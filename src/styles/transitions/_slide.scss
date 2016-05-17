@@ -1,0 +1,61 @@
+$slide-duration: 0.35s;
+$slide-amount: 40px;
+$slide-curve: ease-out;
+
+// Slide-left
+
+.slide-left-enter {
+  position: absolute;
+  left: $slide-amount;
+  top: 0px;
+  opacity: 0;
+}
+
+.slide-left-enter.slide-left-enter-active {
+  left: 0px;
+  top: 0px;
+  opacity: 1;
+  transition: all $slide-duration $slide-curve;
+}
+
+.slide-left-leave {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  opacity: 1;
+}
+
+.slide-left-leave.slide-left-leave-active {
+  opacity: 0;
+  left: -$slide-amount;
+  transition: all $slide-duration $slide-curve;
+}
+
+// Slide-Right
+
+.slide-right-enter {
+  position: absolute;
+  left: -$slide-amount;
+  top: 0px;
+  opacity: 0;
+}
+
+.slide-right-enter.slide-right-enter-active {
+  left: 0px;
+  top: 0px;
+  opacity: 1;
+  transition: all $slide-duration $slide-curve;
+}
+
+.slide-right-leave {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  opacity: 1;
+}
+
+.slide-right-leave.slide-right-leave-active {
+  opacity: 0;
+  left: $slide-amount;
+  transition: all $slide-duration $slide-curve;
+}

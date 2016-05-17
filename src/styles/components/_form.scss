@@ -1,0 +1,46 @@
+form {
+  label {
+    display: block;
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 10px;
+  }
+
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: #32526a;
+    border: 0px;
+    padding: 8px 10px;
+    outline: 0;
+    color: #fff;
+    margin-bottom: 40px;
+    color: #f0f0f0;
+  }
+}
+
+.CodeMirror pre {
+  padding: 0px 12px
+}
+
+.ReactCodeMirror {
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.CodeMirror {
+  font-size: 14px;
+}
+
+.CodeMirror-gutters {
+  background-color: darken(#32526a, 10%) !important;
+  border: 0px;
+}
+
+.CodeMirror-linenumber {
+  color: #8c8d8c;
+}
+
+.cm-s-solarized .cm-atom {
+  color: #ccc
+}

@@ -1,2 +1,8 @@
+@import "../../node_modules/codemirror/theme/solarized.css";
+@import "../../node_modules/codemirror/lib/codemirror.css";
+
 @import "transitions";
 @import "base";
+@import "components/multistep";
+@import "components/button";
+@import "components/form";
