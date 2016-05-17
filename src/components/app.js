@@ -6,11 +6,9 @@ var {Router, Route, browserHistory} = require('react-router');
 var render = require('react-dom').render;
 
 require('normalize.css');
-require('../styles/main.css');
+require('../styles/app.scss');
 
-
-var content = document.getElementById('content');
-
+var content = document.getElementById('app');
 
 render((
   <Router history={browserHistory}>

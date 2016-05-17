@@ -11,7 +11,7 @@ var path = require('path');
 module.exports = {
 
   output: {
-    filename: 'main.js',
+    filename: 'app.js',
     publicPath: '/assets/'
   },
 
@@ -20,7 +20,7 @@ module.exports = {
   devtool: false,
   entry: [
       'webpack/hot/only-dev-server',
-      './src/components/main.js'
+      './src/components/app.js'
   ],
 
   stats: {
