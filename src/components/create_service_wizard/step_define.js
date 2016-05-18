@@ -3,6 +3,7 @@ var React = require('react');
 var Codemirror = require('react-codemirror');
 var yaml = require('codemirror/mode/yaml/yaml');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+var Lorry = require('../lorry');
 
 let store = {
   serviceName: 'my-first-service',
@@ -33,15 +34,25 @@ module.exports = React.createClass ({
     },
 
     validate(){
-      // Do some validation
       this.setState({
         loading: true,
         buttonText: "Validating..."
       });
 
-      setTimeout(function() {
-        this.props.onContinue();
-      }.bind(this), 1000);
+      var lorry = new Lorry();
+
+      lorry.validate(this.state.composeYaml).then(function(response) {
+        console.log(response);
+        if (response.status === "valid") {
+          this.props.onContinue();
+        } else {
+          this.setState({
+            loading: false,
+            buttonText: "Submit Definition"
+          });
+        }
+
+      }.bind(this));
     },
 
     // TOOD: Extract into components (like the text field with error states and validation)
