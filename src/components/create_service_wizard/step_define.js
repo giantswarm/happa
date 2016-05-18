@@ -4,7 +4,9 @@ var Codemirror = require('react-codemirror');
 var yaml = require('codemirror/mode/yaml/yaml');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
-let store = { serviceName: '', composeYaml: '' };
+let store = {
+  serviceName: 'my-first-service',
+  composeYaml: 'helloworld:\n  image: giantswarm/helloworld\n  ports:\n    - "8080:8080"' };
 
 module.exports = React.createClass ({
     getInitialState() {
