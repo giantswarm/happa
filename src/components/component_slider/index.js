@@ -13,8 +13,8 @@ module.exports = class ComponentSlider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentSlide: this.props.currentSlide,
-      currentSlideAsArray: [this.props.slides[this.props.currentSlide]],  // We store the current slide in an array
+      currentSlide: this.props.currentSlide || 0,
+      currentSlideAsArray: [this.props.slides[this.props.currentSlide || 0]],  // We store the current slide in an array
                                                     // So we can push in the new slide
                                                     // and pop the old slide
                                                     // so that Reactcsstransitiongroup will
