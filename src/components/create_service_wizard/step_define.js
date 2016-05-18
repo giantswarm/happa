@@ -20,15 +20,6 @@ module.exports = React.createClass ({
       };
     },
 
-    componentDidMount: function() {
-      this.unsubscribe = store.listen(function(newService){
-        this.setState(newService);
-      }.bind(this));
-    },
-    componentWillUnmount: function() {
-      this.unsubscribe();
-    },
-
     updateServiceName(event) {
       actions.serviceNameEdited(event.target.value);
     },
@@ -38,6 +29,7 @@ module.exports = React.createClass ({
     },
 
     validate(){
+      // TODO: Turn this into an action
       this.setState({
         loading: true,
         buttonText: "Validating..."
