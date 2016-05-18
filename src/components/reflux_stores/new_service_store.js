@@ -1,10 +1,11 @@
 "use strict";
 var Reflux = require('reflux');
 var actions = require("../reflux_actions/new_service_actions");
+var Lorry = require('../lorry');
 
 var newService = {
   serviceName: 'my-first-service',
-  composeYaml: 'helloworld:\n  image: giantswarm/helloworld\n  ports:\n    - "8080:8080"'
+  composeYaml: 'helloworld:\n  image: giantswarm/helloworld\n  ports:\n    - "8080:8080"',
 };
 
 module.exports = Reflux.createStore({
@@ -22,5 +23,11 @@ module.exports = Reflux.createStore({
   onServiceDefinitionEdited: function(definition) {
     newService.composeYaml = definition;
     this.trigger(newService);
+  },
+
+  onValidateServiceDefinition: function() {
+  },
+
+  onValidateServiceDefinitionCompleted: function(validationResult) {
   }
 });

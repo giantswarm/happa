@@ -3,19 +3,31 @@ var React = require('react');
 var Codemirror = require('react-codemirror');
 var yaml = require('codemirror/mode/yaml/yaml');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var Lorry = require('../lorry');
+
 var Slide = require('../component_slider/slide');
 var actions = require('../reflux_actions/new_service_actions');
 var store = require('../reflux_stores/new_service_store');
 var Reflux = require('reflux');
 
 module.exports = React.createClass ({
-    mixins: [Reflux.connect(store,'newService')],
+    mixins: [Reflux.connect(store,'newService'), Reflux.listenerMixin],
+
+    componentDidMount: function() {
+      this.listenTo(actions.validateServiceDefinition.completed, this.onValidateServiceDefinitionCompleted);
+    },
 
     getInitialState: function() {
       return {
         buttonText: "Submit Definition"
       };
+    },
+
+    onValidateServiceDefinitionCompleted: function(validationResult) {
+      if (validationResult.status == "valid") {
+        this.props.onContinue();
+      } else {
+        this.setState({validating: false});
+      }
     },
 
     updateServiceName(event) {
@@ -27,26 +39,8 @@ module.exports = React.createClass ({
     },
 
     validate(){
-      // TODO: Turn this into an action
-      this.setState({
-        loading: true,
-        buttonText: "Validating..."
-      });
-
-      var lorry = new Lorry();
-
-      lorry.validate(this.state.newService.composeYaml).then(function(response) {
-        console.log(response);
-        if (response.status === "valid") {
-          this.props.onContinue();
-        } else {
-          this.setState({
-            loading: false,
-            buttonText: "Submit Definition"
-          });
-        }
-
-      }.bind(this));
+      this.setState({validating: true});
+      actions.validateServiceDefinition(this.state.newService.composeYaml);
     },
 
     // TODO: Extract into components (like the text field with error states and validation)
@@ -69,10 +63,14 @@ module.exports = React.createClass ({
           </form>
 
           <div className="progress_button--container">
-            <button disabled={ this.state.loading } className="primary" onClick={this.validate}>{this.state.buttonText}</button>
+            <button disabled={ this.state.validating } className="primary" onClick={this.validate}>
+              {
+                this.state.validating ? "Validating ..." : "Submit Definition"
+              }
+            </button>
             <ReactCSSTransitionGroup transitionName="slide-left" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
             {
-              this.state.loading ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
+              this.state.validating ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
             }
             </ReactCSSTransitionGroup>
           </div>
