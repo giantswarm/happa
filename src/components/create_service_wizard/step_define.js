@@ -9,8 +9,6 @@ var actions = require('../reflux_actions/new_service_actions');
 var store = require('../reflux_stores/new_service_store');
 var Reflux = require('reflux');
 
-
-
 module.exports = React.createClass ({
     mixins: [Reflux.connect(store,'newService')],
 

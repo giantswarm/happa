@@ -25,3 +25,25 @@ Running tests
 `make test`
 
 No tests at the moment though
+
+
+ReFlux in a nutshell
+--------------------
+```
+╔═════════╗       ╔════════╗       ╔═════════════════╗
+║ Actions ║──────>║ Stores ║──────>║ View Components ║
+╚═════════╝       ╚════════╝       ╚═════════════════╝
+     ^                                      │
+     └──────────────────────────────────────┘
+```
+Components should only emit actions.
+
+Actions affect the store.
+
+The store emits the newly changed object.
+
+The view listens for changes to the store and updates its state.
+
+By following these guidelines we should get some benefits in keeping component
+logic focused on rendering, and not on doing the actual work of manipulating
+state.
