@@ -2,6 +2,11 @@
 // Takes an array of components (slides), and lets you transition between them
 //
 // <ComponentSlider currentSlide=0 slides={[component1, component2, component3]}/>;
+//
+// props:
+//
+// @currentSlide - Number - The index of the current slide. Default 0
+// @slides       - Array  - An array of components
 
 var React = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');

@@ -1,20 +1,20 @@
 "use strict";
 
-var React   = require('react');
+var React           = require('react');
 var ComponentSlider = require('../component_slider');
 
-var StepDefine = require('./step_define.js');
-var StepImages = require('./step_images.js');
+var StepDefine    = require('./step_define.js');
+var StepImages    = require('./step_images.js');
 var StepConfigure = require('./step_configure.js');
-var StepLaunch = require('./step_launch.js');
+var StepLaunch    = require('./step_launch.js');
 
 module.exports = React.createClass({
   onContinue() {
-    this.refs.wizard.next();
+    this.refs.componentSlider.next();
   },
 
   onPrevious() {
-    this.refs.wizard.previous();
+    this.refs.componentSlider.previous();
   },
 
   slides() {
@@ -27,6 +27,6 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    return <ComponentSlider ref="wizard" slides={this.slides()}/>;
+    return <ComponentSlider ref="componentSlider" slides={this.slides()}/>;
   }
 });
