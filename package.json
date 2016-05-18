@@ -6,6 +6,10 @@
   "private": true,
   "src": "src",
   "test": "test",
+  "scripts": {
+    "test": "grunt test",
+    "start": "grunt serve"
+  },
   "dist": "dist",
   "mainInput": "main",
   "mainOutput": "main",
