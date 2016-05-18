@@ -19,10 +19,10 @@ module.exports = React.createClass({
 
   slides() {
     return ([
-      <StepDefine key="step-define" onPrevious={this.onPrevious} onContinue={this.onContinue}/>,
-      <StepImages key="step-images" onPrevious={this.onPrevious} onContinue={this.onContinue}/>,
+      <StepDefine    key="step-define"    onPrevious={this.onPrevious} onContinue={this.onContinue}/>,
+      <StepImages    key="step-images"    onPrevious={this.onPrevious} onContinue={this.onContinue}/>,
       <StepConfigure key="step-configure" onPrevious={this.onPrevious} onContinue={this.onContinue}/>,
-      <StepLaunch key="step-launch" onPrevious={this.onPrevious} onContinue={this.onContinue}/>
+      <StepLaunch    key="step-launch"    onPrevious={this.onPrevious} onContinue={this.onContinue}/>
     ]);
   },
 
