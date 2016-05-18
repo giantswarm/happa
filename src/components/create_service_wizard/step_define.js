@@ -59,7 +59,7 @@ module.exports = React.createClass ({
 
     render() {
       return (
-        <div className="multistep--step">
+        <div className="component_slider--step">
           <h1>Define your service</h1>
           <form>
             <div className="textfield">

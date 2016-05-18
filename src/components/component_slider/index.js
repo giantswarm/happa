@@ -1,5 +1,7 @@
-// Multislide
-// Takes an array of components, and lets you transition between them
+// Component Slider
+// Takes an array of components (slides), and lets you transition between them
+//
+// <ComponentSlider currentSlide=0 slides={[component1, component2, component3]}/>;
 
 var React = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
@@ -11,8 +13,12 @@ module.exports = class ComponentSlider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentSlide: 0,
-      currentSlideAsArray: [this.props.slides[0]],
+      currentSlide: this.props.currentSlide,
+      currentSlideAsArray: [this.props.slides[this.props.currentSlide]],  // We store the current slide in an array
+                                                    // So we can push in the new slide
+                                                    // and pop the old slide
+                                                    // so that Reactcsstransitiongroup will
+                                                    // apply its transitions correctly
       direction: 'left'
     };
 

@@ -27,6 +27,6 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    return <ComponentSlider ref="wizard" slides={this.slides()}/>;
+    return <ComponentSlider ref="wizard" currentSlide={1} slides={this.slides()}/>;
   }
 });

@@ -17,7 +17,7 @@ module.exports = React.createClass ({
 
     render() {
       return (
-        <div className="multistep--step">
+        <div className="component_slider--step">
           <h1>Launch</h1>
           <button className="primary" onClick={this.validate} disabled>Continue</button><br/>
           <button onClick={this.props.onPrevious}>Previous</button>
