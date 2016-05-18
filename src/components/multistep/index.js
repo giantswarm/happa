@@ -51,7 +51,7 @@ class MultiStep extends Component {
   render() {
     return (
       <div className="multistep--container">
-        <ReactCSSTransitionGroup transitionName={`slide-${this.state.direction}`} transitionEnterTimeout={350} transitionLeaveTimeout={350}>
+        <ReactCSSTransitionGroup transitionName={`slide-${this.state.direction}`} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
           {this.state.currentStepAsArray}
         </ReactCSSTransitionGroup>
       </div>

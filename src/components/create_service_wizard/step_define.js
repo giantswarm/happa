@@ -2,8 +2,9 @@
 var React = require('react');
 var Codemirror = require('react-codemirror');
 var yaml = require('codemirror/mode/yaml/yaml');
+var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
-let store = { firstName: '', lastName: '' };
+let store = { firstName: '', lastName: '', buttonText: "Submit Definition" };
 
 module.exports = React.createClass ({
     getInitialState() {
@@ -29,11 +30,14 @@ module.exports = React.createClass ({
 
     validate(){
       // Do some validation
-      console.log("validating");
-      console.log("valid");
+      this.setState({
+        loading: true,
+        buttonText: "Validating..."
+      });
 
-      // Signal continue
-      this.props.onContinue();
+      setTimeout(function() {
+        this.props.onContinue();
+      }.bind(this), 2000);
     },
 
     render() {
@@ -41,13 +45,24 @@ module.exports = React.createClass ({
         <div className="multistep--step">
           <h1>Define your service</h1>
           <form>
-            <label>Service Name</label>
-            <input type="text"/>
+            <div className="textfield">
+              <label>Service Name</label>
+              <input type="text"/>
+              <span className="message">Service Name must be made up of lower case letters and hyphens</span>
+            </div>
 
             <label>Paste Docker Compose YAML</label>
             <Codemirror value={this.state.code} onChange={this.updateCode} options={{lineNumbers: true, mode: "yaml", theme: "solarized dark"}} />
           </form>
-          <button className="primary" onClick={this.validate}>Submit Definition</button><br/>
+
+          <div className="progress_button--container">
+            <button disabled={ this.state.loading } className="primary" onClick={this.validate}>{this.state.buttonText}</button>
+            <ReactCSSTransitionGroup transitionName="slide-left" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
+            {
+              this.state.loading ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
+            }
+            </ReactCSSTransitionGroup>
+          </div>
         </div>
       );
     }
