@@ -1,5 +1,14 @@
 "use strict";
 
+// Create Service Wizard
+// Sets up a ComponentSlider with the steps to create a service
+//
+// Steps know how to validate themselves and let the wizard know
+// when to continue or go back through onContinue and onPrevious
+//
+// Interacts with NewServiceStore, which is what holds the NewService
+// as it is being built.
+
 var React           = require('react');
 var ComponentSlider = require('../component_slider');
 

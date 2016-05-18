@@ -1,3 +1,5 @@
+"use strict";
+
 // Component Slider
 // Takes an array of components (slides), and lets you transition between them
 //

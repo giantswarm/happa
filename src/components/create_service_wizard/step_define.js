@@ -7,7 +7,8 @@ var Lorry = require('../lorry');
 
 let store = {
   serviceName: 'my-first-service',
-  composeYaml: 'helloworld:\n  image: giantswarm/helloworld\n  ports:\n    - "8080:8080"' };
+  composeYaml: 'helloworld:\n  image: giantswarm/helloworld\n  ports:\n    - "8080:8080"'
+};
 
 module.exports = React.createClass ({
     getInitialState() {
@@ -55,7 +56,7 @@ module.exports = React.createClass ({
       }.bind(this));
     },
 
-    // TOOD: Extract into components (like the text field with error states and validation)
+    // TODO: Extract into components (like the text field with error states and validation)
 
     render() {
       return (
