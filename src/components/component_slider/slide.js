@@ -2,7 +2,7 @@
 
 // Slide
 //
-// Wrap components in a Slide when using them in a component Slider.
+// Wrap components in a Slide when using them in a ComponentSlider
 //
 // <Slide>
 //  <h1>My slide</h1>
