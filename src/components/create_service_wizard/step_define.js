@@ -4,6 +4,7 @@ var Codemirror = require('react-codemirror');
 var yaml = require('codemirror/mode/yaml/yaml');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var Lorry = require('../lorry');
+var Slide = require('../component_slider/slide');
 
 let store = {
   serviceName: 'my-first-service',
@@ -60,7 +61,7 @@ module.exports = React.createClass ({
 
     render() {
       return (
-        <div className="component_slider--step">
+        <Slide>
           <h1>Define your service</h1>
           <form>
             <div className="textfield">
@@ -83,7 +84,7 @@ module.exports = React.createClass ({
             }
             </ReactCSSTransitionGroup>
           </div>
-        </div>
+        </Slide>
       );
     }
 });

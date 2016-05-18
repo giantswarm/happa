@@ -1,5 +1,6 @@
 'use strict';
 var React = require('react');
+var Slide = require('../component_slider/slide');
 
 module.exports = React.createClass ({
     getInitialState() {
@@ -17,11 +18,11 @@ module.exports = React.createClass ({
 
     render() {
         return (
-        <div className="component_slider--step">
+        <Slide>
           <h1>Configure your containers</h1>
           <button className="primary" onClick={this.validate}>Continue</button><br/>
           <button onClick={this.props.onPrevious}>Previous</button>
-        </div>
+        </Slide>
         );
     }
 });
