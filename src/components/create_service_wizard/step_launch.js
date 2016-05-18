@@ -1,21 +1,9 @@
 'use strict';
 var React = require('react');
 
-let store = { firstName: '', lastName: '' };
-
 module.exports = React.createClass ({
     getInitialState() {
-        return store;
-    },
-
-    handleFirstNameChanged(event) {
-      store.firstName = event.target.value;
-      this.setState(store);
-    },
-
-    handleLastNameChanged(event) {
-      store.lastName = event.target.value;
-      this.setState(store);
+      return {};
     },
 
     validate(){

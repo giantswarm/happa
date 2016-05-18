@@ -4,27 +4,29 @@ var Codemirror = require('react-codemirror');
 var yaml = require('codemirror/mode/yaml/yaml');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
-let store = { firstName: '', lastName: '', buttonText: "Submit Definition" };
+let store = { serviceName: '', composeYaml: '' };
 
 module.exports = React.createClass ({
     getInitialState() {
-        return store;
+      return {
+        serviceName: store.serviceName,
+        composeYaml: store.composeYaml,
+        buttonText: "Submit Definition"
+      };
     },
 
-    handleFirstNameChanged(event) {
-      store.firstName = event.target.value;
-      this.setState(store);
-    },
+    updateServiceName(event) {
+      store.serviceName = event.target.value;
 
-    handleLastNameChanged(event) {
-      store.lastName = event.target.value;
-      this.setState(store);
+      this.setState({
+        serviceName: store.serviceName
+      });
     },
 
     updateCode (newCode) {
-      console.log(newCode);
+      store.composeYaml = newCode;
       this.setState({
-        code: newCode
+        composeYaml: store.composeYaml
       });
     },
 
@@ -37,8 +39,10 @@ module.exports = React.createClass ({
 
       setTimeout(function() {
         this.props.onContinue();
-      }.bind(this), 2000);
+      }.bind(this), 1000);
     },
+
+    // TOOD: Extract into components (like the text field with error states and validation)
 
     render() {
       return (
@@ -47,12 +51,14 @@ module.exports = React.createClass ({
           <form>
             <div className="textfield">
               <label>Service Name</label>
-              <input type="text"/>
-              <span className="message">Service Name must be made up of lower case letters and hyphens</span>
+              <input value={this.state.serviceName} type="text" onChange={this.updateServiceName}/>
+              {
+                this.state.error ? <span className="message">Service Name must be made up of lower case letters and hyphens</span> : null
+              }
             </div>
 
             <label>Paste Docker Compose YAML</label>
-            <Codemirror value={this.state.code} onChange={this.updateCode} options={{lineNumbers: true, mode: "yaml", theme: "solarized dark"}} />
+            <Codemirror value={this.state.composeYaml} onChange={this.updateCode} options={{lineNumbers: true, mode: "yaml", theme: "solarized dark"}} />
           </form>
 
           <div className="progress_button--container">
