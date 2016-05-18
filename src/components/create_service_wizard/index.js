@@ -1,7 +1,7 @@
 "use strict";
 
 var React   = require('react');
-var MultiStep = require('../multistep');
+var ComponentSlider = require('../component_slider');
 
 var StepDefine = require('./step_define.js');
 var StepImages = require('./step_images.js');
@@ -17,7 +17,7 @@ module.exports = React.createClass({
     this.refs.wizard.previous();
   },
 
-  steps() {
+  slides() {
     return ([
       <StepDefine key="step-define" onPrevious={this.onPrevious} onContinue={this.onContinue}/>,
       <StepImages key="step-images" onPrevious={this.onPrevious} onContinue={this.onContinue}/>,
@@ -27,6 +27,6 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    return <MultiStep ref="wizard" steps={this.steps()}/>;
+    return <ComponentSlider ref="wizard" slides={this.slides()}/>;
   }
 });

@@ -1,15 +1,18 @@
+// Multislide
+// Takes an array of components, and lets you transition between them
+
 var React = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 var Component = React.Component;
 var PropTypes = React.PropTypes;
 
-class MultiStep extends Component {
+module.exports = class ComponentSlider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentStep: 0,
-      currentStepAsArray: [this.props.steps[0]],
+      currentSlide: 0,
+      currentSlideAsArray: [this.props.slides[0]],
       direction: 'left'
     };
 
@@ -20,43 +23,41 @@ class MultiStep extends Component {
     this.previous = this.previous.bind(this);
   }
 
-  setStep(stepNumber) {
+  setSlide(slideNumber) {
     var direction;
 
-    if (stepNumber < this.props.steps.length) {
-      if (stepNumber > this.state.currentStep) {
+    if (slideNumber < this.props.slides.length) {
+      if (slideNumber > this.state.currentSlide) {
         direction = 'left';
       } else {
         direction = 'right';
       }
 
       this.setState({
-        currentStep: stepNumber,
-        currentStepAsArray: [this.props.steps[stepNumber]],
+        currentSlide: slideNumber,
+        currentSlideAsArray: [this.props.slides[slideNumber]],
         direction: direction
       });
     } else {
-      console.log("At the last step.");
+      console.log("At the last slide.");
     }
   }
 
   next() {
-    this.setStep(this.state.currentStep + 1);
+    this.setSlide(this.state.currentSlide + 1);
   }
 
   previous() {
-    this.setStep(this.state.currentStep - 1);
+    this.setSlide(this.state.currentSlide - 1);
   }
 
   render() {
     return (
-      <div className="multistep--container">
+      <div className="component_slider--container">
         <ReactCSSTransitionGroup transitionName={`slide-${this.state.direction}`} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-          {this.state.currentStepAsArray}
+          {this.state.currentSlideAsArray}
         </ReactCSSTransitionGroup>
       </div>
     );
   }
-}
-
-module.exports = MultiStep;
+};
