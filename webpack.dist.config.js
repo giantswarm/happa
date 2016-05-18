@@ -22,12 +22,12 @@ module.exports = {
 
   stats: {
     colors: true,
-    reasons: false
+    reasons: true
   },
 
   plugins: [
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin(),
+    //new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.AggressiveMergingPlugin()
   ],
@@ -49,11 +49,10 @@ module.exports = {
       exclude: /node_modules/,
       loader: 'jsxhint'
     }],
-
     loaders: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loader: 'babel-loader'
+      loaders: ['babel']
     }, {
       test: /\.css$/,
       loader: 'style-loader!css-loader'
@@ -61,7 +60,7 @@ module.exports = {
       test: /\.scss/,
       loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
     }, {
-      test: /\.(png|jpg)$/,
+      test: /\.(png|jpg|svg)$/,
       loader: 'url-loader?limit=8192'
     }]
   }

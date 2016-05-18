@@ -9,12 +9,19 @@ best to implement them.
 Getting started
 ---------------
 
-You need node and npm.
+Requirements: docker
 
-Then install dependencies with:
+You should be able to start the development server with:
 
-`npm install`
+`make develop`
 
-After that you should be able to start the development server with:
+Then visit `docker.dev:8000/webpack-dev-server/`
 
-`grunt serve`
+Any changes should cause the browser to reload automatically
+
+Running tests
+-------------
+
+`make test`
+
+No tests at the moment though
