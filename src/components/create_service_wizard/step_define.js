@@ -5,34 +5,36 @@ var yaml = require('codemirror/mode/yaml/yaml');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var Lorry = require('../lorry');
 var Slide = require('../component_slider/slide');
+var actions = require('../reflux_actions/new_service_actions');
+var store = require('../reflux_stores/new_service_store');
+var Reflux = require('reflux');
 
-let store = {
-  serviceName: 'my-first-service',
-  composeYaml: 'helloworld:\n  image: giantswarm/helloworld\n  ports:\n    - "8080:8080"'
-};
+
 
 module.exports = React.createClass ({
-    getInitialState() {
+    mixins: [Reflux.connect(store,'newService')],
+
+    getInitialState: function() {
       return {
-        serviceName: store.serviceName,
-        composeYaml: store.composeYaml,
         buttonText: "Submit Definition"
       };
     },
 
-    updateServiceName(event) {
-      store.serviceName = event.target.value;
+    componentDidMount: function() {
+      this.unsubscribe = store.listen(function(newService){
+        this.setState(newService);
+      }.bind(this));
+    },
+    componentWillUnmount: function() {
+      this.unsubscribe();
+    },
 
-      this.setState({
-        serviceName: store.serviceName
-      });
+    updateServiceName(event) {
+      actions.serviceNameEdited(event.target.value);
     },
 
     updateCode (newCode) {
-      store.composeYaml = newCode;
-      this.setState({
-        composeYaml: store.composeYaml
-      });
+      actions.serviceDefinitionEdited(newCode);
     },
 
     validate(){
@@ -43,7 +45,7 @@ module.exports = React.createClass ({
 
       var lorry = new Lorry();
 
-      lorry.validate(this.state.composeYaml).then(function(response) {
+      lorry.validate(this.state.newService.composeYaml).then(function(response) {
         console.log(response);
         if (response.status === "valid") {
           this.props.onContinue();
@@ -66,14 +68,14 @@ module.exports = React.createClass ({
           <form>
             <div className="textfield">
               <label>Service Name</label>
-              <input value={this.state.serviceName} type="text" onChange={this.updateServiceName}/>
+              <input value={this.state.newService.serviceName} type="text" onChange={this.updateServiceName}/>
               {
                 this.state.error ? <span className="message">Service Name must be made up of lower case letters and hyphens</span> : null
               }
             </div>
 
             <label>Paste Docker Compose YAML</label>
-            <Codemirror value={this.state.composeYaml} onChange={this.updateCode} options={{lineNumbers: true, mode: "yaml", theme: "solarized dark"}} />
+            <Codemirror value={this.state.newService.composeYaml} onChange={this.updateCode} options={{lineNumbers: true, mode: "yaml", theme: "solarized dark"}} />
           </form>
 
           <div className="progress_button--container">
