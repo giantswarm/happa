@@ -38,7 +38,8 @@ module.exports = React.createClass ({
       actions.serviceDefinitionEdited(newCode);
     },
 
-    validate(){
+    validate(event){
+      event.preventDefault();
       this.setState({validating: true});
       actions.validateServiceDefinition(this.state.newService.composeYaml);
     },
@@ -49,7 +50,7 @@ module.exports = React.createClass ({
       return (
         <Slide>
           <h1>Define your service</h1>
-          <form>
+          <form onSubmit={this.validate}>
             <div className="textfield">
               <label>Service Name</label>
               <input value={this.state.newService.serviceName} type="text" onChange={this.updateServiceName}/>
