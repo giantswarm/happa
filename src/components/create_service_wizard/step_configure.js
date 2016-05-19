@@ -9,8 +9,6 @@ module.exports = React.createClass ({
 
     validate(){
       // Do some validation
-      console.log("validating");
-      console.log("valid");
 
       // Signal continue
       this.props.onContinue();

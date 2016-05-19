@@ -23,7 +23,7 @@ module.exports = React.createClass ({
     },
 
     onValidateServiceDefinitionCompleted: function(validationResult) {
-      if (validationResult.status == "valid") {
+      if (validationResult.status === "valid") {
         this.props.onContinue();
       } else {
         this.setState({validating: false});

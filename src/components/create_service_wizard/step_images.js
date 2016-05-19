@@ -4,6 +4,7 @@ var Slide = require('../component_slider/slide');
 var actions = require('../reflux_actions/new_service_actions');
 var store = require('../reflux_stores/new_service_store');
 var Reflux = require('reflux');
+var _ = require('underscore');
 
 module.exports = React.createClass ({
     mixins: [Reflux.connect(store,'newService')],
@@ -14,8 +15,6 @@ module.exports = React.createClass ({
 
     validate(){
       // Do some validation
-      console.log("validating");
-      console.log("valid");
 
       // Signal continue
       this.props.onContinue();
@@ -25,6 +24,13 @@ module.exports = React.createClass ({
         return (
           <Slide>
             <h1>Analyzing images for {this.state.newService.serviceName}</h1>
+            {
+              _.map(this.state.newService.composeJson, function(val, key) {
+                return <div className="image" key={key}>
+                  {val.image}
+                </div>;
+              })
+            }
             <button className="primary" onClick={this.validate}>Continue</button><br/>
             <button onClick={this.props.onPrevious}>Previous</button>
           </Slide>

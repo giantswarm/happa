@@ -1,3 +1,4 @@
+"use strict";
 var Reflux = require('reflux');
 var Lorry = require('../lorry');
 

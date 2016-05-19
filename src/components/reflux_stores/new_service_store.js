@@ -29,5 +29,6 @@ module.exports = Reflux.createStore({
   },
 
   onValidateServiceDefinitionCompleted: function(validationResult) {
+    newService.composeJson = validationResult.document;
   }
 });
