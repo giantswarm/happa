@@ -1,0 +1,39 @@
+.image_analyze_progress--container {
+  font-family: Inconsolata;
+  margin-bottom: 40px;
+
+  .loader {
+    position: relative;
+    top: 5px;
+    float: right;
+    width: 25px;
+
+  }
+}
+
+.image_analyze_progress--label {
+  display: block;
+  margin-bottom: 10px;
+  color: #ddd;
+}
+
+.image_analyze_progress--bar-container {
+  box-sizing: border-box;
+  background-color: #425e74;
+  width: 95%;
+  height: 35px;
+  border-radius: 7px;
+  box-shadow: inset 1px 1px 4px 0px rgba(0,0,0,0.5);
+  overflow: hidden;
+  z-index: 0;
+  padding: 5px;
+}
+
+.image_analyze_progress--bar {
+  background-color: #a4b1bc;
+  width: 10%;
+  transition: width 1s;
+  height: 25px;
+  position: relative;
+  z-index: 5;
+}

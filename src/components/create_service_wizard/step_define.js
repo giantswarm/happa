@@ -41,7 +41,7 @@ module.exports = React.createClass ({
     validate(event){
       event.preventDefault();
       this.setState({validating: true});
-      actions.validateServiceDefinition(this.state.newService.composeYaml);
+      actions.validateServiceDefinition(this.state.newService.rawComposeYaml);
     },
 
     // TODO: Extract into components (like the text field with error states and validation)
@@ -60,7 +60,7 @@ module.exports = React.createClass ({
             </div>
 
             <label>Paste Docker Compose YAML</label>
-            <Codemirror value={this.state.newService.composeYaml} onChange={this.updateCode} options={{lineNumbers: true, mode: "yaml", theme: "solarized dark"}} />
+            <Codemirror value={this.state.newService.rawComposeYaml} onChange={this.updateCode} options={{lineNumbers: true, mode: "yaml", theme: "solarized dark"}} />
           </form>
 
           <div className="progress_button--container">

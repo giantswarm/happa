@@ -2,10 +2,12 @@
 var Reflux = require('reflux');
 var actions = require("../reflux_actions/new_service_actions");
 var Lorry = require('../lorry');
+var _ = require('underscore');
 
 var newService = {
   serviceName: 'my-first-service',
-  composeYaml: 'helloworld:\n  image: giantswarm/helloworld\n  ports:\n    - "8080:8080"',
+  rawComposeYaml: 'helloworld:\n  image: index.docker.io/giantswarm/helloworld\n  ports:\n    - "8080:8080"',
+  parsedCompose: "NOTPARSEDYET",
 };
 
 module.exports = Reflux.createStore({
@@ -21,7 +23,7 @@ module.exports = Reflux.createStore({
   },
 
   onServiceDefinitionEdited: function(definition) {
-    newService.composeYaml = definition;
+    newService.rawComposeYaml = definition;
     this.trigger(newService);
   },
 
@@ -29,6 +31,60 @@ module.exports = Reflux.createStore({
   },
 
   onValidateServiceDefinitionCompleted: function(validationResult) {
-    newService.composeJson = validationResult.document;
+    newService.parsedCompose = validationResult.document;
+    newService.images = _.map(newService.parsedCompose, function(val, key) {
+        var image = _.findWhere(newService.images, {name: val.image});
+        var status = "NOTSTARTED";
+        var progress = 0;
+
+        if (image && image.analyzeStatus) {
+          status = image.analyzeStatus;
+        }
+
+        if (image && image.analyzeStatus) {
+          progress = image.analyzeProgress;
+        }
+
+        if (status === "NOTSTARTED") {
+          actions.analyzeImage(val.image);
+        }
+
+        return {
+          name: val.image,
+          analyzeProgress: progress,
+          analyzeStatus: status
+        };
+      });
+
+    this.trigger(newService);
+  },
+
+  onAnalyzeImage: function(imageName) {
+    var image = _.findWhere(newService.images, {name: imageName});
+    image.analyzeStatus = "STARTED";
+    this.trigger(newService);
+  },
+
+  onAnalyzeImageProgress: function(imageName, progress) {
+    var image = _.findWhere(newService.images, {name: imageName});
+    image.analyzeProgress = progress;
+    this.trigger(newService);
+  },
+
+  onAnalyzeImageCompleted: function(imageName, analyzeResult) {
+    var image = _.findWhere(newService.images, {name: imageName});
+    // Check if there was an unauthorized, set analyzeStatus to UNAUTHORIZED
+    image.analyzeProgress = 100;
+    image.analyzeStatus = "DONE";
+    this.trigger(newService);
+  },
+
+  onAnalyzeImageFailed: function(imageName, error) {
+    var image = _.findWhere(newService.images, {name: imageName});
+    image.analyzeProgress = 0;
+    image.analyzeStatus = "FAILED";
+    console.log(error);
+    image.analyzeError = error;
+    this.trigger(newService);
   }
 });
