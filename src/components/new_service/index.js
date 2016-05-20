@@ -18,6 +18,7 @@ var StepConfigure = require('./step_configure.js');
 var StepLaunch    = require('./step_launch.js');
 
 module.exports = React.createClass({
+  // TODO: Make this into actions that update this components currentSlide state
   onContinue() {
     this.refs.componentSlider.next();
   },
