@@ -26,12 +26,12 @@ NewServiceActions.analyzeImage.listen(function(imageName) {
   var progress = 0;
   var n = 0;
 
+  action.started(imageName);
+
   var fakeProgressInterval = setInterval(function() {
     n += 1;
     action.progress(imageName, 75 - (75/n));
-  }, Math.random() * 400);
-
-  action.started(imageName);
+  }, 400 + (Math.random() * 400));
 
   idi.analyze(imageName).then(function(response) {
     clearInterval(fakeProgressInterval);
