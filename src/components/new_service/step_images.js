@@ -70,6 +70,7 @@ module.exports = React.createClass ({
               }.bind(this))
             }
 
+            <button className="primary" onClick={this.props.onContinue}>Continue</button><br/>
             <button onClick={this.onPrevious}>Previous</button>
           </Slide>
         );

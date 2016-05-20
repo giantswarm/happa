@@ -7,7 +7,8 @@ var NewServiceActions = Reflux.createActions([
   "serviceNameEdited",
   "serviceDefinitionEdited",
   {"validateServiceDefinition": {children: ["completed", "failed"]}},
-  {"analyzeImage": {children: ["started", "completed", "failed", "progress"]}}
+  {"analyzeImage": {children: ["started", "completed", "failed", "progress"]}},
+  "componentRamLimitEdited"
 ]);
 
 NewServiceActions.validateServiceDefinition.listen(function(definition) {
@@ -20,7 +21,6 @@ NewServiceActions.validateServiceDefinition.listen(function(definition) {
 });
 
 NewServiceActions.analyzeImage.listen(function(imageName) {
-  console.log('analyzing: ', imageName);
   var idi = new IDI();
   var action = this;
   var progress = 0;

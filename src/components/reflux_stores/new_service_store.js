@@ -27,40 +27,51 @@ module.exports = Reflux.createStore({
     this.trigger(newService);
   },
 
+  onComponentRamLimitEdited: function(componentName, limit) {
+    newService.parsedCompose[componentName].ramLimit = limit;
+    this.trigger(newService);
+  },
+
+
   onValidateServiceDefinition: function() {
   },
 
   onValidateServiceDefinitionCompleted: function(validationResult) {
     newService.parsedCompose = validationResult.document;
+
     newService.images = _.map(newService.parsedCompose, function(val, key) {
-        var image = _.findWhere(newService.images, {name: val.image});
-        var status = "NOTSTARTED";
-        var progress = 0;
+      var image = _.findWhere(newService.images, {name: val.image});
+      var status = "NOTSTARTED";
+      var progress = 0;
 
-        if (image && image.analyzeStatus) {
-          status = image.analyzeStatus;
-        }
+      if (image && image.analyzeStatus) {
+        status = image.analyzeStatus;
+      }
 
-        if (image && image.analyzeStatus) {
-          progress = image.analyzeProgress;
-        }
+      if (image && image.analyzeStatus) {
+        progress = image.analyzeProgress;
+      }
 
-        if (status === "NOTSTARTED") {
-          actions.analyzeImage(val.image);
-        }
+      if (status === "NOTSTARTED") {
+        actions.analyzeImage(val.image);
+      }
 
-        return {
-          name: val.image,
-          analyzeProgress: progress,
-          analyzeStatus: status
-        };
-      });
+      return {
+        name: val.image,
+        analyzeProgress: progress,
+        analyzeStatus: status
+      };
+    });
 
     newService.images = _.uniq(newService.images, function isUniq(item) {
       return String(item.name);
     });
 
-    console.log(newService.images);
+    newService.parsedCompose = _.mapObject(newService.parsedCompose, function(componentData, componentName) {
+      componentData.ramLimit = 128;
+      return componentData;
+    });
+
     this.trigger(newService);
   },
 
@@ -95,7 +106,6 @@ module.exports = Reflux.createStore({
     var image = _.findWhere(newService.images, {name: imageName});
     image.analyzeProgress = 0;
     image.analyzeStatus = "FAILED";
-    console.log(error);
     image.analyzeError = error;
     this.trigger(newService);
   }

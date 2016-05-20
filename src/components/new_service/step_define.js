@@ -45,6 +45,7 @@ module.exports = React.createClass ({
     },
 
     updateServiceName(event) {
+      var serviceName = event.target.value;
       actions.serviceNameEdited(event.target.value);
     },
 
