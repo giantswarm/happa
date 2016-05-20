@@ -14,6 +14,21 @@ module.exports = React.createClass ({
 
     componentDidMount: function() {
       this.listenTo(actions.validateServiceDefinition.completed, this.onValidateServiceDefinitionCompleted);
+
+      var codeMirror = this.refs.codeMirror.getCodeMirror();
+
+      codeMirror.on("gutterClick", function(cm, n) {
+        var info = cm.lineInfo(n);
+        cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+      });
+
+      function makeMarker() {
+        var marker = document.createElement("div");
+        marker.style.color = "#d22";
+        marker.innerHTML = "●";
+        return marker;
+      }
+
     },
 
     getInitialState: function() {
@@ -60,7 +75,12 @@ module.exports = React.createClass ({
             </div>
 
             <label>Paste Docker Compose YAML</label>
-            <Codemirror value={this.state.newService.rawComposeYaml} onChange={this.updateCode} options={{lineNumbers: true, mode: "yaml", theme: "solarized dark"}} />
+            <Codemirror ref="codeMirror" value={this.state.newService.rawComposeYaml} onChange={this.updateCode} options={{
+              lineNumbers: true,
+              mode: "yaml",
+              theme: "solarized dark",
+              gutters: ["CodeMirror-linenumbers", "breakpoints"]
+            }} />
           </form>
 
           <div className="progress_button--container">

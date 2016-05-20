@@ -24,7 +24,9 @@ module.exports = React.createClass ({
       });
 
       if (allImagesDone) {
-        this.props.onContinue();
+        setTimeout(this.props.onContinue, 500); // Allow the progress bar to reach the end
+                                                // before transitioning automatically to the next
+                                                // step
       }
     },
 
@@ -44,7 +46,7 @@ module.exports = React.createClass ({
             {
               this.state.newService.images.map(function(image){
                 return (
-                  <div className="image_analyze_progress--container" key={image.name}>
+                  <div className={"image_analyze_progress--container "  + image.analyzeStatus} key={image.name}>
                     <div onClick={this.retryAnalyze.bind(this, image.name)} className="image_analyze_progress--label">{image.name} - {image.analyzeStatus}</div>
                     <ReactCSSTransitionGroup transitionName="slide-left" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
                     {

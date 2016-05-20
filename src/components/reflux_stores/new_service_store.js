@@ -61,6 +61,13 @@ module.exports = Reflux.createStore({
 
   onAnalyzeImage: function(imageName) {
     var image = _.findWhere(newService.images, {name: imageName});
+    image.analyzeProgress = 0;
+    image.analyzeStatus = "STARTING";
+    this.trigger(newService);
+  },
+
+  onAnalyzeImageStarted: function(imageName) {
+    var image = _.findWhere(newService.images, {name: imageName});
     image.analyzeStatus = "STARTED";
     this.trigger(newService);
   },

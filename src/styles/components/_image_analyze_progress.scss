@@ -32,8 +32,12 @@
 .image_analyze_progress--bar {
   background-color: #a4b1bc;
   width: 10%;
-  transition: width 1s;
+  transition: width 0.5s;
   height: 25px;
   position: relative;
   z-index: 5;
+}
+
+.STARTING .image_analyze_progress--bar {
+  transition: width 0s;
 }

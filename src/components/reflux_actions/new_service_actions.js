@@ -7,7 +7,7 @@ var NewServiceActions = Reflux.createActions([
   "serviceNameEdited",
   "serviceDefinitionEdited",
   {"validateServiceDefinition": {children: ["completed", "failed"]}},
-  {"analyzeImage": {children: ["completed", "failed", "progress"]}}
+  {"analyzeImage": {children: ["started", "completed", "failed", "progress"]}}
 ]);
 
 NewServiceActions.validateServiceDefinition.listen(function(definition) {
@@ -30,6 +30,8 @@ NewServiceActions.analyzeImage.listen(function(imageName) {
     n += 1;
     action.progress(imageName, 75 - (75/n));
   }, Math.random() * 400);
+
+  action.started(imageName);
 
   idi.analyze(imageName).then(function(response) {
     clearInterval(fakeProgressInterval);
