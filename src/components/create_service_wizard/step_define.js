@@ -17,11 +17,6 @@ module.exports = React.createClass ({
 
       var codeMirror = this.refs.codeMirror.getCodeMirror();
 
-      codeMirror.on("gutterClick", function(cm, n) {
-        var info = cm.lineInfo(n);
-        cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
-      });
-
       function makeMarker() {
         var marker = document.createElement("div");
         marker.style.color = "#d22";
@@ -29,6 +24,10 @@ module.exports = React.createClass ({
         return marker;
       }
 
+      codeMirror.on("gutterClick", function(cm, n) {
+        var info = cm.lineInfo(n);
+        cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+      });
     },
 
     getInitialState: function() {

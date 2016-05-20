@@ -56,6 +56,11 @@ module.exports = Reflux.createStore({
         };
       });
 
+    newService.images = _.uniq(newService.images, function isUniq(item) {
+      return String(item.name);
+    });
+
+    console.log(newService.images);
     this.trigger(newService);
   },
 

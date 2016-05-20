@@ -18,25 +18,25 @@ module.exports = React.createClass ({
       this.continueIfDone();
     },
 
+    onPrevious: function() {
+      clearTimeout(this.continueTimeout);
+      this.props.onPrevious();
+    },
+
     continueIfDone: function() {
       var allImagesDone = _.every(this.state.newService.images, function(image) {
         return image.analyzeStatus === "DONE";
       });
 
       if (allImagesDone) {
-        setTimeout(this.props.onContinue, 500); // Allow the progress bar to reach the end
-                                                // before transitioning automatically to the next
-                                                // step
+        // Allow the progress bar to reach the end
+        // before transitioning automatically to the next step
+        this.continueTimeout = setTimeout(this.props.onContinue, 500);
       }
     },
 
     retryAnalyze: function(imageName) {
       actions.analyzeImage(imageName);
-    },
-
-    images() {
-      console.log("images");
-
     },
 
     render() {
@@ -70,7 +70,7 @@ module.exports = React.createClass ({
               }.bind(this))
             }
 
-            <button onClick={this.props.onPrevious}>Previous</button>
+            <button onClick={this.onPrevious}>Previous</button>
           </Slide>
         );
     }
