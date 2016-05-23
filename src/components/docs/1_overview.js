@@ -19,6 +19,23 @@ module.exports = React.createClass ({
             2. Configure kubectl for your cluster
             3. Running a simple example
             `}
+            <CodeBlock>
+            {`$ kubectl version
+              $ another command
+              output oh my gosh
+              $ some other command
+              more output`}
+            </CodeBlock>
+
+            <CodeBlock>
+            {`$ kubectl version`}
+            </CodeBlock>
+
+            <CodeBlock>
+            {`$ this -is --some="console command"
+            This is output from the command above,
+            broken into two output lines.`}
+            </CodeBlock>
           </Markdown>
           <br/>
           <br/>

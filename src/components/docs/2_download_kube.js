@@ -20,9 +20,7 @@ module.exports = React.createClass ({
             If you already have kubectl, you should have at least version 1.2.x installed. To check the version number, do the following:
             `}
             <CodeBlock>
-            {`
-              kubectl version
-            `}
+            {`kubectl version`}
             </CodeBlock>
           </Markdown>
           <button className="primary" onClick={this.props.onContinue}>Continue</button><br/>

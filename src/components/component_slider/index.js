@@ -66,7 +66,7 @@ module.exports = class ComponentSlider extends Component {
 
   render() {
     return (
-      <div className="component_slider--container">
+      <div className="component_slider--container col-7">
         <ReactCSSTransitionGroup transitionName={`slide-${this.state.direction}`} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
           {this.state.currentSlideAsArray}
         </ReactCSSTransitionGroup>

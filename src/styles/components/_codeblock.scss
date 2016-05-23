@@ -1,11 +1,70 @@
 .codeblock--container {
-  margin-bottom: 40px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+
+  &:hover {
+    pre {
+      background-color: #3d3d3d
+    }
+
+    .codeblock--buttons {
+      background-color: #276996;
+    }
+  }
 
   pre {
-    background-color: #232830;
-    padding: 0px 20px;
-    border-radius: 4px;
-    overflow: scroll;
+    background-color: #333333;
+    padding: 7px 13px;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .codeblock--buttons {
+    position: absolute;
+    height: 40px;
+    top: 0px;
+    right: 0px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+
+    a {
+      text-decoration: none;
+      display: block;
+      height: 100%;
+      padding: 7px 10px;
+    }
+
+    &:active {
+      background-color: darken(#276996, 5%);
+    }
+  }
+
+  .codeblock--line {
+    &.hovering {
+      span {
+        color: #666b6f;
+      }
+    }
+
+    span {
+      font-family: Inconsolata;
+    }
+  }
+
+  .codeblock--line.isprompt {
+    &.hovering {
+      .codeblock--prompt-indicator {
+        color: #556d78;
+      }
+
+      span {
+        color: #fff;
+      }
+    }
+  }
+
+  .codeblock--prompt-indicator {
+    color: #189de9;
   }
 
   .codeblock--copy-confirmation {
