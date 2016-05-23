@@ -15,7 +15,7 @@ module.exports = React.createClass ({
     },
 
     onAnalyzeImageCompleted: function(imageName) {
-      this.continueIfDone();
+      this.continueIfAllImagesDone();
     },
 
     onPrevious: function() {
@@ -23,7 +23,7 @@ module.exports = React.createClass ({
       this.props.onPrevious();
     },
 
-    continueIfDone: function() {
+    continueIfAllImagesDone: function() {
       var allImagesDone = _.every(this.state.newService.images, function(image) {
         return image.analyzeStatus === "DONE";
       });
