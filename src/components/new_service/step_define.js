@@ -65,6 +65,15 @@ module.exports = React.createClass ({
       return this.state.newService.fields[fieldName].validationErrors && this.state.newService.fields[fieldName].validationErrors.length > 0;
     },
 
+    updateFileSelect(evt) {
+      var files = evt.target.files,
+      reader = new FileReader();
+      reader.onload = function() {
+        actions.serviceDefinitionEdited(this.result);
+      };
+      reader.readAsText(files[0]);
+    },
+
     // TODO: Extract into components (like the text field with error states and validation)
 
     render() {
@@ -83,7 +92,6 @@ module.exports = React.createClass ({
             </div>
 
             <label>Paste Docker Compose YAML</label>
-
             <div className="textarea">
               <Codemirror ref="codeMirror" value={this.state.newService.fields.rawComposeYaml.value} onChange={this.updateCode} options={{
                 lineNumbers: true,
@@ -91,12 +99,14 @@ module.exports = React.createClass ({
                 theme: "solarized dark",
                 gutters: ["CodeMirror-linenumbers", "breakpoints"]
               }} />
+              <input type="file" id="openselect" onChange={this.updateFileSelect}/>
               <div className="errorContainer">
                 {
                   this.hasErrors('rawComposeYaml') ? <span className="message">{this.state.newService.fields.rawComposeYaml.validationErrors}</span> : null
                 }
               </div>
             </div>
+
           </form>
 
           <div className="progress_button--container">
