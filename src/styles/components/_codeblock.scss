@@ -1,0 +1,21 @@
+.codeblock--container {
+  margin-bottom: 40px;
+
+  pre {
+    background-color: #232830;
+    padding: 0px 20px;
+    border-radius: 4px;
+    overflow: scroll;
+  }
+
+  .codeblock--copy-confirmation {
+    color: #a4e405;
+    opacity: 0;
+    margin-left: 10px;
+    transition: opacity 0.1s linear;
+  }
+
+  .codeblock--copy-confirmation.visible {
+    opacity: 1;
+  }
+}

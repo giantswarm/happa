@@ -2,6 +2,8 @@ html, body {
   background: #2a4a62;
   font-family: "Roboto";
   color: #eee;
+  line-height: 1.6em;
+  font-size: 16px;
 }
 
 h1 {
@@ -20,4 +22,8 @@ h1 {
 
 .text-center {
   text-align: center
+}
+
+a {
+  color: #fff
 }
