@@ -11,6 +11,7 @@ var Line = React.createClass ({
     classes.push("codeblock--line");
     if (this.props.hovering) {classes.push("hovering");}
     if (this.props.line.prompt) {classes.push("isprompt");}
+    if (this.props.clicked) {classes.push("clicked");}
 
     return classes;
   },
@@ -38,7 +39,7 @@ module.exports = React.createClass ({
         var lines = child.split("\n");
         lines = lines.map(function(x) { return this.stripIndent(x); }.bind(this));
         lines = lines.map(function(x) { return {text: this.textWithoutPrompt(x), prompt: this.isPrompt(x)}; }.bind(this));
-        lines = lines.map(function(x) { return <Line line={x} hovering={this.state.hovering}/>; }.bind(this));
+        lines = lines.map(function(x) { return <Line line={x} clicked={this.state.clicked} hovering={this.state.hovering}/>; }.bind(this));
         return lines;
       } else {
         // Someone nested a react component in here, so just return it?
@@ -119,6 +120,18 @@ module.exports = React.createClass ({
     });
   },
 
+  clicked: function() {
+    this.setState({
+      clicked: true
+    });
+  },
+
+  released: function() {
+    this.setState({
+      clicked: false
+    });
+  },
+
   render() {
     return(
       <div className="codeblock--container">
@@ -129,7 +142,9 @@ module.exports = React.createClass ({
             <a href="#"
                onMouseOver={this.hovering}
                onMouseOut={this.notHovering}
-               onClick={this.copyCodeToClipboard}>
+               onClick={this.copyCodeToClipboard}
+               onMouseDown={this.clicked}
+               onMouseUp={this.released}>
             ICON
             </a>
           </div>
