@@ -20,6 +20,8 @@ module.exports = React.createClass ({
             3. Running a simple example
             `}
           </Markdown>
+          <br/>
+          <br/>
           <button className="primary" onClick={this.props.onContinue}>Continue</button><br/>
         </Slide>
       );

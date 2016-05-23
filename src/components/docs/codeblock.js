@@ -7,7 +7,7 @@ module.exports = React.createClass ({
   rawMarkup: function() {
     return React.Children.map(this.props.children, child => {
       if (typeof child === 'string') {
-        return this.stripIndent(child)
+        return this.stripIndent(child);
       } else {
         return child;
       }
@@ -29,11 +29,10 @@ module.exports = React.createClass ({
   },
 
   copyCodeToClipboard: function(e) {
-    console.log(this.rawMarkup()[0])
     copy(this.rawMarkup()[0].trim());
     e.preventDefault();
 
-    var copyConfirmation = $(this.refs.confirmCopy)
+    var copyConfirmation = $(this.refs.confirmCopy);
     copyConfirmation.addClass('visible');
     setTimeout(function() {
       copyConfirmation.removeClass('visible');
