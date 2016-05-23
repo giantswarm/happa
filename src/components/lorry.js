@@ -16,7 +16,8 @@ module.exports = function() {
         return response.entity;
       } else {
         return {
-          status: "invalid"
+          status: "invalid",
+          errors: [{error: {message: "YAML is so invalid that lorry exploded"}}]
         };
       }
     });
