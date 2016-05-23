@@ -17,7 +17,7 @@ module.exports = React.createClass ({
     render() {
       return (
         <Slide>
-          <h1>Launch</h1>
+          <h1 className="text-center">Ready for lift off!</h1>
           <button className="primary" onClick={this.validate} disabled>Continue</button><br/>
           <button onClick={this.props.onPrevious}>Previous</button>
         </Slide>
