@@ -27,6 +27,12 @@ Running tests
 No tests at the moment though
 
 
+Configuration
+-------------
+
+Use environment variables to adjust the behavior of this application.
+
+
 ReFlux in a nutshell
 --------------------
 ```

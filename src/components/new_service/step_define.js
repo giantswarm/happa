@@ -36,6 +36,8 @@ module.exports = React.createClass ({
       };
     },
 
+    // TODO: Figure out how to write this in a way where the view does not listen to actions
+    // only the store should be doing that.
     onValidateServiceDefinitionCompleted: function(validationResult) {
       if (validationResult.status === "valid") {
         this.props.onContinue();
@@ -56,7 +58,11 @@ module.exports = React.createClass ({
     validate(event){
       event.preventDefault();
       this.setState({validating: true});
-      actions.validateServiceDefinition(this.state.newService.rawComposeYaml);
+      actions.validateServiceDefinition(this.state.newService.fields.rawComposeYaml.value);
+    },
+
+    hasErrors(fieldName) {
+      return this.state.newService.fields[fieldName].validationErrors && this.state.newService.fields[fieldName].validationErrors.length > 0;
     },
 
     // TODO: Extract into components (like the text field with error states and validation)
@@ -66,21 +72,31 @@ module.exports = React.createClass ({
         <Slide>
           <h1>Define your service</h1>
           <form onSubmit={this.validate}>
-            <div className="textfield">
+            <div className={"textfield " + (this.hasErrors('serviceName') ? "hasrrors" : null)}>
               <label>Service Name</label>
-              <input value={this.state.newService.serviceName} type="text" onChange={this.updateServiceName}/>
-              {
-                this.state.error ? <span className="message">Service Name must be made up of lower case letters and hyphens</span> : null
-              }
+              <input defaultValue={this.state.newService.fields.serviceName.value} type="text" onChange={this.updateServiceName} />
+              <div className="errorContainer">
+                {
+                  this.hasErrors('serviceName') ? <span className="message">{this.state.newService.fields.serviceName.validationErrors}</span> : null
+                }
+              </div>
             </div>
 
             <label>Paste Docker Compose YAML</label>
-            <Codemirror ref="codeMirror" value={this.state.newService.rawComposeYaml} onChange={this.updateCode} options={{
-              lineNumbers: true,
-              mode: "yaml",
-              theme: "solarized dark",
-              gutters: ["CodeMirror-linenumbers", "breakpoints"]
-            }} />
+
+            <div className="textarea">
+              <Codemirror ref="codeMirror" value={this.state.newService.fields.rawComposeYaml.value} onChange={this.updateCode} options={{
+                lineNumbers: true,
+                mode: "yaml",
+                theme: "solarized dark",
+                gutters: ["CodeMirror-linenumbers", "breakpoints"]
+              }} />
+              <div className="errorContainer">
+                {
+                  this.hasErrors('rawComposeYaml') ? <span className="message">{this.state.newService.fields.rawComposeYaml.validationErrors}</span> : null
+                }
+              </div>
+            </div>
           </form>
 
           <div className="progress_button--container">

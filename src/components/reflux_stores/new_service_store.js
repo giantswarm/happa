@@ -3,11 +3,25 @@ var Reflux = require('reflux');
 var actions = require("../reflux_actions/new_service_actions");
 var Lorry = require('../lorry');
 var _ = require('underscore');
+var validate = require('validate.js');
 
 var newService = {
-  serviceName: 'my-first-service',
-  rawComposeYaml: 'helloworld:\n  image: index.docker.io/giantswarm/helloworld\n  ports:\n    - "8080:8080"',
+  fields: {
+    serviceName: {value: 'my-first-service', validationErrors: []},
+    rawComposeYaml: {
+      value: 'helloworld:\n  image: index.docker.io/giantswarm/helloworld\n  ports:\n    - "8080:8080"',
+      validationErrors: []
+    }
+  },
   parsedCompose: "NOTPARSEDYET",
+};
+
+var serviceNameConstraint = {
+  presence: true,
+  format: {
+    pattern: /^[a-zA-Z0-9_\-]*$/,
+    message: "must only contain letters, numbers, underscores, and hyphens"
+  }
 };
 
 module.exports = Reflux.createStore({
@@ -18,12 +32,13 @@ module.exports = Reflux.createStore({
   },
 
   onServiceNameEdited: function(name) {
-    newService.serviceName = name;
+    var validationErrors = validate.single(name, serviceNameConstraint);
+    newService.fields.serviceName = {value: name, validationErrors: validationErrors};
     this.trigger(newService);
   },
 
   onServiceDefinitionEdited: function(definition) {
-    newService.rawComposeYaml = definition;
+    newService.fields.rawComposeYaml.value = definition;
     this.trigger(newService);
   },
 
@@ -37,6 +52,12 @@ module.exports = Reflux.createStore({
   },
 
   onValidateServiceDefinitionCompleted: function(validationResult) {
+    if (validationResult.errors) {
+      newService.fields.rawComposeYaml.validationErrors = validationResult.errors.map(
+        function(errorObject) {return errorObject.error.message;}
+      );
+    }
+
     newService.parsedCompose = validationResult.document;
 
     newService.images = _.map(newService.parsedCompose, function(val, key) {
