@@ -72,7 +72,7 @@ module.exports = React.createClass ({
         <Slide>
           <h1>Define your service</h1>
           <form onSubmit={this.validate}>
-            <div className={"textfield " + (this.hasErrors('serviceName') ? "hasrrors" : null)}>
+            <div className={"textfield " + (this.hasErrors('serviceName') ? "has_errors" : null)}>
               <label>Service Name</label>
               <input defaultValue={this.state.newService.fields.serviceName.value} type="text" onChange={this.updateServiceName} />
               <div className="errorContainer">
