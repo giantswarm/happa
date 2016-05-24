@@ -134,7 +134,7 @@ module.exports = React.createClass ({
 
   render() {
     return(
-      <div className="codeblock--container">
+      <div className={this.lines().length === 1 ? "codeblock--container oneline" : "codeblock--container"}>
         <pre>
           { this.lines() }
 

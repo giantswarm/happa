@@ -20,6 +20,13 @@
     transition: background-color 0.02s linear;
   }
 
+  &.oneline {
+    .codeblock--buttons {
+      border-bottom-left-radius: 0px;
+      border-bottom-right-radius: 10px;
+    }
+  }
+
   .codeblock--buttons {
     position: absolute;
     height: 40px;
