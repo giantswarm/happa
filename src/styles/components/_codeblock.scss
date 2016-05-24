@@ -33,12 +33,13 @@
     border-top-right-radius: 10px;
     border-bottom-left-radius: 10px;
     transition: background-color 0.02s linear;
+    z-index: 10;
 
     a {
       text-decoration: none;
       display: block;
       height: 100%;
-      padding: 7px 10px;
+      padding: 7px 14px;
     }
 
     &:active {
@@ -69,6 +70,15 @@
     opacity: 1;
   }
 
+  .codeblock--checkmark {
+    top: 10px;
+    right: -30px;
+    position: absolute;
+    z-index: 0;
+    color: #189de9;
+    display: none;
+  }
+
   &.oneline {
     .codeblock--buttons {
       border-bottom-left-radius: 0px;
@@ -85,7 +95,7 @@
 
     .codeblock--line.codeblock--prompt {
       .codeblock--prompt-indicator {
-        color: #179ce7;
+        color: #556d78;
       }
 
       span {
@@ -93,4 +103,38 @@
       }
     }
   }
+
+  &.clicked {
+    .codeblock--line.codeblock--prompt {
+      span {
+        color: #cdd3d6;
+      }
+    }
+  }
+}
+
+.checkmark-enter {
+  display: block !important;
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(.87,-.41,.19,1.44);
+  transform: scale(0.1,0.1) rotate(-90deg);
+}
+
+.checkmark-enter-active {
+  opacity: 1;
+  right: -30px !important;
+  transform: scale(1.2,1.2) rotate(0deg);
+}
+
+.checkmark-leave {
+  display: block !important;
+  opacity: 1;
+  transition: all 0.5s cubic-bezier(.87,-.41,.19,1.44);
+  transform: scale(1.2,1.2) rotate(0deg);
+}
+
+.checkmark-leave-active {
+  opacity: 0;
+  transform: scale(0.1,0.1) rotate(-90deg);
+  right: 0px !important;
 }

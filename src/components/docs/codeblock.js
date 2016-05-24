@@ -4,6 +4,7 @@ var copy = require('copy-to-clipboard');
 var $ = require('jquery');
 var _ = require('underscore');
 var Line = require("./line");
+var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 var Prompt = React.createClass ({
   render: function() {
@@ -75,9 +76,14 @@ var CodeBlock = React.createClass ({
                onClick={this.copyCodeToClipboard}
                onMouseDown={function() {this.setState({clicked: true});}.bind(this)}
                onMouseUp={function() {this.setState({clicked: false});}.bind(this)}>
-            ICON
+            <i className="fa fa-clipboard" aria-hidden="true"></i>
             </a>
           </div>
+          <ReactCSSTransitionGroup transitionName={`checkmark`} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
+            {
+              this.state.clicked ? <i className="fa fa-check codeblock--checkmark" aria-hidden="true"></i> : null
+            }
+          </ReactCSSTransitionGroup>
         </pre>
       </div>
     );
