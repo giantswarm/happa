@@ -17,7 +17,7 @@ var appContainer = document.getElementById('app');
 
 render((
   <Router history={browserHistory}>
-    <Route path = "/" component={docs}>
-    </Route>
+    <Route path = "/" component={docs} />
+    <Route path = "/services/new" component={newService} />
   </Router>
 ), appContainer);

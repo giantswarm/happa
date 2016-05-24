@@ -20,8 +20,12 @@
     transition: background-color 0.02s linear;
 
     span {
-      white-space: pre-wrap
+      // white-space: pre;
     }
+  }
+
+  .content {
+    overflow: scroll;
   }
 
 
@@ -48,6 +52,7 @@
   }
 
   .codeblock--line {
+
     span {
       font-family: Inconsolata;
       transition: color 0.02s linear;
@@ -112,16 +117,20 @@
   }
 }
 
+.codeblock--checkmark {
+  opacity: 1;
+  transform: scale(0, 0);
+}
+
 .checkmark-enter {
-  opacity: 0;
-  transition: all 0.5s cubic-bezier(.87,-.41,.19,1.44);
-  transform: scale(0.1,0.1) rotate(-90deg);
+  opacity: 1;
+  transform: scale(0.2, 0.2);
+  transition: all 0.2s cubic-bezier(0,-.41,.19,1.44);
 }
 
 .checkmark-enter-active {
   opacity: 1;
-  right: -30px !important;
-  transform: scale(1.2,1.2) rotate(0deg);
+  transform: scale(1.5,1.5);
 }
 
 .checkmark-leave {
@@ -132,6 +141,12 @@
 
 .checkmark-leave-active {
   opacity: 0;
-  transform: scale(0.1,0.1) rotate(-90deg);
+  transform: scale(0.1,0.1) rotate(270deg);
   right: 0px !important;
+}
+
+.scrollarea-content {
+  .content {
+    width: 1000px
+  }
 }

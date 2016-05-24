@@ -70,7 +70,9 @@ var CodeBlock = React.createClass ({
     return(
       <div className={this.classNames()}>
         <pre>
-          { this.props.children }
+          <div ref="pre" className="content">
+            { this.props.children }
+          </div>
           <div className="codeblock--buttons">
             <a href="#"
                onMouseOver={function() {this.setState({hovering: true});}.bind(this)}
