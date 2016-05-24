@@ -13,7 +13,7 @@ var stripIndent = function(str) {
   const re = new RegExp(`^[ \\t]{${indent}}`, 'gm');
 
   return indent > 0 ? str.replace(re, '') : str;
-}
+};
 
 module.exports = React.createClass ({
   nonIndentedLines: function() {

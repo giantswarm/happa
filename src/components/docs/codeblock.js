@@ -3,18 +3,17 @@ var React = require('react');
 var copy = require('copy-to-clipboard');
 var $ = require('jquery');
 var _ = require('underscore');
-
 var Line = require("./line");
 
 var Prompt = React.createClass ({
   render: function() {
-    return <Line prompt={true} text={this.props.children}/>
+    return <Line prompt={true} text={this.props.children}/>;
   }
 });
 
 var Output = React.createClass ({
   render: function() {
-    return <Line prompt={false} text={this.props.children}/>
+    return <Line prompt={false} text={this.props.children}/>;
   }
 });
 
@@ -27,11 +26,10 @@ var CodeBlock = React.createClass ({
 
   promptLinesAsString: function() {
     var string = React.Children.toArray(this.props.children)
-                  .filter(function(x){ return (x.type == Prompt) })
-                  .map(function(x){ return x.props.children})
+                  .filter(function(x){ return (x.type === Prompt); })
+                  .map(function(x){ return x.props.children; })
                   .join("\n");
 
-    console.log(string)
     return string;
   },
 
@@ -72,11 +70,11 @@ var CodeBlock = React.createClass ({
           { this.props.children }
           <div className="codeblock--buttons">
             <a href="#"
-               onMouseOver={function() {this.setState({hovering: true})}.bind(this)}
-               onMouseOut={function() {this.setState({hovering: false})}.bind(this)}
+               onMouseOver={function() {this.setState({hovering: true});}.bind(this)}
+               onMouseOut={function() {this.setState({hovering: false});}.bind(this)}
                onClick={this.copyCodeToClipboard}
-               onMouseDown={function() {this.setState({clicked: true})}.bind(this)}
-               onMouseUp={function() {this.setState({clicked: false})}.bind(this)}>
+               onMouseDown={function() {this.setState({clicked: true});}.bind(this)}
+               onMouseUp={function() {this.setState({clicked: false});}.bind(this)}>
             ICON
             </a>
           </div>
@@ -90,4 +88,4 @@ module.exports = {
   CodeBlock: CodeBlock,
   Prompt: Prompt,
   Output: Output
-}
+};

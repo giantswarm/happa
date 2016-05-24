@@ -36,7 +36,8 @@ module.exports = React.createClass ({
               </Prompt>
 
               <Output>
-                {`output`}
+                {`output output output output output output output output output output output output output output output
+                  newline`}
               </Output>
             </CodeBlock>
 
