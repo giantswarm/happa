@@ -76,7 +76,6 @@
     position: absolute;
     z-index: 0;
     color: #189de9;
-    display: none;
   }
 
   &.oneline {
@@ -114,7 +113,6 @@
 }
 
 .checkmark-enter {
-  display: block !important;
   opacity: 0;
   transition: all 0.5s cubic-bezier(.87,-.41,.19,1.44);
   transform: scale(0.1,0.1) rotate(-90deg);
@@ -127,7 +125,6 @@
 }
 
 .checkmark-leave {
-  display: block !important;
   opacity: 1;
   transition: all 0.5s cubic-bezier(.87,-.41,.19,1.44);
   transform: scale(1.2,1.2) rotate(0deg);

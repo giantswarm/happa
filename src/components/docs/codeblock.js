@@ -44,6 +44,8 @@ var CodeBlock = React.createClass ({
     setTimeout(function() {
       copyConfirmation.removeClass('visible');
     }, 500);
+
+    this.setState({clicked: false});
   },
 
   classNames: function() {
@@ -74,8 +76,8 @@ var CodeBlock = React.createClass ({
                onMouseOver={function() {this.setState({hovering: true});}.bind(this)}
                onMouseOut={function() {this.setState({hovering: false});}.bind(this)}
                onClick={this.copyCodeToClipboard}
-               onMouseDown={function() {this.setState({clicked: true});}.bind(this)}
-               onMouseUp={function() {this.setState({clicked: false});}.bind(this)}>
+
+               onMouseUp={function() {this.setState({clicked: true});}.bind(this)}>
             <i className="fa fa-clipboard" aria-hidden="true"></i>
             </a>
           </div>
