@@ -4,96 +4,35 @@ var copy = require('copy-to-clipboard');
 var $ = require('jquery');
 var _ = require('underscore');
 
-var Line = React.createClass ({
-  className: function() {
-    var classes = [];
+var Line = require("./line");
 
-    classes.push("codeblock--line");
-    if (this.props.hovering) {classes.push("hovering");}
-    if (this.props.line.prompt) {classes.push("isprompt");}
-    if (this.props.clicked) {classes.push("clicked");}
-
-    return classes;
-  },
-
+var Prompt = React.createClass ({
   render: function() {
-    return (
-      <div className={this.className().join(" ")}>
-        <span className="codeblock--prompt-indicator">{this.props.line.prompt ? "$ " : null}</span>
-        {this.props.line.text}
-      </div>
-    );
+    return <Line prompt={true} text={this.props.children}/>
   }
 });
 
-module.exports = React.createClass ({
+var Output = React.createClass ({
+  render: function() {
+    return <Line prompt={false} text={this.props.children}/>
+  }
+});
+
+var CodeBlock = React.createClass ({
   getInitialState: function() {
     return {
       hovering: false
     };
   },
 
-  lines: function() {
-    return React.Children.map(this.props.children, child => {
-      if (typeof child === 'string') {
-        var lines = child.split("\n");
-        lines = lines.map(function(x) { return this.stripIndent(x); }.bind(this));
-        lines = lines.map(function(x) { return {text: this.textWithoutPrompt(x), prompt: this.isPrompt(x)}; }.bind(this));
-        lines = lines.map(function(x) { return <Line line={x} clicked={this.state.clicked} hovering={this.state.hovering}/>; }.bind(this));
-        return lines;
-      } else {
-        // Someone nested a react component in here, so just return it?
-        return child;
-      }
-    });
-  },
-
-  isPrompt: function(line) {
-    var startsWithDollar = /^\$ (.*)$/;
-    var match = line.match(startsWithDollar);
-
-    if (match) {
-      return true;
-    } else {
-      return false;
-    }
-  },
-
-  textWithoutPrompt: function(line) {
-    var startsWithDollar = /^\$ (.*)$/;
-    var match = line.match(startsWithDollar);
-
-    if (match) {
-      return match[1];
-    } else {
-      return line;
-    }
-  },
-
-  stripIndent: function(str) {
-    const match = str.match(/^[ \t]*(?=\S)/gm);
-
-    if (!match) {
-      return str;
-    }
-
-    // TODO: use spread operator when targeting Node.js 6
-    const indent = Math.min.apply(Math, match.map(x => x.length)); // eslint-disable-line
-    const re = new RegExp(`^[ \\t]{${indent}}`, 'gm');
-
-    return indent > 0 ? str.replace(re, '') : str;
-  },
-
   promptLinesAsString: function() {
-    var justThePromptLines = this.lines().filter(function(x) {
-      return x.props.line.prompt;
-    });
+    var string = React.Children.toArray(this.props.children)
+                  .filter(function(x){ return (x.type == Prompt) })
+                  .map(function(x){ return x.props.children})
+                  .join("\n");
 
-    justThePromptLines = justThePromptLines.map(function(x) {
-      return x.props.line.text;
-    });
-
-    return justThePromptLines.join("\n");
+    console.log(string)
+    return string;
   },
 
   copyCodeToClipboard: function(e) {
@@ -108,43 +47,36 @@ module.exports = React.createClass ({
     }, 500);
   },
 
-  hovering: function() {
-    this.setState({
-      hovering: true
-    });
-  },
+  classNames: function() {
+    var classNames = [];
 
-  notHovering: function() {
-    this.setState({
-      hovering: false
-    });
-  },
+    // this.props.children is either an array or in the case of 1 child
+    // just that child object
+    // So this makes sure I always have an array, and flattens it.
+    var childrenArray = [this.props.children].reduce(function(a, b) {
+      return a.concat(b);
+    }, []);
 
-  clicked: function() {
-    this.setState({
-      clicked: true
-    });
-  },
+    classNames.push("codeblock--container");
+    if (this.state.hovering) {classNames.push("hovering");}
+    if (this.state.clicked) {classNames.push("clicked");}
+    if (childrenArray.length === 1) {classNames.push("oneline");}
 
-  released: function() {
-    this.setState({
-      clicked: false
-    });
+    return classNames.join(" ");
   },
 
   render() {
     return(
-      <div className={this.lines().length === 1 ? "codeblock--container oneline" : "codeblock--container"}>
+      <div className={this.classNames()}>
         <pre>
-          { this.lines() }
-
+          { this.props.children }
           <div className="codeblock--buttons">
             <a href="#"
-               onMouseOver={this.hovering}
-               onMouseOut={this.notHovering}
+               onMouseOver={function() {this.setState({hovering: true})}.bind(this)}
+               onMouseOut={function() {this.setState({hovering: false})}.bind(this)}
                onClick={this.copyCodeToClipboard}
-               onMouseDown={this.clicked}
-               onMouseUp={this.released}>
+               onMouseDown={function() {this.setState({clicked: true})}.bind(this)}
+               onMouseUp={function() {this.setState({clicked: false})}.bind(this)}>
             ICON
             </a>
           </div>
@@ -153,3 +85,9 @@ module.exports = React.createClass ({
     );
   }
 });
+
+module.exports = {
+  CodeBlock: CodeBlock,
+  Prompt: Prompt,
+  Output: Output
+}

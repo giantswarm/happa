@@ -20,12 +20,6 @@
     transition: background-color 0.02s linear;
   }
 
-  &.oneline {
-    .codeblock--buttons {
-      border-bottom-left-radius: 0px;
-      border-bottom-right-radius: 10px;
-    }
-  }
 
   .codeblock--buttons {
     position: absolute;
@@ -49,41 +43,14 @@
   }
 
   .codeblock--line {
-    &.hovering {
-      span {
-        color: #666b6f;
-      }
-    }
-
     span {
       font-family: Inconsolata;
       transition: color 0.02s linear;
+      color: #d6d7d1;
     }
   }
 
-  .codeblock--line.isprompt {
-    &.hovering {
-      .codeblock--prompt-indicator {
-        color: #556d78;
-      }
-
-      span {
-        color: #fff;
-      }
-    }
-
-    &.hovering.clicked {
-      .codeblock--prompt-indicator {
-        color: #556d78;
-      }
-
-      span {
-        color: #ddd;
-      }
-    }
-  }
-
-  .codeblock--prompt-indicator {
+  .codeblock--line .codeblock--prompt-indicator {
     color: #189de9;
   }
 
@@ -96,5 +63,30 @@
 
   .codeblock--copy-confirmation.visible {
     opacity: 1;
+  }
+
+  &.oneline {
+    .codeblock--buttons {
+      border-bottom-left-radius: 0px;
+      border-bottom-right-radius: 10px;
+    }
+  }
+
+  &.hovering {
+    .codeblock--line {
+      span {
+        color: #695e55;
+      }
+    }
+
+    .codeblock--line.codeblock--prompt {
+      .codeblock--prompt-indicator {
+        color: #179ce7;
+      }
+
+      span {
+        color: #fff;
+      }
+    }
   }
 }

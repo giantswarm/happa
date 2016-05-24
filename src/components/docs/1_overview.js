@@ -2,7 +2,7 @@
 var React = require('react');
 var Slide = require('../component_slider/slide');
 var Markdown = require('./markdown');
-var CodeBlock = require('./codeblock');
+var {CodeBlock, Prompt, Output} = require('./codeblock');
 
 module.exports = React.createClass ({
     render() {
@@ -19,22 +19,31 @@ module.exports = React.createClass ({
             2. Configure kubectl for your cluster
             3. Running a simple example
             `}
+
             <CodeBlock>
-            {`$ kubectl version
-              $ another command
-              output oh my gosh
-              $ some other command
-              more output`}
+              <Prompt>
+                {`kubectl version \\
+                  long \\
+                  command`}
+              </Prompt>
+
+              <Output>
+                {`output`}
+              </Output>
+
+              <Prompt>
+                {`some other command`}
+              </Prompt>
+
+              <Output>
+                {`output`}
+              </Output>
             </CodeBlock>
 
             <CodeBlock>
-            {`$ kubectl version`}
-            </CodeBlock>
-
-            <CodeBlock>
-            {`$ this -is --some="console command"
-            This is output from the command above,
-            broken into two output lines.`}
+              <Prompt>
+                {'echo "Hello world"'}
+              </Prompt>
             </CodeBlock>
           </Markdown>
           <br/>
