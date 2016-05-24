@@ -18,10 +18,6 @@
     border-radius: 10px;
     position: relative;
     transition: background-color 0.02s linear;
-
-    span {
-      // white-space: pre;
-    }
   }
 
   .content {
@@ -52,13 +48,9 @@
   }
 
   .codeblock--line {
-
-    span {
-      font-family: "Inconsolata";
-      font-weight: 400;
-      transition: color 0.02s linear;
-      color: #d6d7d1;
-    }
+    font-family: "Inconsolata";
+    transition: color 0.02s linear;
+    color: #d6d7d1;
   }
 
   .codeblock--line .codeblock--prompt-indicator {
@@ -93,27 +85,21 @@
 
   &.hovering {
     .codeblock--line {
-      span {
-        color: #695e55;
-      }
+      color: #695e55;
     }
 
     .codeblock--line.codeblock--prompt {
+      color: #fff;
+
       .codeblock--prompt-indicator {
         color: #556d78;
-      }
-
-      span {
-        color: #fff;
       }
     }
   }
 
   &.clicked {
     .codeblock--line.codeblock--prompt {
-      span {
-        color: #cdd3d6;
-      }
+      color: #cdd3d6;
     }
   }
 }
