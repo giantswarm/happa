@@ -48,9 +48,9 @@ var CodeBlock = React.createClass ({
 
   promptLinesAsString: function() {
     var string = React.Children.toArray(this.props.children)
-                  .filter(function(x){ return (x.type === Prompt); })
-                  .map(function(x){ return x.props.children; })
-                  .join("\n");
+                               .filter(function(x){ return (x.type === Prompt); })
+                               .map(function(x){ return x.props.children; })
+                               .join("\n");
 
     return Helpers.dedent(string);
   },
