@@ -1,44 +1,19 @@
 'use strict';
 
-// CodeBlock
-// Use this to show some commands and output to the user.
-// User's can copy the commands to their clipboard easily.
+// FileBlock
 //
-//      <CodeBlock>
-//        <Prompt>
-//          {`kubectl version \\
-//            long \\
-//            command`}
-//        </Prompt>
 //
-//        <Output>
-//          {`output`}
-//        </Output>
-//      </CodeBlock>
 //
-// Output and Prompt can be in any order. The copy to clipboard button will only
-// take the content in the Prompt tags.
-
+//
 
 var React = require('react');
 var copy = require('copy-to-clipboard');
+var $ = require('jquery');
 var _ = require('underscore');
 var Line = require("./line");
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
-var Prompt = React.createClass ({
-  render: function() {
-    return <Line prompt={true} text={this.props.children}/>;
-  }
-});
-
-var Output = React.createClass ({
-  render: function() {
-    return <Line prompt={false} text={this.props.children}/>;
-  }
-});
-
-var CodeBlock = React.createClass ({
+module.exports = React.createClass ({
   getInitialState: function() {
     return {
       hovering: false
@@ -59,6 +34,12 @@ var CodeBlock = React.createClass ({
 
     copy(this.promptLinesAsString());
 
+    var copyConfirmation = $(this.refs.confirmCopy);
+    copyConfirmation.addClass('visible');
+    setTimeout(function() {
+      copyConfirmation.removeClass('visible');
+    }, 500);
+
     this.setState({clicked: false});
   },
 
@@ -68,7 +49,6 @@ var CodeBlock = React.createClass ({
     // this.props.children is either an array or in the case of 1 child
     // just that child object
     // So this makes sure I always have an array, and flattens it.
-    // TODO: Use React.Children. It exists to do this kind of stuff for me.
     var childrenArray = [this.props.children].reduce(function(a, b) {
       return a.concat(b);
     }, []);
@@ -93,9 +73,9 @@ var CodeBlock = React.createClass ({
                onMouseOver={function() {this.setState({hovering: true});}.bind(this)}
                onMouseOut={function() {this.setState({hovering: false});}.bind(this)}
                onClick={this.copyCodeToClipboard}
-               onMouseUp={function() {this.setState({clicked: true});}.bind(this)}
-            >
-              <i className="fa fa-clipboard" aria-hidden="true"></i>
+
+               onMouseUp={function() {this.setState({clicked: true});}.bind(this)}>
+            <i className="fa fa-clipboard" aria-hidden="true"></i>
             </a>
           </div>
           <ReactCSSTransitionGroup transitionName={`checkmark`} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
@@ -108,9 +88,3 @@ var CodeBlock = React.createClass ({
     );
   }
 });
-
-module.exports = {
-  CodeBlock: CodeBlock,
-  Prompt: Prompt,
-  Output: Output
-};

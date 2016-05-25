@@ -1,4 +1,12 @@
 'use strict';
+
+// Line
+// Used in CodeBlock and FileBlock
+// <Line prompt={true} text="Some text" />;
+//
+// prompt: Display this line as a prompt or not (adds the dollar sign before the text)
+// text: The text that this line should display
+
 var React = require('react');
 
 var stripIndent = function(str) {
