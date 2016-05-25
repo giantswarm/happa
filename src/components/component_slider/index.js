@@ -19,6 +19,7 @@ var PropTypes = React.PropTypes;
 module.exports = class ComponentSlider extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       currentSlide: this.props.currentSlide || 0,
       currentSlideAsArray: [this.props.slides[this.props.currentSlide || 0]],  // We store the current slide in an array

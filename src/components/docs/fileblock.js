@@ -16,13 +16,14 @@
 // </FileBlock>
 //
 
-var React = require('react');
-var copy = require('copy-to-clipboard');
-var $ = require('jquery');
-var _ = require('underscore');
-var Line = require("./line");
+var Modernizr               = window.Modernizr;
+var React                   = require('react');
+var copy                    = require('copy-to-clipboard');
+var $                       = require('jquery');
+var _                       = require('underscore');
+var Line                    = require("./line");
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var Helpers = require('../helpers');
+var Helpers                 = require('../helpers');
 
 module.exports = React.createClass ({
   getInitialState: function() {
