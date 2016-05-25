@@ -1,5 +1,6 @@
 'use strict';
 var React = require('react');
+var Slide = require('../component_slider/slide');
 
 module.exports = React.createClass ({
     getInitialState() {
@@ -8,8 +9,6 @@ module.exports = React.createClass ({
 
     validate(){
       // Do some validation
-      console.log("validating");
-      console.log("valid");
 
       // Signal continue
       this.props.onContinue();
@@ -17,11 +16,11 @@ module.exports = React.createClass ({
 
     render() {
       return (
-        <div className="multistep--step">
-          <h1>Launch</h1>
+        <Slide>
+          <h1 className="text-center">Ready for lift off!</h1>
           <button className="primary" onClick={this.validate} disabled>Continue</button><br/>
           <button onClick={this.props.onPrevious}>Previous</button>
-        </div>
+        </Slide>
       );
     }
 });

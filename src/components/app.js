@@ -1,6 +1,6 @@
 'use strict';
 
-var createServiceWizard = require('./create_service_wizard/index');
+var newService = require('./new_service/index');
 var React               = require('react');
 var ReactRouter         = require('react-router');
 var render              = require('react-dom').render;
@@ -16,7 +16,7 @@ var appContainer = document.getElementById('app');
 
 render((
   <Router history={browserHistory}>
-    <Route path = "/" component={createServiceWizard}>
+    <Route path = "/" component={newService}>
     </Route>
   </Router>
 ), appContainer);

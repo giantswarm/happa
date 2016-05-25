@@ -3,6 +3,13 @@
   100% {-webkit-transform: rotate(360deg);}
 }
 
+.loader {
+  animation-name: spin;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
 .progress_button--container {
   position: relative;
 
@@ -10,10 +17,6 @@
     position: relative;
     vertical-align: middle;
     width: 30px;
-    animation-name: spin;
-    animation-duration: 1000ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
     margin: 0px;
   }
 

@@ -9,19 +9,30 @@
 }
 
 
-.textfield {
+.textfield, .textarea {
   position: relative;
   margin-bottom: 40px;
+
+  &.has_errors input {
+    background-color: #4a606e;
+  }
+
+  input {
+    transition: all 0.1s linear;
+  }
 
   .message {
     position: relative;
     display: block;
     font-size: 12px;
-    color: #933;
+    color: #fcc;
     animation-name: appear;
     animation-duration: 2000ms;
     animation-iteration-count: 1;
     animation-timing-function: ease-out;
+  }
 
+  .errorContainer {
+    height: 20px;
   }
 }
