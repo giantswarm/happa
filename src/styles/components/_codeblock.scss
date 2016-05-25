@@ -40,6 +40,11 @@
       display: block;
       height: 100%;
       padding: 7px 14px;
+      color: #aaa;
+
+      &:hover {
+        color: #fff;
+      }
     }
 
     &:active {
