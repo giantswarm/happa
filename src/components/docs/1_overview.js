@@ -3,8 +3,20 @@ var React = require('react');
 var Slide = require('../component_slider/slide');
 var Markdown = require('./markdown');
 var {CodeBlock, Prompt, Output} = require('./codeblock');
+var FileBlock = require('./fileblock');
 
 module.exports = React.createClass ({
+    testFileContent() {
+      return (`
+        The contents of the file
+
+        Indentation
+        -----------
+          Indentation should be preserved based on where the first line
+          started in the code.
+      `);
+    },
+
     render() {
       return (
         <Slide>
@@ -22,9 +34,12 @@ module.exports = React.createClass ({
 
             <CodeBlock>
               <Prompt>
-                {`kubectl version \\
-                  long \\
-                  command`}
+                {`
+                  kubectl --param \\
+                            --param=value \\
+                            --param=value
+
+                `}
               </Prompt>
 
               <Output>
@@ -36,16 +51,31 @@ module.exports = React.createClass ({
               </Prompt>
 
               <Output>
-                {`output output output output output output output output output output output output output output output
-                  newline`}
+                {`
+                  output output output output output output output output output output output output output output output
+                    indented text after newline
+                `}
+              </Output>
+
+              <Prompt>
+                {`docker ps`}
+              </Prompt>
+
+              <Output>
+                {`
+                  CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES
+                  938601af2dec        happa               "npm start"         About an hour ago   Up About an hour    0.0.0.0:8000->8000/tcp   admiring_wozniak
+                `}
               </Output>
             </CodeBlock>
 
             <CodeBlock>
               <Prompt>
-                {'echo "Hello world"'}
+                {`echo "Hello world"`}
               </Prompt>
             </CodeBlock>
+
+            <FileBlock fileName="kubeconfig">{this.testFileContent()}</FileBlock>
           </Markdown>
           <br/>
           <br/>

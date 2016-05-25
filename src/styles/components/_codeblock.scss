@@ -1,4 +1,5 @@
 .codeblock--container {
+  font-family: "Inconsolata";
   margin-bottom: 25px;
   margin-top: 25px;
 
@@ -24,6 +25,12 @@
     overflow: scroll;
   }
 
+  .codeblock--filename {
+    font-family: "Inconsolata";
+    color: #189de9;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
 
   .codeblock--buttons {
     position: absolute;
@@ -37,14 +44,25 @@
 
     a {
       text-decoration: none;
-      display: block;
+      display: inline-block;
       height: 100%;
-      padding: 7px 14px;
+      padding: 0px 14px;
       color: #aaa;
+      line-height: 40px;
 
       &:hover {
         color: #fff;
       }
+    }
+
+    a:first-child {
+      padding-left: 18px;
+      padding-right: 5px;
+    }
+
+    a:last-child {
+      padding-left: 14px;
+      padding-right: 14px;
     }
 
     &:active {
@@ -91,6 +109,18 @@
   &.hovering {
     .codeblock--line {
       color: #695e55;
+    }
+
+    .codeblock--filecontents {
+      .codeblock--line {
+        color: #fff
+      }
+    }
+
+    .codeblock--filename {
+      font-family: "Inconsolata";
+      color: #189de9;
+      font-weight: 700;
     }
 
     .codeblock--line.codeblock--prompt {

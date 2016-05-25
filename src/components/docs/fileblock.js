@@ -1,9 +1,19 @@
 'use strict';
 
 // FileBlock
+// Use this to show the contents of a file to a user.
+// The user can then easily download the file or copy it to clipboard
 //
+// <FileBlock fileName={"my-filename.txt"}>
+// {`
+//   The contents of the file
 //
-//
+//   Indentation
+//   -----------
+//     Indentation should be preserved based on where the first line
+//     started.
+// `}
+// </FileBlock>
 //
 
 var React = require('react');
@@ -12,6 +22,7 @@ var $ = require('jquery');
 var _ = require('underscore');
 var Line = require("./line");
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+var Helpers = require('../helpers');
 
 module.exports = React.createClass ({
   getInitialState: function() {
@@ -20,19 +31,10 @@ module.exports = React.createClass ({
     };
   },
 
-  promptLinesAsString: function() {
-    var string = React.Children.toArray(this.props.children)
-                  .filter(function(x){ return (x.type === Prompt); })
-                  .map(function(x){ return x.props.children; })
-                  .join("\n");
-
-    return string;
-  },
-
   copyCodeToClipboard: function(e) {
     e.preventDefault();
 
-    copy(this.promptLinesAsString());
+    copy(Helpers.dedent(this.props.children));
 
     var copyConfirmation = $(this.refs.confirmCopy);
     copyConfirmation.addClass('visible');
@@ -56,9 +58,26 @@ module.exports = React.createClass ({
     classNames.push("codeblock--container");
     if (this.state.hovering) {classNames.push("hovering");}
     if (this.state.clicked) {classNames.push("clicked");}
-    if (childrenArray.length === 1) {classNames.push("oneline");}
 
     return classNames.join(" ");
+  },
+
+  saveFile: function(e) {
+    // e.preventDefault();
+    // Helpers.saveAs(blob(), this.props.fileName);
+  },
+
+  blob: function() {
+    var blob = new Blob([Helpers.dedent(this.props.children)], {type: "application/plain;charset=utf-8"});
+    return blob;
+  },
+
+  downloadAsFileLink: function() {
+    return(
+      <a href={window.URL.createObjectURL(this.blob())} download={this.props.fileName}>
+        <i className="fa fa-download" aria-hidden="true"></i>
+      </a>
+    );
   },
 
   render() {
@@ -66,16 +85,21 @@ module.exports = React.createClass ({
       <div className={this.classNames()}>
         <pre>
           <div ref="pre" className="content">
-            { this.props.children }
+            <div className="codeblock--filename">
+              { this.props.fileName }
+            </div>
+            <div className="codeblock--filecontents">
+              <Line text={ Helpers.dedent(this.props.children) } />
+            </div>
           </div>
-          <div className="codeblock--buttons">
-            <a href="#"
+          <div className="codeblock--buttons"
                onMouseOver={function() {this.setState({hovering: true});}.bind(this)}
-               onMouseOut={function() {this.setState({hovering: false});}.bind(this)}
-               onClick={this.copyCodeToClipboard}
-
-               onMouseUp={function() {this.setState({clicked: true});}.bind(this)}>
-            <i className="fa fa-clipboard" aria-hidden="true"></i>
+               onMouseOut={function() {this.setState({hovering: false});}.bind(this)}>
+            {
+              Modernizr.adownload ? this.downloadAsFileLink() : null
+            }
+            <a href="#" onClick={this.copyCodeToClipboard} onMouseUp={function() {this.setState({clicked: true});}.bind(this)}>
+              <i className="fa fa-clipboard" aria-hidden="true"></i>
             </a>
           </div>
           <ReactCSSTransitionGroup transitionName={`checkmark`} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>

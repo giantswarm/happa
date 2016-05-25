@@ -25,16 +25,17 @@ var copy = require('copy-to-clipboard');
 var _ = require('underscore');
 var Line = require("./line");
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+var Helpers = require('../helpers');
 
 var Prompt = React.createClass ({
   render: function() {
-    return <Line prompt={true} text={this.props.children}/>;
+    return <Line prompt={true} text={Helpers.dedent(this.props.children)}/>;
   }
 });
 
 var Output = React.createClass ({
   render: function() {
-    return <Line prompt={false} text={this.props.children}/>;
+    return <Line prompt={false} text={Helpers.dedent(this.props.children)}/>;
   }
 });
 
@@ -51,7 +52,7 @@ var CodeBlock = React.createClass ({
                   .map(function(x){ return x.props.children; })
                   .join("\n");
 
-    return string;
+    return Helpers.dedent(string);
   },
 
   copyCodeToClipboard: function(e) {
