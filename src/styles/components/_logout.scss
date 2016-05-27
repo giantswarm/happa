@@ -1,12 +1,15 @@
 .logout--container {
   margin: auto;
   width: 200px;
-  margin-top: 25%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-left: -100px;
+  margin-top: -12.5px;
   text-align: center;
 
   img {
     vertical-align: middle;
-    margin-left: 10px;
     width: 25px;
   }
 }

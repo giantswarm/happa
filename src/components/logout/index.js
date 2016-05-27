@@ -30,7 +30,6 @@ module.exports = React.createClass({
           <div className="logout--mask"></div>
         </ReactCSSTransitionGroup>
         <div className="logout--container">
-          <span>Loging out</span>
           <img className="loader" src="/images/loader_oval_light.svg" />
         </div>
       </div>

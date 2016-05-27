@@ -22,7 +22,7 @@ module.exports = React.createClass({
     // if (nextPath) {
       // this.context.router.replaceWith(nextPath);
     // } else {
-    this.context.router.push('/services/new');
+    this.context.router.push('/');
     // }
   },
 
@@ -47,7 +47,7 @@ module.exports = React.createClass({
 
         <ReactCSSTransitionGroup transitionName={`login_form--transition`} transitionAppear={true} transitionAppearTimeout={200} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
           <div className="login_form--container col-4">
-            <h1>Giant Swarm</h1>
+            <h1>Giant Swarm Web UI</h1>
             <form onSubmit={this.logIn}>
               <div className="textfield">
                 <label>Username or Email</label>
