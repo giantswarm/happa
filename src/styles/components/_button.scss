@@ -8,6 +8,7 @@ button {
   outline: none;
   cursor: pointer;
   margin-bottom: 10px;
+  transition: background-color 0.1s cubic-bezier(0,-.41,.19,1.44);
 }
 
 button.primary {
@@ -16,12 +17,10 @@ button.primary {
 
 button.primary:hover {
   background-color: lighten(#2d9a2c, 5%);
-  transition: background-color 0.02s linear;
 }
 
 button:hover {
   background-color: lighten(#52728a, 5%);
-  transition: background-color 0.02s linear;
 }
 
 button.primary:active {
@@ -30,4 +29,8 @@ button.primary:active {
 
 button:active {
   background-color: darken(#52728a, 5%) !important;
+}
+
+button:disabled:hover, button:disabled {
+  background-color: #aaa;
 }
