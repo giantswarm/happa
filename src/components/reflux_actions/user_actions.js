@@ -32,15 +32,15 @@ UserActions.authenticate.listen(function(username, password) {
           };
           action.completed(userData);
         }, (error) => {
-          action.failed();
+          action.failed("Error while fetching user details: Please try again later or contact support.");
         });
 
       } else {
-        action.failed();
+        action.failed("Invalid username or password.");
       }
     });
   } catch(error) {
-    action.failed(error);
+    action.failed(error.message.split(",").join(", "));
   }
 });
 

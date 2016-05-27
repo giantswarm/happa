@@ -15,6 +15,7 @@ module.exports = React.createClass({
 
   componentDidMount: function() {
     this.listenTo(actions.authenticate.completed, this.onAuthenticateCompleted);
+    this.listenTo(actions.authenticate.failed, this.onAuthenticateFailed);
   },
 
   onAuthenticateCompleted: function() {
@@ -26,17 +27,57 @@ module.exports = React.createClass({
     // }
   },
 
+  onAuthenticateFailed: function(message) {
+    this.setState({
+      flash: {
+        category: 'error',
+        content: 'The username/email or password entered don\'t match. Please try again.'
+      }
+    });
+  },
+
+  clearErrorMessage: function() {
+    this.setState({
+      flash: undefined
+    });
+  },
+
   updateUsername(event) {
+    this.clearErrorMessage();
     actions.updateUsername(event.target.value);
   },
 
   updatePassword(event) {
+    this.clearErrorMessage();
     actions.updatePassword(event.target.value);
   },
 
   logIn(e) {
     e.preventDefault();
-    actions.authenticate(this.state.user.username, this.state.user.password);
+    this.clearErrorMessage();
+
+    if ( ! this.state.user.password) {
+      this.setState({
+        flash: {
+          category: 'error',
+          content: 'Please enter your password.'
+        }
+      });
+    }
+
+    if ( ! this.state.user.username) {
+      this.setState({
+        flash: {
+          category: 'error',
+          content: 'Please provide the username or email address that you used for registration.'
+        }
+      });
+    }
+
+
+    if (this.state.user.username && this.state.user.password) {
+      actions.authenticate(this.state.user.username, this.state.user.password);
+    }
   },
 
   //TODO: turn progressbutton into a component
@@ -47,6 +88,12 @@ module.exports = React.createClass({
 
         <ReactCSSTransitionGroup transitionName={`login_form--transition`} transitionAppear={true} transitionAppearTimeout={200} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
           <div className="login_form--container col-4">
+            <div className="login_form--flash-container">
+              <ReactCSSTransitionGroup transitionName={`login_form--transition`} transitionAppear={true} transitionAppearTimeout={200} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
+                { this.state.flash ? <div className={"login_form--flash " + this.state.flash.category}>{this.state.flash.content}</div> : null}
+              </ReactCSSTransitionGroup>
+            </div>
+
             <h1>Giant Swarm Web UI</h1>
             <form onSubmit={this.logIn}>
               <div className="textfield">

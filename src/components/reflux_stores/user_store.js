@@ -52,7 +52,7 @@ module.exports = Reflux.createStore({
     this.trigger(user);
   },
 
-  onAuthenticateFailed: function(userData) {
+  onAuthenticateFailed: function(error) {
     localStorage.removeItem('user.authtoken');
     localStorage.removeItem('user.username');
     localStorage.removeItem('user.email');
