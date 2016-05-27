@@ -19,17 +19,15 @@ button.primary:hover {
   transition: background-color 0.02s linear;
 }
 
-
-
 button:hover {
   background-color: lighten(#52728a, 5%);
   transition: background-color 0.02s linear;
 }
 
-button.primary:focus {
+button.primary:active {
   background-color: darken(#2d9a2c, 5%) !important;
 }
 
-button:focus {
+button:active {
   background-color: darken(#52728a, 5%) !important;
 }
