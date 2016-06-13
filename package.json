@@ -16,7 +16,7 @@
   "dependencies": {
     "babel-plugin-transform-react-jsx": "~6.8.0",
     "codemirror": "~5.14.2",
-    "copy-to-clipboard": "~3.0.0",
+    "copy-to-clipboard": "~3.0.2",
     "jquery": "2.2.4",
     "jshint": "^2.5.0",
     "marked": "~0.3.5",
