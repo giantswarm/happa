@@ -2,9 +2,11 @@
 @import "../../node_modules/codemirror/lib/codemirror.css";
 
 @import "transitions";
-@import "base";
 
+@import "vendor/clearfix";
 @import "vendor/simple-grid";
+
+@import "base";
 
 @import "components/component_slider";
 @import "components/button";
