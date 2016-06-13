@@ -18,7 +18,7 @@ services:
     environment:
       DEBUGGING: 1
       CORS_ORIGIN: http://docker.dev:8000
-      GIANTSWARM_API_URI: http://giantswarmmockapi:8000/v1
+      GIANTSWARM_API_URI: http://giantswarmmockapi:8000
       GIANTSWARM_API_TOKEN: valid_token
       HUBSPOT_API_URI: http://hubspotmock:9999
       HUBSPOT_HUB_ID: "430224"

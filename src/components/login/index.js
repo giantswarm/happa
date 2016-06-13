@@ -31,7 +31,7 @@ module.exports = React.createClass({
     this.setState({
       flash: {
         category: 'error',
-        content: 'The username/email or password entered don\'t match. Please try again.'
+        content: message
       }
     });
   },
@@ -42,9 +42,9 @@ module.exports = React.createClass({
     });
   },
 
-  updateUsername(event) {
+  updateEmail(event) {
     this.clearErrorMessage();
-    actions.updateUsername(event.target.value);
+    actions.updateEmail(event.target.value);
   },
 
   updatePassword(event) {
@@ -65,18 +65,18 @@ module.exports = React.createClass({
       });
     }
 
-    if ( ! this.state.user.username) {
+    if ( ! this.state.user.email) {
       this.setState({
         flash: {
           category: 'error',
-          content: 'Please provide the username or email address that you used for registration.'
+          content: 'Please provide the email address that you used for registration.'
         }
       });
     }
 
 
-    if (this.state.user.username && this.state.user.password) {
-      actions.authenticate(this.state.user.username, this.state.user.password);
+    if (this.state.user.email && this.state.user.password) {
+      actions.authenticate(this.state.user.email, this.state.user.password);
     }
   },
 
@@ -97,12 +97,12 @@ module.exports = React.createClass({
             <h1>Giant Swarm Web UI</h1>
             <form onSubmit={this.logIn}>
               <div className="textfield">
-                <label>Username or Email</label>
-                <input value={this.state.user.username}
+                <label>E-mail</label>
+                <input value={this.state.user.email}
                        type="text"
-                       id="usernameOrEmail"
-                       ref="usernameOrEmail"
-                       onChange={this.updateUsername} autoFocus />
+                       id="email"
+                       ref="email"
+                       onChange={this.updateEmail} autoFocus />
               </div>
 
               <div className="textfield">

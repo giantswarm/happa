@@ -6,3 +6,6 @@ test: docker-build
 
 docker-build:
 	docker build -t happa .
+
+clean-build:
+	docker build -t happa --no-cache .

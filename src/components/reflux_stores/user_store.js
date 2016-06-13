@@ -7,7 +7,7 @@ var validate = require('validate.js');
 var user = {
   authenticated: false,
   authenticating: false,
-  username: "",
+  email: "",
   password: ""
 };
 
@@ -17,8 +17,7 @@ module.exports = Reflux.createStore({
   getInitialState: function() {
     user = {
       authtoken: localStorage.getItem('user.authtoken'),
-      username: localStorage.getItem('user.username'),
-      email: localStorage.getItem('user.email'),
+      email: localStorage.getItem('user.email') || "",
       password: "",
       authenticated: localStorage.getItem('user.authtoken') ? true : false
     };
@@ -26,8 +25,8 @@ module.exports = Reflux.createStore({
     return user;
   },
 
-  onUpdateUsername: function(username) {
-    user.username = username;
+  onUpdateEmail: function(email) {
+    user.email = email;
     this.trigger(user);
   },
 
@@ -43,7 +42,6 @@ module.exports = Reflux.createStore({
 
   onAuthenticateCompleted: function(userData) {
     localStorage.setItem('user.authtoken', userData.authtoken);
-    localStorage.setItem('user.username', userData.username);
     localStorage.setItem('user.email', userData.email);
 
     user.authenticated = true;
@@ -53,18 +51,15 @@ module.exports = Reflux.createStore({
   },
 
   onAuthenticateFailed: function(error) {
-    localStorage.removeItem('user.authtoken');
-    localStorage.removeItem('user.username');
-    localStorage.removeItem('user.email');
-
-    user.authenticated = false;
-    user.authenticating = false;
-    this.trigger(user);
+    this.clearStoredCredentials();
   },
 
   onLogoutCompleted: function() {
+    this.clearStoredCredentials();
+  },
+
+  clearStoredCredentials: function() {
     localStorage.removeItem('user.authtoken');
-    localStorage.removeItem('user.username');
     localStorage.removeItem('user.email');
 
     user.authenticated = false;

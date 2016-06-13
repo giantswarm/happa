@@ -52,9 +52,9 @@ module.exports = React.createClass({
       success: function(responseData){
         console.log("Account generated successfully.", responseData);
       },
-      error: function(jqXHR, textStatus, textStatus){
+      error: function(jqXHR, textStatus, textStatus2){
         console.log("An error occurred when trying to create a user account.");
-        console.log(jqXHR, textStatus, textStatus);
+        console.log(jqXHR, textStatus, textStatus2);
       }
     });
   },
