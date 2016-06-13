@@ -1,0 +1,40 @@
+version: "2"
+services:
+  happa:
+    build: "./"
+    image: happa:latest
+    command: npm start
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./src:/usr/src/app/src"
+    links:
+      - passage
+
+  passage:
+    image: registry.giantswarm.io/giantswarm/passage:latest
+    ports:
+      - "5000:5000"
+    environment:
+      DEBUGGING: 1
+      CORS_ORIGIN: http://docker.dev:8000
+      GIANTSWARM_API_URI: http://giantswarmmockapi:8000/v1
+      GIANTSWARM_API_TOKEN: valid_token
+      HUBSPOT_API_URI: http://hubspotmock:9999
+      HUBSPOT_HUB_ID: "430224"
+      HUBSPOT_API_KEY: 1234567890abcdefghijklmnop
+    links:
+      - hubspotmock
+      - giantswarmmockapi
+
+  # Mocks the HubSpot API
+  hubspotmock:
+    image: registry.giantswarm.io/giantswarm/mock-hubspot-api:latest
+    environment:
+      DEBUGGING: 1
+    ports:
+      - "9999:9999"
+  giantswarmmockapi:
+    image: registry.giantswarm.io/giantswarm/mock-api:latest
+    ports:
+      - "9000:8000"
