@@ -41,8 +41,15 @@ module.exports = Reflux.createStore({
   },
 
   onCheckInviteFailed: function(error) {
+    console.log(error)
     signUpForm.checkInviteStatus = "failed";
-    signUpForm.statusMessage = "verify_failed";
+
+    if (error === "Bad request") {
+      signUpForm.statusMessage = "verify_failed";
+    } else if (error === "InvalidTokenOrContactID") {
+      signUpForm.statusMessage = "invalid_token";
+    }
+
     this.trigger(signUpForm);
   },
 

@@ -6,7 +6,8 @@ module.exports = React.createClass({
     return {
       "verify_started": <span>Verifying Token...</span>,
       "verify_completed": <span>Verifying Token... <span className="success">VALID!</span></span>,
-      "verify_failed": <span>Verifying Token... <span className="error">FAILED!</span></span>,
+      "verify_failed": <span>Verifying Token... <span className="error">FAILED!</span><br/> The server appears to be down. Please try again later</span>,
+      "invalid_token": <span>Verifying Token... <span className="error">FAILED!</span> This token is not valid. Perhaps you already used it?</span>,
       "enter_password": <span>Please enter your desired password</span>,
       "create_account_starting": <span>Creating Account... </span>,
       "create_account_started": <span>Creating Account... </span>,
