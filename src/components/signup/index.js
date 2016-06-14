@@ -1,96 +1,88 @@
 "use strict";
 
 var React = require('react');
+var Reflux  = require('reflux');
 var $     = require('jquery');
+var Passage = require("../../lib/passage_client");
+var passage = new Passage({endpoint: window.config.passageEndpoint});
+var actions = require("../reflux_actions/sign_up_form_actions");
+var store = require("../reflux_stores/sign_up_form_store");
+var PasswordConfirmationField = require("./password_confirmation_field");
+var StatusMessage = require('./status_message');
+var TermsOfService = require('./terms_of_service');
 
 module.exports = React.createClass({
+  mixins: [Reflux.connect(store, 'signUpForm'), Reflux.listenerMixin],
 
   getInitialState: function() {
-    return {validInvite: null};
+    return {
+      password: "",
+      passwordConfirmation: ""
+    };
   },
 
   componentDidMount: function(){
     // contactID and token are set via URL
-    this.checkInvite(this.props.params.contactId, this.props.params.token);
-  },
-
-  checkInvite: function(contactId, token) {
-    console.log("Checking invite", contactId, token);
-    var url = window.config.passageEndpoint + '/invite/'+ contactId +'/' + token;
-    $.getJSON(url, function(data){
-      this.setState({"validInvite": data.is_valid});
-      if (data.is_valid) {
-        console.log("Invite is valid!");
-        console.log(data);
-        this.setState({
-          "email": data.email,
-          "initialAccountExpirationDays": data.initial_account_expiration
-        });
-      } else {
-        console.log("Sorry, invite is not valid");
-      }
-    }.bind(this));
+    actions.checkInvite(this.props.params.contactId, this.props.params.token);
   },
 
   handleSubmit: function(e){
     e.preventDefault();
-    console.log("Form submitted!");
-    // TODO: check if both passwords are identical
-    var account = {
-      "contact_id": this.props.params.contactId,
-      "invite_token": this.props.params.token,
-      "password": this.refs.password1.value
-    };
-    console.log(account);
-    var url = window.config.passageEndpoint + '/accounts/';
-    $.ajax({
-      type: "POST",
-      url: url,
-      dataType: 'json',
-      contentType : 'application/json',
-      data: JSON.stringify(account),
-      success: function(responseData){
-        console.log("Account generated successfully.", responseData);
-      },
-      error: function(jqXHR, textStatus, textStatus2){
-        console.log("An error occurred when trying to create a user account.");
-        console.log(jqXHR, textStatus, textStatus2);
-      }
-    });
+
+    if(this.state.signUpForm.formValid) {
+      actions.createAccount({
+        contactId: this.props.params.contactId,
+        inviteToken: this.props.params.token,
+        password: this.state.signUpForm.passwordField.value
+      });
+    } else {
+      console.log("The form isn't valid yet. This shouldn't even be possible.");
+    }
+  },
+
+  passwordEditing: function(values) {
+    actions.passwordEditing.started();
+  },
+
+  passwordEdited: function(values) {
+    actions.passwordEditing.completed(values);
+  },
+
+  tosChanged: function(e) {
+    actions.tosChanged(e.target.checked);
   },
 
   render: function() {
-    if (this.state.validInvite === true) {
-      return (
-        <div className="signup--container col-6">
-          <p>Hi {this.state.email}! Your account will be valid for {this.state.initialAccountExpirationDays} days starting from your sign-up.</p>
-          <form ref="signupForm" onSubmit={this.handleSubmit}>
-            <div className="textfield">
-              <label for="password1">Password</label>
-              <input type="password" ref="password1" id="password1" />
-            </div>
-            <div className="textfield">
-              <label for="password2">Password, once more</label>
-              <input type="password" ref="password2" id="password2" />
-            </div>
-            <div>
-              <button>Submit</button>
-            </div>
-          </form>
-        </div>
-      );
-    } else if (this.state.validInvite === false) {
-      return (
-        <div className="signup--container col-6">
-          Sorry, your invite is not valid
-        </div>
-      );
-    } else {
-      return (
-        <div className="signup--container col-6">
-          Checking your invite...
-        </div>
-      );
-    }
+    return (
+      <div className="signup--container col-6">
+        <StatusMessage status={this.state.signUpForm.statusMessage} />
+
+        <h1>Create Your Giant Swarm Account</h1>
+        <p>Your first steps with Giant Swarm are in reach. Please use this form to create your Giant Swarm user account.</p>
+
+        <form ref="signupForm" onSubmit={this.handleSubmit}>
+          <PasswordConfirmationField name="password"
+                         label="Password"
+                         confirmationLabel="Password, once more"
+                         onChange={this.passwordEdited}
+                         onStartTyping={this.passwordEditing} />
+
+          <TermsOfService />
+
+          <div className="checkbox">
+            <label for="tosAccept">
+              <input type="checkbox" ref="tosAccept" id="tosAccept" onChange={this.tosChanged} />
+              I accept the terms of service
+            </label>
+          </div>
+
+          <div>
+            <button disabled={ (! this.state.signUpForm.formValid) || this.state.signUpForm.submitting }>Submit</button>
+          </div>
+        </form>
+
+
+      </div>
+    );
   }
 });

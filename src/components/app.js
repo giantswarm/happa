@@ -10,6 +10,7 @@ var docs       = require('./docs/index');
 var login      = require('./login/index');
 var logout     = require('./logout/index');
 var signup     = require('./signup/index');
+window.Passage = require('../lib/passage_client');
 
 var UserActions = require('./reflux_actions/user_actions');
 var UserStore   = require('./reflux_stores/user_store');
