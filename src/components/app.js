@@ -35,7 +35,7 @@ render((
     <Route path="/" component={Layout}>
       <IndexRoute component={docs} onEnter={requireAuth} />
       <Route path = "/services/new" component={newService} onEnter={requireAuth} />
-      <Route path = "/signup/:contactId/:token/" component={signup} />
+      <Route path = "/signup/:contactId/:token" component={signup} />
       <Route path = "/login" component={login} />
       <Route path = "/logout" component={logout} />
     </Route>
