@@ -18,15 +18,21 @@ module.exports = React.createClass({
     // contactID and token are set via URL
     actions.checkInvite(this.props.params.contactId, this.props.params.token);
     this.listenTo(actions.advanceForm, this.advanceForm);
+    this.listenTo(actions.resetForm, this.resetForm);
   },
 
   componentWillReceiveProps: function(props) {
-    console.log(props);
+    actions.resetForm();
     actions.checkInvite(props.params.contactId, props.params.token);
   },
 
   advanceForm: function() {
     $("#" + this.state.signUpForm.formSteps[this.state.signUpForm.currentStep]).slideDown();
+  },
+
+  resetForm: function() {
+    $("#passwordGroup").hide();
+    $("#TOSGroup").hide();
   },
 
   handleSubmit: function(e){
@@ -79,10 +85,12 @@ module.exports = React.createClass({
 
           <StatusMessage status={this.state.signUpForm.statusMessage} />
 
-          <div>
+          <div className="signup--submitButton">
             {
-              this.state.signUpForm.buttonText[this.state.signUpForm.currentStep] != "" ? <button className="primary" disabled={ (! this.state.signUpForm.advancable) || this.state.signUpForm.submitting }>{this.state.signUpForm.buttonText[this.state.signUpForm.currentStep]}</button> : null
+              this.state.signUpForm.buttonText[this.state.signUpForm.currentStep] !== "" ? <button className="primary" disabled={ (! this.state.signUpForm.advancable) || this.state.signUpForm.submitting }>{this.state.signUpForm.buttonText[this.state.signUpForm.currentStep]}</button> : null
             }
+
+            { this.state.signUpForm.submitting ? <img className="loader" src="/images/loader_oval_light.svg" /> : null }
           </div>
         </form>
 

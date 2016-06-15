@@ -21,7 +21,7 @@ function newSignUpForm() {
     currentStep: 0,
     advancable: false
   };
-};
+}
 
 var signUpForm;
 
@@ -33,7 +33,7 @@ module.exports = Reflux.createStore({
     return signUpForm;
   },
 
-  reset: function() {
+  onResetForm: function() {
     signUpForm = newSignUpForm();
     this.trigger(signUpForm);
   },
@@ -60,6 +60,10 @@ module.exports = Reflux.createStore({
   onAdvanceForm: function(data) {
     if (signUpForm.currentStep < signUpForm.formSteps.length) {
       signUpForm.currentStep += 1;
+    }
+
+    if (signUpForm.currentStep === 2) {
+      signUpForm.statusMessage = "tos_intro";
     }
 
     this.trigger(signUpForm);

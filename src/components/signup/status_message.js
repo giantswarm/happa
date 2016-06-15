@@ -19,8 +19,9 @@ module.exports = React.createClass({
       "password_confirmation_mismatch": <span>Password confirmation does not match.</span>,
       "password_ok": <span>Password looks good, now just type it again.</span>,
       "password_confirmation_ok": <span>Nice! You typed it again really good!</span>,
+      "tos_intro": <span>Waiting for you to check that mark...</span>,
       "tos_ok": <span>Thanks for accepting the TOS</span>,
-      "tos_not_accepted": <span>Waiting for you to check that mark...</span>,
+      "tos_not_accepted": <span>Waiting for you to check that mark... again</span>,
       "all_good": <span>Ready to create your account!</span>
     };
   },

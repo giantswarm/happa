@@ -9,7 +9,8 @@ var Actions = Reflux.createActions([
   {"createAccount": {children: ["completed", "failed"]}},
   {"passwordEditing": {children: ["started", "completed"]}},
   {"passwordConfirmationEditing": {children: ["started", "completed"]}},
-  {"advanceForm": {children: ["start", "complete"]}},
+  "advanceForm",
+  "resetForm",
   "tosChanged"
 ]);
 
@@ -31,7 +32,6 @@ Actions.createAccount.listen(function(account) {
 
   passage.createAccount(account)
   .then(data => {
-    console.log("Account created");
     action.completed(data);
   })
   .catch(x => {
