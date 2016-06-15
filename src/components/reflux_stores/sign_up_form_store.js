@@ -10,6 +10,7 @@ var signUpForm = {
   checkInviteStatus: 'started',
   email: undefined,
   passwordField: {value: "", valid: false},
+  passwordConfirmationField: {value: "", valid: false},
   termsOfServiceField: {value: false, valid: false},
   formValid: undefined,
   submitting: false
@@ -41,7 +42,6 @@ module.exports = Reflux.createStore({
   },
 
   onCheckInviteFailed: function(error) {
-    console.log(error)
     signUpForm.checkInviteStatus = "failed";
 
     if (error === "Bad request") {
@@ -77,9 +77,7 @@ module.exports = Reflux.createStore({
     this.trigger(signUpForm);
   },
 
-  onPasswordEditingCompleted: function(fields) {
-    var password = fields.value;
-    var confirmation = fields.confirmationValue;
+  onPasswordEditingCompleted: function(password) {
     signUpForm.passwordField.valid = false;
 
     if (password.length < 8) {
@@ -90,14 +88,33 @@ module.exports = Reflux.createStore({
       signUpForm.statusMessage = "password_not_just_letters";
     } else if (/^[A-Z]+$/.test(password)) {
       signUpForm.statusMessage = "password_not_just_letters";
-    } else if (password !== confirmation) {
-      signUpForm.statusMessage = "password_confirmation_mismatch";
     } else {
       signUpForm.statusMessage = "password_ok";
       signUpForm.passwordField.valid = true;
     }
 
     signUpForm.passwordField.value = password;
+
+    this.trigger(signUpForm);
+
+    this.validateForm();
+  },
+
+  onPasswordConfirmationEditingStarted: function(confirmation) {
+    signUpForm.formValid = false;
+    signUpForm.passwordConfirmationField.valid = false;
+    this.trigger(signUpForm);
+  },
+
+  onPasswordConfirmationEditingCompleted: function(confirmation) {
+    signUpForm.passwordConfirmationField.valid = false;
+
+    if (signUpForm.passwordField.value === confirmation) {
+      signUpForm.statusMessage = "password_confirmation_ok";
+      signUpForm.passwordConfirmationField.valid = true;
+    } else {
+      signUpForm.statusMessage = "password_confirmation_mismatch";
+    }
 
     this.trigger(signUpForm);
 
@@ -123,7 +140,7 @@ module.exports = Reflux.createStore({
   },
 
   validateForm: function() {
-    if (signUpForm.passwordField.valid && signUpForm.termsOfServiceField.valid) {
+    if (signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid && signUpForm.termsOfServiceField.valid) {
       signUpForm.formValid = true;
       signUpForm.statusMessage = "all_good";
     } else {

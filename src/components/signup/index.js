@@ -7,7 +7,7 @@ var Passage = require("../../lib/passage_client");
 var passage = new Passage({endpoint: window.config.passageEndpoint});
 var actions = require("../reflux_actions/sign_up_form_actions");
 var store = require("../reflux_stores/sign_up_form_store");
-var PasswordConfirmationField = require("./password_confirmation_field");
+var PasswordField = require("./password_field");
 var StatusMessage = require('./status_message');
 var TermsOfService = require('./terms_of_service');
 
@@ -40,12 +40,20 @@ module.exports = React.createClass({
     }
   },
 
-  passwordEditing: function(values) {
+  passwordEditing: function() {
     actions.passwordEditing.started();
   },
 
-  passwordEdited: function(values) {
-    actions.passwordEditing.completed(values);
+  passwordEdited: function(value) {
+    actions.passwordEditing.completed(value);
+  },
+
+  passwordConfirmationEditing: function() {
+    actions.passwordConfirmationEditing.started();
+  },
+
+  passwordConfirmationEdited: function(value) {
+    actions.passwordConfirmationEditing.completed(value);
   },
 
   tosChanged: function(e) {
@@ -58,14 +66,18 @@ module.exports = React.createClass({
         <StatusMessage status={this.state.signUpForm.statusMessage} />
 
         <h1>Create Your Giant Swarm Account</h1>
-        <p>Your first steps with Giant Swarm are in reach. Please use this form to create your Giant Swarm user account.</p>
+        <p className="subtitle">Your first steps with Giant Swarm are in reach. Please use this form to create your Giant Swarm user account.</p>
 
         <form ref="signupForm" onSubmit={this.handleSubmit}>
-          <PasswordConfirmationField name="password"
+          <PasswordField ref="password"
                          label="Password"
-                         confirmationLabel="Password, once more"
-                         onChange={this.passwordEdited}
-                         onStartTyping={this.passwordEditing} />
+                         onStartTyping={actions.passwordEditing.started}
+                         onChange={actions.passwordEditing.completed} />
+
+          <PasswordField ref="password"
+                         label="Password, once again"
+                         onStartTyping={actions.passwordConfirmationEditing.started}
+                         onChange={actions.passwordConfirmationEditing.completed} />
 
           <TermsOfService />
 

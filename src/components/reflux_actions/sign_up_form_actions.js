@@ -8,6 +8,7 @@ var Actions = Reflux.createActions([
   {"checkInvite": {children: ["completed", "failed"]}},
   {"createAccount": {children: ["completed", "failed"]}},
   {"passwordEditing": {children: ["started", "completed"]}},
+  {"passwordConfirmationEditing": {children: ["started", "completed"]}},
   "tosChanged"
 ]);
 

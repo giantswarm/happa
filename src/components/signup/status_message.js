@@ -17,7 +17,8 @@ module.exports = React.createClass({
       "password_not_just_numbers": <span>Please add something else than only numbers</span>,
       "password_not_just_letters": <span>Please add some more diverse characters.</span>,
       "password_confirmation_mismatch": <span>Password confirmation does not match.</span>,
-      "password_ok": <span>Password looks good</span>,
+      "password_ok": <span>Password looks good, now just type it again.</span>,
+      "password_confirmation_ok": <span>Nice! You typed it again really good!</span>,
       "tos_ok": <span>Thanks for accepting the TOS</span>,
       "tos_not_accepted": <span>Waiting for you to check that mark...</span>,
       "all_good": <span>Ready to create your account!</span>
