@@ -19,8 +19,7 @@ UserActions.authenticate.listen(function(email, password) {
   // Todo don't throw errors from JS client. It should return a rejected promise.
   // try {
     giantSwarm.authenticate({
-      username: email,
-      email: email,
+      usernameOrEmail: email,
       password: password
     })
     .then(function(response) {
