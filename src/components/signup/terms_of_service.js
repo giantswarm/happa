@@ -86,7 +86,7 @@ module.exports = React.createClass({
         </div>
 
         <div class="toslink">
-          <a href="/terms/" target="_blank">Giant Swarm Terms of Service</a><br/>
+          <a href="https://giantswarm.io/terms/" target="_blank">Giant Swarm Terms of Service</a><br/>
           <small>(link opens in new window/tab)</small>
         </div>
       </div>
