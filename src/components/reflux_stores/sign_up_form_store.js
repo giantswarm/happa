@@ -6,26 +6,36 @@ var $        = require('jquery');
 var React    = require('react');
 var validate = require('validate.js');
 
-var signUpForm = {
-  statusMessage: "verify_started",
-  checkInviteStatus: 'started',
-  email: undefined,
-  passwordField: {value: "", valid: false},
-  passwordConfirmationField: {value: "", valid: false},
-  termsOfServiceField: {value: false, valid: false},
-  formValid: undefined,
-  submitting: false,
-  buttonText: "Next",
-  formSteps: ['passwordGroup', 'TOSGroup'],
-  currentStep: 0,
-  advancable: false
+function newSignUpForm() {
+  return {
+    statusMessage: "verify_started",
+    checkInviteStatus: 'started',
+    email: undefined,
+    passwordField: {value: "", valid: false},
+    passwordConfirmationField: {value: "", valid: false},
+    termsOfServiceField: {value: false, valid: false},
+    formValid: undefined,
+    submitting: false,
+    buttonText: ["", "Next", "Submit"],
+    formSteps: ["", 'passwordGroup', 'TOSGroup'],
+    currentStep: 0,
+    advancable: false
+  };
 };
+
+var signUpForm;
 
 module.exports = Reflux.createStore({
   listenables: actions,
 
   getInitialState: function() {
+    signUpForm = newSignUpForm();
     return signUpForm;
+  },
+
+  reset: function() {
+    signUpForm = newSignUpForm();
+    this.trigger(signUpForm);
   },
 
   onCheckInvite: function() {
@@ -45,6 +55,16 @@ module.exports = Reflux.createStore({
       this.trigger(signUpForm);
       actions.advanceForm();
     }.bind(this), 800);
+  },
+
+  onAdvanceForm: function(data) {
+    if (signUpForm.currentStep < signUpForm.formSteps.length) {
+      signUpForm.currentStep += 1;
+    }
+
+    this.trigger(signUpForm);
+
+    this.validateForm();
   },
 
   onCheckInviteFailed: function(error) {
@@ -67,7 +87,6 @@ module.exports = Reflux.createStore({
 
   onCreateAccountCompleted: function() {
     signUpForm.statusMessage = "create_account_completed";
-    signUpForm.submitting = false;
     this.trigger(signUpForm);
   },
 
@@ -79,7 +98,7 @@ module.exports = Reflux.createStore({
 
   onPasswordEditingStarted: function() {
     signUpForm.formValid = false;
-    signUpForm.formValid = false;
+    signUpForm.advancable = false;
     signUpForm.passwordField.valid = false;
     this.trigger(signUpForm);
   },
@@ -109,6 +128,7 @@ module.exports = Reflux.createStore({
 
   onPasswordConfirmationEditingStarted: function(confirmation) {
     signUpForm.formValid = false;
+    signUpForm.advancable = false;
     signUpForm.passwordConfirmationField.valid = false;
     this.trigger(signUpForm);
   },
@@ -120,8 +140,6 @@ module.exports = Reflux.createStore({
       if (signUpForm.passwordField.value === confirmation) {
         signUpForm.statusMessage = "password_confirmation_ok";
         signUpForm.passwordConfirmationField.valid = true;
-        signUpForm.advancable = true;
-        signUpForm.currentStep = 1;
       } else {
         signUpForm.statusMessage = "password_confirmation_mismatch";
       }
@@ -134,6 +152,7 @@ module.exports = Reflux.createStore({
 
   onTosChanged: function(checked) {
     signUpForm.formValid = false;
+    signUpForm.advancable = false;
 
     if (checked) {
       signUpForm.termsOfServiceField.valid = true;
@@ -151,6 +170,14 @@ module.exports = Reflux.createStore({
   },
 
   validateForm: function() {
+    if (signUpForm.currentStep === 1 && signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid) {
+      signUpForm.advancable = true;
+    } else if (signUpForm.currentStep === 2 && signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid && signUpForm.termsOfServiceField.valid) {
+      signUpForm.advancable = true;
+    } else {
+      signUpForm.advancable = false;
+    }
+
     if (signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid && signUpForm.termsOfServiceField.valid) {
       signUpForm.formValid = true;
       signUpForm.statusMessage = "all_good";

@@ -14,14 +14,15 @@ var TermsOfService = require('./terms_of_service');
 module.exports = React.createClass({
   mixins: [Reflux.connect(store, 'signUpForm'), Reflux.listenerMixin],
 
-  getInitialState: function() {
-
-  },
-
   componentDidMount: function(){
     // contactID and token are set via URL
     actions.checkInvite(this.props.params.contactId, this.props.params.token);
     this.listenTo(actions.advanceForm, this.advanceForm);
+  },
+
+  componentWillReceiveProps: function(props) {
+    console.log(props);
+    actions.checkInvite(props.params.contactId, props.params.token);
   },
 
   advanceForm: function() {
@@ -79,7 +80,9 @@ module.exports = React.createClass({
           <StatusMessage status={this.state.signUpForm.statusMessage} />
 
           <div>
-            <button disabled={ (! this.state.signUpForm.advancable) || this.state.signUpForm.submitting }>{this.state.signUpForm.buttonText}</button>
+            {
+              this.state.signUpForm.buttonText[this.state.signUpForm.currentStep] != "" ? <button className="primary" disabled={ (! this.state.signUpForm.advancable) || this.state.signUpForm.submitting }>{this.state.signUpForm.buttonText[this.state.signUpForm.currentStep]}</button> : null
+            }
           </div>
         </form>
 
