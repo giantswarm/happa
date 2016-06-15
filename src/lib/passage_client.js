@@ -27,7 +27,7 @@ var validateOrRaise = function(validatable, constraints) {
 // Passage
 // -------
 // A client for Passage.
-// config: {endpoint: "http://passage.com"}
+// config: {endpoint: "http://passage.com", timeout_ms: 10000}
 //
 // Example Usage:
 // var passage = new Passage({endpoint: "http://docker.dev:5000"})
@@ -41,7 +41,12 @@ var Passage = function(config) {
       }
     }
   };
+
   validateOrRaise(config, constraints);
+
+  if (config.timeout_ms === undefined) {
+    config.timeout_ms = 10000;
+  }
 
   return {
     //
@@ -59,7 +64,9 @@ var Passage = function(config) {
       validateOrRaise(params, constraints);
       var url = `${config.endpoint}/invite/${params.contactId}/${params.token}`;
 
-      var promise = request.get(url).then(x => {
+      var promise = request.get(url)
+      .timeout(config.timeout_ms)
+      .then(x => {
         if (x.body.is_valid) {
           return(x.body);
         } else {
@@ -97,6 +104,7 @@ var Passage = function(config) {
       console.log(url);
 
       var promise = request.post(url)
+      .timeout(config.timeout_ms)
       .send(payload)
       .set("ContentType", "application/json")
       .then(x => {
