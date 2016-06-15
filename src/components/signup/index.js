@@ -12,6 +12,10 @@ var StatusMessage = require('./status_message');
 var TermsOfService = require('./terms_of_service');
 
 module.exports = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+
   mixins: [Reflux.connect(store, 'signUpForm'), Reflux.listenerMixin],
 
   componentDidMount: function(){
@@ -19,6 +23,7 @@ module.exports = React.createClass({
     actions.checkInvite(this.props.params.contactId, this.props.params.token);
     this.listenTo(actions.advanceForm, this.advanceForm);
     this.listenTo(actions.resetForm, this.resetForm);
+    this.listenTo(actions.createAccount.completed, this.accountCreated);
   },
 
   componentWillReceiveProps: function(props) {
@@ -33,6 +38,15 @@ module.exports = React.createClass({
   resetForm: function() {
     $("#passwordGroup").hide();
     $("#TOSGroup").hide();
+  },
+
+  accountCreated: function() {
+    // Delay a bit so the user sees the DONE message
+    // and then transition to the getting started guide
+
+    setTimeout(() => {
+      this.context.router.push('/');
+    }, 1000);
   },
 
   handleSubmit: function(e){
