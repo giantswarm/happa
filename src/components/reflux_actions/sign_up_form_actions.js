@@ -9,6 +9,7 @@ var Actions = Reflux.createActions([
   {"createAccount": {children: ["completed", "failed"]}},
   {"passwordEditing": {children: ["started", "completed"]}},
   {"passwordConfirmationEditing": {children: ["started", "completed"]}},
+  {"advanceForm": {children: ["start", "complete"]}},
   "tosChanged"
 ]);
 
@@ -17,7 +18,6 @@ Actions.checkInvite.listen(function(contactId, token) {
 
   passage.checkInvite({contactId, token})
   .then(data => {
-    console.log("Invite is valid!");
     action.completed(data);
   })
   .catch(x => {

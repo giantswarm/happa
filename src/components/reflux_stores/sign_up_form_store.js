@@ -1,8 +1,9 @@
 "use strict";
-var Reflux  = require('reflux');
-var actions = require("../reflux_actions/sign_up_form_actions");
-var _       = require('underscore');
-var React   = require('react');
+var Reflux   = require('reflux');
+var actions  = require("../reflux_actions/sign_up_form_actions");
+var _        = require('underscore');
+var $        = require('jquery');
+var React    = require('react');
 var validate = require('validate.js');
 
 var signUpForm = {
@@ -13,7 +14,11 @@ var signUpForm = {
   passwordConfirmationField: {value: "", valid: false},
   termsOfServiceField: {value: false, valid: false},
   formValid: undefined,
-  submitting: false
+  submitting: false,
+  buttonText: "Next",
+  formSteps: ['passwordGroup', 'TOSGroup'],
+  currentStep: 0,
+  advancable: false
 };
 
 module.exports = Reflux.createStore({
@@ -38,7 +43,8 @@ module.exports = Reflux.createStore({
     setTimeout(function() {
       signUpForm.statusMessage = "enter_password";
       this.trigger(signUpForm);
-    }.bind(this), 1000);
+      actions.advanceForm();
+    }.bind(this), 800);
   },
 
   onCheckInviteFailed: function(error) {
@@ -72,6 +78,7 @@ module.exports = Reflux.createStore({
   },
 
   onPasswordEditingStarted: function() {
+    signUpForm.formValid = false;
     signUpForm.formValid = false;
     signUpForm.passwordField.valid = false;
     this.trigger(signUpForm);
@@ -109,16 +116,20 @@ module.exports = Reflux.createStore({
   onPasswordConfirmationEditingCompleted: function(confirmation) {
     signUpForm.passwordConfirmationField.valid = false;
 
-    if (signUpForm.passwordField.value === confirmation) {
-      signUpForm.statusMessage = "password_confirmation_ok";
-      signUpForm.passwordConfirmationField.valid = true;
-    } else {
-      signUpForm.statusMessage = "password_confirmation_mismatch";
+    if (signUpForm.passwordField.valid) {
+      if (signUpForm.passwordField.value === confirmation) {
+        signUpForm.statusMessage = "password_confirmation_ok";
+        signUpForm.passwordConfirmationField.valid = true;
+        signUpForm.advancable = true;
+        signUpForm.currentStep = 1;
+      } else {
+        signUpForm.statusMessage = "password_confirmation_mismatch";
+      }
+
+      this.trigger(signUpForm);
+
+      this.validateForm();
     }
-
-    this.trigger(signUpForm);
-
-    this.validateForm();
   },
 
   onTosChanged: function(checked) {

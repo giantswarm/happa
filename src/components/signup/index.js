@@ -15,15 +15,17 @@ module.exports = React.createClass({
   mixins: [Reflux.connect(store, 'signUpForm'), Reflux.listenerMixin],
 
   getInitialState: function() {
-    return {
-      password: "",
-      passwordConfirmation: ""
-    };
+
   },
 
   componentDidMount: function(){
     // contactID and token are set via URL
     actions.checkInvite(this.props.params.contactId, this.props.params.token);
+    this.listenTo(actions.advanceForm, this.advanceForm);
+  },
+
+  advanceForm: function() {
+    $("#" + this.state.signUpForm.formSteps[this.state.signUpForm.currentStep]).slideDown();
   },
 
   handleSubmit: function(e){
@@ -36,24 +38,8 @@ module.exports = React.createClass({
         password: this.state.signUpForm.passwordField.value
       });
     } else {
-      console.log("The form isn't valid yet. This shouldn't even be possible.");
+      actions.advanceForm();
     }
-  },
-
-  passwordEditing: function() {
-    actions.passwordEditing.started();
-  },
-
-  passwordEdited: function(value) {
-    actions.passwordEditing.completed(value);
-  },
-
-  passwordConfirmationEditing: function() {
-    actions.passwordConfirmationEditing.started();
-  },
-
-  passwordConfirmationEdited: function(value) {
-    actions.passwordConfirmationEditing.completed(value);
   },
 
   tosChanged: function(e) {
@@ -63,35 +49,40 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="signup--container col-6">
-        <StatusMessage status={this.state.signUpForm.statusMessage} />
-
         <h1>Create Your Giant Swarm Account</h1>
         <p className="subtitle">Your first steps with Giant Swarm are in reach. Please use this form to create your Giant Swarm user account.</p>
 
         <form ref="signupForm" onSubmit={this.handleSubmit}>
-          <PasswordField ref="password"
-                         label="Password"
-                         onStartTyping={actions.passwordEditing.started}
-                         onChange={actions.passwordEditing.completed} />
+          <div ref="passwordGroup" id="passwordGroup">
+            <PasswordField ref="password"
+                           label="Password"
+                           onStartTyping={actions.passwordEditing.started}
+                           onChange={actions.passwordEditing.completed} />
 
-          <PasswordField ref="password"
-                         label="Password, once again"
-                         onStartTyping={actions.passwordConfirmationEditing.started}
-                         onChange={actions.passwordConfirmationEditing.completed} />
-
-          <TermsOfService />
-
-          <div className="checkbox">
-            <label for="tosAccept">
-              <input type="checkbox" ref="tosAccept" id="tosAccept" onChange={this.tosChanged} />
-              I accept the terms of service
-            </label>
+            <PasswordField ref="password"
+                           label="Password, once again"
+                           onStartTyping={actions.passwordConfirmationEditing.started}
+                           onChange={actions.passwordConfirmationEditing.completed} />
           </div>
+
+          <div id="TOSGroup">
+            <TermsOfService />
+
+            <div className="checkbox">
+              <label for="tosAccept">
+                <input type="checkbox" ref="tosAccept" id="tosAccept" onChange={this.tosChanged} />
+                I accept the terms of service
+              </label>
+            </div>
+          </div>
+
+          <StatusMessage status={this.state.signUpForm.statusMessage} />
 
           <div>
-            <button disabled={ (! this.state.signUpForm.formValid) || this.state.signUpForm.submitting }>Submit</button>
+            <button disabled={ (! this.state.signUpForm.advancable) || this.state.signUpForm.submitting }>{this.state.signUpForm.buttonText}</button>
           </div>
         </form>
+
 
 
       </div>
