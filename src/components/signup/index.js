@@ -84,10 +84,10 @@ module.exports = React.createClass({
 
         <form ref="signupForm" onSubmit={this.handleSubmit}>
           <div id="passwordGroup">
-            <p className="subtitle">Hi {this.state.signUpForm.email}!<br/>Your first steps with Giant Swarm are in reach. Please use this form to create your Giant Swarm user account.</p>
+            <p className="subtitle">This is your personal Giant Swarm account for the email address {this.state.signUpForm.email}!</p>
 
             <PasswordField ref="password"
-                           label="Password"
+                           label="Set a password"
                            onStartTyping={actions.passwordEditing.started}
                            onChange={actions.passwordEditing.completed} />
           </div>

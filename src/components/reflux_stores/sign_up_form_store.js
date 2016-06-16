@@ -17,7 +17,7 @@ function newSignUpForm() {
     termsOfServiceField: {value: false, valid: false},
     formValid: undefined,
     submitting: false,
-    buttonText: ["", "Next", "Next", "Submit"],
+    buttonText: ["", "Next", "Next", "Create your account now"],
     formSteps: ["", 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
     currentStep: 0,
     advancable: false
