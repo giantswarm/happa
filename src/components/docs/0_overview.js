@@ -20,6 +20,7 @@ module.exports = React.createClass ({
     render() {
       return (
         <Slide>
+
           <Markdown>
             {`
             Get started with your Kubernetes cluster

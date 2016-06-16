@@ -6,13 +6,11 @@
 //
 // https://github.com/bestiejs/platform.js/
 //
-// Could maybe drop the dependency and go for wrapping 'navigator'
 //
 
 var platform = require('platform');
 
 var result = "Unknown";
-
 
 // Get a string representing the platform
 // It is too detailed for us though, so we do a bit more work later.
