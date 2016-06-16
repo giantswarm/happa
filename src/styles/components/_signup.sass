@@ -7,6 +7,16 @@
   margin-top: 50px
   text-align: left
 
+  input
+    background-color: lighten(#32526a, 5%)
+    border: 1px solid lighten(#32526a, 5%)
+    letter-spacing: 3px
+    font-weight: 700
+    padding-left: 15px
+
+    &:focus
+      border: 1px solid lighten(#32526a, 15%)
+
   h1
     font-size: 36px
     margin-bottom: 20px
@@ -22,12 +32,13 @@
   text-align: center
 
 .signup--status-text
-  font-family: monospace
+  font-family: Inconsolata, monospace
   box-sizing: border-box
   width: 100%
-  background-color: #32526a
+  background-color: #333333
   border: 0px
-  padding: 8px 10px
+  padding: 8px 12px
+  font-weight: 400
   outline: 0
   color: #fff
   margin-bottom: 30px
