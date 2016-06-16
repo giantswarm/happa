@@ -24,7 +24,6 @@ module.exports = React.createClass({
     this.listenTo(actions.advanceForm, this.advanceForm);
     this.listenTo(actions.resetForm, this.resetForm);
     this.listenTo(actions.createAccount.completed, this.accountCreated);
-    this.listenTo(actions.checkInvite.completed, this.checkInviteCompleted);
   },
 
   componentWillReceiveProps: function(props) {
@@ -38,10 +37,6 @@ module.exports = React.createClass({
         this.refs.password.focus();
       }
     }.bind(this));
-  },
-
-  checkInviteCompleted: function() {
-
   },
 
   resetForm: function() {
