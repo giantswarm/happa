@@ -1,6 +1,7 @@
 "use strict";
 var Reflux   = require('reflux');
 var actions  = require("../reflux_actions/sign_up_form_actions");
+var userActions  = require("../reflux_actions/user_actions");
 var _        = require('underscore');
 var $        = require('jquery');
 var React    = require('react');
@@ -89,8 +90,13 @@ module.exports = Reflux.createStore({
     this.trigger(signUpForm);
   },
 
-  onCreateAccountCompleted: function() {
+  onCreateAccountCompleted: function(data) {
+    console.log(data);
     signUpForm.statusMessage = "create_account_completed";
+    userActions.authenticate.completed({
+      email: data.email,
+      authtoken: data.token
+    });
     this.trigger(signUpForm);
   },
 
