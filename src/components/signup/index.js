@@ -24,6 +24,7 @@ module.exports = React.createClass({
     this.listenTo(actions.advanceForm, this.advanceForm);
     this.listenTo(actions.resetForm, this.resetForm);
     this.listenTo(actions.createAccount.completed, this.accountCreated);
+    this.listenTo(actions.checkInvite.completed, this.checkInviteCompleted);
   },
 
   componentWillReceiveProps: function(props) {
@@ -32,7 +33,15 @@ module.exports = React.createClass({
   },
 
   advanceForm: function() {
-    $("#" + this.state.signUpForm.formSteps[this.state.signUpForm.currentStep]).slideDown();
+    $("#" + this.state.signUpForm.formSteps[this.state.signUpForm.currentStep]).slideDown(function() {
+      if (this.state.signUpForm.currentStep === 1) {
+        this.refs.password.focus();
+      }
+    }.bind(this));
+  },
+
+  checkInviteCompleted: function() {
+
   },
 
   resetForm: function() {
@@ -82,7 +91,7 @@ module.exports = React.createClass({
                            onStartTyping={actions.passwordEditing.started}
                            onChange={actions.passwordEditing.completed} />
 
-            <PasswordField ref="password"
+            <PasswordField ref="passwordConfirmation"
                            label="Password, once again"
                            onStartTyping={actions.passwordConfirmationEditing.started}
                            onChange={actions.passwordConfirmationEditing.completed} />

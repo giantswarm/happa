@@ -1,5 +1,6 @@
 "use strict";
 var React = require('react');
+var ReactDOM = require('react-dom');
 var typingTimer;
 var doneTypingInterval = 600; // ms
 
@@ -25,6 +26,10 @@ var PasswordField = React.createClass({
 
   value: function() {
     return this.refs.input.value;
+  },
+
+  focus: function() {
+    ReactDOM.findDOMNode(this.refs.input).focus();
   },
 
   render: function() {
