@@ -35,7 +35,12 @@ module.exports = React.createClass({
     $("#" + this.state.signUpForm.formSteps[this.state.signUpForm.currentStep]).slideDown(function() {
       if (this.state.signUpForm.currentStep === 1) {
         this.refs.password.focus();
+      } else if (this.state.signUpForm.currentStep === 2) {
+        this.refs.passwordConfirmation.focus();
+      } else if (this.state.signUpForm.currentStep === 3) {
+        this.refs.passwordConfirmation.blur();
       }
+      actions.advanceForm.completed();
     }.bind(this));
   },
 
@@ -78,14 +83,16 @@ module.exports = React.createClass({
 
 
         <form ref="signupForm" onSubmit={this.handleSubmit}>
-          <div ref="passwordGroup" id="passwordGroup">
+          <div id="passwordGroup">
             <p className="subtitle">Hi {this.state.signUpForm.email}!<br/>Your first steps with Giant Swarm are in reach. Please use this form to create your Giant Swarm user account.</p>
 
             <PasswordField ref="password"
                            label="Password"
                            onStartTyping={actions.passwordEditing.started}
                            onChange={actions.passwordEditing.completed} />
+          </div>
 
+          <div id="passwordConfirmationGroup">
             <PasswordField ref="passwordConfirmation"
                            label="Password, once again"
                            onStartTyping={actions.passwordConfirmationEditing.started}

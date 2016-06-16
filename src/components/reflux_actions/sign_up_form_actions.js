@@ -9,7 +9,7 @@ var Actions = Reflux.createActions([
   {"createAccount": {children: ["completed", "failed"]}},
   {"passwordEditing": {children: ["started", "completed"]}},
   {"passwordConfirmationEditing": {children: ["started", "completed"]}},
-  "advanceForm",
+  {"advanceForm": {children: ["completed"]}},
   "resetForm",
   "tosChanged"
 ]);

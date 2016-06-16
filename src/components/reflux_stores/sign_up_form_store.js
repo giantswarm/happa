@@ -17,8 +17,8 @@ function newSignUpForm() {
     termsOfServiceField: {value: false, valid: false},
     formValid: undefined,
     submitting: false,
-    buttonText: ["", "Next", "Submit"],
-    formSteps: ["", 'passwordGroup', 'TOSGroup'],
+    buttonText: ["", "Next", "Next", "Submit"],
+    formSteps: ["", 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
     currentStep: 0,
     advancable: false
   };
@@ -58,18 +58,26 @@ module.exports = Reflux.createStore({
     }.bind(this), 800);
   },
 
-  onAdvanceForm: function(data) {
+  onAdvanceForm: function() {
     if (signUpForm.currentStep < signUpForm.formSteps.length) {
       signUpForm.currentStep += 1;
-    }
-
-    if (signUpForm.currentStep === 2) {
-      signUpForm.statusMessage = "tos_intro";
     }
 
     this.trigger(signUpForm);
 
     this.validateForm();
+  },
+
+  onAdvanceFormCompleted: function() {
+    if (signUpForm.currentStep === 2) {
+      // signUpForm.statusMessage = "tos_intro";
+    }
+
+    if (signUpForm.currentStep === 3) {
+      signUpForm.statusMessage = "tos_intro";
+    }
+
+    this.trigger(signUpForm);
   },
 
   onCheckInviteFailed: function(error) {
@@ -116,7 +124,9 @@ module.exports = Reflux.createStore({
   onPasswordEditingCompleted: function(password) {
     signUpForm.passwordField.valid = false;
 
-    if (password.length < 8) {
+    if (password.length === 0) {
+      // Be invalid, but don't change the status message.
+    } else if (password.length < 8) {
       signUpForm.statusMessage = "password_too_short";
     } else if (/^[0-9]+$/.test(password)) {
       signUpForm.statusMessage = "password_not_just_numbers";
@@ -180,9 +190,13 @@ module.exports = Reflux.createStore({
   },
 
   validateForm: function() {
-    if (signUpForm.currentStep === 1 && signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid) {
+    // TODO Refactor. Loop over steps and intelligently find out what validations apply right now
+
+    if (signUpForm.currentStep === 1 && signUpForm.passwordField.valid) {
       signUpForm.advancable = true;
-    } else if (signUpForm.currentStep === 2 && signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid && signUpForm.termsOfServiceField.valid) {
+    } else if (signUpForm.currentStep === 2 && signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid) {
+      signUpForm.advancable = true;
+    } else if (signUpForm.currentStep === 3 && signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid && signUpForm.termsOfServiceField.valid) {
       signUpForm.advancable = true;
     } else {
       signUpForm.advancable = false;

@@ -2,7 +2,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var typingTimer;
-var doneTypingInterval = 600; // ms
+var doneTypingInterval = 250; // ms
 
 //
 // PasswordField
@@ -30,6 +30,10 @@ var PasswordField = React.createClass({
 
   focus: function() {
     ReactDOM.findDOMNode(this.refs.input).focus();
+  },
+
+  blur: function() {
+    ReactDOM.findDOMNode(this.refs.input).blur();
   },
 
   render: function() {
