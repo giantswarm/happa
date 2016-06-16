@@ -151,6 +151,21 @@ module.exports = Reflux.createStore({
     signUpForm.advancable = false;
     signUpForm.passwordConfirmationField.valid = false;
     this.trigger(signUpForm);
+
+    if (signUpForm.passwordField.valid) {
+      if (signUpForm.passwordField.value === confirmation) {
+        signUpForm.statusMessage = "password_confirmation_ok";
+        signUpForm.passwordConfirmationField.valid = true;
+        this.trigger(signUpForm);
+        this.validateForm();
+        if (signUpForm.currentStep === 1) {
+          // If we're on the first step, the confirmation field isn't even visible
+          // yet. So a password manager must have filled in the confirmation for the user
+          // Advance automatically as a convenience to the user.
+          actions.advanceForm();
+        }
+      }
+    }
   },
 
   onPasswordConfirmationEditingCompleted: function(confirmation) {

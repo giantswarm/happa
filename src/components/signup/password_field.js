@@ -17,7 +17,7 @@ var PasswordField = React.createClass({
   },
 
   onChange: function(e) {
-    this.props.onStartTyping();
+    this.props.onStartTyping(this.refs.input.value);
     clearTimeout(typingTimer);
     typingTimer = setTimeout(x => {
       this.props.onChange(this.refs.input.value);
