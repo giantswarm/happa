@@ -38,6 +38,7 @@ module.exports = class ComponentSlider extends Component {
   }
 
   setSlide(slideNumber) {
+    window.scrollTo(0, 0);
     var direction;
 
     if (slideNumber < this.props.slides.length) {
