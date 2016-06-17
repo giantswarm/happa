@@ -34,11 +34,11 @@ function requireAuth(nextState, replace) {
 
 render((
   <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
+    <Route path = "/login" component={login} />
+    <Route path = "/signup/:contactId/:token" component={signup} />
     <Route path="/" component={Layout}>
       <IndexRoute component={docs} onEnter={requireAuth} />
       <Route path = "/services/new" component={newService} onEnter={requireAuth} />
-      <Route path = "/signup/:contactId/:token" component={signup} />
-      <Route path = "/login" component={login} />
       <Route path = "/logout" component={logout} />
     </Route>
   </Router>

@@ -25,6 +25,10 @@ module.exports = Reflux.createStore({
     return user;
   },
 
+  currentUser: function() {
+    return user;
+  },
+
   onUpdateEmail: function(email) {
     user.email = email;
     this.trigger(user);
