@@ -14,7 +14,7 @@ module.exports = React.createClass ({
       <div>
         <nav>
           <div className="col-8">
-            <img className="logo" src="/images/giantswarm_icon.svg" />
+            <a href="https://giantswarm.io" target="_blank"><img className="logo" src="/images/giantswarm_icon.svg" /></a>
             <IndexLink to="/" activeClassName="active">Home</IndexLink>
             <div className="subactions">
               <span className="currentuser">Logged in as: {UserStore.currentUser().email}</span>
