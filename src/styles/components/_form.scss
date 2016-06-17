@@ -17,6 +17,18 @@ form {
     margin-bottom: 8px;
     color: #f0f0f0;
     border-radius: 4px;
+
+    border: 1px solid lighten(#32526a, 5%);
+    padding-left: 15px;
+
+    &:focus {
+      border: 1px solid lighten(#32526a, 15%);
+    }
+  }
+
+  input[type="password"] {
+    letter-spacing: 3px;
+    font-weight: 700;
   }
 }
 
