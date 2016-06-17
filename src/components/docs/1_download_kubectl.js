@@ -26,7 +26,7 @@ module.exports = React.createClass ({
     switch(this.state.selectedPlatform) {
       case "Windows":
         return <div>
-          <p>Currently, there's no official release of kubectl for Windows. Please refer to <a href="https://github.com/eirslett/kubectl-windows" target="_blank">https://github.com/eirslett/kubectl-windows</a> for a binary download and instructions on how to build the kubectl client for Windows.</p>
+          <p>Currently, there&apos;s no official release of <code>kubectl</code> for Windows. Please refer to <a href="https://github.com/eirslett/kubectl-windows" target="_blank">https://github.com/eirslett/kubectl-windows</a> for a binary download and instructions on how to build the <code>kubectl</code> client for Windows.</p>
         </div>;
       case "MacWithoutBrew":
         return <div>
@@ -71,7 +71,7 @@ module.exports = React.createClass ({
             </Prompt>
           </CodeBlock>
 
-          <p>That should be it. To verify you have kubectl available in your path, do this little check:</p>
+          <p>That should be it. To verify you have <code>kubectl</code> available in your path, do this little check:</p>
 
           <CodeBlock>
             <Prompt>
@@ -96,7 +96,7 @@ module.exports = React.createClass ({
             </Prompt>
           </CodeBlock>
 
-          <p>To verify you have kubectl available in your path, do this little check:</p>
+          <p>To verify you have <code>kubectl</code> available in your path, do this little check:</p>
 
           <CodeBlock>
             <Prompt>
@@ -118,14 +118,14 @@ module.exports = React.createClass ({
       <Slide>
         <Markdown>
           {`
-          Download or update kubectl
-          ==========================
+          # Download or update kubectl
 
-          Let’s make sure you have the current stable version of kubectl, the Kubernetes client CLI, available.
+          Let’s make sure you have the current stable version of \`kubectl\`, the Kubernetes client CLI, available.
 
-          🐣 To the newbie: kubectl is the CLI you’ll use to work with your cluster mostly. Some things can be done using the Kubernetes web dashboard, but only the CLI provides access to all Kubernetes functionality.
+          🐣 __To the newbie__: \`kubectl\` is the CLI you’ll use to work with your cluster mostly. Some things can be
+          done using the web-based Kubernetes Dashboard, but only the CLI provides access to all Kubernetes functionality.
 
-          If you already have kubectl, you should have at least version 1.2.x installed. To check the version number, do the following:
+          If you already have \`kubectl\`, you should have at least version 1.2.x installed. To check the version number, do the following:
           `}
           <CodeBlock>
             <Prompt>

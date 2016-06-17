@@ -10,8 +10,8 @@ module.exports = React.createClass ({
       return (
         <Slide>
           <h1>Configure kubectl for your cluster</h1>
-          <p>Here we set up a cluster configuration for kubectl to work with your Giant Swarm Kubernetes cluster.</p>
-          <p>Everything you need for this step is contained in the giantswarm-kubeconfig below:</p>
+          <p>Here we set up a cluster configuration for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster.</p>
+          <p>Everything you need for this step is contained in the <code>giantswarm-kubeconfig</code> below:</p>
 
           <FileBlock fileName="giantswarm-kubeconfig">
           {`
@@ -35,13 +35,13 @@ module.exports = React.createClass ({
           `}
           </FileBlock>
 
-          <p>Please save that file to your file system.</p>
+          <p>Please save that file to your file system with the name <code>giantswarm-kubeconfig</code>.</p>
 
-          <p>Be aware that the file contains your client certificates, so treat this file as sensitive data and make sure it's only accessible to authorized users.</p>
+          <p>Be aware that the file contains your client certificates, so treat this file as sensitive data and make sure it&apos;s only accessible to authorized users.</p>
 
-          <p>Now change into the directory containing the giantswarm-kubeconfig file in a terminal.</p>
+          <p>Now change into the directory containing the <code>giantswarm-kubeconfig</code> file in a terminal.</p>
 
-          <p>To make the configuration from the provided giantswarm-kubeconfig file available to your kubectl, add its path to the KUBECONFIG environment variable by executing this:</p>
+          <p>To make the configuration from the provided <code>giantswarm-kubeconfig</code> file available to your <code>kubectl</code>, add its path to the <code>KUBECONFIG</code> environment variable by executing this:</p>
 
           <CodeBlock>
             <Prompt>
@@ -49,7 +49,7 @@ module.exports = React.createClass ({
             </Prompt>
           </CodeBlock>
 
-          <p>🏆 Real pros add something like that (including the full path instead of $(pwd)) to a terminal profile, e. g. ~/.bash_profile to have this available in all new shell sessions.</p>
+          <p>🏆 Real pros add something like the above (including the full path instead of <code>$(pwd)</code>) to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
 
           <p>Now, whenever you want to switch to working with your Giant Swarm cluster, use this</p>
 

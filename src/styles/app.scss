@@ -1,12 +1,12 @@
 @import "../../node_modules/codemirror/theme/solarized.css";
 @import "../../node_modules/codemirror/lib/codemirror.css";
 
-@import "transitions";
-
 @import "vendor/clearfix";
 @import "vendor/simple-grid";
 
 @import "base";
+
+@import "transitions";
 
 @import "components/component_slider";
 @import "components/button";

@@ -23,14 +23,13 @@ module.exports = React.createClass ({
 
           <Markdown>
             {`
-            Get started with your Kubernetes cluster
-            ========================================
+            # Get started with your Kubernetes cluster
 
-            We'll guide you through the following steps to help you successfully run your own services on your Kubernetes cluster:
+            Follow these steps to get started quickly:
 
-            1. Download (or update) kubectl
-            2. Configure kubectl for your cluster
-            3. Running a simple example
+            1. Download (or update) \`kubectl\`
+            2. Configure \`kubectl\` for your cluster
+            3. Run a simple example
             `}
           </Markdown>
           <br/>
