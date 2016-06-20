@@ -1,5 +1,6 @@
-FROM node:6.2.2-wheezy
-
+FROM node:6.2.2-slim
+RUN apt-get update -y
+RUN apt-get install -y git build-essential python
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
