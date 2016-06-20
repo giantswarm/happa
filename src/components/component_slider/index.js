@@ -68,7 +68,7 @@ module.exports = class ComponentSlider extends Component {
 
   render() {
     return (
-      <div className="component_slider--container col-8">
+      <div className="component_slider--container">
         {this.state.currentSlideAsArray}
       </div>
     );

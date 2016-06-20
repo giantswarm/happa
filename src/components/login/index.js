@@ -1,9 +1,10 @@
 "use strict";
 
-var actions = require('../reflux_actions/user_actions');
-var store   = require('../reflux_stores/user_store');
-var Reflux  = require('reflux');
-var React   = require('react');
+var actions                 = require('../reflux_actions/user_actions');
+var store                   = require('../reflux_stores/user_store');
+var flashMessageActions     = require('../reflux_actions/flash_message_actions');
+var Reflux                  = require('reflux');
+var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 module.exports = React.createClass({
@@ -19,12 +20,8 @@ module.exports = React.createClass({
   },
 
   onAuthenticateCompleted: function() {
-    // Login was a success, should transition
-    // if (nextPath) {
-      // this.context.router.replaceWith(nextPath);
-    // } else {
+    flashMessageActions.clearAll();
     this.context.router.push('/');
-    // }
   },
 
   onAuthenticateFailed: function(message) {
