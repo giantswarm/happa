@@ -6,7 +6,6 @@
   <title></title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
   <link rel="icon" sizes="192x192" href="/images/app_icon_192.png">
   <link rel="icon" sizes="128x128" href="/images/app_icon_128.png">
   <link rel="apple-touch-icon" sizes="128x128" href="/images/app_icon_128.png">
@@ -15,6 +14,16 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <script>
+  var config = {
+    enableTracking: false,
+    // TODO: Make this configurable via Docker environment variable
+    //defaultApiEndpoint: 'https://api.giantswarm.io'
+    defaultApiEndpoint: 'http://docker.dev:9000',
+    passageEndpoint: 'http://docker.dev:5000'
+  }
+  window.config = config;
+  </script>
 </head>
 <body>
   <!--[if lt IE 8]>
@@ -29,8 +38,7 @@
     </div>
   </noscript>
 
-  <div id="app">
-  </div>
+  <div id="app"></div>
   <script type="text/javascript" src="vendor/modernizr.js"></script>
   <script type="text/javascript" src="assets/app.js"></script>
 </body>

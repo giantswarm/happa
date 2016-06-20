@@ -1,0 +1,29 @@
+button, .button
+  background-color: #52728a
+  border: 0px
+  border-radius: 5px
+  color: #fff
+  padding: 10px 20px
+  font-weight: 400
+  outline: none
+  cursor: pointer
+  margin-bottom: 10px
+  transition: background-color 0.1s cubic-bezier(0, -0.41, 0.19, 1.44)
+
+button.primary
+  background-color: #2d9a2c
+
+button.primary:hover
+  background-color: lighten(#2d9a2c, 5%)
+
+button:hover
+  background-color: lighten(#52728a, 5%)
+
+button.primary:active
+  background-color: darken(#2d9a2c, 5%) !important
+
+button:active
+  background-color: darken(#52728a, 5%) !important
+
+button:disabled:hover, button:disabled
+  background-color: #aaa

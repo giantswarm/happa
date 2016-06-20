@@ -38,6 +38,7 @@ module.exports = class ComponentSlider extends Component {
   }
 
   setSlide(slideNumber) {
+    window.scrollTo(0, 0);
     var direction;
 
     if (slideNumber < this.props.slides.length) {
@@ -67,10 +68,8 @@ module.exports = class ComponentSlider extends Component {
 
   render() {
     return (
-      <div className="component_slider--container col-6">
-        <ReactCSSTransitionGroup transitionName={`slide-${this.state.direction}`} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-          {this.state.currentSlideAsArray}
-        </ReactCSSTransitionGroup>
+      <div className="component_slider--container col-8">
+        {this.state.currentSlideAsArray}
       </div>
     );
   }
