@@ -5,6 +5,7 @@ var {Link, IndexLink}  = require('react-router');
 
 var UserActions = require('./reflux_actions/user_actions');
 var UserStore   = require('./reflux_stores/user_store');
+var FlashMessages = require('./flash_messages/index');
 
 //<Link to="/services/new" activeClassName="active">New Service</Link>
 
@@ -22,7 +23,11 @@ module.exports = React.createClass ({
             </div>
           </div>
         </nav>
-        {this.props.children}
+
+        <div className="main col-8">
+          <FlashMessages />
+          {this.props.children}
+        </div>
       </div>
     );
   }
