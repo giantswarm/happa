@@ -28,10 +28,11 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    console.log(_.map(Array.from(this.state.flashMessages), this.makeFlashComponent));
     return (
       <div className="flash-messages--container">
-        { _.map(flashStore.getAll(), this.makeFlashComponent) }
+        <ReactCSSTransitionGroup transitionName='flash-messages--transition' transitionAppear={true} transitionAppearTimeout={200} transitionEnterTimeout={200} transitionLeaveTimeout={0}>
+          { _.map(flashStore.getAll(), this.makeFlashComponent) }
+        </ReactCSSTransitionGroup>
       </div>
     );
   }

@@ -4,7 +4,6 @@ var Slide = require('../component_slider/slide');
 var Markdown = require('./markdown');
 var {CodeBlock, Prompt, Output} = require('./codeblock');
 var FileBlock = require('./fileblock');
-var flashActions = require('../reflux_actions/flash_message_actions');
 
 module.exports = React.createClass ({
     testFileContent() {
