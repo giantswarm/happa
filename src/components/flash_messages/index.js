@@ -18,7 +18,7 @@ module.exports = React.createClass({
     return(
       <div className={"flash-messages--flash-message" + " flash-messages--" + flashMessage.class} key={flashMessage.key}>
         {flashMessage.message}
-        <div className="flash-messages--dismiss" onClick={this.dismissFlash.bind(this, flashMessage)}>x</div>
+        <i className="fa fa-times flash-messages--dismiss" aria-hidden="true" onClick={this.dismissFlash.bind(this, flashMessage)}></i>
       </div>
     );
   },
