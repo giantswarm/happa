@@ -18,14 +18,6 @@ module.exports = React.createClass ({
       `);
     },
 
-    addFlash() {
-      flashActions.add({
-        icon: "warning",
-        message: "I am a cool flash message",
-        class: "success"
-      });
-    },
-
     render() {
       return (
         <Slide>
@@ -44,7 +36,6 @@ module.exports = React.createClass ({
           <br/>
           <br/>
           <button className="primary" onClick={this.props.onContinue}>Continue</button><br/>
-          <button className="primary" onClick={this.addFlash}>flash</button><br/>
         </Slide>
       );
     }
