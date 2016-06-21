@@ -53,3 +53,15 @@ The view listens for changes to the store and updates its state.
 By following these guidelines we should get some benefits in keeping component
 logic focused on rendering, and not on doing the actual work of manipulating
 state.
+
+
+Icons
+-----
+
+Happa uses a custom icon pack which we can manage at https://fortawesome.com
+Login details are in keypass, search for 'fortawesome'.
+The `<script src="https://use.fonticons.com/d940f7eb.js"></script>` line in
+index.html is what includes the file for us.
+
+More information about our font kit and how to use it can be found here:
+https://fortawesome.com/kits/d940f7eb/docs
