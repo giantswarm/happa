@@ -40,3 +40,23 @@
   border-color: #ebccd1
   color: #a94442
 
+
+.flash-messages--transition-appear, .flash-messages--transition-enter
+  opacity: 0
+  transform: translateY(-5px)
+
+.flash-messages--transition-appear-active, .flash-messages--transition-enter-active
+  opacity: 1
+  transform: translateY(0px)
+  transition: all 0.2s linear
+
+.flash-messages--transition-leave
+  opacity: 0
+  display: none
+
+.flash-messages--transition-leave-active
+  transition: all 0s linear
+  opacity: 0
+  display: none
+
+

@@ -3,6 +3,7 @@
 var actions                 = require('../reflux_actions/user_actions');
 var store                   = require('../reflux_stores/user_store');
 var flashMessageActions     = require('../reflux_actions/flash_message_actions');
+var FlashMessages           = require('../flash_messages/index.js');
 var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
@@ -22,55 +23,44 @@ module.exports = React.createClass({
   onAuthenticateCompleted: function() {
     flashMessageActions.clearAll();
     this.context.router.push('/');
-  },
-
-  onAuthenticateFailed: function(message) {
-    this.setState({
-      flash: {
-        category: 'error',
-        content: message
-      }
+    flashMessageActions.add({
+      message: 'Signed in succesfully.',
+      class: "success"
     });
   },
 
-  clearErrorMessage: function() {
-    this.setState({
-      flash: undefined
+  onAuthenticateFailed: function(message) {
+    flashMessageActions.add({
+      message: message,
+      class: "danger"
     });
   },
 
   updateEmail(event) {
-    this.clearErrorMessage();
+    flashMessageActions.clearAll();
     actions.updateEmail(event.target.value);
   },
 
   updatePassword(event) {
-    this.clearErrorMessage();
+    flashMessageActions.clearAll();
     actions.updatePassword(event.target.value);
   },
 
   logIn(e) {
     e.preventDefault();
-    this.clearErrorMessage();
-
-    if ( ! this.state.user.password) {
-      this.setState({
-        flash: {
-          category: 'error',
-          content: 'Please enter your password.'
-        }
-      });
-    }
+    flashMessageActions.clearAll();
 
     if ( ! this.state.user.email) {
-      this.setState({
-        flash: {
-          category: 'error',
-          content: 'Please provide the email address that you used for registration.'
-        }
+      flashMessageActions.add({
+        message: 'Please provide the email address that you used for registration.',
+        class: "danger"
+      });
+    } else if ( ! this.state.user.password) {
+      flashMessageActions.add({
+        message: 'Please enter your password.',
+        class: "danger"
       });
     }
-
 
     if (this.state.user.email && this.state.user.password) {
       actions.authenticate(this.state.user.email, this.state.user.password);
@@ -86,9 +76,7 @@ module.exports = React.createClass({
         <ReactCSSTransitionGroup transitionName={`login_form--transition`} transitionAppear={true} transitionAppearTimeout={200} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
           <div className="login_form--container col-4">
             <div className="login_form--flash-container">
-              <ReactCSSTransitionGroup transitionName={`login_form--transition`} transitionAppear={true} transitionAppearTimeout={200} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-                { this.state.flash ? <div className={"login_form--flash " + this.state.flash.category}>{this.state.flash.content}</div> : null}
-              </ReactCSSTransitionGroup>
+              <FlashMessages />
             </div>
 
             <h1>Giant Swarm Web UI</h1>

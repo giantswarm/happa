@@ -21,6 +21,10 @@ module.exports = React.createClass({
 
   onLogoutCompleted: function() {
     flashMessageActions.clearAll();
+    flashMessageActions.add({
+      message: 'You have logged out.',
+      class: "info"
+    });
     this.context.router.push('/login');
   },
 
