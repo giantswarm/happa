@@ -1,7 +1,7 @@
 'use strict';
 
 var React       = require('react');
-var ReactRouter, {applyRouterMiddleware, Router, Route, IndexRoute, hashHistory} = require('react-router');
+var ReactRouter, {applyRouterMiddleware, Router, Route, IndexRoute, browserHistory} = require('react-router');
 var useScroll   = require('react-router-scroll');
 var render      = require('react-dom').render;
 
@@ -33,7 +33,7 @@ function requireAuth(nextState, replace) {
 }
 
 render((
-  <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
+  <Router history={browserHistory} render={applyRouterMiddleware(useScroll())}>
     <Route path = "/login" component={login} />
     <Route path = "/signup/:contactId/:token" component={signup} />
     <Route path="/" component={Layout}>
