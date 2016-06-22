@@ -7,7 +7,7 @@ var {Link}  = require('react-router');
 module.exports = React.createClass({
   render: function() {
     return (
-      <div className="col-8 centered">
+      <div>
         <h1>Whoops &ndash; Page not found :(</h1>
         <p>Maybe the URL you typed in was wrong, or maybe we moved something around.<br/>
         In any case, what you were looking for isn't here! Sorry!</p>
