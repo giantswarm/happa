@@ -1,9 +1,10 @@
 "use strict";
 
-var actions = require('../reflux_actions/user_actions');
-var store   = require('../reflux_stores/user_store');
-var Reflux  = require('reflux');
-var React   = require('react');
+var actions                 = require('../reflux_actions/user_actions');
+var flashMessageActions     = require('../reflux_actions/flash_message_actions');
+var store                   = require('../reflux_stores/user_store');
+var Reflux                  = require('reflux');
+var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 module.exports = React.createClass({
@@ -19,6 +20,11 @@ module.exports = React.createClass({
   },
 
   onLogoutCompleted: function() {
+    flashMessageActions.clearAll();
+    flashMessageActions.add({
+      message: 'You have logged out.',
+      class: "info"
+    });
     this.context.router.push('/login');
   },
 

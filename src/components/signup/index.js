@@ -1,15 +1,16 @@
 "use strict";
 
-var React = require('react');
-var Reflux  = require('reflux');
-var $     = require('jquery');
-var Passage = require("../../lib/passage_client");
-var passage = new Passage({endpoint: window.config.passageEndpoint});
-var actions = require("../reflux_actions/sign_up_form_actions");
-var store = require("../reflux_stores/sign_up_form_store");
-var PasswordField = require("./password_field");
-var StatusMessage = require('./status_message');
-var TermsOfService = require('./terms_of_service');
+var React               = require('react');
+var Reflux              = require('reflux');
+var $                   = require('jquery');
+var Passage             = require("../../lib/passage_client");
+var passage             = new Passage({endpoint: window.config.passageEndpoint});
+var actions             = require("../reflux_actions/sign_up_form_actions");
+var store               = require("../reflux_stores/sign_up_form_store");
+var PasswordField       = require("./password_field");
+var StatusMessage       = require('./status_message');
+var TermsOfService      = require('./terms_of_service');
+var flashMessageActions = require('../reflux_actions/flash_message_actions');
 
 module.exports = React.createClass({
   contextTypes: {
@@ -52,6 +53,11 @@ module.exports = React.createClass({
   accountCreated: function() {
     // Delay a bit so the user sees the DONE message
     // and then transition to the getting started guide
+
+    flashMessageActions.add({
+      message: 'Account created! Welcome to Giant Swarm.',
+      class: "success"
+    });
 
     setTimeout(() => {
       this.context.router.push('/');
