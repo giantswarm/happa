@@ -30,6 +30,7 @@ module.exports = React.createClass ({
             1. Download (or update) \`kubectl\`
             2. Configure \`kubectl\` for your cluster
             3. Run a simple example
+            4. Inspecting your service and next steps
             `}
           </Markdown>
           <br/>
