@@ -82,7 +82,7 @@ module.exports = React.createClass({
             <h1>Giant Swarm Web UI</h1>
             <form onSubmit={this.logIn}>
               <div className="textfield">
-                <label>E-mail</label>
+                <label>Email</label>
                 <input value={this.state.user.email}
                        type="text"
                        id="email"
