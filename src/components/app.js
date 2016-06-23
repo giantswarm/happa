@@ -1,7 +1,7 @@
 'use strict';
 
 var React       = require('react');
-var ReactRouter, {applyRouterMiddleware, Router, Route, IndexRoute, hashHistory} = require('react-router');
+var ReactRouter, {applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRoute, browserHistory} = require('react-router');
 var useScroll   = require('react-router-scroll');
 var render      = require('react-dom').render;
 
@@ -11,6 +11,7 @@ var docs       = require('./docs/index');
 var login      = require('./login/index');
 var logout     = require('./logout/index');
 var signup     = require('./signup/index');
+var notFound   = require('./not_found/index');
 window.Passage = require('../lib/passage_client');
 
 var UserActions = require('./reflux_actions/user_actions');
@@ -33,13 +34,15 @@ function requireAuth(nextState, replace) {
 }
 
 render((
-  <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
+  <Router history={browserHistory} render={applyRouterMiddleware(useScroll())}>
     <Route path = "/login" component={login} />
+    <Route path = "/logout" component={logout} />
     <Route path = "/signup/:contactId/:token" component={signup} />
+
     <Route path="/" component={Layout}>
       <IndexRoute component={docs} onEnter={requireAuth} />
       <Route path = "/services/new" component={newService} onEnter={requireAuth} />
-      <Route path = "/logout" component={logout} />
+      <Route path="*" component={notFound} />
     </Route>
   </Router>
 ), appContainer);

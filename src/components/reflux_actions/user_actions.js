@@ -24,7 +24,7 @@ UserActions.authenticate.listen(function(email, password) {
     })
     .then(function(response) {
       if (response.result === true) {
-        giantSwarm.user()
+        return giantSwarm.user()
         .then((data) => {
           var userData = {
             email: data.result.email,
