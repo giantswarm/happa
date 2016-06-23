@@ -28,14 +28,17 @@ module.exports = React.createClass ({
             selector:
               app: helloworld
           ---
-          apiVersion: v1
-          kind: ReplicationController
+          apiVersion: extensions/v1beta1
+          kind: Deployment
           metadata:
             name: helloworld
             labels:
               app: helloworld
           spec:
             replicas: 2
+            selector:
+              matchLabels:
+                app: helloworld
             template:
               metadata:
                 labels:
@@ -50,8 +53,8 @@ module.exports = React.createClass ({
           </FileBlock>
 
           <p>Save the above manifest in a file called <code>helloworld-manifest.yaml</code>.</p>
-          <p>🐣  If you&apos;re new to Kubernetes: A manifest describes things to create in Kubernetes. In this case the manifest describes two different things, a replication controller and a service. The replication controller ensures that a number of pods (two, actually) containing Docker containers from a certain image are running. The service is there to expose these containers inside your cluster via a certain hostname and port.</p>
-          <p>Now use <code>kubectl</code> to create the service and the replication controller:</p>
+          <p>🐣  If you&apos;re new to Kubernetes: A manifest describes things to create in Kubernetes. In this case the manifest describes two different things, a service and a deployment. The service is there to expose containers (here: the ones with the label app: helloworld) inside your cluster via a certain hostname and port. The deployment describes your helloworld deployment. It manages a replica set, which ensures that a number of pods (two, actually) containing Docker containers from a certain image are running.</p>
+          <p>Now use <code>kubectl</code> to create the service and the deployment:</p>
 
           <CodeBlock>
             <Prompt>
@@ -60,12 +63,12 @@ module.exports = React.createClass ({
             <Output>
               {`
                 service "helloworld" created
-                replicationcontroller "helloworld" created
+                deployment "helloworld" created
               `}
             </Output>
           </CodeBlock>
 
-          <p>The replication controller will create pods with the Docker containers running. Once they are up, which should take only a few seconds, you can access them using this URL:</p>
+          <p>The deployment will create a replica set, which in turn will create pods with the Docker containers running. Once they are up, which should take only a few seconds, you can access them using this URL:</p>
 
           <a href="http://go9cdgqfnr.giantswarm-kaas.io/api/v1/proxy/namespaces/default/services/helloworld/" target="_blank">http://go9cdgqfnr.giantswarm-kaas.io/api/v1/proxy/namespaces/default/services/helloworld/</a>
 
