@@ -13,11 +13,13 @@ ClusterActions.fetchAll.listen(function() {
 
   var giantSwarm = new GiantSwarm.Client();
 
+  // Fetch all organizations
   giantSwarm.memberships()
   .then(response => {
-    return response.result; // Array of organizations
+    return response.result; // Return just the array of organizations
   })
   .then(organizations => {
+    // For each organization, fetch the clusters it has
     return Promise.all(_.map(organizations, organizationName => {
       return giantSwarm.clusters({ organizationName })
              .then(response => {
@@ -26,12 +28,15 @@ ClusterActions.fetchAll.listen(function() {
     }));
   })
   .then(clustersPerOrganization => {
+    // Flatten the array of arrays of clusters
     var clusters = _.flatten(clustersPerOrganization);
 
+    // Sort descending by date
     var clustersSortedByDate = _.sortBy(clusters, cluster => {
       return Date.parse(cluster.create_date);
     }).reverse();
 
+    // Return just the IDs
     var justClusterIDs = _.map(clustersSortedByDate, cluster => {
       return cluster.id;
     });
@@ -39,20 +44,24 @@ ClusterActions.fetchAll.listen(function() {
     return justClusterIDs;
   })
   .then(clusterIDs => {
+    // For each ID fetch cluster details
+    // Return null if fetching of details fails for any reason.
+    // TODO: Reconsider if returning null on failure here is wise.
     return Promise.all(_.map(clusterIDs, clusterId => {
       return giantSwarm.clusterDetails({ clusterId })
              .then(response => {
                 return response.result;
              })
-             // Deal graciously with clusters for which there are no details.
              .catch(error => {
                 return null;
              });
     }));
   })
+  // Resolve the promise wtih an array of all cluster details.
   .then(orderedClusterDetails => {
     action.completed(_.compact(orderedClusterDetails));
   })
+  // If something went wrong, fail the action
   .catch(error => {
     action.failed(error);
   });
