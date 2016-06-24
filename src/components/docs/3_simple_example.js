@@ -1,11 +1,35 @@
 'use strict';
-var React = require('react');
-var Slide = require('../component_slider/slide');
-var Markdown = require('./markdown');
+var React                       = require('react');
+var Reflux                      = require('reflux');
+var Slide                       = require('../component_slider/slide');
+var Markdown                    = require('./markdown');
 var {CodeBlock, Prompt, Output} = require('./codeblock');
-var FileBlock = require('./fileblock');
+var FileBlock                   = require('./fileblock');
+var ClusterStore                = require('../reflux_stores/cluster_store.js');
+var ClusterActions              = require('../reflux_actions/cluster_actions.js');
 
 module.exports = React.createClass ({
+    mixins: [Reflux.connect(ClusterStore,'clusters'), Reflux.listenerMixin],
+
+    componentDidMount: function() {
+      if (this.state.clusters === "NOTLOADED") {
+        ClusterActions.fetchAll();
+      }
+    },
+
+    linkToHelloWorld: function() {
+      if (this.state.clusters === "NOTLOADED") {
+        return "Figuring out the url...";
+      } else if (this.state.clusters === "LOADINGFAILED") {
+        return "Could not figure out the url for your hello world app. Sorry.";
+      } else {
+        var url = `${this.state.clusters[0].api_endpoint}/api/v1/proxy/namespaces/default/services/helloworld/`;
+        return (
+          <a href={url} target="_blank">{url}</a>
+        );
+      }
+    },
+
     render() {
       return (
         <Slide>
@@ -70,7 +94,7 @@ module.exports = React.createClass ({
 
           <p>The deployment will create a replica set, which in turn will create pods with the Docker containers running. Once they are up, which should take only a few seconds, you can access them using this URL:</p>
 
-          <a href="http://go9cdgqfnr.giantswarm-kaas.io/api/v1/proxy/namespaces/default/services/helloworld/" target="_blank">http://go9cdgqfnr.giantswarm-kaas.io/api/v1/proxy/namespaces/default/services/helloworld/</a>
+          { this.linkToHelloWorld() }
 
           <p>This should show a little welcome message from the Giant Swarm team.</p>
 

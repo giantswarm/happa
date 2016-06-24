@@ -1,11 +1,58 @@
 'use strict';
-var React = require('react');
-var Slide = require('../component_slider/slide');
-var Markdown = require('./markdown');
+var React                       = require('react');
+var Reflux                      = require('reflux');
+var Slide                       = require('../component_slider/slide');
+var Markdown                    = require('./markdown');
 var {CodeBlock, Prompt, Output} = require('./codeblock');
-var FileBlock = require('./fileblock');
+var FileBlock                   = require('./fileblock');
+var ClusterStore                = require('../reflux_stores/cluster_store.js');
+var ClusterActions              = require('../reflux_actions/cluster_actions.js');
 
 module.exports = React.createClass ({
+    mixins: [Reflux.connect(ClusterStore,'clusters'), Reflux.listenerMixin],
+
+    componentDidMount: function() {
+      if (this.state.clusters === "NOTLOADED") {
+        ClusterActions.fetchAll();
+      }
+    },
+
+    kubeConfig: function() {
+      if (this.state.clusters === "NOTLOADED") {
+        return <FileBlock fileName="giantswarm-kubeconfig">
+          Loading ...
+        </FileBlock>;
+      } else if (this.state.clusters === "LOADINGFAILED") {
+        return <FileBlock fileName="giantswarm-kubeconfig">
+          Could not load your kubeconfig, sorry. Please contact support.
+        </FileBlock>;
+      } else {
+        return (
+          <FileBlock fileName="giantswarm-kubeconfig">
+            {`
+            apiVersion: v1
+            kind: Config
+            clusters:
+             - cluster:
+                 certificate-authority-data: ${this.state.clusters[0].certificate_authority_data}
+                 server: ${this.state.clusters[0].api_endpoint}
+               name: ${this.state.clusters[0].name}
+            contexts:
+             - context:
+                 cluster: ${this.state.clusters[0].name}
+                 user: ${this.state.clusters[0].service_accounts[0].name}
+               name: giantswarm-default
+            users:
+             - name: ${this.state.clusters[0].service_accounts[0].name}
+               user:
+                 client-certificate-data: ${this.state.clusters[0].service_accounts[0].client_certificate_data}
+                 client-key-data: ${this.state.clusters[0].service_accounts[0].client_key_data}
+            `}
+          </FileBlock>
+        );
+      }
+    },
+
     render() {
       return (
         <Slide>
@@ -13,27 +60,7 @@ module.exports = React.createClass ({
           <p>Here we set up a cluster configuration for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster.</p>
           <p>Everything you need for this step is contained in the <code>giantswarm-kubeconfig</code> below:</p>
 
-          <FileBlock fileName="giantswarm-kubeconfig">
-          {`
-          apiVersion: v1
-          kind: Config
-          clusters:
-           - cluster:
-               certificate-authority-data: <CA_DATA>
-               server: https://go9cdgqfnr.giantswarm-kaas.io
-             name: go9cdgqfnr
-          contexts:
-           - context:
-               cluster: go9cdgqfnr
-               user: giantswarm-default-admin
-             name: giantswarm-default
-          users:
-           - name: giantswarm-default-admin
-             user:
-               client-certificate-data: <CLIENT_CERTIFICATE_DATA>
-               client-key-data: <CLIENT_KEY_DATA>
-          `}
-          </FileBlock>
+          { this.kubeConfig() }
 
           <p>Please save that file to your file system with the name <code>giantswarm-kubeconfig</code>.</p>
 
