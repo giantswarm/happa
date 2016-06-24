@@ -1,6 +1,8 @@
 "use strict";
 var Reflux = require('reflux');
-var actions = require("../reflux_actions/user_actions");
+var userActions = require("../reflux_actions/user_actions");
+var clusterActions = require("../reflux_actions/cluster_actions");
+var clusterStore = require("../reflux_stores/cluster_store");
 var _ = require('underscore');
 var validate = require('validate.js');
 
@@ -12,7 +14,7 @@ var user = {
 };
 
 module.exports = Reflux.createStore({
-  listenables: actions,
+  listenables: userActions,
 
   getInitialState: function() {
     user = {
@@ -51,6 +53,8 @@ module.exports = Reflux.createStore({
     user.authenticated = true;
     user.authenticating = false;
     user.password = "";
+
+    clusterActions.fetchAll();
     this.trigger(user);
   },
 
