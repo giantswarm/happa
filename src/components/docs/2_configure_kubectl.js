@@ -41,17 +41,27 @@ module.exports = React.createClass ({
 
           <p>Now change into the directory containing the <code>giantswarm-kubeconfig</code> file in a terminal.</p>
 
-          <p>To make the configuration from the provided <code>giantswarm-kubeconfig</code> file available to your <code>kubectl</code>, add its path to the <code>KUBECONFIG</code> environment variable by executing this:</p>
+          <p>To make the configuration from the provided <code>giantswarm-kubeconfig</code> file available to your <code>kubectl</code>, add its path to the <code>KUBECONFIG</code> environment variable by executing this (replacing <code>/path/to</code> with your actual path):</p>
 
           <CodeBlock>
             <Prompt>
-              {`export KUBECONFIG="\$\{KUBECONFIG\}:$(pwd)/giantswarm-kubeconfig"`}
+              {`export KUBECONFIG="\$\{KUBECONFIG\}:/path/to/giantswarm-kubeconfig"`}
             </Prompt>
           </CodeBlock>
 
-          <p>🏆 Real pros add something like the above (including the full path instead of <code>$(pwd)</code>) to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
+          <p><i className="fa fa-graduation-cap" title="For learners"></i> To save some time in the future, add the command above to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
 
-          <p>Now, whenever you want to switch to working with your Giant Swarm cluster, use this</p>
+          <p>Now, whenever you want to switch to working with your Giant Swarm cluster, use this command:</p>
+
+          <CodeBlock>
+            <Prompt>
+              {`kubectl config use-context giantswarm-default`}
+            </Prompt>
+          </CodeBlock>
+
+          <p><i className="fa fa-graduation-cap" title="For learners"></i> Again, here you can save your future self some time by creating an alias.</p>
+
+          <p>Now let&apos;s start something on your cluster.</p>
 
           <button className="primary" onClick={this.props.onContinue}>Continue</button><br/>
           <button onClick={this.props.onPrevious}>Previous</button>
