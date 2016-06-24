@@ -49,7 +49,7 @@ module.exports = React.createClass ({
             </Prompt>
           </CodeBlock>
 
-          <p>🏆 Real pros add something like the above (including the full path instead of <code>$(pwd)</code>) to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
+          <p><i className="fa fa-graduation-cap" title="For learners"></i> To save some time in the future, add the command above to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
 
           <p>Now, whenever you want to switch to working with your Giant Swarm cluster, use this</p>
 

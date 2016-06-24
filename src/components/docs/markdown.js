@@ -6,7 +6,7 @@ module.exports = React.createClass ({
   rawMarkup: function() {
     return React.Children.map(this.props.children, child => {
       if (typeof child === 'string') {
-        return <span dangerouslySetInnerHTML={ {__html: marked(this.stripIndent(child), {sanitize: true})}} />;
+        return <span dangerouslySetInnerHTML={ {__html: marked(this.stripIndent(child), {sanitize: false})}} />;
       } else {
         return child;
       }
