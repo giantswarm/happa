@@ -32,17 +32,6 @@ module.exports = {
     new webpack.optimize.AggressiveMergingPlugin()
   ],
 
-  resolve: {
-    extensions: ['', '.js'],
-    alias: {
-      'styles': __dirname + '/src/styles',
-      'mixins': __dirname + '/src/mixins',
-      'components': __dirname + '/src/components/',
-      'stores': __dirname + '/src/stores/',
-      'actions': __dirname + '/src/actions/'
-    }
-  },
-
   module: {
     preLoaders: [{
       test: /\.js$/,
