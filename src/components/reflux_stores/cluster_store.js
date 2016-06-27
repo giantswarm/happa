@@ -16,10 +16,6 @@ module.exports = Reflux.createStore({
     return clusterStore[0];
   },
 
-  onFetchAllStarted: function() {
-    console.log('started');
-  },
-
   onFetchAllCompleted: function(clusters) {
     clusterStore = clusters;
     this.trigger(clusterStore);

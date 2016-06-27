@@ -54,7 +54,7 @@ module.exports = class ComponentSlider extends Component {
         direction: direction
       });
     } else {
-      console.log("At the last slide.");
+      // Tried to get to a slide that doesn't exist. Do nothing.
     }
   }
 

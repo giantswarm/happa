@@ -101,8 +101,6 @@ var Passage = function(config) {
         "password": params.password
       };
 
-      console.log(url);
-
       var promise = request.post(url)
       .timeout(config.timeout_ms)
       .send(payload)
