@@ -41,6 +41,8 @@ render((
 
     <Route path="/" component={Layout}>
       <IndexRoute component={docs} onEnter={requireAuth} />
+      <Route path = "/docs" component={docs} onEnter={requireAuth} />
+      <Route path = "/docs/:pageId" component={docs} onEnter={requireAuth} />
       <Route path = "/services/new" component={newService} onEnter={requireAuth} />
       <Route path="*" component={notFound} />
     </Route>

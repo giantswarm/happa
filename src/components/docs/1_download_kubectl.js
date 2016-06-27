@@ -150,8 +150,8 @@ module.exports = React.createClass ({
           {this.selectedInstallInstructions()}
 
         </Markdown>
-        <button className="primary" onClick={this.props.onContinue}>Continue</button><br/>
-        <button onClick={this.props.onPrevious}>Previous</button>
+        <button className="primary" onClick={this.props.goToSlide.bind(null, 'configure')}>Continue</button><br/>
+        <button onClick={this.props.goToSlide.bind(null, 'overview')}>Previous</button>
       </Slide>
     );
   }
