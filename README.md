@@ -36,16 +36,6 @@ Build the production docker container with:
 You'll want to do this if you want to test the production container locally.
 It creates a container called `happa`
 
-By default it will still try to connect to development endpoints for the API and Passage.
-You can use environment variables to change that behavior if needed:
-
-```
-docker run -ti -p 80:80 \
-               -e API_ENDPOINT=https://api.giantswarm.io \
-               -e PASSAGE_ENDPOINT=https://passage.giantswarm.io \
-               happa
-```
-
 Configuration
 -------------
 

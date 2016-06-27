@@ -5,7 +5,7 @@ default: dist
 # Build and run the production environment
 # becomes available at docker.dev
 production: dist docker-build-prod
-	docker run -ti -p 80:80 happa
+	docker run -ti -p 80:80 -e API_ENDPOINT=https://api.giantswarm.io -e PASSAGE_ENDPOINT=https://passage.giantswarm.io happa
 
 # Build production assets and save them in the 'dist' folder
 dist: docker-build-dev
