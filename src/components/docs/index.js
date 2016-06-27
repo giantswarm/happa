@@ -21,9 +21,11 @@ module.exports = React.createClass({
     };
   },
 
-  componentDidMount() {
-    if (this.props.params.pageId) {
-      this.goToSlide(this.props.params.pageId);
+  componentWillReceiveProps(nextProps, nextState) {
+    if (nextProps.params.pageId && nextProps.params.pageId !== this.props.params.pageId) {
+      this.goToSlide(nextProps.params.pageId);
+    } else if (! nextProps.params.pageId) {
+      this.goToSlide("overview");
     }
   },
 

@@ -4,6 +4,7 @@ var Slide = require('../component_slider/slide');
 var Markdown = require('./markdown');
 var {CodeBlock, Prompt, Output} = require('./codeblock');
 var FileBlock = require('./fileblock');
+var {Link, IndexLink}  = require('react-router');
 
 module.exports = React.createClass ({
     testFileContent() {
@@ -26,13 +27,14 @@ module.exports = React.createClass ({
             # Get started with your Kubernetes cluster
 
             Follow these steps to get started quickly:
-
-            1. Download (or update) \`kubectl\`
-            2. Configure \`kubectl\` for your cluster
-            3. Run a simple example
-            4. Inspecting your service and next steps
             `}
           </Markdown>
+          <ol>
+            <li><Link to="/docs/download">Download (or update) <code>kubectl</code></Link></li>
+            <li><Link to="/docs/configure">Configure <code>kubectl</code> for your cluster</Link></li>
+            <li><Link to="/docs/example">Run a simple example</Link></li>
+            <li><Link to="/docs/inspecting">Inspecting your service and next steps</Link></li>
+          </ol>
           <br/>
           <br/>
           <button className="primary" onClick={this.props.goToSlide.bind(null, 'download')}>Continue</button><br/>
