@@ -23,7 +23,7 @@ ClusterActions.fetchAll.listen(function() {
     return Promise.all(_.map(organizations, organizationName => {
       return giantSwarm.clusters({ organizationName })
              .then(response => {
-               return response.result.clusters;
+               return response.result.clusters || [];
              });
     }));
   })
