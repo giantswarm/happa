@@ -11,7 +11,7 @@ production: dist docker-build-prod
 dist: docker-build-dev
 	rm -rf dist
 	mkdir dist
-	docker run -ti -p 8000:8000 -v ${PWD}/src:/usr/src/app/src -v ${PWD}/dist:/usr/src/app/dist happa-dev grunt build
+	docker run -p 8000:8000 -v ${PWD}/src:/usr/src/app/src -v ${PWD}/dist:/usr/src/app/dist happa-dev grunt build
 
 # Build the production docker container, which is just an nginx server
 # with the files from the dist folder
