@@ -41,7 +41,7 @@ module.exports = class ComponentSlider extends Component {
     window.scrollTo(0, 0);
     var direction;
 
-    if (slideNumber < this.props.slides.length) {
+    if (slideNumber >= 0 && slideNumber < this.props.slides.length) {
       if (slideNumber > this.state.currentSlide) {
         direction = 'left';
       } else {
