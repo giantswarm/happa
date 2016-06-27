@@ -99,7 +99,6 @@ module.exports = Reflux.createStore({
   },
 
   onCreateAccountCompleted: function(data) {
-    console.log(data);
     signUpForm.statusMessage = "create_account_completed";
     userActions.authenticate.completed({
       email: data.email,

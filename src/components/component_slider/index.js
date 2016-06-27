@@ -41,7 +41,7 @@ module.exports = class ComponentSlider extends Component {
     window.scrollTo(0, 0);
     var direction;
 
-    if (slideNumber < this.props.slides.length) {
+    if (slideNumber >= 0 && slideNumber < this.props.slides.length) {
       if (slideNumber > this.state.currentSlide) {
         direction = 'left';
       } else {
@@ -54,7 +54,7 @@ module.exports = class ComponentSlider extends Component {
         direction: direction
       });
     } else {
-      console.log("At the last slide.");
+      // Tried to get to a slide that doesn't exist. Do nothing.
     }
   }
 
