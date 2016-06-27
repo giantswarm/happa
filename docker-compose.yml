@@ -1,7 +1,9 @@
 version: "2"
 services:
   happa:
-    build: "./"
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
     image: happa:latest
     command: npm start
     ports:

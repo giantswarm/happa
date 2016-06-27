@@ -88,6 +88,13 @@ module.exports = function (grunt) {
           {
             flatten: true,
             expand: true,
+            src: ['VERSION'],
+            dest: '<%= pkg.dist %>',
+            filter: 'isFile'
+          },
+          {
+            flatten: true,
+            expand: true,
             src: ['<%= pkg.src %>/images/*'],
             dest: '<%= pkg.dist %>/images/'
           },
@@ -95,7 +102,7 @@ module.exports = function (grunt) {
             flatten: true,
             expand: true,
             src: ['<%= pkg.src %>/vendor/*'],
-            dest: '<%= pkg.dist %>/assets/vendor/'
+            dest: '<%= pkg.dist %>/vendor/'
           }
         ]
       }
@@ -103,6 +110,10 @@ module.exports = function (grunt) {
 
     clean: {
       dist: {
+        options: {
+          force: true
+        },
+
         files: [{
           dot: true,
           src: [
@@ -126,7 +137,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', ['karma']);
 
-  grunt.registerTask('build', ['clean', 'copy', 'webpack']);
+  grunt.registerTask('build', ['copy', 'webpack']);
 
   grunt.registerTask('default', []);
 };

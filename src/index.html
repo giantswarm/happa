@@ -16,10 +16,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <script>
   var config = {
-    enableTracking: false,
-    // TODO: Make this configurable via Docker environment variable
-    //defaultApiEndpoint: 'https://api.giantswarm.io'
-    defaultApiEndpoint: 'http://docker.dev:9000',
+    apiEndpoint: 'http://docker.dev:9000',
     passageEndpoint: 'http://docker.dev:5000'
   }
   window.config = config;

@@ -27,21 +27,15 @@ module.exports = {
 
   plugins: [
     new webpack.optimize.DedupePlugin(),
-    //new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin()
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    })
   ],
-
-  resolve: {
-    extensions: ['', '.js'],
-    alias: {
-      'styles': __dirname + '/src/styles',
-      'mixins': __dirname + '/src/mixins',
-      'components': __dirname + '/src/components/',
-      'stores': __dirname + '/src/stores/',
-      'actions': __dirname + '/src/actions/'
-    }
-  },
 
   module: {
     preLoaders: [{
@@ -52,7 +46,10 @@ module.exports = {
     loaders: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loaders: ['babel']
+      loader: 'babel',
+      query: {
+        presets: ['es2015']
+      }
     }, {
       test: /\.css$/,
       loader: 'style-loader!css-loader'

@@ -26,6 +26,15 @@ Running tests
 
 No tests at the moment though
 
+Building for production
+-----------------------
+
+Build the production docker container with:
+
+`make production`
+
+You'll want to do this if you want to test the production container locally.
+It creates a container called `happa`
 
 Configuration
 -------------

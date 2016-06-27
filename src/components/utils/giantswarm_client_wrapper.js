@@ -12,7 +12,7 @@ var GiantSwarmClient = {
   // with the proper endpoint, and unauthorized callback
   // if one is set.
   Client: function() {
-    var defaultApiEndpoint = window.config.defaultApiEndpoint;
+    var apiEndpoint = window.config.apiEndpoint;
     var cluster = localStorage.getItem('user.clusterid');
     var authToken = localStorage.getItem('user.authtoken');
 
@@ -27,7 +27,7 @@ var GiantSwarmClient = {
     if(localStorage.getItem('user.endpoint')) {
       giantSwarm.apiEndpoint = localStorage.getItem('user.endpoint');
     } else {
-      giantSwarm.apiEndpoint = defaultApiEndpoint;
+      giantSwarm.apiEndpoint = apiEndpoint;
     }
 
     return giantSwarm;
