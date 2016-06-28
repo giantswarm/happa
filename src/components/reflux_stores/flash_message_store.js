@@ -5,11 +5,6 @@ var _ = require('underscore');
 
 var flashMessages = new Set();
 
-// {
-//   icon: "warning-triangle",
-//   message: "You are already logged in",
-//   class: "warning"
-// }
 var id = 0;
 function flashId() {
   return id ++;
