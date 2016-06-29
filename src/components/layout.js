@@ -8,8 +8,6 @@ var UserActions = require('./reflux_actions/user_actions');
 var UserStore   = require('./reflux_stores/user_store');
 var FlashMessages = require('./flash_messages/index');
 
-//<Link to="/services/new" activeClassName="active">New Service</Link>
-
 module.exports = React.createClass ({
   mixins: [Reflux.connect(UserStore,'user'), Reflux.listenerMixin],
 
