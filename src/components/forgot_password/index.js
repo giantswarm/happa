@@ -54,8 +54,8 @@ module.exports = React.createClass({
                 }
                 </ReactCSSTransitionGroup>
               </div>
+              <Link to="/login">Back to login form</Link>
             </form>
-            <Link to="/login">Back to login form</Link>
           </div>
         </ReactCSSTransitionGroup>
       </div>
