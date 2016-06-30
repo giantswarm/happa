@@ -6,7 +6,9 @@ var passage = new Passage({endpoint: window.config.passageEndpoint});
 
 var Actions = Reflux.createActions([
   "updateEmail",
-  {"requestPasswordRecoveryToken": {children: ["completed", "failed"]}}
+  {"requestPasswordRecoveryToken": {children: ["completed", "failed"]}},
+  {"passwordEditing": {children: ["started", "completed"]}},
+  {"passwordConfirmationEditing": {children: ["started", "completed"]}}
 ]);
 
 Actions.requestPasswordRecoveryToken.listen(function(email) {
