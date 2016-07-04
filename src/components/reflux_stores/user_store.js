@@ -33,6 +33,7 @@ module.exports = Reflux.createStore({
 
   onUpdateEmail: function(email) {
     user.email = email;
+    localStorage.setItem('user.email', email);
     this.trigger(user);
   },
 

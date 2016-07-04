@@ -12,13 +12,28 @@ var {Link}                  = require('react-router');
 module.exports = React.createClass({
   mixins: [Reflux.connect(forgotPasswordStore, 'form'), Reflux.listenerMixin],
 
-  submit: function() {
+  getInitialState: function() {
+    return {
+      email: forgotPasswordStore.getInitialState().email
+    };
+  },
 
+  submit: function(event) {
+    event.preventDefault();
+    flashMessageActions.clearAll();
+    forgotPasswordActions.requestPasswordRecoveryToken(this.state.form.email);
+  },
+
+  componentWillUnmount: function() {
+    flashMessageActions.clearAll();
   },
 
   updateEmail(event) {
     flashMessageActions.clearAll();
-
+    forgotPasswordActions.updateEmail(event.target.value);
+    this.setState({
+      email: event.target.value
+    });
   },
 
   render: function() {
@@ -36,7 +51,7 @@ module.exports = React.createClass({
             <form onSubmit={this.submit}>
               <div className="textfield">
                 <label>Email</label>
-                <input value={this.state.form.email}
+                <input value={this.state.email}
                        type="text"
                        id="email"
                        ref="email"

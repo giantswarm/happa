@@ -30,24 +30,20 @@ $slide-curve: ease-out
 // Slide-Right
 
 .slide-right-enter
-  position: absolute
+  // position: absolute
   left: -$slide-amount
-  top: 0px
   opacity: 0
+  transition: all $slide-duration $slide-curve
 
 .slide-right-enter.slide-right-enter-active
   left: 0px
-  top: 0px
   opacity: 1
-  transition: all $slide-duration $slide-curve
+
 
 .slide-right-leave
-  position: absolute
-  left: 0px
-  top: 0px
   opacity: 1
+  transition: all $slide-duration $slide-curve
 
 .slide-right-leave.slide-right-leave-active
   opacity: 0
-  left: $slide-amount
-  transition: all $slide-duration $slide-curve
+
