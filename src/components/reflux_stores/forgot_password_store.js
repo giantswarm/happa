@@ -24,7 +24,8 @@ module.exports = Reflux.createStore({
         value: ""
       },
       statusMessage: "enter_password"
-    }
+    };
+
     return form;
   },
 
