@@ -19,7 +19,7 @@ services:
       - "5000:5000"
     environment:
       DEBUGGING: 1
-      CORS_ORIGIN: http://docker.dev:8000
+      HAPPA_BASE_URI: http://docker.dev:8000
       GIANTSWARM_API_URI: http://giantswarmmockapi:8000
       GIANTSWARM_API_TOKEN: valid_token
       HUBSPOT_API_URI: http://hubspotmock:9999
@@ -28,12 +28,13 @@ services:
       #NUM_PROXIES: "0"
       RATELIMIT_GLOBAL: 1000 per day, 100 per hour, 30 per minute
       RATELIMIT_STORAGE_URL: redis://redis:6379
+
     links:
       - hubspotmock
       - giantswarmmockapi
       - redis:redis
       - mailcatcher:mailcatcher
-  
+
   redis:
     image: redis:3.2
     ports:
