@@ -85,7 +85,7 @@ module.exports = React.createClass({
               <FlashMessages />
             </div>
 
-            <h1>Giant Swarm Web UI</h1>
+            <h1>Log in to Giant&nbsp;Swarm</h1>
             <form onSubmit={this.logIn}>
               <div className="textfield">
                 <label>Email</label>
