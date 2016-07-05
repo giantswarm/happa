@@ -17,3 +17,5 @@ Icon
 node_modules/
 .tmp
 dist
+
+docker-compose-prod.yml
