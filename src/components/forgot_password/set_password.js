@@ -126,7 +126,7 @@ module.exports = React.createClass({
         <div className="textfield">
           <label>E-mail</label>
           <input value={this.state.email}
-                 type="text"
+                 type="email"
                  id="email"
                  ref="email"
                  onChange={this.updateEmail} autoFocus />
