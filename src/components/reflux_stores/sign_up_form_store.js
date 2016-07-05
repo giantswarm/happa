@@ -87,6 +87,8 @@ module.exports = Reflux.createStore({
       signUpForm.statusMessage = "verify_failed";
     } else if (error === "InvalidTokenOrContactID") {
       signUpForm.statusMessage = "invalid_token";
+    } else {
+      signUpForm.statusMessage = "verify_failed";
     }
 
     this.trigger(signUpForm);
