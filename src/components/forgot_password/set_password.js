@@ -76,7 +76,8 @@ module.exports = React.createClass({
             <PasswordField ref="password"
                            label="New password"
                            onStartTyping={forgotPasswordActions.passwordEditing.started}
-                           onChange={forgotPasswordActions.passwordEditing.completed} />
+                           onChange={forgotPasswordActions.passwordEditing.completed}
+                           autofocus />
           </div>
 
           <div className="textfield">

@@ -11,6 +11,12 @@ var doneTypingInterval = 250; // ms
 // after 500 ms or after leaving the field
 //
 var PasswordField = React.createClass({
+  componentDidMount: function() {
+    if (this.props.autofocus) {
+      this.refs.input.focus();
+    }
+  },
+
   onBlur: function(e) {
     clearTimeout(typingTimer);
     this.props.onChange(this.refs.input.value);
