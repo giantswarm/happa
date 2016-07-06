@@ -3,7 +3,6 @@ var Reflux   = require('reflux');
 var actions  = require("../reflux_actions/sign_up_form_actions");
 var userActions  = require("../reflux_actions/user_actions");
 var _        = require('underscore');
-var $        = require('jquery');
 var React    = require('react');
 var validate = require('validate.js');
 
