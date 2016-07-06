@@ -40,13 +40,13 @@ module.exports = Reflux.createStore({
 
     // Store the user's email on "successful" token request
     // That way when the user comes back to set their password we can
-    // skip the confirmation step where they have to re-enter their e-mail.
+    // skip the confirmation step where they have to re-enter their email.
     localStorage.setItem('user.email', data.email);
 
     // Show a success flash.
     // TODO: Transition to a success page.
     flashMessageActions.add({
-      message: 'Please check your inbox, an e-mail with a link should be sent.',
+      message: 'Please check your inbox, an email with a link should be sent.',
       class: "success"
     });
   },
@@ -58,7 +58,7 @@ module.exports = Reflux.createStore({
     switch(error.name) {
       case "TypeError":
         flashMessageActions.add({
-          message: "Please provide a (valid) e-mail address",
+          message: "Please provide a (valid) email address",
           class: "danger"
         });
       break;
@@ -106,7 +106,7 @@ module.exports = Reflux.createStore({
     switch(error.name) {
       case "TypeError":
         flashMessageActions.add({
-          message: "Please provide a (valid) e-mail address",
+          message: "Please provide a (valid) email address",
           class: "danger"
         });
         form.email = "";

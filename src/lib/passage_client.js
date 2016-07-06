@@ -115,7 +115,7 @@ var Passage = function(config) {
     //
     // requestPasswordRecoveryToken
     // -----------
-    // Request a password recovery token, which passage will send to the user's e-mail.
+    // Request a password recovery token, which passage will send to the user's email.
     // params: {email: "some_valid_email@example.com"}
     //
     requestPasswordRecoveryToken: function(params) {

@@ -123,9 +123,9 @@ module.exports = React.createClass({
   setEmailForm() {
     return(
       <form onSubmit={this.setEmail}>
-        <p>Before we can check your recovery token, please type in your e-mail again for verification purposes.</p>
+        <p>Before we can check your recovery token, please type in your email again for verification purposes.</p>
         <div className="textfield">
-          <label>E-mail</label>
+          <label>Email</label>
           <input value={this.state.email}
                  type="email"
                  id="email"
