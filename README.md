@@ -74,3 +74,9 @@ index.html is what includes the file for us.
 
 More information about our font kit and how to use it can be found here:
 https://fortawesome.com/kits/d940f7eb/docs
+
+
+Checking for outdated dependencies
+----------------------------------
+
+To see what dependencies have updates run `make npm-check-updates`
