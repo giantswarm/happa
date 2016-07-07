@@ -5,7 +5,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="terms-of-service--container">
-        <label for="readTOS">Confirm that you acknowledge our Terms of Service:</label>
+        <label htmlFor="readTOS">Confirm that you acknowledge our Terms of Service:</label>
 
         <div className="tostext">
         <h1>Terms of Service</h1>
@@ -85,7 +85,7 @@ module.exports = React.createClass({
         <p>13.6 Should any provision of the Terms be or become invalid, this shall not affect the validity of the remaining provisions. In this event, the Parties shall be obliged to replace the invalid provision by a valid provision which most approximates the economic purpose of the invalid provision. The same applies in case of a gap.</p>
         </div>
 
-        <div class="toslink">
+        <div className="toslink">
           <a target="_blank" href="https://giantswarm.io/terms/">Giant Swarm Terms of Service</a><br/>
           <small>(link opens in new window/tab)</small>
         </div>

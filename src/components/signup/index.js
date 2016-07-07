@@ -109,7 +109,7 @@ module.exports = React.createClass({
             <TermsOfService />
 
             <div className="checkbox">
-              <label for="tosAccept">
+              <label htmlFor="tosAccept">
                 <input type="checkbox" ref="tosAccept" id="tosAccept" onChange={this.tosChanged} />
                 I accept the terms of service
               </label>
