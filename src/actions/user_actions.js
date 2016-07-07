@@ -1,6 +1,6 @@
 "use strict";
 var Reflux = require('reflux');
-var GiantSwarm = require('../utils/giantswarm_client_wrapper');
+var GiantSwarm = require('../lib/giantswarm_client_wrapper');
 
 var UserActions = Reflux.createActions([
   "updateEmail",

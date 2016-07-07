@@ -1,6 +1,6 @@
 "use strict";
 var Reflux = require('reflux');
-var flashMessageActions = require("../reflux_actions/flash_message_actions");
+var flashMessageActions = require("../actions/flash_message_actions");
 var _ = require('underscore');
 
 var flashMessages = new Set();

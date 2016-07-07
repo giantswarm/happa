@@ -5,12 +5,12 @@ var Reflux              = require('reflux');
 var $                   = require('jquery');
 var Passage             = require("../../lib/passage_client");
 var passage             = new Passage({endpoint: window.config.passageEndpoint});
-var actions             = require("../reflux_actions/sign_up_form_actions");
-var store               = require("../reflux_stores/sign_up_form_store");
+var actions             = require("../../actions/sign_up_form_actions");
+var store               = require("../../stores/sign_up_form_store");
 var PasswordField       = require("./password_field");
 var StatusMessage       = require('./status_message');
 var TermsOfService      = require('./terms_of_service');
-var flashMessageActions = require('../reflux_actions/flash_message_actions');
+var flashMessageActions = require('../../actions/flash_message_actions');
 
 module.exports = React.createClass({
   contextTypes: {

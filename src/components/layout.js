@@ -4,8 +4,8 @@ var React = require('react');
 var Reflux = require('reflux');
 var {Link, IndexLink}  = require('react-router');
 
-var UserActions = require('./reflux_actions/user_actions');
-var UserStore   = require('./reflux_stores/user_store');
+var UserActions = require('../actions/user_actions');
+var UserStore   = require('../stores/user_store');
 var FlashMessages = require('./flash_messages/index');
 
 module.exports = React.createClass ({

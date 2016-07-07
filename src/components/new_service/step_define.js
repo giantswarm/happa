@@ -5,8 +5,8 @@ var yaml = require('codemirror/mode/yaml/yaml');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 var Slide = require('../component_slider/slide');
-var actions = require('../reflux_actions/new_service_actions');
-var store = require('../reflux_stores/new_service_store');
+var actions = require('../../actions/new_service_actions');
+var store = require('../../stores/new_service_store');
 var Reflux = require('reflux');
 
 module.exports = React.createClass ({

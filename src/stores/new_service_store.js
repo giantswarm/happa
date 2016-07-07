@@ -1,7 +1,7 @@
 "use strict";
 var Reflux = require('reflux');
-var actions = require("../reflux_actions/new_service_actions");
-var Lorry = require('../lorry');
+var actions = require("../actions/new_service_actions");
+var Lorry = require('../lib/lorry');
 var _ = require('underscore');
 var validate = require('validate.js');
 

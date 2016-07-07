@@ -22,7 +22,7 @@ var copy                    = require('copy-to-clipboard');
 var _                       = require('underscore');
 var Line                    = require("./line");
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var Helpers                 = require('../helpers');
+var Helpers                 = require('../../lib/helpers');
 
 module.exports = React.createClass ({
   getInitialState: function() {

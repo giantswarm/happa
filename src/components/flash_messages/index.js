@@ -1,7 +1,7 @@
 "use strict";
 
-var flashActions            = require('../reflux_actions/flash_message_actions');
-var flashStore              = require('../reflux_stores/flash_message_store');
+var flashActions            = require('../../actions/flash_message_actions');
+var flashStore              = require('../../stores/flash_message_store');
 var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');

@@ -1,7 +1,7 @@
 "use strict";
 var Reflux = require('reflux');
-var Lorry = require('../lorry');
-var IDI = require('../idi');
+var Lorry = require('../lib/lorry');
+var IDI = require('../lib/idi');
 
 var NewServiceActions = Reflux.createActions([
   "serviceNameEdited",

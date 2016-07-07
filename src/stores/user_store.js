@@ -1,8 +1,8 @@
 "use strict";
 var Reflux = require('reflux');
-var userActions = require("../reflux_actions/user_actions");
-var clusterActions = require("../reflux_actions/cluster_actions");
-var clusterStore = require("../reflux_stores/cluster_store");
+var userActions = require("../actions/user_actions");
+var clusterActions = require("../actions/cluster_actions");
+var clusterStore = require("../stores/cluster_store");
 var _ = require('underscore');
 var validate = require('validate.js');
 
