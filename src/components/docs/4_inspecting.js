@@ -161,7 +161,7 @@ module.exports = React.createClass ({
               </ul>
             </li>
           </ul>
-          <button onClick={this.props.onPrevious}>Previous</button>
+          <button onClick={this.props.goToSlide.bind(null, 'example')}>Previous</button>
         </Slide>
       );
     }
