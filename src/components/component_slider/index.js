@@ -37,6 +37,10 @@ module.exports = class ComponentSlider extends Component {
     this.previous = this.previous.bind(this);
   }
 
+  componentWillReceiveProps(nextProps, nextState) {
+    this.setSlide(nextProps.currentSlide);
+  }
+
   setSlide(slideNumber) {
     window.scrollTo(0, 0);
     var direction;

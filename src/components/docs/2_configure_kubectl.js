@@ -90,8 +90,8 @@ module.exports = React.createClass ({
 
           <p>Now let&apos;s start something on your cluster.</p>
 
-          <button className="primary" onClick={this.props.onContinue}>Continue</button><br/>
-          <button onClick={this.props.onPrevious}>Previous</button>
+          <button className="primary" onClick={this.props.goToSlide.bind(null, 'example')}>Continue</button><br/>
+          <button onClick={this.props.goToSlide.bind(null, 'download')}>Previous</button>
         </Slide>
       );
     }
