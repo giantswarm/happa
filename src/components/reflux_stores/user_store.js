@@ -33,6 +33,7 @@ module.exports = Reflux.createStore({
 
   onUpdateEmail: function(email) {
     user.email = email;
+    localStorage.setItem('user.email', email);
     this.trigger(user);
   },
 
@@ -59,7 +60,14 @@ module.exports = Reflux.createStore({
   },
 
   onAuthenticateFailed: function(error) {
+    // Clear credentials when failing to authenticate
+    // But keep thte email in localstorage, incase the user moves on
+    // to the forgot password screen.
+    var email = user.email;
+
     this.clearStoredCredentials();
+
+    localStorage.setItem('user.email', email);
   },
 
   onLogoutCompleted: function() {

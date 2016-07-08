@@ -19,7 +19,6 @@
 var Modernizr               = window.Modernizr;
 var React                   = require('react');
 var copy                    = require('copy-to-clipboard');
-var $                       = require('jquery');
 var _                       = require('underscore');
 var Line                    = require("./line");
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
@@ -36,12 +35,6 @@ module.exports = React.createClass ({
     e.preventDefault();
 
     copy(Helpers.dedent(this.props.children));
-
-    var copyConfirmation = $(this.refs.confirmCopy);
-    copyConfirmation.addClass('visible');
-    setTimeout(function() {
-      copyConfirmation.removeClass('visible');
-    }, 500);
 
     this.setState({clicked: false});
   },

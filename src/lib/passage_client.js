@@ -110,6 +110,110 @@ var Passage = function(config) {
       });
 
       return promise;
+    },
+
+    //
+    // requestPasswordRecoveryToken
+    // -----------
+    // Request a password recovery token, which passage will send to the user's email.
+    // params: {email: "some_valid_email@example.com"}
+    //
+    requestPasswordRecoveryToken: function(params) {
+      var constraints = {
+        email: { presence: true, email: true }
+      };
+
+      validateOrRaise(params, constraints);
+
+      var url = `${config.endpoint}/recovery/`;
+
+      var payload = {
+        email: params.email
+      };
+
+      var promise = request.post(url)
+      .timeout(config.timeout_ms)
+      .send(payload)
+      .set("ContentType", "application/json")
+      .then(x => {
+        return(x.body);
+      });
+
+      return promise;
+    },
+
+    //
+    // verifyPasswordRecoveryToken
+    // -----------
+    // Verify a password recovery token. Promise only resolves if the token is valid.
+    // If the token is invalid, or the request fails for some reason the promise is
+    // rejected.
+    //
+    // params: {email: "some_valid_email@example.com", token: "123456abcdefg"}
+    //
+    verifyPasswordRecoveryToken: function(params) {
+      var constraints = {
+        email: { presence: true, email: true },
+        token: { presence: true }
+      };
+
+      validateOrRaise(params, constraints);
+
+      var url = `${config.endpoint}/recovery/${params.token}/`;
+
+      var payload = {
+        email: params.email
+      };
+
+      var promise = request.post(url)
+      .timeout(config.timeout_ms)
+      .send(payload)
+      .set("ContentType", "application/json")
+      .then(x => {
+        if (x.body.is_valid) {
+          return(x.body);
+        } else {
+          throw(new Error("Invalid Token"));
+        }
+      });
+
+      return promise;
+    },
+
+    //
+    // setNewPassword
+    // -----------
+    // Set a new password. Requires a valid recovery token.
+    // If the token is invalid, or the request fails for some reason the promise is
+    // rejected.
+    //
+    // params: {email: "some_valid_email@example.com", token: "123456abcdefg", password: "users_new_password"}
+    //
+    setNewPassword: function(params) {
+      var constraints = {
+        email: { presence: true, email: true },
+        token: { presence: true },
+        password: { presence: true }
+      };
+
+      validateOrRaise(params, constraints);
+
+      var url = `${config.endpoint}/recovery/${params.token}/password/`;
+
+      var payload = {
+        email: params.email,
+        password: params.password
+      };
+
+      var promise = request.post(url)
+      .timeout(config.timeout_ms)
+      .send(payload)
+      .set("ContentType", "application/json")
+      .then(x => {
+        return(x.body);
+      });
+
+      return promise;
     }
   };
 };

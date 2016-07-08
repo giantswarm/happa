@@ -18,7 +18,7 @@ module.exports = Reflux.createStore({
   },
 
   onAdd: function(flashMessage) {
-    // Add a random unique key to the flash message so that react can keep
+    // Add a unique key to the flash message so that react can keep
     // track of it correctly in the iterator.
     flashMessage.key = "flash-" + flashId();
     flashMessages.add(flashMessage);

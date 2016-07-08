@@ -4,7 +4,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.dev
-    image: happa:latest
+    image: happa-dev:latest
     command: npm start
     ports:
       - "8000:8000"
@@ -19,15 +19,26 @@ services:
       - "5000:5000"
     environment:
       DEBUGGING: 1
-      CORS_ORIGIN: http://docker.dev:8000
+      HAPPA_BASE_URI: http://docker.dev:8000
       GIANTSWARM_API_URI: http://giantswarmmockapi:8000
       GIANTSWARM_API_TOKEN: valid_token
       HUBSPOT_API_URI: http://hubspotmock:9999
       HUBSPOT_HUB_ID: "430224"
       HUBSPOT_API_KEY: 1234567890abcdefghijklmnop
+      #NUM_PROXIES: "0"
+      RATELIMIT_GLOBAL: 1000 per day, 100 per hour, 30 per minute
+      RATELIMIT_STORAGE_URL: redis://redis:6379
+
     links:
       - hubspotmock
       - giantswarmmockapi
+      - redis:redis
+      - mailcatcher:mailcatcher
+
+  redis:
+    image: redis:3.2
+    ports:
+      - "6379:6379"
 
   # Mocks the HubSpot API
   hubspotmock:
@@ -40,3 +51,9 @@ services:
     image: registry.giantswarm.io/giantswarm/mock-api:latest
     ports:
       - "9000:8000"
+
+  mailcatcher:
+    image: registry.giantswarm.io/giantswarm/mailcatcher:latest
+    ports:
+      - "1080:1080"
+      - "1025:1025"

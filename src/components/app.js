@@ -5,14 +5,15 @@ var ReactRouter, {applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRout
 var useScroll   = require('react-router-scroll');
 var render      = require('react-dom').render;
 
-var Layout     = require('./layout');
-var newService = require('./new_service/index');
-var docs       = require('./docs/index');
-var login      = require('./login/index');
-var logout     = require('./logout/index');
-var signup     = require('./signup/index');
-var notFound   = require('./not_found/index');
-window.Passage = require('../lib/passage_client');
+var Layout                = require('./layout');
+var newService            = require('./new_service/index');
+var docs                  = require('./docs/index');
+var login                 = require('./login/index');
+var logout                = require('./logout/index');
+var signup                = require('./signup/index');
+var notFound              = require('./not_found/index');
+var forgot_password_index = require('./forgot_password/index');
+var forgot_password_set_password = require('./forgot_password/set_password');
 
 var UserActions = require('./reflux_actions/user_actions');
 var UserStore   = require('./reflux_stores/user_store');
@@ -37,6 +38,8 @@ render((
   <Router history={browserHistory} render={applyRouterMiddleware(useScroll())}>
     <Route path = "/login" component={login} />
     <Route path = "/logout" component={logout} />
+    <Route path = "/forgot_password" component={forgot_password_index} />
+    <Route path = "/forgot_password/:token" component={forgot_password_set_password} />
     <Route path = "/signup/:contactId/:token" component={signup} />
 
     <Route path="/" component={Layout}>

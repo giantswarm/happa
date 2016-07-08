@@ -7,6 +7,7 @@ var FlashMessages           = require('../flash_messages/index.js');
 var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+var {Link}                  = require('react-router');
 
 module.exports = React.createClass({
   contextTypes: {
@@ -18,6 +19,10 @@ module.exports = React.createClass({
   componentDidMount: function() {
     this.listenTo(actions.authenticate.completed, this.onAuthenticateCompleted);
     this.listenTo(actions.authenticate.failed, this.onAuthenticateFailed);
+  },
+
+  componentWillUnmount: function() {
+    flashMessageActions.clearAll();
   },
 
   onAuthenticateCompleted: function() {
@@ -48,6 +53,7 @@ module.exports = React.createClass({
 
   logIn(e) {
     e.preventDefault();
+
     flashMessageActions.clearAll();
 
     if ( ! this.state.user.email) {
@@ -79,7 +85,7 @@ module.exports = React.createClass({
               <FlashMessages />
             </div>
 
-            <h1>Giant Swarm Web UI</h1>
+            <h1>Log in to Giant&nbsp;Swarm</h1>
             <form onSubmit={this.logIn}>
               <div className="textfield">
                 <label>Email</label>
@@ -111,7 +117,9 @@ module.exports = React.createClass({
                 }
                 </ReactCSSTransitionGroup>
               </div>
+              <Link to="/forgot_password">Forgot your password?</Link>
             </form>
+
             <div className="login_form--legal">
             By logging in you acknowledge that we track your activities in order to analyze your product usage and improve your experience. See our <a href="https://giantswarm.io/privacypolicy/">Privacy Policy</a>.
             <br/>
