@@ -38,8 +38,8 @@ module.exports = React.createClass({
 
   success() {
     return(
-      <div>
-        <h1>Check your mail! <i className="fa fa-envelope"></i></h1>
+      <div className="forgot-password--token-sent">
+        <h1><i className="fa fa-envelope"></i> Check your mail!</h1>
         <p>If you have an account, we've sent an email to {this.state.form.email}.</p>
 
         <small>
