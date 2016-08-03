@@ -6,7 +6,6 @@ var useScroll   = require('react-router-scroll');
 var render      = require('react-dom').render;
 
 var Layout                = require('./layout');
-var newService            = require('./new_service/index');
 var docs                  = require('./docs/index');
 var login                 = require('./login/index');
 var logout                = require('./logout/index');
@@ -46,7 +45,6 @@ render((
       <IndexRoute component={docs} onEnter={requireAuth} />
       <Route path = "/docs" component={docs} onEnter={requireAuth} />
       <Route path = "/docs/:pageId" component={docs} onEnter={requireAuth} />
-      <Route path = "/services/new" component={newService} onEnter={requireAuth} />
       <Route path="*" component={notFound} />
     </Route>
   </Router>
