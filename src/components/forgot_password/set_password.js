@@ -1,9 +1,9 @@
 "use strict";
 
-var forgotPasswordStore     = require('../reflux_stores/forgot_password_store');
-var forgotPasswordActions   = require('../reflux_actions/forgot_password_actions');
-var userActions             = require('../reflux_actions/user_actions');
-var flashMessageActions     = require('../reflux_actions/flash_message_actions');
+var forgotPasswordStore     = require('../../stores/forgot_password_store');
+var forgotPasswordActions   = require('../../actions/forgot_password_actions');
+var userActions             = require('../../actions/user_actions');
+var flashMessageActions     = require('../../actions/flash_message_actions');
 var FlashMessages           = require('../flash_messages/index.js');
 var Reflux                  = require('reflux');
 var React                   = require('react');

@@ -5,8 +5,8 @@ var Slide                       = require('../component_slider/slide');
 var Markdown                    = require('./markdown');
 var {CodeBlock, Prompt, Output} = require('./codeblock');
 var FileBlock                   = require('./fileblock');
-var ClusterStore                = require('../reflux_stores/cluster_store.js');
-var ClusterActions              = require('../reflux_actions/cluster_actions.js');
+var ClusterStore                = require('../../stores/cluster_store.js');
+var ClusterActions              = require('../../actions/cluster_actions.js');
 
 module.exports = React.createClass ({
     mixins: [Reflux.connect(ClusterStore,'clusters'), Reflux.listenerMixin],

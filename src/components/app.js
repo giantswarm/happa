@@ -6,7 +6,6 @@ var useScroll   = require('react-router-scroll');
 var render      = require('react-dom').render;
 
 var Layout                = require('./layout');
-var newService            = require('./new_service/index');
 var docs                  = require('./docs/index');
 var login                 = require('./login/index');
 var logout                = require('./logout/index');
@@ -15,8 +14,8 @@ var notFound              = require('./not_found/index');
 var forgot_password_index = require('./forgot_password/index');
 var forgot_password_set_password = require('./forgot_password/set_password');
 
-var UserActions = require('./reflux_actions/user_actions');
-var UserStore   = require('./reflux_stores/user_store');
+var UserActions = require('../actions/user_actions');
+var UserStore   = require('../stores/user_store');
 
 require('normalize.css');
 require('../styles/app.scss');
@@ -46,7 +45,6 @@ render((
       <IndexRoute component={docs} onEnter={requireAuth} />
       <Route path = "/docs" component={docs} onEnter={requireAuth} />
       <Route path = "/docs/:pageId" component={docs} onEnter={requireAuth} />
-      <Route path = "/services/new" component={newService} onEnter={requireAuth} />
       <Route path="*" component={notFound} />
     </Route>
   </Router>

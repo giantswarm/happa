@@ -5,8 +5,8 @@ var Slide                       = require('../component_slider/slide');
 var Markdown                    = require('./markdown');
 var {CodeBlock, Prompt, Output} = require('./codeblock');
 var FileBlock                   = require('./fileblock');
-var ClusterStore                = require('../reflux_stores/cluster_store.js');
-var ClusterActions              = require('../reflux_actions/cluster_actions.js');
+var ClusterStore                = require('../../stores/cluster_store.js');
+var ClusterActions              = require('../../actions/cluster_actions.js');
 
 module.exports = React.createClass ({
     mixins: [Reflux.connect(ClusterStore,'clusters'), Reflux.listenerMixin],
@@ -77,7 +77,7 @@ module.exports = React.createClass ({
           </FileBlock>
 
           <p>Save the above manifest in a file called <code>helloworld-manifest.yaml</code>.</p>
-          <p><i class="fa fa-graduation-cap" title="For learners"></i> If you&apos;re new to Kubernetes: A manifest describes things to create in Kubernetes. In this case the manifest describes two different things, a service and a deployment. The service is there to expose containers (here: the ones with the label app: helloworld) inside your cluster via a certain hostname and port. The deployment describes your helloworld deployment. It manages a replica set, which ensures that a number of pods (two, actually) containing Docker containers from a certain image are running.</p>
+          <p><i className="fa fa-graduation-cap" title="For learners"></i> If you&apos;re new to Kubernetes: A manifest describes things to create in Kubernetes. In this case the manifest describes two different things, a service and a deployment. The service is there to expose containers (here: the ones with the label app: helloworld) inside your cluster via a certain hostname and port. The deployment describes your helloworld deployment. It manages a replica set, which ensures that a number of pods (two, actually) containing Docker containers from a certain image are running.</p>
           <p>Now use <code>kubectl</code> to create the service and the deployment:</p>
 
           <CodeBlock>

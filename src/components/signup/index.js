@@ -2,15 +2,14 @@
 
 var React               = require('react');
 var Reflux              = require('reflux');
-var $                   = require('jquery');
 var Passage             = require("../../lib/passage_client");
 var passage             = new Passage({endpoint: window.config.passageEndpoint});
-var actions             = require("../reflux_actions/sign_up_form_actions");
-var store               = require("../reflux_stores/sign_up_form_store");
+var actions             = require("../../actions/sign_up_form_actions");
+var store               = require("../../stores/sign_up_form_store");
 var PasswordField       = require("./password_field");
 var StatusMessage       = require('./status_message');
 var TermsOfService      = require('./terms_of_service');
-var flashMessageActions = require('../reflux_actions/flash_message_actions');
+var flashMessageActions = require('../../actions/flash_message_actions');
 
 module.exports = React.createClass({
   contextTypes: {
@@ -23,7 +22,6 @@ module.exports = React.createClass({
     // contactID and token are set via URL
     actions.checkInvite(this.props.params.contactId, this.props.params.token);
     this.listenTo(actions.advanceForm, this.advanceForm);
-    this.listenTo(actions.resetForm, this.resetForm);
     this.listenTo(actions.createAccount.completed, this.accountCreated);
   },
 
@@ -33,21 +31,14 @@ module.exports = React.createClass({
   },
 
   advanceForm: function() {
-    $("#" + this.state.signUpForm.formSteps[this.state.signUpForm.currentStep]).slideDown(function() {
-      if (this.state.signUpForm.currentStep === 1) {
-        this.refs.password.focus();
-      } else if (this.state.signUpForm.currentStep === 2) {
-        this.refs.passwordConfirmation.focus();
-      } else if (this.state.signUpForm.currentStep === 3) {
-        this.refs.passwordConfirmation.blur();
-      }
-      actions.advanceForm.completed();
-    }.bind(this));
-  },
-
-  resetForm: function() {
-    $("#passwordGroup").hide();
-    $("#TOSGroup").hide();
+    if (this.state.signUpForm.currentStep === 1) {
+      this.refs.password.focus();
+    } else if (this.state.signUpForm.currentStep === 2) {
+      this.refs.passwordConfirmation.focus();
+    } else if (this.state.signUpForm.currentStep === 3) {
+      this.refs.passwordConfirmation.blur();
+    }
+    actions.advanceForm.completed();
   },
 
   accountCreated: function() {
@@ -88,7 +79,7 @@ module.exports = React.createClass({
         <h1>Create Your Giant Swarm Account</h1>
 
 
-        <form ref="signupForm" onSubmit={this.handleSubmit}>
+        <form ref="signupForm" onSubmit={this.handleSubmit} className={"step-" + this.state.signUpForm.currentStep} >
           <div id="passwordGroup">
             <p className="subtitle">This is your personal Giant Swarm account for the email address {this.state.signUpForm.email}!</p>
 
@@ -109,7 +100,7 @@ module.exports = React.createClass({
             <TermsOfService />
 
             <div className="checkbox">
-              <label for="tosAccept">
+              <label htmlFor="tosAccept">
                 <input type="checkbox" ref="tosAccept" id="tosAccept" onChange={this.tosChanged} />
                 I accept the terms of service
               </label>

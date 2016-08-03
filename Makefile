@@ -32,6 +32,10 @@ docker-build-dev:
 docker-clean-build-dev:
 	docker build -t happa-dev --no-cache -f Dockerfile.dev .
 
-# Run tests (of which there are non right now)
+# Print a list of outdated dependencies
+npm-check-updates:
+	docker run -ti happa-dev ncu
+
+# Run tests (of which there are none right now)
 test: docker-build
 	docker run -ti -p 8000:8000 -v ${PWD}/src:/usr/src/app/src happa-dev npm test

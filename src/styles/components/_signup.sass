@@ -1,5 +1,21 @@
 #passwordConfirmationGroup, #passwordGroup, #TOSGroup
-  display: none
+  max-height: 0
+  overflow-y: hidden
+  transition-property: all
+  transition-duration: 0.5s
+  transition-timing-function: cubic-bezier(0.420, 0.000, 0.580, 1.000)
+
+.step-1, .step-2, .step-3
+  #passwordGroup
+    max-height: 500px
+
+.step-2, .step-3
+  #passwordConfirmationGroup
+    max-height: 500px
+
+.step-3
+  #TOSGroup
+    max-height: 500px
 
 .signup--container
   position: relative

@@ -1,8 +1,8 @@
 "use strict";
 
-var actions                 = require('../reflux_actions/user_actions');
-var store                   = require('../reflux_stores/user_store');
-var flashMessageActions     = require('../reflux_actions/flash_message_actions');
+var actions                 = require('../../actions/user_actions');
+var store                   = require('../../stores/user_store');
+var flashMessageActions     = require('../../actions/flash_message_actions');
 var FlashMessages           = require('../flash_messages/index.js');
 var Reflux                  = require('reflux');
 var React                   = require('react');

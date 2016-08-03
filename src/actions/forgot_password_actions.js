@@ -1,7 +1,7 @@
 "use strict";
 var Reflux = require('reflux');
 
-var Passage = require("../../lib/passage_client");
+var Passage = require("../lib/passage_client");
 var passage = new Passage({endpoint: window.config.passageEndpoint});
 
 var Actions = Reflux.createActions([
