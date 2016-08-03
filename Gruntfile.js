@@ -109,6 +109,17 @@ module.exports = function (grunt) {
       }
     },
 
+    cacheBust: {
+      taskName: {
+        options: {
+            baseDir: '<%= pkg.dist %>',
+            assets: ['assets/**'],
+            deleteOriginals: true,
+        },
+        src: ['<%= pkg.dist %>/index.html']
+      }
+    },
+
     clean: {
       dist: {
         options: {
@@ -138,7 +149,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', ['karma']);
 
-  grunt.registerTask('build', ['copy', 'webpack']);
+  grunt.registerTask('build', ['copy', 'webpack', 'cacheBust']);
 
   grunt.registerTask('default', []);
 };
