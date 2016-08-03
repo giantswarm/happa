@@ -17,7 +17,6 @@
     "babel-plugin-transform-react-jsx": "~6.8.0",
     "codemirror": "~5.16.0",
     "copy-to-clipboard": "~3.0.2",
-    "jquery": "3.0.0",
     "jshint": "^2.5.0",
     "marked": "~0.3.5",
     "node-kubernetes-client": "~0.2.3",
