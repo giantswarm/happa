@@ -26,15 +26,23 @@ Running tests
 
 No tests at the moment though
 
-Building for production
------------------------
+Building / Running for production
+----------------------------------
 
-Build the production docker container with:
+`make production` will build and run happa's production container.
 
-`make production`
+Happa makes use of a development container to produce production assets.
+A production container then takes those assets and serves them using nginx.
 
-You'll want to do this if you want to test the production container locally.
-It creates a container called `happa`
+The build process is as follows:
+
+0. Build the development container `make docker-build-dev`
+
+1. Create production assets using the development container, save them in the
+dist folder. `make dist`
+
+2. Create the production container `make docker-build-prod`
+
 
 Configuration
 -------------
