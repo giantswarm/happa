@@ -1,0 +1,2 @@
+"use strict";
+export const LOAD_ORGANIZATIONS_SUCCESS = 'LOAD_ORGANIZATIONS_SUCCESS';

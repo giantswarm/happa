@@ -1,7 +1,14 @@
+// FlashMessages
+//
+// Shows all flash messages in the flash message store
+// And provides a way to dismiss them.
+//
+
 "use strict";
 
 var flashActions            = require('../../actions/flash_message_actions');
 var flashStore              = require('../../stores/flash_message_store');
+var FlashMessage            = require('./flash_message');
 var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
@@ -15,12 +22,7 @@ module.exports = React.createClass({
   mixins: [Reflux.connect(flashStore,'flashMessages'), Reflux.listenerMixin],
 
   makeFlashComponent: function(flashMessage) {
-    return(
-      <div className={"flash-messages--flash-message" + " flash-messages--" + flashMessage.class} key={flashMessage.key}>
-        {flashMessage.message}
-        <i className="fa fa-times flash-messages--dismiss" aria-hidden="true" onClick={this.dismissFlash.bind(this, flashMessage)}></i>
-      </div>
-    );
+    return <FlashMessage message={flashMessage.message} key={flashMessage.key} class={flashMessage.class} onDismiss={this.dismissFlash.bind(this, flashMessage)}/>;
   },
 
   dismissFlash: function(flashMessage) {
