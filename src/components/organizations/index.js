@@ -2,25 +2,25 @@
 
 import React from 'react';
 import FlashMessage from '../flash_messages/flash_message';
-import {loadOrganizations} from '../../actions/organizationActions';
+import {organizationsLoad, organizationDelete} from '../../actions/organizationActions';
 import {connect} from 'react-redux';
 import OrganizationRow from './organizationRow';
 
 class Organizations extends React.Component {
   componentDidMount() {
-    this.props.dispatch(loadOrganizations());
+    this.props.dispatch(organizationsLoad());
   }
 
   viewOrganization(orgId) {
     this.context.router.push('/organizations/' + orgId);
   }
 
-  deleteOrganization(orgName) {
-    console.log("delete?", orgName)
+  deleteOrganization(orgId) {
+    this.props.dispatch(organizationDelete(orgId));
   }
 
-  selectOrganization(orgName) {
-    console.log("select", orgName)
+  selectOrganization(orgId) {
+    console.log("select", orgId);
   }
 
   render() {
@@ -46,13 +46,13 @@ class Organizations extends React.Component {
           <tbody>
             {
               this.props.organizations.map(
-                (orgName) => {
-                  return <OrganizationRow organizationName={orgName}
-                                        key={orgName}
-                                        onClick={this.viewOrganization.bind(this, orgName)}
-                                        onDelete={this.deleteOrganization.bind(this, orgName)}
-                                        onSelect={this.selectOrganization.bind(this, orgName)}
-                         />
+                (orgId) => {
+                  return <OrganizationRow organizationName={orgId}
+                                        key={orgId}
+                                        onClick={this.viewOrganization.bind(this, orgId)}
+                                        onDelete={this.deleteOrganization.bind(this, orgId)}
+                                        onSelect={this.selectOrganization.bind(this, orgId)}
+                         />;
                 }
               )
             }

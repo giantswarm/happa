@@ -13,6 +13,12 @@ main_store.js
 
   },
 
+  modal: {
+    visible: bool, // true if there should be a modal visible
+    templateValues: {} // an object that the modal template will use
+    template: '' // one of the valid modal templates
+  },
+
   entities: { // the various entities that this app cares about
     users: {
       lastUpdated: 123456789 // timestamp of when the entities were last updated

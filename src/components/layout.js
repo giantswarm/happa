@@ -8,6 +8,8 @@ var UserActions = require('../actions/user_actions');
 var UserStore   = require('../stores/user_store');
 var FlashMessages = require('./flash_messages/index');
 
+import Modal from './modal/index';
+
 module.exports = React.createClass ({
   mixins: [Reflux.connect(UserStore,'user'), Reflux.listenerMixin],
 
@@ -27,6 +29,7 @@ module.exports = React.createClass ({
 
         <div className="main col-8">
           <FlashMessages />
+          <Modal />
           {this.props.children}
         </div>
       </div>
