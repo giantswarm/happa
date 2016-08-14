@@ -11,21 +11,32 @@ class Modal extends React.Component {
     this.props.dispatch(modalHide());
   }
 
+  confirm() {
+    this.props.dispatch(this.props.modal.confirmAction);
+  }
+
   render() {
-    return (
-      <BootstrapModal show={this.props.modal.visible} onHide={this.close.bind(this)}>
-        <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title>Modal heading</BootstrapModal.Title>
-        </BootstrapModal.Header>
-        <BootstrapModal.Body>
-          <h4>Text in a modal</h4>
-          <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
-        </BootstrapModal.Body>
-        <BootstrapModal.Footer>
-          <Button onClick={this.close.bind(this)}>Close</Button>
-        </BootstrapModal.Footer>
-      </BootstrapModal>
-    );
+    switch(this.props.modal.template) {
+      case "organizationDelete":
+        return (
+          <BootstrapModal show={this.props.modal.visible} onHide={this.close.bind(this)}>
+            <BootstrapModal.Header closeButton>
+              <BootstrapModal.Title>Delete an Organization</BootstrapModal.Title>
+            </BootstrapModal.Header>
+            <BootstrapModal.Body>
+              <h4>Are you sure you want to delete <code>{this.props.modal.templateValues.orgId}</code>?</h4>
+              <small>There is no undo</small>
+              <p></p>
+            </BootstrapModal.Body>
+            <BootstrapModal.Footer>
+              <Button bsStyle="danger" onClick={this.confirm.bind(this)}>Delete Organization</Button>
+              <Button bsStyle="link" onClick={this.close.bind(this)}>Cancel</Button>
+            </BootstrapModal.Footer>
+          </BootstrapModal>
+        );
+      default:
+        return null;
+    }
   }
 }
 

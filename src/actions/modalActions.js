@@ -3,6 +3,6 @@
 import * as types from './actionTypes';
 
 
-export function modalHide(orgId) {
+export function modalHide() {
   return {type: types.MODAL_HIDE};
 }

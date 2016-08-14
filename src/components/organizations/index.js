@@ -5,6 +5,7 @@ import FlashMessage from '../flash_messages/flash_message';
 import {organizationsLoad, organizationDelete} from '../../actions/organizationActions';
 import {connect} from 'react-redux';
 import OrganizationRow from './organizationRow';
+import Button from 'react-bootstrap/lib/Button';
 
 class Organizations extends React.Component {
   componentDidMount() {
@@ -58,7 +59,7 @@ class Organizations extends React.Component {
             }
           </tbody>
         </table>
-        <button className="small">Create New Organization</button>
+        <Button bsStyle="primary">Create New Organization</Button>
       </div>
     );
   }
