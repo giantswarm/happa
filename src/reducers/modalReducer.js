@@ -15,7 +15,6 @@ export default function modalReducer(state = {visible: false}, action = undefine
         visible: true,
         templateValues: {orgId: action.orgId},
         template: 'organizationDelete',
-        confirmAction: action.confirmAction
       };
 
     case types.ORGANIZATION_CREATE:
@@ -23,7 +22,20 @@ export default function modalReducer(state = {visible: false}, action = undefine
         visible: true,
         templateValues: {},
         template: 'organizationCreate',
-        confirmAction: action.confirmAction
+      };
+
+    case types.ORGANIZATION_ADD_MEMBER:
+      return {
+        visible: true,
+        templateValues: {orgId: action.orgId},
+        template: 'organizationAddMember'
+      };
+
+    case types.ORGANIZATION_REMOVE_MEMBER:
+      return {
+        visible: true,
+        templateValues: {orgId: action.orgId, username: action.username},
+        template: 'organizationRemoveMember'
       };
 
     default:

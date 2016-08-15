@@ -6,11 +6,19 @@ var flashMessageActions = require('../../actions/flash_message_actions');
 var FlashMessage = require("../flash_messages/flash_message");
 import Button from 'react-bootstrap/lib/Button';
 import {connect} from 'react-redux';
-import {organizationsLoad} from '../../actions/organizationActions';
+import {organizationsLoad, organizationAddMember, organizationRemoveMember} from '../../actions/organizationActions';
 
 var OrganizationDetail = React.createClass({
   componentDidMount() {
     this.props.dispatch(organizationsLoad());
+  },
+
+  addMember() {
+    this.props.dispatch(organizationAddMember(this.props.organization.id));
+  },
+
+  removeMember(username) {
+    this.props.dispatch(organizationRemoveMember(this.props.organization.id, username));
   },
 
   render: function() {
@@ -72,17 +80,23 @@ var OrganizationDetail = React.createClass({
                 <table>
                   <thead>
                     <tr>
-                      <th>Email</th>
-                      <th>Name</th>
+                      <th>Username</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
                     {
-                      this.props.organization.members.map((member) => {
+                      this.props.organization.members.map((username) => {
                         return (
-                          <tr key={member}>
-                            <td>{member}</td>
-                            <td></td>
+                          <tr key={username}>
+                            <td>{username}</td>
+                            <td>
+                              <div className="contextual">
+                                <i className="fa fa-times clickable"
+                                   title="Delete this organization"
+                                   onClick={this.removeMember.bind(this, username)} />
+                              </div>
+                            </td>
                           </tr>
                         );
                       })
@@ -90,7 +104,7 @@ var OrganizationDetail = React.createClass({
                   </tbody>
                 </table>
               }
-              <Button bsStyle="primary" className="small">Add Member</Button>
+              <Button onClick={this.addMember} bsStyle="primary" className="small">Add Member</Button>
             </div>
           </div>
 

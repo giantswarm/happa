@@ -118,3 +118,55 @@ export function organizationCreateConfirm(orgId) {
     });
   };
 }
+
+export function organizationAddMember(orgId) {
+  return {
+    type: types.ORGANIZATION_ADD_MEMBER,
+    orgId: orgId
+  };
+}
+
+export function organizationAddMemberConfirm(orgId, username) {
+  return function(dispatch) {
+    return giantSwarm.addMemberToOrganization({
+      organizationName: orgId,
+      username: username
+    })
+    .then(organizationsLoad().bind(this, dispatch))
+    .then(dispatch.bind(this, modalHide()))
+    .then(dispatch.bind(this, flashAdd({
+      message: 'Successfully added `' + username + '` to organization: ' + '`' + orgId + '`',
+      class: "success"
+    })))
+    .catch(error => {
+      throw(error);
+    });
+  };
+}
+
+
+export function organizationRemoveMemberConfirm(orgId, username) {
+  return function(dispatch) {
+    return giantSwarm.removeMemberFromOrganization({
+      organizationName: orgId,
+      username: username
+    })
+    .then(organizationsLoad().bind(this, dispatch))
+    .then(dispatch.bind(this, modalHide()))
+    .then(dispatch.bind(this, flashAdd({
+      message: 'Successfully removed `' + username + '` to organization: ' + '`' + orgId + '`',
+      class: "success"
+    })))
+    .catch(error => {
+      throw(error);
+    });
+  };
+}
+
+export function organizationRemoveMember(orgId, username) {
+  return {
+    type: types.ORGANIZATION_REMOVE_MEMBER,
+    orgId: orgId,
+    username: username
+  };
+}
