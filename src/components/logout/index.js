@@ -26,8 +26,7 @@ var Logout = React.createClass({
     this.props.dispatch(flashClearAll());
     this.props.dispatch(flashAdd({
       message: 'You have logged out.',
-      class: "info",
-      key: 'logout'
+      class: "info"
     }));
     this.context.router.push('/login');
   },

@@ -41,7 +41,7 @@ class Organizations extends React.Component {
         <br/>
         {
           this.props.organizations.length === 0 ?
-          <p>No organizations! Empty state.</p>
+          <p>No organizations, create one using the button below:</p>
           :
           <table>
             <thead>

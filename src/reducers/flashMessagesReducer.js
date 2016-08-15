@@ -3,6 +3,11 @@
 import Immutable from 'immutable';
 import * as types from '../actions/actionTypes';
 
+var id = 0;
+function flashId() {
+  return id ++;
+}
+
 export default function modalReducer(state = Immutable.Set(), action = undefined) {
   switch(action.type) {
     case types.FLASH_REMOVE:
@@ -10,6 +15,7 @@ export default function modalReducer(state = Immutable.Set(), action = undefined
 
 
     case types.FLASH_ADD:
+      action.flashMessage.key = flashId();
       return state.add(action.flashMessage);
 
     case types.FLASH_CLEAR_ALL:

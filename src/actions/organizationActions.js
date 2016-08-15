@@ -36,8 +36,7 @@ export function organizationDeleteConfirm(orgId) {
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully deleted organization: ' + orgId,
-      class: "success",
-      key: "delete"
+      class: "success"
     })))
     .catch(error => {
       throw(error);
@@ -67,8 +66,7 @@ export function organizationCreateConfirm(orgId) {
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully created organization: ' + orgId,
-      class: "success",
-      key: "create"
+      class: "success"
     })))
     .catch(error => {
       throw(error);
