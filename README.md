@@ -1,9 +1,11 @@
 Happa Interface Prototype
 -------------------------
 
-This is Giant Swarm's interface prototype / experiment. It is meant to help us
-get feedback on the types of complex interactions we are going to make and how
-best to implement them.
+This is Giant Swarm's interface. It lets users:
+
+- View and manage clusters
+- Manage their account
+- Manage billing information
 
 
 Getting started

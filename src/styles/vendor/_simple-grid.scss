@@ -127,8 +127,16 @@ $breakpoint-large: 60em; // 960px
 
 .row [class^="col"] {
   float: left;
-  margin: 0.5rem 2%;
+
   min-height: 0.125rem;
+}
+
+.row [class^="col"]:first-child {
+  margin-left: 0px;
+}
+
+.row [class^="col"]:last-child {
+  margin-right: 0px;
 }
 
 .row::after {

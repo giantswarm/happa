@@ -10,16 +10,30 @@ button, .button
   margin-bottom: 10px
   transition: background-color 0.1s cubic-bezier(0, -0.41, 0.19, 1.44)
 
-button.primary
-  background-color: #2d9a2c
+  &.small
+    font-size: 14px
+    padding: 8px 18px
 
-button.primary:hover
+button.primary, .btn-primary
+  background-color: #2d9a2c
+  border: 0px
+
+.btn-link
+  color: #ccc
+
+.btn-link:hover
+  color: #fff
+
+button.primary:hover, .btn-primary:hover
   background-color: lighten(#2d9a2c, 5%)
 
 button:hover
   background-color: lighten(#52728a, 5%)
 
-button.primary:active
+button.primary:active, .btn-primary:active
+  background-color: darken(#2d9a2c, 5%) !important
+
+button.primary:focus, .btn-primary:focus
   background-color: darken(#2d9a2c, 5%) !important
 
 button:active
@@ -27,3 +41,4 @@ button:active
 
 button:disabled:hover, button:disabled
   background-color: #aaa
+
