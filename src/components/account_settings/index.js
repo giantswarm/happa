@@ -4,6 +4,7 @@ var React               = require('react');
 var {Link}              = require('react-router');
 var flashMessageActions = require('../../actions/flash_message_actions');
 var FlashMessage = require("../flash_messages/flash_message");
+var Gravatar = require("react-gravatar");
 
 module.exports = React.createClass({
   render: function() {
@@ -28,9 +29,10 @@ module.exports = React.createClass({
             </p>
 
             <p>
-              brad@example.com
+              <span className="email-gravatar"><Gravatar email="brad@example.com" https size={100} default="mm" /></span>
+              <span className="email-email">brad@example.com</span>
             </p>
-            <button>Replace email</button>
+            <button>Replace Email</button>
           </div>
         </div>
 

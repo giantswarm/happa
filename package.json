@@ -43,7 +43,8 @@
     "redux": "3.5.2",
     "redux-thunk": "2.0.1",
     "react-bootstrap": "0.30.2",
-    "immutable": "3.8.1"
+    "immutable": "3.8.1",
+    "react-gravatar": "2.4.5"
   },
   "devDependencies": {
     "redux-immutable-state-invariant": "1.2.3",
