@@ -48,8 +48,8 @@ class Organizations extends React.Component {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Clusters</th>
-                <th>Members</th>
+                <th className="centered">Clusters</th>
+                <th className="centered">Members</th>
                 <th></th>
               </tr>
             </thead>

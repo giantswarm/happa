@@ -7,8 +7,8 @@ class OrganizationRow extends React.Component {
     return (
       <tr>
         <td className="clickable" onClick={this.props.onClick}>{this.props.organization.id}</td>
-        <td className="clickable" onClick={this.props.onClick}>{this.props.organization.clusters.length}</td>
-        <td className="clickable" onClick={this.props.onClick}>{this.props.organization.members.length}</td>
+        <td className="clickable centered" onClick={this.props.onClick}>{this.props.organization.clusters.length}</td>
+        <td className="clickable centered" onClick={this.props.onClick}>{this.props.organization.members.length}</td>
         <td>
           <div className="contextual">
             <i className="fa fa-times clickable"

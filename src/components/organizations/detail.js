@@ -45,7 +45,6 @@ var OrganizationDetail = React.createClass({
                   <tbody>
                     {
                       this.props.organization.clusters.map((cluster) => {
-                        console.log(cluster);
                         return (
                           <tr key={cluster}>
                             <td>{cluster}</td>
@@ -54,7 +53,6 @@ var OrganizationDetail = React.createClass({
                         );
                       })
                     }
-
                   </tbody>
                 </table>
               }
@@ -67,28 +65,31 @@ var OrganizationDetail = React.createClass({
               <h3 className="table-label">Members</h3>
             </div>
             <div className="col-9">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Email</th>
-                    <th>Name</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>brad@example.com</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>george@example.com</td>
-                    <td>the_george</td>
-                  </tr>
-                  <tr>
-                    <td>testuser@example.com</td>
-                    <td></td>
-                  </tr>
-                </tbody>
-              </table>
+              {
+                this.props.organization.members.length === 0 ?
+                <p>This organization has no members, which shouldn't really be possible</p>
+                :
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Email</th>
+                      <th>Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      this.props.organization.members.map((member) => {
+                        return (
+                          <tr key={member}>
+                            <td>{member}</td>
+                            <td></td>
+                          </tr>
+                        );
+                      })
+                    }
+                  </tbody>
+                </table>
+              }
               <Button bsStyle="primary" className="small">Add Member</Button>
             </div>
           </div>
