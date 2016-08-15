@@ -43,7 +43,7 @@ export function organizationsLoad() {
 
       var organizations = clusters.reduce((previous, current) => {
         var orgId = current[0];
-        var clusters = current[1];
+        var clusters = current[1] || [];
         previous[orgId] = {clusters: clusters.map((x) => {return x.id;})};
         return previous;
       }, {});
