@@ -6,6 +6,7 @@ import {organizationsLoad, organizationDelete, organizationCreate} from '../../a
 import {connect} from 'react-redux';
 import OrganizationRow from './organizationRow';
 import Button from 'react-bootstrap/lib/Button';
+import _ from 'underscore';
 
 class Organizations extends React.Component {
   componentDidMount() {
@@ -40,7 +41,7 @@ class Organizations extends React.Component {
         <h1>Organizations</h1>
         <br/>
         {
-          this.props.organizations.length === 0 ?
+          this.props.organizations.items.length === 0 ?
           <p>No organizations, create one using the button below:</p>
           :
           <table>
@@ -54,13 +55,12 @@ class Organizations extends React.Component {
             </thead>
             <tbody>
               {
-                this.props.organizations.map(
-                  (orgId) => {
-                    return <OrganizationRow organizationName={orgId}
-                                          key={orgId}
-                                          onClick={this.viewOrganization.bind(this, orgId)}
-                                          onDelete={this.deleteOrganization.bind(this, orgId)}
-                                          onSelect={this.selectOrganization.bind(this, orgId)}
+                _.map(this.props.organizations.items, (organization) => {
+                    return <OrganizationRow organization={organization}
+                                          key={organization.id}
+                                          onClick={this.viewOrganization.bind(this, organization.id)}
+                                          onDelete={this.deleteOrganization.bind(this, organization.id)}
+                                          onSelect={this.selectOrganization.bind(this, organization.id)}
                            />;
                   }
                 )
@@ -80,7 +80,7 @@ Organizations.contextTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
-    organizations: state.organizations
+    organizations: state.entities.organizations
   };
 }
 
