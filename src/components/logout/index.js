@@ -6,8 +6,10 @@ var store                   = require('../../stores/user_store');
 var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
+import {connect} from 'react-redux';
 
-module.exports = React.createClass({
+var Logout = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
@@ -21,10 +23,12 @@ module.exports = React.createClass({
 
   onLogoutCompleted: function() {
     flashMessageActions.clearAll();
-    flashMessageActions.add({
+    this.props.dispatch(flashClearAll());
+    this.props.dispatch(flashAdd({
       message: 'You have logged out.',
-      class: "info"
-    });
+      class: "info",
+      key: 'logout'
+    }));
     this.context.router.push('/login');
   },
 
@@ -42,3 +46,9 @@ module.exports = React.createClass({
     );
   }
 });
+
+function mapStateToProps(state, ownProps) {
+  return {};
+}
+
+module.exports = connect(mapStateToProps)(Logout);

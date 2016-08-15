@@ -2,7 +2,7 @@
 
 import React from 'react';
 import FlashMessage from '../flash_messages/flash_message';
-import {organizationsLoad, organizationDelete} from '../../actions/organizationActions';
+import {organizationsLoad, organizationDelete, organizationCreate} from '../../actions/organizationActions';
 import {connect} from 'react-redux';
 import OrganizationRow from './organizationRow';
 import Button from 'react-bootstrap/lib/Button';
@@ -20,6 +20,10 @@ class Organizations extends React.Component {
     this.props.dispatch(organizationDelete(orgId));
   }
 
+  createOrganization() {
+    this.props.dispatch(organizationCreate());
+  }
+
   selectOrganization(orgId) {
     console.log("select", orgId);
   }
@@ -35,31 +39,36 @@ class Organizations extends React.Component {
 
         <h1>Organizations</h1>
         <br/>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Clusters</th>
-              <th>Members</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              this.props.organizations.map(
-                (orgId) => {
-                  return <OrganizationRow organizationName={orgId}
-                                        key={orgId}
-                                        onClick={this.viewOrganization.bind(this, orgId)}
-                                        onDelete={this.deleteOrganization.bind(this, orgId)}
-                                        onSelect={this.selectOrganization.bind(this, orgId)}
-                         />;
-                }
-              )
-            }
-          </tbody>
-        </table>
-        <Button bsStyle="primary">Create New Organization</Button>
+        {
+          this.props.organizations.length === 0 ?
+          <p>No organizations! Empty state.</p>
+          :
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Clusters</th>
+                <th>Members</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                this.props.organizations.map(
+                  (orgId) => {
+                    return <OrganizationRow organizationName={orgId}
+                                          key={orgId}
+                                          onClick={this.viewOrganization.bind(this, orgId)}
+                                          onDelete={this.deleteOrganization.bind(this, orgId)}
+                                          onSelect={this.selectOrganization.bind(this, orgId)}
+                           />;
+                  }
+                )
+              }
+            </tbody>
+          </table>
+        }
+        <Button bsStyle="primary" onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
       </div>
     );
   }

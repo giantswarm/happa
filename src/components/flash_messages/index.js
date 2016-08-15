@@ -13,8 +13,10 @@ var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var _                       = require('underscore');
+import {connect} from 'react-redux';
+import {flashRemove} from '../../actions/flashMessageActions';
 
-module.exports = React.createClass({
+var FlashMessages = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
@@ -27,6 +29,7 @@ module.exports = React.createClass({
 
   dismissFlash: function(flashMessage) {
     flashActions.remove(flashMessage);
+    this.props.dispatch(flashRemove(flashMessage));
   },
 
   render: function() {
@@ -34,8 +37,17 @@ module.exports = React.createClass({
       <div className="flash-messages--container">
         <ReactCSSTransitionGroup transitionName='flash-messages--transition' transitionEnterTimeout={200} transitionLeaveTimeout={1}>
           { _.map(flashStore.getAll(), this.makeFlashComponent) }
+          { _.map(this.props.flashMessages.toArray(), this.makeFlashComponent) }
         </ReactCSSTransitionGroup>
       </div>
     );
   }
 });
+
+function mapStateToProps(state, ownProps) {
+  return {
+    flashMessages: state.flashMessages
+  };
+}
+
+module.exports = connect(mapStateToProps)(FlashMessages);

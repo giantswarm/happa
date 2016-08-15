@@ -18,6 +18,14 @@ export default function modalReducer(state = {visible: false}, action = undefine
         confirmAction: action.confirmAction
       };
 
+    case types.ORGANIZATION_CREATE:
+      return {
+        visible: true,
+        templateValues: {},
+        template: 'organizationCreate',
+        confirmAction: action.confirmAction
+      };
+
     default:
       return state;
   }
