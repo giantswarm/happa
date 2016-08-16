@@ -8,7 +8,15 @@ export function flashRemove(flashMessage) {
 }
 
 export function flashAdd(flashMessage) {
-  return {type: types.FLASH_ADD, flashMessage};
+  return function(dispatch) {
+    dispatch({type: types.FLASH_ADD, flashMessage});
+
+    if (flashMessage.ttl) {
+      setTimeout(() => {
+        dispatch({type: types.FLASH_REMOVE, flashMessage});
+      }, flashMessage.ttl);
+    }
+  };
 }
 
 export function flashClearAll() {

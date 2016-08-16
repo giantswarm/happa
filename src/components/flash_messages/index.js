@@ -35,7 +35,7 @@ var FlashMessages = React.createClass({
   render: function() {
     return (
       <div className="flash-messages--container">
-        <ReactCSSTransitionGroup transitionName='flash-messages--transition' transitionEnterTimeout={200} transitionLeaveTimeout={1}>
+        <ReactCSSTransitionGroup transitionName='flash-messages--transition' transitionEnterTimeout={200} transitionLeaveTimeout={200}>
           { _.map(flashStore.getAll(), this.makeFlashComponent) }
           { _.map(this.props.flashMessages.toArray(), this.makeFlashComponent) }
         </ReactCSSTransitionGroup>

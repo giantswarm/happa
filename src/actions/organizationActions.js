@@ -81,7 +81,8 @@ export function organizationDeleteConfirm(orgId) {
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully deleted organization: ' + orgId,
-      class: "success"
+      class: "success",
+      ttl: 3000
     })))
     .catch(error => {
       throw(error);
@@ -111,7 +112,8 @@ export function organizationCreateConfirm(orgId) {
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully created organization: ' + orgId,
-      class: "success"
+      class: "success",
+      ttl: 3000
     })))
     .catch(error => {
       throw(error);
@@ -136,7 +138,8 @@ export function organizationAddMemberConfirm(orgId, username) {
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully added `' + username + '` to organization: ' + '`' + orgId + '`',
-      class: "success"
+      class: "success",
+      ttl: 3000
     })))
     .catch(error => {
       throw(error);
@@ -155,7 +158,8 @@ export function organizationRemoveMemberConfirm(orgId, username) {
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully removed `' + username + '` to organization: ' + '`' + orgId + '`',
-      class: "success"
+      class: "success",
+      ttl: 3000
     })))
     .catch(error => {
       throw(error);
