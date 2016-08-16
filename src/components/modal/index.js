@@ -77,8 +77,15 @@ class Modal extends React.Component {
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
-              <Button bsStyle="primary" onClick={this.createOrganisation.bind(this)}>Create Organization</Button>
-              <Button bsStyle="link" onClick={this.close.bind(this)}>Cancel</Button>
+              {
+                this.props.modal.templateValues.loading ?
+                <img className="loader" src="/images/loader_oval_light.svg" width="30px" height="30px" />
+                :
+                <div>
+                  <Button bsStyle="primary" onClick={this.createOrganisation.bind(this)}>Create Organization</Button>
+                  <Button bsStyle="link" onClick={this.close.bind(this)}>Cancel</Button>
+                </div>
+              }
             </BootstrapModal.Footer>
           </BootstrapModal>
         );

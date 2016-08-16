@@ -18,6 +18,8 @@ export function organizationsLoadSuccess(organizations) {
 
 export function organizationsLoad() {
   return function(dispatch) {
+    dispatch({type: types.ORGANIZATIONS_LOAD});
+
     return giantSwarm.memberships()
     .then(membershipsResponse => {
       var organizationsArray = membershipsResponse.result;
@@ -59,13 +61,7 @@ export function organizationsLoad() {
       return organizations;
     })
     .then((organizations) => {
-      var result = {
-        lastUpdated: 12345678,
-        isFetching: false,
-        items: organizations
-      };
-
-      dispatch(organizationsLoadSuccess(result));
+      dispatch(organizationsLoadSuccess(organizations));
     })
     .catch(error => {
       dispatch(flashAdd({
@@ -122,6 +118,8 @@ export function organizationCreate() {
 
 export function organizationCreateConfirm(orgId) {
   return function(dispatch) {
+    dispatch({type: types.ORGANIZATION_CREATE_CONFIRM});
+
     return giantSwarm.createOrganization({
       organizationName: orgId
     })
