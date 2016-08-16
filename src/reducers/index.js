@@ -7,8 +7,6 @@ const entities = combineReducers({
   organizations
 });
 
-const appState = {};
-
 const rootReducer = combineReducers({
   entities,
   modal,

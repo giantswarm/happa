@@ -5,6 +5,7 @@ import _ from 'underscore';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import {modalHide} from './modalActions';
 import {flashAdd} from './flashMessageActions';
+import React from 'react';
 
 var giantSwarm = new GiantSwarm.Client();
 
@@ -67,7 +68,14 @@ export function organizationsLoad() {
       dispatch(organizationsLoadSuccess(result));
     })
     .catch(error => {
-      throw(error);
+      dispatch(flashAdd({
+        message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : "Perhaps our servers are down, please try again later or contact support: info@giantswarm.io"}</div>,
+        class: "danger"
+      }));
+
+      dispatch({
+        type: types.ORGANIZATIONS_LOAD_ERROR
+      });
     });
   };
 }
@@ -85,7 +93,16 @@ export function organizationDeleteConfirm(orgId) {
       ttl: 3000
     })))
     .catch(error => {
-      throw(error);
+      dispatch(modalHide());
+
+      dispatch(flashAdd({
+        message: <div><strong>Could not delete organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : "Perhaps our servers are down, please try again later or contact support: info@giantswarm.io"}</div>,
+        class: "danger"
+      }));
+
+      dispatch({
+        type: types.ORGANIZATION_DELETE_ERROR
+      });
     });
   };
 }
@@ -116,7 +133,16 @@ export function organizationCreateConfirm(orgId) {
       ttl: 3000
     })))
     .catch(error => {
-      throw(error);
+      dispatch(modalHide());
+
+      dispatch(flashAdd({
+        message: <div><strong>Could not create organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : "Perhaps our servers are down, please try again later or contact support: info@giantswarm.io"}</div>,
+        class: "danger"
+      }));
+
+      dispatch({
+        type: types.ORGANIZATION_CREATE_ERROR
+      });
     });
   };
 }
@@ -142,7 +168,16 @@ export function organizationAddMemberConfirm(orgId, username) {
       ttl: 3000
     })))
     .catch(error => {
-      throw(error);
+      dispatch(modalHide());
+
+      dispatch(flashAdd({
+        message: <div><strong>Could not add user `{username}` to organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : "Perhaps our servers are down, please try again later or contact support: info@giantswarm.io"}</div>,
+        class: "danger"
+      }));
+
+      dispatch({
+        type: types.ORGANIZATION_ADD_MEMBER_ERROR
+      });
     });
   };
 }
@@ -162,7 +197,16 @@ export function organizationRemoveMemberConfirm(orgId, username) {
       ttl: 3000
     })))
     .catch(error => {
-      throw(error);
+      dispatch(modalHide());
+
+      dispatch(flashAdd({
+        message: <div><strong>Could not remove user `{username}`` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : "Perhaps our servers are down, please try again later or contact support: info@giantswarm.io"}</div>,
+        class: "danger"
+      }));
+
+      dispatch({
+        type: types.ORGANIZATION_REMOVE_MEMBER_ERROR
+      });
     });
   };
 }
