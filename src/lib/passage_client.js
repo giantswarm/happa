@@ -61,11 +61,13 @@ var Passage = function(config) {
         token: { presence: true }
       };
 
-      validateOrRaise(params, constraints);
       var url = `${config.endpoint}/invite/${params.contactId}/${params.token}`;
 
-      var promise = request.get(url)
-      .timeout(config.timeout_ms)
+      var promise = new Promise((resolve, reject) => {
+        validateOrRaise(params, constraints);
+        resolve(request.get(url)
+        .timeout(config.timeout_ms));
+      })
       .then(x => {
         if (x.body.is_valid) {
           return(x.body);
@@ -90,7 +92,6 @@ var Passage = function(config) {
         password: { presence: true }
       };
 
-      validateOrRaise(params, constraints);
       var url = `${config.endpoint}/accounts/`;
 
       // Passage is not expecting camelcase in its json body
@@ -101,10 +102,13 @@ var Passage = function(config) {
         "password": params.password
       };
 
-      var promise = request.post(url)
-      .timeout(config.timeout_ms)
-      .send(payload)
-      .set("ContentType", "application/json")
+      var promise = new Promise((resolve, reject) => {
+        validateOrRaise(params, constraints);
+        resolve(request.post(url)
+          .timeout(config.timeout_ms)
+          .send(payload)
+          .set("ContentType", "application/json"));
+      })
       .then(x => {
         return(x.body);
       });
@@ -123,18 +127,19 @@ var Passage = function(config) {
         email: { presence: true, email: true }
       };
 
-      validateOrRaise(params, constraints);
-
       var url = `${config.endpoint}/recovery/`;
 
       var payload = {
         email: params.email
       };
 
-      var promise = request.post(url)
-      .timeout(config.timeout_ms)
-      .send(payload)
-      .set("ContentType", "application/json")
+      var promise = new Promise((resolve, reject) => {
+        validateOrRaise(params, constraints);
+        resolve(request.post(url)
+          .timeout(config.timeout_ms)
+          .send(payload)
+          .set("ContentType", "application/json"));
+      })
       .then(x => {
         return(x.body);
       });
@@ -157,18 +162,19 @@ var Passage = function(config) {
         token: { presence: true }
       };
 
-      validateOrRaise(params, constraints);
-
       var url = `${config.endpoint}/recovery/${params.token}/`;
 
       var payload = {
         email: params.email
       };
 
-      var promise = request.post(url)
-      .timeout(config.timeout_ms)
-      .send(payload)
-      .set("ContentType", "application/json")
+      var promise = new Promise((resolve, reject) => {
+        validateOrRaise(params, constraints);
+        resolve(request.post(url)
+          .timeout(config.timeout_ms)
+          .send(payload)
+          .set("ContentType", "application/json"));
+      })
       .then(x => {
         if (x.body.is_valid) {
           return(x.body);
@@ -196,8 +202,6 @@ var Passage = function(config) {
         password: { presence: true }
       };
 
-      validateOrRaise(params, constraints);
-
       var url = `${config.endpoint}/recovery/${params.token}/password/`;
 
       var payload = {
@@ -205,10 +209,13 @@ var Passage = function(config) {
         password: params.password
       };
 
-      var promise = request.post(url)
-      .timeout(config.timeout_ms)
-      .send(payload)
-      .set("ContentType", "application/json")
+      var promise = new Promise((resolve, reject) => {
+        validateOrRaise(params, constraints);
+        resolve(request.post(url)
+          .timeout(config.timeout_ms)
+          .send(payload)
+          .set("ContentType", "application/json"));
+      })
       .then(x => {
         return(x.body);
       });

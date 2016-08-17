@@ -9,7 +9,6 @@ var store               = require("../../stores/sign_up_form_store");
 var PasswordField       = require("./password_field");
 var StatusMessage       = require('./status_message');
 var TermsOfService      = require('./terms_of_service');
-var flashMessageActions = require('../../actions/flash_message_actions');
 
 module.exports = React.createClass({
   contextTypes: {

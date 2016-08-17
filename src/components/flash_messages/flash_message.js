@@ -6,8 +6,6 @@
 
 "use strict";
 
-var flashActions            = require('../../actions/flash_message_actions');
-var flashStore              = require('../../stores/flash_message_store');
 var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
@@ -23,8 +21,6 @@ module.exports = React.createClass({
       visible: true
     };
   },
-
-  mixins: [Reflux.connect(flashStore,'flashMessages'), Reflux.listenerMixin],
 
   dismissFlash: function() {
     if (this.props.onDismiss) {

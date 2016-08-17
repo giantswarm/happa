@@ -9,7 +9,6 @@ export default function modalReducer(state = {visible: false}, action = undefine
         visible: false
       });
 
-
     case types.ORGANIZATION_DELETE:
       return {
         visible: true,

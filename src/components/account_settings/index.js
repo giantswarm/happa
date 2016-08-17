@@ -2,8 +2,6 @@
 
 var React               = require('react');
 var {Link}              = require('react-router');
-var flashMessageActions = require('../../actions/flash_message_actions');
-var FlashMessage = require("../flash_messages/flash_message");
 var Gravatar = require("react-gravatar");
 
 module.exports = React.createClass({

@@ -2,15 +2,16 @@
 
 var actions                 = require('../../actions/user_actions');
 var store                   = require('../../stores/user_store');
-var flashMessageActions     = require('../../actions/flash_message_actions');
 var FlashMessages           = require('../flash_messages/index.js');
 var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var {Link}                  = require('react-router');
 import Button from '../button';
+import {connect} from 'react-redux';
+import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
 
-module.exports = React.createClass({
+var Login = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
@@ -23,50 +24,53 @@ module.exports = React.createClass({
   },
 
   componentWillUnmount: function() {
-    flashMessageActions.clearAll();
+    this.props.dispatch(flashClearAll());
   },
 
   onAuthenticateCompleted: function() {
-    flashMessageActions.clearAll();
+    this.props.dispatch(flashClearAll());
+
     this.context.router.push('/');
-    flashMessageActions.add({
+
+    this.props.dispatch(flashAdd({
       message: 'Signed in succesfully.',
-      class: "success"
-    });
+      class: "success",
+      ttl: 3000
+    }));
   },
 
   onAuthenticateFailed: function(message) {
-    flashMessageActions.add({
+    this.props.dispatch(flashAdd({
       message: message,
       class: "danger"
-    });
+    }));
   },
 
   updateEmail(event) {
-    flashMessageActions.clearAll();
+    this.props.dispatch(flashClearAll());
     actions.updateEmail(event.target.value);
   },
 
   updatePassword(event) {
-    flashMessageActions.clearAll();
+    this.props.dispatch(flashClearAll());
     actions.updatePassword(event.target.value);
   },
 
   logIn(e) {
     e.preventDefault();
 
-    flashMessageActions.clearAll();
+    this.props.dispatch(flashClearAll());
 
     if ( ! this.state.user.email) {
-      flashMessageActions.add({
+      this.props.dispatch(flashAdd({
         message: 'Please provide the email address that you used for registration.',
         class: "danger"
-      });
+      }));
     } else if ( ! this.state.user.password) {
-      flashMessageActions.add({
+      this.props.dispatch(flashAdd({
         message: 'Please enter your password.',
         class: "danger"
-      });
+      }));
     }
 
     if (this.state.user.email && this.state.user.password) {
@@ -124,3 +128,5 @@ module.exports = React.createClass({
     );
   }
 });
+
+module.exports = connect()(Login);

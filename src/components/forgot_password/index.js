@@ -1,36 +1,69 @@
 "use strict";
 
-var forgotPasswordStore     = require('../../stores/forgot_password_store');
-var forgotPasswordActions   = require('../../actions/forgot_password_actions');
-var flashMessageActions     = require('../../actions/flash_message_actions');
 var FlashMessages           = require('../flash_messages/index.js');
-var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var {Link}                  = require('react-router');
+import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
+import {connect} from 'react-redux';
+import Button from '../button';
+import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
+import {bindActionCreators} from 'redux';
 
-module.exports = React.createClass({
-  mixins: [Reflux.connect(forgotPasswordStore, 'form'), Reflux.listenerMixin],
-
+var ForgotPassword = React.createClass({
   getInitialState: function() {
     return {
-      email: forgotPasswordStore.getInitialState().email
+      submitting: false,
+      tokenRequested: false,
+      email: localStorage.getItem('user.email') || "",
     };
   },
 
   submit: function(event) {
     event.preventDefault();
-    flashMessageActions.clearAll();
-    forgotPasswordActions.requestPasswordRecoveryToken(this.state.form.email);
+    this.props.dispatch(flashClearAll());
+
+    this.setState({
+      submitting: true
+    });
+
+
+    this.props.actions.requestPasswordRecoveryToken(this.state.email)
+    .then(() => {
+      localStorage.setItem('user.email', this.state.email);
+      this.setState({
+        submitting: false,
+        tokenRequested: true
+      });
+    })
+    .catch((error) => {
+      switch(error.name) {
+        case "TypeError":
+          this.props.dispatch(flashAdd({
+            message: "Please provide a (valid) email address",
+            class: "danger"
+          }));
+          break;
+        default:
+          this.props.dispatch(flashAdd({
+            message: "Something went wrong. Or servers might be down, or perhaps you've made too many requests in a row. Please try again in 5 minutes.",
+            class: "danger"
+          }));
+      }
+
+      this.setState({
+        submitting: false,
+        tokenRequested: false
+      });
+    });
   },
 
   componentWillUnmount: function() {
-    flashMessageActions.clearAll();
+    this.props.dispatch(flashClearAll());
   },
 
   updateEmail(event) {
-    flashMessageActions.clearAll();
-    forgotPasswordActions.updateEmail(event.target.value);
+    this.props.dispatch(flashClearAll());
     this.setState({
       email: event.target.value
     });
@@ -40,7 +73,7 @@ module.exports = React.createClass({
     return(
       <div className="forgot-password--token-sent">
         <h1><i className="fa fa-envelope"></i> Check your mail!</h1>
-        <p>If you have an account, we've sent an email to {this.state.form.email}.</p>
+        <p>If you have an account, we've sent an email to {this.state.email}.</p>
 
         <small>
         <p>Having trouble? Please contact us via <a href="mailto:support@giantswarm.io">support@giantswarm.io</a></p>
@@ -58,27 +91,16 @@ module.exports = React.createClass({
       <div>
         <h1>Forgot your password?</h1>
         <p>Enter the email you used to sign-up and submit the form. We'll send you a link you can use to set a new password.</p>
-        <form onSubmit={this.submit}>
+        <form onSubmit={this.submit} noValidate="novalidate">
           <div className="textfield">
             <label>Email</label>
             <input value={this.state.email}
-                   type="email"
+                   type="text"
                    id="email"
                    ref="email"
                    onChange={this.updateEmail} autoFocus />
           </div>
-          <div className="progress_button--container">
-            <button type="submit" className="btn primary" disabled={this.state.form.submitting} onClick={this.submit}>
-              {
-                this.state.form.submitting ? "Submitting ..." : "Submit"
-              }
-            </button>
-            <ReactCSSTransitionGroup transitionName="slide-right" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-            {
-              this.state.form.submitting ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
-            }
-            </ReactCSSTransitionGroup>
-          </div>
+          <Button type="submit" bsStyle="primary" loading={this.state.submitting} onClick={this.submit}>{ this.state.submitting ? "Submitting ..." : "Submit" }</Button>
           <Link to="/login">Back to login form</Link>
         </form>
       </div>
@@ -90,15 +112,25 @@ module.exports = React.createClass({
       <div>
         <div className="login_form--mask"></div>
 
-        <ReactCSSTransitionGroup transitionName={`login_form--transition`} transitionAppear={true} transitionAppearTimeout={200} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
+        <ReactCSSTransitionGroup
+          transitionName={`login_form--transition`} transitionAppear={true} transitionAppearTimeout={200} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
           <div className="login_form--container col-4">
             <div className="login_form--flash-container">
               <FlashMessages />
             </div>
-            { this.state.form.tokenRequested ? this.success() : this.form() }
+            { this.state.tokenRequested ? this.success() : this.form() }
           </div>
         </ReactCSSTransitionGroup>
       </div>
     );
   }
 });
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(forgotPasswordActions, dispatch),
+    dispatch: dispatch
+  };
+}
+
+module.exports = connect(null, mapDispatchToProps)(ForgotPassword);

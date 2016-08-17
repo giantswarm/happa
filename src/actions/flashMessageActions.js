@@ -2,7 +2,6 @@
 
 import * as types from './actionTypes';
 
-
 export function flashRemove(flashMessage) {
   return {type: types.FLASH_REMOVE, flashMessage};
 }

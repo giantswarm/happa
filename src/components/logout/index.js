@@ -1,7 +1,6 @@
 "use strict";
 
 var actions                 = require('../../actions/user_actions');
-var flashMessageActions     = require('../../actions/flash_message_actions');
 var store                   = require('../../stores/user_store');
 var Reflux                  = require('reflux');
 var React                   = require('react');
@@ -22,7 +21,6 @@ var Logout = React.createClass({
   },
 
   onLogoutCompleted: function() {
-    flashMessageActions.clearAll();
     this.props.dispatch(flashClearAll());
     this.props.dispatch(flashAdd({
       message: 'You have logged out.',

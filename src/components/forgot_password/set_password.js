@@ -1,100 +1,242 @@
 "use strict";
 
-var forgotPasswordStore     = require('../../stores/forgot_password_store');
-var forgotPasswordActions   = require('../../actions/forgot_password_actions');
 var userActions             = require('../../actions/user_actions');
-var flashMessageActions     = require('../../actions/flash_message_actions');
 var FlashMessages           = require('../flash_messages/index.js');
-var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var {Link}                  = require('react-router');
 var PasswordField           = require("../signup/password_field");
 var StatusMessage           = require('../signup/status_message');
+import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
+import {connect} from 'react-redux';
+import Button from '../button';
+import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
+import {bindActionCreators} from 'redux';
 
-module.exports = React.createClass({
+var SetPassword = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
-
-  mixins: [Reflux.connect(forgotPasswordStore, 'form'), Reflux.listenerMixin],
 
   getInitialState: function() {
     return {
       password: "",
       passwordConfirmation: "",
-      email: forgotPasswordStore.getInitialState().email
+      email: localStorage.getItem('user.email') || "",
+      submitting: false,
+
+      passwordField: {
+        valid: false,
+        value: ""
+      },
+
+      passwordConfirmationField: {
+        valid: false,
+        value: ""
+      },
+
+      formIsValid: false,
+
+      verifyingToken: false,
+      tokenValid: false,
+      statusMessage: "enter_password"
     };
   },
 
 
   componentDidMount: function(){
     // If we have the email, verify the token immediately.
-    if (this.state.form.email) {
-      forgotPasswordActions.verifyPasswordRecoveryToken(this.state.form.email, this.props.params.token);
+    if (this.state.email) {
+      this.setState({
+        verifyingToken: true
+      });
+
+      this.props.actions.verifyPasswordRecoveryToken(this.state.email, this.props.params.token)
+      .then((m) => {
+        this.setState({
+          verifyingToken: false,
+          tokenValid: true
+        });
+      })
+      .catch((error) => {
+        switch(error.name) {
+          case "TypeError":
+            this.props.dispatch(flashAdd({
+              message: "Please provide a (valid) email address",
+              class: "danger"
+            }));
+
+            break;
+          case "Error":
+            this.props.dispatch(flashAdd({
+              message: "The reset token appears to be invalid.",
+              class: "danger"
+            }));
+
+            break;
+        }
+
+        this.setState({
+          verifyingToken: false,
+          tokenValid: false
+        });
+      });
     }
-
-    this.listenTo(userActions.authenticate.completed, this.onAuthenticateCompleted);
-  },
-
-  onAuthenticateCompleted: function() {
-    flashMessageActions.clearAll();
-    this.context.router.push('/');
-    flashMessageActions.add({
-      message: 'Password set successfully! Welcome back!',
-      class: "success"
-    });
   },
 
   submit: function(event) {
     event.preventDefault();
-    forgotPasswordActions.setNewPassword(this.state.form.email, this.props.params.token, this.state.form.passwordField.value);
+
+    this.setState({
+      submitting: true
+    });
+
+    this.props.actions.setNewPassword(this.state.email, this.props.params.token, this.state.passwordField.value)
+    .then(() => {
+      this.setState({
+        submitting: false
+      });
+
+      this.props.dispatch(flashClearAll());
+      this.context.router.push('/');
+      this.props.dispatch(flashAdd({
+        message: 'Password set successfully! Welcome back!',
+        class: "success"
+      }));
+    });
+
   },
 
   setEmail: function(event) {
     event.preventDefault();
-    flashMessageActions.clearAll();
+    this.props.dispatch(flashClearAll());
     forgotPasswordActions.updateEmail(this.state.email);
     forgotPasswordActions.verifyPasswordRecoveryToken(this.state.email, this.props.params.token);
   },
 
   updateEmail(event) {
-    flashMessageActions.clearAll();
+    this.props.dispatch(flashClearAll());
 
     this.setState({
       email: event.target.value
     });
   },
 
+  passwordEditingStarted: function(password) {
+    this.setState({
+      passwordField: {
+        valid: false,
+        value: password
+      }
+    });
+  },
+
+  passwordEditingCompleted: function(password) {
+    var valid = false;
+    var statusMessage = this.state.statusMessage;
+
+    if (password.length === 0) {
+      // Be invalid, but don't change the status message.
+    } else if (password.length < 8) {
+      statusMessage = "password_too_short";
+    } else if (/^[0-9]+$/.test(password)) {
+      statusMessage = "password_not_just_numbers";
+    } else if (/^[a-z]+$/.test(password)) {
+      statusMessage = "password_not_just_letters";
+    } else if (/^[A-Z]+$/.test(password)) {
+      statusMessage = "password_not_just_letters";
+    } else {
+      statusMessage = "password_ok";
+      valid = true;
+    }
+
+    this.setState({
+      statusMessage: statusMessage,
+
+      passwordField: {
+        valid: valid,
+        value: password
+      }
+    });
+  },
+
+  passwordConfirmationEditingStarted: function(confirmation) {
+    var valid = false;
+    var statusMessage = this.state.statusMessage;
+
+    if (this.state.passwordField.valid) {
+      if (this.state.passwordField.value === confirmation) {
+        statusMessage = "password_confirmation_ok";
+        valid = true;
+      }
+    }
+
+    this.setState({
+      statusMessage: statusMessage,
+
+      passwordConfirmationField: {
+        valid: valid,
+        value: confirmation
+      }
+    });
+  },
+
+  passwordConfirmationEditingCompleted: function(confirmation) {
+    var valid = false;
+    var statusMessage = this.state.statusMessage;
+
+    if (this.state.passwordField.valid) {
+      if (this.state.passwordField.value === confirmation) {
+        statusMessage = "password_confirmation_ok";
+        valid = true;
+      } else {
+        statusMessage = "password_confirmation_mismatch";
+      }
+    }
+
+    this.setState({
+      statusMessage: statusMessage,
+
+      passwordConfirmationField: {
+        valid: valid,
+        value: confirmation
+      }
+    });
+  },
+
+  formIsValid() {
+    return this.state.passwordField.valid && this.state.passwordConfirmationField.valid;
+  },
+
   setPasswordForm() {
-    if (this.state.form.tokenValid) {
+    if (this.state.tokenValid) {
       return(
         <form onSubmit={this.submit}>
-          <StatusMessage status={this.state.form.statusMessage} />
+          <StatusMessage status={this.state.statusMessage} />
 
           <div className="textfield">
             <PasswordField ref="password"
                            label="New password"
-                           onStartTyping={forgotPasswordActions.passwordEditing.started}
-                           onChange={forgotPasswordActions.passwordEditing.completed}
+                           onStartTyping={this.passwordEditingStarted}
+                           onChange={this.passwordEditingCompleted}
                            autofocus />
           </div>
 
           <div className="textfield">
             <PasswordField ref="passwordConfirmation"
                            label="Password, once again"
-                           onStartTyping={forgotPasswordActions.passwordConfirmationEditing.started}
-                           onChange={forgotPasswordActions.passwordConfirmationEditing.completed} />
+                           onStartTyping={this.passwordConfirmationEditingStarted}
+                           onChange={this.passwordConfirmationEditingCompleted} />
           </div>
           <div className="progress_button--container">
-            <button type="submit" className="btn primary" disabled={this.state.form.submitting || ! forgotPasswordStore.passwordFieldsValid()} onClick={this.submit}>
+            <button type="submit" className="btn primary" disabled={this.state.submitting || ! this.formIsValid()} onClick={this.submit}>
               {
-                this.state.form.submitting ? "Submitting ..." : "Submit"
+                this.state.submitting ? "Submitting ..." : "Submit"
               }
             </button>
             <ReactCSSTransitionGroup transitionName="slide-right" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
             {
-              this.state.form.submitting ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
+              this.state.submitting ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
             }
             </ReactCSSTransitionGroup>
           </div>
@@ -102,7 +244,7 @@ module.exports = React.createClass({
         </form>
       );
     } else {
-      if (this.state.form.verifyingToken) {
+      if (this.state.verifyingToken) {
         return(
           <div className="forgot-password--token-validating">
             <img className="loader" src="/images/loader_oval_light.svg" />
@@ -134,14 +276,14 @@ module.exports = React.createClass({
         </div>
 
         <div className="progress_button--container">
-          <button type="submit" className="btn primary" disabled={this.state.form.submitting} onClick={this.setEmail}>
+          <button type="submit" className="btn primary" disabled={this.state.submitting} onClick={this.setEmail}>
             {
-              this.state.form.submitting ? "Submitting ..." : "Submit"
+              this.state.submitting ? "Submitting ..." : "Submit"
             }
           </button>
           <ReactCSSTransitionGroup transitionName="slide-right" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
           {
-            this.state.form.submitting ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
+            this.state.submitting ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
           }
           </ReactCSSTransitionGroup>
         </div>
@@ -162,10 +304,20 @@ module.exports = React.createClass({
               <FlashMessages />
             </div>
             <h1>Set your new password</h1>
-            {this.state.form.email ? this.setPasswordForm() : this.setEmailForm()}
+            {this.state.email ? this.setPasswordForm() : this.setEmailForm()}
           </div>
         </ReactCSSTransitionGroup>
       </div>
     );
   }
 });
+
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(forgotPasswordActions, dispatch),
+    dispatch: dispatch
+  };
+}
+
+module.exports = connect(null, mapDispatchToProps)(SetPassword);
