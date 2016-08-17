@@ -3,7 +3,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'react-bootstrap/lib/Button';
+import Button from '../button';
 import {modalHide} from '../../actions/modalActions';
 import {organizationDeleteConfirm,
         organizationCreateConfirm,
@@ -58,8 +58,29 @@ class Modal extends React.Component {
               <small>There is no undo</small>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
-              <Button bsStyle="danger" onClick={this.deleteOrganisation.bind(this, this.props.modal.templateValues.orgId)}>Delete Organization</Button>
-              <Button bsStyle="link" onClick={this.close.bind(this)}>Cancel</Button>
+              <Button
+                type="submit"
+                bsStyle="danger"
+                loading={this.props.modal.templateValues.loading}
+                onClick={this.deleteOrganisation.bind(this, this.props.modal.templateValues.orgId)}>
+                {
+                  this.props.modal.templateValues.loading ?
+                  "Deleting Organization"
+                  :
+                  "Delete Organization"
+                }
+              </Button>
+
+              {
+                this.props.modal.templateValues.loading ?
+                null
+                :
+                <Button
+                  bsStyle="link"
+                  onClick={this.close.bind(this)}>
+                  Cancel
+                </Button>
+              }
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
@@ -77,14 +98,28 @@ class Modal extends React.Component {
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
+              <Button
+                type="submit"
+                bsStyle="primary"
+                loading={this.props.modal.templateValues.loading}
+                onClick={this.createOrganisation.bind(this)}>
+                {
+                  this.props.modal.templateValues.loading ?
+                  "Creating Organization"
+                  :
+                  "Create Organization"
+                }
+              </Button>
+
               {
                 this.props.modal.templateValues.loading ?
-                <img className="loader" src="/images/loader_oval_light.svg" width="30px" height="30px" />
+                null
                 :
-                <div>
-                  <Button bsStyle="primary" onClick={this.createOrganisation.bind(this)}>Create Organization</Button>
-                  <Button bsStyle="link" onClick={this.close.bind(this)}>Cancel</Button>
-                </div>
+                <Button
+                  bsStyle="link"
+                  onClick={this.close.bind(this)}>
+                  Cancel
+                </Button>
               }
             </BootstrapModal.Footer>
           </BootstrapModal>

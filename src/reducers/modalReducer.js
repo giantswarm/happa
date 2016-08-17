@@ -13,7 +13,20 @@ export default function modalReducer(state = {visible: false}, action = undefine
     case types.ORGANIZATION_DELETE:
       return {
         visible: true,
-        templateValues: {orgId: action.orgId},
+        templateValues: {
+          orgId: action.orgId,
+          loading: false
+        },
+        template: 'organizationDelete'
+      };
+
+    case types.ORGANIZATION_DELETE_CONFIRM:
+      return {
+        visible: true,
+        templateValues: {
+          orgId: action.orgId,
+          loading: true
+        },
         template: 'organizationDelete'
       };
 

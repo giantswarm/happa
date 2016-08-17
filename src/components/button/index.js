@@ -3,9 +3,10 @@
 // Button
 //
 // <Button
-//   type=string
-//   loading=bool
-//   disabled=bool
+//   type="button|submit|reset"
+//   bsStyle="primary|success|danger|info|warning|link"
+//   loading=true|false
+//   disabled=true|false
 //   onClick=function>
 //
 //   Button Text
@@ -28,7 +29,7 @@ class Button extends React.Component {
       <div className="progress_button--container">
         <BsButton
           type={this.props.type}
-          bsStyle="primary"
+          bsStyle={this.props.bsStyle}
           onClick={this.props.onClick}
           disabled={this.props.disabled || this.props.loading}>
 

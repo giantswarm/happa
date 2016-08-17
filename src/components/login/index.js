@@ -107,7 +107,7 @@ module.exports = React.createClass({
               </div>
 
               <div className="progress_button--container">
-                <Button type="submit" loading={this.state.user.authenticating} onClick={this.logIn}>Log in</Button>
+                <Button type="submit" bsStyle="primary" loading={this.state.user.authenticating} onClick={this.logIn}>Log in</Button>
               </div>
               <Link to="/forgot_password">Forgot your password?</Link>
             </form>

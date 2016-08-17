@@ -78,7 +78,7 @@ export function organizationsLoad() {
 
 export function organizationDeleteConfirm(orgId) {
   return function(dispatch) {
-    dispatch({type: types.ORGANIZATION_DELETE_CONFIRM});
+    dispatch({type: types.ORGANIZATION_DELETE_CONFIRM, orgId: orgId});
 
     return giantSwarm.deleteOrganization({
       organizationName: orgId
