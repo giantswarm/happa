@@ -138,8 +138,29 @@ class Modal extends React.Component {
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
-              <Button bsStyle="primary" onClick={this.addMember.bind(this)}>Add Member to Organization</Button>
-              <Button bsStyle="link" onClick={this.close.bind(this)}>Cancel</Button>
+              <Button
+                type="submit"
+                bsStyle="primary"
+                loading={this.props.modal.templateValues.loading}
+                onClick={this.addMember.bind(this)}>
+                {
+                  this.props.modal.templateValues.loading ?
+                  "Adding Member"
+                  :
+                  "Add Member to Organization"
+                }
+              </Button>
+
+              {
+                this.props.modal.templateValues.loading ?
+                null
+                :
+                <Button
+                  bsStyle="link"
+                  onClick={this.close.bind(this)}>
+                  Cancel
+                </Button>
+              }
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
@@ -154,8 +175,29 @@ class Modal extends React.Component {
               <p>Are you sure you want to remove {this.props.modal.templateValues.username} from {this.props.modal.templateValues.orgId}</p>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
-              <Button bsStyle="danger" onClick={this.removeMember.bind(this)}>Remove Member from Organization</Button>
-              <Button bsStyle="link" onClick={this.close.bind(this)}>Cancel</Button>
+              <Button
+                type="submit"
+                bsStyle="danger"
+                loading={this.props.modal.templateValues.loading}
+                onClick={this.removeMember.bind(this)}>
+                {
+                  this.props.modal.templateValues.loading ?
+                  "Removing Member"
+                  :
+                  "Remove Member from Organization"
+                }
+              </Button>
+
+              {
+                this.props.modal.templateValues.loading ?
+                null
+                :
+                <Button
+                  bsStyle="link"
+                  onClick={this.close.bind(this)}>
+                  Cancel
+                </Button>
+              }
             </BootstrapModal.Footer>
           </BootstrapModal>
         );

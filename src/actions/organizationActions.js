@@ -156,6 +156,12 @@ export function organizationAddMember(orgId) {
 
 export function organizationAddMemberConfirm(orgId, username) {
   return function(dispatch) {
+    dispatch({
+      type: types.ORGANIZATION_ADD_MEMBER_CONFIRM,
+      orgId: orgId,
+      username: username
+    });
+
     return giantSwarm.addMemberToOrganization({
       organizationName: orgId,
       username: username
@@ -185,6 +191,12 @@ export function organizationAddMemberConfirm(orgId, username) {
 
 export function organizationRemoveMemberConfirm(orgId, username) {
   return function(dispatch) {
+    dispatch({
+      type: types.ORGANIZATION_REMOVE_MEMBER_CONFIRM,
+      orgId: orgId,
+      username: username
+    });
+
     return giantSwarm.removeMemberFromOrganization({
       organizationName: orgId,
       username: username
