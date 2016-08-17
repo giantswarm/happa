@@ -8,6 +8,7 @@ var Reflux                  = require('reflux');
 var React                   = require('react');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var {Link}                  = require('react-router');
+import Button from '../button';
 
 module.exports = React.createClass({
   contextTypes: {
@@ -106,16 +107,7 @@ module.exports = React.createClass({
               </div>
 
               <div className="progress_button--container">
-                <button type="submit" className="btn primary" disabled={this.state.user.authenticating} onClick={this.logIn}>
-                  {
-                    this.state.user.authenticating ? "Logging in ..." : "Log in"
-                  }
-                </button>
-                <ReactCSSTransitionGroup transitionName="slide-right" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-                {
-                  this.state.user.authenticating ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
-                }
-                </ReactCSSTransitionGroup>
+                <Button type="submit" loading={this.state.user.authenticating} onClick={this.logIn}>Log in</Button>
               </div>
               <Link to="/forgot_password">Forgot your password?</Link>
             </form>
