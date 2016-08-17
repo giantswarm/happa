@@ -27,7 +27,7 @@ export function organizationsLoad() {
       var clusters = Promise.all(_.map(organizationsArray, organizationName => {
         return giantSwarm.clusters({ organizationName })
                .then(response => {
-                 return [organizationName, response.result.clusters.sort()] || [organizationName, []];
+                 return [organizationName, response.result.clusters] || [organizationName, []];
                });
       }));
 
@@ -47,7 +47,7 @@ export function organizationsLoad() {
       var organizations = clusters.reduce((previous, current) => {
         var orgId = current[0];
         var clusters = current[1] || [];
-        previous[orgId] = {clusters: clusters.map((x) => {return x.id;})};
+        previous[orgId] = {clusters: clusters.sort().map((x) => {return x.id;})};
         return previous;
       }, {});
 
