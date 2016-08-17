@@ -62,7 +62,7 @@ class Organizations extends React.Component {
                 </thead>
                 <tbody>
                   {
-                    _.map(this.props.organizations.items, (organization) => {
+                    _.map(_.sortBy(this.props.organizations.items, 'id'), (organization) => {
                         return <OrganizationRow organization={organization}
                                               key={organization.id}
                                               onClick={this.viewOrganization.bind(this, organization.id)}
