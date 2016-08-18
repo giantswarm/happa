@@ -13,6 +13,7 @@ var signup                = require('./signup/index');
 var notFound              = require('./not_found/index');
 var forgot_password_index = require('./forgot_password/index');
 var forgot_password_set_password = require('./forgot_password/set_password');
+var wip = require('./wip');
 
 var UserActions = require('../actions/user_actions');
 var UserStore   = require('../stores/user_store');
@@ -42,7 +43,7 @@ render((
     <Route path = "/signup/:contactId/:token" component={signup} />
 
     <Route path="/" component={Layout}>
-      <IndexRoute component={docs} onEnter={requireAuth} />
+      <IndexRoute component={wip} onEnter={requireAuth} />
       <Route path = "/docs" component={docs} onEnter={requireAuth} />
       <Route path = "/docs/:pageId" component={docs} onEnter={requireAuth} />
       <Route path="*" component={notFound} />
