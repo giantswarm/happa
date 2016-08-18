@@ -106,7 +106,7 @@ export function organizationDeleteConfirm(orgId) {
     return giantSwarm.deleteOrganization({
       organizationName: orgId
     })
-    .then(organizationsLoad().bind(this, dispatch))
+    .then(() => {return dispatch(organizationsLoad())})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully deleted organization: ' + orgId,
@@ -148,7 +148,7 @@ export function organizationCreateConfirm(orgId) {
     return giantSwarm.createOrganization({
       organizationName: orgId
     })
-    .then(organizationsLoad().bind(this, dispatch))
+    .then(() => {return dispatch(organizationsLoad())})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully created organization: ' + orgId,
@@ -178,7 +178,7 @@ export function organizationAddMember(orgId) {
 }
 
 export function organizationAddMemberConfirm(orgId, username) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({
       type: types.ORGANIZATION_ADD_MEMBER_CONFIRM,
       orgId: orgId,
@@ -189,7 +189,7 @@ export function organizationAddMemberConfirm(orgId, username) {
       organizationName: orgId,
       username: username
     })
-    .then(organizationsLoad().bind(this, dispatch))
+    .then(() => {return dispatch(organizationsLoad())})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully added `' + username + '` to organization: ' + '`' + orgId + '`',
@@ -224,7 +224,7 @@ export function organizationRemoveMemberConfirm(orgId, username) {
       organizationName: orgId,
       username: username
     })
-    .then(organizationsLoad().bind(this, dispatch))
+    .then(() => {return dispatch(organizationsLoad())})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully removed `' + username + '` from organization: ' + '`' + orgId + '`',

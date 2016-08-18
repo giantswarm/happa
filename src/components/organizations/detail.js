@@ -252,7 +252,6 @@ var OrganizationDetail = React.createClass({
 });
 
 function mapStateToProps(state, ownProps) {
-  console.log(state.entities.organizations.items[ownProps.params.orgId]);
   return {
     organization: state.entities.organizations.items[ownProps.params.orgId],
     clusters: state.entities.clusters
