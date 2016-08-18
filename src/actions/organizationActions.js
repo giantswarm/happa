@@ -205,7 +205,7 @@ export function organizationRemoveMemberConfirm(orgId, username) {
     .then(organizationsLoad().bind(this, dispatch))
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
-      message: 'Successfully removed `' + username + '` to organization: ' + '`' + orgId + '`',
+      message: 'Successfully removed `' + username + '` from organization: ' + '`' + orgId + '`',
       class: "success",
       ttl: 3000
     })))
