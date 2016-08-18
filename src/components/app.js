@@ -18,6 +18,7 @@ import {Provider} from 'react-redux';
 import configureStore from '../stores/configureStore';
 var organizationDetail           = require('./organizations/detail');
 var accountSettings              = require('./account_settings');
+var wip = require('./wip');
 
 var UserActions = require('../actions/user_actions');
 var UserStore   = require('../stores/user_store');
@@ -50,7 +51,7 @@ render(
       <Route path = "/signup/:contactId/:token" component={signup} />
 
       <Route path="/" component={Layout}>
-        <IndexRoute component={docs} onEnter={requireAuth} />
+        <IndexRoute component={wip} onEnter={requireAuth} />
         <Route path = "/docs" component={docs} onEnter={requireAuth} />
         <Route path = "/docs/:pageId" component={docs} onEnter={requireAuth} />
         <Route path = "/organizations" component={Organizations} />
