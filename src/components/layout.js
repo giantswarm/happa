@@ -12,9 +12,17 @@ import Modal from './modal/index';
 import {DropdownButton, MenuItem} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import _ from 'underscore';
-
+import {organizationSelect, organizationsLoad} from '../actions/organizationActions';
 var Layout = React.createClass ({
   mixins: [Reflux.connect(UserStore,'user'), Reflux.listenerMixin],
+
+  componentDidMount() {
+    this.props.dispatch(organizationsLoad());
+  },
+
+  selectOrganization: function(orgId) {
+    this.props.dispatch(organizationSelect(orgId));
+  },
 
   render: function() {
     return (
@@ -25,8 +33,8 @@ var Layout = React.createClass ({
             <IndexLink to="/" activeClassName="active">Home</IndexLink>
 
             <div className="subactions">
-              <DropdownButton title={<span><span className="label label-default">ORG</span> giantswarm</span>} key="2" id="org_dropdown">
-                <MenuItem componentClass={Link} href="/organizations/giantswarm" to="/organizations/giantswarm">Details for giantswarm</MenuItem>
+              <DropdownButton title={<span><span className="label label-default">ORG</span> {this.props.selectedOrganization}</span>} key="2" id="org_dropdown">
+                <MenuItem componentClass={Link} href="/organizations/giantswarm" to={"/organizations/" + this.props.selectedOrganization}>Details for {this.props.selectedOrganization}</MenuItem>
                 <MenuItem divider />
                 <MenuItem componentClass={Link} href="/organizations" to="/organizations">Manage organizations</MenuItem>
                 <MenuItem divider />
@@ -34,7 +42,7 @@ var Layout = React.createClass ({
                 {
 
                   _.map(_.sortBy(this.props.organizations.items, 'id'), (org) => {
-                    return <MenuItem key={org.id}>{org.id}</MenuItem>;
+                    return <MenuItem onSelect={this.selectOrganization} eventKey={org.id} key={org.id}>{org.id}</MenuItem>;
                   })
                 }
               </DropdownButton>
@@ -60,7 +68,8 @@ var Layout = React.createClass ({
 
 function mapStateToProps(state, ownProps) {
   return {
-    organizations: state.entities.organizations
+    organizations: state.entities.organizations,
+    selectedOrganization: state.app.selectedOrganization
   };
 }
 

@@ -2,12 +2,14 @@ import {combineReducers} from 'redux';
 import organizations from './organizationReducer';
 import modal from './modalReducer';
 import flashMessages from './flashMessagesReducer';
+import app from './appReducer';
 
 const entities = combineReducers({
   organizations
 });
 
 const rootReducer = combineReducers({
+  app,
   entities,
   modal,
   flashMessages
@@ -21,7 +23,7 @@ export default rootReducer;
 main_store.js
 
 {
-  appState: {
+  app: {
     selectedOrganization: '',
     isConnected: bool, // true if the app has connectivity to the internet
     isFetching: bool, // true if the app is making an API request

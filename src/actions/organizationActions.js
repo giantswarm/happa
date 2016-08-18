@@ -9,6 +9,13 @@ import React from 'react';
 
 var giantSwarm = new GiantSwarm.Client();
 
+export function organizationSelect(orgId) {
+  return {
+    type: types.ORGANIZATION_SELECT,
+    orgId
+  };
+}
+
 export function organizationsLoadSuccess(organizations) {
   return {
     type: types.ORGANIZATIONS_LOAD_SUCCESS,
@@ -17,7 +24,13 @@ export function organizationsLoadSuccess(organizations) {
 }
 
 export function organizationsLoad() {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var alreadyFetching = getState().entities.organizations.isFetching;
+
+    if (alreadyFetching) {
+      return null;
+    }
+
     dispatch({type: types.ORGANIZATIONS_LOAD});
 
     return giantSwarm.memberships()
@@ -62,6 +75,15 @@ export function organizationsLoad() {
       return organizations;
     })
     .then((organizations) => {
+      var previouslySelectedOrganization = localStorage.getItem('app.selectedOrganization');
+
+      if (previouslySelectedOrganization) {
+        dispatch(organizationSelect(previouslySelectedOrganization));
+      } else {
+        var firstOrganization = _.map(organizations, (x) => {return x.id;})[0];
+        dispatch(organizationSelect(firstOrganization));
+      }
+
       dispatch(organizationsLoadSuccess(organizations));
     })
     .catch(error => {
