@@ -4,14 +4,14 @@ import userActions from '../../actions/user_actions';
 import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 import PasswordField from "../signup/password_field";
 import StatusMessage from '../signup/status_message';
-import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
-import {connect} from 'react-redux';
+import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
+import { connect } from 'react-redux';
 import Button from '../button';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 
 var SetPassword = React.createClass({
   contextTypes: {

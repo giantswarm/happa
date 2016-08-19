@@ -10,8 +10,8 @@ import FlashMessage from './flash_message';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from 'underscore';
-import {connect} from 'react-redux';
-import {flashRemove} from '../../actions/flashMessageActions';
+import { connect } from 'react-redux';
+import { flashRemove } from '../../actions/flashMessageActions';
 
 var FlashMessages = React.createClass({
   contextTypes: {

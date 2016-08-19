@@ -1,9 +1,9 @@
 'use strict';
 
 import React from 'react';
-import ReactRouter, {applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRoute, browserHistory} from 'react-router';
-import useScroll from 'react-router-scroll';
-import {render} from 'react-dom';
+import { applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRoute, browserHistory } from 'react-router';
+import { useScroll } from 'react-router-scroll';
+import { render } from 'react-dom';
 import Layout from './layout';
 import docs from './docs/index';
 import login from './login/index';
@@ -13,7 +13,7 @@ import notFound from './not_found/index';
 import forgot_password_index from './forgot_password/index';
 import forgot_password_set_password from './forgot_password/set_password';
 import Organizations from './organizations';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import configureStore from '../stores/configureStore';
 import organizationDetail from './organizations/detail';
 import accountSettings from './account_settings';

@@ -6,10 +6,10 @@ import FlashMessages from '../flash_messages/index.js';
 import Reflux from 'reflux';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 import Button from '../button';
 import {connect} from 'react-redux';
-import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
+import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 
 var Login = React.createClass({
   contextTypes: {

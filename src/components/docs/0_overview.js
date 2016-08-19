@@ -2,9 +2,9 @@
 import React from 'react';
 import Slide from '../component_slider/slide';
 import Markdown from './markdown';
-import {CodeBlock, Prompt, Output} from './codeblock';
+import { CodeBlock, Prompt, Output } from './codeblock';
 import FileBlock from './fileblock';
-import {Link, IndexLink} from 'react-router';
+import { Link, IndexLink } from 'react-router';
 
 module.exports = React.createClass ({
     testFileContent() {

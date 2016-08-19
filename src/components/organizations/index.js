@@ -2,8 +2,8 @@
 
 import React from 'react';
 import FlashMessage from '../flash_messages/flash_message';
-import {organizationsLoad, organizationDelete, organizationCreate, organizationSelect} from '../../actions/organizationActions';
-import {connect} from 'react-redux';
+import { organizationsLoad, organizationDelete, organizationCreate, organizationSelect } from '../../actions/organizationActions';
+import { connect } from 'react-redux';
 import OrganizationRow from './organizationRow';
 import Button from 'react-bootstrap/lib/Button';
 import _ from 'underscore';

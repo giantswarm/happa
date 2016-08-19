@@ -5,8 +5,8 @@ import store from '../../stores/user_store';
 import Reflux from 'reflux';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
-import {connect} from 'react-redux';
+import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
+import { connect } from 'react-redux';
 
 var Logout = React.createClass({
   contextTypes: {

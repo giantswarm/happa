@@ -3,8 +3,8 @@
 import * as types from './actionTypes';
 import _ from 'underscore';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
-import {modalHide} from './modalActions';
-import {flashAdd} from './flashMessageActions';
+import { modalHide } from './modalActions';
+import { flashAdd } from './flashMessageActions';
 import React from 'react';
 
 var giantSwarm = new GiantSwarm.Client();

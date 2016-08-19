@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 
 module.exports = React.createClass({
   render: function() {

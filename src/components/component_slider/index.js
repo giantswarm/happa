@@ -10,7 +10,7 @@
 // @currentSlide - Number - The index of the current slide. Default 0
 // @slides       - Array  - An array of components
 
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 module.exports = class ComponentSlider extends Component {

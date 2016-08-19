@@ -1,11 +1,11 @@
 "use strict";
 
 import React from 'react';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 import FlashMessage from "../flash_messages/flash_message";
 import Button from 'react-bootstrap/lib/Button';
-import {connect} from 'react-redux';
-import {organizationsLoad, organizationAddMember, organizationRemoveMember} from '../../actions/organizationActions';
+import { connect } from 'react-redux';
+import { organizationsLoad, organizationAddMember, organizationRemoveMember } from '../../actions/organizationActions';
 
 var OrganizationDetail = React.createClass({
   componentDidMount() {

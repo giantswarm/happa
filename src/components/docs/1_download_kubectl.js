@@ -2,7 +2,7 @@
 import React from 'react';
 import Slide from '../component_slider/slide';
 import Markdown from './markdown';
-import {CodeBlock, Prompt, Output} from './codeblock';
+import { CodeBlock, Prompt, Output } from './codeblock';
 import platform from '../../lib/platform';
 
 module.exports = React.createClass ({

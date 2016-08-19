@@ -3,12 +3,12 @@
 import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import {Link} from 'react-router';
-import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
-import {connect} from 'react-redux';
+import { Link } from 'react-router';
+import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
+import { connect } from 'react-redux';
 import Button from '../button';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 
 var ForgotPassword = React.createClass({
   getInitialState: function() {

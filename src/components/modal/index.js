@@ -1,14 +1,14 @@
 "use strict";
 
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../button';
-import {modalHide} from '../../actions/modalActions';
-import {organizationDeleteConfirm,
-        organizationCreateConfirm,
-        organizationAddMemberConfirm,
-        organizationRemoveMemberConfirm} from '../../actions/organizationActions';
+import { modalHide } from '../../actions/modalActions';
+import { organizationDeleteConfirm,
+         organizationCreateConfirm,
+         organizationAddMemberConfirm,
+         organizationRemoveMemberConfirm } from '../../actions/organizationActions';
 
 class Modal extends React.Component {
   close() {
