@@ -1,7 +1,7 @@
 'use strict';
 
 var React       = require('react');
-var ReactRouter, {applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRoute, browserHistory} = require('react-router');
+import ReactRouter, {applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRoute, browserHistory} from 'react-router';
 var useScroll   = require('react-router-scroll');
 var render      = require('react-dom').render;
 

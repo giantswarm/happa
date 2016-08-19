@@ -24,6 +24,22 @@ export function organizationSelect(orgId) {
   };
 }
 
+export function organizationDeleteSuccess(orgId, deletingSelectedOrganization) {
+  // Check if the organization the user deleted is the currently selected organization
+  // If so, switch to the first organization in the list.
+  //
+  // Don't switch if there are no organizations at all.
+  return function(dispatch, getState) {
+    var firstOrganization = _.map(_.sortBy(getState().entities.organizations.items, 'id'), (x) => {return x.id;})[0];
+
+    if (firstOrganization && deletingSelectedOrganization) {
+      return dispatch(organizationSelect(firstOrganization));
+    }
+
+    return null;
+  };
+}
+
 export function organizationsLoadSuccess(organizations) {
   return {
     type: types.ORGANIZATIONS_LOAD_SUCCESS,
@@ -134,22 +150,6 @@ export function organizationDelete(orgId) {
   return {
     type: types.ORGANIZATION_DELETE,
     orgId: orgId
-  };
-}
-
-export function organizationDeleteSuccess(orgId, deletingSelectedOrganization) {
-  // Check if the organization the user deleted is the currently selected organization
-  // If so, switch to the first organization in the list.
-  //
-  // Don't switch if there are no organizations at all.
-  return function(dispatch, getState) {
-    var firstOrganization = _.map(_.sortBy(getState().entities.organizations.items, 'id'), (x) => {return x.id;})[0];
-
-    if (firstOrganization && deletingSelectedOrganization) {
-      return dispatch(organizationSelect(firstOrganization));
-    }
-
-    return null;
   };
 }
 
