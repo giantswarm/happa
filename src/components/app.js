@@ -54,9 +54,9 @@ render(
         <IndexRoute component={wip} onEnter={requireAuth} />
         <Route path = "/docs" component={docs} onEnter={requireAuth} />
         <Route path = "/docs/:pageId" component={docs} onEnter={requireAuth} />
-        <Route path = "/organizations" component={Organizations} />
-        <Route path = "/organizations/:orgId" component={organizationDetail} />
-        <Route path = "/account_settings" component={accountSettings} />
+        <Route path = "/organizations" component={Organizations} onEnter={requireAuth} />
+        <Route path = "/organizations/:orgId" component={organizationDetail} onEnter={requireAuth} />
+        <Route path = "/account_settings" component={accountSettings} onEnter={requireAuth} />
         <Route path="*" component={notFound} />
       </Route>
     </Router>
