@@ -211,7 +211,9 @@ class Modal extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    modal: state.modal
+    modal: state.modal,
+    selectedOrganization: state.app.selectedOrganization,
+    organizations: state.entities.organizations.items
   };
 }
 

@@ -10,9 +10,17 @@ import React from 'react';
 var giantSwarm = new GiantSwarm.Client();
 
 export function organizationSelect(orgId) {
-  return {
-    type: types.ORGANIZATION_SELECT,
-    orgId
+  return function(dispatch, getState) {
+    dispatch(flashAdd({
+      message: 'Selected organization: ' + orgId,
+      class: "success",
+      ttl: 3000
+    }));
+
+    return dispatch({
+      type: types.ORGANIZATION_SELECT,
+      orgId
+    });
   };
 }
 
@@ -75,15 +83,6 @@ export function organizationsLoad() {
       return organizations;
     })
     .then((organizations) => {
-      var previouslySelectedOrganization = localStorage.getItem('app.selectedOrganization');
-
-      if (previouslySelectedOrganization) {
-        dispatch(organizationSelect(previouslySelectedOrganization));
-      } else {
-        var firstOrganization = _.map(organizations, (x) => {return x.id;})[0];
-        dispatch(organizationSelect(firstOrganization));
-      }
-
       dispatch(organizationsLoadSuccess(organizations));
     })
     .catch(error => {
@@ -100,19 +99,22 @@ export function organizationsLoad() {
 }
 
 export function organizationDeleteConfirm(orgId) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({type: types.ORGANIZATION_DELETE_CONFIRM, orgId: orgId});
+
+    var deletingSelectedOrganization = orgId === getState().app.selectedOrganization;
 
     return giantSwarm.deleteOrganization({
       organizationName: orgId
     })
-    .then(() => {return dispatch(organizationsLoad())})
+    .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully deleted organization: ' + orgId,
       class: "success",
       ttl: 3000
     })))
+    .then(() => {return dispatch(organizationDeleteSuccess(orgId, deletingSelectedOrganization));})
     .catch(error => {
       dispatch(modalHide());
 
@@ -135,6 +137,22 @@ export function organizationDelete(orgId) {
   };
 }
 
+export function organizationDeleteSuccess(orgId, deletingSelectedOrganization) {
+  // Check if the organization the user deleted is the currently selected organization
+  // If so, switch to the first organization in the list.
+  //
+  // Don't switch if there are no organizations at all.
+  return function(dispatch, getState) {
+    var firstOrganization = _.map(_.sortBy(getState().entities.organizations.items, 'id'), (x) => {return x.id;})[0];
+
+    if (firstOrganization && deletingSelectedOrganization) {
+      return dispatch(organizationSelect(firstOrganization));
+    }
+
+    return null;
+  };
+}
+
 export function organizationCreate() {
   return {
     type: types.ORGANIZATION_CREATE
@@ -148,7 +166,7 @@ export function organizationCreateConfirm(orgId) {
     return giantSwarm.createOrganization({
       organizationName: orgId
     })
-    .then(() => {return dispatch(organizationsLoad())})
+    .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully created organization: ' + orgId,
@@ -189,7 +207,7 @@ export function organizationAddMemberConfirm(orgId, username) {
       organizationName: orgId,
       username: username
     })
-    .then(() => {return dispatch(organizationsLoad())})
+    .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully added `' + username + '` to organization: ' + '`' + orgId + '`',
@@ -224,7 +242,7 @@ export function organizationRemoveMemberConfirm(orgId, username) {
       organizationName: orgId,
       username: username
     })
-    .then(() => {return dispatch(organizationsLoad())})
+    .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully removed `' + username + '` from organization: ' + '`' + orgId + '`',

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import FlashMessage from '../flash_messages/flash_message';
-import {organizationsLoad, organizationDelete, organizationCreate} from '../../actions/organizationActions';
+import {organizationsLoad, organizationDelete, organizationCreate, organizationSelect} from '../../actions/organizationActions';
 import {connect} from 'react-redux';
 import OrganizationRow from './organizationRow';
 import Button from 'react-bootstrap/lib/Button';
@@ -26,7 +26,7 @@ class Organizations extends React.Component {
   }
 
   selectOrganization(orgId) {
-    console.log("select", orgId);
+    this.props.dispatch(organizationSelect(orgId));
   }
 
   render() {
