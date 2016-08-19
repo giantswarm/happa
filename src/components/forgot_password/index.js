@@ -1,9 +1,9 @@
 "use strict";
 
-var FlashMessages           = require('../flash_messages/index.js');
-var React                   = require('react');
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var {Link}                  = require('react-router');
+import FlashMessages from '../flash_messages/index.js';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import {Link} from 'react-router';
 import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
 import {connect} from 'react-redux';
 import Button from '../button';

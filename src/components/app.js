@@ -1,27 +1,25 @@
 'use strict';
 
-var React       = require('react');
+import React from 'react';
 import ReactRouter, {applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRoute, browserHistory} from 'react-router';
-var useScroll   = require('react-router-scroll');
-var render      = require('react-dom').render;
-
-var Layout                       = require('./layout');
-var docs                         = require('./docs/index');
-var login                        = require('./login/index');
-var logout                       = require('./logout/index');
-var signup                       = require('./signup/index');
-var notFound                     = require('./not_found/index');
-var forgot_password_index        = require('./forgot_password/index');
-var forgot_password_set_password = require('./forgot_password/set_password');
+import useScroll from 'react-router-scroll';
+import {render} from 'react-dom';
+import Layout from './layout';
+import docs from './docs/index';
+import login from './login/index';
+import logout from './logout/index';
+import signup from './signup/index';
+import notFound from './not_found/index';
+import forgot_password_index from './forgot_password/index';
+import forgot_password_set_password from './forgot_password/set_password';
 import Organizations from './organizations';
 import {Provider} from 'react-redux';
 import configureStore from '../stores/configureStore';
-var organizationDetail           = require('./organizations/detail');
-var accountSettings              = require('./account_settings');
-var wip = require('./wip');
-
-var UserActions = require('../actions/user_actions');
-var UserStore   = require('../stores/user_store');
+import organizationDetail from './organizations/detail';
+import accountSettings from './account_settings';
+import wip from './wip';
+import UserActions from '../actions/user_actions';
+import UserStore from '../stores/user_store';
 
 require('normalize.css');
 require('../styles/app.scss');

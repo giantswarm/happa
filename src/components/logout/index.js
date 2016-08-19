@@ -1,10 +1,10 @@
 "use strict";
 
-var actions                 = require('../../actions/user_actions');
-var store                   = require('../../stores/user_store');
-var Reflux                  = require('reflux');
-var React                   = require('react');
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+import actions from '../../actions/user_actions';
+import store from '../../stores/user_store';
+import Reflux from 'reflux';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
 import {connect} from 'react-redux';
 

@@ -1,12 +1,12 @@
 "use strict";
 
-var actions                 = require('../../actions/user_actions');
-var store                   = require('../../stores/user_store');
-var FlashMessages           = require('../flash_messages/index.js');
-var Reflux                  = require('reflux');
-var React                   = require('react');
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var {Link}                  = require('react-router');
+import actions from '../../actions/user_actions';
+import store from '../../stores/user_store';
+import FlashMessages from '../flash_messages/index.js';
+import Reflux from 'reflux';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import {Link} from 'react-router';
 import Button from '../button';
 import {connect} from 'react-redux';
 import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';

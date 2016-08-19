@@ -1,8 +1,8 @@
 "use strict";
 
-var React               = require('react');
-var {Link}              = require('react-router');
-var FlashMessage = require("../flash_messages/flash_message");
+import React from 'react';
+import {Link} from 'react-router';
+import FlashMessage from "../flash_messages/flash_message";
 import Button from 'react-bootstrap/lib/Button';
 import {connect} from 'react-redux';
 import {organizationsLoad, organizationAddMember, organizationRemoveMember} from '../../actions/organizationActions';

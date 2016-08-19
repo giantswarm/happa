@@ -6,10 +6,10 @@
 
 "use strict";
 
-var Reflux                  = require('reflux');
-var React                   = require('react');
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var _                       = require('underscore');
+import Reflux from 'reflux';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import _ from 'underscore';
 
 module.exports = React.createClass({
   contextTypes: {

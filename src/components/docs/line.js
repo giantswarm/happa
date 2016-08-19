@@ -7,7 +7,7 @@
 // prompt: Display this line as a prompt or not (adds the dollar sign before the text)
 // text: The text that this line should display
 
-var React = require('react');
+import React from 'react';
 
 module.exports = React.createClass ({
   render: function() {

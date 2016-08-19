@@ -1,9 +1,9 @@
 'use strict';
-var React = require('react');
-var Slide = require('../component_slider/slide');
-var Markdown = require('./markdown');
-var {CodeBlock, Prompt, Output} = require('./codeblock');
-var FileBlock = require('./fileblock');
+import React from 'react';
+import Slide from '../component_slider/slide';
+import Markdown from './markdown';
+import {CodeBlock, Prompt, Output} from './codeblock';
+import FileBlock from './fileblock';
 
 module.exports = React.createClass ({
     render() {

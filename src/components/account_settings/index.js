@@ -1,8 +1,8 @@
 "use strict";
 
-var React               = require('react');
-var {Link}              = require('react-router');
-var Gravatar = require("react-gravatar");
+import React from 'react';
+import {Link} from 'react-router';
+import Gravatar from "react-gravatar";
 
 module.exports = React.createClass({
   render: function() {

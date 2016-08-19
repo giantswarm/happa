@@ -1,12 +1,12 @@
 "use strict";
 
-var userActions             = require('../../actions/user_actions');
-var FlashMessages           = require('../flash_messages/index.js');
-var React                   = require('react');
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var {Link}                  = require('react-router');
-var PasswordField           = require("../signup/password_field");
-var StatusMessage           = require('../signup/status_message');
+import userActions from '../../actions/user_actions';
+import FlashMessages from '../flash_messages/index.js';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import {Link} from 'react-router';
+import PasswordField from "../signup/password_field";
+import StatusMessage from '../signup/status_message';
 import {flashAdd, flashClearAll} from '../../actions/flashMessageActions';
 import {connect} from 'react-redux';
 import Button from '../button';

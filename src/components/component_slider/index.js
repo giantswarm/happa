@@ -10,11 +10,8 @@
 // @currentSlide - Number - The index of the current slide. Default 0
 // @slides       - Array  - An array of components
 
-var React = require('react');
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-
-var Component = React.Component;
-var PropTypes = React.PropTypes;
+import React, {Component, PropTypes} from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 module.exports = class ComponentSlider extends Component {
   constructor(props) {

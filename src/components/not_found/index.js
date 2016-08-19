@@ -1,8 +1,8 @@
 "use strict";
 
-var React   = require('react');
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var {Link}  = require('react-router');
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import {Link} from 'react-router';
 
 module.exports = React.createClass({
   render: function() {

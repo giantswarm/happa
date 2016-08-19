@@ -1,14 +1,15 @@
 "use strict";
 
-var React               = require('react');
-var Reflux              = require('reflux');
-var Passage             = require("../../lib/passage_client");
-var passage             = new Passage({endpoint: window.config.passageEndpoint});
-var actions             = require("../../actions/sign_up_form_actions");
-var store               = require("../../stores/sign_up_form_store");
-var PasswordField       = require("./password_field");
-var StatusMessage       = require('./status_message');
-var TermsOfService      = require('./terms_of_service');
+import React from 'react';
+import Reflux from 'reflux';
+import Passage from "../../lib/passage_client";
+import actions from "../../actions/sign_up_form_actions";
+import store from "../../stores/sign_up_form_store";
+import PasswordField from "./password_field";
+import StatusMessage from './status_message';
+import TermsOfService from './terms_of_service';
+
+var passage = new Passage({endpoint: window.config.passageEndpoint});
 
 module.exports = React.createClass({
   contextTypes: {

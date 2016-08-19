@@ -6,10 +6,10 @@
 
 "use strict";
 
-var FlashMessage            = require('./flash_message');
-var React                   = require('react');
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var _                       = require('underscore');
+import FlashMessage from './flash_message';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import _ from 'underscore';
 import {connect} from 'react-redux';
 import {flashRemove} from '../../actions/flashMessageActions';
 

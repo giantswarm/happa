@@ -20,12 +20,12 @@
 // take the content in the Prompt tags.
 
 
-var React = require('react');
-var copy = require('copy-to-clipboard');
-var _ = require('underscore');
-var Line = require("./line");
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var Helpers = require('../../lib/helpers');
+import React from 'react';
+import copy from 'copy-to-clipboard';
+import _ from 'underscore';
+import Line from "./line";
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import Helpers from '../../lib/helpers';
 
 var Prompt = React.createClass ({
   render: function() {

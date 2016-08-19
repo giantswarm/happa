@@ -1,18 +1,17 @@
 "use strict";
 
-var React = require('react');
-var Reflux = require('reflux');
-var {Link, IndexLink}  = require('react-router');
-
-var UserActions = require('../actions/user_actions');
-var UserStore   = require('../stores/user_store');
-var FlashMessages = require('./flash_messages/index');
-
+import React from 'react';
+import Reflux from 'reflux';
+import {Link, IndexLink}  from 'react-router';
+import UserActions from '../actions/user_actions';
+import UserStore   from '../stores/user_store';
+import FlashMessages from './flash_messages/index';
 import Modal from './modal/index';
 import {DropdownButton, MenuItem} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import _ from 'underscore';
 import {organizationSelect, organizationsLoad} from '../actions/organizationActions';
+
 var Layout = React.createClass ({
   mixins: [Reflux.connect(UserStore,'user'), Reflux.listenerMixin],
 
