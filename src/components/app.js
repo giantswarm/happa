@@ -26,18 +26,18 @@ require('../styles/app.scss');
 
 var appContainer = document.getElementById('app');
 
-function requireAuth(nextState, replace) {
-  UserStore.getInitialState();
+const store = configureStore();
 
-  if (! UserStore.isAuthenticated()) {
+function requireAuth(nextState, replace) {
+  var state = store.getState();
+
+  if (! state.app.loggedInUser) {
     replace({
       pathname: '/login',
       query: { nextPathname: nextState.location.pathname }
     });
   }
 }
-
-const store = configureStore();
 
 render(
   <Provider store={store}>

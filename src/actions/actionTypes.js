@@ -1,5 +1,14 @@
 "use strict";
 
+// User related
+export const LOGIN = "LOGIN";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_ERROR = "LOGIN_ERROR";
+
+export const LOGOUT = "LOGOUT";
+export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
+export const LOGOUT_ERROR = "LOGOUT_ERROR";
+
 // Password Recovery
 export const REQUEST_PASSWORD_RECOVERY_TOKEN = "REQUEST_PASSWORD_RECOVERY_TOKEN";
 export const VERIFY_PASSWORD_RECOVERY_TOKEN = "VERIFY_PASSWORD_RECOVERY_TOKEN";

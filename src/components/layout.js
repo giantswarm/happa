@@ -1,7 +1,6 @@
 "use strict";
 
 import React from 'react';
-import Reflux from 'reflux';
 import {Link, IndexLink}  from 'react-router';
 import UserActions from '../actions/user_actions';
 import UserStore   from '../stores/user_store';
@@ -13,8 +12,6 @@ import _ from 'underscore';
 import { organizationSelect, organizationsLoad } from '../actions/organizationActions';
 
 var Layout = React.createClass ({
-  mixins: [Reflux.connect(UserStore,'user'), Reflux.listenerMixin],
-
   componentDidMount() {
     this.props.dispatch(organizationsLoad());
   },
@@ -54,7 +51,7 @@ var Layout = React.createClass ({
               }
               &nbsp;
               &nbsp;
-              <DropdownButton title={<span><span className="label label-default">USER</span> {UserStore.currentUser().email}</span>} key="1" id="user_dropdown">
+              <DropdownButton title={<span><span className="label label-default">USER</span> {this.props.user.email}</span>} key="1" id="user_dropdown">
                 <MenuItem componentClass={Link} href="/account_settings" to="/account_settings">Account Settings</MenuItem>
                 <MenuItem componentClass={Link} href="/logout" to="/logout">Logout</MenuItem>
               </DropdownButton>
@@ -75,6 +72,7 @@ var Layout = React.createClass ({
 function mapStateToProps(state, ownProps) {
   return {
     organizations: state.entities.organizations,
+    user: state.app.loggedInUser,
     selectedOrganization: state.app.selectedOrganization
   };
 }

@@ -6,12 +6,36 @@ import { browserHistory } from 'react-router';
 
 var firstTime = true;
 
-export default function appReducer(state = {selectedOrganization: 'not-yet-loaded'}, action = undefined) {
+export default function appReducer(state = {
+    selectedOrganization: 'not-yet-loaded',
+    loggedInUser: JSON.parse(localStorage.getItem('user'))
+  }, action = undefined) {
   switch(action.type) {
+    case types.LOGIN_SUCCESS:
+      // localStorage.setItem('user', JSON.stringify(action.userData));
+
+      // browserHistory.push('/');
+
+      return Object.assign({}, state, {
+        loggedInUser: action.userData
+      });
+
+    case types.LOGOUT_SUCCESS:
+      localStorage.setItem('user', null);
+
+      browserHistory.push('/login');
+
+      return Object.assign({}, state, {
+        loggedInUser: action.userData
+      });
+
     case types.ORGANIZATION_SELECT:
       localStorage.setItem('app.selectedOrganization', action.orgId);
       browserHistory.push('/');
-      return {selectedOrganization: action.orgId};
+
+      return Object.assign({}, state, {
+        selectedOrganization: action.orgId
+      });
 
     case types.ORGANIZATIONS_LOAD_SUCCESS:
       // Organizations have been loaded
@@ -27,13 +51,20 @@ export default function appReducer(state = {selectedOrganization: 'not-yet-loade
         if (previouslySelectedOrganization && organizationStillExists) {
           // The user had an organization selected, and it still exists.
           // So we stay on it.
-          return {selectedOrganization: previouslySelectedOrganization};
+          return Object.assign({}, state, {
+            selectedOrganization: previouslySelectedOrganization
+          });
+
         } else {
           // The user didn't have an organization selected yet, or the one
           // they selected is gone. Switch to the first organization in the list.
           var firstOrganization = _.map(action.organizations, (x) => {return x.id;})[0];
           localStorage.setItem('app.selectedOrganization', firstOrganization);
-          return {selectedOrganization: firstOrganization};
+
+          return Object.assign({}, state, {
+            selectedOrganization: firstOrganization
+          });
+
         }
       } else {
         return state;

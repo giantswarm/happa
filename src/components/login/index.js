@@ -3,40 +3,26 @@
 import actions from '../../actions/user_actions';
 import store from '../../stores/user_store';
 import FlashMessages from '../flash_messages/index.js';
-import Reflux from 'reflux';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Link } from 'react-router';
 import Button from '../button';
 import {connect} from 'react-redux';
 import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
+import * as userActions from '../../actions/userActions';
+import { bindActionCreators } from 'redux';
+import { browserHistory } from 'react-router';
 
 var Login = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.object
-  },
-
-  mixins: [Reflux.connect(store,'user'), Reflux.listenerMixin],
-
-  componentDidMount: function() {
-    this.listenTo(actions.authenticate.completed, this.onAuthenticateCompleted);
-    this.listenTo(actions.authenticate.failed, this.onAuthenticateFailed);
+  getInitialState: function() {
+    return {
+      email: '',
+      password: ''
+    }
   },
 
   componentWillUnmount: function() {
     this.props.dispatch(flashClearAll());
-  },
-
-  onAuthenticateCompleted: function() {
-    this.props.dispatch(flashClearAll());
-
-    this.context.router.push('/');
-
-    this.props.dispatch(flashAdd({
-      message: 'Signed in succesfully.',
-      class: "success",
-      ttl: 3000
-    }));
   },
 
   onAuthenticateFailed: function(message) {
@@ -48,12 +34,16 @@ var Login = React.createClass({
 
   updateEmail(event) {
     this.props.dispatch(flashClearAll());
-    actions.updateEmail(event.target.value);
+    this.setState({
+      email: event.target.value
+    });
   },
 
   updatePassword(event) {
     this.props.dispatch(flashClearAll());
-    actions.updatePassword(event.target.value);
+    this.setState({
+      password: event.target.value
+    });
   },
 
   logIn(e) {
@@ -61,20 +51,45 @@ var Login = React.createClass({
 
     this.props.dispatch(flashClearAll());
 
-    if ( ! this.state.user.email) {
+    if ( ! this.state.email) {
       this.props.dispatch(flashAdd({
         message: 'Please provide the email address that you used for registration.',
         class: "danger"
       }));
-    } else if ( ! this.state.user.password) {
+    } else if ( ! this.state.password) {
       this.props.dispatch(flashAdd({
         message: 'Please enter your password.',
-        class: "danger"
+        class: 'danger'
       }));
     }
 
-    if (this.state.user.email && this.state.user.password) {
-      actions.authenticate(this.state.user.email, this.state.user.password);
+    if (this.state.email && this.state.password) {
+      this.setState({
+        authenticating: true
+      });
+
+      this.props.actions.login(this.state.email, this.state.password)
+      .then((x) => {
+        this.props.dispatch(flashAdd({
+          message: 'Welcome!',
+          class: 'success',
+          ttl: 3000
+        }));
+
+        browserHistory.push('/');
+      })
+      .catch((error) => {
+        this.setState({
+          authenticating: false
+        });
+
+        this.props.dispatch(flashAdd({
+          message: 'Error',
+          class: 'danger',
+          ttl: 3000
+        }));
+      })
+
     }
   },
 
@@ -94,7 +109,7 @@ var Login = React.createClass({
             <form onSubmit={this.logIn}>
               <div className="textfield">
                 <label>Email</label>
-                <input value={this.state.user.email}
+                <input value={this.state.email}
                        type="text"
                        id="email"
                        ref="email"
@@ -103,7 +118,7 @@ var Login = React.createClass({
 
               <div className="textfield">
                 <label>Password</label>
-                <input value={this.state.user.password}
+                <input value={this.state.password}
                        type="password"
                        id="password"
                        ref="password"
@@ -111,7 +126,7 @@ var Login = React.createClass({
               </div>
 
               <div className="progress_button--container">
-                <Button type="submit" bsStyle="primary" loading={this.state.user.authenticating} onClick={this.logIn}>Log in</Button>
+                <Button type="submit" bsStyle="primary" loading={this.state.authenticating} onClick={this.logIn}>Log in</Button>
               </div>
               <Link to="/forgot_password">Forgot your password?</Link>
             </form>
@@ -129,4 +144,17 @@ var Login = React.createClass({
   }
 });
 
-module.exports = connect()(Login);
+function mapStateToProps(state, ownProps) {
+  return {
+    user: state.app.loggedInUser
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(userActions, dispatch),
+    dispatch: dispatch
+  }
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Login);

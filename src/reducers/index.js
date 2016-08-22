@@ -27,7 +27,11 @@ main_store.js
     selectedOrganization: '',
     isConnected: bool, // true if the app has connectivity to the internet
     isFetching: bool, // true if the app is making an API request
-    loggedInUser: "oponder", // id of the user that is currently logged in
+    loggedInUser: {
+      email: '',
+      username: '',
+      authToken: ''
+    }, // id of the user that is currently logged in
   },
 
   flashMessages: {
