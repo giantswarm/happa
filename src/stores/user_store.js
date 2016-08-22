@@ -1,16 +1,16 @@
-"use strict";
+'use strict';
 var Reflux = require('reflux');
-var userActions = require("../actions/user_actions");
-var clusterActions = require("../actions/cluster_actions");
-var clusterStore = require("../stores/cluster_store");
+var userActions = require('../actions/user_actions');
+var clusterActions = require('../actions/cluster_actions');
+var clusterStore = require('../stores/cluster_store');
 var _ = require('underscore');
 var validate = require('validate.js');
 
 var user = {
   authenticated: false,
   authenticating: false,
-  email: "",
-  password: ""
+  email: '',
+  password: ''
 };
 
 module.exports = Reflux.createStore({
@@ -19,8 +19,8 @@ module.exports = Reflux.createStore({
   getInitialState: function() {
     user = {
       authtoken: localStorage.getItem('user.authtoken'),
-      email: localStorage.getItem('user.email') || "",
-      password: "",
+      email: localStorage.getItem('user.email') || '',
+      password: '',
       authenticated: localStorage.getItem('user.authtoken') ? true : false
     };
 
@@ -53,7 +53,7 @@ module.exports = Reflux.createStore({
 
     user.authenticated = true;
     user.authenticating = false;
-    user.password = "";
+    user.password = '';
 
     clusterActions.fetchAll();
     this.trigger(user);

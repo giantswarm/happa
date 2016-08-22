@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -47,7 +47,7 @@ class Modal extends React.Component {
 
   render() {
     switch(this.props.modal.template) {
-      case "organizationDelete":
+      case 'organizationDelete':
         return (
           <BootstrapModal show={this.props.modal.visible} onHide={this.close.bind(this)}>
             <BootstrapModal.Header closeButton>
@@ -59,15 +59,15 @@ class Modal extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                type="submit"
-                bsStyle="danger"
+                type='submit'
+                bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
                 onClick={this.deleteOrganisation.bind(this, this.props.modal.templateValues.orgId)}>
                 {
                   this.props.modal.templateValues.loading ?
-                  "Deleting Organization"
+                  'Deleting Organization'
                   :
-                  "Delete Organization"
+                  'Delete Organization'
                 }
               </Button>
 
@@ -76,7 +76,7 @@ class Modal extends React.Component {
                 null
                 :
                 <Button
-                  bsStyle="link"
+                  bsStyle='link'
                   onClick={this.close.bind(this)}>
                   Cancel
                 </Button>
@@ -85,7 +85,7 @@ class Modal extends React.Component {
           </BootstrapModal>
         );
 
-      case "organizationCreate":
+      case 'organizationCreate':
         return (
           <BootstrapModal show={this.props.modal.visible} onHide={this.close.bind(this)}>
             <BootstrapModal.Header closeButton>
@@ -94,20 +94,20 @@ class Modal extends React.Component {
             <BootstrapModal.Body>
               <h4>Organization Name:</h4>
               <form onSubmit={this.createOrganisation.bind(this)} >
-                <input ref="orgId" autoFocus type="text"/>
+                <input ref='orgId' autoFocus type='text'/>
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                type="submit"
-                bsStyle="primary"
+                type='submit'
+                bsStyle='primary'
                 loading={this.props.modal.templateValues.loading}
                 onClick={this.createOrganisation.bind(this)}>
                 {
                   this.props.modal.templateValues.loading ?
-                  "Creating Organization"
+                  'Creating Organization'
                   :
-                  "Create Organization"
+                  'Create Organization'
                 }
               </Button>
 
@@ -116,7 +116,7 @@ class Modal extends React.Component {
                 null
                 :
                 <Button
-                  bsStyle="link"
+                  bsStyle='link'
                   onClick={this.close.bind(this)}>
                   Cancel
                 </Button>
@@ -125,7 +125,7 @@ class Modal extends React.Component {
           </BootstrapModal>
         );
 
-      case "organizationAddMember":
+      case 'organizationAddMember':
         return (
           <BootstrapModal show={this.props.modal.visible} onHide={this.close.bind(this)}>
             <BootstrapModal.Header closeButton>
@@ -134,20 +134,20 @@ class Modal extends React.Component {
             <BootstrapModal.Body>
               <h4>Username:</h4>
               <form onSubmit={this.addMember.bind(this)} >
-                <input ref="username" autoFocus type="text"/>
+                <input ref='username' autoFocus type='text'/>
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                type="submit"
-                bsStyle="primary"
+                type='submit'
+                bsStyle='primary'
                 loading={this.props.modal.templateValues.loading}
                 onClick={this.addMember.bind(this)}>
                 {
                   this.props.modal.templateValues.loading ?
-                  "Adding Member"
+                  'Adding Member'
                   :
-                  "Add Member to Organization"
+                  'Add Member to Organization'
                 }
               </Button>
 
@@ -156,7 +156,7 @@ class Modal extends React.Component {
                 null
                 :
                 <Button
-                  bsStyle="link"
+                  bsStyle='link'
                   onClick={this.close.bind(this)}>
                   Cancel
                 </Button>
@@ -165,7 +165,7 @@ class Modal extends React.Component {
           </BootstrapModal>
         );
 
-      case "organizationRemoveMember":
+      case 'organizationRemoveMember':
         return (
           <BootstrapModal show={this.props.modal.visible} onHide={this.close.bind(this)}>
             <BootstrapModal.Header closeButton>
@@ -176,15 +176,15 @@ class Modal extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                type="submit"
-                bsStyle="danger"
+                type='submit'
+                bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
                 onClick={this.removeMember.bind(this)}>
                 {
                   this.props.modal.templateValues.loading ?
-                  "Removing Member"
+                  'Removing Member'
                   :
-                  "Remove Member from Organization"
+                  'Remove Member from Organization'
                 }
               </Button>
 
@@ -193,7 +193,7 @@ class Modal extends React.Component {
                 null
                 :
                 <Button
-                  bsStyle="link"
+                  bsStyle='link'
                   onClick={this.close.bind(this)}>
                   Cancel
                 </Button>

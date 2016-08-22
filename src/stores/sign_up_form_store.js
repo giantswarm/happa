@@ -1,23 +1,23 @@
-"use strict";
+'use strict';
 var Reflux   = require('reflux');
-var actions  = require("../actions/sign_up_form_actions");
-var userActions  = require("../actions/user_actions");
+var actions  = require('../actions/sign_up_form_actions');
+var userActions  = require('../actions/user_actions');
 var _        = require('underscore');
 var React    = require('react');
 var validate = require('validate.js');
 
 function newSignUpForm() {
   return {
-    statusMessage: "verify_started",
+    statusMessage: 'verify_started',
     checkInviteStatus: 'started',
     email: undefined,
-    passwordField: {value: "", valid: false},
-    passwordConfirmationField: {value: "", valid: false},
+    passwordField: {value: '', valid: false},
+    passwordConfirmationField: {value: '', valid: false},
     termsOfServiceField: {value: false, valid: false},
     formValid: undefined,
     submitting: false,
-    buttonText: ["", "Next", "Next", "Create your account now"],
-    formSteps: ["", 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
+    buttonText: ['', 'Next', 'Next', 'Create your account now'],
+    formSteps: ['', 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
     currentStep: 0,
     advancable: false
   };
@@ -40,18 +40,18 @@ module.exports = Reflux.createStore({
 
   onCheckInvite: function() {
     signUpForm.checkInviteStatus = 'started';
-    signUpForm.statusMessage = "verify_started";
+    signUpForm.statusMessage = 'verify_started';
     this.trigger(signUpForm);
   },
 
   onCheckInviteCompleted: function(data) {
     signUpForm.email = data.email;
-    signUpForm.statusMessage = "verify_completed";
+    signUpForm.statusMessage = 'verify_completed';
     signUpForm.checkInviteStatus = 'completed';
     this.trigger(signUpForm);
 
     setTimeout(function() {
-      signUpForm.statusMessage = "enter_password";
+      signUpForm.statusMessage = 'enter_password';
       this.trigger(signUpForm);
       actions.advanceForm();
     }.bind(this), 800);
@@ -69,38 +69,38 @@ module.exports = Reflux.createStore({
 
   onAdvanceFormCompleted: function() {
     if (signUpForm.currentStep === 2) {
-      // signUpForm.statusMessage = "tos_intro";
+      // signUpForm.statusMessage = 'tos_intro';
     }
 
     if (signUpForm.currentStep === 3) {
-      signUpForm.statusMessage = "tos_intro";
+      signUpForm.statusMessage = 'tos_intro';
     }
 
     this.trigger(signUpForm);
   },
 
   onCheckInviteFailed: function(error) {
-    signUpForm.checkInviteStatus = "failed";
+    signUpForm.checkInviteStatus = 'failed';
 
-    if (error === "Bad request") {
-      signUpForm.statusMessage = "verify_failed";
-    } else if (error === "InvalidTokenOrContactID") {
-      signUpForm.statusMessage = "invalid_token";
+    if (error === 'Bad request') {
+      signUpForm.statusMessage = 'verify_failed';
+    } else if (error === 'InvalidTokenOrContactID') {
+      signUpForm.statusMessage = 'invalid_token';
     } else {
-      signUpForm.statusMessage = "verify_failed";
+      signUpForm.statusMessage = 'verify_failed';
     }
 
     this.trigger(signUpForm);
   },
 
   onCreateAccount: function() {
-    signUpForm.statusMessage = "create_account_starting";
+    signUpForm.statusMessage = 'create_account_starting';
     signUpForm.submitting = true;
     this.trigger(signUpForm);
   },
 
   onCreateAccountCompleted: function(data) {
-    signUpForm.statusMessage = "create_account_completed";
+    signUpForm.statusMessage = 'create_account_completed';
     userActions.authenticate.completed({
       email: data.email,
       authtoken: data.token
@@ -109,7 +109,7 @@ module.exports = Reflux.createStore({
   },
 
   onCreateAccountFailed: function() {
-    signUpForm.statusMessage = "create_account_failed";
+    signUpForm.statusMessage = 'create_account_failed';
     signUpForm.submitting = false;
     this.trigger(signUpForm);
   },
@@ -127,15 +127,15 @@ module.exports = Reflux.createStore({
     if (password.length === 0) {
       // Be invalid, but don't change the status message.
     } else if (password.length < 8) {
-      signUpForm.statusMessage = "password_too_short";
+      signUpForm.statusMessage = 'password_too_short';
     } else if (/^[0-9]+$/.test(password)) {
-      signUpForm.statusMessage = "password_not_just_numbers";
+      signUpForm.statusMessage = 'password_not_just_numbers';
     } else if (/^[a-z]+$/.test(password)) {
-      signUpForm.statusMessage = "password_not_just_letters";
+      signUpForm.statusMessage = 'password_not_just_letters';
     } else if (/^[A-Z]+$/.test(password)) {
-      signUpForm.statusMessage = "password_not_just_letters";
+      signUpForm.statusMessage = 'password_not_just_letters';
     } else {
-      signUpForm.statusMessage = "password_ok";
+      signUpForm.statusMessage = 'password_ok';
       signUpForm.passwordField.valid = true;
     }
 
@@ -154,7 +154,7 @@ module.exports = Reflux.createStore({
 
     if (signUpForm.passwordField.valid) {
       if (signUpForm.passwordField.value === confirmation) {
-        signUpForm.statusMessage = "password_confirmation_ok";
+        signUpForm.statusMessage = 'password_confirmation_ok';
         signUpForm.passwordConfirmationField.valid = true;
         this.trigger(signUpForm);
         this.validateForm();
@@ -173,10 +173,10 @@ module.exports = Reflux.createStore({
 
     if (signUpForm.passwordField.valid) {
       if (signUpForm.passwordField.value === confirmation) {
-        signUpForm.statusMessage = "password_confirmation_ok";
+        signUpForm.statusMessage = 'password_confirmation_ok';
         signUpForm.passwordConfirmationField.valid = true;
       } else {
-        signUpForm.statusMessage = "password_confirmation_mismatch";
+        signUpForm.statusMessage = 'password_confirmation_mismatch';
       }
 
       this.trigger(signUpForm);
@@ -192,11 +192,11 @@ module.exports = Reflux.createStore({
     if (checked) {
       signUpForm.termsOfServiceField.valid = true;
       signUpForm.termsOfServiceField.value = true;
-      signUpForm.statusMessage = "tos_ok";
+      signUpForm.statusMessage = 'tos_ok';
     } else {
       signUpForm.termsOfServiceField.valid = false;
       signUpForm.termsOfServiceField.value = false;
-      signUpForm.statusMessage = "tos_not_accepted";
+      signUpForm.statusMessage = 'tos_not_accepted';
     }
 
     this.trigger(signUpForm);
@@ -219,7 +219,7 @@ module.exports = Reflux.createStore({
 
     if (signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid && signUpForm.termsOfServiceField.valid) {
       signUpForm.formValid = true;
-      signUpForm.statusMessage = "all_good";
+      signUpForm.statusMessage = 'all_good';
     } else {
       signUpForm.formValid = false;
     }

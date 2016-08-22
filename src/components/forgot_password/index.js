@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
@@ -15,7 +15,7 @@ var ForgotPassword = React.createClass({
     return {
       submitting: false,
       tokenRequested: false,
-      email: localStorage.getItem('user.email') || "",
+      email: localStorage.getItem('user.email') || '',
     };
   },
 
@@ -38,16 +38,16 @@ var ForgotPassword = React.createClass({
     })
     .catch((error) => {
       switch(error.name) {
-        case "TypeError":
+        case 'TypeError':
           this.props.dispatch(flashAdd({
-            message: "Please provide a (valid) email address",
-            class: "danger"
+            message: 'Please provide a (valid) email address',
+            class: 'danger'
           }));
           break;
         default:
           this.props.dispatch(flashAdd({
-            message: "Something went wrong. Or servers might be down, or perhaps you've made too many requests in a row. Please try again in 5 minutes.",
-            class: "danger"
+            message: 'Something went wrong. Or servers might be down, or perhaps you\'ve made too many requests in a row. Please try again in 5 minutes.',
+            class: 'danger'
           }));
       }
 
@@ -71,16 +71,16 @@ var ForgotPassword = React.createClass({
 
   success() {
     return(
-      <div className="forgot-password--token-sent">
-        <h1><i className="fa fa-envelope"></i> Check your mail!</h1>
+      <div className='forgot-password--token-sent'>
+        <h1><i className='fa fa-envelope'></i> Check your mail!</h1>
         <p>If you have an account, we've sent an email to {this.state.email}.</p>
 
         <small>
-        <p>Having trouble? Please contact us via <a href="mailto:support@giantswarm.io">support@giantswarm.io</a></p>
+        <p>Having trouble? Please contact us via <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a></p>
         </small>
 
         <small>
-          <Link to="/login">Back to login form</Link>
+          <Link to='/login'>Back to login form</Link>
         </small>
       </div>
     );
@@ -91,17 +91,17 @@ var ForgotPassword = React.createClass({
       <div>
         <h1>Forgot your password?</h1>
         <p>Enter the email you used to sign-up and submit the form. We'll send you a link you can use to set a new password.</p>
-        <form onSubmit={this.submit} noValidate="novalidate">
-          <div className="textfield">
+        <form onSubmit={this.submit} noValidate='novalidate'>
+          <div className='textfield'>
             <label>Email</label>
             <input value={this.state.email}
-                   type="text"
-                   id="email"
-                   ref="email"
+                   type='text'
+                   id='email'
+                   ref='email'
                    onChange={this.updateEmail} autoFocus />
           </div>
-          <Button type="submit" bsStyle="primary" loading={this.state.submitting} onClick={this.submit}>{ this.state.submitting ? "Submitting ..." : "Submit" }</Button>
-          <Link to="/login">Back to login form</Link>
+          <Button type='submit' bsStyle='primary' loading={this.state.submitting} onClick={this.submit}>{ this.state.submitting ? 'Submitting ...' : 'Submit' }</Button>
+          <Link to='/login'>Back to login form</Link>
         </form>
       </div>
     );
@@ -110,12 +110,12 @@ var ForgotPassword = React.createClass({
   render: function() {
     return (
       <div>
-        <div className="login_form--mask"></div>
+        <div className='login_form--mask'></div>
 
         <ReactCSSTransitionGroup
           transitionName={`login_form--transition`} transitionAppear={true} transitionAppearTimeout={200} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-          <div className="login_form--container col-4">
-            <div className="login_form--flash-container">
+          <div className='login_form--container col-4'>
+            <div className='login_form--flash-container'>
               <FlashMessages />
             </div>
             { this.state.tokenRequested ? this.success() : this.form() }

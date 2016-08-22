@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // LOGIN
 // LOGOUT
@@ -38,7 +38,7 @@ export function login(email, password) {
       if (response.result === true) {
         return true;
       } else {
-        throw("Invalid email and/or password");
+        throw('Invalid email and/or password');
       }
     })
     .then(giantSwarm.user.bind(giantSwarm))

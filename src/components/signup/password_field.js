@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 import React from 'react';
 import ReactDOM from 'react-dom';
 var typingTimer;
@@ -44,9 +44,9 @@ var PasswordField = React.createClass({
 
   render: function() {
     return (
-      <div className="textfield">
+      <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
-        <input type="password" ref="input" id={this.props.name} onBlur={this.onBlur} onChange={this.onChange} />
+        <input type='password' ref='input' id={this.props.name} onBlur={this.onBlur} onChange={this.onChange} />
       </div>
     );
   }

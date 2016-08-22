@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Component Slider
 // Takes an array of components (slides), and lets you transition between them
@@ -69,7 +69,7 @@ module.exports = class ComponentSlider extends Component {
 
   render() {
     return (
-      <div className="component_slider--container">
+      <div className='component_slider--container'>
         {this.state.currentSlideAsArray}
       </div>
     );

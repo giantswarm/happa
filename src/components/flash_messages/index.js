@@ -4,7 +4,7 @@
 // And provides a way to dismiss them.
 //
 
-"use strict";
+'use strict';
 
 import FlashMessage from './flash_message';
 import React from 'react';
@@ -28,7 +28,7 @@ var FlashMessages = React.createClass({
 
   render: function() {
     return (
-      <div className="flash-messages--container">
+      <div className='flash-messages--container'>
         <ReactCSSTransitionGroup transitionName='flash-messages--transition' transitionEnterTimeout={200} transitionLeaveTimeout={200}>
           { _.map(this.props.flashMessages.toArray(), this.makeFlashComponent) }
         </ReactCSSTransitionGroup>

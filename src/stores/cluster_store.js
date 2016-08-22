@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 var Reflux = require('reflux');
-var clusterActions = require("../actions/cluster_actions");
+var clusterActions = require('../actions/cluster_actions');
 var _ = require('underscore');
 
-var clusterStore = "NOTLOADED";
+var clusterStore = 'NOTLOADED';
 
 module.exports = Reflux.createStore({
   listenables: clusterActions,
@@ -22,7 +22,7 @@ module.exports = Reflux.createStore({
   },
 
   onFetchAllFailed: function(error) {
-    clusterStore = "LOADINGFAILED";
+    clusterStore = 'LOADINGFAILED';
     this.trigger(clusterStore);
     window.alert(error);
   }

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import * as types from './actionTypes';
 import _ from 'underscore';
@@ -13,7 +13,7 @@ export function organizationSelect(orgId) {
   return function(dispatch, getState) {
     dispatch(flashAdd({
       message: 'Selected organization: ' + orgId,
-      class: "success",
+      class: 'success',
       ttl: 3000
     }));
 
@@ -103,8 +103,8 @@ export function organizationsLoad() {
     })
     .catch(error => {
       dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : "Perhaps our servers are down, please try again later or contact support: info@giantswarm.io"}</div>,
-        class: "danger"
+        message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        class: 'danger'
       }));
 
       dispatch({
@@ -127,7 +127,7 @@ export function organizationDeleteConfirm(orgId) {
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully deleted organization: ' + orgId,
-      class: "success",
+      class: 'success',
       ttl: 3000
     })))
     .then(() => {return dispatch(organizationDeleteSuccess(orgId, deletingSelectedOrganization));})
@@ -135,8 +135,8 @@ export function organizationDeleteConfirm(orgId) {
       dispatch(modalHide());
 
       dispatch(flashAdd({
-        message: <div><strong>Could not delete organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : "Perhaps our servers are down, please try again later or contact support: info@giantswarm.io"}</div>,
-        class: "danger"
+        message: <div><strong>Could not delete organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        class: 'danger'
       }));
 
       dispatch({
@@ -170,15 +170,15 @@ export function organizationCreateConfirm(orgId) {
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully created organization: ' + orgId,
-      class: "success",
+      class: 'success',
       ttl: 3000
     })))
     .catch(error => {
       dispatch(modalHide());
 
       dispatch(flashAdd({
-        message: <div><strong>Could not create organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : "Perhaps our servers are down, please try again later or contact support: info@giantswarm.io"}</div>,
-        class: "danger"
+        message: <div><strong>Could not create organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        class: 'danger'
       }));
 
       dispatch({
@@ -211,15 +211,15 @@ export function organizationAddMemberConfirm(orgId, username) {
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully added `' + username + '` to organization: ' + '`' + orgId + '`',
-      class: "success",
+      class: 'success',
       ttl: 3000
     })))
     .catch(error => {
       dispatch(modalHide());
 
       dispatch(flashAdd({
-        message: <div><strong>Could not add user `{username}` to organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : "Perhaps our servers are down, please try again later or contact support: info@giantswarm.io"}</div>,
-        class: "danger"
+        message: <div><strong>Could not add user `{username}` to organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        class: 'danger'
       }));
 
       dispatch({
@@ -246,15 +246,15 @@ export function organizationRemoveMemberConfirm(orgId, username) {
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
       message: 'Successfully removed `' + username + '` from organization: ' + '`' + orgId + '`',
-      class: "success",
+      class: 'success',
       ttl: 3000
     })))
     .catch(error => {
       dispatch(modalHide());
 
       dispatch(flashAdd({
-        message: <div><strong>Could not remove user `{username}`` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : "Perhaps our servers are down, please try again later or contact support: info@giantswarm.io"}</div>,
-        class: "danger"
+        message: <div><strong>Could not remove user `{username}`` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        class: 'danger'
       }));
 
       dispatch({

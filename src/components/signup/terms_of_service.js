@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
 import React from 'react';
 
 module.exports = React.createClass({
   render: function() {
     return (
-      <div className="terms-of-service--container">
-        <label htmlFor="readTOS">Confirm that you acknowledge our Terms of Service:</label>
+      <div className='terms-of-service--container'>
+        <label htmlFor='readTOS'>Confirm that you acknowledge our Terms of Service:</label>
 
-        <div className="tostext">
+        <div className='tostext'>
         <h1>Terms of Service</h1>
         <h2>1. Scope of Terms</h2>
         <p>1.1 These Terms of Service (hereinafter "Terms") apply to Giant Swarm Websites and to any and all online resources, software, data feeds, materials, download areas, tools and interactive venues and all other services provided on Giant Swarm Websites, including any secure area services, the cloud computing service, add-ons and other components (hereinafter collectively "Giant Swarm Service").</p>

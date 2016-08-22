@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 var Reflux = require('reflux');
 var GiantSwarm = require('../lib/giantswarm_client_wrapper');
 var _ = require('underscore');
 
 var ClusterActions = Reflux.createActions([
-  {"fetchAll": {children: ["started", "completed", "failed"]}},
+  {'fetchAll': {children: ['started', 'completed', 'failed']}},
 ]);
 
 ClusterActions.fetchAll.listen(function() {

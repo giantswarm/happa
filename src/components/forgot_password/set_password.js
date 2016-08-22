@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
 import userActions from '../../actions/user_actions';
 import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Link } from 'react-router';
-import PasswordField from "../signup/password_field";
+import PasswordField from '../signup/password_field';
 import StatusMessage from '../signup/status_message';
 import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 import { connect } from 'react-redux';
@@ -20,26 +20,26 @@ var SetPassword = React.createClass({
 
   getInitialState: function() {
     return {
-      password: "",
-      passwordConfirmation: "",
-      email: localStorage.getItem('user.email') || "",
+      password: '',
+      passwordConfirmation: '',
+      email: localStorage.getItem('user.email') || '',
       submitting: false,
 
       passwordField: {
         valid: false,
-        value: ""
+        value: ''
       },
 
       passwordConfirmationField: {
         valid: false,
-        value: ""
+        value: ''
       },
 
       formIsValid: false,
 
       verifyingToken: false,
       tokenValid: false,
-      statusMessage: "enter_password"
+      statusMessage: 'enter_password'
     };
   },
 
@@ -60,17 +60,17 @@ var SetPassword = React.createClass({
       })
       .catch((error) => {
         switch(error.name) {
-          case "TypeError":
+          case 'TypeError':
             this.props.dispatch(flashAdd({
-              message: "Please provide a (valid) email address",
-              class: "danger"
+              message: 'Please provide a (valid) email address',
+              class: 'danger'
             }));
 
             break;
-          case "Error":
+          case 'Error':
             this.props.dispatch(flashAdd({
-              message: "The reset token appears to be invalid.",
-              class: "danger"
+              message: 'The reset token appears to be invalid.',
+              class: 'danger'
             }));
 
             break;
@@ -101,7 +101,7 @@ var SetPassword = React.createClass({
       this.context.router.push('/');
       this.props.dispatch(flashAdd({
         message: 'Password set successfully! Welcome back!',
-        class: "success"
+        class: 'success'
       }));
     });
 
@@ -138,15 +138,15 @@ var SetPassword = React.createClass({
     if (password.length === 0) {
       // Be invalid, but don't change the status message.
     } else if (password.length < 8) {
-      statusMessage = "password_too_short";
+      statusMessage = 'password_too_short';
     } else if (/^[0-9]+$/.test(password)) {
-      statusMessage = "password_not_just_numbers";
+      statusMessage = 'password_not_just_numbers';
     } else if (/^[a-z]+$/.test(password)) {
-      statusMessage = "password_not_just_letters";
+      statusMessage = 'password_not_just_letters';
     } else if (/^[A-Z]+$/.test(password)) {
-      statusMessage = "password_not_just_letters";
+      statusMessage = 'password_not_just_letters';
     } else {
-      statusMessage = "password_ok";
+      statusMessage = 'password_ok';
       valid = true;
     }
 
@@ -166,7 +166,7 @@ var SetPassword = React.createClass({
 
     if (this.state.passwordField.valid) {
       if (this.state.passwordField.value === confirmation) {
-        statusMessage = "password_confirmation_ok";
+        statusMessage = 'password_confirmation_ok';
         valid = true;
       }
     }
@@ -187,10 +187,10 @@ var SetPassword = React.createClass({
 
     if (this.state.passwordField.valid) {
       if (this.state.passwordField.value === confirmation) {
-        statusMessage = "password_confirmation_ok";
+        statusMessage = 'password_confirmation_ok';
         valid = true;
       } else {
-        statusMessage = "password_confirmation_mismatch";
+        statusMessage = 'password_confirmation_mismatch';
       }
     }
 
@@ -214,47 +214,47 @@ var SetPassword = React.createClass({
         <form onSubmit={this.submit}>
           <StatusMessage status={this.state.statusMessage} />
 
-          <div className="textfield">
-            <PasswordField ref="password"
-                           label="New password"
+          <div className='textfield'>
+            <PasswordField ref='password'
+                           label='New password'
                            onStartTyping={this.passwordEditingStarted}
                            onChange={this.passwordEditingCompleted}
                            autofocus />
           </div>
 
-          <div className="textfield">
-            <PasswordField ref="passwordConfirmation"
-                           label="Password, once again"
+          <div className='textfield'>
+            <PasswordField ref='passwordConfirmation'
+                           label='Password, once again'
                            onStartTyping={this.passwordConfirmationEditingStarted}
                            onChange={this.passwordConfirmationEditingCompleted} />
           </div>
-          <div className="progress_button--container">
-            <button type="submit" className="btn primary" disabled={this.state.submitting || ! this.formIsValid()} onClick={this.submit}>
+          <div className='progress_button--container'>
+            <button type='submit' className='btn primary' disabled={this.state.submitting || ! this.formIsValid()} onClick={this.submit}>
               {
-                this.state.submitting ? "Submitting ..." : "Submit"
+                this.state.submitting ? 'Submitting ...' : 'Submit'
               }
             </button>
-            <ReactCSSTransitionGroup transitionName="slide-right" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
+            <ReactCSSTransitionGroup transitionName='slide-right' transitionEnterTimeout={200} transitionLeaveTimeout={200}>
             {
-              this.state.submitting ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
+              this.state.submitting ? <img className='loader' src='/images/loader_oval_light.svg' /> : null
             }
             </ReactCSSTransitionGroup>
           </div>
-          <Link to="/login">Back to login form</Link>
+          <Link to='/login'>Back to login form</Link>
         </form>
       );
     } else {
       if (this.state.verifyingToken) {
         return(
-          <div className="forgot-password--token-validating">
-            <img className="loader" src="/images/loader_oval_light.svg" />
+          <div className='forgot-password--token-validating'>
+            <img className='loader' src='/images/loader_oval_light.svg' />
             <br/>
             Validating your token...
           </div>
         );
       } else {
         return(
-          <div className="forgot-password--token-validating">
+          <div className='forgot-password--token-validating'>
             Something went wrong.
           </div>
         );
@@ -266,29 +266,29 @@ var SetPassword = React.createClass({
     return(
       <form onSubmit={this.setEmail}>
         <p>Before we can check your recovery token, please type in your email again for verification purposes.</p>
-        <div className="textfield">
+        <div className='textfield'>
           <label>Email</label>
           <input value={this.state.email}
-                 type="email"
-                 id="email"
-                 ref="email"
+                 type='email'
+                 id='email'
+                 ref='email'
                  onChange={this.updateEmail} autoFocus />
         </div>
 
-        <div className="progress_button--container">
-          <button type="submit" className="btn primary" disabled={this.state.submitting} onClick={this.setEmail}>
+        <div className='progress_button--container'>
+          <button type='submit' className='btn primary' disabled={this.state.submitting} onClick={this.setEmail}>
             {
-              this.state.submitting ? "Submitting ..." : "Submit"
+              this.state.submitting ? 'Submitting ...' : 'Submit'
             }
           </button>
-          <ReactCSSTransitionGroup transitionName="slide-right" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
+          <ReactCSSTransitionGroup transitionName='slide-right' transitionEnterTimeout={200} transitionLeaveTimeout={200}>
           {
-            this.state.submitting ? <img className="loader" src="/images/loader_oval_light.svg" /> : null
+            this.state.submitting ? <img className='loader' src='/images/loader_oval_light.svg' /> : null
           }
           </ReactCSSTransitionGroup>
         </div>
-        <Link to="/login">Back to login form</Link><br/>
-        <Link to="/forgot_password">Request a new token</Link>
+        <Link to='/login'>Back to login form</Link><br/>
+        <Link to='/forgot_password'>Request a new token</Link>
       </form>
     );
   },
@@ -296,11 +296,11 @@ var SetPassword = React.createClass({
   render: function() {
     return (
       <div>
-        <div className="login_form--mask"></div>
+        <div className='login_form--mask'></div>
 
         <ReactCSSTransitionGroup transitionName={`login_form--transition`} transitionAppear={true} transitionAppearTimeout={200} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-          <div className="login_form--container col-4">
-            <div className="login_form--flash-container">
+          <div className='login_form--container col-4'>
+            <div className='login_form--flash-container'>
               <FlashMessages />
             </div>
             <h1>Set your new password</h1>

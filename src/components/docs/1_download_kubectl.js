@@ -24,11 +24,11 @@ module.exports = React.createClass ({
 
   selectedInstallInstructions: function() {
     switch(this.state.selectedPlatform) {
-      case "Windows":
+      case 'Windows':
         return <div>
-          <p>Currently, there&apos;s no official release of <code>kubectl</code> for Windows. Please refer to <a href="https://github.com/eirslett/kubectl-windows" target="_blank">https://github.com/eirslett/kubectl-windows</a> for a binary download and instructions on how to build the <code>kubectl</code> client for Windows.</p>
+          <p>Currently, there&apos;s no official release of <code>kubectl</code> for Windows. Please refer to <a href='https://github.com/eirslett/kubectl-windows' target='_blank'>https://github.com/eirslett/kubectl-windows</a> for a binary download and instructions on how to build the <code>kubectl</code> client for Windows.</p>
         </div>;
-      case "MacWithoutBrew":
+      case 'MacWithoutBrew':
         return <div>
           <p>Installation without homebrew:</p>
 
@@ -50,9 +50,9 @@ module.exports = React.createClass ({
             </Prompt>
           </CodeBlock>
         </div>;
-      case "Mac":
+      case 'Mac':
         return <div>
-          <p>Installation via <a href="http://brew.sh/" target="_blank">homebrew</a>:</p>
+          <p>Installation via <a href='http://brew.sh/' target='_blank'>homebrew</a>:</p>
 
           <CodeBlock>
             <Prompt>
@@ -80,7 +80,7 @@ module.exports = React.createClass ({
           </CodeBlock>
 
         </div>;
-      case "Linux":
+      case 'Linux':
         return <div>
           <p>To download and install the client, do:</p>
 
@@ -105,7 +105,7 @@ module.exports = React.createClass ({
           </CodeBlock>
 
         </div>;
-      case "Unknown":
+      case 'Unknown':
         return <h1>Installation Instructions for Mac</h1>;
       default:
         return <h1>Installation Instructions for Mac</h1>;
@@ -122,7 +122,7 @@ module.exports = React.createClass ({
 
           Let’s make sure you have the current stable version of \`kubectl\`, the Kubernetes client CLI, available.
 
-          <i class="fa fa-graduation-cap" title="For learners"></i> \`kubectl\` is the CLI you’ll use to work with your cluster mostly. Some things can be
+          <i class='fa fa-graduation-cap' title='For learners'></i> \`kubectl\` is the CLI you’ll use to work with your cluster mostly. Some things can be
           done using the web-based Kubernetes Dashboard, but only the CLI provides access to all Kubernetes functionality.
 
           If you already have \`kubectl\`, you should have at least version 1.2.x installed. To check the version number, do the following:
@@ -133,24 +133,24 @@ module.exports = React.createClass ({
             </Prompt>
           </CodeBlock>
 
-          <ul className="platform_selector">
-            <li className={this.isSelectedPlatform('Linux') ? "active" : null}
+          <ul className='platform_selector'>
+            <li className={this.isSelectedPlatform('Linux') ? 'active' : null}
                 onClick={this.selectPlatform.bind(this, 'Linux')}>Linux</li>
 
-            <li className={this.isSelectedPlatform('Mac') ? "active" : null}
+            <li className={this.isSelectedPlatform('Mac') ? 'active' : null}
                 onClick={this.selectPlatform.bind(this, 'Mac')}>Mac</li>
 
-            <li className={this.isSelectedPlatform('MacWithoutBrew') ? "active" : null}
+            <li className={this.isSelectedPlatform('MacWithoutBrew') ? 'active' : null}
                 onClick={this.selectPlatform.bind(this, 'MacWithoutBrew')}>Mac (without homebrew)</li>
 
-            <li className={this.isSelectedPlatform('Windows') ? "active" : null}
+            <li className={this.isSelectedPlatform('Windows') ? 'active' : null}
                 onClick={this.selectPlatform.bind(this, 'Windows')}>Windows</li>
           </ul>
 
           {this.selectedInstallInstructions()}
 
         </Markdown>
-        <button className="primary" onClick={this.props.goToSlide.bind(null, 'configure')}>Continue</button><br/>
+        <button className='primary' onClick={this.props.goToSlide.bind(null, 'configure')}>Continue</button><br/>
         <button onClick={this.props.goToSlide.bind(null, 'overview')}>Previous</button>
       </Slide>
     );

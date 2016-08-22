@@ -4,7 +4,7 @@
 // props on dismiss.
 //
 
-"use strict";
+'use strict';
 
 import Reflux from 'reflux';
 import React from 'react';
@@ -35,9 +35,9 @@ module.exports = React.createClass({
   render: function() {
     if (this.state.visible) {
       return (
-        <div className={"flash-messages--flash-message" + " flash-messages--" + this.props.class}>
+        <div className={'flash-messages--flash-message' + ' flash-messages--' + this.props.class}>
           { this.props.message ? this.props.message : this.props.children }
-          <i className="fa fa-times flash-messages--dismiss" aria-hidden="true" onClick={this.dismissFlash}></i>
+          <i className='fa fa-times flash-messages--dismiss' aria-hidden='true' onClick={this.dismissFlash}></i>
         </div>
       );
     } else {

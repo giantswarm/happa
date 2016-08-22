@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import Immutable from 'immutable';
 import * as types from '../actions/actionTypes';

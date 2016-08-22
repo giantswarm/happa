@@ -12,23 +12,23 @@ module.exports = React.createClass ({
     mixins: [Reflux.connect(ClusterStore,'clusters'), Reflux.listenerMixin],
 
     componentDidMount: function() {
-      if (this.state.clusters === "NOTLOADED") {
+      if (this.state.clusters === 'NOTLOADED') {
         ClusterActions.fetchAll();
       }
     },
 
     kubeConfig: function() {
-      if (this.state.clusters === "NOTLOADED") {
-        return <FileBlock fileName="giantswarm-kubeconfig">
+      if (this.state.clusters === 'NOTLOADED') {
+        return <FileBlock fileName='giantswarm-kubeconfig'>
           Loading ...
         </FileBlock>;
-      } else if (this.state.clusters === "LOADINGFAILED") {
-        return <FileBlock fileName="giantswarm-kubeconfig">
+      } else if (this.state.clusters === 'LOADINGFAILED') {
+        return <FileBlock fileName='giantswarm-kubeconfig'>
           Could not load your kubeconfig, sorry. Please contact support.
         </FileBlock>;
       } else {
         return (
-          <FileBlock fileName="giantswarm-kubeconfig">
+          <FileBlock fileName='giantswarm-kubeconfig'>
             {`
             apiVersion: v1
             kind: Config
@@ -72,11 +72,11 @@ module.exports = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`export KUBECONFIG="\$\{KUBECONFIG\}:/path/to/giantswarm-kubeconfig"`}
+              {`export KUBECONFIG='\$\{KUBECONFIG\}:/path/to/giantswarm-kubeconfig'`}
             </Prompt>
           </CodeBlock>
 
-          <p><i className="fa fa-graduation-cap" title="For learners"></i> To save some time in the future, add the command above to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
+          <p><i className='fa fa-graduation-cap' title='For learners'></i> To save some time in the future, add the command above to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
 
           <p>Now, whenever you want to switch to working with your Giant Swarm cluster, use this command:</p>
 
@@ -86,11 +86,11 @@ module.exports = React.createClass ({
             </Prompt>
           </CodeBlock>
 
-          <p><i className="fa fa-graduation-cap" title="For learners"></i> Again, here you can save your future self some time by creating an alias.</p>
+          <p><i className='fa fa-graduation-cap' title='For learners'></i> Again, here you can save your future self some time by creating an alias.</p>
 
           <p>Now let&apos;s start something on your cluster.</p>
 
-          <button className="primary" onClick={this.props.goToSlide.bind(null, 'example')}>Continue</button><br/>
+          <button className='primary' onClick={this.props.goToSlide.bind(null, 'example')}>Continue</button><br/>
           <button onClick={this.props.goToSlide.bind(null, 'download')}>Previous</button>
         </Slide>
       );

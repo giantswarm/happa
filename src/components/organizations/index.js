@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import React from 'react';
 import FlashMessage from '../flash_messages/flash_message';
@@ -33,7 +33,7 @@ class Organizations extends React.Component {
     return (
       <div>
 
-        <FlashMessage class="info">
+        <FlashMessage class='info'>
           Organizations help you to organize project teams and invoicing.
           Each organization can have clusters and will receive an invoice.
           Add users to your organization to give them access to clusters.
@@ -43,20 +43,20 @@ class Organizations extends React.Component {
         <br/>
         {(() => {
           if (this.props.organizations.isFetching && Object.keys(this.props.organizations.items).length === 0) {
-            return <img className="loader" src="/images/loader_oval_light.svg" width="20px" height="20px" />;
+            return <img className='loader' src='/images/loader_oval_light.svg' width='20px' height='20px' />;
           } else if (Object.keys(this.props.organizations.items).length === 0) {
             return <div>
               <p>No organizations, create one using the button below:</p>
-              <Button bsStyle="primary" onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
+              <Button bsStyle='primary' onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
               </div>;
           } else {
             return <div>
-              <table className={this.props.organizations.isFetching ? "fetching" : ""}>
+              <table className={this.props.organizations.isFetching ? 'fetching' : ''}>
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th className="centered">Clusters</th>
-                    <th className="centered">Members</th>
+                    <th className='centered'>Clusters</th>
+                    <th className='centered'>Members</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -74,7 +74,7 @@ class Organizations extends React.Component {
                   }
                 </tbody>
               </table>
-              <Button bsStyle="primary" onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
+              <Button bsStyle='primary' onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
             </div>;
           }
         })()}

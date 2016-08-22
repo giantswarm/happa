@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 import React from 'react';
 import ComponentSlider from '../component_slider';
-import _ from "underscore";
+import _ from 'underscore';
 
 import Page0_Overview from './0_overview.js';
 import Page1_DownloadKubeCTL from './1_download_kubectl.js';
@@ -25,7 +25,7 @@ module.exports = React.createClass({
     if (nextProps.params.pageId && nextProps.params.pageId !== this.props.params.pageId) {
       this.goToSlide(nextProps.params.pageId);
     } else if (! nextProps.params.pageId) {
-      this.goToSlide("overview");
+      this.goToSlide('overview');
     }
   },
 
@@ -47,15 +47,15 @@ module.exports = React.createClass({
 
   slides() {
     return ([
-      <Page0_Overview         key="overview"  goToSlide={this.goToSlide}/>,
-      <Page1_DownloadKubeCTL  key="download"  goToSlide={this.goToSlide}/>,
-      <Page2_ConfigureKubeCTL key="configure" goToSlide={this.goToSlide}/>,
-      <Page3_SimpleExample    key="example"   goToSlide={this.goToSlide}/>,
-      <Page4_Inspecting    key="inspecting"   goToSlide={this.goToSlide}/>
+      <Page0_Overview         key='overview'  goToSlide={this.goToSlide}/>,
+      <Page1_DownloadKubeCTL  key='download'  goToSlide={this.goToSlide}/>,
+      <Page2_ConfigureKubeCTL key='configure' goToSlide={this.goToSlide}/>,
+      <Page3_SimpleExample    key='example'   goToSlide={this.goToSlide}/>,
+      <Page4_Inspecting    key='inspecting'   goToSlide={this.goToSlide}/>
     ]);
   },
 
   render: function() {
-    return <ComponentSlider ref="componentSlider" currentSlide={this.state.currentSlide} slides={this.slides()}/>;
+    return <ComponentSlider ref='componentSlider' currentSlide={this.state.currentSlide} slides={this.slides()}/>;
   }
 });

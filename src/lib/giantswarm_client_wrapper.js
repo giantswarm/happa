@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 // A wrapper for the GiantSwarm JS Client
 // It initializes the client with the right end point
 // if the user happens to have one set in localstorage

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import actions from '../../actions/user_actions';
 import store from '../../stores/user_store';
@@ -24,7 +24,7 @@ var Logout = React.createClass({
     this.props.dispatch(flashClearAll());
     this.props.dispatch(flashAdd({
       message: 'You have logged out.',
-      class: "info",
+      class: 'info',
       ttl: 3000
     }));
     this.context.router.push('/login');
@@ -34,11 +34,11 @@ var Logout = React.createClass({
   render: function() {
     return (
       <div>
-        <ReactCSSTransitionGroup transitionName="logout--mask--transition" transitionAppear={true} transitionAppearTimeout={400} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-          <div className="logout--mask"></div>
+        <ReactCSSTransitionGroup transitionName='logout--mask--transition' transitionAppear={true} transitionAppearTimeout={400} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
+          <div className='logout--mask'></div>
         </ReactCSSTransitionGroup>
-        <div className="logout--container">
-          <img className="loader" src="/images/loader_oval_light.svg" />
+        <div className='logout--container'>
+          <img className='loader' src='/images/loader_oval_light.svg' />
         </div>
       </div>
     );
