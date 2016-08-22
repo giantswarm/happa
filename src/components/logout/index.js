@@ -1,33 +1,21 @@
 'use strict';
 
-import actions from '../../actions/user_actions';
-import store from '../../stores/user_store';
 import Reflux from 'reflux';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as userActions from '../../actions/userActions';
 
 var Logout = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
 
-  mixins: [Reflux.connect(store,'user'), Reflux.listenerMixin],
 
   componentDidMount: function() {
-    this.listenTo(actions.logout.completed, this.onLogoutCompleted);
-    actions.logout();
-  },
-
-  onLogoutCompleted: function() {
-    this.props.dispatch(flashClearAll());
-    this.props.dispatch(flashAdd({
-      message: 'You have logged out.',
-      class: 'info',
-      ttl: 3000
-    }));
-    this.context.router.push('/login');
+    this.props.actions.logout()
   },
 
   //TODO: turn progressbutton into a component
@@ -45,8 +33,12 @@ var Logout = React.createClass({
   }
 });
 
-function mapStateToProps(state, ownProps) {
-  return {};
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(userActions, dispatch),
+    dispatch: dispatch
+  };
 }
 
-module.exports = connect(mapStateToProps)(Logout);
+
+module.exports = connect(null, mapDispatchToProps)(Logout);

@@ -1,6 +1,5 @@
 'use strict';
 
-import userActions from '../../actions/user_actions';
 import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';

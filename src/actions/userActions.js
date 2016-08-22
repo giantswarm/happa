@@ -20,11 +20,23 @@ export function loginError(errorMessage) {
   };
 }
 
+export function logoutSuccess() {
+  return {
+    type: types.LOGOUT_SUCCESS
+  };
+}
+
+export function logoutError(errorMessage) {
+  return {
+    type: types.LOGOUT_ERROR,
+    errorMessage
+  };
+}
+
 
 export function login(email, password) {
-  var giantSwarm = new GiantSwarm.Client();
-
   return function(dispatch, getState) {
+    var giantSwarm = new GiantSwarm.Client();
     dispatch({
       type: types.LOGIN,
       email: email
@@ -64,8 +76,19 @@ export function login(email, password) {
 
 export function logout() {
   return function(dispatch, getState) {
-    return dispatch({
+    var authToken = getState().app.loggedInUser.authToken;
+
+    var giantSwarm = new GiantSwarm.Client(authToken);
+    dispatch({
       type: types.LOGOUT
     });
+
+    return giantSwarm.logout()
+    .then(() => {
+      dispatch(logoutSuccess());
+    })
+    .catch((error) => {
+      dispatch(logoutError(error));
+    })
   };
 }

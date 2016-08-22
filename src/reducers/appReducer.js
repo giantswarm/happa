@@ -21,12 +21,21 @@ export default function appReducer(state = {
       });
 
     case types.LOGOUT_SUCCESS:
-      localStorage.setItem('user', null);
+      localStorage.removeItem('user');
 
       browserHistory.push('/login');
 
       return Object.assign({}, state, {
-        loggedInUser: action.userData
+        loggedInUser: {}
+      });
+
+    case types.LOGOUT_ERROR:
+      localStorage.removeItem('user');
+
+      browserHistory.push('/login');
+
+      return Object.assign({}, state, {
+        loggedInUser: {}
       });
 
     case types.ORGANIZATION_SELECT:

@@ -18,8 +18,6 @@ import configureStore from '../stores/configureStore';
 import organizationDetail from './organizations/detail';
 import accountSettings from './account_settings';
 import wip from './wip';
-import UserActions from '../actions/user_actions';
-import UserStore from '../stores/user_store';
 
 require('normalize.css');
 require('../styles/app.scss');

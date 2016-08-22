@@ -2,8 +2,6 @@
 
 import React from 'react';
 import {Link, IndexLink}  from 'react-router';
-import UserActions from '../actions/user_actions';
-import UserStore   from '../stores/user_store';
 import FlashMessages from './flash_messages/index';
 import Modal from './modal/index';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
