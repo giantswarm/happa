@@ -14,7 +14,8 @@
   },
   "rules": {
     "no-underscore-dangle": 0,
-    "quotes": [1, "single", {"allowTemplateLiterals": true}]
+    "quotes": [1, "single", {"allowTemplateLiterals": true}],
+    "semi": [2, "always"]
   },
   "plugins": [
     "react"

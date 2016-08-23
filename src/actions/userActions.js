@@ -89,6 +89,6 @@ export function logout() {
     })
     .catch((error) => {
       dispatch(logoutError(error));
-    })
+    });
   };
 }

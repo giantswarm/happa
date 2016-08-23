@@ -5,13 +5,35 @@ import Markdown from './markdown';
 import { CodeBlock, Prompt, Output } from './codeblock';
 import FileBlock from './fileblock';
 import {connect} from 'react-redux';
+import * as clusterActions from '../../actions/clusterActions';
+import { bindActionCreators } from 'redux';
+import _ from 'underscore';
 
 var SimpleExample = React.createClass ({
-    componentWillMount: function() {
+    getInitialState: function() {
+      return {
+        loading: true
+      };
+    },
+
+    componentDidMount: function() {
       // TODO: Fire off a load cluster details action here
       if (!this.props.cluster.service_accounts) {
         this.setState({
           loading: true
+        });
+
+        this.props.actions.clusterLoadDetails(this.props.cluster.id)
+        .then((x) => {
+          console.log(x);
+          this.setState({
+            loading: false
+          });
+        })
+        .catch((x) => {
+          this.setState({
+            loading: 'failed'
+          });
         });
       } else {
         this.setState({
@@ -110,11 +132,19 @@ var SimpleExample = React.createClass ({
 
 function mapStateToProps(state, ownProps) {
   var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
-  var firstClusterId = selectedOrganization.clusters[0];
+  var clustersByDate = _.sortBy(selectedOrganization.clusters, 'create_date').reverse();
+  var firstClusterId =clustersByDate[0];
   var firstCluster = state.entities.clusters.items[firstClusterId];
 
   return {
     cluster: firstCluster
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(clusterActions, dispatch),
+    dispatch: dispatch
   };
 }
 

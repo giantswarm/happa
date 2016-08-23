@@ -16,7 +16,7 @@ var Login = React.createClass({
     return {
       email: '',
       password: ''
-    }
+    };
   },
 
   componentWillUnmount: function() {
@@ -94,8 +94,7 @@ var Login = React.createClass({
           class: 'danger',
           ttl: 3000
         }));
-      })
-
+      });
     }
   },
 
@@ -161,7 +160,7 @@ function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(userActions, dispatch),
     dispatch: dispatch
-  }
+  };
 }
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Login);

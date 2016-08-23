@@ -5,15 +5,36 @@ import Markdown from './markdown';
 import { CodeBlock, Prompt, Output } from './codeblock';
 import FileBlock from './fileblock';
 import {connect} from 'react-redux';
-import {loadClusters} from '../../actions/clusterActions';
+import * as clusterActions from '../../actions/clusterActions';
+import { bindActionCreators } from 'redux';
+import _ from 'underscore';
 
 var ConfigKubeCtl = React.createClass ({
 
-    componentWillMount: function() {
+    getInitialState: function() {
+      return {
+        loading: true
+      };
+    },
+
+    componentDidMount: function() {
       // TODO: Fire off a load cluster details action here
       if (!this.props.cluster.service_accounts) {
         this.setState({
           loading: true
+        });
+
+        this.props.actions.clusterLoadDetails(this.props.cluster.id)
+        .then((x) => {
+          console.log(x);
+          this.setState({
+            loading: false
+          });
+        })
+        .catch((x) => {
+          this.setState({
+            loading: 'failed'
+          });
         });
       } else {
         this.setState({
@@ -27,7 +48,7 @@ var ConfigKubeCtl = React.createClass ({
         return <FileBlock fileName='giantswarm-kubeconfig'>
           Loading ...
         </FileBlock>;
-      } else if (this.tate.loading === 'failed') {
+      } else if (this.state.loading === 'failed') {
         return <FileBlock fileName='giantswarm-kubeconfig'>
           Could not load your kubeconfig, sorry. Please contact support.
         </FileBlock>;
@@ -104,7 +125,8 @@ var ConfigKubeCtl = React.createClass ({
 
 function mapStateToProps(state, ownProps) {
   var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
-  var firstClusterId = selectedOrganization.clusters[0];
+  var clustersByDate = _.sortBy(selectedOrganization.clusters, 'create_date');
+  var firstClusterId =clustersByDate[1];
   var firstCluster = state.entities.clusters.items[firstClusterId];
 
   return {
@@ -112,4 +134,11 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-module.exports = connect(mapStateToProps)(ConfigKubeCtl);
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(clusterActions, dispatch),
+    dispatch: dispatch
+  };
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(ConfigKubeCtl);

@@ -14,7 +14,7 @@ var Logout = React.createClass({
 
 
   componentDidMount: function() {
-    this.props.actions.logout()
+    this.props.actions.logout();
   },
 
   //TODO: turn progressbutton into a component
