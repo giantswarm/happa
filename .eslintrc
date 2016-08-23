@@ -15,7 +15,7 @@
   "rules": {
     "no-underscore-dangle": 0,
     "quotes": [1, "single", {"allowTemplateLiterals": true}],
-    "semi": [2, "always"]
+    "semi": [1, "always"]
   },
   "plugins": [
     "react"

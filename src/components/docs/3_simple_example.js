@@ -17,20 +17,35 @@ var SimpleExample = React.createClass ({
     },
 
     componentDidMount: function() {
-      // TODO: Fire off a load cluster details action here
-      if (!this.props.cluster.service_accounts) {
+      if (!this.props.cluster) {
+        this.props.dispatch(flashAdd({
+          message: 'This organization has no clusters',
+          class: 'danger',
+          ttl: 3000
+        }));
+
+        this.setState({
+          loading: 'failed'
+        });
+      } else if (!this.props.cluster.service_accounts) {
         this.setState({
           loading: true
         });
 
         this.props.actions.clusterLoadDetails(this.props.cluster.id)
-        .then((x) => {
-          console.log(x);
+        .then((cluster) => {
           this.setState({
             loading: false
           });
         })
-        .catch((x) => {
+        .catch((error) => {
+          console.log(error);
+          this.props.dispatch(flashAdd({
+            message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
+            class: 'danger',
+            ttl: 3000
+          }));
+
           this.setState({
             loading: 'failed'
           });
@@ -43,10 +58,10 @@ var SimpleExample = React.createClass ({
     },
 
     linkToHelloWorld: function() {
-      if (this.state.loading) {
-        return 'Figuring out the url...';
-      } else if (this.state.loading === 'failed') {
+      if (this.state.loading === 'failed') {
         return 'Could not figure out the url for your hello world app. Sorry.';
+      } else if (this.state.loading) {
+        return 'Figuring out the url...';
       } else {
         var url = `${this.props.cluster.api_endpoint}/api/v1/proxy/namespaces/default/services/helloworld/`;
         return (
@@ -133,7 +148,7 @@ var SimpleExample = React.createClass ({
 function mapStateToProps(state, ownProps) {
   var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
   var clustersByDate = _.sortBy(selectedOrganization.clusters, 'create_date').reverse();
-  var firstClusterId =clustersByDate[0];
+  var firstClusterId = clustersByDate[0];
   var firstCluster = state.entities.clusters.items[firstClusterId];
 
   return {
@@ -148,4 +163,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(mapStateToProps)(SimpleExample);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(SimpleExample);

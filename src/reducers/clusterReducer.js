@@ -16,6 +16,7 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
       };
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
+      console.log(action);
       var items = Object.assign({}, state.items);
 
       items[action.cluster.id] = action.cluster;
