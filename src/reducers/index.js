@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
 import organizations from './organizationReducer';
+import clusters from './clusterReducer';
 import modal from './modalReducer';
 import flashMessages from './flashMessagesReducer';
 import app from './appReducer';
 
 const entities = combineReducers({
-  organizations
+  organizations,
+  clusters
 });
 
 const rootReducer = combineReducers({

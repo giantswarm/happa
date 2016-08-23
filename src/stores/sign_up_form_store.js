@@ -1,5 +1,4 @@
 'use strict';
-var Reflux   = require('reflux');
 var actions  = require('../actions/sign_up_form_actions');
 var _        = require('underscore');
 var React    = require('react');
@@ -24,206 +23,206 @@ function newSignUpForm() {
 
 var signUpForm;
 
-module.exports = Reflux.createStore({
-  listenables: actions,
+// module.exports = Reflux.createStore({
+//   listenables: actions,
 
-  getInitialState: function() {
-    signUpForm = newSignUpForm();
-    return signUpForm;
-  },
+//   getInitialState: function() {
+//     signUpForm = newSignUpForm();
+//     return signUpForm;
+//   },
 
-  onResetForm: function() {
-    signUpForm = newSignUpForm();
-    this.trigger(signUpForm);
-  },
+//   onResetForm: function() {
+//     signUpForm = newSignUpForm();
+//     this.trigger(signUpForm);
+//   },
 
-  onCheckInvite: function() {
-    signUpForm.checkInviteStatus = 'started';
-    signUpForm.statusMessage = 'verify_started';
-    this.trigger(signUpForm);
-  },
+//   onCheckInvite: function() {
+//     signUpForm.checkInviteStatus = 'started';
+//     signUpForm.statusMessage = 'verify_started';
+//     this.trigger(signUpForm);
+//   },
 
-  onCheckInviteCompleted: function(data) {
-    signUpForm.email = data.email;
-    signUpForm.statusMessage = 'verify_completed';
-    signUpForm.checkInviteStatus = 'completed';
-    this.trigger(signUpForm);
+//   onCheckInviteCompleted: function(data) {
+//     signUpForm.email = data.email;
+//     signUpForm.statusMessage = 'verify_completed';
+//     signUpForm.checkInviteStatus = 'completed';
+//     this.trigger(signUpForm);
 
-    setTimeout(function() {
-      signUpForm.statusMessage = 'enter_password';
-      this.trigger(signUpForm);
-      actions.advanceForm();
-    }.bind(this), 800);
-  },
+//     setTimeout(function() {
+//       signUpForm.statusMessage = 'enter_password';
+//       this.trigger(signUpForm);
+//       actions.advanceForm();
+//     }.bind(this), 800);
+//   },
 
-  onAdvanceForm: function() {
-    if (signUpForm.currentStep < signUpForm.formSteps.length) {
-      signUpForm.currentStep += 1;
-    }
+//   onAdvanceForm: function() {
+//     if (signUpForm.currentStep < signUpForm.formSteps.length) {
+//       signUpForm.currentStep += 1;
+//     }
 
-    this.trigger(signUpForm);
+//     this.trigger(signUpForm);
 
-    this.validateForm();
-  },
+//     this.validateForm();
+//   },
 
-  onAdvanceFormCompleted: function() {
-    if (signUpForm.currentStep === 2) {
-      // signUpForm.statusMessage = 'tos_intro';
-    }
+//   onAdvanceFormCompleted: function() {
+//     if (signUpForm.currentStep === 2) {
+//       // signUpForm.statusMessage = 'tos_intro';
+//     }
 
-    if (signUpForm.currentStep === 3) {
-      signUpForm.statusMessage = 'tos_intro';
-    }
+//     if (signUpForm.currentStep === 3) {
+//       signUpForm.statusMessage = 'tos_intro';
+//     }
 
-    this.trigger(signUpForm);
-  },
+//     this.trigger(signUpForm);
+//   },
 
-  onCheckInviteFailed: function(error) {
-    signUpForm.checkInviteStatus = 'failed';
+//   onCheckInviteFailed: function(error) {
+//     signUpForm.checkInviteStatus = 'failed';
 
-    if (error === 'Bad request') {
-      signUpForm.statusMessage = 'verify_failed';
-    } else if (error === 'InvalidTokenOrContactID') {
-      signUpForm.statusMessage = 'invalid_token';
-    } else {
-      signUpForm.statusMessage = 'verify_failed';
-    }
+//     if (error === 'Bad request') {
+//       signUpForm.statusMessage = 'verify_failed';
+//     } else if (error === 'InvalidTokenOrContactID') {
+//       signUpForm.statusMessage = 'invalid_token';
+//     } else {
+//       signUpForm.statusMessage = 'verify_failed';
+//     }
 
-    this.trigger(signUpForm);
-  },
+//     this.trigger(signUpForm);
+//   },
 
-  onCreateAccount: function() {
-    signUpForm.statusMessage = 'create_account_starting';
-    signUpForm.submitting = true;
-    this.trigger(signUpForm);
-  },
+//   onCreateAccount: function() {
+//     signUpForm.statusMessage = 'create_account_starting';
+//     signUpForm.submitting = true;
+//     this.trigger(signUpForm);
+//   },
 
-  onCreateAccountCompleted: function(data) {
-    signUpForm.statusMessage = 'create_account_completed';
-    userActions.authenticate.completed({
-      email: data.email,
-      authtoken: data.token
-    });
-    this.trigger(signUpForm);
-  },
+//   onCreateAccountCompleted: function(data) {
+//     signUpForm.statusMessage = 'create_account_completed';
+//     userActions.authenticate.completed({
+//       email: data.email,
+//       authtoken: data.token
+//     });
+//     this.trigger(signUpForm);
+//   },
 
-  onCreateAccountFailed: function() {
-    signUpForm.statusMessage = 'create_account_failed';
-    signUpForm.submitting = false;
-    this.trigger(signUpForm);
-  },
+//   onCreateAccountFailed: function() {
+//     signUpForm.statusMessage = 'create_account_failed';
+//     signUpForm.submitting = false;
+//     this.trigger(signUpForm);
+//   },
 
-  onPasswordEditingStarted: function() {
-    signUpForm.formValid = false;
-    signUpForm.advancable = false;
-    signUpForm.passwordField.valid = false;
-    this.trigger(signUpForm);
-  },
+//   onPasswordEditingStarted: function() {
+//     signUpForm.formValid = false;
+//     signUpForm.advancable = false;
+//     signUpForm.passwordField.valid = false;
+//     this.trigger(signUpForm);
+//   },
 
-  onPasswordEditingCompleted: function(password) {
-    signUpForm.passwordField.valid = false;
+//   onPasswordEditingCompleted: function(password) {
+//     signUpForm.passwordField.valid = false;
 
-    if (password.length === 0) {
-      // Be invalid, but don't change the status message.
-    } else if (password.length < 8) {
-      signUpForm.statusMessage = 'password_too_short';
-    } else if (/^[0-9]+$/.test(password)) {
-      signUpForm.statusMessage = 'password_not_just_numbers';
-    } else if (/^[a-z]+$/.test(password)) {
-      signUpForm.statusMessage = 'password_not_just_letters';
-    } else if (/^[A-Z]+$/.test(password)) {
-      signUpForm.statusMessage = 'password_not_just_letters';
-    } else {
-      signUpForm.statusMessage = 'password_ok';
-      signUpForm.passwordField.valid = true;
-    }
+//     if (password.length === 0) {
+//       // Be invalid, but don't change the status message.
+//     } else if (password.length < 8) {
+//       signUpForm.statusMessage = 'password_too_short';
+//     } else if (/^[0-9]+$/.test(password)) {
+//       signUpForm.statusMessage = 'password_not_just_numbers';
+//     } else if (/^[a-z]+$/.test(password)) {
+//       signUpForm.statusMessage = 'password_not_just_letters';
+//     } else if (/^[A-Z]+$/.test(password)) {
+//       signUpForm.statusMessage = 'password_not_just_letters';
+//     } else {
+//       signUpForm.statusMessage = 'password_ok';
+//       signUpForm.passwordField.valid = true;
+//     }
 
-    signUpForm.passwordField.value = password;
+//     signUpForm.passwordField.value = password;
 
-    this.trigger(signUpForm);
+//     this.trigger(signUpForm);
 
-    this.validateForm();
-  },
+//     this.validateForm();
+//   },
 
-  onPasswordConfirmationEditingStarted: function(confirmation) {
-    signUpForm.formValid = false;
-    signUpForm.advancable = false;
-    signUpForm.passwordConfirmationField.valid = false;
-    this.trigger(signUpForm);
+//   onPasswordConfirmationEditingStarted: function(confirmation) {
+//     signUpForm.formValid = false;
+//     signUpForm.advancable = false;
+//     signUpForm.passwordConfirmationField.valid = false;
+//     this.trigger(signUpForm);
 
-    if (signUpForm.passwordField.valid) {
-      if (signUpForm.passwordField.value === confirmation) {
-        signUpForm.statusMessage = 'password_confirmation_ok';
-        signUpForm.passwordConfirmationField.valid = true;
-        this.trigger(signUpForm);
-        this.validateForm();
-        if (signUpForm.currentStep === 1) {
-          // If we're on the first step, the confirmation field isn't even visible
-          // yet. So a password manager must have filled in the confirmation for the user
-          // Advance automatically as a convenience to the user.
-          actions.advanceForm();
-        }
-      }
-    }
-  },
+//     if (signUpForm.passwordField.valid) {
+//       if (signUpForm.passwordField.value === confirmation) {
+//         signUpForm.statusMessage = 'password_confirmation_ok';
+//         signUpForm.passwordConfirmationField.valid = true;
+//         this.trigger(signUpForm);
+//         this.validateForm();
+//         if (signUpForm.currentStep === 1) {
+//           // If we're on the first step, the confirmation field isn't even visible
+//           // yet. So a password manager must have filled in the confirmation for the user
+//           // Advance automatically as a convenience to the user.
+//           actions.advanceForm();
+//         }
+//       }
+//     }
+//   },
 
-  onPasswordConfirmationEditingCompleted: function(confirmation) {
-    signUpForm.passwordConfirmationField.valid = false;
+//   onPasswordConfirmationEditingCompleted: function(confirmation) {
+//     signUpForm.passwordConfirmationField.valid = false;
 
-    if (signUpForm.passwordField.valid) {
-      if (signUpForm.passwordField.value === confirmation) {
-        signUpForm.statusMessage = 'password_confirmation_ok';
-        signUpForm.passwordConfirmationField.valid = true;
-      } else {
-        signUpForm.statusMessage = 'password_confirmation_mismatch';
-      }
+//     if (signUpForm.passwordField.valid) {
+//       if (signUpForm.passwordField.value === confirmation) {
+//         signUpForm.statusMessage = 'password_confirmation_ok';
+//         signUpForm.passwordConfirmationField.valid = true;
+//       } else {
+//         signUpForm.statusMessage = 'password_confirmation_mismatch';
+//       }
 
-      this.trigger(signUpForm);
+//       this.trigger(signUpForm);
 
-      this.validateForm();
-    }
-  },
+//       this.validateForm();
+//     }
+//   },
 
-  onTosChanged: function(checked) {
-    signUpForm.formValid = false;
-    signUpForm.advancable = false;
+//   onTosChanged: function(checked) {
+//     signUpForm.formValid = false;
+//     signUpForm.advancable = false;
 
-    if (checked) {
-      signUpForm.termsOfServiceField.valid = true;
-      signUpForm.termsOfServiceField.value = true;
-      signUpForm.statusMessage = 'tos_ok';
-    } else {
-      signUpForm.termsOfServiceField.valid = false;
-      signUpForm.termsOfServiceField.value = false;
-      signUpForm.statusMessage = 'tos_not_accepted';
-    }
+//     if (checked) {
+//       signUpForm.termsOfServiceField.valid = true;
+//       signUpForm.termsOfServiceField.value = true;
+//       signUpForm.statusMessage = 'tos_ok';
+//     } else {
+//       signUpForm.termsOfServiceField.valid = false;
+//       signUpForm.termsOfServiceField.value = false;
+//       signUpForm.statusMessage = 'tos_not_accepted';
+//     }
 
-    this.trigger(signUpForm);
+//     this.trigger(signUpForm);
 
-    this.validateForm();
-  },
+//     this.validateForm();
+//   },
 
-  validateForm: function() {
-    // TODO Refactor. Loop over steps and intelligently find out what validations apply right now
+//   validateForm: function() {
+//     // TODO Refactor. Loop over steps and intelligently find out what validations apply right now
 
-    if (signUpForm.currentStep === 1 && signUpForm.passwordField.valid) {
-      signUpForm.advancable = true;
-    } else if (signUpForm.currentStep === 2 && signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid) {
-      signUpForm.advancable = true;
-    } else if (signUpForm.currentStep === 3 && signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid && signUpForm.termsOfServiceField.valid) {
-      signUpForm.advancable = true;
-    } else {
-      signUpForm.advancable = false;
-    }
+//     if (signUpForm.currentStep === 1 && signUpForm.passwordField.valid) {
+//       signUpForm.advancable = true;
+//     } else if (signUpForm.currentStep === 2 && signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid) {
+//       signUpForm.advancable = true;
+//     } else if (signUpForm.currentStep === 3 && signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid && signUpForm.termsOfServiceField.valid) {
+//       signUpForm.advancable = true;
+//     } else {
+//       signUpForm.advancable = false;
+//     }
 
-    if (signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid && signUpForm.termsOfServiceField.valid) {
-      signUpForm.formValid = true;
-      signUpForm.statusMessage = 'all_good';
-    } else {
-      signUpForm.formValid = false;
-    }
+//     if (signUpForm.passwordField.valid && signUpForm.passwordConfirmationField.valid && signUpForm.termsOfServiceField.valid) {
+//       signUpForm.formValid = true;
+//       signUpForm.statusMessage = 'all_good';
+//     } else {
+//       signUpForm.formValid = false;
+//     }
 
-    this.trigger(signUpForm);
-  }
+//     this.trigger(signUpForm);
+//   }
 
-});
+// });

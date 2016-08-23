@@ -1,16 +1,11 @@
 'use strict';
 import React from 'react';
-import Reflux from 'reflux';
 import Slide from '../component_slider/slide';
 import Markdown from './markdown';
 import { CodeBlock, Prompt, Output } from './codeblock';
 import FileBlock from './fileblock';
-import ClusterStore from '../../stores/cluster_store.js';
-import ClusterActions from '../../actions/cluster_actions.js';
 
 module.exports = React.createClass ({
-    mixins: [Reflux.connect(ClusterStore,'clusters'), Reflux.listenerMixin],
-
     componentDidMount: function() {
       if (this.state.clusters === 'NOTLOADED') {
         ClusterActions.fetchAll();

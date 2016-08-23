@@ -31,14 +31,22 @@ var Login = React.createClass({
   },
 
   updateEmail(event) {
-    this.props.dispatch(flashClearAll());
+    // Clear flash messages if there are any.
+    if (this.props.flashMessages.size > 0) {
+      this.props.dispatch(flashClearAll());
+    }
+
     this.setState({
       email: event.target.value
     });
   },
 
   updatePassword(event) {
-    this.props.dispatch(flashClearAll());
+    // Clear flash messages if there are any.
+    if (this.props.flashMessages.size > 0) {
+      this.props.dispatch(flashClearAll());
+    }
+
     this.setState({
       password: event.target.value
     });
@@ -144,7 +152,8 @@ var Login = React.createClass({
 
 function mapStateToProps(state, ownProps) {
   return {
-    user: state.app.loggedInUser
+    user: state.app.loggedInUser,
+    flashMessages: state.flashMessages
   };
 }
 

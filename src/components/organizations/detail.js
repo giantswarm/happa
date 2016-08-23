@@ -6,6 +6,7 @@ import FlashMessage from '../flash_messages/flash_message';
 import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import { organizationsLoad, organizationAddMember, organizationRemoveMember } from '../../actions/organizationActions';
+import moment from 'moment';
 
 var OrganizationDetail = React.createClass({
   componentDidMount() {
@@ -18,6 +19,11 @@ var OrganizationDetail = React.createClass({
 
   removeMember(username) {
     this.props.dispatch(organizationRemoveMember(this.props.organization.id, username));
+  },
+
+  formatDate(ISO8601DateString) {
+    // http://momentjs.com/docs/#/displaying/
+    return moment(ISO8601DateString).utc().format('D MMM YYYY, h:mm z');
   },
 
   render: function() {
@@ -55,7 +61,7 @@ var OrganizationDetail = React.createClass({
                         return (
                           <tr key={cluster}>
                             <td>{cluster}</td>
-                            <td></td>
+                            <td>{this.formatDate(this.props.clusters.items[cluster].create_date)}</td>
                           </tr>
                         );
                       })

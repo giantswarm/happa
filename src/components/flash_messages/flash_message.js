@@ -6,7 +6,6 @@
 
 'use strict';
 
-import Reflux from 'reflux';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from 'underscore';

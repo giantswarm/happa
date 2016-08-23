@@ -12,7 +12,7 @@ export default function appReducer(state = {
   }, action = undefined) {
   switch(action.type) {
     case types.LOGIN_SUCCESS:
-      // localStorage.setItem('user', JSON.stringify(action.userData));
+      localStorage.setItem('user', JSON.stringify(action.userData));
 
       // browserHistory.push('/');
 

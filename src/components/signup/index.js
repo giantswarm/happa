@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import Reflux from 'reflux';
 import Passage from '../../lib/passage_client';
 import actions from '../../actions/sign_up_form_actions';
 import store from '../../stores/sign_up_form_store';
@@ -15,8 +14,6 @@ module.exports = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
-
-  mixins: [Reflux.connect(store, 'signUpForm'), Reflux.listenerMixin],
 
   componentDidMount: function(){
     // contactID and token are set via URL

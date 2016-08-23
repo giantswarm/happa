@@ -5,6 +5,7 @@ import _ from 'underscore';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
+import { clusterLoadPartialDetails } from './clusterActions';
 import React from 'react';
 
 var giantSwarm = new GiantSwarm.Client();
@@ -85,6 +86,11 @@ export function organizationsLoad() {
         var orgId = current[0];
         var clusters = current[1] || [];
         previous[orgId] = {clusters: clusters.sort().map((x) => {return x.id;})};
+
+        _.each(clusters, (cluster) => {
+          dispatch(clusterLoadPartialDetails(cluster));
+        });
+
         return previous;
       }, {});
 
@@ -102,6 +108,8 @@ export function organizationsLoad() {
       dispatch(organizationsLoadSuccess(organizations));
     })
     .catch(error => {
+      console.log(error);
+
       dispatch(flashAdd({
         message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
         class: 'danger'

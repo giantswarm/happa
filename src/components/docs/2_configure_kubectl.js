@@ -1,16 +1,13 @@
 'use strict';
 import React from 'react';
-import Reflux from 'reflux';
 import Slide from '../component_slider/slide';
 import Markdown from './markdown';
 import { CodeBlock, Prompt, Output } from './codeblock';
 import FileBlock from './fileblock';
-import ClusterStore from '../../stores/cluster_store.js';
-import ClusterActions from '../../actions/cluster_actions.js';
+import {connect} from 'react-redux';
+import {loadClusters} from '../../actions/clusterActions';
 
-module.exports = React.createClass ({
-    mixins: [Reflux.connect(ClusterStore,'clusters'), Reflux.listenerMixin],
-
+var ConfigKubeCtl = React.createClass ({
     componentDidMount: function() {
       if (this.state.clusters === 'NOTLOADED') {
         ClusterActions.fetchAll();
@@ -96,3 +93,11 @@ module.exports = React.createClass ({
       );
     }
 });
+
+function mapStateToProps(state, ownProps) {
+  return {
+    clusters: state.entities.clusters
+  };
+}
+
+module.exports = connect(mapStateToProps)(ConfigKubeCtl);
