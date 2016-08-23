@@ -8,18 +8,26 @@ import {connect} from 'react-redux';
 import {loadClusters} from '../../actions/clusterActions';
 
 var ConfigKubeCtl = React.createClass ({
-    componentDidMount: function() {
-      if (this.state.clusters === 'NOTLOADED') {
-        ClusterActions.fetchAll();
+
+    componentWillMount: function() {
+      // TODO: Fire off a load cluster details action here
+      if (!this.props.cluster.service_accounts) {
+        this.setState({
+          loading: true
+        });
+      } else {
+        this.setState({
+          loading: false
+        });
       }
     },
 
     kubeConfig: function() {
-      if (this.state.clusters === 'NOTLOADED') {
+      if (this.state.loading) {
         return <FileBlock fileName='giantswarm-kubeconfig'>
           Loading ...
         </FileBlock>;
-      } else if (this.state.clusters === 'LOADINGFAILED') {
+      } else if (this.tate.loading === 'failed') {
         return <FileBlock fileName='giantswarm-kubeconfig'>
           Could not load your kubeconfig, sorry. Please contact support.
         </FileBlock>;
@@ -31,19 +39,19 @@ var ConfigKubeCtl = React.createClass ({
             kind: Config
             clusters:
              - cluster:
-                 certificate-authority-data: ${this.state.clusters[0].certificate_authority_data}
-                 server: ${this.state.clusters[0].api_endpoint}
-               name: ${this.state.clusters[0].name}
+                 certificate-authority-data: ${this.props.cluster.certificate_authority_data}
+                 server: ${this.props.cluster.api_endpoint}
+               name: ${this.props.cluster.name}
             contexts:
              - context:
-                 cluster: ${this.state.clusters[0].name}
-                 user: ${this.state.clusters[0].service_accounts[0].name}
+                 cluster: ${this.props.cluster.name}
+                 user: ${this.props.cluster.service_accounts[0].name}
                name: giantswarm-default
             users:
-             - name: ${this.state.clusters[0].service_accounts[0].name}
+             - name: ${this.props.cluster.service_accounts[0].name}
                user:
-                 client-certificate-data: ${this.state.clusters[0].service_accounts[0].client_certificate_data}
-                 client-key-data: ${this.state.clusters[0].service_accounts[0].client_key_data}
+                 client-certificate-data: ${this.props.cluster.service_accounts[0].client_certificate_data}
+                 client-key-data: ${this.props.cluster.service_accounts[0].client_key_data}
             `}
           </FileBlock>
         );
@@ -95,8 +103,12 @@ var ConfigKubeCtl = React.createClass ({
 });
 
 function mapStateToProps(state, ownProps) {
+  var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
+  var firstClusterId = selectedOrganization.clusters[0];
+  var firstCluster = state.entities.clusters.items[firstClusterId];
+
   return {
-    clusters: state.entities.clusters
+    cluster: firstCluster
   };
 }
 

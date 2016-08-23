@@ -4,21 +4,29 @@ import Slide from '../component_slider/slide';
 import Markdown from './markdown';
 import { CodeBlock, Prompt, Output } from './codeblock';
 import FileBlock from './fileblock';
+import {connect} from 'react-redux';
 
-module.exports = React.createClass ({
-    componentDidMount: function() {
-      if (this.state.clusters === 'NOTLOADED') {
-        ClusterActions.fetchAll();
+var SimpleExample = React.createClass ({
+    componentWillMount: function() {
+      // TODO: Fire off a load cluster details action here
+      if (!this.props.cluster.service_accounts) {
+        this.setState({
+          loading: true
+        });
+      } else {
+        this.setState({
+          loading: false
+        });
       }
     },
 
     linkToHelloWorld: function() {
-      if (this.state.clusters === 'NOTLOADED') {
+      if (this.state.loading) {
         return 'Figuring out the url...';
-      } else if (this.state.clusters === 'LOADINGFAILED') {
+      } else if (this.state.loading === 'failed') {
         return 'Could not figure out the url for your hello world app. Sorry.';
       } else {
-        var url = `${this.state.clusters[0].api_endpoint}/api/v1/proxy/namespaces/default/services/helloworld/`;
+        var url = `${this.props.cluster.api_endpoint}/api/v1/proxy/namespaces/default/services/helloworld/`;
         return (
           <a href={url} target='_blank'>{url}</a>
         );
@@ -99,3 +107,15 @@ module.exports = React.createClass ({
       );
     }
 });
+
+function mapStateToProps(state, ownProps) {
+  var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
+  var firstClusterId = selectedOrganization.clusters[0];
+  var firstCluster = state.entities.clusters.items[firstClusterId];
+
+  return {
+    cluster: firstCluster
+  };
+}
+
+module.exports = connect(mapStateToProps)(SimpleExample);
