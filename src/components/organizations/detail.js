@@ -31,10 +31,8 @@ var OrganizationDetail = React.createClass({
       return (
         <div>
           <div className='row'>
-            <div className='col-3'>
-            </div>
-            <div className='col-9'>
-              <h1>{this.props.params.orgId}</h1>
+            <div className='col-12'>
+              <h1>Details for: {this.props.params.orgId}</h1>
             </div>
           </div>
 
