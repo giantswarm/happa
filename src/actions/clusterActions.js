@@ -39,7 +39,8 @@ export function clusterLoadDetailsError(error) {
 
 export function clusterLoadDetails(clusterId) {
   return function(dispatch, getState) {
-    var giantSwarm = new GiantSwarm.Client();
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
 
     return giantSwarm.clusterDetails({clusterId})
     .then((response) => {
