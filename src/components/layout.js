@@ -8,6 +8,7 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import _ from 'underscore';
 import { organizationSelect, organizationsLoad } from '../actions/organizationActions';
+import Breadcrumbs from 'react-breadcrumbs';
 
 var Layout = React.createClass ({
   componentDidMount() {
@@ -59,6 +60,7 @@ var Layout = React.createClass ({
         </nav>
 
         <div className='main col-8'>
+          <Breadcrumbs routes={this.props.routes} params={this.props.params} setDocumentTitle={true}/>
           <FlashMessages />
           <Modal />
           {this.props.children}

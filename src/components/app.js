@@ -46,20 +46,20 @@ render(
       <Route path = "/forgot_password/:token" component={forgot_password_set_password} />
       <Route path = "/signup/:contactId/:token" component={signup} />
 
-      <Route path="/" component={Layout} onEnter={requireAuth}>
+      <Route name="Home" path="/" component={Layout} onEnter={requireAuth}>
         <IndexRoute component={wip}/>
 
-        <Route name='docs' path="docs" >
+        <Route name='Getting Started' path="docs" >
           <IndexRoute component={docs} />
           <Route name="docs.page" path ="/docs/:pageId" component={docs}/>
         </Route>
 
-        <Route name="organizations" path="organizations">
+        <Route name="Organizations" path="organizations">
           <IndexRoute component={Organizations} />
           <Route name="organizations.detail" path="/organizations/:orgId" component={organizationDetail} />
         </Route>
 
-        <Route path="/account_settings" component={accountSettings} />
+        <Route name="Account Settings" path="/account_settings" component={accountSettings} />
         <Route path="*" component={notFound} />
       </Route>
     </Router>
