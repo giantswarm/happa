@@ -129,7 +129,10 @@ module.exports = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`kubectl create -f https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml`}
+              {`
+                kubectl create \\
+                -f https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
+              `}
             </Prompt>
           </CodeBlock>
 
