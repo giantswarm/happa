@@ -7,6 +7,7 @@ import StatusMessage from './status_message';
 import TermsOfService from './terms_of_service';
 import { browserHistory } from 'react-router';
 import * as userActions from '../../actions/userActions';
+import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 
@@ -49,7 +50,6 @@ var SignUp = React.createClass({
       setTimeout(function() {
         this.setState({
           statusMessage: 'enter_password',
-          currentStep: 1
         });
 
         this.advanceForm();
@@ -80,11 +80,21 @@ var SignUp = React.createClass({
   },
 
   advanceForm: function() {
-    if (this.state.currentStep === 1) {
+    var nextStep = this.state.currentStep + 1;
+
+    this.setState({
+      currentStep: nextStep
+    });
+
+    if (nextStep === 1) {
       this.refs.password.focus();
-    } else if (this.state.currentStep === 2) {
+    } else if (nextStep === 2) {
       this.refs.passwordConfirmation.focus();
-    } else if (this.state.currentStep === 3) {
+    } else if (nextStep === 3) {
+      this.setState({
+        statusMessage: 'tos_intro'
+      });
+
       this.refs.passwordConfirmation.blur();
     }
   },
@@ -92,11 +102,11 @@ var SignUp = React.createClass({
   accountCreated: function() {
     // Delay a bit so the user sees the DONE message
     // and then transition to the getting started guide
-
-    // flashMessageActions.add({
-    //   message: 'Account created! Welcome to Giant Swarm.',
-    //   class: 'success'
-    // });
+    //
+    this.props.dispatch(flashAdd({
+      message: 'Account created! Welcome to Giant Swarm.',
+      class: 'success'
+    }));
 
     setTimeout(() => {
       browserHistory.push('/');
@@ -121,6 +131,16 @@ var SignUp = React.createClass({
         password: this.state.passwordField.value
       })
       .then((data) => {
+        console.log(data);
+
+        var userData = {
+          username: data.username,
+          email: data.email,
+          authToken: data.token
+        };
+
+        this.props.actions.loginSuccess(userData);
+
         this.setState({
           statusMessage: 'create_account_completed'
         });
@@ -134,16 +154,11 @@ var SignUp = React.createClass({
         });
       });
     } else {
-      this.setState({
-        currentStep: this.state.currentStep + 1
-      }, () => {
-        this.advanceForm();
-      });
+      this.advanceForm();
     }
   },
 
   tosChanged: function(e) {
-    console.log(e.target.checked);
     var checked = e.target.checked;
 
     var formValid = false;
@@ -236,7 +251,6 @@ var SignUp = React.createClass({
 
     if (this.state.passwordField.valid) {
       if (this.state.passwordField.value === confirmation) {
-        console.log('ok');
 
         this.setState({
           passwordConfirmationField: {
@@ -259,7 +273,37 @@ var SignUp = React.createClass({
   },
 
   passwordConfirmationEditingCompleted: function(passwordConfirmation) {
+    var statusMessage = this.state.statusMessage;
+    var valid = this.state.passwordConfirmationField.valid;
 
+    this.setState({
+      formValid: false,
+      advancable: false,
+      passwordConfirmationField: {
+        valid: false,
+        value: passwordConfirmation
+      }
+    });
+
+    if (this.state.passwordField.valid) {
+      if (this.state.passwordField.value === passwordConfirmation) {
+        statusMessage = 'password_confirmation_ok';
+        valid = true;
+      } else {
+        statusMessage = 'password_confirmation_mismatch';
+        valid = false;
+      }
+
+      this.setState({
+        statusMessage: statusMessage,
+        passwordConfirmationField: {
+          valid: valid,
+          value: passwordConfirmation
+        }
+      });
+
+      this.validateForm();
+    }
   },
 
   validateForm: function() {

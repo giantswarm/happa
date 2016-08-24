@@ -52,22 +52,20 @@ Configuration
 Use environment variables to adjust the behavior of this application.
 
 
-ReFlux in a nutshell
+Redux in a nutshell
 --------------------
 ```
-╔═════════╗       ╔════════╗       ╔═════════════════╗
-║ Actions ║──────>║ Stores ║──────>║ View Components ║
-╚═════════╝       ╚════════╝       ╚═════════════════╝
+╔═════════╗       ╔══════════╗       ╔═════════════════╗
+║ Actions ║──────>║ Reducers ║──────>║ View Components ║
+╚═════════╝       ╚══════════╝       ╚═════════════════╝
      ^                                      │
      └──────────────────────────────────────┘
 ```
 Components should only emit actions.
 
-Actions affect the store.
+Reducers listen for actions and emit a new state.
 
-The store emits the newly changed object.
-
-The view listens for changes to the store and updates its state.
+The view listens for changes to the state and renders.
 
 By following these guidelines we should get some benefits in keeping component
 logic focused on rendering, and not on doing the actual work of manipulating
