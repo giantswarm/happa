@@ -20,7 +20,7 @@ var SimpleExample = React.createClass ({
     componentDidMount: function() {
       if (!this.props.cluster) {
         this.props.dispatch(flashAdd({
-          message: 'This organization has no clusters',
+          message: <span><b>This organization has no clusters</b><br/>This page might not work as expected.</span>,
           class: 'danger',
           ttl: 3000
         }));
