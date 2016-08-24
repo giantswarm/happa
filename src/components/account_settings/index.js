@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import Gravatar from 'react-gravatar';
 import {connect} from 'react-redux';
 import Button from '../button';
+import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 
 var AccountSettings = React.createClass({
   getInitialState: function() {
@@ -30,11 +31,13 @@ var AccountSettings = React.createClass({
     if (re.test(email)) {
       this.setState({
         changeEmailFormValid: true,
+        changeEmailFormError: false,
         newEmail: email
       });
     } else {
       this.setState({
         changeEmailFormValid: false,
+        changeEmailFormError: false,
         newEmail: email
       });
     };
@@ -44,17 +47,29 @@ var AccountSettings = React.createClass({
     e.preventDefault();
 
     this.setState({
-      changeEmailFormSubmitting: true
+      changeEmailFormSubmitting: true,
+      changeEmailFormError: false
     });
 
-    setTimeout(function() {
+    var authToken = this.props.user.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
+    giantSwarm.changeEmail({
+      old_email: this.props.user.email,
+      new_email: this.state.newEmail
+    })
+    .then((response) => {
       this.setState({
         changeEmailFormSubmitting: false,
         changeEmailSuccess: true
       });
-    }.bind(this), 1000);
-
-    console.log('Changing email!');
+    })
+    .catch((error) => {
+      this.setState({
+        changeEmailFormSubmitting: false,
+        changeEmailFormError: true
+      });
+    });
   },
 
   render: function() {
@@ -80,31 +95,50 @@ var AccountSettings = React.createClass({
               (() => {
                 if (this.state.changeEmailSuccess) {
                   return (
-                    <p className='success'>We have just sent an email to <b>{this.state.newEmail}</b> with a confirmation link.
-                    Please click that link to confirm the email change. Until then, your old address
-                    will remain in place.</p>
-                  )
+                    <div className='flash-messages--flash-message flash-messages--success'>
+                      We have just sent an email to <b>{this.state.newEmail}</b>
+                      &nbsp;
+                      with a confirmation link. Please click that link to confirm
+                      the email change. Until then, your old address will remain
+                      in place.
+                    </div>
+                  );
                 } else if (this.state.changeEmailFormVisible) {
                   return (
                     <div>
-                      <form onSubmit={this.changeEmail}>
+                      <form className="change_email_form" onSubmit={this.changeEmail}>
                         <div className='textfield'>
                           <label>New Email</label>
                           <input ref='new_email' onChange={this.validateEmail} type="text"/>
-                          <Button type='submit'
-                                  bsStyle='primary'
-                                  disabled={!this.state.changeEmailFormValid}
-                                  loading={this.state.changeEmailFormSubmitting}>Confirm New Email</Button>
                         </div>
+                        <Button type='submit'
+                                bsStyle='primary'
+                                disabled={!this.state.changeEmailFormValid}
+                                loading={this.state.changeEmailFormSubmitting}>Confirm New Email</Button>
                       </form>
+                      {
+                        this.state.changeEmailFormError
+                        ?
+                          <div className='flash-messages--flash-message flash-messages--danger'>
+                            Something went wrong while trying to update your e-mail address.
+                            Perhaps our servers are down. Could you try again later,
+                            or contact support otherwise:
+                            &nbsp;
+                            <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
+                          </div>
+                        :
+                          null
+                      }
                     </div>
                   );
                 } else {
                   return (
                     <div>
                       <p>
-                        <span className='email-gravatar'><Gravatar email='brad@example.com' https size={100} default='mm' /></span>
-                        <span className='email-email'>brad@example.com</span>
+                        <span className='email-gravatar'>
+                          <Gravatar email={this.props.user.email} https size={100} default='mm' />
+                        </span>
+                        <span className='email-email'>{this.props.user.email}</span>
                       </p>
                       <Button bsStyle='primary' onClick={this.revealChangeEmailForm}>Replace Email</Button>
                     </div>

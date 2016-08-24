@@ -77,8 +77,8 @@ export function login(email, password) {
 export function logout() {
   return function(dispatch, getState) {
     var authToken = getState().app.loggedInUser.authToken;
-
     var giantSwarm = new GiantSwarm.Client(authToken);
+
     dispatch({
       type: types.LOGOUT
     });
