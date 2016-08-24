@@ -22,7 +22,9 @@ module.exports = React.createClass({
   },
 
   componentDidMount() {
-    this.goToSlide(this.props.params.pageId);
+    if (this.props.params.pageId) {
+      this.goToSlide(this.props.params.pageId);
+    }
   },
 
   componentWillReceiveProps(nextProps, nextState) {
