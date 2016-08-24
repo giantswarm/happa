@@ -7,6 +7,7 @@ import FileBlock from './fileblock';
 import {connect} from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
+import { flashAdd } from '../../actions/flashMessageActions';
 import _ from 'underscore';
 
 var SimpleExample = React.createClass ({
