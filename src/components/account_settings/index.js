@@ -3,8 +3,60 @@
 import React from 'react';
 import { Link } from 'react-router';
 import Gravatar from 'react-gravatar';
+import {connect} from 'react-redux';
+import Button from '../button';
 
-module.exports = React.createClass({
+var AccountSettings = React.createClass({
+  getInitialState: function() {
+    return {
+      changeEmailFormVisible: false,
+      changeEmailFormValid: false,
+      changeEmailFormSubmitting: false,
+      changeEmailSuccess: false
+    };
+  },
+
+  revealChangeEmailForm: function() {
+    this.setState({
+      changeEmailFormVisible: true
+    }, () => {
+      this.refs.new_email.focus();
+    });
+  },
+
+  validateEmail: function(e) {
+    var email = e.target.value;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (re.test(email)) {
+      this.setState({
+        changeEmailFormValid: true,
+        newEmail: email
+      });
+    } else {
+      this.setState({
+        changeEmailFormValid: false,
+        newEmail: email
+      });
+    };
+  },
+
+  changeEmail: function(e) {
+    e.preventDefault();
+
+    this.setState({
+      changeEmailFormSubmitting: true
+    });
+
+    setTimeout(function() {
+      this.setState({
+        changeEmailFormSubmitting: false,
+        changeEmailSuccess: true
+      });
+    }.bind(this), 1000);
+
+    console.log('Changing email!');
+  },
+
   render: function() {
     return (
       <div>
@@ -24,11 +76,43 @@ module.exports = React.createClass({
               aware that it is also visible to other members of your organization.
             </p>
 
-            <p>
-              <span className='email-gravatar'><Gravatar email='brad@example.com' https size={100} default='mm' /></span>
-              <span className='email-email'>brad@example.com</span>
-            </p>
-            <button>Replace Email</button>
+            {
+              (() => {
+                if (this.state.changeEmailSuccess) {
+                  return (
+                    <p className='success'>We have just sent an email to <b>{this.state.newEmail}</b> with a confirmation link.
+                    Please click that link to confirm the email change. Until then, your old address
+                    will remain in place.</p>
+                  )
+                } else if (this.state.changeEmailFormVisible) {
+                  return (
+                    <div>
+                      <form onSubmit={this.changeEmail}>
+                        <div className='textfield'>
+                          <label>New Email</label>
+                          <input ref='new_email' onChange={this.validateEmail} type="text"/>
+                          <Button type='submit'
+                                  bsStyle='primary'
+                                  disabled={!this.state.changeEmailFormValid}
+                                  loading={this.state.changeEmailFormSubmitting}>Confirm New Email</Button>
+                        </div>
+                      </form>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div>
+                      <p>
+                        <span className='email-gravatar'><Gravatar email='brad@example.com' https size={100} default='mm' /></span>
+                        <span className='email-email'>brad@example.com</span>
+                      </p>
+                      <Button bsStyle='primary' onClick={this.revealChangeEmailForm}>Replace Email</Button>
+                    </div>
+                  );
+                }
+              })()
+            }
+
           </div>
         </div>
 
@@ -145,3 +229,11 @@ module.exports = React.createClass({
     );
   }
 });
+
+function mapStateToProps(state, ownProps) {
+  return {
+    user: state.app.loggedInUser
+  };
+}
+
+module.exports = connect(mapStateToProps)(AccountSettings);
