@@ -36,3 +36,50 @@ nav
 
     &:hover
       color: #fff
+
+  .user_dropdown
+    display: inline
+
+    ul.dropdown-menu
+      background-color: lighten($darkblue, 5%)
+      border: none
+      border-radius: 5pxi
+
+      >li
+        >a
+          color: #ddd
+
+          &:hover
+            background-color: transparent
+            color: #fff
+
+    .dropdown-toggle.btn-default
+      background-color: transparent
+      border: none
+      color: #ccd
+
+
+      &:active
+        background-color: transparent
+        color: #fff
+        box-shadow: none
+        text-decoration: underline
+
+      &:hover
+        background-color: transparent
+        color: #ddd
+        text-decoration: underline
+
+      &:focus
+        background-color: transparent
+        color: #fff
+
+      ul.dropdown-menu
+        background-color: $darkblue
+        box-shadow: none
+
+    .open
+      .dropdown-toggle.btn-default
+        background-color: transparent
+        color: #fff
+        box-shadow: none

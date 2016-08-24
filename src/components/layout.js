@@ -31,7 +31,7 @@ var Layout = React.createClass ({
             <div className='subactions'>
               {
                 (_.map(this.props.organizations.items, (x) => {return x.id;}).length === 0 && ! this.props.organizations.isFetching) ?
-                <DropdownButton title={<span><span className='label label-default'>ORG</span>No organizations</span>} key='2' id='org_dropdown'>
+                <DropdownButton className="organization_dropdown" title={<span><span className='label label-default'>ORG</span>No organizations</span>} key='2' id='org_dropdown'>
                   <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
                 </DropdownButton>
                 :
@@ -51,10 +51,12 @@ var Layout = React.createClass ({
               }
               &nbsp;
               &nbsp;
-              <DropdownButton title={<span><span className='label label-default'>USER</span> {this.props.user.email}</span>} key='1' id='user_dropdown'>
-                <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
-                <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
-              </DropdownButton>
+              <div className="user_dropdown">
+                <DropdownButton title={<span>{this.props.user.email}</span>} key='1' id='user_dropdown'>
+                  <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
+                  <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
+                </DropdownButton>
+              </div>
             </div>
           </div>
 
