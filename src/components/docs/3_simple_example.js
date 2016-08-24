@@ -1,31 +1,71 @@
 'use strict';
-var React                       = require('react');
-var Reflux                      = require('reflux');
-var Slide                       = require('../component_slider/slide');
-var Markdown                    = require('./markdown');
-var {CodeBlock, Prompt, Output} = require('./codeblock');
-var FileBlock                   = require('./fileblock');
-var ClusterStore                = require('../../stores/cluster_store.js');
-var ClusterActions              = require('../../actions/cluster_actions.js');
+import React from 'react';
+import Slide from '../component_slider/slide';
+import Markdown from './markdown';
+import { CodeBlock, Prompt, Output } from './codeblock';
+import FileBlock from './fileblock';
+import {connect} from 'react-redux';
+import * as clusterActions from '../../actions/clusterActions';
+import { bindActionCreators } from 'redux';
+import _ from 'underscore';
 
-module.exports = React.createClass ({
-    mixins: [Reflux.connect(ClusterStore,'clusters'), Reflux.listenerMixin],
+var SimpleExample = React.createClass ({
+    getInitialState: function() {
+      return {
+        loading: true
+      };
+    },
 
     componentDidMount: function() {
-      if (this.state.clusters === "NOTLOADED") {
-        ClusterActions.fetchAll();
+      if (!this.props.cluster) {
+        this.props.dispatch(flashAdd({
+          message: 'This organization has no clusters',
+          class: 'danger',
+          ttl: 3000
+        }));
+
+        this.setState({
+          loading: 'failed'
+        });
+      } else if (!this.props.cluster.service_accounts) {
+        this.setState({
+          loading: true
+        });
+
+        this.props.actions.clusterLoadDetails(this.props.cluster.id)
+        .then((cluster) => {
+          this.setState({
+            loading: false
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          this.props.dispatch(flashAdd({
+            message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
+            class: 'danger',
+            ttl: 3000
+          }));
+
+          this.setState({
+            loading: 'failed'
+          });
+        });
+      } else {
+        this.setState({
+          loading: false
+        });
       }
     },
 
     linkToHelloWorld: function() {
-      if (this.state.clusters === "NOTLOADED") {
-        return "Figuring out the url...";
-      } else if (this.state.clusters === "LOADINGFAILED") {
-        return "Could not figure out the url for your hello world app. Sorry.";
+      if (this.state.loading === 'failed') {
+        return 'Could not figure out the url for your hello world app. Sorry.';
+      } else if (this.state.loading) {
+        return 'Figuring out the url...';
       } else {
-        var url = `${this.state.clusters[0].api_endpoint}/api/v1/proxy/namespaces/default/services/helloworld/`;
+        var url = `${this.props.cluster.api_endpoint}/api/v1/proxy/namespaces/default/services/helloworld/`;
         return (
-          <a href={url} target="_blank">{url}</a>
+          <a href={url} target='_blank'>{url}</a>
         );
       }
     },
@@ -37,7 +77,7 @@ module.exports = React.createClass ({
           <p>To check if every part of your cluster is running as it should, let&apos;s create an entire application. When set up, this application will provide a little web server running in multiple pods.</p>
           <p>Here is the manifest we need:</p>
 
-          <FileBlock fileName="helloworld-manifest.yaml">
+          <FileBlock fileName='helloworld-manifest.yaml'>
           {`
           apiVersion: v1
           kind: Service
@@ -77,7 +117,7 @@ module.exports = React.createClass ({
           </FileBlock>
 
           <p>Save the above manifest in a file called <code>helloworld-manifest.yaml</code>.</p>
-          <p><i className="fa fa-graduation-cap" title="For learners"></i> If you&apos;re new to Kubernetes: A manifest describes things to create in Kubernetes. In this case the manifest describes two different things, a service and a deployment. The service is there to expose containers (here: the ones with the label app: helloworld) inside your cluster via a certain hostname and port. The deployment describes your helloworld deployment. It manages a replica set, which ensures that a number of pods (two, actually) containing Docker containers from a certain image are running.</p>
+          <p><i className='fa fa-graduation-cap' title='For learners'></i> If you&apos;re new to Kubernetes: A manifest describes things to create in Kubernetes. In this case the manifest describes two different things, a service and a deployment. The service is there to expose containers (here: the ones with the label app: helloworld) inside your cluster via a certain hostname and port. The deployment describes your helloworld deployment. It manages a replica set, which ensures that a number of pods (two, actually) containing Docker containers from a certain image are running.</p>
           <p>Now use <code>kubectl</code> to create the service and the deployment:</p>
 
           <CodeBlock>
@@ -86,8 +126,8 @@ module.exports = React.createClass ({
             </Prompt>
             <Output>
               {`
-                service "helloworld" created
-                deployment "helloworld" created
+                service 'helloworld' created
+                deployment 'helloworld' created
               `}
             </Output>
           </CodeBlock>
@@ -98,9 +138,29 @@ module.exports = React.createClass ({
 
           <p>This should show a little welcome message from the Giant Swarm team.</p>
 
-          <button className="primary" onClick={this.props.goToSlide.bind(null, 'inspecting')}>Continue</button><br/>
+          <button className='primary' onClick={this.props.goToSlide.bind(null, 'inspecting')}>Continue</button><br/>
           <button onClick={this.props.goToSlide.bind(null, 'configure')}>Previous</button>
         </Slide>
       );
     }
 });
+
+function mapStateToProps(state, ownProps) {
+  var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
+  var clustersByDate = _.sortBy(selectedOrganization.clusters, 'create_date').reverse();
+  var firstClusterId = clustersByDate[0];
+  var firstCluster = state.entities.clusters.items[firstClusterId];
+
+  return {
+    cluster: firstCluster
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(clusterActions, dispatch),
+    dispatch: dispatch
+  };
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(SimpleExample);

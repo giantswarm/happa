@@ -1,52 +1,95 @@
 'use strict';
-var React                       = require('react');
-var Reflux                      = require('reflux');
-var Slide                       = require('../component_slider/slide');
-var Markdown                    = require('./markdown');
-var {CodeBlock, Prompt, Output} = require('./codeblock');
-var FileBlock                   = require('./fileblock');
-var ClusterStore                = require('../../stores/cluster_store.js');
-var ClusterActions              = require('../../actions/cluster_actions.js');
+import React from 'react';
+import Slide from '../component_slider/slide';
+import Markdown from './markdown';
+import { CodeBlock, Prompt, Output } from './codeblock';
+import FileBlock from './fileblock';
+import {connect} from 'react-redux';
+import * as clusterActions from '../../actions/clusterActions';
+import { bindActionCreators } from 'redux';
+import _ from 'underscore';
+import { browserHistory } from 'react-router';
+import { flashAdd } from '../../actions/flashMessageActions';
 
-module.exports = React.createClass ({
-    mixins: [Reflux.connect(ClusterStore,'clusters'), Reflux.listenerMixin],
+var ConfigKubeCtl = React.createClass ({
+
+    getInitialState: function() {
+      return {
+        loading: true
+      };
+    },
 
     componentDidMount: function() {
-      if (this.state.clusters === "NOTLOADED") {
-        ClusterActions.fetchAll();
+      if (!this.props.cluster) {
+        this.props.dispatch(flashAdd({
+          message: 'This organization has no clusters',
+          class: 'danger',
+          ttl: 3000
+        }));
+
+        this.setState({
+          loading: 'failed'
+        });
+      } else if (!this.props.cluster.service_accounts) {
+        this.setState({
+          loading: true
+        });
+
+        this.props.actions.clusterLoadDetails(this.props.cluster.id)
+        .then((cluster) => {
+          this.setState({
+            loading: false
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          this.props.dispatch(flashAdd({
+            message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
+            class: 'danger',
+            ttl: 3000
+          }));
+
+          this.setState({
+            loading: 'failed'
+          });
+        });
+      } else {
+        this.setState({
+          loading: false
+        });
       }
     },
 
     kubeConfig: function() {
-      if (this.state.clusters === "NOTLOADED") {
-        return <FileBlock fileName="giantswarm-kubeconfig">
-          Loading ...
-        </FileBlock>;
-      } else if (this.state.clusters === "LOADINGFAILED") {
-        return <FileBlock fileName="giantswarm-kubeconfig">
+      if (this.state.loading === 'failed') {
+        return <FileBlock fileName='giantswarm-kubeconfig'>
           Could not load your kubeconfig, sorry. Please contact support.
+        </FileBlock>;
+      } else if (this.state.loading) {
+        return <FileBlock fileName='giantswarm-kubeconfig'>
+          Loading ...
         </FileBlock>;
       } else {
         return (
-          <FileBlock fileName="giantswarm-kubeconfig">
+          <FileBlock fileName='giantswarm-kubeconfig'>
             {`
             apiVersion: v1
             kind: Config
             clusters:
              - cluster:
-                 certificate-authority-data: ${this.state.clusters[0].certificate_authority_data}
-                 server: ${this.state.clusters[0].api_endpoint}
-               name: ${this.state.clusters[0].name}
+                 certificate-authority-data: ${this.props.cluster.certificate_authority_data}
+                 server: ${this.props.cluster.api_endpoint}
+               name: ${this.props.cluster.name}
             contexts:
              - context:
-                 cluster: ${this.state.clusters[0].name}
-                 user: ${this.state.clusters[0].service_accounts[0].name}
+                 cluster: ${this.props.cluster.name}
+                 user: ${this.props.cluster.service_accounts[0].name}
                name: giantswarm-default
             users:
-             - name: ${this.state.clusters[0].service_accounts[0].name}
+             - name: ${this.props.cluster.service_accounts[0].name}
                user:
-                 client-certificate-data: ${this.state.clusters[0].service_accounts[0].client_certificate_data}
-                 client-key-data: ${this.state.clusters[0].service_accounts[0].client_key_data}
+                 client-certificate-data: ${this.props.cluster.service_accounts[0].client_certificate_data}
+                 client-key-data: ${this.props.cluster.service_accounts[0].client_key_data}
             `}
           </FileBlock>
         );
@@ -72,11 +115,11 @@ module.exports = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`export KUBECONFIG="\$\{KUBECONFIG\}:/path/to/giantswarm-kubeconfig"`}
+              {`export KUBECONFIG='\$\{KUBECONFIG\}:/path/to/giantswarm-kubeconfig'`}
             </Prompt>
           </CodeBlock>
 
-          <p><i className="fa fa-graduation-cap" title="For learners"></i> To save some time in the future, add the command above to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
+          <p><i className='fa fa-graduation-cap' title='For learners'></i> To save some time in the future, add the command above to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
 
           <p>Now, whenever you want to switch to working with your Giant Swarm cluster, use this command:</p>
 
@@ -86,13 +129,33 @@ module.exports = React.createClass ({
             </Prompt>
           </CodeBlock>
 
-          <p><i className="fa fa-graduation-cap" title="For learners"></i> Again, here you can save your future self some time by creating an alias.</p>
+          <p><i className='fa fa-graduation-cap' title='For learners'></i> Again, here you can save your future self some time by creating an alias.</p>
 
           <p>Now let&apos;s start something on your cluster.</p>
 
-          <button className="primary" onClick={this.props.goToSlide.bind(null, 'example')}>Continue</button><br/>
+          <button className='primary' onClick={this.props.goToSlide.bind(null, 'example')}>Continue</button><br/>
           <button onClick={this.props.goToSlide.bind(null, 'download')}>Previous</button>
         </Slide>
       );
     }
 });
+
+function mapStateToProps(state, ownProps) {
+  var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
+  var clustersByDate = _.sortBy(selectedOrganization.clusters, 'create_date').reverse();
+  var firstClusterId =clustersByDate[0];
+  var firstCluster = state.entities.clusters.items[firstClusterId];
+
+  return {
+    cluster: firstCluster
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(clusterActions, dispatch),
+    dispatch: dispatch
+  };
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(ConfigKubeCtl);

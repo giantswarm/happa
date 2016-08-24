@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 var request = require('superagent-bluebird-promise');
-var validate = require("validate.js");
-var _ = require("underscore");
+var validate = require('validate.js');
+var _ = require('underscore');
 
 //
 // validateOrRaise
@@ -17,9 +17,9 @@ var validateOrRaise = function(validatable, constraints) {
     // If there are validation errors, throw a TypeError that has readable
     // information about what went wrong.
     var messages = _.map(validationErrors, (errorMessages, field) => {
-      return field + ": " + errorMessages.join(", ");
+      return field + ': ' + errorMessages.join(', ');
     });
-    throw(new TypeError(messages.join("\n")));
+    throw(new TypeError(messages.join('\n')));
   }
 };
 
@@ -27,10 +27,10 @@ var validateOrRaise = function(validatable, constraints) {
 // Passage
 // -------
 // A client for Passage.
-// config: {endpoint: "http://passage.com", timeout_ms: 10000}
+// config: {endpoint: 'http://passage.com', timeout_ms: 10000}
 //
 // Example Usage:
-// var passage = new Passage({endpoint: "http://docker.dev:5000"})
+// var passage = new Passage({endpoint: 'http://docker.dev:5000'})
 //
 var Passage = function(config) {
   var constraints = {
@@ -53,7 +53,7 @@ var Passage = function(config) {
     // checkInvite
     // -----------
     // Check if a invitation token is valid for a certain contactId
-    // params: {contactId: "12345", token: "abcdef"}
+    // params: {contactId: '12345', token: 'abcdef'}
     //
     checkInvite: function(params) {
       var constraints = {
@@ -61,11 +61,13 @@ var Passage = function(config) {
         token: { presence: true }
       };
 
-      validateOrRaise(params, constraints);
       var url = `${config.endpoint}/invite/${params.contactId}/${params.token}`;
 
-      var promise = request.get(url)
-      .timeout(config.timeout_ms)
+      var promise = new Promise((resolve, reject) => {
+        validateOrRaise(params, constraints);
+        resolve(request.get(url)
+        .timeout(config.timeout_ms));
+      })
       .then(x => {
         if (x.body.is_valid) {
           return(x.body);
@@ -81,7 +83,7 @@ var Passage = function(config) {
     // createAccount
     // -----------
     // Create an account
-    // params: {contactId: "12345", inviteToken: "abcdef", password: "uvwxyz"}
+    // params: {contactId: '12345', inviteToken: 'abcdef', password: 'uvwxyz'}
     //
     createAccount: function(params) {
       var constraints = {
@@ -90,21 +92,23 @@ var Passage = function(config) {
         password: { presence: true }
       };
 
-      validateOrRaise(params, constraints);
       var url = `${config.endpoint}/accounts/`;
 
       // Passage is not expecting camelcase in its json body
       // Converting it here.
       var payload = {
-        "contact_id": params.contactId,
-        "invite_token": params.inviteToken,
-        "password": params.password
+        'contact_id': params.contactId,
+        'invite_token': params.inviteToken,
+        'password': params.password
       };
 
-      var promise = request.post(url)
-      .timeout(config.timeout_ms)
-      .send(payload)
-      .set("ContentType", "application/json")
+      var promise = new Promise((resolve, reject) => {
+        validateOrRaise(params, constraints);
+        resolve(request.post(url)
+          .timeout(config.timeout_ms)
+          .send(payload)
+          .set('ContentType', 'application/json'));
+      })
       .then(x => {
         return(x.body);
       });
@@ -116,14 +120,12 @@ var Passage = function(config) {
     // requestPasswordRecoveryToken
     // -----------
     // Request a password recovery token, which passage will send to the user's email.
-    // params: {email: "some_valid_email@example.com"}
+    // params: {email: 'some_valid_email@example.com'}
     //
     requestPasswordRecoveryToken: function(params) {
       var constraints = {
         email: { presence: true, email: true }
       };
-
-      validateOrRaise(params, constraints);
 
       var url = `${config.endpoint}/recovery/`;
 
@@ -131,10 +133,13 @@ var Passage = function(config) {
         email: params.email
       };
 
-      var promise = request.post(url)
-      .timeout(config.timeout_ms)
-      .send(payload)
-      .set("ContentType", "application/json")
+      var promise = new Promise((resolve, reject) => {
+        validateOrRaise(params, constraints);
+        resolve(request.post(url)
+          .timeout(config.timeout_ms)
+          .send(payload)
+          .set('ContentType', 'application/json'));
+      })
       .then(x => {
         return(x.body);
       });
@@ -149,7 +154,7 @@ var Passage = function(config) {
     // If the token is invalid, or the request fails for some reason the promise is
     // rejected.
     //
-    // params: {email: "some_valid_email@example.com", token: "123456abcdefg"}
+    // params: {email: 'some_valid_email@example.com', token: '123456abcdefg'}
     //
     verifyPasswordRecoveryToken: function(params) {
       var constraints = {
@@ -157,23 +162,24 @@ var Passage = function(config) {
         token: { presence: true }
       };
 
-      validateOrRaise(params, constraints);
-
       var url = `${config.endpoint}/recovery/${params.token}/`;
 
       var payload = {
         email: params.email
       };
 
-      var promise = request.post(url)
-      .timeout(config.timeout_ms)
-      .send(payload)
-      .set("ContentType", "application/json")
+      var promise = new Promise((resolve, reject) => {
+        validateOrRaise(params, constraints);
+        resolve(request.post(url)
+          .timeout(config.timeout_ms)
+          .send(payload)
+          .set('ContentType', 'application/json'));
+      })
       .then(x => {
         if (x.body.is_valid) {
           return(x.body);
         } else {
-          throw(new Error("Invalid Token"));
+          throw(new Error('Invalid Token'));
         }
       });
 
@@ -187,7 +193,7 @@ var Passage = function(config) {
     // If the token is invalid, or the request fails for some reason the promise is
     // rejected.
     //
-    // params: {email: "some_valid_email@example.com", token: "123456abcdefg", password: "users_new_password"}
+    // params: {email: 'some_valid_email@example.com', token: '123456abcdefg', password: 'users_new_password'}
     //
     setNewPassword: function(params) {
       var constraints = {
@@ -196,8 +202,6 @@ var Passage = function(config) {
         password: { presence: true }
       };
 
-      validateOrRaise(params, constraints);
-
       var url = `${config.endpoint}/recovery/${params.token}/password/`;
 
       var payload = {
@@ -205,10 +209,13 @@ var Passage = function(config) {
         password: params.password
       };
 
-      var promise = request.post(url)
-      .timeout(config.timeout_ms)
-      .send(payload)
-      .set("ContentType", "application/json")
+      var promise = new Promise((resolve, reject) => {
+        validateOrRaise(params, constraints);
+        resolve(request.post(url)
+          .timeout(config.timeout_ms)
+          .send(payload)
+          .set('ContentType', 'application/json'));
+      })
       .then(x => {
         return(x.body);
       });

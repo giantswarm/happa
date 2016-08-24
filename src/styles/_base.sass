@@ -1,13 +1,15 @@
 $darkblue: #234a61
 
 html, body
-  background: $darkblue
-  padding-top: 20px
-  padding-bottom: 40px
-  height: auto
+	background: $darkblue
+	padding-top: 50px
+	padding-bottom: 40px
+	height: auto
 
 h1
-  font-weight: 200
+	font-weight: 200
+	margin-top: 0px
+	margin-bottom: 20px
 
 code
 	font-family: Inconsolata, monospace
@@ -15,6 +17,7 @@ code
 	font-size: 0.9em
 
 p
+	margin-top: 0px
 	code
 		background-color: darken($darkblue, 5%)
 		border-radius: 4px
@@ -23,13 +26,25 @@ p
 		color: #c7c5bd
 
 .main
-  margin: auto
-  position: relative;
-  z-index: 0
-  img
-    margin-bottom: 10px
-    text-align: center
-    width: 50px
+	margin: auto
+	position: relative;
+	z-index: 0
+	img
+		margin-bottom: 10px
+		text-align: center
+		width: 50px
 
 a
-  color: #fff
+	color: #f7f7f7
+
+a:hover, a:focus
+	color: #fff
+
+a:focus
+	text-decoration: none
+
+a.active
+	font-weight: bold
+
+.row
+	margin-left: 0px

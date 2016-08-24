@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 var dedent = function(strings, ...values) {
   let raw;
-  if (typeof strings === "string") {
+  if (typeof strings === 'string') {
     // dedent can be used as a plain function
     raw = [strings];
   } else {
@@ -10,13 +10,13 @@ var dedent = function(strings, ...values) {
   }
 
   // first, perform interpolation
-  let result = "";
+  let result = '';
   for (let i = 0; i < raw.length; i++) {
     result += raw[i].
 
 
       // handle escaped backticks
-      replace(/\\`/g, "`");
+      replace(/\\`/g, '`');
 
     if (i < values.length) {
       result += values[i];
@@ -24,7 +24,7 @@ var dedent = function(strings, ...values) {
   }
 
   // now strip indentation
-  const lines = result.split("\n");
+  const lines = result.split('\n');
   let mindent = null;
   lines.forEach(l => {
     let m = l.match(/^(\s+)\S+/);
@@ -40,14 +40,14 @@ var dedent = function(strings, ...values) {
   });
 
   if (mindent !== null) {
-    result = lines.map(l => l[0] === " " ? l.slice(mindent) : l).join("\n");
+    result = lines.map(l => l[0] === ' ' ? l.slice(mindent) : l).join('\n');
   }
 
   // dedent eats leading and trailing whitespace too
   result = result.trim();
 
   // handle escaped newlines at the end to ensure they don't get stripped too
-  return result.replace(/\\n/g, "\n");
+  return result.replace(/\\n/g, '\n');
 };
 
 module.exports = {

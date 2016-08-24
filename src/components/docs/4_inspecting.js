@@ -1,9 +1,9 @@
 'use strict';
-var React = require('react');
-var Slide = require('../component_slider/slide');
-var Markdown = require('./markdown');
-var {CodeBlock, Prompt, Output} = require('./codeblock');
-var FileBlock = require('./fileblock');
+import React from 'react';
+import Slide from '../component_slider/slide';
+import Markdown from './markdown';
+import { CodeBlock, Prompt, Output } from './codeblock';
+import FileBlock from './fileblock';
 
 module.exports = React.createClass ({
     render() {
@@ -129,35 +129,38 @@ module.exports = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`kubectl create -f https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml`}
+              {`
+                kubectl create \\
+                -f https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
+              `}
             </Prompt>
           </CodeBlock>
 
           <p>Wait a few seconds and you can access the UI at:</p>
 
           <p>
-            <a href="http://go9cdgqfnr.giantswarm-kaas.io/ui/">http://go9cdgqfnr.giantswarm-kaas.io/ui/</a>
+            <a href='http://go9cdgqfnr.giantswarm-kaas.io/ui/'>http://go9cdgqfnr.giantswarm-kaas.io/ui/</a>
           </p>
 
-          <p>We recommend to <a href="https://blog.giantswarm.io/getting-started-with-a-local-kubernetes-environment/" target="_blank">choose a local development environment</a> so you can test your apps before deploying to your Giant Swarm cluster. </p>
+          <p>We recommend to <a href='https://blog.giantswarm.io/getting-started-with-a-local-kubernetes-environment/' target='_blank'>choose a local development environment</a> so you can test your apps before deploying to your Giant Swarm cluster. </p>
 
-          <p>If you have not done so already, you should get acquainted with the <a href="https://blog.giantswarm.io/understanding-basic-kubernetes-concepts-i-introduction-to-pods-labels-replicas/" target="_blank">basic concepts of Kubernetes</a>.</p>
+          <p>If you have not done so already, you should get acquainted with the <a href='https://blog.giantswarm.io/understanding-basic-kubernetes-concepts-i-introduction-to-pods-labels-replicas/' target='_blank'>basic concepts of Kubernetes</a>.</p>
 
           <h3>Further Reading</h3>
 
           <ul>
-            <li><a href="http://kubernetes.io/docs/" target="_blank">Official Kubernetes Documentation</a></li>
+            <li><a href='http://kubernetes.io/docs/' target='_blank'>Official Kubernetes Documentation</a></li>
             <li>
               Useful Primitives
               <ul>
-                <li><a href="http://kubernetes.io/docs/user-guide/pods/" target="_blank">Pods</a></li>
-                <li><a href="http://kubernetes.io/docs/user-guide/labels/" target="_blank">Labels & Selectors</a></li>
-                <li><a href="http://kubernetes.io/docs/user-guide/replicasets/" target="_blank">Replica Sets</a></li>
-                <li><a href="http://kubernetes.io/docs/user-guide/deployments/" target="_blank">Deployments</a></li>
-                <li><a href="http://kubernetes.io/docs/user-guide/services/" target="_blank">Services</a></li>
-                <li><a href="http://kubernetes.io/docs/user-guide/secrets/" target="_blank">Secrets</a></li>
-                <li><a href="http://kubernetes.io/docs/user-guide/namespaces/" target="_blank">Namespaces</a></li>
-                <li><a href="https://github.com/kubernetes/kubernetes/blob/release-1.2/cluster/addons/dns/README.md" target="_blank">DNS</a></li>
+                <li><a href='http://kubernetes.io/docs/user-guide/pods/' target='_blank'>Pods</a></li>
+                <li><a href='http://kubernetes.io/docs/user-guide/labels/' target='_blank'>Labels & Selectors</a></li>
+                <li><a href='http://kubernetes.io/docs/user-guide/replicasets/' target='_blank'>Replica Sets</a></li>
+                <li><a href='http://kubernetes.io/docs/user-guide/deployments/' target='_blank'>Deployments</a></li>
+                <li><a href='http://kubernetes.io/docs/user-guide/services/' target='_blank'>Services</a></li>
+                <li><a href='http://kubernetes.io/docs/user-guide/secrets/' target='_blank'>Secrets</a></li>
+                <li><a href='http://kubernetes.io/docs/user-guide/namespaces/' target='_blank'>Namespaces</a></li>
+                <li><a href='https://github.com/kubernetes/kubernetes/blob/release-1.2/cluster/addons/dns/README.md' target='_blank'>DNS</a></li>
               </ul>
             </li>
           </ul>

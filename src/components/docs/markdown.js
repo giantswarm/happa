@@ -1,6 +1,6 @@
 'use strict';
-var React = require('react');
-var marked = require('marked');
+import React from 'react';
+import marked from 'marked';
 
 module.exports = React.createClass ({
   rawMarkup: function() {

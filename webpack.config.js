@@ -42,12 +42,16 @@ module.exports = {
     preLoaders: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loader: 'jsxhint'
+      loader: 'eslint-loader'
     }],
     loaders: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loaders: ['react-hot', 'babel']
+      loader: 'babel',
+      query: {
+        presets: ['es2015'],
+        plugins: ['transform-react-jsx']
+      }
     }, {
       test: /\.scss/,
       loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'

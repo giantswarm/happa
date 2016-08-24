@@ -49,6 +49,8 @@ services:
       - "9999:9999"
   giantswarmmockapi:
     image: registry.giantswarm.io/giantswarm/mock-api:latest
+    environment:
+      DELAY_MS: 200
     ports:
       - "9000:8000"
 

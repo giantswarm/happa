@@ -1,39 +1,46 @@
-"use strict";
+// FlashMessages
+//
+// Shows all flash messages in the flash message store
+// And provides a way to dismiss them.
+//
 
-var flashActions            = require('../../actions/flash_message_actions');
-var flashStore              = require('../../stores/flash_message_store');
-var Reflux                  = require('reflux');
-var React                   = require('react');
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-var _                       = require('underscore');
+'use strict';
 
-module.exports = React.createClass({
+import FlashMessage from './flash_message';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import _ from 'underscore';
+import { connect } from 'react-redux';
+import { flashRemove } from '../../actions/flashMessageActions';
+
+var FlashMessages = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
 
-  mixins: [Reflux.connect(flashStore,'flashMessages'), Reflux.listenerMixin],
-
   makeFlashComponent: function(flashMessage) {
-    return(
-      <div className={"flash-messages--flash-message" + " flash-messages--" + flashMessage.class} key={flashMessage.key}>
-        {flashMessage.message}
-        <i className="fa fa-times flash-messages--dismiss" aria-hidden="true" onClick={this.dismissFlash.bind(this, flashMessage)}></i>
-      </div>
-    );
+    return <FlashMessage message={flashMessage.message} key={flashMessage.key} class={flashMessage.class} onDismiss={this.dismissFlash.bind(this, flashMessage)}/>;
   },
 
   dismissFlash: function(flashMessage) {
-    flashActions.remove(flashMessage);
+    this.props.dispatch(flashRemove(flashMessage));
   },
 
   render: function() {
     return (
-      <div className="flash-messages--container">
-        <ReactCSSTransitionGroup transitionName='flash-messages--transition' transitionEnterTimeout={200} transitionLeaveTimeout={1}>
-          { _.map(flashStore.getAll(), this.makeFlashComponent) }
+      <div className='flash-messages--container'>
+        <ReactCSSTransitionGroup transitionName='flash-messages--transition' transitionEnterTimeout={200} transitionLeaveTimeout={200}>
+          { _.map(this.props.flashMessages.toArray(), this.makeFlashComponent) }
         </ReactCSSTransitionGroup>
       </div>
     );
   }
 });
+
+function mapStateToProps(state, ownProps) {
+  return {
+    flashMessages: state.flashMessages
+  };
+}
+
+module.exports = connect(mapStateToProps)(FlashMessages);

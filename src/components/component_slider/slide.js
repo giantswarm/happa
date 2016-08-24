@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Slide
 //
@@ -9,12 +9,12 @@
 // </Slide>
 //
 
-var React = require('react');
+import React from 'react';
 
 module.exports = React.createClass ({
   render() {
     return (
-      <div className="component_slider--step">
+      <div className='component_slider--step'>
         {this.props.children}
       </div>
     );

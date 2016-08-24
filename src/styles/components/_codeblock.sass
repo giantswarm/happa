@@ -12,13 +12,31 @@
 
   pre
     background-color: #333333
-    padding: 7px 13px
+    padding: 9px 13px
     border-radius: 10px
     position: relative
     transition: background-color 0.02s linear
+    border: none
+    line-height: auto
 
   .content
-    overflow-x: scroll
+    overflow-x: auto
+    white-space: pre
+
+  .content::-webkit-scrollbar
+    background-color: #333333
+    border-radius: 5px
+
+  .content::-webkit-scrollbar-track
+    background-color: darken(#3d3d3d, 5%)
+    border-radius: 5px
+
+  .content::-webkit-scrollbar-thumb
+    background-color: lighten(#3d3d3d, 5%)
+    border-radius: 5px
+
+  .content::-webkit-scrollbar-corner
+  .content::-webkit-resizer
 
   .codeblock--filename
     font-family: "Inconsolata"
