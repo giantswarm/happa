@@ -6,6 +6,8 @@ import Gravatar from 'react-gravatar';
 import {connect} from 'react-redux';
 import Button from '../button';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
+import * as UserActions from '../../actions/userActions';
+import { bindActionCreators } from 'redux';
 
 var AccountSettings = React.createClass({
   getInitialState: function() {
@@ -64,6 +66,9 @@ var AccountSettings = React.createClass({
         changeEmailSuccess: true
       });
     })
+    .then(() => {
+      return this.props.actions.refreshUserInfo();
+    })
     .catch((error) => {
       this.setState({
         changeEmailFormSubmitting: false,
@@ -96,11 +101,7 @@ var AccountSettings = React.createClass({
                 if (this.state.changeEmailSuccess) {
                   return (
                     <div className='flash-messages--flash-message flash-messages--success'>
-                      We have just sent an email to <b>{this.state.newEmail}</b>
-                      &nbsp;
-                      with a confirmation link. Please click that link to confirm
-                      the email change. Until then, your old address will remain
-                      in place.
+                      Your e-mail has now been set to <b>{this.state.newEmail}</b>.
                     </div>
                   );
                 } else if (this.state.changeEmailFormVisible) {
@@ -114,7 +115,8 @@ var AccountSettings = React.createClass({
                         <Button type='submit'
                                 bsStyle='primary'
                                 disabled={!this.state.changeEmailFormValid}
-                                loading={this.state.changeEmailFormSubmitting}>Confirm New Email</Button>
+                                loading={this.state.changeEmailFormSubmitting}>Set New Email</Button>
+                        <small>This will set your e-mail immediately.</small>
                       </form>
                       {
                         this.state.changeEmailFormError
@@ -270,4 +272,11 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-module.exports = connect(mapStateToProps)(AccountSettings);
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(UserActions, dispatch),
+    dispatch: dispatch
+  };
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(AccountSettings);
