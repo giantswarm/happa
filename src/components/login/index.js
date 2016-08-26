@@ -89,11 +89,19 @@ var Login = React.createClass({
           authenticating: false
         });
 
-        this.props.dispatch(flashAdd({
-          message: 'Error',
-          class: 'danger',
-          ttl: 3000
-        }));
+        if (error.status === 400) {
+          this.props.dispatch(flashAdd({
+            message: <span><b>Could not log in.</b><br/> Credentials appear to be incorrect.</span>,
+            class: 'danger'
+          }));
+        } else {
+          this.props.dispatch(flashAdd({
+            message: 'Could not log in. Something went wrong. Please try again later or contact support: support@giantswarm.io',
+            class: 'danger'
+          }));
+        }
+
+
       });
     }
   },
