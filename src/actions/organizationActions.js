@@ -8,8 +8,6 @@ import { flashAdd } from './flashMessageActions';
 import { clusterLoadPartialDetails } from './clusterActions';
 import React from 'react';
 
-var giantSwarm = new GiantSwarm.Client();
-
 export function organizationSelect(orgId) {
   return function(dispatch, getState) {
     dispatch(flashAdd({
@@ -50,6 +48,9 @@ export function organizationsLoadSuccess(organizations) {
 
 export function organizationsLoad() {
   return function(dispatch, getState) {
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
     var alreadyFetching = getState().entities.organizations.isFetching;
 
     if (alreadyFetching) {
@@ -128,6 +129,9 @@ export function organizationDeleteConfirm(orgId) {
 
     var deletingSelectedOrganization = orgId === getState().app.selectedOrganization;
 
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
     return giantSwarm.deleteOrganization({
       organizationName: orgId
     })
@@ -168,8 +172,11 @@ export function organizationCreate() {
 }
 
 export function organizationCreateConfirm(orgId) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({type: types.ORGANIZATION_CREATE_CONFIRM});
+
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
 
     return giantSwarm.createOrganization({
       organizationName: orgId
@@ -211,6 +218,9 @@ export function organizationAddMemberConfirm(orgId, username) {
       username: username
     });
 
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
     return giantSwarm.addMemberToOrganization({
       organizationName: orgId,
       username: username
@@ -239,12 +249,15 @@ export function organizationAddMemberConfirm(orgId, username) {
 
 
 export function organizationRemoveMemberConfirm(orgId, username) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({
       type: types.ORGANIZATION_REMOVE_MEMBER_CONFIRM,
       orgId: orgId,
       username: username
     });
+
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
 
     return giantSwarm.removeMemberFromOrganization({
       organizationName: orgId,

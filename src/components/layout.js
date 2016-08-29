@@ -29,32 +29,36 @@ var Layout = React.createClass ({
             <Link to='docs' activeClassName='active'>Getting Started</Link>
 
             <div className='subactions'>
-              {
-                (_.map(this.props.organizations.items, (x) => {return x.id;}).length === 0 && ! this.props.organizations.isFetching) ?
-                <DropdownButton title={<span><span className='label label-default'>ORG</span>No organizations</span>} key='2' id='org_dropdown'>
-                  <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
-                </DropdownButton>
-                :
-                <DropdownButton title={<span><span className='label label-default'>ORG</span> {this.props.selectedOrganization}</span>} key='2' id='org_dropdown'>
-                  <MenuItem componentClass={Link} href='/organizations/giantswarm' to={'/organizations/' + this.props.selectedOrganization}>Details for {this.props.selectedOrganization}</MenuItem>
-                  <MenuItem divider />
-                  <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
-                  <MenuItem divider />
-                  <MenuItem header>Switch Organization</MenuItem>
-                  {
+              <div className='organization_dropdown'>
+                {
+                  (_.map(this.props.organizations.items, (x) => {return x.id;}).length === 0 && ! this.props.organizations.isFetching) ?
+                  <DropdownButton title={<span>>No organizations</span>} key='2' id='org_dropdown'>
+                    <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
+                  </DropdownButton>
+                  :
+                  <DropdownButton title={<span><span className='label label-default'>ORG</span> {this.props.selectedOrganization}</span>} key='2' id='org_dropdown'>
+                    <MenuItem componentClass={Link} href='/organizations/giantswarm' to={'/organizations/' + this.props.selectedOrganization}>Details for {this.props.selectedOrganization}</MenuItem>
+                    <MenuItem divider />
+                    <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
+                    <MenuItem divider />
+                    <MenuItem header>Switch Organization</MenuItem>
+                    {
 
-                    _.map(_.sortBy(this.props.organizations.items, 'id'), (org) => {
-                      return <MenuItem onSelect={this.selectOrganization} eventKey={org.id} key={org.id}>{org.id}</MenuItem>;
-                    })
-                  }
+                      _.map(_.sortBy(this.props.organizations.items, 'id'), (org) => {
+                        return <MenuItem onSelect={this.selectOrganization} eventKey={org.id} key={org.id}>{org.id}</MenuItem>;
+                      })
+                    }
+                  </DropdownButton>
+                }
+              </div>
+              &nbsp;
+              &nbsp;
+              <div className="user_dropdown">
+                <DropdownButton title={<span>{this.props.user.email}</span>} key='1' id='user_dropdown'>
+                  <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
+                  <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
                 </DropdownButton>
-              }
-              &nbsp;
-              &nbsp;
-              <DropdownButton title={<span><span className='label label-default'>USER</span> {this.props.user.email}</span>} key='1' id='user_dropdown'>
-                <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
-                <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
-              </DropdownButton>
+              </div>
             </div>
           </div>
 

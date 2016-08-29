@@ -9,9 +9,7 @@ module.exports = React.createClass({
     return (
       <div>
         <div className='row'>
-          <div className='col-3'>
-          </div>
-          <div className='col-9'>
+          <div className='col-12'>
             <h1>Your Account Settings</h1>
           </div>
         </div>

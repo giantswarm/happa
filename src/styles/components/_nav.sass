@@ -36,3 +36,104 @@ nav
 
     &:hover
       color: #fff
+
+  .user_dropdown, .organization_dropdown
+    display: inline
+
+    ul.dropdown-menu
+      background-color: lighten($darkblue, 5%)
+      border: none
+      border-radius: 5px
+
+      >li
+        >a
+          color: #ddd
+
+          &:hover
+            background-color: transparent
+            color: #fff
+
+    .dropdown-toggle.btn-default
+      background-color: transparent
+      border: none
+      color: #ccd
+
+
+      &:active
+        background-color: transparent
+        color: #ccd
+        box-shadow: none
+        text-decoration: underline
+
+      &:hover
+        background-color: transparent
+        color: #fff
+        text-decoration: underline
+
+      &:focus
+        background-color: transparent
+        color: #ccd
+
+      &:active:focus
+        color: #fff
+
+      ul.dropdown-menu
+        background-color: $darkblue
+        box-shadow: none
+
+    .open
+      .dropdown-toggle.btn-default
+        background-color: transparent
+        color: #fff
+        box-shadow: none
+
+  .organization_dropdown
+    .dropdown-toggle.btn-default
+      background-color: lighten($darkblue, 2%)
+      border-radius: 5px
+      border-top: 1px solid lighten($darkblue, 8%)
+      border-bottom: 1px solid darken($darkblue, 8%)
+      position: relative
+      padding-left: 50px
+
+      .label
+        margin-right: 10px
+        position: absolute
+        top: 0px
+        bottom: 0px
+        left: 0px
+        line-height: 29px
+        border-radius: 0px
+        border-top-left-radius: 5px
+        border-bottom-left-radius: 5px
+        background-color: lighten($darkblue, 8%)
+        padding-left: 10px
+        padding-right: 10px
+        font-weight: normal
+        letter-spacing: 0.5px
+
+      &:active
+        text-decoration: none
+        background-color: lighten($darkblue, 1%)
+
+      &:focus
+        background-color: lighten($darkblue, 1%)
+
+      &:hover
+        text-decoration: none
+        background-color: lighten($darkblue, 3%)
+
+    ul.dropdown-menu
+      .dropdown-header
+        color: #ccc
+
+      .divider
+        background-color: transparent
+        border-bottom: 1px solid lighten($darkblue, 9%)
+        border-top: 1px solid darken($darkblue, 1%)
+
+    .open
+      .dropdown-toggle.btn-default
+        background-color: lighten($darkblue, 1%)
+        border-bottom: 1px solid lighten($darkblue, 8%)
+        border-top: 1px solid darken($darkblue, 8%)
