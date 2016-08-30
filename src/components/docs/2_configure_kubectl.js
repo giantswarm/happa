@@ -10,13 +10,35 @@ import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 import { browserHistory } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
+import Button from '../button';
 
 var ConfigKubeCtl = React.createClass ({
 
     getInitialState: function() {
       return {
-        loading: true
+        loading: true,
+        keyPair: {
+          generated: false,
+          generating: false
+        }
       };
+    },
+
+    generateKeyPair: function() {
+      this.setState({
+        keyPair: {
+          generating: true
+        }
+      });
+
+      setTimeout(() => {
+        this.setState({
+          keyPair: {
+            generating: false,
+            generated: true
+          }
+        });
+      }, 3000);
     },
 
     componentDidMount: function() {
@@ -100,12 +122,23 @@ var ConfigKubeCtl = React.createClass ({
       return (
         <Slide>
           <h1>Configure kubectl for your cluster</h1>
-          <p>Here we set up a cluster configuration for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster.</p>
-          <p>Everything you need for this step is contained in the <code>giantswarm-kubeconfig</code> below:</p>
+          <p><strong>Generate and download a cluster configuration file for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster, including certificates for a unique service account. The Kubernetes service account is the identity you use when working with your cluster using <code>kubectl</code>.</strong></p>
+          <p>Note that you can <strong>only</strong> access the full kubeconfig file here <b>once</b>, so please download and store your file away safely immediately after generating it.</p>
+          <p><strong>Should you ever lose access to the kubeconfig generated here, you can generate a new one. Your previously generated key and certificate will continue to exist, so you might want to delete it.</strong></p>
 
-          { this.kubeConfig() }
+          {
+            this.state.keyPair.generated
+            ?
+              <h1>kubeconfig</h1>
+              // this.kubeConfig()
+            :
+              <div className="create-key-pair">
+                <p><strong>Use the button below to create new service account credentials and access your kubeconfig file</strong></p>
+                <Button bsStyle="primary" loading={this.state.keyPair.generating} onClick={this.generateKeyPair}>Create cluster configuration</Button>
+              </div>
+          }
 
-          <p>Please save that file to your file system with the name <code>giantswarm-kubeconfig</code>.</p>
+          <p>Once generated, please save that file to your file system with the name <code>giantswarm-kubeconfig</code>.</p>
 
           <p>Be aware that the file contains your client certificates, so treat this file as sensitive data and make sure it&apos;s only accessible to authorized users.</p>
 
