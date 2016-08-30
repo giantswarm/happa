@@ -116,7 +116,6 @@ var AccountSettings = React.createClass({
                                 bsStyle='primary'
                                 disabled={!this.state.changeEmailFormValid}
                                 loading={this.state.changeEmailFormSubmitting}>Set New Email</Button>
-                        <small>This will set your e-mail immediately.</small>
                       </form>
                       {
                         this.state.changeEmailFormError
