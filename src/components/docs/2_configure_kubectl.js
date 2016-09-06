@@ -11,6 +11,7 @@ import _ from 'underscore';
 import { browserHistory } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
 import Button from '../button';
+import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 
 var ConfigKubeCtl = React.createClass ({
 
@@ -19,7 +20,8 @@ var ConfigKubeCtl = React.createClass ({
         loading: true,
         keyPair: {
           generated: false,
-          generating: false
+          generating: false,
+          data: null
         }
       };
     },
@@ -31,14 +33,26 @@ var ConfigKubeCtl = React.createClass ({
         }
       });
 
-      setTimeout(() => {
+      var authToken = this.props.authToken;
+      var giantSwarm = new GiantSwarm.Client(authToken);
+
+      giantSwarm.createClusterKeyPair({
+        clusterId: this.props.cluster.id,
+        description: 'First key pair generated in the Giant Swarm client'
+      })
+      .then((response) => {
+        console.log(response);
         this.setState({
           keyPair: {
             generating: false,
-            generated: true
+            generated: true,
+            data: response.result
           }
         });
-      }, 3000);
+      })
+      .catch((error) => {
+        throw(error);
+      });
     },
 
     componentDidMount: function() {
@@ -99,19 +113,19 @@ var ConfigKubeCtl = React.createClass ({
             kind: Config
             clusters:
              - cluster:
-                 certificate-authority-data: ${this.props.cluster.certificate_authority_data}
+                 certificate-authority-data: ${this.state.keyPair.data.certificate_authority_data}
                  server: ${this.props.cluster.api_endpoint}
                name: ${this.props.cluster.name}
             contexts:
              - context:
                  cluster: ${this.props.cluster.name}
-                 user: ${this.props.cluster.service_accounts[0].name}
+                 user: "giantswarm-default"
                name: giantswarm-default
             users:
-             - name: ${this.props.cluster.service_accounts[0].name}
+             - name: "giantswarm-default"
                user:
-                 client-certificate-data: ${this.props.cluster.service_accounts[0].client_certificate_data}
-                 client-key-data: ${this.props.cluster.service_accounts[0].client_key_data}
+                 client-certificate-data: ${this.state.keyPair.data.client_certificate_data}
+                 client-key-data: ${this.state.keyPair.data.client_key_data}
             `}
           </FileBlock>
         );
@@ -179,7 +193,8 @@ function mapStateToProps(state, ownProps) {
   var firstCluster = state.entities.clusters.items[firstClusterId];
 
   return {
-    cluster: firstCluster
+    cluster: firstCluster,
+    user: state.app.loggedInUser
   };
 }
 

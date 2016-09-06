@@ -8,6 +8,7 @@ var firstTime = true;
 
 export default function appReducer(state = {
     selectedOrganization: 'not-yet-loaded',
+    firstLoadComplete: false,
     loggedInUser: JSON.parse(localStorage.getItem('user'))
   }, action = undefined) {
   switch(action.type) {
@@ -61,7 +62,8 @@ export default function appReducer(state = {
           // The user had an organization selected, and it still exists.
           // So we stay on it.
           return Object.assign({}, state, {
-            selectedOrganization: previouslySelectedOrganization
+            selectedOrganization: previouslySelectedOrganization,
+            firstLoadComplete: true
           });
 
         } else {
@@ -71,7 +73,8 @@ export default function appReducer(state = {
           localStorage.setItem('app.selectedOrganization', firstOrganization);
 
           return Object.assign({}, state, {
-            selectedOrganization: firstOrganization
+            selectedOrganization: firstOrganization,
+            firstLoadComplete: true
           });
 
         }
