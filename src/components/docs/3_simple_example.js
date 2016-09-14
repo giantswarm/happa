@@ -87,9 +87,9 @@ var SimpleExample = React.createClass ({
             labels:
               app: helloworld
           spec:
+            type: NodePort
             ports:
-            - port: 80
-              targetPort: 8080
+            - port: 8080
             selector:
               app: helloworld
           ---
@@ -123,7 +123,7 @@ var SimpleExample = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`kubectl create -f helloworld-manifest.yaml`}
+              {`kubectl create --filename helloworld-manifest.yaml`}
             </Prompt>
             <Output>
               {`
