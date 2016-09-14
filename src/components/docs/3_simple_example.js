@@ -64,7 +64,7 @@ var SimpleExample = React.createClass ({
       } else if (this.state.loading) {
         return 'Figuring out the url...';
       } else {
-        var url = `${this.props.cluster.api_endpoint}/api/v1/proxy/namespaces/helloworld/services/helloworld/`;
+        var url = `${this.props.cluster.api_endpoint}/api/v1/proxy/namespaces/default/services/helloworld/`;
         return (
           <a href={url} target='_blank'>{url}</a>
         );
@@ -123,10 +123,7 @@ var SimpleExample = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`
-                kubectl create namespace helloworld
-                kubectl create --namespace helloworld --filename helloworld-manifest.yaml
-              `}
+              {`kubectl create --filename helloworld-manifest.yaml`}
             </Prompt>
             <Output>
               {`
