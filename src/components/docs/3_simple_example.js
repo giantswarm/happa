@@ -89,7 +89,7 @@ var SimpleExample = React.createClass ({
           spec:
             type: NodePort
             ports:
-            - port: 80
+            - port: 8080
             selector:
               app: helloworld
           ---
