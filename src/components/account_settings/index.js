@@ -2,81 +2,12 @@
 
 import React from 'react';
 import { Link } from 'react-router';
-import Gravatar from 'react-gravatar';
 import {connect} from 'react-redux';
-import Button from '../button';
-import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import * as UserActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
+import ChangeEmailForm from './change_email_form';
 
 var AccountSettings = React.createClass({
-  getInitialState: function() {
-    return {
-      changeEmailFormVisible: false,
-      changeEmailFormValid: false,
-      changeEmailFormSubmitting: false,
-      changeEmailSuccess: false
-    };
-  },
-
-  revealChangeEmailForm: function() {
-    this.setState({
-      changeEmailFormVisible: true
-    }, () => {
-      this.refs.new_email.focus();
-    });
-  },
-
-  validateEmail: function(e) {
-    var email = e.target.value;
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (re.test(email)) {
-      this.setState({
-        changeEmailFormValid: true,
-        changeEmailFormError: false,
-        newEmail: email
-      });
-    } else {
-      this.setState({
-        changeEmailFormValid: false,
-        changeEmailFormError: false,
-        newEmail: email
-      });
-    };
-  },
-
-  changeEmail: function(e) {
-    e.preventDefault();
-
-    this.setState({
-      changeEmailFormSubmitting: true,
-      changeEmailFormError: false
-    });
-
-    var authToken = this.props.user.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
-
-    giantSwarm.changeEmail({
-      old_email: this.props.user.email,
-      new_email: this.state.newEmail
-    })
-    .then((response) => {
-      this.setState({
-        changeEmailFormSubmitting: false,
-        changeEmailSuccess: true
-      });
-    })
-    .then(() => {
-      return this.props.actions.refreshUserInfo();
-    })
-    .catch((error) => {
-      this.setState({
-        changeEmailFormSubmitting: false,
-        changeEmailFormError: true
-      });
-    });
-  },
-
   render: function() {
     return (
       <div>
@@ -96,58 +27,7 @@ var AccountSettings = React.createClass({
               aware that it is also visible to other members of your organization.
             </p>
 
-            {
-              (() => {
-                if (this.state.changeEmailSuccess) {
-                  return (
-                    <div className='flash-messages--flash-message flash-messages--success'>
-                      Your e-mail has now been set to <b>{this.state.newEmail}</b>.
-                    </div>
-                  );
-                } else if (this.state.changeEmailFormVisible) {
-                  return (
-                    <div>
-                      <form className="change_email_form" onSubmit={this.changeEmail}>
-                        <div className='textfield'>
-                          <label>New Email</label>
-                          <input ref='new_email' onChange={this.validateEmail} type="text"/>
-                        </div>
-                        <Button type='submit'
-                                bsStyle='primary'
-                                disabled={!this.state.changeEmailFormValid}
-                                loading={this.state.changeEmailFormSubmitting}>Set New Email</Button>
-                      </form>
-                      {
-                        this.state.changeEmailFormError
-                        ?
-                          <div className='flash-messages--flash-message flash-messages--danger'>
-                            Something went wrong while trying to update your e-mail address.
-                            Perhaps our servers are down. Could you try again later,
-                            or contact support otherwise:
-                            &nbsp;
-                            <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
-                          </div>
-                        :
-                          null
-                      }
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div>
-                      <p>
-                        <span className='email-gravatar'>
-                          <Gravatar email={this.props.user.email} https size={100} default='mm' />
-                        </span>
-                        <span className='email-email'>{this.props.user.email}</span>
-                      </p>
-                      <Button bsStyle='primary' onClick={this.revealChangeEmailForm}>Replace Email</Button>
-                    </div>
-                  );
-                }
-              })()
-            }
-
+            <ChangeEmailForm user={this.props.user} actions={this.props.actions} />
           </div>
         </div>
 
