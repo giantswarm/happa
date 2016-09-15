@@ -138,9 +138,7 @@ var Login = React.createClass({
                        onChange={this.updatePassword} />
               </div>
 
-              <div className='progress_button--container'>
-                <Button type='submit' bsStyle='primary' loading={this.state.authenticating} onClick={this.logIn}>Log in</Button>
-              </div>
+              <Button type='submit' bsStyle='primary' loading={this.state.authenticating} onClick={this.logIn}>Log in</Button>
               <Link to='/forgot_password'>Forgot your password?</Link>
             </form>
 
