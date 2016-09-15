@@ -19,7 +19,7 @@ module.exports = {
   debug: true,
   devtool: false,
   entry: [
-      'webpack/hot/only-dev-server',
+      'webpack/hot/dev-server',
       './src/components/app.js'
   ],
 

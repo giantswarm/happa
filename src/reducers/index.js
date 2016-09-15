@@ -28,7 +28,7 @@ main_store.js
   app: {
     selectedOrganization: '',
     isConnected: bool, // true if the app has connectivity to the internet
-    isFetching: bool, // true if the app is making an API request
+    firstLoadComplete: false // true after the first load is completed
     loggedInUser: {
       email: '',
       username: '',

@@ -10,13 +10,49 @@ import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 import { browserHistory } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
+import Button from '../button';
+import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 
 var ConfigKubeCtl = React.createClass ({
 
     getInitialState: function() {
       return {
-        loading: true
+        loading: true,
+        keyPair: {
+          generated: false,
+          generating: false,
+          data: null
+        }
       };
+    },
+
+    generateKeyPair: function() {
+      this.setState({
+        keyPair: {
+          generating: true
+        }
+      });
+
+      var authToken = this.props.authToken;
+      var giantSwarm = new GiantSwarm.Client(authToken);
+
+      giantSwarm.createClusterKeyPair({
+        clusterId: this.props.cluster.id,
+        description: 'First key pair generated in the Giant Swarm client'
+      })
+      .then((response) => {
+        console.log(response);
+        this.setState({
+          keyPair: {
+            generating: false,
+            generated: true,
+            data: response.result
+          }
+        });
+      })
+      .catch((error) => {
+        throw(error);
+      });
     },
 
     componentDidMount: function() {
@@ -77,19 +113,19 @@ var ConfigKubeCtl = React.createClass ({
             kind: Config
             clusters:
              - cluster:
-                 certificate-authority-data: ${this.props.cluster.certificate_authority_data}
+                 certificate-authority-data: ${this.state.keyPair.data.certificate_authority_data}
                  server: ${this.props.cluster.api_endpoint}
                name: ${this.props.cluster.name}
             contexts:
              - context:
                  cluster: ${this.props.cluster.name}
-                 user: ${this.props.cluster.service_accounts[0].name}
+                 user: "giantswarm-default"
                name: giantswarm-default
             users:
-             - name: ${this.props.cluster.service_accounts[0].name}
+             - name: "giantswarm-default"
                user:
-                 client-certificate-data: ${this.props.cluster.service_accounts[0].client_certificate_data}
-                 client-key-data: ${this.props.cluster.service_accounts[0].client_key_data}
+                 client-certificate-data: ${this.state.keyPair.data.client_certificate_data}
+                 client-key-data: ${this.state.keyPair.data.client_key_data}
             `}
           </FileBlock>
         );
@@ -100,12 +136,21 @@ var ConfigKubeCtl = React.createClass ({
       return (
         <Slide>
           <h1>Configure kubectl for your cluster</h1>
-          <p>Here we set up a cluster configuration for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster.</p>
-          <p>Everything you need for this step is contained in the <code>giantswarm-kubeconfig</code> below:</p>
+          <p>Generate and download a cluster configuration file for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster, including a key pair for administrative access.</p>
+          <p>Please download and store your file away safely immediately after generating it. You can always come back here and generate a new configuration file, containing a new key pair.</p>
 
-          { this.kubeConfig() }
+          {
+            this.state.keyPair.generated
+            ?
+              this.kubeConfig()
+            :
+              <div className="create-key-pair">
+                <p><strong>Use the button below to create new service account credentials and access your kubeconfig file</strong></p>
+                <Button bsStyle="primary" loading={this.state.keyPair.generating} onClick={this.generateKeyPair}>Create cluster configuration</Button>
+              </div>
+          }
 
-          <p>Please save that file to your file system with the name <code>giantswarm-kubeconfig</code>.</p>
+          <p>Once generated, please save that file to your file system with the name <code>giantswarm-kubeconfig</code>.</p>
 
           <p>Be aware that the file contains your client certificates, so treat this file as sensitive data and make sure it&apos;s only accessible to authorized users.</p>
 
@@ -147,7 +192,8 @@ function mapStateToProps(state, ownProps) {
   var firstCluster = state.entities.clusters.items[firstClusterId];
 
   return {
-    cluster: firstCluster
+    cluster: firstCluster,
+    user: state.app.loggedInUser
   };
 }
 
