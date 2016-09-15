@@ -136,9 +136,8 @@ var ConfigKubeCtl = React.createClass ({
       return (
         <Slide>
           <h1>Configure kubectl for your cluster</h1>
-          <p>Generate and download a cluster configuration file for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster, including certificates for a unique service account. The Kubernetes service account is the identity you use when working with your cluster using <code>kubectl</code>.</p>
-          <p>Note that you can <strong>only</strong> access the full kubeconfig file here <b>once</b>, so please download and store your file away safely immediately after generating it.</p>
-          <p>Should you ever lose access to the kubeconfig generated here, you can generate a new one. Your previously generated key and certificate will continue to exist, so you might want to delete it.</p>
+          <p>Generate and download a cluster configuration file for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster, including a key pair for administrative access.</p>
+          <p>Please download and store your file away safely immediately after generating it. You can always come back here and generate a new configuration file, containing a new key pair.</p>
 
           {
             this.state.keyPair.generated
