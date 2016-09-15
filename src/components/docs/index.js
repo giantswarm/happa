@@ -23,7 +23,7 @@ module.exports = React.createClass({
 
   componentDidMount() {
     if (this.props.params.pageId) {
-      this.goToSlide(this.props.params.pageId);
+      this.goToSlide(this.props.params.pageId, this.props.params.clusterId);
     }
   },
 
@@ -35,8 +35,8 @@ module.exports = React.createClass({
     }
   },
 
-  goToSlide(slideId) {
-    this.context.router.push('/docs/' + slideId);
+  goToSlide(slideId, clusterId) {
+    this.context.router.push('/docs/' + slideId + '/' + clusterId);
 
     var slideIndex = _.findIndex(this.slides(), slide => {
       return (slide.key === slideId);

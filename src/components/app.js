@@ -18,6 +18,7 @@ import configureStore from '../stores/configureStore';
 import organizationDetail from './organizations/detail';
 import accountSettings from './account_settings';
 import wip from './wip';
+import Home from './home';
 
 require('normalize.css');
 require('../styles/app.scss');
@@ -47,11 +48,14 @@ render(
       <Route path = "/signup/:contactId/:token" component={signup} />
 
       <Route name="Home" path="/" component={Layout} onEnter={requireAuth}>
-        <IndexRoute component={wip}/>
+        <IndexRoute component={Home}/>
 
         <Route name='Getting Started' path="docs" >
           <IndexRoute component={docs} />
-          <Route name="docs.page" path ="/docs/:pageId" component={docs}/>
+
+          <Route name="docs.page" path ="/docs/:pageId" component={docs}>
+            <Route path="/docs/:pageId/:clusterId" component={docs} />
+          </Route>
         </Route>
 
         <Route name="Organizations" path="organizations">

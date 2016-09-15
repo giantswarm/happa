@@ -1,7 +1,10 @@
+.btn
+  border-radius: 3px
+
 button, .button
   background-color: #52728a
   border: 0px
-  border-radius: 5px
+  border-radius: 3px
   color: #fff
   padding: 10px 20px
   font-weight: 400
@@ -47,3 +50,39 @@ button:disabled:hover, button:disabled
 
 .progress_button--status-indicator
   display: inline
+
+.open
+  >button.outline.dropdown-toggle.btn-default
+    background-color: $darkblue
+    color: #ccc
+    border: 1px solid #fff
+
+    &:focus, &:active, &:hover, &:active:focus, &:hover:focus, &:hover:active
+      background-color: rgba(255, 255, 255, 0.1)
+      color: #fff
+      border: 1px solid #fff
+
+button.outline
+  background-color: transparent
+  color: #ccc
+  border: 1px solid #d7d7d7
+  border-radius: 3px
+
+  &:focus, &:active, &:hover, &:active:focus, &:hover:focus, &:hover:active
+    background-color: rgba(255, 255, 255, 0.1)
+    color: #fff
+    border: 1px solid #fff
+
+.dropdown.open
+  ul.dropdown-menu
+    background-color: lighten($darkblue, 5%)
+    border: none
+    border-radius: 5px
+
+    li
+      a
+        color: #fff
+        padding: 8px 15px
+
+        &:hover, &:focus
+          background-color: lighten($darkblue, 10%)

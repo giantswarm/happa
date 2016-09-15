@@ -1,0 +1,85 @@
+.table.node-table
+  border-bottom: 0px
+  width: 100%
+
+  >thead
+    >tr
+      >th
+        border-bottom: 2px solid #989898
+
+  >tr
+    border-bottom: 0px
+
+  >tbody
+    >tr
+      >td
+        border-bottom: 0px
+        border-top: 0px
+        width: 20%
+        padding-right: 3%
+
+
+  .node-table--node-ip
+    width: 10%
+
+  .node-table--status-label
+    font-size: 14px
+    width: 10%
+
+  .node-table--status-label-running
+    color: #51c961
+
+  .node-table--node-labels
+    width: 190px
+
+  .node-table--net-in-header, .node-table--net-in-value
+    text-align: left
+    width: 10%
+
+  .node-table--net-out-header, .node-table--net-out-value
+    text-align: left
+
+  .node-table--node-label
+    background-color: #eee
+    padding: 3px 5px
+    border-radius: 3px
+    font-size: 12px
+    font-family: "Inconsolata"
+    color: #333333
+    margin-right: 5px
+    display: inline-block
+
+    &:last-child
+      margin-right: 0px
+
+  .node-table--node-ip
+    font-family: "Inconsolata"
+
+  .node-table--metric-unit
+    color: #cbcbcb
+    font-weight: 100
+
+
+.bar-chart
+  background-color: #4f6e80
+  height: 22px
+  vertical-align: middle
+  position: relative
+
+.bar-chart--bar
+  background-color: #003c78
+  height: 22px
+  position: absolute
+  top: 0px
+  z-index: 0
+  width: 0%
+  transition: width 0.4s cubic-bezier(0, -0.41, 0.19, 1.44)
+
+.bar-chart--value
+  text-align: center
+  font-size: 10px
+  line-height: 22px
+  position: absolute
+  top: 0px
+  width: 100%
+  z-index: 1

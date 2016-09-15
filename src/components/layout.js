@@ -33,7 +33,7 @@ var Layout = React.createClass ({
       return (
         <div>
           <nav>
-            <div className='main-nav col-8'>
+            <div className='main-nav col-9'>
               <a href='https://giantswarm.io' target='_blank'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
               <IndexLink to='/' activeClassName='active'>Home</IndexLink>
               <Link to='docs' activeClassName='active'>Getting Started</Link>
@@ -74,13 +74,13 @@ var Layout = React.createClass ({
             </div>
 
             <div className="breadcrumb-wrapper">
-              <div className="main col-8">
+              <div className="main col-9">
                 <Breadcrumbs routes={this.props.routes} params={this.props.params} setDocumentTitle={true}/>
               </div>
             </div>
           </nav>
 
-          <div className='main col-8'>
+          <div className='main col-9'>
             <FlashMessages />
             <Modal />
             {this.props.children}
