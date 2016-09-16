@@ -3,11 +3,14 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import BarChart from './bar_chart';
+import {connect} from 'react-redux';
 
-module.exports = React.createClass({
+var NodeRow = React.createClass({
   render: function() {
     return (
       <tr>
+        <td>{this.props.node_internal_ip}</td>
+        {/*
         <td className="node-table--node-ip">{this.props.node.ip}</td>
         <td className="node-table--status-label">
           <span className="node-table--status-label-running">RUNNING</span>
@@ -45,7 +48,20 @@ module.exports = React.createClass({
         <td>
 
         </td>
+        */}
       </tr>
     );
   }
 });
+
+function mapStateToProps(state, ownProps) {
+  return {
+    node: state.entities.nodes.items[ownProps.node_internal_ip]
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {};
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(NodeRow);

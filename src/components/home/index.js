@@ -5,8 +5,32 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {connect} from 'react-redux';
 import ClusterDashboard from './cluster_dashboard';
 import ClusterEmptyState from './cluster_empty_state';
+import * as clusterActions from '../../actions/clusterActions';
+import { bindActionCreators } from 'redux';
+import { flashAdd } from '../../actions/flashMessageActions';
+import _ from 'underscore';
 
 var Home = React.createClass({
+  componentDidMount: function() {
+    Promise.all(
+      this.props.clusters.map((cluster) => {
+        console.log(cluster.id);
+        return this.props.actions.clusterLoadDetails(cluster.id);
+      })
+    )
+    .catch((error) => {
+      this.props.dispatch(flashAdd({
+        message: <span>Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io</span>,
+        class: 'danger',
+        ttl: 3000
+      }));
+
+      this.setState({
+        loading: 'failed'
+      });
+    });
+  },
+
   render: function() {
     return (
       <div>
@@ -48,7 +72,10 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    actions: bindActionCreators(clusterActions, dispatch),
+    dispatch: dispatch
+  };
 }
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Home);

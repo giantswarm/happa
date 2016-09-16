@@ -9,57 +9,6 @@ import NodeRow from './node_row';
 
 
 var ClusterDashboard = React.createClass({
-  getInitialState: function() {
-    return {
-      nodes: [
-        {
-          ip: '172.0.1.45',
-          labels: ['hiram'],
-          status: 'running',
-          ramUsed: '54%',
-          cpuUsed: '18%',
-          storageUsed: '64%',
-          netIn: '28',
-          netOut: '28',
-          pods: 27
-        },
-        {
-          ip: '172.0.1.46',
-          labels: ['hiram'],
-          status: 'running',
-          ramUsed: '61%',
-          cpuUsed: '25%',
-          storageUsed: '52%',
-          netIn: '28',
-          netOut: '28',
-          pods: 16
-        },
-        {
-          ip: '172.0.1.47',
-          labels: ['hicpu', 'historage'],
-          status: 'running',
-          ramUsed: '32%',
-          cpuUsed: '68%',
-          storageUsed: '68%',
-          netIn: '28',
-          netOut: '28',
-          pods: 22
-        },
-        {
-          ip: '172.0.1.48',
-          labels: ['hicpu', 'deprecated'],
-          status: 'running',
-          ramUsed: '78%',
-          cpuUsed: '44%',
-          storageUsed: '92%',
-          netIn: '28',
-          netOut: '1.1',
-          pods: 18
-        },
-      ]
-    };
-  },
-
   render: function() {
     return <div className={'cluster-dashboard well'}>
       { this.props.children ?
@@ -131,8 +80,8 @@ var ClusterDashboard = React.createClass({
           </thead>
           <tbody>
             {
-              this.state.nodes.map((node) => {
-                return <NodeRow key={node.ip} node={node} animate={this.props.animate} />;
+              this.props.cluster.nodes.map((node_internal_ip) => {
+                return <NodeRow key={node_internal_ip} node_internal_ip={node_internal_ip} animate={this.props.animate} />;
               })
             }
           </tbody>
