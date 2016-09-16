@@ -21,6 +21,7 @@ var ConfigKubeCtl = React.createClass ({
         keyPair: {
           generated: false,
           generating: false,
+          error: false,
           data: null
         }
       };
@@ -29,19 +30,21 @@ var ConfigKubeCtl = React.createClass ({
     generateKeyPair: function() {
       this.setState({
         keyPair: {
-          generating: true
+          generating: true,
+          error: false
         }
       });
 
       var authToken = this.props.user.authToken;
       var giantSwarm = new GiantSwarm.Client(authToken);
 
-      giantSwarm.createClusterKeyPair({
-        clusterId: this.props.cluster.id,
-        description: 'First key pair generated in the Giant Swarm client'
+      new Promise((resolve, reject) => {
+        resolve(giantSwarm.createClusterKeyPair({
+          clusterId: this.props.cluster.id,
+          description: 'First key pair generated in the Giant Swarm client'
+        }));
       })
       .then((response) => {
-        console.log(response);
         this.setState({
           keyPair: {
             generating: false,
@@ -51,6 +54,16 @@ var ConfigKubeCtl = React.createClass ({
         });
       })
       .catch((error) => {
+        setTimeout(() => {
+          this.setState({
+            keyPair: {
+              generating: false,
+              generated: false,
+              error: true
+            }
+          });
+        }, 200);
+
         throw(error);
       });
     },
@@ -78,7 +91,6 @@ var ConfigKubeCtl = React.createClass ({
           });
         })
         .catch((error) => {
-          console.log(error);
           this.props.dispatch(flashAdd({
             message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
             class: 'danger',
@@ -97,39 +109,29 @@ var ConfigKubeCtl = React.createClass ({
     },
 
     kubeConfig: function() {
-      if (this.state.loading === 'failed') {
-        return <FileBlock fileName='giantswarm-kubeconfig'>
-          Could not load your kubeconfig, sorry. Please contact support.
-        </FileBlock>;
-      } else if (this.state.loading) {
-        return <FileBlock fileName='giantswarm-kubeconfig'>
-          Loading ...
-        </FileBlock>;
-      } else {
-        return (
-          <FileBlock fileName='giantswarm-kubeconfig'>
-            {`
-            apiVersion: v1
-            kind: Config
-            clusters:
-             - cluster:
-                 certificate-authority-data: ${this.state.keyPair.data.certificate_authority_data}
-                 server: ${this.props.cluster.api_endpoint}
-               name: ${this.props.cluster.name}
-            contexts:
-             - context:
-                 cluster: ${this.props.cluster.name}
-                 user: "giantswarm-default"
-               name: giantswarm-default
-            users:
-             - name: "giantswarm-default"
-               user:
-                 client-certificate-data: ${this.state.keyPair.data.client_certificate_data}
-                 client-key-data: ${this.state.keyPair.data.client_key_data}
-            `}
-          </FileBlock>
-        );
-      }
+      return (
+        <FileBlock fileName='giantswarm-kubeconfig'>
+          {`
+          apiVersion: v1
+          kind: Config
+          clusters:
+           - cluster:
+               certificate-authority-data: ${this.state.keyPair.data.certificate_authority_data}
+               server: ${this.props.cluster.api_endpoint}
+             name: ${this.props.cluster.name}
+          contexts:
+           - context:
+               cluster: ${this.props.cluster.name}
+               user: "giantswarm-default"
+             name: giantswarm-default
+          users:
+           - name: "giantswarm-default"
+             user:
+               client-certificate-data: ${this.state.keyPair.data.client_certificate_data}
+               client-key-data: ${this.state.keyPair.data.client_key_data}
+          `}
+        </FileBlock>
+      );
     },
 
     render() {
@@ -144,9 +146,20 @@ var ConfigKubeCtl = React.createClass ({
             ?
               this.kubeConfig()
             :
-              <div className="create-key-pair">
+              <div className='create-key-pair'>
                 <p><strong>Use the button below to create new service account credentials and access your kubeconfig file</strong></p>
                 <Button bsStyle="primary" loading={this.state.keyPair.generating} onClick={this.generateKeyPair}>Create cluster configuration</Button>
+                <div className='key-pair-error'>
+                {
+                  this.state.keyPair.error
+                  ?
+                    <div className="flash-messages--flash-message flash-messages--danger">
+                      Request failed. Please try again later or contact support
+                    </div>
+                  :
+                    null
+                }
+                </div>
               </div>
           }
 
