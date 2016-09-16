@@ -36,14 +36,16 @@ class Button extends React.Component {
           {this.props.children}
         </BsButton>
 
-        <ReactCSSTransitionGroup
-          transitionName='slide-right'
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}>
-          {
-            this.props.loading ? <img className='loader' src='/images/loader_oval_light.svg' /> : null
-          }
-        </ReactCSSTransitionGroup>
+        <div className='progress_button--status-indicator'>
+          <ReactCSSTransitionGroup
+            transitionName='slide-right'
+            transitionEnterTimeout={200}
+            transitionLeaveTimeout={200}>
+            {
+              this.props.loading ? <img className='loader' src='/images/loader_oval_light.svg' /> : null
+            }
+          </ReactCSSTransitionGroup>
+        </div>
       </div>
     );
   }

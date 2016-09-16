@@ -22,6 +22,7 @@
     "normalize.css": "~4.2.0",
     "react": "~15.3.0",
     "react-addons-css-transition-group": "~15.3.0",
+    "react-addons-update": "~15.3.0",
     "giantswarm": "git://github.com/giantswarm/giantswarm-js-client",
     "react-codemirror": "~0.2.6",
     "react-dom": "~15.3.0",

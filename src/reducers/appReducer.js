@@ -12,6 +12,13 @@ export default function appReducer(state = {
     loggedInUser: JSON.parse(localStorage.getItem('user'))
   }, action = undefined) {
   switch(action.type) {
+    case types.REFRESH_USER_INFO_SUCCESS:
+      localStorage.setItem('user', JSON.stringify(action.userData));
+
+      return Object.assign({}, state, {
+        loggedInUser: action.userData
+      });
+
     case types.LOGIN_SUCCESS:
       localStorage.setItem('user', JSON.stringify(action.userData));
 

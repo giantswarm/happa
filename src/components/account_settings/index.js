@@ -2,9 +2,12 @@
 
 import React from 'react';
 import { Link } from 'react-router';
-import Gravatar from 'react-gravatar';
+import {connect} from 'react-redux';
+import * as UserActions from '../../actions/userActions';
+import { bindActionCreators } from 'redux';
+import ChangeEmailForm from './change_email_form';
 
-module.exports = React.createClass({
+var AccountSettings = React.createClass({
   render: function() {
     return (
       <div>
@@ -24,11 +27,7 @@ module.exports = React.createClass({
               aware that it is also visible to other members of your organization.
             </p>
 
-            <p>
-              <span className='email-gravatar'><Gravatar email='brad@example.com' https size={100} default='mm' /></span>
-              <span className='email-email'>brad@example.com</span>
-            </p>
-            <button>Replace Email</button>
+            <ChangeEmailForm user={this.props.user} actions={this.props.actions} />
           </div>
         </div>
 
@@ -145,3 +144,18 @@ module.exports = React.createClass({
     );
   }
 });
+
+function mapStateToProps(state, ownProps) {
+  return {
+    user: state.app.loggedInUser
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(UserActions, dispatch),
+    dispatch: dispatch
+  };
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(AccountSettings);

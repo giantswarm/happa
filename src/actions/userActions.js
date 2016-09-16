@@ -33,6 +33,34 @@ export function logoutError(errorMessage) {
   };
 }
 
+export function refreshUserInfo() {
+  return function(dispatch, getState) {
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
+    return giantSwarm.user()
+    .then((data) => {
+      var userData = {
+        email: data.result.email,
+        username: data.result.username,
+        authToken: giantSwarm.authToken
+      };
+
+      dispatch({
+        type: types.REFRESH_USER_INFO_SUCCESS,
+        userData: userData
+      });
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.REFRESH_USER_INFO_ERROR,
+        error: error
+      });
+      throw(error);
+    });
+  };
+}
+
 
 export function login(email, password) {
   return function(dispatch, getState) {
@@ -77,8 +105,8 @@ export function login(email, password) {
 export function logout() {
   return function(dispatch, getState) {
     var authToken = getState().app.loggedInUser.authToken;
-
     var giantSwarm = new GiantSwarm.Client(authToken);
+
     dispatch({
       type: types.LOGOUT
     });

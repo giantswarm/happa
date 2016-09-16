@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import _ from 'underscore';
 import { organizationSelect, organizationsLoad } from '../actions/organizationActions';
 import Breadcrumbs from 'react-breadcrumbs';
+import Gravatar from 'react-gravatar';
 
 var Layout = React.createClass ({
   componentDidMount() {
@@ -63,6 +64,7 @@ var Layout = React.createClass ({
                 &nbsp;
                 &nbsp;
                 <div className="user_dropdown">
+                  <Gravatar email={this.props.user.email} https size={100} default='mm' />
                   <DropdownButton title={<span>{this.props.user.email}</span>} key='1' id='user_dropdown'>
                     <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
                     <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
