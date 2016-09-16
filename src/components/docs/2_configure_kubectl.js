@@ -33,7 +33,7 @@ var ConfigKubeCtl = React.createClass ({
         }
       });
 
-      var authToken = this.props.authToken;
+      var authToken = this.props.user.authToken;
       var giantSwarm = new GiantSwarm.Client(authToken);
 
       giantSwarm.createClusterKeyPair({
