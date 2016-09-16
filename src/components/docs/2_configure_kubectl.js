@@ -115,20 +115,21 @@ var ConfigKubeCtl = React.createClass ({
           apiVersion: v1
           kind: Config
           clusters:
-           - cluster:
-               certificate-authority-data: ${this.state.keyPair.data.certificate_authority_data}
-               server: ${this.props.cluster.api_endpoint}
-             name: ${this.props.cluster.name}
+          - cluster:
+              certificate-authority-data: ${btoa(this.state.keyPair.data.certificate_authority_data)}
+              server: ${this.props.cluster.api_endpoint}
+            name: ${this.props.cluster.name}
           contexts:
-           - context:
-               cluster: ${this.props.cluster.name}
-               user: "giantswarm-default"
-             name: giantswarm-default
+          - context:
+              cluster: ${this.props.cluster.name}
+              user: "giantswarm-default"
+            name: giantswarm-default
           users:
-           - name: "giantswarm-default"
-             user:
-               client-certificate-data: ${this.state.keyPair.data.client_certificate_data}
-               client-key-data: ${this.state.keyPair.data.client_key_data}
+          - name: "giantswarm-default"
+            user:
+              client-certificate-data: ${btoa(this.state.keyPair.data.client_certificate_data)}
+              client-key-data: ${btoa(this.state.keyPair.data.client_key_data)}
+          current-context: "giantswarm-default"
           `}
         </FileBlock>
       );
