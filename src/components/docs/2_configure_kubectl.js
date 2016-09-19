@@ -129,7 +129,6 @@ var ConfigKubeCtl = React.createClass ({
             user:
               client-certificate-data: ${btoa(this.state.keyPair.data.client_certificate_data)}
               client-key-data: ${btoa(this.state.keyPair.data.client_key_data)}
-          current-context: "giantswarm-default"
           `}
         </FileBlock>
       );
