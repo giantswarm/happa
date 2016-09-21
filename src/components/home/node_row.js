@@ -3,15 +3,12 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import BarChart from './bar_chart';
-import {connect} from 'react-redux';
 
 var NodeRow = React.createClass({
   render: function() {
     return (
       <tr>
-        <td>{this.props.node_internal_ip}</td>
-        {/*
-        <td className="node-table--node-ip">{this.props.node.ip}</td>
+        <td className="node-table--node-ip">{this.props.nodeId}</td>
         <td className="node-table--status-label">
           <span className="node-table--status-label-running">RUNNING</span>
         </td>
@@ -37,6 +34,9 @@ var NodeRow = React.createClass({
             color="#d68a10"/>
 
         </td>
+        <td className="node-table--container-count">
+          {this.props.node.container_count.value}
+        </td>
         <td className="node-table--net-in-value">
           {this.props.node.netIn}
           <span className="node-table--metric-unit">K/Sec</span>
@@ -45,23 +45,9 @@ var NodeRow = React.createClass({
           {this.props.node.netOut}
           <span className="node-table--metric-unit">K/Sec</span>
         </td>
-        <td>
-
-        </td>
-        */}
       </tr>
     );
   }
 });
 
-function mapStateToProps(state, ownProps) {
-  return {
-    node: state.entities.nodes.items[ownProps.node_internal_ip]
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {};
-}
-
-module.exports = connect(mapStateToProps, mapDispatchToProps)(NodeRow);
+module.exports = NodeRow;

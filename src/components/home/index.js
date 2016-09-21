@@ -14,8 +14,8 @@ var Home = React.createClass({
   componentDidMount: function() {
     Promise.all(
       this.props.clusters.map((cluster) => {
-        console.log(cluster.id);
-        return this.props.actions.clusterLoadDetails(cluster.id);
+        this.props.actions.clusterLoadDetails(cluster.id);
+        this.props.actions.clusterFetchMetrics(cluster.id);
       })
     )
     .catch((error) => {

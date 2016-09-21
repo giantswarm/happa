@@ -6,6 +6,7 @@ import Button from '../button';
 import Gadget from './gadget';
 import DonutGadget from './donut_gadget';
 import NodeRow from './node_row';
+import _ from 'underscore';
 
 
 var ClusterDashboard = React.createClass({
@@ -68,11 +69,12 @@ var ClusterDashboard = React.createClass({
         <table className='table node-table'>
           <thead>
             <tr>
-              <th>IP</th>
+              <th>INSTANCE</th>
               <th>STATUS</th>
               <th>RAM USED</th>
               <th>CPU USAGE</th>
               <th>STORAGE USED</th>
+              <th>CONTAINER COUNT</th>
               <th className="node-table--net-in-header">NET IN</th>
               <th className="node-table--net-out-header">NET OUT</th>
               <th></th>
@@ -80,8 +82,8 @@ var ClusterDashboard = React.createClass({
           </thead>
           <tbody>
             {
-              this.props.cluster.nodes.map((node_internal_ip) => {
-                return <NodeRow key={node_internal_ip} node_internal_ip={node_internal_ip} animate={this.props.animate} />;
+              _.map(this.props.cluster.nodes, (node, key) => {
+                return <NodeRow key={key} nodeId={key} node={node} animate={this.props.animate} />;
               })
             }
           </tbody>

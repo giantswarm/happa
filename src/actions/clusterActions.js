@@ -2,6 +2,7 @@
 
 import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
+import Desmotes from '../lib/desmotes_client';
 
 // clusterLoadDetailsForOrganization
 // =============================================================
@@ -37,6 +38,21 @@ export function clusterLoadDetailsError(error) {
   };
 }
 
+export function clusterLoadMetricsSuccess(clusterId, clusterMetrics) {
+  return {
+    type: types.CLUSTER_LOAD_METRICS_SUCCESS,
+    clusterId,
+    clusterMetrics
+  };
+}
+
+export function clusterLoadMetricsError(error) {
+  return {
+    type: types.CLUSTER_LOAD_METRICS_ERROR,
+    error
+  };
+}
+
 export function clusterLoadDetails(clusterId) {
   return function(dispatch, getState) {
     var authToken = getState().app.loggedInUser.authToken;
@@ -51,6 +67,27 @@ export function clusterLoadDetails(clusterId) {
     .catch((error) => {
       dispatch(clusterLoadDetailsError(error));
       throw(error);
+    });
+  };
+}
+
+export function clusterFetchMetrics(clusterId) {
+  return function(dispatch, getState) {
+    var authToken = getState().app.loggedInUser.authToken;
+
+    var desmotes = new Desmotes({
+      endpoint: 'http://docker.dev:9001',
+      authorizationToken: authToken
+    });
+
+    return desmotes.clusterMetrics({
+      clusterId: clusterId
+    }).then((clusterMetrics) => {
+      dispatch(clusterLoadMetricsSuccess(clusterId, clusterMetrics));
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch(clusterLoadMetricsError(error));
     });
   };
 }
