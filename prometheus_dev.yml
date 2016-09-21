@@ -7,6 +7,8 @@ scrape_configs:
     # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
 
+    honor_labels: true
+
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
 
