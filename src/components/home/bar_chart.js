@@ -37,7 +37,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className='bar-chart'>
-        <div className='bar-chart--bar' style={{width: this.state.percentage, backgroundColor: this.props.color}}>
+        <div className='bar-chart--bar' style={{width: `${this.state.percentage * 100}%`, backgroundColor: this.props.color}}>
         </div>
         <div className='bar-chart--value'>
           {this.props.label}

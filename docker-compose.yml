@@ -81,7 +81,6 @@ services:
      - redis
      - giantswarmmockapi
      - prometheus
-     - fake_metrics
 
   prometheus:
     image: prom/prometheus
@@ -90,5 +89,5 @@ services:
     volumes:
       - "./prometheus_dev.yml:/etc/prometheus/prometheus.yml"
 
-  fake_metrics:
-    image: marian/fakemetrics:latest
+    links:
+      - giantswarmmockapi

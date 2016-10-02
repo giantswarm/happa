@@ -46,9 +46,9 @@ var Home = React.createClass({
         }
 
         {
-          this.props.clusters.map((cluster) => {
+          _.sortBy(this.props.clusters.map((cluster) => {
             return <ClusterDashboard animate={true} key={cluster.id} cluster={cluster} />;
-          })
+          }), (cluster) => cluster.id)
         }
       </div>
     );

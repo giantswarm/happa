@@ -13,4 +13,4 @@ scrape_configs:
     # scheme defaults to 'http'.
 
     static_configs:
-      - targets: ['fake_metrics:80']
+      - targets: ['giantswarmmockapi:8000']

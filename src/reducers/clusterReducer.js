@@ -45,6 +45,7 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
           for (var nodeMetric of action.clusterMetrics.nodes[nodeMetricKey].instances) {
             nodes[nodeMetric.instance] = Object.assign({}, nodes[nodeMetric.instance]);
+            nodes[nodeMetric.instance].id = nodeMetric.instance;
             nodes[nodeMetric.instance][metricName] = {
               value: nodeMetric.value,
               unit: action.clusterMetrics.nodes[nodeMetricKey].unit,
