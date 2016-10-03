@@ -12,8 +12,28 @@ import _ from 'underscore';
 
 var Home = React.createClass({
   componentDidMount: function() {
+    this.updateMetrics(this.props.clusters);
+  },
+
+  clustersSortedById: function(clusters) {
+    return _.sortBy(clusters, 'id');
+  },
+
+  clusterIds: function(clusters) {
+    return this.clustersSortedById(clusters).map((cluster) => cluster.id);
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    var clustersAreTheSame = _.isEqual(this.clusterIds(nextProps.clusters), this.clusterIds(this.props.clusters));
+
+    if (! clustersAreTheSame) {
+      this.updateMetrics(nextProps.clusters);
+    }
+  },
+
+  updateMetrics: function(clusters) {
     Promise.all(
-      this.props.clusters.map((cluster) => {
+      clusters.map((cluster) => {
         this.props.actions.clusterLoadDetails(cluster.id);
         this.props.actions.clusterFetchMetrics(cluster.id);
       })
