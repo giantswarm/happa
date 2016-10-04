@@ -137,7 +137,7 @@ var SimpleExample = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`kubectl create --filename helloworld-manifest.yaml`}
+              {`kubectl apply --filename helloworld-manifest.yaml`}
             </Prompt>
             <Output>
               {`
