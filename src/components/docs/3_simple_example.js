@@ -121,7 +121,7 @@ var SimpleExample = React.createClass ({
           kind: Ingress
           metadata:
             labels:
-              app: helloworld 
+              app: helloworld
             name: helloworld
             namespace: default
           spec:
@@ -149,7 +149,7 @@ var SimpleExample = React.createClass ({
 
           <p>The deployment will create a replica set, which in turn will create pods with the Docker containers running. Once they are up, which should take only a few seconds, you can access them using this URL:</p>
 
-          { this.linkToHelloWorld() }
+          <p>{ this.linkToHelloWorld() }</p>
 
           <p>This should show a little welcome message from the Giant Swarm team.</p>
 
