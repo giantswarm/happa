@@ -64,7 +64,7 @@ var SimpleExample = React.createClass ({
       } else if (this.state.loading) {
         return 'Figuring out the url...';
       } else {
-        var url = `${this.props.cluster.api_endpoint}/api/v1/proxy/namespaces/default/services/helloworld/`;
+        var url = `helloworld.default.${this.props.cluster.id}.k8s.gigantic.io`;
         return (
           <a href={url} target='_blank'>{url}</a>
         );
