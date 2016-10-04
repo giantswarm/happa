@@ -131,13 +131,12 @@ var SimpleExample = React.createClass ({
           `}
           </FileBlock>
 
-          <p>Save the above manifest in a file called <code>helloworld-manifest.yaml</code>.</p>
           <p><i className='fa fa-graduation-cap' title='For learners'></i> If you&apos;re new to Kubernetes: A manifest describes things to create in Kubernetes. In this case the manifest describes two different things, a service and a deployment. The service is there to expose containers (here: the ones with the label app: helloworld) inside your cluster via a certain hostname and port. The deployment describes your helloworld deployment. It manages a replica set, which ensures that a number of pods (two, actually) containing Docker containers from a certain image are running.</p>
-          <p>Now use <code>kubectl</code> to create the service and the deployment:</p>
+          <p>Now use <code>kubectl</code> to create the service, deployment, and ingress resource:</p>
 
           <CodeBlock>
             <Prompt>
-              {`kubectl apply --filename helloworld-manifest.yaml`}
+              {`kubectl apply --filename https://raw.githubusercontent.com/giantswarm/helloworld/master/helloworld-manifest.yaml`}
             </Prompt>
             <Output>
               {`
