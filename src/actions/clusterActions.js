@@ -76,7 +76,7 @@ export function clusterFetchMetrics(clusterId) {
     var authToken = getState().app.loggedInUser.authToken;
 
     var desmotes = new Desmotes({
-      endpoint: 'http://docker.dev:9001',
+      endpoint: window.config.desmotesEndpoint,
       authorizationToken: authToken
     });
 
