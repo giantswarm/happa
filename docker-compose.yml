@@ -83,11 +83,11 @@ services:
      - prometheus
 
   prometheus:
-    image: prom/prometheus
+    image: registry.giantswarm.io/giantswarm/fake-metrics-prometheus:latest
     ports:
       - "9090:9090"
-    volumes:
-      - "./prometheus_dev.yml:/etc/prometheus/prometheus.yml"
-
     links:
-      - giantswarmmockapi
+      - fake-metrics-node
+
+  fake-metrics-node:
+    image: registry.giantswarm.io/giantswarm/fake-metrics-node:latest

@@ -2,19 +2,72 @@
   "name": "happa",
   "components": {
     "nginx": {
-      "image": "registry.giantswarm.io/giantswarm/happa:0.1.1",
+      "image": "registry.giantswarm.io/giantswarm/happa:home-page-2016-10-04-13-59-18",
       "ports": 80,
       "domains": {
         "80": "happa.giantswarm.io"
       },
       "scale": {
-        "min": 3,
+        "min": 1,
         "placement": "one-per-machine"
       },
       "env": {
         "PASSAGE_ENDPOINT": "https://passage.giantswarm.io",
-        "API_ENDPOINT": "https://api.giantswarm.io"
+        "API_ENDPOINT": "https://api.giantswarm.io",
+        "DESMOTES_ENDPOINT": "https://desmotes.giantswarm.io"
       }
+    },
+
+    "desmotes": {
+      "image": "registry.giantswarm.io/giantswarm/desmotes:first-version-2016-10-04-13-42-53",
+      "ports": 5000,
+      "domains": {
+        "5000": "desmotes.giantswarm.io"
+      },
+
+      "env": {
+        "GIANTSWARM_API_URI": "https://api.giantswarm.io",
+        "PROMETHEUS_URI": "http://fake-metrics-prometheus:9090",
+        "PROMETHEUS_QUERY_TIMEOUT": "3.0",
+        "CORS_BASE_URI": "https://happa.giantswarm.io",
+        "CACHE_KEY_SALT": "$cache_key_salt",
+        "DEBUGGING": "yeah",
+        "REDIS_HOST": "redis",
+        "REDIS_PORT": "6379"
+      },
+
+      "links": [
+        {
+          "component": "fake-metrics-prometheus",
+          "target_port": 9090
+        },
+        {
+          "component": "redis",
+          "target_port": 6379
+        }
+      ]
+    },
+
+    "redis": {
+      "ports": 6379,
+      "image": "redis:3.2"
+    },
+
+    "fake-metrics-prometheus": {
+      "image": "registry.giantswarm.io/giantswarm/fake-metrics-prometheus:latest",
+      "ports": 9090,
+
+      "links": [
+        {
+          "component": "fake-metrics-node",
+          "target_port": 8000
+        }
+      ]
+    },
+
+    "fake-metrics-node": {
+      "ports": 8000,
+      "image": "registry.giantswarm.io/giantswarm/fake-metrics-node:latest"
     }
   }
 }
