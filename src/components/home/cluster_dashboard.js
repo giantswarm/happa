@@ -62,7 +62,7 @@ var ClusterDashboard = React.createClass({
       var bytesFree = this.props.cluster.metrics.node_storage_limit.value - this.props.cluster.metrics.node_storage_used.value;
       return `${humanFileSize(bytesFree, false)} free`;
     } else {
-      return 0;
+      return 'loading';
     }
   },
 
@@ -95,7 +95,7 @@ var ClusterDashboard = React.createClass({
         <div className='gadgets'>
           {/* <Gadget label='Status' value="OK" backgroundColor="#1a8735"/> */}
           <DonutGadget label='RAM' bottom_label={this.ramAmountFree()} large_label={Math.round(this.ramPercentUsed() * 100) + '%'} color='#003c78' percentage={this.ramPercentUsed()} />
-          <DonutGadget label='CPU' bottom_label='10 cores total' large_label="12%" color="#3ab6c7" percentage={0.12} />
+          <DonutGadget label='CPU' bottom_label='unknown' large_label="0%" color="#3ab6c7" percentage={0} />
           <DonutGadget label='Node Storage' bottom_label={this.storageAmountFree()} large_label={Math.round(this.storagePercentUsed() * 100) + '%'} color="#d68a10" percentage={this.storagePercentUsed()} />
 
           <Gadget label='Network In'  bottom_label='MB/Sec' value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_incoming.value.toFixed(1) : ''}/>
