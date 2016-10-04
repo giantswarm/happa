@@ -86,6 +86,7 @@ var SimpleExample = React.createClass ({
             name: helloworld
             labels:
               app: helloworld
+            namespace: default
           spec:
             type: NodePort
             ports:
@@ -108,12 +109,25 @@ var SimpleExample = React.createClass ({
               metadata:
                 labels:
                   app: helloworld
+                namespace: default
               spec:
                 containers:
                 - name: helloworld
                   image: giantswarm/helloworld:latest
                   ports:
                   - containerPort: 8080
+          ---
+          apiVersion: extensions/v1beta1
+          kind: Ingress
+          metadata:
+            labels:
+              app: helloworld 
+            name: helloworld
+            namespace: default
+          spec:
+            backend:
+              serviceName: helloworld
+              servicePort: 8080
           `}
           </FileBlock>
 
@@ -129,6 +143,7 @@ var SimpleExample = React.createClass ({
               {`
                 service 'helloworld' created
                 deployment 'helloworld' created
+                ingress "helloworld" created
               `}
             </Output>
           </CodeBlock>
