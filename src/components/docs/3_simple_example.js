@@ -64,7 +64,7 @@ var SimpleExample = React.createClass ({
       } else if (this.state.loading) {
         return 'Figuring out the url...';
       } else {
-        var url = `${this.props.cluster.api_endpoint}/api/v1/proxy/namespaces/default/services/helloworld/`;
+        var url = `helloworld.default.${this.props.cluster.id}.k8s.gigantic.io`;
         return (
           <a href={url} target='_blank'>{url}</a>
         );
@@ -86,6 +86,7 @@ var SimpleExample = React.createClass ({
             name: helloworld
             labels:
               app: helloworld
+            namespace: default
           spec:
             type: NodePort
             ports:
@@ -108,34 +109,47 @@ var SimpleExample = React.createClass ({
               metadata:
                 labels:
                   app: helloworld
+                namespace: default
               spec:
                 containers:
                 - name: helloworld
                   image: giantswarm/helloworld:latest
                   ports:
                   - containerPort: 8080
+          ---
+          apiVersion: extensions/v1beta1
+          kind: Ingress
+          metadata:
+            labels:
+              app: helloworld
+            name: helloworld
+            namespace: default
+          spec:
+            backend:
+              serviceName: helloworld
+              servicePort: 8080
           `}
           </FileBlock>
 
-          <p>Save the above manifest in a file called <code>helloworld-manifest.yaml</code>.</p>
           <p><i className='fa fa-graduation-cap' title='For learners'></i> If you&apos;re new to Kubernetes: A manifest describes things to create in Kubernetes. In this case the manifest describes two different things, a service and a deployment. The service is there to expose containers (here: the ones with the label app: helloworld) inside your cluster via a certain hostname and port. The deployment describes your helloworld deployment. It manages a replica set, which ensures that a number of pods (two, actually) containing Docker containers from a certain image are running.</p>
-          <p>Now use <code>kubectl</code> to create the service and the deployment:</p>
+          <p>Now use <code>kubectl</code> to create the service, deployment, and ingress resource:</p>
 
           <CodeBlock>
             <Prompt>
-              {`kubectl create --filename helloworld-manifest.yaml`}
+              {`kubectl apply --filename https://raw.githubusercontent.com/giantswarm/helloworld/master/helloworld-manifest.yaml`}
             </Prompt>
             <Output>
               {`
                 service 'helloworld' created
                 deployment 'helloworld' created
+                ingress "helloworld" created
               `}
             </Output>
           </CodeBlock>
 
           <p>The deployment will create a replica set, which in turn will create pods with the Docker containers running. Once they are up, which should take only a few seconds, you can access them using this URL:</p>
 
-          { this.linkToHelloWorld() }
+          <p>{ this.linkToHelloWorld() }</p>
 
           <p>This should show a little welcome message from the Giant Swarm team.</p>
 
