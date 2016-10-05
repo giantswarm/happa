@@ -129,7 +129,7 @@ var ClusterDashboard = React.createClass({
               <th>RAM USED</th>
               <th>CPU USAGE</th>
               <th>STORAGE USED</th>
-              <th>CONTAINER COUNT</th>
+              <th className="node-table--container-count-header">CONTAINER COUNT</th>
               <th className="node-table--net-in-header">NET IN</th>
               <th className="node-table--net-out-header">NET OUT</th>
               <th></th>
