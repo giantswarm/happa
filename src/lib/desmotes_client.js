@@ -68,7 +68,7 @@ var Desmotes = function(config) {
           request
             .get(url)
             .timeout(config.timeout_ms)
-            .set('Authorization', 'giantswarm ' + params.token)
+            .set('Authorization', 'giantswarm ' + config.authorizationToken)
             .set('ContentType', 'application/json')
         );
       })
