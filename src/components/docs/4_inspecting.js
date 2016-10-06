@@ -146,24 +146,8 @@ module.exports = React.createClass ({
 
           <p>If you have not done so already, you should get acquainted with the <a href='https://blog.giantswarm.io/understanding-basic-kubernetes-concepts-i-introduction-to-pods-labels-replicas/' target='_blank'>basic concepts of Kubernetes</a>.</p>
 
-          <h3>Further Reading</h3>
-
-          <ul>
-            <li><a href='http://kubernetes.io/docs/' target='_blank'>Official Kubernetes Documentation</a></li>
-            <li>
-              Useful Primitives
-              <ul>
-                <li><a href='http://kubernetes.io/docs/user-guide/pods/' target='_blank'>Pods</a></li>
-                <li><a href='http://kubernetes.io/docs/user-guide/labels/' target='_blank'>Labels & Selectors</a></li>
-                <li><a href='http://kubernetes.io/docs/user-guide/replicasets/' target='_blank'>Replica Sets</a></li>
-                <li><a href='http://kubernetes.io/docs/user-guide/deployments/' target='_blank'>Deployments</a></li>
-                <li><a href='http://kubernetes.io/docs/user-guide/services/' target='_blank'>Services</a></li>
-                <li><a href='http://kubernetes.io/docs/user-guide/secrets/' target='_blank'>Secrets</a></li>
-                <li><a href='http://kubernetes.io/docs/user-guide/namespaces/' target='_blank'>Namespaces</a></li>
-                <li><a href='https://github.com/kubernetes/kubernetes/blob/release-1.2/cluster/addons/dns/README.md' target='_blank'>DNS</a></li>
-              </ul>
-            </li>
-          </ul>
+          <p>Last but not least, you should check out our <a href='https://docs.giantswarm.io/' target='_blank'>Documentation</a>, including an <a href='https://docs.giantswarm.io/basics/kubernetes-fundamentals/' target='_blank'>overview of Kubernetes Fundamentals</a> and a selection of <a href='https://docs.giantswarm.io/guides/' target='_blank'>User Guides</a> that help you set up Monitoring, Logging, and more.</p>
+          
           <button onClick={this.props.goToSlide.bind(null, 'example')}>Previous</button>
         </Slide>
       );
