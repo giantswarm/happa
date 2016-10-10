@@ -144,17 +144,16 @@ var ConfigKubeCtl = React.createClass ({
         <Slide>
           <h1>Configure kubectl for your cluster {this.props.cluster ? <code>{this.props.cluster.id}</code> : ""}</h1>
           <p>Generate and download a cluster configuration file for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster, including a key pair for administrative access.</p>
-          <p>Please download and store your file away safely immediately after generating it. You can always come back here and generate a new configuration file, containing a new key pair.</p>
 
           {
             this.props.allClusters.length > 1 ?
             <div className='well select-cluster'>
               <div className="select-cluster--dropdown-container">
-                <label>Select Cluster</label>
-                <DropdownButton title={this.props.cluster.id}>
+                <label>Select Cluster:</label>
+                <DropdownButton id="cluster-slect-dropdown" title={this.props.cluster.id}>
                   {
                     _.map(this.props.allClusters,
-                      clusterId => <MenuItem onClick={this.selectCluster.bind(this, clusterId)}>{clusterId}</MenuItem>
+                      clusterId => <MenuItem key={clusterId} onClick={this.selectCluster.bind(this, clusterId)}>{clusterId}</MenuItem>
                     )
                   }
                 </DropdownButton>
