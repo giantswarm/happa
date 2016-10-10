@@ -73,8 +73,12 @@ var ClusterDashboard = React.createClass({
     this.context.router.push('/docs/configure');
   },
 
+  isLoading: function() {
+    return (! this.props.cluster.metrics);
+  },
+
   render: function() {
-    return <div className={'cluster-dashboard well'}>
+    return <div className={this.props.className + ' cluster-dashboard well ' + (this.isLoading() ? 'loading' : '')}>
       { this.props.children ?
         <div className="cluster-dashboard--overlay">
           {this.props.children}
@@ -82,7 +86,15 @@ var ClusterDashboard = React.createClass({
         :
         undefined
       }
-      <div className={this.props.className}>
+      {
+        this.isLoading() ?
+        <div className="cluster-dashboard--overlay">
+          <img className='loader' src='/images/loader_oval_light.svg' />
+        </div>
+        :
+        undefined
+      }
+      <div className={'cluster-dashboard--inner'}>
         <h1>
           Cluster: {this.props.cluster.id}
 
@@ -106,12 +118,12 @@ var ClusterDashboard = React.createClass({
           <DonutGadget label='Node Storage' bottom_label={this.storageAmountFree()} large_label={Math.round(this.storagePercentUsed() * 100) + '%'} color="#d68a10" percentage={this.storagePercentUsed()} />
 
           <Gadget label='Network In'
-                  bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).unit + '/Sec' : "loading"}
+                  bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).unit + '/Sec' : 'loading'}
                   value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_incoming.value.toFixed(1) : ''}
           />
 
           <Gadget label='Network Out'
-                  bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).unit + '/Sec' : "loading"}
+                  bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).unit + '/Sec' : 'loading'}
                   value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_outgoing.value.toFixed(1) : ''}
           />
           <Gadget label='Nodes' value={_.map(this.props.cluster.nodes, (node) => node).length}/>

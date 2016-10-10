@@ -1,8 +1,19 @@
 .cluster-dashboard
   position: relative
 
-.cluster-dashboard--empty-slate
-  opacity: 0.1
+  &.loading
+    transition: opacity 0.1s cubic-bezier(0, -0.41, 0.19, 1.44)
+
+    .cluster-dashboard--inner
+      opacity: 0.1
+
+    .loader
+      margin-top: 100px
+
+
+  &.empty-slate
+    .loader
+      display: none
 
 .cluster-dashboard--overlay
   text-align: center
