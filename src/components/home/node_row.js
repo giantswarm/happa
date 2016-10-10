@@ -47,7 +47,7 @@ var NodeRow = React.createClass({
         </td>
         <td className="node-table--net-in-value">
           {humanFileSize(this.props.node.network_traffic_incoming.value).value}
-          <span className="node-table--metric-unit">/Sec</span>
+          <span className="node-table--metric-unit">{humanFileSize(this.props.node.network_traffic_outgoing.value).unit}/Sec</span>
         </td>
         <td className="node-table--net-out-value">
           {humanFileSize(this.props.node.network_traffic_outgoing.value).value}

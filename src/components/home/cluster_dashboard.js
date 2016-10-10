@@ -105,8 +105,15 @@ var ClusterDashboard = React.createClass({
           <DonutGadget label='CPU' bottom_label={this.cpuCores()} large_label={Math.round(this.cpuPercentUsed() * 100) + '%'} color="#3ab6c7" percentage={this.cpuPercentUsed()} />
           <DonutGadget label='Node Storage' bottom_label={this.storageAmountFree()} large_label={Math.round(this.storagePercentUsed() * 100) + '%'} color="#d68a10" percentage={this.storagePercentUsed()} />
 
-          <Gadget label='Network In'  bottom_label='MB/Sec' value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_incoming.value.toFixed(1) : ''}/>
-          <Gadget label='Network Out' bottom_label='MB/Sec' value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_outgoing.value.toFixed(1) : ''}/>
+          <Gadget label='Network In'
+                  bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).unit + '/Sec' : "loading"}
+                  value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_incoming.value.toFixed(1) : ''}
+          />
+
+          <Gadget label='Network Out'
+                  bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).unit + '/Sec' : "loading"}
+                  value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_outgoing.value.toFixed(1) : ''}
+          />
           <Gadget label='Nodes' value={_.map(this.props.cluster.nodes, (node) => node).length}/>
           <Gadget label='Pods' value={this.props.cluster.metrics ? this.props.cluster.metrics.pod_count.value : ''}/>
         </div>
