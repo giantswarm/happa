@@ -10,15 +10,10 @@ import React from 'react';
 
 export function organizationSelect(orgId) {
   return function(dispatch, getState) {
-    dispatch(flashAdd({
-      message: 'Selected organization: ' + orgId,
-      class: 'success',
-      ttl: 3000
-    }));
-
     return dispatch({
       type: types.ORGANIZATION_SELECT,
-      orgId
+      orgId,
+      organizations: getState().entities.organizations.items
     });
   };
 }

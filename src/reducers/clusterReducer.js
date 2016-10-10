@@ -24,8 +24,6 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
       items[action.cluster.id] = Object.assign({}, items[action.cluster.id], action.cluster);
 
-
-
       return {
         lastUpdated: state.lastUpdated,
         isFetching: false,

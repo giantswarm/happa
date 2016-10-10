@@ -7,30 +7,32 @@ import Gadget from './gadget';
 import DonutGadget from './donut_gadget';
 import NodeRow from './node_row';
 import _ from 'underscore';
-
-function humanFileSize(bytes, si) {
-    // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
-    var thresh = si ? 1000 : 1024;
-
-    if(Math.abs(bytes) < thresh) {
-        return bytes + ' B';
-    }
-
-    var units = si
-        ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
-        : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
-
-    var u = -1;
-
-    do {
-        bytes /= thresh;
-        ++u;
-    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
-
-    return bytes.toFixed(1)+' '+units[u];
-}
+import {humanFileSize} from '../../lib/helpers';
+import * as clusterActions from '../../actions/clusterActions';
+import { bindActionCreators } from 'redux';
+import {connect} from 'react-redux';
 
 var ClusterDashboard = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+
+  cpuPercentUsed: function() {
+    if (this.props.cluster.metrics) {
+      return this.props.cluster.metrics.cpu_used.value;
+    } else {
+      return 0;
+    }
+  },
+
+  cpuCores: function() {
+    if (this.props.cluster.metrics) {
+      return `${this.props.cluster.metrics.cpu_cores.value} cores total`;
+    } else {
+      return 'loading';
+    }
+  },
+
   ramPercentUsed: function() {
     if (this.props.cluster.metrics) {
       return this.props.cluster.metrics.ram_used.value / this.props.cluster.metrics.ram_available.value;
@@ -41,8 +43,8 @@ var ClusterDashboard = React.createClass({
 
   ramAmountFree: function() {
     if (this.props.cluster.metrics) {
-      var bytesFree = this.props.cluster.metrics.ram_available.value - this.props.cluster.metrics.ram_used.value;
-      return `${humanFileSize(bytesFree, false)} free`;
+      var bytesFree = humanFileSize(this.props.cluster.metrics.ram_available.value - this.props.cluster.metrics.ram_used.value);
+      return `${bytesFree.value} ${bytesFree.unit} free`;
     } else {
       return 'loading';
     }
@@ -59,11 +61,16 @@ var ClusterDashboard = React.createClass({
 
   storageAmountFree: function() {
     if (this.props.cluster.metrics) {
-      var bytesFree = this.props.cluster.metrics.node_storage_limit.value - this.props.cluster.metrics.node_storage_used.value;
-      return `${humanFileSize(bytesFree, false)} free`;
+      var bytesFree = humanFileSize(this.props.cluster.metrics.node_storage_limit.value - this.props.cluster.metrics.node_storage_used.value);
+      return `${bytesFree.value} ${bytesFree.unit} free`;
     } else {
       return 'loading';
     }
+  },
+
+  configureDocsFor: function(clusterId) {
+    this.props.actions.clusterSelect(clusterId);
+    this.context.router.push('/docs/configure');
   },
 
   render: function() {
@@ -81,7 +88,7 @@ var ClusterDashboard = React.createClass({
 
           <ButtonGroup>
             <DropdownButton title="" id="add_node_dropdown" className="outline">
-              <MenuItem componentClass={Link} href='/docs/configure/clusterIdHere' to='/docs/configure/clusterIdHere'>Access Via kubectl</MenuItem>
+              <MenuItem onClick={this.configureDocsFor.bind(this, this.props.cluster.id)}>Access Via kubectl</MenuItem>
               {/*
                 <MenuItem>Open in Kubernetes Dashboard</MenuItem>
                 <MenuItem>Configure Persistent Storage</MenuItem>
@@ -95,7 +102,7 @@ var ClusterDashboard = React.createClass({
         <div className='gadgets'>
           {/* <Gadget label='Status' value="OK" backgroundColor="#1a8735"/> */}
           <DonutGadget label='RAM' bottom_label={this.ramAmountFree()} large_label={Math.round(this.ramPercentUsed() * 100) + '%'} color='#003c78' percentage={this.ramPercentUsed()} />
-          <DonutGadget label='CPU' bottom_label='unknown' large_label="0%" color="#3ab6c7" percentage={0} />
+          <DonutGadget label='CPU' bottom_label={this.cpuCores()} large_label={Math.round(this.cpuPercentUsed() * 100) + '%'} color="#3ab6c7" percentage={this.cpuPercentUsed()} />
           <DonutGadget label='Node Storage' bottom_label={this.storageAmountFree()} large_label={Math.round(this.storagePercentUsed() * 100) + '%'} color="#d68a10" percentage={this.storagePercentUsed()} />
 
           <Gadget label='Network In'  bottom_label='MB/Sec' value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_incoming.value.toFixed(1) : ''}/>
@@ -148,4 +155,11 @@ var ClusterDashboard = React.createClass({
   }
 });
 
-module.exports = ClusterDashboard;
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(clusterActions, dispatch),
+    dispatch: dispatch
+  };
+}
+
+module.exports = connect(null, mapDispatchToProps)(ClusterDashboard);

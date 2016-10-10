@@ -4,6 +4,7 @@ import Slide from '../component_slider/slide';
 import Markdown from './markdown';
 import { CodeBlock, Prompt, Output } from './codeblock';
 import FileBlock from './fileblock';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 import {connect} from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
@@ -134,12 +135,37 @@ var ConfigKubeCtl = React.createClass ({
       );
     },
 
+    selectCluster: function(clusterId) {
+      this.props.actions.clusterSelect(clusterId);
+    },
+
     render() {
       return (
         <Slide>
-          <h1>Configure kubectl for your cluster</h1>
+          <h1>Configure kubectl for your cluster {this.props.cluster ? <code>{this.props.cluster.id}</code> : ""}</h1>
           <p>Generate and download a cluster configuration file for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster, including a key pair for administrative access.</p>
           <p>Please download and store your file away safely immediately after generating it. You can always come back here and generate a new configuration file, containing a new key pair.</p>
+
+          {
+            this.props.allClusters.length > 1 ?
+            <div className='well select-cluster'>
+              <div className="select-cluster--dropdown-container">
+                <label>Select Cluster</label>
+                <DropdownButton title={this.props.cluster.id}>
+                  {
+                    _.map(this.props.allClusters,
+                      clusterId => <MenuItem onClick={this.selectCluster.bind(this, clusterId)}>{clusterId}</MenuItem>
+                    )
+                  }
+                </DropdownButton>
+              </div>
+
+              <p><strong>Watch out:</strong> The key-pair and configuration will be specific for one cluster. As you have access to more than one cluster, please make sure this is the right one.</p>
+              <p>You might have access to additional clusters after switching to a different organization.</p>
+            </div>
+            :
+            "Nothing to see here"
+          }
 
           {
             this.state.keyPair.generated
@@ -200,12 +226,11 @@ var ConfigKubeCtl = React.createClass ({
 
 function mapStateToProps(state, ownProps) {
   var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
-  var clustersByDate = _.sortBy(selectedOrganization.clusters, 'create_date').reverse();
-  var firstClusterId =clustersByDate[0];
-  var firstCluster = state.entities.clusters.items[firstClusterId];
+  var selectedCluster = state.entities.clusters.items[state.app.selectedCluster];
 
   return {
-    cluster: firstCluster,
+    cluster: selectedCluster,
+    allClusters: state.entities.organizations.items[state.app.selectedOrganization].clusters,
     user: state.app.loggedInUser
   };
 }

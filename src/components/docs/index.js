@@ -23,7 +23,7 @@ module.exports = React.createClass({
 
   componentDidMount() {
     if (this.props.params.pageId) {
-      this.goToSlide(this.props.params.pageId, this.props.params.clusterId);
+      this.goToSlide(this.props.params.pageId);
     }
   },
 
@@ -35,8 +35,8 @@ module.exports = React.createClass({
     }
   },
 
-  goToSlide(slideId, clusterId) {
-    this.context.router.push('/docs/' + slideId + '/' + clusterId);
+  goToSlide(slideId) {
+    this.context.router.push('/docs/' + slideId);
 
     var slideIndex = _.findIndex(this.slides(), slide => {
       return (slide.key === slideId);
@@ -62,6 +62,10 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    return <ComponentSlider ref='componentSlider' currentSlide={this.state.currentSlide} slides={this.slides()}/>;
+    return (
+      <div className="col-10 centered">
+        <ComponentSlider ref='componentSlider' currentSlide={this.state.currentSlide} slides={this.slides()}/>
+      </div>
+    );
   }
 });

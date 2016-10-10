@@ -53,9 +53,7 @@ render(
         <Route name='Getting Started' path="docs" >
           <IndexRoute component={docs} />
 
-          <Route name="docs.page" path ="/docs/:pageId" component={docs}>
-            <Route path="/docs/:pageId/:clusterId" component={docs} />
-          </Route>
+          <Route name="docs.page" path ="/docs/:pageId" component={docs} />
         </Route>
 
         <Route name="Organizations" path="organizations">
