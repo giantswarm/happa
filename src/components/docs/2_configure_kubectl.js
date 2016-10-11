@@ -142,7 +142,7 @@ var ConfigKubeCtl = React.createClass ({
     render() {
       return (
         <Slide>
-          <h1>Configure kubectl for your cluster {this.props.cluster ? <code>{this.props.cluster.id}</code> : ""}</h1>
+          <h1>Configure kubectl for your cluster {this.props.cluster ? <code>{this.props.cluster.id}</code> : ''}</h1>
           <p>Generate and download a cluster configuration file for <code>kubectl</code> to work with your Giant Swarm Kubernetes cluster, including a key pair for administrative access.</p>
 
           {
@@ -163,7 +163,7 @@ var ConfigKubeCtl = React.createClass ({
               <p>You might have access to additional clusters after switching to a different organization.</p>
             </div>
             :
-            "Nothing to see here"
+            undefined
           }
 
           {

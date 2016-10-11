@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import ReactTimeout from 'react-timeout'
+import ReactTimeout from 'react-timeout';
 import {connect} from 'react-redux';
 import ClusterDashboard from './cluster_dashboard';
 import ClusterEmptyState from './cluster_empty_state';
