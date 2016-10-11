@@ -2,6 +2,7 @@
 
 import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
+import Desmotes from '../lib/desmotes_client';
 
 // clusterLoadDetailsForOrganization
 // =============================================================
@@ -16,6 +17,24 @@ export function clusterLoadDetailsForOrganizationError() {
 
 export function clusterLoadDetailsForOrganization(organizationId) {
   return function(dispatch, getState) {
+  };
+}
+
+// clusterSelect
+// =============================================================
+// Sets which cluster is in "focus". For pages that reference a
+// specific cluster, the "focused" cluster will be used.
+//
+// The only page that really cares about that right now is the
+// configure page in the getting started guide.
+//
+
+export function clusterSelect(clusterId) {
+  return function(dispatch, getState) {
+    return dispatch({
+      type: types.CLUSTER_SELECT,
+      clusterId
+    });
   };
 }
 
@@ -37,6 +56,21 @@ export function clusterLoadDetailsError(error) {
   };
 }
 
+export function clusterLoadMetricsSuccess(clusterId, clusterMetrics) {
+  return {
+    type: types.CLUSTER_LOAD_METRICS_SUCCESS,
+    clusterId,
+    clusterMetrics
+  };
+}
+
+export function clusterLoadMetricsError(error) {
+  return {
+    type: types.CLUSTER_LOAD_METRICS_ERROR,
+    error
+  };
+}
+
 export function clusterLoadDetails(clusterId) {
   return function(dispatch, getState) {
     var authToken = getState().app.loggedInUser.authToken;
@@ -51,6 +85,27 @@ export function clusterLoadDetails(clusterId) {
     .catch((error) => {
       dispatch(clusterLoadDetailsError(error));
       throw(error);
+    });
+  };
+}
+
+export function clusterFetchMetrics(clusterId) {
+  return function(dispatch, getState) {
+    var authToken = getState().app.loggedInUser.authToken;
+
+    var desmotes = new Desmotes({
+      endpoint: window.config.desmotesEndpoint,
+      authorizationToken: authToken
+    });
+
+    return desmotes.clusterMetrics({
+      clusterId: clusterId
+    }).then((clusterMetrics) => {
+      dispatch(clusterLoadMetricsSuccess(clusterId, clusterMetrics));
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch(clusterLoadMetricsError(error));
     });
   };
 }

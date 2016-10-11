@@ -50,6 +50,35 @@ var dedent = function(strings, ...values) {
   return result.replace(/\\n/g, '\n');
 };
 
+var humanFileSize = function(bytes, si) {
+    // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
+    var thresh = si ? 1000 : 1024;
+
+    if(Math.abs(bytes) < thresh) {
+      return {
+        value: bytes.toFixed(1),
+        unit: 'B'
+      };
+    }
+
+    var units = si
+        ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
+        : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+
+    var u = -1;
+
+    do {
+        bytes /= thresh;
+        ++u;
+    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
+
+    return {
+      value: bytes.toFixed(0),
+      unit: units[u]
+    };
+};
+
 module.exports = {
-  dedent: dedent
+  dedent: dedent,
+  humanFileSize: humanFileSize
 };

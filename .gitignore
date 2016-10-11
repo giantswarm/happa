@@ -19,3 +19,4 @@ node_modules/
 dist
 
 docker-compose-prod.yml
+swarmvars.json

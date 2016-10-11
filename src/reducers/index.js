@@ -7,7 +7,7 @@ import app from './appReducer';
 
 const entities = combineReducers({
   organizations,
-  clusters
+  clusters,
 });
 
 const rootReducer = combineReducers({
@@ -27,6 +27,7 @@ main_store.js
 {
   app: {
     selectedOrganization: '',
+    selectedCluster: '',
     isConnected: bool, // true if the app has connectivity to the internet
     firstLoadComplete: false // true after the first load is completed
     loggedInUser: {

@@ -131,8 +131,6 @@ var SignUp = React.createClass({
         password: this.state.passwordField.value
       })
       .then((data) => {
-        console.log(data);
-
         var userData = {
           username: data.username,
           email: data.email,
