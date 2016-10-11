@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import ReactTimeout from 'react-timeout'
 import {connect} from 'react-redux';
 import ClusterDashboard from './cluster_dashboard';
 import ClusterEmptyState from './cluster_empty_state';
@@ -13,6 +14,10 @@ import _ from 'underscore';
 var Home = React.createClass({
   componentDidMount: function() {
     this.updateMetrics(this.props.clusters);
+
+    this.props.setInterval(() => {
+      this.updateMetrics(this.props.clusters);
+    }, 10000);
   },
 
   clustersSortedById: function(clusters) {
@@ -98,4 +103,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(Home);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(ReactTimeout(Home));

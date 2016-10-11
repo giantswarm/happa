@@ -34,6 +34,12 @@ module.exports = React.createClass({
     }
   },
 
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      percentage: nextProps.percentage
+    });
+  },
+
   render: function() {
     return (
       <div className='bar-chart'>
