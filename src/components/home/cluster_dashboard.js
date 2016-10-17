@@ -119,12 +119,12 @@ var ClusterDashboard = React.createClass({
 
           <Gadget label='Network In'
                   bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).unit + '/Sec' : 'loading'}
-                  value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_incoming.value.toFixed(1) : ''}
+                  value={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).value : ''}
           />
 
           <Gadget label='Network Out'
                   bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).unit + '/Sec' : 'loading'}
-                  value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_outgoing.value.toFixed(1) : ''}
+                  value={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).value : ''}
           />
           <Gadget label='Nodes' value={_.map(this.props.cluster.nodes, (node) => node).length}/>
           <Gadget label='Pods' value={this.props.cluster.metrics ? this.props.cluster.metrics.pod_count.value : ''}/>
