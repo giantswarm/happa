@@ -6,6 +6,14 @@ import BarChart from './bar_chart';
 import {humanFileSize} from '../../lib/helpers';
 
 var NodeRow = React.createClass({
+  truncate: function(string, maxLength=20) {
+   if (string.length > maxLength) {
+    return string.substring(0,maxLength) + '\u2026';
+   } else {
+    return string;
+   }
+  },
+
   labelifyBytes: function(bytes) {
     var quantity = humanFileSize(bytes);
     return quantity.value + ' ' + quantity.unit;
@@ -14,7 +22,7 @@ var NodeRow = React.createClass({
   render: function() {
     return (
       <tr>
-        <td className="node-table--node-ip">{this.props.nodeId}</td>
+        <td className="node-table--node-ip">{this.truncate(this.props.nodeId)}</td>
         {/*
           <td className="node-table--status-label">
             <span className="node-table--status-label-running">RUNNING</span>
