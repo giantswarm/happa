@@ -30,7 +30,8 @@ var AccountSettings = React.createClass({
             <ChangeEmailForm user={this.props.user} actions={this.props.actions} />
           </div>
         </div>
-
+{
+  /*
         <div className='row section'>
           <div className='col-3'>
             <h3 className='table-label'>Name</h3>
@@ -129,7 +130,8 @@ var AccountSettings = React.createClass({
             </form>
           </div>
         </div>
-
+   */
+}
         <div className='row section'>
           <div className='col-3'>
             <h3 className='table-label'>Delete Account</h3>
