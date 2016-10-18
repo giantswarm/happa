@@ -110,8 +110,9 @@ var OrganizationDetail = React.createClass({
               <Button onClick={this.addMember} bsStyle='primary' className='small'>Add Member</Button>
             </div>
           </div>
-
-          <div className='row section'>
+{
+  /*
+    <div className='row section'>
             <div className='col-3'>
               <h3 className='table-label'>Invoices</h3>
             </div>
@@ -152,8 +153,7 @@ var OrganizationDetail = React.createClass({
               </FlashMessage>
             </div>
           </div>
-
-          <div className='row section'>
+           <div className='row section'>
             <div className='col-3'>
               <h3 className='table-label'>Billing Address</h3>
             </div>
@@ -246,6 +246,8 @@ var OrganizationDetail = React.createClass({
               </form>
             </div>
           </div>
+   */
+}
         </div>
       );
     } else {
