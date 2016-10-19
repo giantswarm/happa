@@ -40,12 +40,12 @@ var Home = React.createClass({
 
   updateMetrics: function(clusters) {
     return Promise.all(
-      clusters.map((cluster) => {
+      _.flatten(clusters.map((cluster) => {
         return [
           this.props.actions.clusterLoadDetails(cluster.id),
           this.props.actions.clusterFetchMetrics(cluster.id)
         ];
-      })
+      }))
     )
     .catch((error) => {
       this.props.dispatch(flashAdd({
