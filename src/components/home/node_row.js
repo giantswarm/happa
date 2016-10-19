@@ -50,11 +50,11 @@ var NodeRow = React.createClass({
             color="#d68a10"/>
 
         </td>
-        <td className="node-table--container-count">
-          {this.props.node.container_count.value}
-        </td>
         <td className="node-table--pod-count">
           {this.props.node.pod_count.value}
+        </td>
+        <td className="node-table--container-count">
+          {this.props.node.container_count.value}
         </td>
         <td className="node-table--net-in-value">
           {humanFileSize(this.props.node.network_traffic_incoming.value).value}
