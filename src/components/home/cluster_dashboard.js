@@ -119,15 +119,16 @@ var ClusterDashboard = React.createClass({
 
           <Gadget label='Network In'
                   bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).unit + '/Sec' : 'loading'}
-                  value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_incoming.value.toFixed(1) : ''}
+                  value={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).value : ''}
           />
 
           <Gadget label='Network Out'
                   bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).unit + '/Sec' : 'loading'}
-                  value={this.props.cluster.metrics ? this.props.cluster.metrics.network_traffic_outgoing.value.toFixed(1) : ''}
+                  value={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).value : ''}
           />
           <Gadget label='Nodes' value={_.map(this.props.cluster.nodes, (node) => node).length}/>
           <Gadget label='Pods' value={this.props.cluster.metrics ? this.props.cluster.metrics.pod_count.value : ''}/>
+          <Gadget label='Containers' value={this.props.cluster.metrics ? this.props.cluster.metrics.container_count.value : ''}/>
         </div>
 
         <div className='seperator'></div>
@@ -155,7 +156,8 @@ var ClusterDashboard = React.createClass({
               <th>RAM USED</th>
               <th>CPU USAGE</th>
               <th>STORAGE USED</th>
-              <th className="node-table--container-count-header">CONTAINER COUNT</th>
+              <th className="node-table--pod-count-header">PODS</th>
+              <th className="node-table--container-count-header">CONTAINERS</th>
               <th className="node-table--net-in-header">NET IN</th>
               <th className="node-table--net-out-header">NET OUT</th>
               <th></th>
