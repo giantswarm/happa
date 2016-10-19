@@ -36,17 +36,16 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
       var nodes = {};
       var clusterMetrics = action.clusterMetrics;
 
-      for (var nodeMetricKey in action.clusterMetrics.nodes) {
-        if (action.clusterMetrics.nodes.hasOwnProperty(nodeMetricKey)) {
-          var metricName = nodeMetricKey;
-          var metricUnit = action.clusterMetrics.nodes[nodeMetricKey].unit;
+      for (var metricName in clusterMetrics.nodes) {
+        if (clusterMetrics.nodes.hasOwnProperty(metricName)) {
+          var metricUnit = clusterMetrics.nodes[metricName].unit;
 
-          for (var nodeMetric of action.clusterMetrics.nodes[nodeMetricKey].instances) {
+          for (var nodeMetric of clusterMetrics.nodes[metricName].instances) {
             nodes[nodeMetric.instance] = Object.assign({}, nodes[nodeMetric.instance]);
             nodes[nodeMetric.instance].id = nodeMetric.instance;
             nodes[nodeMetric.instance][metricName] = {
               value: nodeMetric.value,
-              unit: action.clusterMetrics.nodes[nodeMetricKey].unit,
+              unit: clusterMetrics.nodes[metricName].unit,
               timestamp: nodeMetric.timestamp
             };
           }
@@ -69,7 +68,6 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
       };
 
       break;
-
 
     default:
       return state;
