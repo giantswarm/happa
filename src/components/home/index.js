@@ -11,13 +11,15 @@ import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
 import _ from 'underscore';
 
+const DESMOTES_POLL_INTERVAL = 30000; // 30 Seconds
+
 var Home = React.createClass({
   componentDidMount: function() {
     this.updateMetrics(this.props.clusters);
 
     this.props.setInterval(() => {
       this.updateMetrics(this.props.clusters);
-    }, 10000);
+    }, DESMOTES_POLL_INTERVAL);
   },
 
   clustersSortedById: function(clusters) {
