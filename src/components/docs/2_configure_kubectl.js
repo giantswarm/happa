@@ -214,6 +214,14 @@ var ConfigKubeCtl = React.createClass ({
 
           <p><i className='fa fa-graduation-cap' title='For learners'></i> Again, here you can save your future self some time by creating an alias.</p>
 
+          <p>Then you can check if you got access to your cluster with:</p>
+
+          <CodeBlock>
+            <Prompt>
+              {`kubectl cluster-info`}
+            </Prompt>
+          </CodeBlock>
+
           <p>Now let&apos;s start something on your cluster.</p>
 
           <button className='primary' onClick={this.props.goToSlide.bind(null, 'example')}>Continue</button><br/>
