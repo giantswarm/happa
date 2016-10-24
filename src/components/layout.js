@@ -7,13 +7,21 @@ import Modal from './modal/index';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import _ from 'underscore';
+import { bindActionCreators } from 'redux';
 import { organizationSelect, organizationsLoad } from '../actions/organizationActions';
+import * as UserActions from '../actions/userActions';
 import Breadcrumbs from 'react-breadcrumbs';
 import Gravatar from 'react-gravatar';
 
 var Layout = React.createClass ({
   componentDidMount() {
-    this.props.dispatch(organizationsLoad());
+    this.props.actions.refreshUserInfo().then(() => {
+      this.props.dispatch(organizationsLoad());
+      return null;
+    })
+    .catch((error) => {
+      this.props.actions.loginError();
+    });
   },
 
   selectOrganization: function(orgId) {
@@ -100,4 +108,11 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-module.exports = connect(mapStateToProps)(Layout);
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(UserActions, dispatch),
+    dispatch: dispatch
+  };
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Layout);

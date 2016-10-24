@@ -68,3 +68,7 @@ export const MODAL_HIDE = 'MODAL_HIDE';
 export const FLASH_REMOVE = 'FLASH_REMOVE';
 export const FLASH_ADD = 'FLASH_ADD';
 export const FLASH_CLEAR_ALL = 'FLASH_CLEAR_ALL';
+
+// General Errors
+
+export const UNAUTHORIZED = 'UNAUTHORIZED';

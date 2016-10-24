@@ -83,6 +83,15 @@ export default function appReducer(state = {
         loggedInUser: {}
       });
 
+    case types.UNAUTHORIZED:
+      localStorage.removeItem('user');
+
+      browserHistory.push('/login');
+
+      return Object.assign({}, state, {
+        loggedInUser: {}
+      });
+
     case types.ORGANIZATION_SELECT:
       localStorage.setItem('app.selectedOrganization', action.orgId);
       browserHistory.push('/');

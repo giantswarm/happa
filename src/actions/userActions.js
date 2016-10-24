@@ -1,8 +1,7 @@
 'use strict';
 
-// LOGIN
-// LOGOUT
-
+import { flashAdd } from './flashMessageActions';
+import React from 'react';
 import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
 
@@ -118,5 +117,20 @@ export function logout() {
     .catch((error) => {
       dispatch(logoutError(error));
     });
+  };
+}
+
+export function unauthorized() {
+  return function(dispatch) {
+    dispatch(flashAdd({
+      message: <div>You have been logged out.</div>,
+      class: 'danger'
+    }));
+
+    dispatch({
+      type: types.UNAUTHORIZED
+    });
+
+    return null;
   };
 }
