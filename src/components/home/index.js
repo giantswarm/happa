@@ -64,7 +64,7 @@ var Home = React.createClass({
         }
 
         {
-          _.sortBy(this.props.clusters.map((cluster) => {
+          _.map(_.sortBy(this.props.clusters, (cluster) => cluster.id), (cluster) => {
             if (cluster.errorLoadingMetrics) {
               return <ClusterDashboard cluster={cluster} key={cluster.id + 'error'} className='empty-slate'>
                 <h1>Couldn't load metrics for cluster <code>{cluster.id}</code></h1>
