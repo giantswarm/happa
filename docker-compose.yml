@@ -91,3 +91,91 @@ services:
 
   fake-metrics-node:
     image: registry.giantswarm.io/giantswarm/fake-metrics-node:latest
+
+  domain-validator:
+    image: registry.giantswarm.io/giantswarm/domain-validator
+    depends_on:
+      - nsqd
+      - couchdb
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./certificates:/certs
+    environment:
+      NSQD_HTTP_ENDPOINT: http://nsqd:4151
+      DEBUGGING: "YEAH"
+      GIANTSWARM_API_URI: http://giantswarmmockapi:8000
+      GIANTSWARM_ADMIN_TOKEN:
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      CORS_BASE_URI: http://docker.dev/
+      CACHE_KEY_SALT: 793857234kjnsdfkjn128ed3ubnkdn2398e
+      TOPIC_DOMAIN_VALIDATION: domain_validation
+      COUCHDB_USER: meister
+      COUCHDB_PASSWORD: a27r0df0912nbogd094t
+      COUCHDB_HOST: couchdb
+      COUCHDB_DBNAME: domains
+
+  couchdb:
+    image: couchdb:1.6.1
+    ports:
+      - "5984:5984"
+    environment:
+      COUCHDB_USER: meister
+      COUCHDB_PASSWORD: a27r0df0912nbogd094t
+
+  nsqlookupd:
+    image: nsqio/nsq:v0.3.8
+    command: /nsqlookupd
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+
+  nsqd:
+    image: nsqio/nsq:v0.3.8
+    command: >
+      /nsqd --lookupd-tcp-address=nsqlookupd:4160
+            --broadcast-address=nsqd
+            --msg-timeout="100s"
+            --max-msg-timeout=48h
+            --verbose=true
+
+    ports:
+      - "4150:4150"
+      - "4151:4151"
+      - "4152:4152"
+
+    volumes:
+      - ./certificates:/certs
+
+  nsqadmin:
+    image: nsqio/nsq:v0.3.8
+    command: >
+      /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    ports:
+      - "4171:4171"
+
+  worker:
+    image: registry.giantswarm.io/giantswarm/domain-validator-worker
+    depends_on:
+      - nsqlookupd
+      - couchdb
+    volumes:
+      - ./certificates:/certs
+    environment:
+      LOG_LEVEL: DEBUG
+      NSQLOOKUPD_HTTP_ADDRESSES: "nsqlookupd:4161"
+      TOPIC: domain_validation
+      CHANNEL: default
+      MAX_TASK_AGE: "86400"
+      MAX_BACKOFF_DURATION: "60"
+      MAX_TRIES: "1000"
+      MAX_IN_FLIGHT: "1"
+      POLL_INTERVAL: "5"
+      NAMESERVERS: 8.8.8.8 8.8.4.4
+      DNS_TIMEOUT: "5"
+      DNS_LIFETIME: "7"
+      COUCHDB_USER: meister
+      COUCHDB_PASSWORD: a27r0df0912nbogd094t
+      COUCHDB_HOST: couchdb
+      COUCHDB_DBNAME: domains
