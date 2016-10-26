@@ -83,6 +83,8 @@ var Login = React.createClass({
         }));
 
         browserHistory.push('/');
+
+        return null;
       })
       .catch((error) => {
         this.setState({

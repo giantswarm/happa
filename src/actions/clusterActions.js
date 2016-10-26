@@ -104,8 +104,8 @@ export function clusterFetchMetrics(clusterId) {
       dispatch(clusterLoadMetricsSuccess(clusterId, clusterMetrics));
     })
     .catch((error) => {
-      console.log(error);
       dispatch(clusterLoadMetricsError(error));
+      throw(error);
     });
   };
 }
