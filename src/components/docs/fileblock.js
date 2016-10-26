@@ -52,6 +52,7 @@ module.exports = React.createClass ({
     classNames.push('codeblock--container');
     if (this.state.hovering) {classNames.push('hovering');}
     if (this.state.clicked) {classNames.push('clicked');}
+    if (this.props.hideText) {classNames.push('oneline');}
 
     return classNames.join(' ');
   },
@@ -83,7 +84,13 @@ module.exports = React.createClass ({
               { this.props.fileName }
             </div>
             <div className='codeblock--filecontents'>
+            {
+              this.props.hideText
+              ?
+              undefined
+              :
               <Line text={ Helpers.dedent(this.props.children) } />
+            }
             </div>
           </div>
           <div className='codeblock--buttons'

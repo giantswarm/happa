@@ -13,6 +13,7 @@ import { browserHistory } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
 import Button from '../button';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
+var Modernizr = window.Modernizr;
 
 var ConfigKubeCtl = React.createClass ({
 
@@ -107,27 +108,56 @@ var ConfigKubeCtl = React.createClass ({
 
     kubeConfig: function() {
       return (
-        <FileBlock fileName='giantswarm-kubeconfig'>
-          {`
-          apiVersion: v1
-          kind: Config
-          clusters:
-          - cluster:
-              certificate-authority-data: ${btoa(this.state.keyPair.data.certificate_authority_data)}
-              server: ${this.props.cluster.api_endpoint}
-            name: ${this.props.cluster.name}
-          contexts:
-          - context:
-              cluster: ${this.props.cluster.name}
-              user: "giantswarm-default"
-            name: giantswarm-default
-          users:
-          - name: "giantswarm-default"
-            user:
-              client-certificate-data: ${btoa(this.state.keyPair.data.client_certificate_data)}
-              client-key-data: ${btoa(this.state.keyPair.data.client_key_data)}
-          `}
-        </FileBlock>
+        <div className="created-key-pair">
+          <FileBlock fileName='giantswarm-kubeconfig'>
+            {`
+            apiVersion: v1
+            kind: Config
+            clusters:
+            - cluster:
+                certificate-authority-data: ${btoa(this.state.keyPair.data.certificate_authority_data)}
+                server: ${this.props.cluster.api_endpoint}
+              name: ${this.props.cluster.name}
+            contexts:
+            - context:
+                cluster: ${this.props.cluster.name}
+                user: "giantswarm-default"
+              name: giantswarm-default
+            users:
+            - name: "giantswarm-default"
+              user:
+                client-certificate-data: ${btoa(this.state.keyPair.data.client_certificate_data)}
+                client-key-data: ${btoa(this.state.keyPair.data.client_key_data)}
+            `}
+          </FileBlock>
+          <div className='well'>
+            <h4>Certificate and Key Download</h4>
+            {
+              Modernizr.adownload ?
+              <div className="cert-downloads">
+                <a className="button outline" href={window.URL.createObjectURL(new Blob([this.state.keyPair.data.certificate_authority_data], {type: 'application/plain;charset=utf-8'}))} download='ca.crt'>CA CERTIFICATE</a>
+                <a className="button outline" href={window.URL.createObjectURL(new Blob([this.state.keyPair.data.client_certificate_data], {type: 'application/plain;charset=utf-8'}))} download='client.crt'>CLIENT CERTIFICATE</a>
+                <a className="button outline" href={window.URL.createObjectURL(new Blob([this.state.keyPair.data.client_key_data], {type: 'application/plain;charset=utf-8'}))} download='client.key'>CLIENT KEY</a>
+              </div>
+              :
+              <div className="cert-downloads">
+                <FileBlock fileName='ca.crt' hideText={true}>
+                  {this.state.keyPair.data.certificate_authority_data}
+                </FileBlock>
+
+                <FileBlock fileName='client.crt' hideText={true}>
+                  {this.state.keyPair.data.client_certificate_data}
+                </FileBlock>
+
+                <FileBlock fileName='client.key' hideText={true}>
+                  {this.state.keyPair.data.client_key_data}
+                </FileBlock>
+              </div>
+            }
+
+            <p>These files resemble the certificates in the configuration file above. They facilitate authenticated access to services using a web browser. <a href="https://docs.giantswarm.io/guides/accessing-services-from-the-outside/">Read more in our Docs.</a></p>
+          </div>
+        </div>
       );
     },
 
