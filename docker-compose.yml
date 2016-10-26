@@ -108,7 +108,7 @@ services:
       GIANTSWARM_ADMIN_TOKEN:
       REDIS_HOST: redis
       REDIS_PORT: "6379"
-      CORS_BASE_URI: http://docker.dev/
+      CORS_BASE_URI: http://docker.dev:8000
       CACHE_KEY_SALT: 793857234kjnsdfkjn128ed3ubnkdn2398e
       TOPIC_DOMAIN_VALIDATION: domain_validation
       COUCHDB_USER: meister
