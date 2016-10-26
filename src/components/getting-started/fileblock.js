@@ -22,7 +22,7 @@ import copy from 'copy-to-clipboard';
 import _  from 'underscore';
 import Line from './line';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import Helpers from '../../lib/helpers';
+import * as Helpers from '../../lib/helpers';
 
 module.exports = React.createClass ({
   getInitialState: function() {
