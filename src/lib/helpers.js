@@ -1,5 +1,6 @@
 'use strict';
 import validate from 'validate.js';
+import moment from 'moment';
 
 export function dedent(strings, ...values) {
   let raw;
@@ -95,4 +96,9 @@ export function validateOrRaise(validatable, constraints) {
     });
     throw(new TypeError(messages.join('\n')));
   }
+};
+
+export function formatDate(ISO8601DateString) {
+  // http://momentjs.com/docs/#/displaying/
+  return moment(ISO8601DateString).utc().format('D MMM YYYY, h:mm z');
 };

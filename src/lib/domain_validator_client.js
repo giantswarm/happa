@@ -19,7 +19,7 @@ var helpers = require('./helpers');
 //  authorizationToken: 'asdfghjk',
 // });
 //
-export default function Desmotes(config) {
+export default function DomainValidator(config) {
   var constraints = {
     endpoint: {
       presence: true,
@@ -107,6 +107,44 @@ export default function Desmotes(config) {
       .catch(error => {
         if (error.status && error.status === 401) {
           throw(new Error('Could not add domain. Not authorized or no such organization.'));
+        } else {
+          throw(error);
+        }
+      });
+
+      return promise;
+    },
+
+    //
+    // deleteDomain
+    // -----------
+    // Delete a domain belonging to an organization.
+    //
+    deleteDomain: function(params) {
+      var constraints = {
+        organizationId: { presence: true },
+        domain: { presence: true }
+      };
+
+      var promise = new Promise((resolve, reject) => {
+        helpers.validateOrRaise(params, constraints);
+
+        var url = `${config.endpoint}/organizations/${params.organizationId}/domains/${params.domain}`;
+
+        resolve(
+          request
+            .delete(url)
+            .timeout(config.timeout_ms)
+            .set('Authorization', 'giantswarm ' + config.authorizationToken)
+            .set('ContentType', 'application/json')
+        );
+      })
+      .then(response => {
+        return response.body;
+      })
+      .catch(error => {
+        if (error.status && error.status === 401) {
+          throw(new Error('Could not delete domain. Not authorized or no such organization.'));
         } else {
           throw(error);
         }
