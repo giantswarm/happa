@@ -8,7 +8,10 @@ var helpers = require('./helpers');
 // Passage
 // -------
 // A client for Passage.
-// config: {endpoint: 'http://passage.com', timeout_ms: 10000}
+// config: {
+//  endpoint: 'http://passage.com',
+//  timeout_ms: 10000 # When a request should time out
+// }
 //
 // Example Usage:
 // var passage = new Passage({endpoint: 'http://docker.dev:5000'})

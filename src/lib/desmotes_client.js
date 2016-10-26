@@ -7,7 +7,11 @@ var helpers = require('./helpers');
 // Desmotes
 // --------
 // A client for Desmotes.
-// config: {endpoint: 'http://desmotes.com', timeout_ms: 10000}
+// config: {
+//  endpoint: 'http://desmotes.com',
+//  authorizationToken: 'asdfghjkl'  # A Giant Swarm user's authentication token,
+//  timeout_ms: 10000                # When a request should time out
+// }
 //
 // Example Usage:
 // var desmotes = new Desmotes({endpoint: 'http://docker.dev:9001', authorizationToken: 'asdfghjk'})
