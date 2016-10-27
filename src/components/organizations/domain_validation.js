@@ -252,11 +252,17 @@ var DomainValidation = React.createClass({
                   </BootstrapModal.Header>
                   <BootstrapModal.Body>
                     <p>To allow validation, please add a TXT record to the DNS entry of this domain with the following content:</p>
-                    <p>
-                      <form>
-                        <input className="validation-token-input" onClick={this.validationTokenClick} ref="validationTokenInput" type="text" readOnly value={'Giant Swarm validation: ' + this.state.modal.domain.validation_token} />
-                      </form>
-                    </p>
+                    <form>
+                      <input
+                        key="validationTokenInput"
+                        className="validation-token-input"
+                        onClick={this.validationTokenClick}
+                        ref="validationTokenInput"
+                        type="text"
+                        readOnly
+                        value={'Giant Swarm validation: ' + this.state.modal.domain.validation_token}
+                      />
+                    </form>
                     <p>To learn more about the domain validation process, please read our <a href="https://docs.giantswarm.io/guides/managing-domains/" target="_blank">guide on Managing Domains</a>.</p>
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
