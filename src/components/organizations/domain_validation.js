@@ -9,7 +9,7 @@ import Button from '../button';
 import { connect } from 'react-redux';
 import { organizationsLoad, organizationAddMember, organizationRemoveMember } from '../../actions/organizationActions';
 import DomainValidator from '../../lib/domain_validator_client';
-import { formatDate, toTitleCase } from '../../lib/helpers.js';
+import { formatDate, relativeDate, toTitleCase } from '../../lib/helpers.js';
 
 var DomainValidation = React.createClass({
   getInitialState() {
@@ -180,7 +180,7 @@ var DomainValidation = React.createClass({
                           }
 
                         </td>
-                        <td>{formatDate(domain.creation_date)}</td>
+                        <td>{relativeDate(domain.creation_date)}</td>
                         <td>
                           <div className='contextual'>
                             <i className='fa fa-info-circle clickable'
@@ -320,11 +320,11 @@ var DomainValidation = React.createClass({
                         </tr>
                         <tr>
                           <td>Created</td>
-                          <td>{formatDate(this.state.modal.domain.creation_date)}</td>
+                          <td>{relativeDate(this.state.modal.domain.creation_date)}</td>
                         </tr>
                         <tr>
                           <td>Last check</td>
-                          <td>{formatDate(this.state.modal.last_validation_attempt_date)}</td>
+                          <td>{relativeDate(this.state.modal.last_validation_attempt_date)}</td>
                         </tr>
                         <tr>
                           <td>Validation comment</td>

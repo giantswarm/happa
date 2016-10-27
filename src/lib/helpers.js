@@ -1,6 +1,8 @@
 'use strict';
 import validate from 'validate.js';
 import moment from 'moment';
+import React from 'react';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
 
 export function dedent(strings, ...values) {
   let raw;
@@ -103,7 +105,18 @@ export function formatDate(ISO8601DateString) {
   return moment(ISO8601DateString).utc().format('D MMM YYYY, h:mm z');
 };
 
+export function relativeDate(ISO8601DateString) {
+  var formatedDate = formatDate(ISO8601DateString);
+  var relativeDate = moment(ISO8601DateString).utc().fromNow();
+
+  return <OverlayTrigger placement="top" overlay={
+    <Tooltip id="tooltip">{formatedDate}</Tooltip>
+  }>
+    <span>{relativeDate}</span>
+  </OverlayTrigger>;
+};
+
 export function toTitleCase(str) {
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
   return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
+};
