@@ -99,7 +99,12 @@ export function organizationsLoad() {
         var orgId = current[0];
         var orgDetails = current[1];
         orgDetails.members = orgDetails.members.sort();
-        previous[orgId] = Object.assign({}, previous[orgId], orgDetails);
+        previous[orgId] = Object.assign(
+          {},
+          getState().entities.organizations.items[orgId],
+          previous[orgId],
+          orgDetails
+        );
         return previous;
       }, organizations);
 
