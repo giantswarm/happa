@@ -117,7 +117,7 @@ var OrganizationDetail = React.createClass({
                   </tbody>
                 </table>
               }
-              <Button onClick={this.addMember} bsStyle='primary'>Add Member</Button>
+              <Button onClick={this.addMember} bsStyle='default'>Add Member</Button>
             </div>
           </div>
 

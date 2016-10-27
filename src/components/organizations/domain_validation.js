@@ -201,7 +201,7 @@ var DomainValidation = React.createClass({
             :
             undefined
           }
-          <Button onClick={this.addDomain} bsStyle='primary' className='small'>Add Domain</Button>
+          <Button onClick={this.addDomain} bsStyle='default' className='small'>Add Domain</Button>
         </div>
 
         {
