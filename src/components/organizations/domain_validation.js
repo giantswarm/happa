@@ -122,6 +122,17 @@ var DomainValidation = React.createClass({
     });
   },
 
+  showDomainDetails(domain) {
+    this.setState({
+      modal: {
+        visible: true,
+        loading: false,
+        template: 'domainDetails',
+        domain: domain
+      }
+    });
+  },
+
   render() {
     return (
       <div className='row section'>
@@ -163,6 +174,10 @@ var DomainValidation = React.createClass({
                       <td>{formatDate(domain.creation_date)}</td>
                       <td>
                         <div className='contextual'>
+                          <i className='fa fa-info-circle clickable'
+                             title='Delete this organization'
+                             onClick={this.showDomainDetails.bind(this, domain)} />
+                          {' '}
                           <i className='fa fa-times clickable'
                              title='Delete this organization'
                              onClick={this.deleteDomain.bind(this, domain.domain)} />
@@ -250,6 +265,51 @@ var DomainValidation = React.createClass({
                         Cancel
                       </Button>
                     }
+                  </BootstrapModal.Footer>
+                </BootstrapModal>;
+
+              case 'domainDetails':
+                return <BootstrapModal show={this.state.modal.visible} onHide={this.closeModal}>
+                  <BootstrapModal.Header closeButton>
+                    <BootstrapModal.Title>Domain validation details</BootstrapModal.Title>
+                  </BootstrapModal.Header>
+                    <table className="details-table">
+                      <tbody>
+                        <tr>
+                          <td style={{width: 180}}>Domain</td>
+                          <td className="code">{this.state.modal.domain.domain}</td>
+                        </tr>
+                        <tr>
+                          <td>Status</td>
+                          <td>{this.state.modal.domain.status}</td>
+                        </tr>
+                        <tr>
+                          <td>Created</td>
+                          <td>{formatDate(this.state.modal.domain.creation_date)}</td>
+                        </tr>
+                        <tr>
+                          <td>Last check</td>
+                          <td>{formatDate(this.state.modal.last_validation_attempt_date)}</td>
+                        </tr>
+                        <tr>
+                          <td>Validation comment</td>
+                          <td>{this.state.modal.domain.validation_comment}</td>
+                        </tr>
+                        <tr>
+                          <td>Expected TXT record</td>
+                          <td className="code">Giant Swarm validation: {this.state.modal.domain.validation_token}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <BootstrapModal.Body>
+                      To learn more about the domain validation process, please read our <a href="https://docs.giantswarm.io/guides/managing-domains/" target="_blank">guide on managing domains</a>.
+                      </BootstrapModal.Body>
+                  <BootstrapModal.Footer>
+                    <Button
+                      bsStyle='link'
+                      onClick={this.closeModal}>
+                      Close
+                    </Button>
                   </BootstrapModal.Footer>
                 </BootstrapModal>;
 
