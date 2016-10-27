@@ -14,16 +14,6 @@ import { formatDate } from '../../lib/helpers.js';
 var OrganizationDetail = React.createClass({
   componentDidMount() {
     this.props.actions.organizationsLoad()
-    .then(() => {
-      return this.props.actions.organizationLoadDomains(this.props.organization.id);
-    })
-    .catch((error) => {
-      this.props.dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to get the list of domains for this organization</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
-        class: 'danger'
-      }));
-    });
-
   },
 
   addMember() {
@@ -125,7 +115,7 @@ var OrganizationDetail = React.createClass({
             loadDomains={this.props.actions.organizationLoadDomains.bind(this, this.props.organization.id)}
             addDomain={this.props.actions.organizationAddDomain.bind(this, this.props.organization.id)}
             deleteDomain={this.props.actions.organizationDeleteDomain.bind(this, this.props.organization.id)}
-            domains={this.props.organization.domains}
+            organization={this.props.organization}
           />
 {
   /*

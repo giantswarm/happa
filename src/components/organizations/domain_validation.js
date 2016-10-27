@@ -12,8 +12,23 @@ import DomainValidator from '../../lib/domain_validator_client';
 import { formatDate, relativeDate, toTitleCase } from '../../lib/helpers.js';
 
 var DomainValidation = React.createClass({
+  componentDidMount: function() {
+    this.props.loadDomains()
+    .catch((error) => {
+      this.props.dispatch(flashAdd({
+        message: <div><strong>Something went wrong while trying to get the list of domains for this organization</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        class: 'danger'
+      }));
+    })
+    .then(() => {
+      var newState = Object.assign({}, this.state, {loading: false});
+      this.setState(newState);
+    });
+  },
+
   getInitialState() {
     return {
+      loading: true,
       modal: {
         visible: false,
         loading: false,
@@ -148,59 +163,66 @@ var DomainValidation = React.createClass({
         </div>
         <div className='col-9'>
           <p>Here you can manage domains to be used within your clusters. To learn more about making your services available under a custom domain name, read our <a href="https://docs.giantswarm.io/guides/managing-domains/" target="_blank">guide on Managing Domains</a></p>
-          {
-            this.props.domains && this.props.domains.length > 0 ?
-            <table>
-              <thead>
-                <tr>
-                  <th>DOMAIN</th>
-                  <th>STATUS</th>
-                  <th>CREATED</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  _.map(this.props.domains, domain => {
-                    return (
-                      <tr key={domain.domain}>
-                        <td>{domain.domain}</td>
-                        <td>
-                          {toTitleCase(domain.status)}
-                          {' '}
-                          {
-                            domain.validation_comment ?
-                            <OverlayTrigger placement="top" overlay={
-                              <Tooltip id="tooltip">{domain.validation_comment}</Tooltip>
-                            }>
-                              <i className='fa fa-exclamation-triangle clickable' />
-                            </OverlayTrigger>
-                            :
-                            undefined
-                          }
+          <div className="domain-list">
+            {
+              this.state.loading ? <img className='loader' src='/images/loader_oval_light.svg' /> : undefined
+            }
 
-                        </td>
-                        <td>{relativeDate(domain.creation_date)}</td>
-                        <td>
-                          <div className='contextual'>
-                            <i className='fa fa-info-circle clickable'
-                               title='Delete this organization'
-                               onClick={this.showDomainDetails.bind(this, domain)} />
+            {
+              this.props.organization.domains && this.props.organization.domains.length > 0 ?
+              <table>
+                <thead>
+                  <tr>
+                    <th>DOMAIN</th>
+                    <th>STATUS</th>
+                    <th>CREATED</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    _.map(this.props.organization.domains, domain => {
+                      return (
+                        <tr key={domain.domain}>
+                          <td>{domain.domain}</td>
+                          <td>
+                            {toTitleCase(domain.status)}
                             {' '}
-                            <i className='fa fa-trash clickable'
-                               title='Delete this organization'
-                               onClick={this.deleteDomain.bind(this, domain.domain)} />
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                }
-              </tbody>
-            </table>
-            :
-            undefined
-          }
+                            {
+                              domain.validation_comment ?
+                              <OverlayTrigger placement="top" overlay={
+                                <Tooltip id="tooltip">{domain.validation_comment}</Tooltip>
+                              }>
+                                <i className='fa fa-exclamation-triangle clickable' />
+                              </OverlayTrigger>
+                              :
+                              undefined
+                            }
+
+                          </td>
+                          <td>{relativeDate(domain.creation_date)}</td>
+                          <td>
+                            <div className='contextual'>
+                              <i className='fa fa-info-circle clickable'
+                                 title='Delete this organization'
+                                 onClick={this.showDomainDetails.bind(this, domain)} />
+                              {' '}
+                              <i className='fa fa-trash clickable'
+                                 title='Delete this organization'
+                                 onClick={this.deleteDomain.bind(this, domain.domain)} />
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  }
+                </tbody>
+              </table>
+
+              :
+              undefined
+            }
+          </div>
           <Button onClick={this.addDomain} bsStyle='default' className='small'>Add Domain</Button>
         </div>
 
