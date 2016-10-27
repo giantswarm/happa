@@ -102,3 +102,8 @@ export function formatDate(ISO8601DateString) {
   // http://momentjs.com/docs/#/displaying/
   return moment(ISO8601DateString).utc().format('D MMM YYYY, h:mm z');
 };
+
+export function toTitleCase(str) {
+  // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
+  return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}

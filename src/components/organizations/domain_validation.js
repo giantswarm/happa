@@ -9,7 +9,7 @@ import Button from '../button';
 import { connect } from 'react-redux';
 import { organizationsLoad, organizationAddMember, organizationRemoveMember } from '../../actions/organizationActions';
 import DomainValidator from '../../lib/domain_validator_client';
-import { formatDate } from '../../lib/helpers.js';
+import { formatDate, toTitleCase } from '../../lib/helpers.js';
 
 var DomainValidation = React.createClass({
   getInitialState() {
@@ -54,14 +54,17 @@ var DomainValidation = React.createClass({
       }
     }, () => {
       this.props.addDomain(this.refs.domainInput.value)
-      .then(this.props.loadDomains)
       .then(response => {
         this.setState({
           modal: {
-            visible: false
+            visible: true,
+            loading: false,
+            template: 'addDomainSuccess',
+            domain: response
           }
         });
       })
+      .then(this.props.loadDomains)
       .catch(error => {
         this.setState({
           modal: {
@@ -133,6 +136,10 @@ var DomainValidation = React.createClass({
     });
   },
 
+  validationTokenClick() {
+    this.refs.validationTokenInput.select();
+  },
+
   render() {
     return (
       <div className='row section'>
@@ -140,55 +147,60 @@ var DomainValidation = React.createClass({
           <h3 className='table-label'>Domains</h3>
         </div>
         <div className='col-9'>
-          <p>Here you can manage domains to be used within your clusters. To learn more about making your services available under a custom domain name, read our guide on Managing Domains.</p>
-          <table>
-            <thead>
-              <tr>
-                <th>DOMAIN</th>
-                <th>STATUS</th>
-                <th>CREATED</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                _.map(this.props.domains, domain => {
-                  return (
-                    <tr key={domain.domain}>
-                      <td>{domain.domain}</td>
-                      <td>
-                        {domain.status}
-                        {' '}
-                        {
-                          domain.validation_comment ?
-                          <OverlayTrigger placement="top" overlay={
-                            <Tooltip id="tooltip">{domain.validation_comment}</Tooltip>
-                          }>
-                            <i className='fa fa-exclamation-triangle clickable' />
-                          </OverlayTrigger>
-                          :
-                          undefined
-                        }
-
-                      </td>
-                      <td>{formatDate(domain.creation_date)}</td>
-                      <td>
-                        <div className='contextual'>
-                          <i className='fa fa-info-circle clickable'
-                             title='Delete this organization'
-                             onClick={this.showDomainDetails.bind(this, domain)} />
+          <p>Here you can manage domains to be used within your clusters. To learn more about making your services available under a custom domain name, read our <a href="https://docs.giantswarm.io/guides/managing-domains/" target="_blank">guide on Managing Domains</a></p>
+          {
+            this.props.domains && this.props.domains.length > 0 ?
+            <table>
+              <thead>
+                <tr>
+                  <th>DOMAIN</th>
+                  <th>STATUS</th>
+                  <th>CREATED</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  _.map(this.props.domains, domain => {
+                    return (
+                      <tr key={domain.domain}>
+                        <td>{domain.domain}</td>
+                        <td>
+                          {toTitleCase(domain.status)}
                           {' '}
-                          <i className='fa fa-times clickable'
-                             title='Delete this organization'
-                             onClick={this.deleteDomain.bind(this, domain.domain)} />
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              }
-            </tbody>
-          </table>
+                          {
+                            domain.validation_comment ?
+                            <OverlayTrigger placement="top" overlay={
+                              <Tooltip id="tooltip">{domain.validation_comment}</Tooltip>
+                            }>
+                              <i className='fa fa-exclamation-triangle clickable' />
+                            </OverlayTrigger>
+                            :
+                            undefined
+                          }
+
+                        </td>
+                        <td>{formatDate(domain.creation_date)}</td>
+                        <td>
+                          <div className='contextual'>
+                            <i className='fa fa-info-circle clickable'
+                               title='Delete this organization'
+                               onClick={this.showDomainDetails.bind(this, domain)} />
+                            {' '}
+                            <i className='fa fa-trash clickable'
+                               title='Delete this organization'
+                               onClick={this.deleteDomain.bind(this, domain.domain)} />
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                }
+              </tbody>
+            </table>
+            :
+            undefined
+          }
           <Button onClick={this.addDomain} bsStyle='primary' className='small'>Add Domain</Button>
         </div>
 
@@ -230,6 +242,29 @@ var DomainValidation = React.createClass({
                         Cancel
                       </Button>
                     }
+                  </BootstrapModal.Footer>
+                </BootstrapModal>;
+
+              case 'addDomainSuccess':
+                return <BootstrapModal show={this.state.modal.visible} onHide={this.closeModal}>
+                  <BootstrapModal.Header closeButton>
+                    <BootstrapModal.Title>Add a domain</BootstrapModal.Title>
+                  </BootstrapModal.Header>
+                  <BootstrapModal.Body>
+                    <p>To allow validation, please add a TXT record to the DNS entry of this domain with the following content:</p>
+                    <p>
+                      <form>
+                        <input className="validation-token-input" onClick={this.validationTokenClick} ref="validationTokenInput" type="text" readOnly value={'Giant Swarm validation: ' + this.state.modal.domain.validation_token} />
+                      </form>
+                    </p>
+                    <p>To learn more about the domain validation process, please read our <a href="https://docs.giantswarm.io/guides/managing-domains/" target="_blank">guide on Managing Domains</a>.</p>
+                  </BootstrapModal.Body>
+                  <BootstrapModal.Footer>
+                    <Button
+                      bsStyle='link'
+                      onClick={this.closeModal}>
+                      Close
+                    </Button>
                   </BootstrapModal.Footer>
                 </BootstrapModal>;
 
@@ -281,7 +316,7 @@ var DomainValidation = React.createClass({
                         </tr>
                         <tr>
                           <td>Status</td>
-                          <td>{this.state.modal.domain.status}</td>
+                          <td>{toTitleCase(this.state.modal.domain.status)}</td>
                         </tr>
                         <tr>
                           <td>Created</td>
@@ -302,7 +337,7 @@ var DomainValidation = React.createClass({
                       </tbody>
                     </table>
                     <BootstrapModal.Body>
-                      To learn more about the domain validation process, please read our <a href="https://docs.giantswarm.io/guides/managing-domains/" target="_blank">guide on managing domains</a>.
+                      To learn more about the domain validation process, please read our <a href="https://docs.giantswarm.io/guides/managing-domains/" target="_blank">guide on Managing Domains</a>.
                       </BootstrapModal.Body>
                   <BootstrapModal.Footer>
                     <Button

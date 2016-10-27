@@ -327,6 +327,8 @@ export function organizationAddDomain(organizationId, domain) {
         organizationId,
         domain: response
       });
+
+      return response;
     })
     .catch(error => {
       throw error;
