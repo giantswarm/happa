@@ -2,6 +2,7 @@
 
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
 import { Link } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
 import Button from '../button';
@@ -144,7 +145,21 @@ var DomainValidation = React.createClass({
                   return (
                     <tr key={domain.domain}>
                       <td>{domain.domain}</td>
-                      <td>{domain.status}</td>
+                      <td>
+                        {domain.status}
+                        {' '}
+                        {
+                          domain.validation_comment ?
+                          <OverlayTrigger placement="top" overlay={
+                            <Tooltip id="tooltip">{domain.validation_comment}</Tooltip>
+                          }>
+                            <i className='fa fa-exclamation-triangle clickable' />
+                          </OverlayTrigger>
+                          :
+                          undefined
+                        }
+
+                      </td>
                       <td>{formatDate(domain.creation_date)}</td>
                       <td>
                         <div className='contextual'>
