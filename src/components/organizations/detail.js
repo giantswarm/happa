@@ -13,7 +13,7 @@ import { formatDate } from '../../lib/helpers.js';
 
 var OrganizationDetail = React.createClass({
   componentDidMount() {
-    this.props.actions.organizationsLoad()
+    this.props.actions.organizationsLoad();
   },
 
   addMember() {

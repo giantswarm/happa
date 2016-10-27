@@ -10,9 +10,20 @@ import { connect } from 'react-redux';
 import { organizationsLoad, organizationAddMember, organizationRemoveMember } from '../../actions/organizationActions';
 import DomainValidator from '../../lib/domain_validator_client';
 import { formatDate, relativeDate, toTitleCase } from '../../lib/helpers.js';
+import ReactTimeout from 'react-timeout';
+
+const DOMAIN_POLL_INTERVAL = 60000; // 60 Seconds
 
 var DomainValidation = React.createClass({
   componentDidMount: function() {
+    this.loadDomains();
+
+    this.props.setInterval(() => {
+      this.props.loadDomains();
+    }, DOMAIN_POLL_INTERVAL);
+  },
+
+  loadDomains: function() {
     this.props.loadDomains()
     .catch((error) => {
       this.props.dispatch(flashAdd({
@@ -384,4 +395,4 @@ var DomainValidation = React.createClass({
   }
 });
 
-export default connect()(DomainValidation);
+export default connect()(ReactTimeout(DomainValidation));
