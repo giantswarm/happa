@@ -54,7 +54,7 @@ export function organizationsLoad() {
     var alreadyFetching = getState().entities.organizations.isFetching;
 
     if (alreadyFetching) {
-      return null;
+      return new Promise((resolve) => { resolve(); });
     }
 
     dispatch({type: types.ORGANIZATIONS_LOAD});
