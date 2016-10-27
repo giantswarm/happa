@@ -3,6 +3,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import FlashMessage from '../flash_messages/flash_message';
+import { flashAdd } from '../../actions/flashMessageActions';
 import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import * as OrganizationActions from '../../actions/organizationActions';
@@ -15,6 +16,12 @@ var OrganizationDetail = React.createClass({
     this.props.actions.organizationsLoad()
     .then(() => {
       return this.props.actions.organizationLoadDomains(this.props.organization.id);
+    })
+    .catch((error) => {
+      this.props.dispatch(flashAdd({
+        message: <div><strong>Something went wrong while trying to get the list of domains for this organization</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        class: 'danger'
+      }));
     });
 
   },
