@@ -40,10 +40,14 @@ module.exports = React.createClass({
     });
   },
 
+  cappedPercentage: function() {
+    return Math.min(this.state.percentage * 100, 100)
+  },
+
   render: function() {
     return (
       <div className='bar-chart'>
-        <div className='bar-chart--bar' style={{width: `${this.state.percentage * 100}%`, backgroundColor: this.props.color}}>
+        <div className='bar-chart--bar' style={{width: `${this.cappedPercentage()}%`, backgroundColor: this.props.color}}>
         </div>
         <div className='bar-chart--value'>
           {this.props.label}
