@@ -34,7 +34,9 @@ module.exports = React.createClass({
   },
 
   pieChart: function(percentage) {
-    var degrees = percentage * 360.0;
+    var cappedPercentage = Math.min(percentage, 0.9999); // glitch starts at exact value of 1
+                                                         // 0.9999 produces a full looking donut
+    var degrees = cappedPercentage * 360.0;
 
     return <svg viewBox="-1 -1 2 2" >
       <g fill='none' fillRule='evenodd'>
