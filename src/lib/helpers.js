@@ -73,7 +73,7 @@ var humanFileSize = function(bytes, si) {
     } while(Math.abs(bytes) >= thresh && u < units.length - 1);
 
     return {
-      value: bytes.toFixed(0),
+      value: bytes.toFixed(1),
       unit: units[u]
     };
 };
