@@ -15,6 +15,10 @@ if [ -n "$INTERCOM_APP_ID" ]; then
   sed -i "s|intercomAppId: 'bdvx0cb8'|intercomAppId: '$INTERCOM_APP_ID'|" /www/index.html
 fi
 
+if [ -n "$DOMAIN_VALIDATOR_ENDPOINT" ]; then
+  sed -i "s|domainValidatorEndpoint: 'http://docker.dev:5001'|domainValidatorEndpoint: '$DOMAIN_VALIDATOR_ENDPOINT'|" /www/index.html
+fi
+
 sed -i "s|VERSION|$(cat /www/VERSION)|" /etc/nginx/nginx.conf
 
 nginx -g "daemon off;"
