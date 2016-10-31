@@ -27,7 +27,7 @@ var DomainValidation = React.createClass({
     this.props.loadDomains()
     .catch((error) => {
       this.props.dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to get the list of domains for this organization</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        message: <div><strong>Something went wrong while trying to get the list of domains for this organization</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
         class: 'danger'
       }));
     })
@@ -99,7 +99,7 @@ var DomainValidation = React.createClass({
         });
 
         this.props.dispatch(flashAdd({
-          message: <div><strong>Something went wrong while trying to add this domain</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+          message: <div><strong>Something went wrong while trying to add this domain</strong><br/>{error.body ? error.body.message : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
           class: 'danger'
         }));
       });
@@ -144,7 +144,7 @@ var DomainValidation = React.createClass({
         });
 
         this.props.dispatch(flashAdd({
-          message: <div><strong>Something went wrong while trying to delete this domain</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+          message: <div><strong>Something went wrong while trying to delete this domain</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
           class: 'danger'
         }));
       });
@@ -195,7 +195,7 @@ var DomainValidation = React.createClass({
                     _.map(this.props.organization.domains, domain => {
                       return (
                         <tr key={domain.domain}>
-                          <td>{domain.domain}</td>
+                          <td className="code">{domain.domain}</td>
                           <td>
                             {toTitleCase(domain.status)}
                             {' '}
@@ -243,10 +243,10 @@ var DomainValidation = React.createClass({
               case 'addDomain':
                 return <BootstrapModal show={this.state.modal.visible} onHide={this.closeModal}>
                   <BootstrapModal.Header closeButton>
-                    <BootstrapModal.Title>Add a domain</BootstrapModal.Title>
+                    <BootstrapModal.Title>Add a Domain</BootstrapModal.Title>
                   </BootstrapModal.Header>
                   <BootstrapModal.Body>
-                    <h4>Domain Name:</h4>
+                    <h4>Domain name:</h4>
                     <form onSubmit={this.confirmAddDomain} >
                       <input ref='domainInput' autoFocus type='text'/>
                     </form>
@@ -259,9 +259,9 @@ var DomainValidation = React.createClass({
                       onClick={this.confirmAddDomain}>
                       {
                         this.state.modal.loading ?
-                        'Creating Organization'
+                        'Adding Domain'
                         :
-                        'Create Organization'
+                        'Add Domain'
                       }
                     </Button>
 
@@ -281,7 +281,7 @@ var DomainValidation = React.createClass({
               case 'addDomainSuccess':
                 return <BootstrapModal show={this.state.modal.visible} onHide={this.closeModal}>
                   <BootstrapModal.Header closeButton>
-                    <BootstrapModal.Title>Add a domain</BootstrapModal.Title>
+                    <BootstrapModal.Title>Add a Domain</BootstrapModal.Title>
                   </BootstrapModal.Header>
                   <BootstrapModal.Body>
                     <p>To allow validation, please add a TXT record to the DNS entry of this domain with the following content:</p>
