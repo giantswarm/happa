@@ -56,11 +56,11 @@ export function clusterLoadDetailsError(error) {
   };
 }
 
-export function clusterLoadMetricsSuccess(clusterId, clusterMetrics) {
+export function clusterLoadMetricsSuccess(clusterId, metrics) {
   return {
     type: types.CLUSTER_LOAD_METRICS_SUCCESS,
     clusterId,
-    clusterMetrics
+    metrics
   };
 }
 
@@ -100,8 +100,8 @@ export function clusterFetchMetrics(clusterId) {
 
     return desmotes.clusterMetrics({
       clusterId: clusterId
-    }).then((clusterMetrics) => {
-      dispatch(clusterLoadMetricsSuccess(clusterId, clusterMetrics));
+    }).then((metrics) => {
+      dispatch(clusterLoadMetricsSuccess(clusterId, metrics));
     })
     .catch((error) => {
       dispatch(clusterLoadMetricsError(error));

@@ -35,7 +35,11 @@ var ClusterDashboard = React.createClass({
 
   ramPercentUsed: function() {
     if (this.props.cluster.metrics) {
-      return this.props.cluster.metrics.ram_used.value / this.props.cluster.metrics.ram_available.value;
+      if (this.props.cluster.metrics.ram_available.value === 0) {
+        return 0
+      } else {
+        return this.props.cluster.metrics.ram_used.value / this.props.cluster.metrics.ram_available.value;
+      }
     } else {
       return 0;
     }
@@ -53,7 +57,11 @@ var ClusterDashboard = React.createClass({
 
   storagePercentUsed: function() {
     if (this.props.cluster.metrics && this.props.cluster.metrics.node_storage_used && this.props.cluster.metrics.node_storage_limit) {
-      return this.props.cluster.metrics.node_storage_used.value / this.props.cluster.metrics.node_storage_limit.value;
+      if (this.props.cluster.metrics.node_storage_limit.value === 0) {
+        return 0
+      } else {
+        return this.props.cluster.metrics.node_storage_used.value / this.props.cluster.metrics.node_storage_limit.value;
+      }
     } else {
       return 0;
     }
