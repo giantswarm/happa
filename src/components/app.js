@@ -19,7 +19,6 @@ import organizationDetail from './organizations/detail';
 import accountSettings from './account_settings';
 import wip from './wip';
 import Home from './home';
-import { syncHistoryWithStore } from 'react-router-redux';
 
 require('normalize.css');
 require('../styles/app.scss');
@@ -39,13 +38,11 @@ function requireAuth(nextState, replace) {
   }
 }
 
-const history = syncHistoryWithStore(browserHistory, store);
-
-history.listen(location => {window.Intercom('update');});
+browserHistory.listen(location => {window.Intercom('update');});
 
 render(
   <Provider store={store}>
-    <Router history={history} render={applyRouterMiddleware(useScroll())}>
+    <Router history={browserHistory} render={applyRouterMiddleware(useScroll())}>
       <Route path = "/login" component={login} />
       <Route path = "/logout" component={logout} />
       <Route path = "/forgot_password" component={forgot_password_index} />

@@ -1,6 +1,7 @@
 'use strict';
 
 import * as types from '../actions/actionTypes';
+import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
 var firstTime = true;
@@ -47,8 +48,9 @@ var determineSelectedCluster = function(selectedOrganization, organizations) {
 var shutDown = function(state) {
   localStorage.removeItem('user');
   firstTime = true;
-  browserHistory.push('/login');
+
   window.Intercom('shutdown');
+  browserHistory.push('/login');
 
   return Object.assign({}, state, {
     loggedInUser: {},

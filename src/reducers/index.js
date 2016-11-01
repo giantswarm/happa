@@ -4,7 +4,6 @@ import clusters from './clusterReducer';
 import modal from './modalReducer';
 import flashMessages from './flashMessagesReducer';
 import app from './appReducer';
-import { routerReducer } from 'react-router-redux';
 
 
 const entities = combineReducers({
@@ -16,8 +15,7 @@ const rootReducer = combineReducers({
   app,
   entities,
   modal,
-  flashMessages,
-  routing: routerReducer
+  flashMessages
 });
 
 export default rootReducer;
