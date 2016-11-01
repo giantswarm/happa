@@ -2,7 +2,7 @@
   "name": "happa",
   "components": {
     "nginx": {
-      "image": "registry.giantswarm.io/giantswarm/happa:finalizing-metrics-2016-10-17-16-07-26",
+      "image": "registry.giantswarm.io/giantswarm/happa:0.1.4",
       "ports": 80,
       "domains": {
         "80": "happa.giantswarm.io"
@@ -19,7 +19,7 @@
     },
 
     "desmotes": {
-      "image": "registry.giantswarm.io/giantswarm/desmotes:fix-cpu-metrics-2016-10-18-18-52-34",
+      "image": "registry.giantswarm.io/giantswarm/desmotes:0.1.1",
       "ports": 5000,
       "domains": {
         "5000": "desmotes.giantswarm.io"
