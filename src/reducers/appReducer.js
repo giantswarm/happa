@@ -2,7 +2,6 @@
 
 import * as types from '../actions/actionTypes';
 import _ from 'underscore';
-import { browserHistory } from 'react-router';
 
 var firstTime = true;
 
@@ -45,6 +44,18 @@ var determineSelectedCluster = function(selectedOrganization, organizations) {
   return selectedCluster;
 };
 
+var shutDown = function(state) {
+  localStorage.removeItem('user');
+  firstTime = true;
+  browserHistory.push('/login');
+  window.Intercom('shutdown');
+
+  return Object.assign({}, state, {
+    loggedInUser: {},
+    firstLoadComplete: false
+  });
+};
+
 export default function appReducer(state = {
     selectedOrganization: 'not-yet-loaded',
     firstLoadComplete: false,
@@ -53,6 +64,11 @@ export default function appReducer(state = {
   switch(action.type) {
     case types.REFRESH_USER_INFO_SUCCESS:
       localStorage.setItem('user', JSON.stringify(action.userData));
+
+      window.Intercom('boot', {
+        app_id: window.config.intercomAppId,
+        email: action.userData.email
+      });
 
       return Object.assign({}, state, {
         loggedInUser: action.userData
@@ -66,35 +82,16 @@ export default function appReducer(state = {
       });
 
     case types.LOGOUT_SUCCESS:
-      localStorage.removeItem('user');
-
-      browserHistory.push('/login');
-
-      return Object.assign({}, state, {
-        loggedInUser: {}
-      });
+      return shutDown(state);
 
     case types.LOGOUT_ERROR:
-      localStorage.removeItem('user');
-
-      browserHistory.push('/login');
-
-      return Object.assign({}, state, {
-        loggedInUser: {}
-      });
+      return shutDown(state);
 
     case types.UNAUTHORIZED:
-      localStorage.removeItem('user');
-
-      browserHistory.push('/login');
-
-      return Object.assign({}, state, {
-        loggedInUser: {}
-      });
+      return shutDown(state);
 
     case types.ORGANIZATION_SELECT:
       localStorage.setItem('app.selectedOrganization', action.orgId);
-      browserHistory.push('/');
 
       // We're changing to a different organization
       // Make sure we have a reasonable value for selectedCluster.

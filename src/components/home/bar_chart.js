@@ -41,7 +41,7 @@ module.exports = React.createClass({
   },
 
   cappedPercentage: function() {
-    return Math.min(this.state.percentage * 100, 100)
+    return Math.min(this.state.percentage * 100, 100);
   },
 
   render: function() {
