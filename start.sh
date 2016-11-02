@@ -11,6 +11,10 @@ if [ -n "$DESMOTES_ENDPOINT" ]; then
   sed -i "s|desmotesEndpoint: 'http://docker.dev:9001'|desmotesEndpoint: '$DESMOTES_ENDPOINT'|" /www/index.html
 fi
 
+if [ -n "$INTERCOM_APP_ID" ]; then
+  sed -i "s|intercomAppId: 'bdvx0cb8'|intercomAppId: '$INTERCOM_APP_ID'|" /www/index.html
+fi
+
 sed -i "s|VERSION|$(cat /www/VERSION)|" /etc/nginx/nginx.conf
 
 nginx -g "daemon off;"
