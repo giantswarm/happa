@@ -7,9 +7,13 @@ import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
 import { clusterLoadPartialDetails } from './clusterActions';
 import React from 'react';
+import { browserHistory } from 'react-router';
 
 export function organizationSelect(orgId) {
   return function(dispatch, getState) {
+
+    browserHistory.push('/');
+
     return dispatch({
       type: types.ORGANIZATION_SELECT,
       orgId,

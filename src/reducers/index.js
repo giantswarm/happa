@@ -5,6 +5,7 @@ import modal from './modalReducer';
 import flashMessages from './flashMessagesReducer';
 import app from './appReducer';
 
+
 const entities = combineReducers({
   organizations,
   clusters,

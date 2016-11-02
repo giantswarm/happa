@@ -3,8 +3,9 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import Button from '../button';
+import ReactTimeout from 'react-timeout';
 
-module.exports = React.createClass({
+module.exports = ReactTimeout(React.createClass({
   getInitialState: function() {
     var initialPercentage;
 
@@ -26,7 +27,7 @@ module.exports = React.createClass({
     // bar-chart--bar
 
     if (this.props.animate) {
-      setTimeout(() => {
+      this.props.setTimeout(() => {
         this.setState({
           percentage: this.props.percentage
         });
@@ -41,7 +42,7 @@ module.exports = React.createClass({
   },
 
   cappedPercentage: function() {
-    return Math.min(this.state.percentage * 100, 100)
+    return Math.min(this.state.percentage * 100, 100);
   },
 
   render: function() {
@@ -55,4 +56,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}));

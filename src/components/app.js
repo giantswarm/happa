@@ -38,6 +38,8 @@ function requireAuth(nextState, replace) {
   }
 }
 
+browserHistory.listen(location => {window.Intercom('update');});
+
 render(
   <Provider store={store}>
     <Router history={browserHistory} render={applyRouterMiddleware(useScroll())}>

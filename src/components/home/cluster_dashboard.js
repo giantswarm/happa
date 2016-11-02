@@ -35,7 +35,11 @@ var ClusterDashboard = React.createClass({
 
   ramPercentUsed: function() {
     if (this.props.cluster.metrics) {
-      return this.props.cluster.metrics.ram_used.value / this.props.cluster.metrics.ram_available.value;
+      if (this.props.cluster.metrics.ram_available.value === 0) {
+        return 0
+      } else {
+        return this.props.cluster.metrics.ram_used.value / this.props.cluster.metrics.ram_available.value;
+      }
     } else {
       return 0;
     }
@@ -52,15 +56,19 @@ var ClusterDashboard = React.createClass({
   },
 
   storagePercentUsed: function() {
-    if (this.props.cluster.metrics) {
-      return this.props.cluster.metrics.node_storage_used.value / this.props.cluster.metrics.node_storage_limit.value;
+    if (this.props.cluster.metrics && this.props.cluster.metrics.node_storage_used && this.props.cluster.metrics.node_storage_limit) {
+      if (this.props.cluster.metrics.node_storage_limit.value === 0) {
+        return 0
+      } else {
+        return this.props.cluster.metrics.node_storage_used.value / this.props.cluster.metrics.node_storage_limit.value;
+      }
     } else {
       return 0;
     }
   },
 
   storageAmountFree: function() {
-    if (this.props.cluster.metrics) {
+    if (this.props.cluster.metrics && this.props.cluster.metrics.node_storage_limit && this.props.cluster.metrics.node_storage_used) {
       var bytesFree = humanFileSize(this.props.cluster.metrics.node_storage_limit.value - this.props.cluster.metrics.node_storage_used.value);
       return `${bytesFree.value} ${bytesFree.unit} free`;
     } else {
@@ -84,7 +92,8 @@ var ClusterDashboard = React.createClass({
           {this.props.children}
         </div>
         :
-        undefined
+        <div className="cluster-dashboard--overlay">
+        </div>
       }
       {
         this.isLoading() ?
@@ -92,9 +101,11 @@ var ClusterDashboard = React.createClass({
           <img className='loader' src='/images/loader_oval_light.svg' />
         </div>
         :
-        undefined
+        <div className="cluster-dashboard--overlay">
+        </div>
       }
       <div className={'cluster-dashboard--inner'}>
+
         <h1>
           Cluster: {this.props.cluster.id}
 
