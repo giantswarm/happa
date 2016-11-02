@@ -136,24 +136,7 @@ module.exports = React.createClass ({
 
           <p>Now that you have a running Kubernetes cluster, you can use it to deploy anything you like on it.</p>
 
-          <p>If you like a nice interface to your cluster, you can easily get the official Kubernetes dashboard running:</p>
-
-          <CodeBlock>
-            <Prompt>
-              {`
-                kubectl create \\
-                -f https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
-              `}
-            </Prompt>
-          </CodeBlock>
-
-          <p>Wait a few seconds and you can access the UI at:</p>
-
-          <p>
-            <a href='http://go9cdgqfnr.giantswarm-kaas.io/ui/'>http://go9cdgqfnr.giantswarm-kaas.io/ui/</a>
-          </p>
-
-          <p>We recommend to <a href='https://blog.giantswarm.io/getting-started-with-a-local-kubernetes-environment/' target='_blank'>choose a local development environment</a> so you can test your apps before deploying to your Giant Swarm cluster. </p>
+          <p>We recommend to <a href='https://blog.giantswarm.io/getting-started-with-a-local-kubernetes-environment/' target='_blank'>choose a local development environment</a> so you can test your apps before deploying to your Giant Swarm cluster.</p>
 
           <p>If you have not done so already, you should get acquainted with the <a href='https://blog.giantswarm.io/understanding-basic-kubernetes-concepts-i-introduction-to-pods-labels-replicas/' target='_blank'>basic concepts of Kubernetes</a>.</p>
 
