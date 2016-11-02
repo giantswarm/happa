@@ -95,7 +95,7 @@ module.exports = React.createClass ({
           </CodeBlock>
 
           <p>You should see in the log entries that the requests for the HTML page, the logo, and the background images have been distributed over both running pods and their respective containers pretty much randomly.</p>
-          <p>To clean things up, we use the <code>kubectl delete</code> command on the service and the deployment we created initially:</p>
+          <p>To clean things up, we use the <code>kubectl delete</code> command on the service, deployment, and ingress we created initially:</p>
 
           <CodeBlock>
             <Prompt>
@@ -115,6 +115,17 @@ module.exports = React.createClass ({
             <Output>
               {`
                 deployment "helloworld" deleted
+              `}
+            </Output>
+          </CodeBlock>
+          
+          <CodeBlock>
+            <Prompt>
+              {`kubectl delete ingress helloworld`}
+            </Prompt>
+            <Output>
+              {`
+                ingress "helloworld" deleted
               `}
             </Output>
           </CodeBlock>
