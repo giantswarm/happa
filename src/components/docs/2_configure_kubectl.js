@@ -123,6 +123,7 @@ var ConfigKubeCtl = React.createClass ({
                 cluster: ${this.props.cluster.name}
                 user: "giantswarm-default"
               name: giantswarm-default
+            current-context: giantswarm-default
             users:
             - name: "giantswarm-default"
               user:
@@ -230,7 +231,15 @@ var ConfigKubeCtl = React.createClass ({
 
           <p><i className='fa fa-graduation-cap' title='For learners'></i> To save some time in the future, add the command above to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
 
-          <p>Now, whenever you want to switch to working with your Giant Swarm cluster, use this command:</p>
+          <p>The above config file also sets the current context to `giantswarm-default`. You can check this with</p>
+
+          <CodeBlock>
+            <Prompt>
+              {`kubectl config view`}
+            </Prompt>
+          </CodeBlock>
+
+          <p>If another context is selected and whenever you want to switch back to working with your Giant Swarm cluster, use this command:</p>
 
           <CodeBlock>
             <Prompt>

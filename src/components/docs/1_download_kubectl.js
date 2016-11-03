@@ -26,7 +26,7 @@ module.exports = React.createClass ({
     switch(this.state.selectedPlatform) {
       case 'Windows':
         return <div>
-          <p>Currently, there&apos;s no official release of <code>kubectl</code> for Windows. Please refer to <a href='https://github.com/eirslett/kubectl-windows' target='_blank'>https://github.com/eirslett/kubectl-windows</a> for a binary download and instructions on how to build the <code>kubectl</code> client for Windows.</p>
+          <p>Download <code>kubectl</code> from <a href='https://storage.googleapis.com/kubernetes-release/release/v1.4.5/bin/windows/amd64/kubectl.exe' target='_blank'>https://storage.googleapis.com/kubernetes-release/release/v1.4.5/bin/windows/amd64/kubectl.exe</a> to a folder of your choice and make it available in your environment PATH variable.</p>
         </div>;
       case 'MacWithoutBrew':
         return <div>
