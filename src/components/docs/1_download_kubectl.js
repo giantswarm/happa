@@ -34,7 +34,7 @@ module.exports = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.4.3/bin/darwin/amd64/kubectl`}
+              {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.4.5/bin/darwin/amd64/kubectl`}
             </Prompt>
             <Prompt>
               {`chmod +x kubectl`}
@@ -86,7 +86,7 @@ module.exports = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.4.3/bin/linux/amd64/kubectl`}
+              {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.4.5/bin/linux/amd64/kubectl`}
             </Prompt>
             <Prompt>
               {`chmod +x kubectl`}
@@ -125,7 +125,7 @@ module.exports = React.createClass ({
           <i class='fa fa-graduation-cap' title='For learners'></i> \`kubectl\` is the CLI you’ll use to work with your cluster mostly. Some things can be
           done using the web-based Kubernetes Dashboard, but only the CLI provides access to all Kubernetes functionality.
 
-          If you already have \`kubectl\`, you should have at least version 1.2.x installed. To check the version number, do the following:
+          If you already have \`kubectl\`, you should have at least version 1.4.x installed. To check the version number, do the following:
           `}
           <CodeBlock>
             <Prompt>

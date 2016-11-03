@@ -224,7 +224,7 @@ var ConfigKubeCtl = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`export KUBECONFIG="\$\{KUBECONFIG\}:/path/to/giantswarm-kubeconfig"`}
+              {`export KUBECONFIG='\$\{KUBECONFIG\}:/path/to/giantswarm-kubeconfig'`}
             </Prompt>
           </CodeBlock>
 
