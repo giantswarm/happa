@@ -2,7 +2,7 @@
   "name": "happa",
   "components": {
     "nginx": {
-      "image": "registry.giantswarm.io/giantswarm/happa:0.1.4",
+      "image": "registry.giantswarm.io/giantswarm/happa:0.1.6",
       "ports": 80,
       "domains": {
         "80": "happa.giantswarm.io"
