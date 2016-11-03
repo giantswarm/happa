@@ -5,7 +5,7 @@ import { applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRoute, browse
 import { useScroll } from 'react-router-scroll';
 import { render } from 'react-dom';
 import Layout from './layout';
-import docs from './docs/index';
+import gettingStarted from './getting-started/index';
 import login from './login/index';
 import logout from './logout/index';
 import signup from './signup/index';
@@ -52,10 +52,10 @@ render(
       <Route name="Home" path="/" component={Layout} onEnter={requireAuth}>
         <IndexRoute component={Home}/>
 
-        <Route name='Getting Started' path="docs" >
-          <IndexRoute component={docs} />
+        <Route name='Getting Started' path="getting-started" >
+          <IndexRoute component={gettingStarted} />
 
-          <Route name="docs.page" path ="/docs/:pageId" component={docs} />
+          <Route name="getting-started.page" path ="/getting-started/:pageId" component={gettingStarted} />
         </Route>
 
         <Route name="Organizations" path="organizations">
