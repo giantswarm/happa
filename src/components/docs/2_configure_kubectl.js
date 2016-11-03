@@ -231,7 +231,7 @@ var ConfigKubeCtl = React.createClass ({
 
           <p><i className='fa fa-graduation-cap' title='For learners'></i> To save some time in the future, add the command above to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
 
-          <p>The above config file also sets the current context to `giantswarm-default`. You can check this with
+          <p>The above config file also sets the current context to `giantswarm-default`. You can check this with</p>
 
           <CodeBlock>
             <Prompt>
