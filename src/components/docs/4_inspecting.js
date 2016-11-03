@@ -53,19 +53,7 @@ module.exports = React.createClass ({
             </Output>
           </CodeBlock>
 
-          <p>The exact pod names vary in each case, since Kubernetes attempts to disambiguate the name using unique suffixes. You can also see an additional suffix to the deployment name, which functions a bit like a version number for your deployments. You can see that also in the replica set that got created by the deployment:</p>
-
-          <CodeBlock>
-            <Prompt>
-              {`kubectl get rs -l app=helloworld`}
-            </Prompt>
-            <Output>
-              {`
-                NAME                    DESIRED   CURRENT   AGE
-                helloworld-3495070191   2         2         4m
-              `}
-            </Output>
-          </CodeBlock>
+          <p>The exact pod names vary in each case, the first suffix functions a bit like a version number for your deployment, this changes with updates to the deployment. The last part of the pod name is used by Kubernetes to disambiguate the name using a unique suffixes.</p>
 
           <p>To investigate a bit closer what our containers are doing inside their pods, we can look at their logs, one pod at a time. Be sure to replace the sample pod name (in brackets) with an actual pod name that you got from the `get pods` command above.</p>
 
