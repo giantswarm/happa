@@ -99,32 +99,12 @@ module.exports = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`kubectl delete svc helloworld`}
+              {`kubectl delete service,deployment,ingress helloworld`}
             </Prompt>
             <Output>
               {`
                 service "helloworld" deleted
-              `}
-            </Output>
-          </CodeBlock>
-
-          <CodeBlock>
-            <Prompt>
-              {`kubectl delete deployment helloworld`}
-            </Prompt>
-            <Output>
-              {`
                 deployment "helloworld" deleted
-              `}
-            </Output>
-          </CodeBlock>
-          
-          <CodeBlock>
-            <Prompt>
-              {`kubectl delete ingress helloworld`}
-            </Prompt>
-            <Output>
-              {`
                 ingress "helloworld" deleted
               `}
             </Output>
