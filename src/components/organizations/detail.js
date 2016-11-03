@@ -50,6 +50,7 @@ var OrganizationDetail = React.createClass({
                   <thead>
                     <tr>
                       <th>Name</th>
+                      <th>Cluster ID</th>
                       <th>Created</th>
                     </tr>
                   </thead>
@@ -58,7 +59,8 @@ var OrganizationDetail = React.createClass({
                       this.props.organization.clusters.map((cluster) => {
                         return (
                           <tr key={cluster}>
-                            <td>{cluster}</td>
+                            <td>{this.props.clusters.items[cluster].name}</td>
+                            <td className="code">{this.props.clusters.items[cluster].id}</td>
                             <td>{this.formatDate(this.props.clusters.items[cluster].create_date)}</td>
                           </tr>
                         );
