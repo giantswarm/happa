@@ -67,11 +67,11 @@ module.exports = React.createClass ({
             </Output>
           </CodeBlock>
 
-          <p>To investigate a bit closer what our containers are doing inside their pods, we can look at their logs, one pod at a time.</p>
+          <p>To investigate a bit closer what our containers are doing inside their pods, we can look at their logs, one pod at a time. Be sure to replace the sample pod name (in brackets) with an actual pod name that you got from the `get pods` command above.</p>
 
           <CodeBlock>
             <Prompt>
-              {`kubectl logs helloworld-3495070191-0ynir`}
+              {`kubectl logs <helloworld-3495070191-0ynir>`}
             </Prompt>
             <Output>
               {`
@@ -83,7 +83,7 @@ module.exports = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`kubectl logs helloworld-3495070191-onuik`}
+              {`kubectl logs <helloworld-3495070191-onuik>`}
             </Prompt>
             <Output>
               {`
