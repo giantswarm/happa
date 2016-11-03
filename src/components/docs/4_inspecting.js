@@ -55,11 +55,11 @@ module.exports = React.createClass ({
 
           <p>The exact pod names vary in each case, the first suffix functions a bit like a version number for your deployment, this changes with updates to the deployment. The last part of the pod name is used by Kubernetes to disambiguate the name using a unique suffixes.</p>
 
-          <p>To investigate a bit closer what our containers are doing inside their pods, we can look at their logs, one pod at a time. Be sure to replace the sample pod name (in brackets) with an actual pod name that you got from the `get pods` command above.</p>
+          <p>To investigate a bit closer what our containers are doing inside their pods, we can look at their logs, one pod at a time. Be sure to replace the version and suffix fields (in brackets) with the actual ones you got from the `get pods` command above.</p>
 
           <CodeBlock>
             <Prompt>
-              {`kubectl logs <helloworld-3495070191-0ynir>`}
+              {`kubectl logs helloworld-<version>-<suffix>`}
             </Prompt>
             <Output>
               {`
@@ -71,7 +71,7 @@ module.exports = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`kubectl logs <helloworld-3495070191-onuik>`}
+              {`kubectl logs <helloworld-<version>-<suffix>`}
             </Prompt>
             <Output>
               {`
