@@ -123,6 +123,7 @@ var ConfigKubeCtl = React.createClass ({
                 cluster: ${this.props.cluster.name}
                 user: "giantswarm-default"
               name: giantswarm-default
+            current-context: giantswarm-default
             users:
             - name: "giantswarm-default"
               user:
