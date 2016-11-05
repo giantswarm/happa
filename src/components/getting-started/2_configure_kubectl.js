@@ -229,7 +229,9 @@ var ConfigKubeCtl = React.createClass ({
             </Prompt>
           </CodeBlock>
 
+          <div className="aside">
           <p><i className='fa fa-graduation-cap' title='For learners'></i> To save some time in the future, add the command above to a terminal profile, e. g. <code>~/.bash_profile</code> to have it available in all new shell sessions.</p>
+          </div>
 
           <p>The above config file also sets the current context to `giantswarm-default`. You can check this with</p>
 
@@ -247,7 +249,9 @@ var ConfigKubeCtl = React.createClass ({
             </Prompt>
           </CodeBlock>
 
+          <div className="aside">
           <p><i className='fa fa-graduation-cap' title='For learners'></i> Again, here you can save your future self some time by creating an alias.</p>
+          </div>
 
           <p>Then you can check if you got access to your cluster with:</p>
 

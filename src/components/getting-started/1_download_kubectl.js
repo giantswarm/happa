@@ -122,8 +122,12 @@ module.exports = React.createClass ({
 
           Let’s make sure you have the current stable version of \`kubectl\`, the Kubernetes client CLI, available.
 
-          <i class='fa fa-graduation-cap' title='For learners'></i> \`kubectl\` is the CLI you’ll use to work with your cluster mostly. Some things can be
-          done using the web-based Kubernetes Dashboard, but only the CLI provides access to all Kubernetes functionality.
+          <div class="aside">
+            <p>
+              <i class='fa fa-graduation-cap' title='For learners'></i> \`kubectl\` is the CLI you’ll use to work with your cluster mostly. Some things can be
+              done using the web-based Kubernetes Dashboard, but only the CLI provides access to all Kubernetes functionality.
+            </p>
+          </div>
 
           If you already have \`kubectl\`, you should have at least version 1.4.x installed. To check the version number, do the following:
           `}
