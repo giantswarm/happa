@@ -78,7 +78,7 @@ var ClusterDashboard = React.createClass({
 
   configureDocsFor: function(clusterId) {
     this.props.actions.clusterSelect(clusterId);
-    this.context.router.push('/docs/configure');
+    this.context.router.push('/getting-started/configure');
   },
 
   isLoading: function() {

@@ -44,7 +44,7 @@ var Layout = React.createClass ({
             <div className='main-nav col-9'>
               <a href='https://giantswarm.io' target='_blank'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
               <IndexLink to='/' activeClassName='active'>Home</IndexLink>
-              <Link to='docs' activeClassName='active'>Getting Started</Link>
+              <Link to='getting-started' activeClassName='active'>Getting Started</Link>
 
               <div className='subactions'>
                 <div className='organization_dropdown'>

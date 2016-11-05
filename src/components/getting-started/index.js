@@ -36,8 +36,8 @@ module.exports = React.createClass({
   },
 
   goToSlide(slideId) {
-    if (window.location.pathname !== '/docs/' + slideId) {
-      this.context.router.push('/docs/' + slideId);
+    if (window.location.pathname !== '/getting-started/' + slideId) {
+      this.context.router.push('/getting-started/' + slideId);
     }
 
     var slideIndex = _.findIndex(this.slides(), slide => {
