@@ -25,7 +25,7 @@ var ensureMetricKeysAreAvailable = function (clusterDetails) {
     clusterDetails.metrics[metricKey] = Object.assign(
       {
         value: 0,
-        unit: "unknown",
+        unit: 'unknown',
         timestamp: 0
       },
       clusterDetails.metrics[metricKey]
@@ -36,7 +36,7 @@ var ensureMetricKeysAreAvailable = function (clusterDetails) {
         clusterDetails.nodes[node][metricKey] = Object.assign(
           {
             value: 0,
-            unit: "unknown",
+            unit: 'unknown',
             timestamp: 0
           },
           clusterDetails.nodes[node][metricKey]
