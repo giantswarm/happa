@@ -45,6 +45,7 @@ var Layout = React.createClass ({
               <a href='https://giantswarm.io' target='_blank'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
               <IndexLink to='/' activeClassName='active'>Cluster Overview</IndexLink>
               <Link to='getting-started' activeClassName='active'>Getting Started</Link>
+              <a href="https://docs.giantswarm.io" target="_blank">Documentation</a>
 
               <div className='subactions'>
                 <div className='organization_dropdown'>
