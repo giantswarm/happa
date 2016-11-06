@@ -37,7 +37,9 @@ module.exports = React.createClass ({
           </ol>
           <br/>
           <br/>
-          <button className="primary" onClick={this.props.goToSlide.bind(null, 'download')}>Continue</button><br/>
+          <div className="component_slider--nav">
+            <button className="primary" onClick={this.props.goToSlide.bind(null, 'download')}>Continue</button>
+          </div>
         </Slide>
       );
     }

@@ -101,8 +101,10 @@ var SimpleExample = React.createClass ({
 
           <p>This should show a little welcome message from the Giant Swarm team.</p>
 
-          <button className='primary' onClick={this.props.goToSlide.bind(null, 'inspecting')}>Continue</button><br/>
-          <button onClick={this.props.goToSlide.bind(null, 'configure')}>Previous</button>
+          <div className="component_slider--nav">
+            <button onClick={this.props.goToSlide.bind(null, 'configure')}>Previous</button>
+            <button className='primary' onClick={this.props.goToSlide.bind(null, 'inspecting')}>Continue</button>
+          </div>
         </Slide>
       );
     }

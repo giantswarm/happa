@@ -109,8 +109,10 @@ module.exports = React.createClass ({
           <p>If you have not done so already, you should get acquainted with the <a href='https://blog.giantswarm.io/understanding-basic-kubernetes-concepts-i-introduction-to-pods-labels-replicas/' target='_blank'>basic concepts of Kubernetes</a>.</p>
 
           <p>Last but not least, you should check out our <a href='https://docs.giantswarm.io/' target='_blank'>Documentation</a>, including an <a href='https://docs.giantswarm.io/basics/kubernetes-fundamentals/' target='_blank'>overview of Kubernetes Fundamentals</a> and a selection of <a href='https://docs.giantswarm.io/guides/' target='_blank'>User Guides</a> that help you set up Monitoring, Logging, and more.</p>
-          
-          <button onClick={this.props.goToSlide.bind(null, 'example')}>Previous</button>
+
+          <div className="component_slider--nav">
+            <button onClick={this.props.goToSlide.bind(null, 'example')}>Previous</button>
+          </div>
         </Slide>
       );
     }
