@@ -98,7 +98,12 @@ module.exports = React.createClass ({
             </Output>
           </CodeBlock>
 
-          <p>Congratulations! You have created - and destroyed - your first application on your brand new Kubernetes cluster on Giant Swarm.</p>
+
+          <div className="celebration">
+            <span>🎉</span>
+            <h3>Congratulations</h3>
+            <p>You have created - and destroyed - your first application on your brand new Kubernetes cluster on Giant Swarm.</p>
+          </div>
 
           <h3>Next Steps</h3>
 
