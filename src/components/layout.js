@@ -43,9 +43,14 @@ var Layout = React.createClass ({
           <nav>
             <div className='main-nav col-9'>
               <a href='https://giantswarm.io' target='_blank'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
-              <IndexLink to='/' activeClassName='active'>Cluster Overview</IndexLink>
-              <Link to='getting-started' activeClassName='active'>Getting Started</Link>
-              <a href="https://docs.giantswarm.io" target="_blank">Documentation</a>
+
+
+
+              <div className='nav-responsive'>
+                <IndexLink to='/' activeClassName='active'>Clusters</IndexLink>
+                <Link to='getting-started' activeClassName='active'>Getting Started</Link>
+                <a href="https://docs.giantswarm.io" target="_blank">Documentation</a>
+              </div>
 
               <div className='subactions'>
                 <div className='organization_dropdown'>
@@ -73,8 +78,12 @@ var Layout = React.createClass ({
                 &nbsp;
                 &nbsp;
                 <div className="user_dropdown">
-                  <Gravatar email={this.props.user.email} https size={100} default='mm' />
-                  <DropdownButton title={<span>{this.props.user.email}</span>} key='1' id='user_dropdown'>
+
+                  <DropdownButton ref="user_dropdown" pullRight={true} title={
+                    <div className="user_dropdown--toggle">
+                      <Gravatar email={this.props.user.email} https size={100} default='mm' />
+                      <span>{this.props.user.email}</span>
+                    </div>} key='1' id='user_dropdown'>
                     <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
                     <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
                   </DropdownButton>

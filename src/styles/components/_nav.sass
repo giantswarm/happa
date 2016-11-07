@@ -19,8 +19,44 @@ nav
   .main-nav
     margin: auto
 
+
+    &> a
+      float: left
+
+    .nav-toggle
+      float: right
+      display: none
+      font-size: 22px
+      color: #e8e8e8
+      cursor: pointer
+
+      @media only screen and (max-width: $breakpoint-large)
+        display: block
+
+  .nav-responsive
+    width: 400px
+    float: left
+    padding-left: 20px
+    height: 40px
+
+    @media only screen and (max-width: $breakpoint-large)
+      position: fixed
+      top: 50px
+      background-color: #265068
+      border-top: 1px solid lighten(#265068, 2%)
+      border-bottom: 1px solid lighten(#265068, 2%)
+      width: 100%
+      left: 0px
+      padding-left: 0px
+      height: auto
+      text-align: center
+
   .subactions
     float: right
+    @media only screen and (max-width: $breakpoint-large)
+      float: right
+      margin-left: 10px
+
     a
       &:last-child
         margin-right: 0px
@@ -31,19 +67,30 @@ nav
     position: relative
     top: -1px
 
-  .main-nav>a
-    text-decoration: none
-    color: #eee
-    margin-right: 18px
+  .main-nav
+    .nav-responsive > a
+      text-decoration: none
+      color: #eee
+      margin-right: 18px
 
-    &:hover
-      color: #fff
+      &:last-child
+        margin-right: 0px
+
+      &:hover
+        color: #fff
 
   .user_dropdown
     margin-left: 10px
+    .user_dropdown--toggle
+      display: inline
+    @media only screen and (max-width: $breakpoint-large)
+      .user_dropdown--toggle
+        display: inline
+        span
+          display: none
 
     .react-gravatar
-      margin-right: -5px
+      margin-right: 8px
 
   .user_dropdown, .organization_dropdown
     display: inline
