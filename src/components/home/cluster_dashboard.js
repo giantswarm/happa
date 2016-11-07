@@ -86,7 +86,7 @@ var ClusterDashboard = React.createClass({
   },
 
   render: function() {
-    return <div className={this.props.className + ' cluster-dashboard well ' + (this.isLoading() ? 'loading' : '')}>
+    return <div className={this.props.className + ' cluster-dashboard well ' + (this.isLoading() || this.props.cluster.errorLoadingMetrics ? 'loading' : '')}>
       { this.props.children ?
         <div className="cluster-dashboard--overlay">
           {this.props.children}
@@ -105,7 +105,6 @@ var ClusterDashboard = React.createClass({
         </div>
       }
       <div className={'cluster-dashboard--inner'}>
-
         <h1>
           Cluster: {this.props.cluster.id}
 

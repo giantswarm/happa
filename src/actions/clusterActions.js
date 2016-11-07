@@ -64,9 +64,10 @@ export function clusterLoadMetricsSuccess(clusterId, metrics) {
   };
 }
 
-export function clusterLoadMetricsError(error) {
+export function clusterLoadMetricsError(clusterId, error) {
   return {
     type: types.CLUSTER_LOAD_METRICS_ERROR,
+    clusterId,
     error
   };
 }
@@ -83,7 +84,7 @@ export function clusterLoadDetails(clusterId) {
       return cluster;
     })
     .catch((error) => {
-      dispatch(clusterLoadDetailsError(error));
+      dispatch(clusterLoadDetailsError(clusterId, error));
       throw(error);
     });
   };
@@ -104,7 +105,7 @@ export function clusterFetchMetrics(clusterId) {
       dispatch(clusterLoadMetricsSuccess(clusterId, metrics));
     })
     .catch((error) => {
-      dispatch(clusterLoadMetricsError(error));
+      dispatch(clusterLoadMetricsError(clusterId, error));
       throw(error);
     });
   };
