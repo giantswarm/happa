@@ -4,6 +4,7 @@ import React from 'react';
 import Button from '../button';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
+import PasswordField from '../signup/password_field';
 
 var PasswordReset = React.createClass({
   getInitialState: function() {
@@ -13,19 +14,59 @@ var PasswordReset = React.createClass({
   },
 
   currentPasswordValid: function() {
-    return this.refs.current_password.value;
+    return this.refs.current_password.value();
   },
 
   newPasswordValid: function() {
-    return this.refs.new_password.value;
+    var password = this.refs.new_password.value();
+    var passwordConfirmation = this.refs.new_password_confirmation.value();
+    var valid = false;
+    var statusMessage;
+
+    if (password.length === 0) {
+      // Be invalid, but don't change the status message.
+    } else if (password.length < 8) {
+      statusMessage = 'Your new password is too short';
+    } else if (/^[0-9]+$/.test(password)) {
+      statusMessage = 'Please pick a new password that is not just numbers';
+    } else if (/^[a-z]+$/.test(password)) {
+      statusMessage = 'Please pick a new password that is not just lower case letters';
+    } else if (/^[A-Z]+$/.test(password)) {
+      statusMessage = 'Please pick a new password that is not just upper case letters';
+    } else {
+      valid = true;
+    }
+
+    this.setState({
+      newPasswordValidationMessage: statusMessage
+    });
+
+    return valid;
   },
 
   newPasswordConfirmationValid: function() {
-    return this.refs.new_password.value && (this.refs.new_password.value === this.refs.new_password_confirmation.value);
+    var password = this.refs.new_password.value();
+    var passwordConfirmation = this.refs.new_password_confirmation.value();
+
+    if (password !== passwordConfirmation && (password && passwordConfirmation)) {
+      this.setState({
+        newPassworConfirmationValidationMessage: 'Password confirmation does not match'
+      })
+    } else {
+      this.setState({
+        newPassworConfirmationValidationMessage: ''
+      })
+    }
+
+    return this.refs.new_password.value() && (this.refs.new_password.value() === this.refs.new_password_confirmation.value());
+  },
+
+  passwordEditingStarted: function() {
+    // NOOP
   },
 
   validate: function() {
-    if (this.refs.current_password.value) {
+    if (this.refs.current_password.value()) {
       this.setState({
         buttonVisible: true,
         error: false
@@ -68,8 +109,8 @@ var PasswordReset = React.createClass({
     var giantSwarm = new GiantSwarm.Client(authToken);
 
     giantSwarm.changePassword({
-      old_password: this.refs.current_password.value,
-      new_password: this.refs.new_password.value
+      old_password: this.refs.current_password.value(),
+      new_password: this.refs.new_password.value()
     })
     .then(() => {
       this.setState({
@@ -122,18 +163,35 @@ var PasswordReset = React.createClass({
 
           <form onSubmit={this.submit} className="change_email_form" >
             <div className='textfield small'>
-              <label>Current Password</label>
-              <input onChange={this.validate} type='password' id='current_password' ref='current_password'/>
+              <PasswordField
+                label="Current Password"
+                onChange={this.validate}
+                onStartTyping={this.passwordEditingStarted}
+                id='current_password'
+                ref='current_password'
+              />
             </div>
 
             <div className='textfield small'>
-              <label>New Password</label>
-              <input onChange={this.validate} type='password' id='new_password' ref='new_password'/>
+              <PasswordField
+                label="New Password"
+                onChange={this.validate}
+                onStartTyping={this.passwordEditingStarted}
+                validationError={this.state.newPasswordValidationMessage}
+                id='new_password'
+                ref='new_password'
+              />
             </div>
 
             <div className='textfield small'>
-              <label>New Password (once more)</label>
-              <input onChange={this.validate} type='password' id='new_password_confirmation' ref='new_password_confirmation'/>
+              <PasswordField
+                label="New Password (once more)"
+                onChange={this.validate}
+                onStartTyping={this.passwordEditingStarted}
+                validationError={this.state.newPassworConfirmationValidationMessage}
+                id='new_password_confirmation'
+                ref='new_password_confirmation'
+              />
             </div>
 
             <div className="button-area">

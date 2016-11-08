@@ -47,6 +47,7 @@ var PasswordField = React.createClass({
       <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
         <input type='password' ref='input' id={this.props.name} onBlur={this.onBlur} onChange={this.onChange} />
+        <span className="message">{this.props.validationError}&nbsp;</span>
       </div>
     );
   }
