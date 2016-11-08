@@ -138,21 +138,23 @@ module.exports = React.createClass ({
           </CodeBlock>
 
           <div className="platform_selector">
-          <ul className='platform_selector--tabs'>
-            <li className={this.isSelectedPlatform('Linux') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Linux')}>Linux</li>
+            <ul className='platform_selector--tabs'>
+              <li className={this.isSelectedPlatform('Linux') ? 'active' : null}
+                  onClick={this.selectPlatform.bind(this, 'Linux')}>Linux</li>
 
-            <li className={this.isSelectedPlatform('Mac') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Mac')}>Mac</li>
+              <li className={this.isSelectedPlatform('Mac') ? 'active' : null}
+                  onClick={this.selectPlatform.bind(this, 'Mac')}>Mac</li>
 
-            <li className={this.isSelectedPlatform('MacWithoutBrew') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'MacWithoutBrew')}>Mac (without homebrew)</li>
+              <li className={this.isSelectedPlatform('MacWithoutBrew') ? 'active' : null}
+                  onClick={this.selectPlatform.bind(this, 'MacWithoutBrew')}>Mac (without homebrew)</li>
 
-            <li className={this.isSelectedPlatform('Windows') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Windows')}>Windows</li>
-          </ul>
+              <li className={this.isSelectedPlatform('Windows') ? 'active' : null}
+                  onClick={this.selectPlatform.bind(this, 'Windows')}>Windows</li>
+            </ul>
 
-          {this.selectedInstallInstructions()}
+            <div className="platform_selector--content">
+              {this.selectedInstallInstructions()}
+            </div>
           </div>
 
         </Markdown>
