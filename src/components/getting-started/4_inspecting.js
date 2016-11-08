@@ -118,7 +118,7 @@ module.exports = React.createClass ({
           <p>Last but not least, you should check out our <a href='https://docs.giantswarm.io/' target='_blank'>Documentation</a>, including an <a href='https://docs.giantswarm.io/basics/kubernetes-fundamentals/' target='_blank'>overview of Kubernetes Fundamentals</a> and a selection of <a href='https://docs.giantswarm.io/guides/' target='_blank'>User Guides</a> that help you set up Monitoring, Logging, and more.</p>
 
           <div className="component_slider--nav">
-            <button onClick={this.props.goToSlide.bind(null, 'example')}>Previous</button>
+            <button onClick={this.props.goToSlide.bind(null, 'example')}><i className="fa fa-caret-left"></i> Back</button>
           </div>
         </Slide>
       );

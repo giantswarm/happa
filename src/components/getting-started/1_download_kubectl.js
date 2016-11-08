@@ -155,8 +155,8 @@ module.exports = React.createClass ({
 
         </Markdown>
         <div className="component_slider--nav">
-          <button onClick={this.props.goToSlide.bind(null, 'overview')}>Previous</button>
-          <button className='primary' onClick={this.props.goToSlide.bind(null, 'configure')}>Continue</button>
+          <button onClick={this.props.goToSlide.bind(null, 'overview')}><i className="fa fa-caret-left"></i>Back</button>
+          <button className='primary' onClick={this.props.goToSlide.bind(null, 'configure')}>Continue <i className="fa fa-caret-right"></i></button>
         </div>
       </Slide>
     );

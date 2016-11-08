@@ -264,8 +264,8 @@ var ConfigKubeCtl = React.createClass ({
           <p>Now let&apos;s start something on your cluster.</p>
 
           <div className="component_slider--nav">
-            <button onClick={this.props.goToSlide.bind(null, 'download')}>Previous</button>
-            <button className='primary' onClick={this.props.goToSlide.bind(null, 'example')}>Continue</button>
+            <button onClick={this.props.goToSlide.bind(null, 'download')}><i className="fa fa-caret-left"></i> Back</button>
+            <button className='primary' onClick={this.props.goToSlide.bind(null, 'example')}>Continue <i className="fa fa-caret-right"></i></button>
           </div>
         </Slide>
       );
