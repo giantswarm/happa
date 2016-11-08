@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import * as UserActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import ChangeEmailForm from './change_email_form';
-import PasswordReset from './password_reset';
+import ChangePasswordForm from './change_password_form';
 
 var AccountSettings = React.createClass({
   render: function() {
@@ -32,7 +32,7 @@ var AccountSettings = React.createClass({
           </div>
         </div>
 
-        <PasswordReset user={this.props.user} afterChange={this.props.actions.logout} />
+        <ChangePasswordForm user={this.props.user} afterChange={this.props.actions.logout} />
 {
   /*
         <div className='row section'>

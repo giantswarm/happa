@@ -6,7 +6,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import PasswordField from '../signup/password_field';
 
-var PasswordReset = React.createClass({
+var ChangePassword = React.createClass({
   getInitialState: function() {
     return ({
       formValid: false
@@ -51,11 +51,11 @@ var PasswordReset = React.createClass({
     if (password !== passwordConfirmation && (password && passwordConfirmation)) {
       this.setState({
         newPassworConfirmationValidationMessage: 'Password confirmation does not match'
-      })
+      });
     } else {
       this.setState({
         newPassworConfirmationValidationMessage: ''
-      })
+      });
     }
 
     return this.refs.new_password.value() && (this.refs.new_password.value() === this.refs.new_password_confirmation.value());
@@ -250,4 +250,4 @@ var PasswordReset = React.createClass({
   }
 });
 
-module.exports = PasswordReset;
+module.exports = ChangePassword;
