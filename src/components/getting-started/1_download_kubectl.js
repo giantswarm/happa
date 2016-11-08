@@ -137,7 +137,8 @@ module.exports = React.createClass ({
             </Prompt>
           </CodeBlock>
 
-          <ul className='platform_selector'>
+          <div className="platform_selector">
+          <ul className='platform_selector--tabs'>
             <li className={this.isSelectedPlatform('Linux') ? 'active' : null}
                 onClick={this.selectPlatform.bind(this, 'Linux')}>Linux</li>
 
@@ -152,6 +153,7 @@ module.exports = React.createClass ({
           </ul>
 
           {this.selectedInstallInstructions()}
+          </div>
 
         </Markdown>
         <div className="component_slider--nav">
