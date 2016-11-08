@@ -119,8 +119,9 @@ var ChangePassword = React.createClass({
         error: false,
         buttonVisible: false
       });
-
-      this.props.afterChange();
+    })
+    .then(() => {
+      return this.props.actions.login(this.props.user.email, this.refs.new_password.value())
     })
     .catch((error) => {
       var errorMessage;
@@ -155,11 +156,6 @@ var ChangePassword = React.createClass({
           <p>
             Use this form to change your password.
           </p>
-
-          <small>
-            <i className='fa fa-info-circle'></i>&nbsp;
-            After setting your password you will be logged out and have to log in again with the new password.
-          </small>
 
           <form onSubmit={this.submit} className="change_email_form" >
             <div className='textfield small'>

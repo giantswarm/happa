@@ -32,7 +32,7 @@ var AccountSettings = React.createClass({
           </div>
         </div>
 
-        <ChangePasswordForm user={this.props.user} afterChange={this.props.actions.logout} />
+        <ChangePasswordForm user={this.props.user} actions={this.props.actions} />
 {
   /*
         <div className='row section'>
