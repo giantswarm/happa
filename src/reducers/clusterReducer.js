@@ -25,7 +25,7 @@ var ensureMetricKeysAreAvailable = function (clusterDetails) {
     clusterDetails.metrics[metricKey] = Object.assign(
       {
         value: 0,
-        unit: "unknown",
+        unit: 'unknown',
         timestamp: 0
       },
       clusterDetails.metrics[metricKey]
@@ -36,7 +36,7 @@ var ensureMetricKeysAreAvailable = function (clusterDetails) {
         clusterDetails.nodes[node][metricKey] = Object.assign(
           {
             value: 0,
-            unit: "unknown",
+            unit: 'unknown',
             timestamp: 0
           },
           clusterDetails.nodes[node][metricKey]
@@ -77,6 +77,19 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
       break;
 
+    case types.CLUSTER_LOAD_DETAILS_ERROR:
+      var items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {errorLoading: true});
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
+      };
+
+      break;
+
     case types.CLUSTER_LOAD_METRICS_SUCCESS:
       var nodes = {};
       var metrics = action.metrics;
@@ -98,6 +111,7 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
       var items = Object.assign({}, state.items);
 
       var clusterDetails = update(items[action.clusterId], {
+        errorLoadingMetrics: {$set: false},
         metrics: {$set: metrics.cluster},
         nodes: {$set: nodes}
       });
@@ -105,6 +119,19 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
       clusterDetails = ensureMetricKeysAreAvailable(clusterDetails);
 
       items[action.clusterId] = clusterDetails;
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
+      };
+
+      break;
+
+    case types.CLUSTER_LOAD_METRICS_ERROR:
+      var items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {errorLoadingMetrics: true});
 
       return {
         lastUpdated: state.lastUpdated,

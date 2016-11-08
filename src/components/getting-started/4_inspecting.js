@@ -53,9 +53,11 @@ module.exports = React.createClass ({
             </Output>
           </CodeBlock>
 
-          <p>The exact pod names vary in each case, the first suffix functions a bit like a version number for your deployment, this changes with updates to the deployment. The last part of the pod name is used by Kubernetes to disambiguate the name using a unique suffixes.</p>
+          <div className="aside">
+            <p>The exact pod names vary in each case, the first suffix functions a bit like a version number for your deployment, this changes with updates to the deployment. The last part of the pod name is used by Kubernetes to disambiguate the name using a unique suffixes.</p>
+          </div>
 
-          <p>To investigate a bit closer what our containers are doing inside their pods, we can look at their logs, one pod at a time. Be sure to replace the version and suffix fields (in brackets) with the actual ones you got from the `get pods` command above.</p>
+          <p>To investigate a bit closer what our containers are doing inside their pods, we can look at their logs, one pod at a time. Be sure to replace the version and suffix fields (in brackets) with the actual ones you got from the <code>get pods</code> command above.</p>
 
           <CodeBlock>
             <Prompt>
@@ -98,7 +100,12 @@ module.exports = React.createClass ({
             </Output>
           </CodeBlock>
 
-          <p>Congratulations! You have created - and destroyed - your first application on your brand new Kubernetes cluster on Giant Swarm.</p>
+
+          <div className="celebration">
+            <span>🎉</span>
+            <h3>Congratulations</h3>
+            <p>You have created &ndash; and destroyed &ndash; your first application on your brand new Kubernetes cluster on Giant Swarm.</p>
+          </div>
 
           <h3>Next Steps</h3>
 
@@ -109,8 +116,10 @@ module.exports = React.createClass ({
           <p>If you have not done so already, you should get acquainted with the <a href='https://blog.giantswarm.io/understanding-basic-kubernetes-concepts-i-introduction-to-pods-labels-replicas/' target='_blank'>basic concepts of Kubernetes</a>.</p>
 
           <p>Last but not least, you should check out our <a href='https://docs.giantswarm.io/' target='_blank'>Documentation</a>, including an <a href='https://docs.giantswarm.io/basics/kubernetes-fundamentals/' target='_blank'>overview of Kubernetes Fundamentals</a> and a selection of <a href='https://docs.giantswarm.io/guides/' target='_blank'>User Guides</a> that help you set up Monitoring, Logging, and more.</p>
-          
-          <button onClick={this.props.goToSlide.bind(null, 'example')}>Previous</button>
+
+          <div className="component_slider--nav">
+            <button onClick={this.props.goToSlide.bind(null, 'example')}><i className="fa fa-caret-left"></i> Back</button>
+          </div>
         </Slide>
       );
     }

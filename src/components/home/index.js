@@ -46,18 +46,7 @@ var Home = React.createClass({
           this.props.actions.clusterFetchMetrics(cluster.id)
         ];
       }))
-    )
-    .catch((error) => {
-      this.props.dispatch(flashAdd({
-        message: <span>Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io</span>,
-        class: 'danger',
-        ttl: 3000
-      }));
-
-      this.setState({
-        loading: 'failed'
-      });
-    });
+    );
   },
 
   render: function() {
@@ -76,7 +65,14 @@ var Home = React.createClass({
 
         {
           _.sortBy(this.props.clusters.map((cluster) => {
-            return <ClusterDashboard animate={true} key={cluster.id} cluster={cluster} />;
+            return (cluster.errorLoadingMetrics ?
+            <ClusterDashboard cluster={cluster} key={cluster.id + 'error'} className='empty-slate'>
+              <h1>Couldn't load metrics for cluster <code>{cluster.id}</code></h1>
+              <p>We're probably experiencing some technical issues with our metrics gathering.</p>
+              <p>Please try again later or contact support: <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a></p>
+            </ClusterDashboard>
+            :
+            <ClusterDashboard animate={true} key={cluster.id} cluster={cluster} />);
           }), (cluster) => cluster.id)
         }
       </div>

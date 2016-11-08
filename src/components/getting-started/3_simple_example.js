@@ -78,7 +78,9 @@ var SimpleExample = React.createClass ({
           <p>To check if every part of your cluster is running as it should, let&apos;s create an entire application. When set up, this application will provide a little web server running in multiple pods.</p>
           <p>We use <code>kubectl</code> to create the service, deployment, and ingress resource from a manifest hosted on GitHub.</p>
 
+          <div className="aside">
           <p><i className='fa fa-graduation-cap' title='For learners'></i> If you&apos;re new to Kubernetes: A manifest describes things to create in Kubernetes. In this case the manifest describes two different things, a service and a deployment. The service is there to expose containers (here: the ones with the label app: helloworld) inside your cluster via a certain hostname and port. The deployment describes your helloworld deployment. It manages a replica set, which ensures that a number of pods (two, actually) containing Docker containers from a certain image are running.</p>
+          </div>
 
           <CodeBlock>
             <Prompt>
@@ -99,8 +101,10 @@ var SimpleExample = React.createClass ({
 
           <p>This should show a little welcome message from the Giant Swarm team.</p>
 
-          <button className='primary' onClick={this.props.goToSlide.bind(null, 'inspecting')}>Continue</button><br/>
-          <button onClick={this.props.goToSlide.bind(null, 'configure')}>Previous</button>
+          <div className="component_slider--nav">
+            <button onClick={this.props.goToSlide.bind(null, 'configure')}><i className="fa fa-caret-left"></i> Back</button>
+            <button className='primary' onClick={this.props.goToSlide.bind(null, 'inspecting')}>Continue <i className="fa fa-caret-right"></i></button>
+          </div>
         </Slide>
       );
     }

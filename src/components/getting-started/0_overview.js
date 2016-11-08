@@ -30,14 +30,16 @@ module.exports = React.createClass ({
             `}
           </Markdown>
           <ol>
-            <li><Link to="/docs/download">Download (or update) <code>kubectl</code></Link></li>
-            <li><Link to="/docs/configure">Configure <code>kubectl</code> for your cluster</Link></li>
-            <li><Link to="/docs/example">Run a simple example</Link></li>
-            <li><Link to="/docs/inspecting">Inspecting your service and next steps</Link></li>
+            <li><Link to="/getting-started/download">Download (or update) <code>kubectl</code></Link></li>
+            <li><Link to="/getting-started/configure">Configure <code>kubectl</code> for your cluster</Link></li>
+            <li><Link to="/getting-started/example">Run a simple example</Link></li>
+            <li><Link to="/getting-started/inspecting">Inspecting your service and next steps</Link></li>
           </ol>
           <br/>
           <br/>
-          <button className="primary" onClick={this.props.goToSlide.bind(null, 'download')}>Continue</button><br/>
+          <div className="component_slider--nav">
+            <button className="primary" onClick={this.props.goToSlide.bind(null, 'download')}>Continue <i className="fa fa-caret-right"></i></button>
+          </div>
         </Slide>
       );
     }

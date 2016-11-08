@@ -36,7 +36,7 @@ var ClusterDashboard = React.createClass({
   ramPercentUsed: function() {
     if (this.props.cluster.metrics) {
       if (this.props.cluster.metrics.ram_available.value === 0) {
-        return 0
+        return 0;
       } else {
         return this.props.cluster.metrics.ram_used.value / this.props.cluster.metrics.ram_available.value;
       }
@@ -58,7 +58,7 @@ var ClusterDashboard = React.createClass({
   storagePercentUsed: function() {
     if (this.props.cluster.metrics && this.props.cluster.metrics.node_storage_used && this.props.cluster.metrics.node_storage_limit) {
       if (this.props.cluster.metrics.node_storage_limit.value === 0) {
-        return 0
+        return 0;
       } else {
         return this.props.cluster.metrics.node_storage_used.value / this.props.cluster.metrics.node_storage_limit.value;
       }
@@ -78,7 +78,7 @@ var ClusterDashboard = React.createClass({
 
   configureDocsFor: function(clusterId) {
     this.props.actions.clusterSelect(clusterId);
-    this.context.router.push('/docs/configure');
+    this.context.router.push('/getting-started/configure');
   },
 
   isLoading: function() {
@@ -86,7 +86,7 @@ var ClusterDashboard = React.createClass({
   },
 
   render: function() {
-    return <div className={this.props.className + ' cluster-dashboard well ' + (this.isLoading() ? 'loading' : '')}>
+    return <div className={this.props.className + ' cluster-dashboard well ' + (this.isLoading() || this.props.cluster.errorLoadingMetrics ? 'loading' : '')}>
       { this.props.children ?
         <div className="cluster-dashboard--overlay">
           {this.props.children}
@@ -105,7 +105,6 @@ var ClusterDashboard = React.createClass({
         </div>
       }
       <div className={'cluster-dashboard--inner'}>
-
         <h1>
           Cluster: {this.props.cluster.id}
 
