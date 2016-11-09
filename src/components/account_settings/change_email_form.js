@@ -117,63 +117,61 @@ var changeEmailForm = React.createClass({
   render: function() {
     return (
       <div>
-        <span className='email-email'>
-          <form className="change_email_form" onSubmit={this.submit}>
-            <input ref='new_email' onChange={this.validateEmail} type="text" value={this.state.fields.email.value}/>
+        <form className="change_email_form" onSubmit={this.submit}>
+          <input ref='new_email' onChange={this.validateEmail} type="text" value={this.state.fields.email.value}/>
 
-            <div className="button-area">
-              <ReactCSSTransitionGroup
-                transitionName='slide-right'
-                transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}>
+          <div className="button-area">
+            <ReactCSSTransitionGroup
+              transitionName='slide-right'
+              transitionEnterTimeout={200}
+              transitionLeaveTimeout={200}>
 
-                {
-                  this.state.buttonVisible ?
-
-                  <Button type='submit'
-                          bsStyle='primary'
-                          disabled={!this.state.changeEmailFormValid}
-                          loading={this.state.changeEmailFormSubmitting}
-                          loadingMessage="Saving...">
-                    Set New Email
-                  </Button>
-
-                  : null
-                }
-              </ReactCSSTransitionGroup>
-
-
-              <ReactCSSTransitionGroup
-                transitionName='slide-right'
-                transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}>
-                {
-                  this.state.changeEmailSuccess
-                  ?
-                    <div className='form-success'><i className='fa fa-check-circle' />Saved Succesfully</div>
-                  :
-                    null
-                }
-              </ReactCSSTransitionGroup>
-
-
-              <ReactCSSTransitionGroup
-                transitionName='slide-right'
-                transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}>
               {
-                this.state.changeEmailFormError
+                this.state.buttonVisible ?
+
+                <Button type='submit'
+                        bsStyle='primary'
+                        disabled={!this.state.changeEmailFormValid}
+                        loading={this.state.changeEmailFormSubmitting}
+                        loadingMessage="Saving...">
+                  Set New Email
+                </Button>
+
+                : null
+              }
+            </ReactCSSTransitionGroup>
+
+
+            <ReactCSSTransitionGroup
+              transitionName='slide-right'
+              transitionEnterTimeout={200}
+              transitionLeaveTimeout={200}>
+              {
+                this.state.changeEmailSuccess
                 ?
-                  <div className='flash-messages--flash-message flash-messages--danger'>
-                    {this.state.errorMessage}
-                  </div>
+                  <div className='form-success'><i className='fa fa-check-circle' />Saved Succesfully</div>
                 :
                   null
               }
-              </ReactCSSTransitionGroup>
-            </div>
-          </form>
-        </span>
+            </ReactCSSTransitionGroup>
+
+
+            <ReactCSSTransitionGroup
+              transitionName='slide-right'
+              transitionEnterTimeout={200}
+              transitionLeaveTimeout={200}>
+            {
+              this.state.changeEmailFormError
+              ?
+                <div className='flash-messages--flash-message flash-messages--danger'>
+                  {this.state.errorMessage}
+                </div>
+              :
+                null
+            }
+            </ReactCSSTransitionGroup>
+          </div>
+        </form>
       </div>
     );
   }

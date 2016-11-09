@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import * as UserActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import ChangeEmailForm from './change_email_form';
+import ChangePasswordForm from './change_password_form';
 
 var AccountSettings = React.createClass({
   render: function() {
@@ -30,6 +31,8 @@ var AccountSettings = React.createClass({
             <ChangeEmailForm user={this.props.user} actions={this.props.actions} />
           </div>
         </div>
+
+        <ChangePasswordForm user={this.props.user} actions={this.props.actions} />
 {
   /*
         <div className='row section'>
@@ -70,34 +73,6 @@ var AccountSettings = React.createClass({
               <div className='textfield small'>
                 <label>Username</label>
                 <input id='username' ref='username'/>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <div className='row section'>
-          <div className='col-3'>
-            <h3 className='table-label'>Password</h3>
-          </div>
-          <div className='col-9'>
-            <p>
-              Use this form to change your password.
-            </p>
-
-            <form>
-              <div className='textfield small'>
-                <label>Current Password</label>
-                <input id='current_password' ref='current_password'/>
-              </div>
-
-              <div className='textfield small'>
-                <label>New Password</label>
-                <input id='new_password' ref='new_password'/>
-              </div>
-
-              <div className='textfield small'>
-                <label>New Password (once more)</label>
-                <input id='new_password_confirmation' ref='new_password_confirmation'/>
               </div>
             </form>
           </div>
