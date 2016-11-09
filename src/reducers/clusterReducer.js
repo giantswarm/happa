@@ -21,8 +21,9 @@ var metricKeys = [
 // Make sure that expected metrics keys are present on cluster and nodes
 // since Desmotes will omit them if they are not found in Prometheus
 var ensureMetricKeysAreAvailable = function (clusterDetails) {
+  clusterDetails.metrics = clusterDetails.metrics || {};
   for (var metricKey of metricKeys) {
-    clusterDetails.metrics[metricKey] = Object.assign(
+    clusterDetails.metrics[metricKey] = Object.assign({},
       {
         value: 0,
         unit: 'unknown',
@@ -30,10 +31,9 @@ var ensureMetricKeysAreAvailable = function (clusterDetails) {
       },
       clusterDetails.metrics[metricKey]
     );
-
     for (var node in clusterDetails.nodes) {
       if (clusterDetails.nodes.hasOwnProperty(node)) {
-        clusterDetails.nodes[node][metricKey] = Object.assign(
+        clusterDetails.nodes[node][metricKey] = Object.assign({},
           {
             value: 0,
             unit: 'unknown',
@@ -53,7 +53,7 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
     case types.CLUSTER_LOAD_PARTIAL_DETAILS:
       var items = Object.assign({}, state.items);
 
-      items[action.cluster.id] = action.cluster;
+      items[action.cluster.id] = ensureMetricKeysAreAvailable(action.cluster);
       items[action.cluster.id].nodes = [];
 
       return {
