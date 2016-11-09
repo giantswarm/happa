@@ -157,7 +157,7 @@ var ChangePassword = React.createClass({
             Use this form to change your password.
           </p>
 
-          <form onSubmit={this.submit} className="change_email_form" >
+          <form onSubmit={this.submit} className="change_password_form" >
             <div className='textfield small'>
               <PasswordField
                 label="Current Password"
