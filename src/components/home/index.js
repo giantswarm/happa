@@ -68,8 +68,9 @@ var Home = React.createClass({
             return (cluster.errorLoadingMetrics ?
             <ClusterDashboard cluster={cluster} key={cluster.id + 'error'} className='empty-slate'>
               <h1>Couldn't load metrics for cluster <code>{cluster.id}</code></h1>
-              <p>We're probably experiencing some technical issues with our metrics gathering.</p>
-              <p>Please try again later or contact support: <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a></p>
+              <p>We're currently improving our metrics gathering.</p>
+              <p>If you need metrics, you can <a href='https://docs.giantswarm.io/guides/kubernetes-prometheus/' target="_blank">set up your own monitoring with Prometheus easily</a></p>
+              <p>Thanks for your patience! If you have any questions don't hesitate to contact support: <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a></p>
             </ClusterDashboard>
             :
             <ClusterDashboard animate={true} key={cluster.id} cluster={cluster} />);
