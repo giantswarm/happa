@@ -87,23 +87,22 @@ var ClusterDashboard = React.createClass({
 
   render: function() {
     return <div className={this.props.className + ' cluster-dashboard well ' + (this.isLoading() || this.props.cluster.errorLoadingMetrics ? 'loading' : '')}>
-      { this.props.children ?
-        <div className="cluster-dashboard--overlay">
-          {this.props.children}
-        </div>
-        :
-        <div className="cluster-dashboard--overlay">
-        </div>
-      }
       {
         this.isLoading() ?
         <div className="cluster-dashboard--overlay">
           <img className='loader' src='/images/loader_oval_light.svg' />
         </div>
         :
-        <div className="cluster-dashboard--overlay">
-        </div>
+        undefined
       }
+      { this.props.children ?
+        <div className="cluster-dashboard--overlay">
+          {this.props.children}
+        </div>
+        :
+        undefined
+      }
+
       <div className={'cluster-dashboard--inner'}>
         <h1>
           Cluster: {this.props.cluster.id}
