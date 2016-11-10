@@ -48,22 +48,14 @@ module.exports = React.createClass({
     </svg>;
   },
 
-  percentage: function() {
-    if (this.props.availableMetric.value === 0) {
-      return 0;
-    } else {
-      return this.props.usedMetric.value / this.props.availableMetric.value;
-    }
-  },
-
   render: function() {
     return (
       <div className='gadget gadget-donut'>
         <div className='gadget--inner'>
           <div className='gadget--label'>{this.props.label}</div>
-          { this.pieChart(this.percentage()) }
-          <div className='gadget--value'>{this.props.large_label(this.percentage())}</div>
-          <div className='gadget--bottom-label'>{this.props.bottom_label(this.props.availableMetric, this.props.usedMetric)}</div>
+          { this.pieChart(this.props.percentage) }
+          <div className='gadget--value'>{this.props.large_label}</div>
+          <div className='gadget--bottom-label'>{this.props.bottom_label}</div>
         </div>
       </div>
     );

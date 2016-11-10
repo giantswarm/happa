@@ -121,7 +121,7 @@ var ChangePassword = React.createClass({
       });
     })
     .then(() => {
-      return this.props.actions.login(this.props.user.email, this.refs.new_password.value())
+      return this.props.actions.login(this.props.user.email, this.refs.new_password.value());
     })
     .catch((error) => {
       var errorMessage;

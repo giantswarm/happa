@@ -3,6 +3,7 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import Button from '../button';
+import {humanFileSize} from '../../lib/helpers';
 
 module.exports = React.createClass({
   render: function() {

@@ -40,7 +40,6 @@ var SimpleExample = React.createClass ({
           });
         })
         .catch((error) => {
-          console.log(error);
           this.props.dispatch(flashAdd({
             message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
             class: 'danger',
