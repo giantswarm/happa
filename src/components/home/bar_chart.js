@@ -47,11 +47,16 @@ module.exports = ReactTimeout(React.createClass({
 
   render: function() {
     return (
-      <div className='bar-chart'>
+      <div className={'bar-chart ' + ( this.props.outdated ? 'bar-chart--outdated' : '' )}>
         <div className='bar-chart--bar' style={{width: `${this.cappedPercentage()}%`, backgroundColor: this.props.color}}>
         </div>
         <div className='bar-chart--value'>
-          {this.props.label}
+          {
+            this.props.outdated ?
+            '...'
+            :
+            this.props.label
+          }
         </div>
       </div>
     );

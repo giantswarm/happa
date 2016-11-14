@@ -17,80 +17,34 @@ var ClusterDashboard = React.createClass({
     router: React.PropTypes.object
   },
 
-  cpuPercentUsed: function() {
-    if (this.props.cluster.metrics) {
-      return this.props.cluster.metrics.cpu_used.value;
-    } else {
-      return 0;
-    }
-  },
-
-  cpuCores: function() {
-    if (this.props.cluster.metrics) {
-      return `${this.props.cluster.metrics.cpu_cores.value} cores total`;
-    } else {
-      return 'loading';
-    }
-  },
-
-  ramPercentUsed: function() {
-    if (this.props.cluster.metrics) {
-      if (this.props.cluster.metrics.ram_available.value === 0) {
-        return 0;
-      } else {
-        return this.props.cluster.metrics.ram_used.value / this.props.cluster.metrics.ram_available.value;
-      }
-    } else {
-      return 0;
-    }
-  },
-
-  ramAmountFree: function() {
-    if (this.props.cluster.metrics) {
-      var bytesFree = humanFileSize(this.props.cluster.metrics.ram_available.value - this.props.cluster.metrics.ram_used.value);
-      return `${bytesFree.value} ${bytesFree.unit} free`;
-    } else {
-      return 'loading';
-    }
-
-  },
-
-  storagePercentUsed: function() {
-    if (this.props.cluster.metrics && this.props.cluster.metrics.node_storage_used && this.props.cluster.metrics.node_storage_limit) {
-      if (this.props.cluster.metrics.node_storage_limit.value === 0) {
-        return 0;
-      } else {
-        return this.props.cluster.metrics.node_storage_used.value / this.props.cluster.metrics.node_storage_limit.value;
-      }
-    } else {
-      return 0;
-    }
-  },
-
-  storageAmountFree: function() {
-    if (this.props.cluster.metrics && this.props.cluster.metrics.node_storage_limit && this.props.cluster.metrics.node_storage_used) {
-      var bytesFree = humanFileSize(this.props.cluster.metrics.node_storage_limit.value - this.props.cluster.metrics.node_storage_used.value);
-      return `${bytesFree.value} ${bytesFree.unit} free`;
-    } else {
-      return 'loading';
-    }
-  },
-
   configureDocsFor: function(clusterId) {
     this.props.actions.clusterSelect(clusterId);
     this.context.router.push('/getting-started/configure');
   },
 
-  isLoading: function() {
-    return (! this.props.cluster.metrics);
+  bytesFreeLabel: function(availableMetric, usedMetric) {
+    var bytesFree = humanFileSize(availableMetric.value - usedMetric.value);
+    return `${bytesFree.value} ${bytesFree.unit} free`;
+  },
+
+  decoratePercentage: function(percentage) {
+    return Math.round(percentage * 100) + '%';
+  },
+
+  coresTotalLabel: function(availableMetric, usedMetric) {
+    return `${availableMetric.value} cores total`;
+  },
+
+  decoratePerSecond: function(metric) {
+    return humanFileSize(metric.value).unit + '/Sec';
   },
 
   render: function() {
-    return <div className={this.props.className + ' cluster-dashboard well ' + (this.isLoading() || this.props.cluster.errorLoadingMetrics ? 'loading' : '')}>
+    return <div className={this.props.className + ' cluster-dashboard well ' + (this.props.cluster.errorLoadingMetrics ? 'loading' : '')}>
       {
-        this.isLoading() ?
+        this.props.children ?
         <div className="cluster-dashboard--overlay">
-          <img className='loader' src='/images/loader_oval_light.svg' />
+          {this.props.children}
         </div>
         :
         undefined
@@ -121,23 +75,54 @@ var ClusterDashboard = React.createClass({
         </h1>
 
         <div className='gadgets'>
-          {/* <Gadget label='Status' value="OK" backgroundColor="#1a8735"/> */}
-          <DonutGadget label='RAM' bottom_label={this.ramAmountFree()} large_label={Math.round(this.ramPercentUsed() * 100) + '%'} color='#003c78' percentage={this.ramPercentUsed()} />
-          <DonutGadget label='CPU' bottom_label={this.cpuCores()} large_label={Math.round(this.cpuPercentUsed() * 100) + '%'} color="#3ab6c7" percentage={this.cpuPercentUsed()} />
-          <DonutGadget label='Node Storage' bottom_label={this.storageAmountFree()} large_label={Math.round(this.storagePercentUsed() * 100) + '%'} color="#d68a10" percentage={this.storagePercentUsed()} />
+          <DonutGadget
+            label='RAM'
+            bottom_label={this.bytesFreeLabel}
+            large_label={this.decoratePercentage}
+            color='#003c78'
+            availableMetric={this.props.cluster.metrics.ram_available}
+            usedMetric={this.props.cluster.metrics.ram_used}
+          />
+
+          <DonutGadget
+            label='CPU'
+            bottom_label={this.coresTotalLabel}
+            large_label={this.decoratePercentage}
+            color="#3ab6c7"
+            availableMetric={this.props.cluster.metrics.cpu_cores}
+            usedMetric={this.props.cluster.metrics.cpu_used}
+          />
+
+          <DonutGadget
+            label='Node Storage'
+            bottom_label={this.bytesFreeLabel}
+            large_label={this.decoratePercentage}
+            color="#d68a10"
+            availableMetric={this.props.cluster.metrics.node_storage_limit}
+            usedMetric={this.props.cluster.metrics.node_storage_used}
+          />
 
           <Gadget label='Network In'
-                  bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).unit + '/Sec' : 'loading'}
-                  value={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).value : ''}
+                  metric={this.props.cluster.metrics.network_traffic_incoming}
+                  bottom_label={this.decoratePerSecond}
           />
 
           <Gadget label='Network Out'
-                  bottom_label={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).unit + '/Sec' : 'loading'}
-                  value={this.props.cluster.metrics ? humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).value : ''}
+                  metric={this.props.cluster.metrics.network_traffic_outgoing}
+                  bottom_label={this.decoratePerSecond}
           />
-          <Gadget label='Nodes' value={_.map(this.props.cluster.nodes, (node) => node).length}/>
-          <Gadget label='Pods' value={this.props.cluster.metrics ? this.props.cluster.metrics.pod_count.value : ''}/>
-          <Gadget label='Containers' value={this.props.cluster.metrics ? this.props.cluster.metrics.container_count.value : ''}/>
+
+          <Gadget label='Nodes'
+                  metric={{value: _.map(this.props.cluster.nodes, (node) => node).length}}
+                  bottom_label={() => {}} />
+
+          <Gadget label='Pods'
+                  metric={this.props.cluster.metrics.pod_count}
+                  bottom_label={() => {}} />
+
+          <Gadget label='Containers'
+                  metric={this.props.cluster.metrics.container_count}
+                  bottom_label={() => {}} />
         </div>
 
         <div className='seperator'></div>
