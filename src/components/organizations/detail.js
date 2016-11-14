@@ -12,6 +12,10 @@ import { bindActionCreators } from 'redux';
 import { formatDate } from '../../lib/helpers.js';
 
 var OrganizationDetail = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+
   componentDidMount() {
     this.props.actions.organizationsLoad();
   },
@@ -22,6 +26,10 @@ var OrganizationDetail = React.createClass({
 
   removeMember(username) {
     this.props.actions.organizationRemoveMember(this.props.organization.id, username);
+  },
+
+  openClusterDetails(cluster) {
+    this.context.router.push('/organizations/validorg/clusters/' + cluster);
   },
 
   render: function() {
@@ -56,7 +64,7 @@ var OrganizationDetail = React.createClass({
                     {
                       this.props.organization.clusters.map((cluster) => {
                         return (
-                          <tr key={cluster}>
+                          <tr key={cluster} onClick={this.openClusterDetails.bind(this, cluster)}>
                             <td>{this.props.clusters.items[cluster].name}</td>
                             <td className="code">{this.props.clusters.items[cluster].id}</td>
                             <td>{formatDate(this.props.clusters.items[cluster].create_date)}</td>

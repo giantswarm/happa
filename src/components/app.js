@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import { applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRoute, browserHistory } from 'react-router';
+import { applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRoute, browserHistory, IndexRedirect } from 'react-router';
 import { useScroll } from 'react-router-scroll';
 import { render } from 'react-dom';
 import Layout from './layout';
@@ -16,6 +16,7 @@ import Organizations from './organizations';
 import { Provider } from 'react-redux';
 import configureStore from '../stores/configureStore';
 import organizationDetail from './organizations/detail';
+import clusterDetail from './organizations/cluster_detail';
 import accountSettings from './account_settings';
 import wip from './wip';
 import Home from './home';
@@ -60,7 +61,13 @@ render(
 
         <Route name="Organizations" path="organizations">
           <IndexRoute component={Organizations} />
-          <Route name="organizations.detail" path="/organizations/:orgId" component={organizationDetail} />
+          <Route name="organizations.detail" path="/organizations/:orgId">
+            <IndexRoute component={organizationDetail} />
+            <Route name="Clusters" path="/organizations/:orgId/clusters">
+              <IndexRedirect to="/organizations/:orgId" />
+              <Route name="clusters.detail" path="/organizations/:orgId/clusters/:clusterId" component={clusterDetail} />
+            </Route>
+          </Route>
         </Route>
 
         <Route name="Account Settings" path="/account_settings" component={accountSettings} />
