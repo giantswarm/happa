@@ -4,7 +4,6 @@ import { Button as BsButton, ButtonGroup, DropdownButton, MenuItem } from 'react
 import { Link } from 'react-router';
 import Button from '../button';
 import Gadget from './gadget';
-import DonutGadgetOld from './donut_gadget_old';
 import DonutGadget from './donut_gadget';
 import NodeRow from './node_row';
 import _ from 'underscore';
@@ -34,6 +33,10 @@ var ClusterDashboard = React.createClass({
 
   coresTotalLabel: function(availableMetric, usedMetric) {
     return `${availableMetric.value} cores total`;
+  },
+
+  decoratePerSecond: function(metric) {
+    return humanFileSize(metric.value).unit + '/Sec';
   },
 
   render: function() {
@@ -100,23 +103,26 @@ var ClusterDashboard = React.createClass({
           />
 
           <Gadget label='Network In'
-                  value={humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).value}
-                  bottom_label={humanFileSize(this.props.cluster.metrics.network_traffic_incoming.value).unit + '/Sec'}
+                  metric={this.props.cluster.metrics.network_traffic_incoming}
+                  bottom_label={this.decoratePerSecond}
           />
 
           <Gadget label='Network Out'
-                  value={humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).value}
-                  bottom_label={humanFileSize(this.props.cluster.metrics.network_traffic_outgoing.value).unit + '/Sec'}
+                  metric={this.props.cluster.metrics.network_traffic_outgoing}
+                  bottom_label={this.decoratePerSecond}
           />
 
           <Gadget label='Nodes'
-                  value={_.map(this.props.cluster.nodes, (node) => node).length} />
+                  metric={{value: _.map(this.props.cluster.nodes, (node) => node).length}}
+                  bottom_label={() => {}} />
 
           <Gadget label='Pods'
-                  value={this.props.cluster.metrics.pod_count.value}/>
+                  metric={this.props.cluster.metrics.pod_count}
+                  bottom_label={() => {}} />
 
           <Gadget label='Containers'
-                  value={this.props.cluster.metrics.container_count.value}/>
+                  metric={this.props.cluster.metrics.container_count}
+                  bottom_label={() => {}} />
         </div>
 
         <div className='seperator'></div>

@@ -56,14 +56,41 @@ module.exports = React.createClass({
     }
   },
 
+  isOutdated: function() {
+    return this.props.usedMetric.outdated || this.props.availableMetric.outdated;
+  },
+
+  classes: function() {
+    var classes = [];
+
+    if (this.isOutdated()) {
+      classes.push('gadget-donut-outdated');
+    }
+
+    return classes.join(' ');
+  },
+
   render: function() {
     return (
-      <div className='gadget gadget-donut'>
+      <div className={'gadget gadget-donut ' + this.classes()}>
         <div className='gadget--inner'>
           <div className='gadget--label'>{this.props.label}</div>
           { this.pieChart(this.percentage()) }
-          <div className='gadget--value'>{this.props.large_label(this.percentage())}</div>
-          <div className='gadget--bottom-label'>{this.props.bottom_label(this.props.availableMetric, this.props.usedMetric)}</div>
+          {
+            this.isOutdated() ?
+            <div className='gadget--value'>...</div>
+            :
+            <div className='gadget--value'>{this.props.large_label(this.percentage())}</div>
+          }
+
+          <div className='gadget--bottom-label'>
+          {
+            this.isOutdated() ?
+            'Unavailable'
+            :
+            this.props.bottom_label(this.props.availableMetric, this.props.usedMetric)
+          }
+          </div>
         </div>
       </div>
     );

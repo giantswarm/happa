@@ -11,7 +11,7 @@ import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
 import _ from 'underscore';
 
-const DESMOTES_POLL_INTERVAL = 60000; // 60 Seconds
+const DESMOTES_POLL_INTERVAL = 5000; // 60 Seconds
 
 var Home = React.createClass({
   componentDidMount: function() {
