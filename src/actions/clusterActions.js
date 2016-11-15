@@ -111,6 +111,35 @@ export function clusterFetchMetrics(clusterId) {
   };
 }
 
+export function clusterLoadKeyPairs(clusterId) {
+  return function(dispatch, getState) {
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
+    dispatch({
+      type: types.CLUSTER_LOAD_KEY_PAIRS,
+      clusterId
+    });
+
+    return giantSwarm.clusterKeyPairs({clusterId})
+    .then((response) => {
+      dispatch({
+        type: types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS,
+        clusterId,
+        keyPairs: response.result
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch({
+        type: types.CLUSTER_LOAD_KEY_PAIRS_ERROR,
+        clusterId,
+        keyPairs
+      });
+    });
+  };
+}
+
 
 // clusterLoadPartialDetails
 // =================================================================

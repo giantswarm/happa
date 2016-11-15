@@ -102,6 +102,7 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
       items[action.cluster.id] = ensureMetricKeysAreAvailable(action.cluster);
       items[action.cluster.id].nodes = [];
+      items[action.cluster.id].keyPairs = [];
 
       return {
         lastUpdated: state.lastUpdated,
@@ -182,6 +183,47 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
       var items = Object.assign({}, state.items);
 
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {errorLoadingMetrics: true});
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
+      };
+
+      break;
+
+    case types.CLUSTER_LOAD_KEY_PAIRS:
+      var items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {isFetchingKeyPairs: true});
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
+      };
+
+      break;
+
+    case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
+      var items = Object.assign({}, state.items);
+
+      console.log(action.keyPairs);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {isFetchingKeyPairs: false, keyPairs: action.keyPairs});
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
+      };
+
+      break;
+
+    case types.CLUSTER_LOAD_KEY_PAIRS_ERROR:
+      var items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {isFetchingKeyPairs: false});
 
       return {
         lastUpdated: state.lastUpdated,

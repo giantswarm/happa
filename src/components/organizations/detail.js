@@ -29,7 +29,7 @@ var OrganizationDetail = React.createClass({
   },
 
   openClusterDetails(cluster) {
-    this.context.router.push('/organizations/validorg/clusters/' + cluster);
+    this.context.router.push('/organizations/' + this.props.organization.id + '/clusters/' + cluster);
   },
 
   render: function() {
@@ -64,7 +64,7 @@ var OrganizationDetail = React.createClass({
                     {
                       this.props.organization.clusters.map((cluster) => {
                         return (
-                          <tr key={cluster} onClick={this.openClusterDetails.bind(this, cluster)}>
+                          <tr className="clickable" key={cluster} onClick={this.openClusterDetails.bind(this, cluster)}>
                             <td>{this.props.clusters.items[cluster].name}</td>
                             <td className="code">{this.props.clusters.items[cluster].id}</td>
                             <td>{formatDate(this.props.clusters.items[cluster].create_date)}</td>

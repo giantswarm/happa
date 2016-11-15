@@ -23,7 +23,7 @@
     "react": "~15.3.0",
     "react-addons-css-transition-group": "~15.3.0",
     "react-addons-update": "~15.3.0",
-    "giantswarm": "git://github.com/giantswarm/giantswarm-js-client#v0.1.2",
+    "giantswarm": "git://github.com/giantswarm/giantswarm-js-client#keypairs-fix",
     "react-codemirror": "~0.2.6",
     "react-dom": "~15.3.0",
     "react-router": "~2.6.1",
