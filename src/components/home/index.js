@@ -85,7 +85,7 @@ var Home = React.createClass({
             } else {
               return <ClusterDashboard animate={true} key={cluster.id} cluster={cluster} />;
             }
-          }), (cluster) => cluster.id)
+          }, (cluster) => cluster.id)
         }
       </div>
     );

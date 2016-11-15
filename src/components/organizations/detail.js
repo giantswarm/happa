@@ -111,12 +111,18 @@ var OrganizationDetail = React.createClass({
             </div>
           </div>
 
-          <DomainValidation
-            loadDomains={this.props.actions.organizationLoadDomains.bind(this, this.props.organization.id)}
-            addDomain={this.props.actions.organizationAddDomain.bind(this, this.props.organization.id)}
-            deleteDomain={this.props.actions.organizationDeleteDomain.bind(this, this.props.organization.id)}
-            organization={this.props.organization}
-          />
+          {
+            /*
+            }
+            <DomainValidation
+              loadDomains={this.props.actions.organizationLoadDomains.bind(this, this.props.organization.id)}
+              addDomain={this.props.actions.organizationAddDomain.bind(this, this.props.organization.id)}
+              deleteDomain={this.props.actions.organizationDeleteDomain.bind(this, this.props.organization.id)}
+              organization={this.props.organization}
+
+            />
+            */
+          }
 {
   /*
     <div className='row section'>
