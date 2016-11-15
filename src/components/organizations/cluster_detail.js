@@ -5,15 +5,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from '../../actions/clusterActions';
 import moment from 'moment';
+import { formatDate } from '../../lib/helpers.js';
 
 class ClusterDetail extends React.Component {
   componentDidMount() {
     this.props.actions.clusterLoadKeyPairs(this.props.cluster.id);
-  }
-
-  formatDate(ISO8601DateString) {
-    // http://momentjs.com/docs/#/displaying/
-    return moment(ISO8601DateString).utc().format('D MMM YYYY, h:mm z');
   }
 
   render() {
@@ -57,12 +53,11 @@ class ClusterDetail extends React.Component {
                 <tbody>
                   {
                     this.props.cluster.keyPairs.map((keyPair) => {
-                      console.log(keyPair);
                       return <tr key={keyPair.id}>
                         <td>{keyPair.description}</td>
                         <td>{keyPair.id}</td>
-                        <td>{this.formatDate(keyPair.create_date)}</td>
-                        <td>{this.formatDate(keyPair.expire_date)}</td>
+                        <td>{formatDate(keyPair.create_date)}</td>
+                        <td>{formatDate(keyPair.expire_date)}</td>
                       </tr>;
                     })
                   }
