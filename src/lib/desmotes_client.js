@@ -1,31 +1,17 @@
 'use strict';
 
 var request = require('superagent-bluebird-promise');
-var validate = require('validate.js');
 var _ = require('underscore');
-
-// validateOrRaise
-// ----------------
-// Helper method that validates an object based on constraints.
-// Raises a TypeError with helpful message if the validation fails.
-//
-var validateOrRaise = function(validatable, constraints) {
-  var validationErrors = validate(validatable, constraints, {fullMessages: false});
-
-  if(validationErrors){
-    // If there are validation errors, throw a TypeError that has readable
-    // information about what went wrong.
-    var messages = _.map(validationErrors, (errorMessages, field) => {
-      return field + ': ' + errorMessages.join(', ');
-    });
-    throw(new TypeError(messages.join('\n')));
-  }
-};
+var helpers = require('./helpers');
 
 // Desmotes
 // --------
 // A client for Desmotes.
-// config: {endpoint: 'http://desmotes.com', timeout_ms: 10000}
+// config: {
+//  endpoint: 'http://desmotes.com',
+//  authorizationToken: 'asdfghjkl'  # A Giant Swarm user's authentication token,
+//  timeout_ms: 10000                # When a request should time out
+// }
 //
 // Example Usage:
 // var desmotes = new Desmotes({endpoint: 'http://docker.dev:9001', authorizationToken: 'asdfghjk'})
@@ -43,7 +29,7 @@ var Desmotes = function(config) {
     }
   };
 
-  validateOrRaise(config, constraints);
+  helpers.validateOrRaise(config, constraints);
 
   if (config.timeout_ms === undefined) {
     config.timeout_ms = 10000;
@@ -63,7 +49,7 @@ var Desmotes = function(config) {
       var url = `${config.endpoint}/cluster/${params.clusterId}/`;
 
       var promise = new Promise((resolve, reject) => {
-        validateOrRaise(params, constraints);
+        helpers.validateOrRaise(params, constraints);
         resolve(
           request
             .get(url)

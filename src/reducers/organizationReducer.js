@@ -1,6 +1,7 @@
 'use strict';
 
 import * as types from '../actions/actionTypes';
+import update from 'react-addons-update';
 
 export default function organizationReducer(state = {lastUpdated: 0, isFetching: false, items: {}}, action = undefined) {
   switch(action.type) {
@@ -37,6 +38,17 @@ export default function organizationReducer(state = {lastUpdated: 0, isFetching:
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: state.items
+      };
+
+    case types.ORGANIZATION_LOAD_DOMAINS:
+      var items = Object.assign({}, state.items);
+
+      items[action.organizationId] = Object.assign({}, items[action.organizationId], {domains: action.domains});
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
       };
 
     default:

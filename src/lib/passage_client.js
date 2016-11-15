@@ -1,33 +1,17 @@
 'use strict';
 
 var request = require('superagent-bluebird-promise');
-var validate = require('validate.js');
 var _ = require('underscore');
-
-//
-// validateOrRaise
-// ----------------
-// Helper method that validates an object based on constraints.
-// Raises a TypeError with helpful message if the validation fails.
-//
-var validateOrRaise = function(validatable, constraints) {
-  var validationErrors = validate(validatable, constraints, {fullMessages: false});
-
-  if(validationErrors){
-    // If there are validation errors, throw a TypeError that has readable
-    // information about what went wrong.
-    var messages = _.map(validationErrors, (errorMessages, field) => {
-      return field + ': ' + errorMessages.join(', ');
-    });
-    throw(new TypeError(messages.join('\n')));
-  }
-};
+var helpers = require('./helpers');
 
 //
 // Passage
 // -------
 // A client for Passage.
-// config: {endpoint: 'http://passage.com', timeout_ms: 10000}
+// config: {
+//  endpoint: 'http://passage.com',
+//  timeout_ms: 10000 # When a request should time out
+// }
 //
 // Example Usage:
 // var passage = new Passage({endpoint: 'http://docker.dev:5000'})
@@ -42,7 +26,7 @@ var Passage = function(config) {
     }
   };
 
-  validateOrRaise(config, constraints);
+  helpers.validateOrRaise(config, constraints);
 
   if (config.timeout_ms === undefined) {
     config.timeout_ms = 10000;
@@ -64,7 +48,7 @@ var Passage = function(config) {
       var url = `${config.endpoint}/invite/${params.contactId}/${params.token}`;
 
       var promise = new Promise((resolve, reject) => {
-        validateOrRaise(params, constraints);
+        helpers.validateOrRaise(params, constraints);
         resolve(request.get(url)
         .timeout(config.timeout_ms));
       })
@@ -103,7 +87,7 @@ var Passage = function(config) {
       };
 
       var promise = new Promise((resolve, reject) => {
-        validateOrRaise(params, constraints);
+        helpers.validateOrRaise(params, constraints);
         resolve(request.post(url)
           .timeout(config.timeout_ms)
           .send(payload)
@@ -134,7 +118,7 @@ var Passage = function(config) {
       };
 
       var promise = new Promise((resolve, reject) => {
-        validateOrRaise(params, constraints);
+        helpers.validateOrRaise(params, constraints);
         resolve(request.post(url)
           .timeout(config.timeout_ms)
           .send(payload)
@@ -169,7 +153,7 @@ var Passage = function(config) {
       };
 
       var promise = new Promise((resolve, reject) => {
-        validateOrRaise(params, constraints);
+        helpers.validateOrRaise(params, constraints);
         resolve(request.post(url)
           .timeout(config.timeout_ms)
           .send(payload)
@@ -210,7 +194,7 @@ var Passage = function(config) {
       };
 
       var promise = new Promise((resolve, reject) => {
-        validateOrRaise(params, constraints);
+        helpers.validateOrRaise(params, constraints);
         resolve(request.post(url)
           .timeout(config.timeout_ms)
           .send(payload)

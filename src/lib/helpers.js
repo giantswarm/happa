@@ -1,6 +1,10 @@
 'use strict';
+import validate from 'validate.js';
+import moment from 'moment';
+import React from 'react';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
 
-var dedent = function(strings, ...values) {
+export function dedent(strings, ...values) {
   let raw;
   if (typeof strings === 'string') {
     // dedent can be used as a plain function
@@ -50,7 +54,7 @@ var dedent = function(strings, ...values) {
   return result.replace(/\\n/g, '\n');
 };
 
-var humanFileSize = function(bytes, si) {
+export function humanFileSize(bytes, si) {
     // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
     var thresh = si ? 1000 : 1024;
 
@@ -78,7 +82,41 @@ var humanFileSize = function(bytes, si) {
     };
 };
 
-module.exports = {
-  dedent: dedent,
-  humanFileSize: humanFileSize
+// validateOrRaise
+// ----------------
+// Helper method that validates an object based on constraints.
+// Raises a TypeError with helpful message if the validation fails.
+//
+export function validateOrRaise(validatable, constraints) {
+  var validationErrors = validate(validatable, constraints, {fullMessages: false});
+
+  if(validationErrors){
+    // If there are validation errors, throw a TypeError that has readable
+    // information about what went wrong.
+    var messages = _.map(validationErrors, (errorMessages, field) => {
+      return field + ': ' + errorMessages.join(', ');
+    });
+    throw(new TypeError(messages.join('\n')));
+  }
+};
+
+export function formatDate(ISO8601DateString) {
+  // http://momentjs.com/docs/#/displaying/
+  return moment(ISO8601DateString).utc().format('D MMM YYYY, h:mm z');
+};
+
+export function relativeDate(ISO8601DateString) {
+  var formatedDate = formatDate(ISO8601DateString);
+  var relativeDate = moment(ISO8601DateString).utc().fromNow();
+
+  return <OverlayTrigger placement="top" overlay={
+    <Tooltip id="tooltip">{formatedDate}</Tooltip>
+  }>
+    <span>{relativeDate}</span>
+  </OverlayTrigger>;
+};
+
+export function toTitleCase(str) {
+  // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
+  return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };

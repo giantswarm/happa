@@ -3,27 +3,25 @@
 import React from 'react';
 import { Link } from 'react-router';
 import FlashMessage from '../flash_messages/flash_message';
+import { flashAdd } from '../../actions/flashMessageActions';
 import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
-import { organizationsLoad, organizationAddMember, organizationRemoveMember } from '../../actions/organizationActions';
-import moment from 'moment';
+import * as OrganizationActions from '../../actions/organizationActions';
+import DomainValidation from './domain_validation';
+import { bindActionCreators } from 'redux';
+import { formatDate } from '../../lib/helpers.js';
 
 var OrganizationDetail = React.createClass({
   componentDidMount() {
-    this.props.dispatch(organizationsLoad());
+    this.props.actions.organizationsLoad();
   },
 
   addMember() {
-    this.props.dispatch(organizationAddMember(this.props.organization.id));
+    this.props.actions.organizationAddMember(this.props.organization.id);
   },
 
   removeMember(username) {
-    this.props.dispatch(organizationRemoveMember(this.props.organization.id, username));
-  },
-
-  formatDate(ISO8601DateString) {
-    // http://momentjs.com/docs/#/displaying/
-    return moment(ISO8601DateString).utc().format('D MMM YYYY, h:mm z');
+    this.props.actions.organizationRemoveMember(this.props.organization.id, username);
   },
 
   render: function() {
@@ -61,7 +59,7 @@ var OrganizationDetail = React.createClass({
                           <tr key={cluster}>
                             <td>{this.props.clusters.items[cluster].name}</td>
                             <td className="code">{this.props.clusters.items[cluster].id}</td>
-                            <td>{this.formatDate(this.props.clusters.items[cluster].create_date)}</td>
+                            <td>{formatDate(this.props.clusters.items[cluster].create_date)}</td>
                           </tr>
                         );
                       })
@@ -109,9 +107,22 @@ var OrganizationDetail = React.createClass({
                   </tbody>
                 </table>
               }
-              <Button onClick={this.addMember} bsStyle='primary' className='small'>Add Member</Button>
+              <Button onClick={this.addMember} bsStyle='default'>Add Member</Button>
             </div>
           </div>
+
+          {
+            /*
+            }
+            <DomainValidation
+              loadDomains={this.props.actions.organizationLoadDomains.bind(this, this.props.organization.id)}
+              addDomain={this.props.actions.organizationAddDomain.bind(this, this.props.organization.id)}
+              deleteDomain={this.props.actions.organizationDeleteDomain.bind(this, this.props.organization.id)}
+              organization={this.props.organization}
+
+            />
+            */
+          }
 {
   /*
     <div className='row section'>
@@ -266,4 +277,11 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-module.exports = connect(mapStateToProps)(OrganizationDetail);
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(OrganizationActions, dispatch),
+    dispatch: dispatch
+  };
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(OrganizationDetail);

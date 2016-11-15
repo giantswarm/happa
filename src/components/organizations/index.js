@@ -47,7 +47,7 @@ class Organizations extends React.Component {
           } else if (Object.keys(this.props.organizations.items).length === 0) {
             return <div>
               <p>No organizations, create one using the button below:</p>
-              <Button bsStyle='primary' onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
+              <Button bsStyle='default' onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
               </div>;
           } else {
             return <div>
@@ -74,7 +74,7 @@ class Organizations extends React.Component {
                   }
                 </tbody>
               </table>
-              <Button bsStyle='primary' onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
+              <Button bsStyle='default' onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
             </div>;
           }
         })()}
