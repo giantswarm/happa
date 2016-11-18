@@ -62,7 +62,7 @@ var OrganizationDetail = React.createClass({
                   </thead>
                   <tbody>
                     {
-                      this.props.organization.clusters.map((cluster) => {
+                      _.map(_.sortBy(this.props.organization.clusters, (cluster) => this.props.clusters.items[cluster].name ), (cluster) => {
                         return (
                           <tr className="clickable" key={cluster} onClick={this.openClusterDetails.bind(this, cluster)}>
                             <td>{this.props.clusters.items[cluster].name}</td>

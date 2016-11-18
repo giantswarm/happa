@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from '../../actions/clusterActions';
 import moment from 'moment';
-import { formatDate } from '../../lib/helpers.js';
+import { relativeDate, truncate } from '../../lib/helpers.js';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
 
 class ClusterDetail extends React.Component {
   componentDidMount() {
@@ -44,8 +45,8 @@ class ClusterDetail extends React.Component {
               <table>
                 <thead>
                   <tr>
-                    <th>Description</th>
                     <th>ID</th>
+                    <th>Description</th>
                     <th>Created</th>
                     <th>Expires</th>
                   </tr>
@@ -54,10 +55,20 @@ class ClusterDetail extends React.Component {
                   {
                     this.props.cluster.keyPairs.map((keyPair) => {
                       return <tr key={keyPair.id}>
+                        <td className="code">
+
+
+                          <OverlayTrigger placement="top" overlay={
+                              <Tooltip id="tooltip">{keyPair.id}</Tooltip>
+                            }>
+                            <span>{truncate(keyPair.id, 10)}</span>
+                          </OverlayTrigger>
+
+                        </td>
+
                         <td>{keyPair.description}</td>
-                        <td>{keyPair.id}</td>
-                        <td>{formatDate(keyPair.create_date)}</td>
-                        <td>{formatDate(keyPair.expire_date)}</td>
+                        <td>{relativeDate(keyPair.create_date)}</td>
+                        <td>{relativeDate(keyPair.expire_date)}</td>
                       </tr>;
                     })
                   }
@@ -75,6 +86,8 @@ class ClusterDetail extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   var cluster = state.entities.clusters.items[ownProps.params.clusterId];
+
+  console.log('cluster', cluster);
 
   return {
     clusters: state.entities.clusters,

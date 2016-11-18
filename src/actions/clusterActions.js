@@ -133,8 +133,7 @@ export function clusterLoadKeyPairs(clusterId) {
       console.log(error);
       dispatch({
         type: types.CLUSTER_LOAD_KEY_PAIRS_ERROR,
-        clusterId,
-        keyPairs
+        clusterId
       });
     });
   };
