@@ -104,24 +104,29 @@ var ClusterDashboard = React.createClass({
 
           <Gadget label='Network In'
                   metric={this.props.cluster.metrics.network_traffic_incoming}
+                  decimals={1}
                   bottom_label={this.decoratePerSecond}
           />
 
           <Gadget label='Network Out'
                   metric={this.props.cluster.metrics.network_traffic_outgoing}
+                  decimals={1}
                   bottom_label={this.decoratePerSecond}
           />
 
           <Gadget label='Nodes'
                   metric={{value: _.map(this.props.cluster.nodes, (node) => node).length}}
+                  decimals={0}
                   bottom_label={() => {}} />
 
           <Gadget label='Pods'
                   metric={this.props.cluster.metrics.pod_count}
+                  decimals={0}
                   bottom_label={() => {}} />
 
           <Gadget label='Containers'
                   metric={this.props.cluster.metrics.container_count}
+                  decimals={0}
                   bottom_label={() => {}} />
         </div>
 

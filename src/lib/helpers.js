@@ -54,13 +54,13 @@ export function dedent(strings, ...values) {
   return result.replace(/\\n/g, '\n');
 };
 
-export function humanFileSize(bytes, si) {
+export function humanFileSize(bytes, si=true, decimals=1) {
     // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
     var thresh = si ? 1000 : 1024;
 
     if(Math.abs(bytes) < thresh) {
       return {
-        value: bytes.toFixed(1),
+        value: bytes.toFixed(decimals),
         unit: 'B'
       };
     }
@@ -77,7 +77,7 @@ export function humanFileSize(bytes, si) {
     } while(Math.abs(bytes) >= thresh && u < units.length - 1);
 
     return {
-      value: bytes.toFixed(1),
+      value: bytes.toFixed(decimals),
       unit: units[u]
     };
 };
@@ -120,3 +120,11 @@ export function toTitleCase(str) {
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
   return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
+
+export function  truncate(string, maxLength=20) {
+  if (string.length > maxLength) {
+    return string.substring(0,maxLength) + '\u2026';
+  } else {
+    return string;
+  }
+}

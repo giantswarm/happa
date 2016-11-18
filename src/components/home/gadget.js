@@ -26,7 +26,7 @@ module.exports = React.createClass({
             this.props.metric.outdated ?
             '...'
             :
-            humanFileSize(this.props.metric.value).value
+            humanFileSize(this.props.metric.value, true, this.props.decimals).value
           }
           </div>
           <div className='gadget--bottom-label'>{this.props.bottom_label(this.props.metric)}</div>
