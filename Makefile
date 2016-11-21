@@ -39,3 +39,15 @@ npm-check-updates:
 # Run tests (of which there are none right now)
 test: docker-build
 	docker run -ti -p 8000:8000 -v ${PWD}/src:/usr/src/app/src happa-dev npm test
+
+# update dependency images
+pull-images:
+	docker pull registry.giantswarm.io/giantswarm/desmotes:latest
+	docker pull registry.giantswarm.io/giantswarm/domain-validator-worker:latest
+	docker pull registry.giantswarm.io/giantswarm/domain-validator:latest
+	docker pull registry.giantswarm.io/giantswarm/fake-metrics-node:latest
+	docker pull registry.giantswarm.io/giantswarm/fake-metrics-prometheus:latest
+	docker pull registry.giantswarm.io/giantswarm/mailcatcher:latest
+	docker pull registry.giantswarm.io/giantswarm/mock-api:latest
+	docker pull registry.giantswarm.io/giantswarm/mock-hubspot-api:latest
+	docker pull registry.giantswarm.io/giantswarm/passage:latest
