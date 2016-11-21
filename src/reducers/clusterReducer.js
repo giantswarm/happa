@@ -208,8 +208,6 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
     case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
       var items = Object.assign({}, state.items);
 
-      console.log(action.keyPairs);
-
       // Add expire_date to keyPairs based on ttl_hours
       var keyPairs = action.keyPairs.map((keyPair) => {
         keyPair.expire_date = moment(keyPair.create_date).utc().add(keyPair.ttl_hours, 'hours');

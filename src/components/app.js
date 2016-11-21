@@ -23,6 +23,7 @@ import Home from './home';
 
 require('normalize.css');
 require('../styles/app.scss');
+require('react-datepicker/dist/react-datepicker.css');
 
 var appContainer = document.getElementById('app');
 
