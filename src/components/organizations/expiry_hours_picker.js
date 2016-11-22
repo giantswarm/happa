@@ -77,22 +77,26 @@ class ExpiryHoursPicker extends React.Component {
   }
 
   updateTTL() {
-    var TTL = 0;
+    var expireDate;
+    var TTL;
 
     if (this.state.selectionType === 'date') {
       // Calculate hours difference between now and selected date
-      TTL = this.state.expireDate.utc().startOf('day').diff(moment().utc(), 'hours');
-
-      if (TTL < 1) {
-        TTL = 0;
-      }
+      var expireDate = this.state.expireDate.utc().startOf('day')
 
     } else if (this.state.selectionType === 'relative') {
       // Calculate hours based on years, months, days, hours chosen
-      TTL += this.state.yearsValue * 8760; // Hours in a year
-      TTL += this.state.monthsValue * 730; // Hours in a month
-      TTL += this.state.daysValue * 24;    // Hours in a day
-      TTL += this.state.hoursValue;
+      var expireDate = moment().utc().add(this.state.yearsValue, 'years');
+      expireDate.add(this.state.monthsValue, 'months');
+      expireDate.add(this.state.daysValue, 'days');
+      expireDate.add(this.state.hoursValue, 'hours');
+    }
+
+    TTL = expireDate.diff(moment().utc(), 'hours');
+
+    // Guard against invalid value
+    if (TTL < 1) {
+      TTL = 0;
     }
 
     this.props.onChange(TTL);

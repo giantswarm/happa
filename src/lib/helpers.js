@@ -102,7 +102,7 @@ export function validateOrRaise(validatable, constraints) {
 
 export function formatDate(ISO8601DateString) {
   // http://momentjs.com/docs/#/displaying/
-  return moment(ISO8601DateString).utc().format('D MMM YYYY, h:mm z');
+  return moment(ISO8601DateString).utc().format('D MMM YYYY, HH:mm z');
 };
 
 export function relativeDate(ISO8601DateString) {
