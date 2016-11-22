@@ -24,7 +24,7 @@ class ClusterKeyPairs extends React.Component {
       expireTTL: 8760,
       description: 'Added by user ' + props.user.email + ' using Happa web interface',
       modal: {
-        visible: true,
+        visible: false,
         loading: false,
         template: 'addKeyPair',
       }
