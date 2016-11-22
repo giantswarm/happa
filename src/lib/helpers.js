@@ -128,3 +128,26 @@ export function  truncate(string, maxLength=20) {
     return string;
   }
 }
+
+export function makeKubeConfigTextFile(cluster, keyPairResult) {
+  return `
+    apiVersion: v1
+    kind: Config
+    clusters:
+    - cluster:
+        certificate-authority-data: ${btoa(keyPairResult.certificate_authority_data)}
+        server: ${cluster.api_endpoint}
+      name: ${cluster.name}
+    contexts:
+    - context:
+        cluster: ${cluster.name}
+        user: "giantswarm-default"
+      name: giantswarm-default
+    current-context: giantswarm-default
+    users:
+    - name: "giantswarm-default"
+      user:
+        client-certificate-data: ${btoa(keyPairResult.client_certificate_data)}
+        client-key-data: ${btoa(keyPairResult.client_key_data)}
+    `;
+}
