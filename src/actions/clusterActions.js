@@ -130,7 +130,6 @@ export function clusterLoadKeyPairs(clusterId) {
       });
     })
     .catch((error) => {
-      console.log(error);
       dispatch({
         type: types.CLUSTER_LOAD_KEY_PAIRS_ERROR,
         clusterId

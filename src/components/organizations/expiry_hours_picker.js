@@ -10,7 +10,7 @@ class ExpiryHoursPicker extends React.Component {
       monthsValue: 0,
       daysValue: 0,
       hoursValue: 0,
-      expireDate: moment(),
+      expireDate: moment().add(1, 'day').utc(),
       selectionType: 'relative'
     };
   }
@@ -81,7 +81,11 @@ class ExpiryHoursPicker extends React.Component {
 
     if (this.state.selectionType === 'date') {
       // Calculate hours difference between now and selected date
-      TTL = this.state.expireDate.startOf('day').diff(moment(), 'hours');
+      TTL = this.state.expireDate.utc().startOf('day').diff(moment().utc(), 'hours');
+
+      if (TTL < 1) {
+        TTL = 0;
+      }
 
     } else if (this.state.selectionType === 'relative') {
       // Calculate hours based on years, months, days, hours chosen
@@ -134,7 +138,7 @@ class ExpiryHoursPicker extends React.Component {
             selected={this.state.expireDate}
             onChange={this.handleDateChange.bind(this)}
             dateFormat='DD/MM/YYYY'
-            minDate={moment()}
+            minDate={moment().add(1, 'day')}
             maxDate={moment().add(5, 'years')}
             showMonthDropdown
             showYearDropdown
