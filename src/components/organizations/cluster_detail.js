@@ -16,14 +16,16 @@ class ClusterDetail extends React.Component {
           </div>
         </div>
 
-        <div className='row section'>
-          <div className='col-3'>
-            <h3 className='table-label'>Cluster Name</h3>
-          </div>
-          <div className='col-9'>
-            <p>A meaningful cluster name will make your life easier once you work with multiple clusters.</p>
-          </div>
-        </div>
+        {
+          // <div className='row section'>
+          //   <div className='col-3'>
+          //     <h3 className='table-label'>Cluster Name</h3>
+          //   </div>
+          //   <div className='col-9'>
+          //     <p>A meaningful cluster name will make your life easier once you work with multiple clusters.</p>
+          //   </div>
+          // </div>
+        }
 
         <ClusterKeyPairs cluster={this.props.cluster} />
       </div>
