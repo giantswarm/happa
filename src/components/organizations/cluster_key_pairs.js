@@ -172,7 +172,7 @@ class ClusterKeyPairs extends React.Component {
                         <OverlayTrigger placement="top" overlay={
                             <Tooltip id="tooltip">{keyPair.id}</Tooltip>
                           }>
-                          <span>{truncate(keyPair.id, 10)}</span>
+                          <span>{truncate(keyPair.id.replace(/:/g, ""), 9)}</span>
                         </OverlayTrigger>
                       </td>
 
