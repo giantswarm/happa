@@ -63,7 +63,7 @@ var SimpleExample = React.createClass ({
       } else if (this.state.loading) {
         return 'Figuring out the url...';
       } else {
-        var url = `helloworld.default.${this.props.cluster.id}.k8s.gigantic.io`;
+        var url = `http://helloworld.default.${this.props.cluster.id}.k8s.gigantic.io`;
         return (
           <a href={url} target='_blank'>{url}</a>
         );
