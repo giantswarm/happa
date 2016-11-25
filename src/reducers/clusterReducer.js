@@ -143,14 +143,16 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
       for (var metricName in metrics.nodes) {
         if (metrics.nodes.hasOwnProperty(metricName)) {
-          for (var nodeMetric of metrics.nodes[metricName].instances) {
-            nodes[nodeMetric.instance] = Object.assign({}, nodes[nodeMetric.instance]);
-            nodes[nodeMetric.instance].id = nodeMetric.instance;
-            nodes[nodeMetric.instance][metricName] = {
-              value: nodeMetric.value,
-              unit: metrics.nodes[metricName].unit,
-              timestamp: nodeMetric.timestamp
-            };
+          if (metrics.nodes[metricName]) {
+            for (var nodeMetric of metrics.nodes[metricName].instances) {
+              nodes[nodeMetric.instance] = Object.assign({}, nodes[nodeMetric.instance]);
+              nodes[nodeMetric.instance].id = nodeMetric.instance;
+              nodes[nodeMetric.instance][metricName] = {
+                value: nodeMetric.value,
+                unit: metrics.nodes[metricName].unit,
+                timestamp: nodeMetric.timestamp
+              };
+            }
           }
         }
       }
