@@ -25,20 +25,41 @@ module.exports = React.createClass ({
           <Markdown>
             {`
             # Get started with your Kubernetes cluster
-
-            Follow these steps to get started quickly:
             `}
           </Markdown>
-          <ol>
-            <li><Link to="/getting-started/download">Download (or update) <code>kubectl</code></Link></li>
-            <li><Link to="/getting-started/configure">Configure <code>kubectl</code> for your cluster</Link></li>
-            <li><Link to="/getting-started/example">Run a simple example</Link></li>
-            <li><Link to="/getting-started/inspecting">Inspecting your service and next steps</Link></li>
+          <ol className="step_selector row">
+            <li className="col-3 col-6-sm">
+              <Link to="/getting-started/download">
+                <span className="step_selector--step-number">1.</span>
+                <span className="step_selector--step-title">Install kubectl</span>
+                <span className="step_selector--step-description">Ensure that you have the most recent version of Kubernetes CLI installed</span>
+              </Link>
+            </li>
+            <li className="col-3 col-6-sm">
+              <Link to="/getting-started/configure">
+                <span className="step_selector--step-number">2.</span>
+                <span className="step_selector--step-title">Configure kubectl</span>
+                <span className="step_selector--step-description">Enable your Kubernetes CLI to access your Kubernetes cluster at Giant Swarm</span>
+              </Link>
+            </li>
+            <li className="col-3 col-6-sm">
+              <Link to="/getting-started/example">
+                <span className="step_selector--step-number">3.</span>
+                <span className="step_selector--step-title">Run a simple example</span>
+                <span className="step_selector--step-description">To make sure everything works as expected, let's start a hello world application</span>
+              </Link>
+            </li>
+            <li className="col-3 col-6-sm">
+              <Link to="/getting-started/inspecting">
+                <span className="step_selector--step-number">4.</span>
+                <span className="step_selector--step-title">Next steps</span>
+                <span className="step_selector--step-description">We point you to some useful next best actions, like setting up the Kubernetes dashboard</span>
+              </Link>
+            </li>
           </ol>
-          <br/>
-          <br/>
+
           <div className="component_slider--nav">
-            <button className="primary" onClick={this.props.goToSlide.bind(null, 'download')}>Continue <i className="fa fa-caret-right"></i></button>
+          <button className="primary" onClick={this.props.goToSlide.bind(null, 'download')}>Start <i className="fa fa-caret-right"></i></button>
           </div>
         </Slide>
       );

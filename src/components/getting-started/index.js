@@ -53,6 +53,14 @@ module.exports = React.createClass({
     this.refs.componentSlider.previous();
   },
 
+  classes() {
+    if (this.state.currentSlide === 0) {
+      return "col-12";
+    } else {
+      return "col-10";
+    }
+  },
+
   slides() {
     return ([
       <Page0_Overview         key='overview'  goToSlide={this.goToSlide}/>,
@@ -65,7 +73,7 @@ module.exports = React.createClass({
 
   render: function() {
     return (
-      <div className="col-10 centered">
+      <div className={"centered " + this.classes()}>
         <ComponentSlider ref='componentSlider' currentSlide={this.state.currentSlide} slides={this.slides()}/>
       </div>
     );
