@@ -11,7 +11,7 @@ import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
 import _ from 'underscore';
 
-const DESMOTES_POLL_INTERVAL = 60000; // 60 Seconds
+const DESMOTES_POLL_INTERVAL = 5000; // 60 Seconds
 
 var Home = React.createClass({
   componentDidMount: function() {
@@ -72,16 +72,8 @@ var Home = React.createClass({
                 <p>If you need metrics, you can <a href='https://docs.giantswarm.io/guides/kubernetes-prometheus/' target="_blank">set up your own monitoring with Prometheus easily</a></p>
                 <p>Thanks for your patience! If you have any questions don't hesitate to contact support: <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a></p>
               </ClusterDashboard>;
-            } else if (cluster.metricsLoading) {
-              return <ClusterDashboard cluster={cluster} key={cluster.id + 'error'} className='empty-slate'>
-
-              </ClusterDashboard>;
-            } else if (cluster.metricsOutdated) {
-              return <ClusterDashboard cluster={cluster} key={cluster.id + 'error'} className='empty-slate'>
-                <h1>Couldn't load metrics for cluster <code>{cluster.id}</code></h1>
-                <p>We're currently experiencing some technical issues with our metrics gathering.</p>
-                <p>Please try again later or contact support: <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a></p>
-              </ClusterDashboard>;
+            } else if (cluster.metricsLoading && ! cluster.metricsLoadedFirstTime) {
+              return <ClusterDashboard cluster={cluster} key={cluster.id} className='loading' />;
             } else {
               return <ClusterDashboard animate={true} key={cluster.id} cluster={cluster} />;
             }

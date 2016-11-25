@@ -49,13 +49,8 @@ var ClusterDashboard = React.createClass({
         :
         undefined
       }
-      { this.props.children ?
-        <div className="cluster-dashboard--overlay">
-          {this.props.children}
-        </div>
-        :
-        undefined
-      }
+
+      <img className='loader' src='/images/loader_oval_light.svg' />
 
       <div className={'cluster-dashboard--inner'}>
         <h1>

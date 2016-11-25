@@ -14,6 +14,7 @@ import ExpiryHoursPicker from './expiry_hours_picker';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import { makeKubeConfigTextFile, dedent } from '../../lib/helpers';
 import copy from 'copy-to-clipboard';
+import _ from 'underscore';
 
 class ClusterKeyPairs extends React.Component {
  constructor(props) {
@@ -44,7 +45,12 @@ class ClusterKeyPairs extends React.Component {
   }
 
   componentDidMount() {
-    this.props.actions.clusterLoadKeyPairs(this.props.cluster.id);
+    return this.props.actions.clusterLoadKeyPairs(this.props.cluster.id)
+    .then(() => {
+      this.setState({
+        loading: false
+      });
+    });
   }
 
   closeModal() {
@@ -87,7 +93,6 @@ class ClusterKeyPairs extends React.Component {
         ttl_hours: this.state.expireTTL
       })
       .then((response) => {
-        this.props.actions.clusterLoadKeyPairs(this.props.cluster.id);
         this.setState({
           kubeconfig: dedent(makeKubeConfigTextFile(this.props.cluster, response.result)),
           modal: {
@@ -96,6 +101,8 @@ class ClusterKeyPairs extends React.Component {
             template: 'addKeyPairSuccess'
           }
         });
+
+        return this.props.actions.clusterLoadKeyPairs(this.props.cluster.id);
       })
       .catch((error) => {
         setTimeout(() => {
@@ -144,7 +151,7 @@ class ClusterKeyPairs extends React.Component {
 
   render() {
     return (
-      <div className='row section'>
+      <div className='row section cluster_key_pairs'>
         <div className='col-3'>
           <h3 className='table-label'>Key Pairs</h3>
         </div>
@@ -152,38 +159,43 @@ class ClusterKeyPairs extends React.Component {
           <p>Key pairs consist of an RSA private key and certificate, signed by the certificate authority (CA) belonging to this cluster. They are used for access to the cluster via the Kubernetes API.</p>
           <br/>
           {
-            this.props.cluster.keyPairs.length === 0 ?
-            <p>No key pairs yet. Why don't you create your first?</p>
-            :
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Description</th>
-                  <th>Created</th>
-                  <th>Expires</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  this.props.cluster.keyPairs.map((keyPair) => {
-                    return <tr key={keyPair.id}>
-                      <td className="code">
-                        <OverlayTrigger placement="top" overlay={
-                            <Tooltip id="tooltip">{keyPair.id}</Tooltip>
-                          }>
-                          <span>{truncate(keyPair.id.replace(/:/g, ""), 9)}</span>
-                        </OverlayTrigger>
-                      </td>
+            (() => {
+              if (this.state.loading) {
+                return <p><img className='loader' src='/images/loader_oval_light.svg'/></p>;
+              } else if (this.props.cluster.keyPairs.length === 0) {
+                return <p>No key pairs yet. Why don't you create your first?</p>;
+              } else {
+                return <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Description</th>
+                      <th>Created</th>
+                      <th>Expires</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      _.map(_.sortBy(this.props.cluster.keyPairs, 'create_date').reverse(), (keyPair) => {
+                        return <tr key={keyPair.id}>
+                          <td className="code">
+                            <OverlayTrigger placement="top" overlay={
+                                <Tooltip id="tooltip">{keyPair.id}</Tooltip>
+                              }>
+                              <span>{truncate(keyPair.id.replace(/:/g, ''), 9)}</span>
+                            </OverlayTrigger>
+                          </td>
 
-                      <td>{keyPair.description}</td>
-                      <td>{relativeDate(keyPair.create_date)}</td>
-                      <td>{relativeDate(keyPair.expire_date)}</td>
-                    </tr>;
-                  })
-                }
-              </tbody>
-            </table>
+                          <td>{keyPair.description}</td>
+                          <td>{relativeDate(keyPair.create_date)}</td>
+                          <td>{relativeDate(keyPair.expire_date)}</td>
+                        </tr>;
+                      })
+                    }
+                  </tbody>
+                </table>;
+              }
+            })()
           }
           <Button onClick={this.addKeyPair.bind(this)} bsStyle='default' className='small'>Create Key Pair</Button>
         </div>
@@ -191,7 +203,7 @@ class ClusterKeyPairs extends React.Component {
           (() => {
             switch(this.state.modal.template) {
               case 'addKeyPair':
-                return <BootstrapModal show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
+                return <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
                   <BootstrapModal.Header closeButton>
                     <BootstrapModal.Title>Create New Key Pair</BootstrapModal.Title>
                   </BootstrapModal.Header>

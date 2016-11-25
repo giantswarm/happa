@@ -10,7 +10,7 @@ class ExpiryHoursPicker extends React.Component {
       monthsValue: 0,
       daysValue: 0,
       hoursValue: 0,
-      expireDate: moment().add(1, 'day').utc(),
+      expireDate: moment().add(1, 'year').utc(),
       selectionType: 'relative'
     };
   }
@@ -77,12 +77,15 @@ class ExpiryHoursPicker extends React.Component {
   }
 
   updateTTL() {
-    var expireDate;
+    var expireDate; // The expiration date the user intends
+                    // This will either come straight from the date picker state
+                    // or calculated based on values from the various year/month/day/hour
+                    // inputs.
     var TTL;
 
     if (this.state.selectionType === 'date') {
-      // Calculate hours difference between now and selected date
-      var expireDate = this.state.expireDate.utc().startOf('day')
+      // expireDate is at the start of the day of whatever the user picked.
+      var expireDate = this.state.expireDate.utc().startOf('day').clone();
 
     } else if (this.state.selectionType === 'relative') {
       // Calculate hours based on years, months, days, hours chosen
@@ -90,8 +93,15 @@ class ExpiryHoursPicker extends React.Component {
       expireDate.add(this.state.monthsValue, 'months');
       expireDate.add(this.state.daysValue, 'days');
       expireDate.add(this.state.hoursValue, 'hours');
+
+      // Set date picker to this value too
+      this.setState({
+        expireDate: expireDate
+      });
     }
 
+    // Now that we have an expireDate, calculate the difference between it and
+    // now in hours.
     TTL = expireDate.diff(moment().utc(), 'hours');
 
     // Guard against invalid value
@@ -125,9 +135,7 @@ class ExpiryHoursPicker extends React.Component {
           { this.pluralLabel.bind(this, 'Day', this.state.daysValue)() }
 
           <input type='text' min="0" max="999" name="hours" maxLength={2} ref="hours" value={this.state.hoursValue} onChange={this.handleHourChange.bind(this)} autoComplete="off"/>
-          { this.pluralLabel.bind(this, 'Hour', this.state.hoursValue)() }
-
-          <small>from now</small>
+          { this.pluralLabel.bind(this, 'Hour', this.state.hoursValue)() } from now
         </li>
         <li>
           <input type='radio'
@@ -143,7 +151,7 @@ class ExpiryHoursPicker extends React.Component {
             onChange={this.handleDateChange.bind(this)}
             dateFormat='DD/MM/YYYY'
             minDate={moment().add(1, 'day')}
-            maxDate={moment().add(5, 'years')}
+            maxDate={moment().add(30, 'years')}
             showMonthDropdown
             showYearDropdown
             dropdownMode='select'

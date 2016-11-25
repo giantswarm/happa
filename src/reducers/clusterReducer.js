@@ -138,6 +138,21 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
       break;
 
+    case types.CLUSTER_LOAD_METRICS:
+      var items = Object.assign({}, state.items);
+
+      var clusterDetails = update(items[action.clusterId], {
+        metricsLoading: {$set: true}
+      });
+
+      items[action.clusterId] = clusterDetails;
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
+      };
+
     case types.CLUSTER_LOAD_METRICS_SUCCESS:
       var nodes = {};
       var metrics = action.metrics;
@@ -162,6 +177,8 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
       var clusterDetails = update(items[action.clusterId], {
         errorLoadingMetrics: {$set: false},
+        metricsLoading: {$set: false},
+        metricsLoadedFirstTime: {$set: true},
         metrics: {$set: metrics.cluster},
         nodes: {$set: nodes}
       });

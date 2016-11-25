@@ -56,6 +56,13 @@ export function clusterLoadDetailsError(error) {
   };
 }
 
+export function clusterLoadMetrics(clusterId) {
+  return {
+    type: types.CLUSTER_LOAD_METRICS,
+    clusterId
+  };
+}
+
 export function clusterLoadMetricsSuccess(clusterId, metrics) {
   return {
     type: types.CLUSTER_LOAD_METRICS_SUCCESS,
@@ -98,6 +105,8 @@ export function clusterFetchMetrics(clusterId) {
       endpoint: window.config.desmotesEndpoint,
       authorizationToken: authToken
     });
+
+    dispatch(clusterLoadMetrics(clusterId));
 
     return desmotes.clusterMetrics({
       clusterId: clusterId
