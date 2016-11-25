@@ -132,7 +132,7 @@ class ClusterKeyPairs extends React.Component {
 
   downloadAsFileLink() {
     return(
-      <a href={window.URL.createObjectURL(this.blob())} className="btn btn-default" download='kubeconfig'>
+      <a href={window.URL.createObjectURL(this.blob())} className="btn btn-default" download='giantswarm-kubeconfig'>
         Download
       </a>
     );
