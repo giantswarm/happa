@@ -1,6 +1,9 @@
 .cluster-dashboard
   position: relative
 
+  .loader
+    display: none
+
   &.loading
     transition: opacity 0.1s cubic-bezier(0, -0.41, 0.19, 1.44)
 
@@ -9,9 +12,15 @@
 
     .loader
       margin-top: 100px
+      position: absolute
+      display: block
+      text-align: center
+      left: 50%
+      margin-left: -25px
 
 
   &.empty-slate
+    height: 380px
     .loader
       display: none
 

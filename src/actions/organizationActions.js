@@ -115,6 +115,7 @@ export function organizationsLoad() {
       return null;
     })
     .catch(error => {
+      throw(error);
       dispatch(flashAdd({
         message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
         class: 'danger'

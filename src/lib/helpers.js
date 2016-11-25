@@ -54,13 +54,13 @@ export function dedent(strings, ...values) {
   return result.replace(/\\n/g, '\n');
 };
 
-export function humanFileSize(bytes, si) {
+export function humanFileSize(bytes, si=true, decimals=1) {
     // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
     var thresh = si ? 1000 : 1024;
 
     if(Math.abs(bytes) < thresh) {
       return {
-        value: bytes.toFixed(1),
+        value: bytes.toFixed(decimals),
         unit: 'B'
       };
     }
@@ -77,7 +77,7 @@ export function humanFileSize(bytes, si) {
     } while(Math.abs(bytes) >= thresh && u < units.length - 1);
 
     return {
-      value: bytes.toFixed(1),
+      value: bytes.toFixed(decimals),
       unit: units[u]
     };
 };
@@ -102,7 +102,7 @@ export function validateOrRaise(validatable, constraints) {
 
 export function formatDate(ISO8601DateString) {
   // http://momentjs.com/docs/#/displaying/
-  return moment(ISO8601DateString).utc().format('D MMM YYYY, h:mm z');
+  return moment(ISO8601DateString).utc().format('D MMM YYYY, HH:mm z');
 };
 
 export function relativeDate(ISO8601DateString) {
@@ -120,3 +120,34 @@ export function toTitleCase(str) {
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
   return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
+
+export function  truncate(string, maxLength=20) {
+  if (string.length > maxLength) {
+    return string.substring(0,maxLength) + '\u2026';
+  } else {
+    return string;
+  }
+}
+
+export function makeKubeConfigTextFile(cluster, keyPairResult) {
+  return `
+    apiVersion: v1
+    kind: Config
+    clusters:
+    - cluster:
+        certificate-authority-data: ${btoa(keyPairResult.certificate_authority_data)}
+        server: ${cluster.api_endpoint}
+      name: ${cluster.name}
+    contexts:
+    - context:
+        cluster: ${cluster.name}
+        user: "giantswarm-default"
+      name: giantswarm-default
+    current-context: giantswarm-default
+    users:
+    - name: "giantswarm-default"
+      user:
+        client-certificate-data: ${btoa(keyPairResult.client_certificate_data)}
+        client-key-data: ${btoa(keyPairResult.client_key_data)}
+    `;
+}

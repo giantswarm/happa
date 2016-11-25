@@ -13,6 +13,7 @@ import { browserHistory } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
 import Button from '../button';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
+import KubeConfig from './kubeconfig';
 var Modernizr = window.Modernizr;
 
 var ConfigKubeCtl = React.createClass ({
@@ -109,28 +110,7 @@ var ConfigKubeCtl = React.createClass ({
     kubeConfig: function() {
       return (
         <div className="created-key-pair">
-          <FileBlock fileName='giantswarm-kubeconfig'>
-            {`
-            apiVersion: v1
-            kind: Config
-            clusters:
-            - cluster:
-                certificate-authority-data: ${btoa(this.state.keyPair.data.certificate_authority_data)}
-                server: ${this.props.cluster.api_endpoint}
-              name: ${this.props.cluster.name}
-            contexts:
-            - context:
-                cluster: ${this.props.cluster.name}
-                user: "giantswarm-default"
-              name: giantswarm-default
-            current-context: giantswarm-default
-            users:
-            - name: "giantswarm-default"
-              user:
-                client-certificate-data: ${btoa(this.state.keyPair.data.client_certificate_data)}
-                client-key-data: ${btoa(this.state.keyPair.data.client_key_data)}
-            `}
-          </FileBlock>
+          <KubeConfig keyPair={this.state.keyPair.data} cluster={this.props.cluster} />
           <div className='well'>
             <h4>Certificate and Key Download</h4>
             {

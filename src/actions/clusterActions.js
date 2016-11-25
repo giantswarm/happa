@@ -56,6 +56,13 @@ export function clusterLoadDetailsError(error) {
   };
 }
 
+export function clusterLoadMetrics(clusterId) {
+  return {
+    type: types.CLUSTER_LOAD_METRICS,
+    clusterId
+  };
+}
+
 export function clusterLoadMetricsSuccess(clusterId, metrics) {
   return {
     type: types.CLUSTER_LOAD_METRICS_SUCCESS,
@@ -99,6 +106,8 @@ export function clusterFetchMetrics(clusterId) {
       authorizationToken: authToken
     });
 
+    dispatch(clusterLoadMetrics(clusterId));
+
     return desmotes.clusterMetrics({
       clusterId: clusterId
     }).then((metrics) => {
@@ -107,6 +116,33 @@ export function clusterFetchMetrics(clusterId) {
     .catch((error) => {
       dispatch(clusterLoadMetricsError(clusterId, error));
       throw(error);
+    });
+  };
+}
+
+export function clusterLoadKeyPairs(clusterId) {
+  return function(dispatch, getState) {
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
+    dispatch({
+      type: types.CLUSTER_LOAD_KEY_PAIRS,
+      clusterId
+    });
+
+    return giantSwarm.clusterKeyPairs({clusterId})
+    .then((response) => {
+      dispatch({
+        type: types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS,
+        clusterId,
+        keyPairs: response.result
+      });
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.CLUSTER_LOAD_KEY_PAIRS_ERROR,
+        clusterId
+      });
     });
   };
 }

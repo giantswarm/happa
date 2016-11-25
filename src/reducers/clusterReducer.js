@@ -102,6 +102,7 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
       items[action.cluster.id] = ensureMetricKeysAreAvailable(action.cluster);
       items[action.cluster.id].nodes = [];
+      items[action.cluster.id].keyPairs = [];
 
       return {
         lastUpdated: state.lastUpdated,
@@ -137,6 +138,21 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
       break;
 
+    case types.CLUSTER_LOAD_METRICS:
+      var items = Object.assign({}, state.items);
+
+      var clusterDetails = update(items[action.clusterId], {
+        metricsLoading: {$set: true}
+      });
+
+      items[action.clusterId] = clusterDetails;
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
+      };
+
     case types.CLUSTER_LOAD_METRICS_SUCCESS:
       var nodes = {};
       var metrics = action.metrics;
@@ -161,6 +177,8 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
       var clusterDetails = update(items[action.clusterId], {
         errorLoadingMetrics: {$set: false},
+        metricsLoading: {$set: false},
+        metricsLoadedFirstTime: {$set: true},
         metrics: {$set: metrics.cluster},
         nodes: {$set: nodes}
       });
@@ -182,6 +200,51 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
       var items = Object.assign({}, state.items);
 
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {errorLoadingMetrics: true});
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
+      };
+
+      break;
+
+    case types.CLUSTER_LOAD_KEY_PAIRS:
+      var items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {isFetchingKeyPairs: true});
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
+      };
+
+      break;
+
+    case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
+      var items = Object.assign({}, state.items);
+
+      // Add expire_date to keyPairs based on ttl_hours
+      var keyPairs = action.keyPairs.map((keyPair) => {
+        keyPair.expire_date = moment(keyPair.create_date).utc().add(keyPair.ttl_hours, 'hours');
+        return keyPair;
+      });
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {isFetchingKeyPairs: false, keyPairs: keyPairs});
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items
+      };
+
+      break;
+
+    case types.CLUSTER_LOAD_KEY_PAIRS_ERROR:
+      var items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {isFetchingKeyPairs: false});
 
       return {
         lastUpdated: state.lastUpdated,
