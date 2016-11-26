@@ -38,11 +38,11 @@ module.exports = React.createClass({
                                                          // 0.9999 produces a full looking donut
     var degrees = cappedPercentage * 360.0;
 
-    return <svg viewBox="-1 -1 2 2" >
+    return <svg viewBox="-2 -2 4 4" >
       <g fill='none' fillRule='evenodd'>
-        <g transform='translate(0 0)' strokeWidth='0.09'>
-          <circle stroke={this.shadeColor(this.props.color, 0.01)} strokeOpacity='.5' cx='0' cy='0' r='0.8'/>
-          <path stroke={this.props.color} d={this.describeArc(0, 0, 0.8, 0, degrees)}></path>
+        <g transform='translate(0 0)' strokeWidth='0.2'>
+          <circle stroke={this.shadeColor(this.props.color, 0.01)} strokeOpacity='.5' cx='0' cy='0' r='1.9'/>
+          <path stroke={this.props.color} d={this.describeArc(0, 0, 1.9, 0, degrees)}></path>
         </g>
       </g>
     </svg>;
