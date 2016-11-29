@@ -12,6 +12,7 @@ import { organizationSelect, organizationsLoad } from '../actions/organizationAc
 import * as UserActions from '../actions/userActions';
 import Breadcrumbs from 'react-breadcrumbs';
 import Gravatar from 'react-gravatar';
+import DocumentTitle from 'react-document-title';
 
 var Layout = React.createClass ({
   componentDidMount() {
@@ -31,79 +32,83 @@ var Layout = React.createClass ({
   render: function() {
     if (! this.props.firstLoadComplete) {
       return (
-        <div className='app-loading'>
-          <div className='app-loading-contents'>
-            <img className='loader' src='/images/loader_oval_light.svg' />
+        <DocumentTitle title='Loading | Giant Swarm '>
+          <div className='app-loading'>
+            <div className='app-loading-contents'>
+              <img className='loader' src='/images/loader_oval_light.svg' />
+            </div>
           </div>
-        </div>
+        </DocumentTitle>
       );
     } else {
       return (
-        <div>
-          <nav>
-            <div className='main-nav col-9'>
-              <a href='https://giantswarm.io' target='_blank'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
+        <DocumentTitle title='Giant Swarm'>
+          <div>
+            <nav>
+              <div className='main-nav col-9'>
+                <a href='https://giantswarm.io' target='_blank'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
 
 
 
-              <div className='nav-responsive'>
-                <IndexLink to='/' activeClassName='active'>Clusters</IndexLink>
-                <Link to='getting-started' activeClassName='active'>Getting Started</Link>
-                <a href="https://docs.giantswarm.io" target="_blank">Documentation <i className="fa fa-external-link"></i></a>
-              </div>
-
-              <div className='subactions'>
-                <div className='organization_dropdown'>
-                  {
-                    (_.map(this.props.organizations.items, (x) => {return x.id;}).length === 0 && ! this.props.organizations.isFetching) ?
-                    <DropdownButton title={<span>>No organizations</span>} key='2' id='org_dropdown'>
-                      <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
-                    </DropdownButton>
-                    :
-                    <DropdownButton title={<span><span className='label label-default'>ORG</span> {this.props.selectedOrganization}</span>} key='2' id='org_dropdown'>
-                      <MenuItem componentClass={Link} href='/organizations/giantswarm' to={'/organizations/' + this.props.selectedOrganization}>Details for {this.props.selectedOrganization}</MenuItem>
-                      <MenuItem divider />
-                      <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
-                      <MenuItem divider />
-                      <MenuItem header>Switch Organization</MenuItem>
-                      {
-
-                        _.map(_.sortBy(this.props.organizations.items, 'id'), (org) => {
-                          return <MenuItem onSelect={this.selectOrganization} eventKey={org.id} key={org.id}>{org.id}</MenuItem>;
-                        })
-                      }
-                    </DropdownButton>
-                  }
+                <div className='nav-responsive'>
+                  <IndexLink to='/' activeClassName='active'>Clusters</IndexLink>
+                  <Link to='getting-started' activeClassName='active'>Getting Started</Link>
+                  <a href="https://docs.giantswarm.io" target="_blank">Documentation <i className="fa fa-external-link"></i></a>
                 </div>
-                &nbsp;
-                &nbsp;
-                <div className="user_dropdown">
 
-                  <DropdownButton ref="user_dropdown" pullRight={true} title={
-                    <div className="user_dropdown--toggle">
-                      <Gravatar email={this.props.user.email} https size={100} default='mm' />
-                      <span>{this.props.user.email}</span>
-                    </div>} key='1' id='user_dropdown'>
-                    <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
-                    <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
-                  </DropdownButton>
+                <div className='subactions'>
+                  <div className='organization_dropdown'>
+                    {
+                      (_.map(this.props.organizations.items, (x) => {return x.id;}).length === 0 && ! this.props.organizations.isFetching) ?
+                      <DropdownButton title={<span>>No organizations</span>} key='2' id='org_dropdown'>
+                        <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
+                      </DropdownButton>
+                      :
+                      <DropdownButton title={<span><span className='label label-default'>ORG</span> {this.props.selectedOrganization}</span>} key='2' id='org_dropdown'>
+                        <MenuItem componentClass={Link} href='/organizations/giantswarm' to={'/organizations/' + this.props.selectedOrganization}>Details for {this.props.selectedOrganization}</MenuItem>
+                        <MenuItem divider />
+                        <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
+                        <MenuItem divider />
+                        <MenuItem header>Switch Organization</MenuItem>
+                        {
+
+                          _.map(_.sortBy(this.props.organizations.items, 'id'), (org) => {
+                            return <MenuItem onSelect={this.selectOrganization} eventKey={org.id} key={org.id}>{org.id}</MenuItem>;
+                          })
+                        }
+                      </DropdownButton>
+                    }
+                  </div>
+                  &nbsp;
+                  &nbsp;
+                  <div className="user_dropdown">
+
+                    <DropdownButton ref="user_dropdown" pullRight={true} title={
+                      <div className="user_dropdown--toggle">
+                        <Gravatar email={this.props.user.email} https size={100} default='mm' />
+                        <span>{this.props.user.email}</span>
+                      </div>} key='1' id='user_dropdown'>
+                      <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
+                      <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
+                    </DropdownButton>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="breadcrumb-wrapper">
-              <div className="main col-9">
-                <Breadcrumbs routes={this.props.routes} params={this.props.params} setDocumentTitle={true}/>
+              <div className="breadcrumb-wrapper">
+                <div className="main col-9">
+                  <Breadcrumbs routes={this.props.routes} params={this.props.params} setDocumentTitle={true}/>
+                </div>
               </div>
-            </div>
-          </nav>
+            </nav>
 
-          <div className='main col-9'>
-            <FlashMessages />
-            <Modal />
-            {this.props.children}
+            <div className='main col-9'>
+              <FlashMessages />
+              <Modal />
+              {this.props.children}
+            </div>
           </div>
-        </div>
+        </DocumentTitle>
       );
     }
   }

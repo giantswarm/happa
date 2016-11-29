@@ -3,12 +3,15 @@
 import React from 'react';
 import ComponentSlider from '../component_slider';
 import _ from 'underscore';
+import DocumentTitle from 'react-document-title';
 
 import Page0_Overview from './0_overview.js';
 import Page1_DownloadKubeCTL from './1_download_kubectl.js';
 import Page2_ConfigureKubeCTL from './2_configure_kubectl.js';
 import Page3_SimpleExample from './3_simple_example.js';
 import Page4_NextSteps from './4_next_steps.js';
+
+
 
 module.exports = React.createClass({
   contextTypes: {
@@ -73,9 +76,11 @@ module.exports = React.createClass({
 
   render: function() {
     return (
-      <div className={'centered ' + this.classes()}>
-        <ComponentSlider ref='componentSlider' currentSlide={this.state.currentSlide} slides={this.slides()}/>
-      </div>
+      <DocumentTitle title={'Getting Started | Giant Swarm'}>
+        <div className={'centered ' + this.classes()}>
+          <ComponentSlider ref='componentSlider' currentSlide={this.state.currentSlide} slides={this.slides()}/>
+        </div>
+      </DocumentTitle>
     );
   }
 });

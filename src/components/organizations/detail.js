@@ -10,6 +10,7 @@ import * as OrganizationActions from '../../actions/organizationActions';
 import DomainValidation from './domain_validation';
 import { bindActionCreators } from 'redux';
 import { formatDate } from '../../lib/helpers.js';
+import DocumentTitle from 'react-document-title';
 
 var OrganizationDetail = React.createClass({
   contextTypes: {
@@ -35,102 +36,103 @@ var OrganizationDetail = React.createClass({
   render: function() {
     if (this.props.organization) {
       return (
-        <div>
-          <div className='row'>
-            <div className='col-12'>
-              <h1>Details for: {this.props.params.orgId}</h1>
+        <DocumentTitle title={'Organization Details | ' + this.props.organization.id +  ' | Giant Swarm'}>
+          <div>
+            <div className='row'>
+              <div className='col-12'>
+                <h1>Details for: {this.props.params.orgId}</h1>
+              </div>
             </div>
-          </div>
 
-          <div className='row section'>
-            <div className='col-3'>
-              <h3 className='table-label'>Clusters</h3>
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Clusters</h3>
+              </div>
+              <div className='col-9'>
+                {
+                  this.props.organization.clusters.length === 0 ?
+                  <p>No clusters here yet, contact Giant Swarm to add a cluster to this
+                  organization</p>
+                  :
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Cluster ID</th>
+                        <th>Created</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {
+                        _.map(_.sortBy(this.props.organization.clusters, (cluster) => this.props.clusters.items[cluster].name ), (cluster) => {
+                          return (
+                            <tr className="clickable" key={cluster} onClick={this.openClusterDetails.bind(this, cluster)}>
+                              <td>{this.props.clusters.items[cluster].name}</td>
+                              <td className="code">{this.props.clusters.items[cluster].id}</td>
+                              <td>{formatDate(this.props.clusters.items[cluster].create_date)}</td>
+                            </tr>
+                          );
+                        })
+                      }
+                    </tbody>
+                  </table>
+                }
+
+              </div>
             </div>
-            <div className='col-9'>
-              {
-                this.props.organization.clusters.length === 0 ?
-                <p>No clusters here yet, contact Giant Swarm to add a cluster to this
-                organization</p>
-                :
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Cluster ID</th>
-                      <th>Created</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      _.map(_.sortBy(this.props.organization.clusters, (cluster) => this.props.clusters.items[cluster].name ), (cluster) => {
-                        return (
-                          <tr className="clickable" key={cluster} onClick={this.openClusterDetails.bind(this, cluster)}>
-                            <td>{this.props.clusters.items[cluster].name}</td>
-                            <td className="code">{this.props.clusters.items[cluster].id}</td>
-                            <td>{formatDate(this.props.clusters.items[cluster].create_date)}</td>
-                          </tr>
-                        );
-                      })
-                    }
-                  </tbody>
-                </table>
+
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Members</h3>
+              </div>
+              <div className='col-9'>
+                {
+                  this.props.organization.members.length === 0 ?
+                  <p>This organization has no members, which shouldn't really be possible</p>
+                  :
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {
+                        this.props.organization.members.map((username) => {
+                          return (
+                            <tr key={username}>
+                              <td>{username}</td>
+                              <td>
+                                <div className='contextual'>
+                                  <i className='fa fa-times clickable'
+                                     title='Delete this organization'
+                                     onClick={this.removeMember.bind(this, username)} />
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      }
+                    </tbody>
+                  </table>
+                }
+                <Button onClick={this.addMember} bsStyle='default'>Add Member</Button>
+              </div>
+            </div>
+
+            {
+              /*
               }
+              <DomainValidation
+                loadDomains={this.props.actions.organizationLoadDomains.bind(this, this.props.organization.id)}
+                addDomain={this.props.actions.organizationAddDomain.bind(this, this.props.organization.id)}
+                deleteDomain={this.props.actions.organizationDeleteDomain.bind(this, this.props.organization.id)}
+                organization={this.props.organization}
 
-            </div>
-          </div>
-
-          <div className='row section'>
-            <div className='col-3'>
-              <h3 className='table-label'>Members</h3>
-            </div>
-            <div className='col-9'>
-              {
-                this.props.organization.members.length === 0 ?
-                <p>This organization has no members, which shouldn't really be possible</p>
-                :
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Username</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      this.props.organization.members.map((username) => {
-                        return (
-                          <tr key={username}>
-                            <td>{username}</td>
-                            <td>
-                              <div className='contextual'>
-                                <i className='fa fa-times clickable'
-                                   title='Delete this organization'
-                                   onClick={this.removeMember.bind(this, username)} />
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    }
-                  </tbody>
-                </table>
-              }
-              <Button onClick={this.addMember} bsStyle='default'>Add Member</Button>
-            </div>
-          </div>
-
-          {
-            /*
+              />
+              */
             }
-            <DomainValidation
-              loadDomains={this.props.actions.organizationLoadDomains.bind(this, this.props.organization.id)}
-              addDomain={this.props.actions.organizationAddDomain.bind(this, this.props.organization.id)}
-              deleteDomain={this.props.actions.organizationDeleteDomain.bind(this, this.props.organization.id)}
-              organization={this.props.organization}
-
-            />
-            */
-          }
 {
   /*
     <div className='row section'>
@@ -269,7 +271,8 @@ var OrganizationDetail = React.createClass({
           </div>
    */
 }
-        </div>
+          </div>
+        </DocumentTitle>
       );
     } else {
       // 404 or fetching
