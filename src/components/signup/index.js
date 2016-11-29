@@ -222,7 +222,7 @@ var SignUp = React.createClass({
     } else if (/^[A-Z]+$/.test(password)) {
       statusMessage = 'password_not_just_letters';
     } else {
-      statusMessage = '';
+      statusMessage = 'password_ok';
       valid = true;
     }
 
@@ -367,6 +367,7 @@ var SignUp = React.createClass({
             </div>
           </div>
 
+          {this.state.statusMessage}
           <StatusMessage status={this.state.statusMessage} />
 
           <div className='signup--submitButton'>
