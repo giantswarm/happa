@@ -15,6 +15,7 @@ import Button from '../button';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import KubeConfig from './kubeconfig';
 import platform from '../../lib/platform';
+import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
 
 var Modernizr = window.Modernizr;
 
@@ -24,6 +25,7 @@ var ConfigKubeCtl = React.createClass ({
     return {
       loading: true,
       selectedPlatform: platform,
+      alternativeOpen: false,
       keyPair: {
         generated: false,
         generating: false,
@@ -172,6 +174,12 @@ var ConfigKubeCtl = React.createClass ({
     return (this.state.selectedPlatform === platform);
   },
 
+  toggleAlternative: function() {
+    this.setState({
+      alternativeOpen: ! this.state.alternativeOpen
+    });
+  },
+
   render() {
     return (
       <Slide>
@@ -223,7 +231,7 @@ var ConfigKubeCtl = React.createClass ({
           </div>
         </div>
 
-        <p>Run this commnd to make sure the installation succeeded:</p>
+        <p>Run this command to make sure the installation succeeded:</p>
 
         <CodeBlock>
           <Prompt>
@@ -251,10 +259,19 @@ var ConfigKubeCtl = React.createClass ({
         <p>In case you wonder: --cluster &le;cluster_id&ge; selects the cluster to provide access to. --auth-token &le;token&ge; saves you from having to enter you password again in gsctl, by re-using the token from your current web UI session.</p>
 
         <div className="well">
-          Show alternative method to configure kubectl without gsctl
+          <div onClick={this.toggleAlternative} className="toggle-alternative">
+            {
+              this.state.alternativeOpen ? <i className="fa fa-caret-down"></i> : <i className="fa fa-caret-right"></i>
+            }
+
+            &nbsp; Show alternative method to configure kubectl without gsctl
+          </div>
+          {
+            this.state.alternativeOpen ? <ConfigureKubeCtlAlternative /> : undefined
+          }
         </div>
 
-        <p>After execution, you should see what happened in detail. After credentials and settigns have been added, the context matching your Giant Swarm Kubernetes cluster has been selected for use in kubectl. You can now check things using these commands:</p>
+        <p>After execution, you should see what happened in detail. After credentials and settings have been added, the context matching your Giant Swarm Kubernetes cluster has been selected for use in kubectl. You can now check things using these commands:</p>
 
         <CodeBlock>
           <Prompt>
