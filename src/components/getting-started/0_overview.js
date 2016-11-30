@@ -50,7 +50,7 @@ module.exports = React.createClass ({
               </Link>
             </li>
             <li className="col-3 col-6-sm">
-              <Link to="/getting-started/inspecting">
+              <Link to="/getting-started/next-steps">
                 <span className="step_selector--step-number">4.</span>
                 <span className="step_selector--step-title">Next steps</span>
                 <span className="step_selector--step-description">We point you to some useful next best actions, like setting up the Kubernetes dashboard</span>

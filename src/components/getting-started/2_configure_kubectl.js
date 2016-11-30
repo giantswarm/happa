@@ -163,7 +163,7 @@ var ConfigKubeCtl = React.createClass ({
           </CodeBlock>
         </div>;
       default:
-        <p>Shouldn't be here</p>
+        <p>Shouldn't be here</p>;
 
     }
   },
