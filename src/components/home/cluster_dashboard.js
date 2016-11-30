@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import Button from '../button';
 import Gadget from './gadget';
 import DonutGadget from './donut_gadget';
+import CPUGadget from './cpu_gadget';
 import NodeRow from './node_row';
 import _ from 'underscore';
 import {humanFileSize} from '../../lib/helpers';
@@ -29,10 +30,6 @@ var ClusterDashboard = React.createClass({
 
   decoratePercentage: function(percentage) {
     return Math.round(percentage * 100) + '%';
-  },
-
-  coresTotalLabel: function(availableMetric, usedMetric) {
-    return `${availableMetric.value} cores total`;
   },
 
   decoratePerSecond: function(metric) {
@@ -79,13 +76,13 @@ var ClusterDashboard = React.createClass({
             usedMetric={this.props.cluster.metrics.ram_used}
           />
 
-          <DonutGadget
+          <CPUGadget
             label='CPU'
             bottom_label={this.coresTotalLabel}
             large_label={this.decoratePercentage}
             color="#3ab6c7"
-            availableMetric={this.props.cluster.metrics.cpu_cores}
-            usedMetric={this.props.cluster.metrics.cpu_used}
+            cores={this.props.cluster.metrics.cpu_cores}
+            cpuUsed={this.props.cluster.metrics.cpu_used}
           />
 
           <DonutGadget
