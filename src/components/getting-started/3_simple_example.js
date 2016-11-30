@@ -211,12 +211,10 @@ var SimpleExample = React.createClass ({
 
 function mapStateToProps(state, ownProps) {
   var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
-  var clustersByDate = _.sortBy(selectedOrganization.clusters, 'create_date').reverse();
-  var firstClusterId = clustersByDate[0];
-  var firstCluster = state.entities.clusters.items[firstClusterId];
+  var selectedCluster = state.entities.clusters.items[state.app.selectedCluster];
 
   return {
-    cluster: firstCluster
+    cluster: selectedCluster
   };
 }
 
