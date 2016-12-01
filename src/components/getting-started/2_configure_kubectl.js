@@ -17,6 +17,8 @@ import KubeConfig from './kubeconfig';
 import platform from '../../lib/platform';
 import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
 
+import request from 'superagent-bluebird-promise';
+
 var Modernizr = window.Modernizr;
 
 var ConfigKubeCtl = React.createClass ({
@@ -26,6 +28,7 @@ var ConfigKubeCtl = React.createClass ({
       loading: true,
       selectedPlatform: platform,
       alternativeOpen: false,
+      gsctlVersion: '0.2.0',
       keyPair: {
         generated: false,
         generating: false,
@@ -73,6 +76,16 @@ var ConfigKubeCtl = React.createClass ({
   },
 
   componentDidMount: function() {
+    request.get('https://downloads.giantswarm.io/gsctl/VERSION')
+    .then((response) => {
+      if (response.text) {
+        this.setState({
+          gsctlVersion: response.text
+        });
+      }
+    });
+
+
     if (!this.props.cluster) {
       this.props.dispatch(flashAdd({
         message: <span><b>This organization has no clusters</b><br/>This page might not work as expected.</span>,
@@ -126,7 +139,7 @@ var ConfigKubeCtl = React.createClass ({
     switch(this.state.selectedPlatform) {
       case 'Windows':
         return <div>
-          <p>Download <a href="http://downloads.giantswarm.io/gsctl/0.1.0/gsctl-0.1.0-windows-amd64.zip"><code>gsctl</code> for Windows (64 Bit)</a> or <a href="http://downloads.giantswarm.io/gsctl/0.1.0/gsctl-0.1.0-windows-386.zip">32 Bit</a></p>
+          <p>Download <a href={'http://downloads.giantswarm.io/gsctl/' + this.state.gsctlVersion + '/gsctl-' + this.state.gsctlVersion + '-windows-amd64.zip'}><code>gsctl</code> for Windows (64 Bit)</a> or <a href={'http://downloads.giantswarm.io/gsctl/' + this.state.gsctlVersion + '/gsctl-' + this.state.gsctlVersion + '-windows-386.zip'}>32 Bit</a></p>
           <p>Copy the contained gsctl.exe to a convenient location</p>
         </div>;
       case 'MacWithoutBrew':
@@ -134,9 +147,9 @@ var ConfigKubeCtl = React.createClass ({
           <CodeBlock>
             <Prompt>
               {`
-                curl -O http://downloads.giantswarm.io/gsctl/0.1.0/gsctl-0.1.0-darwin-amd64.tar.gz
-                tar xzf gsctl-0.1.0-darwin-amd64.tar.gz
-                sudo cp gsctl-0.1.0-darwin-amd64/gsctl /usr/local/bin/
+                curl -O http://downloads.giantswarm.io/gsctl/` + this.state.gsctlVersion + `/gsctl-` + this.state.gsctlVersion + `-darwin-amd64.tar.gz
+                tar xzf gsctl-` + this.state.gsctlVersion + `-darwin-amd64.tar.gz
+                sudo cp gsctl-` + this.state.gsctlVersion + `-darwin-amd64/gsctl /usr/local/bin/
               `}
             </Prompt>
           </CodeBlock>
@@ -157,9 +170,9 @@ var ConfigKubeCtl = React.createClass ({
           <CodeBlock>
             <Prompt>
               {`
-                curl -O http://downloads.giantswarm.io/gsctl/0.1.0/gsctl-0.1.0-linux-amd64.tar.gz
-                tar xzf gsctl-0.1.0-linux-amd64.tar.gz
-                sudo cp gsctl-0.1.0-linux-amd64/gsctl /usr/local/bin/
+                curl -O http://downloads.giantswarm.io/gsctl/` + this.state.gsctlVersion + `/gsctl-` + this.state.gsctlVersion + `-linux-amd64.tar.gz
+                tar xzf gsctl-` + this.state.gsctlVersion + `-linux-amd64.tar.gz
+                sudo cp gsctl-` + this.state.gsctlVersion + `-linux-amd64/gsctl /usr/local/bin/
               `}
             </Prompt>
           </CodeBlock>
@@ -209,7 +222,7 @@ var ConfigKubeCtl = React.createClass ({
 
         <p>The gsctl command line utility provides access to your Giant Swarm resources. It's perfectly suited to create credentials for kubectl in one step. Let's install gsctl quickly.</p>
 
-        <p>In case you can't install gsctl right now, we provide an alternative solution below.</p>
+        <p>In case you can't install gsctl right now, we provide an <a href="#alternative">alternative solution below.</a></p>
 
         <div className="platform_selector">
           <ul className='platform_selector--tabs'>
@@ -258,7 +271,7 @@ var ConfigKubeCtl = React.createClass ({
 
         <p>In case you wonder: --cluster &le;cluster_id&ge; selects the cluster to provide access to. --auth-token &le;token&ge; saves you from having to enter you password again in gsctl, by re-using the token from your current web UI session.</p>
 
-        <div className="well">
+        <div className="well" id="alternative">
           <div onClick={this.toggleAlternative} className="toggle-alternative">
             {
               this.state.alternativeOpen ? <i className="fa fa-caret-down"></i> : <i className="fa fa-caret-right"></i>
