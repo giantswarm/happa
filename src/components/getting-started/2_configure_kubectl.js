@@ -160,7 +160,10 @@ var ConfigKubeCtl = React.createClass ({
 
           <CodeBlock>
             <Prompt>
-              {`brew tap giantswarm/giantswarm && brew update && brew install gsctl`}
+              {`
+                brew tap giantswarm/giantswarm
+                brew install gsctl
+              `}
             </Prompt>
           </CodeBlock>
 
