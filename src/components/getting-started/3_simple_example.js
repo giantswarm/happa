@@ -147,7 +147,7 @@ var SimpleExample = React.createClass ({
           </CodeBlock>
 
           <div className="aside">
-            <p>The exact pod names vary in each case, the first suffix functions a bit like a version number for your deployment, this changes with updates to the deployment. The last part of the pod name is used by Kubernetes to disambiguate the name using a unique suffixes.</p>
+            <p><i className='fa fa-graduation-cap' title='For learners'></i> The exact pod names vary in each case, the first suffix functions a bit like a version number for your deployment, this changes with updates to the deployment. The last part of the pod name is used by Kubernetes to disambiguate the name using a unique suffixes.</p>
           </div>
 
           <p>To investigate a bit closer what our containers are doing inside their pods, we can look at their logs, one pod at a time. Be sure to replace the version and suffix fields (in brackets) with the actual ones you got from the <code>get pods</code> command above.</p>
