@@ -74,6 +74,13 @@ button:disabled:hover, button:disabled
     border: 1px solid #fff
 
 .dropdown.open
+  button, .btn-default
+    background-color: #31556a
+    color: #fff
+    &:focus, &:active, &:hover, &:active:focus, &:hover:focus, &:hover:active
+      background-color: darken(#31556a, 5%)
+      color: #fff
+
   ul.dropdown-menu
     background-color: lighten($darkblue, 5%)
     border: none
@@ -83,6 +90,14 @@ button:disabled:hover, button:disabled
       a
         color: #fff
         padding: 8px 15px
+        text-decoration: none
 
         &:hover, &:focus
           background-color: lighten($darkblue, 10%)
+
+.dropdown
+  button, .btn-default
+    &:focus, &:active, &:hover, &:active:focus, &:hover:focus, &:hover:active
+      background-color: #31556a
+      color: #fff
+      border: inherit

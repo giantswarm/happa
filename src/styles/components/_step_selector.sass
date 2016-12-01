@@ -1,0 +1,41 @@
+.step_selector
+  padding: 0px
+  margin: 40px 0px
+  height: 180px
+  list-style-type: none
+
+  li
+    a
+      display: block
+      background-color: #4f6e81
+      border-radius: 5px
+      height: 180px
+      text-align: center
+      margin-bottom: 20px
+      font-size: 14px
+      padding: 15px 10px
+
+      &:hover
+        background-color: lighten(#4f6e81, 4%)
+
+        .step_selector--step-number
+          color: lighten(#4f6e81, 50%)
+
+        .step_selector--step-description
+            color: lighten(#4f6e81, 50%)
+
+      .step_selector--step-number
+        font-size: 30px
+        font-weight: 800
+        display: block
+        color: lighten(#4f6e81, 14%)
+
+      .step_selector--step-title
+        font-weight: 800
+        display: block
+
+      .step_selector--step-description
+        font-size: 12px
+
+    a
+      text-decoration: none

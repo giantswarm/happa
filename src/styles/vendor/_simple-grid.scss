@@ -127,7 +127,7 @@ $breakpoint-large: 1200px;
 
 .row [class^="col"] {
   float: left;
-
+  margin-right: $gutter;
   min-height: 0.125rem;
 }
 
