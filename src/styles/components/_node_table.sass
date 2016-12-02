@@ -37,10 +37,22 @@
         border-bottom: 0px
         border-top: 0px
         width: 20%
+        position: relative
 
         @media only screen and (max-width: $breakpoint-large)
-          width: 100%
-          text-align: center
+          width: 95%
+          text-align: left
+          padding-left: 100px
+
+        .node-table--responsive-label
+          display: none
+          @media only screen and (max-width: $breakpoint-large)
+            display: block
+            position: absolute
+            font-size: 12px
+            font-family: $font-family
+            left: 0px
+            top: 13px
 
 
   .node-table--status-label
@@ -59,13 +71,9 @@
 
     @media only screen and (max-width: $breakpoint-large)
       width: 100%
-      text-align: center
 
   .node-table--net-out-header, .node-table--net-out-value
     text-align: left
-
-    @media only screen and (max-width: $breakpoint-large)
-      text-align: center
 
   .node-table--container-count-header, .node-table--pod-count-header
     text-align: center
@@ -104,6 +112,9 @@
 
   .node-table--container-count, .node-table--pod-count
     text-align: center
+
+    @media only screen and (max-width: $breakpoint-large)
+      text-align: left
 
 
 .bar-chart
