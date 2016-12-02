@@ -46,6 +46,12 @@ export function organizationsLoadSuccess(organizations) {
   };
 }
 
+// organizationsLoad
+// -----------------
+// This long function does various requests to the Giant Swarm API
+// and massages the responses into some reasonable state for Happa to
+// work with.
+//
 export function organizationsLoad() {
   return function(dispatch, getState) {
     var authToken = getState().app.loggedInUser.authToken;
@@ -67,6 +73,9 @@ export function organizationsLoad() {
         return giantSwarm.clusters({ organizationName })
                .then(response => {
                  return [organizationName, response.result.clusters] || [organizationName, []];
+               })
+               .catch(error => {
+                 return [organizationName, 'error'];
                });
       }));
 
@@ -86,11 +95,16 @@ export function organizationsLoad() {
       var organizations = clusters.reduce((previous, current) => {
         var orgId = current[0];
         var clusters = current[1] || [];
-        previous[orgId] = {clusters: clusters.sort().map((x) => {return x.id;})};
 
-        _.each(clusters, (cluster) => {
-          dispatch(clusterLoadPartialDetails(cluster));
-        });
+        if (clusters === 'error') {
+          previous[orgId] = {clusters: [], errorLoadingClusters: true};
+        } else {
+          previous[orgId] = {clusters: clusters.sort().map((x) => {return x.id;})};
+
+          _.each(clusters, (cluster) => {
+            dispatch(clusterLoadPartialDetails(cluster));
+          });
+        }
 
         return previous;
       }, {});
@@ -115,7 +129,6 @@ export function organizationsLoad() {
       return null;
     })
     .catch(error => {
-      throw(error);
       dispatch(flashAdd({
         message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
         class: 'danger'
