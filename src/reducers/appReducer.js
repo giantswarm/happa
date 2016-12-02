@@ -83,6 +83,9 @@ export default function appReducer(state = {
         loggedInUser: action.userData
       });
 
+    case types.LOGIN_ERROR:
+      return shutDown(state);
+
     case types.LOGOUT_SUCCESS:
       return shutDown(state);
 

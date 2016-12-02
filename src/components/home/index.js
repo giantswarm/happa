@@ -75,9 +75,9 @@ var Home = React.createClass({
                   <p>Thanks for your patience! If you have any questions don't hesitate to contact support: <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a></p>
                 </ClusterDashboard>;
               } else if (cluster.metricsLoading && ! cluster.metricsLoadedFirstTime) {
-                return <ClusterDashboard cluster={cluster} key={cluster.id} className='loading' />;
+                return <ClusterDashboard selectedOrganization={this.props.selectedOrganization} cluster={cluster} key={cluster.id} className='loading' />;
               } else {
-                return <ClusterDashboard animate={true} key={cluster.id} cluster={cluster} />;
+                return <ClusterDashboard selectedOrganization={this.props.selectedOrganization} animate={true} key={cluster.id} cluster={cluster} />;
               }
             }, (cluster) => cluster.id)
           }

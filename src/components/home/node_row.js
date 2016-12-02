@@ -16,7 +16,10 @@ var NodeRow = React.createClass({
   render: function() {
     return (
       <tr>
-        <td className="node-table--node-ip">{truncate(this.props.nodeId)}</td>
+        <td className="node-table--node-id">
+          <span className="node-table--node-id-truncated">{truncate(this.props.nodeId)}</span>
+          <span className="node-table--node-id-not-truncated">{this.props.nodeId}</span>
+        </td>
         {/*
           <td className="node-table--status-label">
             <span className="node-table--status-label-running">RUNNING</span>
