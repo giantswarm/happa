@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import Button from '../button';
 import Gadget from './gadget';
 import DonutGadget from './donut_gadget';
+import CPUGadget from './cpu_gadget';
 import NodeRow from './node_row';
 import _ from 'underscore';
 import {humanFileSize} from '../../lib/helpers';
@@ -31,10 +32,6 @@ var ClusterDashboard = React.createClass({
     return Math.round(percentage * 100) + '%';
   },
 
-  coresTotalLabel: function(availableMetric, usedMetric) {
-    return `${availableMetric.value} cores total`;
-  },
-
   decoratePerSecond: function(metric) {
     return humanFileSize(metric.value).unit + '/Sec';
   },
@@ -59,6 +56,7 @@ var ClusterDashboard = React.createClass({
           <ButtonGroup>
             <DropdownButton title="" id="add_node_dropdown" className="outline">
               <MenuItem onClick={this.configureDocsFor.bind(this, this.props.cluster.id)}>Access Via kubectl</MenuItem>
+              <MenuItem componentClass={Link} href={"/organizations"} to={"/organizations/" + this.props.selectedOrganization + "/clusters/" + this.props.cluster.id }>Cluster Details</MenuItem>
               {/*
                 <MenuItem>Open in Kubernetes Dashboard</MenuItem>
                 <MenuItem>Configure Persistent Storage</MenuItem>
@@ -79,13 +77,13 @@ var ClusterDashboard = React.createClass({
             usedMetric={this.props.cluster.metrics.ram_used}
           />
 
-          <DonutGadget
+          <CPUGadget
             label='CPU'
             bottom_label={this.coresTotalLabel}
             large_label={this.decoratePercentage}
             color="#3ab6c7"
-            availableMetric={this.props.cluster.metrics.cpu_cores}
-            usedMetric={this.props.cluster.metrics.cpu_used}
+            cores={this.props.cluster.metrics.cpu_cores}
+            cpuUsed={this.props.cluster.metrics.cpu_used}
           />
 
           <DonutGadget

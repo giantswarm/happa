@@ -145,7 +145,7 @@ var SetPassword = React.createClass({
     } else if (/^[A-Z]+$/.test(password)) {
       statusMessage = 'password_not_just_letters';
     } else {
-      statusMessage = 'password_ok';
+      statusMessage = '';
       valid = true;
     }
 

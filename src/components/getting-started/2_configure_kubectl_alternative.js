@@ -82,7 +82,7 @@ var ConfigKubeCtl = React.createClass ({
       this.setState({
         loading: 'failed'
       });
-    } else if (!this.props.cluster.service_accounts) {
+    } else {
       this.setState({
         loading: true
       });
@@ -103,10 +103,6 @@ var ConfigKubeCtl = React.createClass ({
         this.setState({
           loading: 'failed'
         });
-      });
-    } else {
-      this.setState({
-        loading: false
       });
     }
   },

@@ -16,13 +16,18 @@ var NodeRow = React.createClass({
   render: function() {
     return (
       <tr>
-        <td className="node-table--node-ip">{truncate(this.props.nodeId)}</td>
+        <td className="node-table--node-id">
+          <span className="node-table--responsive-label">INSTANCE</span>
+          <span className="node-table--node-id-truncated">{truncate(this.props.nodeId)}</span>
+          <span className="node-table--node-id-not-truncated">{this.props.nodeId}</span>
+        </td>
         {/*
           <td className="node-table--status-label">
             <span className="node-table--status-label-running">RUNNING</span>
           </td>
         */}
         <td className="node-table--barchart-container">
+          <span className="node-table--responsive-label">RAM USED</span>
           <BarChart
             percentage={this.props.node.ram_used.value / this.props.node.ram_available.value}
             label={this.labelifyBytes(this.props.node.ram_used.value)}
@@ -31,6 +36,7 @@ var NodeRow = React.createClass({
             color="#003c78" />
         </td>
         <td className="node-table--barchart-container">
+          <span className="node-table--responsive-label">CPU USED</span>
           <BarChart
             percentage={this.props.node.cpu_used.value}
             label={(this.props.node.cpu_used.value * 100).toFixed(0) + '%'}
@@ -39,6 +45,7 @@ var NodeRow = React.createClass({
             color="#3ab6c7" />
         </td>
         <td className="node-table--barchart-container node-table--barchart-storage">
+          <span className="node-table--responsive-label">STORAGE USED</span>
           <BarChart
             percentage={this.props.node.node_storage_used.value / this.props.node.node_storage_limit.value}
             label={this.labelifyBytes(this.props.node.node_storage_used.value)}
@@ -48,6 +55,7 @@ var NodeRow = React.createClass({
 
         </td>
         <td className="node-table--pod-count">
+          <span className="node-table--responsive-label">PODS</span>
           {
             this.props.node.pod_count.outdated ?
             '...'
@@ -56,6 +64,7 @@ var NodeRow = React.createClass({
           }
         </td>
         <td className="node-table--container-count">
+          <span className="node-table--responsive-label">CONTAINERS</span>
           {
             this.props.node.container_count.outdated ?
             '...'
@@ -64,6 +73,7 @@ var NodeRow = React.createClass({
           }
         </td>
         <td className="node-table--net-in-value">
+          <span className="node-table--responsive-label">NET IN</span>
           {
             this.props.node.network_traffic_incoming.outdated ?
             '...'
@@ -75,6 +85,7 @@ var NodeRow = React.createClass({
           }
         </td>
         <td className="node-table--net-out-value">
+          <span className="node-table--responsive-label">NET OUT</span>
           {
             this.props.node.network_traffic_outgoing.outdated ?
             '...'

@@ -49,15 +49,11 @@ module.exports = React.createClass({
   },
 
   percentage: function() {
-    if (this.props.availableMetric.value === 0) {
-      return 0;
-    } else {
-      return this.props.usedMetric.value / this.props.availableMetric.value;
-    }
+    return this.props.cpuUsed.value;
   },
 
   isOutdated: function() {
-    return this.props.usedMetric.outdated || this.props.availableMetric.outdated;
+    return this.props.cpuUsed.outdated;
   },
 
   classes: function() {
@@ -88,7 +84,7 @@ module.exports = React.createClass({
             this.isOutdated() ?
             'Unavailable'
             :
-            this.props.bottom_label(this.props.availableMetric, this.props.usedMetric)
+            (this.props.cores.value + ' cores total')
           }
           </div>
         </div>

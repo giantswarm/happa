@@ -2,6 +2,13 @@
   border-bottom: 0px
   width: 100%
 
+  @media only screen and (max-width: $breakpoint-large)
+    th
+      display: none
+
+    td
+      display: block
+
   >thead
     >tr
       >th
@@ -12,10 +19,40 @@
 
   >tbody
     >tr
+      @media only screen and (max-width: $breakpoint-large)
+        display: block
+        border-bottom: 1px solid lighten(#234a61, 0%)
+        border-top: 1px solid lighten(#234a61, 10%)
+        padding-bottom: 25px
+        padding-top: 25px
+
+        &:first-child
+          border-top: 0px
+
+
+        &:last-child
+          border-bottom: 0px
+
       >td
         border-bottom: 0px
         border-top: 0px
         width: 20%
+        position: relative
+
+        @media only screen and (max-width: $breakpoint-large)
+          width: 95%
+          text-align: left
+          padding-left: 100px
+
+        .node-table--responsive-label
+          display: none
+          @media only screen and (max-width: $breakpoint-large)
+            display: block
+            position: absolute
+            font-size: 12px
+            font-family: $font-family
+            left: 0px
+            top: 13px
 
 
   .node-table--status-label
@@ -31,6 +68,9 @@
   .node-table--net-in-header, .node-table--net-in-value
     text-align: left
     width: 10%
+
+    @media only screen and (max-width: $breakpoint-large)
+      width: 100%
 
   .node-table--net-out-header, .node-table--net-out-value
     text-align: left
@@ -51,9 +91,20 @@
     &:last-child
       margin-right: 0px
 
-  .node-table--node-ip
+  .node-table--node-id
     font-family: "Inconsolata"
     font-size: 12px
+
+    .node-table--node-id-not-truncated
+      display: none
+
+    @media only screen and (max-width: $breakpoint-large)
+      .node-table--node-id-not-truncated
+        display: block
+        font-size: 14px
+
+      .node-table--node-id-truncated
+        display: none
 
   .node-table--metric-unit
     color: #cbcbcb
@@ -61,6 +112,9 @@
 
   .node-table--container-count, .node-table--pod-count
     text-align: center
+
+    @media only screen and (max-width: $breakpoint-large)
+      text-align: left
 
 
 .bar-chart
