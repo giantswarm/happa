@@ -97,7 +97,7 @@ var ConfigKubeCtl = React.createClass ({
       case 'Windows':
         return <div>
           <p>Download <a href={'http://downloads.giantswarm.io/gsctl/' + this.state.gsctlVersion + '/gsctl-' + this.state.gsctlVersion + '-windows-amd64.zip'}><code>gsctl</code> for Windows (64 Bit)</a> or <a href={'http://downloads.giantswarm.io/gsctl/' + this.state.gsctlVersion + '/gsctl-' + this.state.gsctlVersion + '-windows-386.zip'}>32 Bit</a></p>
-          <p>Copy the contained gsctl.exe to a convenient location</p>
+          <p>Copy the contained <code>gsctl.exe</code> to a convenient location</p>
         </div>;
       case 'MacWithoutBrew':
         return <div>
@@ -180,9 +180,9 @@ var ConfigKubeCtl = React.createClass ({
           undefined
         }
 
-        <p>The gsctl command line utility provides access to your Giant Swarm resources. It's perfectly suited to create credentials for kubectl in one step. Let's install gsctl quickly.</p>
+        <p>The <code>gsctl</code> command line utility provides access to your Giant Swarm resources. It's perfectly suited to create credentials for <code>kubectl</code> in one step. Let's install <code>gsctl</code> quickly.</p>
 
-        <p>In case you can't install gsctl right now, we provide an <a href="#alternative">alternative solution below.</a></p>
+        <p>In case you can't install <code>gsctl</code> right now, we provide an <a href="#alternative">alternative solution below.</a></p>
 
         <div className="platform_selector">
           <ul className='platform_selector--tabs'>
@@ -212,7 +212,7 @@ var ConfigKubeCtl = React.createClass ({
           </Prompt>
         </CodeBlock>
 
-        <p>Next, we let gsctl do several things in one step:</p>
+        <p>Next, we let <code>gsctl</code> do several things in one step:</p>
 
         <ul>
           <li>Create a new key pair (certificate and private key) for you to access this cluster</li>
@@ -229,7 +229,7 @@ var ConfigKubeCtl = React.createClass ({
           </Prompt>
         </CodeBlock>
 
-        <p>In case you wonder: --cluster &le;cluster_id&ge; selects the cluster to provide access to. --auth-token &le;token&ge; saves you from having to enter you password again in gsctl, by re-using the token from your current web UI session.</p>
+        <p>In case you wonder: <code>--cluster &le;cluster_id&ge;</code> selects the cluster to provide access to. <code>--auth-token &le;token&ge;</code> saves you from having to enter you password again in <code>gsctl</code>, by re-using the token from your current web UI session.</p>
 
         <div className="well" id="alternative">
           <div onClick={this.toggleAlternative} className="toggle-alternative">
@@ -244,7 +244,7 @@ var ConfigKubeCtl = React.createClass ({
           }
         </div>
 
-        <p>After execution, you should see what happened in detail. After credentials and settings have been added, the context matching your Giant Swarm Kubernetes cluster has been selected for use in kubectl. You can now check things using these commands:</p>
+        <p>After execution, you should see what happened in detail. After credentials and settings have been added, the context matching your Giant Swarm Kubernetes cluster has been selected for use in <code>kubectl</code>. You can now check things using these commands:</p>
 
         <CodeBlock>
           <Prompt>
