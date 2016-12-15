@@ -31,8 +31,8 @@ class Modal extends React.Component {
     if (e) {
       e.preventDefault();
     }
-    var username = this.refs.username.value;
-    this.props.dispatch(organizationAddMemberConfirm(this.props.modal.templateValues.orgId, username));
+    var email = this.refs.email.value;
+    this.props.dispatch(organizationAddMemberConfirm(this.props.modal.templateValues.orgId, email));
   }
 
   removeMember(e) {
@@ -40,9 +40,9 @@ class Modal extends React.Component {
       e.preventDefault();
     }
 
-    var username = this.props.modal.templateValues.username;
+    var email = this.props.modal.templateValues.email;
     var orgId = this.props.modal.templateValues.orgId;
-    this.props.dispatch(organizationRemoveMemberConfirm(orgId, username));
+    this.props.dispatch(organizationRemoveMemberConfirm(orgId, email));
   }
 
   render() {
@@ -132,9 +132,9 @@ class Modal extends React.Component {
               <BootstrapModal.Title>Add a Member</BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
-              <h4>Username:</h4>
+              <h4>Email:</h4>
               <form onSubmit={this.addMember.bind(this)} >
-                <input ref='username' autoFocus type='text'/>
+                <input ref='email' autoFocus type='text'/>
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
@@ -172,7 +172,7 @@ class Modal extends React.Component {
               <BootstrapModal.Title>Remove Member</BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
-              <p>Are you sure you want to remove {this.props.modal.templateValues.username} from {this.props.modal.templateValues.orgId}</p>
+              <p>Are you sure you want to remove {this.props.modal.templateValues.email} from {this.props.modal.templateValues.orgId}</p>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button

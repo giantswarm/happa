@@ -228,12 +228,12 @@ export function organizationAddMember(orgId) {
   };
 }
 
-export function organizationAddMemberConfirm(orgId, username) {
+export function organizationAddMemberConfirm(orgId, email) {
   return function(dispatch, getState) {
     dispatch({
       type: types.ORGANIZATION_ADD_MEMBER_CONFIRM,
       orgId: orgId,
-      username: username
+      email: email
     });
 
     var authToken = getState().app.loggedInUser.authToken;
@@ -241,12 +241,12 @@ export function organizationAddMemberConfirm(orgId, username) {
 
     return giantSwarm.addMemberToOrganization({
       organizationName: orgId,
-      username: username
+      email: email
     })
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
-      message: 'Successfully added `' + username + '` to organization: ' + '`' + orgId + '`',
+      message: 'Successfully added `' + email + '` to organization: ' + '`' + orgId + '`',
       class: 'success',
       ttl: 3000
     })))
@@ -254,7 +254,7 @@ export function organizationAddMemberConfirm(orgId, username) {
       dispatch(modalHide());
 
       dispatch(flashAdd({
-        message: <div><strong>Could not add user `{username}` to organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        message: <div><strong>Could not add user `{email}` to organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
         class: 'danger'
       }));
 
@@ -266,12 +266,12 @@ export function organizationAddMemberConfirm(orgId, username) {
 }
 
 
-export function organizationRemoveMemberConfirm(orgId, username) {
+export function organizationRemoveMemberConfirm(orgId, email) {
   return function(dispatch, getState) {
     dispatch({
       type: types.ORGANIZATION_REMOVE_MEMBER_CONFIRM,
       orgId: orgId,
-      username: username
+      email: email
     });
 
     var authToken = getState().app.loggedInUser.authToken;
@@ -279,12 +279,12 @@ export function organizationRemoveMemberConfirm(orgId, username) {
 
     return giantSwarm.removeMemberFromOrganization({
       organizationName: orgId,
-      username: username
+      email: email
     })
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
-      message: 'Successfully removed `' + username + '` from organization: ' + '`' + orgId + '`',
+      message: 'Successfully removed `' + email + '` from organization: ' + '`' + orgId + '`',
       class: 'success',
       ttl: 3000
     })))
@@ -292,7 +292,7 @@ export function organizationRemoveMemberConfirm(orgId, username) {
       dispatch(modalHide());
 
       dispatch(flashAdd({
-        message: <div><strong>Could not remove user `{username}`` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        message: <div><strong>Could not remove user `{email}`` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
         class: 'danger'
       }));
 
@@ -303,11 +303,11 @@ export function organizationRemoveMemberConfirm(orgId, username) {
   };
 }
 
-export function organizationRemoveMember(orgId, username) {
+export function organizationRemoveMember(orgId, email) {
   return {
     type: types.ORGANIZATION_REMOVE_MEMBER,
     orgId: orgId,
-    username: username
+    email: email
   };
 }
 
