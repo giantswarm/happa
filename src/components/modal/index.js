@@ -10,7 +10,17 @@ import { organizationDeleteConfirm,
          organizationAddMemberConfirm,
          organizationRemoveMemberConfirm } from '../../actions/organizationActions';
 
+import EmailField from './email_field';
+
 class Modal extends React.Component {
+ constructor(props) {
+    super();
+
+    this.state = {
+      emailValid: false
+    };
+  }
+
   close() {
     this.props.dispatch(modalHide());
   }
@@ -31,8 +41,14 @@ class Modal extends React.Component {
     if (e) {
       e.preventDefault();
     }
-    var email = this.refs.email.value;
-    this.props.dispatch(organizationAddMemberConfirm(this.props.modal.templateValues.orgId, email));
+
+    if (this.state.emailValid) {
+      var email = this.refs.email.value();
+      this.props.dispatch(organizationAddMemberConfirm(this.props.modal.templateValues.orgId, email));
+      this.setState({
+        emailValid: false
+      });
+    }
   }
 
   removeMember(e) {
@@ -43,6 +59,18 @@ class Modal extends React.Component {
     var email = this.props.modal.templateValues.email;
     var orgId = this.props.modal.templateValues.orgId;
     this.props.dispatch(organizationRemoveMemberConfirm(orgId, email));
+  }
+
+  emailFieldChanged(emailField) {
+    if (emailField.valid()) {
+      this.setState({
+        emailValid: true
+      });
+    } else {
+      this.setState({
+        emailValid: false
+      });
+    }
   }
 
   render() {
@@ -134,7 +162,7 @@ class Modal extends React.Component {
             <BootstrapModal.Body>
               <h4>Email:</h4>
               <form onSubmit={this.addMember.bind(this)} >
-                <input ref='email' autoFocus type='text'/>
+                <EmailField name='email' ref='email' onChange={this.emailFieldChanged.bind(this)} autofocus/>
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
@@ -142,6 +170,7 @@ class Modal extends React.Component {
                 type='submit'
                 bsStyle='primary'
                 loading={this.props.modal.templateValues.loading}
+                disabled={ ! this.state.emailValid }
                 onClick={this.addMember.bind(this)}>
                 {
                   this.props.modal.templateValues.loading ?
