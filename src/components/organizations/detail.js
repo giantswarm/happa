@@ -106,7 +106,7 @@ var OrganizationDetail = React.createClass({
                               <td>
                                 <div className='contextual'>
                                   <i className='fa fa-times clickable'
-                                     title='Delete this organization'
+                                     title='Remove this member'
                                      onClick={this.removeMember.bind(this, member.email)} />
                                 </div>
                               </td>

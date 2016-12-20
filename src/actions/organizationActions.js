@@ -292,7 +292,7 @@ export function organizationRemoveMemberConfirm(orgId, email) {
       dispatch(modalHide());
 
       dispatch(flashAdd({
-        message: <div><strong>Could not remove user `{email}`` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        message: <div><strong>Could not remove user `{email}` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
         class: 'danger'
       }));
 
