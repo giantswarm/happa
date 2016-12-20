@@ -16,7 +16,7 @@ dist: docker-build-dev
 # Build the production docker container, which is just an nginx server
 # with the files from the dist folder
 docker-build-prod:
-	docker build -t happa -f Dockerfile .
+	docker build -t registry.giantswarm.io/giantswarm/happa -f Dockerfile .
 
 # Run the development environment
 # Becomes available at docker.dev:8000
