@@ -367,7 +367,6 @@ var SignUp = React.createClass({
             </div>
           </div>
 
-          {this.state.statusMessage}
           <StatusMessage status={this.state.statusMessage} />
 
           <div className='signup--submitButton'>

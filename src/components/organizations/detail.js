@@ -25,8 +25,8 @@ var OrganizationDetail = React.createClass({
     this.props.actions.organizationAddMember(this.props.organization.id);
   },
 
-  removeMember(username) {
-    this.props.actions.organizationRemoveMember(this.props.organization.id, username);
+  removeMember(email) {
+    this.props.actions.organizationRemoveMember(this.props.organization.id, email);
   },
 
   openClusterDetails(cluster) {
@@ -93,21 +93,21 @@ var OrganizationDetail = React.createClass({
                   <table>
                     <thead>
                       <tr>
-                        <th>Username</th>
+                        <th>Email</th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
                       {
-                        this.props.organization.members.map((username) => {
+                        _.sortBy(this.props.organization.members, 'email').map((member) => {
                           return (
-                            <tr key={username}>
-                              <td>{username}</td>
+                            <tr key={member.username}>
+                              <td>{member.email}</td>
                               <td>
                                 <div className='contextual'>
                                   <i className='fa fa-times clickable'
-                                     title='Delete this organization'
-                                     onClick={this.removeMember.bind(this, username)} />
+                                     title='Remove this member'
+                                     onClick={this.removeMember.bind(this, member.email)} />
                                 </div>
                               </td>
                             </tr>

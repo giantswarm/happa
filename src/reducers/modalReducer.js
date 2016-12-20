@@ -64,14 +64,14 @@ export default function modalReducer(state = {visible: false}, action = undefine
     case types.ORGANIZATION_REMOVE_MEMBER:
       return {
         visible: true,
-        templateValues: {orgId: action.orgId, username: action.username},
+        templateValues: {orgId: action.orgId, email: action.email},
         template: 'organizationRemoveMember'
       };
 
     case types.ORGANIZATION_REMOVE_MEMBER_CONFIRM:
       return {
         visible: true,
-        templateValues: {orgId: action.orgId, username: action.username, loading: true},
+        templateValues: {orgId: action.orgId, email: action.email, loading: true},
         template: 'organizationRemoveMember'
       };
 
