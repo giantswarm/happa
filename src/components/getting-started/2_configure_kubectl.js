@@ -229,7 +229,7 @@ var ConfigKubeCtl = React.createClass ({
           </Prompt>
         </CodeBlock>
 
-        <p>In case you wonder: <code>--cluster &le;cluster_id&ge;</code> selects the cluster to provide access to. <code>--auth-token &le;token&ge;</code> saves you from having to enter you password again in <code>gsctl</code>, by re-using the token from your current web UI session.</p>
+        <p>In case you wonder: <code>--cluster &lt;cluster_id&gt;</code> selects the cluster to provide access to. <code>--auth-token &lt;token&gt;</code> saves you from having to enter you password again in <code>gsctl</code>, by re-using the token from your current web UI session.</p>
 
         <div className="well" id="alternative">
           <div onClick={this.toggleAlternative} className="toggle-alternative">
