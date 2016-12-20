@@ -1,0 +1,78 @@
+# Requires secrets.env with:
+#
+# GIANTSWARM_API_TOKEN=
+# MAILGUN_API_KEY=
+# PROMETHEUS_PASSWORD=
+
+version: "2"
+services:
+  happa:
+    image: registry.giantswarm.io/giantswarm/happa:latest
+    ports:
+      - "80:80"
+    links:
+      - passage
+    environment:
+      API_ENDPOINT: https://api.giantswarm.io
+      INTERCOM_APP_ID: ictssdcu
+
+  passage:
+    image: registry.giantswarm.io/giantswarm/passage:latest
+    ports:
+      - "5000:5000"
+    environment:
+      # DEBUGGING: 1
+      # NUM_PROXIES: "0"
+      HAPPA_BASE_URI: http://docker.dev
+      GIANTSWARM_API_URI: https://api.giantswarm.io
+      HUBSPOT_API_URI: http://hubspotmock:9999
+      HUBSPOT_HUB_ID: "430224"
+      HUBSPOT_API_KEY: 1234567890abcdefghijklmnop
+      RATELIMIT_GLOBAL: 1000 per day, 100 per hour, 30 per minute
+      RATELIMIT_STORAGE_URL: redis://redis:6379
+      MAILGUN_API_ENDPOINT: https://api.mailgun.net/v2/mg.giantswarm.io/messages
+    env_file: secrets.env
+
+    links:
+      - hubspotmock
+      - redis:redis
+      - mailcatcher:mailcatcher
+
+  redis:
+    image: redis:3.2
+    ports:
+      - "6379:6379"
+
+  # Mocks the HubSpot API
+  hubspotmock:
+    image: registry.giantswarm.io/giantswarm/mock-hubspot-api:latest
+    environment:
+      DEBUGGING: 1
+    ports:
+      - "9999:9999"
+
+  mailcatcher:
+    image: registry.giantswarm.io/giantswarm/mailcatcher:latest
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+
+  desmotes:
+    image: registry.giantswarm.io/giantswarm/desmotes:latest
+    ports:
+      - "9001:5000"
+    environment:
+      GIANTSWARM_API_URI: https://api.giantswarm.io
+      PROMETHEUS_URI: https://leaseweb-prometheus.giantswarm.io
+      PROMETHEUS_QUERY_TIMEOUT: 3.0
+      CORS_BASE_URI: http://docker.dev
+      PROMETHEUS_USER: admin
+      CACHE_KEY_SALT: dev_salt
+      DEBUGGING: yeah
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      NODE_STORAGE_DEVICES_REGEX: "/dev/vdb|/dev/vdc"
+    env_file: secrets.env
+
+    depends_on:
+     - redis
