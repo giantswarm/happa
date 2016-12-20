@@ -1,13 +1,11 @@
 'use strict';
 
-var Modernizr = window.Modernizr;
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from '../button';
 import * as clusterActions from '../../actions/clusterActions';
-import moment from 'moment';
 import { relativeDate, truncate } from '../../lib/helpers.js';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
 import ExpiryHoursPicker from './expiry_hours_picker';
@@ -104,7 +102,7 @@ class ClusterKeyPairs extends React.Component {
 
         return this.props.actions.clusterLoadKeyPairs(this.props.cluster.id);
       })
-      .catch((error) => {
+      .catch(() => {
         setTimeout(() => {
           this.setState({
             modal: {
@@ -310,8 +308,14 @@ class ClusterKeyPairs extends React.Component {
   }
 }
 
+ClusterKeyPairs.propTypes = {
+  user: React.PropTypes.object,
+  actions: React.PropTypes.object,
+  cluster: React.PropTypes.object
+};
 
-function mapStateToProps(state, ownProps) {
+
+function mapStateToProps(state) {
   return {
     clusters: state.entities.clusters,
     user: state.app.loggedInUser

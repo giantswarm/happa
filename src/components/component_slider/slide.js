@@ -11,7 +11,7 @@
 
 import React from 'react';
 
-module.exports = React.createClass ({
+class Slide extends React.Component {
   render() {
     return (
       <div className='component_slider--step'>
@@ -19,4 +19,10 @@ module.exports = React.createClass ({
       </div>
     );
   }
-});
+}
+
+Slide.propTypes = {
+  children: React.PropTypes.node
+};
+
+export default Slide;

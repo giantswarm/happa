@@ -1,8 +1,6 @@
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { Button as BsButton, ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap';
+import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap';
 import { Link } from 'react-router';
-import Button from '../button';
 import Gadget from './gadget';
 import DonutGadget from './donut_gadget';
 import CPUGadget from './cpu_gadget';
@@ -13,30 +11,30 @@ import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 
-var ClusterDashboard = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.object
-  },
+class ClusterDashboard extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-  configureDocsFor: function(clusterId) {
+  configureDocsFor(clusterId) {
     this.props.actions.clusterSelect(clusterId);
     this.context.router.push('/getting-started/configure');
-  },
+  }
 
-  bytesFreeLabel: function(availableMetric, usedMetric) {
+  bytesFreeLabel(availableMetric, usedMetric) {
     var bytesFree = humanFileSize(availableMetric.value - usedMetric.value);
     return `${bytesFree.value} ${bytesFree.unit} free`;
-  },
+  }
 
-  decoratePercentage: function(percentage) {
+  decoratePercentage(percentage) {
     return Math.round(percentage * 100) + '%';
-  },
+  }
 
-  decoratePerSecond: function(metric) {
+  decoratePerSecond(metric) {
     return humanFileSize(metric.value).unit + '/Sec';
-  },
+  }
 
-  render: function() {
+  render() {
     return <div className={this.props.className + ' cluster-dashboard well ' + (this.props.cluster.errorLoadingMetrics ? 'loading' : '')}>
       {
         this.props.children ?
@@ -157,7 +155,7 @@ var ClusterDashboard = React.createClass({
           </thead>
           <tbody>
             {
-              _.map(_.sortBy(this.props.cluster.nodes, (node, key) => key), (node, key) => {
+              _.map(_.sortBy(this.props.cluster.nodes, (node, key) => key), (node) => {
                 return <NodeRow key={node.id} nodeId={node.id} node={node} animate={this.props.animate} />;
               })
             }
@@ -166,7 +164,20 @@ var ClusterDashboard = React.createClass({
       </div>
     </div>;
   }
-});
+}
+
+ClusterDashboard.contextTypes = {
+  router: React.PropTypes.object
+};
+
+ClusterDashboard.propTypes = {
+  cluster: React.PropTypes.object,
+  actions: React.PropTypes.object,
+  className: React.PropTypes.string,
+  children: React.PropTypes.object,
+  selectedOrganization: React.PropTypes.string,
+  animate: React.PropTypes.bool
+};
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -175,4 +186,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(null, mapDispatchToProps)(ClusterDashboard);
+export default connect(null, mapDispatchToProps)(ClusterDashboard);

@@ -2,23 +2,16 @@
 
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as userActions from '../../actions/userActions';
 
-var Logout = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.object
-  },
-
-
-  componentDidMount: function() {
+class Logout extends React.Component {
+  componentDidMount() {
     this.props.actions.logout();
-  },
+  }
 
-  //TODO: turn progressbutton into a component
-  render: function() {
+  render() {
     return (
       <div>
         <ReactCSSTransitionGroup transitionName='logout--mask--transition' transitionAppear={true} transitionAppearTimeout={400} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
@@ -30,7 +23,15 @@ var Logout = React.createClass({
       </div>
     );
   }
-});
+}
+
+Logout.contextTypes = {
+  router: React.PropTypes.object
+};
+
+Logout.propTypes = {
+  actions: React.PropTypes.object
+};
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -38,6 +39,5 @@ function mapDispatchToProps(dispatch) {
     dispatch: dispatch
   };
 }
-
 
 module.exports = connect(null, mapDispatchToProps)(Logout);

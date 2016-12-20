@@ -10,10 +10,9 @@
 // @currentSlide - Number - The index of the current slide. Default 0
 // @slides       - Array  - An array of components
 
-import React, { Component, PropTypes } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import React from 'react';
 
-module.exports = class ComponentSlider extends Component {
+class ComponentSlider extends React.Component {
   constructor(props) {
     super(props);
 
@@ -34,7 +33,7 @@ module.exports = class ComponentSlider extends Component {
     this.previous = this.previous.bind(this);
   }
 
-  componentWillReceiveProps(nextProps, nextState) {
+  componentWillReceiveProps(nextProps) {
     this.setSlide(nextProps.currentSlide);
   }
 
@@ -74,4 +73,11 @@ module.exports = class ComponentSlider extends Component {
       </div>
     );
   }
+}
+
+ComponentSlider.propTypes = {
+  currentSlide: React.PropTypes.number,
+  slides: React.PropTypes.array
 };
+
+export default ComponentSlider;

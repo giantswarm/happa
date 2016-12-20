@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-module.exports = React.createClass({
-  render: function() {
+class TermsOfService extends React.Component {
+  render() {
     return (
       <div className='terms-of-service--container'>
         <label htmlFor='readTOS'>Confirm that you acknowledge our Terms of Service:</label>
@@ -93,4 +93,6 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
+
+export default TermsOfService;

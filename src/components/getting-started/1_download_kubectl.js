@@ -2,27 +2,29 @@
 import React from 'react';
 import Slide from '../component_slider/slide';
 import Markdown from './markdown';
-import { CodeBlock, Prompt, Output } from './codeblock';
+import { CodeBlock, Prompt } from './codeblock';
 import platform from '../../lib/platform';
 
-module.exports = React.createClass ({
-  getInitialState: function() {
-    return {
+class DownloadKubeCTL extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       selectedPlatform: platform
     };
-  },
+  }
 
-  selectPlatform: function(platform) {
+  selectPlatform(platform) {
     this.setState({
       selectedPlatform: platform
     });
-  },
+  }
 
-  isSelectedPlatform: function(platform) {
+  isSelectedPlatform(platform) {
     return (this.state.selectedPlatform === platform);
-  },
+  }
 
-  selectedInstallInstructions: function() {
+  selectedInstallInstructions() {
     switch(this.state.selectedPlatform) {
       case 'Windows':
         return <div>
@@ -111,7 +113,7 @@ module.exports = React.createClass ({
         return <h1>Installation Instructions for Mac</h1>;
 
     }
-  },
+  }
 
   render() {
     return (
@@ -165,4 +167,10 @@ module.exports = React.createClass ({
       </Slide>
     );
   }
-});
+}
+
+DownloadKubeCTL.propTypes = {
+  goToSlide: React.PropTypes.func
+};
+
+export default DownloadKubeCTL;

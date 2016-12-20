@@ -8,17 +8,14 @@ import PasswordField from '../signup/password_field';
 import StatusMessage from '../signup/status_message';
 import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 import { connect } from 'react-redux';
-import Button from '../button';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
 
-var SetPassword = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.object
-  },
+class SetPassword extends React.Component {
+  constructor(props) {
+    super(props);
 
-  getInitialState: function() {
-    return {
+    this.state = {
       password: '',
       passwordConfirmation: '',
       email: localStorage.getItem('user.email') || '',
@@ -40,10 +37,9 @@ var SetPassword = React.createClass({
       tokenValid: false,
       statusMessage: 'enter_password'
     };
-  },
+  }
 
-
-  componentDidMount: function(){
+  componentDidMount(){
     // If we have the email, verify the token immediately.
     if (this.state.email) {
       this.setState({
@@ -51,7 +47,7 @@ var SetPassword = React.createClass({
       });
 
       this.props.actions.verifyPasswordRecoveryToken(this.state.email, this.props.params.token)
-      .then((m) => {
+      .then(() => {
         this.setState({
           verifyingToken: false,
           tokenValid: true
@@ -81,9 +77,9 @@ var SetPassword = React.createClass({
         });
       });
     }
-  },
+  }
 
-  submit: function(event) {
+  submit = (event) => {
     event.preventDefault();
 
     this.setState({
@@ -103,34 +99,33 @@ var SetPassword = React.createClass({
         class: 'success'
       }));
     });
+  }
 
-  },
-
-  setEmail: function(event) {
+  setEmai = (event) => {
     event.preventDefault();
     this.props.dispatch(flashClearAll());
     forgotPasswordActions.updateEmail(this.state.email);
     forgotPasswordActions.verifyPasswordRecoveryToken(this.state.email, this.props.params.token);
-  },
+  }
 
-  updateEmail(event) {
+  updateEmail = (event) => {
     this.props.dispatch(flashClearAll());
 
     this.setState({
       email: event.target.value
     });
-  },
+  }
 
-  passwordEditingStarted: function(password) {
+  passwordEditingStarted = (password) => {
     this.setState({
       passwordField: {
         valid: false,
         value: password
       }
     });
-  },
+  }
 
-  passwordEditingCompleted: function(password) {
+  passwordEditingCompleted = (password) => {
     var valid = false;
     var statusMessage = this.state.statusMessage;
 
@@ -157,9 +152,9 @@ var SetPassword = React.createClass({
         value: password
       }
     });
-  },
+  }
 
-  passwordConfirmationEditingStarted: function(confirmation) {
+  passwordConfirmationEditingStarted = (confirmation) => {
     var valid = false;
     var statusMessage = this.state.statusMessage;
 
@@ -178,9 +173,9 @@ var SetPassword = React.createClass({
         value: confirmation
       }
     });
-  },
+  }
 
-  passwordConfirmationEditingCompleted: function(confirmation) {
+  passwordConfirmationEditingCompleted = (confirmation) => {
     var valid = false;
     var statusMessage = this.state.statusMessage;
 
@@ -201,13 +196,13 @@ var SetPassword = React.createClass({
         value: confirmation
       }
     });
-  },
+  }
 
-  formIsValid() {
+  formIsValid = () => {
     return this.state.passwordField.valid && this.state.passwordConfirmationField.valid;
-  },
+  }
 
-  setPasswordForm() {
+  setPasswordForm = () => {
     if (this.state.tokenValid) {
       return(
         <form onSubmit={this.submit}>
@@ -259,9 +254,9 @@ var SetPassword = React.createClass({
         );
       }
     }
-  },
+  }
 
-  setEmailForm() {
+  setEmailForm = () => {
     return(
       <form onSubmit={this.setEmail}>
         <p>Before we can check your recovery token, please type in your email again for verification purposes.</p>
@@ -290,9 +285,9 @@ var SetPassword = React.createClass({
         <Link to='/forgot_password'>Request a new token</Link>
       </form>
     );
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div>
         <div className='login_form--mask'></div>
@@ -309,8 +304,17 @@ var SetPassword = React.createClass({
       </div>
     );
   }
-});
+}
 
+SetPassword.contextTypes = {
+  router: React.PropTypes.object
+};
+
+SetPassword.propTypes = {
+  actions: React.PropTypes.object,
+  params: React.PropTypes.object,
+  dispatch: React.PropTypes.func
+};
 
 function mapDispatchToProps(dispatch) {
   return {

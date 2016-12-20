@@ -1,7 +1,6 @@
 'use strict';
 
 var request = require('superagent-bluebird-promise');
-var _ = require('underscore');
 var helpers = require('./helpers');
 
 // DomainValidator
@@ -50,7 +49,7 @@ export default function DomainValidator(config) {
         organizationId: { presence: true }
       };
 
-      var promise = new Promise((resolve, reject) => {
+      var promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
 
         var url = `${config.endpoint}/organizations/${params.organizationId}/domains/`;
@@ -88,7 +87,7 @@ export default function DomainValidator(config) {
         domain: { presence: true }
       };
 
-      var promise = new Promise((resolve, reject) => {
+      var promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
 
         var url = `${config.endpoint}/organizations/${params.organizationId}/domains/${params.domain}`;
@@ -126,7 +125,7 @@ export default function DomainValidator(config) {
         domain: { presence: true }
       };
 
-      var promise = new Promise((resolve, reject) => {
+      var promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
 
         var url = `${config.endpoint}/organizations/${params.organizationId}/domains/${params.domain}`;
@@ -153,5 +152,4 @@ export default function DomainValidator(config) {
       return promise;
     }
   };
-};
-
+}

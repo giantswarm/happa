@@ -1,20 +1,7 @@
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { Button as BsButton, ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap';
-import { Link } from 'react-router';
-import Button from '../button';
-import Gadget from './gadget';
-import DonutGadget from './donut_gadget';
-import NodeRow from './node_row';
-import ClusterDashboard from './cluster_dashboard';
 
-
-var ClusterEmptyState = React.createClass({
-  getInitialState: function() {
-    return {};
-  },
-
-  render: function() {
+class ClusterEmptyState extends React.Component {
+  render() {
     if (this.props.organizations[this.props.selectedOrganization].errorLoadingClusters) {
       return <div className='cluster-dashboard well empty-slate'>
         <div className="cluster-dashboard--overlay">
@@ -33,8 +20,13 @@ var ClusterEmptyState = React.createClass({
         <div className="cluster-dashboard--inner">
         </div>
       </div>;
-    };
+    }
   }
-});
+}
 
-module.exports = ClusterEmptyState;
+ClusterEmptyState.propTypes = {
+  organizations: React.PropTypes.object,
+  selectedOrganization: React.PropTypes.string
+};
+
+export default ClusterEmptyState;

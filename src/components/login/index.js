@@ -11,26 +11,28 @@ import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import { browserHistory } from 'react-router';
 
-var Login = React.createClass({
-  getInitialState: function() {
-    return {
+class Login extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       email: '',
       password: ''
     };
-  },
+  }
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     this.props.dispatch(flashClearAll());
-  },
+  }
 
-  onAuthenticateFailed: function(message) {
+  onAuthenticateFailed = (message) => {
     this.props.dispatch(flashAdd({
       message: message,
       class: 'danger'
     }));
-  },
+  }
 
-  updateEmail(event) {
+  updateEmail = (event) => {
     // Clear flash messages if there are any.
     if (this.props.flashMessages.size > 0) {
       this.props.dispatch(flashClearAll());
@@ -39,9 +41,9 @@ var Login = React.createClass({
     this.setState({
       email: event.target.value
     });
-  },
+  }
 
-  updatePassword(event) {
+  updatePassword = (event) => {
     // Clear flash messages if there are any.
     if (this.props.flashMessages.size > 0) {
       this.props.dispatch(flashClearAll());
@@ -50,9 +52,9 @@ var Login = React.createClass({
     this.setState({
       password: event.target.value
     });
-  },
+  }
 
-  logIn(e) {
+  logIn = (e) => {
     e.preventDefault();
 
     this.props.dispatch(flashClearAll());
@@ -75,7 +77,7 @@ var Login = React.createClass({
       });
 
       this.props.actions.login(this.state.email, this.state.password)
-      .then((x) => {
+      .then(() => {
         this.props.dispatch(flashAdd({
           message: 'Welcome!',
           class: 'success',
@@ -106,10 +108,10 @@ var Login = React.createClass({
 
       });
     }
-  },
+  }
 
   //TODO: turn progressbutton into a component
-  render: function() {
+  render() {
     return (
       <div>
         <div className='login_form--mask'></div>
@@ -155,9 +157,15 @@ var Login = React.createClass({
       </div>
     );
   }
-});
+}
 
-function mapStateToProps(state, ownProps) {
+Login.propTypes = {
+  dispatch: React.PropTypes.func,
+  flashMessages: React.PropTypes.object,
+  actions: React.PropTypes.object
+};
+
+function mapStateToProps(state) {
   return {
     user: state.app.loggedInUser,
     flashMessages: state.flashMessages

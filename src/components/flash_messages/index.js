@@ -13,20 +13,16 @@ import _ from 'underscore';
 import { connect } from 'react-redux';
 import { flashRemove } from '../../actions/flashMessageActions';
 
-var FlashMessages = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.object
-  },
-
-  makeFlashComponent: function(flashMessage) {
+class FlashMessages extends React.Component {
+  makeFlashComponent = (flashMessage) => {
     return <FlashMessage message={flashMessage.message} key={flashMessage.key} class={flashMessage.class} onDismiss={this.dismissFlash.bind(this, flashMessage)}/>;
-  },
+  }
 
-  dismissFlash: function(flashMessage) {
+  dismissFlash = (flashMessage) => {
     this.props.dispatch(flashRemove(flashMessage));
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className='flash-messages--container'>
         <ReactCSSTransitionGroup transitionName='flash-messages--transition' transitionEnterTimeout={200} transitionLeaveTimeout={200}>
@@ -35,9 +31,18 @@ var FlashMessages = React.createClass({
       </div>
     );
   }
-});
+}
 
-function mapStateToProps(state, ownProps) {
+FlashMessages.contextTypes = {
+  router: React.PropTypes.object
+};
+
+FlashMessages.propTypes = {
+  flashMessages: React.PropTypes.object,
+  dispatch: React.PropTypes.func
+};
+
+function mapStateToProps(state) {
   return {
     flashMessages: state.flashMessages
   };

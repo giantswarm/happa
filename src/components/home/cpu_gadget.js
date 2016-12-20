@@ -1,20 +1,18 @@
 'use strict';
 
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import Button from '../button';
 
-module.exports = React.createClass({
-  polarToCartesian: function(centerX, centerY, radius, angleInDegrees) {
+class CPUGadget extends React.Component {
+  polarToCartesian(centerX, centerY, radius, angleInDegrees) {
     var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
 
     return {
       x: centerX + (radius * Math.cos(angleInRadians)),
       y: centerY + (radius * Math.sin(angleInRadians))
     };
-  },
+  }
 
-  describeArc: function(x, y, radius, startAngle, endAngle){
+  describeArc(x, y, radius, startAngle, endAngle){
     var start = this.polarToCartesian(x, y, radius, endAngle);
     var end = this.polarToCartesian(x, y, radius, startAngle);
 
@@ -26,14 +24,14 @@ module.exports = React.createClass({
     ].join(' ');
 
     return d;
-  },
+  }
 
-  shadeColor: function(color, percent) {
+  shadeColor(color, percent) {
     var f = parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
     return '#' + (0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
-  },
+  }
 
-  pieChart: function(percentage) {
+  pieChart(percentage) {
     var cappedPercentage = Math.min(percentage, 0.9999); // glitch starts at exact value of 1
                                                          // 0.9999 produces a full looking donut
     var degrees = cappedPercentage * 360.0;
@@ -46,17 +44,17 @@ module.exports = React.createClass({
         </g>
       </g>
     </svg>;
-  },
+  }
 
-  percentage: function() {
+  percentage() {
     return this.props.cpuUsed.value;
-  },
+  }
 
-  isOutdated: function() {
+  isOutdated() {
     return this.props.cpuUsed.outdated;
-  },
+  }
 
-  classes: function() {
+  classes() {
     var classes = [];
 
     if (this.isOutdated()) {
@@ -64,9 +62,9 @@ module.exports = React.createClass({
     }
 
     return classes.join(' ');
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className={'gadget gadget-donut ' + this.classes()}>
         <div className='gadget--inner'>
@@ -91,4 +89,14 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
+
+CPUGadget.propTypes = {
+  color: React.PropTypes.string,
+  cpuUsed: React.PropTypes.object,
+  cores: React.PropTypes.object,
+  label: React.PropTypes.string,
+  large_label: React.PropTypes.func
+};
+
+export default CPUGadget;

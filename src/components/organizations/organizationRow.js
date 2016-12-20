@@ -25,4 +25,11 @@ class OrganizationRow extends React.Component {
   }
 }
 
+OrganizationRow.propTypes = {
+  onClick: React.PropTypes.func,
+  onDelete: React.PropTypes.func,
+  onSelect: React.PropTypes.func,
+  organization: React.PropTypes.object
+};
+
 export default OrganizationRow;

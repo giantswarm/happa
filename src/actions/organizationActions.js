@@ -74,7 +74,7 @@ export function organizationsLoad() {
                .then(response => {
                  return [organizationName, response.result.clusters] || [organizationName, []];
                })
-               .catch(error => {
+               .catch(() => {
                  return [organizationName, 'error'];
                });
       }));

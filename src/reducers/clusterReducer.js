@@ -84,9 +84,9 @@ var determineIfOutdated = function (clusterDetails) {
 // Takes a timestamp and returns true or false if it is outdated
 
 var isOutdated = function (timestamp) {
-  var timestamp = moment.utc(timestamp);
+  var momentTime = moment.utc(timestamp);
   var now = moment.utc(moment());
-  var diff = now.diff(timestamp, 'seconds');
+  var diff = now.diff(momentTime, 'seconds');
 
   if (diff > 60) {
     return true;
@@ -96,9 +96,12 @@ var isOutdated = function (timestamp) {
 };
 
 export default function clusterReducer(state = {lastUpdated: 0, isFetching: false, items: {}}, action = undefined) {
+  var items;
+  var clusterDetails;
+
   switch(action.type) {
     case types.CLUSTER_LOAD_PARTIAL_DETAILS:
-      var items = Object.assign({}, state.items);
+      items = Object.assign({}, state.items);
 
       items[action.cluster.id] = ensureMetricKeysAreAvailable(action.cluster);
       items[action.cluster.id].nodes = [];
@@ -110,10 +113,8 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
         items: items
       };
 
-      break;
-
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
-      var items = Object.assign({}, state.items);
+      items = Object.assign({}, state.items);
 
       items[action.cluster.id] = Object.assign({}, items[action.cluster.id], action.cluster);
 
@@ -123,10 +124,8 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
         items: items
       };
 
-      break;
-
     case types.CLUSTER_LOAD_DETAILS_ERROR:
-      var items = Object.assign({}, state.items);
+      items = Object.assign({}, state.items);
 
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {errorLoading: true});
 
@@ -136,12 +135,10 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
         items: items
       };
 
-      break;
-
     case types.CLUSTER_LOAD_METRICS:
-      var items = Object.assign({}, state.items);
+      items = Object.assign({}, state.items);
 
-      var clusterDetails = update(items[action.clusterId], {
+      clusterDetails = update(items[action.clusterId], {
         metricsLoading: {$set: true}
       });
 
@@ -173,9 +170,9 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
         }
       }
 
-      var items = Object.assign({}, state.items);
+      items = Object.assign({}, state.items);
 
-      var clusterDetails = update(items[action.clusterId], {
+      clusterDetails = update(items[action.clusterId], {
         errorLoadingMetrics: {$set: false},
         metricsLoading: {$set: false},
         metricsLoadedFirstTime: {$set: true},
@@ -194,10 +191,8 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
         items: items
       };
 
-      break;
-
     case types.CLUSTER_LOAD_METRICS_ERROR:
-      var items = Object.assign({}, state.items);
+      items = Object.assign({}, state.items);
 
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {errorLoadingMetrics: true});
 
@@ -207,10 +202,8 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
         items: items
       };
 
-      break;
-
     case types.CLUSTER_LOAD_KEY_PAIRS:
-      var items = Object.assign({}, state.items);
+      items = Object.assign({}, state.items);
 
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {isFetchingKeyPairs: true});
 
@@ -220,10 +213,8 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
         items: items
       };
 
-      break;
-
     case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
-      var items = Object.assign({}, state.items);
+      items = Object.assign({}, state.items);
 
       // Add expire_date to keyPairs based on ttl_hours
       var keyPairs = action.keyPairs.map((keyPair) => {
@@ -239,10 +230,8 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
         items: items
       };
 
-      break;
-
     case types.CLUSTER_LOAD_KEY_PAIRS_ERROR:
-      var items = Object.assign({}, state.items);
+      items = Object.assign({}, state.items);
 
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {isFetchingKeyPairs: false});
 
@@ -251,8 +240,6 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
         isFetching: false,
         items: items
       };
-
-      break;
 
     default:
       return state;

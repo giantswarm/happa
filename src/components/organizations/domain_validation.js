@@ -3,27 +3,25 @@
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
-import { Link } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
 import Button from '../button';
 import { connect } from 'react-redux';
-import { organizationsLoad, organizationAddMember, organizationRemoveMember } from '../../actions/organizationActions';
-import DomainValidator from '../../lib/domain_validator_client';
-import { formatDate, relativeDate, toTitleCase } from '../../lib/helpers.js';
+import { relativeDate, toTitleCase } from '../../lib/helpers.js';
 import ReactTimeout from 'react-timeout';
+import _ from 'underscore';
 
 const DOMAIN_POLL_INTERVAL = 60000; // 60 Seconds
 
-var DomainValidation = React.createClass({
-  componentDidMount: function() {
+class DomainValidation extends React.Component {
+  componentDidMount() {
     this.loadDomains();
 
     this.props.setInterval(() => {
       this.props.loadDomains();
     }, DOMAIN_POLL_INTERVAL);
-  },
+  }
 
-  loadDomains: function() {
+  loadDomains() {
     this.props.loadDomains()
     .catch((error) => {
       this.props.dispatch(flashAdd({
@@ -35,7 +33,7 @@ var DomainValidation = React.createClass({
       var newState = Object.assign({}, this.state, {loading: false});
       this.setState(newState);
     });
-  },
+  }
 
   getInitialState() {
     return {
@@ -46,7 +44,7 @@ var DomainValidation = React.createClass({
         template: 'addDomain'
       }
     };
-  },
+  }
 
   closeModal() {
     this.setState({
@@ -55,7 +53,7 @@ var DomainValidation = React.createClass({
         loading: false
       }
     });
-  },
+  }
 
   addDomain() {
     this.setState({
@@ -65,7 +63,7 @@ var DomainValidation = React.createClass({
         template: 'addDomain'
       }
     });
-  },
+  }
 
   confirmAddDomain(e) {
     if (e) {
@@ -104,7 +102,7 @@ var DomainValidation = React.createClass({
         }));
       });
     });
-  },
+  }
 
   deleteDomain(domain) {
     this.setState({
@@ -115,7 +113,7 @@ var DomainValidation = React.createClass({
         domain: domain
       }
     });
-  },
+  }
 
   confirmDeleteDomain() {
     var domain = this.state.modal.domain;
@@ -129,7 +127,7 @@ var DomainValidation = React.createClass({
     }, () => {
       this.props.deleteDomain(domain)
       .then(this.props.loadDomains)
-      .then(response => {
+      .then(() => {
         this.setState({
           modal: {
             visible: false
@@ -149,7 +147,7 @@ var DomainValidation = React.createClass({
         }));
       });
     });
-  },
+  }
 
   showDomainDetails(domain) {
     this.setState({
@@ -160,11 +158,11 @@ var DomainValidation = React.createClass({
         domain: domain
       }
     });
-  },
+  }
 
   validationTokenClick() {
     this.refs.validationTokenInput.select();
-  },
+  }
 
   render() {
     return (
@@ -393,6 +391,15 @@ var DomainValidation = React.createClass({
       </div>
     );
   }
-});
+}
+
+DomainValidation.propTypes = {
+  setInterval: React.PropTypes.func,
+  loadDomains: React.PropTypes.func,
+  dispatch: React.PropTypes.func,
+  addDomain: React.PropTypes.func,
+  deleteDomain: React.PropTypes.func,
+  organization: React.PropTypes.object
+};
 
 export default connect()(ReactTimeout(DomainValidation));

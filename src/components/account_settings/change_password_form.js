@@ -6,20 +6,21 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import PasswordField from '../signup/password_field';
 
-var ChangePassword = React.createClass({
-  getInitialState: function() {
-    return ({
+class ChangePassword extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state ={
       formValid: false
-    });
-  },
+    };
+  }
 
-  currentPasswordValid: function() {
+  currentPasswordValid = () => {
     return this.refs.current_password.value();
-  },
+  }
 
-  newPasswordValid: function() {
+  newPasswordValid = () => {
     var password = this.refs.new_password.value();
-    var passwordConfirmation = this.refs.new_password_confirmation.value();
     var valid = false;
     var statusMessage;
 
@@ -42,9 +43,9 @@ var ChangePassword = React.createClass({
     });
 
     return valid;
-  },
+  }
 
-  newPasswordConfirmationValid: function() {
+  newPasswordConfirmationValid = () => {
     var password = this.refs.new_password.value();
     var passwordConfirmation = this.refs.new_password_confirmation.value();
 
@@ -59,13 +60,13 @@ var ChangePassword = React.createClass({
     }
 
     return this.refs.new_password.value() && (this.refs.new_password.value() === this.refs.new_password_confirmation.value());
-  },
+  }
 
-  passwordEditingStarted: function() {
+  passwordEditingStarted() {
     // NOOP
-  },
+  }
 
-  validate: function() {
+  validate = () => {
     if (this.refs.current_password.value()) {
       this.setState({
         buttonVisible: true,
@@ -95,9 +96,9 @@ var ChangePassword = React.createClass({
         error: false
       });
     }
-  },
+  }
 
-  submit: function(e) {
+  submit = (e) => {
     e.preventDefault();
 
     this.setState({
@@ -144,9 +145,9 @@ var ChangePassword = React.createClass({
         errorMessage: errorMessage
       });
     });
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className='row section'>
         <div className='col-3'>
@@ -244,6 +245,11 @@ var ChangePassword = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = ChangePassword;
+ChangePassword.propTypes = {
+  user: React.PropTypes.object,
+  actions: React.PropTypes.object
+};
+
+export default ChangePassword;

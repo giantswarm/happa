@@ -23,7 +23,6 @@ import BsButton from 'react-bootstrap/lib/Button';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Button extends React.Component {
-
   render() {
     return (
       <div className='progress_button--container'>
@@ -49,7 +48,15 @@ class Button extends React.Component {
       </div>
     );
   }
-
 }
+
+Button.propTypes = {
+  type: React.PropTypes.string,
+  bsStyle: React.PropTypes.string,
+  onClick: React.PropTypes.func,
+  disabled: React.PropTypes.bool,
+  loading: React.PropTypes.bool,
+  children: React.PropTypes.node
+};
 
 export default Button;

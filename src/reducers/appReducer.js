@@ -63,6 +63,9 @@ export default function appReducer(state = {
     firstLoadComplete: false,
     loggedInUser: JSON.parse(localStorage.getItem('user'))
   }, action = undefined) {
+
+  var selectedCluster;
+
   switch(action.type) {
     case types.REFRESH_USER_INFO_SUCCESS:
       localStorage.setItem('user', JSON.stringify(action.userData));
@@ -100,7 +103,7 @@ export default function appReducer(state = {
 
       // We're changing to a different organization
       // Make sure we have a reasonable value for selectedCluster.
-      var selectedCluster = determineSelectedCluster(action.orgId, action.organizations);
+      selectedCluster = determineSelectedCluster(action.orgId, action.organizations);
 
       return Object.assign({}, state, {
         selectedOrganization: action.orgId,
@@ -124,7 +127,7 @@ export default function appReducer(state = {
         firstTime = false;
 
         var selectedOrganization = determineSelectedOrganization(action.organizations);
-        var selectedCluster = determineSelectedCluster(selectedOrganization, action.organizations);
+        selectedCluster = determineSelectedCluster(selectedOrganization, action.organizations);
 
         return Object.assign({}, state, {
           selectedOrganization: selectedOrganization,
@@ -134,8 +137,6 @@ export default function appReducer(state = {
       } else {
         return state;
       }
-
-      break;
 
     default:
       return state;

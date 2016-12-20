@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-module.exports = React.createClass({
-  statusMessage: function(key) {
+class StatusMessage extends React.Component {
+  statusMessage() {
     return {
       'verify_started': <span>Verifying invite...</span>,
       'verify_completed': <span>Verifying invite... <span className='success'>VALID!</span></span>,
@@ -25,13 +25,13 @@ module.exports = React.createClass({
       'tos_not_accepted': <span>Waiting for you to check that mark... again</span>,
       'all_good': <span>Ready to create your account!</span>
     };
-  },
+  }
 
-  showLoader: function() {
+  showLoader() {
     return false;
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className='signup--status'>
         <div className='signup--status-text'>
@@ -41,4 +41,10 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
+
+StatusMessage.propTypes = {
+  status: React.PropTypes.string
+};
+
+export default StatusMessage;

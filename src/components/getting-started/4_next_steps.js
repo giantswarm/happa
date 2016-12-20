@@ -1,11 +1,8 @@
 'use strict';
 import React from 'react';
 import Slide from '../component_slider/slide';
-import Markdown from './markdown';
-import { CodeBlock, Prompt, Output } from './codeblock';
-import FileBlock from './fileblock';
 
-module.exports = React.createClass ({
+class NextSteps extends React.Component {
     render() {
       return (
         <Slide>
@@ -25,4 +22,10 @@ module.exports = React.createClass ({
         </Slide>
       );
     }
-});
+}
+
+NextSteps.propTypes = {
+  goToSlide: React.PropTypes.func
+};
+
+export default NextSteps;

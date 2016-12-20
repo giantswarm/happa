@@ -7,21 +7,17 @@
 'use strict';
 
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import _ from 'underscore';
 
-module.exports = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.object
-  },
+class FlashMessage extends React.Component {
+  constructor(props) {
+    super(props);
 
-  getInitialState: function() {
-    return {
+    this.state = {
       visible: true
     };
-  },
+  }
 
-  dismissFlash: function() {
+  dismissFlash = () => {
     if (this.props.onDismiss) {
       this.props.onDismiss();
     } else {
@@ -29,9 +25,9 @@ module.exports = React.createClass({
         visible: false
       });
     }
-  },
+  }
 
-  render: function() {
+  render() {
     if (this.state.visible) {
       return (
         <div className={'flash-messages--flash-message' + ' flash-messages--' + this.props.class}>
@@ -43,5 +39,17 @@ module.exports = React.createClass({
       return null;
     }
   }
-});
+}
 
+FlashMessage.contextTypes = {
+  router: React.PropTypes.object
+};
+
+FlashMessage.propTypes = {
+  onDismiss: React.PropTypes.func,
+  class: React.PropTypes.string,
+  message: React.PropTypes.any,
+  children: React.PropTypes.node
+};
+
+export default FlashMessage;

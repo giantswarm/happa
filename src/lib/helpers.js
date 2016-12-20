@@ -3,6 +3,7 @@ import validate from 'validate.js';
 import moment from 'moment';
 import React from 'react';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
+import _ from 'underscore';
 
 export function dedent(strings, ...values) {
   let raw;
@@ -52,7 +53,7 @@ export function dedent(strings, ...values) {
 
   // handle escaped newlines at the end to ensure they don't get stripped too
   return result.replace(/\\n/g, '\n');
-};
+}
 
 export function humanFileSize(bytes, si=true, decimals=1) {
     // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
@@ -80,7 +81,7 @@ export function humanFileSize(bytes, si=true, decimals=1) {
       value: bytes.toFixed(decimals),
       unit: units[u]
     };
-};
+}
 
 // validateOrRaise
 // ----------------
@@ -98,12 +99,12 @@ export function validateOrRaise(validatable, constraints) {
     });
     throw(new TypeError(messages.join('\n')));
   }
-};
+}
 
 export function formatDate(ISO8601DateString) {
   // http://momentjs.com/docs/#/displaying/
   return moment(ISO8601DateString).utc().format('D MMM YYYY, HH:mm z');
-};
+}
 
 export function relativeDate(ISO8601DateString) {
   var formatedDate = formatDate(ISO8601DateString);
@@ -114,12 +115,12 @@ export function relativeDate(ISO8601DateString) {
   }>
     <span>{relativeDate}</span>
   </OverlayTrigger>;
-};
+}
 
 export function toTitleCase(str) {
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
   return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-};
+}
 
 export function  truncate(string, maxLength=20) {
   if (string.length > maxLength) {

@@ -1,45 +1,43 @@
 'use strict';
 
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactTimeout from 'react-timeout';
 import {connect} from 'react-redux';
 import ClusterDashboard from './cluster_dashboard';
 import ClusterEmptyState from './cluster_empty_state';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import { flashAdd } from '../../actions/flashMessageActions';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 
 const DESMOTES_POLL_INTERVAL = 60000; // 60 Seconds
 
-var Home = React.createClass({
-  componentDidMount: function() {
+class Home extends React.Component {
+  componentDidMount() {
     this.updateMetrics(this.props.clusters);
 
     this.props.setInterval(() => {
       this.updateMetrics(this.props.clusters);
     }, DESMOTES_POLL_INTERVAL);
-  },
+  }
 
-  clustersSortedById: function(clusters) {
+  clustersSortedById(clusters) {
     return _.sortBy(clusters, 'id');
-  },
+  }
 
-  clusterIds: function(clusters) {
+  clusterIds(clusters) {
     return this.clustersSortedById(clusters).map((cluster) => cluster.id);
-  },
+  }
 
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     var clustersAreTheSame = _.isEqual(this.clusterIds(nextProps.clusters), this.clusterIds(this.props.clusters));
 
     if (! clustersAreTheSame) {
       this.updateMetrics(nextProps.clusters);
     }
-  },
+  }
 
-  updateMetrics: function(clusters) {
+  updateMetrics(clusters) {
     return Promise.all(
       _.flatten(clusters.map((cluster) => {
         return [
@@ -48,9 +46,9 @@ var Home = React.createClass({
         ];
       }))
     );
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <DocumentTitle title={'Cluster Overview | ' + this.props.selectedOrganization + ' | Giant Swarm'}>
         <div>
@@ -85,10 +83,17 @@ var Home = React.createClass({
       </DocumentTitle>
     );
   }
-});
+}
 
+Home.propTypes = {
+  clusters: React.PropTypes.array,
+  setInterval: React.PropTypes.func,
+  actions: React.PropTypes.object,
+  selectedOrganization: React.PropTypes.string,
+  organizations: React.PropTypes.object
+};
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   var selectedOrganization = state.app.selectedOrganization;
   var organizations = state.entities.organizations.items;
   var clusterIds = organizations[selectedOrganization].clusters;
@@ -110,4 +115,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(ReactTimeout(Home));
+export default connect(mapStateToProps, mapDispatchToProps)(ReactTimeout(Home));

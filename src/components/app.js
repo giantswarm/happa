@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import { applyRouterMiddleware, Router, Route, IndexRoute, NotFoundRoute, browserHistory, IndexRedirect } from 'react-router';
+import { applyRouterMiddleware, Router, Route, IndexRoute, browserHistory, IndexRedirect } from 'react-router';
 import { useScroll } from 'react-router-scroll';
 import { render } from 'react-dom';
 import Layout from './layout';
@@ -18,7 +18,6 @@ import configureStore from '../stores/configureStore';
 import organizationDetail from './organizations/detail';
 import clusterDetail from './organizations/cluster_detail';
 import accountSettings from './account_settings';
-import wip from './wip';
 import Home from './home';
 
 require('normalize.css');
@@ -40,7 +39,7 @@ function requireAuth(nextState, replace) {
   }
 }
 
-browserHistory.listen(location => {window.Intercom('update');});
+browserHistory.listen(() => {window.Intercom('update');});
 
 render(
   <Provider store={store}>

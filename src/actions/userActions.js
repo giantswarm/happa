@@ -62,7 +62,7 @@ export function refreshUserInfo() {
 
 
 export function login(email, password) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     var giantSwarm = new GiantSwarm.Client();
     dispatch({
       type: types.LOGIN,

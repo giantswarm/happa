@@ -85,11 +85,11 @@ class ExpiryHoursPicker extends React.Component {
 
     if (this.state.selectionType === 'date') {
       // expireDate is at the start of the day of whatever the user picked.
-      var expireDate = this.state.expireDate.utc().startOf('day').clone();
+      expireDate = this.state.expireDate.utc().startOf('day').clone();
 
     } else if (this.state.selectionType === 'relative') {
       // Calculate hours based on years, months, days, hours chosen
-      var expireDate = moment().utc().add(this.state.yearsValue, 'years');
+      expireDate = moment().utc().add(this.state.yearsValue, 'years');
       expireDate.add(this.state.monthsValue, 'months');
       expireDate.add(this.state.daysValue, 'days');
       expireDate.add(this.state.hoursValue, 'hours');
@@ -161,5 +161,9 @@ class ExpiryHoursPicker extends React.Component {
     );
   }
 }
+
+ExpiryHoursPicker.propTypes = {
+  onChange: React.PropTypes.func
+};
 
 export default ExpiryHoursPicker;

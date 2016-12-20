@@ -4,22 +4,6 @@ import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import Desmotes from '../lib/desmotes_client';
 
-// clusterLoadDetailsForOrganization
-// =============================================================
-// Takes an organization name and loads details for all clusters
-// associated with that organization.
-
-export function clusterLoadDetailsForOrganizationSuccess() {
-}
-
-export function clusterLoadDetailsForOrganizationError() {
-}
-
-export function clusterLoadDetailsForOrganization(organizationId) {
-  return function(dispatch, getState) {
-  };
-}
-
 // clusterSelect
 // =============================================================
 // Sets which cluster is in "focus". For pages that reference a
@@ -30,7 +14,7 @@ export function clusterLoadDetailsForOrganization(organizationId) {
 //
 
 export function clusterSelect(clusterId) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     return dispatch({
       type: types.CLUSTER_SELECT,
       clusterId
@@ -138,7 +122,7 @@ export function clusterLoadKeyPairs(clusterId) {
         keyPairs: response.result
       });
     })
-    .catch((error) => {
+    .catch(() => {
       dispatch({
         type: types.CLUSTER_LOAD_KEY_PAIRS_ERROR,
         clusterId

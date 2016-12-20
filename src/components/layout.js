@@ -14,22 +14,22 @@ import Breadcrumbs from 'react-breadcrumbs';
 import Gravatar from 'react-gravatar';
 import DocumentTitle from 'react-document-title';
 
-var Layout = React.createClass ({
+class Layout extends React.Component {
   componentDidMount() {
     this.props.actions.refreshUserInfo().then(() => {
       this.props.dispatch(organizationsLoad());
       return null;
     })
-    .catch((error) => {
+    .catch(() => {
       this.props.actions.loginError();
     });
-  },
+  }
 
-  selectOrganization: function(orgId) {
+  selectOrganization = (orgId) => {
     this.props.dispatch(organizationSelect(orgId));
-  },
+  }
 
-  render: function() {
+  render() {
     if (! this.props.firstLoadComplete) {
       return (
         <DocumentTitle title='Loading | Giant Swarm '>
@@ -112,9 +112,21 @@ var Layout = React.createClass ({
       );
     }
   }
-});
+}
 
-function mapStateToProps(state, ownProps) {
+Layout.propTypes = {
+  children: React.PropTypes.object,
+  routes: React.PropTypes.array,
+  params: React.PropTypes.object,
+  user: React.PropTypes.object,
+  organizations: React.PropTypes.object,
+  selectedOrganization: React.PropTypes.string,
+  firstLoadComplete: React.PropTypes.bool,
+  dispatch: React.PropTypes.func,
+  actions: React.PropTypes.object
+};
+
+function mapStateToProps(state) {
   return {
     organizations: state.entities.organizations,
     user: state.app.loggedInUser,

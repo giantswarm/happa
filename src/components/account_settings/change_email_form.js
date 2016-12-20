@@ -1,13 +1,14 @@
 import React from 'react';
-import Gravatar from 'react-gravatar';
 import Button from '../button';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import update from 'react-addons-update';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-var changeEmailForm = React.createClass({
-  getInitialState: function(props) {
-    return {
+class ChangeEmailForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       changeEmailFormValid: false,
       changeEmailFormSubmitting: false,
       changeEmailSuccess: false,
@@ -18,15 +19,15 @@ var changeEmailForm = React.createClass({
         }
       }
     };
-  },
+  }
 
-  resetForm: function() {
+  resetForm() {
     this.setState({
 
     });
-  },
+  }
 
-  validateEmail: function(e) {
+  validateEmail = (e) => {
     var email = e.target.value;
     var buttonVisible;
 
@@ -58,12 +59,12 @@ var changeEmailForm = React.createClass({
         changeEmailFormValid: {$set: false},
         changeEmailFormError: {$set: false},
       });
-    };
+    }
 
     this.setState(newState);
-  },
+  }
 
-  submit: function(e) {
+  submit = (e) => {
     e.preventDefault();
 
     // Don't submit the form if nothing changed.
@@ -80,7 +81,7 @@ var changeEmailForm = React.createClass({
         old_email: this.props.user.email,
         new_email: this.state.fields.email.value
       })
-      .then((response) => {
+      .then(() => {
         this.setState({
           changeEmailFormSubmitting: false,
           changeEmailSuccess: true,
@@ -112,9 +113,9 @@ var changeEmailForm = React.createClass({
         });
       });
     }
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div>
         <form className="change_email_form" onSubmit={this.submit}>
@@ -175,6 +176,11 @@ var changeEmailForm = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = changeEmailForm;
+ChangeEmailForm.propTypes = {
+  user: React.PropTypes.object,
+  actions: React.PropTypes.object
+};
+
+export default ChangeEmailForm;
