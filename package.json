@@ -14,6 +14,7 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
+    "airbrake-js": "0.5.9",
     "codemirror": "~5.17.0",
     "copy-to-clipboard": "~3.0.5",
     "marked": "~0.3.5",

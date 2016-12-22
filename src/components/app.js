@@ -19,10 +19,18 @@ import organizationDetail from './organizations/detail';
 import clusterDetail from './organizations/cluster_detail';
 import accountSettings from './account_settings';
 import Home from './home';
+import AirbrakeClient from 'airbrake-js';
 
 require('normalize.css');
 require('../styles/app.scss');
 require('react-datepicker/dist/react-datepicker.css');
+
+new AirbrakeClient({
+  projectId: 'b623d794488458d023f2fcbea93954ca',
+  projectKey: 'b623d794488458d023f2fcbea93954ca',
+  reporter: 'xhr',
+  host: 'https://exceptions.giantswarm.io'
+});
 
 var appContainer = document.getElementById('app');
 
