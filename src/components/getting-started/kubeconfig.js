@@ -11,4 +11,9 @@ class KubeConfig extends React.Component {
   }
 }
 
-module.exports = KubeConfig;
+KubeConfig.propTypes = {
+  cluster: React.PropTypes.object,
+  keyPair: React.PropTypes.object,
+}
+
+export default KubeConfig;

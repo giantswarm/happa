@@ -1,23 +1,22 @@
 'use strict';
 import React from 'react';
 import Slide from '../component_slider/slide';
-import Markdown from './markdown';
 import { CodeBlock, Prompt, Output } from './codeblock';
-import FileBlock from './fileblock';
 import {connect} from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
-import _ from 'underscore';
 
-var SimpleExample = React.createClass ({
-    getInitialState: function() {
-      return {
+class SimpleExample extends React.Component {
+    constructor(props) {
+      super(props);
+
+      this.state = {
         loading: true
       };
-    },
+    }
 
-    componentDidMount: function() {
+    componentDidMount() {
       if (!this.props.cluster) {
         this.props.dispatch(flashAdd({
           message: <span><b>This organization has no clusters</b><br/>This page might not work as expected.</span>,
@@ -34,12 +33,12 @@ var SimpleExample = React.createClass ({
         });
 
         this.props.actions.clusterLoadDetails(this.props.cluster.id)
-        .then((cluster) => {
+        .then(() => {
           this.setState({
             loading: false
           });
         })
-        .catch((error) => {
+        .catch(() => {
           this.props.dispatch(flashAdd({
             message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
             class: 'danger',
@@ -51,9 +50,9 @@ var SimpleExample = React.createClass ({
           });
         });
       }
-    },
+    }
 
-    linkToHelloWorld: function() {
+    linkToHelloWorld() {
       if (this.state.loading === 'failed') {
         return 'Could not figure out the url for your hello world app. Sorry.';
       } else if (this.state.loading) {
@@ -64,7 +63,7 @@ var SimpleExample = React.createClass ({
           <a href={url} target='_blank'>{url}</a>
         );
       }
-    },
+    }
 
     render() {
       return (
@@ -203,10 +202,16 @@ var SimpleExample = React.createClass ({
         </Slide>
       );
     }
-});
+}
 
-function mapStateToProps(state, ownProps) {
-  var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
+SimpleExample.propTypes = {
+  cluster: React.PropTypes.object,
+  dispatch: React.PropTypes.func,
+  actions: React.PropTypes.object,
+  goToSlide: React.PropTypes.func
+};
+
+function mapStateToProps(state) {
   var selectedCluster = state.entities.clusters.items[state.app.selectedCluster];
 
   return {

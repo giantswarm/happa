@@ -9,8 +9,8 @@
 
 import React from 'react';
 
-module.exports = React.createClass ({
-  render: function() {
+class Line extends React.Component {
+  render() {
     return (
       <div className={this.props.prompt ? 'codeblock--line codeblock--prompt' : 'codeblock--line'}>
         <span className='codeblock--prompt-indicator'>{this.props.prompt ? '$ ' : null}</span>
@@ -18,4 +18,11 @@ module.exports = React.createClass ({
       </div>
     );
   }
-});
+}
+
+Line.propTypes = {
+  prompt: React.PropTypes.bool,
+  text: React.PropTypes.string
+};
+
+export default Line;

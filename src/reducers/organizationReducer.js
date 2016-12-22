@@ -1,7 +1,6 @@
 'use strict';
 
 import * as types from '../actions/actionTypes';
-import update from 'react-addons-update';
 
 export default function organizationReducer(state = {lastUpdated: 0, isFetching: false, items: {}}, action = undefined) {
   switch(action.type) {

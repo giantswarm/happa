@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import { Link } from 'react-router';
 import {connect} from 'react-redux';
 import * as UserActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
@@ -9,8 +8,8 @@ import ChangeEmailForm from './change_email_form';
 import ChangePasswordForm from './change_password_form';
 import DocumentTitle from 'react-document-title';
 
-var AccountSettings = React.createClass({
-  render: function() {
+class AccountSettings extends React.Component {
+  render() {
     return (
       <DocumentTitle title='Account Settings | Giant Swarm'>
         <div>
@@ -123,9 +122,14 @@ var AccountSettings = React.createClass({
       </DocumentTitle>
     );
   }
-});
+}
 
-function mapStateToProps(state, ownProps) {
+AccountSettings.propTypes = {
+  user: React.PropTypes.object,
+  actions: React.PropTypes.object
+};
+
+function mapStateToProps(state) {
   return {
     user: state.app.loggedInUser
   };

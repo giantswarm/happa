@@ -35,7 +35,6 @@ outer:
   for (var key in mapping) {
      if (mapping.hasOwnProperty(key)) {
         var eligibleMatches = mapping[key];
-        var resultingPlatform = key;
 
         for (var find of eligibleMatches) {
 

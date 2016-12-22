@@ -22,48 +22,49 @@
 
 import React from 'react';
 import copy from 'copy-to-clipboard';
-import _ from 'underscore';
 import Line from './line';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import * as Helpers from '../../lib/helpers';
 
-var Prompt = React.createClass ({
-  render: function() {
+export class Prompt extends React.Component {
+  render() {
     return <Line prompt={true} text={Helpers.dedent(this.props.children)}/>;
   }
-});
+}
 
-var Output = React.createClass ({
-  render: function() {
+export class Output extends React.Component {
+  render() {
     return <Line prompt={false} text={Helpers.dedent(this.props.children)}/>;
   }
-});
+}
 
-var CodeBlock = React.createClass ({
-  getInitialState: function() {
-    return {
+export class CodeBlock extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       hovering: false
     };
-  },
+  }
 
-  promptLinesAsString: function() {
+  promptLinesAsString() {
     var string = React.Children.toArray(this.props.children)
                                .filter(function(x){ return (x.type === Prompt); })
                                .map(function(x){ return x.props.children; })
                                .join('\n');
 
     return Helpers.dedent(string);
-  },
+  }
 
-  copyCodeToClipboard: function(e) {
+  copyCodeToClipboard(e) {
     e.preventDefault();
 
     copy(this.promptLinesAsString());
 
     this.setState({clicked: false});
-  },
+  }
 
-  classNames: function() {
+  classNames() {
     var classNames = [];
 
     // this.props.children is either an array or in the case of 1 child
@@ -80,7 +81,7 @@ var CodeBlock = React.createClass ({
     if (childrenArray.length === 1) {classNames.push('oneline');}
 
     return classNames.join(' ');
-  },
+  }
 
   render() {
     return(
@@ -93,7 +94,7 @@ var CodeBlock = React.createClass ({
             <a href='#'
                onMouseOver={function() {this.setState({hovering: true});}.bind(this)}
                onMouseOut={function() {this.setState({hovering: false});}.bind(this)}
-               onClick={this.copyCodeToClipboard}
+               onClick={this.copyCodeToClipboard.bind(this)}
                onMouseUp={function() {this.setState({clicked: true});}.bind(this)}
             >
               <i className='fa fa-clipboard' aria-hidden='true'></i>
@@ -108,10 +109,16 @@ var CodeBlock = React.createClass ({
       </div>
     );
   }
-});
+}
 
-module.exports = {
-  CodeBlock: CodeBlock,
-  Prompt: Prompt,
-  Output: Output
+Prompt.propTypes = {
+  children: React.PropTypes.node
+};
+
+Output.propTypes = {
+  children: React.PropTypes.node
+};
+
+CodeBlock.propTypes = {
+  children: React.PropTypes.node
 };

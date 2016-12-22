@@ -1,11 +1,10 @@
 'use strict';
 
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Link } from 'react-router';
 
-module.exports = React.createClass({
-  render: function() {
+class NotFound extends React.Component {
+  render() {
     return (
       <div>
         <h1>Whoops &ndash; Page not found :(</h1>
@@ -21,4 +20,6 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
+
+export default NotFound;

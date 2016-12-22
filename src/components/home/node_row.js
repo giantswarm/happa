@@ -1,19 +1,16 @@
 'use strict';
 
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import BarChart from './bar_chart';
 import {humanFileSize, truncate} from '../../lib/helpers';
 
-var NodeRow = React.createClass({
-
-
-  labelifyBytes: function(bytes) {
+class NodeRow extends React.Component {
+  labelifyBytes(bytes) {
     var quantity = humanFileSize(bytes);
     return quantity.value + ' ' + quantity.unit;
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <tr>
         <td className="node-table--node-id">
@@ -99,6 +96,12 @@ var NodeRow = React.createClass({
       </tr>
     );
   }
-});
+}
 
-module.exports = NodeRow;
+NodeRow.propTypes = {
+  nodeId: React.PropTypes.string,
+  animate: React.PropTypes.bool,
+  node: React.PropTypes.object
+};
+
+export default NodeRow;

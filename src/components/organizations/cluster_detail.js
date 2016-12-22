@@ -36,6 +36,11 @@ class ClusterDetail extends React.Component {
   }
 }
 
+ClusterDetail.propTypes = {
+  cluster: React.PropTypes.object,
+  clusters: React.PropTypes.object
+};
+
 function mapStateToProps(state, ownProps) {
   var cluster = state.entities.clusters.items[ownProps.params.clusterId];
 

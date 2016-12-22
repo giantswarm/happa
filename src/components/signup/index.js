@@ -7,15 +7,17 @@ import StatusMessage from './status_message';
 import TermsOfService from './terms_of_service';
 import { browserHistory } from 'react-router';
 import * as userActions from '../../actions/userActions';
-import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
+import { flashAdd } from '../../actions/flashMessageActions';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 
 var passage = new Passage({endpoint: window.config.passageEndpoint});
 
-var SignUp = React.createClass({
-  getInitialState: function() {
-    return {
+class SignUp extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       statusMessage: 'verify_started',
       checkInviteStatus: 'started',
       email: undefined,
@@ -29,13 +31,26 @@ var SignUp = React.createClass({
       currentStep: 0,
       advancable: false
     };
-  },
+  }
 
   resetForm() {
-    this.setState(getInitialState);
-  },
+    this.setState({
+      statusMessage: 'verify_started',
+      checkInviteStatus: 'started',
+      email: undefined,
+      passwordField: {value: '', valid: false},
+      passwordConfirmationField: {value: '', valid: false},
+      termsOfServiceField: {value: false, valid: false},
+      formValid: undefined,
+      submitting: false,
+      buttonText: ['', 'Next', 'Next', 'Create your account now'],
+      formSteps: ['', 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
+      currentStep: 0,
+      advancable: false
+    });
+  }
 
-  componentDidMount: function(){
+  componentDidMount(){
     var contactId = this.props.params.contactId;
     var token = this.props.params.token;
 
@@ -72,14 +87,14 @@ var SignUp = React.createClass({
     });
 
     // actions.checkInvite(this.props.params.contactId, this.props.params.token);
-  },
+  }
 
-  componentWillReceiveProps: function(props) {
+  componentWillReceiveProps() {
     this.resetForm();
     this.componentDidMount();
-  },
+  }
 
-  advanceForm: function() {
+  advanceForm() {
     var nextStep = this.state.currentStep + 1;
 
     this.setState({
@@ -97,9 +112,9 @@ var SignUp = React.createClass({
 
       this.refs.passwordConfirmation.blur();
     }
-  },
+  }
 
-  accountCreated: function() {
+  accountCreated() {
     // Delay a bit so the user sees the DONE message
     // and then transition to the getting started guide
     //
@@ -111,15 +126,12 @@ var SignUp = React.createClass({
     setTimeout(() => {
       browserHistory.push('/');
     }, 1000);
-  },
+  }
 
-  handleSubmit: function(e){
+  handleSubmit(e){
     e.preventDefault();
 
     if(this.state.formValid) {
-      var contactId = this.props.params.contactId;
-      var token = this.props.params.token;
-
       this.setState({
         statusMessage: 'create_account_starting',
         submitting: true,
@@ -145,7 +157,7 @@ var SignUp = React.createClass({
 
         this.accountCreated();
       })
-      .catch((error) => {
+      .catch(() => {
         this.setState({
           statusMessage: 'create_account_failed',
           submitting: false
@@ -154,13 +166,11 @@ var SignUp = React.createClass({
     } else {
       this.advanceForm();
     }
-  },
+  }
 
-  tosChanged: function(e) {
+  tosChanged(e) {
     var checked = e.target.checked;
 
-    var formValid = false;
-    var advancable = false;
     var statusMessage = this.state.statusMessage;
 
     this.setState({
@@ -194,9 +204,9 @@ var SignUp = React.createClass({
     }, () => {
       this.validateForm();
     });
-  },
+  }
 
-  passwordEditingStarted: function(password) {
+  passwordEditingStarted(password) {
     this.setState({
       formValid: false,
       advancable: false,
@@ -205,9 +215,9 @@ var SignUp = React.createClass({
         valid: false
       }
     });
-  },
+  }
 
-  passwordEditingCompleted: function(password) {
+  passwordEditingCompleted(password) {
     var statusMessage = this.state.statusMessage;
     var valid = false;
 
@@ -235,9 +245,9 @@ var SignUp = React.createClass({
     });
 
     this.validateForm();
-  },
+  }
 
-  passwordConfirmationEditingStarted: function(confirmation) {
+  passwordConfirmationEditingStarted(confirmation) {
     this.setState({
       formValid: false,
       advancable: false,
@@ -268,9 +278,9 @@ var SignUp = React.createClass({
         }
       }
     }
-  },
+  }
 
-  passwordConfirmationEditingCompleted: function(passwordConfirmation) {
+  passwordConfirmationEditingCompleted(passwordConfirmation) {
     var statusMessage = this.state.statusMessage;
     var valid = this.state.passwordConfirmationField.valid;
 
@@ -302,9 +312,9 @@ var SignUp = React.createClass({
 
       this.validateForm();
     }
-  },
+  }
 
-  validateForm: function() {
+  validateForm() {
     var advancable = false;
     var formValid = false;
     var statusMessage = this.state.statusMessage;
@@ -331,9 +341,9 @@ var SignUp = React.createClass({
       formValid: formValid,
       statusMessage: statusMessage
     });
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className='signup--container col-6'>
         <h1>Create Your Giant Swarm Account</h1>
@@ -383,11 +393,13 @@ var SignUp = React.createClass({
       </div>
     );
   }
-});
-
-function mapStateToProps(state, ownProps) {
-
 }
+
+SignUp.propTypes = {
+  params: React.PropTypes.object,
+  dispatch: React.PropTypes.func,
+  actions: React.PropTypes.object
+};
 
 function mapDispatchToProps(dispatch) {
   return {

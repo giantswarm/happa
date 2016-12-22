@@ -1,38 +1,30 @@
 'use strict';
 import React from 'react';
 import Slide from '../component_slider/slide';
-import Markdown from './markdown';
-import { CodeBlock, Prompt, Output } from './codeblock';
-import FileBlock from './fileblock';
+import { CodeBlock, Prompt } from './codeblock';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import {connect} from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
-import { browserHistory } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
-import Button from '../button';
-import GiantSwarm from '../../lib/giantswarm_client_wrapper';
-import KubeConfig from './kubeconfig';
 import platform from '../../lib/platform';
 import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
-
 import request from 'superagent-bluebird-promise';
 
-var Modernizr = window.Modernizr;
+class ConfigKubeCtl extends React.Component {
+  constructor(props) {
+    super(props);
 
-var ConfigKubeCtl = React.createClass ({
-
-  getInitialState: function() {
-    return {
+    this.state = {
       loading: true,
       selectedPlatform: platform,
       alternativeOpen: false,
       gsctlVersion: '0.2.0'
     };
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     request.get('https://downloads.giantswarm.io/gsctl/VERSION')
     .then((response) => {
       if (response.text) {
@@ -59,12 +51,12 @@ var ConfigKubeCtl = React.createClass ({
       });
 
       this.props.actions.clusterLoadDetails(this.props.cluster.id)
-      .then((cluster) => {
+      .then(() => {
         this.setState({
           loading: false
         });
       })
-      .catch((error) => {
+      .catch(() => {
         this.props.dispatch(flashAdd({
           message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
           class: 'danger',
@@ -76,23 +68,23 @@ var ConfigKubeCtl = React.createClass ({
         });
       });
     }
-  },
+  }
 
-  selectCluster: function(clusterId) {
+  selectCluster(clusterId) {
     this.props.actions.clusterSelect(clusterId);
-  },
+  }
 
-  selectPlatform: function(platform) {
+  selectPlatform(platform) {
     this.setState({
       selectedPlatform: platform
     });
-  },
+  }
 
-  clusterId: function() {
+  clusterId() {
     return this.props.cluster ? this.props.cluster.id : 'sample-cluster-id';
-  },
+  }
 
-  selectedInstallInstructions: function() {
+  selectedInstallInstructions() {
     switch(this.state.selectedPlatform) {
       case 'Windows':
         return <div>
@@ -141,17 +133,17 @@ var ConfigKubeCtl = React.createClass ({
         <p>Shouldn't be here</p>;
 
     }
-  },
+  }
 
-  isSelectedPlatform: function(platform) {
+  isSelectedPlatform(platform) {
     return (this.state.selectedPlatform === platform);
-  },
+  }
 
-  toggleAlternative: function() {
+  toggleAlternative = () => {
     this.setState({
       alternativeOpen: ! this.state.alternativeOpen
     });
-  },
+  }
 
   render() {
     return (
@@ -271,10 +263,18 @@ var ConfigKubeCtl = React.createClass ({
       </Slide>
     );
   }
-});
+}
 
-function mapStateToProps(state, ownProps) {
-  var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
+ConfigKubeCtl.propTypes = {
+  cluster: React.PropTypes.object,
+  dispatch: React.PropTypes.func,
+  actions: React.PropTypes.object,
+  allClusters: React.PropTypes.array,
+  user: React.PropTypes.object,
+  goToSlide: React.PropTypes.func
+};
+
+function mapStateToProps(state) {
   var selectedCluster = state.entities.clusters.items[state.app.selectedCluster];
 
   return {
@@ -291,4 +291,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(ConfigKubeCtl);
+export default connect(mapStateToProps, mapDispatchToProps)(ConfigKubeCtl);

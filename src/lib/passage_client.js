@@ -1,7 +1,6 @@
 'use strict';
 
 var request = require('superagent-bluebird-promise');
-var _ = require('underscore');
 var helpers = require('./helpers');
 
 //
@@ -47,7 +46,7 @@ var Passage = function(config) {
 
       var url = `${config.endpoint}/invite/${params.contactId}/${params.token}`;
 
-      var promise = new Promise((resolve, reject) => {
+      var promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(request.get(url)
         .timeout(config.timeout_ms));
@@ -86,7 +85,7 @@ var Passage = function(config) {
         'password': params.password
       };
 
-      var promise = new Promise((resolve, reject) => {
+      var promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(request.post(url)
           .timeout(config.timeout_ms)
@@ -117,7 +116,7 @@ var Passage = function(config) {
         email: params.email
       };
 
-      var promise = new Promise((resolve, reject) => {
+      var promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(request.post(url)
           .timeout(config.timeout_ms)
@@ -152,7 +151,7 @@ var Passage = function(config) {
         email: params.email
       };
 
-      var promise = new Promise((resolve, reject) => {
+      var promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(request.post(url)
           .timeout(config.timeout_ms)
@@ -193,7 +192,7 @@ var Passage = function(config) {
         password: params.password
       };
 
-      var promise = new Promise((resolve, reject) => {
+      var promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(request.post(url)
           .timeout(config.timeout_ms)
@@ -209,5 +208,5 @@ var Passage = function(config) {
   };
 };
 
-module.exports = Passage;
+export default Passage;
 

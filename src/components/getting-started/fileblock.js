@@ -19,35 +19,28 @@
 var Modernizr = window.Modernizr;
 import React from 'react';
 import copy from 'copy-to-clipboard';
-import _  from 'underscore';
 import Line from './line';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import * as Helpers from '../../lib/helpers';
 
-module.exports = React.createClass ({
-  getInitialState: function() {
-    return {
+class FileBlock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       hovering: false
     };
-  },
+  }
 
-  copyCodeToClipboard: function(e) {
+  copyCodeToClipboard = (e) => {
     e.preventDefault();
 
     copy(Helpers.dedent(this.props.children));
 
     this.setState({clicked: false});
-  },
+  }
 
-  classNames: function() {
+  classNames() {
     var classNames = [];
-
-    // this.props.children is either an array or in the case of 1 child
-    // just that child object
-    // So this makes sure I always have an array, and flattens it.
-    var childrenArray = [this.props.children].reduce(function(a, b) {
-      return a.concat(b);
-    }, []);
 
     classNames.push('codeblock--container');
     if (this.state.hovering) {classNames.push('hovering');}
@@ -55,25 +48,20 @@ module.exports = React.createClass ({
     if (this.props.hideText) {classNames.push('oneline');}
 
     return classNames.join(' ');
-  },
+  }
 
-  saveFile: function(e) {
-    // e.preventDefault();
-    // Helpers.saveAs(blob(), this.props.fileName);
-  },
-
-  blob: function() {
+  blob() {
     var blob = new Blob([Helpers.dedent(this.props.children)], {type: 'application/plain;charset=utf-8'});
     return blob;
-  },
+  }
 
-  downloadAsFileLink: function() {
+  downloadAsFileLink() {
     return(
       <a href={window.URL.createObjectURL(this.blob())} download={this.props.fileName}>
         <i className='fa fa-download' aria-hidden='true'></i>
       </a>
     );
-  },
+  }
 
   render() {
     return(
@@ -112,4 +100,12 @@ module.exports = React.createClass ({
       </div>
     );
   }
-});
+}
+
+FileBlock.propTypes = {
+  children: React.PropTypes.node,
+  fileName: React.PropTypes.string,
+  hideText: React.PropTypes.bool
+};
+
+export default FileBlock;

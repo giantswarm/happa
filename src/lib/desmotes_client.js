@@ -1,7 +1,6 @@
 'use strict';
 
 var request = require('superagent-bluebird-promise');
-var _ = require('underscore');
 var helpers = require('./helpers');
 
 // Desmotes
@@ -48,7 +47,7 @@ var Desmotes = function(config) {
 
       var url = `${config.endpoint}/cluster/${params.clusterId}/`;
 
-      var promise = new Promise((resolve, reject) => {
+      var promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(
           request

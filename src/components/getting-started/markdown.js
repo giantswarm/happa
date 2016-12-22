@@ -2,8 +2,8 @@
 import React from 'react';
 import marked from 'marked';
 
-module.exports = React.createClass ({
-  rawMarkup: function() {
+class Markdown extends React.Component {
+  rawMarkup() {
     return React.Children.map(this.props.children, child => {
       if (typeof child === 'string') {
         return <span dangerouslySetInnerHTML={ {__html: marked(this.stripIndent(child), {sanitize: false})}} />;
@@ -11,9 +11,9 @@ module.exports = React.createClass ({
         return child;
       }
     });
-  },
+  }
 
-  stripIndent: function(str) {
+  stripIndent(str) {
     const match = str.match(/^[ \t]*(?=\S)/gm);
 
     if (!match) {
@@ -25,9 +25,15 @@ module.exports = React.createClass ({
     const re = new RegExp(`^[ \\t]{${indent}}`, 'gm');
 
     return indent > 0 ? str.replace(re, '') : str;
-  },
+  }
 
-  render: function() {
+  render() {
     return (<div>{this.rawMarkup()}</div>);
   }
-});
+}
+
+Markdown.propTypes = {
+  children: React.PropTypes.node
+};
+
+export default Markdown;

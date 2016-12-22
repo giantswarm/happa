@@ -1,39 +1,32 @@
 'use strict';
 
 import React from 'react';
-import { Link } from 'react-router';
-import FlashMessage from '../flash_messages/flash_message';
-import { flashAdd } from '../../actions/flashMessageActions';
 import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
 import * as OrganizationActions from '../../actions/organizationActions';
-import DomainValidation from './domain_validation';
 import { bindActionCreators } from 'redux';
 import { formatDate } from '../../lib/helpers.js';
 import DocumentTitle from 'react-document-title';
+import _ from 'underscore';
 
-var OrganizationDetail = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.object
-  },
-
+class OrganizationDetail extends React.Component {
   componentDidMount() {
     this.props.actions.organizationsLoad();
-  },
+  }
 
-  addMember() {
+  addMember = () => {
     this.props.actions.organizationAddMember(this.props.organization.id);
-  },
+  }
 
-  removeMember(email) {
+  removeMember = (email) => {
     this.props.actions.organizationRemoveMember(this.props.organization.id, email);
-  },
+  }
 
-  openClusterDetails(cluster) {
+  openClusterDetails = (cluster) => {
     this.context.router.push('/organizations/' + this.props.organization.id + '/clusters/' + cluster);
-  },
+  }
 
-  render: function() {
+  render() {
     if (this.props.organization) {
       return (
         <DocumentTitle title={'Organization Details | ' + this.props.organization.id +  ' | Giant Swarm'}>
@@ -279,7 +272,19 @@ var OrganizationDetail = React.createClass({
       return <h1>404 or fetching</h1>;
     }
   }
-});
+}
+
+OrganizationDetail.contextTypes = {
+  router: React.PropTypes.object
+};
+
+OrganizationDetail.propTypes = {
+  actions: React.PropTypes.object,
+  clusters: React.PropTypes.object,
+  organization: React.PropTypes.object,
+  dispatch: React.PropTypes.func,
+  params: React.PropTypes.object
+};
 
 function mapStateToProps(state, ownProps) {
   return {

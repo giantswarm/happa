@@ -1,27 +1,21 @@
 'use strict';
 import React from 'react';
-import Slide from '../component_slider/slide';
-import Markdown from './markdown';
-import { CodeBlock, Prompt, Output } from './codeblock';
+import { CodeBlock, Prompt } from './codeblock';
 import FileBlock from './fileblock';
-import { DropdownButton, MenuItem } from 'react-bootstrap';
 import {connect} from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import _ from 'underscore';
-import { browserHistory } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
 import Button from '../button';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import platform from '../../lib/platform';
-import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
 
 var Modernizr = window.Modernizr;
 
-var ConfigKubeCtl = React.createClass ({
-
-  getInitialState: function() {
-    return {
+class ConfigKubeCtl extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       loading: true,
       selectedPlatform: platform,
       alternativeOpen: false,
@@ -32,9 +26,9 @@ var ConfigKubeCtl = React.createClass ({
         data: null
       }
     };
-  },
+  }
 
-  generateKeyPair: function() {
+  generateKeyPair = () => {
     this.setState({
       keyPair: {
         generating: true,
@@ -58,7 +52,7 @@ var ConfigKubeCtl = React.createClass ({
         }
       });
     })
-    .catch((error) => {
+    .catch(() => {
       setTimeout(() => {
         this.setState({
           keyPair: {
@@ -69,9 +63,9 @@ var ConfigKubeCtl = React.createClass ({
         });
       }, 200);
     });
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     if (!this.props.cluster) {
       this.props.dispatch(flashAdd({
         message: <span><b>This organization has no clusters</b><br/>This page might not work as expected.</span>,
@@ -88,12 +82,12 @@ var ConfigKubeCtl = React.createClass ({
       });
 
       this.props.actions.clusterLoadDetails(this.props.cluster.id)
-      .then((cluster) => {
+      .then(() => {
         this.setState({
           loading: false
         });
       })
-      .catch((error) => {
+      .catch(() => {
         this.props.dispatch(flashAdd({
           message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
           class: 'danger',
@@ -105,9 +99,9 @@ var ConfigKubeCtl = React.createClass ({
         });
       });
     }
-  },
+  }
 
-  kubeConfig: function() {
+  kubeConfig() {
     return (
       <div className="created-key-pair">
         <FileBlock fileName='giantswarm-kubeconfig'>
@@ -161,22 +155,22 @@ var ConfigKubeCtl = React.createClass ({
         </div>
       </div>
     );
-  },
+  }
 
 
-  isSelectedPlatform: function(platform) {
+  isSelectedPlatform(platform) {
     return (this.state.selectedPlatform === platform);
-  },
+  }
 
-  toggleAlternative: function() {
+  toggleAlternative() {
     this.setState({
       alternativeOpen: ! this.state.alternativeOpen
     });
-  },
+  }
 
-  selectCluster: function(clusterId) {
+  selectCluster(clusterId) {
     this.props.actions.clusterSelect(clusterId);
-  },
+  }
 
   render() {
     return (
@@ -245,10 +239,9 @@ var ConfigKubeCtl = React.createClass ({
       </div>
     );
   }
-});
+}
 
-function mapStateToProps(state, ownProps) {
-  var selectedOrganization = state.entities.organizations.items[state.app.selectedOrganization];
+function mapStateToProps(state) {
   var selectedCluster = state.entities.clusters.items[state.app.selectedCluster];
 
   return {
@@ -265,4 +258,11 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(ConfigKubeCtl);
+ConfigKubeCtl.propTypes = {
+  user: React.PropTypes.object,
+  cluster: React.PropTypes.object,
+  dispatch: React.PropTypes.func,
+  actions: React.PropTypes.object
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ConfigKubeCtl);

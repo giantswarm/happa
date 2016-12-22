@@ -13,23 +13,23 @@ import { organizationDeleteConfirm,
 import EmailField from './email_field';
 
 class Modal extends React.Component {
- constructor(props) {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       emailValid: false
     };
   }
 
-  close() {
+  close = () => {
     this.props.dispatch(modalHide());
   }
 
-  deleteOrganisation(orgId) {
+  deleteOrganisation = (orgId) => {
     this.props.dispatch(organizationDeleteConfirm(orgId));
   }
 
-  createOrganisation(e) {
+  createOrganisation = (e) => {
     if (e) {
       e.preventDefault();
     }
@@ -37,7 +37,7 @@ class Modal extends React.Component {
     this.props.dispatch(organizationCreateConfirm(orgId));
   }
 
-  addMember(e) {
+  addMember = (e) => {
     if (e) {
       e.preventDefault();
     }
@@ -51,7 +51,7 @@ class Modal extends React.Component {
     }
   }
 
-  removeMember(e) {
+  removeMember = (e) => {
     if (e) {
       e.preventDefault();
     }
@@ -61,7 +61,7 @@ class Modal extends React.Component {
     this.props.dispatch(organizationRemoveMemberConfirm(orgId, email));
   }
 
-  emailFieldChanged(emailField) {
+  emailFieldChanged = (emailField) => {
     if (emailField.valid()) {
       this.setState({
         emailValid: true
@@ -238,7 +238,12 @@ class Modal extends React.Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
+Modal.propTypes = {
+  dispatch: React.PropTypes.func,
+  modal: React.PropTypes.object
+};
+
+function mapStateToProps(state) {
   return {
     modal: state.modal,
     selectedOrganization: state.app.selectedOrganization,

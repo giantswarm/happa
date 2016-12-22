@@ -90,7 +90,12 @@ Organizations.contextTypes = {
   router: React.PropTypes.object
 };
 
-function mapStateToProps(state, ownProps) {
+Organizations.propTypes = {
+  dispatch: React.PropTypes.func,
+  organizations: React.PropTypes.object
+};
+
+function mapStateToProps(state) {
   return {
     organizations: state.entities.organizations
   };

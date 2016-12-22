@@ -1,12 +1,10 @@
 'use strict';
 
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import Button from '../button';
 import {humanFileSize} from '../../lib/helpers';
 
-module.exports = React.createClass({
-  classes: function() {
+class Gadget extends React.Component {
+  classes() {
     var classes = [];
 
     if (this.props.metric.outdated) {
@@ -14,9 +12,9 @@ module.exports = React.createClass({
     }
 
     return classes.join(' ');
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className={'gadget ' + this.classes()}>
         <div className='gadget--inner' style={{backgroundColor: this.props.backgroundColor}}>
@@ -34,4 +32,14 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
+
+Gadget.propTypes = {
+  metric: React.PropTypes.object,
+  backgroundColor: React.PropTypes.string,
+  label: React.PropTypes.string,
+  decimals: React.PropTypes.number,
+  bottom_label: React.PropTypes.func
+};
+
+export default Gadget;

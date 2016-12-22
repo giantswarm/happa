@@ -15,28 +15,30 @@ var doneTypingInterval = 250; // ms
 
 var validationRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-var EmailField = React.createClass({
-  getInitialState: function() {
-    return {
+class EmailField extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       valid: false,
       validationError: ''
     };
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     if (this.props.autofocus) {
       this.refs.input.focus();
     }
-  },
+  }
 
-  onBlur: function(e) {
+  onBlur = () => {
     clearTimeout(typingTimer);
     if (this.props.onChange) {
       this.props.onChange(this);
     }
-  },
+  }
 
-  onChange: function(e) {
+  onChange = () => {
     var currentValue = this.refs.input.value;
     var valid = false;
     var validationError = this.state.validationError;
@@ -64,32 +66,32 @@ var EmailField = React.createClass({
     });
 
     // Check after a few ms afer stopping typing if it is invalid, and then show an error message
-    typingTimer = setTimeout(x => {
+    typingTimer = setTimeout(() => {
       if (! validationRegEx.test(currentValue)) {
         this.setState({
           validationError: 'Please enter a valid email address'
         });
       }
     }, doneTypingInterval);
-  },
+  }
 
-  value: function() {
+  value = () => {
     return this.refs.input.value;
-  },
+  }
 
-  valid: function() {
+  valid = () => {
     return this.state.valid;
-  },
+  }
 
-  focus: function() {
+  focus = () => {
     ReactDOM.findDOMNode(this.refs.input).focus();
-  },
+  }
 
-  blur: function() {
+  blur = () => {
     ReactDOM.findDOMNode(this.refs.input).blur();
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
@@ -98,6 +100,14 @@ var EmailField = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = EmailField;
+EmailField.propTypes = {
+  autofocus: React.PropTypes.bool,
+  onChange: React.PropTypes.func,
+  onStartTyping: React.PropTypes.func,
+  name: React.PropTypes.string,
+  label: React.PropTypes.string
+};
+
+export default EmailField;

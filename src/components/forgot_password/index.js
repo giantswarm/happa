@@ -10,16 +10,18 @@ import Button from '../button';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
 
-var ForgotPassword = React.createClass({
-  getInitialState: function() {
-    return {
+class ForgotPassword extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       submitting: false,
       tokenRequested: false,
       email: localStorage.getItem('user.email') || '',
     };
-  },
+  }
 
-  submit: function(event) {
+  submit = (event) => {
     event.preventDefault();
     this.props.dispatch(flashClearAll());
 
@@ -56,20 +58,20 @@ var ForgotPassword = React.createClass({
         tokenRequested: false
       });
     });
-  },
+  }
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     this.props.dispatch(flashClearAll());
-  },
+  }
 
-  updateEmail(event) {
+  updateEmail = (event) => {
     this.props.dispatch(flashClearAll());
     this.setState({
       email: event.target.value
     });
-  },
+  }
 
-  success() {
+  success = () => {
     return(
       <div className='forgot-password--token-sent'>
         <h1><i className='fa fa-envelope'></i> Check your mail!</h1>
@@ -84,9 +86,9 @@ var ForgotPassword = React.createClass({
         </small>
       </div>
     );
-  },
+  }
 
-  form() {
+  form = () => {
     return(
       <div>
         <h1>Forgot your password?</h1>
@@ -105,9 +107,9 @@ var ForgotPassword = React.createClass({
         </form>
       </div>
     );
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div>
         <div className='login_form--mask'></div>
@@ -124,7 +126,12 @@ var ForgotPassword = React.createClass({
       </div>
     );
   }
-});
+}
+
+ForgotPassword.propTypes = {
+  actions: React.PropTypes.object,
+  dispatch: React.PropTypes.func
+};
 
 function mapDispatchToProps(dispatch) {
   return {

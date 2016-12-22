@@ -11,34 +11,30 @@ import Page2_ConfigureKubeCTL from './2_configure_kubectl.js';
 import Page3_SimpleExample from './3_simple_example.js';
 import Page4_NextSteps from './4_next_steps.js';
 
+class GettingStarted extends React.Component {
+  constructor(props) {
+    super(props);
 
-
-module.exports = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.object
-  },
-
-  getInitialState() {
-    return {
+    this.state = {
       currentSlide: 0
     };
-  },
+  }
 
   componentDidMount() {
     if (this.props.params.pageId) {
       this.goToSlide(this.props.params.pageId);
     }
-  },
+  }
 
-  componentWillReceiveProps(nextProps, nextState) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.params.pageId && nextProps.params.pageId !== this.props.params.pageId) {
       this.goToSlide(nextProps.params.pageId);
     } else if (! nextProps.params.pageId) {
       this.goToSlide('overview');
     }
-  },
+  }
 
-  goToSlide(slideId) {
+  goToSlide = (slideId) => {
     if (window.location.pathname !== '/getting-started/' + slideId) {
       this.context.router.push('/getting-started/' + slideId);
     }
@@ -50,11 +46,11 @@ module.exports = React.createClass({
     this.setState({
       currentSlide: slideIndex
     });
-  },
+  }
 
   onPrevious() {
     this.refs.componentSlider.previous();
-  },
+  }
 
   classes() {
     if (this.state.currentSlide === 0) {
@@ -62,7 +58,7 @@ module.exports = React.createClass({
     } else {
       return 'col-10';
     }
-  },
+  }
 
   slides() {
     return ([
@@ -72,9 +68,9 @@ module.exports = React.createClass({
       <Page3_SimpleExample    key='example'   goToSlide={this.goToSlide}/>,
       <Page4_NextSteps        key='next-steps'   goToSlide={this.goToSlide}/>
     ]);
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <DocumentTitle title={'Getting Started | Giant Swarm'}>
         <div className={'centered ' + this.classes()}>
@@ -83,4 +79,14 @@ module.exports = React.createClass({
       </DocumentTitle>
     );
   }
-});
+}
+
+GettingStarted.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
+
+GettingStarted.propTypes = {
+  params: React.PropTypes.object
+};
+
+export default GettingStarted;

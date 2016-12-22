@@ -49,7 +49,7 @@ module.exports = {
       loader: 'babel',
       query: {
         presets: ['es2015'],
-        plugins: ['transform-react-jsx']
+        plugins: ['transform-react-jsx', 'transform-class-properties']
       }
     }, {
       test: /\.css$/,
