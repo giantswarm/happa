@@ -22,6 +22,7 @@ import Home from './home';
 import AirbrakeClient from 'airbrake-js';
 
 require('normalize.css');
+require('bootstrap/dist/css/bootstrap.min.css');
 require('../styles/app.scss');
 require('react-datepicker/dist/react-datepicker.css');
 
