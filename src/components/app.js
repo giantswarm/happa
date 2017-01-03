@@ -10,6 +10,7 @@ import login from './login/index';
 import logout from './logout/index';
 import signup from './signup/index';
 import notFound from './not_found/index';
+import newCluster from './new_cluster';
 import forgot_password_index from './forgot_password/index';
 import forgot_password_set_password from './forgot_password/set_password';
 import Organizations from './organizations';
@@ -67,6 +68,8 @@ render(
 
       <Route name="Home" path="/" component={Layout} onEnter={requireAuth}>
         <IndexRoute component={Home}/>
+
+        <Route name='New Cluster' path="new-cluster" component={newCluster} />
 
         <Route name='Getting Started' path="getting-started" >
           <IndexRoute component={gettingStarted} />
