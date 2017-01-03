@@ -19,6 +19,14 @@ if [ -n "$DOMAIN_VALIDATOR_ENDPOINT" ]; then
   sed -i "s|domainValidatorEndpoint: 'http://docker.dev:5001'|domainValidatorEndpoint: '$DOMAIN_VALIDATOR_ENDPOINT'|" /www/index.html
 fi
 
+if [ -n "$ENVIRONMENT" ]; then
+  sed -i "s|environment: 'development'|environment: '$ENVIRONMENT'|" /www/index.html
+else
+  sed -i "s|environment: 'development'|environment: 'docker-container'|" /www/index.html
+fi
+
+sed -i "s|version: 'development'|version: '$(cat /www/VERSION)'|" /www/index.html
+
 sed -i "s|VERSION|$(cat /www/VERSION)|" /etc/nginx/nginx.conf
 
 nginx -g "daemon off;"
