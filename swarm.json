@@ -2,19 +2,16 @@
   "name": "happa",
   "components": {
     "nginx": {
-      "image": "registry.giantswarm.io/giantswarm/happa:0.1.6",
+      "image": "registry.giantswarm.io/giantswarm/happa:0.1.19",
       "ports": 80,
       "domains": {
         "80": "happa.giantswarm.io"
       },
-      "scale": {
-        "min": 1,
-        "placement": "one-per-machine"
-      },
       "env": {
         "PASSAGE_ENDPOINT": "https://passage.giantswarm.io",
         "API_ENDPOINT": "https://api.giantswarm.io",
-        "DESMOTES_ENDPOINT": "https://desmotes.giantswarm.io"
+        "DESMOTES_ENDPOINT": "https://desmotes.giantswarm.io",
+        "ENVIRONMENT": "production-old-infra"
       }
     },
 
