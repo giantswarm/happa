@@ -18,6 +18,7 @@ class CreateCluster extends React.Component {
       availableVersions: ['1.4.6', '1.4.7', '1.5.0', '1.5.1'],
       selectedVersion: '1.4.6',
       clusterName: 'My cluster',
+      syncWorkers: true,
       workers: [
         { id: 1, cpu: 1, memory: 1, storage: 10 },
         { id: 2, cpu: 1, memory: 1, storage: 10 },
@@ -54,6 +55,12 @@ class CreateCluster extends React.Component {
 
     this.setState({
       workers: workers
+    });
+  }
+
+  syncWorkersChanged = (e) => {
+    this.setState({
+      syncWorkers: e.target.checked
     });
   }
 
@@ -123,7 +130,7 @@ class CreateCluster extends React.Component {
   render() {
     return (
       <DocumentTitle title={'Create Cluster | ' + this.props.selectedOrganization + ' | Giant Swarm'}>
-        <div>
+        <div className='new-cluster'>
           <div className='row'>
             <div className='col-12'>
               <h1>Create a Cluster</h1>
@@ -145,6 +152,12 @@ class CreateCluster extends React.Component {
           <div className='row section'>
             <div className='col-12'>
               <h3 className='table-label'>Worker Node Configuration</h3>
+              <div className='checkbox'>
+                <label htmlFor='syncWorkers'>
+                  <input type='checkbox' ref='syncWorkers' id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
+                  Use same configuration for all worker nodes
+                </label>
+              </div>
             </div>
           </div>
           <div className='row'>
