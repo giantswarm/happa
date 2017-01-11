@@ -45,9 +45,9 @@ class CreateCluster extends React.Component {
   addWorker = () => {
     var newDefaultWorker = {
       id: Date.now(),
-      cpu: '1',
-      memory: '1',
-      storage: '200'
+      cpu: 1,
+      memory: 1,
+      storage: 20
     };
 
     var workers = [].concat(this.state.workers, newDefaultWorker);
