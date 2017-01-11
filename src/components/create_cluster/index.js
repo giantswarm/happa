@@ -5,9 +5,10 @@ import {connect} from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import Button from '../button';
 import NumberPicker from './number_picker.js';
-import { WithContext as ReactTags } from 'react-tag-input';
 import _ from 'underscore';
-// import update from 'react-addons-update';
+import { browserHistory } from 'react-router';
+import { flashAdd } from '../../actions/flashMessageActions';
+import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 
 class CreateCluster extends React.Component {
   constructor(props) {
@@ -15,17 +16,15 @@ class CreateCluster extends React.Component {
 
     this.state = {
       availableVersions: ['1.4.6', '1.4.7', '1.5.0', '1.5.1'],
+      selectedVersion: '1.4.6',
       clusterName: 'My cluster',
       workers: [
-        {
-          id: Date.now(),
-          cpu: '1',
-          memory: '1',
-          storage: '200',
-          tags: [],
-          suggestions: ['Banana', 'Mango', 'Pear', 'Apricot']
-        }
+        { id: 1, cpu: 1, memory: 1, storage: 10 },
+        { id: 2, cpu: 1, memory: 1, storage: 10 },
+        { id: 3, cpu: 1, memory: 1, storage: 10 }
       ],
+      submitting: false,
+      error: false
     };
   }
 
@@ -48,9 +47,7 @@ class CreateCluster extends React.Component {
       id: Date.now(),
       cpu: '1',
       memory: '1',
-      storage: '200',
-      tags: [],
-      suggestions: ['Banana', 'Mango', 'Pear', 'Apricot']
+      storage: '200'
     };
 
     var workers = [].concat(this.state.workers, newDefaultWorker);
@@ -60,37 +57,67 @@ class CreateCluster extends React.Component {
     });
   }
 
-  deleteTag = (worker, i) => {
-    let tags = worker.tags;
-    tags.splice(i, 1);
-
-    worker.tags = tags;
-  }
-
-  addTag = (worker, tag) => {
-    let tags = worker.tags;
-
-    tags.push({
-      id: tags.length + 1,
-      text: tag
+  updateWorkerCPU = (workerId, cpu) => {
+    var worker = this.state.workers.find((worker) => {
+      return worker.id === workerId;
     });
 
-    worker.tags = tags;
+    worker.cpu = cpu;
   }
 
-  dragTag = (worker, tag, currPos, newPos) => {
-    let tags = this.state.tags;
+  updateWorkerMemory = (workerId, memory) => {
+    var worker = this.state.workers.find((worker) => {
+      return worker.id === workerId;
+    });
 
-    // mutate array
-    tags.splice(currPos, 1);
-    tags.splice(newPos, 0, tag);
+    worker.memory = memory;
+  }
 
-    // re-render
-    this.setState({ tags: tags });
+  updateWorkerStorage = (workerId, storage) => {
+    var worker = this.state.workers.find((worker) => {
+      return worker.id === workerId;
+    });
+
+    worker.storage = storage;
   }
 
   createCluster = () => {
+    this.setState({
+      submitting: true
+    });
 
+    var giantSwarm = new GiantSwarm.Client(this.props.authToken);
+
+    giantSwarm.createCluster({
+      clusterName: this.state.clusterName,
+      kubernetesVersion: this.state.selectedVersion,
+      owner: this.props.selectedOrganization,
+      workers: this.state.workers.map((worker) => {
+        return {
+          memory: {size_gb: worker.memory},
+          storage: {size_gb: worker.storage},
+          cpu: {cores: worker.cpu}
+        };
+      })
+    })
+    .then(() => {
+      browserHistory.push('/organizations/' + this.props.selectedOrganization);
+      this.props.dispatch(flashAdd({
+        message: <div>Your new cluster is being created!</div>,
+        class: 'success',
+        ttl: 3000
+      }));
+    })
+    .catch((error) => {
+      this.setState({
+        submitting: false,
+        error: error
+      });
+    });
+
+    setTimeout(() => {
+
+    }, 1000);
   }
 
   render() {
@@ -117,7 +144,7 @@ class CreateCluster extends React.Component {
 
           <div className='row section'>
             <div className='col-12'>
-              <h3 className='table-label'>Worker Configuration</h3>
+              <h3 className='table-label'>Worker Node Configuration</h3>
             </div>
           </div>
           <div className='row'>
@@ -125,34 +152,20 @@ class CreateCluster extends React.Component {
               this.state.workers.map((worker, index) => {
                 return <div className='col-4 new-cluster--worker' key={'Worker ' + worker.id}>
                   <div className="new-cluster--worker-title">
-                    { 'Worker ' + (index + 1) }
+                    { 'Worker #' + (index + 1) }
                     {
-                      index > 0
+                      index > 1
                         ?
-                        <span className="new-cluster--delete" onClick={this.deleteWorker.bind(this, index)}>x</span>
+
+                        <span className="new-cluster--delete" onClick={this.deleteWorker.bind(this, index)}><i className='fa fa-times' /></span>
                         :
                         undefined
                     }
                   </div>
 
-                  <NumberPicker label="CPU" stepSize={1} initialValue={1} min={1} max={10} />
-                  <NumberPicker label="Memory" unit="GB" stepSize={1} initialValue={1} min={1} max={100} />
-                  <NumberPicker label="Storage" unit="GB" stepSize={10} initialValue={20} min={20} max={100} />
-
-                  <div className="new-cluster--worker-setting-row">
-                    <div className="new-cluster--worker-setting-label">
-                      Labels
-                    </div>
-                    <div className="new-cluster--worker-setting-label-control">
-                     <ReactTags tags={worker.tags}
-                          suggestions={worker.suggestions}
-                          placeholder="Add a label"
-                          autofocus={false}
-                          handleDelete={this.deleteTag.bind(this, worker)}
-                          handleAddition={this.addTag.bind(this, worker)}
-                          handleDrag={this.dragTag.bind(this, worker)} />
-                    </div>
-                  </div>
+                  <NumberPicker label="CPU Cores" stepSize={1} initialValue={worker.cpu} min={1} max={10} workerId={worker.id} onChange={this.updateWorkerCPU} />
+                  <NumberPicker label="Memory" unit="GB" stepSize={1} initialValue={worker.memory} min={1} max={16} workerId={worker.id} onChange={this.updateWorkerMemory} />
+                  <NumberPicker label="Storage" unit="GB" stepSize={10} initialValue={worker.storage} min={10} max={100} workerId={worker.id} onChange={this.updateWorkerStorage} />
                 </div>;
               })
             }
@@ -163,7 +176,7 @@ class CreateCluster extends React.Component {
 
           <div className='row section'>
             <div className='col-3'>
-              <h3 className='table-label'>Kubernetes Version</h3>
+              <h3 className='table-label'>Kubernetes Version:</h3>
             </div>
             <div className='col-9'>
               <p>1.4.6 (Default)</p>
@@ -172,7 +185,7 @@ class CreateCluster extends React.Component {
 
           <div className='row'>
             <div className='col-3'>
-              <h3 className='table-label'>Master Sizing</h3>
+              <h3 className='table-label'>Master Sizing:</h3>
             </div>
             <div className='col-9'>
               <p>Auto Sized (Default)</p>
@@ -194,7 +207,8 @@ class CreateCluster extends React.Component {
               <Button type='button'
                       bsSize='large'
                       bsStyle='primary'
-                      onClick={this.createCluster}>Create Cluster</Button>
+                      onClick={this.createCluster}
+                      loading={this.state.submitting}>Create Cluster</Button>
             </div>
           </div>
         </div>
@@ -204,19 +218,24 @@ class CreateCluster extends React.Component {
 }
 
 CreateCluster.propTypes = {
-  selectedOrganization: React.PropTypes.string
+  selectedOrganization: React.PropTypes.string,
+  dispatch: React.PropTypes.func,
+  authToken: React.PropTypes.string
 };
 
 function mapStateToProps(state) {
   var selectedOrganization = state.app.selectedOrganization;
 
   return {
-    selectedOrganization: selectedOrganization
+    selectedOrganization: selectedOrganization,
+    authToken: state.app.loggedInUser.authToken
   };
 }
 
-function mapDispatchToProps() {
-  return {};
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateCluster);

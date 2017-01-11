@@ -24,6 +24,12 @@ class NumberPicker extends React.Component {
     }
   }
 
+  triggerOnChange = () => {
+    if(this.props.onChange) {
+      this.props.onChange(this.props.workerId, this.state.value);
+    }
+  }
+
   increment = () => {
     var currentValue = this.state.value;
     var desiredValue = (currentValue + this.props.stepSize);
@@ -31,6 +37,8 @@ class NumberPicker extends React.Component {
     if (currentValue < this.props.max) {
       this.setState({
         value: Math.min(this.props.max, desiredValue)
+      }, () => {
+        this.triggerOnChange();
       });
     }
   }
@@ -42,6 +50,8 @@ class NumberPicker extends React.Component {
     if (currentValue > this.props.min) {
       this.setState({
         value: Math.max(this.props.min, desiredValue)
+      }, () => {
+        this.triggerOnChange();
       });
     }
   }
@@ -54,7 +64,7 @@ class NumberPicker extends React.Component {
         </div>
         <div className="new-cluster--worker-setting-control">
           <div className="new-cluster--worker-setting-control-decrease" onClick={this.decrement} >
-            -
+            &ndash;
           </div>
           {this.formatValue()}
           <div className="new-cluster--worker-setting-control-increase" onClick={this.increment}>
@@ -73,7 +83,9 @@ NumberPicker.propTypes = {
   stepSize: React.PropTypes.number,
   formatter: React.PropTypes.func,
   min: React.PropTypes.number,
-  max: React.PropTypes.number
+  max: React.PropTypes.number,
+  onChange: React.PropTypes.func,
+  workerId: React.PropTypes.number
 };
 
 function mapStateToProps() {
