@@ -128,7 +128,7 @@ class SignUp extends React.Component {
     }, 1000);
   }
 
-  handleSubmit(e){
+  handleSubmit = (e) => {
     e.preventDefault();
 
     if(this.state.formValid) {
@@ -168,7 +168,7 @@ class SignUp extends React.Component {
     }
   }
 
-  tosChanged(e) {
+  tosChanged = (e) => {
     var checked = e.target.checked;
 
     var statusMessage = this.state.statusMessage;
@@ -206,7 +206,7 @@ class SignUp extends React.Component {
     });
   }
 
-  passwordEditingStarted(password) {
+  passwordEditingStarted = (password) => {
     this.setState({
       formValid: false,
       advancable: false,
@@ -217,7 +217,7 @@ class SignUp extends React.Component {
     });
   }
 
-  passwordEditingCompleted(password) {
+  passwordEditingCompleted = (password) => {
     var statusMessage = this.state.statusMessage;
     var valid = false;
 
@@ -247,7 +247,7 @@ class SignUp extends React.Component {
     this.validateForm();
   }
 
-  passwordConfirmationEditingStarted(confirmation) {
+  passwordConfirmationEditingStarted = (confirmation) => {
     this.setState({
       formValid: false,
       advancable: false,
@@ -280,7 +280,7 @@ class SignUp extends React.Component {
     }
   }
 
-  passwordConfirmationEditingCompleted(passwordConfirmation) {
+  passwordConfirmationEditingCompleted = (passwordConfirmation) => {
     var statusMessage = this.state.statusMessage;
     var valid = this.state.passwordConfirmationField.valid;
 
