@@ -9,6 +9,7 @@ import _ from 'underscore';
 import { browserHistory } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
+import update from 'react-addons-update';
 
 class CreateCluster extends React.Component {
   constructor(props) {
@@ -59,8 +60,23 @@ class CreateCluster extends React.Component {
   }
 
   syncWorkersChanged = (e) => {
+    var workers = this.state.workers;
+    var worker1 = this.state.workers[0];
+
+    if (e.target.checked) {
+      workers = workers.map((worker) => {
+        return {
+          id: worker.id,
+          cpu: worker1.cpu,
+          memory: worker1.memory,
+          storage: worker1.storage
+        };
+      });
+    }
+
     this.setState({
-      syncWorkers: e.target.checked
+      syncWorkers: e.target.checked,
+      workers: workers
     });
   }
 
@@ -69,7 +85,26 @@ class CreateCluster extends React.Component {
       return worker.id === workerId;
     });
 
+    var index = this.state.workers.indexOf(worker);
+
     worker.cpu = cpu;
+    var newState;
+
+    if (this.state.syncWorkers) {
+      var workers = this.state.workers.map((worker) => {
+        worker.cpu = cpu;
+        return worker;
+      });
+      newState = update(this.state, {
+        workers: {$set: workers}
+      });
+    } else {
+      newState = update(this.state, {
+        workers: {$splice: [[index, 1, worker]]}
+      });
+    }
+
+    this.setState(newState);
   }
 
   updateWorkerMemory = (workerId, memory) => {
@@ -77,7 +112,26 @@ class CreateCluster extends React.Component {
       return worker.id === workerId;
     });
 
+    var index = this.state.workers.indexOf(worker);
+
     worker.memory = memory;
+    var newState;
+
+    if (this.state.syncWorkers) {
+      var workers = this.state.workers.map((worker) => {
+        worker.memory = memory;
+        return worker;
+      });
+      newState = update(this.state, {
+        workers: {$set: workers}
+      });
+    } else {
+      newState = update(this.state, {
+        workers: {$splice: [[index, 1, worker]]}
+      });
+    }
+
+    this.setState(newState);
   }
 
   updateWorkerStorage = (workerId, storage) => {
@@ -85,7 +139,26 @@ class CreateCluster extends React.Component {
       return worker.id === workerId;
     });
 
+    var index = this.state.workers.indexOf(worker);
+
     worker.storage = storage;
+    var newState;
+
+    if (this.state.syncWorkers) {
+      var workers = this.state.workers.map((worker) => {
+        worker.storage = storage;
+        return worker;
+      });
+      newState = update(this.state, {
+        workers: {$set: workers}
+      });
+    } else {
+      newState = update(this.state, {
+        workers: {$splice: [[index, 1, worker]]}
+      });
+    }
+
+    this.setState(newState);
   }
 
   createCluster = () => {
@@ -176,9 +249,34 @@ class CreateCluster extends React.Component {
                     }
                   </div>
 
-                  <NumberPicker label="CPU Cores" stepSize={1} initialValue={worker.cpu} min={1} max={10} workerId={worker.id} onChange={this.updateWorkerCPU} />
-                  <NumberPicker label="Memory" unit="GB" stepSize={1} initialValue={worker.memory} min={1} max={16} workerId={worker.id} onChange={this.updateWorkerMemory} />
-                  <NumberPicker label="Storage" unit="GB" stepSize={10} initialValue={worker.storage} min={10} max={100} workerId={worker.id} onChange={this.updateWorkerStorage} />
+                  <NumberPicker label="CPU Cores"
+                                stepSize={1}
+                                value={worker.cpu}
+                                min={1} max={10}
+                                workerId={worker.id}
+                                onChange={this.updateWorkerCPU}
+                                readOnly={this.state.syncWorkers && index !== 0}
+                  />
+
+                  <NumberPicker label="Memory"
+                                unit="GB"
+                                stepSize={1}
+                                value={worker.memory}
+                                min={1} max={16}
+                                workerId={worker.id}
+                                onChange={this.updateWorkerMemory}
+                                readOnly={this.state.syncWorkers && index !== 0}
+                  />
+
+                  <NumberPicker label="Storage"
+                                unit="GB"
+                                stepSize={10}
+                                value={worker.storage}
+                                min={10} max={100}
+                                workerId={worker.id}
+                                onChange={this.updateWorkerStorage}
+                                readOnly={this.state.syncWorkers && index !== 0}
+                  />
                 </div>;
               })
             }

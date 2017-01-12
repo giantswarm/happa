@@ -6,10 +6,6 @@ import {connect} from 'react-redux';
 class NumberPicker extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      value: props.initialValue
-    };
   }
 
   componentDidMount() {
@@ -20,39 +16,31 @@ class NumberPicker extends React.Component {
     if (this.props.formatter) {
       return this.props.formatter(this.state.value);
     } else {
-      return [this.state.value, this.props.unit].join(' ');
+      return [this.props.value, this.props.unit].join(' ');
     }
   }
 
-  triggerOnChange = () => {
+  triggerOnChange = (newValue) => {
     if(this.props.onChange) {
-      this.props.onChange(this.props.workerId, this.state.value);
+      this.props.onChange(this.props.workerId, newValue);
     }
   }
 
   increment = () => {
-    var currentValue = this.state.value;
+    var currentValue = this.props.value;
     var desiredValue = (currentValue + this.props.stepSize);
 
     if (currentValue < this.props.max) {
-      this.setState({
-        value: Math.min(this.props.max, desiredValue)
-      }, () => {
-        this.triggerOnChange();
-      });
+      this.triggerOnChange(Math.min(this.props.max, desiredValue));
     }
   }
 
   decrement = () => {
-    var currentValue = this.state.value;
+    var currentValue = this.props.value;
     var desiredValue = (currentValue - this.props.stepSize);
 
     if (currentValue > this.props.min) {
-      this.setState({
-        value: Math.max(this.props.min, desiredValue)
-      }, () => {
-        this.triggerOnChange();
-      });
+      this.triggerOnChange(Math.max(this.props.min, desiredValue));
     }
   }
 
@@ -63,13 +51,23 @@ class NumberPicker extends React.Component {
           {this.props.label}
         </div>
         <div className="new-cluster--worker-setting-control">
-          <div className="new-cluster--worker-setting-control-decrease" onClick={this.decrement} >
-            &ndash;
-          </div>
+          {
+            this.props.readOnly ?
+            undefined
+            :
+            <div className="new-cluster--worker-setting-control-decrease" onClick={this.decrement} >
+              &ndash;
+            </div>
+          }
           {this.formatValue()}
-          <div className="new-cluster--worker-setting-control-increase" onClick={this.increment}>
-            +
-          </div>
+          {
+            this.props.readOnly ?
+            undefined
+            :
+            <div className="new-cluster--worker-setting-control-increase" onClick={this.increment}>
+              +
+            </div>
+          }
         </div>
       </div>
     );
@@ -79,13 +77,14 @@ class NumberPicker extends React.Component {
 NumberPicker.propTypes = {
   unit: React.PropTypes.string,
   label: React.PropTypes.string,
-  initialValue: React.PropTypes.number,
+  value: React.PropTypes.number,
   stepSize: React.PropTypes.number,
   formatter: React.PropTypes.func,
   min: React.PropTypes.number,
   max: React.PropTypes.number,
   onChange: React.PropTypes.func,
-  workerId: React.PropTypes.number
+  workerId: React.PropTypes.number,
+  readOnly: React.PropTypes.bool
 };
 
 function mapStateToProps() {
