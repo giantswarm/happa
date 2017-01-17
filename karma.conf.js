@@ -7,7 +7,8 @@ module.exports = function (config) {
     basePath: '',
     plugins: [
       'karma-webpack',
-      'karma-jasmine'
+      'karma-jasmine',
+      'karma-phantomjs-launcher'
     ],
     frameworks: ['jasmine'],
     files: [
@@ -72,7 +73,7 @@ module.exports = function (config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: [],
+    browsers: ["PhantomJS"],
     reporters: ['progress'],
     captureTimeout: 60000,
     singleRun: true

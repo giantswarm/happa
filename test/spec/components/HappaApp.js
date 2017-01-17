@@ -6,7 +6,7 @@ function MyComponent() {
   return (
     <div>
       <span className="heading">Title</span>
-      <Subcomponent foo="bar" />
+      <h1>Test</h1>
     </div>
   );
 }
@@ -21,7 +21,7 @@ describe('HappaApp', function () {
     expect(result.type).toBe('div');
     expect(result.props.children).toEqual([
       <span className="heading">Title</span>,
-      <Subcomponent foo="bar" />
+      <h1>Test</h1>
     ]);
 
   });
