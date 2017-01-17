@@ -16,8 +16,8 @@ class CreateCluster extends React.Component {
     super(props);
 
     this.state = {
-      availableVersions: ['1.4.6', '1.4.7', '1.5.0', '1.5.1'],
-      selectedVersion: '1.4.6',
+      availableVersions: ['1.4.6', '1.4.7', '1.5.0', '1.5.1', '1.5.2'],
+      selectedVersion: '1.5.2',
       clusterName: 'My cluster',
       syncWorkers: true,
       workers: [
@@ -45,12 +45,23 @@ class CreateCluster extends React.Component {
   }
 
   addWorker = () => {
-    var newDefaultWorker = {
-      id: Date.now(),
-      cpu: 1,
-      memory: 1,
-      storage: 20
-    };
+    var newDefaultWorker;
+
+    if (this.state.syncWorkers) {
+      newDefaultWorker = {
+        id: Date.now(),
+        cpu: this.state.workers[0].cpu,
+        memory: this.state.workers[0].memory,
+        storage: this.state.workers[0].storage
+      };
+    } else {
+      newDefaultWorker = {
+        id: Date.now(),
+        cpu: 1,
+        memory: 1,
+        storage: 20
+      };
+    }
 
     var workers = [].concat(this.state.workers, newDefaultWorker);
 
@@ -170,7 +181,6 @@ class CreateCluster extends React.Component {
 
     giantSwarm.createCluster({
       clusterName: this.state.clusterName,
-      kubernetesVersion: this.state.selectedVersion,
       owner: this.props.selectedOrganization,
       workers: this.state.workers.map((worker) => {
         return {
@@ -287,16 +297,16 @@ class CreateCluster extends React.Component {
 
           <div className='row section'>
             <div className='col-3'>
-              <h3 className='table-label'>Kubernetes Version:</h3>
+              <h3 className='table-label'>Kubernetes Version</h3>
             </div>
             <div className='col-9'>
-              <p>1.4.6 (Default)</p>
+              <p>1.5.2 (Default)</p>
             </div>
           </div>
 
           <div className='row'>
             <div className='col-3'>
-              <h3 className='table-label'>Master Sizing:</h3>
+              <h3 className='table-label'>Master Sizing</h3>
             </div>
             <div className='col-9'>
               <p>Auto Sized (Default)</p>
@@ -312,7 +322,7 @@ class CreateCluster extends React.Component {
             </div>
           </div>
 
-          <div className='row section'>
+          <div className='row section new-cluster--launch'>
             <div className='col-12'>
               <p>Create this cluster now and it will be available for you to use as soon as possible</p>
               <Button type='button'

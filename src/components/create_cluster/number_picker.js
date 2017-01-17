@@ -46,7 +46,7 @@ class NumberPicker extends React.Component {
 
   render() {
     return (
-      <div className="new-cluster--worker-setting-row">
+      <div className={'new-cluster--worker-setting-row ' + ( this.props.readOnly ? 'readonly' : '' )}>
         <div className="new-cluster--worker-setting-label">
           {this.props.label}
         </div>

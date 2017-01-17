@@ -57,7 +57,7 @@ class Home extends React.Component {
           <div className='well launch-new-cluster'>
 
             <Link to='new-cluster'>
-              <Button type='button' bsSize='large' bsStyle='primary'>Launch New Cluster</Button>
+              <Button type='button' bsStyle='primary'>Launch New Cluster</Button>
             </Link>
             Believe it or not, you can have as many clusters as you like.
           </div>
