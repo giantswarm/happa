@@ -1,19 +1,28 @@
 'use strict';
+import React from 'react';
+import ReactTestUtils from 'react-addons-test-utils';
+
+function MyComponent() {
+  return (
+    <div>
+      <span className="heading">Title</span>
+      <Subcomponent foo="bar" />
+    </div>
+  );
+}
 
 describe('HappaApp', function () {
-  var React = require('react/addons');
-  var HappaApp, component;
-
-  beforeEach(function () {
-    var container = document.createElement('div');
-    container.id = 'content';
-    document.body.appendChild(container);
-
-    HappaApp = require('components/HappaApp.js');
-    component = React.createElement(HappaApp);
-  });
-
   it('should create a new instance of HappaApp', function () {
-    expect(component).toBeDefined();
+
+    const renderer = ReactTestUtils.createRenderer();
+    renderer.render(<MyComponent />);
+    const result = renderer.getRenderOutput();
+
+    expect(result.type).toBe('div');
+    expect(result.props.children).toEqual([
+      <span className="heading">Title</span>,
+      <Subcomponent foo="bar" />
+    ]);
+
   });
 });

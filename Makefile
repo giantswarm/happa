@@ -37,8 +37,8 @@ npm-check-updates:
 	docker run -ti happa-dev ncu
 
 # Run tests (of which there are none right now)
-test: docker-build
-	docker run -ti -p 8000:8000 -v ${PWD}/src:/usr/src/app/src happa-dev npm test
+test: docker-build-dev
+	docker run -ti -p 8000:8000 -p 8080:8080 -v ${PWD}/src:/usr/src/app/src happa-dev npm test
 
 # update dependency images
 pull-images:

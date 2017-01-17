@@ -5,22 +5,30 @@ var path = require('path');
 module.exports = function (config) {
   config.set({
     basePath: '',
+    plugins: [
+      'karma-webpack',
+      'karma-jasmine'
+    ],
     frameworks: ['jasmine'],
     files: [
-      'test/helpers/**/*.js',
-      'test/spec/components/**/*.js',
-      'test/spec/stores/**/*.js',
-      'test/spec/actions/**/*.js'
+      'test/**/*.js'
     ],
     preprocessors: {
-      'test/spec/components/**/*.js': ['webpack'],
-      'test/spec/stores/**/*.js': ['webpack'],
-      'test/spec/actions/**/*.js': ['webpack']
+      'test/**/*.js': ['webpack']
     },
     webpack: {
       cache: true,
       module: {
-        loaders: [{
+        loaders: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel',
+          query: {
+            presets: ['es2015'],
+            plugins: ['transform-react-jsx', 'transform-class-properties']
+          }
+        }, {
           test: /\.gif/,
           loader: 'url-loader?limit=10000&mimetype=image/gif'
         }, {
@@ -29,9 +37,6 @@ module.exports = function (config) {
         }, {
           test: /\.png/,
           loader: 'url-loader?limit=10000&mimetype=image/png'
-        }, {
-          test: /\.js$/,
-          loader: 'babel-loader'
         }, {
           test: /\.scss/,
           loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
