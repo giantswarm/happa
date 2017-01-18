@@ -11,9 +11,9 @@ import { flashAdd } from '../../actions/flashMessageActions';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 
-var passage = new Passage({endpoint: window.config.passageEndpoint});
+var passage = new Passage();
 
-class SignUp extends React.Component {
+export class SignUp extends React.Component {
   constructor(props) {
     super(props);
 
@@ -404,4 +404,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(null, mapDispatchToProps)(SignUp);
+export default connect(null, mapDispatchToProps)(SignUp);

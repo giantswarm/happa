@@ -3,9 +3,7 @@
 import * as types from './actionTypes';
 import Passage from '../lib/passage_client';
 
-var passage = new Passage({
-  endpoint: window.config.passageEndpoint
-});
+var passage = new Passage();
 
 export function requestPasswordRecoveryToken(email) {
   return function(dispatch) {

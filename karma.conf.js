@@ -19,7 +19,15 @@ module.exports = function (config) {
     },
     webpack: {
       cache: true,
+      externals: {
+        'react/addons': true,
+        'react/lib/ReactContext': true,
+        'react/lib/ExecutionEnvironment': true
+      },
       module: {
+        preLoaders: [
+            { test: /\.json$/, loader: 'json-loader'},
+        ],
         loaders: [
         {
           test: /\.js$/,

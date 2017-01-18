@@ -3,6 +3,14 @@
 var request = require('superagent-bluebird-promise');
 var helpers = require('./helpers');
 
+var endpoint;
+
+if (window && window.config) {
+  endpoint = window.config.passageEndpoint
+} else {
+  endpoint = 'http://docker.dev:5000'
+}
+
 //
 // Passage
 // -------
@@ -15,7 +23,7 @@ var helpers = require('./helpers');
 // Example Usage:
 // var passage = new Passage({endpoint: 'http://docker.dev:5000'})
 //
-var Passage = function(config) {
+var Passage = function(config = {endpoint: endpoint} ) {
   var constraints = {
     endpoint: {
       presence: true,
