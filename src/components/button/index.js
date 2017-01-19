@@ -28,6 +28,7 @@ class Button extends React.Component {
       <div className='progress_button--container'>
         <BsButton
           type={this.props.type}
+          bsSize={this.props.bsSize}
           bsStyle={this.props.bsStyle}
           onClick={this.props.onClick}
           disabled={this.props.disabled || this.props.loading}>
@@ -53,6 +54,7 @@ class Button extends React.Component {
 Button.propTypes = {
   type: React.PropTypes.string,
   bsStyle: React.PropTypes.string,
+  bsSize: React.PropTypes.string,
   onClick: React.PropTypes.func,
   disabled: React.PropTypes.bool,
   loading: React.PropTypes.bool,

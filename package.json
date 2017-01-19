@@ -1,6 +1,6 @@
 {
   "name": "happa",
-  "version": "0.0.8",
+  "version": "0.1.19",
   "description": "",
   "repository": "",
   "private": true,
@@ -24,7 +24,7 @@
     "react": "~15.3.0",
     "react-addons-css-transition-group": "~15.3.0",
     "react-addons-update": "~15.3.0",
-    "giantswarm": "git://github.com/giantswarm/giantswarm-js-client#v0.1.3",
+    "giantswarm": "git://github.com/giantswarm/giantswarm-js-client#create-cluster",
     "react-codemirror": "~0.2.6",
     "react-dom": "~15.3.0",
     "react-router": "~2.6.1",
@@ -47,7 +47,8 @@
     "react-breadcrumbs": "1.3.16",
     "react-timeout": "1.0.0",
     "react-datepicker": "0.34.0",
-    "react-document-title": "2.0.2"
+    "react-document-title": "2.0.2",
+    "react-tag-input": "4.6.2"
   },
   "devDependencies": {
     "jasmine-core": "2.4.1",

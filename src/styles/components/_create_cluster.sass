@@ -1,0 +1,153 @@
+.launch-new-cluster
+  font-size: 14px
+
+  .progress_button--container
+    .btn
+      margin-right: 15px
+
+  .btn
+    padding: 8px 20px
+
+.new-cluster
+  .checkbox
+    margin-bottom: 0px
+
+.new-cluster--worker
+  border-radius: 5px
+  background-color: #244d65
+  height: 203px
+  margin-bottom: 25px
+  padding: 10px 16px
+  font-weight: 400
+  font-size: 14px
+
+  .new-cluster--worker-title
+    position: relative
+    margin-bottom: 15px
+
+  .new-cluster--delete
+    position: absolute
+    right: 0px
+    cursor: pointer
+    -webkit-user-select: none
+    -moz-user-select: none
+    -ms-user-select: none
+    -o-user-select: none
+    user-select: none
+
+    &:hover
+      font-weight: bold
+
+    &:active
+      color: #aaa
+
+  .new-cluster--worker-setting-row
+    margin-bottom: 15px
+
+    &.readonly
+      opacity: 0.5
+
+  .new-cluster--worker-setting-label
+    width: 40%
+    display: inline-block
+    line-height: 35px
+
+  .new-cluster--worker-setting-control
+    width: 60%
+    display: inline-block
+    height: 35px
+    background-color: #32526a
+    line-height: 35px
+    text-align: center
+    border-radius: 5px
+    position: relative
+
+  .new-cluster--worker-setting-control-increase, .new-cluster--worker-setting-control-decrease
+    position: absolute
+    top: 0px
+    width: 35px
+    background-color: #3b5f7b
+    cursor: pointer
+    -webkit-user-select: none
+    -moz-user-select: none
+    -ms-user-select: none
+    -o-user-select: none
+    user-select: none
+
+    &:hover
+      background-color: darken(#3b5f7b, 2%)
+
+    &:active
+      background-color: darken(#3b5f7b, 6%)
+      color: #aaa
+
+  .new-cluster--worker-setting-control-increase
+    right: 0px
+    border-top-right-radius: 5px
+    border-bottom-right-radius: 5px
+
+  .new-cluster--worker-setting-control-decrease
+    left: 0px
+    border-top-left-radius: 5px
+    border-bottom-left-radius: 5px
+
+  .new-cluster--worker-setting-label-control
+    width: 100%
+    background-color: #2a5067
+    border-radius: 5px
+    padding: 10px
+
+  .ReactTags__tags
+    .ReactTags__tagInput
+      display: inline-block
+
+      input
+        background-color: #2a5067
+        border: 0px
+        cursor: pointer
+
+        &:focus
+          outline: none
+
+    .ReactTags__tag
+      background-color: #3b5f7b
+      padding: 2px 8px
+      border-radius: 5px
+      margin-right: 5px
+      margin-bottom: 5px
+      display: inline-block
+
+      .ReactTags__remove
+        color: #aaa
+        margin-left: 6px
+        cursor: pointer
+        &:hover
+          text-decoration: none
+          color: #fff
+
+.new-cluster--add-worker
+  border-radius: 5px
+  border: 1px dashed #5f8096
+  height: 203px
+  line-height: 203px
+  margin-bottom: 25px
+  text-align: center
+  cursor: pointer
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  -o-user-select: none
+  user-select: none
+
+  &:hover
+    border: 1px dashed lighten(#5f8096, 10%)
+
+  &:active
+    background-color: lighten(#234a61, 1%)
+    color: #fff
+
+.new-cluster--launch
+  text-align: center
+
+  button
+    margin-top: 18px

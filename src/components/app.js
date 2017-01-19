@@ -10,6 +10,7 @@ import login from './login/index';
 import logout from './logout/index';
 import signup from './signup/index';
 import notFound from './not_found/index';
+// import createCluster from './create_cluster';
 import forgot_password_index from './forgot_password/index';
 import forgot_password_set_password from './forgot_password/set_password';
 import Organizations from './organizations';
@@ -26,18 +27,20 @@ require('bootstrap/dist/css/bootstrap.min.css');
 require('../styles/app.scss');
 require('react-datepicker/dist/react-datepicker.css');
 
-var airbrake = new AirbrakeClient({
-  projectId: 'b623d794488458d023f2fcbea93954ca',
-  projectKey: 'b623d794488458d023f2fcbea93954ca',
-  reporter: 'xhr',
-  host: 'https://exceptions.giantswarm.io'
-});
+if (window.config.environment != 'development') {
+  var airbrake = new AirbrakeClient({
+    projectId: 'b623d794488458d023f2fcbea93954ca',
+    projectKey: 'b623d794488458d023f2fcbea93954ca',
+    reporter: 'xhr',
+    host: 'https://exceptions.giantswarm.io'
+  });
 
-airbrake.addFilter(function(notice) {
-  notice.context.environment = window.config.environment;
-  notice.context.version = window.config.version;
-  return notice;
-});
+  airbrake.addFilter(function(notice) {
+    notice.context.environment = window.config.environment;
+    notice.context.version = window.config.version;
+    return notice;
+  });
+}
 
 var appContainer = document.getElementById('app');
 
@@ -67,6 +70,10 @@ render(
 
       <Route name="Home" path="/" component={Layout} onEnter={requireAuth}>
         <IndexRoute component={Home}/>
+
+        {
+        // <Route name='Create Cluster' path="new-cluster" component={createCluster} />
+        }
 
         <Route name='Getting Started' path="getting-started" >
           <IndexRoute component={gettingStarted} />
