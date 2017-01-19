@@ -73,6 +73,7 @@
     "eslint-plugin-react": "6.1.2",
     "babel-plugin-transform-react-jsx": "~6.8.0",
     "babel-plugin-transform-class-properties": "6.18.0",
+    "babel-polyfill": "6.20.0",
     "karma": "~1.2.0",
     "karma-jasmine": "~1.0.2",
     "karma-script-launcher": "~1.0.0",

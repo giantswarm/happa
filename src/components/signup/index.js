@@ -125,7 +125,7 @@ export class SignUp extends React.Component {
     }, 1000);
   }
 
-  handleSubmit = (e) => {
+  handleSubmit() {
     e.preventDefault();
 
     if(this.state.formValid) {
@@ -164,7 +164,7 @@ export class SignUp extends React.Component {
     }
   }
 
-  tosChanged = (e) => {
+  tosChanged() {
     var checked = e.target.checked;
 
     var statusMessage = this.state.statusMessage;
@@ -202,7 +202,7 @@ export class SignUp extends React.Component {
     });
   }
 
-  passwordEditingStarted = (password) => {
+  passwordEditingStarted() {
     this.setState({
       formValid: false,
       advancable: false,
@@ -213,7 +213,7 @@ export class SignUp extends React.Component {
     });
   }
 
-  passwordEditingCompleted = (password) => {
+  passwordEditingCompleted() {
     var statusMessage = this.state.statusMessage;
     var valid = false;
 
@@ -243,7 +243,7 @@ export class SignUp extends React.Component {
     this.validateForm();
   }
 
-  passwordConfirmationEditingStarted = (confirmation) => {
+  passwordConfirmationEditingStarted() {
     this.setState({
       formValid: false,
       advancable: false,
@@ -276,7 +276,7 @@ export class SignUp extends React.Component {
     }
   }
 
-  passwordConfirmationEditingCompleted = (passwordConfirmation) => {
+  passwordConfirmationEditingCompleted() {
     var statusMessage = this.state.statusMessage;
     var valid = this.state.passwordConfirmationField.valid;
 
@@ -342,7 +342,7 @@ export class SignUp extends React.Component {
   render() {
     return (
       <div className='signup--container col-6'>
-        <h1>Create Your Giant Swarm Account</h1>
+        <h1 ref="title">Create Your Giant Swarm Account</h1>
 
 
         <form ref='signupForm' onSubmit={this.handleSubmit} className={'step-' + this.state.currentStep} >

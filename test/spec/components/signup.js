@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import { SignUp } from 'components/signup'
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import configureStore from 'stores/configureStore';
 const store = configureStore();
@@ -18,11 +18,10 @@ function MyComponent() {
 
 describe('HappaApp', function () {
   it('should create a new instance of HappaApp', function () {
-    const renderer = ReactTestUtils.createRenderer();
-    renderer.render(<SignUp store={store} />);
-    const result = renderer.getRenderOutput();
+    const wrapper = mount(<SignUp store={store} params={{contactId: "123456"}} />);
 
-    expect(result.type).toBe('div');
-    expect(result.props.children).toContain(<h1>Create Your Giant Swarm Account</h1>);
+    var text = wrapper.ref('title').text();
+
+    expect(text).toEqual('Create Your Giant Swarm Account');
   });
 });
