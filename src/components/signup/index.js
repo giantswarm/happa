@@ -51,10 +51,9 @@ class SignUp extends React.Component {
   }
 
   componentDidMount(){
-    var contactId = this.props.params.contactId;
     var token = this.props.params.token;
 
-    passage.checkInvite({contactId, token})
+    passage.checkInvite({token})
     .then(data => {
       this.setState({
         email: data.email,
@@ -77,7 +76,7 @@ class SignUp extends React.Component {
 
       var statusMessage = 'verify_failed';
 
-      if (error.message === 'InvalidTokenOrContactID') {
+      if (error.message === 'InvalidToken') {
         statusMessage = 'invalid_token';
       }
 
@@ -85,8 +84,6 @@ class SignUp extends React.Component {
         statusMessage: statusMessage
       });
     });
-
-    // actions.checkInvite(this.props.params.contactId, this.props.params.token);
   }
 
   componentWillReceiveProps() {
@@ -138,7 +135,6 @@ class SignUp extends React.Component {
       });
 
       passage.createAccount({
-        contactId: this.props.params.contactId,
         inviteToken: this.props.params.token,
         password: this.state.passwordField.value
       })

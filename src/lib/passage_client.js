@@ -35,16 +35,15 @@ var Passage = function(config) {
     //
     // checkInvite
     // -----------
-    // Check if a invitation token is valid for a certain contactId
-    // params: {contactId: '12345', token: 'abcdef'}
+    // Check if a invitation token is valid
+    // params: {token: 'abcdef'}
     //
     checkInvite: function(params) {
       var constraints = {
-        contactId: { presence: true },
         token: { presence: true }
       };
 
-      var url = `${config.endpoint}/invite/${params.contactId}/${params.token}`;
+      var url = `${config.endpoint}/invite/${params.token}`;
 
       var promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
@@ -55,7 +54,7 @@ var Passage = function(config) {
         if (x.body.is_valid) {
           return(x.body);
         } else {
-          throw(Error('InvalidTokenOrContactID'));
+          throw(Error('InvalidToken'));
         }
       });
 
@@ -66,11 +65,10 @@ var Passage = function(config) {
     // createAccount
     // -----------
     // Create an account
-    // params: {contactId: '12345', inviteToken: 'abcdef', password: 'uvwxyz'}
+    // params: {inviteToken: 'abcdef', password: 'uvwxyz'}
     //
     createAccount: function(params) {
       var constraints = {
-        contactId: { presence: true },
         inviteToken: { presence: true },
         password: { presence: true }
       };
@@ -80,7 +78,6 @@ var Passage = function(config) {
       // Passage is not expecting camelcase in its json body
       // Converting it here.
       var payload = {
-        'contact_id': params.contactId,
         'invite_token': params.inviteToken,
         'password': params.password
       };
