@@ -36,7 +36,7 @@ docker-clean-build-dev:
 npm-check-updates:
 	docker run -ti happa-dev ncu
 
-# Run tests (of which there are none right now)
+# Run tests
 test: docker-build-dev
 	docker run -ti -p 8000:8000 -p 8080:8080 -v ${PWD}/src:/usr/src/app/src happa-dev npm test
 

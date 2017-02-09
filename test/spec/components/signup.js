@@ -1,20 +1,10 @@
 'use strict';
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
-import { SignUp } from 'components/signup'
-import { shallow, mount } from 'enzyme';
+import { SignUp } from 'components/signup';
+import { mount } from 'enzyme';
 
 import configureStore from 'stores/configureStore';
 const store = configureStore();
-
-function MyComponent() {
-  return (
-    <div>
-      <span className="heading">Title</span>
-      <h1>Test</h1>
-    </div>
-  );
-}
 
 describe('HappaApp', function () {
   it('should create a new instance of HappaApp', function () {
