@@ -1,9 +1,6 @@
 FROM mhart/alpine-node:6.2.2
 
-RUN apk update && apk add git g++ curl make python && rm -rf /var/cache/apk/*
-
-RUN curl -Ls https://github.com/fgrehm/docker-phantomjs2/releases/download/v2.0.0-20150722/dockerized-phantomjs.tar.gz \
-       | tar xz -C /
+RUN apk update && apk add git g++ make python && rm -rf /var/cache/apk/*
 
 # Create app directory
 RUN mkdir -p /usr/src/app
