@@ -1,6 +1,7 @@
 test:
-  npm test
-  mkdir dist
-  grunt build
-  docker build -t registry.giantswarm.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 -f Dockerfile .
-  docker push registry.giantswarm.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+  override:
+    - npm test
+    - mkdir dist
+    - grunt build
+    - docker build -t registry.giantswarm.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 -f Dockerfile .
+    - docker push registry.giantswarm.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
