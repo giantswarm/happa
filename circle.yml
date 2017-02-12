@@ -13,7 +13,7 @@ test:
     # Just a little smoke test. Starts the production container and checks
     # if a line of text from index.html is in there.
     - docker run -p 80:80 -d registry.giantswarm.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
-    - curl localhost:80 | grep yolo # Grep returns non 0 exit code if it can't find the text, which fails the smoke test
+    - curl localhost:80 | grep Happa # Grep returns non 0 exit code if it can't find the text, which fails the smoke test
 
     # Push
     - docker push registry.giantswarm.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
