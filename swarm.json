@@ -3,9 +3,9 @@
   "components": {
     "nginx": {
       "image": "registry.giantswarm.io/giantswarm/happa:0.1.19",
-      "ports": 80,
+      "ports": 8000,
       "domains": {
-        "80": "happa.giantswarm.io"
+        "8000": "happa.giantswarm.io"
       },
       "env": {
         "PASSAGE_ENDPOINT": "https://passage.giantswarm.io",

@@ -29,13 +29,13 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: 80
+            port: 8000
           initialDelaySeconds: 10
           timeoutSeconds: 1
         readinessProbe:
           httpGet:
             path: /
-            port: 80
+            port: 8000
           initialDelaySeconds: 10
           timeoutSeconds: 1
       imagePullSecrets:
