@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: happa
+  namespace: giantswarm
+  labels:
+    app: happa
+spec:
+  rules:
+  - host: happa.giantswarm.g8s.fra-1.giantswarm.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: happa
+          servicePort: 80
