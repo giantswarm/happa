@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: happa
+  namespace: giantswarm
+  labels:
+    app: happa
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: happa
+    spec:
+      containers:
+      - name: happa
+        image: registry.giantswarm.io/giantswarm/happa:%%DOCKER_TAG%%
+        env:
+        - name: PASSAGE_ENDPOINT
+          value: https://passage.giantswarm.io
+        - name: API_ENDPOINT
+          value: https://api.giantswarm.io
+        - name: DESMOTES_ENDPOINT
+          value: https://desmotes.giantswarm.io
+        - name: ENVIRONMENT
+          value: kubernetes
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+      imagePullSecrets:
+      - name: circleci-giantswarm-registry

@@ -5,22 +5,40 @@ var path = require('path');
 module.exports = function (config) {
   config.set({
     basePath: '',
+    plugins: [
+      'karma-webpack',
+      'karma-jasmine',
+      'karma-phantomjs-launcher'
+    ],
     frameworks: ['jasmine'],
     files: [
-      'test/helpers/**/*.js',
-      'test/spec/components/**/*.js',
-      'test/spec/stores/**/*.js',
-      'test/spec/actions/**/*.js'
+      'node_modules/babel-polyfill/dist/polyfill.js',
+      'test/**/*.js'
     ],
     preprocessors: {
-      'test/spec/components/**/*.js': ['webpack'],
-      'test/spec/stores/**/*.js': ['webpack'],
-      'test/spec/actions/**/*.js': ['webpack']
+      'test/**/*.js': ['webpack']
     },
     webpack: {
       cache: true,
+      externals: {
+        'react/addons': true,
+        'react/lib/ReactContext': true,
+        'react/lib/ExecutionEnvironment': true
+      },
       module: {
-        loaders: [{
+        preLoaders: [
+            { test: /\.json$/, loader: 'json-loader'},
+        ],
+        loaders: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel',
+          query: {
+            presets: ['es2015'],
+            plugins: ['transform-react-jsx', 'transform-class-properties']
+          }
+        }, {
           test: /\.gif/,
           loader: 'url-loader?limit=10000&mimetype=image/gif'
         }, {
@@ -29,9 +47,6 @@ module.exports = function (config) {
         }, {
           test: /\.png/,
           loader: 'url-loader?limit=10000&mimetype=image/png'
-        }, {
-          test: /\.js$/,
-          loader: 'babel-loader'
         }, {
           test: /\.scss/,
           loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
@@ -67,7 +82,7 @@ module.exports = function (config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: [],
+    browsers: ["PhantomJS"],
     reporters: ['progress'],
     captureTimeout: 60000,
     singleRun: true

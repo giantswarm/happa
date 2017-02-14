@@ -9,7 +9,7 @@ services:
   happa:
     image: registry.giantswarm.io/giantswarm/happa:latest
     ports:
-      - "80:80"
+      - "80:8000"
     links:
       - passage
     environment:
@@ -20,7 +20,7 @@ services:
   passage:
     image: registry.giantswarm.io/giantswarm/passage:latest
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       # DEBUGGING: 1
       # NUM_PROXIES: "0"

@@ -4,7 +4,7 @@ if [ -n "$API_ENDPOINT" ]; then
 fi
 
 if [ -n "$PASSAGE_ENDPOINT" ]; then
-  sed -i "s|passageEndpoint: 'http://docker.dev:5000'|passageEndpoint: '$PASSAGE_ENDPOINT'|" /www/index.html
+  sed -i "s|passageEndpoint: 'http://docker.dev:5001'|passageEndpoint: '$PASSAGE_ENDPOINT'|" /www/index.html
 fi
 
 if [ -n "$DESMOTES_ENDPOINT" ]; then
@@ -29,4 +29,6 @@ sed -i "s|version: 'development'|version: '$(cat /www/VERSION)'|" /www/index.htm
 
 sed -i "s|VERSION|$(cat /www/VERSION)|" /etc/nginx/nginx.conf
 
-nginx -g "daemon off;"
+echo ""
+echo "--- Starting Happa nginx server ---"
+exec nginx -g "daemon off;"

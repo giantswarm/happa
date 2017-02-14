@@ -11,9 +11,14 @@ import { flashAdd } from '../../actions/flashMessageActions';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 
+// TODO: Figure out a way to make the test suite know about our standard
+// 'window.config' object. Or change the way these config params are passed
+// in. Or change the way these components get at these supporting libraries.
+window.config = window.config || {passageEndpoint: 'http://docker.dev:5000'};
+// EndTODO
 var passage = new Passage({endpoint: window.config.passageEndpoint});
 
-class SignUp extends React.Component {
+export class SignUp extends React.Component {
   constructor(props) {
     super(props);
 
@@ -342,7 +347,7 @@ class SignUp extends React.Component {
   render() {
     return (
       <div className='signup--container col-6'>
-        <h1>Create Your Giant Swarm Account</h1>
+        <h1 ref='title'>Create Your Giant Swarm Account</h1>
 
 
         <form ref='signupForm' onSubmit={this.handleSubmit} className={'step-' + this.state.currentStep} >
@@ -404,4 +409,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(null, mapDispatchToProps)(SignUp);
+export default connect(null, mapDispatchToProps)(SignUp);
