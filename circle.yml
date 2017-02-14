@@ -12,7 +12,7 @@ test:
     # Just a little smoke test. Starts the production container and checks
     # if a line of text from index.html is in there.
     - docker run -p 8000:8000 -d registry.giantswarm.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
-    - curl https://localhost:8000 | grep Happa # Grep returns non 0 exit code if it can't find the text, which fails the smoke test
+    - curl -k https://localhost:8000 | grep Happa # Grep returns non 0 exit code if it can't find the text, which fails the smoke test
 
 deployment:
   master:

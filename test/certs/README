@@ -1,0 +1,5 @@
+These are just self signed dummy certificates so that we can test out proper
+SSL configuration of the production nginx container.
+
+In production, the kubernetes deployment mounts a secret with the
+real certificates.
