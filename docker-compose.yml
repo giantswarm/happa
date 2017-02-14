@@ -98,7 +98,7 @@ services:
       - nsqd
       - couchdb
     ports:
-      - "5001:5000"
+      - "5002:5000"
     volumes:
       - ./certificates:/certs
     environment:
