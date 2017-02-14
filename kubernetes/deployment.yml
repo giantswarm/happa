@@ -14,9 +14,17 @@ spec:
       labels:
         app: happa
     spec:
+      volumes:
+        - name: api-certs
+          secret:
+            secretName: giantswarm-cert
       containers:
       - name: happa
         image: registry.giantswarm.io/giantswarm/happa:%%DOCKER_TAG%%
+        volumeMounts:
+        - name: api-certs
+          mountPath: /etc/nginx/certs
+          readOnly: true
         env:
         - name: PASSAGE_ENDPOINT
           value: https://passage.giantswarm.io
@@ -30,12 +38,14 @@ spec:
           httpGet:
             path: /
             port: 8000
+            scheme: HTTPS
           initialDelaySeconds: 10
           timeoutSeconds: 1
         readinessProbe:
           httpGet:
             path: /
             port: 8000
+            scheme: HTTPS
           initialDelaySeconds: 10
           timeoutSeconds: 1
       imagePullSecrets:
