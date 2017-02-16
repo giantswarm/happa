@@ -7,6 +7,8 @@ import ClusterDashboard from './cluster_dashboard';
 import ClusterEmptyState from './cluster_empty_state';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
+import Button from '../button';
+import {Link}  from 'react-router';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 // import Button from '../button';
@@ -54,15 +56,13 @@ class Home extends React.Component {
     return (
       <DocumentTitle title={'Cluster Overview | ' + this.props.selectedOrganization + ' | Giant Swarm'}>
         <div>
-          {
-          // <div className='well launch-new-cluster'>
+          <div className='well launch-new-cluster'>
 
-          //   <Link to='new-cluster'>
-          //     <Button type='button' bsStyle='primary'>Launch New Cluster</Button>
-          //   </Link>
-          //   Believe it or not, you can have as many clusters as you like.
-          // </div>
-          }
+            <Link to='new-cluster'>
+              <Button type='button' bsStyle='primary'>Launch New Cluster</Button>
+            </Link>
+            Believe it or not, you can have as many clusters as you like.
+          </div>
 
           {
             this.props.clusters.length === 0 ? <ClusterEmptyState selectedOrganization={this.props.selectedOrganization} organizations={this.props.organizations} /> : null

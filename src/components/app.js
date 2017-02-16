@@ -17,6 +17,7 @@ import Organizations from './organizations';
 import { Provider } from 'react-redux';
 import configureStore from '../stores/configureStore';
 import organizationDetail from './organizations/detail';
+import createCluster from './create_cluster';
 import clusterDetail from './organizations/cluster_detail';
 import accountSettings from './account_settings';
 import Home from './home';
@@ -71,9 +72,7 @@ render(
       <Route name="Home" path="/" component={Layout} onEnter={requireAuth}>
         <IndexRoute component={Home}/>
 
-        {
-        // <Route name='Create Cluster' path="new-cluster" component={createCluster} />
-        }
+        <Route name='Create Cluster' path="new-cluster" component={createCluster} />
 
         <Route name='Getting Started' path="getting-started" >
           <IndexRoute component={gettingStarted} />
