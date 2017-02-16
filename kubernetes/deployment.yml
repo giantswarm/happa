@@ -27,11 +27,11 @@ spec:
           readOnly: true
         env:
         - name: PASSAGE_ENDPOINT
-          value: https://passage-k8s.giantswarm.io
+          value: https://passage-g8s.giantswarm.io
         - name: API_ENDPOINT
-          value: https://api-k8s.giantswarm.io
+          value: https://api-g8s.giantswarm.io
         - name: DESMOTES_ENDPOINT
-          value: https://desmotes-k8s.giantswarm.io
+          value: https://desmotes-g8s.giantswarm.io
         - name: ENVIRONMENT
           value: kubernetes
         livenessProbe:
