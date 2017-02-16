@@ -16,7 +16,7 @@ if [ -n "$INTERCOM_APP_ID" ]; then
 fi
 
 if [ -n "$DOMAIN_VALIDATOR_ENDPOINT" ]; then
-  sed -i "s|domainValidatorEndpoint: 'http://docker.dev:5001'|domainValidatorEndpoint: '$DOMAIN_VALIDATOR_ENDPOINT'|" /www/index.html
+  sed -i "s|domainValidatorEndpoint: 'http://docker.dev:5002'|domainValidatorEndpoint: '$DOMAIN_VALIDATOR_ENDPOINT'|" /www/index.html
 fi
 
 if [ -n "$ENVIRONMENT" ]; then
