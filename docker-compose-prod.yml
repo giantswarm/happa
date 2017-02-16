@@ -9,7 +9,7 @@ services:
   happa:
     image: registry.giantswarm.io/giantswarm/happa:latest
     ports:
-      - "80:8000"
+      - "443:8000"
     links:
       - passage
     environment:

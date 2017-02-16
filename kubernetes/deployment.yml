@@ -14,28 +14,38 @@ spec:
       labels:
         app: happa
     spec:
+      volumes:
+        - name: giantswarm-cert
+          secret:
+            secretName: giantswarm-cert
       containers:
       - name: happa
         image: registry.giantswarm.io/giantswarm/happa:%%DOCKER_TAG%%
+        volumeMounts:
+        - name: giantswarm-cert
+          mountPath: /etc/nginx/certs
+          readOnly: true
         env:
         - name: PASSAGE_ENDPOINT
-          value: https://passage.giantswarm.io
+          value: https://passage-g8s.giantswarm.io
         - name: API_ENDPOINT
-          value: https://api.giantswarm.io
+          value: https://api-g8s.giantswarm.io
         - name: DESMOTES_ENDPOINT
-          value: https://desmotes.giantswarm.io
+          value: https://desmotes-g8s.giantswarm.io
         - name: ENVIRONMENT
           value: kubernetes
         livenessProbe:
           httpGet:
             path: /
             port: 8000
+            scheme: HTTPS
           initialDelaySeconds: 10
           timeoutSeconds: 1
         readinessProbe:
           httpGet:
             path: /
             port: 8000
+            scheme: HTTPS
           initialDelaySeconds: 10
           timeoutSeconds: 1
       imagePullSecrets:
