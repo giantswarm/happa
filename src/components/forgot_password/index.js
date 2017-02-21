@@ -48,7 +48,7 @@ class ForgotPassword extends React.Component {
           break;
         default:
           this.props.dispatch(flashAdd({
-            message: 'Something went wrong. Or servers might be down, or perhaps you\'ve made too many requests in a row. Please try again in 5 minutes.',
+            message: 'Something went wrong. Our servers might be down, or perhaps you\'ve made too many requests in a row. Please try again in 5 minutes.',
             class: 'danger'
           }));
       }
