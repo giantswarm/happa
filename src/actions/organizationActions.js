@@ -72,7 +72,7 @@ export function organizationsLoad() {
       var clusters = Promise.all(_.map(organizationsArray, organizationName => {
         return giantSwarm.clusters({ organizationName })
                .then(response => {
-                 return [organizationName, response.result.clusters] || [organizationName, []];
+                 return [organizationName, response.result] || [organizationName, []];
                })
                .catch(() => {
                  return [organizationName, 'error'];

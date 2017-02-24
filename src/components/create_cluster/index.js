@@ -184,8 +184,8 @@ class CreateCluster extends React.Component {
       owner: this.props.selectedOrganization,
       workers: this.state.workers.map((worker) => {
         return {
-          memory: {size_gb: worker.memory},
-          storage: {size_gb: worker.storage},
+          memory: {size_gb: String(worker.memory)},
+          storage: {size_gb: String(worker.storage)},
           cpu: {cores: worker.cpu}
         };
       })
