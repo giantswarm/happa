@@ -3,6 +3,10 @@
 import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import Desmotes from '../lib/desmotes_client';
+import { modalHide } from './modalActions';
+import { flashAdd } from './flashMessageActions';
+import React from 'react';
+
 
 // clusterSelect
 // =============================================================
@@ -58,6 +62,59 @@ export function clusterLoadMetricsSuccess(clusterId, metrics) {
 export function clusterLoadMetricsError(clusterId, error) {
   return {
     type: types.CLUSTER_LOAD_METRICS_ERROR,
+    clusterId,
+    error
+  };
+}
+
+export function clusterDelete(clusterId) {
+  return {
+    type: types.CLUSTER_DELETE,
+    clusterId
+  };
+}
+
+export function clusterDeleteConfirm(clusterId) {
+  return function(dispatch, getState) {
+    dispatch({
+      type: types.CLUSTER_DELETE_CONFIRM,
+      clusterId
+    });
+
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
+    return giantSwarm.deleteCluster({clusterId})
+    .then((response) => {
+      console.log(response);
+      dispatch(modalHide());
+      dispatch(flashAdd({
+        message: <div><strong>Cluster deleted succesfully</strong></div>,
+        class: 'success'
+      }));
+      dispatch(clusterDeleteSuccess(clusterId));
+    })
+    .catch((error) => {
+      dispatch(modalHide());
+      dispatch(flashAdd({
+        message: <div><strong>Something went wrong while trying to delete cluster: {clusterId}</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        class: 'danger'
+      }));
+      dispatch(clusterDeleteError(clusterId, error));
+    });
+  };
+}
+
+export function clusterDeleteSuccess(clusterId) {
+  return {
+    type: types.CLUSTER_DELETE_SUCCESS,
+    clusterId
+  };
+}
+
+export function clusterDeleteError(clusterId, error) {
+  return {
+    type: types.CLUSTER_DELETE_ERROR,
     clusterId,
     error
   };

@@ -10,6 +10,8 @@ import { organizationDeleteConfirm,
          organizationAddMemberConfirm,
          organizationRemoveMemberConfirm } from '../../actions/organizationActions';
 
+import { clusterDeleteConfirm } from '../../actions/clusterActions';
+
 import EmailField from './email_field';
 
 class Modal extends React.Component {
@@ -23,6 +25,10 @@ class Modal extends React.Component {
 
   close = () => {
     this.props.dispatch(modalHide());
+  }
+
+  deleteClusterConfirm = (clusterId) => {
+    this.props.dispatch(clusterDeleteConfirm(clusterId));
   }
 
   deleteOrganisation = (orgId) => {
@@ -231,6 +237,43 @@ class Modal extends React.Component {
           </BootstrapModal>
         );
 
+      case 'clusterDelete':
+        return (
+          <BootstrapModal show={this.props.modal.visible} onHide={this.close.bind(this)}>
+            <BootstrapModal.Header closeButton>
+              <BootstrapModal.Title>Delete Cluster</BootstrapModal.Title>
+            </BootstrapModal.Header>
+            <BootstrapModal.Body>
+              <p>Are you sure you want to delete cluster <code>{this.props.modal.templateValues.clusterId}</code>?</p>
+              <p>There is no way to undo this action, and it will take place immediately.</p>
+            </BootstrapModal.Body>
+            <BootstrapModal.Footer>
+              <Button
+                type='submit'
+                bsStyle='danger'
+                loading={this.props.modal.templateValues.loading}
+                onClick={this.deleteClusterConfirm.bind(this, this.props.modal.templateValues.clusterId)}>
+                {
+                  this.props.modal.templateValues.loading ?
+                  'Deleting Cluster'
+                  :
+                  'Delete Cluster'
+                }
+              </Button>
+
+              {
+                this.props.modal.templateValues.loading ?
+                null
+                :
+                <Button
+                  bsStyle='link'
+                  onClick={this.close.bind(this)}>
+                  Cancel
+                </Button>
+              }
+            </BootstrapModal.Footer>
+          </BootstrapModal>
+        );
 
       default:
         return null;
