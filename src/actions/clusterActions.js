@@ -76,7 +76,6 @@ export function clusterLoadDetails(clusterId) {
     })
     .catch((error) => {
       dispatch(clusterLoadDetailsError(clusterId, error));
-      throw(error);
     });
   };
 }
@@ -99,7 +98,6 @@ export function clusterFetchMetrics(clusterId) {
     })
     .catch((error) => {
       dispatch(clusterLoadMetricsError(clusterId, error));
-      throw(error);
     });
   };
 }
