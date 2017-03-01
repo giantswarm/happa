@@ -85,7 +85,7 @@ export function clusterDeleteConfirm(clusterId) {
     var giantSwarm = new GiantSwarm.Client(authToken);
 
     return giantSwarm.deleteCluster({clusterId})
-    .then((response) => {
+    .then(() => {
       dispatch(modalHide());
       dispatch(flashAdd({
         message: <div><strong>Cluster deleted succesfully</strong></div>,
