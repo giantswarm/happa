@@ -16,7 +16,7 @@ services:
   passage:
     image: registry.giantswarm.io/giantswarm/passage:latest
     ports:
-      - "5001:5000"
+      - "5001:8000"
 
     environment:
       DEBUGGING: 1
