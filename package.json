@@ -33,7 +33,7 @@
     "underscore": "~1.8.3",
     "bootstrap": "3.3.7",
     "validate.js": "~0.10.0",
-    "superagent-bluebird-promise": "git://github.com/Gekkio/superagent-bluebird-promise.git#fix-rejected-non-error-warning",
+    "superagent-bluebird-promise": "~4.2.0",
     "superagent": "1.8.2",
     "file-loader": "0.9.0",
     "bufferutil": "1.2.1",
