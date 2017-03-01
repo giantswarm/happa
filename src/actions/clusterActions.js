@@ -86,7 +86,6 @@ export function clusterDeleteConfirm(clusterId) {
 
     return giantSwarm.deleteCluster({clusterId})
     .then((response) => {
-      console.log(response);
       dispatch(modalHide());
       dispatch(flashAdd({
         message: <div><strong>Cluster deleted succesfully</strong></div>,
