@@ -238,13 +238,14 @@ class Modal extends React.Component {
         );
 
       case 'clusterDelete':
+        var clusterId = this.props.modal.templateValues.clusterId;
         return (
           <BootstrapModal show={this.props.modal.visible} onHide={this.close.bind(this)}>
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>Delete Cluster</BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
-              <p>Are you sure you want to delete cluster <code>{this.props.modal.templateValues.clusterId}</code>?</p>
+              <p>Are you sure you want to delete cluster <code>{this.props.clusters[clusterId].name} ({this.props.modal.templateValues.clusterId})</code>?</p>
               <p>There is no way to undo this action, and it will take place immediately.</p>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
@@ -283,14 +284,16 @@ class Modal extends React.Component {
 
 Modal.propTypes = {
   dispatch: React.PropTypes.func,
-  modal: React.PropTypes.object
+  modal: React.PropTypes.object,
+  clusters: React.PropTypes.object
 };
 
 function mapStateToProps(state) {
   return {
     modal: state.modal,
     selectedOrganization: state.app.selectedOrganization,
-    organizations: state.entities.organizations.items
+    organizations: state.entities.organizations.items,
+    clusters: state.entities.clusters.items
   };
 }
 
