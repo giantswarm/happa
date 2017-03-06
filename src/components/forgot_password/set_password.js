@@ -19,6 +19,8 @@ class SetPassword extends React.Component {
       password: '',
       passwordConfirmation: '',
       email: localStorage.getItem('user.email') || '',
+      emailField: '',
+
       submitting: false,
 
       passwordField: {
@@ -40,43 +42,47 @@ class SetPassword extends React.Component {
   }
 
   componentDidMount(){
-    // If we have the email, verify the token immediately.
+    // If we have the email already from localstorage, verify the token immediately.
     if (this.state.email) {
-      this.setState({
-        verifyingToken: true
-      });
-
-      this.props.actions.verifyPasswordRecoveryToken(this.state.email, this.props.params.token)
-      .then(() => {
-        this.setState({
-          verifyingToken: false,
-          tokenValid: true
-        });
-      })
-      .catch((error) => {
-        switch(error.name) {
-          case 'TypeError':
-            this.props.dispatch(flashAdd({
-              message: 'Please provide a (valid) email address',
-              class: 'danger'
-            }));
-
-            break;
-          case 'Error':
-            this.props.dispatch(flashAdd({
-              message: 'The reset token appears to be invalid.',
-              class: 'danger'
-            }));
-
-            break;
-        }
-
-        this.setState({
-          verifyingToken: false,
-          tokenValid: false
-        });
-      });
+      this.verifyToken();
     }
+  }
+
+  verifyToken(){
+    this.setState({
+      verifyingToken: true
+    });
+
+    this.props.actions.verifyPasswordRecoveryToken(this.state.email, this.props.params.token)
+    .then(() => {
+      this.setState({
+        verifyingToken: false,
+        tokenValid: true
+      });
+    })
+    .catch((error) => {
+      switch(error.name) {
+        case 'TypeError':
+          this.props.dispatch(flashAdd({
+            message: 'Please provide a (valid) email address',
+            class: 'danger'
+          }));
+
+          break;
+        case 'Error':
+          this.props.dispatch(flashAdd({
+            message: 'The reset token appears to be invalid.',
+            class: 'danger'
+          }));
+
+          break;
+      }
+
+      this.setState({
+        verifyingToken: false,
+        tokenValid: false
+      });
+    });
   }
 
   submit = (event) => {
@@ -101,18 +107,21 @@ class SetPassword extends React.Component {
     });
   }
 
-  setEmai = (event) => {
+  setEmail = (event) => {
     event.preventDefault();
     this.props.dispatch(flashClearAll());
-    forgotPasswordActions.updateEmail(this.state.email);
-    forgotPasswordActions.verifyPasswordRecoveryToken(this.state.email, this.props.params.token);
+    this.setState({
+      email: this.state.emailField
+    }, () => {
+      this.verifyToken();
+    });
   }
 
   updateEmail = (event) => {
     this.props.dispatch(flashClearAll());
 
     this.setState({
-      email: event.target.value
+      emailField: event.target.value
     });
   }
 
@@ -248,8 +257,12 @@ class SetPassword extends React.Component {
         );
       } else {
         return(
-          <div className='forgot-password--token-validating'>
-            Something went wrong.
+          <div>
+            <div className='forgot-password--token-validating'>
+              Something went wrong.
+            </div>
+            <br/>
+            <Link to='/forgot_password'>Request a new token</Link>
           </div>
         );
       }
@@ -262,7 +275,7 @@ class SetPassword extends React.Component {
         <p>Before we can check your recovery token, please type in your email again for verification purposes.</p>
         <div className='textfield'>
           <label>Email</label>
-          <input value={this.state.email}
+          <input value={this.state.emailField}
                  type='email'
                  id='email'
                  ref='email'
@@ -281,7 +294,7 @@ class SetPassword extends React.Component {
           }
           </ReactCSSTransitionGroup>
         </div>
-        <Link to='/login'>Back to login form</Link><br/>
+        <Link to='/login'>Back to login form</Link><br/><br/>
         <Link to='/forgot_password'>Request a new token</Link>
       </form>
     );
