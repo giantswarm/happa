@@ -4,6 +4,7 @@ import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import Desmotes from '../lib/desmotes_client';
 import { modalHide } from './modalActions';
+import { organizationsLoad } from './organizationActions';
 import { flashAdd } from './flashMessageActions';
 import React from 'react';
 
@@ -93,6 +94,7 @@ export function clusterDeleteConfirm(clusterId) {
       }));
       dispatch(clusterDeleteSuccess(clusterId));
     })
+    .then(dispatch(organizationsLoad()))
     .catch((error) => {
       dispatch(modalHide());
       dispatch(flashAdd({
