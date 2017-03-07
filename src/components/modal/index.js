@@ -245,8 +245,8 @@ class Modal extends React.Component {
               <BootstrapModal.Title>Delete Cluster</BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
-              <p>Are you sure you want to delete cluster <code>{this.props.clusters[clusterId].name} ({this.props.modal.templateValues.clusterId})</code>?</p>
-              <p>There is no way to undo this action, and it will take place immediately.</p>
+              <p>Are you sure you want to delete cluster <strong>{this.props.clusters[clusterId].name}</strong> (<code>{this.props.modal.templateValues.clusterId}</code>)?</p>
+              <p>All workloads on this cluster will be terminated. Data stored on the worker nodes will be lost. There is no way to undo this action.</p>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button

@@ -89,8 +89,9 @@ export function clusterDeleteConfirm(clusterId) {
     .then(() => {
       dispatch(modalHide());
       dispatch(flashAdd({
-        message: <div><strong>Cluster deleted succesfully</strong></div>,
-        class: 'success'
+        message: <div>Cluster deleted succesfully</div>,
+        class: 'success',
+        ttl: 3000
       }));
       dispatch(clusterDeleteSuccess(clusterId));
     })
@@ -98,8 +99,9 @@ export function clusterDeleteConfirm(clusterId) {
     .catch((error) => {
       dispatch(modalHide());
       dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to delete cluster: {clusterId}</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
-        class: 'danger'
+        message: <div>Something went wrong while trying to delete cluster: {clusterId}<br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        class: 'danger',
+        ttl: 3000
       }));
       dispatch(clusterDeleteError(clusterId, error));
     });
