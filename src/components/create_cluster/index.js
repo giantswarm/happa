@@ -210,6 +210,10 @@ class CreateCluster extends React.Component {
     }, 1000);
   }
 
+  componentDidMount() {
+    this.refs.cluster_name.select();
+  }
+
   render() {
     return (
       <DocumentTitle title={'Create Cluster | ' + this.props.selectedOrganization + ' | Giant Swarm'}>
@@ -227,7 +231,7 @@ class CreateCluster extends React.Component {
             <div className='col-9'>
               <form>
                 <p>Give your cluster a name so you can recognize it in a crowd.</p>
-                <input ref='cluster_name' type="text" value={this.state.clusterName} onChange={this.updateClusterName} />
+                <input ref='cluster_name' type="text" value={this.state.clusterName} onChange={this.updateClusterName} autoFocus />
               </form>
             </div>
           </div>

@@ -9,6 +9,26 @@ export default function modalReducer(state = {visible: false}, action = undefine
         visible: false
       });
 
+    case types.CLUSTER_DELETE:
+      return {
+        visible: true,
+        templateValues: {
+          clusterId: action.clusterId,
+          loading: false
+        },
+        template: 'clusterDelete'
+      };
+
+    case types.CLUSTER_DELETE_CONFIRM:
+      return {
+        visible: true,
+        templateValues: {
+          clusterId: action.clusterId,
+          loading: true
+        },
+        template: 'clusterDelete'
+      };
+
     case types.ORGANIZATION_DELETE:
       return {
         visible: true,

@@ -21,6 +21,10 @@ class ClusterDashboard extends React.Component {
     this.context.router.push('/getting-started/configure');
   }
 
+  showDeleteClusterModal(clusterId) {
+    this.props.actions.clusterDelete(clusterId);
+  }
+
   bytesFreeLabel(availableMetric, usedMetric) {
     var bytesFree = humanFileSize(availableMetric.value - usedMetric.value);
     return `${bytesFree.value} ${bytesFree.unit} free`;
@@ -54,7 +58,13 @@ class ClusterDashboard extends React.Component {
           <ButtonGroup>
             <DropdownButton title="" id="add_node_dropdown" className="outline">
               <MenuItem onClick={this.configureDocsFor.bind(this, this.props.cluster.id)}>Access Via kubectl</MenuItem>
-              <MenuItem componentClass={Link} href={'/organizations'} to={'/organizations/' + this.props.selectedOrganization + '/clusters/' + this.props.cluster.id }>Cluster Details</MenuItem>
+              <MenuItem componentClass={Link}
+                        href={'/organizations'}
+                        to={'/organizations/' + this.props.selectedOrganization + '/clusters/' + this.props.cluster.id }>
+                        Cluster Details
+              </MenuItem>
+              <MenuItem onClick={this.showDeleteClusterModal.bind(this, this.props.cluster.id)}>Delete Cluster</MenuItem>
+
               {/*
                 <MenuItem>Open in Kubernetes Dashboard</MenuItem>
                 <MenuItem>Configure Persistent Storage</MenuItem>

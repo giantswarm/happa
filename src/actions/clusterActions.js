@@ -3,6 +3,11 @@
 import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import Desmotes from '../lib/desmotes_client';
+import { modalHide } from './modalActions';
+import { organizationsLoad } from './organizationActions';
+import { flashAdd } from './flashMessageActions';
+import React from 'react';
+
 
 // clusterSelect
 // =============================================================
@@ -63,6 +68,61 @@ export function clusterLoadMetricsError(clusterId, error) {
   };
 }
 
+export function clusterDelete(clusterId) {
+  return {
+    type: types.CLUSTER_DELETE,
+    clusterId
+  };
+}
+
+export function clusterDeleteConfirm(clusterId) {
+  return function(dispatch, getState) {
+    dispatch({
+      type: types.CLUSTER_DELETE_CONFIRM,
+      clusterId
+    });
+
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
+    return giantSwarm.deleteCluster({clusterId})
+    .then(() => {
+      dispatch(modalHide());
+      dispatch(flashAdd({
+        message: <div>Cluster deleted succesfully</div>,
+        class: 'success',
+        ttl: 3000
+      }));
+      dispatch(clusterDeleteSuccess(clusterId));
+    })
+    .then(dispatch(organizationsLoad()))
+    .catch((error) => {
+      dispatch(modalHide());
+      dispatch(flashAdd({
+        message: <div>Something went wrong while trying to delete cluster: {clusterId}<br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        class: 'danger',
+        ttl: 3000
+      }));
+      dispatch(clusterDeleteError(clusterId, error));
+    });
+  };
+}
+
+export function clusterDeleteSuccess(clusterId) {
+  return {
+    type: types.CLUSTER_DELETE_SUCCESS,
+    clusterId
+  };
+}
+
+export function clusterDeleteError(clusterId, error) {
+  return {
+    type: types.CLUSTER_DELETE_ERROR,
+    clusterId,
+    error
+  };
+}
+
 export function clusterLoadDetails(clusterId) {
   return function(dispatch, getState) {
     var authToken = getState().app.loggedInUser.authToken;
@@ -76,7 +136,6 @@ export function clusterLoadDetails(clusterId) {
     })
     .catch((error) => {
       dispatch(clusterLoadDetailsError(clusterId, error));
-      throw(error);
     });
   };
 }
@@ -99,7 +158,6 @@ export function clusterFetchMetrics(clusterId) {
     })
     .catch((error) => {
       dispatch(clusterLoadMetricsError(clusterId, error));
-      throw(error);
     });
   };
 }
