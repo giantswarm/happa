@@ -53,7 +53,7 @@ class ClusterDashboard extends React.Component {
 
       <div className={'cluster-dashboard--inner'}>
         <h1>
-          Cluster: {this.props.cluster.id}
+          {this.props.cluster.name}
 
           <ButtonGroup>
             <DropdownButton title="" id="add_node_dropdown" className="outline">
@@ -74,6 +74,7 @@ class ClusterDashboard extends React.Component {
             </DropdownButton>
           </ButtonGroup>
         </h1>
+        <h4><code>{this.props.cluster.id}</code></h4>
 
         <div className='gadgets'>
           <DonutGadget
