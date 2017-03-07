@@ -254,7 +254,7 @@ class CreateCluster extends React.Component {
                   <div className="new-cluster--worker-title">
                     { 'Worker #' + (index + 1) }
                     {
-                      index > 1
+                      index > 0
                         ?
 
                         <span className="new-cluster--delete" onClick={this.deleteWorker.bind(this, index)}><i className='fa fa-times' /></span>
