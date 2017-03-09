@@ -80,7 +80,7 @@ metadata:
     ingress.kubernetes.io/ssl-passthrough: "true"
 spec:
   rules:
-  - host: staging.happa.giantswarm.io
+  - host: happa-staging.giantswarm.io
     http:
       paths:
       - backend:
@@ -89,4 +89,4 @@ spec:
         path: /
   tls:
   - hosts:
-    - staging.happa.giantswarm.io
+    - happa-staging.giantswarm.io
