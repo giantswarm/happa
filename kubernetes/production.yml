@@ -50,3 +50,43 @@ spec:
           timeoutSeconds: 1
       imagePullSecrets:
       - name: circleci-giantswarm-registry
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: happa
+  namespace: giantswarm
+  labels:
+    app: happa
+spec:
+  type: NodePort
+  ports:
+  - port: 8000
+  selector:
+    app: happa
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: happa
+  namespace: giantswarm
+  labels:
+    app: happa
+  annotations:
+    ingress.kubernetes.io/ssl-passthrough: "true"
+spec:
+  rules:
+  - host: happa-g8s.giantswarm.io
+    http:
+      paths:
+      - backend:
+          serviceName: happa
+          servicePort: 8000
+        path: /
+  tls:
+  - hosts:
+    - happa-g8s.giantswarm.io

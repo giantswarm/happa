@@ -61,7 +61,13 @@ class Home extends React.Component {
             <Link to='new-cluster'>
               <Button type='button' bsStyle='primary'>Launch New Cluster</Button>
             </Link>
-            Believe it or not, you can have as many clusters as you like.
+            {
+              this.props.clusters.length === 0 ?
+              'Ready to launch your first cluster? Click the green button!'
+              :
+              'Believe it or not, you can have as many clusters as you like.'
+            }
+
           </div>
 
           {
