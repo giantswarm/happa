@@ -52,7 +52,7 @@ class ClusterDashboard extends React.Component {
       <img className='loader' src='/images/loader_oval_light.svg' />
 
       <div className={'cluster-dashboard--inner'}>
-        <h1>
+        <h1 className="cluster-dashboard--name">
           {this.props.cluster.name}<div className="cluster-dashboard--id"> — <code>{this.props.cluster.id}</code></div>
 
           <ButtonGroup>
