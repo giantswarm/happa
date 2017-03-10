@@ -294,8 +294,17 @@ class CreateCluster extends React.Component {
                 </div>;
               })
             }
-            <div className='col-4 new-cluster--add-worker' onClick={this.addWorker}>
-              Add a worker
+            <div className={'col-4 new-cluster--add-worker-button ' + (this.state.workers.length < 3 ? 'warning' : '')} onClick={this.addWorker}>
+              <div className="new-cluster--add-worker-button-title">
+                Add a worker
+              </div>
+              {
+                this.state.workers.length < 3 ?
+                  <div className="new-cluster--low-worker-warning">
+                    We recommend that you have at least three worker nodes in a cluster
+                  </div>
+                  : ''
+              }
             </div>
           </div>
 

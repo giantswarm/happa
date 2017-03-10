@@ -125,19 +125,23 @@
           text-decoration: none
           color: #fff
 
-.new-cluster--add-worker
+.new-cluster--add-worker-button
   border-radius: 5px
   border: 1px dashed #5f8096
   height: 203px
-  line-height: 203px
   margin-bottom: 25px
   text-align: center
   cursor: pointer
+  vertical-align: middle
   -webkit-user-select: none
   -moz-user-select: none
   -ms-user-select: none
   -o-user-select: none
+  padding-top: 90px
   user-select: none
+
+  &.warning
+    padding-top: 70px
 
   &:hover
     border: 1px dashed lighten(#5f8096, 10%)
@@ -145,6 +149,14 @@
   &:active
     background-color: lighten(#234a61, 1%)
     color: #fff
+
+  .new-cluster--add-worker-button-title
+
+
+  .new-cluster--low-worker-warning
+    font-size: 14px
+    padding: 0px 35px
+    color: lighten(#5f8096, 15%)
 
 .new-cluster--launch
   text-align: center
