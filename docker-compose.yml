@@ -230,6 +230,9 @@ services:
                     --service.vault.config.pki.token.ttl="12h"
                     --service.vault.address="http://vault:8200"
                     --service.vault.token="dev-token"
+                    --service.storage.kind="etcd"
+                    --service.storage.etcd.address="http://etcd:2379"
+                    --service.storage.etcd.prefix="cluster-service"
     links:
      - etcd
      - vault
