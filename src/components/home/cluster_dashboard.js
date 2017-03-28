@@ -184,7 +184,7 @@ ClusterDashboard.propTypes = {
   cluster: React.PropTypes.object,
   actions: React.PropTypes.object,
   className: React.PropTypes.string,
-  children: React.PropTypes.object,
+  children: React.PropTypes.array,
   selectedOrganization: React.PropTypes.string,
   animate: React.PropTypes.bool
 };
