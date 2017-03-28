@@ -85,6 +85,10 @@ services:
 
   fake-metrics-node:
     image: registry.giantswarm.io/giantswarm/fake-metrics-node:latest
+    environment:
+      CLUSTER_SERVICE_ETCD_ENDPOINT: "http://etcd:2379"
+    links:
+      - etcd
 
 ######################
 ## DOMAIN VALIDATOR ##
