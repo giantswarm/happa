@@ -2,7 +2,7 @@
 
 EXPIRY="2019-01-01T00:00:00Z"
 ADMIN_TOKEN="test"
-ENDPOINT="http://localhost:9000"
+ENDPOINT="http://docker.dev:9000"
 USERNAME="developer"
 EMAIL="developer@example.com"
 PASSWORD="Y29ycmVjdF9wYXNzd29yZA==" # "correct_password"
