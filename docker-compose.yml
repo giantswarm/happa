@@ -22,7 +22,7 @@ services:
       DEBUGGING: 1
       HAPPA_BASE_URI: http://docker.dev:8000
       GIANTSWARM_API_URI: http://api:8000
-      GIANTSWARM_API_TOKEN: valid_token
+      GIANTSWARM_API_TOKEN: test
       HUBSPOT_API_URI: http://hubspotmock:9999
       HUBSPOT_HUB_ID: "430224"
       HUBSPOT_API_KEY: 1234567890abcdefghijklmnop
