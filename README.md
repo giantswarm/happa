@@ -17,8 +17,7 @@ It is a Single Page React Application that runs in modern browsers.
 
 It currently depends on `api`, `passage`, and `desmotes`.
 
-## Getting started with development
-
+## Getting started with development / demoing
 
 Requirements: `docker`
 
@@ -28,7 +27,25 @@ You should be able to start the development server with:
 
 Then visit `docker.dev:8000/webpack-dev-server/`
 
-Any changes should cause the browser to reload automatically
+Any changes should cause the browser to reload automatically.
+
+Happa will also be up at: `docker.dev:8000`, without the auto reloading feature.
+You can use this to demo Happa and features like cluster creation.
+
+It is important that you have a entry in your `hosts` file that points `docker.dev`
+to your docker host.
+
+Once everything is up you can log in as `developer@example.com` with
+`correct_password` as your password.
+
+If you want to test out things like the forgot password feature, all e-mail ends up in
+the mailcatcher app running at `docker.dev:1080`
+
+## Tear down the dev / demo environment
+
+Pressing `ctrl-c` after `make develop` will not stop the development environment.
+You should `docker-compose down && docker-compose rm` to fully clean up
+after yourself.
 
 Running tests
 -------------

@@ -22,7 +22,9 @@ docker-build-prod:
 # Becomes available at docker.dev:8000
 develop:
 	docker-compose build
-	docker-compose up
+	docker-compose up -d
+	./dev_fixtures.sh
+	docker-compose logs -f --tail="all"
 
 # Build the dev container
 docker-build-dev:
