@@ -21,8 +21,47 @@ docker-build-prod:
 # Run the development environment
 # Becomes available at docker.dev:8000
 develop:
+	@echo
+	@echo "-----------------------------------------------------------"
+	@echo "Starting Happa development environment using Docker Compose"
+	@echo "-----------------------------------------------------------"
+	@echo
 	docker-compose build
-	docker-compose up
+	docker-compose up -d
+
+	@echo
+	@echo "---------------------------"
+	@echo "Creating a development user"
+	@echo "---------------------------"
+	@echo
+	./dev_fixtures.sh
+
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo "Happa development environment is running at docker.dev:8000."
+	@echo "------------------------------------------------------------"
+	@echo
+
+	@echo
+	@echo "Please ensure there is an entry in your hosts file that points docker.dev to your docker host"
+	@echo "In many cases this will simply be 127.0.0.1"
+	@echo
+
+	@echo
+	@echo "A development user has been created:"
+	@echo "Email: developer@example.com"
+	@echo "Password: correct_password"
+	@echo
+
+	@echo "To tail the development logs use: make develop-logs"
+	@echo "To stop the development environment use: make develop-stop"
+
+develop-logs:
+	docker-compose logs -f --tail="all"
+
+develop-stop:
+	docker-compose down
+	docker-compose rm
 
 # Build the dev container
 docker-build-dev:

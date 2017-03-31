@@ -21,8 +21,8 @@ services:
     environment:
       DEBUGGING: 1
       HAPPA_BASE_URI: http://docker.dev:8000
-      GIANTSWARM_API_URI: http://giantswarmmockapi:8000
-      GIANTSWARM_API_TOKEN: valid_token
+      GIANTSWARM_API_URI: http://api:8000
+      GIANTSWARM_API_TOKEN: test
       HUBSPOT_API_URI: http://hubspotmock:9999
       HUBSPOT_HUB_ID: "430224"
       HUBSPOT_API_KEY: 1234567890abcdefghijklmnop
@@ -32,7 +32,7 @@ services:
 
     links:
       - hubspotmock
-      - giantswarmmockapi
+      - api
       - redis:redis
       - mailcatcher:mailcatcher
 
@@ -48,12 +48,6 @@ services:
       DEBUGGING: 1
     ports:
       - "9999:9999"
-  giantswarmmockapi:
-    image: registry.giantswarm.io/giantswarm/mock-api:latest
-    environment:
-      DELAY_MS: 200
-    ports:
-      - "9000:8000"
 
   mailcatcher:
     image: registry.giantswarm.io/giantswarm/mailcatcher:latest
@@ -66,7 +60,7 @@ services:
     ports:
       - "9001:5000"
     environment:
-      GIANTSWARM_API_URI: http://giantswarmmockapi:8000
+      GIANTSWARM_API_URI: http://api:8000
       PROMETHEUS_URI: http://prometheus:9090
       PROMETHEUS_QUERY_TIMEOUT: 3.0
       CORS_BASE_URI: http://docker.dev:8000
@@ -79,7 +73,7 @@ services:
 
     depends_on:
      - redis
-     - giantswarmmockapi
+     - api
      - prometheus
 
   prometheus:
@@ -91,91 +85,186 @@ services:
 
   fake-metrics-node:
     image: registry.giantswarm.io/giantswarm/fake-metrics-node:latest
-
-  domain-validator:
-    image: registry.giantswarm.io/giantswarm/domain-validator
-    depends_on:
-      - nsqd
-      - couchdb
-    ports:
-      - "5002:5000"
-    volumes:
-      - ./certificates:/certs
     environment:
-      NSQD_HTTP_ENDPOINT: http://nsqd:4151
-      DEBUGGING: "YEAH"
-      GIANTSWARM_API_URI: http://giantswarmmockapi:8000
-      GIANTSWARM_ADMIN_TOKEN:
-      REDIS_HOST: redis
-      REDIS_PORT: "6379"
-      CORS_BASE_URI: http://docker.dev:8000
-      CACHE_KEY_SALT: 793857234kjnsdfkjn128ed3ubnkdn2398e
-      TOPIC_DOMAIN_VALIDATION: domain_validation
-      COUCHDB_USER: meister
-      COUCHDB_PASSWORD: a27r0df0912nbogd094t
-      COUCHDB_HOST: couchdb
-      COUCHDB_DBNAME: domains
+      CLUSTER_SERVICE_ETCD_ENDPOINT: "http://etcd:2379"
+    links:
+      - etcd
 
-  couchdb:
-    image: couchdb:1.6.1
+######################
+## DOMAIN VALIDATOR ##
+######################
+
+  # domain-validator:
+  #   image: registry.giantswarm.io/giantswarm/domain-validator
+  #   depends_on:
+  #     - nsqd
+  #     - couchdb
+  #   ports:
+  #     - "5002:5000"
+  #   environment:
+  #     NSQD_HTTP_ENDPOINT: http://nsqd:4151
+  #     DEBUGGING: "YEAH"
+  #     GIANTSWARM_API_URI: http://api:8000
+  #     GIANTSWARM_ADMIN_TOKEN:
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: "6379"
+  #     CORS_BASE_URI: http://docker.dev:8000
+  #     CACHE_KEY_SALT: 793857234kjnsdfkjn128ed3ubnkdn2398e
+  #     TOPIC_DOMAIN_VALIDATION: domain_validation
+  #     COUCHDB_USER: meister
+  #     COUCHDB_PASSWORD: a27r0df0912nbogd094t
+  #     COUCHDB_HOST: couchdb
+  #     COUCHDB_DBNAME: domains
+
+  # couchdb:
+  #   image: couchdb:1.6.1
+  #   ports:
+  #     - "5984:5984"
+  #   environment:
+  #     COUCHDB_USER: meister
+  #     COUCHDB_PASSWORD: a27r0df0912nbogd094t
+
+  # nsqlookupd:
+  #   image: nsqio/nsq:v0.3.8
+  #   command: /nsqlookupd
+  #   ports:
+  #     - "4160:4160"
+  #     - "4161:4161"
+
+  # nsqd:
+  #   image: nsqio/nsq:v0.3.8
+  #   command: >
+  #     /nsqd --lookupd-tcp-address=nsqlookupd:4160
+  #           --broadcast-address=nsqd
+  #           --msg-timeout="100s"
+  #           --max-msg-timeout=48h
+  #           --verbose=true
+
+  #   ports:
+  #     - "4150:4150"
+  #     - "4151:4151"
+  #     - "4152:4152"
+
+  #   volumes:
+  #     - ./certificates:/certs
+
+  # nsqadmin:
+  #   image: nsqio/nsq:v0.3.8
+  #   command: >
+  #     /nsqadmin --lookupd-http-address=nsqlookupd:4161
+  #   ports:
+  #     - "4171:4171"
+
+  # worker:
+  #   image: registry.giantswarm.io/giantswarm/domain-validator-worker
+  #   depends_on:
+  #     - nsqlookupd
+  #     - couchdb
+  #   volumes:
+  #     - ./certificates:/certs
+  #   environment:
+  #     LOG_LEVEL: DEBUG
+  #     NSQLOOKUPD_HTTP_ADDRESSES: "nsqlookupd:4161"
+  #     TOPIC: domain_validation
+  #     CHANNEL: default
+  #     MAX_TASK_AGE: "86400"
+  #     MAX_BACKOFF_DURATION: "60"
+  #     MAX_TRIES: "1000"
+  #     MAX_IN_FLIGHT: "1"
+  #     POLL_INTERVAL: "5"
+  #     NAMESERVERS: 8.8.8.8 8.8.4.4
+  #     DNS_TIMEOUT: "5"
+  #     DNS_LIFETIME: "7"
+  #     COUCHDB_USER: meister
+  #     COUCHDB_PASSWORD: a27r0df0912nbogd094t
+  #     COUCHDB_HOST: couchdb
+  #     COUCHDB_DBNAME: domains
+
+#########
+## API ##
+#########
+
+  api:
+    image: registry.giantswarm.io/giantswarm/api:4dd6ebeb6cf5958d8efcbe0974a6d8c189840198
+    command: daemon --server.listen.address=http://0.0.0.0:8000
+                    --add-admin-token=test:test
+                    --companyd-address=http://companyd:8000
+                    --token-service-connection=http://tokend:8000
+                    --user-service-connection=http://userd:8000
+                    --cluster-service-address=http://cluster-service:8000
+    links:
+     - companyd
+     - userd
+     - tokend
+     - cluster-service
     ports:
-      - "5984:5984"
+     - "9000:8000"
+
+  userd:
+    image: registry.giantswarm.io/giantswarm/userd:1374ee10433fef4a7534552413b9a772627608f0
+    command: /opt/userd/userd --listen=0.0.0.0:8000 --storage=etcdv3
+    links:
+     - etcd
+    ports:
+     - "9002:8000"
     environment:
-      COUCHDB_USER: meister
-      COUCHDB_PASSWORD: a27r0df0912nbogd094t
+     ETCD_PEER: "http://etcd:2379"
 
-  nsqlookupd:
-    image: nsqio/nsq:v0.3.8
-    command: /nsqlookupd
+  companyd:
+    image: registry.giantswarm.io/giantswarm/companyd
+    command: /opt/companyd --storage="etcd" --port=8000 --storage-etcd-peers=http://etcd:2379
+    links:
+     - etcd
     ports:
-      - "4160:4160"
-      - "4161:4161"
+     - "9003:8000"
 
-  nsqd:
-    image: nsqio/nsq:v0.3.8
-    command: >
-      /nsqd --lookupd-tcp-address=nsqlookupd:4160
-            --broadcast-address=nsqd
-            --msg-timeout="100s"
-            --max-msg-timeout=48h
-            --verbose=true
-
+  cluster-service:
+    image: registry.giantswarm.io/giantswarm/cluster-service:41c0e981455a5db577bef88e35719ca5690869ac
+    command: daemon --server.listen.address="http://0.0.0.0:8000"
+                    --service.keyPair.certificate.ttl="24h"
+                    --service.kubernetes.guest.api.endpointFormat="https://api.%s.g8s.fra-1.giantswarm.io"
+                    --service.kubernetes.guest.version="v1.5.2_coreos.0"
+                    --service.kubernetesd.address="http://mock-kubernetesd:8000"
+                    --service.vault.config.address="http://vault:8200"
+                    --service.vault.config.pki.allowBareDomains=true
+                    --service.vault.config.pki.allowedDomainsFormat="%s.g8s.fra-1.giantswarm.io,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster.local"
+                    --service.vault.config.pki.caTTL="48h"
+                    --service.vault.config.pki.commonNameFormat="%s.g8s.fra-1.giantswarm.io"
+                    --service.vault.config.pki.token.num=1
+                    --service.vault.config.pki.token.ttl="12h"
+                    --service.vault.address="http://vault:8200"
+                    --service.vault.token="dev-token"
+                    --service.storage.kind="etcd"
+                    --service.storage.etcd.address="http://etcd:2379"
+                    --service.storage.etcd.prefix="cluster-service"
+    links:
+     - etcd
+     - vault
+     - mock-kubernetesd
     ports:
-      - "4150:4150"
-      - "4151:4151"
-      - "4152:4152"
+     - "9004:8000"
 
-    volumes:
-      - ./certificates:/certs
-
-  nsqadmin:
-    image: nsqio/nsq:v0.3.8
-    command: >
-      /nsqadmin --lookupd-http-address=nsqlookupd:4161
+  tokend:
+    image: registry.giantswarm.io/giantswarm/tokend
+    command: --host=0.0.0.0 --etcd-peer=http://etcd:2379 --storage-type=etcd --port=8000
+    links:
+     - etcd
     ports:
-      - "4171:4171"
+     - "9005:8000"
 
-  worker:
-    image: registry.giantswarm.io/giantswarm/domain-validator-worker
-    depends_on:
-      - nsqlookupd
-      - couchdb
-    volumes:
-      - ./certificates:/certs
-    environment:
-      LOG_LEVEL: DEBUG
-      NSQLOOKUPD_HTTP_ADDRESSES: "nsqlookupd:4161"
-      TOPIC: domain_validation
-      CHANNEL: default
-      MAX_TASK_AGE: "86400"
-      MAX_BACKOFF_DURATION: "60"
-      MAX_TRIES: "1000"
-      MAX_IN_FLIGHT: "1"
-      POLL_INTERVAL: "5"
-      NAMESERVERS: 8.8.8.8 8.8.4.4
-      DNS_TIMEOUT: "5"
-      DNS_LIFETIME: "7"
-      COUCHDB_USER: meister
-      COUCHDB_PASSWORD: a27r0df0912nbogd094t
-      COUCHDB_HOST: couchdb
-      COUCHDB_DBNAME: domains
+  etcd:
+    image: quay.io/coreos/etcd:v3.1.2
+    command: etcd --listen-client-urls 'http://0.0.0.0:2379'
+                  --advertise-client-urls 'http://0.0.0.0:2379'
+    ports:
+      - "9006:2379"
+
+  vault:
+    image: giantswarm/docker-vault:0.1.0
+    command: server -dev
+                    -dev-listen-address="0.0.0.0:8200"
+                    -dev-root-token-id="dev-token"
+
+  # Always returns 201 OK
+  mock-kubernetesd:
+    image: registry.giantswarm.io/giantswarm/mock-kubernetesd
