@@ -10,6 +10,7 @@ import { flashAdd } from '../../actions/flashMessageActions';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import update from 'react-addons-update';
 import NewKVMWorker from './new_kvm_worker.js';
+import NewAWSWorker from './new_aws_worker.js';
 
 class CreateCluster extends React.Component {
   constructor(props) {
@@ -190,14 +191,23 @@ class CreateCluster extends React.Component {
           </div>
           <div className='row'>
             {
-              this.state.workers.map((worker, index) => {
-                return <NewKVMWorker key={'Worker ' + worker.id}
-                                     worker={worker}
-                                     index={index}
-                                     readOnly={this.state.syncWorkers}
-                                     deleteWorker={this.deleteWorker.bind(this, index)}
-                                     onWorkerUpdated={this.updateWorker.bind(this, index)} />;
-              })
+              window.config.createClusterWorkerType === 'aws'
+              ? this.state.workers.map((worker, index) => {
+                  return <NewAWSWorker key={'Worker ' + worker.id}
+                                       worker={worker}
+                                       index={index}
+                                       readOnly={this.state.syncWorkers}
+                                       deleteWorker={this.deleteWorker.bind(this, index)}
+                                       onWorkerUpdated={this.updateWorker.bind(this, index)} />;
+                })
+              : this.state.workers.map((worker, index) => {
+                  return <NewKVMWorker key={'Worker ' + worker.id}
+                                       worker={worker}
+                                       index={index}
+                                       readOnly={this.state.syncWorkers}
+                                       deleteWorker={this.deleteWorker.bind(this, index)}
+                                       onWorkerUpdated={this.updateWorker.bind(this, index)} />;
+                })
             }
             <div className={'col-4 new-cluster--add-worker-button ' + (this.state.workers.length < 3 ? 'warning' : '')} onClick={this.addWorker}>
               <div className="new-cluster--add-worker-button-title">
