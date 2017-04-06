@@ -4,12 +4,12 @@ import React from 'react';
 import {connect} from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import Button from '../button';
-import NumberPicker from './number_picker.js';
 import _ from 'underscore';
 import { browserHistory } from 'react-router';
 import { flashAdd } from '../../actions/flashMessageActions';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import update from 'react-addons-update';
+import NewKVMWorker from './new_kvm_worker.js';
 
 class CreateCluster extends React.Component {
   constructor(props) {
@@ -91,87 +91,6 @@ class CreateCluster extends React.Component {
     });
   }
 
-  updateWorkerCPU = (workerId, cpu) => {
-    var worker = this.state.workers.find((worker) => {
-      return worker.id === workerId;
-    });
-
-    var index = this.state.workers.indexOf(worker);
-
-    worker.cpu = cpu;
-    var newState;
-
-    if (this.state.syncWorkers) {
-      var workers = this.state.workers.map((worker) => {
-        worker.cpu = cpu;
-        return worker;
-      });
-      newState = update(this.state, {
-        workers: {$set: workers}
-      });
-    } else {
-      newState = update(this.state, {
-        workers: {$splice: [[index, 1, worker]]}
-      });
-    }
-
-    this.setState(newState);
-  }
-
-  updateWorkerMemory = (workerId, memory) => {
-    var worker = this.state.workers.find((worker) => {
-      return worker.id === workerId;
-    });
-
-    var index = this.state.workers.indexOf(worker);
-
-    worker.memory = memory;
-    var newState;
-
-    if (this.state.syncWorkers) {
-      var workers = this.state.workers.map((worker) => {
-        worker.memory = memory;
-        return worker;
-      });
-      newState = update(this.state, {
-        workers: {$set: workers}
-      });
-    } else {
-      newState = update(this.state, {
-        workers: {$splice: [[index, 1, worker]]}
-      });
-    }
-
-    this.setState(newState);
-  }
-
-  updateWorkerStorage = (workerId, storage) => {
-    var worker = this.state.workers.find((worker) => {
-      return worker.id === workerId;
-    });
-
-    var index = this.state.workers.indexOf(worker);
-
-    worker.storage = storage;
-    var newState;
-
-    if (this.state.syncWorkers) {
-      var workers = this.state.workers.map((worker) => {
-        worker.storage = storage;
-        return worker;
-      });
-      newState = update(this.state, {
-        workers: {$set: workers}
-      });
-    } else {
-      newState = update(this.state, {
-        workers: {$splice: [[index, 1, worker]]}
-      });
-    }
-
-    this.setState(newState);
-  }
-
   createCluster = () => {
     this.setState({
       submitting: true
@@ -214,6 +133,28 @@ class CreateCluster extends React.Component {
     this.refs.cluster_name.select();
   }
 
+  updateWorker(index, newWorker) {
+    var newState;
+
+    if (this.state.syncWorkers) {
+      var workers = this.state.workers.map((worker) => {
+        worker.storage = newWorker.storage;
+        worker.cpu = newWorker.cpu;
+        worker.memory = newWorker.memory;
+        return worker;
+      });
+      newState = update(this.state, {
+        workers: {$set: workers}
+      });
+    } else {
+      newState = update(this.state, {
+        workers: {$splice: [[index, 1, newWorker]]}
+      });
+    }
+
+    this.setState(newState);
+  }
+
   render() {
     return (
       <DocumentTitle title={'Create Cluster | ' + this.props.selectedOrganization + ' | Giant Swarm'}>
@@ -250,48 +191,12 @@ class CreateCluster extends React.Component {
           <div className='row'>
             {
               this.state.workers.map((worker, index) => {
-                return <div className='col-4 new-cluster--worker' key={'Worker ' + worker.id}>
-                  <div className="new-cluster--worker-title">
-                    { 'Worker #' + (index + 1) }
-                    {
-                      index > 0
-                        ?
-
-                        <span className="new-cluster--delete" onClick={this.deleteWorker.bind(this, index)}><i className='fa fa-times' /></span>
-                        :
-                        undefined
-                    }
-                  </div>
-
-                  <NumberPicker label="CPU Cores"
-                                stepSize={1}
-                                value={worker.cpu}
-                                min={1} max={10}
-                                workerId={worker.id}
-                                onChange={this.updateWorkerCPU}
-                                readOnly={this.state.syncWorkers && index !== 0}
-                  />
-
-                  <NumberPicker label="Memory"
-                                unit="GB"
-                                stepSize={1}
-                                value={worker.memory}
-                                min={1} max={16}
-                                workerId={worker.id}
-                                onChange={this.updateWorkerMemory}
-                                readOnly={this.state.syncWorkers && index !== 0}
-                  />
-
-                  <NumberPicker label="Storage"
-                                unit="GB"
-                                stepSize={10}
-                                value={worker.storage}
-                                min={10} max={100}
-                                workerId={worker.id}
-                                onChange={this.updateWorkerStorage}
-                                readOnly={this.state.syncWorkers && index !== 0}
-                  />
-                </div>;
+                return <NewKVMWorker key={'Worker ' + worker.id}
+                                     worker={worker}
+                                     index={index}
+                                     readOnly={this.state.syncWorkers}
+                                     deleteWorker={this.deleteWorker.bind(this, index)}
+                                     onWorkerUpdated={this.updateWorker.bind(this, index)} />;
               })
             }
             <div className={'col-4 new-cluster--add-worker-button ' + (this.state.workers.length < 3 ? 'warning' : '')} onClick={this.addWorker}>
