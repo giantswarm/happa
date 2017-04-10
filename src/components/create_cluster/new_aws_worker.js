@@ -12,20 +12,14 @@ class NewAWSWorker extends React.Component {
       modalVisible: false,
       preSelectedInstanceTypeName: props.worker.instanceType,
       instanceTypes: [
-        {
-          name: 'm3.large',
-          description: 'M3 General Purpose Large',
-          cpuCores: '2',
-          memory: '7.5 GB',
-          storage: '32 GB'
-        },
-        {
-          name: 'm3.xlarge',
-          description: 'M3 General Purpose Extra Large',
-          cpuCores: '4',
-          memory: '15 GB',
-          storage: '80 GB'
-        },
+        {name: 'm3.large', description: 'M3 General Purpose Large', cpuCores: '2', memory: '7.5 GB', storage: '32 GB'},
+        {name: 'm3.xlarge', description: 'M3 General Purpose Extra Large', cpuCores: '4', memory: '15 GB', storage: '80 GB'},
+        {name: 'm3.2xlarge', description: 'M3 General Purpose Double Extra Large', 'memory': '30 GB', cpuCores: '8', storage: '160 GB'},
+        {name: 'r3.large', description: 'R3 High-Memory Large', 'memory': '15.25', cpuCores: '2', storage: '32 GB'},
+        {name: 'r3.xlarge', description: 'R3 High-Memory Extra Large', 'memory': '30.5 GB',  cpuCores: '4', storage: '80 GB'},
+        {name: 'r3.2xlarge', description: 'R3 High-Memory Double Extra Large', 'memory': '61 GB',  cpuCores: '8', storage: '160 GB'},
+        {name: 'r3.4xlarge', description: 'R3 High-Memory Quadruple Extra Large', 'memory': '122 GB', cpuCores: '16',  storage: '320 GB'},
+        {name: 'r3.8xlarge', description: 'R3 High-Memory Eight Extra Large', 'memory': '244 GB', cpuCores: '32', storage: '640 GB'}
       ]
     };
   }
@@ -116,9 +110,9 @@ class NewAWSWorker extends React.Component {
                   <th></th>
                   <th>Name</th>
                   <th>Description</th>
-                  <th>CPU Cores</th>
-                  <th>Memory</th>
-                  <th>Storage</th>
+                  <th className="numeric">CPU Cores</th>
+                  <th className="numeric">Memory</th>
+                  <th className="numeric">Storage</th>
                 </tr>
               </thead>
               <tbody>
@@ -127,10 +121,10 @@ class NewAWSWorker extends React.Component {
                     return <tr key={instanceType.name} onClick={this.preSelect.bind(this, instanceType.name)}>
                       <td><input type='radio' readOnly checked={instanceType.name === this.state.preSelectedInstanceTypeName}/></td>
                       <td>{instanceType.name}</td>
-                      <td>{instanceType.description}</td>
-                      <td>{instanceType.cpuCores}</td>
-                      <td>{instanceType.memory}</td>
-                      <td>{instanceType.storage}</td>
+                      <td className="description">{instanceType.description}</td>
+                      <td className="numeric">{instanceType.cpuCores}</td>
+                      <td className="numeric">{instanceType.memory}</td>
+                      <td className="numeric">{instanceType.storage}</td>
                     </tr>;
                   })
                 }

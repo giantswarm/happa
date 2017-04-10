@@ -192,6 +192,35 @@
   margin-bottom: -10px
   border-bottom: 0px
   width: auto
+  display: block
+
+  thead
+    display: block
+    width: 100%
+    tr
+      display: block
+      width: 100%
+
+  tbody td, thead th
+    width: 20%
+
+    &:first-child
+      width: 8%
+
+  tbody
+    display: block
+    height: 300px
+    overflow-y: scroll
 
   tbody tr
     cursor: pointer
+
+  td
+    vertical-align: top
+    font-size: 14px
+
+  td.numeric, th.numeric
+    text-align: center
+
+  td.description
+    font-size: 12px
