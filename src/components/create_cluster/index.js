@@ -22,9 +22,9 @@ class CreateCluster extends React.Component {
       clusterName: 'My cluster',
       syncWorkers: true,
       workers: [
-        { id: 1, cpu: 1, memory: 1, storage: 10 },
-        { id: 2, cpu: 1, memory: 1, storage: 10 },
-        { id: 3, cpu: 1, memory: 1, storage: 10 }
+        { id: 1, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large' },
+        { id: 2, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large' },
+        { id: 3, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large' }
       ],
       submitting: false,
       error: false
@@ -53,7 +53,8 @@ class CreateCluster extends React.Component {
         id: Date.now(),
         cpu: this.state.workers[0].cpu,
         memory: this.state.workers[0].memory,
-        storage: this.state.workers[0].storage
+        storage: this.state.workers[0].storage,
+        instanceType: this.state.workers[0].instanceType
       };
     } else {
       newDefaultWorker = {
@@ -81,7 +82,8 @@ class CreateCluster extends React.Component {
           id: worker.id,
           cpu: worker1.cpu,
           memory: worker1.memory,
-          storage: worker1.storage
+          storage: worker1.storage,
+          instanceType: worker1.instanceType
         };
       });
     }
@@ -142,6 +144,7 @@ class CreateCluster extends React.Component {
         worker.storage = newWorker.storage;
         worker.cpu = newWorker.cpu;
         worker.memory = newWorker.memory;
+        worker.instanceType = newWorker.instanceType;
         return worker;
       });
       newState = update(this.state, {
@@ -196,7 +199,7 @@ class CreateCluster extends React.Component {
                   return <NewAWSWorker key={'Worker ' + worker.id}
                                        worker={worker}
                                        index={index}
-                                       readOnly={this.state.syncWorkers}
+                                       readOnly={this.state.syncWorkers && index !== 0}
                                        deleteWorker={this.deleteWorker.bind(this, index)}
                                        onWorkerUpdated={this.updateWorker.bind(this, index)} />;
                 })
@@ -204,7 +207,7 @@ class CreateCluster extends React.Component {
                   return <NewKVMWorker key={'Worker ' + worker.id}
                                        worker={worker}
                                        index={index}
-                                       readOnly={this.state.syncWorkers}
+                                       readOnly={this.state.syncWorkers && index !== 0}
                                        deleteWorker={this.deleteWorker.bind(this, index)}
                                        onWorkerUpdated={this.updateWorker.bind(this, index)} />;
                 })

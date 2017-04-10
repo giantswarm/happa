@@ -42,7 +42,7 @@ class NewKVMWorker extends React.Component {
                       min={1} max={10}
                       workerId={worker.id}
                       onChange={this.updateWorkerCPU}
-                      readOnly={this.props.readOnly && index !== 0}
+                      readOnly={this.props.readOnly}
         />
 
         <NumberPicker label="Memory"
@@ -52,7 +52,7 @@ class NewKVMWorker extends React.Component {
                       min={1} max={16}
                       workerId={worker.id}
                       onChange={this.updateWorkerMemory}
-                      readOnly={this.props.readOnly && index !== 0}
+                      readOnly={this.props.readOnly}
         />
 
         <NumberPicker label="Storage"
@@ -62,7 +62,7 @@ class NewKVMWorker extends React.Component {
                       min={10} max={100}
                       workerId={worker.id}
                       onChange={this.updateWorkerStorage}
-                      readOnly={this.props.readOnly && index !== 0}
+                      readOnly={this.props.readOnly}
         />
       </div>
     );

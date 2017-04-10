@@ -163,3 +163,35 @@
 
   .progress_button--container
     margin-top: 18px
+
+
+.new-cluster--aws-instance-type-selector
+  form
+    position: relative
+
+.new-cluster--aws-instance-type-selector-button
+  cursor: pointer
+  position: absolute
+  top: 0px
+  right: 0px
+  background-color: #3a5f7b
+  height: 39px
+  line-height: 39px
+  padding: 0px 12px
+  font-size: 18px
+  border-top-right-radius: 5px
+  border-bottom-right-radius: 5px
+
+  &.disabled
+    color: lighten(#3a5f7b, 10%)
+    cursor: default
+
+.new-cluster--aws-instance-type-selector-table
+  margin-left: -15px
+  margin-right: -15px
+  margin-bottom: -10px
+  border-bottom: 0px
+  width: auto
+
+  tbody tr
+    cursor: pointer

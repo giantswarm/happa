@@ -1,25 +1,77 @@
 'use strict';
 
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import Button from '../button';
 
 class NewAWSWorker extends React.Component {
-  updateWorkerCPU = (cpu) => {
-    this.props.worker.cpu = cpu;
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      modalVisible: false,
+      preSelectedInstanceTypeName: props.worker.instanceType,
+      instanceTypes: [
+        {
+          name: 'm3.large',
+          description: 'M3 General Purpose Large',
+          cpuCores: '2',
+          memory: '7.5 GB',
+          storage: '32 GB'
+        },
+        {
+          name: 'm3.xlarge',
+          description: 'M3 General Purpose Extra Large',
+          cpuCores: '4',
+          memory: '15 GB',
+          storage: '80 GB'
+        },
+      ]
+    };
+  }
+
+  showModal = () => {
+    if ( ! this.props.readOnly) {
+      this.setState({
+        modalVisible: true,
+        preSelectedInstanceTypeName: this.props.worker.instanceType
+      });
+    }
+  }
+
+  closeModal = () => {
+    this.setState({
+      modalVisible: false
+    });
+  }
+
+  updateInstanceType = (event) => {
+    var value = event.target.value;
+    this.props.worker.instanceType = value;
     this.props.onWorkerUpdated(this.props.worker);
   }
 
-  updateWorkerMemory = (memory) => {
-    this.props.worker.memory = memory;
-    this.props.onWorkerUpdated(this.props.worker);
+  buttonClass() {
+    if (this.props.readOnly) {
+      return 'disabled';
+    } else {
+      return '';
+    }
   }
 
-  updateWorkerStorage = (storage) => {
-    this.props.worker.storage = storage;
+  preSelect(instanceTypeName) {
+    this.setState({
+      preSelectedInstanceTypeName: instanceTypeName
+    });
+  }
+
+  selectInstanceType = () => {
+    this.props.worker.instanceType = this.state.preSelectedInstanceTypeName;
     this.props.onWorkerUpdated(this.props.worker);
+    this.closeModal();
   }
 
   render() {
-    // var worker = this.props.worker;
     var index = this.props.index;
     return (
       <div className='col-4 new-cluster--worker'>
@@ -34,6 +86,72 @@ class NewAWSWorker extends React.Component {
               undefined
           }
         </div>
+        <div className="new-cluster--worker-setting-label">
+          Instance Type
+        </div>
+
+        <div className="new-cluster--aws-instance-type-selector">
+          <form onSubmit={(e) => {e.preventDefault();}}>
+            <input ref='instance_type'
+                   type="text"
+                   value={this.props.worker.instanceType}
+                   onChange={this.updateInstanceType}
+                   autoFocus
+                   readOnly={this.props.readOnly} />
+
+
+            <div className={'new-cluster--aws-instance-type-selector-button ' + this.buttonClass()} onClick={this.showModal}>
+              <i className='fa fa-bars' />
+            </div>
+          </form>
+        </div>
+        <BootstrapModal show={this.state.modalVisible} onHide={this.closeModal}>
+          <BootstrapModal.Header closeButton>
+            <BootstrapModal.Title>Select an Instance Type</BootstrapModal.Title>
+          </BootstrapModal.Header>
+          <BootstrapModal.Body>
+            <table className='new-cluster--aws-instance-type-selector-table'>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>CPU Cores</th>
+                  <th>Memory</th>
+                  <th>Storage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  this.state.instanceTypes.map((instanceType) => {
+                    return <tr key={instanceType.name} onClick={this.preSelect.bind(this, instanceType.name)}>
+                      <td><input type='radio' readOnly checked={instanceType.name === this.state.preSelectedInstanceTypeName}/></td>
+                      <td>{instanceType.name}</td>
+                      <td>{instanceType.description}</td>
+                      <td>{instanceType.cpuCores}</td>
+                      <td>{instanceType.memory}</td>
+                      <td>{instanceType.storage}</td>
+                    </tr>;
+                  })
+                }
+              </tbody>
+            </table>
+          </BootstrapModal.Body>
+          <BootstrapModal.Footer>
+            <Button
+              type='submit'
+              bsStyle='primary'
+              onClick={this.selectInstanceType}>
+              Select Instance Type
+            </Button>
+
+            <Button
+              bsStyle='link'
+              onClick={this.closeModal}>
+              Cancel
+            </Button>
+          </BootstrapModal.Footer>
+        </BootstrapModal>
       </div>
     );
   }
