@@ -1,10 +1,10 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: happa-staging
+  name: happa
   namespace: giantswarm
   labels:
-    app: happa-staging
+    app: happa
 spec:
   replicas: 2
   strategy:
@@ -12,26 +12,26 @@ spec:
   template:
     metadata:
       labels:
-        app: happa-staging
+        app: happa
     spec:
       volumes:
         - name: giantswarm-cert
           secret:
             secretName: giantswarm-cert
       containers:
-      - name: happa-staging
-        image: registry.giantswarm.io/giantswarm/happa:%%DOCKER_TAG%%
+      - name: happa
+        image: registry.giantswarm.io/giantswarm/happa:{{ .BuildInfo.SHA }}
         volumeMounts:
         - name: giantswarm-cert
           mountPath: /etc/nginx/certs
           readOnly: true
         env:
         - name: PASSAGE_ENDPOINT
-          value: https://passage-g8s.giantswarm.io
+          value: {{ .Installation.V1.GiantSwarm.Passage.Address | urlString }}
         - name: API_ENDPOINT
-          value: https://api-g8s.giantswarm.io
+          value: {{ .Installation.V1.GiantSwarm.API.Address | urlString }}
         - name: DESMOTES_ENDPOINT
-          value: https://desmotes-g8s.giantswarm.io
+          value: {{ .Installation.V1.GiantSwarm.Desmotes.Address | urlString }}
         - name: ENVIRONMENT
           value: kubernetes
         livenessProbe:
@@ -56,37 +56,37 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: happa-staging
+  name: happa
   namespace: giantswarm
   labels:
-    app: happa-staging
+    app: happa
 spec:
   type: NodePort
   ports:
   - port: 8000
   selector:
-    app: happa-staging
+    app: happa
 
 ---
 
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: happa-staging
+  name: happa
   namespace: giantswarm
   labels:
-    app: happa-staging
+    app: happa
   annotations:
     ingress.kubernetes.io/ssl-passthrough: "true"
 spec:
   rules:
-  - host: happa-staging.giantswarm.io
+  - host: {{ .Installation.V1.GiantSwarm.Happa.Address.Host }}
     http:
       paths:
       - backend:
-          serviceName: happa-staging
+          serviceName: happa
           servicePort: 8000
         path: /
   tls:
   - hosts:
-    - happa-staging.giantswarm.io
+    - {{ .Installation.V1.GiantSwarm.Happa.Address.Host }}
