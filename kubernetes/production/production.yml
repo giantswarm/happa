@@ -34,6 +34,8 @@ spec:
           value: {{ .Installation.V1.GiantSwarm.Desmotes.Address | urlString }}
         - name: ENVIRONMENT
           value: kubernetes
+        - name: CREATE_CLUSTER_WORKER_TYPE
+          value: {{ .Installation.V1.GiantSwarm.Happa.CreateClusterWorkerType }}
         livenessProbe:
           httpGet:
             path: /
