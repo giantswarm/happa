@@ -14,7 +14,7 @@ class NumberPicker extends React.Component {
 
   formatValue() {
     if (this.props.formatter) {
-      return this.props.formatter(this.state.value);
+      return this.props.formatter(this.props.value);
     } else {
       return [this.props.value, this.props.unit].join(' ');
     }
@@ -22,7 +22,7 @@ class NumberPicker extends React.Component {
 
   triggerOnChange = (newValue) => {
     if(this.props.onChange) {
-      this.props.onChange(this.props.workerId, newValue);
+      this.props.onChange(newValue);
     }
   }
 
@@ -83,7 +83,6 @@ NumberPicker.propTypes = {
   min: React.PropTypes.number,
   max: React.PropTypes.number,
   onChange: React.PropTypes.func,
-  workerId: React.PropTypes.number,
   readOnly: React.PropTypes.bool
 };
 

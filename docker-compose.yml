@@ -185,7 +185,7 @@ services:
 #########
 
   api:
-    image: registry.giantswarm.io/giantswarm/api:4dd6ebeb6cf5958d8efcbe0974a6d8c189840198
+    image: registry.giantswarm.io/giantswarm/api:8fafacde5799b8fa70b01042a449ca338bcf8d4b
     command: daemon --server.listen.address=http://0.0.0.0:8000
                     --add-admin-token=test:test
                     --companyd-address=http://companyd:8000
@@ -219,7 +219,7 @@ services:
      - "9003:8000"
 
   cluster-service:
-    image: registry.giantswarm.io/giantswarm/cluster-service:41c0e981455a5db577bef88e35719ca5690869ac
+    image: registry.giantswarm.io/giantswarm/cluster-service:2f27b0af63759bf873135e6d60a365003da00ee9
     command: daemon --server.listen.address="http://0.0.0.0:8000"
                     --service.keyPair.certificate.ttl="24h"
                     --service.kubernetes.guest.api.endpointFormat="https://api.%s.g8s.fra-1.giantswarm.io"
