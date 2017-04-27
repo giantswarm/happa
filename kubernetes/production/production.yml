@@ -35,7 +35,7 @@ spec:
         - name: ENVIRONMENT
           value: kubernetes
         - name: CREATE_CLUSTER_WORKER_TYPE
-          value: {{ .Installation.V1.GiantSwarm.Happa.CreateClusterWorkerType }}
+          value: {{ .Installation.V1.Provider.Kind }}
         livenessProbe:
           httpGet:
             path: /
