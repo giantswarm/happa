@@ -11,6 +11,7 @@ dependencies:
 
 compile:
   override:
+    - npm install
     - npm test
     - mkdir dist
     - grunt build
