@@ -20,7 +20,7 @@ spec:
             secretName: giantswarm-cert
       containers:
       - name: happa-staging
-        image: registry.giantswarm.io/giantswarm/happa:{{ .BuildInfo.SHA }}
+        image: quay.io/giantswarm/happa:{{ .BuildInfo.SHA }}
         volumeMounts:
         - name: giantswarm-cert
           mountPath: /etc/nginx/certs
@@ -56,7 +56,7 @@ spec:
             cpu: 250m
             memory: 250Mi
       imagePullSecrets:
-      - name: circleci-giantswarm-registry
+      - name: giantswarm-registry
 
 ---
 
