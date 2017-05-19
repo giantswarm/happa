@@ -80,7 +80,7 @@ dist folder. `make dist`
 Configuration
 -------------
 
-Use environment variables to adjust the behavior of this application.
+Use environment variables to adjust the behavior of this application in production.
 
 |Variable Name|Description|Default|
 |-------------|-----------|-------|
@@ -90,7 +90,12 @@ Use environment variables to adjust the behavior of this application.
 |DOMAIN_VALIDATOR_ENDPOINT|URL to the Domain Validator service, which helps in the custom domains feature .|http://docker.dev:5001|
 |INTERCOM_APP_ID|The ID of Giant Swarm's intercom app. The default is our development intercom account.|bdvx0cb8|
 |ENVIRONMENT  |A string that indicates where Happa is running. It'll be present in any exception notifications|development|
+|CREATE_CLUSTER_WORKER_TYPE|A string that indicates what kind of workers the cluster that this instance of Happa is deployed is making. Must be either 'aws' or 'kvm'| kvm|
 
+In development, environment variables are not applied. This is because the development container does not start in the same way
+that the production container does.
+
+If you want to for example test creating clusters in an aws environment in development, you'll have to edit `createClusterWorkerType` in index.html manually while testing your changes.
 
 Redux in a nutshell
 --------------------
