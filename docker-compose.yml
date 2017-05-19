@@ -185,7 +185,7 @@ services:
 #########
 
   api:
-    image: registry.giantswarm.io/giantswarm/api:8fafacde5799b8fa70b01042a449ca338bcf8d4b
+    image: quay.io/giantswarm/api:5a67849de39bc7c60e8b475ab32d41ba6f2b4c88
     command: daemon --server.listen.address=http://0.0.0.0:8000
                     --add-admin-token=test:test
                     --companyd-address=http://companyd:8000
@@ -201,7 +201,7 @@ services:
      - "9000:8000"
 
   userd:
-    image: registry.giantswarm.io/giantswarm/userd:1374ee10433fef4a7534552413b9a772627608f0
+    image: quay.io/giantswarm/userd:873ce4c3674a7c51142591220bd8738dd56ff5e3
     command: /opt/userd/userd --listen=0.0.0.0:8000 --storage=etcdv3
     links:
      - etcd
@@ -211,7 +211,7 @@ services:
      ETCD_PEER: "http://etcd:2379"
 
   companyd:
-    image: registry.giantswarm.io/giantswarm/companyd
+    image: quay.io/giantswarm/companyd:ad5adceb71edef4fc2a215ed92ec81a2403c2214
     command: /opt/companyd --storage="etcd" --port=8000 --storage-etcd-peers=http://etcd:2379
     links:
      - etcd
@@ -219,24 +219,23 @@ services:
      - "9003:8000"
 
   cluster-service:
-    image: registry.giantswarm.io/giantswarm/cluster-service:2f27b0af63759bf873135e6d60a365003da00ee9
+    image: quay.io/giantswarm/cluster-service:c4811ef98b1f9eec5842b8f36fedb287d7fedced
     command: daemon --server.listen.address="http://0.0.0.0:8000"
-                    --service.keyPair.certificate.ttl="24h"
-                    --service.kubernetes.guest.api.endpointFormat="https://api.%s.g8s.fra-1.giantswarm.io"
+                    --service.keypair.certificate.ttl="24h"
+                    --service.kubernetes.guest.api.endpointformat="https://api.%s.g8s.fra-1.giantswarm.io"
                     --service.kubernetes.guest.version="v1.5.2_coreos.0"
                     --service.kubernetesd.address="http://mock-kubernetesd:8000"
                     --service.vault.config.address="http://vault:8200"
-                    --service.vault.config.pki.allowBareDomains=true
-                    --service.vault.config.pki.allowedDomainsFormat="%s.g8s.fra-1.giantswarm.io,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster.local"
-                    --service.vault.config.pki.caTTL="48h"
-                    --service.vault.config.pki.commonNameFormat="%s.g8s.fra-1.giantswarm.io"
+                    --service.vault.config.pki.allowbaredomains=true
+                    --service.vault.config.pki.alloweddomainsformat="%s.g8s.fra-1.giantswarm.io,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster.local"
+                    --service.vault.config.pki.cattl="48h"
+                    --service.vault.config.pki.commonnameformat="%s.g8s.fra-1.giantswarm.io"
                     --service.vault.config.pki.token.num=1
                     --service.vault.config.pki.token.ttl="12h"
                     --service.vault.address="http://vault:8200"
                     --service.vault.token="dev-token"
                     --service.storage.kind="etcd"
                     --service.storage.etcd.address="http://etcd:2379"
-                    --service.storage.etcd.prefix="cluster-service"
     links:
      - etcd
      - vault
@@ -245,7 +244,7 @@ services:
      - "9004:8000"
 
   tokend:
-    image: registry.giantswarm.io/giantswarm/tokend
+    image: quay.io/giantswarm/tokend:9b27478a13bd3c0f5f9c3e8b0ad02b7030cc04b9
     command: --host=0.0.0.0 --etcd-peer=http://etcd:2379 --storage-type=etcd --port=8000
     links:
      - etcd
