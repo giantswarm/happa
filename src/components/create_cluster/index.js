@@ -10,6 +10,7 @@ import { flashAdd } from '../../actions/flashMessageActions';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import update from 'react-addons-update';
 import NewKVMWorker from './new_kvm_worker.js';
+import NewAWSWorker from './new_aws_worker.js';
 
 class CreateCluster extends React.Component {
   constructor(props) {
@@ -115,13 +116,13 @@ class CreateCluster extends React.Component {
     // decisions about a meaningful abstraction. For now, going with a easy solution.
 
     if (window.config.createClusterWorkerType === 'aws') {
-      for(var i=0; i < this.state.workerCount; i++){
-        workers.push({}); // We don't support instance type selection yet for AWS Clusters.
-                          // So just send an array of empty objects, one for each
-                          // worker we want to create so that our backend will
-                          // spawn the correct number of workers with default
-                          // settings.
-      }
+      workers = this.state.workers.map((worker) => {
+        return {
+          aws: {
+            instance_type: worker.instanceType
+          }
+        };
+      });
     } else {
       workers = this.state.workers.map((worker) => {
         return {
@@ -201,60 +202,55 @@ class CreateCluster extends React.Component {
               </form>
             </div>
           </div>
-          {
-            window.config.createClusterWorkerType === 'aws'
-            ?
-            <div className='row section new-cluster--worker-count'>
-              <div className='col-3'>
-                <h3 className='table-label'>Worker Nodes</h3>
-              </div>
-              <div className='col-9'>
-                <form onSubmit={(e) => {e.preventDefault();}}>
-                  <p>Currently all worker nodes will use instance type <code>m3.large</code>, which provides 2 vCPUs, 7.5 GB RAM, and 32 GB of SSD storage.</p>
-                  <input ref='worker_count' min='1' max='16' type="number" value={this.state.workerCount} onChange={this.updateWorkerCount} autoFocus />
-                  workers
-                </form>
-              </div>
-            </div>
-            :
-            <div>
-              <div className='row section'>
-                <div className='col-12'>
-                  <h3 className='table-label'>Worker Node Configuration</h3>
-                  <div className='checkbox'>
-                    <label htmlFor='syncWorkers'>
-                      <input type='checkbox' ref='syncWorkers' id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
-                      Use same configuration for all worker nodes
-                    </label>
-                  </div>
+
+          <div>
+            <div className='row section'>
+              <div className='col-12'>
+                <h3 className='table-label'>Worker Node Configuration</h3>
+                <div className='checkbox'>
+                  <label htmlFor='syncWorkers'>
+                    <input type='checkbox' ref='syncWorkers' id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
+                    Use same configuration for all worker nodes
+                  </label>
                 </div>
               </div>
-              <div className='row'>
-                {
-                  this.state.workers.map((worker, index) => {
+            </div>
+            <div className='row'>
+              {
+                this.state.workers.map((worker, index) => {
+                  console.log(window.config.createClusterWorkerType);
+                  if (window.config.createClusterWorkerType === 'aws') {
+                    return <NewAWSWorker key={'Worker ' + worker.id}
+                                       worker={worker}
+                                       index={index}
+                                       readOnly={this.state.syncWorkers && index !== 0}
+                                       deleteWorker={this.deleteWorker.bind(this, index)}
+                                       onWorkerUpdated={this.updateWorker.bind(this, index)} />;
+                  } else if (window.config.createClusterWorkerType === 'kvm') {
                     return <NewKVMWorker key={'Worker ' + worker.id}
-                                         worker={worker}
-                                         index={index}
-                                         readOnly={this.state.syncWorkers && index !== 0}
-                                         deleteWorker={this.deleteWorker.bind(this, index)}
-                                         onWorkerUpdated={this.updateWorker.bind(this, index)} />;
-                  })
-                }
-                <div className={'col-4 new-cluster--add-worker-button ' + (this.state.workers.length < 3 ? 'warning' : '')} onClick={this.addWorker}>
-                  <div className="new-cluster--add-worker-button-title">
-                    Add a worker
-                  </div>
-                  {
-                    this.state.workers.length < 3 ?
-                      <div className="new-cluster--low-worker-warning">
-                        We recommend that you have at least three worker nodes in a cluster
-                      </div>
-                      : ''
+                                       worker={worker}
+                                       index={index}
+                                       readOnly={this.state.syncWorkers && index !== 0}
+                                       deleteWorker={this.deleteWorker.bind(this, index)}
+                                       onWorkerUpdated={this.updateWorker.bind(this, index)} />;
                   }
+                })
+              }
+              <div className={'col-4 new-cluster--add-worker-button ' + (this.state.workers.length < 3 ? 'warning' : '')} onClick={this.addWorker}>
+                <div className="new-cluster--add-worker-button-title">
+                  Add a worker
                 </div>
+                {
+                  this.state.workers.length < 3 ?
+                    <div className="new-cluster--low-worker-warning">
+                      We recommend that you have at least three worker nodes in a cluster
+                    </div>
+                    : ''
+                }
               </div>
             </div>
-          }
+          </div>
+
           <div className='row section'>
             <div className='col-3'>
               <h3 className='table-label'>Kubernetes Version</h3>
