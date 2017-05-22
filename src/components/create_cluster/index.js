@@ -218,7 +218,6 @@ class CreateCluster extends React.Component {
             <div className='row'>
               {
                 this.state.workers.map((worker, index) => {
-                  console.log(window.config.createClusterWorkerType);
                   if (window.config.createClusterWorkerType === 'aws') {
                     return <NewAWSWorker key={'Worker ' + worker.id}
                                        worker={worker}
