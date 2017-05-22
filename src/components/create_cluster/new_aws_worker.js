@@ -3,6 +3,7 @@
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../button';
+import InputField from '../shared/input_field';
 
 class NewAWSWorker extends React.Component {
   constructor(props) {
@@ -39,8 +40,7 @@ class NewAWSWorker extends React.Component {
     });
   }
 
-  updateInstanceType = (event) => {
-    var value = event.target.value;
+  updateInstanceType = (value) => {
     this.props.worker.instanceType = value;
     this.props.onWorkerUpdated(this.props.worker);
   }
@@ -65,6 +65,30 @@ class NewAWSWorker extends React.Component {
     this.closeModal();
   }
 
+  validateInstanceType = (instanceTypeName) => {
+    var validInstanceTypes = this.state.instanceTypes.map((x) => {
+      return x.name;
+    });
+
+    if (validInstanceTypes.indexOf(instanceTypeName) != -1) {
+      this.props.worker.valid = true;
+      this.props.onWorkerUpdated(this.props.worker);
+
+      return {
+        valid: true,
+        validationError: ''
+      };
+    }
+
+    this.props.worker.valid = false;
+    this.props.onWorkerUpdated(this.props.worker);
+
+    return {
+      valid: false,
+      validationError: 'Please enter a valid instance type'
+    };
+  }
+
   render() {
     var index = this.props.index;
     return (
@@ -86,14 +110,15 @@ class NewAWSWorker extends React.Component {
 
         <div className="new-cluster--aws-instance-type-selector">
           <form onSubmit={(e) => {e.preventDefault();}}>
-            <input ref='instance_type'
+            <InputField ref='instance_type'
                    type="text"
                    value={this.props.worker.instanceType}
                    onChange={this.updateInstanceType}
+                   validate={this.validateInstanceType}
                    autoFocus
                    readOnly={this.props.readOnly} />
 
-
+            <span>{this.props.worker.valid}</span>
             <div className={'new-cluster--aws-instance-type-selector-button ' + this.buttonClass()} onClick={this.showModal}>
               <i className='fa fa-bars' />
             </div>
