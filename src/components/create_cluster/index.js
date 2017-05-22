@@ -23,11 +23,12 @@ class CreateCluster extends React.Component {
       workerCount: 3,
       syncWorkers: true,
       workers: [
-        { id: 1, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large' },
-        { id: 2, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large' },
-        { id: 3, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large' }
+        { id: 1, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', valid: true },
+        { id: 2, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', valid: true },
+        { id: 3, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', valid: true }
       ],
       submitting: false,
+      valid: true,
       error: false
     };
   }
@@ -61,14 +62,17 @@ class CreateCluster extends React.Component {
         cpu: this.state.workers[0].cpu,
         memory: this.state.workers[0].memory,
         storage: this.state.workers[0].storage,
-        instanceType: this.state.workers[0].instanceType
+        instanceType: this.state.workers[0].instanceType,
+        valid: this.state.workers[0].valid
       };
     } else {
       newDefaultWorker = {
         id: Date.now(),
         cpu: 1,
         memory: 1,
-        storage: 20
+        storage: 20,
+        instanceType: 'm3.large',
+        valid: true
       };
     }
 
@@ -90,7 +94,8 @@ class CreateCluster extends React.Component {
           cpu: worker1.cpu,
           memory: worker1.memory,
           storage: worker1.storage,
-          instanceType: worker1.instanceType
+          instanceType: worker1.instanceType,
+          valid: worker1.valid,
         };
       });
     }
@@ -179,6 +184,17 @@ class CreateCluster extends React.Component {
     }
 
     this.setState(newState);
+  }
+
+  valid = () => {
+    var workers = this.state.workers;
+    for (var i = 0; i < workers.length; i++) {
+      if (! workers[i].valid) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   render() {
@@ -284,7 +300,9 @@ class CreateCluster extends React.Component {
                       bsSize='large'
                       bsStyle='primary'
                       onClick={this.createCluster}
-                      loading={this.state.submitting}>Create Cluster</Button>
+                      loading={this.state.submitting}
+                      disabled={!this.valid()}>Create Cluster
+              </Button>
             </div>
           </div>
         </div>

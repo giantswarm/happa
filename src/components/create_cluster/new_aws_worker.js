@@ -71,11 +71,17 @@ class NewAWSWorker extends React.Component {
     });
 
     if (validInstanceTypes.indexOf(instanceTypeName) != -1) {
+      this.props.worker.valid = true;
+      this.props.onWorkerUpdated(this.props.worker);
+
       return {
         valid: true,
         validationError: ''
       };
     }
+
+    this.props.worker.valid = false;
+    this.props.onWorkerUpdated(this.props.worker);
 
     return {
       valid: false,
@@ -112,7 +118,7 @@ class NewAWSWorker extends React.Component {
                    autoFocus
                    readOnly={this.props.readOnly} />
 
-
+            <span>{this.props.worker.valid}</span>
             <div className={'new-cluster--aws-instance-type-selector-button ' + this.buttonClass()} onClick={this.showModal}>
               <i className='fa fa-bars' />
             </div>
