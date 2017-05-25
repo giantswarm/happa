@@ -78,10 +78,9 @@ class Home extends React.Component {
             _.map(_.sortBy(this.props.clusters, (cluster) => cluster.id), (cluster) => {
               if (cluster.errorLoadingMetrics) {
                 return <ClusterDashboard cluster={cluster} key={cluster.id + 'error'} className='empty-slate'>
-                  <h1>Couldn't load metrics for cluster <code>{cluster.id}</code></h1>
-                  <p>We're currently improving our metrics gathering.</p>
-                  <p>If you need metrics, you can <a href='https://docs.giantswarm.io/guides/kubernetes-prometheus/' target="_blank">set up your own monitoring with Prometheus easily</a></p>
+                  <h1>Couldn't load metrics for this cluster</h1>
                   <p>Thanks for your patience! If you have any questions don't hesitate to contact support: <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a></p>
+                  <p>Tip: you can <a href='https://docs.giantswarm.io/guides/kubernetes-prometheus/' target="_blank">set up your own monitoring with Prometheus easily</a></p>
                 </ClusterDashboard>;
               } else if (cluster.metricsLoading && ! cluster.metricsLoadedFirstTime) {
                 return <ClusterDashboard selectedOrganization={this.props.selectedOrganization} cluster={cluster} key={cluster.id} className='loading' />;

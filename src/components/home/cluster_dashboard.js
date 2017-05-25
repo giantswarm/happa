@@ -40,6 +40,28 @@ class ClusterDashboard extends React.Component {
 
   render() {
     return <div className={this.props.className + ' cluster-dashboard well ' + (this.props.cluster.errorLoadingMetrics ? 'loading' : '')}>
+      <h1 className="cluster-dashboard--name">
+        {this.props.cluster.name}<div className="cluster-dashboard--id"> — <code>{this.props.cluster.id}</code></div>
+
+        <ButtonGroup>
+          <DropdownButton title="" id="add_node_dropdown" className="outline">
+            <MenuItem onClick={this.configureDocsFor.bind(this, this.props.cluster.id)}>Access Via kubectl</MenuItem>
+            <MenuItem componentClass={Link}
+                      href={'/organizations'}
+                      to={'/organizations/' + this.props.selectedOrganization + '/clusters/' + this.props.cluster.id }>
+                      Cluster Details
+            </MenuItem>
+            <MenuItem onClick={this.showDeleteClusterModal.bind(this, this.props.cluster.id)}>Delete Cluster</MenuItem>
+
+            {/*
+              <MenuItem>Open in Kubernetes Dashboard</MenuItem>
+              <MenuItem>Configure Persistent Storage</MenuItem>
+              <MenuItem>Launch Cluster Like This</MenuItem>
+              <MenuItem>Rename cluster</MenuItem>
+            */}
+          </DropdownButton>
+        </ButtonGroup>
+      </h1>
       {
         this.props.children ?
         <div className="cluster-dashboard--overlay">
@@ -52,29 +74,6 @@ class ClusterDashboard extends React.Component {
       <img className='loader' src='/images/loader_oval_light.svg' />
 
       <div className={'cluster-dashboard--inner'}>
-        <h1 className="cluster-dashboard--name">
-          {this.props.cluster.name}<div className="cluster-dashboard--id"> — <code>{this.props.cluster.id}</code></div>
-
-          <ButtonGroup>
-            <DropdownButton title="" id="add_node_dropdown" className="outline">
-              <MenuItem onClick={this.configureDocsFor.bind(this, this.props.cluster.id)}>Access Via kubectl</MenuItem>
-              <MenuItem componentClass={Link}
-                        href={'/organizations'}
-                        to={'/organizations/' + this.props.selectedOrganization + '/clusters/' + this.props.cluster.id }>
-                        Cluster Details
-              </MenuItem>
-              <MenuItem onClick={this.showDeleteClusterModal.bind(this, this.props.cluster.id)}>Delete Cluster</MenuItem>
-
-              {/*
-                <MenuItem>Open in Kubernetes Dashboard</MenuItem>
-                <MenuItem>Configure Persistent Storage</MenuItem>
-                <MenuItem>Launch Cluster Like This</MenuItem>
-                <MenuItem>Rename cluster</MenuItem>
-              */}
-            </DropdownButton>
-          </ButtonGroup>
-        </h1>
-
         <div className='gadgets'>
           <DonutGadget
             label='RAM'
