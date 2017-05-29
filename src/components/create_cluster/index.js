@@ -284,15 +284,6 @@ class CreateCluster extends React.Component {
             </div>
           </div>
 
-          <div className='row section'>
-            <div className='col-3'>
-              <h3 className='table-label'>Monthly Cost Preview</h3>
-            </div>
-            <div className='col-9'>
-              <p>We're still working on our pricing.</p>
-            </div>
-          </div>
-
           <div className='row section new-cluster--launch'>
             <div className='col-12'>
               <p>Create this cluster now and it will be available for you to use as soon as possible</p>
