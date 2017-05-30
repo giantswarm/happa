@@ -185,7 +185,7 @@ services:
 #########
 
   api:
-    image: quay.io/giantswarm/api:5a67849de39bc7c60e8b475ab32d41ba6f2b4c88
+    image: quay.io/giantswarm/api:fff064e059076954450857ed87bb7bbd02e63d07
     command: daemon --server.listen.address=http://0.0.0.0:8000
                     --add-admin-token=test:test
                     --companyd-address=http://companyd:8000
@@ -211,7 +211,7 @@ services:
      ETCD_PEER: "http://etcd:2379"
 
   companyd:
-    image: quay.io/giantswarm/companyd:ad5adceb71edef4fc2a215ed92ec81a2403c2214
+    image: quay.io/giantswarm/companyd:f39cc2ff1235c628461cd956a448ea7d6b26077d
     command: /opt/companyd --storage="etcd" --port=8000 --storage-etcd-peers=http://etcd:2379
     links:
      - etcd
