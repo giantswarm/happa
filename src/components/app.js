@@ -1,5 +1,6 @@
 'use strict';
 
+import 'babel-polyfill';
 import React from 'react';
 import { applyRouterMiddleware, Router, Route, IndexRoute, browserHistory, IndexRedirect } from 'react-router';
 import { useScroll } from 'react-router-scroll';
@@ -22,7 +23,6 @@ import clusterDetail from './organizations/cluster_detail';
 import accountSettings from './account_settings';
 import Home from './home';
 import AirbrakeClient from 'airbrake-js';
-import 'babel-polyfill';
 
 require('normalize.css');
 require('bootstrap/dist/css/bootstrap.min.css');
