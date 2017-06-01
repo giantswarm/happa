@@ -22,6 +22,7 @@ import clusterDetail from './organizations/cluster_detail';
 import accountSettings from './account_settings';
 import Home from './home';
 import AirbrakeClient from 'airbrake-js';
+import 'babel-polyfill';
 
 require('normalize.css');
 require('bootstrap/dist/css/bootstrap.min.css');
