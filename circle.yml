@@ -11,10 +11,7 @@ dependencies:
 
 compile:
   override:
-    - npm install
-    - npm test
-    - mkdir dist
-    - grunt build
+    - make dist
     - docker build -t quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 -f Dockerfile .
 
 test:
