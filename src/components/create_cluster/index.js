@@ -17,8 +17,8 @@ class CreateCluster extends React.Component {
     super(props);
 
     this.state = {
-      availableVersions: ['1.4.6', '1.4.7', '1.5.0', '1.5.1', '1.5.2'],
-      selectedVersion: '1.5.2',
+      availableVersions: ['1.4.6', '1.4.7', '1.5.0', '1.5.1', '1.5.2', '1.6.4'],
+      selectedVersion: '1.6.4',
       clusterName: 'My cluster',
       workerCount: 3,
       syncWorkers: true,
@@ -271,7 +271,7 @@ class CreateCluster extends React.Component {
               <h3 className='table-label'>Kubernetes Version</h3>
             </div>
             <div className='col-9'>
-              <p>1.5.2 (Default)</p>
+              <p>1.6.4 (Default)</p>
             </div>
           </div>
 
