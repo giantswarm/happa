@@ -1,5 +1,6 @@
 'use strict';
 
+import 'babel-polyfill';
 import React from 'react';
 import { applyRouterMiddleware, Router, Route, IndexRoute, browserHistory, IndexRedirect } from 'react-router';
 import { useScroll } from 'react-router-scroll';
