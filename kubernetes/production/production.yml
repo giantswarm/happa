@@ -32,6 +32,8 @@ spec:
           value: {{ .Installation.V1.GiantSwarm.API.Address | urlString }}
         - name: DESMOTES_ENDPOINT
           value: {{ .Installation.V1.GiantSwarm.Desmotes.Address | urlString }}
+        - name: INTERCOM_APP_ID
+          value: ictssdcu
         - name: ENVIRONMENT
           value: kubernetes
         - name: CREATE_CLUSTER_WORKER_TYPE
