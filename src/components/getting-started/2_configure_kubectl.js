@@ -35,10 +35,10 @@ class ConfigKubeCtl extends React.Component {
     });
 
 
-    if (!this.props.cluster) {
+    if (this.props.selectedCluster.nullObject) {
       this.props.dispatch(flashAdd({
-        message: <span><b>This organization has no clusters</b><br/>This page might not work as expected.</span>,
-        class: 'danger',
+        message: <span><b>This organization has no clusters</b><br/>We've inserted values for a sample cluster.</span>,
+        class: 'info',
         ttl: 3000
       }));
 
@@ -50,7 +50,7 @@ class ConfigKubeCtl extends React.Component {
         loading: true
       });
 
-      this.props.actions.clusterLoadDetails(this.props.cluster.id)
+      this.props.actions.clusterLoadDetails(this.props.selectedCluster.id)
       .then(() => {
         this.setState({
           loading: false
@@ -78,10 +78,6 @@ class ConfigKubeCtl extends React.Component {
     this.setState({
       selectedPlatform: platform
     });
-  }
-
-  clusterId() {
-    return this.props.cluster ? this.props.cluster.id : 'sample-cluster-id';
   }
 
   selectedInstallInstructions() {
@@ -145,28 +141,35 @@ class ConfigKubeCtl extends React.Component {
     });
   }
 
+  friendlyClusterName = (cluster) => {
+    return cluster.name + ' ' + '(' + cluster.id + ')';
+  }
+
   render() {
     return (
       <Slide>
-        <h1>Configure kubectl for your cluster {this.props.cluster ? <code>{this.clusterId()}</code> : ''}</h1>
-
-        <p>Before we continue, make sure that you have the right cluster selected to configure access to:</p>
+        <h1>Configure kubectl for cluster: {this.props.selectedCluster.name}<div className="cluster-dashboard--id"> (<code>{this.props.selectedCluster.id}</code>)</div></h1>
 
         {
-          this.props.allClusters.length > 1 ?
-          <div className='well select-cluster'>
-            <div className="select-cluster--dropdown-container">
-              <label>Select Cluster:</label>
-              <DropdownButton id="cluster-slect-dropdown" title={this.props.cluster.id}>
-                {
-                  _.map(this.props.allClusters,
-                    clusterId => <MenuItem key={clusterId} onClick={this.selectCluster.bind(this, clusterId)}>{clusterId}</MenuItem>
-                  )
-                }
-              </DropdownButton>
-            </div>
+          this.props.selectedOrgsClusterIDs.length > 1 ?
+          <div>
+            <p>Before we continue, make sure that you have the right cluster selected to configure access to:</p>
+            <div className='well select-cluster'>
+              <div className="select-cluster--dropdown-container">
+                <label>Select Cluster:</label>
+                <DropdownButton id="cluster-slect-dropdown" title={this.friendlyClusterName(this.props.selectedCluster)}>
+                  {
+                    _.map(this.props.selectedOrgsClusterIDs,
+                      clusterId => <MenuItem key={clusterId} onClick={this.selectCluster.bind(this, clusterId)}>
+                        {this.friendlyClusterName(this.props.clusters.items[clusterId])}
+                      </MenuItem>
+                    )
+                  }
+                </DropdownButton>
+              </div>
 
-            <p>You might have access to additional clusters after switching to a different organization.</p>
+              <p>You might have access to additional clusters after switching to a different organization.</p>
+            </div>
           </div>
           :
           undefined
@@ -217,7 +220,7 @@ class ConfigKubeCtl extends React.Component {
 
         <CodeBlock>
           <Prompt>
-            {`gsctl create kubeconfig --cluster ` + this.clusterId() + ` --auth-token ` + this.props.user.authToken}
+            {`gsctl create kubeconfig --cluster ` + this.props.selectedCluster.id + ` --auth-token ` + this.props.user.authToken}
           </Prompt>
         </CodeBlock>
 
@@ -266,10 +269,11 @@ class ConfigKubeCtl extends React.Component {
 }
 
 ConfigKubeCtl.propTypes = {
-  cluster: React.PropTypes.object,
+  selectedCluster: React.PropTypes.object,
+  clusters: React.PropTypes.object,
   dispatch: React.PropTypes.func,
   actions: React.PropTypes.object,
-  allClusters: React.PropTypes.array,
+  selectedOrgsClusterIDs: React.PropTypes.array,
   user: React.PropTypes.object,
   goToSlide: React.PropTypes.func
 };
@@ -277,9 +281,21 @@ ConfigKubeCtl.propTypes = {
 function mapStateToProps(state) {
   var selectedCluster = state.entities.clusters.items[state.app.selectedCluster];
 
+  // If we can't find the selected cluster
+  // create a nullObject that acts like a selectedCluster
+  // so most of the page will work
+  if (selectedCluster === undefined) {
+    selectedCluster = {
+      id: '12345',
+      name: 'Sample Cluster',
+      nullObject: true
+    };
+  }
+
   return {
-    cluster: selectedCluster,
-    allClusters: state.entities.organizations.items[state.app.selectedOrganization].clusters,
+    selectedCluster: selectedCluster,
+    selectedOrgsClusterIDs: state.entities.organizations.items[state.app.selectedOrganization].clusters,
+    clusters: state.entities.clusters,
     user: state.app.loggedInUser
   };
 }
