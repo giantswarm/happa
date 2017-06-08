@@ -14,10 +14,6 @@ class OrganizationRow extends React.Component {
             <i className='fa fa-times clickable'
                title='Delete this organization'
                onClick={this.props.onDelete} />
-            &nbsp;
-            <i className='fa fa-flag clickable'
-               title='Switch to this organization'
-               onClick={this.props.onSelect} />
           </div>
         </td>
       </tr>

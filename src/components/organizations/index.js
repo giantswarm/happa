@@ -15,6 +15,7 @@ class Organizations extends React.Component {
   }
 
   viewOrganization(orgId) {
+    this.selectOrganization(orgId);
     this.context.router.push('/organizations/' + orgId);
   }
 
@@ -68,7 +69,6 @@ class Organizations extends React.Component {
                                                 key={organization.id}
                                                 onClick={this.viewOrganization.bind(this, organization.id)}
                                                 onDelete={this.deleteOrganization.bind(this, organization.id)}
-                                                onSelect={this.selectOrganization.bind(this, organization.id)}
                                  />;
                         }
                       )
