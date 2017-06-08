@@ -6,15 +6,48 @@ import { bindActionCreators } from 'redux';
 import * as clusterActions from '../../actions/clusterActions';
 import ClusterKeyPairs from './cluster_key_pairs';
 import DocumentTitle from 'react-document-title';
+import { flashAdd } from '../../actions/flashMessageActions';
 
 class ClusterDetail extends React.Component {
+  constructor (props){
+    super(props);
+
+    this.state = {
+      loading: true
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+      loading: true
+    });
+
+    this.props.actions.clusterLoadDetails(this.props.cluster.id)
+    .then(() => {
+      this.setState({
+        loading: false
+      });
+    })
+    .catch(() => {
+      this.props.dispatch(flashAdd({
+        message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
+        class: 'danger',
+        ttl: 3000
+      }));
+
+      this.setState({
+        loading: 'failed'
+      });
+    });
+  }
+
   render() {
     return (
       <DocumentTitle title={'Cluster Details | ' + this.props.cluster.name +  ' | Giant Swarm'}>
-        <div>
+        <div className="cluster-details">
           <div className='row'>
             <div className='col-12'>
-              <h1>Details for cluster: {this.props.cluster.name}</h1>
+              <h1>Details for cluster: {this.props.cluster.name} {this.state.loading ? <img className='loader' width="25px" height="25px" src='/images/loader_oval_light.svg'/> : ''} </h1>
             </div>
           </div>
 
@@ -29,7 +62,7 @@ class ClusterDetail extends React.Component {
             // </div>
           }
 
-          <ClusterKeyPairs cluster={this.props.cluster} />
+          {this.state.loading ? '' : <ClusterKeyPairs cluster={this.props.cluster} />}
         </div>
       </DocumentTitle>
     );
@@ -38,7 +71,9 @@ class ClusterDetail extends React.Component {
 
 ClusterDetail.propTypes = {
   cluster: React.PropTypes.object,
-  clusters: React.PropTypes.object
+  clusters: React.PropTypes.object,
+  dispatch: React.PropTypes.func,
+  actions: React.PropTypes.object
 };
 
 function mapStateToProps(state, ownProps) {
