@@ -150,52 +150,62 @@ class ClusterKeyPairs extends React.Component {
   render() {
     return (
       <div className='row section cluster_key_pairs'>
-        <div className='col-3'>
-          <h3 className='table-label'>Key Pairs</h3>
-        </div>
-        <div className='col-9'>
-          <p>Key pairs consist of an RSA private key and certificate, signed by the certificate authority (CA) belonging to this cluster. They are used for access to the cluster via the Kubernetes API.</p>
-          <br/>
-          {
-            (() => {
-              if (this.state.loading) {
-                return <p><img className='loader' src='/images/loader_oval_light.svg'/></p>;
-              } else if (this.props.cluster.keyPairs.length === 0) {
-                return <p>No key pairs yet. Why don't you create your first?</p>;
-              } else {
-                return <table>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Description</th>
-                      <th>Created</th>
-                      <th>Expires</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      _.map(_.sortBy(this.props.cluster.keyPairs, 'create_date').reverse(), (keyPair) => {
-                        return <tr key={keyPair.id}>
-                          <td className="code">
-                            <OverlayTrigger placement="top" overlay={
-                                <Tooltip id="tooltip">{keyPair.id}</Tooltip>
-                              }>
-                              <span>{truncate(keyPair.id.replace(/:/g, ''), 9)}</span>
-                            </OverlayTrigger>
-                          </td>
 
-                          <td>{keyPair.description}</td>
-                          <td>{relativeDate(keyPair.create_date)}</td>
-                          <td>{relativeDate(keyPair.expire_date)}</td>
-                        </tr>;
-                      })
-                    }
-                  </tbody>
-                </table>;
-              }
-            })()
-          }
-          <Button onClick={this.addKeyPair.bind(this)} bsStyle='default' className='small'>Create Key Pair</Button>
+        <div className='row'>
+          <div className='col-12'>
+            <h3 className='table-label'>Key Pairs</h3>
+          </div>
+        </div>
+
+        <div className='row'>
+          <div className='col-9'>
+            <p>Key pairs consist of an RSA private key and certificate, signed by the certificate authority (CA) belonging to this cluster. They are used for access to the cluster via the Kubernetes API.</p>
+          </div>
+        </div>
+
+        <div className='row'>
+          <div className='col-12'>
+            {
+              (() => {
+                if (this.state.loading) {
+                  return <p><img className='loader' src='/images/loader_oval_light.svg'/></p>;
+                } else if (this.props.cluster.keyPairs.length === 0) {
+                  return <p>No key pairs yet. Why don't you create your first?</p>;
+                } else {
+                  return <table>
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Description</th>
+                        <th>Created</th>
+                        <th>Expires</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {
+                        _.map(_.sortBy(this.props.cluster.keyPairs, 'create_date').reverse(), (keyPair) => {
+                          return <tr key={keyPair.id}>
+                            <td className="code">
+                              <OverlayTrigger placement="top" overlay={
+                                  <Tooltip id="tooltip">{keyPair.id}</Tooltip>
+                                }>
+                                <span>{truncate(keyPair.id.replace(/:/g, ''), 9)}</span>
+                              </OverlayTrigger>
+                            </td>
+
+                            <td>{keyPair.description}</td>
+                            <td>{relativeDate(keyPair.create_date)}</td>
+                            <td>{relativeDate(keyPair.expire_date)}</td>
+                          </tr>;
+                        })
+                      }
+                    </tbody>
+                  </table>;
+                }
+              })()
+            }
+            <Button onClick={this.addKeyPair.bind(this)} bsStyle='default' className='small'>Create Key Pair</Button>
+          </div>
         </div>
         {
           (() => {
