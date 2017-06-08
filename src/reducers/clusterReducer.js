@@ -103,9 +103,9 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
     case types.CLUSTER_LOAD_PARTIAL_DETAILS:
       items = Object.assign({}, state.items);
 
-      items[action.cluster.id] = ensureMetricKeysAreAvailable(action.cluster);
-      items[action.cluster.id].nodes = [];
-      items[action.cluster.id].keyPairs = [];
+      items[action.cluster.id] = Object.assign({}, items[action.cluster.id], ensureMetricKeysAreAvailable(action.cluster));
+      items[action.cluster.id].nodes = items[action.cluster.id].nodes || [];
+      items[action.cluster.id].keyPairs = items[action.cluster.id].keyPairs || [];
 
       return {
         lastUpdated: state.lastUpdated,
