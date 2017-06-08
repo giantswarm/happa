@@ -35,7 +35,7 @@ class ConfigKubeCtl extends React.Component {
     });
 
 
-    if (!this.props.cluster) {
+    if (!this.props.selectedCluster) {
       this.props.dispatch(flashAdd({
         message: <span><b>This organization has no clusters</b><br/>This page might not work as expected.</span>,
         class: 'danger',
@@ -50,7 +50,7 @@ class ConfigKubeCtl extends React.Component {
         loading: true
       });
 
-      this.props.actions.clusterLoadDetails(this.props.cluster.id)
+      this.props.actions.clusterLoadDetails(this.props.selectedCluster.id)
       .then(() => {
         this.setState({
           loading: false
@@ -81,7 +81,7 @@ class ConfigKubeCtl extends React.Component {
   }
 
   clusterId() {
-    return this.props.cluster ? this.props.cluster.id : 'sample-cluster-id';
+    return this.props.selectedCluster ? this.props.selectedCluster.id : 'sample-cluster-id';
   }
 
   selectedInstallInstructions() {
@@ -148,25 +148,28 @@ class ConfigKubeCtl extends React.Component {
   render() {
     return (
       <Slide>
-        <h1>Configure kubectl for your cluster {this.props.cluster ? <code>{this.clusterId()}</code> : ''}</h1>
-
-        <p>Before we continue, make sure that you have the right cluster selected to configure access to:</p>
+        <h1>Configure kubectl for your cluster {this.props.selectedCluster ? <code>{this.clusterId()}</code> : ''}</h1>
 
         {
-          this.props.allClusters.length > 1 ?
-          <div className='well select-cluster'>
-            <div className="select-cluster--dropdown-container">
-              <label>Select Cluster:</label>
-              <DropdownButton id="cluster-slect-dropdown" title={this.props.cluster.id}>
-                {
-                  _.map(this.props.allClusters,
-                    clusterId => <MenuItem key={clusterId} onClick={this.selectCluster.bind(this, clusterId)}>{clusterId}</MenuItem>
-                  )
-                }
-              </DropdownButton>
-            </div>
+          this.props.selectedOrgsClusterIDs.length > 1 ?
+          <div>
+            <p>Before we continue, make sure that you have the right cluster selected to configure access to:</p>
+            <div className='well select-cluster'>
+              <div className="select-cluster--dropdown-container">
+                <label>Select Cluster:</label>
+                <DropdownButton id="cluster-slect-dropdown" title={this.props.selectedCluster.id}>
+                  {
+                    _.map(this.props.selectedOrgsClusterIDs,
+                      clusterId => <MenuItem key={clusterId} onClick={this.selectCluster.bind(this, clusterId)}>
+                        {clusterId}
+                      </MenuItem>
+                    )
+                  }
+                </DropdownButton>
+              </div>
 
-            <p>You might have access to additional clusters after switching to a different organization.</p>
+              <p>You might have access to additional clusters after switching to a different organization.</p>
+            </div>
           </div>
           :
           undefined
@@ -266,10 +269,11 @@ class ConfigKubeCtl extends React.Component {
 }
 
 ConfigKubeCtl.propTypes = {
-  cluster: React.PropTypes.object,
+  selectedCluster: React.PropTypes.object,
+  clusters: React.PropTypes.object,
   dispatch: React.PropTypes.func,
   actions: React.PropTypes.object,
-  allClusters: React.PropTypes.array,
+  selectedOrgsClusterIDs: React.PropTypes.array,
   user: React.PropTypes.object,
   goToSlide: React.PropTypes.func
 };
@@ -278,8 +282,9 @@ function mapStateToProps(state) {
   var selectedCluster = state.entities.clusters.items[state.app.selectedCluster];
 
   return {
-    cluster: selectedCluster,
-    allClusters: state.entities.organizations.items[state.app.selectedOrganization].clusters,
+    selectedCluster: selectedCluster,
+    selectedOrgsClusterIDs: state.entities.organizations.items[state.app.selectedOrganization].clusters,
+    clusters: state.entities.clusters,
     user: state.app.loggedInUser
   };
 }
