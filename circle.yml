@@ -34,4 +34,5 @@ deployment:
       - unset AWS_CA
       - unset AWS_CRT
       - unset AWS_KEY
+      - mv ./helm/ ./helm-no-deploy/
       - ./architect deploy --resources-directory-path='./kubernetes/staging'
