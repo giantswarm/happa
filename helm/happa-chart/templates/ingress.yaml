@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: happa
+  namespace: giantswarm
+  labels:
+    app: happa
+  annotations:
+    ingress.kubernetes.io/ssl-passthrough: "true"
+spec:
+  rules:
+  - host: {{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
+    http:
+      paths:
+      - backend:
+          serviceName: happa
+          servicePort: 8000
+        path: /
+  tls:
+  - hosts:
+    - {{ .Values.Installation.V1.GiantSwarm.Happa.Host }}

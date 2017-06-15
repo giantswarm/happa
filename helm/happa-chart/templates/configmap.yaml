@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: happa-configmap
+  namespace: giantswarm
+data:
+  passage-endpoint: {{ .Values.Installation.V1.GiantSwarm.Passage.Address }}
+  api-endpoint: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
+  desmotes-endpoint: {{ .Values.Installation.V1.GiantSwarm.Desmotes.Address }}
+  create-cluster-worker-type: {{ .Values.Installation.V1.Provider.Kind }}

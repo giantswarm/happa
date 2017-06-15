@@ -1,0 +1,75 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: happa
+  namespace: giantswarm
+  labels:
+    app: happa
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: happa
+    spec:
+      volumes:
+        - name: giantswarm-cert
+          secret:
+            secretName: giantswarm-cert
+      containers:
+      - name: happa
+        image: quay.io/giantswarm/happa:{{ .SHA }}
+        volumeMounts:
+        - name: giantswarm-cert
+          mountPath: /etc/nginx/certs
+          readOnly: true
+        env:
+        - name: PASSAGE_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: passage-endpoint
+        - name: API_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: api-endpoint
+        - name: DESMOTES_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: desmotes-endpoint
+        - name: CREATE_CLUSTER_WORKER_TYPE
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: create-cluster-worker-type
+        - name: INTERCOM_APP_ID
+          value: ictssdcu
+        - name: ENVIRONMENT
+          value: kubernetes
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+            scheme: HTTPS
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+            scheme: HTTPS
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 20Mi
+          limits:
+            cpu: 250m
+            memory: 250Mi
+      imagePullSecrets:
+      - name: giantswarm-registry
