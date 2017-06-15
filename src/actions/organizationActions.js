@@ -6,7 +6,7 @@ import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import DomainValidator from '../lib/domain_validator_client';
 import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
-import { clusterLoadPartialDetails } from './clusterActions';
+import { clusterLoadSuccess, clusterLoadError } from './clusterActions';
 import React from 'react';
 import { browserHistory } from 'react-router';
 
@@ -69,58 +69,40 @@ export function organizationsLoad() {
     .then(membershipsResponse => {
       var organizationsArray = membershipsResponse.result;
 
-      var clusters = Promise.all(_.map(organizationsArray, organizationName => {
-        return giantSwarm.clusters({ organizationName })
-               .then(response => {
-                 return [organizationName, response.result] || [organizationName, []];
-               })
-               .catch(() => {
-                 return [organizationName, 'error'];
-               });
-      }));
+      var clusters = giantSwarm.clusters()
+                     .then(response => {
+                        dispatch(clusterLoadSuccess(response.result));
+                     })
+                     .catch((error) => {
+                        dispatch(clusterLoadError(error));
+                     });
 
       var orgDetails = Promise.all(_.map(organizationsArray, organizationName => {
         return giantSwarm.organization({ organizationName })
                .then(response => {
-                 return [organizationName, response.result];
+                 return response.result;
                });
       }));
 
       return Promise.all([clusters, orgDetails]);
     })
     .then((result) => {
-      var clusters = result[0];
       var orgDetails = result[1];
 
-      var organizations = clusters.reduce((previous, current) => {
-        var orgId = current[0];
-        var clusters = current[1] || [];
+      var organizations = orgDetails.reduce((previous, current) => {
+        var orgId = current.id;
+        var orgDetails = current;
 
-        if (clusters === 'error') {
-          previous[orgId] = {clusters: [], errorLoadingClusters: true};
-        } else {
-          previous[orgId] = {clusters: clusters.sort().map((x) => {return x.id;})};
-
-          _.each(clusters, (cluster) => {
-            dispatch(clusterLoadPartialDetails(cluster));
-          });
-        }
-
-        return previous;
-      }, {});
-
-      organizations = orgDetails.reduce((previous, current) => {
-        var orgId = current[0];
-        var orgDetails = current[1];
         orgDetails.members = orgDetails.members.sort();
+
         previous[orgId] = Object.assign(
           {},
+          {clusters: []},
           getState().entities.organizations.items[orgId],
-          previous[orgId],
-          orgDetails
+          orgDetails,
         );
         return previous;
-      }, organizations);
+      }, {});
 
       return organizations;
     })

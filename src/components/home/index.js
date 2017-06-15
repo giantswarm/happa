@@ -71,7 +71,7 @@ class Home extends React.Component {
           </div>
 
           {
-            this.props.clusters.length === 0 ? <ClusterEmptyState selectedOrganization={this.props.selectedOrganization} organizations={this.props.organizations} /> : null
+            this.props.clusters.length === 0 ? <ClusterEmptyState errorLoadingClusters={this.props.errorLoadingClusters} selectedOrganization={this.props.selectedOrganization} organizations={this.props.organizations} /> : null
           }
 
           {
@@ -100,12 +100,14 @@ Home.propTypes = {
   setInterval: React.PropTypes.func,
   actions: React.PropTypes.object,
   selectedOrganization: React.PropTypes.string,
-  organizations: React.PropTypes.object
+  organizations: React.PropTypes.object,
+  errorLoadingClusters: React.PropTypes.bool
 };
 
 function mapStateToProps(state) {
   var selectedOrganization = state.app.selectedOrganization;
   var organizations = state.entities.organizations.items;
+  var errorLoadingClusters = state.entities.clusters.errorLoading;
   var clusterIds = organizations[selectedOrganization].clusters;
   var clusters = clusterIds.map((clusterId) => {
     return state.entities.clusters.items[clusterId];
@@ -114,6 +116,7 @@ function mapStateToProps(state) {
   return {
     clusters: clusters,
     organizations: organizations,
+    errorLoadingClusters: errorLoadingClusters,
     selectedOrganization: selectedOrganization
   };
 }

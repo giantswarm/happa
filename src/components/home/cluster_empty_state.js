@@ -2,7 +2,7 @@ import React from 'react';
 
 class ClusterEmptyState extends React.Component {
   render() {
-    if (this.props.organizations[this.props.selectedOrganization].errorLoadingClusters) {
+    if (this.props.errorLoadingClusters) {
       return <div className='cluster-dashboard well empty-slate'>
         <div className="cluster-dashboard--overlay">
           <h1>Error loading clusters for organization <code>{this.props.selectedOrganization}</code></h1>
@@ -25,6 +25,7 @@ class ClusterEmptyState extends React.Component {
 }
 
 ClusterEmptyState.propTypes = {
+  errorLoadingClusters: React.PropTypes.bool,
   organizations: React.PropTypes.object,
   selectedOrganization: React.PropTypes.string
 };
