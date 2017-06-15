@@ -20,7 +20,7 @@ spec:
             secretName: giantswarm-cert
       containers:
       - name: happa
-        image: quay.io/giantswarm/happa:3634a41d089abdc1609a70050c6afd459b549db3
+        image: quay.io/giantswarm/happa:{{ .SHA }}
         volumeMounts:
         - name: giantswarm-cert
           mountPath: /etc/nginx/certs

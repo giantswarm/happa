@@ -1,2 +1,2 @@
 name: happa-chart
-version: 1.0.0-3634a41d089abdc1609a70050c6afd459b549db3
+version: 1.0.0-{{ .SHA }}
