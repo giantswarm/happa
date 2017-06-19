@@ -185,7 +185,7 @@ services:
 #########
 
   api:
-    image: quay.io/giantswarm/api:fff064e059076954450857ed87bb7bbd02e63d07
+    image: quay.io/giantswarm/api:eff46b69093476dc275fd6e03084fe28b1ee3058
     command: daemon --server.listen.address=http://0.0.0.0:8000
                     --add-admin-token=test:test
                     --companyd-address=http://companyd:8000

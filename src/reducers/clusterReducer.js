@@ -3,6 +3,7 @@
 import * as types from '../actions/actionTypes';
 import update from 'react-addons-update';
 import moment from 'moment';
+import _ from 'underscore';
 
 var metricKeys = [
   'cpu_cores',
@@ -100,16 +101,26 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
   var clusterDetails;
 
   switch(action.type) {
-    case types.CLUSTER_LOAD_PARTIAL_DETAILS:
+    case types.CLUSTER_LOAD_SUCCESS:
       items = Object.assign({}, state.items);
 
-      items[action.cluster.id] = Object.assign({}, items[action.cluster.id], ensureMetricKeysAreAvailable(action.cluster));
-      items[action.cluster.id].nodes = items[action.cluster.id].nodes || [];
-      items[action.cluster.id].keyPairs = items[action.cluster.id].keyPairs || [];
+      _.each(action.clusters, (cluster) => {
+        items[cluster.id] = Object.assign({}, items[cluster.id], ensureMetricKeysAreAvailable(cluster));
+        items[cluster.id].nodes = items[cluster.id].nodes || [];
+        items[cluster.id].keyPairs = items[cluster.id].keyPairs || [];
+      });
 
       return {
         lastUpdated: state.lastUpdated,
         isFetching: false,
+        items: items
+      };
+
+    case types.CLUSTER_LOAD_ERROR:
+      return {
+        lastUpdated: Date.now(),
+        isFetching: false,
+        errorLoading: true,
         items: items
       };
 

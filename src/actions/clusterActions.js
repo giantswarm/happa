@@ -189,16 +189,17 @@ export function clusterLoadKeyPairs(clusterId) {
   };
 }
 
-
-// clusterLoadPartialDetails
-// =================================================================
-// Since organization load also includes some cluster details
-// it will fire off the CLUSTER_LOAD_PARTIAL_DETAILS action
-// with that cluster data so it can end up in entities.clusters
-
-export function clusterLoadPartialDetails(cluster) {
+export function clusterLoadSuccess(clusters) {
   return {
-    type: types.CLUSTER_LOAD_PARTIAL_DETAILS,
-    cluster: cluster
+    type: types.CLUSTER_LOAD_SUCCESS,
+    clusters: clusters
+  };
+}
+
+
+export function clusterLoadError(error) {
+  return {
+    type: types.CLUSTER_LOAD_ERROR,
+    error: error
   };
 }
