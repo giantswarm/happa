@@ -17,3 +17,18 @@ curl -i -X POST \
   \"password\": \"${PASSWORD}\",
   \"expiry\": \"${EXPIRY}\"
 }"
+
+EXPIRY="2019-01-01T00:00:00Z"
+USERNAME="developer2"
+EMAIL="developer2@example.com"
+
+# Create a second account, same password as before
+curl -i -X POST \
+  -H "Authorization: giantswarm ${ADMIN_TOKEN}" \
+  "${ENDPOINT}/v1/user/" \
+  -d "{
+  \"username\": \"${USERNAME}\",
+  \"email\": \"${EMAIL}\",
+  \"password\": \"${PASSWORD}\",
+  \"expiry\": \"${EXPIRY}\"
+}"

@@ -94,7 +94,7 @@ class OrganizationDetail extends React.Component {
                       {
                         _.sortBy(this.props.organization.members, 'email').map((member) => {
                           return (
-                            <tr key={member.username}>
+                            <tr key={member.email}>
                               <td>{member.email}</td>
                               <td>
                                 <div className='contextual'>
