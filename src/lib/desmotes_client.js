@@ -13,7 +13,7 @@ var helpers = require('./helpers');
 // }
 //
 // Example Usage:
-// var desmotes = new Desmotes({endpoint: 'http://docker.dev:9001', authorizationToken: 'asdfghjk'})
+// var desmotes = new Desmotes({endpoint: 'http://localhost:9001', authorizationToken: 'asdfghjk'})
 //
 var Desmotes = function(config) {
   var constraints = {
@@ -74,4 +74,3 @@ var Desmotes = function(config) {
 };
 
 module.exports = Desmotes;
-

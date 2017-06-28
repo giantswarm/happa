@@ -20,7 +20,7 @@ services:
 
     environment:
       DEBUGGING: 1
-      HAPPA_BASE_URI: http://docker.dev:8000
+      HAPPA_BASE_URI: http://localhost:8000
       GIANTSWARM_API_URI: http://api:8000
       GIANTSWARM_API_TOKEN: test
       HUBSPOT_API_URI: http://hubspotmock:9999
@@ -63,7 +63,7 @@ services:
       GIANTSWARM_API_URI: http://api:8000
       PROMETHEUS_URI: http://prometheus:9090
       PROMETHEUS_QUERY_TIMEOUT: 3.0
-      CORS_BASE_URI: http://docker.dev:8000
+      CORS_BASE_URI: http://localhost:8000
       PROMETHEUS_USER: prometheus_dev_user
       PROMETHEUS_PASSWORD: prometheus_dev_password
       CACHE_KEY_SALT: dev_salt
@@ -108,7 +108,7 @@ services:
   #     GIANTSWARM_ADMIN_TOKEN:
   #     REDIS_HOST: redis
   #     REDIS_PORT: "6379"
-  #     CORS_BASE_URI: http://docker.dev:8000
+  #     CORS_BASE_URI: http://localhost:8000
   #     CACHE_KEY_SALT: 793857234kjnsdfkjn128ed3ubnkdn2398e
   #     TOPIC_DOMAIN_VALIDATION: domain_validation
   #     COUCHDB_USER: meister

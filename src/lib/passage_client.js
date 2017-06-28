@@ -13,7 +13,7 @@ var helpers = require('./helpers');
 // }
 //
 // Example Usage:
-// var passage = new Passage({endpoint: 'http://docker.dev:5000'})
+// var passage = new Passage({endpoint: 'http://localhost:5000'})
 //
 var Passage = function(config) {
   var constraints = {
@@ -206,4 +206,3 @@ var Passage = function(config) {
 };
 
 export default Passage;
-

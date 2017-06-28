@@ -3,7 +3,7 @@
 default: dist
 
 # Build and run the production environment
-# becomes available at docker.dev
+# becomes available at localhost
 production: dist docker-build-prod
 	docker-compose -f docker-compose-prod.yml up
 
@@ -19,7 +19,7 @@ docker-build-prod:
 	docker build -t quay.io/giantswarm/happa -f Dockerfile .
 
 # Run the development environment
-# Becomes available at docker.dev:8000
+# Becomes available at localhost:8000
 develop:
 	@echo
 	@echo "-----------------------------------------------------------"
@@ -38,13 +38,8 @@ develop:
 
 	@echo
 	@echo "------------------------------------------------------------"
-	@echo "Happa development environment is running at docker.dev:8000."
+	@echo "Happa development environment is running at localhost:8000."
 	@echo "------------------------------------------------------------"
-	@echo
-
-	@echo
-	@echo "Please ensure there is an entry in your hosts file that points docker.dev to your docker host"
-	@echo "In many cases this will simply be 127.0.0.1"
 	@echo
 
 	@echo

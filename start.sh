@@ -1,14 +1,14 @@
 #!/bin/bash
 if [ -n "$API_ENDPOINT" ]; then
-  sed -i "s|apiEndpoint: 'http://docker.dev:9000'|apiEndpoint: '$API_ENDPOINT'|" /www/index.html
+  sed -i "s|apiEndpoint: 'http://localhost:9000'|apiEndpoint: '$API_ENDPOINT'|" /www/index.html
 fi
 
 if [ -n "$PASSAGE_ENDPOINT" ]; then
-  sed -i "s|passageEndpoint: 'http://docker.dev:5001'|passageEndpoint: '$PASSAGE_ENDPOINT'|" /www/index.html
+  sed -i "s|passageEndpoint: 'http://localhost:5001'|passageEndpoint: '$PASSAGE_ENDPOINT'|" /www/index.html
 fi
 
 if [ -n "$DESMOTES_ENDPOINT" ]; then
-  sed -i "s|desmotesEndpoint: 'http://docker.dev:9001'|desmotesEndpoint: '$DESMOTES_ENDPOINT'|" /www/index.html
+  sed -i "s|desmotesEndpoint: 'http://localhost:9001'|desmotesEndpoint: '$DESMOTES_ENDPOINT'|" /www/index.html
 fi
 
 if [ -n "$INTERCOM_APP_ID" ]; then
@@ -16,7 +16,7 @@ if [ -n "$INTERCOM_APP_ID" ]; then
 fi
 
 if [ -n "$DOMAIN_VALIDATOR_ENDPOINT" ]; then
-  sed -i "s|domainValidatorEndpoint: 'http://docker.dev:5002'|domainValidatorEndpoint: '$DOMAIN_VALIDATOR_ENDPOINT'|" /www/index.html
+  sed -i "s|domainValidatorEndpoint: 'http://localhost:5002'|domainValidatorEndpoint: '$DOMAIN_VALIDATOR_ENDPOINT'|" /www/index.html
 fi
 
 if [ -n "$CREATE_CLUSTER_WORKER_TYPE" ]; then
