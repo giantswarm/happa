@@ -6,7 +6,7 @@ metadata:
   labels:
     app: happa
   annotations:
-    ingress.kubernetes.io/ssl-passthrough: "true"
+    kubernetes.io/tls-acme: "true"
 spec:
   rules:
   - host: {{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
