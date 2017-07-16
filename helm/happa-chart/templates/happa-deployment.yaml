@@ -74,7 +74,7 @@ spec:
             {{- else }}
             scheme: HTTPS
             {{- end }}
-           initialDelaySeconds: 10
+          initialDelaySeconds: 10
           timeoutSeconds: 1
         resources:
           requests:
