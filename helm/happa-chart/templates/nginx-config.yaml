@@ -16,8 +16,10 @@ data:
 
     http {
       keepalive_timeout 5s;
-
+      
+      include /etc/nginx/mime.types;
       default_type  application/octet-stream;
+      
       gzip on;
       gzip_proxied any;
 
