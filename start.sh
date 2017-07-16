@@ -35,4 +35,4 @@ sed -i "s|VERSION|$(cat /www/VERSION)|" /etc/nginx/nginx.conf
 
 echo ""
 echo "--- Starting Happa nginx server ---"
-exec nginx -g "daemon off;"
+exec nginx -c /etc/nginx/config/nginx.conf -g "daemon off;"

@@ -29,7 +29,7 @@ spec:
 
         volumeMounts:
         - name: nginx-config
-          mountPath: /etc/nginx/
+          mountPath: /etc/nginx/config
 
         {{- if not .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
         - name: giantswarm-cert
