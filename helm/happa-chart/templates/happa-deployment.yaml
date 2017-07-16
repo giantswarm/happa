@@ -14,21 +14,29 @@ spec:
       labels:
         app: happa
     spec:
-      {{- if not .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
       volumes:
+        {{- if not .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
         - name: giantswarm-cert
           secret:
             secretName: giantswarm-cert
-      {{- end }}
+        {{- end }}
+        - name: nginx-config
+          configMap:
+            secretName: happa-nginx-config
       containers:
       - name: happa
         image: quay.io/giantswarm/happa
-        {{- if not .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
+
         volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/
+
+        {{- if not .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
         - name: giantswarm-cert
           mountPath: /etc/nginx/certs
           readOnly: true
         {{- end }}
+
         env:
         - name: PASSAGE_ENDPOINT
           valueFrom:
