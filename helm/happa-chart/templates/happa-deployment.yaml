@@ -22,7 +22,7 @@ spec:
         {{- end }}
         - name: nginx-config
           configMap:
-            secretName: happa-nginx-config
+            name: happa-nginx-config
       containers:
       - name: happa
         image: quay.io/giantswarm/happa
