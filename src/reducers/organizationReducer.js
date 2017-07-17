@@ -28,7 +28,7 @@ export default function organizationReducer(state = {lastUpdated: 0, isFetching:
       items = Object.assign({}, state.items);
 
       _.each(action.clusters, (cluster) => {
-        var org = items[cluster.owner] || {clusters: []};
+        var org = items[cluster.owner] || {clusters: [], id: cluster.owner, members: []};
         var clusters = [...org.clusters, cluster.id].sort();
         clusters = _.uniq(clusters, true);
 
