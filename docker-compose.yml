@@ -14,7 +14,7 @@ services:
       - passage
 
   passage:
-    image: registry.giantswarm.io/giantswarm/passage:latest
+    image: quay.io/giantswarm/passage:latest
     ports:
       - "5001:8000"
 
@@ -56,7 +56,7 @@ services:
       - "1025:1025"
 
   desmotes:
-    image: registry.giantswarm.io/giantswarm/desmotes:latest
+    image: quay.io/giantswarm/desmotes:latest
     ports:
       - "9001:5000"
     environment:
