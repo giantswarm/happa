@@ -25,7 +25,7 @@ spec:
             name: happa-nginx-config
       containers:
       - name: happa
-        image: quay.io/giantswarm/happa
+        image: quay.io/giantswarm/happa:[[ .SHA ]]
 
         volumeMounts:
         - name: nginx-config
