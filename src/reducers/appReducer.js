@@ -4,8 +4,6 @@ import * as types from '../actions/actionTypes';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
-var firstTime = true;
-
 var determineSelectedOrganization = function(organizations) {
   var allOrganizations = _.map(organizations, (x) => {return x.id;});
   var previouslySelectedOrganization = localStorage.getItem('app.selectedOrganization');
@@ -47,7 +45,6 @@ var determineSelectedCluster = function(selectedOrganization, organizations) {
 
 var shutDown = function(state) {
   localStorage.removeItem('user');
-  firstTime = true;
 
   window.Intercom('shutdown');
   browserHistory.push('/login');
@@ -119,24 +116,21 @@ export default function appReducer(state = {
 
     case types.ORGANIZATIONS_LOAD_SUCCESS:
       // Organizations have been loaded
-      // If its first time loading, lets check if the user has an organization
-      // selected already, and if that organization still exists. and if not select the first organization.
+      // Check if the user has an organization selected already, and if that
+      // organization still exists. If not select the first organization.
       // And then do the same for the selected cluster.
 
-      if (firstTime) {
-        firstTime = false;
+      var selectedOrganization = determineSelectedOrganization(action.organizations);
 
-        var selectedOrganization = determineSelectedOrganization(action.organizations);
+      if (selectedOrganization) {
         selectedCluster = determineSelectedCluster(selectedOrganization, action.organizations);
-
-        return Object.assign({}, state, {
-          selectedOrganization: selectedOrganization,
-          selectedCluster: selectedCluster,
-          firstLoadComplete: true
-        });
-      } else {
-        return state;
       }
+
+      return Object.assign({}, state, {
+        selectedOrganization: selectedOrganization,
+        selectedCluster: selectedCluster,
+        firstLoadComplete: true
+      });
 
     default:
       return state;

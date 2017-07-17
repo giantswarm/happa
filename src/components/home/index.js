@@ -55,20 +55,25 @@ class Home extends React.Component {
   render() {
     return (
       <DocumentTitle title={'Cluster Overview | ' + this.props.selectedOrganization + ' | Giant Swarm'}>
+      {
         <div>
-          <div className='well launch-new-cluster'>
+          {
+            this.props.selectedOrganization ?
+              <div className='well launch-new-cluster'>
 
-            <Link to='new-cluster'>
-              <Button type='button' bsStyle='primary'>Launch New Cluster</Button>
-            </Link>
-            {
-              this.props.clusters.length === 0 ?
-              'Ready to launch your first cluster? Click the green button!'
-              :
-              ''
-            }
-
-          </div>
+                <Link to='new-cluster'>
+                  <Button type='button' bsStyle='primary'>Launch New Cluster</Button>
+                </Link>
+                {
+                  this.props.clusters.length === 0 ?
+                  'Ready to launch your first cluster? Click the green button!'
+                  :
+                  ''
+                }
+              </div>
+            :
+            undefined
+          }
 
           {
             this.props.clusters.length === 0 ? <ClusterEmptyState errorLoadingClusters={this.props.errorLoadingClusters} selectedOrganization={this.props.selectedOrganization} organizations={this.props.organizations} /> : null
@@ -90,6 +95,7 @@ class Home extends React.Component {
             }, (cluster) => cluster.id)
           }
         </div>
+      }
       </DocumentTitle>
     );
   }
@@ -108,10 +114,14 @@ function mapStateToProps(state) {
   var selectedOrganization = state.app.selectedOrganization;
   var organizations = state.entities.organizations.items;
   var errorLoadingClusters = state.entities.clusters.errorLoading;
-  var clusterIds = organizations[selectedOrganization].clusters;
-  var clusters = clusterIds.map((clusterId) => {
-    return state.entities.clusters.items[clusterId];
-  });
+
+  var clusters = [];
+  if (selectedOrganization) {
+    var clusterIds = organizations[selectedOrganization].clusters;
+    clusters = clusterIds.map((clusterId) => {
+      return state.entities.clusters.items[clusterId];
+    });
+  }
 
   return {
     clusters: clusters,
