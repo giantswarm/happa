@@ -90,13 +90,9 @@ class ConfigKubeCtl extends React.Component {
       case 'MacWithoutBrew':
         return <div>
           <CodeBlock>
-            <Prompt>
-              {`
-                curl -O http://downloads.giantswarm.io/gsctl/` + this.state.gsctlVersion + `/gsctl-` + this.state.gsctlVersion + `-darwin-amd64.tar.gz
-                tar xzf gsctl-` + this.state.gsctlVersion + `-darwin-amd64.tar.gz
-                sudo cp gsctl-` + this.state.gsctlVersion + `-darwin-amd64/gsctl /usr/local/bin/
-              `}
-            </Prompt>
+            <Prompt>{`curl -O http://downloads.giantswarm.io/gsctl/` + this.state.gsctlVersion + `/gsctl-` + this.state.gsctlVersion + `-darwin-amd64.tar.gz`}</Prompt>
+            <Prompt>{`tar xzf gsctl-` + this.state.gsctlVersion + `-darwin-amd64.tar.gz`}</Prompt>
+            <Prompt>{`sudo cp gsctl-` + this.state.gsctlVersion + `-darwin-amd64/gsctl /usr/local/bin/`}</Prompt>
           </CodeBlock>
         </div>;
       case 'Mac':
@@ -104,25 +100,17 @@ class ConfigKubeCtl extends React.Component {
           <p>Installation via <a href='http://brew.sh/' target='_blank'>homebrew</a>:</p>
 
           <CodeBlock>
-            <Prompt>
-              {`
-                brew tap giantswarm/giantswarm
-                brew install gsctl
-              `}
-            </Prompt>
+            <Prompt>{`brew tap giantswarm/giantswarm`}</Prompt>
+            <Prompt>{`brew install gsctl`}</Prompt>
           </CodeBlock>
 
         </div>;
       case 'Linux':
         return <div>
           <CodeBlock>
-            <Prompt>
-              {`
-                curl -O http://downloads.giantswarm.io/gsctl/` + this.state.gsctlVersion + `/gsctl-` + this.state.gsctlVersion + `-linux-amd64.tar.gz
-                tar xzf gsctl-` + this.state.gsctlVersion + `-linux-amd64.tar.gz
-                sudo cp gsctl-` + this.state.gsctlVersion + `-linux-amd64/gsctl /usr/local/bin/
-              `}
-            </Prompt>
+            <Prompt>{`curl -O http://downloads.giantswarm.io/gsctl/` + this.state.gsctlVersion + `/gsctl-` + this.state.gsctlVersion + `-linux-amd64.tar.gz`}</Prompt>
+            <Prompt>{`tar xzf gsctl-` + this.state.gsctlVersion + `-linux-amd64.tar.gz`}</Prompt>
+            <Prompt>{`sudo cp gsctl-` + this.state.gsctlVersion + `-linux-amd64/gsctl /usr/local/bin/`}</Prompt>
           </CodeBlock>
         </div>;
       default:
@@ -203,7 +191,7 @@ class ConfigKubeCtl extends React.Component {
 
         <CodeBlock>
           <Prompt>
-            {`gsctl info`}
+            {`gsctl --api-endpoint ` + window.config.apiEndpoint + ` info`}
           </Prompt>
         </CodeBlock>
 
@@ -220,11 +208,15 @@ class ConfigKubeCtl extends React.Component {
 
         <CodeBlock>
           <Prompt>
-            {`gsctl create kubeconfig --cluster ` + this.props.selectedCluster.id + ` --auth-token ` + this.props.user.authToken}
+            {`
+              gsctl --api-endpoint ` + window.config.apiEndpoint + ` \\
+                create kubeconfig --cluster ` + this.props.selectedCluster.id + ` \\
+                --auth-token ` + this.props.user.authToken
+            }
           </Prompt>
         </CodeBlock>
 
-        <p>In case you wonder: <code>--cluster &lt;cluster_id&gt;</code> selects the cluster to provide access to. <code>--auth-token &lt;token&gt;</code> saves you from having to enter you password again in <code>gsctl</code>, by re-using the token from your current web UI session.</p>
+        <p>In case you wonder: <code>--api-endpoint</code> sets the right API endpoint to use for your installation. <code>--cluster &lt;cluster_id&gt;</code> selects the cluster to provide access to. <code>--auth-token &lt;token&gt;</code> saves you from having to enter you password again in <code>gsctl</code>, by re-using the token from your current web UI session.</p>
 
         <div className="well" id="alternative">
           <div onClick={this.toggleAlternative} className="toggle-alternative">
