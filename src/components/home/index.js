@@ -65,7 +65,7 @@ class Home extends React.Component {
               this.props.clusters.length === 0 ?
               'Ready to launch your first cluster? Click the green button!'
               :
-              'Believe it or not, you can have as many clusters as you like.'
+              ''
             }
 
           </div>
