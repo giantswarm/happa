@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactTimeout from 'react-timeout';
 import {connect} from 'react-redux';
-import ClusterDashboard from './cluster_dashboard';
+import ClusterDashboardItem from './cluster_dashboard_item';
 import ClusterEmptyState from './cluster_empty_state';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
@@ -11,18 +11,11 @@ import Button from '../button';
 import {Link}  from 'react-router';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
-// import Button from '../button';
-// import {Link}  from 'react-router';
-
-const DESMOTES_POLL_INTERVAL = 60000; // 60 Seconds
 
 class Home extends React.Component {
-  componentDidMount() {
-    this.updateMetrics(this.props.clusters);
 
-    this.props.setInterval(() => {
-      this.updateMetrics(this.props.clusters);
-    }, DESMOTES_POLL_INTERVAL);
+  componentDidMount() {
+    this.fetchClusterDetails(this.props.clusters);
   }
 
   clustersSortedById(clusters) {
@@ -33,21 +26,10 @@ class Home extends React.Component {
     return this.clustersSortedById(clusters).map((cluster) => cluster.id);
   }
 
-  componentWillReceiveProps(nextProps) {
-    var clustersAreTheSame = _.isEqual(this.clusterIds(nextProps.clusters), this.clusterIds(this.props.clusters));
-
-    if (! clustersAreTheSame) {
-      this.updateMetrics(nextProps.clusters);
-    }
-  }
-
-  updateMetrics(clusters) {
+  fetchClusterDetails(clusters) {
     return Promise.all(
       _.flatten(clusters.map((cluster) => {
-        return [
-          this.props.actions.clusterLoadDetails(cluster.id),
-          this.props.actions.clusterFetchMetrics(cluster.id)
-        ];
+        return [this.props.actions.clusterLoadDetails(cluster.id)];
       }))
     );
   }
@@ -76,17 +58,7 @@ class Home extends React.Component {
 
           {
             _.map(_.sortBy(this.props.clusters, (cluster) => cluster.id), (cluster) => {
-              if (cluster.errorLoadingMetrics) {
-                return <ClusterDashboard selectedOrganization={this.props.selectedOrganization} cluster={cluster} key={cluster.id + 'error'} className='empty-slate'>
-                  <h1>Couldn't load metrics for this cluster</h1>
-                  <p>Thanks for your patience! If you have any questions don't hesitate to contact support: <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a></p>
-                  <p>Tip: you can <a href='https://docs.giantswarm.io/guides/kubernetes-prometheus/' target="_blank">set up your own monitoring with Prometheus easily</a></p>
-                </ClusterDashboard>;
-              } else if (cluster.metricsLoading && ! cluster.metricsLoadedFirstTime) {
-                return <ClusterDashboard selectedOrganization={this.props.selectedOrganization} cluster={cluster} key={cluster.id} className='loading' />;
-              } else {
-                return <ClusterDashboard selectedOrganization={this.props.selectedOrganization} animate={true} key={cluster.id} cluster={cluster} />;
-              }
+              return <ClusterDashboardItem selectedOrganization={this.props.selectedOrganization} animate={true} key={cluster.id} cluster={cluster} />;
             }, (cluster) => cluster.id)
           }
         </div>

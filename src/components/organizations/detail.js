@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import { formatDate } from '../../lib/helpers.js';
 import DocumentTitle from 'react-document-title';
 import _ from 'underscore';
+import ClusterIDLabel from '../shared/cluster_id_label';
 
 class OrganizationDetail extends React.Component {
   componentDidMount() {
@@ -33,7 +34,7 @@ class OrganizationDetail extends React.Component {
           <div>
             <div className='row'>
               <div className='col-12'>
-                <h1>Details for: {this.props.params.orgId}</h1>
+                <h1>Organization: {this.props.params.orgId}</h1>
               </div>
             </div>
 
@@ -50,8 +51,8 @@ class OrganizationDetail extends React.Component {
                   <table>
                     <thead>
                       <tr>
-                        <th>Name</th>
                         <th>Cluster ID</th>
+                        <th>Name</th>
                         <th>Created</th>
                       </tr>
                     </thead>
@@ -60,8 +61,8 @@ class OrganizationDetail extends React.Component {
                         _.map(_.sortBy(this.props.organization.clusters, (cluster) => this.props.clusters.items[cluster].name ), (cluster) => {
                           return (
                             <tr className="clickable" key={cluster} onClick={this.openClusterDetails.bind(this, cluster)}>
+                              <td><ClusterIDLabel clusterID={this.props.clusters.items[cluster].id} /></td>
                               <td>{this.props.clusters.items[cluster].name}</td>
-                              <td className="code">{this.props.clusters.items[cluster].id}</td>
                               <td>{formatDate(this.props.clusters.items[cluster].create_date)}</td>
                             </tr>
                           );
