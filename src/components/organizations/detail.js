@@ -44,7 +44,7 @@ class OrganizationDetail extends React.Component {
               </div>
               <div className='col-9'>
                 {
-                  this.props.organization.clusters.length === 0 ?
+                  this.props.clusters.length === 0 ?
                   <p>No clusters here yet, contact Giant Swarm to add a cluster to this
                   organization</p>
                   :
@@ -58,12 +58,12 @@ class OrganizationDetail extends React.Component {
                     </thead>
                     <tbody>
                       {
-                        _.map(_.sortBy(this.props.organization.clusters, (cluster) => this.props.clusters.items[cluster].name ), (cluster) => {
+                        _.map(_.sortBy(this.props.clusters, (cluster) => cluster.name ), (cluster) => {
                           return (
-                            <tr className="clickable" key={cluster} onClick={this.openClusterDetails.bind(this, cluster)}>
-                              <td><ClusterIDLabel clusterID={this.props.clusters.items[cluster].id} /></td>
-                              <td>{this.props.clusters.items[cluster].name}</td>
-                              <td>{formatDate(this.props.clusters.items[cluster].create_date)}</td>
+                            <tr className="clickable" key={cluster.id} onClick={this.openClusterDetails.bind(this, cluster.id)}>
+                              <td><ClusterIDLabel clusterID={cluster.id} /></td>
+                              <td>{cluster.name}</td>
+                              <td>{formatDate(cluster.create_date)}</td>
                             </tr>
                           );
                         })
@@ -281,16 +281,23 @@ OrganizationDetail.contextTypes = {
 
 OrganizationDetail.propTypes = {
   actions: React.PropTypes.object,
-  clusters: React.PropTypes.object,
+  clusters: React.PropTypes.array,
   organization: React.PropTypes.object,
   dispatch: React.PropTypes.func,
   params: React.PropTypes.object
 };
 
 function mapStateToProps(state, ownProps) {
+  var allClusters = state.entities.clusters.items;
+  var clusters = [];
+
+  clusters = _.filter(allClusters, (cluster) => {
+    return cluster.owner === ownProps.params.orgId;
+  });
+
   return {
     organization: state.entities.organizations.items[ownProps.params.orgId],
-    clusters: state.entities.clusters
+    clusters: clusters
   };
 }
 

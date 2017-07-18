@@ -46,6 +46,10 @@ class ClusterDashboardItem extends React.Component {
     return c;
   }
 
+  showDeleteClusterModal(cluster) {
+    this.props.actions.clusterDelete(cluster);
+  }
+
   accessCluster() {
     this.props.actions.clusterSelect(this.props.cluster.id);
     this.context.router.push('/getting-started/configure');
@@ -86,6 +90,7 @@ class ClusterDashboardItem extends React.Component {
               <ButtonGroup className='pull-right'>
                 <Button onClick={this.goToClusterDetails.bind(this)}>Details</Button>
                 <Button onClick={this.accessCluster.bind(this)}>Access</Button>
+                <Button onClick={this.showDeleteClusterModal.bind(this, this.props.cluster)}>Delete</Button>
               </ButtonGroup>
             </div>
 

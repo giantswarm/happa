@@ -68,42 +68,43 @@ export function clusterLoadMetricsError(clusterId, error) {
   };
 }
 
-export function clusterDelete(clusterId) {
+export function clusterDelete(cluster) {
   return {
     type: types.CLUSTER_DELETE,
-    clusterId
+    cluster
   };
 }
 
-export function clusterDeleteConfirm(clusterId) {
+export function clusterDeleteConfirm(cluster) {
   return function(dispatch, getState) {
     dispatch({
       type: types.CLUSTER_DELETE_CONFIRM,
-      clusterId
+      cluster
     });
 
     var authToken = getState().app.loggedInUser.authToken;
     var giantSwarm = new GiantSwarm.Client(authToken);
 
-    return giantSwarm.deleteCluster({clusterId})
+    return giantSwarm.deleteCluster({clusterId: cluster.id})
+    .then(dispatch(modalHide()))
     .then(() => {
-      dispatch(modalHide());
+
       dispatch(flashAdd({
         message: <div>Cluster deleted succesfully</div>,
         class: 'success',
         ttl: 3000
       }));
-      dispatch(clusterDeleteSuccess(clusterId));
+      dispatch(clusterDeleteSuccess(cluster.id));
     })
     .then(dispatch(organizationsLoad()))
     .catch((error) => {
       dispatch(modalHide());
       dispatch(flashAdd({
-        message: <div>Something went wrong while trying to delete cluster: {clusterId}<br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        message: <div>Something went wrong while trying to delete cluster: {cluster.id}<br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
         class: 'danger',
         ttl: 3000
       }));
-      dispatch(clusterDeleteError(clusterId, error));
+      dispatch(clusterDeleteError(cluster.id, error));
     });
   };
 }

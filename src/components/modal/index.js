@@ -238,14 +238,16 @@ class Modal extends React.Component {
         );
 
       case 'clusterDelete':
-        var clusterId = this.props.modal.templateValues.clusterId;
+        var cluster = this.props.modal.templateValues.cluster;
+        var clusterId = this.props.modal.templateValues.cluster.id;
+        var clusterName = this.props.modal.templateValues.cluster.name;
         return (
           <BootstrapModal show={this.props.modal.visible} onHide={this.close.bind(this)}>
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>Delete Cluster</BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
-              <p>Are you sure you want to delete cluster <strong>{this.props.clusters[clusterId].name}</strong> (<code>{this.props.modal.templateValues.clusterId}</code>)?</p>
+              <p>Are you sure you want to delete cluster <strong>{clusterName}</strong> (<code>{clusterId}</code>)?</p>
               <p>All workloads on this cluster will be terminated. Data stored on the worker nodes will be lost. There is no way to undo this action.</p>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
@@ -253,7 +255,7 @@ class Modal extends React.Component {
                 type='submit'
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
-                onClick={this.deleteClusterConfirm.bind(this, this.props.modal.templateValues.clusterId)}>
+                onClick={this.deleteClusterConfirm.bind(this, cluster)}>
                 {
                   this.props.modal.templateValues.loading ?
                   'Deleting Cluster'

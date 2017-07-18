@@ -102,7 +102,7 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
 
   switch(action.type) {
     case types.CLUSTER_LOAD_SUCCESS:
-      items = Object.assign({}, state.items);
+      items = {};
 
       _.each(action.clusters, (cluster) => {
         items[cluster.id] = Object.assign({}, items[cluster.id], ensureMetricKeysAreAvailable(cluster));
@@ -250,6 +250,13 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: items
+      };
+
+    case types.CLUSTER_DELETE_SUCCESS:
+      return {
+        lastUpdated: Date.now(),
+        isFetching: false,
+        items: state.items
       };
 
     default:

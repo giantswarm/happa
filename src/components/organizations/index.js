@@ -31,6 +31,17 @@ class Organizations extends React.Component {
     this.props.dispatch(organizationSelect(orgId));
   }
 
+  clustersForOrg(orgId) {
+    var allClusters = this.props.clusters;
+    var clusters = [];
+
+    clusters = _.filter(allClusters, (cluster) => {
+      return cluster.owner === orgId;
+    });
+
+    return clusters;
+  }
+
   render() {
     return (
       <DocumentTitle title='Organizations | Giant Swarm'>
@@ -66,6 +77,7 @@ class Organizations extends React.Component {
                     {
                       _.map(_.sortBy(this.props.organizations.items, 'id'), (organization) => {
                           return <OrganizationRow organization={organization}
+                                                clusters={this.clustersForOrg(organization.id)}
                                                 key={organization.id}
                                                 onClick={this.viewOrganization.bind(this, organization.id)}
                                                 onDelete={this.deleteOrganization.bind(this, organization.id)}
@@ -92,12 +104,14 @@ Organizations.contextTypes = {
 
 Organizations.propTypes = {
   dispatch: React.PropTypes.func,
-  organizations: React.PropTypes.object
+  organizations: React.PropTypes.object,
+  clusters: React.PropTypes.object
 };
 
 function mapStateToProps(state) {
   return {
-    organizations: state.entities.organizations
+    organizations: state.entities.organizations,
+    clusters: state.entities.clusters.items
   };
 }
 

@@ -85,13 +85,13 @@ Home.propTypes = {
 function mapStateToProps(state) {
   var selectedOrganization = state.app.selectedOrganization;
   var organizations = state.entities.organizations.items;
+  var allClusters = state.entities.clusters.items;
   var errorLoadingClusters = state.entities.clusters.errorLoading;
 
   var clusters = [];
   if (selectedOrganization) {
-    var clusterIds = organizations[selectedOrganization].clusters;
-    clusters = clusterIds.map((clusterId) => {
-      return state.entities.clusters.items[clusterId];
+    clusters = _.filter(allClusters, (cluster) => {
+      return cluster.owner === selectedOrganization;
     });
   }
 
