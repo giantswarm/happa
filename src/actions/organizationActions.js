@@ -23,20 +23,12 @@ export function organizationSelect(orgId) {
   };
 }
 
-export function organizationDeleteSuccess(orgId, deletingSelectedOrganization) {
-  // Check if the organization the user deleted is the currently selected organization
-  // If so, switch to the first organization in the list.
-  //
-  // Don't switch if there are no organizations at all.
-  return function(dispatch, getState) {
-    var firstOrganization = _.map(_.sortBy(getState().entities.organizations.items, 'id'), (x) => {return x.id;})[0];
-
-    if (firstOrganization && deletingSelectedOrganization) {
-      return dispatch(organizationSelect(firstOrganization));
-    }
-
-    return null;
+export function organizationDeleteSuccess(orgId) {
+  return {
+    type: types.ORGANIZATION_DELETE_SUCCESS,
+    orgId
   };
+
 }
 
 export function organizationsLoadSuccess(organizations) {
@@ -127,8 +119,6 @@ export function organizationDeleteConfirm(orgId) {
   return function(dispatch, getState) {
     dispatch({type: types.ORGANIZATION_DELETE_CONFIRM, orgId: orgId});
 
-    var deletingSelectedOrganization = orgId === getState().app.selectedOrganization;
-
     var authToken = getState().app.loggedInUser.authToken;
     var giantSwarm = new GiantSwarm.Client(authToken);
 
@@ -142,7 +132,7 @@ export function organizationDeleteConfirm(orgId) {
       class: 'success',
       ttl: 3000
     })))
-    .then(() => {return dispatch(organizationDeleteSuccess(orgId, deletingSelectedOrganization));})
+    .then(() => {return dispatch(organizationDeleteSuccess(orgId));})
     .catch(error => {
       dispatch(modalHide());
 
