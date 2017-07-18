@@ -155,7 +155,7 @@ class ClusterDetail extends React.Component {
           <div className='row'>
             <div className='col-9'>
               <p>All workloads on this cluster will be terminated. Data stored on the worker nodes will be lost. There is no way to undo this action.</p>
-              <Button onClick={this.showDeleteClusterModal.bind(this, this.props.cluster)}>Delete</Button>
+              <Button bsStyle='danger' onClick={this.showDeleteClusterModal.bind(this, this.props.cluster)}>Delete Cluster</Button>
             </div>
           </div>
 
