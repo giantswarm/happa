@@ -11,6 +11,7 @@ import { flashAdd } from '../../actions/flashMessageActions';
 import platform from '../../lib/platform';
 import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
 import request from 'superagent-bluebird-promise';
+import ClusterIDLabel from '../shared/cluster_id_label';
 
 class ConfigKubeCtl extends React.Component {
   constructor(props) {
@@ -136,7 +137,7 @@ class ConfigKubeCtl extends React.Component {
   render() {
     return (
       <Slide>
-        <h1>Configure kubectl for cluster: {this.props.selectedCluster.name}<div className="cluster-dashboard--id"> (<code>{this.props.selectedCluster.id}</code>)</div></h1>
+        <h1>Configure kubectl for cluster: {this.props.selectedCluster.name} <ClusterIDLabel clusterID={this.props.selectedCluster.id} /></h1>
 
         {
           this.props.selectedOrgsClusterIDs.length > 1 ?

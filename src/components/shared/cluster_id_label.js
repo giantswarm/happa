@@ -2,27 +2,28 @@
 import React from 'react';
 import ColorHash from 'color-hash';
 
+var colorHashCache = {};
 
 class ClusterIDLabel extends React.Component {
 
   constructor(props) {
     super(props);
-    var col = this.calculateColour(props.clusterID);
-    this.state = {
-      backgroundColor: col
-    };
   }
 
   calculateColour(str) {
-    var colorHash = new ColorHash({lightness: 0.4, saturation: 0.4});
-    var col = colorHash.hex(str);
-    return col;
+    if (!colorHashCache[str]) {
+      var colorHash = new ColorHash({lightness: 0.4, saturation: 0.4});
+      var col = colorHash.hex(str);
+      colorHashCache[str] = col;
+    }
+
+    return colorHashCache[str];
   }
 
   render() {
     return (
       <span style={{
-        backgroundColor: this.state.backgroundColor,
+        backgroundColor: this.calculateColour(this.props.clusterID),
         fontFamily: 'Inconsolata, monospace',
         padding: '0.2em 0.4em',
         borderRadius: '0.2em',
