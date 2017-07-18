@@ -9,6 +9,7 @@ import DocumentTitle from 'react-document-title';
 import { flashAdd } from '../../actions/flashMessageActions';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import { relativeDate } from '../../lib/helpers.js';
+import Button from '../button/index';
 
 class ClusterDetail extends React.Component {
   constructor (props){
@@ -76,6 +77,10 @@ class ClusterDetail extends React.Component {
     return c;
   }
 
+  showDeleteClusterModal(cluster) {
+    this.props.actions.clusterDelete(cluster);
+  }
+
   render() {
     var awsInstanceType = <tr/>;
     if (this.props.cluster.workers && this.props.cluster.workers[0].aws.instance_type) {
@@ -127,7 +132,7 @@ class ClusterDetail extends React.Component {
                       <td className='value'>{this.getMemoryTotal() === null ? 'n/a' : this.getMemoryTotal()} GB</td>
                     </tr>
                     <tr>
-                      <td>Total Storage in worker nodes</td>
+                      <td>Total storage in worker nodes</td>
                       <td className='value'>{this.getStorageTotal() === null ? 'n/a' : this.getStorageTotal()} GB</td>
                     </tr>
                   </tbody>
@@ -138,6 +143,23 @@ class ClusterDetail extends React.Component {
           </div>
 
           {this.state.loading ? '' : <ClusterKeyPairs cluster={this.props.cluster} />}
+
+
+          <div className='row section cluster_delete'>
+            <div className='row'>
+              <div className='col-12'>
+                <h3 className='table-label'>Delete This Cluster</h3>
+              </div>
+            </div>
+
+          <div className='row'>
+            <div className='col-9'>
+              <p>All workloads on this cluster will be terminated. Data stored on the worker nodes will be lost. There is no way to undo this action.</p>
+              <Button onClick={this.showDeleteClusterModal.bind(this, this.props.cluster)}>Delete</Button>
+            </div>
+          </div>
+
+          </div>
         </div>
       </DocumentTitle>
     );

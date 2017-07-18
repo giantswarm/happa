@@ -7,6 +7,7 @@ import { modalHide } from './modalActions';
 import { organizationsLoad } from './organizationActions';
 import { flashAdd } from './flashMessageActions';
 import React from 'react';
+import { browserHistory } from 'react-router';
 
 
 // clusterSelect
@@ -86,6 +87,9 @@ export function clusterDeleteConfirm(cluster) {
     var giantSwarm = new GiantSwarm.Client(authToken);
 
     return giantSwarm.deleteCluster({clusterId: cluster.id})
+    .then(() => {
+      browserHistory.push('/organizations/'+cluster.owner);
+    })
     .then(dispatch(modalHide()))
     .then(() => {
 

@@ -11,7 +11,7 @@ import { organizationDeleteConfirm,
          organizationRemoveMemberConfirm } from '../../actions/organizationActions';
 
 import { clusterDeleteConfirm } from '../../actions/clusterActions';
-
+import ClusterIDLabel from '../shared/cluster_id_label';
 import EmailField from './email_field';
 
 class Modal extends React.Component {
@@ -244,11 +244,11 @@ class Modal extends React.Component {
         return (
           <BootstrapModal show={this.props.modal.visible} onHide={this.close.bind(this)}>
             <BootstrapModal.Header closeButton>
-              <BootstrapModal.Title>Delete Cluster</BootstrapModal.Title>
+              <BootstrapModal.Title>Are you sure you want to delete cluster <strong>{clusterName}</strong> <ClusterIDLabel clusterID={clusterId} />?</BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
-              <p>Are you sure you want to delete cluster <strong>{clusterName}</strong> (<code>{clusterId}</code>)?</p>
-              <p>All workloads on this cluster will be terminated. Data stored on the worker nodes will be lost. There is no way to undo this action.</p>
+              <p>All workloads on this cluster will be terminated. Data stored on the worker nodes will be lost.</p>
+              <p>There is no way to undo this action.</p>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
