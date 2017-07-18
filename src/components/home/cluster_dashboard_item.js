@@ -62,8 +62,6 @@ class ClusterDashboardItem extends React.Component {
     var cpus = this.getCpusTotal();
     return (
       <div className='cluster-dashboard-item row well'>
-        <div className='col-12'>
-          <div className='row'>
 
             <div className='col-1 cluster-dashboard-item--title'>
               <Link to={'/organizations/'+ this.props.selectedOrganization +'/clusters/' + this.props.cluster.id}>
@@ -71,32 +69,25 @@ class ClusterDashboardItem extends React.Component {
               </Link>
             </div>
 
-            <div className='col-8 cluster-dashboard-item--title'>
-              <Link to={'/organizations/'+ this.props.selectedOrganization +'/clusters/' + this.props.cluster.id}>
-                <span className="cluster-dashboard-item--name" style={{fontWeight: 'bold'}}>{this.props.cluster.name}</span>
-              </Link>
-            </div>
+            <div className='col-8'>
+              <div className='cluster-dashboard-item--title'>
+                <Link to={'/organizations/'+ this.props.selectedOrganization +'/clusters/' + this.props.cluster.id}>
+                  <span className="cluster-dashboard-item--name" style={{fontWeight: 'bold'}}>{this.props.cluster.name}</span>
+                </Link>
+              </div>
 
-            <div className='col-3'>
-              <ButtonGroup className='pull-right'>
-                <Button onClick={this.goToClusterDetails.bind(this)}>Details</Button>
-                <Button onClick={this.accessCluster.bind(this)}>Access</Button>
-              </ButtonGroup>
-            </div>
-
-          </div>
-          <div className='row'>
-
-            <div className='col-1'></div>
-            <div className='col-11'>
               <div>Organization: <b>{this.props.selectedOrganization}</b> · Created <b>{relativeDate(this.props.cluster.create_date)}</b> · Kubernetes <b>{this.props.cluster.kubernetes_version}</b></div>
               <div>
                 <b>{this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}</b> nodes · <b>{memory ? memory : 'n/a'}</b> GB RAM · <b>{cpus ? cpus : 'n/a'}</b> CPUs · <b>{storage ? storage: 'n/a'}</b> GB storage
               </div>
             </div>
 
-          </div>
-        </div>
+            <div className='col-3 pull-right'>
+              <ButtonGroup className='pull-right'>
+                <Button onClick={this.goToClusterDetails.bind(this)}>Details</Button>
+                <Button onClick={this.accessCluster.bind(this)}>Access</Button>
+              </ButtonGroup>
+            </div>
 
       </div>
     );
