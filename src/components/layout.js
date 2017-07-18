@@ -60,7 +60,7 @@ class Layout extends React.Component {
                   <div className='organization_dropdown'>
                     {
                       (_.map(this.props.organizations.items, (x) => {return x.id;}).length === 0 && ! this.props.organizations.isFetching) ?
-                      <DropdownButton title={<span>>No organizations</span>} key='2' id='org_dropdown'>
+                      <DropdownButton title={<span><span className='label label-default'>ORG</span>No organizations</span>} key='2' id='org_dropdown'>
                         <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
                       </DropdownButton>
                       :

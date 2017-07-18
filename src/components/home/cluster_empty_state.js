@@ -1,8 +1,17 @@
 import React from 'react';
+import {Link}  from 'react-router';
 
 class ClusterEmptyState extends React.Component {
   render() {
-    if (this.props.errorLoadingClusters) {
+    if (!this.props.selectedOrganization) {
+      return <div className='cluster-dashboard well empty-slate'>
+        <div className="cluster-dashboard--overlay">
+          <h1>Welcome to Giant Swarm!</h1>
+          <p>There are no organizations yet in your installation.</p>
+          <p>Go to <Link to='organizations'>Manage Organizations</Link> to create your first organization, then come back to this screen to create your first cluster!</p>
+        </div>
+      </div>;
+    } else if (this.props.errorLoadingClusters) {
       return <div className='cluster-dashboard well empty-slate'>
         <div className="cluster-dashboard--overlay">
           <h1>Error loading clusters for organization <code>{this.props.selectedOrganization}</code></h1>
