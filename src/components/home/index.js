@@ -62,7 +62,7 @@ class Home extends React.Component {
           }
 
           {
-            _.map(_.sortBy(this.props.clusters, (cluster) => cluster.id), (cluster) => {
+            _.map(_.sortBy(this.props.clusters, (cluster) => cluster.name), (cluster) => {
               return <ClusterDashboardItem selectedOrganization={this.props.selectedOrganization} animate={true} key={cluster.id} cluster={cluster} />;
             }, (cluster) => cluster.id)
           }
