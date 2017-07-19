@@ -25,7 +25,7 @@
     "react-addons-css-transition-group": "~15.4.2",
     "react-addons-update": "~15.4.2",
     "react-addons-test-utils": "~15.4.2",
-    "giantswarm": "git://github.com/giantswarm/giantswarm-js-client#add-v4-list-organizations",
+    "giantswarm": "git://github.com/giantswarm/giantswarm-js-client#v0.1.7",
     "react-codemirror": "~0.2.6",
     "react-dom": "~15.4.2",
     "react-router": "~2.6.1",
