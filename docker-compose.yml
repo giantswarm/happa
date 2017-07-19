@@ -50,7 +50,7 @@ services:
       - "9999:9999"
 
   mailcatcher:
-    image: registry.giantswarm.io/giantswarm/mailcatcher:latest
+    image: quay.io/giantswarm/mailcatcher:latest
     ports:
       - "1080:1080"
       - "1025:1025"
@@ -185,7 +185,7 @@ services:
 #########
 
   api:
-    image: quay.io/giantswarm/api:c55175c3d5cb24d67ff9cf20f8f2ed7687732885
+    image: quay.io/giantswarm/api:latest
     command: daemon --server.listen.address=http://0.0.0.0:8000
                     --add-admin-token=test:test
                     --companyd-address=http://companyd:8000
