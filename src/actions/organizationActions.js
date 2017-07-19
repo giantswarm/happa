@@ -57,9 +57,11 @@ export function organizationsLoad() {
 
     dispatch({type: types.ORGANIZATIONS_LOAD});
 
-    return giantSwarm.memberships()
+    return giantSwarm.organizations()
     .then(membershipsResponse => {
-      var organizationsArray = membershipsResponse.result;
+      var organizationsArray = membershipsResponse.result.map((organization) => {
+        return organization.id;
+      });
 
       var clusters = giantSwarm.clusters()
                      .then(response => {
