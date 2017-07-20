@@ -211,7 +211,7 @@ services:
      ETCD_PEER: "http://etcd:2379"
 
   companyd:
-    image: quay.io/giantswarm/companyd:f39cc2ff1235c628461cd956a448ea7d6b26077d
+    image: quay.io/giantswarm/companyd:latest
     command: /opt/companyd --storage="etcd" --port=8000 --storage-etcd-peers=http://etcd:2379
     links:
      - etcd
@@ -219,7 +219,7 @@ services:
      - "9003:8000"
 
   cluster-service:
-    image: quay.io/giantswarm/cluster-service:c4811ef98b1f9eec5842b8f36fedb287d7fedced
+    image: quay.io/giantswarm/cluster-service:latest
     command: daemon --server.listen.address="http://0.0.0.0:8000"
                     --service.keypair.certificate.ttl="24h"
                     --service.kubernetes.guest.api.endpointformat="https://api.%s.g8s.fra-1.giantswarm.io"
@@ -236,6 +236,7 @@ services:
                     --service.vault.token="dev-token"
                     --service.storage.kind="etcd"
                     --service.storage.etcd.address="http://etcd:2379"
+                    --service.provider.kind="kvm"
     links:
      - etcd
      - vault
@@ -244,7 +245,7 @@ services:
      - "9004:8000"
 
   tokend:
-    image: quay.io/giantswarm/tokend:9b27478a13bd3c0f5f9c3e8b0ad02b7030cc04b9
+    image: quay.io/giantswarm/tokend:latest
     command: --host=0.0.0.0 --etcd-peer=http://etcd:2379 --storage-type=etcd --port=8000
     links:
      - etcd
