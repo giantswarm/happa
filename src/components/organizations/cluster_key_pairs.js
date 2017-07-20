@@ -150,7 +150,6 @@ class ClusterKeyPairs extends React.Component {
   render() {
     return (
       <div className='row section cluster_key_pairs'>
-
         <div className='row'>
           <div className='col-12'>
             <h3 className='table-label'>Key Pairs</h3>

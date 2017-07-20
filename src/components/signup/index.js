@@ -14,7 +14,7 @@ import {connect} from 'react-redux';
 // TODO: Figure out a way to make the test suite know about our standard
 // 'window.config' object. Or change the way these config params are passed
 // in. Or change the way these components get at these supporting libraries.
-window.config = window.config || {passageEndpoint: 'http://docker.dev:5000'};
+window.config = window.config || {passageEndpoint: 'http://localhost:5000'};
 // EndTODO
 var passage = new Passage({endpoint: window.config.passageEndpoint});
 

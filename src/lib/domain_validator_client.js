@@ -14,7 +14,7 @@ var helpers = require('./helpers');
 //
 // Example Usage:
 // var domainValidator = new DomainValidator({
-//  endpoint: 'http://docker.dev:9001',
+//  endpoint: 'http://localhost:9001',
 //  authorizationToken: 'asdfghjk',
 // });
 //

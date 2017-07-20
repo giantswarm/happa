@@ -8,6 +8,7 @@ import OrganizationRow from './organizationRow';
 import Button from 'react-bootstrap/lib/Button';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
+import {clustersForOrg} from '../../lib/helpers';
 
 class Organizations extends React.Component {
   componentDidMount() {
@@ -66,6 +67,7 @@ class Organizations extends React.Component {
                     {
                       _.map(_.sortBy(this.props.organizations.items, 'id'), (organization) => {
                           return <OrganizationRow organization={organization}
+                                                clusters={clustersForOrg(organization.id, this.props.clusters)}
                                                 key={organization.id}
                                                 onClick={this.viewOrganization.bind(this, organization.id)}
                                                 onDelete={this.deleteOrganization.bind(this, organization.id)}
@@ -92,12 +94,14 @@ Organizations.contextTypes = {
 
 Organizations.propTypes = {
   dispatch: React.PropTypes.func,
-  organizations: React.PropTypes.object
+  organizations: React.PropTypes.object,
+  clusters: React.PropTypes.object
 };
 
 function mapStateToProps(state) {
   return {
-    organizations: state.entities.organizations
+    organizations: state.entities.organizations,
+    clusters: state.entities.clusters.items
   };
 }
 

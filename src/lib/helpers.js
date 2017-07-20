@@ -152,3 +152,15 @@ export function makeKubeConfigTextFile(cluster, keyPairResult) {
         client-key-data: ${btoa(keyPairResult.client_key_data)}
     `;
 }
+
+// clustersForOrg takes a orgId and a list of clusters and returns just the clusters
+// that are owned by that orgId
+export function clustersForOrg(orgId, allClusters) {
+  var clusters = [];
+
+  clusters = _.filter(allClusters, (cluster) => {
+    return cluster.owner === orgId;
+  });
+
+  return clusters;
+}

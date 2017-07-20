@@ -2,12 +2,14 @@
 
 import React from 'react';
 import Button from 'react-bootstrap/lib/Button';
+import {Link}  from 'react-router';
 import { connect } from 'react-redux';
 import * as OrganizationActions from '../../actions/organizationActions';
 import { bindActionCreators } from 'redux';
 import { formatDate } from '../../lib/helpers.js';
 import DocumentTitle from 'react-document-title';
 import _ from 'underscore';
+import ClusterIDLabel from '../shared/cluster_id_label';
 
 class OrganizationDetail extends React.Component {
   componentDidMount() {
@@ -33,7 +35,7 @@ class OrganizationDetail extends React.Component {
           <div>
             <div className='row'>
               <div className='col-12'>
-                <h1>Details for: {this.props.params.orgId}</h1>
+                <h1>Organization: {this.props.params.orgId}</h1>
               </div>
             </div>
 
@@ -43,26 +45,25 @@ class OrganizationDetail extends React.Component {
               </div>
               <div className='col-9'>
                 {
-                  this.props.organization.clusters.length === 0 ?
-                  <p>No clusters here yet, contact Giant Swarm to add a cluster to this
-                  organization</p>
+                  this.props.clusters.length === 0 ?
+                  <p>No clusters here yet, <Link to='new-cluster' activeClassName='active'>create your first!</Link></p>
                   :
                   <table>
                     <thead>
                       <tr>
-                        <th>Name</th>
                         <th>Cluster ID</th>
+                        <th>Name</th>
                         <th>Created</th>
                       </tr>
                     </thead>
                     <tbody>
                       {
-                        _.map(_.sortBy(this.props.organization.clusters, (cluster) => this.props.clusters.items[cluster].name ), (cluster) => {
+                        _.map(_.sortBy(this.props.clusters, (cluster) => cluster.name ), (cluster) => {
                           return (
-                            <tr className="clickable" key={cluster} onClick={this.openClusterDetails.bind(this, cluster)}>
-                              <td>{this.props.clusters.items[cluster].name}</td>
-                              <td className="code">{this.props.clusters.items[cluster].id}</td>
-                              <td>{formatDate(this.props.clusters.items[cluster].create_date)}</td>
+                            <tr className="clickable" key={cluster.id} onClick={this.openClusterDetails.bind(this, cluster.id)}>
+                              <td><ClusterIDLabel clusterID={cluster.id} /></td>
+                              <td>{cluster.name}</td>
+                              <td>{formatDate(cluster.create_date)}</td>
                             </tr>
                           );
                         })
@@ -280,16 +281,23 @@ OrganizationDetail.contextTypes = {
 
 OrganizationDetail.propTypes = {
   actions: React.PropTypes.object,
-  clusters: React.PropTypes.object,
+  clusters: React.PropTypes.array,
   organization: React.PropTypes.object,
   dispatch: React.PropTypes.func,
   params: React.PropTypes.object
 };
 
 function mapStateToProps(state, ownProps) {
+  var allClusters = state.entities.clusters.items;
+  var clusters = [];
+
+  clusters = _.filter(allClusters, (cluster) => {
+    return cluster.owner === ownProps.params.orgId;
+  });
+
   return {
     organization: state.entities.organizations.items[ownProps.params.orgId],
-    clusters: state.entities.clusters
+    clusters: clusters
   };
 }
 

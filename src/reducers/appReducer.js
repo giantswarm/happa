@@ -2,46 +2,6 @@
 
 import * as types from '../actions/actionTypes';
 import { browserHistory } from 'react-router';
-import _ from 'underscore';
-
-var determineSelectedOrganization = function(organizations) {
-  var allOrganizations = _.map(organizations, (x) => {return x.id;});
-  var previouslySelectedOrganization = localStorage.getItem('app.selectedOrganization');
-  var organizationStillExists = allOrganizations.indexOf(previouslySelectedOrganization) > -1;
-  var selectedOrganization;
-
-  if (previouslySelectedOrganization && organizationStillExists) {
-    // The user had an organization selected, and it still exists.
-    // So we stay on it.
-    selectedOrganization = previouslySelectedOrganization;
-
-  } else {
-    // The user didn't have an organization selected yet, or the one
-    // they selected is gone. Switch to the first organization in the list.
-    var firstOrganization = _.map(organizations, (x) => {return x.id;})[0];
-    localStorage.setItem('app.selectedOrganization', firstOrganization);
-
-    selectedOrganization = firstOrganization;
-  }
-
-  return selectedOrganization;
-};
-
-var determineSelectedCluster = function(selectedOrganization, organizations) {
-  var previouslySelectedCluster = localStorage.getItem('app.selectedCluster');
-  var clusterStillExists = organizations[selectedOrganization].clusters.indexOf(previouslySelectedCluster) > -1;
-  var selectedCluster;
-
-  if (previouslySelectedCluster && clusterStillExists) {
-    selectedCluster = previouslySelectedCluster;
-  } else {
-    var firstCluster = organizations[selectedOrganization].clusters[0];
-    localStorage.setItem('app.selectedCluster', firstCluster);
-    selectedCluster =  firstCluster;
-  }
-
-  return selectedCluster;
-};
 
 var shutDown = function(state) {
   localStorage.removeItem('user');
@@ -60,8 +20,6 @@ export default function appReducer(state = {
     firstLoadComplete: false,
     loggedInUser: JSON.parse(localStorage.getItem('user'))
   }, action = undefined) {
-
-  var selectedCluster;
 
   switch(action.type) {
     case types.REFRESH_USER_INFO_SUCCESS:
@@ -96,15 +54,9 @@ export default function appReducer(state = {
       return shutDown(state);
 
     case types.ORGANIZATION_SELECT:
-      localStorage.setItem('app.selectedOrganization', action.orgId);
-
-      // We're changing to a different organization
-      // Make sure we have a reasonable value for selectedCluster.
-      selectedCluster = determineSelectedCluster(action.orgId, action.organizations);
-
       return Object.assign({}, state, {
         selectedOrganization: action.orgId,
-        selectedCluster: selectedCluster
+        selectedCluster: action.selectedCluster
       });
 
     case types.CLUSTER_SELECT:
@@ -115,20 +67,20 @@ export default function appReducer(state = {
       });
 
     case types.ORGANIZATIONS_LOAD_SUCCESS:
-      // Organizations have been loaded
-      // Check if the user has an organization selected already, and if that
-      // organization still exists. If not select the first organization.
-      // And then do the same for the selected cluster.
+      // // Organizations have been loaded
+      // // Check if the user has an organization selected already, and if that
+      // // organization still exists. If not select the first organization.
+      // // And then do the same for the selected cluster.
 
-      var selectedOrganization = determineSelectedOrganization(action.organizations);
+      // var selectedOrganization = determineSelectedOrganization(action.organizations);
 
-      if (selectedOrganization) {
-        selectedCluster = determineSelectedCluster(selectedOrganization, action.organizations);
-      }
+      // if (selectedOrganization) {
+      //   selectedCluster = determineSelectedCluster(selectedOrganization, action.organizations);
+      // }
 
       return Object.assign({}, state, {
-        selectedOrganization: selectedOrganization,
-        selectedCluster: selectedCluster,
+        selectedOrganization: action.selectedOrganization,
+        selectedCluster: action.selectedCluster,
         firstLoadComplete: true
       });
 

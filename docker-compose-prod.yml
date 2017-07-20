@@ -24,7 +24,7 @@ services:
     environment:
       # DEBUGGING: 1
       # NUM_PROXIES: "0"
-      HAPPA_BASE_URI: http://docker.dev
+      HAPPA_BASE_URI: http://localhost
       GIANTSWARM_API_URI: https://api.giantswarm.io
       HUBSPOT_API_URI: http://hubspotmock:9999
       HUBSPOT_HUB_ID: "430224"
@@ -66,7 +66,7 @@ services:
       GIANTSWARM_API_URI: https://api.giantswarm.io
       PROMETHEUS_URI: https://leaseweb-prometheus.giantswarm.io
       PROMETHEUS_QUERY_TIMEOUT: 3.0
-      CORS_BASE_URI: http://docker.dev
+      CORS_BASE_URI: http://localhost
       PROMETHEUS_USER: admin
       CACHE_KEY_SALT: dev_salt
       DEBUGGING: yeah

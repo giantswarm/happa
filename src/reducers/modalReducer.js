@@ -13,7 +13,7 @@ export default function modalReducer(state = {visible: false}, action = undefine
       return {
         visible: true,
         templateValues: {
-          clusterId: action.clusterId,
+          cluster: action.cluster,
           loading: false
         },
         template: 'clusterDelete'
@@ -23,7 +23,7 @@ export default function modalReducer(state = {visible: false}, action = undefine
       return {
         visible: true,
         templateValues: {
-          clusterId: action.clusterId,
+          cluster: action.cluster,
           loading: true
         },
         template: 'clusterDelete'
