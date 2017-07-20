@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Button from 'react-bootstrap/lib/Button';
+import {Link}  from 'react-router';
 import { connect } from 'react-redux';
 import * as OrganizationActions from '../../actions/organizationActions';
 import { bindActionCreators } from 'redux';
@@ -45,8 +46,7 @@ class OrganizationDetail extends React.Component {
               <div className='col-9'>
                 {
                   this.props.clusters.length === 0 ?
-                  <p>No clusters here yet, contact Giant Swarm to add a cluster to this
-                  organization</p>
+                  <p>No clusters here yet, <Link to='new-cluster' activeClassName='active'>create your first!</Link></p>
                   :
                   <table>
                     <thead>
