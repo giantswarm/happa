@@ -12,6 +12,7 @@ import platform from '../../lib/platform';
 import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
 import request from 'superagent-bluebird-promise';
 import ClusterIDLabel from '../shared/cluster_id_label';
+import {clustersForOrg} from '../../lib/helpers';
 
 class ConfigKubeCtl extends React.Component {
   constructor(props) {
@@ -140,7 +141,7 @@ class ConfigKubeCtl extends React.Component {
         <h1>Configure kubectl for cluster: {this.props.selectedCluster.name} <ClusterIDLabel clusterID={this.props.selectedCluster.id} /></h1>
 
         {
-          this.props.selectedOrgsClusterIDs.length > 1 ?
+          this.props.selectedOrgClusters.length > 1 ?
           <div>
             <p>Before we continue, make sure that you have the right cluster selected to configure access to:</p>
             <div className='well select-cluster'>
@@ -148,9 +149,9 @@ class ConfigKubeCtl extends React.Component {
                 <label>Select Cluster:</label>
                 <DropdownButton id="cluster-slect-dropdown" title={this.friendlyClusterName(this.props.selectedCluster)}>
                   {
-                    _.map(this.props.selectedOrgsClusterIDs,
-                      clusterId => <MenuItem key={clusterId} onClick={this.selectCluster.bind(this, clusterId)}>
-                        {this.friendlyClusterName(this.props.clusters.items[clusterId])}
+                    _.map(this.props.selectedOrgClusters,
+                      cluster => <MenuItem key={cluster.id} onClick={this.selectCluster.bind(this, cluster.id)}>
+                        {this.friendlyClusterName(cluster)}
                       </MenuItem>
                     )
                   }
@@ -266,28 +267,37 @@ ConfigKubeCtl.propTypes = {
   clusters: React.PropTypes.object,
   dispatch: React.PropTypes.func,
   actions: React.PropTypes.object,
-  selectedOrgsClusterIDs: React.PropTypes.array,
+  selectedOrgClusters: React.PropTypes.array,
   user: React.PropTypes.object,
   goToSlide: React.PropTypes.func
 };
 
 function mapStateToProps(state) {
   var selectedCluster = state.entities.clusters.items[state.app.selectedCluster];
+  var selectedOrgClusters = [];
+
+  if(state.app.selectedOrganization) {
+    selectedOrgClusters = clustersForOrg(state.app.selectedOrganization, state.entities.clusters.items);
+  }
 
   // If we can't find the selected cluster
   // create a nullObject that acts like a selectedCluster
   // so most of the page will work
   if (selectedCluster === undefined) {
-    selectedCluster = {
-      id: '12345',
-      name: 'Sample Cluster',
-      nullObject: true
-    };
+    if (selectedOrgClusters.length === 0) {
+      selectedCluster = {
+        id: '12345',
+        name: 'Sample Cluster',
+        nullObject: true
+      };
+    } else {
+      selectedCluster = state.entities.clusters.items[selectedOrgClusters[0].id];
+    }
   }
 
   return {
     selectedCluster: selectedCluster,
-    selectedOrgsClusterIDs: state.entities.organizations.items[state.app.selectedOrganization].clusters,
+    selectedOrgClusters: selectedOrgClusters,
     clusters: state.entities.clusters,
     user: state.app.loggedInUser
   };

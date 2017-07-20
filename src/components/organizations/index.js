@@ -8,6 +8,7 @@ import OrganizationRow from './organizationRow';
 import Button from 'react-bootstrap/lib/Button';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
+import {clustersForOrg} from '../../lib/helpers';
 
 class Organizations extends React.Component {
   componentDidMount() {
@@ -29,17 +30,6 @@ class Organizations extends React.Component {
 
   selectOrganization(orgId) {
     this.props.dispatch(organizationSelect(orgId));
-  }
-
-  clustersForOrg(orgId) {
-    var allClusters = this.props.clusters;
-    var clusters = [];
-
-    clusters = _.filter(allClusters, (cluster) => {
-      return cluster.owner === orgId;
-    });
-
-    return clusters;
   }
 
   render() {
@@ -77,7 +67,7 @@ class Organizations extends React.Component {
                     {
                       _.map(_.sortBy(this.props.organizations.items, 'id'), (organization) => {
                           return <OrganizationRow organization={organization}
-                                                clusters={this.clustersForOrg(organization.id)}
+                                                clusters={clustersForOrg(organization.id, this.props.clusters)}
                                                 key={organization.id}
                                                 onClick={this.viewOrganization.bind(this, organization.id)}
                                                 onDelete={this.deleteOrganization.bind(this, organization.id)}

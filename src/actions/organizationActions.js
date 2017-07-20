@@ -10,15 +10,65 @@ import { clusterLoadSuccess, clusterLoadError } from './clusterActions';
 import React from 'react';
 import { browserHistory } from 'react-router';
 
+var determineSelectedOrganization = function(organizations) {
+  var allOrganizations = _.map(organizations, x => x.id);
+  var previouslySelectedOrganization = localStorage.getItem('app.selectedOrganization');
+  var organizationStillExists = allOrganizations.indexOf(previouslySelectedOrganization) > -1;
+  var selectedOrganization;
+
+  if (previouslySelectedOrganization && organizationStillExists) {
+    // The user had an organization selected, and it still exists.
+    // So we stay on it.
+    selectedOrganization = previouslySelectedOrganization;
+
+  } else {
+    // The user didn't have an organization selected yet, or the one
+    // they selected is gone. Switch to the first organization in the list.
+    var firstOrganization = _.map(organizations, (x) => {return x.id;})[0];
+    localStorage.setItem('app.selectedOrganization', firstOrganization);
+
+    selectedOrganization = firstOrganization;
+  }
+
+  return selectedOrganization;
+};
+
+var determineSelectedCluster = function(selectedOrganization, organizations, clusters) {
+  var previouslySelectedCluster = localStorage.getItem('app.selectedCluster');
+  var orgClusters = _.filter(clusters, cluster => cluster.owner === selectedOrganization);
+
+  var clusterStillExists = _.map(orgClusters, x => x.id).indexOf(previouslySelectedCluster) > -1;
+  var selectedCluster;
+
+  if (previouslySelectedCluster && clusterStillExists) {
+    selectedCluster = previouslySelectedCluster;
+  } else {
+    if (orgClusters.length > 0) {
+      selectedCluster = orgClusters[0].id;
+    } else {
+      selectedCluster = undefined;
+    }
+    localStorage.setItem('app.selectedCluster', selectedCluster);
+  }
+
+  return selectedCluster;
+};
+
 export function organizationSelect(orgId) {
   return function(dispatch, getState) {
+
+    localStorage.setItem('app.selectedOrganization', orgId);
+
+    // We're changing to a different organization
+    // Make sure we have a reasonable value for selectedCluster.
+    var selectedCluster = determineSelectedCluster(orgId, getState().entities.organizations.items, getState().entities.clusters.items);
 
     browserHistory.push('/');
 
     return dispatch({
       type: types.ORGANIZATION_SELECT,
       orgId,
-      organizations: getState().entities.organizations.items
+      selectedCluster
     });
   };
 }
@@ -31,10 +81,12 @@ export function organizationDeleteSuccess(orgId) {
 
 }
 
-export function organizationsLoadSuccess(organizations) {
+export function organizationsLoadSuccess(organizations, selectedOrganization, selectedCluster) {
   return {
     type: types.ORGANIZATIONS_LOAD_SUCCESS,
-    organizations
+    organizations,
+    selectedOrganization,
+    selectedCluster
   };
 }
 
@@ -64,6 +116,7 @@ export function organizationsLoad() {
       var clusters = giantSwarm.clusters()
                      .then(response => {
                         dispatch(clusterLoadSuccess(response.result));
+                        return response.result;
                      })
                      .catch((error) => {
                         console.error(error);
@@ -80,6 +133,7 @@ export function organizationsLoad() {
       return Promise.all([clusters, orgDetails]);
     })
     .then((result) => {
+      var clusters = result[0];
       var orgDetails = result[1];
 
       var organizations = orgDetails.reduce((previous, current) => {
@@ -97,10 +151,17 @@ export function organizationsLoad() {
         return previous;
       }, {});
 
-      return organizations;
+      var selectedOrganization = determineSelectedOrganization(organizations);
+      var selectedCluster = determineSelectedCluster(selectedOrganization, organizations, clusters);
+
+      return {
+        organizations,
+        selectedOrganization,
+        selectedCluster
+      };
     })
-    .then((organizations) => {
-      dispatch(organizationsLoadSuccess(organizations));
+    .then((result) => {
+      dispatch(organizationsLoadSuccess(result.organizations, result.selectedOrganization, result.selectedCluster));
       return null;
     })
     .catch(error => {

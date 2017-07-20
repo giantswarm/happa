@@ -26,7 +26,7 @@ OrganizationRow.propTypes = {
   onDelete: React.PropTypes.func,
   onSelect: React.PropTypes.func,
   organization: React.PropTypes.object,
-  clusters: React.PropTypes.object
+  clusters: React.PropTypes.array
 };
 
 export default OrganizationRow;
