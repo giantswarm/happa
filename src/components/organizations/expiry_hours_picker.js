@@ -13,6 +13,13 @@ class ExpiryHoursPicker extends React.Component {
       expireDate: moment().add(1, 'year').utc(),
       selectionType: 'relative'
     };
+
+    // to set the week start to Monday
+    moment.locale('en', {
+      week : {
+        dow : 1,
+      }
+    });
   }
 
   isPlural(number) {
