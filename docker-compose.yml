@@ -267,4 +267,4 @@ services:
 
   # Always returns 201 OK
   mock-kubernetesd:
-    image: registry.giantswarm.io/giantswarm/mock-kubernetesd
+    image: quay.io/giantswarm/mock-kubernetesd:latest
