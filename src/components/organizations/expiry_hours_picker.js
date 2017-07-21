@@ -13,6 +13,13 @@ class ExpiryHoursPicker extends React.Component {
       expireDate: moment().add(1, 'year').utc(),
       selectionType: 'relative'
     };
+
+    // to set the week start to Monday
+    moment.locale('en', {
+      week : {
+        dow : 1,
+      }
+    });
   }
 
   isPlural(number) {
@@ -149,7 +156,7 @@ class ExpiryHoursPicker extends React.Component {
           <DatePicker
             selected={this.state.expireDate}
             onChange={this.handleDateChange.bind(this)}
-            dateFormat='DD/MM/YYYY'
+            dateFormat='YYYY-MM-DD'
             minDate={moment().add(1, 'day')}
             maxDate={moment().add(30, 'years')}
             showMonthDropdown
