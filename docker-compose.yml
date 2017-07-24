@@ -261,9 +261,12 @@ services:
 
   vault:
     image: giantswarm/docker-vault:0.1.0
+    volumes:
+      - ${PWD}/dev_vault_config.hcl:/dev_vault_config.hcl
     command: server -dev
                     -dev-listen-address="0.0.0.0:8200"
                     -dev-root-token-id="dev-token"
+                    -config=/dev_vault_config.hcl
 
   # Always returns 201 OK
   mock-kubernetesd:
