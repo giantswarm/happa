@@ -1,1 +1,1 @@
-max_lease_ttl = "175200h"
+max_lease_ttl = "1752000h"
