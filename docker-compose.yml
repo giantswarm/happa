@@ -228,7 +228,7 @@ services:
                     --service.vault.config.address="http://vault:8200"
                     --service.vault.config.pki.allowbaredomains=true
                     --service.vault.config.pki.alloweddomainsformat="%s.g8s.fra-1.giantswarm.io,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster.local"
-                    --service.vault.config.pki.cattl="48h"
+                    --service.vault.config.pki.cattl="1752000h"
                     --service.vault.config.pki.commonnameformat="%s.g8s.fra-1.giantswarm.io"
                     --service.vault.config.pki.token.num=1
                     --service.vault.config.pki.token.ttl="12h"
