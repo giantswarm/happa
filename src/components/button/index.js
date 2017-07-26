@@ -23,9 +23,24 @@ import BsButton from 'react-bootstrap/lib/Button';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Button extends React.Component {
+  loadingIndicator = (position) => {
+    return <div className='progress_button--status-indicator'>
+      <ReactCSSTransitionGroup
+        transitionName={`slide-${position}`}
+        transitionEnterTimeout={200}
+        transitionLeaveTimeout={200}>
+        {
+          this.props.loading ? <img className='loader' src='/images/loader_oval_light.svg' /> : null
+        }
+      </ReactCSSTransitionGroup>
+    </div>;
+  };
+
   render() {
     return (
       <div className='progress_button--container'>
+        { this.props.loadingPosition === 'left' ? this.loadingIndicator(this.props.loadingPosition) : undefined }
+
         <BsButton
           type={this.props.type}
           bsSize={this.props.bsSize}
@@ -36,16 +51,7 @@ class Button extends React.Component {
           {this.props.children}
         </BsButton>
 
-        <div className='progress_button--status-indicator'>
-          <ReactCSSTransitionGroup
-            transitionName='slide-right'
-            transitionEnterTimeout={200}
-            transitionLeaveTimeout={200}>
-            {
-              this.props.loading ? <img className='loader' src='/images/loader_oval_light.svg' /> : null
-            }
-          </ReactCSSTransitionGroup>
-        </div>
+        { this.props.loadingPosition === 'right' ? this.loadingIndicator(this.props.loadingPosition) : undefined }
       </div>
     );
   }
@@ -58,7 +64,12 @@ Button.propTypes = {
   onClick: React.PropTypes.func,
   disabled: React.PropTypes.bool,
   loading: React.PropTypes.bool,
+  loadingPosition: React.PropTypes.string,
   children: React.PropTypes.node
+};
+
+Button.defaultProps = {
+  loadingPosition: 'right'
 };
 
 export default Button;

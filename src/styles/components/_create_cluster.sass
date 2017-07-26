@@ -41,62 +41,6 @@
     &:active
       color: #aaa
 
-  .new-cluster--worker-setting-row
-    margin-bottom: 15px
-
-    &.readonly
-      opacity: 0.5
-
-  .new-cluster--worker-setting-label
-    width: 40%
-    display: inline-block
-    line-height: 35px
-
-  .new-cluster--worker-setting-control
-    width: 60%
-    display: inline-block
-    height: 35px
-    background-color: #32526a
-    line-height: 35px
-    text-align: center
-    border-radius: 5px
-    position: relative
-
-  .new-cluster--worker-setting-control-increase, .new-cluster--worker-setting-control-decrease
-    position: absolute
-    top: 0px
-    width: 35px
-    background-color: #3b5f7b
-    cursor: pointer
-    -webkit-user-select: none
-    -moz-user-select: none
-    -ms-user-select: none
-    -o-user-select: none
-    user-select: none
-
-    &:hover
-      background-color: darken(#3b5f7b, 2%)
-
-    &:active
-      background-color: darken(#3b5f7b, 6%)
-      color: #aaa
-
-  .new-cluster--worker-setting-control-increase
-    right: 0px
-    border-top-right-radius: 5px
-    border-bottom-right-radius: 5px
-
-  .new-cluster--worker-setting-control-decrease
-    left: 0px
-    border-top-left-radius: 5px
-    border-bottom-left-radius: 5px
-
-  .new-cluster--worker-setting-label-control
-    width: 100%
-    background-color: #2a5067
-    border-radius: 5px
-    padding: 10px
-
   .ReactTags__tags
     .ReactTags__tagInput
       display: inline-block
@@ -124,6 +68,69 @@
         &:hover
           text-decoration: none
           color: #fff
+
+.new-cluster--worker-setting-row
+  margin-bottom: 15px
+
+  &.readonly
+    opacity: 0.5
+
+  &.inmodal
+    .new-cluster--worker-setting-control
+      width: 25%
+
+    .new-cluster--worker-setting-control-increase, .new-cluster--worker-setting-control-decrease
+      background-color: lighten(#3b5f7b, 10%)
+
+.new-cluster--worker-setting-label
+  width: 40%
+  display: inline-block
+  line-height: 35px
+
+.new-cluster--worker-setting-control
+  width: 60%
+  display: inline-block
+  height: 35px
+  background-color: #32526a
+  line-height: 35px
+  text-align: center
+  border-radius: 5px
+  position: relative
+
+.new-cluster--worker-setting-control-increase, .new-cluster--worker-setting-control-decrease
+  position: absolute
+  top: 0px
+  width: 35px
+  background-color: #3b5f7b
+  cursor: pointer
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  -o-user-select: none
+  user-select: none
+
+  &:hover
+    background-color: darken(#3b5f7b, 2%)
+
+  &:active
+    background-color: darken(#3b5f7b, 6%)
+    color: #aaa
+
+.new-cluster--worker-setting-control-increase
+  right: 0px
+  border-top-right-radius: 5px
+  border-bottom-right-radius: 5px
+
+.new-cluster--worker-setting-control-decrease
+  left: 0px
+  border-top-left-radius: 5px
+  border-bottom-left-radius: 5px
+
+.new-cluster--worker-setting-label-control
+  width: 100%
+  background-color: #2a5067
+  border-radius: 5px
+  padding: 10px
 
 .new-cluster--add-worker-button
   border-radius: 5px
