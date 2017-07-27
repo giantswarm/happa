@@ -16,9 +16,9 @@ spec:
     spec:
       volumes:
         {{- if not .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
-        - name: giantswarm-cert
+        - name: happa-certs-secret
           secret:
-            secretName: giantswarm-cert
+            secretName: happa-certs-secret
         {{- end }}
         - name: nginx-config
           configMap:
@@ -32,7 +32,7 @@ spec:
           mountPath: /etc/nginx/config
 
         {{- if not .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
-        - name: giantswarm-cert
+        - name: happa-certs-secret
           mountPath: /etc/nginx/certs
           readOnly: true
         {{- end }}
