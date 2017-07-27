@@ -35,6 +35,13 @@ class ScaleClusterModal extends React.Component {
     });
   }
 
+  back = () => {
+    this.setState({
+      loading: false,
+      error: null
+    });
+  }
+
   show = () => {
     this.setState({
       modalVisible: true
@@ -198,12 +205,17 @@ class ScaleClusterModal extends React.Component {
                     this.state.error.message
                 }
                 </div>
+                <div className='flash-messages--flash-message flash-messages--hidden'>
+                  <br/>
+                  <br/>
+                  <br/>
+                </div>
               </BootstrapModal.Body>
               <BootstrapModal.Footer>
                 <Button
                   bsStyle='link'
                   disabled={this.state.loading}
-                  onClick={this.close}>
+                  onClick={this.back}>
                   Back
                 </Button>
                 <Button
