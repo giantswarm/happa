@@ -44,8 +44,8 @@ data:
         ssl_prefer_server_ciphers on;
         ssl_ciphers EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA512:EECDH+ECDSA+SHA384:EECDH+ECDSA+SHA256:ECDH+AESGCM:ECDH+AES256:DH+AESGCM:DH+AES256:RSA+AESGCM:!aNULL:!eNULL:!LOW:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS;
 
-        ssl_certificate /etc/nginx/certs/crt;
-        ssl_certificate_key /etc/nginx/certs/key;
+        ssl_certificate /etc/nginx/certs/crt.pem;
+        ssl_certificate_key /etc/nginx/certs/key.pem;
 
         add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
