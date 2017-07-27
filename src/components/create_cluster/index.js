@@ -223,12 +223,17 @@ class CreateCluster extends React.Component {
             <div className='row section'>
               <div className='col-12'>
                 <h3 className='table-label'>Worker Node Configuration</h3>
-                <div className='checkbox'>
-                  <label htmlFor='syncWorkers'>
-                    <input type='checkbox' ref='syncWorkers' id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
-                    Use same configuration for all worker nodes
-                  </label>
-                </div>
+                {
+                  window.config.createClusterWorkerType === 'kvm' ?
+                    <div className='checkbox'>
+                      <label htmlFor='syncWorkers'>
+                        <input type='checkbox' ref='syncWorkers' id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
+                        Use same configuration for all worker nodes
+                      </label>
+                    </div>
+                  :
+                    undefined
+                }
               </div>
             </div>
             <div className='row'>
