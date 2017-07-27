@@ -219,7 +219,7 @@ services:
      - "9003:8000"
 
   cluster-service:
-    image: quay.io/giantswarm/cluster-service:ab956e84556bba2fc63be32803806fd6e725ee31
+    image: quay.io/giantswarm/cluster-service:latest
     command: daemon --server.listen.address="http://0.0.0.0:8000"
                     --service.keypair.certificate.ttl="24h"
                     --service.kubernetes.guest.api.endpointformat="https://api.%s.g8s.fra-1.giantswarm.io"
