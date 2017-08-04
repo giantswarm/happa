@@ -10,13 +10,15 @@ import { flashAdd } from '../../actions/flashMessageActions';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import { relativeDate } from '../../lib/helpers.js';
 import Button from '../button/index';
+import ScaleClusterModal from './scale_cluster_modal';
 
 class ClusterDetail extends React.Component {
   constructor (props){
     super(props);
 
     this.state = {
-      loading: true
+      loading: true,
+      scalingModalVisible: false
     };
   }
 
@@ -81,6 +83,11 @@ class ClusterDetail extends React.Component {
     this.props.actions.clusterDelete(cluster);
   }
 
+  showScalingModal = () => {
+    this.refs.scaleClusterModal.getWrappedInstance().reset();
+    this.refs.scaleClusterModal.getWrappedInstance().show();
+  }
+
   render() {
     var awsInstanceType = <tr/>;
     if (window.config.createClusterWorkerType === 'aws') {
@@ -94,72 +101,91 @@ class ClusterDetail extends React.Component {
 
     return (
       <DocumentTitle title={'Cluster Details | ' + this.props.cluster.name +  ' | Giant Swarm'}>
-        <div className="cluster-details">
-          <div className='row'>
-            <div className='col-12'>
-              <h1>
-                <ClusterIDLabel clusterID={this.props.cluster.id} />
-                {this.props.cluster.name} {this.state.loading ? <img className='loader' width="25px" height="25px" src='/images/loader_oval_light.svg'/> : ''}
-              </h1>
-            </div>
+        <div>
+          <div className="cluster-details">
             <div className='row'>
               <div className='col-12'>
-                <table className='table resource-details'>
-                  <tbody>
-                    <tr>
-                      <td>Created</td>
-                      <td className='value'>{this.props.cluster.create_date ? relativeDate(this.props.cluster.create_date) : 'n/a'}</td>
-                    </tr>
-                    <tr>
-                      <td>Kubernetes version</td>
-                      <td className='value code'>{this.props.cluster.kubernetes_version ? this.props.cluster.kubernetes_version : 'n/a'}</td>
-                    </tr>
-                    <tr>
-                      <td>Kubernetes API endpoint</td>
-                      <td className='value code'>{this.props.cluster.api_endpoint ? this.props.cluster.api_endpoint : 'n/a'}</td>
-                    </tr>
-                    <tr>
-                      <td>Number of worker nodes</td>
-                      <td className='value'>{this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}</td>
-                    </tr>
-                    {awsInstanceType}
-                    <tr>
-                      <td>Total CPU cores in worker nodes</td>
-                      <td className='value'>{this.getCpusTotal() === null ? 'n/a' : this.getCpusTotal()}</td>
-                    </tr>
-                    <tr>
-                      <td>Total RAM in worker nodes</td>
-                      <td className='value'>{this.getMemoryTotal() === null ? 'n/a' : this.getMemoryTotal()} GB</td>
-                    </tr>
-                    <tr>
-                      <td>Total storage in worker nodes</td>
-                      <td className='value'>{this.getStorageTotal() === null ? 'n/a' : this.getStorageTotal()} GB</td>
-                    </tr>
-                  </tbody>
-                </table>
-
+                <h1>
+                  <ClusterIDLabel clusterID={this.props.cluster.id} />
+                  {' '}
+                  {this.props.cluster.name} {this.state.loading ? <img className='loader' width="25px" height="25px" src='/images/loader_oval_light.svg'/> : ''}
+                </h1>
               </div>
             </div>
           </div>
 
-          {this.state.loading ? '' : <ClusterKeyPairs cluster={this.props.cluster} />}
+          {
+            this.state.loading === false ?
+              <div>
+                <div className="cluster-details">
+                  <div className='row'>
+                    <div className='col-12'>
+                      <table className='table resource-details'>
+                        <tbody>
+                          <tr>
+                            <td>Created</td>
+                            <td className='value'>{this.props.cluster.create_date ? relativeDate(this.props.cluster.create_date) : 'n/a'}</td>
+                          </tr>
+                          <tr>
+                            <td>Kubernetes version</td>
+                            <td className='value code'>{this.props.cluster.kubernetes_version ? this.props.cluster.kubernetes_version : 'n/a'}</td>
+                          </tr>
+                          <tr>
+                            <td>Kubernetes API endpoint</td>
+                            <td className='value code'>{this.props.cluster.api_endpoint ? this.props.cluster.api_endpoint : 'n/a'}</td>
+                          </tr>
+                          <tr>
+                            <td>Number of worker nodes</td>
+                            <td className='value'>
+                              {this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}
+                              &nbsp;
+                              {
+                                window.config.createClusterWorkerType === 'aws' ?
+                                  <Button onClick={this.showScalingModal}>Scale</Button>
+                                :
+                                  undefined
+                              }
+                            </td>
+                          </tr>
+                          {awsInstanceType}
+                          <tr>
+                            <td>Total CPU cores in worker nodes</td>
+                            <td className='value'>{this.getCpusTotal() === null ? 'n/a' : this.getCpusTotal()}</td>
+                          </tr>
+                          <tr>
+                            <td>Total RAM in worker nodes</td>
+                            <td className='value'>{this.getMemoryTotal() === null ? 'n/a' : this.getMemoryTotal()} GB</td>
+                          </tr>
+                          <tr>
+                            <td>Total storage in worker nodes</td>
+                            <td className='value'>{this.getStorageTotal() === null ? 'n/a' : this.getStorageTotal()} GB</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
 
+                <ClusterKeyPairs cluster={this.props.cluster} />
 
-          <div className='row section cluster_delete'>
-            <div className='row'>
-              <div className='col-12'>
-                <h3 className='table-label'>Delete This Cluster</h3>
+                <div className='row section cluster_delete'>
+                  <div className='row'>
+                    <div className='col-12'>
+                      <h3 className='table-label'>Delete This Cluster</h3>
+                    </div>
+                  </div>
+                  <div className='row'>
+                    <div className='col-9'>
+                      <p>All workloads on this cluster will be terminated. Data stored on the worker nodes will be lost. There is no way to undo this action.</p>
+                      <Button bsStyle='danger' onClick={this.showDeleteClusterModal.bind(this, this.props.cluster)}>Delete Cluster</Button>
+                    </div>
+                  </div>
+                </div>
+                <ScaleClusterModal ref="scaleClusterModal" cluster={this.props.cluster} user={this.props.user}/>
               </div>
-            </div>
-
-          <div className='row'>
-            <div className='col-9'>
-              <p>All workloads on this cluster will be terminated. Data stored on the worker nodes will be lost. There is no way to undo this action.</p>
-              <Button bsStyle='danger' onClick={this.showDeleteClusterModal.bind(this, this.props.cluster)}>Delete Cluster</Button>
-            </div>
-          </div>
-
-          </div>
+            :
+            undefined
+          }
         </div>
       </DocumentTitle>
     );
@@ -168,17 +194,17 @@ class ClusterDetail extends React.Component {
 
 ClusterDetail.propTypes = {
   cluster: React.PropTypes.object,
-  clusters: React.PropTypes.object,
   dispatch: React.PropTypes.func,
-  actions: React.PropTypes.object
+  actions: React.PropTypes.object,
+  user: React.PropTypes.object,
 };
 
 function mapStateToProps(state, ownProps) {
   var cluster = state.entities.clusters.items[ownProps.params.clusterId];
 
   return {
-    clusters: state.entities.clusters,
-    cluster: cluster
+    cluster: cluster,
+    user: state.app.loggedInUser
   };
 }
 

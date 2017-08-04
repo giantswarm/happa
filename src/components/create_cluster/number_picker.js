@@ -46,10 +46,16 @@ class NumberPicker extends React.Component {
 
   render() {
     return (
-      <div className={'new-cluster--worker-setting-row ' + ( this.props.readOnly ? 'readonly' : '' )}>
-        <div className="new-cluster--worker-setting-label">
-          {this.props.label}
-        </div>
+      <div className={'new-cluster--worker-setting-row ' + ( this.props.readOnly ? 'readonly ' : ' ' ) + ( this.props.theme)}>
+        {
+          this.props.label ?
+          <div className="new-cluster--worker-setting-label">
+            {this.props.label}
+          </div>
+          :
+          undefined
+        }
+
         <div className="new-cluster--worker-setting-control">
           {
             this.props.readOnly ?
@@ -83,7 +89,8 @@ NumberPicker.propTypes = {
   min: React.PropTypes.number,
   max: React.PropTypes.number,
   onChange: React.PropTypes.func,
-  readOnly: React.PropTypes.bool
+  readOnly: React.PropTypes.bool,
+  theme: React.PropTypes.string
 };
 
 function mapStateToProps() {

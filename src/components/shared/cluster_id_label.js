@@ -26,8 +26,7 @@ class ClusterIDLabel extends React.Component {
         backgroundColor: this.calculateColour(this.props.clusterID),
         fontFamily: 'Inconsolata, monospace',
         padding: '0.2em 0.4em',
-        borderRadius: '0.2em',
-        marginRight: '0.5em',
+        borderRadius: '0.2em'
       }} title={'Unique Cluster ID: ' + this.props.clusterID}>{ this.props.clusterID }</span>
     );
   }
