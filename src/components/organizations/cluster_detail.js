@@ -90,7 +90,7 @@ class ClusterDetail extends React.Component {
 
   render() {
     var awsInstanceType = <tr/>;
-    if (window.config.createClusterWorkerType === 'aws') {
+    if (window.config.createClusterWorkerType === 'aws' && this.state.loading === false) {
       awsInstanceType = (
         <tr>
           <td>AWS instance type</td>
