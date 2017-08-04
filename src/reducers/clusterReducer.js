@@ -52,6 +52,20 @@ var ensureMetricKeysAreAvailable = function (clusterDetails) {
   return clusterDetails;
 };
 
+// ensureWorkersHaveAWSkey
+// -----------------------
+// Since the API omits the 'aws' key from workers on kvm installations, I will
+// add it back here with dummy values if it is not present.
+var ensureWorkersHaveAWSkey = function (clusterDetails) {
+  clusterDetails.workers = clusterDetails.workers || [];
+
+  for (var i = 0; i < clusterDetails.workers.length; i++) {
+    clusterDetails.workers[i].aws = clusterDetails.workers[i].aws || {instance_type: ''};
+  }
+
+  return clusterDetails;
+};
+
 // determineIfOutdated
 // ----------------------------
 // Loop over all metrics and add outdated: true where the timestamp
@@ -128,6 +142,7 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
       items = Object.assign({}, state.items);
 
       items[action.cluster.id] = Object.assign({}, items[action.cluster.id], action.cluster);
+      items[action.cluster.id] = Object.assign({}, items[action.cluster.id], ensureWorkersHaveAWSkey(action.cluster));
 
       return {
         lastUpdated: state.lastUpdated,
