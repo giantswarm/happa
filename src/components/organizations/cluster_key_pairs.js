@@ -245,13 +245,15 @@ class ClusterKeyPairs extends React.Component {
                           <div className="col-6">
                             <label>Common Name Prefix:</label>
                             <input ref='domainInput' autoFocus type='text' value={this.state.cn_prefix} onChange={this.handleCNPrefixChange.bind(this)}/>
+                            <div className="text-field-hint">Will be prefixed to the api hostname of this cluster.</div>
                           </div>
                           <div className="col-6">
                             <label>Organizations:</label>
                             <input ref='domainInput' type='text' value={this.state.certificate_organizations} onChange={this.handleCertificateOrganizationsChange.bind(this)}/>
+                            <div className="text-field-hint">Comma seperated values. e.g.: admin,blue-team,staging</div>
                           </div>
                         </div>
-
+                        <br/>
                         <div className="row">
                           <div className="col-12">
                             <label>Description:</label>
