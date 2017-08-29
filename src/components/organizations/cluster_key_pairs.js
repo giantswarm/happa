@@ -16,18 +16,24 @@ import _ from 'underscore';
 
 class ClusterKeyPairs extends React.Component {
  constructor(props) {
-    super();
+    super(props);
 
     this.state = {
       loading: true,
       expireTTL: 8760,
-      description: 'Added by user ' + props.user.email + ' using Happa web interface',
+      description: this.defaultDescription(props.user.email),
+      cn_prefix: '',
+      certificate_organizations: '',
       modal: {
         visible: false,
         loading: false,
         template: 'addKeyPair',
       }
     };
+  }
+
+  defaultDescription(email) {
+    return 'Added by user ' + email + ' using Happa web interface';
   }
 
   handleTTLChange(ttl) {
@@ -42,6 +48,18 @@ class ClusterKeyPairs extends React.Component {
     });
   }
 
+  handleCNPrefixChange(e) {
+    this.setState({
+      cn_prefix: e.target.value
+    });
+  }
+
+  handleCertificateOrganizationsChange(e) {
+    this.setState({
+      certificate_organizations: e.target.value
+    });
+  }
+
   componentDidMount() {
     return this.props.actions.clusterLoadKeyPairs(this.props.cluster.id)
     .then(() => {
@@ -53,6 +71,9 @@ class ClusterKeyPairs extends React.Component {
 
   closeModal() {
     this.setState({
+      cn_prefix: '',
+      certificate_organizations: '',
+      description: this.defaultDescription(this.props.user.email),
       modal: {
         visible: false,
         loading: false
@@ -86,9 +107,11 @@ class ClusterKeyPairs extends React.Component {
       }
     }, () => {
       giantSwarm.createClusterKeyPair({
+        certificate_organizations: this.state.certificate_organizations,
         clusterId: this.props.cluster.id,
+        cn_prefix: this.state.cn_prefix,
         description: this.state.description,
-        ttl_hours: this.state.expireTTL
+        ttl_hours: this.state.expireTTL,
       })
       .then((response) => {
         this.setState({
@@ -216,10 +239,25 @@ class ClusterKeyPairs extends React.Component {
                   </BootstrapModal.Header>
                   <form onSubmit={this.confirmAddKeyPair.bind(this)} >
                     <BootstrapModal.Body>
-                      <p>Here you create a key pair that allows for full access to your cluster via the Kubernetes API.</p>
-                        <label>Description:</label>
-                        <input ref='domainInput' autoFocus type='text' value={this.state.description} onChange={this.handleDescriptionChange.bind(this)}/>
-                        <br/>
+                      <p>A key pair grants you access to the Kubernetes API of this cluster.</p>
+                      <p>Kubernetes uses the common name of the certificate as the username, and assigns the Organizations as roles. This allows you to set up role based access rights.</p>
+                        <div className="row">
+                          <div className="col-6">
+                            <label>Common Name Prefix:</label>
+                            <input ref='domainInput' autoFocus type='text' value={this.state.cn_prefix} onChange={this.handleCNPrefixChange.bind(this)}/>
+                          </div>
+                          <div className="col-6">
+                            <label>Organizations:</label>
+                            <input ref='domainInput' type='text' value={this.state.certificate_organizations} onChange={this.handleCertificateOrganizationsChange.bind(this)}/>
+                          </div>
+                        </div>
+
+                        <div className="row">
+                          <div className="col-12">
+                            <label>Description:</label>
+                            <input ref='domainInput' type='text' value={this.state.description} onChange={this.handleDescriptionChange.bind(this)}/>
+                          </div>
+                        </div>
                         <br/>
                         <label>Expires:</label>
                         <ExpiryHoursPicker onChange={this.handleTTLChange.bind(this)} />
