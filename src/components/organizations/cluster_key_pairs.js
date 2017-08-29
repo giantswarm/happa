@@ -166,6 +166,14 @@ class ClusterKeyPairs extends React.Component {
     );
   }
 
+  cnPrefix() {
+    if (this.state.cn_prefix == '') {
+      return this.props.user.email;
+    } else {
+      return this.state.cn_prefix;
+    }
+  }
+
   downloadKubeConfig() {
 
   }
@@ -240,12 +248,12 @@ class ClusterKeyPairs extends React.Component {
                   <form onSubmit={this.confirmAddKeyPair.bind(this)} >
                     <BootstrapModal.Body>
                       <p>A key pair grants you access to the Kubernetes API of this cluster.</p>
-                      <p>Kubernetes uses the common name of the certificate as the username, and assigns the Organizations as roles. This allows you to set up role based access rights.</p>
+                      <p>Kubernetes uses the common name of the certificate as the username, and assigns the Organizations as groups. This allows you to set up role based access rights.</p>
                         <div className="row">
                           <div className="col-6">
                             <label>Common Name Prefix:</label>
                             <input ref='domainInput' autoFocus type='text' value={this.state.cn_prefix} onChange={this.handleCNPrefixChange.bind(this)}/>
-                            <div className="text-field-hint">Will be prefixed to the api hostname of this cluster.</div>
+                            <div className="text-field-hint">{this.cnPrefix()}.user.api.clusterdomain</div>
                           </div>
                           <div className="col-6">
                             <label>Organizations:</label>
