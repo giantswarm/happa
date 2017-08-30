@@ -23,7 +23,6 @@ services:
       HAPPA_BASE_URI: http://localhost:8000
       GIANTSWARM_API_URI: http://api:8000
       GIANTSWARM_API_TOKEN: test
-      HUBSPOT_API_URI: http://hubspotmock:9999
       HUBSPOT_HUB_ID: "430224"
       HUBSPOT_API_KEY: 1234567890abcdefghijklmnop
       #NUM_PROXIES: "0"
@@ -31,7 +30,6 @@ services:
       RATELIMIT_STORAGE_URL: redis://redis:6379
 
     links:
-      - hubspotmock
       - api
       - redis:redis
       - mailcatcher:mailcatcher
@@ -40,14 +38,6 @@ services:
     image: redis:3.2
     ports:
       - "6379:6379"
-
-  # Mocks the HubSpot API
-  hubspotmock:
-    image: registry.giantswarm.io/giantswarm/mock-hubspot-api:latest
-    environment:
-      DEBUGGING: 1
-    ports:
-      - "9999:9999"
 
   mailcatcher:
     image: quay.io/giantswarm/mailcatcher:latest
@@ -74,21 +64,6 @@ services:
     depends_on:
      - redis
      - api
-     - prometheus
-
-  prometheus:
-    image: registry.giantswarm.io/giantswarm/fake-metrics-prometheus:latest
-    ports:
-      - "9090:9090"
-    links:
-      - fake-metrics-node
-
-  fake-metrics-node:
-    image: registry.giantswarm.io/giantswarm/fake-metrics-node:latest
-    environment:
-      CLUSTER_SERVICE_ETCD_ENDPOINT: "http://etcd:2379"
-    links:
-      - etcd
 
 ######################
 ## DOMAIN VALIDATOR ##
@@ -185,7 +160,7 @@ services:
 #########
 
   api:
-    image: quay.io/giantswarm/api:latest
+    image: quay.io/giantswarm/api:edfe335e8769cf41af87e266b56da6ce76f93e5b
     command: daemon --server.listen.address=http://0.0.0.0:8000
                     --add-admin-token=test:test
                     --companyd-address=http://companyd:8000
@@ -201,7 +176,7 @@ services:
      - "9000:8000"
 
   userd:
-    image: quay.io/giantswarm/userd:873ce4c3674a7c51142591220bd8738dd56ff5e3
+    image: quay.io/giantswarm/userd:b26cc3f662bdf6c36cacbf43761ac63682225ffd
     command: /opt/userd/userd --listen=0.0.0.0:8000 --storage=etcdv3
     links:
      - etcd
@@ -219,7 +194,7 @@ services:
      - "9003:8000"
 
   cluster-service:
-    image: quay.io/giantswarm/cluster-service:latest
+    image: quay.io/giantswarm/cluster-service:e5a043ed71ebba1848f73eae2f629154d850a104
     command: daemon --server.listen.address="http://0.0.0.0:8000"
                     --service.keypair.certificate.ttl="24h"
                     --service.kubernetes.guest.api.endpointformat="https://api.%s.g8s.fra-1.giantswarm.io"
@@ -265,7 +240,7 @@ services:
       - "9006:2379"
 
   vault:
-    image: giantswarm/docker-vault:0.1.0
+    image: vault
     volumes:
       - ${PWD}/dev_vault_config.hcl:/dev_vault_config.hcl
     command: server -dev
