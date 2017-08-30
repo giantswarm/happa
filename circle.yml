@@ -12,7 +12,7 @@ dependencies:
 compile:
   override:
     - make dist
-    - docker build -t quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 -f Dockerfile .
+    - ./architect build
 
 test:
   override:
