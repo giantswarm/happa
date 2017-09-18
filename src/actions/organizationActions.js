@@ -273,6 +273,23 @@ export function organizationAddMemberConfirm(orgId, email) {
       email: email
     });
 
+    if (getState().entities.organizations && getState().entities.organizations.items && getState().entities.organizations.items[orgId] && getState().entities.organizations.items[orgId].members) {
+      var members = getState().entities.organizations.items[orgId].members;
+      var memberEmails = members.map((member) => {
+        return member.email;
+      });
+
+      if (memberEmails.includes(email.toLowerCase())) {
+        dispatch(modalHide());
+        return dispatch(flashAdd({
+          message: <div><strong>User `{email}` is already in organization `{orgId}`</strong></div>,
+          class: 'info',
+          ttl: 3000
+        }));
+      }
+    }
+
+
     var authToken = getState().app.loggedInUser.authToken;
     var giantSwarm = new GiantSwarm.Client(authToken);
 
@@ -301,7 +318,6 @@ export function organizationAddMemberConfirm(orgId, email) {
     });
   };
 }
-
 
 export function organizationRemoveMemberConfirm(orgId, email) {
   return function(dispatch, getState) {
