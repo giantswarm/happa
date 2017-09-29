@@ -20,7 +20,11 @@ class NewAWSWorker extends React.Component {
         {name: 'r3.xlarge', description: 'R3 High-Memory Extra Large', 'memory': '30.5 GB',  cpuCores: '4', storage: '80 GB'},
         {name: 'r3.2xlarge', description: 'R3 High-Memory Double Extra Large', 'memory': '61 GB',  cpuCores: '8', storage: '160 GB'},
         {name: 'r3.4xlarge', description: 'R3 High-Memory Quadruple Extra Large', 'memory': '122 GB', cpuCores: '16',  storage: '320 GB'},
-        {name: 'r3.8xlarge', description: 'R3 High-Memory Eight Extra Large', 'memory': '244 GB', cpuCores: '32', storage: '640 GB'}
+        {name: 'r3.8xlarge', description: 'R3 High-Memory Eight Extra Large', 'memory': '244 GB', cpuCores: '32', storage: '640 GB'},
+        {name: 'm4.large', description: 'M4 General Purpose Large', cpuCores: '2', memory: '7.5 GB', storage: 'EBS-only'},
+        {name: 'm4.xlarge', description: 'M4 General Purpose Extra Large', cpuCores: '4', memory: '15 GB', storage: 'EBS-only'},
+        {name: 'm4.2xlarge', description: 'M4 General Purpose Double Extra Large', 'memory': '30 GB', cpuCores: '8', storage: 'EBS-only'},
+        {name: 'm4.4xlarge', description: 'M4 General Purpose Four Extra Large', 'memory': '61 GB', cpuCores: '16', storage: 'EBS-only'}
       ]
     };
   }
