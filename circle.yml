@@ -26,4 +26,4 @@ deployment:
   master:
     branch: master
     commands:
-      - ./architect deploy --resources-directory-path='./kubernetes/production'
+      - ./architect deploy
