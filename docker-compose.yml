@@ -160,7 +160,7 @@ services:
 #########
 
   api:
-    image: quay.io/giantswarm/api:edfe335e8769cf41af87e266b56da6ce76f93e5b
+    image: quay.io/giantswarm/api:latest
     command: daemon --server.listen.address=http://0.0.0.0:8000
                     --add-admin-token=test:test
                     --companyd-address=http://companyd:8000
@@ -176,29 +176,24 @@ services:
      - "9000:8000"
 
   userd:
-    image: quay.io/giantswarm/userd:b26cc3f662bdf6c36cacbf43761ac63682225ffd
-    command: /opt/userd/userd --listen=0.0.0.0:8000 --storage=etcdv3
-    links:
-     - etcd
+    image: quay.io/giantswarm/userd:latest
+    command: /opt/userd/userd --listen=0.0.0.0:8000 --storage=memory
     ports:
      - "9002:8000"
-    environment:
-     ETCD_PEER: "http://etcd:2379"
 
   companyd:
     image: quay.io/giantswarm/companyd:latest
-    command: /opt/companyd --storage="etcd" --port=8000 --storage-etcd-peers=http://etcd:2379
-    links:
-     - etcd
+    command: /opt/companyd --storage=memory --port=8000
     ports:
      - "9003:8000"
 
   cluster-service:
-    image: quay.io/giantswarm/cluster-service:e5a043ed71ebba1848f73eae2f629154d850a104
+    image: quay.io/giantswarm/cluster-service:latest
     command: daemon --server.listen.address="http://0.0.0.0:8000"
                     --service.keypair.certificate.ttl="24h"
+                    --service.kubernetes.incluster=false
                     --service.kubernetes.guest.api.endpointformat="https://api.%s.g8s.fra-1.giantswarm.io"
-                    --service.kubernetes.guest.version="v1.5.2_coreos.0"
+                    --service.kubernetes.guest.version="v1.7.5_coreos.0"
                     --service.kubernetesd.address="http://mock-kubernetesd:8000"
                     --service.vault.config.address="http://vault:8200"
                     --service.vault.config.pki.allowbaredomains=true
@@ -209,8 +204,7 @@ services:
                     --service.vault.config.pki.token.ttl="12h"
                     --service.vault.address="http://vault:8200"
                     --service.vault.token="dev-token"
-                    --service.storage.kind="etcd"
-                    --service.storage.etcd.address="http://etcd:2379"
+                    --service.storage.kind="memory"
                     --service.provider.kind="aws"
                     --service.provider.aws.ec2.instance.allowed="m3.large,m3.xlarge,m3.2xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge"
                     --service.provider.aws.ec2.instance.available="m1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,cg1.4xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,cr1.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,hi1.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g2.2xlarge,g2.8xlarge,x1.16xlarge,x1.32xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,f1.2xlarge,f1.16xlarge"
@@ -218,7 +212,6 @@ services:
                     --service.provider.aws.ec2.instance.default="m3.large"
 
     links:
-     - etcd
      - vault
      - mock-kubernetesd
     ports:
@@ -226,18 +219,9 @@ services:
 
   tokend:
     image: quay.io/giantswarm/tokend:latest
-    command: --host=0.0.0.0 --etcd-peer=http://etcd:2379 --storage-type=etcd --port=8000
-    links:
-     - etcd
+    command: --host=0.0.0.0 --storage-type=memory --port=8000
     ports:
      - "9005:8000"
-
-  etcd:
-    image: quay.io/coreos/etcd:v3.1.2
-    command: etcd --listen-client-urls 'http://0.0.0.0:2379'
-                  --advertise-client-urls 'http://0.0.0.0:2379'
-    ports:
-      - "9006:2379"
 
   vault:
     image: vault
