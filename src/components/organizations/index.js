@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import FlashMessage from '../flash_messages/flash_message';
 import { organizationsLoad, organizationDelete, organizationCreate, organizationSelect } from '../../actions/organizationActions';
 import { connect } from 'react-redux';
 import OrganizationRow from './organizationRow';
@@ -36,12 +35,6 @@ class Organizations extends React.Component {
     return (
       <DocumentTitle title='Organizations | Giant Swarm'>
         <div>
-          <FlashMessage class='info'>
-            Organizations help you to organize project teams and invoicing.
-            Each organization can have clusters and will receive an invoice.
-            Add users to your organization to give them access to clusters.
-          </FlashMessage>
-          <br/>
           <h1>Organizations</h1>
           <br/>
           {(() => {
