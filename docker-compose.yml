@@ -23,8 +23,6 @@ services:
       HAPPA_BASE_URI: http://localhost:8000
       GIANTSWARM_API_URI: http://api:8000
       GIANTSWARM_API_TOKEN: test
-      HUBSPOT_HUB_ID: "430224"
-      HUBSPOT_API_KEY: 1234567890abcdefghijklmnop
       #NUM_PROXIES: "0"
       RATELIMIT_GLOBAL: 1000 per day, 100 per hour, 30 per minute
       RATELIMIT_STORAGE_URL: redis://redis:6379
