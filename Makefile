@@ -77,11 +77,10 @@ test: docker-build-dev
 # update dependency images
 pull-images:
 	docker pull quay.io/giantswarm/desmotes:latest
-	docker pull registry.giantswarm.io/giantswarm/domain-validator-worker:latest
-	docker pull registry.giantswarm.io/giantswarm/domain-validator:latest
-	docker pull registry.giantswarm.io/giantswarm/fake-metrics-node:latest
-	docker pull registry.giantswarm.io/giantswarm/fake-metrics-prometheus:latest
+	docker pull quay.io/giantswarm/domain-validator-worker:latest
+	docker pull quay.io/giantswarm/domain-validator:latest
+	docker pull quay.io/giantswarm/fake-metrics-node:latest
+	docker pull quay.io/giantswarm/fake-metrics-prometheus:latest
 	docker pull quay.io/giantswarm/mailcatcher:latest
-	docker pull registry.giantswarm.io/giantswarm/mock-api:latest
-	docker pull registry.giantswarm.io/giantswarm/mock-hubspot-api:latest
+	docker pull quay.io/giantswarm/giantswarm/mock-api:latest
 	docker pull quay.io/giantswarm/passage:latest

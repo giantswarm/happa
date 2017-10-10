@@ -7,7 +7,7 @@
 version: "2"
 services:
   happa:
-    image: registry.giantswarm.io/giantswarm/happa:latest
+    image: quay.io/giantswarm/happa:latest
     ports:
       - "443:8000"
     links:
@@ -18,7 +18,7 @@ services:
       ENVIRONMENT: pre-production
 
   passage:
-    image: registry.giantswarm.io/giantswarm/passage:latest
+    image: quay.io/giantswarm/passage:latest
     ports:
       - "5001:5000"
     environment:
@@ -26,16 +26,12 @@ services:
       # NUM_PROXIES: "0"
       HAPPA_BASE_URI: http://localhost
       GIANTSWARM_API_URI: https://api.giantswarm.io
-      HUBSPOT_API_URI: http://hubspotmock:9999
-      HUBSPOT_HUB_ID: "430224"
-      HUBSPOT_API_KEY: 1234567890abcdefghijklmnop
       RATELIMIT_GLOBAL: 1000 per day, 100 per hour, 30 per minute
       RATELIMIT_STORAGE_URL: redis://redis:6379
       MAILGUN_API_ENDPOINT: https://api.mailgun.net/v2/mg.giantswarm.io/messages
     env_file: secrets.env
 
     links:
-      - hubspotmock
       - redis:redis
       - mailcatcher:mailcatcher
 
@@ -44,22 +40,14 @@ services:
     ports:
       - "6379:6379"
 
-  # Mocks the HubSpot API
-  hubspotmock:
-    image: registry.giantswarm.io/giantswarm/mock-hubspot-api:latest
-    environment:
-      DEBUGGING: 1
-    ports:
-      - "9999:9999"
-
   mailcatcher:
-    image: registry.giantswarm.io/giantswarm/mailcatcher:latest
+    image: quay.io/giantswarm/mailcatcher:latest
     ports:
       - "1080:1080"
       - "1025:1025"
 
   desmotes:
-    image: registry.giantswarm.io/giantswarm/desmotes:latest
+    image: quay.io/giantswarm/desmotes:latest
     ports:
       - "9001:5000"
     environment:

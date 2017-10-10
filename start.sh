@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 if [ -n "$API_ENDPOINT" ]; then
   sed -i "s|apiEndpoint: 'http://localhost:9000'|apiEndpoint: '$API_ENDPOINT'|" /www/index.html
 fi
