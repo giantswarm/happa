@@ -28,7 +28,7 @@ class DownloadKubeCTL extends React.Component {
     switch(this.state.selectedPlatform) {
       case 'Windows':
         return <div>
-          <p>Download <code>kubectl</code> from <a href='https://storage.googleapis.com/kubernetes-release/release/v1.4.6/bin/windows/amd64/kubectl.exe' target='_blank'>https://storage.googleapis.com/kubernetes-release/release/v1.4.6/bin/windows/amd64/kubectl.exe</a> to a folder of your choice and make it available in your environment PATH variable.</p>
+          <p>Download <code>kubectl</code> from <a href='https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe' target='_blank'>https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe</a> to a folder of your choice and make it available in your environment PATH variable.</p>
         </div>;
       case 'MacWithoutBrew':
         return <div>
@@ -36,7 +36,7 @@ class DownloadKubeCTL extends React.Component {
 
           <CodeBlock>
             <Prompt>
-              {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.4.6/bin/darwin/amd64/kubectl`}
+              {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/darwin/amd64/kubectl`}
             </Prompt>
             <Prompt>
               {`chmod +x kubectl`}
@@ -88,7 +88,7 @@ class DownloadKubeCTL extends React.Component {
 
           <CodeBlock>
             <Prompt>
-              {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.4.6/bin/linux/amd64/kubectl`}
+              {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/linux/amd64/kubectl`}
             </Prompt>
             <Prompt>
               {`chmod +x kubectl`}
