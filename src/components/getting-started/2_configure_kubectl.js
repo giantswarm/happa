@@ -193,7 +193,7 @@ class ConfigKubeCtl extends React.Component {
 
         <CodeBlock>
           <Prompt>
-            {`gsctl --api-endpoint ` + window.config.apiEndpoint + ` info`}
+            {`gsctl --endpoint ` + window.config.apiEndpoint + ` info`}
           </Prompt>
         </CodeBlock>
 
@@ -211,14 +211,14 @@ class ConfigKubeCtl extends React.Component {
         <CodeBlock>
           <Prompt>
             {`
-              gsctl --api-endpoint ` + window.config.apiEndpoint + ` \\
+              gsctl --endpoint ` + window.config.apiEndpoint + ` \\
                 create kubeconfig --cluster ` + this.props.selectedCluster.id + ` \\
                 --auth-token ` + this.props.user.authToken
             }
           </Prompt>
         </CodeBlock>
 
-        <p>In case you wonder: <code>--api-endpoint</code> sets the right API endpoint to use for your installation. <code>--cluster &lt;cluster_id&gt;</code> selects the cluster to provide access to. <code>--auth-token &lt;token&gt;</code> saves you from having to enter you password again in <code>gsctl</code>, by re-using the token from your current web UI session.</p>
+        <p>In case you wonder: <code>--endpoint</code> sets the right API endpoint to use for your installation. <code>--cluster &lt;cluster_id&gt;</code> selects the cluster to provide access to. <code>--auth-token &lt;token&gt;</code> saves you from having to enter you password again in <code>gsctl</code>, by re-using the token from your current web UI session.</p>
 
         <div className="well" id="alternative">
           <div onClick={this.toggleAlternative} className="toggle-alternative">
