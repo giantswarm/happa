@@ -16,9 +16,13 @@ class CreateCluster extends React.Component {
   constructor(props) {
     super(props);
 
+    var k8sVersion = '1.7.5';
+    if (window.config.createClusterWorkerType === 'aws') {
+      k8sVersion = '1.8.1';
+    }
+
     this.state = {
-      availableVersions: ['1.4.6', '1.4.7', '1.5.0', '1.5.1', '1.5.2', '1.6.4', '1.7.3', '1.7.5', '1.8.1'],
-      selectedVersion: '1.8.1',
+      k8sVersion: k8sVersion,
       clusterName: 'My cluster',
       workerCount: 3,
       syncWorkers: true,
@@ -276,7 +280,7 @@ class CreateCluster extends React.Component {
               <h3 className='table-label'>Kubernetes Version</h3>
             </div>
             <div className='col-9'>
-              <p>1.8.1 (Default)</p>
+              <p>{this.state.k8sVersion} (Default)</p>
             </div>
           </div>
 
