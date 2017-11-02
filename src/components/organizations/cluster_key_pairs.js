@@ -209,6 +209,8 @@ class ClusterKeyPairs extends React.Component {
                         <th>Description</th>
                         <th>Created</th>
                         <th>Expires</th>
+                        <th>Common Name (CN)</th>
+                        <th>Organization (O)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -222,10 +224,15 @@ class ClusterKeyPairs extends React.Component {
                                 <span>{truncate(keyPair.id.replace(/:/g, ''), 9)}</span>
                               </OverlayTrigger>
                             </td>
-
                             <td>{keyPair.description}</td>
                             <td>{relativeDate(keyPair.create_date)}</td>
                             <td>{relativeDate(keyPair.expire_date)}</td>
+                            <td className="code">
+                              <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{keyPair.common_name}</Tooltip>}>
+                                <span>{truncate(keyPair.common_name, 24)}</span>
+                              </OverlayTrigger>
+                            </td>
+                            <td className="code">{keyPair.certificate_organizations}</td>
                           </tr>;
                         })
                       }
@@ -387,4 +394,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClusterKeyPairs);
-
