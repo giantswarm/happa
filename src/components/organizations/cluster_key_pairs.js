@@ -209,6 +209,8 @@ class ClusterKeyPairs extends React.Component {
                         <th>Description</th>
                         <th>Created</th>
                         <th>Expires</th>
+                        <th>Common Name (CN)</th>
+                        <th>Organization (O)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -226,6 +228,8 @@ class ClusterKeyPairs extends React.Component {
                             <td>{keyPair.description}</td>
                             <td>{relativeDate(keyPair.create_date)}</td>
                             <td>{relativeDate(keyPair.expire_date)}</td>
+                            <td>{keyPair.common_name}</td>
+                            <td>{keyPair.certificate_organizations}</td>
                           </tr>;
                         })
                       }
@@ -387,4 +391,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClusterKeyPairs);
-
