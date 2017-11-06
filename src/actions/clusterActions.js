@@ -2,7 +2,6 @@
 
 import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
-import Desmotes from '../lib/desmotes_client';
 import { modalHide } from './modalActions';
 import { organizationsLoad } from './organizationActions';
 import { flashAdd } from './flashMessageActions';
@@ -141,28 +140,6 @@ export function clusterLoadDetails(clusterId) {
     })
     .catch((error) => {
       dispatch(clusterLoadDetailsError(clusterId, error));
-    });
-  };
-}
-
-export function clusterFetchMetrics(clusterId) {
-  return function(dispatch, getState) {
-    var authToken = getState().app.loggedInUser.authToken;
-
-    var desmotes = new Desmotes({
-      endpoint: window.config.desmotesEndpoint,
-      authorizationToken: authToken
-    });
-
-    dispatch(clusterLoadMetrics(clusterId));
-
-    return desmotes.clusterMetrics({
-      clusterId: clusterId
-    }).then((metrics) => {
-      dispatch(clusterLoadMetricsSuccess(clusterId, metrics));
-    })
-    .catch((error) => {
-      dispatch(clusterLoadMetricsError(clusterId, error));
     });
   };
 }
