@@ -7,10 +7,6 @@ if [ -n "$PASSAGE_ENDPOINT" ]; then
   sed -i "s|passageEndpoint: 'http://localhost:5001'|passageEndpoint: '$PASSAGE_ENDPOINT'|" /www/index.html
 fi
 
-if [ -n "$DESMOTES_ENDPOINT" ]; then
-  sed -i "s|desmotesEndpoint: 'http://localhost:9001'|desmotesEndpoint: '$DESMOTES_ENDPOINT'|" /www/index.html
-fi
-
 if [ -n "$INTERCOM_APP_ID" ]; then
   sed -i "s|intercomAppId: 'bdvx0cb8'|intercomAppId: '$INTERCOM_APP_ID'|" /www/index.html
 fi

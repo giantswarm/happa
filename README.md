@@ -15,7 +15,7 @@ You can see it in action at: https://happa-g8s.giantswarm.io
 
 It is a Single Page React Application that runs in modern browsers.
 
-It currently depends on `api`, `passage`, and `desmotes`.
+It currently depends on `api` and `passage`.
 
 ## Getting started with development / demoing
 
