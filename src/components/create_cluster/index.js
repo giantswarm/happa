@@ -16,10 +16,8 @@ class CreateCluster extends React.Component {
   constructor(props) {
     super(props);
 
-    var k8sVersion = '1.8.1';
-
     this.state = {
-      k8sVersion: k8sVersion,
+      k8sVersion: '1.8.1',
       clusterName: 'My cluster',
       workerCount: 3,
       syncWorkers: true,
