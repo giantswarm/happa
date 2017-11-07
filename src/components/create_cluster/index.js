@@ -16,10 +16,7 @@ class CreateCluster extends React.Component {
   constructor(props) {
     super(props);
 
-    var k8sVersion = '1.7.5';
-    if (window.config.createClusterWorkerType === 'aws') {
-      k8sVersion = '1.8.1';
-    }
+    var k8sVersion = '1.8.1';
 
     this.state = {
       k8sVersion: k8sVersion,
