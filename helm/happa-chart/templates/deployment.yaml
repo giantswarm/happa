@@ -48,11 +48,6 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: api-endpoint
-        - name: DESMOTES_ENDPOINT
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: desmotes-endpoint
         - name: CREATE_CLUSTER_WORKER_TYPE
           valueFrom:
             configMapKeyRef:

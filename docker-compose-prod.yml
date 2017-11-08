@@ -46,22 +46,5 @@ services:
       - "1080:1080"
       - "1025:1025"
 
-  desmotes:
-    image: quay.io/giantswarm/desmotes:latest
-    ports:
-      - "9001:5000"
-    environment:
-      GIANTSWARM_API_URI: https://api.giantswarm.io
-      PROMETHEUS_URI: https://leaseweb-prometheus.giantswarm.io
-      PROMETHEUS_QUERY_TIMEOUT: 3.0
-      CORS_BASE_URI: http://localhost
-      PROMETHEUS_USER: admin
-      CACHE_KEY_SALT: dev_salt
-      DEBUGGING: yeah
-      REDIS_HOST: redis
-      REDIS_PORT: "6379"
-      NODE_STORAGE_DEVICES_REGEX: "/dev/vdb|/dev/vdc"
-    env_file: secrets.env
-
     depends_on:
      - redis

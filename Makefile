@@ -76,7 +76,6 @@ test: docker-build-dev
 
 # update dependency images
 pull-images:
-	docker pull quay.io/giantswarm/desmotes:latest
 	docker pull quay.io/giantswarm/domain-validator-worker:latest
 	docker pull quay.io/giantswarm/domain-validator:latest
 	docker pull quay.io/giantswarm/fake-metrics-node:latest

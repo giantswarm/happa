@@ -43,22 +43,6 @@ services:
       - "1080:1080"
       - "1025:1025"
 
-  desmotes:
-    image: quay.io/giantswarm/desmotes:latest
-    ports:
-      - "9001:5000"
-    environment:
-      GIANTSWARM_API_URI: http://api:8000
-      PROMETHEUS_URI: http://prometheus:9090
-      PROMETHEUS_QUERY_TIMEOUT: 3.0
-      CORS_BASE_URI: http://localhost:8000
-      PROMETHEUS_USER: prometheus_dev_user
-      PROMETHEUS_PASSWORD: prometheus_dev_password
-      CACHE_KEY_SALT: dev_salt
-      DEBUGGING: yeah
-      REDIS_HOST: redis
-      REDIS_PORT: "6379"
-
     depends_on:
      - redis
      - api
