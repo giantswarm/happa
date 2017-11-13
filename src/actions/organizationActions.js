@@ -265,6 +265,13 @@ export function organizationAddMember(orgId) {
   };
 }
 
+export function organizationAddMemberTyping(orgId) {
+  return {
+    type: types.ORGANIZATION_ADD_MEMBER_TYPING,
+    orgId: orgId
+  };
+}
+
 export function organizationAddMemberConfirm(orgId, email) {
   return function(dispatch, getState) {
     dispatch({
@@ -280,12 +287,11 @@ export function organizationAddMemberConfirm(orgId, email) {
       });
 
       if (memberEmails.includes(email.toLowerCase())) {
-        dispatch(modalHide());
-        return dispatch(flashAdd({
-          message: <div><strong>User `{email}` is already in organization `{orgId}`</strong></div>,
-          class: 'info',
-          ttl: 3000
-        }));
+        return dispatch({
+          type: types.ORGANIZATION_ADD_MEMBER_ERROR,
+          orgId: orgId,
+          errorMessage: `User "${email}"" is already in organization "${orgId}"`
+        });
       }
     }
 
@@ -304,16 +310,11 @@ export function organizationAddMemberConfirm(orgId, email) {
       class: 'success',
       ttl: 3000
     })))
-    .catch(error => {
-      dispatch(modalHide());
-
-      dispatch(flashAdd({
-        message: <div><strong>Could not add user `{email}` to organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
-        class: 'danger'
-      }));
-
+    .catch(() => {
       dispatch({
-        type: types.ORGANIZATION_ADD_MEMBER_ERROR
+        type: types.ORGANIZATION_ADD_MEMBER_ERROR,
+        orgId: orgId,
+        errorMessage: <span>Could not add {email} to organization {orgId}.</span>
       });
     });
   };

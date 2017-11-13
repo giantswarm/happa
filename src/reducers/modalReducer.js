@@ -74,10 +74,24 @@ export default function modalReducer(state = {visible: false}, action = undefine
         template: 'organizationAddMember'
       };
 
+    case types.ORGANIZATION_ADD_MEMBER_TYPING:
+      return {
+        visible: true,
+        templateValues: {orgId: action.orgId, loading: false},
+        template: 'organizationAddMember'
+      };
+
     case types.ORGANIZATION_ADD_MEMBER_CONFIRM:
       return {
         visible: true,
         templateValues: {orgId: action.orgId, loading: true},
+        template: 'organizationAddMember'
+      };
+
+    case types.ORGANIZATION_ADD_MEMBER_ERROR:
+      return {
+        visible: true,
+        templateValues: {orgId: action.orgId, loading: false, errorMessage: action.errorMessage},
         template: 'organizationAddMember'
       };
 

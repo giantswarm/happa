@@ -96,7 +96,7 @@ class EmailField extends React.Component {
       <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
         <input type='email' ref='input' id={this.props.name} onBlur={this.onBlur} onChange={this.onChange} />
-        <span className="message">{this.state.validationError}&nbsp;</span>
+        <span className="message">{this.state.validationError} {this.props.errorMessage}&nbsp;</span>
       </div>
     );
   }
@@ -107,7 +107,8 @@ EmailField.propTypes = {
   onChange: React.PropTypes.func,
   onStartTyping: React.PropTypes.func,
   name: React.PropTypes.string,
-  label: React.PropTypes.string
+  label: React.PropTypes.string,
+  errorMessage: React.PropTypes.string
 };
 
 export default EmailField;

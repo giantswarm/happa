@@ -8,6 +8,7 @@ import { modalHide } from '../../actions/modalActions';
 import { organizationDeleteConfirm,
          organizationCreateConfirm,
          organizationAddMemberConfirm,
+         organizationAddMemberTyping,
          organizationRemoveMemberConfirm } from '../../actions/organizationActions';
 
 import { clusterDeleteConfirm } from '../../actions/clusterActions';
@@ -51,9 +52,6 @@ class Modal extends React.Component {
     if (this.state.emailValid) {
       var email = this.refs.email.value();
       this.props.dispatch(organizationAddMemberConfirm(this.props.modal.templateValues.orgId, email));
-      this.setState({
-        emailValid: false
-      });
     }
   }
 
@@ -68,6 +66,10 @@ class Modal extends React.Component {
   }
 
   emailFieldChanged = (emailField) => {
+    var email = this.props.modal.templateValues.email;
+    var orgId = this.props.modal.templateValues.orgId;
+    this.props.dispatch(organizationAddMemberTyping(orgId, email));
+
     if (emailField.valid()) {
       this.setState({
         emailValid: true
@@ -166,9 +168,17 @@ class Modal extends React.Component {
               <BootstrapModal.Title>Add a Member</BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
+              <div className={'flash-messages--flash-message' + ' flash-messages--info'}>
+              <i className='fa fa-info-circle' /> You can only add users to this organization if they already have a user account.
+              </div>
+              <br/>
               <h4>Email:</h4>
               <form onSubmit={this.addMember.bind(this)} >
-                <EmailField name='email' ref='email' onChange={this.emailFieldChanged.bind(this)} autofocus/>
+                <EmailField name='email'
+                            ref='email'
+                            onChange={this.emailFieldChanged.bind(this)}
+                            errorMessage={this.props.modal.templateValues.errorMessage}
+                            autofocus/>
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
