@@ -90,7 +90,7 @@ class Modal extends React.Component {
               <BootstrapModal.Title>Delete an Organization</BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
-              <h4>Are you sure you want to delete <code>{this.props.modal.templateValues.orgId}</code>?</h4>
+              <p>Are you sure you want to delete <code>{this.props.modal.templateValues.orgId}</code>?</p>
               <small>There is no undo</small>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
@@ -128,8 +128,8 @@ class Modal extends React.Component {
               <BootstrapModal.Title>Create an Organization</BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
-              <h4>Organization Name:</h4>
               <form onSubmit={this.createOrganisation.bind(this)} >
+                <label>Organization Name:</label>
                 <input ref='orgId' autoFocus type='text'/>
               </form>
             </BootstrapModal.Body>
@@ -168,12 +168,10 @@ class Modal extends React.Component {
               <BootstrapModal.Title>Add a Member</BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
-              <div className={'flash-messages--flash-message' + ' flash-messages--info'}>
-              <i className='fa fa-info-circle' /> You can only add users to this organization if they already have a user account.
-              </div>
-              <br/>
-              <h4>Email:</h4>
+              <p>You can only add users to this organization if they already have a user account.</p>
+
               <form onSubmit={this.addMember.bind(this)} >
+                <label>Email:</label>
                 <EmailField name='email'
                             ref='email'
                             onChange={this.emailFieldChanged.bind(this)}
