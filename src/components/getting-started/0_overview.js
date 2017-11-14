@@ -36,7 +36,7 @@ class Overview extends React.Component {
           <li className="col-3 col-6-sm">
             <Link to="/getting-started/configure">
               <span className="step_selector--step-number">2.</span>
-              <span className="step_selector--step-title">Configure kubectl</span>
+              <span className="step_selector--step-title">Get access</span>
               <span className="step_selector--step-description">Enable your Kubernetes CLI to access your Kubernetes cluster at Giant Swarm</span>
             </Link>
           </li>
