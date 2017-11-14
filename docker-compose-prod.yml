@@ -16,6 +16,7 @@ services:
       API_ENDPOINT: https://api.giantswarm.io
       INTERCOM_APP_ID: ictssdcu
       ENVIRONMENT: pre-production
+      INGRESS_BASE_DOMAIN: k8s.pre-production-sample.io
 
   passage:
     image: quay.io/giantswarm/passage:latest
