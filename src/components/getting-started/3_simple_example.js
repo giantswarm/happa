@@ -11,9 +11,16 @@ class SimpleExample extends React.Component {
     constructor(props) {
       super(props);
 
+      var ingressBaseDomain = window.config.ingressBaseDomain;
+
       this.state = {
-        loading: true
+        loading: true,
+        ingressBaseDomain: ingressBaseDomain
       };
+    }
+
+    helloWorldHost() {
+      return `helloworld.${this.props.cluster.id}.${this.state.ingressBaseDomain}`;
     }
 
     componentDidMount() {
@@ -58,7 +65,7 @@ class SimpleExample extends React.Component {
       } else if (this.state.loading) {
         return 'Figuring out the url...';
       } else {
-        var url = `http://helloworld.default.${this.props.cluster.id}.k8s.gigantic.io`;
+        var url = `http://${this.helloWorldHost()}`;
         return (
           <a href={url} target='_blank'>{url}</a>
         );
@@ -76,9 +83,30 @@ class SimpleExample extends React.Component {
           <p><i className='fa fa-graduation-cap' title='For learners'></i> If you&apos;re new to Kubernetes: A manifest describes things to create in Kubernetes. In this case the manifest describes two different things, a service and a deployment. The service is there to expose containers (here: the ones with the label app: helloworld) inside your cluster via a certain hostname and port. The deployment describes your helloworld deployment. It manages a replica set, which ensures that a number of pods (two, actually) containing Docker containers from a certain image are running.</p>
           </div>
 
+          <p>First we download the manifest:</p>
           <CodeBlock>
             <Prompt>
-              {`kubectl apply --filename https://raw.githubusercontent.com/giantswarm/helloworld/master/helloworld-manifest.yaml`}
+              {`
+                wget https://raw.githubusercontent.com/giantswarm/helloworld/master/helloworld-manifest.yaml
+              `}
+            </Prompt>
+          </CodeBlock>
+
+          <p>Next we'll have to replace the placeholder host value in the ingress defined in that manifest. You can open up an editor, or use <code>sed</code> as shown below. Replace <code>helloworld.clusterid.gigantic.io</code> with <code>{this.helloWorldHost()}</code>.</p>
+          <CodeBlock>
+            <Prompt>
+              {`
+                sed -i "" "s/helloworld.clusterid.gigantic.io/${this.helloWorldHost()}/" helloworld-manifest.yaml
+              `}
+            </Prompt>
+          </CodeBlock>
+
+          <p>Finally apply the manifest to your cluster:</p>
+          <CodeBlock>
+            <Prompt>
+              {`
+               kubectl apply -f helloworld-manifest.yaml
+              `}
             </Prompt>
             <Output>
               {`
