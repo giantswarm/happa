@@ -225,9 +225,13 @@ class ConfigKubeCtl extends React.Component {
         <ul>
           <li><code>--endpoint</code> sets the right API endpoint to use for your installation.</li>
           <li><code>--cluster &lt;cluster_id&gt;</code> selects the cluster to provide access to.</li>
-          <li><code>--certificate-organizations system:masters</code> ensures that you will be authorized as an administrator when using this keypair..</li>
+          <li><code>--certificate-organizations system:masters</code> ensures that you will be authorized as an administrator when using this keypair.</li>
           <li><code>--auth-token &lt;token&gt;</code> saves you from having to enter you password again in <code>gsctl</code>, by re-using the token from your current web UI session.</li>
         </ul>
+
+        <div className="aside">
+          <p><i className='fa fa-graduation-cap' title='For learners'></i> <code>--certificate-organizations</code> is a flag that sets what group you belong to when authenticating against the Kubernetes API. The default superadmin group on RBAC (Role Based Access Control) enabled clusters is <code>system:masters</code> . All clusters on AWS have RBAC enabled, some of our on-prem (KVM) clusters do not.</p>
+        </div>
 
         <div className="well" id="alternative">
           <div onClick={this.toggleAlternative} className="toggle-alternative">
