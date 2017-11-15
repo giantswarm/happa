@@ -13,7 +13,7 @@ services:
     links:
       - passage
     environment:
-      API_ENDPOINT: https://api.giantswarm.io
+      API_ENDPOINT: https://api.g8s.ginger.eu-central-1.aws.gigantic.io
       INTERCOM_APP_ID: ictssdcu
       ENVIRONMENT: pre-production
 
@@ -25,7 +25,7 @@ services:
       # DEBUGGING: 1
       # NUM_PROXIES: "0"
       HAPPA_BASE_URI: http://localhost
-      GIANTSWARM_API_URI: https://api.giantswarm.io
+      GIANTSWARM_API_URI: https://api.g8s.ginger.eu-central-1.aws.gigantic.io
       RATELIMIT_GLOBAL: 1000 per day, 100 per hour, 30 per minute
       RATELIMIT_STORAGE_URL: redis://redis:6379
       MAILGUN_API_ENDPOINT: https://api.mailgun.net/v2/mg.giantswarm.io/messages
