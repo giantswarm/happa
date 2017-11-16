@@ -59,7 +59,9 @@ function requireAuth(nextState, replace) {
   }
 }
 
-browserHistory.listen(() => {window.Intercom('update');});
+if (window.config.intercomAppId) {
+  browserHistory.listen(() => {window.Intercom('update');});
+}
 
 render(
   <Provider store={store}>

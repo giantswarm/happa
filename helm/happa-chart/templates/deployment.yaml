@@ -54,7 +54,10 @@ spec:
               name: happa-configmap
               key: create-cluster-worker-type
         - name: INTERCOM_APP_ID
-          value: ictssdcu
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: intercom-app-id
         - name: ENVIRONMENT
           value: kubernetes
         livenessProbe:
