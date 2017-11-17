@@ -53,6 +53,11 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: create-cluster-worker-type
+        - name: INGRESS_BASE_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: ingress-base-domain
         - name: INTERCOM_APP_ID
           valueFrom:
             configMapKeyRef:

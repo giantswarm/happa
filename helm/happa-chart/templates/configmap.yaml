@@ -7,4 +7,5 @@ data:
   passage-endpoint: {{ .Values.Installation.V1.GiantSwarm.Passage.Address }}
   api-endpoint: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
   create-cluster-worker-type: {{ .Values.Installation.V1.Provider.Kind }}
+  ingress-base-domain: {{ .Values.Installation.V1.Guest.Kubernetes.IngressController.BaseDomain }}
   intercom-app-id: {{ .Values.Installation.V1.GiantSwarm.Happa.IntercomAppID }}

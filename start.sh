@@ -23,6 +23,10 @@ if [ -n "$CREATE_CLUSTER_WORKER_TYPE" ]; then
   sed -i "s|createClusterWorkerType: 'kvm'|createClusterWorkerType: '$CREATE_CLUSTER_WORKER_TYPE'|" /www/index.html
 fi
 
+if [ -n "$INGRESS_BASE_DOMAIN" ]; then
+  sed -i "s|ingressBaseDomain: 'k8s.sample.io'|ingressBaseDomain: '$INGRESS_BASE_DOMAIN'|" /www/index.html
+fi
+
 if [ -n "$ENVIRONMENT" ]; then
   sed -i "s|environment: 'development'|environment: '$ENVIRONMENT'|" /www/index.html
 else
