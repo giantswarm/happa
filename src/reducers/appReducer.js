@@ -6,7 +6,10 @@ import { browserHistory } from 'react-router';
 var shutDown = function(state) {
   localStorage.removeItem('user');
 
-  window.Intercom('shutdown');
+  if (window.config.intercomAppId) {
+    window.Intercom('shutdown');
+  }
+
   browserHistory.push('/login');
 
   return Object.assign({}, state, {
@@ -25,10 +28,12 @@ export default function appReducer(state = {
     case types.REFRESH_USER_INFO_SUCCESS:
       localStorage.setItem('user', JSON.stringify(action.userData));
 
-      window.Intercom('boot', {
-        app_id: window.config.intercomAppId,
-        email: action.userData.email
-      });
+      if (window.config.intercomAppId) {
+        window.Intercom('boot', {
+          app_id: window.config.intercomAppId,
+          email: action.userData.email
+        });
+      }
 
       return Object.assign({}, state, {
         loggedInUser: action.userData

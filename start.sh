@@ -7,8 +7,12 @@ if [ -n "$PASSAGE_ENDPOINT" ]; then
   sed -i "s|passageEndpoint: 'http://localhost:5001'|passageEndpoint: '$PASSAGE_ENDPOINT'|" /www/index.html
 fi
 
+# Completely remove intercom in production if there is no intercom app id set.
 if [ -n "$INTERCOM_APP_ID" ]; then
   sed -i "s|intercomAppId: 'bdvx0cb8'|intercomAppId: '$INTERCOM_APP_ID'|" /www/index.html
+else
+  sed -i "s|intercomAppId: 'bdvx0cb8',||" /www/index.html
+  sed -i '/.*Intercom Start.*/,/.*Intercom End.*/d' /www/index.html
 fi
 
 if [ -n "$DOMAIN_VALIDATOR_ENDPOINT" ]; then
