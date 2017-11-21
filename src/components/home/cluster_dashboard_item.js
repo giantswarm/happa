@@ -48,7 +48,7 @@ class ClusterDashboardItem extends React.Component {
 
   accessCluster() {
     this.props.actions.clusterSelect(this.props.cluster.id);
-    this.context.router.push('/getting-started/configure');
+    this.context.router.push('/getting-started/');
   }
 
   goToClusterDetails() {
