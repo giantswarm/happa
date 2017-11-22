@@ -20,7 +20,11 @@ class SimpleExample extends React.Component {
     }
 
     helloWorldHost() {
-      return `helloworld.${this.props.cluster.id}.k8s.${this.state.ingressBaseDomain}`;
+      if (this.props.cluster) {
+        return `helloworld.${this.props.cluster.id}.k8s.${this.state.ingressBaseDomain}`;
+      } else {
+        return `helloworld.12345.${this.state.ingressBaseDomain}`;
+      }
     }
 
     componentDidMount() {
@@ -92,7 +96,7 @@ class SimpleExample extends React.Component {
             </Prompt>
           </CodeBlock>
 
-          <p>Next we'll have to replace the placeholder host value in the ingress defined in that manifest. You can open up an editor, or use <code>sed</code> as shown below. Replace <code>helloworld.clusterid.gigantic.io</code> with <code>{this.helloWorldHost()}</code>.</p>
+          <p>Next use <code>sed</code> to replace the placeholder <code>helloworld.clusterid.gigantic.io</code> with <code>{this.helloWorldHost()}</code>.</p>
           <CodeBlock>
             <Prompt>
               {`
