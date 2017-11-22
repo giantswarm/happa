@@ -18,6 +18,12 @@ class Home extends React.Component {
     this.fetchClusterDetails(this.props.clusters);
   }
 
+  componentDidUpdate(prevProps) {
+    if (! _.isEqual(this.props.clusters, prevProps.clusters)) {
+      this.fetchClusterDetails(this.props.clusters);
+    }
+  }
+
   clustersSortedById(clusters) {
     return _.sortBy(clusters, 'id');
   }
