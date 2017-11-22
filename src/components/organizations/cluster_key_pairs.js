@@ -20,6 +20,7 @@ class ClusterKeyPairs extends React.Component {
 
     this.state = {
       loading: true,
+      error: false,
       expireTTL: 8760,
       description: this.defaultDescription(props.user.email),
       cn_prefix: '',
@@ -61,11 +62,31 @@ class ClusterKeyPairs extends React.Component {
   }
 
   componentDidMount() {
+    this.loadKeyPairs();
+  }
+
+  loadKeyPairs() {
+    this.setState({
+      loading: true,
+      error: false
+    });
+
     return this.props.actions.clusterLoadKeyPairs(this.props.cluster.id)
     .then(() => {
       this.setState({
-        loading: false
+        loading: false,
+        error: false
       });
+    })
+    .catch(() => {
+      // In case of error delay a half second so that the user gets a chance to
+      // see the spinner before we blast the error state.
+      setTimeout(() => {
+        this.setState({
+          loading: false,
+          error: true
+        });
+      }, 500);
     });
   }
 
@@ -199,10 +220,20 @@ class ClusterKeyPairs extends React.Component {
               (() => {
                 if (this.state.loading) {
                   return <p><img className='loader' src='/images/loader_oval_light.svg'/></p>;
+                } else if (this.state.error) {
+                  return <div><div className='flash-messages--flash-message flash-messages--danger'>
+                    Something went wrong while trying to load the list of key pairs.
+                  </div>
+                  <Button onClick={this.loadKeyPairs.bind(this)}>Try loading key pairs again.</Button>
+                  </div>;
                 } else if (this.props.cluster.keyPairs.length === 0) {
-                  return <p>No key pairs yet. Why don't you create your first?</p>;
+                  return <div>
+                  <p>No key pairs yet. Why don't you create your first?</p>
+                  <Button onClick={this.addKeyPair.bind(this)} bsStyle='default' className='small'>Create Key Pair</Button>
+                  </div>;
                 } else {
-                  return <table>
+                  return <div>
+                  <table>
                     <thead>
                       <tr>
                         <th>ID</th>
@@ -237,11 +268,12 @@ class ClusterKeyPairs extends React.Component {
                         })
                       }
                     </tbody>
-                  </table>;
+                  </table>
+                  <Button onClick={this.addKeyPair.bind(this)} bsStyle='default' className='small'>Create Key Pair</Button>
+                  </div>;
                 }
               })()
             }
-            <Button onClick={this.addKeyPair.bind(this)} bsStyle='default' className='small'>Create Key Pair</Button>
           </div>
         </div>
         {

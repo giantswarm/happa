@@ -162,11 +162,13 @@ export function clusterLoadKeyPairs(clusterId) {
         keyPairs: response.result
       });
     })
-    .catch(() => {
+    .catch((error) => {
       dispatch({
         type: types.CLUSTER_LOAD_KEY_PAIRS_ERROR,
         clusterId
       });
+
+      throw(error);
     });
   };
 }
