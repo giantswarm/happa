@@ -125,7 +125,7 @@ class ReleaseSelector extends React.Component {
                   return <div className='release-selector-modal--release-details' key={release.version}>
                     <h2>Version {release.version} {
                       this.state.selectedRelease === release.version ?
-                        <Button className='selected' bsStyle='primary' onClick={this.selectRelease.bind(this, release.version)}>Selected</Button>
+                        <span className='selected'>(Selected)</span>
                         :
                         <Button onClick={this.selectRelease.bind(this, release.version)}>Select</Button>
                     }</h2>
