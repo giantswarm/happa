@@ -1,0 +1,83 @@
+@keyframes spin
+  0%
+    transform: rotate(0deg)
+
+  100%
+    transform: rotate(360deg)
+
+.new-cluster--release-selector p
+  display: inline
+  margin-right: 10px
+
+.new-cluster--release-selector .progress_button--container
+  position: relative
+  top: -2px
+  display: inline-block
+
+.release-selector-modal .modal-body
+  height: 400px
+  overflow-y: scroll
+
+.release-selector-modal--release-details
+  border-bottom: 1px solid #eee
+  padding-bottom: 18px
+  margin-bottom: 25px
+
+  .progress_button--container
+    margin-left: 6px
+
+  h2
+    font-size: 18px
+    margin-top: 0px
+    margin-bottom: 5px
+
+  .release-selector-modal--release-details--date
+
+  .btn-primary
+    cursor: auto
+    border: 1px solid #2d992d
+
+    &:hover
+      background-color: #2d992d
+
+    &:focus
+      border: 1px solid #2d992d
+      background-color: #2d992d
+      outline: none
+
+    &:active
+     box-shadow: none
+
+  ul
+    margin-left: 0px
+    padding-left: 20px
+
+.release-selector-modal--release-details:only-child, .release-selector-modal--release-details:last-child
+  border-bottom: none
+
+.release-selector-modal--components
+  margin-bottom: 0px
+
+.release-selector-modal--component
+  display: inline-block
+  margin-bottom: 15px
+  margin-right: 5px
+
+.release-selector-modal--component--name
+  background-color: lighten(#122531, 10%)
+  padding: 5px 8px
+  border-top-left-radius: 5px
+  border-bottom-left-radius: 5px
+  border: 1px solid lighten(#122531, 10%)
+  font-size: 14px
+  font-weight: 200
+
+.release-selector-modal--component--version
+  padding: 5px 8px
+  border-top-right-radius: 5px
+  border-bottom-right-radius: 5px
+  border: 1px solid lighten(#122531, 10%)
+  font-size: 14px
+  font-weight: 200
+
+.release-selector-modal--component--version
