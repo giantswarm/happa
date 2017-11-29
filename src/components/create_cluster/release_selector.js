@@ -5,6 +5,7 @@ import Button from '../button';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import {connect} from 'react-redux';
 import { loadReleases } from '../../actions/releaseActions';
+import { flashAdd } from '../../actions/flashMessageActions';
 import _ from 'underscore';
 import { relativeDate } from '../../lib/helpers.js';
 
@@ -42,14 +43,20 @@ class ReleaseSelector extends React.Component {
       });
     })
     .catch((error) => {
-      // In case of error delay a half second so that the user gets a chance to
-      // see the spinner before we blast the error state.
-      setTimeout(() => {
-        this.setState({
-          loading: false,
-          error: true
-        });
-      }, 500);
+      this.setState({
+        loading: false,
+        error: true
+      });
+
+      this.props.dispatch(flashAdd({
+        message: <div>
+          <b>Something went wrong while trying to fetch the list of releases.</b><br/>
+          {error.body ? error.body.message : ''}
+          <br/>
+          Perhaps our servers are down, please try again later or contact support: info@giantswarm.io
+        </div>,
+        class: 'danger'
+      }));
 
       throw(error);
     });
@@ -86,17 +93,9 @@ class ReleaseSelector extends React.Component {
     }
   }
 
-  errorContent() {
-    return <div>
-      <p>Error loading available releases.</p>
-      <Button onClick={this.loadReleases.bind(this)}>Try loading available releases again.</Button>
-    </div>;
-  }
-
   loadingContent() {
     return <div>
       <p><img className='loader' src='/images/loader_oval_light.svg' width="25px" height="25px" /></p>
-
     </div>;
   }
 
@@ -112,7 +111,7 @@ class ReleaseSelector extends React.Component {
       <div className='new-cluster--release-selector' >
         {
           this.state.loading ? this.loadingContent() :
-            this.state.error ? this.errorContent() :
+            this.state.error ? this.loadingContent() :
               this.loadedContent()
         }
 
