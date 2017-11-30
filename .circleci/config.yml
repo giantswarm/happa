@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+    - checkout
+
+    - run: |
+        wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+        chmod +x ./architect
+        ./architect version
+    - run: |
+        make dist
+        ./architect build
+
+    - run: |
+        docker run --name testcontainer -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+        curl -s -k https://localhost:8000 | grep Happa # Grep returns non 0 exit code if it can't find the text, which fails the smoke test
+        docker kill testcontainer
+
+    - deploy:
+        command: |
+          if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            ./architect deploy
+          fi

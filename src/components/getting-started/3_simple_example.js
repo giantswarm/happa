@@ -20,7 +20,7 @@ class SimpleExample extends React.Component {
     }
 
     helloWorldHost() {
-      return `helloworld.${this.props.cluster.id}.${this.state.ingressBaseDomain}`;
+      return `helloworld.${this.props.cluster.id}.k8s.${this.state.ingressBaseDomain}`;
     }
 
     componentDidMount() {
