@@ -40,9 +40,17 @@ class Home extends React.Component {
     );
   }
 
+  title() {
+    if (this.props.selectedOrganization) {
+      return 'Cluster Overview | ' + this.props.selectedOrganization + ' | Giant Swarm';
+    } else {
+      return 'Cluster Overview | Giant Swarm';
+    }
+  }
+
   render() {
     return (
-      <DocumentTitle title={'Cluster Overview | ' + this.props.selectedOrganization + ' | Giant Swarm'}>
+      <DocumentTitle title={this.title()}>
       {
         <div>
           {
