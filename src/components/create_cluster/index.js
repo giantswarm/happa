@@ -141,6 +141,7 @@ class CreateCluster extends React.Component {
     giantSwarm.createCluster({
       clusterName: this.state.clusterName,
       owner: this.props.selectedOrganization,
+      releaseVersion: this.state.releaseVersion,
       workers: workers
     })
     .then(() => {
