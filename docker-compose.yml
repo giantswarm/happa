@@ -47,108 +47,15 @@ services:
      - redis
      - api
 
-######################
-## DOMAIN VALIDATOR ##
-######################
-
-  # domain-validator:
-  #   image: registry.giantswarm.io/giantswarm/domain-validator
-  #   depends_on:
-  #     - nsqd
-  #     - couchdb
-  #   ports:
-  #     - "5002:5000"
-  #   environment:
-  #     NSQD_HTTP_ENDPOINT: http://nsqd:4151
-  #     DEBUGGING: "YEAH"
-  #     GIANTSWARM_API_URI: http://api:8000
-  #     GIANTSWARM_ADMIN_TOKEN:
-  #     REDIS_HOST: redis
-  #     REDIS_PORT: "6379"
-  #     CORS_BASE_URI: http://localhost:8000
-  #     CACHE_KEY_SALT: 793857234kjnsdfkjn128ed3ubnkdn2398e
-  #     TOPIC_DOMAIN_VALIDATION: domain_validation
-  #     COUCHDB_USER: meister
-  #     COUCHDB_PASSWORD: a27r0df0912nbogd094t
-  #     COUCHDB_HOST: couchdb
-  #     COUCHDB_DBNAME: domains
-
-  # couchdb:
-  #   image: couchdb:1.6.1
-  #   ports:
-  #     - "5984:5984"
-  #   environment:
-  #     COUCHDB_USER: meister
-  #     COUCHDB_PASSWORD: a27r0df0912nbogd094t
-
-  # nsqlookupd:
-  #   image: nsqio/nsq:v0.3.8
-  #   command: /nsqlookupd
-  #   ports:
-  #     - "4160:4160"
-  #     - "4161:4161"
-
-  # nsqd:
-  #   image: nsqio/nsq:v0.3.8
-  #   command: >
-  #     /nsqd --lookupd-tcp-address=nsqlookupd:4160
-  #           --broadcast-address=nsqd
-  #           --msg-timeout="100s"
-  #           --max-msg-timeout=48h
-  #           --verbose=true
-
-  #   ports:
-  #     - "4150:4150"
-  #     - "4151:4151"
-  #     - "4152:4152"
-
-  #   volumes:
-  #     - ./certificates:/certs
-
-  # nsqadmin:
-  #   image: nsqio/nsq:v0.3.8
-  #   command: >
-  #     /nsqadmin --lookupd-http-address=nsqlookupd:4161
-  #   ports:
-  #     - "4171:4171"
-
-  # worker:
-  #   image: registry.giantswarm.io/giantswarm/domain-validator-worker
-  #   depends_on:
-  #     - nsqlookupd
-  #     - couchdb
-  #   volumes:
-  #     - ./certificates:/certs
-  #   environment:
-  #     LOG_LEVEL: DEBUG
-  #     NSQLOOKUPD_HTTP_ADDRESSES: "nsqlookupd:4161"
-  #     TOPIC: domain_validation
-  #     CHANNEL: default
-  #     MAX_TASK_AGE: "86400"
-  #     MAX_BACKOFF_DURATION: "60"
-  #     MAX_TRIES: "1000"
-  #     MAX_IN_FLIGHT: "1"
-  #     POLL_INTERVAL: "5"
-  #     NAMESERVERS: 8.8.8.8 8.8.4.4
-  #     DNS_TIMEOUT: "5"
-  #     DNS_LIFETIME: "7"
-  #     COUCHDB_USER: meister
-  #     COUCHDB_PASSWORD: a27r0df0912nbogd094t
-  #     COUCHDB_HOST: couchdb
-  #     COUCHDB_DBNAME: domains
-
-#########
-## API ##
-#########
-
   api:
-    image: quay.io/giantswarm/api:latest
+    image: 'quay.io/giantswarm/api:latest'
     command: daemon --server.listen.address=http://0.0.0.0:8000
-                    --add-admin-token=test:test
+                    --add-admin-token=adminuser:test
                     --companyd-address=http://companyd:8000
                     --token-service-connection=http://tokend:8000
                     --user-service-connection=http://userd:8000
                     --cluster-service-address=http://cluster-service:8000
+                    --provider=kvm
     links:
      - companyd
      - userd
@@ -159,61 +66,150 @@ services:
 
   userd:
     image: quay.io/giantswarm/userd:latest
-    command: /opt/userd/userd --listen=0.0.0.0:8000 --storage=memory
+    command: /opt/userd/userd --listen=0.0.0.0:8000
+                              --storage-tpr-tponame="userd"
+                              --storage=tpr
+                              --k8s-incluster=false
+                              --k8s-address=http://kube-apiserver:8080
+    links:
+     - etcd
+     - kube-apiserver
+
+    depends_on:
+      - kube-apiserver
+
     ports:
      - "9002:8000"
 
   companyd:
     image: quay.io/giantswarm/companyd:latest
-    command: /opt/companyd --storage=memory --port=8000
+    command: /opt/companyd --storage="tpr" --port=8000
+                           --k8s-incluster=false
+                           --k8s-address=http://kube-apiserver:8080
+    links:
+     - etcd
+     - kube-apiserver
     ports:
      - "9003:8000"
 
   cluster-service:
     image: quay.io/giantswarm/cluster-service:latest
+    # image: cluster-service-dev
     command: daemon --server.listen.address="http://0.0.0.0:8000"
-                    --service.keypair.certificate.ttl="24h"
+                    --service.info.installationname="testbot"
                     --service.kubernetes.incluster=false
+                    --service.keypair.certificate.ttl="24h"
                     --service.kubernetes.guest.api.endpointformat="https://api.%s.g8s.fra-1.giantswarm.io"
-                    --service.kubernetes.guest.version="v1.7.5_coreos.0"
-                    --service.kubernetesd.address="http://mock-kubernetesd:8000"
+                    --service.kubernetes.guest.version="v1.5.2_coreos.0"
+                    --service.kubernetes.address="http://kube-apiserver:8080"
+                    --service.kubernetesd.address="http://kubernetesd:8000"
                     --service.vault.config.address="http://vault:8200"
                     --service.vault.config.pki.allowbaredomains=true
                     --service.vault.config.pki.alloweddomainsformat="%s.g8s.fra-1.giantswarm.io,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster.local"
-                    --service.vault.config.pki.cattl="175200h"
+                    --service.vault.config.pki.cattl="48h"
                     --service.vault.config.pki.commonnameformat="%s.g8s.fra-1.giantswarm.io"
                     --service.vault.config.pki.token.num=1
                     --service.vault.config.pki.token.ttl="12h"
                     --service.vault.address="http://vault:8200"
                     --service.vault.token="dev-token"
-                    --service.storage.kind="memory"
-                    --service.provider.kind="aws"
+                    --service.release.collectinterval="5m"
+                    --service.release.endpoints="http://cert-operator:8000"
+                    --service.storage.kind="tpr"
+                    --service.provider.kind="kvm"
                     --service.provider.aws.ec2.instance.allowed="m3.large,m3.xlarge,m3.2xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge"
                     --service.provider.aws.ec2.instance.available="m1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,cg1.4xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,cr1.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,hi1.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g2.2xlarge,g2.8xlarge,x1.16xlarge,x1.32xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,f1.2xlarge,f1.16xlarge"
                     --service.provider.aws.ec2.instance.capabilities='{"c1.medium":{"cpu_cores":2,"memory_size_gb":1.7,"storage_size_gb":350},"c1.xlarge":{"cpu_cores":8,"memory_size_gb":7,"storage_size_gb":420},"c3.2xlarge":{"cpu_cores":8,"memory_size_gb":15,"storage_size_gb":80},"c3.4xlarge":{"cpu_cores":16,"memory_size_gb":30,"storage_size_gb":160},"c3.8xlarge":{"cpu_cores":32,"memory_size_gb":60,"storage_size_gb":320},"c3.large":{"cpu_cores":2,"memory_size_gb":3.75,"storage_size_gb":16},"c3.xlarge":{"cpu_cores":4,"memory_size_gb":7.5,"storage_size_gb":40},"c4.2xlarge":{"cpu_cores":8,"memory_size_gb":15,"storage_size_gb":0},"c4.4xlarge":{"cpu_cores":16,"memory_size_gb":30,"storage_size_gb":0},"c4.8xlarge":{"cpu_cores":36,"memory_size_gb":60,"storage_size_gb":0},"c4.large":{"cpu_cores":2,"memory_size_gb":3.75,"storage_size_gb":0},"c4.xlarge":{"cpu_cores":4,"memory_size_gb":7.5,"storage_size_gb":0},"cc2.8xlarge":{"cpu_cores":32,"memory_size_gb":60.5,"storage_size_gb":840},"cg1.4xlarge":{"cpu_cores":16,"memory_size_gb":22.5,"storage_size_gb":840},"cr1.8xlarge":{"cpu_cores":32,"memory_size_gb":244,"storage_size_gb":120},"d2.2xlarge":{"cpu_cores":8,"memory_size_gb":61,"storage_size_gb":2000},"d2.4xlarge":{"cpu_cores":16,"memory_size_gb":122,"storage_size_gb":2000},"d2.8xlarge":{"cpu_cores":36,"memory_size_gb":244,"storage_size_gb":2000},"d2.xlarge":{"cpu_cores":4,"memory_size_gb":30.5,"storage_size_gb":2000},"f1.16xlarge":{"cpu_cores":64,"memory_size_gb":976,"storage_size_gb":940},"f1.2xlarge":{"cpu_cores":8,"memory_size_gb":122,"storage_size_gb":470},"g2.2xlarge":{"cpu_cores":8,"memory_size_gb":15,"storage_size_gb":60},"g2.8xlarge":{"cpu_cores":32,"memory_size_gb":60,"storage_size_gb":120},"hi1.4xlarge":{"cpu_cores":16,"memory_size_gb":60.5,"storage_size_gb":1024},"hs1.8xlarge":{"cpu_cores":16,"memory_size_gb":117,"storage_size_gb":2000},"i2.2xlarge":{"cpu_cores":8,"memory_size_gb":61,"storage_size_gb":800},"i2.4xlarge":{"cpu_cores":16,"memory_size_gb":122,"storage_size_gb":800},"i2.8xlarge":{"cpu_cores":32,"memory_size_gb":244,"storage_size_gb":800},"i2.xlarge":{"cpu_cores":4,"memory_size_gb":30.5,"storage_size_gb":800},"i3.16xlarge":{"cpu_cores":64,"memory_size_gb":488,"storage_size_gb":1900},"i3.2xlarge":{"cpu_cores":8,"memory_size_gb":61,"storage_size_gb":1900},"i3.4xlarge":{"cpu_cores":16,"memory_size_gb":122,"storage_size_gb":1900},"i3.8xlarge":{"cpu_cores":32,"memory_size_gb":244,"storage_size_gb":1900},"i3.large":{"cpu_cores":2,"memory_size_gb":15.25,"storage_size_gb":475},"i3.xlarge":{"cpu_cores":4,"memory_size_gb":30.5,"storage_size_gb":950},"m1.large":{"cpu_cores":2,"memory_size_gb":7.5,"storage_size_gb":420},"m1.medium":{"cpu_cores":1,"memory_size_gb":3.75,"storage_size_gb":410},"m1.small":{"cpu_cores":1,"memory_size_gb":1.7,"storage_size_gb":160},"m1.xlarge":{"cpu_cores":4,"memory_size_gb":15,"storage_size_gb":420},"m2.2xlarge":{"cpu_cores":4,"memory_size_gb":34.2,"storage_size_gb":850},"m2.4xlarge":{"cpu_cores":8,"memory_size_gb":68.4,"storage_size_gb":840},"m2.xlarge":{"cpu_cores":2,"memory_size_gb":17.1,"storage_size_gb":420},"m3.2xlarge":{"cpu_cores":8,"memory_size_gb":30,"storage_size_gb":80},"m3.large":{"cpu_cores":2,"memory_size_gb":7.5,"storage_size_gb":32},"m3.medium":{"cpu_cores":1,"memory_size_gb":3.75,"storage_size_gb":4},"m3.xlarge":{"cpu_cores":4,"memory_size_gb":15,"storage_size_gb":40},"m4.10xlarge":{"cpu_cores":40,"memory_size_gb":160,"storage_size_gb":0},"m4.16xlarge":{"cpu_cores":64,"memory_size_gb":256,"storage_size_gb":0},"m4.2xlarge":{"cpu_cores":8,"memory_size_gb":32,"storage_size_gb":0},"m4.4xlarge":{"cpu_cores":16,"memory_size_gb":64,"storage_size_gb":0},"m4.large":{"cpu_cores":2,"memory_size_gb":8,"storage_size_gb":0},"m4.xlarge":{"cpu_cores":4,"memory_size_gb":16,"storage_size_gb":0},"p2.16xlarge":{"cpu_cores":64,"memory_size_gb":732,"storage_size_gb":0},"p2.8xlarge":{"cpu_cores":32,"memory_size_gb":488,"storage_size_gb":0},"p2.xlarge":{"cpu_cores":4,"memory_size_gb":61,"storage_size_gb":0},"r3.2xlarge":{"cpu_cores":8,"memory_size_gb":61,"storage_size_gb":160},"r3.4xlarge":{"cpu_cores":16,"memory_size_gb":122,"storage_size_gb":320},"r3.8xlarge":{"cpu_cores":32,"memory_size_gb":244,"storage_size_gb":320},"r3.large":{"cpu_cores":2,"memory_size_gb":15.25,"storage_size_gb":32},"r3.xlarge":{"cpu_cores":4,"memory_size_gb":30.5,"storage_size_gb":80},"r4.16xlarge":{"cpu_cores":64,"memory_size_gb":488,"storage_size_gb":0},"r4.2xlarge":{"cpu_cores":8,"memory_size_gb":61,"storage_size_gb":0},"r4.4xlarge":{"cpu_cores":16,"memory_size_gb":122,"storage_size_gb":0},"r4.8xlarge":{"cpu_cores":32,"memory_size_gb":244,"storage_size_gb":0},"r4.large":{"cpu_cores":2,"memory_size_gb":15.25,"storage_size_gb":0},"r4.xlarge":{"cpu_cores":4,"memory_size_gb":30.5,"storage_size_gb":0},"t1.micro":{"cpu_cores":1,"memory_size_gb":0.613,"storage_size_gb":0},"t2.2xlarge":{"cpu_cores":8,"memory_size_gb":32,"storage_size_gb":0},"t2.large":{"cpu_cores":2,"memory_size_gb":8,"storage_size_gb":0},"t2.medium":{"cpu_cores":2,"memory_size_gb":4,"storage_size_gb":0},"t2.micro":{"cpu_cores":1,"memory_size_gb":1,"storage_size_gb":0},"t2.nano":{"cpu_cores":1,"memory_size_gb":0.5,"storage_size_gb":0},"t2.small":{"cpu_cores":1,"memory_size_gb":2,"storage_size_gb":0},"t2.xlarge":{"cpu_cores":4,"memory_size_gb":16,"storage_size_gb":0},"x1.16xlarge":{"cpu_cores":64,"memory_size_gb":976,"storage_size_gb":1920},"x1.32xlarge":{"cpu_cores":128,"memory_size_gb":1952,"storage_size_gb":1920}}'
                     --service.provider.aws.ec2.instance.default="m3.large"
-
     links:
+     - etcd
+     - cert-operator
      - vault
-     - mock-kubernetesd
+     - kubernetesd
+     - kube-apiserver
+
+    depends_on:
+      - kube-apiserver
+
     ports:
      - "9004:8000"
 
   tokend:
     image: quay.io/giantswarm/tokend:latest
     command: --host=0.0.0.0 --storage-type=memory --port=8000
+    links:
+     - etcd
     ports:
      - "9005:8000"
 
+  etcd:
+    image: quay.io/coreos/etcd:v3.1.7
+    command: etcd --listen-client-urls 'http://0.0.0.0:2379'
+                  --advertise-client-urls 'http://0.0.0.0:2379'
+    ports:
+      - "9006:2379"
+
   vault:
     image: vault
-    volumes:
-      - ${PWD}/dev_vault_config.hcl:/dev_vault_config.hcl
     command: server -dev
                     -dev-listen-address="0.0.0.0:8200"
                     -dev-root-token-id="dev-token"
-                    -config=/dev_vault_config.hcl
+    ports:
+      - "9007:8200"
 
-  # Always returns 201 OK
-  mock-kubernetesd:
-    image: quay.io/giantswarm/mock-kubernetesd:latest
+  kubernetesd:
+    image: quay.io/giantswarm/kubernetesd:latest
+    command: daemon --server.listen.address="http://0.0.0.0:8000"
+                    --service.provider.kind="aws"
+                    --service.rangepool.namespace.flannel="something"
+                    --service.aws.vpcpeerid="12345"
+                    --service.kubernetes.address="http://kube-apiserver:8080"
+                    --service.kubernetes.incluster=false
+                    --service.cluster.kubernetes.api.clusteriprange="172.31.0.0/24"
+                    --service.vault.certificate.ttl="36h"
+    links:
+      - kube-apiserver
+
+  kube-apiserver:
+    image: gcr.io/google_containers/hyperkube:v1.7.5
+    command: /hyperkube apiserver
+             --etcd-servers=http://etcd:2379
+             --v=4
+             --service-cluster-ip-range="172.0.0.2/16"
+             --insecure-bind-address="0.0.0.0"
+
+    links:
+      - etcd
+
+    ports:
+      - "9008:8080"
+
+  cert-operator:
+    image: quay.io/giantswarm/cert-operator:latest
+    command: daemon --server.listen.address=http://0.0.0.0:8000
+                    --service.kubernetes.address="http://kube-apiserver:8080"
+                    --service.kubernetes.incluster=false
+                    --service.vault.config.address="http://vault:8200"
+                    --service.vault.config.token="dev-token"
+                    --service.vault.config.pki.ca.ttl=120
+                    --service.vault.config.pki.commonname.format="%s.g8s.fra-1.giantswarm.io,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster.local"
+                    --service.resource.vaultcrt.expirationthreshold=24h
+                    --service.resource.vaultcrt.namespace=default
+    links:
+      - kube-apiserver
+      - vault
+
+    ports:
+     - "9009:8000"
+
+  aws-operator:
+    image: quay.io/giantswarm/aws-operator:latest
+    command: daemon --service.kubernetes.address="http://kube-apiserver:8080"
+                    --service.kubernetes.incluster=false
+                    --service.aws.accesskey.id="yolo"
+                    --service.aws.accesskey.secret="yolo"
+                    --service.aws.hostaccesskey.id="yolo"
+                    --service.aws.hostaccesskey.secret="yolo"
+
+    links:
+      - kube-apiserver
+      - vault
