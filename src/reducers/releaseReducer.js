@@ -7,7 +7,7 @@ export default function releaseReducer(state = {activeRelease: '', items: {}}, a
   switch(action.type) {
     case types.RELEASES_LOAD_SUCCESS:
       var items = {};
-      var activeRelease = {};
+      var activeRelease = '';
 
       _.each(action.releases, (release) => {
         items[release.version] = release;
