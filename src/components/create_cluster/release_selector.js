@@ -121,7 +121,7 @@ class ReleaseSelector extends React.Component {
           </BootstrapModal.Header>
             <BootstrapModal.Body>
               {
-                _.map(this.props.releases, (release) => {
+                _.map(_.sortBy(this.props.releases, 'version').reverse(), (release) => {
                   return <div className='release-selector-modal--release-details' key={release.version}>
                     <h2>Version {release.version} {
                       this.state.selectedRelease === release.version ?
