@@ -113,7 +113,7 @@ services:
                     --service.vault.address="http://vault:8200"
                     --service.vault.token="dev-token"
                     --service.release.collectinterval="5m"
-                    --service.release.endpoints="http://cert-operator:8000"
+                    --service.release.endpoints="http://cert-operator:8000,http://aws-operator:8000"
                     --service.storage.kind="tpr"
                     --service.provider.kind="kvm"
                     --service.provider.aws.ec2.instance.allowed="m3.large,m3.xlarge,m3.2xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge"
@@ -123,6 +123,7 @@ services:
     links:
      - etcd
      - cert-operator
+     - aws-operator
      - vault
      - kubernetesd
      - kube-apiserver
