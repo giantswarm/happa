@@ -3,22 +3,16 @@
 import * as types from '../actions/actionTypes';
 import _ from 'underscore';
 
-export default function releaseReducer(state = {activeRelease: '', items: {}}, action = undefined) {
+export default function releaseReducer(state = {items: {}}, action = undefined) {
   switch(action.type) {
     case types.RELEASES_LOAD_SUCCESS:
       var items = {};
-      var activeRelease = '';
 
       _.each(action.releases, (release) => {
-        items[release.version] = release;
-
-        if (release.active) {
-          activeRelease = release.version;
-        }
+        if (release.active) items[release.version] = release;
       });
 
       return {
-        activeRelease,
         items
       };
 
