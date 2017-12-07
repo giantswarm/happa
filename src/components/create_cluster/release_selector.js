@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import cmp from 'semver-compare';
 import Button from '../button';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import {connect} from 'react-redux';
@@ -27,6 +28,10 @@ class ReleaseSelector extends React.Component {
     this.loadReleases();
   }
 
+  /**
+   * Loads available releases into this.props.releases.
+   * Triggers a flash message if something went wrong.
+   */
   loadReleases() {
     this.setState({
       loading: true,
@@ -35,7 +40,13 @@ class ReleaseSelector extends React.Component {
 
     this.props.dispatch(loadReleases())
     .then(() => {
-      this.selectRelease(this.props.activeRelease);
+      // select latest release as a default
+      var allVersions = Object.keys(this.props.releases);
+      if (allVersions.length > 0) {
+        allVersions.sort(cmp).reverse();
+        var defaulVersion = allVersions[0];
+        this.selectRelease(defaulVersion);
+      }
 
       this.setState({
         loading: false,
@@ -62,6 +73,9 @@ class ReleaseSelector extends React.Component {
     });
   }
 
+  /**
+   * Sets the currently selected release
+   */
   selectRelease(release) {
     this.setState({
       selectedRelease: release
@@ -163,7 +177,6 @@ class ReleaseSelector extends React.Component {
 }
 
 ReleaseSelector.propTypes = {
-  activeRelease: React.PropTypes.string,
   dispatch: React.PropTypes.func,
   releaseSelected: React.PropTypes.func,
   releases: React.PropTypes.object
@@ -177,10 +190,8 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   var releases = Object.assign({}, state.entities.releases.items);
-  var activeRelease = state.entities.releases.activeRelease;
 
   return {
-    activeRelease,
     releases
   };
 }
