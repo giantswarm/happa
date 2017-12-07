@@ -8,8 +8,9 @@ export default function releaseReducer(state = {items: {}}, action = undefined) 
     case types.RELEASES_LOAD_SUCCESS:
       var items = {};
 
+      // returns releases in an object, keyed by version number
       _.each(action.releases, (release) => {
-        if (release.active) items[release.version] = release;
+        items[release.version] = release;
       });
 
       return {
