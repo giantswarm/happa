@@ -64,7 +64,7 @@ class ReleaseSelector extends React.Component {
           <b>Something went wrong while trying to fetch the list of releases.</b><br/>
           {error.body ? error.body.message : ''}
           <br/>
-          Perhaps our servers are down, please try again later or contact support: info@giantswarm.io
+          Perhaps our servers are down, please try again later or contact support: support@giantswarm.io
         </div>,
         class: 'danger'
       }));

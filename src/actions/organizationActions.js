@@ -169,7 +169,7 @@ export function organizationsLoad() {
     .catch(error => {
       console.error(error);
       dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
         class: 'danger'
       }));
 
@@ -202,7 +202,7 @@ export function organizationDeleteConfirm(orgId) {
       dispatch(modalHide());
 
       dispatch(flashAdd({
-        message: <div><strong>Could not delete organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        message: <div><strong>Could not delete organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
         class: 'danger'
       }));
 
@@ -247,7 +247,7 @@ export function organizationCreateConfirm(orgId) {
       dispatch(modalHide());
 
       dispatch(flashAdd({
-        message: <div><strong>Could not create organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        message: <div><strong>Could not create organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
         class: 'danger'
       }));
 
@@ -346,7 +346,7 @@ export function organizationRemoveMemberConfirm(orgId, email) {
       dispatch(modalHide());
 
       dispatch(flashAdd({
-        message: <div><strong>Could not remove user `{email}` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: info@giantswarm.io'}</div>,
+        message: <div><strong>Could not remove user `{email}` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
         class: 'danger'
       }));
 
