@@ -205,6 +205,7 @@ services:
   aws-operator:
     image: quay.io/giantswarm/aws-operator:latest
     command: daemon --service.kubernetes.address="http://kube-apiserver:8080"
+                    --service.installation.name=demo
                     --service.kubernetes.incluster=false
                     --service.aws.accesskey.id="yolo"
                     --service.aws.accesskey.secret="yolo"
