@@ -5,20 +5,29 @@ jobs:
     steps:
     - checkout
 
-    - run: |
-        wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-        chmod +x ./architect
-        ./architect version
-    - run: |
-        make dist
-        ./architect build
+    - run:
+        name: Install architect
+        command: |
+          wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+          chmod +x ./architect
+          ./architect version
 
-    - run: |
-        docker run --name testcontainer -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
-        curl -s -k https://localhost:8000 | grep Happa # Grep returns non 0 exit code if it can't find the text, which fails the smoke test
-        docker kill testcontainer
+    - run:
+        name: Build
+        command: |
+          make dist
+          ./architect build
+
+    - run:
+        name: Test
+        command: |
+          docker run --name testcontainer -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+          CURL_OUTPUT=$(curl -s -k https://localhost:8000)
+          echo "${CURL_OUTPUT}" | grep Happa
+          docker kill testcontainer
 
     - deploy:
+        name: Deploy with architect (master only)
         command: |
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
             ./architect deploy
