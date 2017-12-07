@@ -121,6 +121,8 @@ class ReleaseSelector extends React.Component {
   }
 
   render() {
+    var allVersions = Object.keys(this.props.releases);
+    allVersions.sort(cmp).reverse();
     return (
       <div className='new-cluster--release-selector' >
         {
@@ -135,7 +137,8 @@ class ReleaseSelector extends React.Component {
           </BootstrapModal.Header>
             <BootstrapModal.Body>
               {
-                _.map(_.sortBy(this.props.releases, 'version').reverse(), (release) => {
+                _.map(allVersions, (version) => {
+                  var release = this.props.releases[version];
                   if (release.active) {
                     return <div className='release-selector-modal--release-details' key={release.version}>
                       <h2>Version {release.version} {
