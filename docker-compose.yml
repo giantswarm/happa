@@ -215,3 +215,6 @@ services:
     links:
       - kube-apiserver
       - vault
+
+    ports:
+     - "9010:8000"
