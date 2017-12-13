@@ -21,7 +21,12 @@ var shutDown = function(state) {
 export default function appReducer(state = {
     selectedOrganization: 'not-yet-loaded',
     firstLoadComplete: false,
-    loggedInUser: JSON.parse(localStorage.getItem('user'))
+    loggedInUser: JSON.parse(localStorage.getItem('user')),
+    info: {
+      general: {
+        provider: ''
+      }
+    }
   }, action = undefined) {
 
   switch(action.type) {
@@ -37,6 +42,11 @@ export default function appReducer(state = {
 
       return Object.assign({}, state, {
         loggedInUser: action.userData
+      });
+
+    case types.INFO_LOAD_SUCCESS:
+      return Object.assign({}, state, {
+        info: action.info
       });
 
     case types.LOGIN_SUCCESS:

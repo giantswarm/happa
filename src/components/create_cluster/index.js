@@ -115,12 +115,12 @@ class CreateCluster extends React.Component {
 
     var workers = [];
 
-    // TODO/FYI: This IF / ELSE on window.config.createClusterWorkerType is a antipattern
+    // TODO/FYI: This IF / ELSE on this.props.provider is a antipattern
     // that will spread throughout the codebase if we are not careful.
     // I am waiting for the 'third' cluster type that we support to be able to make
     // decisions about a meaningful abstraction. For now, going with a easy solution.
 
-    if (window.config.createClusterWorkerType === 'aws') {
+    if (this.props.provider === 'aws') {
       workers = this.state.workers.map((worker) => {
         return {
           aws: {
@@ -237,7 +237,7 @@ class CreateCluster extends React.Component {
               <div className='col-12'>
                 <h3 className='table-label'>Worker Node Configuration</h3>
                 {
-                  window.config.createClusterWorkerType === 'kvm' ?
+                  this.props.provider === 'kvm' ?
                     <div className='checkbox'>
                       <label htmlFor='syncWorkers'>
                         <input type='checkbox' ref='syncWorkers' id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
@@ -252,14 +252,14 @@ class CreateCluster extends React.Component {
             <div className='row'>
               {
                 this.state.workers.map((worker, index) => {
-                  if (window.config.createClusterWorkerType === 'aws') {
+                  if (this.props.provider === 'aws') {
                     return <NewAWSWorker key={'Worker ' + worker.id}
                                        worker={worker}
                                        index={index}
                                        readOnly={this.state.syncWorkers && index !== 0}
                                        deleteWorker={this.deleteWorker.bind(this, index)}
                                        onWorkerUpdated={this.updateWorker.bind(this, index)} />;
-                  } else if (window.config.createClusterWorkerType === 'kvm') {
+                  } else if (this.props.provider === 'kvm') {
                     return <NewKVMWorker key={'Worker ' + worker.id}
                                        worker={worker}
                                        index={index}
@@ -323,7 +323,8 @@ class CreateCluster extends React.Component {
 CreateCluster.propTypes = {
   selectedOrganization: React.PropTypes.string,
   dispatch: React.PropTypes.func,
-  authToken: React.PropTypes.string
+  authToken: React.PropTypes.string,
+  provider: React.PropTypes.string
 };
 
 function mapStateToProps(state) {
@@ -331,7 +332,8 @@ function mapStateToProps(state) {
 
   return {
     selectedOrganization: selectedOrganization,
-    authToken: state.app.loggedInUser.authToken
+    authToken: state.app.loggedInUser.authToken,
+    provider: state.app.info.general.provider
   };
 }
 

@@ -50,6 +50,7 @@ export function refreshUserInfo() {
         userData: userData
       });
     })
+    .then(getInfo().bind(this, dispatch, getState))
     .catch((error) => {
       dispatch({
         type: types.REFRESH_USER_INFO_ERROR,
@@ -62,7 +63,7 @@ export function refreshUserInfo() {
 
 
 export function login(email, password) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     var giantSwarm = new GiantSwarm.Client();
     dispatch({
       type: types.LOGIN,
@@ -94,6 +95,7 @@ export function login(email, password) {
       dispatch(loginSuccess(userData));
       return userData;
     })
+    .then(getInfo().bind(this, dispatch, getState))
     .catch(error => {
       dispatch(loginError(error));
       throw(error);
@@ -138,5 +140,31 @@ export function unauthorized() {
     });
 
     return null;
+  };
+}
+
+export function getInfo() {
+  return function(dispatch, getState) {
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
+    dispatch({
+      type: types.INFO_LOAD
+    });
+
+    return giantSwarm.info()
+    .then((response) => {
+      dispatch({
+        type: types.INFO_LOAD_SUCCESS,
+        info: response.result
+      });
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.INFO_LOAD_ERROR,
+        error: error
+      });
+      throw(error);
+    });
   };
 }

@@ -90,7 +90,7 @@ class ClusterDetail extends React.Component {
 
   render() {
     var awsInstanceType = <tr/>;
-    if (window.config.createClusterWorkerType === 'aws' && this.state.loading === false) {
+    if (this.props.provider === 'aws' && this.state.loading === false) {
       awsInstanceType = (
         <tr>
           <td>AWS instance type</td>
@@ -188,9 +188,10 @@ class ClusterDetail extends React.Component {
 }
 
 ClusterDetail.propTypes = {
+  actions: React.PropTypes.object,
   cluster: React.PropTypes.object,
   dispatch: React.PropTypes.func,
-  actions: React.PropTypes.object,
+  provider: React.PropTypes.string,
   user: React.PropTypes.object,
 };
 
@@ -199,6 +200,7 @@ function mapStateToProps(state, ownProps) {
 
   return {
     cluster: cluster,
+    provider: state.app.info.general.provider,
     user: state.app.loggedInUser
   };
 }
