@@ -49,11 +49,6 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: api-endpoint
-        - name: CREATE_CLUSTER_WORKER_TYPE
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: create-cluster-worker-type
         - name: INGRESS_BASE_DOMAIN
           valueFrom:
             configMapKeyRef:
