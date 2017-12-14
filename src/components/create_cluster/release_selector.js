@@ -198,8 +198,6 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
   var releases = Object.assign({}, state.entities.releases.items);
 
-  releases["1.2.0"] = {"active":true,"changelog":[{"component":"kubernetes","description":"Updated to kubernetes 1.8.4. Fixes a goroutine leak in the k8s api."},{"component":"vault","description":"Vault version updated."}],"components":[{"name":"calico","version":"2.6.2"},{"name":"docker","version":"1.12.6"},{"name":"etcd","version":"3.2.7"},{"name":"kubedns","version":"1.14.5"},{"name":"kubernetes","version":"1.8.4"},{"name":"nginx-ingress-controller","version":"0.9.0"},{"name":"vault","version":"0.7.3"}],"timestamp":"2017-12-05T13:00:00Z","version":"1.2.0"}
-
   return {
     releases
   };
