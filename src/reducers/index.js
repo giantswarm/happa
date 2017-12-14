@@ -4,10 +4,12 @@ import clusters from './clusterReducer';
 import modal from './modalReducer';
 import flashMessages from './flashMessagesReducer';
 import app from './appReducer';
+import releases from './releaseReducer';
 
 const entities = combineReducers({
   organizations,
   clusters,
+  releases,
 });
 
 const rootReducer = combineReducers({
@@ -80,6 +82,13 @@ main_store.js
         }
       }
     },
+
+    releases: {
+      activeRelease: "0.1.0",
+      items: {
+        "0.1.0": {"active":true,"changelog":[{"component":"vault","description":"Vault version updated."}],"components":[{"name":"vault","version":"0.7.3"}],"timestamp":"2017-10-26T16:53:00Z","version":"0.1.0"}
+      }
+    }
 
     invoices: {
       lastUpdated: 123456789,

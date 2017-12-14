@@ -100,7 +100,9 @@ class ReleaseSelector extends React.Component {
   }
 
   buttonText() {
-    if (Object.keys(this.props.releases).length === 1) {
+    var activeReleases = _.filter(this.props.releases, (x) => {return x.active;});
+
+    if (activeReleases.length === 1) {
       return 'Show Details';
     } else {
       return 'Details and Alternatives';
@@ -169,8 +171,8 @@ class ReleaseSelector extends React.Component {
                       </ul>
                     </div>;
                   }
-                })
-              }
+              })
+            }
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button onClick={this.closeModal}>Close</Button>
@@ -195,6 +197,8 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   var releases = Object.assign({}, state.entities.releases.items);
+
+  releases["1.2.0"] = {"active":true,"changelog":[{"component":"kubernetes","description":"Updated to kubernetes 1.8.4. Fixes a goroutine leak in the k8s api."},{"component":"vault","description":"Vault version updated."}],"components":[{"name":"calico","version":"2.6.2"},{"name":"docker","version":"1.12.6"},{"name":"etcd","version":"3.2.7"},{"name":"kubedns","version":"1.14.5"},{"name":"kubernetes","version":"1.8.4"},{"name":"nginx-ingress-controller","version":"0.9.0"},{"name":"vault","version":"0.7.3"}],"timestamp":"2017-12-05T13:00:00Z","version":"1.2.0"}
 
   return {
     releases
