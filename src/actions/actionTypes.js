@@ -93,9 +93,5 @@ export const FLASH_ADD = 'FLASH_ADD';
 export const FLASH_CLEAR_ALL = 'FLASH_CLEAR_ALL';
 
 // General Errors
-export const UNAUTHORIZED = 'UNAUTHORIZED';
 
-// Releases
-export const RELEASES_LOAD = 'RELEASES_LOAD';
-export const RELEASES_LOAD_SUCCESS = 'RELEASES_LOAD_SUCCESS';
-export const RELEASES_LOAD_ERROR = 'RELEASES_LOAD_ERROR';
+export const UNAUTHORIZED = 'UNAUTHORIZED';
