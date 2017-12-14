@@ -62,9 +62,8 @@ class ReleaseSelector extends React.Component {
       this.props.dispatch(flashAdd({
         message: <div>
           <b>Something went wrong while trying to fetch the list of releases.</b><br/>
-          {error.body ? error.body.message : ''}
-          <br/>
           Perhaps our servers are down, please try again later or contact support: support@giantswarm.io
+          {error.body && error.body.message ? <pre>{error.body.message}</pre> : ''}
         </div>,
         class: 'danger'
       }));
