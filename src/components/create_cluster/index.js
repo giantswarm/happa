@@ -11,13 +11,14 @@ import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import update from 'react-addons-update';
 import NewKVMWorker from './new_kvm_worker.js';
 import NewAWSWorker from './new_aws_worker.js';
+import ReleaseSelector from './release_selector.js';
 
 class CreateCluster extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      k8sVersion: '1.8.4',
+      releaseVersion: '',
       clusterName: 'My cluster',
       workerCount: 3,
       syncWorkers: true,
@@ -27,7 +28,7 @@ class CreateCluster extends React.Component {
         { id: 3, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', valid: true }
       ],
       submitting: false,
-      valid: true,
+      valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
       error: false
     };
   }
@@ -140,6 +141,7 @@ class CreateCluster extends React.Component {
     giantSwarm.createCluster({
       clusterName: this.state.clusterName,
       owner: this.props.selectedOrganization,
+      releaseVersion: this.state.releaseVersion,
       workers: workers
     })
     .then(() => {
@@ -186,6 +188,7 @@ class CreateCluster extends React.Component {
   }
 
   valid = () => {
+    // If any of the workers aren't valid, return false
     var workers = this.state.workers;
     for (var i = 0; i < workers.length; i++) {
       if (! workers[i].valid) {
@@ -193,7 +196,18 @@ class CreateCluster extends React.Component {
       }
     }
 
+    // If any of the releaseVersion hasn't been set yet, return false
+    if (this.state.releaseVersion === '') {
+      return false;
+    }
+
     return true;
+  }
+
+  selectRelease = (releaseVersion) => {
+    this.setState({
+      releaseVersion
+    });
   }
 
   render() {
@@ -272,10 +286,10 @@ class CreateCluster extends React.Component {
 
           <div className='row section'>
             <div className='col-3'>
-              <h3 className='table-label'>Kubernetes Version</h3>
+              <h3 className='table-label'>Release Version</h3>
             </div>
             <div className='col-9'>
-              <p>{this.state.k8sVersion} (Default)</p>
+              <ReleaseSelector releaseSelected={this.selectRelease} />
             </div>
           </div>
 
