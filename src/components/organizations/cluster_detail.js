@@ -139,12 +139,7 @@ class ClusterDetail extends React.Component {
                             <td className='value'>
                               {this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}
                               &nbsp;
-                              {
-                                window.config.createClusterWorkerType === 'aws' ?
-                                  <Button onClick={this.showScalingModal}>Scale</Button>
-                                :
-                                  undefined
-                              }
+                              <Button onClick={this.showScalingModal}>Scale</Button>
                             </td>
                           </tr>
                           {awsInstanceType}
