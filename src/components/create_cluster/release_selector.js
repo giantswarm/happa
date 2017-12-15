@@ -115,9 +115,17 @@ class ReleaseSelector extends React.Component {
   }
 
   loadedContent() {
+    var kubernetes = _.find(this.props.releases[this.state.selectedRelease].components, (x) => { return x.name === 'kubernetes'});
+
     return <div>
       <p>{ this.state.selectedRelease }</p>
-      <Button onClick={this.openModal}>{ this.buttonText() }</Button>
+      <Button onClick={this.openModal}>{ this.buttonText() }</Button><br/><br/>
+
+      <p>This releases contains:</p>
+      <div className='release-selector-modal--component contrast'>
+        <span className='release-selector-modal--component--name'>kubernetes</span>
+        <span className='release-selector-modal--component--version'>{kubernetes.version}</span>
+      </div>
     </div>;
   }
 
