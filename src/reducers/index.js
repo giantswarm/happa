@@ -36,6 +36,8 @@ main_store.js
       username: '',
       authToken: ''
     }, // id of the user that is currently logged in
+    info: {"general":{"installation_name":"testbot","provider":"kvm"},"workers":{"count_per_cluster":{"max":0,"default":3}}}
+    }
   },
 
   flashMessages: {

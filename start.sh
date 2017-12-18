@@ -19,10 +19,6 @@ if [ -n "$DOMAIN_VALIDATOR_ENDPOINT" ]; then
   sed -i "s|domainValidatorEndpoint: 'http://localhost:5002'|domainValidatorEndpoint: '$DOMAIN_VALIDATOR_ENDPOINT'|" /www/index.html
 fi
 
-if [ -n "$CREATE_CLUSTER_WORKER_TYPE" ]; then
-  sed -i "s|createClusterWorkerType: 'kvm'|createClusterWorkerType: '$CREATE_CLUSTER_WORKER_TYPE'|" /www/index.html
-fi
-
 if [ -n "$INGRESS_BASE_DOMAIN" ]; then
   sed -i "s|ingressBaseDomain: 'k8s.sample.io'|ingressBaseDomain: '$INGRESS_BASE_DOMAIN'|" /www/index.html
 fi
