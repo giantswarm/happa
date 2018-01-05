@@ -40,10 +40,10 @@ class ReleaseSelector extends React.Component {
 
     this.props.dispatch(loadReleases())
     .then(() => {
-      // select latest release as a default
-      var allVersions = Object.keys(this.props.releases);
+      // select latest active release as a default
+
+      var allVersions = this.props.activeSortedReleases;
       if (allVersions.length > 0) {
-        allVersions.sort(cmp).reverse();
         var defaulVersion = allVersions[0];
         this.selectRelease(defaulVersion);
       }
@@ -130,8 +130,6 @@ class ReleaseSelector extends React.Component {
   }
 
   render() {
-    var allVersions = Object.keys(this.props.releases);
-    allVersions.sort(cmp).reverse();
     return (
       <div className='new-cluster--release-selector' >
         {
@@ -146,7 +144,7 @@ class ReleaseSelector extends React.Component {
           </BootstrapModal.Header>
             <BootstrapModal.Body>
               {
-                _.map(allVersions, (version) => {
+                _.map(this.props.activeSortedReleases, (version) => {
                   var release = this.props.releases[version];
                   if (release.active) {
                     return <div className='release-selector-modal--release-details' key={release.version}>
@@ -193,7 +191,8 @@ class ReleaseSelector extends React.Component {
 ReleaseSelector.propTypes = {
   dispatch: React.PropTypes.func,
   releaseSelected: React.PropTypes.func,
-  releases: React.PropTypes.object
+  releases: React.PropTypes.object, // Version string to a release object i.e.: {"0.1.0": {...}, "0.2.0", {...}}
+  activeSortedReleases: React.PropTypes.array // Array of strings i.e: ["0.1.0", "0.2.0"]
 };
 
 function mapDispatchToProps(dispatch) {
@@ -205,8 +204,13 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
   var releases = Object.assign({}, state.entities.releases.items);
 
+  var activeSortedReleases = _.filter(releases, release => release.active);
+  activeSortedReleases = _.map(activeSortedReleases, release => release.version);
+  activeSortedReleases.sort(cmp).reverse();
+
   return {
-    releases
+    releases,
+    activeSortedReleases
   };
 }
 
