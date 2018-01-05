@@ -19,7 +19,6 @@
     "color-hash": "latest",
     "copy-to-clipboard": "~3.0.5",
     "marked": "~0.3.9",
-    "node-kubernetes-client": "~0.2.3",
     "node-sass": "^3.7.0",
     "normalize.css": "~4.2.0",
     "react": "~15.4.2",
