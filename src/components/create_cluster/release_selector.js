@@ -99,9 +99,7 @@ class ReleaseSelector extends React.Component {
   }
 
   buttonText() {
-    var activeReleases = _.filter(this.props.releases, (x) => {return x.active;});
-
-    if (activeReleases.length === 1) {
+    if (this.props.activeSortedReleases.length === 1) {
       return 'Show Details';
     } else {
       return 'Details and Alternatives';
@@ -115,7 +113,7 @@ class ReleaseSelector extends React.Component {
   }
 
   loadedContent() {
-    var kubernetes = _.find(this.props.releases[this.state.selectedRelease].components, (x) => { return x.name === 'kubernetes'});
+    var kubernetes = _.find(this.props.releases[this.state.selectedRelease].components, component => component.name === 'kubernetes');
 
     return <div>
       <p>{ this.state.selectedRelease }</p>
@@ -146,36 +144,34 @@ class ReleaseSelector extends React.Component {
               {
                 _.map(this.props.activeSortedReleases, (version) => {
                   var release = this.props.releases[version];
-                  if (release.active) {
-                    return <div className='release-selector-modal--release-details' key={release.version}>
-                      <h2>Version {release.version} {
-                        this.state.selectedRelease === release.version ?
-                          <span className='selected'>Selected</span>
-                          :
-                          <Button onClick={this.selectRelease.bind(this, release.version)}>Select</Button>
-                      }</h2>
-                      <p className='release-selector-modal--release-details--date'>Released <span>{relativeDate(release.timestamp)}</span></p>
+                  return <div className='release-selector-modal--release-details' key={release.version}>
+                    <h2>Version {release.version} {
+                      this.state.selectedRelease === release.version ?
+                        <span className='selected'>Selected</span>
+                        :
+                        <Button onClick={this.selectRelease.bind(this, release.version)}>Select</Button>
+                    }</h2>
+                    <p className='release-selector-modal--release-details--date'>Released <span>{relativeDate(release.timestamp)}</span></p>
 
-                      <div className='release-selector-modal--components'>
-                        {
-                           _.map(_.sortBy(release.components, 'name'), (component) => {
-                            return <div className='release-selector-modal--component' key={component.name}>
-                              <span className='release-selector-modal--component--name'>{component.name}</span>
-                              <span className='release-selector-modal--component--version'>{component.version}</span>
-                            </div>;
-                          })
-                        }
-                      </div>
-                      <p>Changes</p>
-                      <ul>
-                        {
-                          _.map(release.changelog, (changelog) => {
-                            return <li key={changelog.component}>{changelog.description}</li>;
-                          })
-                        }
-                      </ul>
-                    </div>;
-                  }
+                    <div className='release-selector-modal--components'>
+                      {
+                         _.map(_.sortBy(release.components, 'name'), (component) => {
+                          return <div className='release-selector-modal--component' key={component.name}>
+                            <span className='release-selector-modal--component--name'>{component.name}</span>
+                            <span className='release-selector-modal--component--version'>{component.version}</span>
+                          </div>;
+                        })
+                      }
+                    </div>
+                    <p>Changes</p>
+                    <ul>
+                      {
+                        _.map(release.changelog, (changelog) => {
+                          return <li key={changelog.component}>{changelog.description}</li>;
+                        })
+                      }
+                    </ul>
+                  </div>;
               })
             }
             </BootstrapModal.Body>
