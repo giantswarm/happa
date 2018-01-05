@@ -14,6 +14,9 @@ RUN npm install
 RUN npm install -g grunt
 RUN npm install -g npm-check-updates
 
+# check for dependency updates
+RUN ncu
+
 # Bundle app source
 COPY . /usr/src/app
 
