@@ -38,7 +38,7 @@ outer:
 
         for (var find of eligibleMatches) {
 
-          if (detailedPlatform.indexOf(find) !== -1) {
+          if (detailedPlatform !== null && detailedPlatform.indexOf(find) !== -1) {
             result = key;
             break outer;
           }
