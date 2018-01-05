@@ -115,7 +115,9 @@ class ReleaseSelector extends React.Component {
   }
 
   loadedContent() {
-    var kubernetes = _.find(this.props.releases[this.state.selectedRelease].components, (x) => { return x.name === 'kubernetes'});
+    var kubernetes = _.find(this.props.releases[this.state.selectedRelease].components, (x) => {
+      return x.name === 'kubernetes';
+    });
 
     return <div>
       <p>{ this.state.selectedRelease }</p>
