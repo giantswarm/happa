@@ -3,7 +3,6 @@
 import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import { modalHide } from './modalActions';
-import { organizationsLoad } from './organizationActions';
 import { flashAdd } from './flashMessageActions';
 import React from 'react';
 import { browserHistory } from 'react-router';
@@ -88,18 +87,15 @@ export function clusterDeleteConfirm(cluster) {
     return giantSwarm.deleteCluster({clusterId: cluster.id})
     .then(() => {
       browserHistory.push('/organizations/'+cluster.owner);
-    })
-    .then(dispatch(modalHide()))
-    .then(() => {
+      dispatch(clusterDeleteSuccess(cluster.id));
 
+      dispatch(modalHide());
       dispatch(flashAdd({
-        message: <div>Cluster deleted succesfully</div>,
+        message: <div>Cluster '{cluster.id}' deleted succesfully</div>,
         class: 'success',
         ttl: 3000
       }));
-      dispatch(clusterDeleteSuccess(cluster.id));
     })
-    .then(dispatch(organizationsLoad()))
     .catch((error) => {
       dispatch(modalHide());
       dispatch(flashAdd({
@@ -107,7 +103,9 @@ export function clusterDeleteConfirm(cluster) {
         class: 'danger',
         ttl: 3000
       }));
-      dispatch(clusterDeleteError(cluster.id, error));
+
+      console.error(error);
+      return dispatch(clusterDeleteError(cluster.id, error));
     });
   };
 }
