@@ -111,6 +111,7 @@ services:
      - etcd
      - cert-operator
      - aws-operator
+     - kubernetesd
      - vault
     ports:
      - "9004:8000"
@@ -188,3 +189,14 @@ services:
 
     ports:
      - "9010:8000"
+
+  kubernetesd:
+    image: quay.io/giantswarm/kubernetesd:latest
+    command: daemon --server.listen.address="http://0.0.0.0:8000"
+                    --service.provider.kind="aws"
+                    --service.rangepool.namespace.flannel="something"
+                    --service.aws.vpcpeerid="12345"
+                    --service.kubernetes.address="http://kube-apiserver:8080"
+                    --service.kubernetes.incluster=false
+                    --service.cluster.kubernetes.api.clusteriprange="172.31.0.0/24"
+                    --service.vault.certificate.ttl="36h"

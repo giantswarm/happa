@@ -268,10 +268,14 @@ export default function clusterReducer(state = {lastUpdated: 0, isFetching: fals
       };
 
     case types.CLUSTER_DELETE_SUCCESS:
+      items = Object.assign({}, state.items);
+
+      delete items[action.clusterId];
+
       return {
         lastUpdated: Date.now(),
         isFetching: false,
-        items: state.items
+        items: items
       };
 
     default:
