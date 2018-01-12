@@ -7,6 +7,7 @@
 'use strict';
 
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = {
 
@@ -14,7 +15,7 @@ module.exports = {
 
   output: {
     filename: 'app.js',
-    path: 'dist/assets/',
+    path: path.resolve(__dirname, 'dist/assets/'),
     publicPath: '/assets/'
   },
 
@@ -79,7 +80,6 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.DefinePlugin({
