@@ -10,18 +10,16 @@ var path = require('path');
 
 module.exports = {
 
+  entry: './src/components/app.js',
+
   output: {
     filename: 'app.js',
     publicPath: '/assets/'
   },
 
   cache: true,
-  debug: true,
+
   devtool: false,
-  entry: [
-      'webpack/hot/dev-server',
-      './src/components/app.js'
-  ],
 
   stats: {
     colors: true,
@@ -29,7 +27,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['', '.js'],
+    extensions: ['.js'],
     alias: {
       'styles': __dirname + '/src/styles',
       'mixins': __dirname + '/src/mixins',
@@ -38,52 +36,64 @@ module.exports = {
       'actions': __dirname + '/src/actions/'
     }
   },
+
   module: {
-    preLoaders: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'eslint-loader'
-    }],
-    loaders: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel',
-      query: {
-        presets: ['env'],
-        plugins: ['transform-react-jsx', 'transform-class-properties']
+
+    rules: [
+      {
+        test: /\.js$/,
+        enforce: 'pre',
+        exclude: /node_modules/,
+        loader: 'eslint-loader'
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env'],
+            plugins: ['transform-react-jsx', 'transform-class-properties']
+          }
+        }
+      },
+      {
+        test: /\.scss/,
+        loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
+      }, {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
+      }, {
+        test: /\.(png|jpg|svg)$/,
+        loader: 'url-loader?limit=8192'
+      },
+      {
+        test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+      },
+      {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
+      },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'file-loader'
+      },
+      {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url-loader?limit=10000&mimetype=image/svg+xml'
+      },
+      {
+        parser: {
+          amd: false // required so giantswarm-v4 sub-modules can be found
+        }
       }
-    }, {
-      test: /\.scss/,
-      loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
-    }, {
-      test: /\.css$/,
-      loader: 'style-loader!css-loader'
-    }, {
-      test: /\.(png|jpg|svg)$/,
-      loader: 'url-loader?limit=8192'
-    },
-    {
-      test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=application/font-woff'
-    },
-    {
-      test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=application/octet-stream'
-    },
-    {
-      test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'file'
-    },
-    {
-      test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=image/svg+xml'
-    }
     ]
   },
 
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.HotModuleReplacementPlugin({debug: true}),
+    new webpack.NoEmitOnErrorsPlugin({debug: true})
   ]
 
 };

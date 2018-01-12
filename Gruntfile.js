@@ -35,9 +35,7 @@ module.exports = function (grunt) {
         historyApiFallback: true
       },
 
-      start: {
-        keepAlive: true
-      }
+      start: {}
     },
 
     connect: {
