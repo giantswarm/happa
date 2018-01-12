@@ -9,23 +9,34 @@ class NewAWSWorker extends React.Component {
   constructor(props) {
     super(props);
 
+    var allInstanceTypes = [
+      {name: 'm3.large'   , description: 'M3 General Purpose Large'                 , memory: '7.5 GB'  , cpuCores: '2'                   , storage: '32 GB'}    ,
+      {name: 'm3.xlarge'  , description: 'M3 General Purpose Extra Large'           , memory: '15 GB'   , cpuCores: '4'                   , storage: '80 GB'}    ,
+      {name: 'm3.2xlarge' , description: 'M3 General Purpose Double Extra Large'    , memory: '30 GB'   , cpuCores: '8'                   , storage: '160 GB'}   ,
+      {name: 'r3.large'   , description: 'R3 High-Memory Large'                     , memory: '15.25'   , cpuCores: '2'                   , storage: '32 GB'}    ,
+      {name: 'r3.xlarge'  , description: 'R3 High-Memory Extra Large'               , memory: '30.5 GB' , cpuCores: '4'                   , storage: '80 GB'}    ,
+      {name: 'r3.2xlarge' , description: 'R3 High-Memory Double Extra Large'        , memory: '61 GB'   , cpuCores: '8'                   , storage: '160 GB'}   ,
+      {name: 'r3.4xlarge' , description: 'R3 High-Memory Quadruple Extra Large'     , memory: '122 GB'  , cpuCores: '16'                  , storage: '320 GB'}   ,
+      {name: 'r3.8xlarge' , description: 'R3 High-Memory Eight Extra Large'         , memory: '244 GB'  , cpuCores: '32'                  , storage: '640 GB'}   ,
+      {name: 'm4.large'   , description: 'M4 General Purpose Large'                 , cpuCores: '2'     , memory: '7.5 GB'                , storage: 'EBS-only'} ,
+      {name: 'm4.xlarge'  , description: 'M4 General Purpose Extra Large'           , cpuCores: '4'     , memory: '15 GB'                 , storage: 'EBS-only'} ,
+      {name: 'm4.2xlarge' , description: 'M4 General Purpose Double Extra Large'    , memory: '30 GB'   , cpuCores: '8'                   , storage: 'EBS-only'} ,
+      {name: 'm4.4xlarge' , description: 'M4 General Purpose Four Extra Large'      , memory: '61 GB'   , cpuCores: '16'                  , storage: 'EBS-only'} ,
+      {name: 'm5.large'   , description: 'M5 General Purpose Large'                 , memory: '8'       , cpuCores: '2'                   , storage: 'EBS-Only'} ,
+      {name: 'm5.xlarge'  , description: 'M5 General Purpose Extra Large'           , memory: '16'      , cpuCores: '4'                   , storage: 'EBS-Only'} ,
+      {name: 'm5.2xlarge' , description: 'M5 General Purpose Double Extra Large'    , memory: '32'      , cpuCores: '8'                   , storage: 'EBS-Only'} ,
+      {name: 'm5.4xlarge' , description: 'M5 General Purpose Quadruple Extra Large' , memory: '64'      , cpuCores: '16'                  , storage: 'EBS-Only'} ,
+      {name: 't2.large'   , description: 'T2 General Purpose Large'                 , memory: '8'       , cpuCores: '36 credits p/hour' , storage: 'EBS-Only'} ,
+      {name: 't2.xlarge'  , description: 'T2 General Purpose Extra Large'           , memory: '16'      , cpuCores: '54 credits p/hour' , storage: 'EBS-Only'} ,
+      {name: 't2.2xlarge' , description: 'T2 General Purpose Double Extra Large'    , memory: '32'      , cpuCores: '81 credits p/hour' , storage: 'EBS-Only'}
+    ];
+
+    var availableInstanceTypes = allInstanceTypes.filter(x => props.allowedInstanceTypes.indexOf(x.name) !== -1);
+
     this.state = {
       modalVisible: false,
       preSelectedInstanceTypeName: props.worker.instanceType,
-      instanceTypes: [
-        {name: 'm3.large', description: 'M3 General Purpose Large', cpuCores: '2', memory: '7.5 GB', storage: '32 GB'},
-        {name: 'm3.xlarge', description: 'M3 General Purpose Extra Large', cpuCores: '4', memory: '15 GB', storage: '80 GB'},
-        {name: 'm3.2xlarge', description: 'M3 General Purpose Double Extra Large', 'memory': '30 GB', cpuCores: '8', storage: '160 GB'},
-        {name: 'r3.large', description: 'R3 High-Memory Large', 'memory': '15.25', cpuCores: '2', storage: '32 GB'},
-        {name: 'r3.xlarge', description: 'R3 High-Memory Extra Large', 'memory': '30.5 GB',  cpuCores: '4', storage: '80 GB'},
-        {name: 'r3.2xlarge', description: 'R3 High-Memory Double Extra Large', 'memory': '61 GB',  cpuCores: '8', storage: '160 GB'},
-        {name: 'r3.4xlarge', description: 'R3 High-Memory Quadruple Extra Large', 'memory': '122 GB', cpuCores: '16',  storage: '320 GB'},
-        {name: 'r3.8xlarge', description: 'R3 High-Memory Eight Extra Large', 'memory': '244 GB', cpuCores: '32', storage: '640 GB'},
-        {name: 'm4.large', description: 'M4 General Purpose Large', cpuCores: '2', memory: '7.5 GB', storage: 'EBS-only'},
-        {name: 'm4.xlarge', description: 'M4 General Purpose Extra Large', cpuCores: '4', memory: '15 GB', storage: 'EBS-only'},
-        {name: 'm4.2xlarge', description: 'M4 General Purpose Double Extra Large', 'memory': '30 GB', cpuCores: '8', storage: 'EBS-only'},
-        {name: 'm4.4xlarge', description: 'M4 General Purpose Four Extra Large', 'memory': '61 GB', cpuCores: '16', storage: 'EBS-only'}
-      ]
+      instanceTypes: availableInstanceTypes,
     };
   }
 
@@ -128,7 +139,7 @@ class NewAWSWorker extends React.Component {
             </div>
           </form>
         </div>
-        <BootstrapModal show={this.state.modalVisible} onHide={this.closeModal}>
+        <BootstrapModal show={this.state.modalVisible} onHide={this.closeModal} className="new-cluster--aws-instance-type-selector-modal">
           <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Select an Instance Type</BootstrapModal.Title>
           </BootstrapModal.Header>
@@ -181,6 +192,7 @@ class NewAWSWorker extends React.Component {
 }
 
 NewAWSWorker.propTypes = {
+  allowedInstanceTypes: React.PropTypes.array,
   worker: React.PropTypes.object,
   index: React.PropTypes.number,
   readOnly: React.PropTypes.bool,
