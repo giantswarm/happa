@@ -15,7 +15,6 @@
   "mainOutput": "main",
   "dependencies": {
     "airbrake-js": "0.5.9",
-    "codemirror": "~5.17.0",
     "color-hash": "latest",
     "copy-to-clipboard": "~3.0.8",
     "marked": "~0.3.12",
@@ -27,7 +26,6 @@
     "react-addons-test-utils": "~15.4.2",
     "giantswarm": "git://github.com/giantswarm/giantswarm-js-client#master",
     "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client#7386ae94d3cc7a9ffb29dc1d9571123acf480fdf",
-    "react-codemirror": "~0.2.6",
     "react-dom": "~15.4.2",
     "react-router": "~2.6.1",
     "react-router-scroll": "0.3.1",
