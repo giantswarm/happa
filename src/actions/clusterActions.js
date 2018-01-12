@@ -32,6 +32,11 @@ export function clusterSelect(clusterId) {
 
 export function clusterLoadDetails(clusterId) {
   return function(dispatch, getState) {
+    dispatch({
+      type: types.CLUSTER_LOAD_DETAILS,
+      clusterId
+    });
+
     var authToken = getState().app.loggedInUser.authToken;
     var giantSwarm = new GiantSwarm.Client(authToken);
 
@@ -43,6 +48,56 @@ export function clusterLoadDetails(clusterId) {
     })
     .catch((error) => {
       dispatch(clusterLoadDetailsError(clusterId, error));
+    });
+  };
+}
+
+
+// clusterCreate
+// ==============================================================
+// Takes a cluster object and tries to create it. Dispatches CLUSTER_CREATE_SUCCESS
+// on success or CLUSTER_DELETE_ERROR on error.
+
+export function clusterCreate(cluster) {
+  return function(dispatch, getState) {
+    dispatch({
+      type: types.CLUSTER_CREATE,
+      cluster
+    });
+
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
+    return giantSwarm.createCluster(cluster)
+    .then((data) => {
+      var location = data.rawResponse.headers.location;
+      var clusterId = location.split('/')[3];
+
+      if (clusterId !== undefined) {
+
+        dispatch(clusterCreateSuccess(clusterId));
+
+        dispatch(flashAdd({
+          message: <div>"{cluster.clusterName}" with ID: "{clusterId}" is being created!</div>,
+          class: 'success',
+          ttl: 3000
+        }));
+
+        return dispatch(clusterLoadDetails(clusterId));
+      }
+
+      throw('Something went wrong while trying to create your cluster.');
+    })
+    .catch((error) => {
+      dispatch(modalHide());
+      dispatch(flashAdd({
+        message: <div>Something went wrong while trying to create your cluster.<br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+        class: 'danger',
+        ttl: 3000
+      }));
+
+      console.error(error);
+      return dispatch(clusterCreateError(cluster.id, error));
     });
   };
 }
@@ -137,6 +192,20 @@ export function clusterLoadDetailsError(error) {
   return {
     type: types.CLUSTER_LOAD_DETAILS_ERROR,
     error
+  };
+}
+
+export function clusterCreateSuccess(cluster) {
+  return {
+    type: types.CLUSTER_CREATE_SUCCESS,
+    cluster
+  };
+}
+
+export function clusterCreateError(cluster) {
+  return {
+    type: types.CLUSTER_CREATE_ERROR,
+    cluster
   };
 }
 

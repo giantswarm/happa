@@ -6,8 +6,7 @@ import DocumentTitle from 'react-document-title';
 import Button from '../button';
 import _ from 'underscore';
 import { browserHistory } from 'react-router';
-import { flashAdd } from '../../actions/flashMessageActions';
-import GiantSwarm from '../../lib/giantswarm_client_wrapper';
+import { clusterCreate } from '../../actions/clusterActions';
 import update from 'react-addons-update';
 import NewKVMWorker from './new_kvm_worker.js';
 import NewAWSWorker from './new_aws_worker.js';
@@ -111,8 +110,6 @@ class CreateCluster extends React.Component {
       submitting: true
     });
 
-    var giantSwarm = new GiantSwarm.Client(this.props.authToken);
-
     var workers = [];
 
     // TODO/FYI: This IF / ELSE on this.props.provider is a antipattern
@@ -138,19 +135,15 @@ class CreateCluster extends React.Component {
       });
     }
 
-    giantSwarm.createCluster({
+
+    this.props.dispatch(clusterCreate({
       clusterName: this.state.clusterName,
       owner: this.props.selectedOrganization,
       releaseVersion: this.state.releaseVersion,
       workers: workers
-    })
+    }))
     .then(() => {
       browserHistory.push('/organizations/' + this.props.selectedOrganization);
-      this.props.dispatch(flashAdd({
-        message: <div>Your new cluster is being created!</div>,
-        class: 'success',
-        ttl: 3000
-      }));
     })
     .catch((error) => {
       this.setState({
@@ -325,7 +318,6 @@ CreateCluster.propTypes = {
   allowedInstanceTypes: React.PropTypes.array,
   selectedOrganization: React.PropTypes.string,
   dispatch: React.PropTypes.func,
-  authToken: React.PropTypes.string,
   provider: React.PropTypes.string,
 };
 
@@ -334,7 +326,6 @@ function mapStateToProps(state) {
 
   return {
     selectedOrganization: selectedOrganization,
-    authToken: state.app.loggedInUser.authToken,
     provider: state.app.info.general.provider,
     allowedInstanceTypes: state.app.info.workers.instance_type.options
   };
