@@ -19,7 +19,7 @@
     "color-hash": "latest",
     "copy-to-clipboard": "~3.0.8",
     "marked": "~0.3.12",
-    "node-sass": "^3.7.0",
+    "node-sass": "^4.7.2",
     "normalize.css": "~4.2.0",
     "react": "~15.4.2",
     "react-addons-css-transition-group": "~15.4.2",
