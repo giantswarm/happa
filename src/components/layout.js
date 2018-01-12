@@ -85,7 +85,7 @@ class Layout extends React.Component {
 
                     <DropdownButton ref="user_dropdown" pullRight={true} title={
                       <div className="user_dropdown--toggle">
-                        <Gravatar email={this.props.user.email} https size={100} default='mm' />
+                        <Gravatar email={this.props.user.email} size={100} default='mm' />
                         <span>{this.props.user.email}</span>
                       </div>} key='1' id='user_dropdown'>
                       <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
