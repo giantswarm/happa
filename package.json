@@ -55,8 +55,8 @@
   "devDependencies": {
     "jasmine-core": "2.4.1",
     "redux-immutable-state-invariant": "1.2.3",
-    "babel-cli": "~6.11.4",
-    "babel-loader": "~6.2.5",
+    "babel-cli": "~6.26.0",
+    "babel-loader": "~7.1.2",
     "babel-preset-env": "^1.6.1",
     "css-loader": "~0.23.1",
     "grunt": "~1.0.1",
