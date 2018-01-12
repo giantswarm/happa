@@ -254,6 +254,7 @@ class CreateCluster extends React.Component {
                 this.state.workers.map((worker, index) => {
                   if (this.props.provider === 'aws') {
                     return <NewAWSWorker key={'Worker ' + worker.id}
+                                       allowedInstanceTypes={this.props.allowedInstanceTypes}
                                        worker={worker}
                                        index={index}
                                        readOnly={this.state.syncWorkers && index !== 0}
@@ -321,10 +322,11 @@ class CreateCluster extends React.Component {
 }
 
 CreateCluster.propTypes = {
+  allowedInstanceTypes: React.PropTypes.array,
   selectedOrganization: React.PropTypes.string,
   dispatch: React.PropTypes.func,
   authToken: React.PropTypes.string,
-  provider: React.PropTypes.string
+  provider: React.PropTypes.string,
 };
 
 function mapStateToProps(state) {
@@ -333,7 +335,8 @@ function mapStateToProps(state) {
   return {
     selectedOrganization: selectedOrganization,
     authToken: state.app.loggedInUser.authToken,
-    provider: state.app.info.general.provider
+    provider: state.app.info.general.provider,
+    allowedInstanceTypes: state.app.info.workers.instance_type.options
   };
 }
 
