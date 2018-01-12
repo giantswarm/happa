@@ -24,8 +24,6 @@ import accountSettings from './account_settings';
 import Home from './home';
 import AirbrakeClient from 'airbrake-js';
 
-import GiantSwarmV4 from 'giantswarm-v4';
-
 require('normalize.css');
 require('bootstrap/dist/css/bootstrap.min.css');
 require('../styles/app.scss');
@@ -64,22 +62,6 @@ function requireAuth(nextState, replace) {
 if (window.config.intercomAppId) {
   browserHistory.listen(() => {window.Intercom('update');});
 }
-
-
-var defaultClient = GiantSwarmV4.ApiClient.instance;
-defaultClient.basePath = 'https://api.g8s.gauss.eu-central-1.aws.gigantic.io';
-var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
-
-defaultClientAuth.apiKey = 'TOKEN';
-defaultClientAuth.apiKeyPrefix = 'giantswarm';
-
-var apiInstance = new GiantSwarmV4.ClustersApi();
-apiInstance.getClusters().then(function(data) {
-  console.log('API called successfully. Returned data:');
-  console.log(data);
-}, function(error) {
-  console.error(error);
-});
 
 render(
   <Provider store={store}>
