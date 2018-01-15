@@ -25,7 +25,7 @@
     "react-addons-update": "~15.4.2",
     "react-addons-test-utils": "~15.4.2",
     "giantswarm": "git://github.com/giantswarm/giantswarm-js-client#v2017",
-    "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client#7386ae94d3cc7a9ffb29dc1d9571123acf480fdf",
+    "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client#master",
     "react-dom": "~15.4.2",
     "react-router": "~2.6.1",
     "react-router-scroll": "0.3.1",
