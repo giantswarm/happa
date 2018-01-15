@@ -22,27 +22,11 @@ import createCluster from './create_cluster';
 import clusterDetail from './organizations/cluster_detail';
 import accountSettings from './account_settings';
 import Home from './home';
-import AirbrakeClient from 'airbrake-js';
 
 require('normalize.css');
 require('bootstrap/dist/css/bootstrap.min.css');
 require('../styles/app.scss');
 require('react-datepicker/dist/react-datepicker.css');
-
-if (window.config.environment != 'development') {
-  var airbrake = new AirbrakeClient({
-    projectId: 'b623d794488458d023f2fcbea93954ca',
-    projectKey: 'b623d794488458d023f2fcbea93954ca',
-    reporter: 'xhr',
-    host: 'https://exceptions.giantswarm.io'
-  });
-
-  airbrake.addFilter(function(notice) {
-    notice.context.environment = window.config.environment;
-    notice.context.version = window.config.version;
-    return notice;
-  });
-}
 
 var appContainer = document.getElementById('app');
 
