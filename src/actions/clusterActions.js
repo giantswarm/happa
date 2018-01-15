@@ -30,49 +30,81 @@ export function clusterSelect(clusterId) {
 // =============================================================
 // Takes a clusterId and loads details for that cluster
 
-export function clusterLoadDetailsSuccess(cluster) {
-  return {
-    type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
-    cluster
+export function clusterLoadDetails(clusterId) {
+  return function(dispatch, getState) {
+    dispatch({
+      type: types.CLUSTER_LOAD_DETAILS,
+      clusterId
+    });
+
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
+    return giantSwarm.clusterDetails({clusterId})
+    .then((response) => {
+      var cluster = response.result;
+      dispatch(clusterLoadDetailsSuccess(cluster));
+      return cluster;
+    })
+    .catch((error) => {
+      dispatch(clusterLoadDetailsError(clusterId, error));
+    });
   };
 }
 
-export function clusterLoadDetailsError(error) {
-  return {
-    type: types.CLUSTER_LOAD_DETAILS_ERROR,
-    error
+
+// clusterCreate
+// ==============================================================
+// Takes a cluster object and tries to create it. Dispatches CLUSTER_CREATE_SUCCESS
+// on success or CLUSTER_DELETE_ERROR on error.
+
+export function clusterCreate(cluster) {
+  return function(dispatch, getState) {
+    dispatch({
+      type: types.CLUSTER_CREATE,
+      cluster
+    });
+
+    var authToken = getState().app.loggedInUser.authToken;
+    var giantSwarm = new GiantSwarm.Client(authToken);
+
+    return giantSwarm.createCluster(cluster)
+    .then((data) => {
+      var location = data.rawResponse.headers.location;
+      if (location === undefined) {
+        throw('Did not get a location header back.');
+      }
+
+      var clusterId = location.split('/')[3];
+      if (clusterId === undefined) {
+        throw('Did not get a valid cluster id.');
+      }
+
+      dispatch(clusterCreateSuccess(clusterId));
+
+      dispatch(flashAdd({
+        message: <div>"{cluster.clusterName}" with ID: "{clusterId}" is being created!</div>,
+        class: 'success',
+        ttl: 3000
+      }));
+
+      return dispatch(clusterLoadDetails(clusterId));
+    })
+    .catch((error) => {
+      console.error(error);
+      dispatch(clusterCreateError(cluster.id, error));
+      throw(error);
+    });
   };
 }
 
-export function clusterLoadMetrics(clusterId) {
-  return {
-    type: types.CLUSTER_LOAD_METRICS,
-    clusterId
-  };
-}
-
-export function clusterLoadMetricsSuccess(clusterId, metrics) {
-  return {
-    type: types.CLUSTER_LOAD_METRICS_SUCCESS,
-    clusterId,
-    metrics
-  };
-}
-
-export function clusterLoadMetricsError(clusterId, error) {
-  return {
-    type: types.CLUSTER_LOAD_METRICS_ERROR,
-    clusterId,
-    error
-  };
-}
-
-export function clusterDelete(cluster) {
-  return {
-    type: types.CLUSTER_DELETE,
-    cluster
-  };
-}
+// clusterDeleteConfirm
+// ==============================================================
+// Takes a cluster object and deletes that cluster. Dispatches CLUSTER_DELETE_SUCCESS
+// on success or CLUSTER_DELETE_ERROR on error.
+//
+// required param:
+//  cluster: {id: "string", owner: "string"}
 
 export function clusterDeleteConfirm(cluster) {
   return function(dispatch, getState) {
@@ -110,37 +142,11 @@ export function clusterDeleteConfirm(cluster) {
   };
 }
 
-export function clusterDeleteSuccess(clusterId) {
-  return {
-    type: types.CLUSTER_DELETE_SUCCESS,
-    clusterId
-  };
-}
-
-export function clusterDeleteError(clusterId, error) {
-  return {
-    type: types.CLUSTER_DELETE_ERROR,
-    clusterId,
-    error
-  };
-}
-
-export function clusterLoadDetails(clusterId) {
-  return function(dispatch, getState) {
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
-
-    return giantSwarm.clusterDetails({clusterId})
-    .then((response) => {
-      var cluster = response.result;
-      dispatch(clusterLoadDetailsSuccess(cluster));
-      return cluster;
-    })
-    .catch((error) => {
-      dispatch(clusterLoadDetailsError(clusterId, error));
-    });
-  };
-}
+// clusterLoadKeyPairs
+// ==============================================================
+// Takes a clusterId and loads its key pairs.
+// dispatches CLUSTER_LOAD_KEY_PAIRS_SUCCESS on success or CLUSTER_LOAD_KEY_PAIRS_ERROR
+// on error.
 
 export function clusterLoadKeyPairs(clusterId) {
   return function(dispatch, getState) {
@@ -171,13 +177,62 @@ export function clusterLoadKeyPairs(clusterId) {
   };
 }
 
+export function clusterLoadDetailsSuccess(cluster) {
+  return {
+    type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
+    cluster
+  };
+}
+
+export function clusterLoadDetailsError(error) {
+  return {
+    type: types.CLUSTER_LOAD_DETAILS_ERROR,
+    error
+  };
+}
+
+export function clusterCreateSuccess(cluster) {
+  return {
+    type: types.CLUSTER_CREATE_SUCCESS,
+    cluster
+  };
+}
+
+export function clusterCreateError(cluster) {
+  return {
+    type: types.CLUSTER_CREATE_ERROR,
+    cluster
+  };
+}
+
+export function clusterDelete(cluster) {
+  return {
+    type: types.CLUSTER_DELETE,
+    cluster
+  };
+}
+
+export function clusterDeleteSuccess(clusterId) {
+  return {
+    type: types.CLUSTER_DELETE_SUCCESS,
+    clusterId
+  };
+}
+
+export function clusterDeleteError(clusterId, error) {
+  return {
+    type: types.CLUSTER_DELETE_ERROR,
+    clusterId,
+    error
+  };
+}
+
 export function clusterLoadSuccess(clusters) {
   return {
     type: types.CLUSTER_LOAD_SUCCESS,
     clusters: clusters
   };
 }
-
 
 export function clusterLoadError(error) {
   return {
