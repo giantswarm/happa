@@ -27,7 +27,7 @@ class EmailField extends React.Component {
 
   componentDidMount() {
     if (this.props.autofocus) {
-      this.refs.input.focus();
+      this.input.focus();
     }
   }
 
@@ -39,7 +39,7 @@ class EmailField extends React.Component {
   }
 
   onChange = () => {
-    var currentValue = this.refs.input.value;
+    var currentValue = this.input.value;
     var valid = false;
     var validationError = this.state.validationError;
 
@@ -76,7 +76,7 @@ class EmailField extends React.Component {
   }
 
   value = () => {
-    return this.refs.input.value;
+    return this.input.value;
   }
 
   valid = () => {
@@ -84,18 +84,18 @@ class EmailField extends React.Component {
   }
 
   focus = () => {
-    ReactDOM.findDOMNode(this.refs.input).focus();
+    ReactDOM.findDOMNode(this.input).focus();
   }
 
   blur = () => {
-    ReactDOM.findDOMNode(this.refs.input).blur();
+    ReactDOM.findDOMNode(this.input).blur();
   }
 
   render() {
     return (
       <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
-        <input type='email' ref='input' id={this.props.name} onBlur={this.onBlur} onChange={this.onChange} />
+        <input type='email' ref={(i) => {this.input = i;}} id={this.props.name} onBlur={this.onBlur} onChange={this.onChange} />
         <span className="message">{this.state.validationError} {this.props.errorMessage}&nbsp;</span>
       </div>
     );

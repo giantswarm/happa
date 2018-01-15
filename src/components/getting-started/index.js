@@ -49,7 +49,7 @@ class GettingStarted extends React.Component {
   }
 
   onPrevious() {
-    this.refs.componentSlider.previous();
+    this.componentSlider.previous();
   }
 
   classes() {
@@ -74,7 +74,7 @@ class GettingStarted extends React.Component {
     return (
       <DocumentTitle title={'Getting Started | Giant Swarm'}>
         <div className={'centered ' + this.classes()}>
-          <ComponentSlider ref='componentSlider' currentSlide={this.state.currentSlide} slides={this.slides()}/>
+          <ComponentSlider ref={(c) => {this.componentSlider = c;}} currentSlide={this.state.currentSlide} slides={this.slides()}/>
         </div>
       </DocumentTitle>
     );

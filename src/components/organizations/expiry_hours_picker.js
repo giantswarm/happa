@@ -132,16 +132,16 @@ class ExpiryHoursPicker extends React.Component {
           />
 
           <label htmlFor="relativeCheck">Relatively:</label>
-          <input type='text' min="0" max="10" name="years" maxLength={2} ref="years"  value={this.state.yearsValue} onChange={this.handleYearChange.bind(this)} autoComplete="off"/>
+          <input type='text' min="0" max="10" name="years" maxLength={2} ref={(i) => {this.years = i;}} value={this.state.yearsValue} onChange={this.handleYearChange.bind(this)} autoComplete="off"/>
           { this.pluralLabel.bind(this, 'Year', this.state.yearsValue)() }
 
-          <input type='text' min="0" max="999" name="months" maxLength={2} ref="months" value={this.state.monthsValue} onChange={this.handleMonthChange.bind(this)} autoComplete="off"/>
+          <input type='text' min="0" max="999" name="months" maxLength={2} ref={(i) => {this.months = i;}} value={this.state.monthsValue} onChange={this.handleMonthChange.bind(this)} autoComplete="off"/>
           { this.pluralLabel.bind(this, 'Month', this.state.monthsValue)() }
 
-          <input type='text' min="0" max="999" name="days" maxLength={2} ref="days" value={this.state.daysValue} onChange={this.handleDayChange.bind(this)} autoComplete="off"/>
+          <input type='text' min="0" max="999" name="days" maxLength={2} ref={(i) => {this.days = i;}} value={this.state.daysValue} onChange={this.handleDayChange.bind(this)} autoComplete="off"/>
           { this.pluralLabel.bind(this, 'Day', this.state.daysValue)() }
 
-          <input type='text' min="0" max="999" name="hours" maxLength={2} ref="hours" value={this.state.hoursValue} onChange={this.handleHourChange.bind(this)} autoComplete="off"/>
+          <input type='text' min="0" max="999" name="hours" maxLength={2} ref={(i) => {this.hours = i;}} value={this.state.hoursValue} onChange={this.handleHourChange.bind(this)} autoComplete="off"/>
           { this.pluralLabel.bind(this, 'Hour', this.state.hoursValue)() } from now
         </li>
         <li>

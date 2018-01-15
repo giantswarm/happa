@@ -119,7 +119,7 @@ class ChangeEmailForm extends React.Component {
     return (
       <div>
         <form className="change_email_form" onSubmit={this.submit}>
-          <input ref='new_email' onChange={this.validateEmail} type="text" value={this.state.fields.email.value}/>
+          <input ref={(i) => {this.new_email = i;}} onChange={this.validateEmail} type="text" value={this.state.fields.email.value}/>
 
           <div className="button-area">
             <ReactCSSTransitionGroup

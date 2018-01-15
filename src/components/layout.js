@@ -46,14 +46,14 @@ class Layout extends React.Component {
           <div>
             <nav>
               <div className='main-nav col-9'>
-                <a href='https://giantswarm.io' target='_blank'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
+                <a href='https://giantswarm.io' target='_blank' rel='noopener noreferrer'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
 
 
 
                 <div className='nav-responsive'>
                   <IndexLink to='/' activeClassName='active'>Clusters</IndexLink>
                   <Link to='getting-started' activeClassName='active'>Getting Started</Link>
-                  <a href="https://docs.giantswarm.io" target="_blank">Documentation <i className="fa fa-external-link"></i></a>
+                  <a href='https://docs.giantswarm.io' target='_blank' rel='noopener noreferrer'>Documentation <i className='fa fa-external-link'></i></a>
                 </div>
 
                 <div className='subactions'>
@@ -83,7 +83,7 @@ class Layout extends React.Component {
                   &nbsp;
                   <div className="user_dropdown">
 
-                    <DropdownButton ref="user_dropdown" pullRight={true} title={
+                    <DropdownButton ref={(d) => {this.user_dropdown = d;}} pullRight={true} title={
                       <div className="user_dropdown--toggle">
                         <Gravatar email={this.props.user.email} size={100} default='mm' />
                         <span>{this.props.user.email}</span>

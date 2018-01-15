@@ -28,7 +28,7 @@ class DownloadKubeCTL extends React.Component {
     switch(this.state.selectedPlatform) {
       case 'Windows':
         return <div>
-          <p>Download <code>kubectl</code> from <a href='https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe' target='_blank'>https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe</a> to a folder of your choice and make it available in your environment PATH variable.</p>
+          <p>Download <code>kubectl</code> from <a href='https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe' target='_blank' rel='noopener noreferrer'>https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe</a> to a folder of your choice and make it available in your environment PATH variable.</p>
         </div>;
       case 'MacWithoutBrew':
         return <div>
@@ -54,7 +54,7 @@ class DownloadKubeCTL extends React.Component {
         </div>;
       case 'Mac':
         return <div>
-          <p>Installation via <a href='http://brew.sh/' target='_blank'>homebrew</a>:</p>
+          <p>Installation via <a href='http://brew.sh/' target='_blank' rel='noopener noreferrer'>homebrew</a>:</p>
 
           <CodeBlock>
             <Prompt>
