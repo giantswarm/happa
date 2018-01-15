@@ -146,9 +146,16 @@ class CreateCluster extends React.Component {
       browserHistory.push('/organizations/' + this.props.selectedOrganization);
     })
     .catch((error) => {
+      var errorMessage = '';
+
+      if (error.body && error.body.message) {
+        errorMessage = error.body.message;
+      }
+
       this.setState({
         submitting: false,
-        error: error
+        error: error,
+        errorMessage: errorMessage
       });
     });
   }
@@ -201,6 +208,14 @@ class CreateCluster extends React.Component {
     this.setState({
       releaseVersion
     });
+  }
+
+  errorState() {
+    return <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
+      <b>Something went wrong while trying to create your cluster.</b><br/>
+      Perhaps our servers are down, please try again later or contact support: support@giantswarm.io<br/>
+      { this.state.errorMessage !== '' ? <pre>{this.state.errorMessage}</pre> : undefined }
+    </div>;
   }
 
   render() {
@@ -298,7 +313,8 @@ class CreateCluster extends React.Component {
 
           <div className='row section new-cluster--launch'>
             <div className='col-12'>
-              <p>Create this cluster now and it will be available for you to use as soon as possible</p>
+              <p>Create this cluster now and it will be available for you to use as soon as possible.</p>
+              { this.state.error ? this.errorState() : undefined }
               <Button type='button'
                       bsSize='large'
                       bsStyle='primary'

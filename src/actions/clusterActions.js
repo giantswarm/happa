@@ -71,33 +71,29 @@ export function clusterCreate(cluster) {
     return giantSwarm.createCluster(cluster)
     .then((data) => {
       var location = data.rawResponse.headers.location;
-      var clusterId = location.split('/')[3];
-
-      if (clusterId !== undefined) {
-
-        dispatch(clusterCreateSuccess(clusterId));
-
-        dispatch(flashAdd({
-          message: <div>"{cluster.clusterName}" with ID: "{clusterId}" is being created!</div>,
-          class: 'success',
-          ttl: 3000
-        }));
-
-        return dispatch(clusterLoadDetails(clusterId));
+      if (location === undefined) {
+        throw('Did not get a location header back.');
       }
 
-      throw('Something went wrong while trying to create your cluster.');
-    })
-    .catch((error) => {
-      dispatch(modalHide());
+      var clusterId = location.split('/')[3];
+      if (clusterId === undefined) {
+        throw('Did not get a valid cluster id.');
+      }
+
+      dispatch(clusterCreateSuccess(clusterId));
+
       dispatch(flashAdd({
-        message: <div>Something went wrong while trying to create your cluster.<br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
-        class: 'danger',
+        message: <div>"{cluster.clusterName}" with ID: "{clusterId}" is being created!</div>,
+        class: 'success',
         ttl: 3000
       }));
 
+      return dispatch(clusterLoadDetails(clusterId));
+    })
+    .catch((error) => {
       console.error(error);
-      return dispatch(clusterCreateError(cluster.id, error));
+      dispatch(clusterCreateError(cluster.id, error));
+      throw(error);
     });
   };
 }
