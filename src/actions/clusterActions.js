@@ -119,7 +119,7 @@ export function clusterDeleteConfirm(cluster) {
 
       dispatch(modalHide());
       dispatch(flashAdd({
-        message: <div>Cluster '{cluster.id}' deleted succesfully</div>,
+        message: <div>Cluster &lsquo;{cluster.id}&lsquo; deleted succesfully</div>,
         class: 'success',
         ttl: 3000
       }));

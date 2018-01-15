@@ -75,7 +75,7 @@ class ForgotPassword extends React.Component {
     return(
       <div className='forgot-password--token-sent'>
         <h1><i className='fa fa-envelope'></i> Check your mail!</h1>
-        <p>If you have an account, we've sent an email to {this.state.email}.</p>
+        <p>If you have an account, we&apos;ve sent an email to {this.state.email}.</p>
 
         <small>
         <p>Having trouble? Please contact us via <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a></p>
@@ -92,14 +92,14 @@ class ForgotPassword extends React.Component {
     return(
       <div>
         <h1>Forgot your password?</h1>
-        <p>Enter the email you used to sign-up and submit the form. We'll send you a link you can use to set a new password.</p>
+        <p>Enter the email you used to sign-up and submit the form. We&apos;ll send you a link you can use to set a new password.</p>
         <form onSubmit={this.submit} noValidate='novalidate'>
           <div className='textfield'>
             <label>Email</label>
             <input value={this.state.email}
                    type='text'
                    id='email'
-                   ref='email'
+                   ref={(i) => {this.email = i;}}
                    onChange={this.updateEmail} autoFocus />
           </div>
           <Button type='submit' bsStyle='primary' loading={this.state.submitting} onClick={this.submit}>{ this.state.submitting ? 'Submitting ...' : 'Submit' }</Button>

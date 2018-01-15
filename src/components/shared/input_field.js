@@ -36,7 +36,7 @@ class InputField extends React.Component {
 
   componentDidMount() {
     if (this.props.autofocus) {
-      this.refs.input.focus();
+      this.input.focus();
     }
   }
 
@@ -48,7 +48,7 @@ class InputField extends React.Component {
   }
 
   onChange = () => {
-    var currentValue = this.refs.input.value;
+    var currentValue = this.input.value;
     var validation = this.props.validate(currentValue);
     var valid = false;
     var validationError = this.state.validationError;
@@ -88,7 +88,7 @@ class InputField extends React.Component {
   }
 
   value = () => {
-    return this.refs.input.value;
+    return this.input.value;
   }
 
   valid = () => {
@@ -96,18 +96,18 @@ class InputField extends React.Component {
   }
 
   focus = () => {
-    ReactDOM.findDOMNode(this.refs.input).focus();
+    ReactDOM.findDOMNode(this.input).focus();
   }
 
   blur = () => {
-    ReactDOM.findDOMNode(this.refs.input).blur();
+    ReactDOM.findDOMNode(this.input).blur();
   }
 
   render() {
     return (
       <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
-        <input ref='input' id={this.props.name}
+        <input ref={(i) => {this.input = i;}} id={this.props.name}
                value={this.state.value}
                onBlur={this.onBlur}
                onChange={this.onChange}

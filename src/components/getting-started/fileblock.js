@@ -67,7 +67,7 @@ class FileBlock extends React.Component {
     return(
       <div className={this.classNames()}>
         <pre>
-          <div ref='pre' className='content'>
+          <div ref={(d) => {this.pre = d;}} className='content'>
             <div className='codeblock--filename'>
               { this.props.fileName }
             </div>

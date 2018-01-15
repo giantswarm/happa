@@ -98,8 +98,8 @@ class ClusterDetail extends React.Component {
   }
 
   showScalingModal = () => {
-    this.refs.scaleClusterModal.getWrappedInstance().reset();
-    this.refs.scaleClusterModal.getWrappedInstance().show();
+    this.scaleClusterModal.getWrappedInstance().reset();
+    this.scaleClusterModal.getWrappedInstance().show();
   }
 
   clusterName() {
@@ -196,7 +196,7 @@ class ClusterDetail extends React.Component {
                   </div>
                 </div>
               </div>
-              <ScaleClusterModal ref="scaleClusterModal" cluster={this.props.cluster} user={this.props.user}/>
+              <ScaleClusterModal ref={(s) => {this.scaleClusterModal = s;}} cluster={this.props.cluster} user={this.props.user}/>
             </div>
           </div>
         :

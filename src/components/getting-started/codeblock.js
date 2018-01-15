@@ -87,7 +87,7 @@ export class CodeBlock extends React.Component {
     return(
       <div className={this.classNames()}>
         <pre>
-          <div ref='pre' className='content'>
+          <div ref={(d) => {this.pre = d;}} className='content'>
             { this.props.children }
           </div>
           <div className='codeblock--buttons'>

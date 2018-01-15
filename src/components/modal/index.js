@@ -40,7 +40,7 @@ class Modal extends React.Component {
     if (e) {
       e.preventDefault();
     }
-    var orgId = this.refs.orgId.value;
+    var orgId = this.orgId.value;
     this.props.dispatch(organizationCreateConfirm(orgId));
   }
 
@@ -50,7 +50,7 @@ class Modal extends React.Component {
     }
 
     if (this.state.emailValid) {
-      var email = this.refs.email.value();
+      var email = this.email.value();
       this.props.dispatch(organizationAddMemberConfirm(this.props.modal.templateValues.orgId, email));
     }
   }
@@ -130,7 +130,7 @@ class Modal extends React.Component {
             <BootstrapModal.Body>
               <form onSubmit={this.createOrganisation.bind(this)} >
                 <label>Organization Name:</label>
-                <input ref='orgId' autoFocus type='text'/>
+                <input ref={(i) => {this.orgId = i;}} autoFocus type='text'/>
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
@@ -173,7 +173,7 @@ class Modal extends React.Component {
               <form onSubmit={this.addMember.bind(this)} >
                 <label>Email:</label>
                 <EmailField name='email'
-                            ref='email'
+                            ref={(e) => {this.email = e;}}
                             onChange={this.emailFieldChanged.bind(this)}
                             errorMessage={this.props.modal.templateValues.errorMessage}
                             autofocus/>

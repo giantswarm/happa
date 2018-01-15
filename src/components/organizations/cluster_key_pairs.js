@@ -224,7 +224,7 @@ class ClusterKeyPairs extends React.Component {
                   </div>;
                 } else if (this.props.cluster.keyPairs.length === 0) {
                   return <div>
-                  <p>No key pairs yet. Why don't you create your first?</p>
+                  <p>No key pairs yet. Why don?apos;t you create your first?</p>
                   <Button onClick={this.addKeyPair.bind(this)} bsStyle='default' className='small'>Create Key Pair</Button>
                   </div>;
                 } else {
@@ -287,12 +287,12 @@ class ClusterKeyPairs extends React.Component {
                         <div className="row">
                           <div className="col-6">
                             <label>Common Name Prefix:</label>
-                            <input ref='domainInput' autoFocus type='text' value={this.state.cn_prefix} onChange={this.handleCNPrefixChange.bind(this)}/>
+                            <input autoFocus type='text' value={this.state.cn_prefix} onChange={this.handleCNPrefixChange.bind(this)}/>
                             <div className="text-field-hint">{this.cnPrefix()}.user.api.clusterdomain</div>
                           </div>
                           <div className="col-6">
                             <label>Organizations:</label>
-                            <input ref='domainInput' type='text' value={this.state.certificate_organizations} onChange={this.handleCertificateOrganizationsChange.bind(this)}/>
+                            <input type='text' value={this.state.certificate_organizations} onChange={this.handleCertificateOrganizationsChange.bind(this)}/>
                             <div className="text-field-hint">Comma seperated values. e.g.: admin,blue-team,staging</div>
                           </div>
                         </div>
@@ -300,7 +300,7 @@ class ClusterKeyPairs extends React.Component {
                         <div className="row">
                           <div className="col-12">
                             <label>Description:</label>
-                            <input ref='domainInput' type='text' value={this.state.description} onChange={this.handleDescriptionChange.bind(this)}/>
+                            <input type='text' value={this.state.description} onChange={this.handleDescriptionChange.bind(this)}/>
                           </div>
                         </div>
                         <br/>
@@ -341,7 +341,7 @@ class ClusterKeyPairs extends React.Component {
                     <BootstrapModal.Title>Your key pair has been created.</BootstrapModal.Title>
                   </BootstrapModal.Header>
                   <BootstrapModal.Body>
-                    <p>Copy the text below and save it to a text file named kubeconfig on your local machine. Caution: You won't see the key and certificate again!</p>
+                    <p>Copy the text below and save it to a text file named kubeconfig on your local machine. Caution: You won&apos;t see the key and certificate again!</p>
                     <p><b>Important:</b> Make sure that only you have access to this file, as it enables for complete administrative access to your cluster.</p>
 
                     <form>

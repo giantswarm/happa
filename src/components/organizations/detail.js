@@ -82,7 +82,7 @@ class OrganizationDetail extends React.Component {
               <div className='col-9'>
                 {
                   this.props.organization.members.length === 0 ?
-                  <p>This organization has no members, which shouldn't really be possible</p>
+                  <p>This organization has no members, which shouldn&apos;t really be possible</p>
                   :
                   <table>
                     <thead>

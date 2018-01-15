@@ -218,7 +218,7 @@ class SetPassword extends React.Component {
           <StatusMessage status={this.state.statusMessage} />
 
           <div className='textfield'>
-            <PasswordField ref='password'
+            <PasswordField ref={(p) => {this.password = p;}}
                            label='New password'
                            onStartTyping={this.passwordEditingStarted}
                            onChange={this.passwordEditingCompleted}
@@ -226,7 +226,7 @@ class SetPassword extends React.Component {
           </div>
 
           <div className='textfield'>
-            <PasswordField ref='passwordConfirmation'
+            <PasswordField ref={(p) => {this.passwordConfirmation = p;}}
                            label='Password, once again'
                            onStartTyping={this.passwordConfirmationEditingStarted}
                            onChange={this.passwordConfirmationEditingCompleted} />
@@ -278,7 +278,7 @@ class SetPassword extends React.Component {
           <input value={this.state.emailField}
                  type='email'
                  id='email'
-                 ref='email'
+                 ref={(i) => {this.email = i;}}
                  onChange={this.updateEmail} autoFocus />
         </div>
 
