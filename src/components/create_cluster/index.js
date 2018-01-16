@@ -6,8 +6,7 @@ import DocumentTitle from 'react-document-title';
 import Button from '../button';
 import _ from 'underscore';
 import { browserHistory } from 'react-router';
-import { flashAdd } from '../../actions/flashMessageActions';
-import GiantSwarm from '../../lib/giantswarm_client_wrapper';
+import { clusterCreate } from '../../actions/clusterActions';
 import update from 'react-addons-update';
 import NewKVMWorker from './new_kvm_worker.js';
 import NewAWSWorker from './new_aws_worker.js';
@@ -111,8 +110,6 @@ class CreateCluster extends React.Component {
       submitting: true
     });
 
-    var giantSwarm = new GiantSwarm.Client(this.props.authToken);
-
     var workers = [];
 
     // TODO/FYI: This IF / ELSE on this.props.provider is a antipattern
@@ -138,24 +135,27 @@ class CreateCluster extends React.Component {
       });
     }
 
-    giantSwarm.createCluster({
+
+    this.props.dispatch(clusterCreate({
       clusterName: this.state.clusterName,
       owner: this.props.selectedOrganization,
       releaseVersion: this.state.releaseVersion,
       workers: workers
-    })
+    }))
     .then(() => {
       browserHistory.push('/organizations/' + this.props.selectedOrganization);
-      this.props.dispatch(flashAdd({
-        message: <div>Your new cluster is being created!</div>,
-        class: 'success',
-        ttl: 3000
-      }));
     })
     .catch((error) => {
+      var errorMessage = '';
+
+      if (error.body && error.body.message) {
+        errorMessage = error.body.message;
+      }
+
       this.setState({
         submitting: false,
-        error: error
+        error: error,
+        errorMessage: errorMessage
       });
     });
   }
@@ -208,6 +208,14 @@ class CreateCluster extends React.Component {
     this.setState({
       releaseVersion
     });
+  }
+
+  errorState() {
+    return <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
+      <b>Something went wrong while trying to create your cluster.</b><br/>
+      Perhaps our servers are down, please try again later or contact support: support@giantswarm.io<br/>
+      { this.state.errorMessage !== '' ? <pre>{this.state.errorMessage}</pre> : undefined }
+    </div>;
   }
 
   render() {
@@ -305,7 +313,8 @@ class CreateCluster extends React.Component {
 
           <div className='row section new-cluster--launch'>
             <div className='col-12'>
-              <p>Create this cluster now and it will be available for you to use as soon as possible</p>
+              <p>Create this cluster now and it will be available for you to use as soon as possible.</p>
+              { this.state.error ? this.errorState() : undefined }
               <Button type='button'
                       bsSize='large'
                       bsStyle='primary'
@@ -325,7 +334,6 @@ CreateCluster.propTypes = {
   allowedInstanceTypes: React.PropTypes.array,
   selectedOrganization: React.PropTypes.string,
   dispatch: React.PropTypes.func,
-  authToken: React.PropTypes.string,
   provider: React.PropTypes.string,
 };
 
@@ -334,7 +342,6 @@ function mapStateToProps(state) {
 
   return {
     selectedOrganization: selectedOrganization,
-    authToken: state.app.loggedInUser.authToken,
     provider: state.app.info.general.provider,
     allowedInstanceTypes: state.app.info.workers.instance_type.options
   };

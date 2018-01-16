@@ -14,7 +14,6 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
-    "airbrake-js": "0.5.9",
     "color-hash": "latest",
     "copy-to-clipboard": "~3.0.8",
     "marked": "~0.3.12",
@@ -24,7 +23,7 @@
     "react-addons-css-transition-group": "~15.4.2",
     "react-addons-update": "~15.4.2",
     "react-addons-test-utils": "~15.4.2",
-    "giantswarm": "git://github.com/giantswarm/giantswarm-js-client#v2017",
+    "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client#v2017",
     "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client#master",
     "react-dom": "~15.4.2",
     "react-router": "~2.6.1",
