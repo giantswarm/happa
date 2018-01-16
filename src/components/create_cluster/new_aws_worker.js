@@ -125,7 +125,7 @@ class NewAWSWorker extends React.Component {
 
         <div className="new-cluster--aws-instance-type-selector">
           <form onSubmit={(e) => {e.preventDefault();}}>
-            <InputField ref='instance_type'
+            <InputField ref={(i) => {this.instance_type = i;}}
                    type="text"
                    value={this.props.worker.instanceType}
                    onChange={this.updateInstanceType}

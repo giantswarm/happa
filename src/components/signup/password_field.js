@@ -13,40 +13,40 @@ var doneTypingInterval = 250; // ms
 class PasswordField extends React.Component {
   componentDidMount() {
     if (this.props.autofocus) {
-      this.refs.input.focus();
+      this.input.focus();
     }
   }
 
   onBlur = () => {
     clearTimeout(typingTimer);
-    this.props.onChange(this.refs.input.value);
+    this.props.onChange(this.input.value);
   }
 
   onChange = () => {
-    this.props.onStartTyping(this.refs.input.value);
+    this.props.onStartTyping(this.input.value);
     clearTimeout(typingTimer);
     typingTimer = setTimeout(() => {
-      this.props.onChange(this.refs.input.value);
+      this.props.onChange(this.input.value);
     }, doneTypingInterval);
   }
 
   value = () => {
-    return this.refs.input.value;
+    return this.input.value;
   }
 
   focus = () => {
-    ReactDOM.findDOMNode(this.refs.input).focus();
+    ReactDOM.findDOMNode(this.input).focus();
   }
 
   blur = () => {
-    ReactDOM.findDOMNode(this.refs.input).blur();
+    ReactDOM.findDOMNode(this.input).blur();
   }
 
   render() {
     return (
       <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
-        <input type='password' ref='input' id={this.props.name} onBlur={this.onBlur} onChange={this.onChange} />
+        <input type='password' ref={ (input) => { this.input = input; } } id={this.props.name} onBlur={this.onBlur} onChange={this.onChange} />
         <span className="message">{this.props.validationError}&nbsp;</span>
       </div>
     );

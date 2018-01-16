@@ -16,11 +16,11 @@ class ChangePassword extends React.Component {
   }
 
   currentPasswordValid = () => {
-    return this.refs.current_password.value();
+    return this.current_password.value();
   }
 
   newPasswordValid = () => {
-    var password = this.refs.new_password.value();
+    var password = this.new_password.value();
     var valid = false;
     var statusMessage;
 
@@ -46,8 +46,8 @@ class ChangePassword extends React.Component {
   }
 
   newPasswordConfirmationValid = () => {
-    var password = this.refs.new_password.value();
-    var passwordConfirmation = this.refs.new_password_confirmation.value();
+    var password = this.new_password.value();
+    var passwordConfirmation = this.new_password_confirmation.value();
 
     if (password !== passwordConfirmation && (password && passwordConfirmation)) {
       this.setState({
@@ -59,7 +59,7 @@ class ChangePassword extends React.Component {
       });
     }
 
-    return this.refs.new_password.value() && (this.refs.new_password.value() === this.refs.new_password_confirmation.value());
+    return this.new_password.value() && (this.new_password.value() === this.new_password_confirmation.value());
   }
 
   passwordEditingStarted() {
@@ -67,7 +67,7 @@ class ChangePassword extends React.Component {
   }
 
   validate = () => {
-    if (this.refs.current_password.value()) {
+    if (this.current_password.value()) {
       this.setState({
         buttonVisible: true,
         error: false
@@ -110,8 +110,8 @@ class ChangePassword extends React.Component {
     var giantSwarm = new GiantSwarm.Client(authToken);
 
     giantSwarm.changePassword({
-      old_password: this.refs.current_password.value(),
-      new_password: this.refs.new_password.value()
+      old_password: this.current_password.value(),
+      new_password: this.new_password.value()
     })
     .then(() => {
       this.setState({
@@ -122,13 +122,13 @@ class ChangePassword extends React.Component {
       });
     })
     .then(() => {
-      return this.props.actions.login(this.props.user.email, this.refs.new_password.value());
+      return this.props.actions.login(this.props.user.email, this.new_password.value());
     })
     .catch((error) => {
       var errorMessage;
 
       if (error.body && error.body.status_code && error.body.status_code === 10010) {
-        errorMessage = <span>Your current password doesn't seem to be right.</span>;
+        errorMessage = <span>Your current password doesn&apos;t seem to be right.</span>;
       } else {
         errorMessage = <span>Something went wrong while trying to set your password.
           Perhaps our servers are down. Could you try again later,
@@ -165,7 +165,7 @@ class ChangePassword extends React.Component {
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
                 id='current_password'
-                ref='current_password'
+                ref={(p) => {this.current_password = p;}}
               />
             </div>
 
@@ -176,7 +176,7 @@ class ChangePassword extends React.Component {
                 onStartTyping={this.passwordEditingStarted}
                 validationError={this.state.newPasswordValidationMessage}
                 id='new_password'
-                ref='new_password'
+                ref={(p) => {this.new_password = p;}}
               />
             </div>
 
@@ -187,7 +187,7 @@ class ChangePassword extends React.Component {
                 onStartTyping={this.passwordEditingStarted}
                 validationError={this.state.newPassworConfirmationValidationMessage}
                 id='new_password_confirmation'
-                ref='new_password_confirmation'
+                ref={(p) => {this.new_password_confirmation = p;}}
               />
             </div>
 

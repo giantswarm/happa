@@ -44,7 +44,7 @@ class Overview extends React.Component {
             <Link to="/getting-started/example">
               <span className="step_selector--step-number">3.</span>
               <span className="step_selector--step-title">Run a simple example</span>
-              <span className="step_selector--step-description">To make sure everything works as expected, let's start a hello world application</span>
+              <span className="step_selector--step-description">To make sure everything works as expected, let&apos;s start a hello world application</span>
             </Link>
           </li>
           <li className="col-3 col-6-sm">

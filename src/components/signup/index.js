@@ -104,15 +104,15 @@ export class SignUp extends React.Component {
     });
 
     if (nextStep === 1) {
-      this.refs.password.focus();
+      this.password.focus();
     } else if (nextStep === 2) {
-      this.refs.passwordConfirmation.focus();
+      this.passwordConfirmation.focus();
     } else if (nextStep === 3) {
       this.setState({
         statusMessage: 'tos_intro'
       });
 
-      this.refs.passwordConfirmation.blur();
+      this.passwordConfirmation.blur();
     }
   }
 
@@ -347,21 +347,21 @@ export class SignUp extends React.Component {
   render() {
     return (
       <div className='signup--container col-6'>
-        <h1 ref='title'>Create Your Giant Swarm Account</h1>
+        <h1 ref={(t) => {this.title = t;}}>Create Your Giant Swarm Account</h1>
 
 
-        <form ref='signupForm' onSubmit={this.handleSubmit} className={'step-' + this.state.currentStep} >
+        <form ref={(f) => {this.signupForm = f;}} onSubmit={this.handleSubmit} className={'step-' + this.state.currentStep} >
           <div id='passwordGroup'>
             <p className='subtitle'>This is your personal Giant Swarm account for the email address {this.state.email}!</p>
 
-            <PasswordField ref='password'
+            <PasswordField ref={(p) => {this.password = p;}}
                            label='Set a password'
                            onStartTyping={this.passwordEditingStarted}
                            onChange={this.passwordEditingCompleted} />
           </div>
 
           <div id='passwordConfirmationGroup'>
-            <PasswordField ref='passwordConfirmation'
+            <PasswordField ref={(f) => {this.passwordConfirmation = f;}}
                            label='Password, once again'
                            onStartTyping={this.passwordConfirmationEditingStarted}
                            onChange={this.passwordConfirmationEditingCompleted} />
@@ -372,7 +372,7 @@ export class SignUp extends React.Component {
 
             <div className='checkbox'>
               <label htmlFor='tosAccept'>
-                <input type='checkbox' ref='tosAccept' id='tosAccept' onChange={this.tosChanged} />
+                <input type='checkbox' ref={(i) => {this.tosAccept = i;}} id='tosAccept' onChange={this.tosChanged} />
                 I accept the terms of service
               </label>
             </div>
