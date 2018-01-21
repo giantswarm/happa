@@ -137,9 +137,9 @@ class CreateCluster extends React.Component {
 
 
     this.props.dispatch(clusterCreate({
-      clusterName: this.state.clusterName,
+      name: this.state.clusterName,
       owner: this.props.selectedOrganization,
-      releaseVersion: this.state.releaseVersion,
+      release_version: this.state.releaseVersion,
       workers: workers
     }))
     .then(() => {

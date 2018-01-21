@@ -9,7 +9,6 @@ import * as clusterActions from '../../actions/clusterActions';
 import { relativeDate, truncate } from '../../lib/helpers.js';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
 import ExpiryHoursPicker from './expiry_hours_picker';
-import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import { makeKubeConfigTextFile, dedent } from '../../lib/helpers';
 import copy from 'copy-to-clipboard';
 import _ from 'underscore';
@@ -117,9 +116,6 @@ class ClusterKeyPairs extends React.Component {
       e.preventDefault();
     }
 
-    var authToken = this.props.user.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
-
     this.setState({
       modal: {
         visible: true,
@@ -127,16 +123,15 @@ class ClusterKeyPairs extends React.Component {
         template: 'addKeyPair'
       }
     }, () => {
-      giantSwarm.createClusterKeyPair({
+      this.props.actions.clusterCreateKeyPair(this.props.cluster.id, {
         certificate_organizations: this.state.certificate_organizations,
-        clusterId: this.props.cluster.id,
         cn_prefix: this.state.cn_prefix,
         description: this.state.description,
-        ttl_hours: this.state.expireTTL,
+        ttl_hours: this.state.expireTTL
       })
-      .then((response) => {
+      .then((keypair) => {
         this.setState({
-          kubeconfig: dedent(makeKubeConfigTextFile(this.props.cluster, response.result)),
+          kubeconfig: dedent(makeKubeConfigTextFile(this.props.cluster, keypair)),
           modal: {
             visible: true,
             loading: false,
@@ -146,7 +141,8 @@ class ClusterKeyPairs extends React.Component {
 
         return this.props.actions.clusterLoadKeyPairs(this.props.cluster.id);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         setTimeout(() => {
           this.setState({
             modal: {

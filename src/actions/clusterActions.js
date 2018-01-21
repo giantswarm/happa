@@ -1,11 +1,11 @@
 'use strict';
 
 import * as types from './actionTypes';
-import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
 import React from 'react';
 import { browserHistory } from 'react-router';
+import GiantSwarmV4 from 'giantswarm-v4';
 
 
 // clusterSelect
@@ -31,18 +31,16 @@ export function clusterSelect(clusterId) {
 // Takes a clusterId and loads details for that cluster
 
 export function clusterLoadDetails(clusterId) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_LOAD_DETAILS,
       clusterId
     });
 
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var clustersApi = new GiantSwarmV4.ClustersApi();
 
-    return giantSwarm.clusterDetails({clusterId})
-    .then((response) => {
-      var cluster = response.result;
+    return clustersApi.getCluster(clusterId)
+    .then((cluster) => {
       dispatch(clusterLoadDetailsSuccess(cluster));
       return cluster;
     })
@@ -59,23 +57,27 @@ export function clusterLoadDetails(clusterId) {
 // on success or CLUSTER_DELETE_ERROR on error.
 
 export function clusterCreate(cluster) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_CREATE,
       cluster
     });
 
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var clustersApi = new GiantSwarmV4.ClustersApi();
 
-    return giantSwarm.createCluster(cluster)
+    return clustersApi.addCluster(cluster)
     .then((data) => {
-      var location = data.rawResponse.headers.location;
-      if (location === undefined) {
-        throw('Did not get a location header back.');
+      const regex = /The cluster with ID '(.*)' has been created\./g;
+      const str = data.message;
+      let m;
+
+      m = regex.exec(str);
+
+      if (m === null) {
+        throw('Did not get a valid clluster created response.');
       }
 
-      var clusterId = location.split('/')[3];
+      var clusterId = m[1];
       if (clusterId === undefined) {
         throw('Did not get a valid cluster id.');
       }
@@ -83,7 +85,7 @@ export function clusterCreate(cluster) {
       dispatch(clusterCreateSuccess(clusterId));
 
       dispatch(flashAdd({
-        message: <div>"{cluster.clusterName}" with ID: "{clusterId}" is being created!</div>,
+        message: <div>"{cluster.cluster_name}" with ID: "{clusterId}" is being created!</div>,
         class: 'success',
         ttl: 3000
       }));
@@ -107,16 +109,15 @@ export function clusterCreate(cluster) {
 //  cluster: {id: "string", owner: "string"}
 
 export function clusterDeleteConfirm(cluster) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_DELETE_CONFIRM,
       cluster
     });
 
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var clustersApi = new GiantSwarmV4.ClustersApi();
 
-    return giantSwarm.deleteCluster({clusterId: cluster.id})
+    return clustersApi.deleteCluster(cluster.id)
     .then(() => {
       browserHistory.push('/organizations/'+cluster.owner);
       dispatch(clusterDeleteSuccess(cluster.id));
@@ -149,21 +150,20 @@ export function clusterDeleteConfirm(cluster) {
 // on error.
 
 export function clusterLoadKeyPairs(clusterId) {
-  return function(dispatch, getState) {
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+  return function(dispatch) {
+    var keypairsApi = new GiantSwarmV4.KeyPairsApi();
 
     dispatch({
       type: types.CLUSTER_LOAD_KEY_PAIRS,
       clusterId
     });
 
-    return giantSwarm.clusterKeyPairs({clusterId})
-    .then((response) => {
+    return keypairsApi.getKeyPairs(clusterId)
+    .then((keyPairs) => {
       dispatch({
         type: types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS,
         clusterId,
-        keyPairs: response.result
+        keyPairs: keyPairs
       });
     })
     .catch((error) => {
@@ -172,6 +172,7 @@ export function clusterLoadKeyPairs(clusterId) {
         clusterId
       });
 
+      console.error(error);
       throw(error);
     });
   };
@@ -238,5 +239,78 @@ export function clusterLoadError(error) {
   return {
     type: types.CLUSTER_LOAD_ERROR,
     error: error
+  };
+}
+
+// clusterPatch
+// ==============================================================
+// Takes a cluster object and tries to patch it.
+// dispatches CLUSTER_PATCH_SUCCESS on success or CLUSTER_PATCH_ERROR
+// on error.
+
+export function clusterPatch(cluster) {
+  return function(dispatch) {
+    dispatch({
+      type: types.CLUSTER_PATCH,
+      cluster
+    });
+
+    var clusterId = cluster.id;
+    delete cluster.id;
+
+    var clustersApi = new GiantSwarmV4.ClustersApi();
+    return clustersApi.modifyCluster(cluster, clusterId)
+    .then((cluster) => {
+      dispatch({
+        type: types.CLUSTER_PATCH_SUCCESS,
+        cluster,
+      });
+
+      return cluster;
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.CLUSTER_PATCH_ERROR,
+        error
+      });
+
+      console.error(error);
+      throw(error);
+    });
+  };
+}
+
+// clusterCreateKeyPair
+// ==============================================================
+// Creates a keypair for a cluster.
+// dispatches CLUSTER_CREATE_KEYPAIR_SUCCESS on success or CLUSTER_CREATE_KEYPAIR_ERROR
+// on error.
+
+export function clusterCreateKeyPair(clusterId, keypair) {
+  return function(dispatch) {
+    dispatch({
+      type: types.CLUSTER_CREATE_KEY_PAIR,
+      keypair
+    });
+
+    var keypairsApi = new GiantSwarmV4.KeyPairsApi();
+    return keypairsApi.addKeyPair(clusterId, keypair)
+    .then((keypair) => {
+      dispatch({
+        type: types.CLUSTER_CREATE_KEY_PAIR_SUCCESS,
+        keypair,
+      });
+
+      return keypair;
+    })
+    .catch((error) => {
+      dispatch({
+        type: types.CLUSTER_CREATE_KEY_PAIR_ERROR,
+        error
+      });
+
+      console.error(error);
+      throw(error);
+    });
   };
 }

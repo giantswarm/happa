@@ -1,7 +1,7 @@
 'use strict';
 
 import * as types from './actionTypes';
-import GiantSwarm from '../lib/giantswarm_client_wrapper';
+import GiantSwarmV4 from 'giantswarm-v4';
 
 export function releasesLoad() {
   return {
@@ -24,15 +24,14 @@ export function releasesLoadError(error) {
 }
 
 export function loadReleases() {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch(releasesLoad());
 
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var releasesApi = new GiantSwarmV4.ReleasesApi();
 
-    return giantSwarm.releases()
-    .then((data) => {
-      dispatch(releasesLoadSuccess(data.result));
+    return releasesApi.getReleases()
+    .then((releases) => {
+      dispatch(releasesLoadSuccess(releases));
     })
     .catch((error) => {
       dispatch(releasesLoadError(error));
