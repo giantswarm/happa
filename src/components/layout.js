@@ -44,6 +44,7 @@ class Layout extends React.Component {
       return (
         <DocumentTitle title='Giant Swarm'>
           <div>
+            <FlashMessages />
             <nav>
               <div className='main-nav col-9'>
                 <a href='https://giantswarm.io' target='_blank'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
@@ -103,7 +104,6 @@ class Layout extends React.Component {
             </nav>
 
             <div className='main col-9'>
-              <FlashMessages />
               <Modal />
               {this.props.children}
             </div>
