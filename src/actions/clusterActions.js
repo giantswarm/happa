@@ -85,7 +85,7 @@ export function clusterCreate(cluster) {
       dispatch(clusterCreateSuccess(clusterId));
 
       dispatch(flashAdd({
-        message: <div>"{cluster.cluster_name}" with ID: "{clusterId}" is being created!</div>,
+        message: <div>"{cluster.name}" with ID: "{clusterId}" is being created!</div>,
         class: 'success',
         ttl: 3000
       }));
