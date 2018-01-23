@@ -7,7 +7,6 @@ import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
 import Button from '../button';
-import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import platform from '../../lib/platform';
 
 var Modernizr = window.Modernizr;
@@ -36,24 +35,22 @@ class ConfigKubeCtl extends React.Component {
       }
     });
 
-    var authToken = this.props.user.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
-
-    giantSwarm.createClusterKeyPair({
-      clusterId: this.props.cluster.id,
+    this.props.actions.clusterCreateKeyPair(this.props.cluster.id, {
       description: `Added by user ${this.props.user.email} using the Happa web interface.`,
       certificate_organizations: 'system:masters',
     })
-    .then((response) => {
+    .then((keypair) => {
       this.setState({
         keyPair: {
           generating: false,
           generated: true,
-          data: response.result
+          data: keypair
         }
       });
     })
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
+
       setTimeout(() => {
         this.setState({
           keyPair: {
