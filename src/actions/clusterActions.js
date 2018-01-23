@@ -65,19 +65,14 @@ export function clusterCreate(cluster) {
 
     var clustersApi = new GiantSwarmV4.ClustersApi();
 
-    return clustersApi.addCluster(cluster)
+    return clustersApi.addClusterWithHttpInfo(cluster)
     .then((data) => {
-      const regex = /The cluster with ID '(.*)' has been created\./g;
-      const str = data.message;
-      let m;
-
-      m = regex.exec(str);
-
-      if (m === null) {
-        throw('Did not get a valid clluster created response.');
+      var location = data.response.headers.location;
+      if (location === undefined) {
+        throw('Did not get a location header back.');
       }
 
-      var clusterId = m[1];
+      var clusterId = location.split('/')[3];
       if (clusterId === undefined) {
         throw('Did not get a valid cluster id.');
       }
