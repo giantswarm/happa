@@ -2,6 +2,7 @@
 
 import * as types from '../actions/actionTypes';
 import { browserHistory } from 'react-router';
+import GiantSwarmV4 from 'giantswarm-v4';
 
 var shutDown = function(state) {
   localStorage.removeItem('user');
@@ -51,6 +52,10 @@ export default function appReducer(state = {
 
     case types.LOGIN_SUCCESS:
       localStorage.setItem('user', JSON.stringify(action.userData));
+        var defaultClient = GiantSwarmV4.ApiClient.instance;
+        var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
+        defaultClientAuth.apiKey = action.userData.authToken;
+        defaultClientAuth.apiKeyPrefix = 'giantswarm';
 
       return Object.assign({}, state, {
         loggedInUser: action.userData

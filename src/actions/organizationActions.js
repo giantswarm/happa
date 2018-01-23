@@ -2,13 +2,13 @@
 
 import * as types from './actionTypes';
 import _ from 'underscore';
-import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import DomainValidator from '../lib/domain_validator_client';
 import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
 import { clusterLoadSuccess, clusterLoadError } from './clusterActions';
 import React from 'react';
 import { browserHistory } from 'react-router';
+import GiantSwarmV4 from 'giantswarm-v4';
 
 var determineSelectedOrganization = function(organizations) {
   var allOrganizations = _.map(organizations, x => x.id);
@@ -98,8 +98,8 @@ export function organizationsLoadSuccess(organizations, selectedOrganization, se
 //
 export function organizationsLoad() {
   return function(dispatch, getState) {
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var clustersApi = new GiantSwarmV4.ClustersApi();
+    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
     var alreadyFetching = getState().entities.organizations.isFetching;
 
@@ -109,16 +109,16 @@ export function organizationsLoad() {
 
     dispatch({type: types.ORGANIZATIONS_LOAD});
 
-    return giantSwarm.organizations()
-    .then(membershipsResponse => {
-      var organizationsArray = membershipsResponse.result.map((organization) => {
+    return organizationsApi.getOrganizations()
+    .then(organizations => {
+      var organizationsArray = organizations.map((organization) => {
         return organization.id;
       });
 
-      var clusters = giantSwarm.clusters()
-                     .then(response => {
-                        dispatch(clusterLoadSuccess(response.result));
-                        return response.result;
+      var clusters = clustersApi.getClusters()
+                     .then(data => {
+                        dispatch(clusterLoadSuccess(data));
+                        return data;
                      })
                      .catch((error) => {
                         console.error(error);
@@ -126,9 +126,9 @@ export function organizationsLoad() {
                      });
 
       var orgDetails = Promise.all(_.map(organizationsArray, organizationName => {
-        return giantSwarm.organization({ organizationName })
-               .then(response => {
-                 return response.result;
+        return organizationsApi.getOrganization(organizationName )
+               .then(organization => {
+                 return organization;
                });
       }));
 
@@ -181,15 +181,12 @@ export function organizationsLoad() {
 }
 
 export function organizationDeleteConfirm(orgId) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch({type: types.ORGANIZATION_DELETE_CONFIRM, orgId: orgId});
 
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
-    return giantSwarm.deleteOrganization({
-      organizationName: orgId
-    })
+    return organizationsApi.deleteOrganization(orgId)
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
@@ -227,15 +224,12 @@ export function organizationCreate() {
 }
 
 export function organizationCreateConfirm(orgId) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch({type: types.ORGANIZATION_CREATE_CONFIRM});
 
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
-    return giantSwarm.createOrganization({
-      organizationName: orgId
-    })
+    return organizationsApi.addOrganization(orgId)
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
@@ -295,13 +289,12 @@ export function organizationAddMemberConfirm(orgId, email) {
       }
     }
 
+    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
-
-    return giantSwarm.addMemberToOrganization({
-      organizationName: orgId,
-      email: email
+    return organizationsApi.getOrganization(orgId)
+    .then((organization) => {
+      var members = organization.members.concat([{email: email}]);
+      return organizationsApi.modifyOrganization(orgId, {members});
     })
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
@@ -321,19 +314,19 @@ export function organizationAddMemberConfirm(orgId, email) {
 }
 
 export function organizationRemoveMemberConfirm(orgId, email) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch({
       type: types.ORGANIZATION_REMOVE_MEMBER_CONFIRM,
       orgId: orgId,
       email: email
     });
 
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
-    return giantSwarm.removeMemberFromOrganization({
-      organizationName: orgId,
-      email: email
+    organizationsApi.getOrganization(orgId)
+    .then((organization) => {
+      var members = organization.members.filter((member) => {return member.email !== email;});
+      return organizationsApi.modifyOrganization(orgId, {members});
     })
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))

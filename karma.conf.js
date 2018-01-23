@@ -35,7 +35,7 @@ module.exports = function (config) {
           exclude: /node_modules/,
           loader: 'babel',
           query: {
-            presets: ['es2015'],
+            presets: ['env'],
             plugins: ['transform-react-jsx', 'transform-class-properties']
           }
         }, {

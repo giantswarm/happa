@@ -22,6 +22,7 @@ import createCluster from './create_cluster';
 import clusterDetail from './organizations/cluster_detail';
 import accountSettings from './account_settings';
 import Home from './home';
+import GiantSwarmV4 from 'giantswarm-v4';
 
 require('normalize.css');
 require('bootstrap/dist/css/bootstrap.min.css');
@@ -32,10 +33,19 @@ var appContainer = document.getElementById('app');
 
 const store = configureStore();
 
+
+var defaultClient = GiantSwarmV4.ApiClient.instance;
+defaultClient.basePath = window.config.apiEndpoint;
+var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
+defaultClientAuth.apiKeyPrefix = 'giantswarm';
+
+
 function requireAuth(nextState, replace) {
   var state = store.getState();
 
-  if (! state.app.loggedInUser) {
+  if (state.app.loggedInUser) {
+    defaultClientAuth.apiKey = state.app.loggedInUser.authToken;
+  } else {
     replace({
       pathname: '/login',
       query: { nextPathname: nextState.location.pathname }

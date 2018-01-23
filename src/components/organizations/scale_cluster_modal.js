@@ -5,7 +5,6 @@ import ClusterIDLabel from '../shared/cluster_id_label';
 import Button from '../button/index';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import NumberPicker from '../create_cluster/number_picker.js';
-import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from '../../actions/clusterActions';
@@ -64,22 +63,19 @@ class ScaleClusterModal extends React.Component {
     this.setState({
       loading: true
     }, () => {
-      var authToken = this.props.user.authToken;
-      var giantSwarm = new GiantSwarm.Client(authToken);
-
       var workers = [];
 
       for (var i = 0; i < this.state.workerCount; i++) {
         workers.push({});
       }
 
-      giantSwarm.patchCluster({clusterId: this.props.cluster.id, workers: workers})
-      .then((response) => {
+      this.props.clusterActions.clusterPatch({id: this.props.cluster.id, workers: workers})
+      .then((patchedCluster) => {
         this.setState({
           loading: false
         });
 
-        this.props.clusterActions.clusterLoadDetailsSuccess(response.result);
+        this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
         this.props.flashActions.flashAdd({
           message: 'Successfully scaled cluster',
           class: 'success',
