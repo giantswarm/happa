@@ -15,7 +15,7 @@ class ExpiryHoursPicker extends React.Component {
     };
 
     // to set the week start to Monday
-    moment.locale('en', {
+    moment.updateLocale('en', {
       week : {
         dow : 1,
       }

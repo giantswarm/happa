@@ -108,7 +108,7 @@ EmailField.propTypes = {
   onStartTyping: React.PropTypes.func,
   name: React.PropTypes.string,
   label: React.PropTypes.string,
-  errorMessage: React.PropTypes.string
+  errorMessage: React.PropTypes.object
 };
 
 export default EmailField;

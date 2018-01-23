@@ -4,6 +4,7 @@ import { flashAdd } from './flashMessageActions';
 import React from 'react';
 import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
+import GiantSwarmV4 from 'giantswarm-v4';
 
 export function loginSuccess(userData) {
   return {
@@ -98,6 +99,7 @@ export function login(email, password) {
     .then(getInfo().bind(this, dispatch, getState))
     .catch(error => {
       dispatch(loginError(error));
+      console.error(error);
       throw(error);
     });
   };
@@ -144,19 +146,18 @@ export function unauthorized() {
 }
 
 export function getInfo() {
-  return function(dispatch, getState) {
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+  return function(dispatch) {
+    var infoApi = new GiantSwarmV4.InfoApi();
 
     dispatch({
       type: types.INFO_LOAD
     });
 
-    return giantSwarm.info()
-    .then((response) => {
+    return infoApi.getInfo()
+    .then((info) => {
       dispatch({
         type: types.INFO_LOAD_SUCCESS,
-        info: response.result
+        info: info
       });
     })
     .catch((error) => {
@@ -164,6 +165,7 @@ export function getInfo() {
         type: types.INFO_LOAD_ERROR,
         error: error
       });
+      console.error(error);
       throw(error);
     });
   };
