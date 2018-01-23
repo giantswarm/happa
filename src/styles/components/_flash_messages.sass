@@ -1,6 +1,16 @@
 .flash-messages--container
-  margin-top: 30px
-  margin-bottom: 30px
+  z-index: 999
+  position: fixed
+  top: 100px
+  left: 0px
+  width: 100%
+
+
+  .flash-messages--flash-message
+    width: 800px
+    max-width: 95%
+    margin: auto
+    margin-bottom: 10px
 
   strong
     color: inherit
@@ -89,5 +99,3 @@
   transition: all 0.2s linear
   transform: translateY(-5px)
   opacity: 0
-
-
