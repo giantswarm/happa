@@ -19,7 +19,7 @@ class Home extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (! _.isEqual(this.props.clusters, prevProps.clusters)) {
+    if (! _.isEqual(_.map(this.props.clusters, x => x.id), _.map(prevProps.clusters, x => x.id))) {
       this.fetchClusterDetails(this.props.clusters);
     }
   }
