@@ -18,6 +18,7 @@ class ReleaseSelector extends React.Component {
       loading: true,
       error: false,
       selectedRelease: '',
+      selectableReleases: [],
       modal: {
         visible: false
       }
@@ -40,17 +41,31 @@ class ReleaseSelector extends React.Component {
 
     this.props.dispatch(loadReleases())
     .then(() => {
-      // select latest active release as a default
+      // Select latest active release as a default.
+      // If there is no latest active release, then allow selection from WIP
+      // releases, with a info message that this is a WIP installation.
 
-      var allVersions = this.props.activeSortedReleases;
-      if (allVersions.length > 0) {
-        var defaulVersion = allVersions[0];
-        this.selectRelease(defaulVersion);
+      let selectableReleases = [];
+      if (this.props.activeSortedReleases.length > 0) {
+        selectableReleases = this.props.activeSortedReleases;
+      } else {
+        selectableReleases = _.map(this.props.releases, release => release.version);
+
+        this.props.dispatch(flashAdd({
+          message: <div>
+            <b>This provider is still a work in progress.</b><br/>
+            We will allow you to pick from work in progress releases too. Only admins will be able to succesfully create a cluster.
+          </div>,
+          class: 'info'
+        }));
       }
+
+      this.selectRelease(selectableReleases[0]);
 
       this.setState({
         loading: false,
-        error: false
+        error: false,
+        selectableReleases: selectableReleases
       });
     })
     .catch((error) => {
@@ -113,18 +128,28 @@ class ReleaseSelector extends React.Component {
   }
 
   loadedContent() {
-    var kubernetes = _.find(this.props.releases[this.state.selectedRelease].components, component => component.name === 'kubernetes');
+    if (this.state.selectedRelease) {
+      var kubernetes = _.find(this.props.releases[this.state.selectedRelease].components, component => component.name === 'kubernetes');
 
-    return <div>
-      <p>{ this.state.selectedRelease }</p>
-      <Button onClick={this.openModal}>{ this.buttonText() }</Button><br/><br/>
+      return <div>
+        <p>{ this.state.selectedRelease }</p>
+        <Button onClick={this.openModal}>{ this.buttonText() }</Button><br/><br/>
 
-      <p>This releases contains:</p>
-      <div className='release-selector-modal--component contrast'>
-        <span className='release-selector-modal--component--name'>kubernetes</span>
-        <span className='release-selector-modal--component--version'>{kubernetes.version}</span>
-      </div>
-    </div>;
+        {
+          kubernetes ? <div>
+                        <p>This releases contains:</p>
+                         <div className='release-selector-modal--component contrast'>
+                           <span className='release-selector-modal--component--name'>kubernetes</span>
+                           <span className='release-selector-modal--component--version'>{kubernetes.version}</span>
+                         </div>
+                       </div>
+          :
+          undefined
+        }
+      </div>;
+    } else {
+      return <div><p>There is no active release currently availabe for this platform.</p></div>;
+    }
   }
 
   render() {
@@ -142,7 +167,7 @@ class ReleaseSelector extends React.Component {
           </BootstrapModal.Header>
             <BootstrapModal.Body>
               {
-                _.map(this.props.activeSortedReleases, (version) => {
+                _.map(this.state.selectableReleases, (version) => {
                   var release = this.props.releases[version];
                   return <div className='release-selector-modal--release-details' key={release.version}>
                     <h2>Version {release.version} {
@@ -166,8 +191,8 @@ class ReleaseSelector extends React.Component {
                     <p>Changes</p>
                     <ul>
                       {
-                        _.map(release.changelog, (changelog) => {
-                          return <li key={changelog.component}>{changelog.description}</li>;
+                        _.map(release.changelog, (changelog, i) => {
+                          return <li key={changelog.component + i}>{changelog.description}</li>;
                         })
                       }
                     </ul>
