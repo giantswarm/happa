@@ -339,11 +339,17 @@ CreateCluster.propTypes = {
 
 function mapStateToProps(state) {
   var selectedOrganization = state.app.selectedOrganization;
+  var provider = state.app.info.general.provider;
+
+  var allowedInstanceTypes = [];
+  if (provider === 'aws') {
+     allowedInstanceTypes = state.app.info.workers.instance_type.options;
+  }
 
   return {
-    selectedOrganization: selectedOrganization,
-    provider: state.app.info.general.provider,
-    allowedInstanceTypes: state.app.info.workers.instance_type.options
+    allowedInstanceTypes,
+    provider,
+    selectedOrganization,
   };
 }
 
