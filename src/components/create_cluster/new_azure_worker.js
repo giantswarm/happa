@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import InputField from '../shared/input_field';
 
 class NewAzureWorker extends React.Component {
   constructor(props) {
@@ -37,6 +38,21 @@ class NewAzureWorker extends React.Component {
               :
               undefined
           }
+        </div>
+
+        <div className="new-cluster--worker-setting-label">
+          VM Size
+        </div>
+
+        <div className="new-cluster--azure-instance-type-selector">
+          <form onSubmit={(e) => {e.preventDefault();}}>
+            <InputField ref='instance_type'
+                   type="text"
+                   value="Standard_DS2_v2"
+                   autoFocus
+                   disabled={true}
+                   readOnly={true} />
+          </form>
         </div>
       </div>
     );
