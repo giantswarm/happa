@@ -10,6 +10,7 @@ import { clusterCreate } from '../../actions/clusterActions';
 import update from 'react-addons-update';
 import NewKVMWorker from './new_kvm_worker.js';
 import NewAWSWorker from './new_aws_worker.js';
+import NewAzureWorker from './new_azure_worker.js';
 import ReleaseSelector from './release_selector.js';
 
 class CreateCluster extends React.Component {
@@ -270,6 +271,13 @@ class CreateCluster extends React.Component {
                                        onWorkerUpdated={this.updateWorker.bind(this, index)} />;
                   } else if (this.props.provider === 'kvm') {
                     return <NewKVMWorker key={'Worker ' + worker.id}
+                                       worker={worker}
+                                       index={index}
+                                       readOnly={this.state.syncWorkers && index !== 0}
+                                       deleteWorker={this.deleteWorker.bind(this, index)}
+                                       onWorkerUpdated={this.updateWorker.bind(this, index)} />;
+                  } else if (this.props.provider === 'azure') {
+                    return <NewAzureWorker key={'Worker ' + worker.id}
                                        worker={worker}
                                        index={index}
                                        readOnly={this.state.syncWorkers && index !== 0}
