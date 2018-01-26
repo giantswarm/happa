@@ -51,13 +51,23 @@ class ReleaseSelector extends React.Component {
       } else {
         selectableReleases = _.map(this.props.releases, release => release.version);
 
-        this.props.dispatch(flashAdd({
-          message: <div>
-            <b>This provider is still a work in progress.</b><br/>
-            We will allow you to pick from work in progress releases too. Only admins will be able to succesfully create a cluster.
-          </div>,
-          class: 'info'
-        }));
+        if (this.props.provider === 'azure') {
+          this.props.dispatch(flashAdd({
+            message: <div>
+              <b>Support for Microsoft Azure is still in an early stage.</b><br/>
+              There is no active release yet. To create a cluster you will need admin permissions.
+            </div>,
+            class: 'info'
+          }));
+        } else {
+          this.props.dispatch(flashAdd({
+            message: <div>
+              <b>No active releases available at the moment.</b><br/>
+              There is no active release yet. To create a cluster you will need admin permissions.
+            </div>,
+            class: 'info'
+          }));
+        }
       }
 
       this.selectRelease(selectableReleases[0]);
@@ -211,6 +221,7 @@ class ReleaseSelector extends React.Component {
 
 ReleaseSelector.propTypes = {
   dispatch: React.PropTypes.func,
+  provider: React.PropTypes.string,
   releaseSelected: React.PropTypes.func,
   releases: React.PropTypes.object, // Version string to a release object i.e.: {"0.1.0": {...}, "0.2.0", {...}}
   activeSortedReleases: React.PropTypes.array // Array of strings i.e: ["0.1.0", "0.2.0"]
@@ -223,6 +234,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state) {
+  var provider = state.app.info.general.provider;
   var releases = Object.assign({}, state.entities.releases.items);
 
   var activeSortedReleases = _.filter(releases, release => release.active);
@@ -230,8 +242,9 @@ function mapStateToProps(state) {
   activeSortedReleases.sort(cmp).reverse();
 
   return {
+    activeSortedReleases,
+    provider,
     releases,
-    activeSortedReleases
   };
 }
 
