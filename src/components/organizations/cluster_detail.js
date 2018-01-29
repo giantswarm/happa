@@ -35,7 +35,7 @@ class ClusterDetail extends React.Component {
       });
 
       this.props.dispatch(flashAdd({
-        message: <div><b>Cluster "{this.props.clusterId}" not found.</b><br/>Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.</div>,
+        message: <div><b>Cluster &quot;{this.props.clusterId}&quot; not found.</b><br/>Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.</div>,
         class: 'info',
         ttl: 6000
       }));
