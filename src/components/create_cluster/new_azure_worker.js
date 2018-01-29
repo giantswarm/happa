@@ -46,7 +46,7 @@ class NewAzureWorker extends React.Component {
 
         <div className="new-cluster--azure-instance-type-selector">
           <form onSubmit={(e) => {e.preventDefault();}}>
-            <InputField ref='instance_type'
+            <InputField ref={(i) => {this.instance_type = i;}}
                    type="text"
                    value="Standard_DS2_v2"
                    autoFocus

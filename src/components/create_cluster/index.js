@@ -162,7 +162,7 @@ class CreateCluster extends React.Component {
   }
 
   componentDidMount() {
-    this.refs.cluster_name.select();
+    this.cluster_name.select();
   }
 
   updateWorker(index, newWorker) {
@@ -236,7 +236,7 @@ class CreateCluster extends React.Component {
             <div className='col-9'>
               <form onSubmit={(e) => {e.preventDefault();}}>
                 <p>Give your cluster a name so you can recognize it in a crowd.</p>
-                <input ref='cluster_name' type="text" value={this.state.clusterName} onChange={this.updateClusterName} autoFocus />
+                <input ref={(i) => {this.cluster_name = i;}} type="text" value={this.state.clusterName} onChange={this.updateClusterName} autoFocus />
               </form>
             </div>
           </div>
@@ -249,7 +249,7 @@ class CreateCluster extends React.Component {
                   this.props.provider === 'kvm' ?
                     <div className='checkbox'>
                       <label htmlFor='syncWorkers'>
-                        <input type='checkbox' ref='syncWorkers' id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
+                        <input type='checkbox' ref={(i) => {this.syncWorkers = i;}} id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
                         Use same configuration for all worker nodes
                       </label>
                     </div>

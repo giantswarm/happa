@@ -80,7 +80,7 @@ export function clusterCreate(cluster) {
       dispatch(clusterCreateSuccess(clusterId));
 
       dispatch(flashAdd({
-        message: <div>"{cluster.name}" with ID: "{clusterId}" is being created!</div>,
+        message: <div>&quot;{cluster.name}&quot; with ID: &quot;{clusterId}&quot; is being created!</div>,
         class: 'success',
         ttl: 3000
       }));
@@ -119,7 +119,7 @@ export function clusterDeleteConfirm(cluster) {
 
       dispatch(modalHide());
       dispatch(flashAdd({
-        message: <div>Cluster '{cluster.id}' deleted succesfully</div>,
+        message: <div>Cluster &lsquo;{cluster.id}&lsquo; deleted succesfully</div>,
         class: 'success',
         ttl: 3000
       }));

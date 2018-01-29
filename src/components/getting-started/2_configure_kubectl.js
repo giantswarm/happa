@@ -39,7 +39,7 @@ class ConfigKubeCtl extends React.Component {
 
     if (this.props.selectedCluster.nullObject) {
       this.props.dispatch(flashAdd({
-        message: <span><b>This organization has no clusters</b><br/>We've inserted values for a sample cluster.</span>,
+        message: <span><b>This organization has no clusters</b><br/>We&apos;ve inserted values for a sample cluster.</span>,
         class: 'info',
         ttl: 3000
       }));
@@ -99,7 +99,7 @@ class ConfigKubeCtl extends React.Component {
         </div>;
       case 'Mac':
         return <div>
-          <p>Installation via <a href='http://brew.sh/' target='_blank'>homebrew</a>:</p>
+          <p>Installation via <a href='http://brew.sh/' target='_blank' rel='noopener noreferrer'>homebrew</a>:</p>
 
           <CodeBlock>
             <Prompt>{`brew tap giantswarm/giantswarm`}</Prompt>
@@ -116,7 +116,7 @@ class ConfigKubeCtl extends React.Component {
           </CodeBlock>
         </div>;
       default:
-        <p>Shouldn't be here</p>;
+        <p>Shouldn&apos;t be here</p>;
 
     }
   }
@@ -165,9 +165,10 @@ class ConfigKubeCtl extends React.Component {
           undefined
         }
 
-        <p>The <code>gsctl</code> command line utility provides access to your Giant Swarm resources. It's perfectly suited to create credentials for <code>kubectl</code> in one step. Let's install <code>gsctl</code> quickly.</p>
+        <p>The <code>gsctl</code> command line utility provides access to your Giant Swarm resources. It&apos;s perfectly suited to
+        create credentials for <code>kubectl</code> in one step. Let&apos;s install <code>gsctl</code> quickly.</p>
 
-        <p>In case you can't install <code>gsctl</code> right now, we provide an <a href="#alternative">alternative solution below.</a></p>
+        <p>In case you can&apos;t install <code>gsctl</code> right now, we provide an <a href="#alternative">alternative solution below.</a></p>
 
         <div className="platform_selector">
           <ul className='platform_selector--tabs'>
@@ -264,7 +265,7 @@ class ConfigKubeCtl extends React.Component {
 
         <p>Here you should see a list of the worker nodes in your cluster.</p>
 
-        <p>Now that this is done, let's deploy some software on your cluster and dig a little deeper.</p>
+        <p>Now that this is done, let&apos;s deploy some software on your cluster and dig a little deeper.</p>
 
         <div className="component_slider--nav">
           <button onClick={this.props.goToSlide.bind(null, 'download')}><i className="fa fa-caret-left"></i> Back</button>
