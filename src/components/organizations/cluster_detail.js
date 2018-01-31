@@ -1,9 +1,11 @@
 'use strict';
 
+import _ from 'underscore';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from '../../actions/clusterActions';
+import * as releaseActions from '../../actions/releaseActions';
 import ClusterKeyPairs from './cluster_key_pairs';
 import DocumentTitle from 'react-document-title';
 import { flashAdd } from '../../actions/flashMessageActions';
@@ -41,7 +43,10 @@ class ClusterDetail extends React.Component {
       }));
 
     } else {
-      this.props.actions.clusterLoadDetails(this.props.cluster.id)
+      this.props.releaseActions.loadReleases()
+      .then(() => {
+        return this.props.clusterActions.clusterLoadDetails(this.props.cluster.id);
+      })
       .then(() => {
         this.setState({
           loading: false
@@ -94,7 +99,11 @@ class ClusterDetail extends React.Component {
   }
 
   showDeleteClusterModal(cluster) {
-    this.props.actions.clusterDelete(cluster);
+    this.props.clusterActions.clusterDelete(cluster);
+  }
+
+  showReleaseDetails() {
+
   }
 
   showScalingModal = () => {
@@ -146,10 +155,35 @@ class ClusterDetail extends React.Component {
                           <td>Created</td>
                           <td className='value'>{this.props.cluster.create_date ? relativeDate(this.props.cluster.create_date) : 'n/a'}</td>
                         </tr>
-                        <tr>
-                          <td>Kubernetes version</td>
-                          <td className='value code'>{this.props.cluster.kubernetes_version ? this.props.cluster.kubernetes_version : 'n/a'}</td>
-                        </tr>
+                        {
+                          this.props.release ?
+                          <tr>
+                            <td>Release version</td>
+                            <td className='value code'>
+                              {this.props.cluster.release_version}
+                              {
+                                (() => {
+                                  var kubernetes = _.find(this.props.release.components, component => component.name === 'kubernetes');
+                                  if (kubernetes) {
+                                    return ' \u2014 includes Kubernetes ' + kubernetes.version;
+                                  }
+                                })()
+                              }
+                            </td>
+                          </tr>
+                          :
+                          <tr>
+                            <td>Kubernetes version</td>
+                            <td className='value code'>
+                              {
+                                this.props.cluster.kubernetes_version !== '' && this.props.cluster.kubernetes_version !== undefined ?
+                                this.props.cluster.kubernetes_version
+                                :
+                                'n/a'
+                              }
+                            </td>
+                          </tr>
+                        }
                         <tr>
                           <td>Kubernetes API endpoint</td>
                           <td className='value code'>{this.props.cluster.api_endpoint ? this.props.cluster.api_endpoint : 'n/a'}</td>
@@ -208,30 +242,39 @@ class ClusterDetail extends React.Component {
 }
 
 ClusterDetail.propTypes = {
-  actions: React.PropTypes.object,
+  clusterActions: React.PropTypes.object,
   cluster: React.PropTypes.object,
   clusterId: React.PropTypes.string,
   dispatch: React.PropTypes.func,
   organizationId: React.PropTypes.string,
+  releaseActions: React.PropTypes.object,
+  release: React.PropTypes.object,
   provider: React.PropTypes.string,
   user: React.PropTypes.object,
 };
 
 function mapStateToProps(state, ownProps) {
   var cluster = state.entities.clusters.items[ownProps.params.clusterId];
+  let release;
+
+  if (cluster.release_version && cluster.release_version !== '') {
+    release = state.entities.releases.items[cluster.release_version];
+  }
 
   return {
     organizationId: ownProps.params.orgId,
     cluster: cluster,
     clusterId: ownProps.params.clusterId,
     provider: state.app.info.general.provider,
+    release: release,
     user: state.app.loggedInUser
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(clusterActions, dispatch),
+    clusterActions: bindActionCreators(clusterActions, dispatch),
+    releaseActions: bindActionCreators(releaseActions, dispatch),
     dispatch: dispatch
   };
 }
