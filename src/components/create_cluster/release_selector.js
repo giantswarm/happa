@@ -173,7 +173,7 @@ class ReleaseSelector extends React.Component {
 
         <BootstrapModal className='release-selector-modal' show={this.state.modal.visible} onHide={this.closeModal}>
           <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Select a release</BootstrapModal.Title>
+            <BootstrapModal.Title>Release Details</BootstrapModal.Title>
           </BootstrapModal.Header>
             <BootstrapModal.Body>
               {

@@ -1,6 +1,7 @@
 'use strict';
 
 import _ from 'underscore';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -21,7 +22,7 @@ class ClusterDetail extends React.Component {
 
     this.state = {
       loading: true,
-      scalingModalVisible: false
+      releaseDetailsModalVisible: false,
     };
   }
 
@@ -52,7 +53,9 @@ class ClusterDetail extends React.Component {
           loading: false
         });
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
+
         this.props.dispatch(flashAdd({
           message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
           class: 'danger'
@@ -102,8 +105,16 @@ class ClusterDetail extends React.Component {
     this.props.clusterActions.clusterDelete(cluster);
   }
 
-  showReleaseDetails() {
+  showReleaseDetails = () => {
+    this.setState({
+      releaseDetailsModalVisible: true
+    });
+  }
 
+  closeModal = () => {
+    this.setState({
+      releaseDetailsModalVisible: false
+    });
   }
 
   showScalingModal = () => {
@@ -160,15 +171,17 @@ class ClusterDetail extends React.Component {
                           <tr>
                             <td>Release version</td>
                             <td className='value code'>
-                              {this.props.cluster.release_version}
-                              {
-                                (() => {
-                                  var kubernetes = _.find(this.props.release.components, component => component.name === 'kubernetes');
-                                  if (kubernetes) {
-                                    return ' \u2014 includes Kubernetes ' + kubernetes.version;
-                                  }
-                                })()
-                              }
+                              <a onClick={this.showReleaseDetails}>
+                                {this.props.cluster.release_version}
+                                {
+                                  (() => {
+                                    var kubernetes = _.find(this.props.release.components, component => component.name === 'kubernetes');
+                                    if (kubernetes) {
+                                      return ' \u2014 includes Kubernetes ' + kubernetes.version;
+                                    }
+                                  })()
+                                }
+                              </a>
                             </td>
                           </tr>
                           :
@@ -236,6 +249,44 @@ class ClusterDetail extends React.Component {
               </div>
               <ScaleClusterModal ref={(s) => {this.scaleClusterModal = s;}} cluster={this.props.cluster} user={this.props.user}/>
             </div>
+            <BootstrapModal className='release-selector-modal' show={this.state.releaseDetailsModalVisible} onHide={this.closeModal}>
+              <BootstrapModal.Header closeButton>
+                <BootstrapModal.Title>Release Details</BootstrapModal.Title>
+              </BootstrapModal.Header>
+                <BootstrapModal.Body>
+                  {
+                    (() => {
+                      var release = this.props.release;
+                      return <div className='release-selector-modal--release-details' key={release.version}>
+                        <h2>Version {release.version}</h2>
+                        <p className='release-selector-modal--release-details--date'>Released <span>{relativeDate(release.timestamp)}</span></p>
+
+                        <div className='release-selector-modal--components'>
+                          {
+                             _.map(_.sortBy(release.components, 'name'), (component) => {
+                              return <div className='release-selector-modal--component' key={component.name}>
+                                <span className='release-selector-modal--component--name'>{component.name}</span>
+                                <span className='release-selector-modal--component--version'>{component.version}</span>
+                              </div>;
+                            })
+                          }
+                        </div>
+                        <p>Changes</p>
+                        <ul>
+                          {
+                            _.map(release.changelog, (changelog, i) => {
+                              return <li key={changelog.component + i}>{changelog.description}</li>;
+                            })
+                          }
+                        </ul>
+                      </div>;
+                    })()
+                  }
+                </BootstrapModal.Body>
+                <BootstrapModal.Footer>
+                  <Button onClick={this.closeModal}>Close</Button>
+                </BootstrapModal.Footer>
+            </BootstrapModal>
           </div>
         :
           undefined
