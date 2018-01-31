@@ -76,7 +76,15 @@ class ClusterDashboardItem extends React.Component {
                 </Link>
               </div>
 
-              <div>Organization: <b>{this.props.selectedOrganization}</b> · Created <b>{relativeDate(this.props.cluster.create_date)}</b> · Kubernetes <b>{this.props.cluster.kubernetes_version}</b></div>
+              <div>Organization: <b>{this.props.selectedOrganization}</b> ·
+                Created <b>{relativeDate(this.props.cluster.create_date)}</b> ·
+                {
+                  this.props.cluster.release_version && this.props.cluster.release_version !== '' ?
+                  <span> Release Version <b>{this.props.cluster.release_version}</b></span>
+                  :
+                  <span> Kubernetes <b>{this.props.cluster.kubernetes_version}</b></span>
+                }
+              </div>
               <div>
                 <b>{this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}</b> nodes · <b>{memory ? memory : 'n/a'}</b> GB RAM · <b>{cpus ? cpus : 'n/a'}</b> CPUs · <b>{storage ? storage: 'n/a'}</b> GB storage
               </div>
