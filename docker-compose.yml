@@ -183,6 +183,7 @@ services:
                     --service.aws.accesskey.secret="yolo"
                     --service.aws.hostaccesskey.id="yolo"
                     --service.aws.hostaccesskey.secret="yolo"
+                    --service.aws.region=myregion
     links:
       - kube-apiserver
       - vault
