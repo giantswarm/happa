@@ -194,7 +194,7 @@ class ClusterDetail extends React.Component {
                             {this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}
                             &nbsp;
                             {
-                              window.config.createClusterWorkerType !== 'kvm' ?
+                              this.props.provider !== 'kvm' ?
                               <Button onClick={this.showScalingModal}>Scale</Button>
                               : undefined
                             }
