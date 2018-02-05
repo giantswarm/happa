@@ -138,12 +138,21 @@ class ClusterDetail extends React.Component {
           <div>
             <div className="cluster-details">
               <div className='row'>
-                <div className='col-12'>
+                <div className='col-8'>
                   <h1>
                     <ClusterIDLabel clusterID={this.props.cluster.id} />
                     {' '}
                     {this.props.cluster.name} {this.state.loading ? <img className='loader' width="25px" height="25px" src='/images/loader_oval_light.svg'/> : ''}
                   </h1>
+                </div>
+                <div className='col-4'>
+                  <div className='pull-right btn-group'>
+                    {
+                      this.props.provider === 'aws' ?
+                      <Button onClick={this.showScalingModal}>SCALE</Button>
+                      : undefined
+                    }
+                  </div>
                 </div>
               </div>
             </div>
@@ -196,12 +205,6 @@ class ClusterDetail extends React.Component {
                           <td>Number of worker nodes</td>
                           <td className='value'>
                             {this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}
-                            &nbsp;
-                            {
-                              this.props.provider === 'aws' ?
-                              <Button onClick={this.showScalingModal}>Scale</Button>
-                              : undefined
-                            }
                           </td>
                         </tr>
                         {awsInstanceType}
