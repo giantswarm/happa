@@ -14,6 +14,7 @@ import ClusterIDLabel from '../shared/cluster_id_label';
 import { relativeDate } from '../../lib/helpers.js';
 import Button from '../button/index';
 import ScaleClusterModal from './scale_cluster_modal';
+import UpgradeClusterModal from './upgrade_cluster_modal';
 import { browserHistory } from 'react-router';
 
 class ClusterDetail extends React.Component {
@@ -113,12 +114,21 @@ class ClusterDetail extends React.Component {
     this.scaleClusterModal.getWrappedInstance().show();
   }
 
+  showUpgradeModal = () => {
+    this.upgradeClusterModal.getWrappedInstance().show();
+  }
+
   clusterName() {
     if (this.props.cluster) {
       return this.props.cluster.name;
     } else {
       return 'Not found';
     }
+  }
+
+  accessCluster = () => {
+    this.props.clusterActions.clusterSelect(this.props.cluster.id);
+    this.context.router.push('/getting-started/');
   }
 
   render() {
@@ -138,20 +148,22 @@ class ClusterDetail extends React.Component {
           <div>
             <div className="cluster-details">
               <div className='row'>
-                <div className='col-8'>
+                <div className='col-7'>
                   <h1>
                     <ClusterIDLabel clusterID={this.props.cluster.id} />
                     {' '}
                     {this.props.cluster.name} {this.state.loading ? <img className='loader' width="25px" height="25px" src='/images/loader_oval_light.svg'/> : ''}
                   </h1>
                 </div>
-                <div className='col-4'>
+                <div className='col-5'>
                   <div className='pull-right btn-group'>
+                    <Button onClick={this.accessCluster}>GET STARTED</Button>
                     {
                       this.props.provider === 'aws' ?
                       <Button onClick={this.showScalingModal}>SCALE</Button>
                       : undefined
                     }
+                    <Button onClick={this.showUpgradeModal}>UPGRADE</Button>
                   </div>
                 </div>
               </div>
@@ -242,6 +254,7 @@ class ClusterDetail extends React.Component {
                 </div>
               </div>
               <ScaleClusterModal ref={(s) => {this.scaleClusterModal = s;}} cluster={this.props.cluster} user={this.props.user}/>
+              <UpgradeClusterModal ref={(s) => {this.upgradeClusterModal = s;}} cluster={this.props.cluster} />
             </div>
             {
               this.props.release ?
@@ -256,6 +269,11 @@ class ClusterDetail extends React.Component {
     );
   }
 }
+
+ClusterDetail.contextTypes = {
+  router: React.PropTypes.object
+};
+
 
 ClusterDetail.propTypes = {
   clusterActions: React.PropTypes.object,
