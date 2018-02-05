@@ -21,8 +21,7 @@ class ClusterDetail extends React.Component {
     super(props);
 
     this.state = {
-      loading: true,
-      releaseDetailsModalVisible: false,
+      loading: true
     };
   }
 
