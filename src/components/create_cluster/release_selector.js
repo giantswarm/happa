@@ -3,12 +3,11 @@
 import React from 'react';
 import cmp from 'semver-compare';
 import Button from '../button';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
 import {connect} from 'react-redux';
 import { loadReleases } from '../../actions/releaseActions';
 import { flashAdd } from '../../actions/flashMessageActions';
 import _ from 'underscore';
-import { relativeDate } from '../../lib/helpers.js';
+import ReleaseDetailsModal from '../modal/release_details_modal';
 
 class ReleaseSelector extends React.Component {
   constructor(props) {
@@ -19,9 +18,6 @@ class ReleaseSelector extends React.Component {
       error: false,
       selectedRelease: '',
       selectableReleases: [],
-      modal: {
-        visible: false
-      }
     };
   }
 
@@ -107,20 +103,8 @@ class ReleaseSelector extends React.Component {
     this.props.releaseSelected(release);
   }
 
-  closeModal = () => {
-    this.setState({
-      modal: {
-        visible: false
-      }
-    });
-  }
-
   openModal = () => {
-    this.setState({
-      modal: {
-        visible: true
-      }
-    });
+    this.releaseDetailsModal.show();
   }
 
   buttonText() {
@@ -171,49 +155,12 @@ class ReleaseSelector extends React.Component {
               this.loadedContent()
         }
 
-        <BootstrapModal className='release-selector-modal' show={this.state.modal.visible} onHide={this.closeModal}>
-          <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Select a release</BootstrapModal.Title>
-          </BootstrapModal.Header>
-            <BootstrapModal.Body>
-              {
-                _.map(this.state.selectableReleases, (version) => {
-                  var release = this.props.releases[version];
-                  return <div className='release-selector-modal--release-details' key={release.version}>
-                    <h2>Version {release.version} {
-                      this.state.selectedRelease === release.version ?
-                        <span className='selected'>Selected</span>
-                        :
-                        <Button onClick={this.selectRelease.bind(this, release.version)}>Select</Button>
-                    }</h2>
-                    <p className='release-selector-modal--release-details--date'>Released <span>{relativeDate(release.timestamp)}</span></p>
-
-                    <div className='release-selector-modal--components'>
-                      {
-                         _.map(_.sortBy(release.components, 'name'), (component) => {
-                          return <div className='release-selector-modal--component' key={component.name}>
-                            <span className='release-selector-modal--component--name'>{component.name}</span>
-                            <span className='release-selector-modal--component--version'>{component.version}</span>
-                          </div>;
-                        })
-                      }
-                    </div>
-                    <p>Changes</p>
-                    <ul>
-                      {
-                        _.map(release.changelog, (changelog, i) => {
-                          return <li key={changelog.component + i}>{changelog.description}</li>;
-                        })
-                      }
-                    </ul>
-                  </div>;
-              })
-            }
-            </BootstrapModal.Body>
-            <BootstrapModal.Footer>
-              <Button onClick={this.closeModal}>Close</Button>
-            </BootstrapModal.Footer>
-        </BootstrapModal>
+        <ReleaseDetailsModal ref={(r) => {this.releaseDetailsModal = r;}}
+                             releases={_.map(this.state.selectableReleases, (version) => {
+                               return this.props.releases[version];
+                             })}
+                             selectedRelease={this.state.selectedRelease}
+                             releaseSelected={this.selectRelease.bind(this)}/>
       </div>
     );
   }

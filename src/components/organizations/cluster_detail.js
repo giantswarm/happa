@@ -1,6 +1,7 @@
 'use strict';
 
 import _ from 'underscore';
+import ReleaseDetailsModal from '../modal/release_details_modal';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -20,8 +21,7 @@ class ClusterDetail extends React.Component {
     super(props);
 
     this.state = {
-      loading: true,
-      scalingModalVisible: false
+      loading: true
     };
   }
 
@@ -52,7 +52,9 @@ class ClusterDetail extends React.Component {
           loading: false
         });
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
+
         this.props.dispatch(flashAdd({
           message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
           class: 'danger'
@@ -102,8 +104,8 @@ class ClusterDetail extends React.Component {
     this.props.clusterActions.clusterDelete(cluster);
   }
 
-  showReleaseDetails() {
-
+  showReleaseDetails = () => {
+    this.releaseDetailsModal.show();
   }
 
   showScalingModal = () => {
@@ -160,15 +162,17 @@ class ClusterDetail extends React.Component {
                           <tr>
                             <td>Release version</td>
                             <td className='value code'>
-                              {this.props.cluster.release_version}
-                              {
-                                (() => {
-                                  var kubernetes = _.find(this.props.release.components, component => component.name === 'kubernetes');
-                                  if (kubernetes) {
-                                    return ' \u2014 includes Kubernetes ' + kubernetes.version;
-                                  }
-                                })()
-                              }
+                              <a onClick={this.showReleaseDetails}>
+                                {this.props.cluster.release_version}
+                                {
+                                  (() => {
+                                    var kubernetes = _.find(this.props.release.components, component => component.name === 'kubernetes');
+                                    if (kubernetes) {
+                                      return ' \u2014 includes Kubernetes ' + kubernetes.version;
+                                    }
+                                  })()
+                                }
+                              </a>
                             </td>
                           </tr>
                           :
@@ -236,6 +240,7 @@ class ClusterDetail extends React.Component {
               </div>
               <ScaleClusterModal ref={(s) => {this.scaleClusterModal = s;}} cluster={this.props.cluster} user={this.props.user}/>
             </div>
+            <ReleaseDetailsModal ref={(r) => {this.releaseDetailsModal = r;}} releases={[this.props.release]} />
           </div>
         :
           undefined
