@@ -163,7 +163,13 @@ class ClusterDetail extends React.Component {
                       <Button onClick={this.showScalingModal}>SCALE</Button>
                       : undefined
                     }
-                    <Button onClick={this.showUpgradeModal}>UPGRADE</Button>
+
+                    {
+                      this.props.user.isAdmin ?
+                      <Button onClick={this.showUpgradeModal}>UPGRADE</Button>
+                      : undefined
+                    }
+
                   </div>
                 </div>
               </div>
