@@ -16,11 +16,6 @@ spec:
         app: happa
     spec:
       volumes:
-        {{- if not .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
-        - name: happa-certs-secret
-          secret:
-            secretName: happa-certs-secret
-        {{- end }}
         - name: nginx-config
           configMap:
             name: happa-nginx-config
@@ -31,12 +26,6 @@ spec:
         volumeMounts:
         - name: nginx-config
           mountPath: /etc/nginx/config
-
-        {{- if not .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
-        - name: happa-certs-secret
-          mountPath: /etc/nginx/certs
-          readOnly: true
-        {{- end }}
 
         env:
         - name: PASSAGE_ENDPOINT
@@ -65,22 +54,14 @@ spec:
           httpGet:
             path: /
             port: 8000
-            {{- if .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
             scheme: HTTP
-            {{- else }}
-            scheme: HTTPS
-            {{- end }}
           initialDelaySeconds: 10
           timeoutSeconds: 1
         readinessProbe:
           httpGet:
             path: /
             port: 8000
-            {{- if .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
             scheme: HTTP
-            {{- else }}
-            scheme: HTTPS
-            {{- end }}
           initialDelaySeconds: 10
           timeoutSeconds: 1
         resources:

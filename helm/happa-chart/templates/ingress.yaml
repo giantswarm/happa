@@ -8,8 +8,6 @@ metadata:
   annotations:
     {{- if .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
     kubernetes.io/tls-acme: "true"
-    {{- else }}
-    ingress.kubernetes.io/ssl-passthrough: "true"
     {{- end }}
 spec:
   rules:
@@ -23,4 +21,8 @@ spec:
   tls:
   - hosts:
     - {{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
+    {{- if .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
     secretName: giantswarm-happa-tls
+    {{- else }}
+    secretName: happa-certs-secret
+    {{- end }}
