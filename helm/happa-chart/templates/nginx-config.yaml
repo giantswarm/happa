@@ -35,23 +35,7 @@ data:
           '"$http_user_agent" "$http_referer"';
 
       server {
-        {{- if .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
         listen 8000;
-        {{- else }}
-        listen 8000 ssl;
-
-        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-        ssl_prefer_server_ciphers on;
-        ssl_ciphers EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA512:EECDH+ECDSA+SHA384:EECDH+ECDSA+SHA256:ECDH+AESGCM:ECDH+AES256:DH+AESGCM:DH+AES256:RSA+AESGCM:!aNULL:!eNULL:!LOW:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS;
-
-        ssl_certificate /etc/nginx/certs/crt.pem;
-        ssl_certificate_key /etc/nginx/certs/key.pem;
-
-        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-
-        # If they come here using HTTP, bounce them to the correct scheme
-        error_page 497 https://$host$request_uri;
-        {{- end }}
 
         access_log /dev/stdout custom;
         client_max_body_size 0;
