@@ -240,7 +240,11 @@ class ClusterDetail extends React.Component {
               </div>
               <ScaleClusterModal ref={(s) => {this.scaleClusterModal = s;}} cluster={this.props.cluster} user={this.props.user}/>
             </div>
-            <ReleaseDetailsModal ref={(r) => {this.releaseDetailsModal = r;}} releases={[this.props.release]} />
+            {
+              this.props.release ?
+              <ReleaseDetailsModal ref={(r) => {this.releaseDetailsModal = r;}} releases={[this.props.release]} />
+              : undefined
+            }
           </div>
         :
           undefined
