@@ -39,7 +39,7 @@ class NewKVMWorker extends React.Component {
         <NumberPicker label="CPU Cores"
                       stepSize={1}
                       value={worker.cpu}
-                      min={1} max={10}
+                      min={1} max={999}
                       workerId={worker.id}
                       onChange={this.updateWorkerCPU}
                       readOnly={this.props.readOnly}
@@ -49,7 +49,7 @@ class NewKVMWorker extends React.Component {
                       unit="GB"
                       stepSize={1}
                       value={worker.memory}
-                      min={1} max={16}
+                      min={1} max={999}
                       workerId={worker.id}
                       onChange={this.updateWorkerMemory}
                       readOnly={this.props.readOnly}
@@ -59,7 +59,7 @@ class NewKVMWorker extends React.Component {
                       unit="GB"
                       stepSize={10}
                       value={worker.storage}
-                      min={10} max={100}
+                      min={10} max={999}
                       workerId={worker.id}
                       onChange={this.updateWorkerStorage}
                       readOnly={this.props.readOnly}
