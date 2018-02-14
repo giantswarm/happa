@@ -224,7 +224,7 @@ class ClusterKeyPairs extends React.Component {
                   </div>;
                 } else if (this.props.cluster.keyPairs.length === 0) {
                   return <div>
-                  <p>No key pairs yet. Why don?apos;t you create your first?</p>
+                  <p>No key pairs yet. Why don&apos;t you create your first?</p>
                   <Button onClick={this.addKeyPair.bind(this)} bsStyle='default' className='small'>Create Key Pair</Button>
                   </div>;
                 } else {
