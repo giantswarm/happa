@@ -208,15 +208,15 @@ class UpgradeClusterModal extends React.Component {
       .then((patchedCluster) => {
         this.setState({
           loading: false
+        }, () => {
+          this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
+          this.props.flashActions.flashAdd({
+            message: 'Successfully requested cluster upgrade.',
+            class: 'success',
+            ttl: 3000
+          });
+          this.close();
         });
-
-        this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
-        this.props.flashActions.flashAdd({
-          message: 'Successfully requested cluster upgrade.',
-          class: 'success',
-          ttl: 3000
-        });
-        this.close();
       })
       .catch((error) => {
         this.setState({
