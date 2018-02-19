@@ -16,6 +16,7 @@ import Button from '../button/index';
 import ScaleClusterModal from './scale_cluster_modal';
 import UpgradeClusterModal from './upgrade_cluster_modal';
 import { browserHistory } from 'react-router';
+import cmp from 'semver-compare';
 
 class ClusterDetail extends React.Component {
   constructor (props){
@@ -126,6 +127,10 @@ class ClusterDetail extends React.Component {
     }
   }
 
+  canClusterUpgrade() {
+    return this.props.user.isAdmin && !!this.props.targetRelease;
+  }
+
   accessCluster = () => {
     this.props.clusterActions.clusterSelect(this.props.cluster.id);
     this.context.router.push('/getting-started/');
@@ -165,7 +170,7 @@ class ClusterDetail extends React.Component {
                     }
 
                     {
-                      this.props.user.isAdmin ?
+                      this.canClusterUpgrade() ?
                       <Button onClick={this.showUpgradeModal}>UPGRADE</Button>
                       : undefined
                     }
@@ -191,15 +196,27 @@ class ClusterDetail extends React.Component {
                             <td className='value code'>
                               <a onClick={this.showReleaseDetails}>
                                 {this.props.cluster.release_version}
+                                {' '}
                                 {
                                   (() => {
                                     var kubernetes = _.find(this.props.release.components, component => component.name === 'kubernetes');
                                     if (kubernetes) {
-                                      return ' \u2014 includes Kubernetes ' + kubernetes.version;
+                                      return <span>
+                                      &mdash; includes Kubernetes {kubernetes.version}
+                                      </span>;
                                     }
                                   })()
                                 }
                               </a>
+                              {' '}
+                              {
+                                this.canClusterUpgrade() ?
+                                <a onClick={this.showUpgradeModal} className='upgrade-available'>
+                                  <i className='fa fa-info-circle' /> Upgrade available
+                                </a>
+                                :
+                                undefined
+                              }
                             </td>
                           </tr>
                           :
@@ -259,12 +276,24 @@ class ClusterDetail extends React.Component {
                   </div>
                 </div>
               </div>
-              <ScaleClusterModal ref={(s) => {this.scaleClusterModal = s;}} cluster={this.props.cluster} user={this.props.user}/>
-              <UpgradeClusterModal ref={(s) => {this.upgradeClusterModal = s;}} cluster={this.props.cluster} />
+              <ScaleClusterModal ref={(s) => {this.scaleClusterModal = s;}}
+                                 cluster={this.props.cluster}
+                                 user={this.props.user}/>
+
+              {
+                this.props.targetRelease ?
+                <UpgradeClusterModal ref={(s) => {this.upgradeClusterModal = s;}}
+                                     cluster={this.props.cluster}
+                                     release={this.props.release}
+                                     targetRelease={this.props.targetRelease} />
+                :
+                undefined
+              }
             </div>
             {
               this.props.release ?
-              <ReleaseDetailsModal ref={(r) => {this.releaseDetailsModal = r;}} releases={[this.props.release]} />
+              <ReleaseDetailsModal ref={(r) => {this.releaseDetailsModal = r;}}
+                                   releases={[this.props.release]} />
               : undefined
             }
           </div>
@@ -290,15 +319,25 @@ ClusterDetail.propTypes = {
   releaseActions: React.PropTypes.object,
   release: React.PropTypes.object,
   provider: React.PropTypes.string,
+  targetRelease: React.PropTypes.object,
   user: React.PropTypes.object,
 };
 
 function mapStateToProps(state, ownProps) {
   var cluster = state.entities.clusters.items[ownProps.params.clusterId];
   let release;
+  let targetReleaseVersion;
 
   if (cluster.release_version && cluster.release_version !== '') {
     release = state.entities.releases.items[cluster.release_version];
+  }
+
+  let availableVersions = _.map(state.entities.releases.items, (x) => {
+    return x.version;
+  }).sort(cmp);
+
+  if (availableVersions.length > availableVersions.indexOf(cluster.release_version)) {
+    targetReleaseVersion = availableVersions[availableVersions.indexOf(cluster.release_version) + 1];
   }
 
   return {
@@ -307,6 +346,7 @@ function mapStateToProps(state, ownProps) {
     clusterId: ownProps.params.clusterId,
     provider: state.app.info.general.provider,
     release: release,
+    targetRelease: state.entities.releases.items[targetReleaseVersion],
     user: state.app.loggedInUser
   };
 }
