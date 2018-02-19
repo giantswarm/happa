@@ -46,14 +46,10 @@ class UpgradeClusterModal extends React.Component {
       components[component.name] = component;
     });
 
-    delete components.kubedns;
-
     var targetComponents = {};
     _.each(this.props.targetRelease.components, (component) => {
       targetComponents[component.name] = component;
     });
-
-    delete targetComponents.calico;
 
     var changedComponents = diff.diff(components, targetComponents);
 
