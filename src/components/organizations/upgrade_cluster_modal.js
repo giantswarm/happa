@@ -212,9 +212,11 @@ class UpgradeClusterModal extends React.Component {
         }, () => {
           this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
           this.props.flashActions.flashAdd({
-            message: 'Successfully requested cluster upgrade.',
-            class: 'success',
-            ttl: 3000
+            message: <div>
+              <strong>Successfully requested cluster upgrade.</strong><br/>
+              Keep an eye on <code>kubectl get nodes</code> to see the progress of the upgrade.
+            </div>,
+            class: 'success'
           });
           this.close();
         });
