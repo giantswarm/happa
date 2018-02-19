@@ -186,7 +186,8 @@ class UpgradeClusterModal extends React.Component {
       <BootstrapModal.Footer>
         <Button
           bsStyle='primary'
-          onClick={this.submit}>
+          onClick={this.submit}
+          loading={this.state.loading}>
           Start Upgrade
         </Button>
         <Button
