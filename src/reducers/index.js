@@ -34,7 +34,8 @@ main_store.js
     loggedInUser: {
       email: '',
       username: '',
-      authToken: ''
+      authToken: '',
+      isAdmin: false
     }, // id of the user that is currently logged in
     info: {"general":{"installation_name":"testbot","provider":"kvm"},"workers":{"count_per_cluster":{"max":0,"default":3}}}
     }
@@ -51,17 +52,6 @@ main_store.js
   },
 
   entities: { // the various entities that this app cares about
-    users: {
-      lastUpdated: 123456789 // timestamp of when the entities were last updated
-      isFetching: bool,
-      items: {
-        oponder: {
-          name: "oponder",
-          organizations: ["giantswarm"]
-        }
-      }
-    },
-
     organizations: {
       lastUpdated: 123456789,
       isFetching: bool,
@@ -89,17 +79,6 @@ main_store.js
       activeRelease: "0.1.0",
       items: {
         "0.1.0": {"active":true,"changelog":[{"component":"vault","description":"Vault version updated."}],"components":[{"name":"vault","version":"0.7.3"}],"timestamp":"2017-10-26T16:53:00Z","version":"0.1.0"}
-      }
-    }
-
-    invoices: {
-      lastUpdated: 123456789,
-      isFetching: bool,
-      items: {
-        invoice_id: {
-          ... invoice properties
-          organization: ["oponder"]
-        }
       }
     }
   }

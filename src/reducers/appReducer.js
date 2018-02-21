@@ -3,6 +3,7 @@
 import * as types from '../actions/actionTypes';
 import { browserHistory } from 'react-router';
 import GiantSwarmV4 from 'giantswarm-v4';
+import _ from 'underscore';
 
 var shutDown = function(state) {
   localStorage.removeItem('user');
@@ -87,21 +88,23 @@ export default function appReducer(state = {
       });
 
     case types.ORGANIZATIONS_LOAD_SUCCESS:
-      // // Organizations have been loaded
-      // // Check if the user has an organization selected already, and if that
-      // // organization still exists. If not select the first organization.
-      // // And then do the same for the selected cluster.
+      // Organizations have been loaded.
+      // Determine if the user should be considered an admin.
 
-      // var selectedOrganization = determineSelectedOrganization(action.organizations);
+      var isAdmin = false;
 
-      // if (selectedOrganization) {
-      //   selectedCluster = determineSelectedCluster(selectedOrganization, action.organizations);
-      // }
+      var organizations = _.map(action.organizations, o => o.id);
+      if (organizations.indexOf('giantswarm') != -1) {
+        isAdmin = true;
+      }
+
+      var loggedInUser = Object.assign({}, state.loggedInUser, {isAdmin});
 
       return Object.assign({}, state, {
         selectedOrganization: action.selectedOrganization,
         selectedCluster: action.selectedCluster,
-        firstLoadComplete: true
+        firstLoadComplete: true,
+        loggedInUser,
       });
 
     default:

@@ -14,7 +14,9 @@ import ClusterIDLabel from '../shared/cluster_id_label';
 import { relativeDate } from '../../lib/helpers.js';
 import Button from '../button/index';
 import ScaleClusterModal from './scale_cluster_modal';
+import UpgradeClusterModal from './upgrade_cluster_modal';
 import { browserHistory } from 'react-router';
+import cmp from 'semver-compare';
 
 class ClusterDetail extends React.Component {
   constructor (props){
@@ -113,12 +115,25 @@ class ClusterDetail extends React.Component {
     this.scaleClusterModal.getWrappedInstance().show();
   }
 
+  showUpgradeModal = () => {
+    this.upgradeClusterModal.getWrappedInstance().show();
+  }
+
   clusterName() {
     if (this.props.cluster) {
       return this.props.cluster.name;
     } else {
       return 'Not found';
     }
+  }
+
+  canClusterUpgrade() {
+    return this.props.user.isAdmin && !!this.props.targetRelease;
+  }
+
+  accessCluster = () => {
+    this.props.clusterActions.clusterSelect(this.props.cluster.id);
+    this.context.router.push('/getting-started/');
   }
 
   render() {
@@ -138,12 +153,29 @@ class ClusterDetail extends React.Component {
           <div>
             <div className="cluster-details">
               <div className='row'>
-                <div className='col-12'>
+                <div className='col-7'>
                   <h1>
                     <ClusterIDLabel clusterID={this.props.cluster.id} />
                     {' '}
                     {this.props.cluster.name} {this.state.loading ? <img className='loader' width="25px" height="25px" src='/images/loader_oval_light.svg'/> : ''}
                   </h1>
+                </div>
+                <div className='col-5'>
+                  <div className='pull-right btn-group'>
+                    <Button onClick={this.accessCluster}>GET STARTED</Button>
+                    {
+                      this.props.provider === 'aws' ?
+                      <Button onClick={this.showScalingModal}>SCALE</Button>
+                      : undefined
+                    }
+
+                    {
+                      this.canClusterUpgrade() ?
+                      <Button onClick={this.showUpgradeModal}>UPGRADE</Button>
+                      : undefined
+                    }
+
+                  </div>
                 </div>
               </div>
             </div>
@@ -164,15 +196,27 @@ class ClusterDetail extends React.Component {
                             <td className='value code'>
                               <a onClick={this.showReleaseDetails}>
                                 {this.props.cluster.release_version}
+                                {' '}
                                 {
                                   (() => {
                                     var kubernetes = _.find(this.props.release.components, component => component.name === 'kubernetes');
                                     if (kubernetes) {
-                                      return ' \u2014 includes Kubernetes ' + kubernetes.version;
+                                      return <span>
+                                      &mdash; includes Kubernetes {kubernetes.version}
+                                      </span>;
                                     }
                                   })()
                                 }
                               </a>
+                              {' '}
+                              {
+                                this.canClusterUpgrade() ?
+                                <a onClick={this.showUpgradeModal} className='upgrade-available'>
+                                  <i className='fa fa-info-circle' /> Upgrade available
+                                </a>
+                                :
+                                undefined
+                              }
                             </td>
                           </tr>
                           :
@@ -196,12 +240,6 @@ class ClusterDetail extends React.Component {
                           <td>Number of worker nodes</td>
                           <td className='value'>
                             {this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}
-                            &nbsp;
-                            {
-                              this.props.provider === 'aws' ?
-                              <Button onClick={this.showScalingModal}>Scale</Button>
-                              : undefined
-                            }
                           </td>
                         </tr>
                         {awsInstanceType}
@@ -238,11 +276,24 @@ class ClusterDetail extends React.Component {
                   </div>
                 </div>
               </div>
-              <ScaleClusterModal ref={(s) => {this.scaleClusterModal = s;}} cluster={this.props.cluster} user={this.props.user}/>
+              <ScaleClusterModal ref={(s) => {this.scaleClusterModal = s;}}
+                                 cluster={this.props.cluster}
+                                 user={this.props.user}/>
+
+              {
+                this.props.targetRelease ?
+                <UpgradeClusterModal ref={(s) => {this.upgradeClusterModal = s;}}
+                                     cluster={this.props.cluster}
+                                     release={this.props.release}
+                                     targetRelease={this.props.targetRelease} />
+                :
+                undefined
+              }
             </div>
             {
               this.props.release ?
-              <ReleaseDetailsModal ref={(r) => {this.releaseDetailsModal = r;}} releases={[this.props.release]} />
+              <ReleaseDetailsModal ref={(r) => {this.releaseDetailsModal = r;}}
+                                   releases={[this.props.release]} />
               : undefined
             }
           </div>
@@ -254,6 +305,11 @@ class ClusterDetail extends React.Component {
   }
 }
 
+ClusterDetail.contextTypes = {
+  router: React.PropTypes.object
+};
+
+
 ClusterDetail.propTypes = {
   clusterActions: React.PropTypes.object,
   cluster: React.PropTypes.object,
@@ -263,15 +319,27 @@ ClusterDetail.propTypes = {
   releaseActions: React.PropTypes.object,
   release: React.PropTypes.object,
   provider: React.PropTypes.string,
+  targetRelease: React.PropTypes.object,
   user: React.PropTypes.object,
 };
 
 function mapStateToProps(state, ownProps) {
   var cluster = state.entities.clusters.items[ownProps.params.clusterId];
   let release;
+  let targetReleaseVersion;
 
-  if (cluster.release_version && cluster.release_version !== '') {
-    release = state.entities.releases.items[cluster.release_version];
+  if (cluster) {
+    if (cluster.release_version && cluster.release_version !== '') {
+      release = state.entities.releases.items[cluster.release_version];
+    }
+
+    let availableVersions = _.map(state.entities.releases.items, (x) => {
+      return x.version;
+    }).sort(cmp);
+
+    if (availableVersions.length > availableVersions.indexOf(cluster.release_version)) {
+      targetReleaseVersion = availableVersions[availableVersions.indexOf(cluster.release_version) + 1];
+    }
   }
 
   return {
@@ -280,6 +348,7 @@ function mapStateToProps(state, ownProps) {
     clusterId: ownProps.params.clusterId,
     provider: state.app.info.general.provider,
     release: release,
+    targetRelease: state.entities.releases.items[targetReleaseVersion],
     user: state.app.loggedInUser
   };
 }
