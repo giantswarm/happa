@@ -328,16 +328,18 @@ function mapStateToProps(state, ownProps) {
   let release;
   let targetReleaseVersion;
 
-  if (cluster.release_version && cluster.release_version !== '') {
-    release = state.entities.releases.items[cluster.release_version];
-  }
+  if (cluster) {
+    if (cluster.release_version && cluster.release_version !== '') {
+      release = state.entities.releases.items[cluster.release_version];
+    }
 
-  let availableVersions = _.map(state.entities.releases.items, (x) => {
-    return x.version;
-  }).sort(cmp);
+    let availableVersions = _.map(state.entities.releases.items, (x) => {
+      return x.version;
+    }).sort(cmp);
 
-  if (availableVersions.length > availableVersions.indexOf(cluster.release_version)) {
-    targetReleaseVersion = availableVersions[availableVersions.indexOf(cluster.release_version) + 1];
+    if (availableVersions.length > availableVersions.indexOf(cluster.release_version)) {
+      targetReleaseVersion = availableVersions[availableVersions.indexOf(cluster.release_version) + 1];
+    }
   }
 
   return {
