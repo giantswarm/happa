@@ -50,9 +50,7 @@ after yourself.
 Running tests
 -------------
 
-`make test`
-
-There is only one sanity test at the moment though.
+There are no automated tests for Happa at the moment.
 
 Deploying
 ---------
