@@ -134,8 +134,7 @@ class UpgradeClusterModal extends React.Component {
         {
           _.map(this.props.targetRelease.changelog, (changelog, i) => {
             return <li key={changelog.component + i}>
-              <b>{changelog.component}</b><br/>
-              {changelog.description}
+              <b>{changelog.component}:</b> {changelog.description}
             </li>;
           })
         }
