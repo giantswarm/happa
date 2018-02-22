@@ -13,7 +13,6 @@ RUN npm config set registry https://registry.npmjs.org/
 
 # Install some slow dependencies individually, so they can get cached as layers
 RUN npm install node-sass@4.7.2
-RUN npm install phantomjs-prebuilt@2.1.16
 
 # Install app dependencies
 COPY package.json /usr/src/app/

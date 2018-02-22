@@ -67,12 +67,6 @@ module.exports = function (grunt) {
       }
     },
 
-    karma: {
-      unit: {
-        configFile: 'karma.conf.js'
-      }
-    },
-
     copy: {
       dist: {
         files: [
@@ -144,8 +138,6 @@ module.exports = function (grunt) {
       'webpack-dev-server'
     ]);
   });
-
-  grunt.registerTask('test', ['karma']);
 
   grunt.registerTask('build', ['copy', 'webpack', 'cacheBust']);
 
