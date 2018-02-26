@@ -1,4 +1,4 @@
-FROM nginx:1.13.8-alpine
+FROM nginx:1.13-alpine
 RUN rm -r /etc/nginx/conf.d
 ADD dist /www
 RUN mkdir -p /etc/nginx/config
