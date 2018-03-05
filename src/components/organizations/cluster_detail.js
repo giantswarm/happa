@@ -255,6 +255,24 @@ class ClusterDetail extends React.Component {
                           <td>Total storage in worker nodes</td>
                           <td className='value'>{this.getStorageTotal() === null ? 'n/a' : this.getStorageTotal()} GB</td>
                         </tr>
+                        {
+                          this.props.cluster.kvm && this.props.cluster.kvm.port_mappings ?
+                          <tr>
+                            <td>Ingress Ports</td>
+                            <td>
+                              <dl className="ingress-port-table">
+                                {this.props.cluster.kvm.port_mappings.reduce((acc, item, idx) => {
+                                  return acc.concat([
+                                    <dt key={`def-${idx}`}>{item.protocol}</dt>,
+                                    <dd key={`term-${idx}`}>{item.port}</dd>
+                                  ]);
+                                }, [])}
+                              </dl>
+                            </td>
+                          </tr>
+                          :
+                          undefined
+                        }
                       </tbody>
                     </table>
                   </div>
