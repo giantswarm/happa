@@ -263,7 +263,7 @@ class ClusterDetail extends React.Component {
                               <dl className="ingress-port-table">
                                 {this.props.cluster.kvm.port_mappings.reduce((acc, item, idx) => {
                                   return acc.concat([
-                                    <dt key={`def-${idx}`}>{item.protocol}</dt>,
+                                    <dt key={`def-${idx}`}><code>{item.protocol}</code></dt>,
                                     <dd key={`term-${idx}`}>{item.port}</dd>
                                   ]);
                                 }, [])}
