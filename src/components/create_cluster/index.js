@@ -23,9 +23,9 @@ class CreateCluster extends React.Component {
       workerCount: 3,
       syncWorkers: true,
       workers: [
-        { id: 1, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', valid: true },
-        { id: 2, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', valid: true },
-        { id: 3, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', valid: true }
+        { id: 1, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', vmSize: 'Standard_D2s_v3', valid: true },
+        { id: 2, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', vmSize: 'Standard_D2s_v3', valid: true },
+        { id: 3, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', vmSize: 'Standard_D2s_v3', valid: true }
       ],
       submitting: false,
       valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
@@ -63,6 +63,7 @@ class CreateCluster extends React.Component {
         memory: this.state.workers[0].memory,
         storage: this.state.workers[0].storage,
         instanceType: this.state.workers[0].instanceType,
+        vmSize: this.state.workers[0].vmSize,
         valid: this.state.workers[0].valid
       };
     } else {
@@ -72,6 +73,7 @@ class CreateCluster extends React.Component {
         memory: 1,
         storage: 20,
         instanceType: 'm3.large',
+        vmSize: 'Standard_D2s_v3',
         valid: true
       };
     }
@@ -174,6 +176,7 @@ class CreateCluster extends React.Component {
         worker.cpu = newWorker.cpu;
         worker.memory = newWorker.memory;
         worker.instanceType = newWorker.instanceType;
+        worker.vmSize = newWorker.vmSize;
         return worker;
       });
       newState = update(this.state, {
@@ -278,6 +281,7 @@ class CreateCluster extends React.Component {
                                        onWorkerUpdated={this.updateWorker.bind(this, index)} />;
                   } else if (this.props.provider === 'azure') {
                     return <NewAzureWorker key={'Worker ' + worker.id}
+                                       allowedVMSizes={this.props.allowedVMSizes}
                                        worker={worker}
                                        index={index}
                                        readOnly={this.state.syncWorkers && index !== 0}
@@ -340,6 +344,7 @@ class CreateCluster extends React.Component {
 
 CreateCluster.propTypes = {
   allowedInstanceTypes: React.PropTypes.array,
+  allowedVMSizes: React.PropTypes.array,
   selectedOrganization: React.PropTypes.string,
   dispatch: React.PropTypes.func,
   provider: React.PropTypes.string,
@@ -351,11 +356,19 @@ function mapStateToProps(state) {
 
   var allowedInstanceTypes = [];
   if (provider === 'aws') {
-     allowedInstanceTypes = state.app.info.workers.instance_type.options;
+    allowedInstanceTypes = state.app.info.workers.instance_type.options;
   }
+
+  var allowedVMSizes = [];
+  if (provider === 'azure') {
+    allowedVMSizes = state.app.info.workers.vm_size.options;
+  }
+
+  allowedVMSizes = ['Standard_D2s_v3', 'Standard_A2_v2'];
 
   return {
     allowedInstanceTypes,
+    allowedVMSizes,
     provider,
     selectedOrganization,
   };

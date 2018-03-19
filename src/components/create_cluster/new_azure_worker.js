@@ -1,18 +1,42 @@
 'use strict';
 
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import Button from '../button';
 import InputField from '../shared/input_field';
+import AzureCapabilities from './azure_capabilities.js';
 
 class NewAzureWorker extends React.Component {
   constructor(props) {
     super(props);
 
+    var allVMSizes = AzureCapabilities;
+    var availableVMSizes = allVMSizes.filter(x => props.allowedVMSizes.indexOf(x.name) !== -1);
+
     this.state = {
+      modalVisible: false,
+      preSelectedVMSize: props.worker.vmSize,
+      vmSizes: availableVMSizes,
     };
   }
 
-  updateInstanceType = (value) => {
-    this.props.worker.instanceType = value;
+  showModal = () => {
+    if ( ! this.props.readOnly) {
+      this.setState({
+        modalVisible: true,
+        preSelectedVMSize: this.props.worker.vmSize
+      });
+    }
+  }
+
+  closeModal = () => {
+    this.setState({
+      modalVisible: false
+    });
+  }
+
+  updateVMSize = (value) => {
+    this.props.worker.vmSize = value;
     this.props.onWorkerUpdated(this.props.worker);
   }
 
@@ -22,6 +46,42 @@ class NewAzureWorker extends React.Component {
     } else {
       return '';
     }
+  }
+
+  preSelect(vmSize) {
+    this.setState({
+      preSelectedVMSize: vmSize
+    });
+  }
+
+  selectVMSize = () => {
+    this.props.worker.vmSize = this.state.preSelectedVMSize;
+    this.props.onWorkerUpdated(this.props.worker);
+    this.closeModal();
+  }
+
+  validateVMSize = (vmSize) => {
+    var validVMSizes = this.state.vmSizes.map((x) => {
+      return x.name;
+    });
+
+    if (validVMSizes.indexOf(vmSize) != -1) {
+      this.props.worker.valid = true;
+      this.props.onWorkerUpdated(this.props.worker);
+
+      return {
+        valid: true,
+        validationError: ''
+      };
+    }
+
+    this.props.worker.valid = false;
+    this.props.onWorkerUpdated(this.props.worker);
+
+    return {
+      valid: false,
+      validationError: 'Please enter a valid vm size'
+    };
   }
 
   render() {
@@ -39,27 +99,78 @@ class NewAzureWorker extends React.Component {
               undefined
           }
         </div>
-
         <div className="new-cluster--worker-setting-label">
           VM Size
         </div>
 
-        <div className="new-cluster--azure-instance-type-selector">
+        <div className="new-cluster--instance-type-selector">
           <form onSubmit={(e) => {e.preventDefault();}}>
-            <InputField ref={(i) => {this.instance_type = i;}}
+            <InputField ref={(i) => {this.vmSize = i;}}
                    type="text"
-                   value="Standard_DS2_v2"
+                   value={this.props.worker.vmSize}
+                   onChange={this.updateVMSize}
+                   validate={this.validateVMSize}
                    autoFocus
-                   disabled={true}
-                   readOnly={true} />
+                   readOnly={this.props.readOnly} />
+
+            <span>{this.props.worker.valid}</span>
+            <div className={'new-cluster--instance-type-selector-button ' + this.buttonClass()} onClick={this.showModal}>
+              <i className='fa fa-bars' />
+            </div>
           </form>
         </div>
+        <BootstrapModal show={this.state.modalVisible} onHide={this.closeModal} className="new-cluster--instance-type-selector-modal">
+          <BootstrapModal.Header closeButton>
+            <BootstrapModal.Title>Select a VM Size</BootstrapModal.Title>
+          </BootstrapModal.Header>
+          <BootstrapModal.Body>
+            <table className='new-cluster--instance-type-selector-table'>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Name</th>
+                  <th className="numeric">CPU Cores</th>
+                  <th className="numeric">Memory</th>
+                  <th className="numeric">Storage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  this.state.vmSizes.map((vmSize) => {
+                    return <tr key={vmSize.name} onClick={this.preSelect.bind(this, vmSize.name)}>
+                      <td><input type='radio' readOnly checked={vmSize.name === this.state.preSelectedVMSize}/></td>
+                      <td>{vmSize.name}</td>
+                      <td className="numeric">{vmSize.numberOfCores}</td>
+                      <td className="numeric">{vmSize.memoryInMb}</td>
+                      <td className="numeric">{vmSize.resourceDiskSizeInMb}</td>
+                    </tr>;
+                  })
+                }
+              </tbody>
+            </table>
+          </BootstrapModal.Body>
+          <BootstrapModal.Footer>
+            <Button
+              type='submit'
+              bsStyle='primary'
+              onClick={this.selectVMSize}>
+              Select VM Size
+            </Button>
+
+            <Button
+              bsStyle='link'
+              onClick={this.closeModal}>
+              Cancel
+            </Button>
+          </BootstrapModal.Footer>
+        </BootstrapModal>
       </div>
     );
   }
 }
 
 NewAzureWorker.propTypes = {
+  allowedVMSizes: React.PropTypes.array,
   worker: React.PropTypes.object,
   index: React.PropTypes.number,
   readOnly: React.PropTypes.bool,
