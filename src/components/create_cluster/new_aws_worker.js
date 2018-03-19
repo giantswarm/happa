@@ -141,7 +141,7 @@ class NewAWSWorker extends React.Component {
             </div>
           </form>
         </div>
-        <BootstrapModal show={this.state.modalVisible} onHide={this.closeModal} className="new-cluster--instance-type-selector-modal">
+        <BootstrapModal show={this.state.modalVisible} onHide={this.closeModal} className="new-cluster--instance-type-selector-modal aws">
           <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Select an Instance Type</BootstrapModal.Title>
           </BootstrapModal.Header>

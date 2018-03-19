@@ -197,25 +197,37 @@
   .modal-dialog
     width: 650px
 
+.new-cluster--instance-type-selector-modal.aws
+  .new-cluster--instance-type-selector-table
+    tbody td, thead th
+      width: 120px
+
+      &:first-child
+        width: 50px
+
 .new-cluster--instance-type-selector-table
   margin-bottom: -10px
   border-bottom: 0px
   width: auto
   display: block
+  table-layout: fixed
 
   thead
     tr
       width: 100%
 
+  tbody, thead
+    display: block
+
   tbody td, thead th
-    width: 20%
+    width: 140px
 
     &:first-child
-      width: 8%
+      width: 50px
 
   tbody
     height: 300px
-    overflow-y: scroll
+    overflow: auto;
 
   tbody tr
     cursor: pointer
