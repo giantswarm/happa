@@ -128,6 +128,14 @@ class CreateCluster extends React.Component {
           }
         };
       });
+    } else if (this.props.provider === 'azure') {
+      workers = this.state.workers.map((worker) => {
+        return {
+          aws: {
+            vm_size: worker.vmSize
+          }
+        };
+      });
     } else {
       workers = this.state.workers.map((worker) => {
         return {
@@ -363,8 +371,6 @@ function mapStateToProps(state) {
   if (provider === 'azure') {
     allowedVMSizes = state.app.info.workers.vm_size.options;
   }
-
-  allowedVMSizes = ['Standard_D2s_v3', 'Standard_A2_v2'];
 
   return {
     allowedInstanceTypes,
