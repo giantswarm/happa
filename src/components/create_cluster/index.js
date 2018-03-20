@@ -131,7 +131,7 @@ class CreateCluster extends React.Component {
     } else if (this.props.provider === 'azure') {
       workers = this.state.workers.map((worker) => {
         return {
-          aws: {
+          azure: {
             vm_size: worker.vmSize
           }
         };
