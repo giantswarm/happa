@@ -56,7 +56,7 @@ export default [
   {
     'additionalProperties': {},
     'maxDataDiskCount': 32,
-    'memoryInMb': 65636,
+    'memoryInMb': 65536,
     'name': 'Standard_D16_v3',
     'numberOfCores': 16,
     'osDiskSizeInMb': 1047552,
