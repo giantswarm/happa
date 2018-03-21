@@ -26,9 +26,10 @@ class NewAWSWorker extends React.Component {
       {name: 'm5.xlarge'  , description: 'M5 General Purpose Extra Large'           , memory: '16'      , cpuCores: '4'                   , storage: 'EBS-Only'} ,
       {name: 'm5.2xlarge' , description: 'M5 General Purpose Double Extra Large'    , memory: '32'      , cpuCores: '8'                   , storage: 'EBS-Only'} ,
       {name: 'm5.4xlarge' , description: 'M5 General Purpose Quadruple Extra Large' , memory: '64'      , cpuCores: '16'                  , storage: 'EBS-Only'} ,
-      {name: 't2.large'   , description: 'T2 General Purpose Large'                 , memory: '8'       , cpuCores: '36 credits p/hour' , storage: 'EBS-Only'} ,
-      {name: 't2.xlarge'  , description: 'T2 General Purpose Extra Large'           , memory: '16'      , cpuCores: '54 credits p/hour' , storage: 'EBS-Only'} ,
-      {name: 't2.2xlarge' , description: 'T2 General Purpose Double Extra Large'    , memory: '32'      , cpuCores: '81 credits p/hour' , storage: 'EBS-Only'}
+      {name: 't2.large'   , description: 'T2 General Purpose Large'                 , memory: '8'       , cpuCores: '36 credits p/hour'   , storage: 'EBS-Only'} ,
+      {name: 't2.xlarge'  , description: 'T2 General Purpose Extra Large'           , memory: '16'      , cpuCores: '54 credits p/hour'   , storage: 'EBS-Only'} ,
+      {name: 't2.2xlarge' , description: 'T2 General Purpose Double Extra Large'    , memory: '32'      , cpuCores: '81 credits p/hour'   , storage: 'EBS-Only'} ,
+      {name: 'c5.2xlarge' , description: 'C5 Compute Optimized Double Extra Large'  , memory: '16'      , cpuCores: '8'                   , storage: 'EBS-Only'}
     ];
 
     var availableInstanceTypes = allInstanceTypes.filter(x => props.allowedInstanceTypes.indexOf(x.name) !== -1);
