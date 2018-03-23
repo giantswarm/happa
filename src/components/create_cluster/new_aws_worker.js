@@ -29,7 +29,8 @@ class NewAWSWorker extends React.Component {
       {name: 't2.large'   , description: 'T2 General Purpose Large'                 , memory: '8'       , cpuCores: '36 credits p/hour'   , storage: 'EBS-Only'} ,
       {name: 't2.xlarge'  , description: 'T2 General Purpose Extra Large'           , memory: '16'      , cpuCores: '54 credits p/hour'   , storage: 'EBS-Only'} ,
       {name: 't2.2xlarge' , description: 'T2 General Purpose Double Extra Large'    , memory: '32'      , cpuCores: '81 credits p/hour'   , storage: 'EBS-Only'} ,
-      {name: 'c5.2xlarge' , description: 'C5 Compute Optimized Double Extra Large'  , memory: '16'      , cpuCores: '8'                   , storage: 'EBS-Only'}
+      {name: 'c5.2xlarge' , description: 'C5 Compute Optimized Double Extra Large'  , memory: '16'      , cpuCores: '8'                   , storage: 'EBS-Only'} ,
+      {name: 'i3.xlarge'  , description: 'I3 Storage Optimized Extra Large'         , memory: '30.5'    , cpuCores: '4'                   , storage: '1 x 0.95 NVMe SSD'}
     ];
 
     var availableInstanceTypes = allInstanceTypes.filter(x => props.allowedInstanceTypes.indexOf(x.name) !== -1);
