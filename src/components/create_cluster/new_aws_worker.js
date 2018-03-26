@@ -125,7 +125,7 @@ class NewAWSWorker extends React.Component {
           Instance Type
         </div>
 
-        <div className="new-cluster--aws-instance-type-selector">
+        <div className="new-cluster--instance-type-selector">
           <form onSubmit={(e) => {e.preventDefault();}}>
             <InputField ref={(i) => {this.instance_type = i;}}
                    type="text"
@@ -136,17 +136,17 @@ class NewAWSWorker extends React.Component {
                    readOnly={this.props.readOnly} />
 
             <span>{this.props.worker.valid}</span>
-            <div className={'new-cluster--aws-instance-type-selector-button ' + this.buttonClass()} onClick={this.showModal}>
+            <div className={'new-cluster--instance-type-selector-button ' + this.buttonClass()} onClick={this.showModal}>
               <i className='fa fa-bars' />
             </div>
           </form>
         </div>
-        <BootstrapModal show={this.state.modalVisible} onHide={this.closeModal} className="new-cluster--aws-instance-type-selector-modal">
+        <BootstrapModal show={this.state.modalVisible} onHide={this.closeModal} className="new-cluster--instance-type-selector-modal aws">
           <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Select an Instance Type</BootstrapModal.Title>
           </BootstrapModal.Header>
           <BootstrapModal.Body>
-            <table className='new-cluster--aws-instance-type-selector-table'>
+            <table className='new-cluster--instance-type-selector-table'>
               <thead>
                 <tr>
                   <th></th>

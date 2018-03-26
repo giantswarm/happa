@@ -172,11 +172,11 @@
     margin-top: 18px
 
 
-.new-cluster--aws-instance-type-selector
+.new-cluster--instance-type-selector
   form
     position: relative
 
-.new-cluster--aws-instance-type-selector-button
+.new-cluster--instance-type-selector-button
   cursor: pointer
   position: absolute
   top: 0px
@@ -193,35 +193,41 @@
     color: lighten(#3a5f7b, 10%)
     cursor: default
 
-.new-cluster--aws-instance-type-selector-modal
+.new-cluster--instance-type-selector-modal
   .modal-dialog
     width: 650px
 
-.new-cluster--aws-instance-type-selector-table
-  margin-left: -15px
-  margin-right: -15px
+.new-cluster--instance-type-selector-modal.aws
+  .new-cluster--instance-type-selector-table
+    tbody td, thead th
+      width: 120px
+
+      &:first-child
+        width: 50px
+
+.new-cluster--instance-type-selector-table
   margin-bottom: -10px
   border-bottom: 0px
   width: auto
   display: block
+  table-layout: fixed
 
   thead
-    display: block
-    width: 100%
     tr
-      display: block
       width: 100%
 
+  tbody, thead
+    display: block
+
   tbody td, thead th
-    width: 20%
+    width: 140px
 
     &:first-child
-      width: 8%
+      width: 50px
 
   tbody
-    display: block
     height: 300px
-    overflow-y: scroll
+    overflow: auto;
 
   tbody tr
     cursor: pointer
