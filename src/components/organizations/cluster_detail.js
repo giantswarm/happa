@@ -164,7 +164,7 @@ class ClusterDetail extends React.Component {
                   <div className='pull-right btn-group'>
                     <Button onClick={this.accessCluster}>GET STARTED</Button>
                     {
-                      this.props.provider === 'aws' ?
+                      (this.props.provider === 'aws' || this.props.provider === 'kvm') ?
                       <Button onClick={this.showScalingModal}>SCALE</Button>
                       : undefined
                     }
