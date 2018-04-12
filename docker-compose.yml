@@ -86,7 +86,6 @@ services:
                     --service.keypair.certificate.ttl="24h"
                     --service.kubernetes.incluster=false
                     --service.kubernetes.guest.api.endpointformat="https://api.%s.g8s.fra-1.giantswarm.io"
-                    --service.kubernetes.guest.version="v1.7.5_coreos.0"
                     --service.kubernetes.address="http://kube-apiserver:8080"
                     --service.kubernetesd.address="http://kubernetesd:8000"
                     --service.vault.config.address="http://vault:8200"

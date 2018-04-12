@@ -71,7 +71,9 @@ class ReleaseDetailsModal extends React.Component {
                   <ul>
                     {
                       _.map(release.changelog, (changelog, i) => {
-                        return <li key={changelog.component + i}>{changelog.description}</li>;
+                        return <li key={changelog.component + i}>
+                          <b>{changelog.component}:</b> {changelog.description}
+                        </li>;
                       })
                     }
                   </ul>
