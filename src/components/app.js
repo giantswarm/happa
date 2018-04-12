@@ -10,6 +10,7 @@ import gettingStarted from './getting-started/index';
 import login from './login/index';
 import logout from './logout/index';
 import signup from './signup/index';
+import oauth_callback from './oauth/callback.js';
 import notFound from './not_found/index';
 // import createCluster from './create_cluster';
 import forgot_password_index from './forgot_password/index';
@@ -23,6 +24,7 @@ import clusterDetail from './organizations/cluster_detail';
 import accountSettings from './account_settings';
 import Home from './home';
 import GiantSwarmV4 from 'giantswarm-v4';
+import Auth from '../lib/auth.js';
 
 require('normalize.css');
 require('bootstrap/dist/css/bootstrap.min.css');
@@ -40,16 +42,19 @@ var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'
 defaultClientAuth.apiKeyPrefix = 'giantswarm';
 
 
-function requireAuth(nextState, replace) {
+function requireAuth() {
   var state = store.getState();
 
   if (state.app.loggedInUser) {
     defaultClientAuth.apiKey = state.app.loggedInUser.authToken;
   } else {
-    replace({
-      pathname: '/login',
-      query: { nextPathname: nextState.location.pathname }
-    });
+    const auth = new Auth();
+    auth.login();
+
+    // replace({
+    //   pathname: '/login',
+    //   query: { nextPathname: nextState.location.pathname }
+    // });
   }
 }
 
@@ -65,6 +70,7 @@ render(
       <Route path = "/forgot_password" component={forgot_password_index} />
       <Route path = "/forgot_password/:token" component={forgot_password_set_password} />
       <Route path = "/signup/:token" component={signup} />
+      <Route path = "/oauth/callback" component={oauth_callback} />
 
       <Route name="Home" path="/" component={Layout} onEnter={requireAuth}>
         <IndexRoute component={Home}/>
