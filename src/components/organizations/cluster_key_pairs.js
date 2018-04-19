@@ -305,7 +305,7 @@ class ClusterKeyPairs extends React.Component {
                         </div>
                         <br/>
                         <label>Expires:</label>
-                        <ExpiryHoursPicker onChange={this.handleTTLChange.bind(this)} />
+                        <ExpiryHoursPicker onChange={this.handleTTLChange.bind(this)} initialValue={this.state.expireTTL} />
                     </BootstrapModal.Body>
                     <BootstrapModal.Footer>
                       <Button
