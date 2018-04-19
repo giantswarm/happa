@@ -3,14 +3,25 @@ import React from 'react';
 import moment from 'moment';
 
 class ExpiryHoursPicker extends React.Component {
- constructor() {
+ constructor(props) {
     super();
+
+    let years = 0;
+    let months = 0;
+    let days = 0;
+    let hours = 0;
+
+    years = Math.floor(props.initialValue / 8760);
+    months = Math.floor((props.initialValue - (years * 8760)) / 720);
+    days = Math.floor((props.initialValue - (years * 8760) - (months * 720)) / 24);
+    hours = Math.floor((props.initialValue - (years * 8760) - (months * 720) - (days * 24)));
+
     this.state = {
-      yearsValue: 1,
-      monthsValue: 0,
-      daysValue: 0,
-      hoursValue: 0,
-      expireDate: moment().add(1, 'year').utc(),
+      yearsValue: years,
+      monthsValue: months,
+      daysValue: days,
+      hoursValue: hours,
+      expireDate: moment().add(props.initialValue, 'hours').utc(),
       selectionType: 'relative'
     };
 
@@ -170,7 +181,8 @@ class ExpiryHoursPicker extends React.Component {
 }
 
 ExpiryHoursPicker.propTypes = {
-  onChange: React.PropTypes.func
+  onChange: React.PropTypes.func,
+  initialValue: React.PropTypes.number
 };
 
 export default ExpiryHoursPicker;
