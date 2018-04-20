@@ -39,31 +39,13 @@ class ReleaseSelector extends React.Component {
     .then(() => {
       // Select latest active release as a default.
       // If there is no latest active release, then allow selection from WIP
-      // releases, with a info message that this is a WIP installation.
-
+      // releases, with a info message to non admins that this is a WIP installation.
       let selectableReleases = [];
       if (this.props.activeSortedReleases.length > 0) {
         selectableReleases = this.props.activeSortedReleases;
       } else {
         selectableReleases = _.map(this.props.releases, release => release.version);
-
-        if (this.props.provider === 'azure') {
-          this.props.dispatch(flashAdd({
-            message: <div>
-              <b>Support for Microsoft Azure is still in an early stage.</b><br/>
-              There is no active release yet. To create a cluster you will need admin permissions.
-            </div>,
-            class: 'info'
-          }));
-        } else {
-          this.props.dispatch(flashAdd({
-            message: <div>
-              <b>No active releases available at the moment.</b><br/>
-              There is no active release yet. To create a cluster you will need admin permissions.
-            </div>,
-            class: 'info'
-          }));
-        }
+        this.informWIP();
       }
 
       this.selectRelease(selectableReleases[0]);
@@ -91,6 +73,30 @@ class ReleaseSelector extends React.Component {
 
       throw(error);
     });
+  }
+
+  // Lets non admin users know that creating a cluster will probably fail for them,
+  // since all releases are WIP and only admins can create clusters from WIP releases.
+  informWIP() {
+    if (!this.props.user.isAdmin) {
+      if (this.props.provider === 'azure') {
+        this.props.dispatch(flashAdd({
+          message: <div>
+            <b>Support for Microsoft Azure is still in an early stage.</b><br/>
+            There is no active release yet. To create a cluster you will need admin permissions.
+          </div>,
+          class: 'info'
+        }));
+      } else {
+        this.props.dispatch(flashAdd({
+          message: <div>
+            <b>No active releases available at the moment.</b><br/>
+            There is no active release yet. To create a cluster you will need admin permissions.
+          </div>,
+          class: 'info'
+        }));
+      }
+    }
   }
 
   /**
@@ -171,7 +177,8 @@ ReleaseSelector.propTypes = {
   provider: React.PropTypes.string,
   releaseSelected: React.PropTypes.func,
   releases: React.PropTypes.object, // Version string to a release object i.e.: {"0.1.0": {...}, "0.2.0", {...}}
-  activeSortedReleases: React.PropTypes.array // Array of strings i.e: ["0.1.0", "0.2.0"]
+  activeSortedReleases: React.PropTypes.array, // Array of strings i.e: ["0.1.0", "0.2.0"]
+  user: React.PropTypes.object
 };
 
 function mapDispatchToProps(dispatch) {
@@ -192,6 +199,7 @@ function mapStateToProps(state) {
     activeSortedReleases,
     provider,
     releases,
+    user: state.app.loggedInUser
   };
 }
 
