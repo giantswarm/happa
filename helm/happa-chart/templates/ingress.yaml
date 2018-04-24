@@ -9,6 +9,9 @@ metadata:
     {{- if .Values.Installation.V1.GiantSwarm.Happa.Letsencrypt }}
     kubernetes.io/tls-acme: "true"
     {{- end }}
+    {{- if .Values.Installation.V1.Security.RestrictAccess.Enabled }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: "{{ .Values.Installation.V1.Security.RestrictAccess.WhitelistSubnets }}"
+    {{- end }}
 spec:
   rules:
   - host: {{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
