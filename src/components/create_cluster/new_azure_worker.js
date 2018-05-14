@@ -141,8 +141,8 @@ class NewAzureWorker extends React.Component {
                       <td><input type='radio' readOnly checked={vmSize.name === this.state.preSelectedVMSize}/></td>
                       <td>{vmSize.name}</td>
                       <td className="numeric">{vmSize.numberOfCores}</td>
-                      <td className="numeric">{vmSize.memoryInMb / 1024} GB</td>
-                      <td className="numeric">{vmSize.resourceDiskSizeInMb / 1024} GB</td>
+                      <td className="numeric">{(vmSize.memoryInMb / 1000).toFixed(2)} GB</td>
+                      <td className="numeric">{(vmSize.resourceDiskSizeInMb / 1000).toFixed(2)} GB</td>
                     </tr>;
                   })
                 }

@@ -77,7 +77,7 @@ class ClusterDetail extends React.Component {
     for (var i=0; i<this.props.cluster.workers.length; i++) {
       m += this.props.cluster.workers[i].memory.size_gb;
     }
-    return m;
+    return m.toFixed(2);
   }
 
   getStorageTotal() {
@@ -88,7 +88,7 @@ class ClusterDetail extends React.Component {
     for (var i=0; i<this.props.cluster.workers.length; i++) {
       s += this.props.cluster.workers[i].storage.size_gb;
     }
-    return s;
+    return s.toFixed(2);
   }
 
   getCpusTotal() {
