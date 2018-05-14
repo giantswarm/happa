@@ -21,7 +21,6 @@ class OauthCallback extends React.Component {
   render() {
     var parsedHash = QueryString.parse(this.props.location.hash);
 
-    console.log(parsedHash);
     return (
       <div>
         <div className='login_form--mask'></div>

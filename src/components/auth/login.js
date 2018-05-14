@@ -148,11 +148,13 @@ class Login extends React.Component {
             </form>
 
             <div className='login_form--legal'>
-            By logging in you acknowledge that we track your activities in order to analyze your product usage and improve your experience. See our <a href='https://giantswarm.io/privacypolicy/'>Privacy Policy</a>.
-            <br/>
-            <br/>
-            Trouble logging in? Please contact us via <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
+              By logging in you acknowledge that we track your activities in order to analyze your product usage and improve your experience. See our <a href='https://giantswarm.io/privacypolicy/'>Privacy Policy</a>.
+              <br/>
+              <br/>
+              Trouble logging in? Please contact us via <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
             </div>
+
+            <Link className='login_form--admin-link' to='/admin-login'>Login as an Administrator</Link>
           </div>
         </ReactCSSTransitionGroup>
       </div>

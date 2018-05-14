@@ -35,6 +35,7 @@ main_store.js
       email: '',
       username: '',
       authToken: '',
+      idToken: '',
       isAdmin: false
     }, // id of the user that is currently logged in
     info: {"general":{"installation_name":"testbot","provider":"kvm"},"workers":{"count_per_cluster":{"max":0,"default":3}}}
