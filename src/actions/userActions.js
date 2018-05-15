@@ -66,6 +66,8 @@ export function refreshUserInfo() {
 export function login(email, password) {
   return function(dispatch, getState) {
     var giantSwarm = new GiantSwarm.Client();
+    var usersApi = new GiantSwarmV4.UsersApi();
+
     dispatch({
       type: types.LOGIN,
       email: email
@@ -82,11 +84,13 @@ export function login(email, password) {
         throw('Invalid email and/or password');
       }
     })
-    .then(giantSwarm.user.bind(giantSwarm))
+    .then(() => {
+      usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = giantSwarm.authToken;
+      return usersApi.getCurrentUser();
+    })
     .then((data) => {
       var userData = {
-        email: data.result.email,
-        username: data.result.username,
+        email: data.email,
         authToken: giantSwarm.authToken
       };
 
