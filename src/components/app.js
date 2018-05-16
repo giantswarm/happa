@@ -13,7 +13,6 @@ import logout from './auth/logout';
 import signup from './signup/index';
 import oauth_callback from './auth/oauth_callback.js';
 import notFound from './not_found/index';
-// import createCluster from './create_cluster';
 import forgot_password_index from './forgot_password/index';
 import forgot_password_set_password from './forgot_password/set_password';
 import Organizations from './organizations';
