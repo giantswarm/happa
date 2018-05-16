@@ -36,14 +36,14 @@ export function logoutError(errorMessage) {
 export function refreshUserInfo() {
   return function(dispatch, getState) {
     var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var usersApi = new GiantSwarmV4.UsersApi();
 
-    return giantSwarm.user()
+
+    return usersApi.getCurrentUser()
     .then((data) => {
       var userData = {
-        email: data.result.email,
-        username: data.result.username,
-        authToken: giantSwarm.authToken
+        email: data.email,
+        authToken: authToken
       };
 
       dispatch({
