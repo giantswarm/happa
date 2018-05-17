@@ -4,7 +4,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'giantswarm.eu.auth0.com',
     clientID: 'mgYdxCGCZ2eao0OJUGOFXurGIaQAACHs',
-    redirectUri: 'http://localhost:7000/oauth/callback',
+    redirectUri: location.protocol + '//' + window.location.host + '/oauth/callback',
     prompt:'none',
     audience: 'g8s',
     responseType: 'id_token',
