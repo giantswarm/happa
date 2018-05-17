@@ -107,7 +107,7 @@ class ChangePassword extends React.Component {
       error: false
     });
 
-    var authToken = this.props.user.authToken;
+    var authToken = this.props.user.auth.token;
     var giantSwarm = new GiantSwarm.Client(authToken);
 
     giantSwarm.changePassword({
@@ -123,7 +123,7 @@ class ChangePassword extends React.Component {
       });
     })
     .then(() => {
-      return this.props.actions.login(this.props.user.email, this.new_password.value());
+      return this.props.actions.giantswarmLogin(this.props.user.email, this.new_password.value());
     })
     .catch((error) => {
       var errorMessage;

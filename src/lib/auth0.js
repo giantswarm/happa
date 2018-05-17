@@ -1,5 +1,4 @@
 import auth0 from 'auth0-js';
-import { browserHistory } from 'react-router';
 
 export default class Auth {
   auth0 = new auth0.WebAuth({
@@ -30,25 +29,12 @@ export default class Auth {
     // Clear Access Token and ID Token from local storage
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
-    // navigate to the home route
-    browserHistory.push('/');
   }
 
   handleAuthentication(callback) {
     this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.idToken) {
-        this.setSession(authResult);
-      }
       callback(err, authResult);
     });
-  }
-
-  setSession(authResult) {
-    // Set the time that the Access Token will expire at
-    let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-    localStorage.setItem('id_token', authResult.idToken);
-    localStorage.setItem('expires_at', expiresAt);
-    browserHistory.push('/');
   }
 
   isAuthenticated() {

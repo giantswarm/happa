@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 class Logout extends React.Component {
   componentDidMount() {
-    this.props.actions.logout();
+    this.props.actions.giantswarmLogout();
   }
 
   render() {

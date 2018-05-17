@@ -38,14 +38,14 @@ const store = configureStore();
 var defaultClient = GiantSwarmV4.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
-defaultClientAuth.apiKeyPrefix = 'giantswarm';
 
 
 function requireAuth(nextState, replace) {
   var state = store.getState();
 
   if (state.app.loggedInUser) {
-    defaultClientAuth.apiKey = state.app.loggedInUser.authToken;
+    defaultClientAuth.apiKeyPrefix = state.app.loggedInUser.auth.scheme;
+    defaultClientAuth.apiKey = state.app.loggedInUser.auth.token;
   } else {
     replace({
       pathname: '/login',

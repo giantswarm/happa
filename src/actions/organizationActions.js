@@ -2,7 +2,6 @@
 
 import * as types from './actionTypes';
 import _ from 'underscore';
-import DomainValidator from '../lib/domain_validator_client';
 import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
 import { clusterLoadSuccess, clusterLoadError } from './clusterActions';
@@ -355,70 +354,5 @@ export function organizationRemoveMember(orgId, email) {
     type: types.ORGANIZATION_REMOVE_MEMBER,
     orgId: orgId,
     email: email
-  };
-}
-
-export function organizationLoadDomains(organizationId) {
-  return function(dispatch, getState) {
-    var domainValidator = new DomainValidator({
-     endpoint: window.config.domainValidatorEndpoint,
-     authorizationToken: getState().app.loggedInUser.authToken,
-    });
-
-    return domainValidator.domains({ organizationId })
-    .then(response => {
-      dispatch({
-        type: types.ORGANIZATION_LOAD_DOMAINS,
-        organizationId,
-        domains: response
-      });
-    })
-    .catch(error => {
-      throw error;
-    });
-  };
-}
-
-export function organizationAddDomain(organizationId, domain) {
-  return function(dispatch, getState) {
-    var domainValidator = new DomainValidator({
-     endpoint: window.config.domainValidatorEndpoint,
-     authorizationToken: getState().app.loggedInUser.authToken,
-    });
-
-    return domainValidator.addDomain({ organizationId, domain })
-    .then(response => {
-      dispatch({
-        type: types.ORGANIZATION_ADD_DOMAIN,
-        organizationId,
-        domain: response
-      });
-
-      return response;
-    })
-    .catch(error => {
-      throw error;
-    });
-  };
-}
-
-export function organizationDeleteDomain(organizationId, domain) {
-  return function(dispatch, getState) {
-    var domainValidator = new DomainValidator({
-     endpoint: window.config.domainValidatorEndpoint,
-     authorizationToken: getState().app.loggedInUser.authToken,
-    });
-
-    return domainValidator.deleteDomain({ organizationId, domain })
-    .then(response => {
-      dispatch({
-        type: types.ORGANIZATION_DELETE_DOMAIN,
-        organizationId,
-        domain: response
-      });
-    })
-    .catch(error => {
-      throw error;
-    });
   };
 }

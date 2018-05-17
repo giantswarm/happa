@@ -9,7 +9,7 @@ import { Link } from 'react-router';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import Auth from '../../lib/auth0';
-import GiantSwarmV4 from 'giantswarm-v4';
+import { browserHistory } from 'react-router';
 
 class OauthCallback extends React.Component {
   constructor(props) {
@@ -27,12 +27,10 @@ class OauthCallback extends React.Component {
       auth.handleAuthentication((err, authResult) => {
         if (err === null) {
           // Login user officially
-          console.log(authResult);
-
-          var defaultClient = GiantSwarmV4.ApiClient.instance;
-          var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
-          defaultClientAuth.apiKeyPrefix = 'Bearer';
-          defaultClientAuth.apiKey = authResult.idToken;
+          this.props.actions.auth0Login(authResult)
+          .then(() => {
+            browserHistory.push('/');
+          });
         } else {
           this.setState({error: err});
         }

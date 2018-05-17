@@ -77,7 +77,7 @@ class Login extends React.Component {
         authenticating: true
       });
 
-      this.props.actions.login(this.state.email, this.state.password)
+      this.props.actions.giantswarmLogin(this.state.email, this.state.password)
       .then(() => {
         this.props.dispatch(flashAdd({
           message: 'Welcome!',

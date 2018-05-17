@@ -35,7 +35,8 @@ export function logoutError(errorMessage) {
 
 export function refreshUserInfo() {
   return function(dispatch, getState) {
-    var authToken = getState().app.loggedInUser.authToken;
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
     var usersApi = new GiantSwarmV4.UsersApi();
 
 
@@ -43,7 +44,10 @@ export function refreshUserInfo() {
     .then((data) => {
       var userData = {
         email: data.email,
-        authToken: authToken
+        auth: {
+          scheme: scheme,
+          token: token
+        }
       };
 
       dispatch({
@@ -62,8 +66,24 @@ export function refreshUserInfo() {
   };
 }
 
+export function auth0Login(authResult) {
+  return function(dispatch) {
+    return new Promise(function(resolve) {
+      var userData = {
+        email: authResult.idTokenPayload.email,
+        auth: {
+          scheme: 'Bearer',
+          token: authResult.idToken
+        }
+      };
 
-export function login(email, password) {
+      resolve(dispatch(loginSuccess(userData)));
+    });
+  };
+}
+
+
+export function giantswarmLogin(email, password) {
   return function(dispatch, getState) {
     var giantSwarm = new GiantSwarm.Client();
     var usersApi = new GiantSwarmV4.UsersApi();
@@ -85,13 +105,17 @@ export function login(email, password) {
       }
     })
     .then(() => {
+      usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKeyPrefix = 'giantswarm';
       usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = giantSwarm.authToken;
       return usersApi.getCurrentUser();
     })
     .then((data) => {
       var userData = {
         email: data.email,
-        authToken: giantSwarm.authToken
+        auth: {
+          scheme: 'giantswarm',
+          token: giantSwarm.authToken
+        }
       };
 
       return userData;
@@ -109,11 +133,11 @@ export function login(email, password) {
   };
 }
 
-export function logout() {
+export function giantswarmLogout() {
   return function(dispatch, getState) {
     var authToken;
     if (getState().app.loggedInUser) {
-      authToken = getState().app.loggedInUser.authToken;
+      authToken = getState().app.loggedInUser.auth.token;
     } else  {
       authToken = undefined;
     }
@@ -150,8 +174,12 @@ export function unauthorized() {
 }
 
 export function getInfo() {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
     var infoApi = new GiantSwarmV4.InfoApi();
+    infoApi.apiClient.authentications.AuthorizationHeaderToken.apiKeyPrefix = scheme;
+    infoApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = token;
 
     dispatch({
       type: types.INFO_LOAD
