@@ -90,7 +90,12 @@ class Layout extends React.Component {
                         <Gravatar email={this.props.user.email} size={100} default='mm' />
                         <span>{this.props.user.email}</span>
                       </div>} key='1' id='user_dropdown'>
-                      <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
+                      {
+                        this.props.user.auth.scheme === 'giantswarm' ?
+                        <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
+                        :
+                        undefined
+                      }
                       <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
                     </DropdownButton>
                   </div>
