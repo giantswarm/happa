@@ -20,10 +20,25 @@ var shutDown = function(state) {
   });
 };
 
+function fetchUserFromStorage() {
+  var user = JSON.parse(localStorage.getItem('user'));
+
+  // User was logged in pre-jwt auth being available.
+  // Migrate.
+  if (user && user.authToken) {
+    user.auth = {
+      scheme: 'giantswarm',
+      token: user.authToken
+    };
+  }
+
+  return user;
+}
+
 export default function appReducer(state = {
     selectedOrganization: 'not-yet-loaded',
     firstLoadComplete: false,
-    loggedInUser: JSON.parse(localStorage.getItem('user')),
+    loggedInUser: fetchUserFromStorage(),
     info: {
       general: {
         provider: ''
