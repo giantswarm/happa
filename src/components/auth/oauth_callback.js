@@ -30,6 +30,9 @@ class OauthCallback extends React.Component {
           this.props.actions.auth0Login(authResult)
           .then(() => {
             browserHistory.push('/');
+          })
+          .catch((err) => {
+            console.log(err);
           });
         } else {
           this.setState({error: err});

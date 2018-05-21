@@ -10,6 +10,7 @@ import _ from 'underscore';
 import { bindActionCreators } from 'redux';
 import { organizationSelect, organizationsLoad } from '../actions/organizationActions';
 import * as UserActions from '../actions/userActions';
+import * as FlashActions from '../actions/flashMessageActions';
 import Breadcrumbs from 'react-breadcrumbs';
 import Gravatar from 'react-gravatar';
 import DocumentTitle from 'react-document-title';
@@ -23,6 +24,11 @@ class Layout extends React.Component {
     })
     .catch(() => {
       this.props.actions.loginError();
+      this.props.flashActions.flashAdd({
+        message: <div>Error logging in.</div>,
+        class: 'danger',
+        ttl: 3000
+      });
     });
   }
 
@@ -129,7 +135,8 @@ Layout.propTypes = {
   selectedOrganization: PropTypes.string,
   firstLoadComplete: PropTypes.bool,
   dispatch: PropTypes.func,
-  actions: PropTypes.object
+  actions: PropTypes.object,
+  flashActions: PropTypes.object,
 };
 
 function mapStateToProps(state) {
@@ -144,6 +151,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(UserActions, dispatch),
+    flashActions: bindActionCreators(FlashActions, dispatch),
     dispatch: dispatch
   };
 }
