@@ -1,10 +1,10 @@
 'use strict';
 
-import { flashAdd } from './flashMessageActions';
+import { flashAdd, flashClearAll } from './flashMessageActions';
 import React from 'react';
 import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarmV4 from '../lib/giantswarm_v4_client_wrapper';
 
 export function loginSuccess(userData) {
   return {
@@ -150,18 +150,32 @@ export function giantswarmLogout() {
 
     return giantSwarm.logout()
     .then(() => {
-      dispatch(logoutSuccess());
+      return dispatch(logoutSuccess());
     })
     .catch((error) => {
       dispatch(logoutError(error));
+      throw error;
     });
   };
 }
 
 export function unauthorized() {
   return function(dispatch) {
+
+    // Clear any lingering flash error messages that would pop up due to failed
+    // requests.
+    dispatch(flashClearAll());
+
+    // Let the user know he has been logged out due to a probably expired
+    // or deleted token.
     dispatch(flashAdd({
-      message: <div>You have been logged out.</div>,
+      key: 'unauthorized', // We set a key explicitly for this flash message
+                           // so that multiple fires do not produce
+                           // multiple flash messages in the ui.
+                           // (Since there could be more than 1 request going on
+                           // that would trigger this unauthorized dispatch)
+
+      message: <div><b>Unable to authenticate</b><br/>Please log in again.</div>,
       class: 'danger'
     }));
 

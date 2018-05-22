@@ -21,14 +21,6 @@ class Layout extends React.Component {
     this.props.actions.refreshUserInfo().then(() => {
       this.props.dispatch(organizationsLoad());
       return null;
-    })
-    .catch(() => {
-      this.props.actions.loginError();
-      this.props.flashActions.flashAdd({
-        message: <div>Error logging in.</div>,
-        class: 'danger',
-        ttl: 3000
-      });
     });
   }
 

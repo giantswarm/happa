@@ -16,19 +16,11 @@ export default class Auth {
 
   constructor() {
     this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
-    this.isAuthenticated = this.isAuthenticated.bind(this);
   }
 
   login() {
     this.auth0.authorize();
-  }
-
-  logout() {
-    // Clear Access Token and ID Token from local storage
-    localStorage.removeItem('id_token');
-    localStorage.removeItem('expires_at');
   }
 
   handleAuthentication(callback) {
@@ -37,21 +29,15 @@ export default class Auth {
     });
   }
 
-  isAuthenticated() {
-    // Check whether the current time is past the
-    // Access Token's expiry time
-    let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return new Date().getTime() < expiresAt;
-  }
-
   renewToken() {
-    this.auth0.checkSession({}, (err, result) => {
-        if (err) {
-          console.log(err);
+    return new Promise((resolve, reject) => {
+      this.auth0.checkSession({}, (err, result) => {
+        if (!err) {
+          resolve(result);
         } else {
-          this.setSession(result);
+          reject(err);
         }
-      }
-    );
+      });
+    });
   }
 }

@@ -15,7 +15,10 @@ export default function modalReducer(state = Immutable.Set(), action = undefined
 
 
     case types.FLASH_ADD:
-      action.flashMessage.key = flashId();
+      if (!action.flashMessage.key) {
+        action.flashMessage.key = flashId();
+      }
+
       return state.add(action.flashMessage);
 
     case types.FLASH_CLEAR_ALL:
