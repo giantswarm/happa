@@ -101,11 +101,11 @@ class SimpleExample extends React.Component {
             </Prompt>
           </CodeBlock>
 
-          <p>Next use <code>sed</code> to replace the placeholder <code>helloworld.clusterid.gigantic.io</code> with <code>{this.helloWorldHost()}</code>.</p>
+          <p>Next use <code>sed</code> to replace the placeholder <code>YOUR_CLUSTER_BASE_DOMAIN</code> with <code>{this.helloWorldHost()}</code>.</p>
           <CodeBlock>
             <Prompt>
               {`
-                sed -i "" "s/helloworld.clusterid.gigantic.io/${this.helloWorldHost()}/" helloworld-manifest.yaml
+                sed -i "" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.helloWorldHost()}/" helloworld-manifest.yaml
               `}
             </Prompt>
           </CodeBlock>
