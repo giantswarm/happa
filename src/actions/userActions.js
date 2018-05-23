@@ -82,7 +82,6 @@ export function auth0Login(authResult) {
   };
 }
 
-
 export function giantswarmLogin(email, password) {
   return function(dispatch, getState) {
     var giantSwarm = new GiantSwarm.Client();
