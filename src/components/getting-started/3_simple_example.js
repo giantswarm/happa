@@ -19,11 +19,11 @@ class SimpleExample extends React.Component {
       };
     }
 
-    helloWorldHost() {
+    clusterBaseDomain() {
       if (this.props.cluster) {
-        return `helloworld.${this.props.cluster.id}.k8s.${this.state.ingressBaseDomain}`;
+        return `${this.props.cluster.id}.k8s.${this.state.ingressBaseDomain}`;
       } else {
-        return `helloworld.12345.${this.state.ingressBaseDomain}`;
+        return `12345.${this.state.ingressBaseDomain}`;
       }
     }
 
@@ -69,7 +69,7 @@ class SimpleExample extends React.Component {
       } else if (this.state.loading) {
         return 'Figuring out the url...';
       } else {
-        var url = `http://${this.helloWorldHost()}`;
+        var url = `http://helloworld.${this.clusterBaseDomain()}`;
         return (
           <a href={url} target='_blank'>{url}</a>
         );
@@ -101,11 +101,11 @@ class SimpleExample extends React.Component {
             </Prompt>
           </CodeBlock>
 
-          <p>Next use <code>sed</code> to replace the placeholder <code>helloworld.clusterid.gigantic.io</code> with <code>{this.helloWorldHost()}</code>.</p>
+          <p>Next use <code>sed</code> to replace the placeholder <code>YOUR_CLUSTER_BASE_DOMAIN</code> with <code>{this.clusterBaseDomain()}</code>.</p>
           <CodeBlock>
             <Prompt>
               {`
-                sed -i "" "s/helloworld.clusterid.gigantic.io/${this.helloWorldHost()}/" helloworld-manifest.yaml
+                sed -i "" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" helloworld-manifest.yaml
               `}
             </Prompt>
           </CodeBlock>
