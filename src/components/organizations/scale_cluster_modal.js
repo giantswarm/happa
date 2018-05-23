@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from '../../actions/clusterActions';
 import * as flashActions from '../../actions/flashMessageActions';
+import PropTypes from 'prop-types';
 
 class ScaleClusterModal extends React.Component {
   constructor (props){
@@ -229,11 +230,11 @@ class ScaleClusterModal extends React.Component {
 }
 
 ScaleClusterModal.propTypes = {
-  cluster: React.PropTypes.object,
-  giantSwarm: React.PropTypes.func,
-  user: React.PropTypes.object,
-  clusterActions: React.PropTypes.object,
-  flashActions: React.PropTypes.object
+  cluster: PropTypes.object,
+  giantSwarm: PropTypes.func,
+  user: PropTypes.object,
+  clusterActions: PropTypes.object,
+  flashActions: PropTypes.object
 };
 
 function mapDispatchToProps(dispatch) {

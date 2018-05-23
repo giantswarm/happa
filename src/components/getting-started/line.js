@@ -8,6 +8,7 @@
 // text: The text that this line should display
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Line extends React.Component {
   render() {
@@ -21,8 +22,8 @@ class Line extends React.Component {
 }
 
 Line.propTypes = {
-  prompt: React.PropTypes.bool,
-  text: React.PropTypes.string
+  prompt: PropTypes.bool,
+  text: PropTypes.string
 };
 
 export default Line;

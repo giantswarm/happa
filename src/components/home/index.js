@@ -11,6 +11,7 @@ import Button from '../button';
 import {Link}  from 'react-router';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
+import PropTypes from 'prop-types';
 
 class Home extends React.Component {
 
@@ -88,12 +89,12 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
-  clusters: React.PropTypes.array,
-  setInterval: React.PropTypes.func,
-  actions: React.PropTypes.object,
-  selectedOrganization: React.PropTypes.string,
-  organizations: React.PropTypes.object,
-  errorLoadingClusters: React.PropTypes.bool
+  clusters: PropTypes.array,
+  setInterval: PropTypes.func,
+  actions: PropTypes.object,
+  selectedOrganization: PropTypes.string,
+  organizations: PropTypes.object,
+  errorLoadingClusters: PropTypes.bool
 };
 
 function mapStateToProps(state) {

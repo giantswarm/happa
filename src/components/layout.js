@@ -13,6 +13,7 @@ import * as UserActions from '../actions/userActions';
 import Breadcrumbs from 'react-breadcrumbs';
 import Gravatar from 'react-gravatar';
 import DocumentTitle from 'react-document-title';
+import PropTypes from 'prop-types';
 
 class Layout extends React.Component {
   componentDidMount() {
@@ -115,15 +116,15 @@ class Layout extends React.Component {
 }
 
 Layout.propTypes = {
-  children: React.PropTypes.object,
-  routes: React.PropTypes.array,
-  params: React.PropTypes.object,
-  user: React.PropTypes.object,
-  organizations: React.PropTypes.object,
-  selectedOrganization: React.PropTypes.string,
-  firstLoadComplete: React.PropTypes.bool,
-  dispatch: React.PropTypes.func,
-  actions: React.PropTypes.object
+  children: PropTypes.object,
+  routes: PropTypes.array,
+  params: PropTypes.object,
+  user: PropTypes.object,
+  organizations: PropTypes.object,
+  selectedOrganization: PropTypes.string,
+  firstLoadComplete: PropTypes.bool,
+  dispatch: PropTypes.func,
+  actions: PropTypes.object
 };
 
 function mapStateToProps(state) {

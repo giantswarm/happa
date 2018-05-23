@@ -2,6 +2,7 @@
 
 import React from 'react';
 import NumberPicker from './number_picker.js';
+import PropTypes from 'prop-types';
 
 class NewKVMWorker extends React.Component {
   updateWorkerCPU = (cpu) => {
@@ -70,11 +71,11 @@ class NewKVMWorker extends React.Component {
 }
 
 NewKVMWorker.propTypes = {
-  worker: React.PropTypes.object,
-  index: React.PropTypes.number,
-  readOnly: React.PropTypes.bool,
-  deleteWorker: React.PropTypes.func,
-  onWorkerUpdated: React.PropTypes.func
+  worker: PropTypes.object,
+  index: PropTypes.number,
+  readOnly: PropTypes.bool,
+  deleteWorker: PropTypes.func,
+  onWorkerUpdated: PropTypes.func
 };
 
 export default NewKVMWorker;

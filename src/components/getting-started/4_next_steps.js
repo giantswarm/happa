@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import Slide from '../component_slider/slide';
+import PropTypes from 'prop-types';
 
 class NextSteps extends React.Component {
     render() {
@@ -30,7 +31,7 @@ class NextSteps extends React.Component {
 }
 
 NextSteps.propTypes = {
-  goToSlide: React.PropTypes.func
+  goToSlide: PropTypes.func
 };
 
 export default NextSteps;

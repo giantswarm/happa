@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {humanFileSize} from '../../lib/helpers';
+import PropTypes from 'prop-types';
 
 class Gadget extends React.Component {
   classes() {
@@ -35,11 +36,11 @@ class Gadget extends React.Component {
 }
 
 Gadget.propTypes = {
-  metric: React.PropTypes.object,
-  backgroundColor: React.PropTypes.string,
-  label: React.PropTypes.string,
-  decimals: React.PropTypes.number,
-  bottom_label: React.PropTypes.func
+  metric: PropTypes.object,
+  backgroundColor: PropTypes.string,
+  label: PropTypes.string,
+  decimals: PropTypes.number,
+  bottom_label: PropTypes.func
 };
 
 export default Gadget;

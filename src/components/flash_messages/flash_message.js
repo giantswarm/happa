@@ -7,6 +7,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class FlashMessage extends React.Component {
   constructor(props) {
@@ -42,14 +43,14 @@ class FlashMessage extends React.Component {
 }
 
 FlashMessage.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 FlashMessage.propTypes = {
-  onDismiss: React.PropTypes.func,
-  class: React.PropTypes.string,
-  message: React.PropTypes.any,
-  children: React.PropTypes.node
+  onDismiss: PropTypes.func,
+  class: PropTypes.string,
+  message: PropTypes.any,
+  children: PropTypes.node
 };
 
 export default FlashMessage;

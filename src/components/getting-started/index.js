@@ -10,6 +10,7 @@ import Page1_DownloadKubeCTL from './1_download_kubectl.js';
 import Page2_ConfigureKubeCTL from './2_configure_kubectl.js';
 import Page3_SimpleExample from './3_simple_example.js';
 import Page4_NextSteps from './4_next_steps.js';
+import PropTypes from 'prop-types';
 
 class GettingStarted extends React.Component {
   constructor(props) {
@@ -82,11 +83,11 @@ class GettingStarted extends React.Component {
 }
 
 GettingStarted.contextTypes = {
-  router: React.PropTypes.object.isRequired
+  router: PropTypes.object.isRequired
 };
 
 GettingStarted.propTypes = {
-  params: React.PropTypes.object
+  params: PropTypes.object
 };
 
 export default GettingStarted;

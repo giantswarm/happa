@@ -12,6 +12,7 @@ import NewKVMWorker from './new_kvm_worker.js';
 import NewAWSWorker from './new_aws_worker.js';
 import NewAzureWorker from './new_azure_worker.js';
 import ReleaseSelector from './release_selector.js';
+import PropTypes from 'prop-types';
 
 class CreateCluster extends React.Component {
   constructor(props) {
@@ -351,11 +352,11 @@ class CreateCluster extends React.Component {
 }
 
 CreateCluster.propTypes = {
-  allowedInstanceTypes: React.PropTypes.array,
-  allowedVMSizes: React.PropTypes.array,
-  selectedOrganization: React.PropTypes.string,
-  dispatch: React.PropTypes.func,
-  provider: React.PropTypes.string,
+  allowedInstanceTypes: PropTypes.array,
+  allowedVMSizes: PropTypes.array,
+  selectedOrganization: PropTypes.string,
+  dispatch: PropTypes.func,
+  provider: PropTypes.string,
 };
 
 function mapStateToProps(state) {

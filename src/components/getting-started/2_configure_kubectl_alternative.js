@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
 import Button from '../button';
 import platform from '../../lib/platform';
+import PropTypes from 'prop-types';
 
 var Modernizr = window.Modernizr;
 
@@ -257,10 +258,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 ConfigKubeCtl.propTypes = {
-  user: React.PropTypes.object,
-  cluster: React.PropTypes.object,
-  dispatch: React.PropTypes.func,
-  actions: React.PropTypes.object
+  user: PropTypes.object,
+  cluster: PropTypes.object,
+  dispatch: PropTypes.func,
+  actions: PropTypes.object
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConfigKubeCtl);

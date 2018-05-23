@@ -5,6 +5,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../button';
 import InputField from '../shared/input_field';
 import AzureCapabilities from './azure_capabilities.js';
+import PropTypes from 'prop-types';
 
 class NewAzureWorker extends React.Component {
   constructor(props) {
@@ -170,12 +171,12 @@ class NewAzureWorker extends React.Component {
 }
 
 NewAzureWorker.propTypes = {
-  allowedVMSizes: React.PropTypes.array,
-  worker: React.PropTypes.object,
-  index: React.PropTypes.number,
-  readOnly: React.PropTypes.bool,
-  deleteWorker: React.PropTypes.func,
-  onWorkerUpdated: React.PropTypes.func
+  allowedVMSizes: PropTypes.array,
+  worker: PropTypes.object,
+  index: PropTypes.number,
+  readOnly: PropTypes.bool,
+  deleteWorker: PropTypes.func,
+  onWorkerUpdated: PropTypes.func
 };
 
 export default NewAzureWorker;

@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 var typingTimer;
 var doneTypingInterval = 250; // ms
 
@@ -103,12 +104,12 @@ class EmailField extends React.Component {
 }
 
 EmailField.propTypes = {
-  autofocus: React.PropTypes.bool,
-  onChange: React.PropTypes.func,
-  onStartTyping: React.PropTypes.func,
-  name: React.PropTypes.string,
-  label: React.PropTypes.string,
-  errorMessage: React.PropTypes.object
+  autofocus: PropTypes.bool,
+  onChange: PropTypes.func,
+  onStartTyping: PropTypes.func,
+  name: PropTypes.string,
+  label: PropTypes.string,
+  errorMessage: PropTypes.object
 };
 
 export default EmailField;

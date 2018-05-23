@@ -3,6 +3,7 @@ import React from 'react';
 import Slide from '../component_slider/slide';
 import Markdown from './markdown';
 import {Link}  from 'react-router';
+import PropTypes from 'prop-types';
 
 class Overview extends React.Component {
   testFileContent() {
@@ -65,7 +66,7 @@ class Overview extends React.Component {
 }
 
 Overview.propTypes = {
-  goToSlide: React.PropTypes.func
+  goToSlide: PropTypes.func
 };
 
 export default Overview;

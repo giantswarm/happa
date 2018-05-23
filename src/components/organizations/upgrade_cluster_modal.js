@@ -9,6 +9,7 @@ import * as clusterActions from '../../actions/clusterActions';
 import * as flashActions from '../../actions/flashMessageActions';
 import diff from 'deep-diff';
 import _ from 'underscore';
+import PropTypes from 'prop-types';
 
 class UpgradeClusterModal extends React.Component {
   constructor (props){
@@ -243,13 +244,13 @@ class UpgradeClusterModal extends React.Component {
 }
 
 UpgradeClusterModal.propTypes = {
-  cluster: React.PropTypes.object,
-  clusterActions: React.PropTypes.object,
-  flashActions: React.PropTypes.object,
-  giantSwarm: React.PropTypes.func,
-  release: React.PropTypes.object,
-  targetRelease: React.PropTypes.object,
-  user: React.PropTypes.object,
+  cluster: PropTypes.object,
+  clusterActions: PropTypes.object,
+  flashActions: PropTypes.object,
+  giantSwarm: PropTypes.func,
+  release: PropTypes.object,
+  targetRelease: PropTypes.object,
+  user: PropTypes.object,
 };
 
 function mapDispatchToProps(dispatch) {

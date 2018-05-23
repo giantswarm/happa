@@ -14,6 +14,7 @@ import { organizationDeleteConfirm,
 import { clusterDeleteConfirm } from '../../actions/clusterActions';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import EmailField from './email_field';
+import PropTypes from 'prop-types';
 
 class Modal extends React.Component {
   constructor(props) {
@@ -293,9 +294,9 @@ class Modal extends React.Component {
 }
 
 Modal.propTypes = {
-  dispatch: React.PropTypes.func,
-  modal: React.PropTypes.object,
-  clusters: React.PropTypes.object
+  dispatch: PropTypes.func,
+  modal: PropTypes.object,
+  clusters: PropTypes.object
 };
 
 function mapStateToProps(state) {

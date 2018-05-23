@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class OrganizationRow extends React.Component {
   render() {
@@ -22,11 +23,11 @@ class OrganizationRow extends React.Component {
 }
 
 OrganizationRow.propTypes = {
-  onClick: React.PropTypes.func,
-  onDelete: React.PropTypes.func,
-  onSelect: React.PropTypes.func,
-  organization: React.PropTypes.object,
-  clusters: React.PropTypes.array
+  onClick: PropTypes.func,
+  onDelete: PropTypes.func,
+  onSelect: PropTypes.func,
+  organization: PropTypes.object,
+  clusters: PropTypes.array
 };
 
 export default OrganizationRow;

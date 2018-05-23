@@ -8,6 +8,7 @@ import { loadReleases } from '../../actions/releaseActions';
 import { flashAdd } from '../../actions/flashMessageActions';
 import _ from 'underscore';
 import ReleaseDetailsModal from '../modal/release_details_modal';
+import PropTypes from 'prop-types';
 
 class ReleaseSelector extends React.Component {
   constructor(props) {
@@ -173,12 +174,12 @@ class ReleaseSelector extends React.Component {
 }
 
 ReleaseSelector.propTypes = {
-  dispatch: React.PropTypes.func,
-  provider: React.PropTypes.string,
-  releaseSelected: React.PropTypes.func,
-  releases: React.PropTypes.object, // Version string to a release object i.e.: {"0.1.0": {...}, "0.2.0", {...}}
-  activeSortedReleases: React.PropTypes.array, // Array of strings i.e: ["0.1.0", "0.2.0"]
-  user: React.PropTypes.object
+  dispatch: PropTypes.func,
+  provider: PropTypes.string,
+  releaseSelected: PropTypes.func,
+  releases: PropTypes.object, // Version string to a release object i.e.: {"0.1.0": {...}, "0.2.0", {...}}
+  activeSortedReleases: PropTypes.array, // Array of strings i.e: ["0.1.0", "0.2.0"]
+  user: PropTypes.object
 };
 
 function mapDispatchToProps(dispatch) {

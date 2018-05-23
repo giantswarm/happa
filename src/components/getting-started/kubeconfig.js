@@ -2,6 +2,7 @@
 import React from 'react';
 import FileBlock from './fileblock';
 import {makeKubeConfigTextFile} from '../../lib/helpers';
+import PropTypes from 'prop-types';
 
 class KubeConfig extends React.Component {
   render() {
@@ -12,8 +13,8 @@ class KubeConfig extends React.Component {
 }
 
 KubeConfig.propTypes = {
-  cluster: React.PropTypes.object,
-  keyPair: React.PropTypes.object,
+  cluster: PropTypes.object,
+  keyPair: PropTypes.object,
 }
 
 export default KubeConfig;

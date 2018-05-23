@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 var typingTimer;
 var doneTypingInterval = 250; // ms
 
@@ -126,14 +127,14 @@ class InputField extends React.Component {
 }
 
 InputField.propTypes = {
-  autofocus: React.PropTypes.bool,
-  onChange: React.PropTypes.func,
-  onStartTyping: React.PropTypes.func,
-  validate: React.PropTypes.func,
-  name: React.PropTypes.string,
-  label: React.PropTypes.string,
-  value: React.PropTypes.string,
-  readOnly: React.PropTypes.bool
+  autofocus: PropTypes.bool,
+  onChange: PropTypes.func,
+  onStartTyping: PropTypes.func,
+  validate: PropTypes.func,
+  name: PropTypes.string,
+  label: PropTypes.string,
+  value: PropTypes.string,
+  readOnly: PropTypes.bool
 };
 
 export default InputField;

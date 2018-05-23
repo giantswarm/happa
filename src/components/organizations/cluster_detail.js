@@ -17,6 +17,7 @@ import ScaleClusterModal from './scale_cluster_modal';
 import UpgradeClusterModal from './upgrade_cluster_modal';
 import { browserHistory } from 'react-router';
 import cmp from 'semver-compare';
+import PropTypes from 'prop-types';
 
 class ClusterDetail extends React.Component {
   constructor (props){
@@ -324,21 +325,21 @@ class ClusterDetail extends React.Component {
 }
 
 ClusterDetail.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 
 ClusterDetail.propTypes = {
-  clusterActions: React.PropTypes.object,
-  cluster: React.PropTypes.object,
-  clusterId: React.PropTypes.string,
-  dispatch: React.PropTypes.func,
-  organizationId: React.PropTypes.string,
-  releaseActions: React.PropTypes.object,
-  release: React.PropTypes.object,
-  provider: React.PropTypes.string,
-  targetRelease: React.PropTypes.object,
-  user: React.PropTypes.object,
+  clusterActions: PropTypes.object,
+  cluster: PropTypes.object,
+  clusterId: PropTypes.string,
+  dispatch: PropTypes.func,
+  organizationId: PropTypes.string,
+  releaseActions: PropTypes.object,
+  release: PropTypes.object,
+  provider: PropTypes.string,
+  targetRelease: PropTypes.object,
+  user: PropTypes.object,
 };
 
 function mapStateToProps(state, ownProps) {

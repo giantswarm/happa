@@ -10,6 +10,7 @@
 //
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Slide extends React.Component {
   render() {
@@ -22,7 +23,7 @@ class Slide extends React.Component {
 }
 
 Slide.propTypes = {
-  children: React.PropTypes.node
+  children: PropTypes.node
 };
 
 export default Slide;

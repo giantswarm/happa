@@ -25,6 +25,7 @@ import copy from 'copy-to-clipboard';
 import Line from './line';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import * as Helpers from '../../lib/helpers';
+import PropTypes from 'prop-types';
 
 export class Prompt extends React.Component {
   render() {
@@ -112,13 +113,13 @@ export class CodeBlock extends React.Component {
 }
 
 Prompt.propTypes = {
-  children: React.PropTypes.node
+  children: PropTypes.node
 };
 
 Output.propTypes = {
-  children: React.PropTypes.node
+  children: PropTypes.node
 };
 
 CodeBlock.propTypes = {
-  children: React.PropTypes.node
+  children: PropTypes.node
 };

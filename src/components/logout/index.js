@@ -5,6 +5,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as userActions from '../../actions/userActions';
+import PropTypes from 'prop-types';
 
 class Logout extends React.Component {
   componentDidMount() {
@@ -26,11 +27,11 @@ class Logout extends React.Component {
 }
 
 Logout.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 Logout.propTypes = {
-  actions: React.PropTypes.object
+  actions: PropTypes.object
 };
 
 function mapDispatchToProps(dispatch) {

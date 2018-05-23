@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import marked from 'marked';
+import PropTypes from 'prop-types';
 
 class Markdown extends React.Component {
   rawMarkup() {
@@ -33,7 +34,7 @@ class Markdown extends React.Component {
 }
 
 Markdown.propTypes = {
-  children: React.PropTypes.node
+  children: PropTypes.node
 };
 
 export default Markdown;

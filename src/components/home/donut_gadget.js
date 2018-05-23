@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class DonutGadget extends React.Component {
   polarToCartesian(centerX, centerY, radius, angleInDegrees) {
@@ -96,12 +97,12 @@ class DonutGadget extends React.Component {
 }
 
 DonutGadget.propTypes = {
-  color: React.PropTypes.string,
-  availableMetric: React.PropTypes.object,
-  usedMetric: React.PropTypes.object,
-  label: React.PropTypes.string,
-  large_label: React.PropTypes.func,
-  bottom_label: React.PropTypes.func
+  color: PropTypes.string,
+  availableMetric: PropTypes.object,
+  usedMetric: PropTypes.object,
+  label: PropTypes.string,
+  large_label: PropTypes.func,
+  bottom_label: PropTypes.func
 };
 
 export default DonutGadget;

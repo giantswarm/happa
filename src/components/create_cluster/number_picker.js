@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 class NumberPicker extends React.Component {
   constructor(props) {
@@ -81,16 +82,16 @@ class NumberPicker extends React.Component {
 }
 
 NumberPicker.propTypes = {
-  unit: React.PropTypes.string,
-  label: React.PropTypes.string,
-  value: React.PropTypes.number,
-  stepSize: React.PropTypes.number,
-  formatter: React.PropTypes.func,
-  min: React.PropTypes.number,
-  max: React.PropTypes.number,
-  onChange: React.PropTypes.func,
-  readOnly: React.PropTypes.bool,
-  theme: React.PropTypes.string
+  unit: PropTypes.string,
+  label: PropTypes.string,
+  value: PropTypes.number,
+  stepSize: PropTypes.number,
+  formatter: PropTypes.func,
+  min: PropTypes.number,
+  max: PropTypes.number,
+  onChange: PropTypes.func,
+  readOnly: PropTypes.bool,
+  theme: PropTypes.string
 };
 
 function mapStateToProps() {

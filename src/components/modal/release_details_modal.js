@@ -5,6 +5,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../button/index';
 import React from 'react';
 import { relativeDate } from '../../lib/helpers.js';
+import PropTypes from 'prop-types';
 
 class ReleaseDetailsModal extends React.Component {
   constructor(props) {
@@ -90,9 +91,9 @@ class ReleaseDetailsModal extends React.Component {
 }
 
 ReleaseDetailsModal.propTypes = {
-  releases: React.PropTypes.array,
-  selectedRelease: React.PropTypes.string,
-  releaseSelected: React.PropTypes.func
+  releases: PropTypes.array,
+  selectedRelease: PropTypes.string,
+  releaseSelected: PropTypes.func
 };
 
 export default ReleaseDetailsModal;
