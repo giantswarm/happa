@@ -8,6 +8,7 @@ import { flashClearAll } from '../../actions/flashMessageActions';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import QueryString from 'query-string';
+import PropTypes from 'prop-types';
 
 class OauthCallback extends React.Component {
   constructor(props) {
@@ -71,11 +72,11 @@ class OauthCallback extends React.Component {
 }
 
 OauthCallback.propTypes = {
-  actions: React.PropTypes.object,
-  location: React.PropTypes.object,
-  dispatch: React.PropTypes.func,
-  flashMessages: React.PropTypes.object,
-  params: React.PropTypes.object
+  actions: PropTypes.object,
+  location: PropTypes.object,
+  dispatch: PropTypes.func,
+  flashMessages: PropTypes.object,
+  params: PropTypes.object
 };
 
 function mapStateToProps(state) {

@@ -7,6 +7,7 @@ import { flashClearAll } from '../../actions/flashMessageActions';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import Auth0 from '../../lib/auth0';
+import PropTypes from 'prop-types';
 
 class AdminLogin extends React.Component {
   componentDidMount() {
@@ -38,9 +39,9 @@ class AdminLogin extends React.Component {
 }
 
 AdminLogin.propTypes = {
-  dispatch: React.PropTypes.func,
-  flashMessages: React.PropTypes.object,
-  actions: React.PropTypes.object
+  dispatch: PropTypes.func,
+  flashMessages: PropTypes.object,
+  actions: PropTypes.object
 };
 
 function mapStateToProps(state) {
