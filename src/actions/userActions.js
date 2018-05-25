@@ -33,6 +33,8 @@ export function logoutError(errorMessage) {
   };
 }
 
+// refreshUserInfo performs the /v4/user/ call and updates what Happa knows
+// about the user based on the response.
 export function refreshUserInfo() {
   return function(dispatch, getState) {
     var usersApi = new GiantSwarmV4.UsersApi();
@@ -66,6 +68,9 @@ export function refreshUserInfo() {
   };
 }
 
+// auth0login is called when we have a callback result from auth0.
+// It then dispatches loginSuccess with the users token and email
+// the userReducer takes care of storing this in state.
 export function auth0Login(authResult) {
   return function(dispatch) {
     return new Promise(function(resolve) {
@@ -82,6 +87,11 @@ export function auth0Login(authResult) {
   };
 }
 
+// giantswarmLogin attempts to log the user in using email and password.
+// It then calls /v4/user/ to get user details. This step could be skipped since
+// we actually know the email (user used it to log in)
+// It then dispatches loginSuccess with the users token and email
+// the userReducer takes care of storing this in state.
 export function giantswarmLogin(email, password) {
   return function(dispatch, getState) {
     var giantSwarm = new GiantSwarm.Client();
@@ -132,6 +142,9 @@ export function giantswarmLogin(email, password) {
   };
 }
 
+// giantswarmLogout attempts to delete the user's giantswarm auth token.
+// it then dispatches logoutSuccess, which will 'shutdown' happa, and return
+// it to the login screen.
 export function giantswarmLogout() {
   return function(dispatch, getState) {
     var authToken;
@@ -158,6 +171,9 @@ export function giantswarmLogout() {
   };
 }
 
+// unauthorized is mean to be called whenever a API call results in an
+// unauthorized error. It will dispatch the `UNAUTHORIZED` action, as well
+// as add a flash message to let the user know we couldn't authenticate them.
 export function unauthorized() {
   return function(dispatch) {
 
@@ -186,6 +202,8 @@ export function unauthorized() {
   };
 }
 
+// getInfo calls the /v4/info/ endpoint and dispatches accordingly to store
+// the resulting info into the state.
 export function getInfo() {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;

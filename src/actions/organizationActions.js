@@ -9,6 +9,11 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import GiantSwarmV4 from 'giantswarm-v4';
 
+// determineSelectedOrganization takes a list of organizations and looks into
+// localstorage to see what the user had selected already (if anything) as their
+// selected organization.
+//
+// Using this information, it ensures we always have a valid organization selected.
 var determineSelectedOrganization = function(organizations) {
   var allOrganizations = _.map(organizations, x => x.id);
   var previouslySelectedOrganization = localStorage.getItem('app.selectedOrganization');
@@ -32,7 +37,12 @@ var determineSelectedOrganization = function(organizations) {
   return selectedOrganization;
 };
 
-var determineSelectedCluster = function(selectedOrganization, organizations, clusters) {
+// determineSelectedCluster takes a list of clusters and an organization and looks into
+// localstorage to see what the user had selected already (if anything) as their
+// selected cluster.
+//
+// Using this information, it ensures we always have a valid cluster selected.
+var determineSelectedCluster = function(selectedOrganization, clusters) {
   var previouslySelectedCluster = localStorage.getItem('app.selectedCluster');
   var orgClusters = _.filter(clusters, cluster => cluster.owner === selectedOrganization);
 
@@ -53,6 +63,11 @@ var determineSelectedCluster = function(selectedOrganization, organizations, clu
   return selectedCluster;
 };
 
+// organizationSelect sets the organization that the user is focusing on and
+// stores it in localstorage so that it persists when the users comes back
+// after closing the browser window.
+//
+// It also ensures we have a valid cluster selected.
 export function organizationSelect(orgId) {
   return function(dispatch, getState) {
 
@@ -60,7 +75,7 @@ export function organizationSelect(orgId) {
 
     // We're changing to a different organization
     // Make sure we have a reasonable value for selectedCluster.
-    var selectedCluster = determineSelectedCluster(orgId, getState().entities.organizations.items, getState().entities.clusters.items);
+    var selectedCluster = determineSelectedCluster(orgId, getState().entities.clusters.items);
 
     browserHistory.push('/');
 
@@ -153,7 +168,7 @@ export function organizationsLoad() {
       }, {});
 
       var selectedOrganization = determineSelectedOrganization(organizations);
-      var selectedCluster = determineSelectedCluster(selectedOrganization, organizations, clusters);
+      var selectedCluster = determineSelectedCluster(selectedOrganization, clusters);
 
       return {
         organizations,
@@ -179,6 +194,9 @@ export function organizationsLoad() {
   };
 }
 
+// organizationDeleteConfirm is called when the user confirms they want to delete
+// and organization. It performs the API call to actually delete the organization
+// and dispatches actions accordingly.
 export function organizationDeleteConfirm(orgId) {
   return function(dispatch) {
     dispatch({type: types.ORGANIZATION_DELETE_CONFIRM, orgId: orgId});
@@ -222,6 +240,9 @@ export function organizationCreate() {
   };
 }
 
+// organizationCreateConfirm is called when the user confirms they want to create
+// and organization. It performs the API call to actually create the organization
+// and dispatches actions accordingly.
 export function organizationCreateConfirm(orgId) {
   return function(dispatch) {
     dispatch({type: types.ORGANIZATION_CREATE_CONFIRM});
@@ -265,6 +286,11 @@ export function organizationAddMemberTyping(orgId) {
   };
 }
 
+// organizationAddMemberConfirm is called when the user confirms they want to add
+// a member to an organization. It performs the API call to actually do the job,
+// and dispatches actions accordingly.
+//
+// It also checks if the member is already in the organization before proceeding.
 export function organizationAddMemberConfirm(orgId, email) {
   return function(dispatch, getState) {
     dispatch({
@@ -312,6 +338,9 @@ export function organizationAddMemberConfirm(orgId, email) {
   };
 }
 
+// organizationRemoveMemberConfirm is called when the user confirms they want to remove
+// a member from an organization. It performs the API call to actually do the job,
+// and dispatches actions accordingly.
 export function organizationRemoveMemberConfirm(orgId, email) {
   return function(dispatch) {
     dispatch({
