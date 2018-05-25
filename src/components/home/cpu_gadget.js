@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class CPUGadget extends React.Component {
   polarToCartesian(centerX, centerY, radius, angleInDegrees) {
@@ -92,11 +93,11 @@ class CPUGadget extends React.Component {
 }
 
 CPUGadget.propTypes = {
-  color: React.PropTypes.string,
-  cpuUsed: React.PropTypes.object,
-  cores: React.PropTypes.object,
-  label: React.PropTypes.string,
-  large_label: React.PropTypes.func
+  color: PropTypes.string,
+  cpuUsed: PropTypes.object,
+  cores: PropTypes.object,
+  label: PropTypes.string,
+  large_label: PropTypes.func
 };
 
 export default CPUGadget;

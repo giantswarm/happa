@@ -4,6 +4,7 @@ import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../button';
 import InputField from '../shared/input_field';
+import PropTypes from 'prop-types';
 
 class NewAWSWorker extends React.Component {
   constructor(props) {
@@ -194,12 +195,12 @@ class NewAWSWorker extends React.Component {
 }
 
 NewAWSWorker.propTypes = {
-  allowedInstanceTypes: React.PropTypes.array,
-  worker: React.PropTypes.object,
-  index: React.PropTypes.number,
-  readOnly: React.PropTypes.bool,
-  deleteWorker: React.PropTypes.func,
-  onWorkerUpdated: React.PropTypes.func
+  allowedInstanceTypes: PropTypes.array,
+  worker: PropTypes.object,
+  index: PropTypes.number,
+  readOnly: PropTypes.bool,
+  deleteWorker: PropTypes.func,
+  onWorkerUpdated: PropTypes.func
 };
 
 export default NewAWSWorker;

@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/lib/Button';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import {clustersForOrg} from '../../lib/helpers';
+import PropTypes from 'prop-types';
 
 class Organizations extends React.Component {
   componentDidMount() {
@@ -82,13 +83,13 @@ class Organizations extends React.Component {
 }
 
 Organizations.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 Organizations.propTypes = {
-  dispatch: React.PropTypes.func,
-  organizations: React.PropTypes.object,
-  clusters: React.PropTypes.object
+  dispatch: PropTypes.func,
+  organizations: PropTypes.object,
+  clusters: PropTypes.object
 };
 
 function mapStateToProps(state) {

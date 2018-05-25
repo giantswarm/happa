@@ -5,6 +5,7 @@ import Button from '../button';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import PasswordField from '../signup/password_field';
+import PropTypes from 'prop-types';
 
 class ChangePassword extends React.Component {
   constructor(props) {
@@ -248,8 +249,8 @@ class ChangePassword extends React.Component {
 }
 
 ChangePassword.propTypes = {
-  user: React.PropTypes.object,
-  actions: React.PropTypes.object
+  user: PropTypes.object,
+  actions: PropTypes.object
 };
 
 export default ChangePassword;

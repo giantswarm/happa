@@ -7,6 +7,7 @@ import { Link } from 'react-router';
 import { relativeDate } from '../../lib/helpers.js';
 import { ButtonGroup } from 'react-bootstrap';
 import Button from '../button/index';
+import PropTypes from 'prop-types';
 
 class ClusterDashboardItem extends React.Component {
   constructor(props) {
@@ -103,16 +104,16 @@ class ClusterDashboardItem extends React.Component {
 }
 
 ClusterDashboardItem.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 ClusterDashboardItem.propTypes = {
-  cluster: React.PropTypes.object,
-  actions: React.PropTypes.object,
-  className: React.PropTypes.string,
-  children: React.PropTypes.array,
-  selectedOrganization: React.PropTypes.string,
-  animate: React.PropTypes.bool
+  cluster: PropTypes.object,
+  actions: PropTypes.object,
+  className: PropTypes.string,
+  children: PropTypes.array,
+  selectedOrganization: PropTypes.string,
+  animate: PropTypes.bool
 };
 
 function mapDispatchToProps(dispatch) {

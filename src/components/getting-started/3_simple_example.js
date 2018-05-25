@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
+import PropTypes from 'prop-types';
 
 class SimpleExample extends React.Component {
     constructor(props) {
@@ -250,10 +251,10 @@ class SimpleExample extends React.Component {
 }
 
 SimpleExample.propTypes = {
-  cluster: React.PropTypes.object,
-  dispatch: React.PropTypes.func,
-  actions: React.PropTypes.object,
-  goToSlide: React.PropTypes.func
+  cluster: PropTypes.object,
+  dispatch: PropTypes.func,
+  actions: PropTypes.object,
+  goToSlide: PropTypes.func
 };
 
 function mapStateToProps(state) {

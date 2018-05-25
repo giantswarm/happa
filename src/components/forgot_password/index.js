@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import Button from '../button';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 
 class ForgotPassword extends React.Component {
   constructor(props) {
@@ -129,8 +130,8 @@ class ForgotPassword extends React.Component {
 }
 
 ForgotPassword.propTypes = {
-  actions: React.PropTypes.object,
-  dispatch: React.PropTypes.func
+  actions: PropTypes.object,
+  dispatch: PropTypes.func
 };
 
 function mapDispatchToProps(dispatch) {

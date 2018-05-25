@@ -22,6 +22,7 @@ import copy from 'copy-to-clipboard';
 import Line from './line';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import * as Helpers from '../../lib/helpers';
+import PropTypes from 'prop-types';
 
 class FileBlock extends React.Component {
   constructor(props) {
@@ -103,9 +104,9 @@ class FileBlock extends React.Component {
 }
 
 FileBlock.propTypes = {
-  children: React.PropTypes.node,
-  fileName: React.PropTypes.string,
-  hideText: React.PropTypes.bool
+  children: PropTypes.node,
+  fileName: PropTypes.string,
+  hideText: PropTypes.bool
 };
 
 export default FileBlock;

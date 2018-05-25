@@ -3,6 +3,7 @@
 import React from 'react';
 import BarChart from './bar_chart';
 import {humanFileSize, truncate} from '../../lib/helpers';
+import PropTypes from 'prop-types';
 
 class NodeRow extends React.Component {
   labelifyBytes(bytes) {
@@ -99,9 +100,9 @@ class NodeRow extends React.Component {
 }
 
 NodeRow.propTypes = {
-  nodeId: React.PropTypes.string,
-  animate: React.PropTypes.bool,
-  node: React.PropTypes.object
+  nodeId: PropTypes.string,
+  animate: PropTypes.bool,
+  node: PropTypes.object
 };
 
 export default NodeRow;

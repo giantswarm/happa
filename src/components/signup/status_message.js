@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class StatusMessage extends React.Component {
   statusMessage() {
@@ -44,7 +45,7 @@ class StatusMessage extends React.Component {
 }
 
 StatusMessage.propTypes = {
-  status: React.PropTypes.string
+  status: PropTypes.string
 };
 
 export default StatusMessage;

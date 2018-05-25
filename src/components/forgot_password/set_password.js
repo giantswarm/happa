@@ -10,6 +10,7 @@ import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 import { connect } from 'react-redux';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 
 class SetPassword extends React.Component {
   constructor(props) {
@@ -320,13 +321,13 @@ class SetPassword extends React.Component {
 }
 
 SetPassword.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 SetPassword.propTypes = {
-  actions: React.PropTypes.object,
-  params: React.PropTypes.object,
-  dispatch: React.PropTypes.func
+  actions: PropTypes.object,
+  params: PropTypes.object,
+  dispatch: PropTypes.func
 };
 
 function mapDispatchToProps(dispatch) {

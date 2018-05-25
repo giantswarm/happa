@@ -3,6 +3,7 @@ import Button from '../button';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import update from 'react-addons-update';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import PropTypes from 'prop-types';
 
 class ChangeEmailForm extends React.Component {
   constructor(props) {
@@ -179,8 +180,8 @@ class ChangeEmailForm extends React.Component {
 }
 
 ChangeEmailForm.propTypes = {
-  user: React.PropTypes.object,
-  actions: React.PropTypes.object
+  user: PropTypes.object,
+  actions: PropTypes.object
 };
 
 export default ChangeEmailForm;

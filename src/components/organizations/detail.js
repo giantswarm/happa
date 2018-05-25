@@ -10,6 +10,7 @@ import { formatDate } from '../../lib/helpers.js';
 import DocumentTitle from 'react-document-title';
 import _ from 'underscore';
 import ClusterIDLabel from '../shared/cluster_id_label';
+import PropTypes from 'prop-types';
 
 class OrganizationDetail extends React.Component {
   componentDidMount() {
@@ -276,15 +277,15 @@ class OrganizationDetail extends React.Component {
 }
 
 OrganizationDetail.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 OrganizationDetail.propTypes = {
-  actions: React.PropTypes.object,
-  clusters: React.PropTypes.array,
-  organization: React.PropTypes.object,
-  dispatch: React.PropTypes.func,
-  params: React.PropTypes.object
+  actions: PropTypes.object,
+  clusters: PropTypes.array,
+  organization: PropTypes.object,
+  dispatch: PropTypes.func,
+  params: PropTypes.object
 };
 
 function mapStateToProps(state, ownProps) {

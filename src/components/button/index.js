@@ -21,6 +21,7 @@
 import React from 'react';
 import BsButton from 'react-bootstrap/lib/Button';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import PropTypes from 'prop-types';
 
 class Button extends React.Component {
   loadingIndicator = (position) => {
@@ -58,14 +59,14 @@ class Button extends React.Component {
 }
 
 Button.propTypes = {
-  type: React.PropTypes.string,
-  bsStyle: React.PropTypes.string,
-  bsSize: React.PropTypes.string,
-  onClick: React.PropTypes.func,
-  disabled: React.PropTypes.bool,
-  loading: React.PropTypes.bool,
-  loadingPosition: React.PropTypes.string,
-  children: React.PropTypes.node
+  type: PropTypes.string,
+  bsStyle: PropTypes.string,
+  bsSize: PropTypes.string,
+  onClick: PropTypes.func,
+  disabled: PropTypes.bool,
+  loading: PropTypes.bool,
+  loadingPosition: PropTypes.string,
+  children: PropTypes.node
 };
 
 Button.defaultProps = {

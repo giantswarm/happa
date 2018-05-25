@@ -12,6 +12,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from 'underscore';
 import { connect } from 'react-redux';
 import { flashRemove } from '../../actions/flashMessageActions';
+import PropTypes from 'prop-types';
 
 class FlashMessages extends React.Component {
   makeFlashComponent = (flashMessage) => {
@@ -34,12 +35,12 @@ class FlashMessages extends React.Component {
 }
 
 FlashMessages.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 FlashMessages.propTypes = {
-  flashMessages: React.PropTypes.object,
-  dispatch: React.PropTypes.func
+  flashMessages: PropTypes.object,
+  dispatch: PropTypes.func
 };
 
 function mapStateToProps(state) {

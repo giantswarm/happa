@@ -10,6 +10,7 @@ import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import { browserHistory } from 'react-router';
+import PropTypes from 'prop-types';
 
 class Login extends React.Component {
   constructor(props) {
@@ -160,9 +161,9 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  dispatch: React.PropTypes.func,
-  flashMessages: React.PropTypes.object,
-  actions: React.PropTypes.object
+  dispatch: PropTypes.func,
+  flashMessages: PropTypes.object,
+  actions: PropTypes.object
 };
 
 function mapStateToProps(state) {

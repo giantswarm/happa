@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 var typingTimer;
 var doneTypingInterval = 250; // ms
 
@@ -54,12 +55,12 @@ class PasswordField extends React.Component {
 }
 
 PasswordField.propTypes = {
-  autofocus: React.PropTypes.bool,
-  onChange: React.PropTypes.func,
-  onStartTyping: React.PropTypes.func,
-  name: React.PropTypes.string,
-  label: React.PropTypes.string,
-  validationError: React.PropTypes.string
+  autofocus: PropTypes.bool,
+  onChange: PropTypes.func,
+  onStartTyping: PropTypes.func,
+  name: PropTypes.string,
+  label: PropTypes.string,
+  validationError: PropTypes.string
 };
 
 export default PasswordField;

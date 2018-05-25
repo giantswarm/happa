@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { relativeDate, toTitleCase } from '../../lib/helpers.js';
 import ReactTimeout from 'react-timeout';
 import _ from 'underscore';
+import PropTypes from 'prop-types';
 
 const DOMAIN_POLL_INTERVAL = 60000; // 60 Seconds
 
@@ -394,12 +395,12 @@ class DomainValidation extends React.Component {
 }
 
 DomainValidation.propTypes = {
-  setInterval: React.PropTypes.func,
-  loadDomains: React.PropTypes.func,
-  dispatch: React.PropTypes.func,
-  addDomain: React.PropTypes.func,
-  deleteDomain: React.PropTypes.func,
-  organization: React.PropTypes.object
+  setInterval: PropTypes.func,
+  loadDomains: PropTypes.func,
+  dispatch: PropTypes.func,
+  addDomain: PropTypes.func,
+  deleteDomain: PropTypes.func,
+  organization: PropTypes.object
 };
 
 export default connect()(ReactTimeout(DomainValidation));

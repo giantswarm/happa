@@ -13,6 +13,7 @@ import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
 import request from 'superagent-bluebird-promise';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import {clustersForOrg} from '../../lib/helpers';
+import PropTypes from 'prop-types';
 
 class ConfigKubeCtl extends React.Component {
   constructor(props) {
@@ -277,13 +278,13 @@ class ConfigKubeCtl extends React.Component {
 }
 
 ConfigKubeCtl.propTypes = {
-  selectedCluster: React.PropTypes.object,
-  clusters: React.PropTypes.object,
-  dispatch: React.PropTypes.func,
-  actions: React.PropTypes.object,
-  selectedOrgClusters: React.PropTypes.array,
-  user: React.PropTypes.object,
-  goToSlide: React.PropTypes.func
+  selectedCluster: PropTypes.object,
+  clusters: PropTypes.object,
+  dispatch: PropTypes.func,
+  actions: PropTypes.object,
+  selectedOrgClusters: PropTypes.array,
+  user: PropTypes.object,
+  goToSlide: PropTypes.func
 };
 
 function mapStateToProps(state) {

@@ -1,6 +1,7 @@
 import DatePicker from 'react-datepicker';
 import React from 'react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 class ExpiryHoursPicker extends React.Component {
  constructor(props) {
@@ -181,8 +182,8 @@ class ExpiryHoursPicker extends React.Component {
 }
 
 ExpiryHoursPicker.propTypes = {
-  onChange: React.PropTypes.func,
-  initialValue: React.PropTypes.number
+  onChange: PropTypes.func,
+  initialValue: PropTypes.number
 };
 
 export default ExpiryHoursPicker;

@@ -10,6 +10,7 @@ import * as userActions from '../../actions/userActions';
 import { flashAdd } from '../../actions/flashMessageActions';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 // TODO: Figure out a way to make the test suite know about our standard
 // 'window.config' object. Or change the way these config params are passed
@@ -397,9 +398,9 @@ export class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
-  params: React.PropTypes.object,
-  dispatch: React.PropTypes.func,
-  actions: React.PropTypes.object
+  params: PropTypes.object,
+  dispatch: PropTypes.func,
+  actions: PropTypes.object
 };
 
 function mapDispatchToProps(dispatch) {

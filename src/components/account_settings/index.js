@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import ChangeEmailForm from './change_email_form';
 import ChangePasswordForm from './change_password_form';
 import DocumentTitle from 'react-document-title';
+import PropTypes from 'prop-types';
 
 class AccountSettings extends React.Component {
   render() {
@@ -125,8 +126,8 @@ class AccountSettings extends React.Component {
 }
 
 AccountSettings.propTypes = {
-  user: React.PropTypes.object,
-  actions: React.PropTypes.object
+  user: PropTypes.object,
+  actions: PropTypes.object
 };
 
 function mapStateToProps(state) {

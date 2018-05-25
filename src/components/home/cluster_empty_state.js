@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link}  from 'react-router';
+import PropTypes from 'prop-types';
 
 class ClusterEmptyState extends React.Component {
   render() {
@@ -34,9 +35,9 @@ class ClusterEmptyState extends React.Component {
 }
 
 ClusterEmptyState.propTypes = {
-  errorLoadingClusters: React.PropTypes.bool,
-  organizations: React.PropTypes.object,
-  selectedOrganization: React.PropTypes.string
+  errorLoadingClusters: PropTypes.bool,
+  organizations: PropTypes.object,
+  selectedOrganization: PropTypes.string
 };
 
 export default ClusterEmptyState;

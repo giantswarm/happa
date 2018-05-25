@@ -12,6 +12,7 @@ import ExpiryHoursPicker from './expiry_hours_picker';
 import { makeKubeConfigTextFile, dedent } from '../../lib/helpers';
 import copy from 'copy-to-clipboard';
 import _ from 'underscore';
+import PropTypes from 'prop-types';
 
 class ClusterKeyPairs extends React.Component {
  constructor(props) {
@@ -401,9 +402,9 @@ class ClusterKeyPairs extends React.Component {
 }
 
 ClusterKeyPairs.propTypes = {
-  user: React.PropTypes.object,
-  actions: React.PropTypes.object,
-  cluster: React.PropTypes.object
+  user: PropTypes.object,
+  actions: PropTypes.object,
+  cluster: PropTypes.object
 };
 
 

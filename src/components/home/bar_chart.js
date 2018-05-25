@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReactTimeout from 'react-timeout';
+import PropTypes from 'prop-types';
 
 class BarChart extends React.Component {
   constructor(props) {
@@ -64,12 +65,12 @@ class BarChart extends React.Component {
 }
 
 BarChart.propTypes = {
-  animate: React.PropTypes.bool,
-  percentage: React.PropTypes.number,
-  setTimeout: React.PropTypes.func,
-  outdated: React.PropTypes.bool,
-  color: React.PropTypes.string,
-  label: React.PropTypes.string
+  animate: PropTypes.bool,
+  percentage: PropTypes.number,
+  setTimeout: PropTypes.func,
+  outdated: PropTypes.bool,
+  color: PropTypes.string,
+  label: PropTypes.string
 };
 
 export default ReactTimeout(BarChart);

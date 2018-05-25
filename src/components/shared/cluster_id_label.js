@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import ColorHash from 'color-hash';
+import PropTypes from 'prop-types';
 
 var colorHashCache = {};
 
@@ -33,7 +34,7 @@ class ClusterIDLabel extends React.Component {
 }
 
 ClusterIDLabel.propTypes = {
-  clusterID: React.PropTypes.string,
+  clusterID: PropTypes.string,
 };
 
 export default ClusterIDLabel;

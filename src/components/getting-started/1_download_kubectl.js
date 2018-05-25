@@ -4,6 +4,7 @@ import Slide from '../component_slider/slide';
 import Markdown from './markdown';
 import { CodeBlock, Prompt } from './codeblock';
 import platform from '../../lib/platform';
+import PropTypes from 'prop-types';
 
 class DownloadKubeCTL extends React.Component {
   constructor(props) {
@@ -170,7 +171,7 @@ class DownloadKubeCTL extends React.Component {
 }
 
 DownloadKubeCTL.propTypes = {
-  goToSlide: React.PropTypes.func
+  goToSlide: PropTypes.func
 };
 
 export default DownloadKubeCTL;

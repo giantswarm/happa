@@ -11,6 +11,7 @@
 // @slides       - Array  - An array of components
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class ComponentSlider extends React.Component {
   constructor(props) {
@@ -76,8 +77,8 @@ class ComponentSlider extends React.Component {
 }
 
 ComponentSlider.propTypes = {
-  currentSlide: React.PropTypes.number,
-  slides: React.PropTypes.array
+  currentSlide: PropTypes.number,
+  slides: PropTypes.array
 };
 
 export default ComponentSlider;
