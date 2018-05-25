@@ -1,10 +1,10 @@
 'use strict';
 
-import { flashAdd } from './flashMessageActions';
+import { flashAdd, flashClearAll } from './flashMessageActions';
 import React from 'react';
 import * as types from './actionTypes';
 import GiantSwarm from '../lib/giantswarm_client_wrapper';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarmV4 from '../lib/giantswarm_v4_client_wrapper';
 
 export function loginSuccess(userData) {
   return {
@@ -33,17 +33,23 @@ export function logoutError(errorMessage) {
   };
 }
 
+// refreshUserInfo performs the /v4/user/ call and updates what Happa knows
+// about the user based on the response.
 export function refreshUserInfo() {
   return function(dispatch, getState) {
-    var authToken = getState().app.loggedInUser.authToken;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var usersApi = new GiantSwarmV4.UsersApi();
 
-    return giantSwarm.user()
+    return usersApi.getCurrentUser()
     .then((data) => {
+      var token = getState().app.loggedInUser.auth.token;
+      var scheme = getState().app.loggedInUser.auth.scheme;
+
       var userData = {
-        email: data.result.email,
-        username: data.result.username,
-        authToken: giantSwarm.authToken
+        email: data.email,
+        auth: {
+          scheme: scheme,
+          token: token
+        }
       };
 
       dispatch({
@@ -62,8 +68,31 @@ export function refreshUserInfo() {
   };
 }
 
+// auth0login is called when we have a callback result from auth0.
+// It then dispatches loginSuccess with the users token and email
+// the userReducer takes care of storing this in state.
+export function auth0Login(authResult) {
+  return function(dispatch) {
+    return new Promise(function(resolve) {
+      var userData = {
+        email: authResult.idTokenPayload.email,
+        auth: {
+          scheme: 'Bearer',
+          token: authResult.idToken
+        }
+      };
 
-export function login(email, password) {
+      resolve(dispatch(loginSuccess(userData)));
+    });
+  };
+}
+
+// giantswarmLogin attempts to log the user in using email and password.
+// It then calls /v4/user/ to get user details. This step could be skipped since
+// we actually know the email (user used it to log in)
+// It then dispatches loginSuccess with the users token and email
+// the userReducer takes care of storing this in state.
+export function giantswarmLogin(email, password) {
   return function(dispatch, getState) {
     var giantSwarm = new GiantSwarm.Client();
     var usersApi = new GiantSwarmV4.UsersApi();
@@ -85,13 +114,17 @@ export function login(email, password) {
       }
     })
     .then(() => {
+      usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKeyPrefix = 'giantswarm';
       usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = giantSwarm.authToken;
       return usersApi.getCurrentUser();
     })
     .then((data) => {
       var userData = {
         email: data.email,
-        authToken: giantSwarm.authToken
+        auth: {
+          scheme: 'giantswarm',
+          token: giantSwarm.authToken
+        }
       };
 
       return userData;
@@ -109,11 +142,14 @@ export function login(email, password) {
   };
 }
 
-export function logout() {
+// giantswarmLogout attempts to delete the user's giantswarm auth token.
+// it then dispatches logoutSuccess, which will 'shutdown' happa, and return
+// it to the login screen.
+export function giantswarmLogout() {
   return function(dispatch, getState) {
     var authToken;
     if (getState().app.loggedInUser) {
-      authToken = getState().app.loggedInUser.authToken;
+      authToken = getState().app.loggedInUser.auth.token;
     } else  {
       authToken = undefined;
     }
@@ -126,18 +162,35 @@ export function logout() {
 
     return giantSwarm.logout()
     .then(() => {
-      dispatch(logoutSuccess());
+      return dispatch(logoutSuccess());
     })
     .catch((error) => {
       dispatch(logoutError(error));
+      throw error;
     });
   };
 }
 
+// unauthorized is mean to be called whenever a API call results in an
+// unauthorized error. It will dispatch the `UNAUTHORIZED` action, as well
+// as add a flash message to let the user know we couldn't authenticate them.
 export function unauthorized() {
   return function(dispatch) {
+
+    // Clear any lingering flash error messages that would pop up due to failed
+    // requests.
+    dispatch(flashClearAll());
+
+    // Let the user know he has been logged out due to a probably expired
+    // or deleted token.
     dispatch(flashAdd({
-      message: <div>You have been logged out.</div>,
+      key: 'unauthorized', // We set a key explicitly for this flash message
+                           // so that multiple fires do not produce
+                           // multiple flash messages in the ui.
+                           // (Since there could be more than 1 request going on
+                           // that would trigger this unauthorized dispatch)
+
+      message: <div><b>Unable to authenticate</b><br/>Please log in again.</div>,
       class: 'danger'
     }));
 
@@ -149,9 +202,15 @@ export function unauthorized() {
   };
 }
 
+// getInfo calls the /v4/info/ endpoint and dispatches accordingly to store
+// the resulting info into the state.
 export function getInfo() {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
     var infoApi = new GiantSwarmV4.InfoApi();
+    infoApi.apiClient.authentications.AuthorizationHeaderToken.apiKeyPrefix = scheme;
+    infoApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = token;
 
     dispatch({
       type: types.INFO_LOAD

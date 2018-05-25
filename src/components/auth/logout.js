@@ -9,7 +9,13 @@ import PropTypes from 'prop-types';
 
 class Logout extends React.Component {
   componentDidMount() {
-    this.props.actions.logout();
+    if (this.props.user && this.props.user.auth && this.props.user.auth.scheme) {
+      if (this.props.user.auth.scheme === 'Bearer') {
+        this.props.actions.logoutSuccess();
+      } else {
+        this.props.actions.giantswarmLogout();
+      }
+    }
   }
 
   render() {
@@ -31,7 +37,8 @@ Logout.contextTypes = {
 };
 
 Logout.propTypes = {
-  actions: PropTypes.object
+  actions: PropTypes.object,
+  user: PropTypes.object
 };
 
 function mapDispatchToProps(dispatch) {
@@ -41,4 +48,10 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(null, mapDispatchToProps)(Logout);
+function mapStateToProps(state) {
+  return {
+    user: state.app.loggedInUser
+  };
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Logout);

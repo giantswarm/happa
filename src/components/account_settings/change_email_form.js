@@ -70,7 +70,7 @@ class ChangeEmailForm extends React.Component {
 
     // Don't submit the form if nothing changed.
     if (this.props.user.email != this.state.fields.email.value) {
-      var authToken = this.props.user.authToken;
+      var authToken = this.props.user.auth.token;
       var giantSwarm = new GiantSwarm.Client(authToken);
 
       this.setState({

@@ -10,6 +10,7 @@ import _ from 'underscore';
 import { bindActionCreators } from 'redux';
 import { organizationSelect, organizationsLoad } from '../actions/organizationActions';
 import * as UserActions from '../actions/userActions';
+import * as FlashActions from '../actions/flashMessageActions';
 import Breadcrumbs from 'react-breadcrumbs';
 import Gravatar from 'react-gravatar';
 import DocumentTitle from 'react-document-title';
@@ -20,9 +21,6 @@ class Layout extends React.Component {
     this.props.actions.refreshUserInfo().then(() => {
       this.props.dispatch(organizationsLoad());
       return null;
-    })
-    .catch(() => {
-      this.props.actions.loginError();
     });
   }
 
@@ -90,7 +88,12 @@ class Layout extends React.Component {
                         <Gravatar email={this.props.user.email} size={100} default='mm' />
                         <span>{this.props.user.email}</span>
                       </div>} key='1' id='user_dropdown'>
-                      <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
+                      {
+                        this.props.user.auth.scheme === 'giantswarm' ?
+                        <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
+                        :
+                        undefined
+                      }
                       <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
                     </DropdownButton>
                   </div>
@@ -124,7 +127,8 @@ Layout.propTypes = {
   selectedOrganization: PropTypes.string,
   firstLoadComplete: PropTypes.bool,
   dispatch: PropTypes.func,
-  actions: PropTypes.object
+  actions: PropTypes.object,
+  flashActions: PropTypes.object,
 };
 
 function mapStateToProps(state) {
@@ -139,6 +143,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(UserActions, dispatch),
+    flashActions: bindActionCreators(FlashActions, dispatch),
     dispatch: dispatch
   };
 }

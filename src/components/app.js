@@ -7,11 +7,12 @@ import { useScroll } from 'react-router-scroll';
 import { render } from 'react-dom';
 import Layout from './layout';
 import gettingStarted from './getting-started/index';
-import login from './login/index';
-import logout from './logout/index';
+import adminLogin from './auth/admin';
+import login from './auth/login';
+import logout from './auth/logout';
 import signup from './signup/index';
+import oauth_callback from './auth/oauth_callback.js';
 import notFound from './not_found/index';
-// import createCluster from './create_cluster';
 import forgot_password_index from './forgot_password/index';
 import forgot_password_set_password from './forgot_password/set_password';
 import Organizations from './organizations';
@@ -37,14 +38,14 @@ const store = configureStore();
 var defaultClient = GiantSwarmV4.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
-defaultClientAuth.apiKeyPrefix = 'giantswarm';
 
 
 function requireAuth(nextState, replace) {
   var state = store.getState();
 
   if (state.app.loggedInUser) {
-    defaultClientAuth.apiKey = state.app.loggedInUser.authToken;
+    defaultClientAuth.apiKeyPrefix = state.app.loggedInUser.auth.scheme;
+    defaultClientAuth.apiKey = state.app.loggedInUser.auth.token;
   } else {
     replace({
       pathname: '/login',
@@ -60,11 +61,13 @@ if (window.config.intercomAppId) {
 render(
   <Provider store={store}>
     <Router history={browserHistory} render={applyRouterMiddleware(useScroll())}>
+      <Route path = "/admin-login" component={adminLogin} />
       <Route path = "/login" component={login} />
       <Route path = "/logout" component={logout} />
       <Route path = "/forgot_password" component={forgot_password_index} />
       <Route path = "/forgot_password/:token" component={forgot_password_set_password} />
       <Route path = "/signup/:token" component={signup} />
+      <Route path = "/oauth/callback" component={oauth_callback} />
 
       <Route name="Home" path="/" component={Layout} onEnter={requireAuth}>
         <IndexRoute component={Home}/>

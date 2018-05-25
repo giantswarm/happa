@@ -217,7 +217,7 @@ class ConfigKubeCtl extends React.Component {
                 create kubeconfig \\
                 --cluster ` + this.props.selectedCluster.id + ` \\
                 --certificate-organizations system:masters \\
-                --auth-token ` + this.props.user.authToken
+                --auth-token ` + this.props.user.auth.token
             }
           </Prompt>
         </CodeBlock>
