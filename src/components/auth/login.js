@@ -153,8 +153,6 @@ class Login extends React.Component {
               <br/>
               Trouble logging in? Please contact us via <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
             </div>
-
-            <Link className='login_form--admin-link' to='/admin-login'>Login as an Administrator</Link>
           </div>
         </ReactCSSTransitionGroup>
       </div>
