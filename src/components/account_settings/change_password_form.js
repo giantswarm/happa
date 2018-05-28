@@ -4,6 +4,7 @@ import React from 'react';
 import Button from '../button';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import GiantSwarm from '../../lib/giantswarm_client_wrapper';
+import { validatePassword } from '../../lib/password_validation';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
 
@@ -22,28 +23,26 @@ class ChangePassword extends React.Component {
 
   newPasswordValid = () => {
     var password = this.new_password.value();
-    var valid = false;
-    var statusMessage;
 
-    if (password.length === 0) {
-      // Be invalid, but don't change the status message.
-    } else if (password.length < 8) {
-      statusMessage = 'Your new password is too short';
-    } else if (/^[0-9]+$/.test(password)) {
-      statusMessage = 'Please pick a new password that is not just numbers';
-    } else if (/^[a-z]+$/.test(password)) {
-      statusMessage = 'Please pick a new password that is not just lower case letters';
-    } else if (/^[A-Z]+$/.test(password)) {
-      statusMessage = 'Please pick a new password that is not just upper case letters';
-    } else {
-      valid = true;
+    var validationResult = validatePassword(password);
+
+    if (validationResult.statusMessage === 'password_too_short') {
+      validationResult.statusMessage = 'Your new password is too short';
+    } else if (validationResult.statusMessage === 'password_not_just_numbers') {
+      validationResult.statusMessage = 'Please pick a new password that is not just numbers';
+    } else if (validationResult.statusMessage === 'password_not_just_letters') {
+      validationResult.statusMessage = 'Please pick a new password that is not just upper case / lower case letters';
+    } else if (validationResult.statusMessage === 'password_ok') {
+      validationResult.statusMessage = '';
     }
 
     this.setState({
-      newPasswordValidationMessage: statusMessage
+      newPasswordValidationMessage: validationResult.statusMessage
     });
 
-    return valid;
+
+
+    return validationResult.valid;
   }
 
   newPasswordConfirmationValid = () => {
