@@ -42,8 +42,13 @@ class UpgradeClusterModal extends React.Component {
   }
 
   changedComponents = () => {
+    var currentComponents = {};
+    if (this.props.release && this.props.release.components) {
+      currentComponents = this.props.release.components;
+    }
+
     var components = {};
-    _.each(this.props.release.components, (component) => {
+    _.each(currentComponents, (component) => {
       components[component.name] = component;
     });
 
@@ -69,6 +74,15 @@ class UpgradeClusterModal extends React.Component {
     });
 
     return <div>
+      {
+        this.props.release === undefined ?
+        <div className="flash-messages--flash-message flash-messages--info">
+          Could not get component information for release version {this.props.cluster.release_version}.<br/>
+          Unable to show you an exact diff.
+        </div>
+        :
+        undefined
+      }
       <p>
         <b>Component Changes</b>
       </p>
@@ -116,9 +130,14 @@ class UpgradeClusterModal extends React.Component {
           })
         }
       </div>
-      <p>
-        <b>Unchanged Components</b>
-      </p>
+      {
+        unchangedComponents.length > 0 ?
+          <p>
+            <b>Unchanged Components</b>
+          </p>
+        :
+          undefined
+      }
       {
          _.map(_.sortBy(unchangedComponents, 'name'), (component) => {
           return <div className='release-selector-modal--component' key={component.name}>

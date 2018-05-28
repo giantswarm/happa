@@ -356,6 +356,15 @@ function mapStateToProps(state, ownProps) {
       return x.version;
     }).sort(cmp);
 
+    // Guard against the release version of this cluster not being in the /v4/releases/
+    // response.
+    // This will ensure that Happa can calculate the target version for upgrade
+    // correctly.
+    if (availableVersions.indexOf(cluster.release_version) === -1) {
+      availableVersions.push(cluster.release_version);
+      availableVersions.sort(cmp);
+    }
+
     if (availableVersions.length > availableVersions.indexOf(cluster.release_version)) {
       targetReleaseVersion = availableVersions[availableVersions.indexOf(cluster.release_version) + 1];
     }
