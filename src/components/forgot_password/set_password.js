@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { validatePassword } from '../../lib/password_validation';
 
 class SetPassword extends React.Component {
   constructor(props) {
@@ -136,29 +137,13 @@ class SetPassword extends React.Component {
   }
 
   passwordEditingCompleted = (password) => {
-    var valid = false;
-    var statusMessage = this.state.statusMessage;
-
-    if (password.length === 0) {
-      // Be invalid, but don't change the status message.
-    } else if (password.length < 8) {
-      statusMessage = 'password_too_short';
-    } else if (/^[0-9]+$/.test(password)) {
-      statusMessage = 'password_not_just_numbers';
-    } else if (/^[a-z]+$/.test(password)) {
-      statusMessage = 'password_not_just_letters';
-    } else if (/^[A-Z]+$/.test(password)) {
-      statusMessage = 'password_not_just_letters';
-    } else {
-      statusMessage = '';
-      valid = true;
-    }
+    var validationResult = validatePassword(password);
 
     this.setState({
-      statusMessage: statusMessage,
+      statusMessage: validationResult.statusMessage,
 
       passwordField: {
-        valid: valid,
+        valid: validationResult.valid,
         value: password
       }
     });

@@ -36,7 +36,7 @@ class StatusMessage extends React.Component {
     return (
       <div className='signup--status'>
         <div className='signup--status-text'>
-          {this.statusMessage()[this.props.status]}
+          {this.statusMessage()[this.props.status] || <span>&nbsp;</span>}
         </div>
         { this.showLoader() ? <img className='loader' src='/images/loader_oval_light.svg' /> : null }
       </div>
