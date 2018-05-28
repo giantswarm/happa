@@ -158,7 +158,7 @@ class ReleaseSelector extends React.Component {
       <div className='new-cluster--release-selector' >
         {
           this.state.loading ? this.loadingContent() :
-            this.state.error ? this.loadingContent() :
+            this.state.error ? undefined :
               this.loadedContent()
         }
 
