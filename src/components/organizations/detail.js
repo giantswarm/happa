@@ -62,7 +62,7 @@ class OrganizationDetail extends React.Component {
                         _.map(_.sortBy(this.props.clusters, (cluster) => cluster.name ), (cluster) => {
                           return (
                             <tr className="clickable" key={cluster.id} onClick={this.openClusterDetails.bind(this, cluster.id)}>
-                              <td><ClusterIDLabel clusterID={cluster.id} /></td>
+                              <td><ClusterIDLabel clusterID={cluster.id} copyEnabled/></td>
                               <td>{cluster.name}</td>
                               <td>{formatDate(cluster.create_date)}</td>
                             </tr>

@@ -55,14 +55,17 @@ class ClusterIDLabel extends React.Component {
 
 
         {
-          this.state.copied ?
-            <i className='fa fa-check' aria-hidden='true'></i>
+          this.props.copyEnabled ?
+            this.state.copied ?
+              <i className='fa fa-check' aria-hidden='true'></i>
+            :
+            <OverlayTrigger placement="top" overlay={
+                <Tooltip id="tooltip">Copy {this.props.clusterID} to clipboard.</Tooltip>
+              }>
+              <i onClick={this.copyToClipboard.bind(this)} className='fa fa-clipboard' aria-hidden='true'></i>
+            </OverlayTrigger>
           :
-          <OverlayTrigger placement="top" overlay={
-              <Tooltip id="tooltip">Copy {this.props.clusterID} to clipboard.</Tooltip>
-            }>
-            <i onClick={this.copyToClipboard.bind(this)} className='fa fa-clipboard' aria-hidden='true'></i>
-          </OverlayTrigger>
+            undefined
         }
       </div>
     );
@@ -71,6 +74,7 @@ class ClusterIDLabel extends React.Component {
 
 ClusterIDLabel.propTypes = {
   clusterID: PropTypes.string,
+  copyEnabled: PropTypes.bool
 };
 
 export default ClusterIDLabel;
