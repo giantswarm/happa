@@ -99,6 +99,7 @@ class Modal extends React.Component {
                 type='submit'
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
+                loadingPosition='left'
                 onClick={this.deleteOrganisation.bind(this, this.props.modal.templateValues.orgId)}>
                 {
                   this.props.modal.templateValues.loading ?
@@ -139,6 +140,7 @@ class Modal extends React.Component {
                 type='submit'
                 bsStyle='primary'
                 loading={this.props.modal.templateValues.loading}
+                loadingPosition='left'
                 onClick={this.createOrganisation.bind(this)}>
                 {
                   this.props.modal.templateValues.loading ?
@@ -186,6 +188,7 @@ class Modal extends React.Component {
                 bsStyle='primary'
                 loading={this.props.modal.templateValues.loading}
                 disabled={ ! this.state.emailValid }
+                loadingPosition='left'
                 onClick={this.addMember.bind(this)}>
                 {
                   this.props.modal.templateValues.loading ?
@@ -223,6 +226,7 @@ class Modal extends React.Component {
                 type='submit'
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
+                loadingPosition='left'
                 onClick={this.removeMember.bind(this)}>
                 {
                   this.props.modal.templateValues.loading ?
@@ -264,6 +268,7 @@ class Modal extends React.Component {
                 type='submit'
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
+                loadingPosition='left'
                 onClick={this.deleteClusterConfirm.bind(this, cluster)}>
                 {
                   this.props.modal.templateValues.loading ?
