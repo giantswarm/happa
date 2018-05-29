@@ -64,7 +64,7 @@ class ClusterDashboardItem extends React.Component {
     return (
       <div className='cluster-dashboard-item row well'>
 
-            <div className='col-1 cluster-dashboard-item--title'>
+            <div className='cluster-dashboard-item--label'>
               <Link to={'/organizations/'+ this.props.selectedOrganization +'/clusters/' + this.props.cluster.id}>
                 <ClusterIDLabel clusterID={this.props.cluster.id} copyEnabled />
               </Link>
