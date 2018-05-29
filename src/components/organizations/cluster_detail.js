@@ -156,7 +156,7 @@ class ClusterDetail extends React.Component {
               <div className='row'>
                 <div className='col-7'>
                   <h1>
-                    <ClusterIDLabel clusterID={this.props.cluster.id} />
+                    <ClusterIDLabel clusterID={this.props.cluster.id} copyEnabled />
                     {' '}
                     {this.props.cluster.name} {this.state.loading ? <img className='loader' width="25px" height="25px" src='/images/loader_oval_light.svg'/> : ''}
                   </h1>
