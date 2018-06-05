@@ -21,6 +21,18 @@ spec:
         - name: nginx-config
           configMap:
             name: happa-nginx-config
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                  - key: k8s-app
+                    operator: In
+                    values:
+                    - happa
+              topologyKey: kubernetes.io/hostname
       containers:
       - name: happa
         image: quay.io/giantswarm/happa:[[ .SHA ]]
