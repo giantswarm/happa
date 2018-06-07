@@ -352,7 +352,11 @@ function mapStateToProps(state, ownProps) {
       release = state.entities.releases.items[cluster.release_version];
     }
 
-    let availableVersions = _.map(state.entities.releases.items, (x) => {
+    let activeReleases = _.filter(state.entities.releases.items, (x) => {
+      return x.active;
+    });
+
+    let availableVersions = _.map(activeReleases, (x) => {
       return x.version;
     }).sort(cmp);
 
