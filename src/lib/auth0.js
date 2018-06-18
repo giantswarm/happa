@@ -31,6 +31,10 @@ export default class Auth {
 
   renewToken() {
     return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject('timeout while trying to renew your session');
+      }, 10000);
+
       this.auth0.checkSession({}, (err, result) => {
         if (!err) {
           resolve(result);
