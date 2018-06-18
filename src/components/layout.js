@@ -21,6 +21,9 @@ class Layout extends React.Component {
     this.props.actions.refreshUserInfo().then(() => {
       this.props.dispatch(organizationsLoad());
       return null;
+    })
+    .catch((error) => {
+      throw(error);
     });
   }
 

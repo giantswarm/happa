@@ -25,23 +25,28 @@ returnType) {
 
   return origCallApi(path, httpMethod, pathParams, queryParams, headerParams, formParams,
     bodyParam, authNames, contentTypes, accepts, returnType).catch((err) => {
-      if (err.status === 401) {
+
+      var defaultClientAuth = this.authentications['AuthorizationHeaderToken'];
+
+      // If the response from the Giant Swarm API is '401'
+      // And we had a Bearer token (so not a giantswarm token)
+      if (err.status === 401 && defaultClientAuth.apiKeyPrefix === 'Bearer') {
+        // Then try to renew the token silently:
         return auth0.renewToken()
         .then((result) => {
           store.dispatch(auth0Login(result));
 
-          var defaultClientAuth = this.authentications['AuthorizationHeaderToken'];
-          defaultClientAuth.apiKeyPrefix = 'Bearer';
           defaultClientAuth.apiKey = result.idToken;
 
           return origCallApi(path, httpMethod, pathParams, queryParams, headerParams, formParams,
-    bodyParam, authNames, contentTypes, accepts, returnType);
+                             bodyParam, authNames, contentTypes, accepts, returnType);
         })
         .catch((err) => {
           store.dispatch(unauthorized());
           throw(err);
         });
       } else {
+        store.dispatch(unauthorized());
         throw err;
       }
     });
