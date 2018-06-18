@@ -149,7 +149,10 @@ export class SignUp extends React.Component {
         var userData = {
           username: data.username,
           email: data.email,
-          authToken: data.token
+          auth:{
+            'scheme':'giantswarm',
+            'token': data.token
+          }
         };
 
         this.props.actions.loginSuccess(userData);
