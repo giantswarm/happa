@@ -6,8 +6,8 @@ export default class Auth {
     clientID: 'mgYdxCGCZ2eao0OJUGOFXurGIaQAACHs',
     redirectUri: location.protocol + '//' + window.location.host + '/oauth/callback',
     prompt:'none',
-    audience: 'g8s',
-    responseType: 'id_token',
+    audience: 'giantswarm-api',
+    responseType: 'id_token token',
     scope: 'openid email profile user_metadata https://giantswarm.io',
     connectionScopes: {
       'github': ['read:org']
