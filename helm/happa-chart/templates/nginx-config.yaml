@@ -16,10 +16,10 @@ data:
 
     http {
       keepalive_timeout 5s;
-      
+
       include /etc/nginx/mime.types;
       default_type  application/octet-stream;
-      
+
       gzip on;
       gzip_proxied any;
 
@@ -40,18 +40,28 @@ data:
         access_log /dev/stdout custom;
         client_max_body_size 0;
         chunked_transfer_encoding on;
-        index index.html;
-        root /www;
 
         add_header X-Backend-Server $hostname;
         add_header X-Version VERSION;
 
-        try_files $uri $uri/ /index.html;
-
         error_page 404 /404.html;
 
+        root /www;
+
+        location / {
+          index index.html;
+
+          try_files $uri $uri/ /index.html;
+
+          # kill cache for any happa page (but not the javascript or other assets)
+          add_header Last-Modified $date_gmt;
+          add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+          if_modified_since off;
+          expires off;
+          etag off;
+        }
+
         location = /404.html {
-          root   /www;
           add_header Cache-Control "no-cache" always;
         }
 
