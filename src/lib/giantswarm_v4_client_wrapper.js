@@ -36,7 +36,7 @@ returnType) {
         .then((result) => {
           store.dispatch(auth0Login(result));
 
-          defaultClientAuth.apiKey = result.idToken;
+          defaultClientAuth.apiKey = result.accessToken;
 
           return origCallApi(path, httpMethod, pathParams, queryParams, headerParams, formParams,
                              bodyParam, authNames, contentTypes, accepts, returnType);

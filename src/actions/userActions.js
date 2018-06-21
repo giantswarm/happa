@@ -78,7 +78,7 @@ export function auth0Login(authResult) {
         email: authResult.idTokenPayload.email,
         auth: {
           scheme: 'Bearer',
-          token: authResult.idToken
+          token: authResult.accessToken
         }
       };
 
