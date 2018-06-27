@@ -134,7 +134,7 @@ class ClusterDetail extends React.Component {
     // cluster must have a release_version and it must be > 3
     var versionIsAbove3 = false;
     if (this.props.cluster.release_version !== '') {
-      if (cmp(this.props.cluster.release_version, '3.0.0') <= 0) {
+      if (cmp(this.props.cluster.release_version, '3.0.0') >= 0) {
         versionIsAbove3 = true;
       }
     }
