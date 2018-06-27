@@ -134,7 +134,7 @@ class ClusterDetail extends React.Component {
     if (this.props.provider !== 'aws') return false;
 
     // cluster must have a release_version
-    if (this.props.cluster.release_version !== '') return false;
+    if (this.props.cluster.release_version === '') return false;
 
     // cluster release_version must be > 3
     if (cmp(this.props.cluster.release_version, '3.0.0') === -1) return false;
