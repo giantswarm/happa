@@ -128,8 +128,18 @@ class ClusterDetail extends React.Component {
     }
   }
 
+  // Determine whether the current cluster can be upgraded
   canClusterUpgrade() {
-    return this.props.user.isAdmin && !!this.props.targetRelease;
+
+    // cluster must have a release_version and it must be > 3
+    var versionIsAbove3 = false;
+    if (this.props.cluster.release_version !== "") {
+      if (cmp(this.props.cluster.release_version, "3.0.0") <= 0) {
+        versionIsAbove3 = true;
+      }
+    }
+
+    return this.props.user.isAdmin && !!this.props.targetRelease || isAbove3;
   }
 
   accessCluster = () => {
