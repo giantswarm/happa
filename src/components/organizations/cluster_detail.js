@@ -139,7 +139,7 @@ class ClusterDetail extends React.Component {
       }
     }
 
-    return this.props.user.isAdmin && !!this.props.targetRelease || isAbove3;
+    return this.props.user.isAdmin && !!this.props.targetRelease || versionIsAbove3;
   }
 
   accessCluster = () => {
