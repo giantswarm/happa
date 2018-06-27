@@ -130,16 +130,22 @@ class ClusterDetail extends React.Component {
 
   // Determine whether the current cluster can be upgraded
   canClusterUpgrade() {
+    // provider must be AWS
+    if (this.props.provider !== 'aws') return false;
 
-    // cluster must have a release_version and it must be > 3
-    var versionIsAbove3 = false;
-    if (this.props.cluster.release_version !== '') {
-      if (cmp(this.props.cluster.release_version, '3.0.0') >= 0) {
-        versionIsAbove3 = true;
-      }
-    }
+    // cluster must have a release_version
+    if (this.props.cluster.release_version !== '') return false;
 
-    return this.props.user.isAdmin && !!this.props.targetRelease && versionIsAbove3 && this.props.provider === 'aws';
+    // cluster release_version must be > 3
+    if (cmp(this.props.cluster.release_version, '3.0.0') === -1) return false;
+
+    // a target release to upgrade to must be defined
+    if (!!this.props.targetRelease !== true) return false;
+
+    // the user must be an admin
+    if (this.props.user.isAdmin !== true) return false;
+
+    return true;
   }
 
   accessCluster = () => {
