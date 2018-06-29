@@ -132,7 +132,6 @@ class ClusterDetail extends React.Component {
   canClusterUpgrade() {
     // provider must be AWS or Azure
     if (this.props.provider !== 'aws' && this.props.provider !== 'azure') {
-      console.log('Provider not supported for upgrades.', this.props.provider);
       return false;
     }
 
@@ -142,25 +141,21 @@ class ClusterDetail extends React.Component {
     // cluster release_version must be > 3 on AWS and > 1 on Azure
     if (this.props.provider === 'aws') {
       if (cmp(this.props.cluster.release_version, '3.0.0') === -1) {
-        console.log('Version not supported for upgrades.', this.props.cluster.release_version);
         return false;
       }
     } else if (this.props.provider === 'azure') {
       if (cmp(this.props.cluster.release_version, '1.0.0') === -1) {
-        console.log('Version not supported for upgrades.', this.props.cluster.release_version);
         return false;
       }
     }
 
     // a target release to upgrade to must be defined
     if (!!this.props.targetRelease !== true) {
-      console.log('No target release set. Upgrade not supported.', this.props.targetRelease);
       return false;
     }
 
     // the user must be an admin
     if (this.props.user.isAdmin !== true) {
-      console.log('User is not admin. Uprade nbot supported.');
       return false;
     }
 
