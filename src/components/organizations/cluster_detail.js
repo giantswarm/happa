@@ -142,12 +142,12 @@ class ClusterDetail extends React.Component {
     // cluster release_version must be > 3 on AWS and > 1 on Azure
     if (this.props.provider === 'aws') {
       if (cmp(this.props.cluster.release_version, '3.0.0') === -1) {
-        console.log('Version not supported for upgrades.', his.props.cluster.release_version);
+        console.log('Version not supported for upgrades.', this.props.cluster.release_version);
         return false;
       }
     } else if (this.props.provider === 'azure') {
       if (cmp(this.props.cluster.release_version, '1.0.0') === -1) {
-        console.log('Version not supported for upgrades.', his.props.cluster.release_version);
+        console.log('Version not supported for upgrades.', this.props.cluster.release_version);
         return false;
       }
     }
