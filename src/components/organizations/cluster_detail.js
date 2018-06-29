@@ -130,6 +130,11 @@ class ClusterDetail extends React.Component {
 
   // Determine whether the current cluster can be upgraded
   canClusterUpgrade() {
+    // the user must be an admin
+    if (this.props.user.isAdmin !== true) {
+      return false;
+    }
+
     // provider must be AWS or Azure
     if (this.props.provider !== 'aws' && this.props.provider !== 'azure') {
       return false;
@@ -137,6 +142,11 @@ class ClusterDetail extends React.Component {
 
     // cluster must have a release_version
     if (this.props.cluster.release_version === '') return false;
+
+    // a target release to upgrade to must be defined
+    if (!!this.props.targetRelease !== true) {
+      return false;
+    }
 
     // cluster release_version must be > 3 on AWS and > 1 on Azure
     if (this.props.provider === 'aws') {
@@ -147,16 +157,6 @@ class ClusterDetail extends React.Component {
       if (cmp(this.props.cluster.release_version, '1.0.0') === -1) {
         return false;
       }
-    }
-
-    // a target release to upgrade to must be defined
-    if (!!this.props.targetRelease !== true) {
-      return false;
-    }
-
-    // the user must be an admin
-    if (this.props.user.isAdmin !== true) {
-      return false;
     }
 
     return true;
