@@ -19,7 +19,7 @@ docker-build-prod:
 	docker build -t quay.io/giantswarm/happa -f Dockerfile .
 
 # Run the development environment
-# Becomes available at localhost:8000
+# Becomes available at localhost:7000
 develop:
 	@echo
 	@echo "-----------------------------------------------------------"
@@ -38,7 +38,7 @@ develop:
 
 	@echo
 	@echo "------------------------------------------------------------"
-	@echo "Happa development environment is running at localhost:8000."
+	@echo "Happa development environment is running at localhost:7000."
 	@echo "------------------------------------------------------------"
 	@echo
 

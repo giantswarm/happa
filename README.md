@@ -19,27 +19,39 @@ It currently depends on `api` and `passage`.
 
 ## Getting started with development / demoing
 
-Requirements: `docker`
+Requirements:
+ - `docker`,
+ - `giantswarm/api`
 
-You should be able to start the development server with:
 
-`make develop`
+Start the `api` and dependencies first by going to the `api` repo and running
+the dockercompose file there:
 
-Then visit `localhost:8000/webpack-dev-server/`
+```
+cd $GOPATH/src/github.com/giantswarm/api/testing
+docker-compose up -d
+docker-compose up -d cluster-service userd companyd    # sometimes these services start too soon and crash
+./fixtures.sh
+```
+
+`./fixtures.sh` will create the initial user and organization you can log in with.
+
+You should now be able to start happa's development server with:
+
+```
+# From this repo, so no longer in api/testing
+make develop
+```
+
+Then visit `localhost:7000`
 
 Any changes should cause the browser to reload automatically.
 
-Happa will also be up at: `docker.dev:8000`, without the auto reloading feature.
-You can use this to demo Happa and features like cluster creation.
-
-It is important that you have a entry in your `hosts` file that points `docker.dev`
-to your docker host.
-
-Once everything is up you can log in as `developer@example.com` with
-`correct_password` as your password.
+Once everything is up you can log in as `developer@giantswarm.io` with
+`password` as your password.
 
 If you want to test out things like the forgot password feature, all e-mail ends up in
-the mailcatcher app running at `docker.dev:1080`
+the mailcatcher app running at `localhost:1080`
 
 ## Tear down the dev / demo environment
 
@@ -84,7 +96,6 @@ Use environment variables to adjust the behavior of this application in producti
 |-------------|-----------|-------|
 |API_ENDPOINT |URL to Giant Swarm's API.|http://docker.dev:9000|
 |PASSAGE_ENDPOINT|URL to Passage, which helps users when they lose their password or have been invited to create an account.|http://docker.dev:5001|
-|DOMAIN_VALIDATOR_ENDPOINT|URL to the Domain Validator service, which helps in the custom domains feature .|http://docker.dev:5001|
 |INTERCOM_APP_ID|The ID of Giant Swarm's intercom app. The default is our development intercom account.|bdvx0cb8|
 |ENVIRONMENT  |A string that indicates where Happa is running. |development|
 
