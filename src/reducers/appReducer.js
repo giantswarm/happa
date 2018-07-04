@@ -8,10 +8,6 @@ import _ from 'underscore';
 var shutDown = function(state) {
   localStorage.removeItem('user');
 
-  if (window.config.intercomAppId) {
-    window.Intercom('shutdown');
-  }
-
   browserHistory.push('/login');
 
   return Object.assign({}, state, {
@@ -49,13 +45,6 @@ export default function appReducer(state = {
   switch(action.type) {
     case types.REFRESH_USER_INFO_SUCCESS:
       localStorage.setItem('user', JSON.stringify(action.userData));
-
-      if (window.config.intercomAppId) {
-        window.Intercom('boot', {
-          app_id: window.config.intercomAppId,
-          email: action.userData.email
-        });
-      }
 
       return Object.assign({}, state, {
         loggedInUser: action.userData
