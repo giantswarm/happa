@@ -54,10 +54,6 @@ function requireAuth(nextState, replace) {
   }
 }
 
-if (window.config.intercomAppId) {
-  browserHistory.listen(() => {window.Intercom('update');});
-}
-
 render(
   <Provider store={store}>
     <Router history={browserHistory} render={applyRouterMiddleware(useScroll())}>
