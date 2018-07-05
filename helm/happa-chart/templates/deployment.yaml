@@ -57,11 +57,6 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: ingress-base-domain
-        - name: INTERCOM_APP_ID
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: intercom-app-id
         - name: ENVIRONMENT
           value: kubernetes
         livenessProbe:
