@@ -3,8 +3,8 @@
 import { flashAdd, flashClearAll } from './flashMessageActions';
 import React from 'react';
 import * as types from './actionTypes';
-import GiantSwarm from '../lib/giantswarm_client_wrapper';
 import GiantSwarmV4 from '../lib/giantswarm_v4_client_wrapper';
+import { Base64 } from 'js-base64';
 
 export function loginSuccess(userData) {
   return {
@@ -94,28 +94,21 @@ export function auth0Login(authResult) {
 // the userReducer takes care of storing this in state.
 export function giantswarmLogin(email, password) {
   return function(dispatch, getState) {
-    var giantSwarm = new GiantSwarm.Client();
     var usersApi = new GiantSwarmV4.UsersApi();
+    var authTokensApi = new GiantSwarmV4.AuthTokensApi();
 
     dispatch({
       type: types.LOGIN,
       email: email
     });
 
-    return giantSwarm.authenticate({
-      usernameOrEmail: email,
-      password: password
+    return authTokensApi.createAuthToken({
+      email: email,
+      password_base64: Base64.encode(password)
     })
     .then((response) => {
-      if (response.result === true) {
-        return true;
-      } else {
-        throw('Invalid email and/or password');
-      }
-    })
-    .then(() => {
       usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKeyPrefix = 'giantswarm';
-      usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = giantSwarm.authToken;
+      usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = response.auth_token;
       return usersApi.getCurrentUser();
     })
     .then((data) => {
@@ -123,7 +116,7 @@ export function giantswarmLogin(email, password) {
         email: data.email,
         auth: {
           scheme: 'giantswarm',
-          token: giantSwarm.authToken
+          token: usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKey
         }
       };
 
@@ -154,13 +147,13 @@ export function giantswarmLogout() {
       authToken = undefined;
     }
 
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var authTokensApi = new GiantSwarmV4.AuthTokensApi();
 
     dispatch({
       type: types.LOGOUT
     });
 
-    return giantSwarm.logout()
+    return authTokensApi.deleteAuthToken('giantswarm ' + authToken)
     .then(() => {
       return dispatch(logoutSuccess());
     })
