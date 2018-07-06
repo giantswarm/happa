@@ -28,6 +28,11 @@ returnType) {
 
       var defaultClientAuth = this.authentications['AuthorizationHeaderToken'];
 
+      // If we're trying to log in, don't try and handle 401 errors.
+      if (path === '/v4/auth-tokens/') {
+        throw err;
+      }
+
       // If the response from the Giant Swarm API is '401'
       // And we had a Bearer token (so not a giantswarm token)
       if (err.status === 401 && defaultClientAuth.apiKeyPrefix === 'Bearer') {

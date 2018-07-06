@@ -94,9 +94,14 @@ class Login extends React.Component {
           authenticating: false
         });
 
-        if (error.status === 400) {
+        if (error.response && error.response.body && error.response.body.code === 'INVALID_CREDENTIALS') {
           this.props.dispatch(flashAdd({
             message: <span><b>Could not log in.</b><br/> Credentials appear to be incorrect.</span>,
+            class: 'danger'
+          }));
+        } else if (error.response && error.response.body && error.response.body.code === 'TOO_MANY_REQUESTS') {
+          this.props.dispatch(flashAdd({
+            message: <span><b>Too many requests</b><br/>Please wait 5 minutes and try again.</span>,
             class: 'danger'
           }));
         } else {
@@ -105,8 +110,6 @@ class Login extends React.Component {
             class: 'danger'
           }));
         }
-
-
       });
     }
   }
