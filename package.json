@@ -20,7 +20,7 @@
     "copy-to-clipboard": "~3.0.8",
     "deep-diff": "^0.3.8",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client#v2017",
-    "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client#auth-tokens",
+    "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client#master",
     "immutable": "3.8.2",
     "marked": "~0.3.16",
     "moment": "2.20.1",
