@@ -22,7 +22,7 @@ class SimpleExample extends React.Component {
 
     clusterBaseDomain() {
       if (this.props.cluster) {
-        return `${this.props.cluster.id}.k8s.${this.state.ingressBaseDomain}`;
+        return `${this.props.cluster.id}.${this.state.ingressBaseDomain}`;
       } else {
         return `12345.${this.state.ingressBaseDomain}`;
       }
