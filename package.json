@@ -22,7 +22,6 @@
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client#v2017",
     "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client#master",
     "immutable": "3.8.2",
-    "marked": "~0.3.16",
     "moment": "2.22.2",
     "node-sass": "4.9.2",
     "normalize.css": "~7.0.0",
