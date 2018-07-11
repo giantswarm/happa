@@ -14,6 +14,7 @@ Icon
 .Spotlight-V100
 .Trashes
 
+package-lock.json
 node_modules/
 .tmp
 dist

@@ -1,7 +1,6 @@
 'use strict';
 import React from 'react';
 import Slide from '../component_slider/slide';
-import Markdown from './markdown';
 import {Link}  from 'react-router';
 import PropTypes from 'prop-types';
 
@@ -20,12 +19,7 @@ class Overview extends React.Component {
   render() {
     return (
       <Slide>
-
-        <Markdown>
-          {`
-          # Get started with your Kubernetes cluster
-          `}
-        </Markdown>
+        <h1>Get started with your Kubernetes cluster</h1>
         <ol className="step_selector row">
           <li className="col-3 col-6-sm">
             <Link to="/getting-started/download">

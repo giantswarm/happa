@@ -1,7 +1,6 @@
 'use strict';
 import React from 'react';
 import Slide from '../component_slider/slide';
-import Markdown from './markdown';
 import { CodeBlock, Prompt } from './codeblock';
 import platform from '../../lib/platform';
 import PropTypes from 'prop-types';
@@ -119,48 +118,45 @@ class DownloadKubeCTL extends React.Component {
   render() {
     return (
       <Slide>
-        <Markdown>
-          {`
-          # Download or update kubectl
+        <h1>Download or update kubectl</h1>
 
-          Let’s make sure you have the current stable version of \`kubectl\`, the Kubernetes client CLI, available.
+        <p>Let’s make sure you have the current stable version of <code>kubectl</code>, the Kubernetes client CLI, available.</p>
 
-          <div class="aside">
-            <p>
-              <i class='fa fa-graduation-cap' title='For learners'></i> \`kubectl\` is the CLI you’ll use to work with your cluster mostly. Some things can be
-              done using the web-based Kubernetes Dashboard, but only the CLI provides access to all Kubernetes functionality.
-            </p>
+        <div className="aside">
+          <p>
+            <i className='fa fa-graduation-cap' title='For learners'></i> <code>kubectl</code> is the CLI you’ll use to work with your cluster mostly. Some things can be
+            done using the web-based Kubernetes Dashboard, but only the CLI provides access to all Kubernetes functionality.
+          </p>
+        </div>
+
+        <p>If you already have <code>kubectl</code>, you should have at least version 1.4.x installed. To check the version number, do the following:</p>
+
+        <CodeBlock>
+          <Prompt>
+            {`kubectl version`}
+          </Prompt>
+        </CodeBlock>
+
+        <div className="platform_selector">
+          <ul className='platform_selector--tabs'>
+            <li className={this.isSelectedPlatform('Linux') ? 'active' : null}
+                onClick={this.selectPlatform.bind(this, 'Linux')}>Linux</li>
+
+            <li className={this.isSelectedPlatform('Mac') ? 'active' : null}
+                onClick={this.selectPlatform.bind(this, 'Mac')}>Mac</li>
+
+            <li className={this.isSelectedPlatform('MacWithoutBrew') ? 'active' : null}
+                onClick={this.selectPlatform.bind(this, 'MacWithoutBrew')}>Mac (without homebrew)</li>
+
+            <li className={this.isSelectedPlatform('Windows') ? 'active' : null}
+                onClick={this.selectPlatform.bind(this, 'Windows')}>Windows</li>
+          </ul>
+
+          <div className="platform_selector--content">
+            {this.selectedInstallInstructions()}
           </div>
+        </div>
 
-          If you already have \`kubectl\`, you should have at least version 1.4.x installed. To check the version number, do the following:
-          `}
-          <CodeBlock>
-            <Prompt>
-              {`kubectl version`}
-            </Prompt>
-          </CodeBlock>
-
-          <div className="platform_selector">
-            <ul className='platform_selector--tabs'>
-              <li className={this.isSelectedPlatform('Linux') ? 'active' : null}
-                  onClick={this.selectPlatform.bind(this, 'Linux')}>Linux</li>
-
-              <li className={this.isSelectedPlatform('Mac') ? 'active' : null}
-                  onClick={this.selectPlatform.bind(this, 'Mac')}>Mac</li>
-
-              <li className={this.isSelectedPlatform('MacWithoutBrew') ? 'active' : null}
-                  onClick={this.selectPlatform.bind(this, 'MacWithoutBrew')}>Mac (without homebrew)</li>
-
-              <li className={this.isSelectedPlatform('Windows') ? 'active' : null}
-                  onClick={this.selectPlatform.bind(this, 'Windows')}>Windows</li>
-            </ul>
-
-            <div className="platform_selector--content">
-              {this.selectedInstallInstructions()}
-            </div>
-          </div>
-
-        </Markdown>
         <div className="component_slider--nav">
           <button onClick={this.props.goToSlide.bind(null, 'overview')}><i className="fa fa-caret-left"></i>Back</button>
           <button className='primary' onClick={this.props.goToSlide.bind(null, 'configure')}>Continue <i className="fa fa-caret-right"></i></button>
