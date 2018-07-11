@@ -12,6 +12,7 @@ var path = require('path');
 module.exports = {
 
   entry: './src/components/app.js',
+  mode: 'production',
 
   output: {
     filename: 'app.js',
@@ -79,8 +80,12 @@ module.exports = {
     ]
   },
 
+  optimization: {
+    minimize: true
+  },
+
+
   plugins: [
-    new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.DefinePlugin({
       'process.env': {

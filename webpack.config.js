@@ -11,6 +11,7 @@ var path = require('path');
 module.exports = {
 
   entry: './src/components/app.js',
+  mode: 'development',
 
   output: {
     filename: 'app.js',
