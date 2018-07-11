@@ -46,9 +46,8 @@
     "redux": "3.5.2",
     "redux-thunk": "2.1.0",
     "semver-compare": "~1.0.0",
-    "superagent": "3.5.2",
     "superagent-bluebird-promise": "~4.2.0",
-    "underscore": "~1.8.3",
+    "underscore": "~1.9.1",
     "validate.js": "~0.12.0"
   },
   "devDependencies": {
