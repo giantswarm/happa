@@ -249,7 +249,7 @@ export function organizationCreateConfirm(orgId) {
 
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
-    return organizationsApi.addOrganization(orgId)
+    return organizationsApi.addOrganization(orgId, {})
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
