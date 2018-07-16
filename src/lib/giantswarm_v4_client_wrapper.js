@@ -39,6 +39,12 @@ returnType) {
           defaultClientAuth.apiKeyPrefix = 'Bearer';
           defaultClientAuth.apiKey = result.accessToken;
 
+          // Since I don't have access to redux actions here now, manipulate
+          // the user storage directly.
+          var userData = JSON.parse(localStorage.getItem('user'));
+          userData.auth.token = result.accessToken;
+          localStorage.setItem('user', JSON.stringify(userData));
+
           return origCallApi(path, httpMethod, pathParams, queryParams, headerParams, formParams,
                              bodyParam, authNames, contentTypes, accepts, returnType);
         })
