@@ -112,11 +112,6 @@ export function organizationsLoadSuccess(organizations, selectedOrganization, se
 //
 export function organizationsLoad() {
   return function(dispatch, getState) {
-    var defaultClient = GiantSwarmV4.ApiClient.instance;
-    var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
-    defaultClientAuth.apiKey = getState().app.loggedInUser.auth.token;
-    defaultClientAuth.apiKeyPrefix = getState().app.loggedInUser.auth.scheme;
-
     var clustersApi = new GiantSwarmV4.ClustersApi();
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
