@@ -23,6 +23,7 @@ import CreateCluster from './create_cluster/index';
 import Home from './home/index';
 import GiantSwarmV4 from 'giantswarm-v4';
 import { push } from 'connected-react-router';
+import { Breadcrumbs, Breadcrumb } from 'react-breadcrumbs';
 
 var defaultClient = GiantSwarmV4.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
@@ -66,7 +67,7 @@ class Layout extends React.Component {
         <DocumentTitle title='Giant Swarm'>
           <div>
             <FlashMessages />
-            <nav>
+            <nav className='outer-nav'>
               <div className='main-nav col-9'>
                 <a href='https://giantswarm.io' target='_blank' rel='noopener noreferrer'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
                 <div className='nav-responsive'>
@@ -121,12 +122,14 @@ class Layout extends React.Component {
 
               <div className="breadcrumb-wrapper">
                 <div className="main col-9">
+                  <Breadcrumbs />
                 </div>
               </div>
             </nav>
 
             <div className='main col-9'>
               <Modal />
+              <Breadcrumb data={{title: 'HOME', pathname: '/'}}>
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/getting-started/" component={GettingStarted} />
@@ -138,6 +141,7 @@ class Layout extends React.Component {
                 <Route exact path="/account-settings/" component={AccountSettings} />
                 <Redirect path="*" to="/" />
               </Switch>
+              </Breadcrumb>
             </div>
           </div>
         </DocumentTitle>

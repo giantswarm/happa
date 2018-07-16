@@ -4,6 +4,7 @@ import { CodeBlock, Prompt } from './codeblock';
 import platform from '../../lib/platform';
 import {Link}  from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Breadcrumb } from 'react-breadcrumbs';
 
 class DownloadKubeCTL extends React.Component {
   constructor(props) {
@@ -117,6 +118,7 @@ class DownloadKubeCTL extends React.Component {
 
   render() {
     return (
+      <Breadcrumb data={{title: 'DOWNLOAD', pathname: '/getting-started/download/'}}>
       <div className="centered col-9">
         <h1>Download or update kubectl</h1>
 
@@ -167,6 +169,7 @@ class DownloadKubeCTL extends React.Component {
           </Link>
         </div>
       </div>
+      </Breadcrumb>
     );
   }
 }
