@@ -180,7 +180,7 @@ class ClusterDetail extends React.Component {
     }
 
     return (
-      <Breadcrumb data={{title: this.props.cluster.id, pathname: '/organizations/' + this.props.cluster.owner + '/' + this.props.cluster.id}}>
+      <Breadcrumb data={{title: this.props.cluster.id, pathname: '/organizations/' + this.props.cluster.owner + '/clusters/' + this.props.cluster.id}}>
         <Breadcrumb data={{title: this.props.cluster.owner.toUpperCase(), pathname: '/organizations/' + this.props.cluster.owner}}>
           <Breadcrumb data={{title: 'ORGANIZATIONS', pathname: '/organizations/'}}>
             <DocumentTitle title={'Cluster Details | ' + this.clusterName() +  ' | Giant Swarm'}>
