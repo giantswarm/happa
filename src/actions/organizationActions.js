@@ -7,6 +7,7 @@ import { flashAdd } from './flashMessageActions';
 import { clusterLoadSuccess, clusterLoadError } from './clusterActions';
 import React from 'react';
 import GiantSwarmV4 from 'giantswarm-v4';
+import { push } from 'connected-react-router';
 
 // determineSelectedOrganization takes a list of organizations and looks into
 // localstorage to see what the user had selected already (if anything) as their
@@ -75,6 +76,8 @@ export function organizationSelect(orgId) {
     // We're changing to a different organization
     // Make sure we have a reasonable value for selectedCluster.
     var selectedCluster = determineSelectedCluster(orgId, getState().entities.clusters.items);
+
+    dispatch(push('/'));
 
     return dispatch({
       type: types.ORGANIZATION_SELECT,
