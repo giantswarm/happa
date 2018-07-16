@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import ReactTimeout from 'react-timeout';
 import {connect} from 'react-redux';
 import ClusterDashboardItem from './cluster_dashboard_item';
 import ClusterEmptyState from './cluster_empty_state';
@@ -90,7 +89,6 @@ class Home extends React.Component {
 
 Home.propTypes = {
   clusters: PropTypes.array,
-  setInterval: PropTypes.func,
   actions: PropTypes.object,
   selectedOrganization: PropTypes.string,
   organizations: PropTypes.object,
@@ -125,4 +123,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReactTimeout(Home));
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
