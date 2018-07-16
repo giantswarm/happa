@@ -15,7 +15,14 @@ var shutDown = function(state) {
 };
 
 function fetchUserFromStorage() {
-  var user = JSON.parse(localStorage.getItem('user'));
+  var user;
+  try {
+    user = JSON.parse(localStorage.getItem('user'));
+  } catch(e) {
+    user =  {
+      auth: {}
+    };
+  }
 
   // User was logged in pre-jwt auth being available.
   // Migrate.

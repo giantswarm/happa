@@ -15,6 +15,8 @@ class Logout extends React.Component {
       } else {
         this.props.actions.giantswarmLogout();
       }
+    } else {
+      this.props.actions.logoutSuccess();
     }
   }
 

@@ -161,9 +161,11 @@ export function giantswarmLogout() {
 
     return authTokensApi.deleteAuthToken('giantswarm ' + authToken)
     .then(() => {
+      dispatch(push('/login'));
       return dispatch(logoutSuccess());
     })
     .catch((error) => {
+      dispatch(push('/login'));
       dispatch(logoutError(error));
       throw error;
     });

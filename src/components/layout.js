@@ -21,9 +21,22 @@ import ClusterDetails from './organizations/cluster_detail';
 import AccountSettings from './account_settings/index';
 import CreateCluster from './create_cluster/index';
 import Home from './home/index';
+import GiantSwarmV4 from 'giantswarm-v4';
+import { push } from 'connected-react-router';
+
+var defaultClient = GiantSwarmV4.ApiClient.instance;
+defaultClient.basePath = window.config.apiEndpoint;
+var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
 
 class Layout extends React.Component {
   componentDidMount() {
+    if (this.props.user) {
+      defaultClientAuth.apiKeyPrefix = this.props.user.auth.scheme;
+      defaultClientAuth.apiKey = this.props.user.auth.token;
+    } else {
+      this.props.dispatch(push('/login'));
+    }
+
     this.props.actions.refreshUserInfo().then(() => {
       this.props.dispatch(organizationsLoad());
       return null;
@@ -144,6 +157,7 @@ Layout.propTypes = {
   dispatch: PropTypes.func,
   actions: PropTypes.object,
   flashActions: PropTypes.object,
+  path: PropTypes.string,
 };
 
 function mapStateToProps(state) {
@@ -151,7 +165,8 @@ function mapStateToProps(state) {
     organizations: state.entities.organizations,
     user: state.app.loggedInUser,
     selectedOrganization: state.app.selectedOrganization,
-    firstLoadComplete: state.app.firstLoadComplete
+    firstLoadComplete: state.app.firstLoadComplete,
+    path: state.router.location.pathname
   };
 }
 
