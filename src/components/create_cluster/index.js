@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import Button from '../button';
 import _ from 'underscore';
-import { browserHistory } from 'react-router';
 import { clusterCreate } from '../../actions/clusterActions';
 import update from 'react-addons-update';
 import NewKVMWorker from './new_kvm_worker.js';
@@ -13,6 +12,7 @@ import NewAWSWorker from './new_aws_worker.js';
 import NewAzureWorker from './new_azure_worker.js';
 import ReleaseSelector from './release_selector.js';
 import PropTypes from 'prop-types';
+import { push } from 'connected-react-router';
 
 class CreateCluster extends React.Component {
   constructor(props) {
@@ -155,7 +155,7 @@ class CreateCluster extends React.Component {
       workers: workers
     }))
     .then(() => {
-      browserHistory.push('/organizations/' + this.props.selectedOrganization);
+      this.props.dispatch(push('/organizations/' + this.props.selectedOrganization));
     })
     .catch((error) => {
       var errorMessage = '';

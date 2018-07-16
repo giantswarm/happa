@@ -6,7 +6,6 @@ import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
 import { clusterLoadSuccess, clusterLoadError } from './clusterActions';
 import React from 'react';
-import { browserHistory } from 'react-router';
 import GiantSwarmV4 from 'giantswarm-v4';
 
 // determineSelectedOrganization takes a list of organizations and looks into
@@ -77,8 +76,6 @@ export function organizationSelect(orgId) {
     // Make sure we have a reasonable value for selectedCluster.
     var selectedCluster = determineSelectedCluster(orgId, getState().entities.clusters.items);
 
-    browserHistory.push('/');
-
     return dispatch({
       type: types.ORGANIZATION_SELECT,
       orgId,
@@ -112,6 +109,11 @@ export function organizationsLoadSuccess(organizations, selectedOrganization, se
 //
 export function organizationsLoad() {
   return function(dispatch, getState) {
+    var defaultClient = GiantSwarmV4.ApiClient.instance;
+    var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
+    defaultClientAuth.apiKey = getState().app.loggedInUser.auth.token;
+    defaultClientAuth.apiKeyPrefix = getState().app.loggedInUser.auth.scheme;
+
     var clustersApi = new GiantSwarmV4.ClustersApi();
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 

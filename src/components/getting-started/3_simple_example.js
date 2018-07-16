@@ -1,12 +1,12 @@
 'use strict';
 import React from 'react';
-import Slide from '../component_slider/slide';
 import { CodeBlock, Prompt, Output } from './codeblock';
 import {connect} from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
 import PropTypes from 'prop-types';
+import {Link}  from 'react-router-dom';
 
 class SimpleExample extends React.Component {
     constructor(props) {
@@ -79,7 +79,7 @@ class SimpleExample extends React.Component {
 
     render() {
       return (
-        <Slide>
+        <div className="centered col-9">
           <h1>Let&apos;s create an example application</h1>
           <p>To check if every part of your cluster is running as it should, let&apos;s create an entire application. When set up,
           this application will provide a little web server running in multiple pods.</p>
@@ -242,10 +242,15 @@ class SimpleExample extends React.Component {
           </div>
 
           <div className="component_slider--nav">
-            <button onClick={this.props.goToSlide.bind(null, 'configure')}><i className="fa fa-caret-left"></i> Back</button>
-            <button className='primary' onClick={this.props.goToSlide.bind(null, 'next-steps')}>Continue <i className="fa fa-caret-right"></i></button>
+            <Link to="/getting-started/configure/">
+              <button><i className="fa fa-caret-left"></i> Back</button>
+            </Link>
+
+            <Link to="/getting-started/next-steps/">
+              <button className='primary'>Continue <i className="fa fa-caret-right"></i></button>
+            </Link>
           </div>
-        </Slide>
+        </div>
       );
     }
 }

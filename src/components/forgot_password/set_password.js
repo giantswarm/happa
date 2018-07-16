@@ -3,7 +3,7 @@
 import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import PasswordField from '../signup/password_field';
 import StatusMessage from '../signup/status_message';
 import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
@@ -12,6 +12,7 @@ import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { validatePassword } from '../../lib/password_validation';
+import { push } from 'connected-react-router';
 
 class SetPassword extends React.Component {
   constructor(props) {
@@ -101,7 +102,7 @@ class SetPassword extends React.Component {
       });
 
       this.props.dispatch(flashClearAll());
-      this.context.router.push('/');
+      this.props.dispatch(push('/'));
       this.props.dispatch(flashAdd({
         message: 'Password set successfully! Welcome back!',
         class: 'success'

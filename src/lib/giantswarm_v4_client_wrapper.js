@@ -3,12 +3,9 @@
 // A wrapper for the GiantSwarm V4 JS Client
 // It initializes the client with the right end point.
 
-import configureStore from '../stores/configureStore';
-import {unauthorized, auth0Login} from '../actions/userActions';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Auth0 from '../lib/auth0';
 
-const store = configureStore();
 const auth0 = new Auth0();
 
 var defaultClient = GiantSwarmV4.ApiClient.instance;
@@ -39,8 +36,6 @@ returnType) {
         // Then try to renew the token silently:
         return auth0.renewToken()
         .then((result) => {
-          store.dispatch(auth0Login(result));
-
           defaultClientAuth.apiKeyPrefix = 'Bearer';
           defaultClientAuth.apiKey = result.accessToken;
 
@@ -48,11 +43,9 @@ returnType) {
                              bodyParam, authNames, contentTypes, accepts, returnType);
         })
         .catch((err) => {
-          store.dispatch(unauthorized());
           throw(err);
         });
       } else {
-        store.dispatch(unauthorized());
         throw err;
       }
     });

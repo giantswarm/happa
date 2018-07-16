@@ -3,12 +3,7 @@
 // A wrapper for the GiantSwarm JS Client
 // It initializes the client with the right end point
 // if the user happens to have one set in localstorage
-
-import configureStore from '../stores/configureStore';
-import {unauthorized} from '../actions/userActions';
 import GiantSwarm from 'giantswarm';
-
-const store = configureStore();
 
 var GiantSwarmClient = {
   // Constructor that initializes a GiantSwarm JS Client
@@ -20,7 +15,7 @@ var GiantSwarmClient = {
     var giantSwarm = new GiantSwarm({
       authToken: authToken,
       onUnauthorized: function() {
-        store.dispatch(unauthorized());
+        throw('unauthorized!');
       }
     });
 

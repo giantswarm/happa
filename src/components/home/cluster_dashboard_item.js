@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from '../../actions/clusterActions';
 import ClusterIDLabel from '../shared/cluster_id_label';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { relativeDate } from '../../lib/helpers.js';
 import { ButtonGroup } from 'react-bootstrap';
 import Button from '../button/index';
 import PropTypes from 'prop-types';
+import { push } from 'connected-react-router';
 
 class ClusterDashboardItem extends React.Component {
   constructor(props) {
@@ -49,12 +50,12 @@ class ClusterDashboardItem extends React.Component {
 
   accessCluster() {
     this.props.actions.clusterSelect(this.props.cluster.id);
-    this.context.router.push('/getting-started/');
+    this.props.dispatch(push('/getting-started/'));
   }
 
   goToClusterDetails() {
     var url = '/organizations/'+ this.props.selectedOrganization +'/clusters/' + this.props.cluster.id;
-    this.context.router.push(url);
+    this.props.dispatch(push(url));
   }
 
   render() {
@@ -113,7 +114,8 @@ ClusterDashboardItem.propTypes = {
   className: PropTypes.string,
   children: PropTypes.array,
   selectedOrganization: PropTypes.string,
-  animate: PropTypes.bool
+  animate: PropTypes.bool,
+  dispatch: PropTypes.func,
 };
 
 function mapDispatchToProps(dispatch) {

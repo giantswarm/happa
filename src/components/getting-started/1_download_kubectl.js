@@ -1,8 +1,8 @@
 'use strict';
 import React from 'react';
-import Slide from '../component_slider/slide';
 import { CodeBlock, Prompt } from './codeblock';
 import platform from '../../lib/platform';
+import {Link}  from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 class DownloadKubeCTL extends React.Component {
@@ -117,7 +117,7 @@ class DownloadKubeCTL extends React.Component {
 
   render() {
     return (
-      <Slide>
+      <div className="centered col-9">
         <h1>Download or update kubectl</h1>
 
         <p>Let’s make sure you have the current stable version of <code>kubectl</code>, the Kubernetes client CLI, available.</p>
@@ -158,10 +158,15 @@ class DownloadKubeCTL extends React.Component {
         </div>
 
         <div className="component_slider--nav">
-          <button onClick={this.props.goToSlide.bind(null, 'overview')}><i className="fa fa-caret-left"></i>Back</button>
-          <button className='primary' onClick={this.props.goToSlide.bind(null, 'configure')}>Continue <i className="fa fa-caret-right"></i></button>
+          <Link to="/getting-started/">
+            <button><i className="fa fa-caret-left"></i>Back</button>
+          </Link>
+
+          <Link to="/getting-started/configure/">
+            <button className='primary'>Continue <i className="fa fa-caret-right"></i></button>
+          </Link>
         </div>
-      </Slide>
+      </div>
     );
   }
 }

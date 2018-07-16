@@ -15,7 +15,7 @@ import { relativeDate } from '../../lib/helpers.js';
 import Button from '../button/index';
 import ScaleClusterModal from './scale_cluster_modal';
 import UpgradeClusterModal from './upgrade_cluster_modal';
-import { browserHistory } from 'react-router';
+import { push } from 'connected-react-router';
 import cmp from 'semver-compare';
 import PropTypes from 'prop-types';
 
@@ -34,7 +34,7 @@ class ClusterDetail extends React.Component {
     });
 
     if (this.props.cluster === undefined) {
-      browserHistory.push('/organizations/'+this.props.organizationId);
+      this.props.dispatch(push('/organizations/'+this.props.organizationId));
       this.setState({
         notfound: true
       });
@@ -164,7 +164,7 @@ class ClusterDetail extends React.Component {
 
   accessCluster = () => {
     this.props.clusterActions.clusterSelect(this.props.cluster.id);
-    this.context.router.push('/getting-started/');
+    this.props.dispatch(push('/getting-started/'));
   }
 
   render() {
@@ -373,7 +373,7 @@ ClusterDetail.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  var cluster = state.entities.clusters.items[ownProps.params.clusterId];
+  var cluster = state.entities.clusters.items[ownProps.match.params.clusterId];
   let release;
   let targetReleaseVersion;
 
@@ -405,9 +405,9 @@ function mapStateToProps(state, ownProps) {
   }
 
   return {
-    organizationId: ownProps.params.orgId,
+    organizationId: ownProps.match.params.orgId,
     cluster: cluster,
-    clusterId: ownProps.params.clusterId,
+    clusterId: ownProps.match.params.clusterId,
     provider: state.app.info.general.provider,
     release: release,
     targetRelease: state.entities.releases.items[targetReleaseVersion],

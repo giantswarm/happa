@@ -8,7 +8,7 @@ import ClusterEmptyState from './cluster_empty_state';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import Button from '../button';
-import {Link}  from 'react-router';
+import {Link}  from 'react-router-dom';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';

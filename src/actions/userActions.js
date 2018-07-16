@@ -5,6 +5,7 @@ import React from 'react';
 import * as types from './actionTypes';
 import GiantSwarmV4 from '../lib/giantswarm_v4_client_wrapper';
 import { Base64 } from 'js-base64';
+import { push } from 'connected-react-router';
 
 export function loginSuccess(userData) {
   return {
@@ -37,7 +38,11 @@ export function logoutError(errorMessage) {
 // about the user based on the response.
 export function refreshUserInfo() {
   return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
     var usersApi = new GiantSwarmV4.UsersApi();
+    usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKeyPrefix = scheme;
+    usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = token;
 
     return usersApi.getCurrentUser()
     .then((data) => {
@@ -129,6 +134,7 @@ export function giantswarmLogin(email, password) {
     .then(getInfo().bind(this, dispatch, getState))
     .catch(error => {
       dispatch(loginError(error));
+      dispatch(push('/login'));
       console.error(error);
       throw(error);
     });
@@ -190,6 +196,8 @@ export function unauthorized() {
     dispatch({
       type: types.UNAUTHORIZED
     });
+
+    dispatch(push('/login'));
 
     return null;
   };

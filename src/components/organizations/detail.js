@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Button from 'react-bootstrap/lib/Button';
-import {Link}  from 'react-router';
+import {Link}  from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as OrganizationActions from '../../actions/organizationActions';
 import { bindActionCreators } from 'redux';
@@ -11,6 +11,7 @@ import DocumentTitle from 'react-document-title';
 import _ from 'underscore';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import PropTypes from 'prop-types';
+import { push } from 'connected-react-router';
 
 class OrganizationDetail extends React.Component {
   componentDidMount() {
@@ -26,7 +27,7 @@ class OrganizationDetail extends React.Component {
   }
 
   openClusterDetails = (cluster) => {
-    this.context.router.push('/organizations/' + this.props.organization.id + '/clusters/' + cluster);
+    this.props.dispatch(push('/organizations/' + this.props.organization.id + '/clusters/' + cluster));
   }
 
   render() {
@@ -36,7 +37,7 @@ class OrganizationDetail extends React.Component {
           <div>
             <div className='row'>
               <div className='col-12'>
-                <h1>Organization: {this.props.params.orgId}</h1>
+                <h1>Organization: {this.props.match.params.orgId}</h1>
               </div>
             </div>
 
@@ -47,7 +48,7 @@ class OrganizationDetail extends React.Component {
               <div className='col-9'>
                 {
                   this.props.clusters.length === 0 ?
-                  <p>No clusters here yet, <Link to='new-cluster' activeClassName='active'>create your first!</Link></p>
+                  <p>No clusters here yet, <Link to='/new-cluster'>create your first!</Link></p>
                   :
                   <table>
                     <thead>
@@ -285,7 +286,7 @@ OrganizationDetail.propTypes = {
   clusters: PropTypes.array,
   organization: PropTypes.object,
   dispatch: PropTypes.func,
-  params: PropTypes.object
+  match: PropTypes.object
 };
 
 function mapStateToProps(state, ownProps) {
@@ -293,11 +294,11 @@ function mapStateToProps(state, ownProps) {
   var clusters = [];
 
   clusters = _.filter(allClusters, (cluster) => {
-    return cluster.owner === ownProps.params.orgId;
+    return cluster.owner === ownProps.match.params.orgId;
   });
 
   return {
-    organization: state.entities.organizations.items[ownProps.params.orgId],
+    organization: state.entities.organizations.items[ownProps.match.params.orgId],
     clusters: clusters
   };
 }

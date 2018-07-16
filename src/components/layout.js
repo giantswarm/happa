@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import {Link, IndexLink}  from 'react-router';
+import { Redirect, NavLink, Route, Switch }  from 'react-router-dom';
 import FlashMessages from './flash_messages/index';
 import Modal from './modal/index';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
@@ -11,10 +11,16 @@ import { bindActionCreators } from 'redux';
 import { organizationSelect, organizationsLoad } from '../actions/organizationActions';
 import * as UserActions from '../actions/userActions';
 import * as FlashActions from '../actions/flashMessageActions';
-import Breadcrumbs from 'react-breadcrumbs';
 import Gravatar from 'react-gravatar';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
+import GettingStarted from './getting-started/index';
+import Organizations from './organizations/index';
+import OrganizationDetails from './organizations/detail';
+import ClusterDetails from './organizations/cluster_detail';
+import AccountSettings from './account_settings/index';
+import CreateCluster from './create_cluster/index';
+import Home from './home/index';
 
 class Layout extends React.Component {
   componentDidMount() {
@@ -50,12 +56,9 @@ class Layout extends React.Component {
             <nav>
               <div className='main-nav col-9'>
                 <a href='https://giantswarm.io' target='_blank' rel='noopener noreferrer'><img className='logo' src='/images/giantswarm_icon.svg' /></a>
-
-
-
                 <div className='nav-responsive'>
-                  <IndexLink to='/' activeClassName='active'>Clusters</IndexLink>
-                  <Link to='getting-started' activeClassName='active'>Getting Started</Link>
+                  <NavLink to='/' activeClassName='active'>Clusters</NavLink>
+                  <NavLink to='/getting-started/' activeClassName='active'>Getting Started</NavLink>
                   <a href='https://docs.giantswarm.io' target='_blank' rel='noopener noreferrer'>Documentation <i className='fa fa-external-link'></i></a>
                 </div>
 
@@ -64,13 +67,13 @@ class Layout extends React.Component {
                     {
                       (_.map(this.props.organizations.items, (x) => {return x.id;}).length === 0 && ! this.props.organizations.isFetching) ?
                       <DropdownButton title={<span><span className='label label-default'>ORG</span>No organizations</span>} key='2' id='org_dropdown'>
-                        <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
+                        <MenuItem componentClass={NavLink} href='/organizations/' to='/organizations/'>Manage organizations</MenuItem>
                       </DropdownButton>
                       :
                       <DropdownButton title={<span><span className='label label-default'>ORG</span> {this.props.selectedOrganization}</span>} key='2' id='org_dropdown'>
-                        <MenuItem componentClass={Link} href='/organizations/giantswarm' to={'/organizations/' + this.props.selectedOrganization}>Details for {this.props.selectedOrganization}</MenuItem>
+                        <MenuItem componentClass={NavLink} href='/organizations/' to={'/organizations/' + this.props.selectedOrganization}>Details for {this.props.selectedOrganization}</MenuItem>
                         <MenuItem divider />
-                        <MenuItem componentClass={Link} href='/organizations' to='/organizations'>Manage organizations</MenuItem>
+                        <MenuItem componentClass={NavLink} href='/organizations/' to='/organizations/'>Manage organizations</MenuItem>
                         <MenuItem divider />
                         <MenuItem header>Switch Organization</MenuItem>
                         {
@@ -93,11 +96,11 @@ class Layout extends React.Component {
                       </div>} key='1' id='user_dropdown'>
                       {
                         this.props.user.auth.scheme === 'giantswarm' ?
-                        <MenuItem componentClass={Link} href='/account_settings' to='/account_settings'>Account Settings</MenuItem>
+                        <MenuItem componentClass={NavLink} href='/account-settings/' to='/account-settings/'>Account Settings</MenuItem>
                         :
                         undefined
                       }
-                      <MenuItem componentClass={Link} href='/logout' to='/logout'>Logout</MenuItem>
+                      <MenuItem componentClass={NavLink} href='/logout' to='/logout'>Logout</MenuItem>
                     </DropdownButton>
                   </div>
                 </div>
@@ -105,14 +108,23 @@ class Layout extends React.Component {
 
               <div className="breadcrumb-wrapper">
                 <div className="main col-9">
-                  <Breadcrumbs routes={this.props.routes} params={this.props.params} setDocumentTitle={true}/>
                 </div>
               </div>
             </nav>
 
             <div className='main col-9'>
               <Modal />
-              {this.props.children}
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/getting-started/" component={GettingStarted} />
+                <Route exact path="/getting-started/*" component={GettingStarted} />
+                <Route exact path="/new-cluster/" component={CreateCluster} />
+                <Route exact path="/organizations/" component={Organizations} />
+                <Route exact path="/organizations/:orgId/" component={OrganizationDetails} />
+                <Route exact path="/organizations/:orgId/clusters/:clusterId/" component={ClusterDetails} />
+                <Route exact path="/account-settings/" component={AccountSettings} />
+                <Redirect path="*" to="/" />
+              </Switch>
             </div>
           </div>
         </DocumentTitle>

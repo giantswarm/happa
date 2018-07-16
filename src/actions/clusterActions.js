@@ -4,8 +4,8 @@ import * as types from './actionTypes';
 import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
 import React from 'react';
-import { browserHistory } from 'react-router';
 import GiantSwarmV4 from 'giantswarm-v4';
+import { push } from 'connected-react-router';
 
 
 // clusterSelect
@@ -114,7 +114,7 @@ export function clusterDeleteConfirm(cluster) {
 
     return clustersApi.deleteCluster(cluster.id)
     .then(() => {
-      browserHistory.push('/organizations/'+cluster.owner);
+      dispatch(push('/organizations/'+cluster.owner));
       dispatch(clusterDeleteSuccess(cluster.id));
 
       dispatch(modalHide());

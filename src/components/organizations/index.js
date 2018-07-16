@@ -9,6 +9,7 @@ import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import {clustersForOrg} from '../../lib/helpers';
 import PropTypes from 'prop-types';
+import { push } from 'connected-react-router';
 
 class Organizations extends React.Component {
   componentDidMount() {
@@ -16,8 +17,8 @@ class Organizations extends React.Component {
   }
 
   viewOrganization(orgId) {
-    this.selectOrganization(orgId);
-    this.context.router.push('/organizations/' + orgId);
+    this.props.dispatch(organizationSelect(orgId));
+    this.props.dispatch(push('/organizations/' + orgId));
   }
 
   deleteOrganization(orgId) {
@@ -26,10 +27,6 @@ class Organizations extends React.Component {
 
   createOrganization() {
     this.props.dispatch(organizationCreate());
-  }
-
-  selectOrganization(orgId) {
-    this.props.dispatch(organizationSelect(orgId));
   }
 
   render() {

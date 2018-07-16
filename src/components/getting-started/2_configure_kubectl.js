@@ -1,6 +1,5 @@
 'use strict';
 import React from 'react';
-import Slide from '../component_slider/slide';
 import { CodeBlock, Prompt } from './codeblock';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import {connect} from 'react-redux';
@@ -14,6 +13,7 @@ import request from 'superagent-bluebird-promise';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import {clustersForOrg} from '../../lib/helpers';
 import PropTypes from 'prop-types';
+import {Link}  from 'react-router-dom';
 
 class ConfigKubeCtl extends React.Component {
   constructor(props) {
@@ -138,7 +138,7 @@ class ConfigKubeCtl extends React.Component {
 
   render() {
     return (
-      <Slide>
+      <div className="centered col-9">
         <h1>Configure kubectl for cluster: {this.props.selectedCluster.name} <ClusterIDLabel clusterID={this.props.selectedCluster.id} /></h1>
 
         {
@@ -269,10 +269,15 @@ class ConfigKubeCtl extends React.Component {
         <p>Now that this is done, let&apos;s deploy some software on your cluster and dig a little deeper.</p>
 
         <div className="component_slider--nav">
-          <button onClick={this.props.goToSlide.bind(null, 'download')}><i className="fa fa-caret-left"></i> Back</button>
-          <button className='primary' onClick={this.props.goToSlide.bind(null, 'example')}>Continue <i className="fa fa-caret-right"></i></button>
+          <Link to="/getting-started/download/">
+            <button><i className="fa fa-caret-left"></i> Back</button>
+          </Link>
+
+          <Link to="/getting-started/example/">
+            <button className='primary'>Continue <i className="fa fa-caret-right"></i></button>
+          </Link>
         </div>
-      </Slide>
+      </div>
     );
   }
 }

@@ -1,14 +1,12 @@
 'use strict';
 
 import * as types from '../actions/actionTypes';
-import { browserHistory } from 'react-router';
 import GiantSwarmV4 from 'giantswarm-v4';
 import _ from 'underscore';
 
+
 var shutDown = function(state) {
   localStorage.removeItem('user');
-
-  browserHistory.push('/login');
 
   return Object.assign({}, state, {
     loggedInUser: {},
