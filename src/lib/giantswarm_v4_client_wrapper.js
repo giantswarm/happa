@@ -43,9 +43,11 @@ returnType) {
                              bodyParam, authNames, contentTypes, accepts, returnType);
         })
         .catch((err) => {
+          window.location.href = '/login';
           throw(err);
         });
       } else {
+        window.location.href = '/login';
         throw err;
       }
     });
