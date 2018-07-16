@@ -5,8 +5,6 @@
   border-bottom: lighten($darkblue, 5%) 1px solid
   border-top: darken($darkblue, 5%) 1px solid
   font-size: 11px
-  text-transform: uppercase
-  color: lighten($darkblue, 50%)
   clear: both
 
   @media only screen and (max-width: $breakpoint-large)
@@ -15,3 +13,9 @@
 
   a
     color: lighten($darkblue, 80%)
+
+  .breadcrumbs__separator
+    margin: 0px 4px
+
+  .breadcrumbs__crumb--active
+    color: lighten($darkblue, 50%)

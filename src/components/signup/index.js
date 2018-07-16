@@ -5,13 +5,13 @@ import Passage from '../../lib/passage_client';
 import PasswordField from './password_field';
 import StatusMessage from './status_message';
 import TermsOfService from './terms_of_service';
-import { browserHistory } from 'react-router';
 import * as userActions from '../../actions/userActions';
 import { flashAdd } from '../../actions/flashMessageActions';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import { validatePassword } from '../../lib/password_validation';
+import { push } from 'connected-react-router';
 
 // TODO: Figure out a way to make the test suite know about our standard
 // 'window.config' object. Or change the way these config params are passed
@@ -128,7 +128,7 @@ export class SignUp extends React.Component {
     }));
 
     setTimeout(() => {
-      browserHistory.push('/');
+      this.props.dispatch(push('/'));
     }, 1000);
   }
 

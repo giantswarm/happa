@@ -4,12 +4,12 @@ import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {connect} from 'react-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 // import { flashClearAll } from '../../actions/flashMessageActions';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import Auth from '../../lib/auth0';
-import { browserHistory } from 'react-router';
+import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 
 class OauthCallback extends React.Component {
@@ -30,7 +30,7 @@ class OauthCallback extends React.Component {
           // Login user officially
           this.props.actions.auth0Login(authResult)
           .then(() => {
-            browserHistory.push('/');
+            this.props.dispatch(push('/'));
           })
           .catch((err) => {
             console.log(err);

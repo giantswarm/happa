@@ -1,6 +1,5 @@
 'use strict';
 import React from 'react';
-import Slide from '../component_slider/slide';
 import { CodeBlock, Prompt } from './codeblock';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import {connect} from 'react-redux';
@@ -14,6 +13,8 @@ import request from 'superagent-bluebird-promise';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import {clustersForOrg} from '../../lib/helpers';
 import PropTypes from 'prop-types';
+import {Link}  from 'react-router-dom';
+import { Breadcrumb }  from 'react-breadcrumbs';
 
 class ConfigKubeCtl extends React.Component {
   constructor(props) {
@@ -138,141 +139,148 @@ class ConfigKubeCtl extends React.Component {
 
   render() {
     return (
-      <Slide>
-        <h1>Configure kubectl for cluster: {this.props.selectedCluster.name} <ClusterIDLabel clusterID={this.props.selectedCluster.id} /></h1>
+      <Breadcrumb data={{title: 'CONFIGURE', pathname: '/getting-started/configure/'}}>
+        <div className="centered col-9">
+          <h1>Configure kubectl for cluster: {this.props.selectedCluster.name} <ClusterIDLabel clusterID={this.props.selectedCluster.id} /></h1>
 
-        {
-          this.props.selectedOrgClusters.length > 1 ?
-          <div>
-            <p>Before we continue, make sure that you have the right cluster selected to configure access to:</p>
-            <div className='well select-cluster'>
-              <div className="select-cluster--dropdown-container">
-                <label>Select Cluster:</label>
-                <DropdownButton id="cluster-slect-dropdown" title={this.friendlyClusterName(this.props.selectedCluster)}>
-                  {
-                    _.map(this.props.selectedOrgClusters,
-                      cluster => <MenuItem key={cluster.id} onClick={this.selectCluster.bind(this, cluster.id)}>
-                        {this.friendlyClusterName(cluster)}
-                      </MenuItem>
-                    )
-                  }
-                </DropdownButton>
+          {
+            this.props.selectedOrgClusters.length > 1 ?
+            <div>
+              <p>Before we continue, make sure that you have the right cluster selected to configure access to:</p>
+              <div className='well select-cluster'>
+                <div className="select-cluster--dropdown-container">
+                  <label>Select Cluster:</label>
+                  <DropdownButton id="cluster-slect-dropdown" title={this.friendlyClusterName(this.props.selectedCluster)}>
+                    {
+                      _.map(this.props.selectedOrgClusters,
+                        cluster => <MenuItem key={cluster.id} onClick={this.selectCluster.bind(this, cluster.id)}>
+                          {this.friendlyClusterName(cluster)}
+                        </MenuItem>
+                      )
+                    }
+                  </DropdownButton>
+                </div>
+
+                <p>You might have access to additional clusters after switching to a different organization.</p>
               </div>
+            </div>
+            :
+            undefined
+          }
 
-              <p>You might have access to additional clusters after switching to a different organization.</p>
+          <p>The <code>gsctl</code> command line utility provides access to your Giant Swarm resources. It&apos;s perfectly suited to
+          create credentials for <code>kubectl</code> in one step. Let&apos;s install <code>gsctl</code> quickly.</p>
+
+          <p>In case you can&apos;t install <code>gsctl</code> right now, we provide an <a href="#alternative">alternative solution below.</a></p>
+
+          <div className="platform_selector">
+            <ul className='platform_selector--tabs'>
+              <li className={this.isSelectedPlatform('Linux') ? 'active' : null}
+                  onClick={this.selectPlatform.bind(this, 'Linux')}>Linux</li>
+
+              <li className={this.isSelectedPlatform('Mac') ? 'active' : null}
+                  onClick={this.selectPlatform.bind(this, 'Mac')}>Mac Homebrew</li>
+
+              <li className={this.isSelectedPlatform('MacWithoutBrew') ? 'active' : null}
+                  onClick={this.selectPlatform.bind(this, 'MacWithoutBrew')}>Mac</li>
+
+              <li className={this.isSelectedPlatform('Windows') ? 'active' : null}
+                  onClick={this.selectPlatform.bind(this, 'Windows')}>Windows</li>
+            </ul>
+
+            <div className="platform_selector--content">
+              {this.selectedInstallInstructions()}
             </div>
           </div>
-          :
-          undefined
-        }
 
-        <p>The <code>gsctl</code> command line utility provides access to your Giant Swarm resources. It&apos;s perfectly suited to
-        create credentials for <code>kubectl</code> in one step. Let&apos;s install <code>gsctl</code> quickly.</p>
+          <p>Run this command to make sure the installation succeeded:</p>
 
-        <p>In case you can&apos;t install <code>gsctl</code> right now, we provide an <a href="#alternative">alternative solution below.</a></p>
+          <CodeBlock>
+            <Prompt>
+              {`gsctl --endpoint ` + window.config.apiEndpoint + ` info`}
+            </Prompt>
+          </CodeBlock>
 
-        <div className="platform_selector">
-          <ul className='platform_selector--tabs'>
-            <li className={this.isSelectedPlatform('Linux') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Linux')}>Linux</li>
+          <p>Next, we let <code>gsctl</code> do several things in one step:</p>
 
-            <li className={this.isSelectedPlatform('Mac') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Mac')}>Mac Homebrew</li>
-
-            <li className={this.isSelectedPlatform('MacWithoutBrew') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'MacWithoutBrew')}>Mac</li>
-
-            <li className={this.isSelectedPlatform('Windows') ? 'active' : null}
-                onClick={this.selectPlatform.bind(this, 'Windows')}>Windows</li>
+          <ul>
+            <li>Create a new key pair (certificate and private key) for you to access this cluster</li>
+            <li>Download your key pair</li>
+            <li>Download the CA certificate for your cluster</li>
+            <li>Update your kubectl configuration to add settings and credentials for the cluster</li>
           </ul>
 
-          <div className="platform_selector--content">
-            {this.selectedInstallInstructions()}
+          <p>Here is the command that you need to execute for all this:</p>
+
+          <CodeBlock>
+            <Prompt>
+              {`
+                gsctl --endpoint ` + window.config.apiEndpoint + ` \\
+                  create kubeconfig \\
+                  --cluster ` + this.props.selectedCluster.id + ` \\
+                  --certificate-organizations system:masters \\
+                  --auth-token ` + this.props.user.auth.token
+              }
+            </Prompt>
+          </CodeBlock>
+
+          <p>In case you wonder:</p>
+
+          <ul>
+            <li><code>--endpoint</code> sets the right API endpoint to use for your installation.</li>
+            <li><code>--cluster &lt;cluster_id&gt;</code> selects the cluster to provide access to.</li>
+            <li><code>--certificate-organizations system:masters</code> ensures that you will be authorized as an administrator when using this keypair.</li>
+            <li><code>--auth-token &lt;token&gt;</code> saves you from having to enter you password again in <code>gsctl</code>, by re-using the token from your current web UI session.</li>
+          </ul>
+
+          <div className="aside">
+            <p><i className='fa fa-graduation-cap' title='For learners'></i> <code>--certificate-organizations</code> is a flag that sets what group you belong to when authenticating against the Kubernetes API. The default superadmin group on RBAC (Role Based Access Control) enabled clusters is <code>system:masters</code> . All clusters on AWS have RBAC enabled, some of our on-prem (KVM) clusters do not.</p>
           </div>
-        </div>
 
-        <p>Run this command to make sure the installation succeeded:</p>
+          <div className="well" id="alternative">
+            <div onClick={this.toggleAlternative} className="toggle-alternative">
+              {
+                this.state.alternativeOpen ? <i className="fa fa-caret-down"></i> : <i className="fa fa-caret-right"></i>
+              }
 
-        <CodeBlock>
-          <Prompt>
-            {`gsctl --endpoint ` + window.config.apiEndpoint + ` info`}
-          </Prompt>
-        </CodeBlock>
-
-        <p>Next, we let <code>gsctl</code> do several things in one step:</p>
-
-        <ul>
-          <li>Create a new key pair (certificate and private key) for you to access this cluster</li>
-          <li>Download your key pair</li>
-          <li>Download the CA certificate for your cluster</li>
-          <li>Update your kubectl configuration to add settings and credentials for the cluster</li>
-        </ul>
-
-        <p>Here is the command that you need to execute for all this:</p>
-
-        <CodeBlock>
-          <Prompt>
-            {`
-              gsctl --endpoint ` + window.config.apiEndpoint + ` \\
-                create kubeconfig \\
-                --cluster ` + this.props.selectedCluster.id + ` \\
-                --certificate-organizations system:masters \\
-                --auth-token ` + this.props.user.auth.token
-            }
-          </Prompt>
-        </CodeBlock>
-
-        <p>In case you wonder:</p>
-
-        <ul>
-          <li><code>--endpoint</code> sets the right API endpoint to use for your installation.</li>
-          <li><code>--cluster &lt;cluster_id&gt;</code> selects the cluster to provide access to.</li>
-          <li><code>--certificate-organizations system:masters</code> ensures that you will be authorized as an administrator when using this keypair.</li>
-          <li><code>--auth-token &lt;token&gt;</code> saves you from having to enter you password again in <code>gsctl</code>, by re-using the token from your current web UI session.</li>
-        </ul>
-
-        <div className="aside">
-          <p><i className='fa fa-graduation-cap' title='For learners'></i> <code>--certificate-organizations</code> is a flag that sets what group you belong to when authenticating against the Kubernetes API. The default superadmin group on RBAC (Role Based Access Control) enabled clusters is <code>system:masters</code> . All clusters on AWS have RBAC enabled, some of our on-prem (KVM) clusters do not.</p>
-        </div>
-
-        <div className="well" id="alternative">
-          <div onClick={this.toggleAlternative} className="toggle-alternative">
+              &nbsp; Show alternative method to configure kubectl without gsctl
+            </div>
             {
-              this.state.alternativeOpen ? <i className="fa fa-caret-down"></i> : <i className="fa fa-caret-right"></i>
+              this.state.alternativeOpen ? <ConfigureKubeCtlAlternative /> : undefined
             }
-
-            &nbsp; Show alternative method to configure kubectl without gsctl
           </div>
-          {
-            this.state.alternativeOpen ? <ConfigureKubeCtlAlternative /> : undefined
-          }
+
+          <p>After execution, you should see what happened in detail. After credentials and settings have been added, the context matching your Giant Swarm Kubernetes cluster has been selected for use in <code>kubectl</code>. You can now check things using these commands:</p>
+
+          <CodeBlock>
+            <Prompt>
+              {`kubectl cluster-info`}
+            </Prompt>
+          </CodeBlock>
+
+          <p>This should print some information on your cluster.</p>
+
+          <CodeBlock>
+            <Prompt>
+              {`kubectl get nodes`}
+            </Prompt>
+          </CodeBlock>
+
+          <p>Here you should see a list of the worker nodes in your cluster.</p>
+
+          <p>Now that this is done, let&apos;s deploy some software on your cluster and dig a little deeper.</p>
+
+          <div className="component_slider--nav">
+            <Link to="/getting-started/download/">
+              <button><i className="fa fa-caret-left"></i> Back</button>
+            </Link>
+
+            <Link to="/getting-started/example/">
+              <button className='primary'>Continue <i className="fa fa-caret-right"></i></button>
+            </Link>
+          </div>
         </div>
-
-        <p>After execution, you should see what happened in detail. After credentials and settings have been added, the context matching your Giant Swarm Kubernetes cluster has been selected for use in <code>kubectl</code>. You can now check things using these commands:</p>
-
-        <CodeBlock>
-          <Prompt>
-            {`kubectl cluster-info`}
-          </Prompt>
-        </CodeBlock>
-
-        <p>This should print some information on your cluster.</p>
-
-        <CodeBlock>
-          <Prompt>
-            {`kubectl get nodes`}
-          </Prompt>
-        </CodeBlock>
-
-        <p>Here you should see a list of the worker nodes in your cluster.</p>
-
-        <p>Now that this is done, let&apos;s deploy some software on your cluster and dig a little deeper.</p>
-
-        <div className="component_slider--nav">
-          <button onClick={this.props.goToSlide.bind(null, 'download')}><i className="fa fa-caret-left"></i> Back</button>
-          <button className='primary' onClick={this.props.goToSlide.bind(null, 'example')}>Continue <i className="fa fa-caret-right"></i></button>
-        </div>
-      </Slide>
+      </Breadcrumb>
     );
   }
 }

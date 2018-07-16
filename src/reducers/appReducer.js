@@ -1,14 +1,12 @@
 'use strict';
 
 import * as types from '../actions/actionTypes';
-import { browserHistory } from 'react-router';
 import GiantSwarmV4 from 'giantswarm-v4';
 import _ from 'underscore';
 
+
 var shutDown = function(state) {
   localStorage.removeItem('user');
-
-  browserHistory.push('/login');
 
   return Object.assign({}, state, {
     loggedInUser: {},
@@ -17,7 +15,14 @@ var shutDown = function(state) {
 };
 
 function fetchUserFromStorage() {
-  var user = JSON.parse(localStorage.getItem('user'));
+  var user;
+  try {
+    user = JSON.parse(localStorage.getItem('user'));
+  } catch(e) {
+    user =  {
+      auth: {}
+    };
+  }
 
   // User was logged in pre-jwt auth being available.
   // Migrate.

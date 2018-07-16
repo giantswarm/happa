@@ -9,6 +9,8 @@ import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import {clustersForOrg} from '../../lib/helpers';
 import PropTypes from 'prop-types';
+import { push } from 'connected-react-router';
+import { Breadcrumb } from 'react-breadcrumbs';
 
 class Organizations extends React.Component {
   componentDidMount() {
@@ -16,8 +18,8 @@ class Organizations extends React.Component {
   }
 
   viewOrganization(orgId) {
-    this.selectOrganization(orgId);
-    this.context.router.push('/organizations/' + orgId);
+    this.props.dispatch(organizationSelect(orgId));
+    this.props.dispatch(push('/organizations/' + orgId));
   }
 
   deleteOrganization(orgId) {
@@ -28,56 +30,54 @@ class Organizations extends React.Component {
     this.props.dispatch(organizationCreate());
   }
 
-  selectOrganization(orgId) {
-    this.props.dispatch(organizationSelect(orgId));
-  }
-
   render() {
     return (
-      <DocumentTitle title='Organizations | Giant Swarm'>
-        <div>
-          <h1>Organizations</h1>
-          <br/>
-          {(() => {
-            if (this.props.organizations.isFetching && Object.keys(this.props.organizations.items).length === 0) {
-              return <img className='loader' src='/images/loader_oval_light.svg' width='20px' height='20px' />;
-            } else if (Object.keys(this.props.organizations.items).length === 0) {
-              return <div>
-                <p>No organizations, create one using the button below:</p>
-                <Button bsStyle='default' onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
+      <Breadcrumb data={{title: 'ORGANIZATIONS', pathname: '/organizations/'}}>
+        <DocumentTitle title='Organizations | Giant Swarm'>
+          <div>
+            <h1>Organizations</h1>
+            <br/>
+            {(() => {
+              if (this.props.organizations.isFetching && Object.keys(this.props.organizations.items).length === 0) {
+                return <img className='loader' src='/images/loader_oval_light.svg' width='20px' height='20px' />;
+              } else if (Object.keys(this.props.organizations.items).length === 0) {
+                return <div>
+                  <p>No organizations, create one using the button below:</p>
+                  <Button bsStyle='default' onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
+                  </div>;
+              } else {
+                return <div>
+                  <table className={this.props.organizations.isFetching ? 'fetching' : ''}>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th className='centered'>Clusters</th>
+                        <th className='centered'>Members</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {
+                        _.map(_.sortBy(this.props.organizations.items, 'id'), (organization) => {
+                            return <OrganizationRow organization={organization}
+                                                  clusters={clustersForOrg(organization.id, this.props.clusters)}
+                                                  key={organization.id}
+                                                  onClick={this.viewOrganization.bind(this, organization.id)}
+                                                  onDelete={this.deleteOrganization.bind(this, organization.id)}
+                                   />;
+                          }
+                        )
+                      }
+                    </tbody>
+                  </table>
+                  <Button bsStyle='default' onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
                 </div>;
-            } else {
-              return <div>
-                <table className={this.props.organizations.isFetching ? 'fetching' : ''}>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th className='centered'>Clusters</th>
-                      <th className='centered'>Members</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      _.map(_.sortBy(this.props.organizations.items, 'id'), (organization) => {
-                          return <OrganizationRow organization={organization}
-                                                clusters={clustersForOrg(organization.id, this.props.clusters)}
-                                                key={organization.id}
-                                                onClick={this.viewOrganization.bind(this, organization.id)}
-                                                onDelete={this.deleteOrganization.bind(this, organization.id)}
-                                 />;
-                        }
-                      )
-                    }
-                  </tbody>
-                </table>
-                <Button bsStyle='default' onClick={this.createOrganization.bind(this)} >Create New Organization</Button>
-              </div>;
-            }
-          })()}
+              }
+            })()}
 
-        </div>
-      </DocumentTitle>
+          </div>
+        </DocumentTitle>
+      </Breadcrumb>
     );
   }
 }

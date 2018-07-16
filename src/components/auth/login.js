@@ -3,13 +3,13 @@
 import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import Button from '../button';
 import {connect} from 'react-redux';
 import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
-import { browserHistory } from 'react-router';
+import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 
 class Login extends React.Component {
@@ -85,7 +85,7 @@ class Login extends React.Component {
           ttl: 3000
         }));
 
-        browserHistory.push('/');
+        this.props.dispatch(push('/'));
 
         return null;
       })
