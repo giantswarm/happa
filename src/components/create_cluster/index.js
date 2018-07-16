@@ -13,6 +13,7 @@ import NewAzureWorker from './new_azure_worker.js';
 import ReleaseSelector from './release_selector.js';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
+import { Breadcrumb } from 'react-breadcrumbs';
 
 class CreateCluster extends React.Component {
   constructor(props) {
@@ -233,120 +234,122 @@ class CreateCluster extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title={'Create Cluster | ' + this.props.selectedOrganization + ' | Giant Swarm'}>
-        <div className='new-cluster'>
-          <div className='row'>
-            <div className='col-12'>
-              <h1>Create a Cluster</h1>
-            </div>
-          </div>
-
-          <div className='row section'>
-            <div className='col-3'>
-              <h3 className='table-label'>Cluster Name</h3>
-            </div>
-            <div className='col-9'>
-              <form onSubmit={(e) => {e.preventDefault();}}>
-                <p>Give your cluster a name so you can recognize it in a crowd.</p>
-                <input ref={(i) => {this.cluster_name = i;}} type="text" value={this.state.clusterName} onChange={this.updateClusterName} autoFocus />
-              </form>
-            </div>
-          </div>
-
-          <div>
-            <div className='row section'>
-              <div className='col-12'>
-                <h3 className='table-label'>Worker Node Configuration</h3>
-                {
-                  this.props.provider === 'kvm' ?
-                    <div className='checkbox'>
-                      <label htmlFor='syncWorkers'>
-                        <input type='checkbox' ref={(i) => {this.syncWorkers = i;}} id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
-                        Use same configuration for all worker nodes
-                      </label>
-                    </div>
-                  :
-                    undefined
-                }
-              </div>
-            </div>
+      <Breadcrumb data={{title: 'CREATE CLUSTER', pathname: '/new-cluster/'}}>
+        <DocumentTitle title={'Create Cluster | ' + this.props.selectedOrganization + ' | Giant Swarm'}>
+          <div className='new-cluster'>
             <div className='row'>
-              {
-                this.state.workers.map((worker, index) => {
-                  if (this.props.provider === 'aws') {
-                    return <NewAWSWorker key={'Worker ' + worker.id}
-                                       allowedInstanceTypes={this.props.allowedInstanceTypes}
-                                       worker={worker}
-                                       index={index}
-                                       readOnly={this.state.syncWorkers && index !== 0}
-                                       deleteWorker={this.deleteWorker.bind(this, index)}
-                                       onWorkerUpdated={this.updateWorker.bind(this, index)} />;
-                  } else if (this.props.provider === 'kvm') {
-                    return <NewKVMWorker key={'Worker ' + worker.id}
-                                       worker={worker}
-                                       index={index}
-                                       readOnly={this.state.syncWorkers && index !== 0}
-                                       deleteWorker={this.deleteWorker.bind(this, index)}
-                                       onWorkerUpdated={this.updateWorker.bind(this, index)} />;
-                  } else if (this.props.provider === 'azure') {
-                    return <NewAzureWorker key={'Worker ' + worker.id}
-                                       allowedVMSizes={this.props.allowedVMSizes}
-                                       worker={worker}
-                                       index={index}
-                                       readOnly={this.state.syncWorkers && index !== 0}
-                                       deleteWorker={this.deleteWorker.bind(this, index)}
-                                       onWorkerUpdated={this.updateWorker.bind(this, index)} />;
+              <div className='col-12'>
+                <h1>Create a Cluster</h1>
+              </div>
+            </div>
+
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Cluster Name</h3>
+              </div>
+              <div className='col-9'>
+                <form onSubmit={(e) => {e.preventDefault();}}>
+                  <p>Give your cluster a name so you can recognize it in a crowd.</p>
+                  <input ref={(i) => {this.cluster_name = i;}} type="text" value={this.state.clusterName} onChange={this.updateClusterName} autoFocus />
+                </form>
+              </div>
+            </div>
+
+            <div>
+              <div className='row section'>
+                <div className='col-12'>
+                  <h3 className='table-label'>Worker Node Configuration</h3>
+                  {
+                    this.props.provider === 'kvm' ?
+                      <div className='checkbox'>
+                        <label htmlFor='syncWorkers'>
+                          <input type='checkbox' ref={(i) => {this.syncWorkers = i;}} id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
+                          Use same configuration for all worker nodes
+                        </label>
+                      </div>
+                    :
+                      undefined
                   }
-                })
-              }
-              <div className={'col-4 new-cluster--add-worker-button ' + (this.state.workers.length < 3 ? 'warning' : '')} onClick={this.addWorker}>
-                <div className="new-cluster--add-worker-button-title">
-                  Add a worker
                 </div>
+              </div>
+              <div className='row'>
                 {
-                  this.state.workers.length < 3 ?
-                    <div className="new-cluster--low-worker-warning">
-                      We recommend that you have at least three worker nodes in a cluster
-                    </div>
-                    : ''
+                  this.state.workers.map((worker, index) => {
+                    if (this.props.provider === 'aws') {
+                      return <NewAWSWorker key={'Worker ' + worker.id}
+                                         allowedInstanceTypes={this.props.allowedInstanceTypes}
+                                         worker={worker}
+                                         index={index}
+                                         readOnly={this.state.syncWorkers && index !== 0}
+                                         deleteWorker={this.deleteWorker.bind(this, index)}
+                                         onWorkerUpdated={this.updateWorker.bind(this, index)} />;
+                    } else if (this.props.provider === 'kvm') {
+                      return <NewKVMWorker key={'Worker ' + worker.id}
+                                         worker={worker}
+                                         index={index}
+                                         readOnly={this.state.syncWorkers && index !== 0}
+                                         deleteWorker={this.deleteWorker.bind(this, index)}
+                                         onWorkerUpdated={this.updateWorker.bind(this, index)} />;
+                    } else if (this.props.provider === 'azure') {
+                      return <NewAzureWorker key={'Worker ' + worker.id}
+                                         allowedVMSizes={this.props.allowedVMSizes}
+                                         worker={worker}
+                                         index={index}
+                                         readOnly={this.state.syncWorkers && index !== 0}
+                                         deleteWorker={this.deleteWorker.bind(this, index)}
+                                         onWorkerUpdated={this.updateWorker.bind(this, index)} />;
+                    }
+                  })
                 }
+                <div className={'col-4 new-cluster--add-worker-button ' + (this.state.workers.length < 3 ? 'warning' : '')} onClick={this.addWorker}>
+                  <div className="new-cluster--add-worker-button-title">
+                    Add a worker
+                  </div>
+                  {
+                    this.state.workers.length < 3 ?
+                      <div className="new-cluster--low-worker-warning">
+                        We recommend that you have at least three worker nodes in a cluster
+                      </div>
+                      : ''
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Release Version</h3>
+              </div>
+              <div className='col-9'>
+                <ReleaseSelector releaseSelected={this.selectRelease} />
+              </div>
+            </div>
+
+            <div className='row'>
+              <div className='col-3'>
+                <h3 className='table-label'>Master Sizing</h3>
+              </div>
+              <div className='col-9'>
+                <p>Auto Sized (Default)</p>
+              </div>
+            </div>
+
+            <div className='row section new-cluster--launch'>
+              <div className='col-12'>
+                <p>Create this cluster now and it will be available for you to use as soon as possible.</p>
+                { this.state.error ? this.errorState() : undefined }
+                <Button type='button'
+                        bsSize='large'
+                        bsStyle='primary'
+                        onClick={this.createCluster}
+                        loading={this.state.submitting}
+                        disabled={!this.valid()}>Create Cluster
+                </Button>
               </div>
             </div>
           </div>
-
-          <div className='row section'>
-            <div className='col-3'>
-              <h3 className='table-label'>Release Version</h3>
-            </div>
-            <div className='col-9'>
-              <ReleaseSelector releaseSelected={this.selectRelease} />
-            </div>
-          </div>
-
-          <div className='row'>
-            <div className='col-3'>
-              <h3 className='table-label'>Master Sizing</h3>
-            </div>
-            <div className='col-9'>
-              <p>Auto Sized (Default)</p>
-            </div>
-          </div>
-
-          <div className='row section new-cluster--launch'>
-            <div className='col-12'>
-              <p>Create this cluster now and it will be available for you to use as soon as possible.</p>
-              { this.state.error ? this.errorState() : undefined }
-              <Button type='button'
-                      bsSize='large'
-                      bsStyle='primary'
-                      onClick={this.createCluster}
-                      loading={this.state.submitting}
-                      disabled={!this.valid()}>Create Cluster
-              </Button>
-            </div>
-          </div>
-        </div>
-      </DocumentTitle>
+        </DocumentTitle>
+      </Breadcrumb>
     );
   }
 }
