@@ -38,11 +38,7 @@ export function logoutError(errorMessage) {
 // about the user based on the response.
 export function refreshUserInfo() {
   return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
     var usersApi = new GiantSwarmV4.UsersApi();
-    usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKeyPrefix = scheme;
-    usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = token;
 
     return usersApi.getCurrentUser()
     .then((data) => {

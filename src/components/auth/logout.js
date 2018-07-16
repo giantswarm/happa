@@ -6,16 +6,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as userActions from '../../actions/userActions';
 import PropTypes from 'prop-types';
+import { push } from 'connected-react-router';
 
 class Logout extends React.Component {
   componentDidMount() {
     if (this.props.user && this.props.user.auth && this.props.user.auth.scheme) {
       if (this.props.user.auth.scheme === 'Bearer') {
+        this.props.dispatch(push('/login'));
         this.props.actions.logoutSuccess();
       } else {
         this.props.actions.giantswarmLogout();
       }
     } else {
+      this.props.dispatch(push('/login'));
       this.props.actions.logoutSuccess();
     }
   }
@@ -40,6 +43,7 @@ Logout.contextTypes = {
 
 Logout.propTypes = {
   actions: PropTypes.object,
+  dispatch: PropTypes.func,
   user: PropTypes.object
 };
 
