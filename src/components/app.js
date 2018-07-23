@@ -35,8 +35,8 @@ render(
         <Route path="/admin-login" component={adminLogin} />
         <Route path="/login" component={login} />
         <Route path="/logout" component={logout} />
+        <Route path="/forgot_password/:token/" component={forgot_password_set_password} />
         <Route path="/forgot_password" component={forgot_password_index} />
-        <Route path="/forgot_password/:token" component={forgot_password_set_password} />
         <Route path="/signup/:token" component={signup} />
         <Route path="/oauth/callback" component={oauth_callback} />
 
