@@ -58,7 +58,7 @@ export class SignUp extends React.Component {
   }
 
   componentDidMount(){
-    var token = this.props.params.token;
+    var token = this.props.match.params.token;
 
     passage.checkInvite({token})
     .then(data => {
@@ -142,7 +142,7 @@ export class SignUp extends React.Component {
       });
 
       passage.createAccount({
-        inviteToken: this.props.params.token,
+        inviteToken: this.props.match.params.token,
         password: this.state.passwordField.value
       })
       .then((data) => {
@@ -386,7 +386,7 @@ export class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
-  params: PropTypes.object,
+  match: PropTypes.object,
   dispatch: PropTypes.func,
   actions: PropTypes.object
 };

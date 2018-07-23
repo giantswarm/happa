@@ -56,7 +56,7 @@ class SetPassword extends React.Component {
       verifyingToken: true
     });
 
-    this.props.actions.verifyPasswordRecoveryToken(this.state.email, this.props.params.token)
+    this.props.actions.verifyPasswordRecoveryToken(this.state.email, this.props.match.params.token)
     .then(() => {
       this.setState({
         verifyingToken: false,
@@ -95,7 +95,7 @@ class SetPassword extends React.Component {
       submitting: true
     });
 
-    this.props.actions.setNewPassword(this.state.email, this.props.params.token, this.state.passwordField.value)
+    this.props.actions.setNewPassword(this.state.email, this.props.match.params.token, this.state.passwordField.value)
     .then(() => {
       this.setState({
         submitting: false
@@ -312,7 +312,7 @@ SetPassword.contextTypes = {
 
 SetPassword.propTypes = {
   actions: PropTypes.object,
-  params: PropTypes.object,
+  match: PropTypes.object,
   dispatch: PropTypes.func
 };
 
