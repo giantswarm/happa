@@ -163,6 +163,22 @@ class ClusterDetail extends React.Component {
     return true;
   }
 
+  // Determine whether the cluster can be scaled
+  canClusterScale() {
+    if (this.props.provider === 'aws') {
+      return true;
+    }
+
+    if (this.props.provider === 'kvm') {
+      return true;
+    }
+
+    // on Azure, release version must be >= 1.0.0
+    if (this.props.provider === 'azure' && cmp(this.props.cluster.release_version, '1.0.0') !== -1) {
+      return true;
+    }
+  }
+
   accessCluster = () => {
     this.props.clusterActions.clusterSelect(this.props.cluster.id);
     this.props.dispatch(push('/getting-started/'));
@@ -199,7 +215,7 @@ class ClusterDetail extends React.Component {
                         <div className='pull-right btn-group'>
                           <Button onClick={this.accessCluster}>GET STARTED</Button>
                           {
-                            (this.props.provider === 'aws' || this.props.provider === 'kvm') ?
+                            this.canClusterScale() ?
                             <Button onClick={this.showScalingModal}>SCALE</Button>
                             : undefined
                           }
