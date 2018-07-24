@@ -173,7 +173,7 @@ class ClusterDetail extends React.Component {
       return true;
     }
 
-    // on Azure, release version must be >= -1
+    // on Azure, release version must be >= 1.0.0
     if (this.props.provider === 'azure' && cmp(this.props.cluster.release_version, '1.0.0') !== -1) {
       return true;
     }
