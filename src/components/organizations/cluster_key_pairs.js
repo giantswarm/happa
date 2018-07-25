@@ -13,6 +13,7 @@ import { makeKubeConfigTextFile, dedent } from '../../lib/helpers';
 import copy from 'copy-to-clipboard';
 import _ from 'underscore';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 class ClusterKeyPairs extends React.Component {
  constructor(props) {
@@ -244,6 +245,13 @@ class ClusterKeyPairs extends React.Component {
                     <tbody>
                       {
                         _.map(_.sortBy(this.props.cluster.keyPairs, 'create_date').reverse(), (keyPair) => {
+
+                          var expiryClass = '';
+                          var expirySeconds = moment(keyPair.expire_date).utc().diff(moment().utc()) / 1000;
+                          if (Math.abs(expirySeconds) < (60 * 60 * 24)) {
+                            expiryClass = 'expiring';
+                          }
+
                           return <tr key={keyPair.id}>
                             <td className="code">
                               <OverlayTrigger placement="top" overlay={
@@ -254,7 +262,7 @@ class ClusterKeyPairs extends React.Component {
                             </td>
                             <td>{keyPair.description}</td>
                             <td>{relativeDate(keyPair.create_date)}</td>
-                            <td>{relativeDate(keyPair.expire_date)}</td>
+                            <td className={expiryClass}>{relativeDate(keyPair.expire_date)}</td>
                             <td className="code">
                               <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{keyPair.common_name}</Tooltip>}>
                                 <span>{truncate(keyPair.common_name, 24)}</span>
