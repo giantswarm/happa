@@ -39,12 +39,11 @@ export function logoutError(errorMessage) {
 export function refreshUserInfo() {
   return function(dispatch, getState) {
     var usersApi = new GiantSwarmV4.UsersApi();
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
 
-    return usersApi.getCurrentUser()
+    return usersApi.getCurrentUser(scheme + ' ' + token)
     .then((data) => {
-      var token = getState().app.loggedInUser.auth.token;
-      var scheme = getState().app.loggedInUser.auth.scheme;
-
       var userData = {
         email: data.email,
         auth: {
