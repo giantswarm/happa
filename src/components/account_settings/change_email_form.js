@@ -1,9 +1,9 @@
 import React from 'react';
 import Button from '../button';
-import GiantSwarm from '../../lib/giantswarm_client_wrapper';
 import update from 'react-addons-update';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import PropTypes from 'prop-types';
+import GiantSwarmV4 from 'giantswarm-v4';
 
 class ChangeEmailForm extends React.Component {
   constructor(props) {
@@ -70,17 +70,19 @@ class ChangeEmailForm extends React.Component {
 
     // Don't submit the form if nothing changed.
     if (this.props.user.email != this.state.fields.email.value) {
-      var authToken = this.props.user.auth.token;
-      var giantSwarm = new GiantSwarm.Client(authToken);
+      var token = this.props.user.auth.token;
+      var scheme = this.props.user.auth.scheme;
+
+      var usersApi = new GiantSwarmV4.UsersApi();
 
       this.setState({
         changeEmailFormSubmitting: true,
         changeEmailFormError: false
       });
 
-      giantSwarm.changeEmail({
-        old_email: this.props.user.email,
-        new_email: this.state.fields.email.value
+      usersApi.modifyUser(scheme + ' ' + token, this.props.user.email,
+      {
+        email: this.state.fields.email.value
       })
       .then(() => {
         this.setState({

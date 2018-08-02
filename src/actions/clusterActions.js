@@ -31,7 +31,10 @@ export function clusterSelect(clusterId) {
 // Takes a clusterId and loads details for that cluster
 
 export function clusterLoadDetails(clusterId) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
     dispatch({
       type: types.CLUSTER_LOAD_DETAILS,
       clusterId
@@ -39,7 +42,7 @@ export function clusterLoadDetails(clusterId) {
 
     var clustersApi = new GiantSwarmV4.ClustersApi();
 
-    return clustersApi.getCluster(clusterId)
+    return clustersApi.getCluster(scheme + ' ' + token, clusterId)
     .then((cluster) => {
       dispatch(clusterLoadDetailsSuccess(cluster));
       return cluster;
@@ -57,7 +60,10 @@ export function clusterLoadDetails(clusterId) {
 // on success or CLUSTER_DELETE_ERROR on error.
 
 export function clusterCreate(cluster) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
     dispatch({
       type: types.CLUSTER_CREATE,
       cluster
@@ -65,7 +71,7 @@ export function clusterCreate(cluster) {
 
     var clustersApi = new GiantSwarmV4.ClustersApi();
 
-    return clustersApi.addClusterWithHttpInfo(cluster)
+    return clustersApi.addClusterWithHttpInfo(scheme + ' ' + token, cluster)
     .then((data) => {
       var location = data.response.headers.location;
       if (location === undefined) {
@@ -104,7 +110,10 @@ export function clusterCreate(cluster) {
 //  cluster: {id: "string", owner: "string"}
 
 export function clusterDeleteConfirm(cluster) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
     dispatch({
       type: types.CLUSTER_DELETE_CONFIRM,
       cluster
@@ -112,7 +121,7 @@ export function clusterDeleteConfirm(cluster) {
 
     var clustersApi = new GiantSwarmV4.ClustersApi();
 
-    return clustersApi.deleteCluster(cluster.id)
+    return clustersApi.deleteCluster(scheme + ' ' + token, cluster.id)
     .then(() => {
       dispatch(push('/organizations/'+cluster.owner));
       dispatch(clusterDeleteSuccess(cluster.id));
@@ -145,7 +154,9 @@ export function clusterDeleteConfirm(cluster) {
 // on error.
 
 export function clusterLoadKeyPairs(clusterId) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
     var keypairsApi = new GiantSwarmV4.KeyPairsApi();
 
     dispatch({
@@ -153,7 +164,7 @@ export function clusterLoadKeyPairs(clusterId) {
       clusterId
     });
 
-    return keypairsApi.getKeyPairs(clusterId)
+    return keypairsApi.getKeyPairs(scheme + ' ' + token, clusterId)
     .then((keyPairs) => {
       dispatch({
         type: types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS,
@@ -244,7 +255,10 @@ export function clusterLoadError(error) {
 // on error.
 
 export function clusterPatch(cluster) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
     dispatch({
       type: types.CLUSTER_PATCH,
       cluster
@@ -254,7 +268,7 @@ export function clusterPatch(cluster) {
     delete cluster.id;
 
     var clustersApi = new GiantSwarmV4.ClustersApi();
-    return clustersApi.modifyCluster(cluster, clusterId)
+    return clustersApi.modifyCluster(scheme + ' ' + token, cluster, clusterId)
     .then((cluster) => {
       dispatch({
         type: types.CLUSTER_PATCH_SUCCESS,
@@ -282,14 +296,17 @@ export function clusterPatch(cluster) {
 // on error.
 
 export function clusterCreateKeyPair(clusterId, keypair) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
     dispatch({
       type: types.CLUSTER_CREATE_KEY_PAIR,
       keypair
     });
 
     var keypairsApi = new GiantSwarmV4.KeyPairsApi();
-    return keypairsApi.addKeyPair(clusterId, keypair)
+    return keypairsApi.addKeyPair(scheme + ' ' + token, clusterId, keypair)
     .then((keypair) => {
       dispatch({
         type: types.CLUSTER_CREATE_KEY_PAIR_SUCCESS,
