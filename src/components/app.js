@@ -14,8 +14,9 @@ import forgot_password_index from './forgot_password/index';
 import forgot_password_set_password from './forgot_password/set_password';
 import { Provider } from 'react-redux';
 import configureStore from '../stores/configureStore';
+import history from '../stores/history';
 import { ConnectedRouter } from 'connected-react-router';
-import { createBrowserHistory } from 'history';
+
 
 require('normalize.css');
 require('bootstrap/dist/css/bootstrap.min.css');
@@ -24,8 +25,8 @@ require('react-datepicker/dist/react-datepicker.css');
 
 var appContainer = document.getElementById('app');
 
-const history = createBrowserHistory();
-const store = configureStore({}, history);
+
+const store = configureStore({});
 
 render(
   <Provider store={store}>

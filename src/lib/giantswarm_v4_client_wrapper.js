@@ -5,8 +5,11 @@
 
 import GiantSwarmV4 from 'giantswarm-v4';
 import Auth0 from '../lib/auth0';
+import configureStore from '../stores/configureStore';
+import { unauthorized } from '../actions/userActions';
 
 const auth0 = new Auth0();
+const store = configureStore({});
 
 var defaultClient = GiantSwarmV4.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
@@ -49,11 +52,11 @@ returnType) {
                              bodyParam, authNames, contentTypes, accepts, returnType);
         })
         .catch((err) => {
-          window.location.href = '/login';
+          store.dispatch(unauthorized());
           throw(err);
         });
       } else if (err.status == 401) {
-          window.location.href = '/login';
+          store.dispatch(unauthorized());
           throw(err);
       } else {
         throw err;
