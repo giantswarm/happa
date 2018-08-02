@@ -53,7 +53,7 @@ returnType) {
           throw(err);
         });
       } else if (err.status == 401) {
-          window.location.href = '/login';
+          // window.location.href = '/login';
           throw(err);
       } else {
         throw err;
