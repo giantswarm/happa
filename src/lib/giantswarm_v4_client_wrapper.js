@@ -52,8 +52,10 @@ returnType) {
           window.location.href = '/login';
           throw(err);
         });
+      } else if (err.status == 401) {
+          window.location.href = '/login';
+          throw(err);
       } else {
-        window.location.href = '/login';
         throw err;
       }
     });
