@@ -3,7 +3,7 @@
 import React from 'react';
 import Button from '../button';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import GiantSwarm from '../../lib/giantswarm_client_wrapper';
+import GiantSwarmV4 from 'giantswarm-v4';
 import { validatePassword } from '../../lib/password_validation';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
@@ -106,12 +106,15 @@ class ChangePassword extends React.Component {
       error: false
     });
 
-    var authToken = this.props.user.auth.token;
-    var giantSwarm = new GiantSwarm.Client(authToken);
+    var token = this.props.user.auth.token;
+    var scheme = this.props.user.auth.scheme;
 
-    giantSwarm.changePassword({
-      old_password: this.current_password.value(),
-      new_password: this.new_password.value()
+    var usersApi = new GiantSwarmV4.UsersApi();
+
+    usersApi.modifyPassword(scheme + ' ' + token, this.props.user.email,
+    {
+      old_password_base64: this.current_password.value(),
+      new_password_base64: this.new_password.value()
     })
     .then(() => {
       this.setState({

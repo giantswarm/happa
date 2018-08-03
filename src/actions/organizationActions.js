@@ -112,6 +112,9 @@ export function organizationsLoadSuccess(organizations, selectedOrganization, se
 //
 export function organizationsLoad() {
   return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
     var clustersApi = new GiantSwarmV4.ClustersApi();
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
@@ -123,13 +126,13 @@ export function organizationsLoad() {
 
     dispatch({type: types.ORGANIZATIONS_LOAD});
 
-    return organizationsApi.getOrganizations()
+    return organizationsApi.getOrganizations(scheme + ' ' + token)
     .then(organizations => {
       var organizationsArray = organizations.map((organization) => {
         return organization.id;
       });
 
-      var clusters = clustersApi.getClusters()
+      var clusters = clustersApi.getClusters(scheme + ' ' + token)
                      .then(data => {
                         dispatch(clusterLoadSuccess(data));
                         return data;
@@ -140,7 +143,7 @@ export function organizationsLoad() {
                      });
 
       var orgDetails = Promise.all(_.map(organizationsArray, organizationName => {
-        return organizationsApi.getOrganization(organizationName )
+        return organizationsApi.getOrganization(scheme + ' ' + token, organizationName)
                .then(organization => {
                  return organization;
                });
@@ -198,12 +201,14 @@ export function organizationsLoad() {
 // and organization. It performs the API call to actually delete the organization
 // and dispatches actions accordingly.
 export function organizationDeleteConfirm(orgId) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
     dispatch({type: types.ORGANIZATION_DELETE_CONFIRM, orgId: orgId});
 
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
-    return organizationsApi.deleteOrganization(orgId)
+    return organizationsApi.deleteOrganization(scheme + ' ' + token, orgId)
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
@@ -244,12 +249,15 @@ export function organizationCreate() {
 // and organization. It performs the API call to actually create the organization
 // and dispatches actions accordingly.
 export function organizationCreateConfirm(orgId) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
     dispatch({type: types.ORGANIZATION_CREATE_CONFIRM});
 
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
-    return organizationsApi.addOrganization(orgId, {})
+    return organizationsApi.addOrganization(scheme + ' ' + token, orgId, {})
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
     .then(dispatch.bind(this, flashAdd({
@@ -314,12 +322,14 @@ export function organizationAddMemberConfirm(orgId, email) {
       }
     }
 
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
-    return organizationsApi.getOrganization(orgId)
+    return organizationsApi.getOrganization(scheme + ' ' + token, orgId)
     .then((organization) => {
       var members = organization.members.concat([{email: email}]);
-      return organizationsApi.modifyOrganization(orgId, {members});
+      return organizationsApi.modifyOrganization(scheme + ' ' + token, orgId, {members});
     })
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))
@@ -342,7 +352,10 @@ export function organizationAddMemberConfirm(orgId, email) {
 // a member from an organization. It performs the API call to actually do the job,
 // and dispatches actions accordingly.
 export function organizationRemoveMemberConfirm(orgId, email) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
     dispatch({
       type: types.ORGANIZATION_REMOVE_MEMBER_CONFIRM,
       orgId: orgId,
@@ -351,10 +364,10 @@ export function organizationRemoveMemberConfirm(orgId, email) {
 
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
-    organizationsApi.getOrganization(orgId)
+    organizationsApi.getOrganization(scheme + ' ' + token, orgId)
     .then((organization) => {
       var members = organization.members.filter((member) => {return member.email !== email;});
-      return organizationsApi.modifyOrganization(orgId, {members});
+      return organizationsApi.modifyOrganization(scheme + ' ' + token, orgId, {members});
     })
     .then(() => {return dispatch(organizationsLoad());})
     .then(dispatch.bind(this, modalHide()))

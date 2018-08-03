@@ -24,12 +24,15 @@ export function releasesLoadError(error) {
 }
 
 export function loadReleases() {
-  return function(dispatch) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
     dispatch(releasesLoad());
 
     var releasesApi = new GiantSwarmV4.ReleasesApi();
 
-    return releasesApi.getReleases()
+    return releasesApi.getReleases(scheme + ' ' + token)
     .then((releases) => {
       dispatch(releasesLoadSuccess(releases));
     })

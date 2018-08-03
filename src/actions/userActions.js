@@ -39,12 +39,11 @@ export function logoutError(errorMessage) {
 export function refreshUserInfo() {
   return function(dispatch, getState) {
     var usersApi = new GiantSwarmV4.UsersApi();
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
 
-    return usersApi.getCurrentUser()
+    return usersApi.getCurrentUser(scheme + ' ' + token)
     .then((data) => {
-      var token = getState().app.loggedInUser.auth.token;
-      var scheme = getState().app.loggedInUser.auth.scheme;
-
       var userData = {
         email: data.email,
         auth: {
@@ -97,6 +96,7 @@ export function giantswarmLogin(email, password) {
   return function(dispatch, getState) {
     var usersApi = new GiantSwarmV4.UsersApi();
     var authTokensApi = new GiantSwarmV4.AuthTokensApi();
+    var authToken;
 
     dispatch({
       type: types.LOGIN,
@@ -108,16 +108,15 @@ export function giantswarmLogin(email, password) {
       password_base64: Base64.encode(password)
     })
     .then((response) => {
-      usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKeyPrefix = 'giantswarm';
-      usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = response.auth_token;
-      return usersApi.getCurrentUser();
+      authToken = response.auth_token;
+      return usersApi.getCurrentUser('giantswarm' + ' ' + response.auth_token);
     })
     .then((data) => {
       var userData = {
         email: data.email,
         auth: {
           scheme: 'giantswarm',
-          token: usersApi.apiClient.authentications.AuthorizationHeaderToken.apiKey
+          token: authToken
         }
       };
 
@@ -208,14 +207,12 @@ export function getInfo() {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
     var infoApi = new GiantSwarmV4.InfoApi();
-    infoApi.apiClient.authentications.AuthorizationHeaderToken.apiKeyPrefix = scheme;
-    infoApi.apiClient.authentications.AuthorizationHeaderToken.apiKey = token;
 
     dispatch({
       type: types.INFO_LOAD
     });
 
-    return infoApi.getInfo()
+    return infoApi.getInfo(scheme + ' ' + token)
     .then((info) => {
       dispatch({
         type: types.INFO_LOAD_SUCCESS,
