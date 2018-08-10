@@ -1,6 +1,6 @@
 {
   "name": "happa",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "",
   "repository": "",
   "private": true,
@@ -20,7 +20,7 @@
     "connected-react-router": "4.3.0",
     "copy-to-clipboard": "~3.0.8",
     "deep-diff": "1.0.1",
-    "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client#master",
+    "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client#security-audit",
     "immutable": "3.8.2",
     "moment": "2.22.2",
     "node-sass": "4.9.2",
