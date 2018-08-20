@@ -311,10 +311,14 @@ class ClusterDetail extends React.Component {
                                 <td>Total RAM in worker nodes</td>
                                 <td className='value'>{this.getMemoryTotal() === null ? 'n/a' : this.getMemoryTotal()} GB</td>
                               </tr>
-                              <tr>
-                                <td>Total storage in worker nodes</td>
-                                <td className='value'>{this.getStorageTotal() === null ? 'n/a' : this.getStorageTotal()} GB</td>
-                              </tr>
+                              {
+                                this.props.provider === 'kvm' ?
+                                <tr>
+                                  <td>Total storage in worker nodes</td>
+                                  <td className='value'>{this.getStorageTotal() === null ? 'n/a' : this.getStorageTotal()} GB</td>
+                                </tr>
+                                : undefined
+                              }
                               {
                                 this.props.cluster.kvm && this.props.cluster.kvm.port_mappings ?
                                 <tr>

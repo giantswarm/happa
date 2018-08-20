@@ -155,7 +155,6 @@ class NewAWSWorker extends React.Component {
                   <th>Description</th>
                   <th className="numeric">CPU Cores</th>
                   <th className="numeric">Memory</th>
-                  <th className="numeric">Storage</th>
                 </tr>
               </thead>
               <tbody>
@@ -167,7 +166,6 @@ class NewAWSWorker extends React.Component {
                       <td className="description">{instanceType.description}</td>
                       <td className="numeric">{instanceType.cpuCores}</td>
                       <td className="numeric">{instanceType.memory}</td>
-                      <td className="numeric">{instanceType.storage}</td>
                     </tr>;
                   })
                 }

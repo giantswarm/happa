@@ -88,7 +88,11 @@ class ClusterDashboardItem extends React.Component {
                 }
               </div>
               <div>
-                <b>{this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}</b> nodes · <b>{memory ? memory : 'n/a'}</b> GB RAM · <b>{cpus ? cpus : 'n/a'}</b> CPUs · <b>{storage ? storage: 'n/a'}</b> GB storage
+                <b>{this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}</b> nodes · <b>{memory ? memory : 'n/a'}</b> GB RAM · <b>{cpus ? cpus : 'n/a'}</b> CPUs
+                  { this.props.cluster.kvm ?
+                    <span> · <b>{storage ? storage: 'n/a'}</b> GB storage</span>
+                    : undefined
+                  }
               </div>
             </div>
 
