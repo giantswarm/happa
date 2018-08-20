@@ -132,7 +132,6 @@ class NewAzureWorker extends React.Component {
                   <th>Name</th>
                   <th className="numeric">CPU Cores</th>
                   <th className="numeric">Memory</th>
-                  <th className="numeric">Storage</th>
                 </tr>
               </thead>
               <tbody>
@@ -143,7 +142,6 @@ class NewAzureWorker extends React.Component {
                       <td>{vmSize.name}</td>
                       <td className="numeric">{vmSize.numberOfCores}</td>
                       <td className="numeric">{(vmSize.memoryInMb / 1000).toFixed(2)} GB</td>
-                      <td className="numeric">{(vmSize.resourceDiskSizeInMb / 1000).toFixed(2)} GB</td>
                     </tr>;
                   })
                 }

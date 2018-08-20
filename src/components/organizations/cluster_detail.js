@@ -185,14 +185,23 @@ class ClusterDetail extends React.Component {
   }
 
   render() {
-    var awsInstanceType = <tr/>;
-    if (this.props.provider === 'aws' && this.state.loading === false) {
-      awsInstanceType = (
-        <tr>
-          <td>AWS instance type</td>
-          <td className='value code'>{this.props.cluster.workers[0].aws.instance_type}</td>
-        </tr>
-      );
+    var instanceTypeOrVMSize = <tr/>;
+    if (this.state.loading === false) {
+      if (this.props.provider === 'aws') {
+        instanceTypeOrVMSize = (
+          <tr>
+            <td>EC2 instance type</td>
+            <td className='value code'>{this.props.cluster.workers[0].aws.instance_type}</td>
+          </tr>
+        );
+      } else if (this.props.provider === 'azure') {
+        instanceTypeOrVMSize = (
+          <tr>
+            <td>VM size</td>
+            <td className='value code'>{this.props.cluster.workers[0].azure.vm_size}</td>
+          </tr>
+        );
+      }
     }
 
     return (
@@ -293,7 +302,7 @@ class ClusterDetail extends React.Component {
                                   {this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}
                                 </td>
                               </tr>
-                              {awsInstanceType}
+                              {instanceTypeOrVMSize}
                               <tr>
                                 <td>Total CPU cores in worker nodes</td>
                                 <td className='value'>{this.getCpusTotal() === null ? 'n/a' : this.getCpusTotal()}</td>
@@ -302,10 +311,14 @@ class ClusterDetail extends React.Component {
                                 <td>Total RAM in worker nodes</td>
                                 <td className='value'>{this.getMemoryTotal() === null ? 'n/a' : this.getMemoryTotal()} GB</td>
                               </tr>
-                              <tr>
-                                <td>Total storage in worker nodes</td>
-                                <td className='value'>{this.getStorageTotal() === null ? 'n/a' : this.getStorageTotal()} GB</td>
-                              </tr>
+                              {
+                                this.props.provider === 'kvm' ?
+                                <tr>
+                                  <td>Total storage in worker nodes</td>
+                                  <td className='value'>{this.getStorageTotal() === null ? 'n/a' : this.getStorageTotal()} GB</td>
+                                </tr>
+                                : undefined
+                              }
                               {
                                 this.props.cluster.kvm && this.props.cluster.kvm.port_mappings ?
                                 <tr>
