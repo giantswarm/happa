@@ -48,6 +48,9 @@ returnType) {
           userData.auth.token = result.accessToken;
           localStorage.setItem('user', JSON.stringify(userData));
 
+          // Ensure the second attempt uses the new token.
+          headerParams['Authorization'] = 'Bearer ' + result.accessToken;
+
           return origCallApi(path, httpMethod, pathParams, queryParams, headerParams, formParams,
                              bodyParam, authNames, contentTypes, accepts, returnType);
         })
