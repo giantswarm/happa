@@ -39,6 +39,14 @@ export function logoutError(errorMessage) {
 export function refreshUserInfo() {
   return function(dispatch, getState) {
     var usersApi = new GiantSwarmV4.UsersApi();
+
+    if (!getState().app.loggedInUser) {
+      dispatch({
+        type: types.REFRESH_USER_INFO_ERROR,
+        error: 'No logged in user to refresh.'
+      });
+      throw('No logged in user to refresh.');
+    }
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 

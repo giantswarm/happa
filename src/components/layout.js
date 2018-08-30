@@ -34,17 +34,17 @@ class Layout extends React.Component {
     if (this.props.user) {
       defaultClientAuth.apiKeyPrefix = this.props.user.auth.scheme;
       defaultClientAuth.apiKey = this.props.user.auth.token;
+
+      this.props.actions.refreshUserInfo().then(() => {
+        this.props.dispatch(organizationsLoad());
+        return null;
+      })
+      .catch((error) => {
+        throw(error);
+      });
     } else {
       this.props.dispatch(push('/login'));
     }
-
-    this.props.actions.refreshUserInfo().then(() => {
-      this.props.dispatch(organizationsLoad());
-      return null;
-    })
-    .catch((error) => {
-      throw(error);
-    });
   }
 
   selectOrganization = (orgId) => {
