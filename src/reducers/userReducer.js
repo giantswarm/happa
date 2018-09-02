@@ -25,20 +25,6 @@ export default function userReducer(state = {lastUpdated: 0, isFetching: false, 
         items: state.items
       };
 
-    case types.USERS_DELETE_CONFIRM:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: state.isFetching,
-        items: state.items
-      };
-
-    case types.USERS_DELETE_ERROR:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: state.items
-      };
-
     case types.USERS_REMOVE_EXPIRATION_SUCCESS:
       var items = Object.assign({}, state.items);
 
