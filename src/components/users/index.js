@@ -9,6 +9,7 @@ import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-breadcrumbs';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { push } from 'connected-react-router';
 import Button from '../button';
 
 class Users extends React.Component {
@@ -25,7 +26,11 @@ class Users extends React.Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(usersLoad());
+    if (this.props.currentUser.isAdmin) {
+      this.props.dispatch(usersLoad());
+    } else {
+      this.props.dispatch(push('/'));
+    }
   }
 
   removeExpiration(email) {
@@ -157,12 +162,14 @@ Users.contextTypes = {
 
 Users.propTypes = {
   dispatch: PropTypes.func,
+  currentUser: PropTypes.object,
   users: PropTypes.object,
   installation_name: PropTypes.string,
 };
 
 function mapStateToProps(state) {
   return {
+    currentUser: state.app.loggedInUser,
     users: state.entities.users,
     installation_name: state.app.info.general.installation_name,
   };
