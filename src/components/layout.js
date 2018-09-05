@@ -15,6 +15,7 @@ import Gravatar from 'react-gravatar';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import GettingStarted from './getting-started/index';
+import Users from './users/index';
 import Organizations from './organizations/index';
 import OrganizationDetails from './organizations/detail';
 import ClusterDetails from './organizations/cluster_detail';
@@ -74,6 +75,14 @@ class Layout extends React.Component {
                   <NavLink to='/' activeClassName='active'>Clusters</NavLink>
                   <NavLink to='/getting-started/' activeClassName='active'>Getting Started</NavLink>
                   <a href='https://docs.giantswarm.io' target='_blank' rel='noopener noreferrer'>Documentation <i className='fa fa-external-link'></i></a>
+
+                  {
+                    this.props.user.isAdmin ?
+                    <NavLink to='/users/' activeClassName='active'>Users</NavLink>
+                    :
+                    undefined
+                  }
+
                 </div>
 
                 <div className='subactions'>
@@ -134,6 +143,7 @@ class Layout extends React.Component {
                 <Route exact path="/" component={Home} />
                 <Route exact path="/getting-started/" component={GettingStarted} />
                 <Route exact path="/getting-started/*" component={GettingStarted} />
+                <Route exact path="/users/" component={Users} />
                 <Route exact path="/new-cluster/" component={CreateCluster} />
                 <Route exact path="/organizations/" component={Organizations} />
                 <Route exact path="/organizations/:orgId/" component={OrganizationDetails} />

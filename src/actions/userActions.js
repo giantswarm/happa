@@ -6,6 +6,7 @@ import * as types from './actionTypes';
 import GiantSwarmV4 from '../lib/giantswarm_v4_client_wrapper';
 import { Base64 } from 'js-base64';
 import { push } from 'connected-react-router';
+import _ from 'underscore';
 
 export function loginSuccess(userData) {
   return {
@@ -234,6 +235,87 @@ export function getInfo() {
       });
       console.error(error);
       throw(error);
+    });
+  };
+}
+
+// usersLoad
+// -----------------
+// Loads all users from the Giant Swarm API into state.
+// /v4/users/
+export function usersLoad() {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    var usersApi = new GiantSwarmV4.UsersApi();
+
+    var alreadyFetching = getState().entities.users.isFetching;
+
+    if (alreadyFetching) {
+      return new Promise((resolve) => { resolve(); });
+    }
+
+    dispatch({type: types.USERS_LOAD});
+
+    return usersApi.getUsers(scheme + ' ' + token)
+    .then(usersArray => {
+      var users = {};
+
+      _.each(usersArray, (user) => {
+        users[user.email] = user;
+      });
+
+      dispatch({
+        type: types.USERS_LOAD_SUCCESS,
+        users,
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      dispatch(flashAdd({
+        message: <div><strong>Something went wrong while trying to load all users</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+        class: 'danger'
+      }));
+
+      dispatch({
+        type: types.USERS_LOAD_ERROR
+      });
+    });
+  };
+}
+
+
+// removeExpiration
+// ----------------
+// Removes the expiration date from a given user.
+export function userRemoveExpiration(email) {
+  return function(dispatch, getState) {
+    const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    var usersApi = new GiantSwarmV4.UsersApi();
+
+    dispatch({type: types.USERS_REMOVE_EXPIRATION});
+
+    return usersApi.modifyUser(scheme + ' ' + token, email, {'expiry': NEVER_EXPIRES})
+    .then(user => {
+      dispatch({
+        type: types.USERS_REMOVE_EXPIRATION_SUCCESS,
+        user,
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      dispatch(flashAdd({
+        message: <div><strong>Something went wrong while trying to remove expiration from this user</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+        class: 'danger'
+      }));
+
+      dispatch({
+        type: types.USERS_REMOVE_EXPIRATION_ERROR
+      });
     });
   };
 }
