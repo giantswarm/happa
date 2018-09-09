@@ -11,6 +11,10 @@ if [ -n "$INGRESS_BASE_DOMAIN" ]; then
   sed -i "s|ingressBaseDomain: 'k8s.sample.io'|ingressBaseDomain: '$INGRESS_BASE_DOMAIN'|" /www/index.html
 fi
 
+if [ -n "$INSTALLATION_NAME" ]; then
+  sed -i "s|installationName: 'development'|installationName: '$INSTALLATION_NAME'|" /www/index.html
+fi
+
 if [ -n "$ENVIRONMENT" ]; then
   sed -i "s|environment: 'development'|environment: '$ENVIRONMENT'|" /www/index.html
 else
