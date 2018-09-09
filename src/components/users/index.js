@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { usersLoad, userRemoveExpiration } from '../../actions/userActions';
+import { usersLoad, userRemoveExpiration, userDelete } from '../../actions/userActions';
 import UserRow from './user_row';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
@@ -37,6 +37,7 @@ class Users extends React.Component {
     this.setState({
       selectedUser: email,
       modal: {
+        template: 'unexpireUser',
         visible: true,
         loading: false,
       }
@@ -52,6 +53,35 @@ class Users extends React.Component {
     });
 
     this.props.dispatch(userRemoveExpiration(email))
+    .then(() => {
+      this.closeModal();
+    })
+    .catch(() => {
+      this.closeModal();
+    });
+  }
+
+  deleteUser(email) {
+    this.setState({
+      selectedUser: email,
+      modal: {
+        template: 'deleteUser',
+        visible: true,
+        loading: false,
+      }
+    });
+  }
+
+  confirmDeleteUser(email) {
+    this.setState({
+      modal: {
+        template: 'deleteUser',
+        visible: true,
+        loading: true,
+      }
+    });
+
+    this.props.dispatch(userDelete(email))
     .then(() => {
       this.closeModal();
     })
@@ -94,6 +124,7 @@ class Users extends React.Component {
                       <tr>
                         <th>Email</th>
                         <th>Expires</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -102,6 +133,7 @@ class Users extends React.Component {
                             return <UserRow user={user}
                                                   key={user.email}
                                                   removeExpiration={this.removeExpiration.bind(this, user.email)}
+                                                  deleteUser={this.deleteUser.bind(this, user.email)}
                                    />;
                           }
                         )
@@ -112,43 +144,86 @@ class Users extends React.Component {
               }
             })()}
 
+            {
+              (() => {
+                switch(this.state.modal.template) {
+                  case 'unexpireUser':
+                    return <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
+                      <BootstrapModal.Header closeButton>
+                        <BootstrapModal.Title>Remove Expiration Date from {this.state.selectedUser}</BootstrapModal.Title>
+                      </BootstrapModal.Header>
 
-            <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
-              <BootstrapModal.Header closeButton>
-                <BootstrapModal.Title>Remove Expiration Date from {this.state.selectedUser}</BootstrapModal.Title>
-              </BootstrapModal.Header>
+                      <BootstrapModal.Body>
+                        <p>Are you sure you want to remove the expiration date from {this.state.selectedUser}?</p>
+                        <p>This account will never expire.</p>
+                        <p>If the account was expired, the user will be able to log in again.</p>
+                      </BootstrapModal.Body>
+                      <BootstrapModal.Footer>
+                        <Button
+                          type='submit'
+                          bsStyle='primary'
+                          loading={this.state.modal.loading}
+                          onClick={this.confirmRemoveExpiration.bind(this, this.state.selectedUser)}>
+                          {
+                            this.state.modal.loading ?
+                            'Removing Expiration'
+                            :
+                            'Remove Expiration'
+                          }
+                        </Button>
 
-              <BootstrapModal.Body>
-                <p>Are you sure you want to remove the epxiration date from {this.state.selectedUser}?</p>
-                <p>This account will never expire.</p>
-                <p>If the account was epxired, the user will be able to log in again.</p>
-              </BootstrapModal.Body>
-              <BootstrapModal.Footer>
-                <Button
-                  type='submit'
-                  bsStyle='primary'
-                  loading={this.state.modal.loading}
-                  onClick={this.confirmRemoveExpiration.bind(this, this.state.selectedUser)}>
-                  {
-                    this.state.modal.loading ?
-                    'Removing Expiration'
-                    :
-                    'Remove Expiration'
-                  }
-                </Button>
+                        {
+                          this.state.modal.loading ?
+                          null
+                          :
+                          <Button
+                            bsStyle='link'
+                            onClick={this.closeModal.bind(this)}>
+                            Cancel
+                          </Button>
+                        }
+                      </BootstrapModal.Footer>
+                    </BootstrapModal>;
 
-                {
-                  this.state.modal.loading ?
-                  null
-                  :
-                  <Button
-                    bsStyle='link'
-                    onClick={this.closeModal.bind(this)}>
-                    Cancel
-                  </Button>
+                  case 'deleteUser':
+                    return <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
+                      <BootstrapModal.Header closeButton>
+                        <BootstrapModal.Title>Delete {this.state.selectedUser}</BootstrapModal.Title>
+                      </BootstrapModal.Header>
+
+                      <BootstrapModal.Body>
+                        <p>Are you sure you want to delete {this.state.selectedUser}?</p>
+                        <p>There is no undo.</p>
+                      </BootstrapModal.Body>
+                      <BootstrapModal.Footer>
+                        <Button
+                          type='submit'
+                          bsStyle='danger'
+                          loading={this.state.modal.loading}
+                          onClick={this.confirmDeleteUser.bind(this, this.state.selectedUser)}>
+                          {
+                            this.state.modal.loading ?
+                            'Deleting User'
+                            :
+                            'Delete User'
+                          }
+                        </Button>
+
+                        {
+                          this.state.modal.loading ?
+                          null
+                          :
+                          <Button
+                            bsStyle='link'
+                            onClick={this.closeModal.bind(this)}>
+                            Cancel
+                          </Button>
+                        }
+                      </BootstrapModal.Footer>
+                    </BootstrapModal>;
                 }
-              </BootstrapModal.Footer>
-            </BootstrapModal>
+              })()
+            }
           </div>
         </DocumentTitle>
       </Breadcrumb>
