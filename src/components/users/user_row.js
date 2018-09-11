@@ -32,6 +32,11 @@ class UserRow extends React.Component {
             </div>
           }
         </td>
+        <td>
+          <i className='fa fa-trash clickable'
+               title='Delete User'
+               onClick={this.props.deleteUser} />
+        </td>
       </tr>
     );
   }
@@ -40,6 +45,7 @@ class UserRow extends React.Component {
 UserRow.propTypes = {
   onClick: PropTypes.func,
   removeExpiration: PropTypes.func,
+  deleteUser: PropTypes.func,
   user: PropTypes.object
 };
 

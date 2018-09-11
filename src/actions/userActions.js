@@ -286,7 +286,7 @@ export function usersLoad() {
 }
 
 
-// removeExpiration
+// userRemoveExpiration
 // ----------------
 // Removes the expiration date from a given user.
 export function userRemoveExpiration(email) {
@@ -315,6 +315,39 @@ export function userRemoveExpiration(email) {
 
       dispatch({
         type: types.USERS_REMOVE_EXPIRATION_ERROR
+      });
+    });
+  };
+}
+
+// userDelete
+// ----------------
+// Deletes the given user.
+export function userDelete(email) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    var usersApi = new GiantSwarmV4.UsersApi();
+
+    dispatch({type: types.USERS_DELETE});
+
+    return usersApi.deleteUser(scheme + ' ' + token, email)
+    .then(() => {
+      dispatch({
+        type: types.USERS_DELETE_SUCCESS,
+        email,
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      dispatch(flashAdd({
+        message: <div><strong>Something went wrong while trying to delete this user</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+        class: 'danger'
+      }));
+
+      dispatch({
+        type: types.USERS_DELETE_ERROR
       });
     });
   };
