@@ -6,7 +6,7 @@ export default class Auth {
     clientID: 'mgYdxCGCZ2eao0OJUGOFXurGIaQAACHs',
     redirectUri: location.protocol + '//' + window.location.host + '/oauth/callback',
     prompt:'none',
-    audience: 'giantswarm-api-'+window.config.installationName,
+    audience: window.config.apiEndpoint,
     responseType: 'id_token token',
     scope: 'openid email profile user_metadata https://giantswarm.io',
     connectionScopes: {

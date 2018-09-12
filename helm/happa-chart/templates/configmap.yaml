@@ -7,4 +7,3 @@ data:
   passage-endpoint: {{ .Values.Installation.V1.GiantSwarm.Passage.Address }}
   api-endpoint: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
   ingress-base-domain: {{ .Values.Installation.V1.Guest.Kubernetes.IngressController.BaseDomain }}
-  installation-name: {{ .Values.Installation.V1.Name }}

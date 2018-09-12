@@ -57,11 +57,6 @@ spec:
             configMapKeyRef:
               name: happa-configmap
               key: ingress-base-domain
-        - name: INSTALLATION_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: happa-configmap
-              key: installation-name
         - name: ENVIRONMENT
           value: kubernetes
         livenessProbe:
