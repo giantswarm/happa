@@ -93,6 +93,7 @@ class OrganizationDetail extends React.Component {
                         <thead>
                           <tr>
                             <th>Email</th>
+                            <th>Email Domain</th>
                             <th></th>
                           </tr>
                         </thead>
@@ -101,7 +102,8 @@ class OrganizationDetail extends React.Component {
                             _.sortBy(this.props.organization.members, 'email').map((member) => {
                               return (
                                 <tr key={member.email}>
-                                  <td>{member.email}</td>
+                                  <td>{ member.email }</td>
+                                  <td>{ member.email.split("@")[1] }</td>
                                   <td>
                                     <div className='contextual'>
                                       <i className='fa fa-times clickable'
