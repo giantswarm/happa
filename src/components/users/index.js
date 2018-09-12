@@ -123,6 +123,7 @@ class Users extends React.Component {
                     <thead>
                       <tr>
                         <th>Email</th>
+                        <th>Email Domain</th>
                         <th>Expires</th>
                         <th></th>
                       </tr>
