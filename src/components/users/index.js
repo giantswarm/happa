@@ -3,14 +3,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { usersLoad, userRemoveExpiration, userDelete } from '../../actions/userActions';
-import UserRow from './user_row';
-import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-breadcrumbs';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { push } from 'connected-react-router';
 import Button from '../button';
+import BootstrapTable from 'react-bootstrap-table-next';
+import moment from 'moment';
+import { relativeDate } from '../../lib/helpers.js';
 
 class Users extends React.Component {
  constructor(props) {
@@ -99,6 +100,35 @@ class Users extends React.Component {
     });
   }
 
+  // Provides the configuraiton for the clusters table
+  getTableColumnsConfig = () => {
+    return [{
+      dataField: 'email',
+      text: 'Email',
+      sort: true
+    }, {
+      dataField: 'emaildomain',
+      text: 'Email Domain',
+      sort: true
+    }, {
+      dataField: 'created',
+      text: 'Created',
+      sort: true,
+      formatter: relativeDate
+    }, {
+      dataField: 'expiry',
+      text: 'Expiry',
+      sort: true,
+      formatter: expiryCellFormatter.bind(this)
+    }, {
+      dataField: 'actionsDummy',
+      isDummyField: true,
+      text: '',
+      align: 'right',
+      formatter: actionsCellFormatter.bind(this)
+    }];
+  }
+
   render() {
     return (
       <Breadcrumb data={{title: 'USERS', pathname: '/users/'}}>
@@ -118,30 +148,10 @@ class Users extends React.Component {
                   <p>No users in the system yet.</p>
                   </div>;
               } else {
-                return <div>
-                  <table className={this.props.users.isFetching ? 'fetching' : ''}>
-                    <thead>
-                      <tr>
-                        <th>Email</th>
-                        <th>Email Domain</th>
-                        <th>Expires</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {
-                        _.map(_.sortBy(this.props.users.items, 'email'), (user) => {
-                            return <UserRow user={user}
-                                                  key={user.email}
-                                                  removeExpiration={this.removeExpiration.bind(this, user.email)}
-                                                  deleteUser={this.deleteUser.bind(this, user.email)}
-                                   />;
-                          }
-                        )
-                      }
-                    </tbody>
-                  </table>
-                </div>;
+                return <BootstrapTable keyField='email' data={ Object.values(this.props.users.items) }
+                          columns={ this.getTableColumnsConfig() } bordered={ false }
+                          defaultSorted={ tableDefaultSorting }
+                          defaultSortDirection='asc' />;
               }
             })()}
 
@@ -242,6 +252,41 @@ Users.propTypes = {
   users: PropTypes.object,
   installation_name: PropTypes.string,
 };
+
+const tableDefaultSorting = [{
+  dataField: 'email',
+  order: 'asc'
+}];
+
+const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
+
+function actionsCellFormatter(cell, row) {
+  return (
+    <Button bsStyle='default' type='button' onClick={this.deleteUser.bind(this, row.email)}>Delete</Button>
+  );
+}
+
+function expiryCellFormatter(cell, row) {
+
+  var expiryClass = '';
+  var expirySeconds = moment(cell).utc().diff(moment().utc()) / 1000;
+
+  if (expirySeconds < (60 * 60 * 24)) {
+    expiryClass = 'expiring';
+  }
+
+  if (cell === NEVER_EXPIRES) {
+    return ('');
+  } else {
+    return (
+      <span className={expiryClass}>{ relativeDate(cell) } &nbsp;
+          <i className='fa fa-times clickable'
+                title='Remove expiration'
+                onClick={this.removeExpiration.bind(this, row.email)} />
+      </span>
+    );
+  }
+}
 
 function mapStateToProps(state) {
   return {
