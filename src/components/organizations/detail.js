@@ -103,7 +103,7 @@ class OrganizationDetail extends React.Component {
                               return (
                                 <tr key={member.email}>
                                   <td>{ member.email }</td>
-                                  <td>{ member.email.split("@")[1] }</td>
+                                  <td>{ member.email.split('@')[1] }</td>
                                   <td>
                                     <div className='contextual'>
                                       <i className='fa fa-times clickable'
