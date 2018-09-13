@@ -19,6 +19,7 @@ class UserRow extends React.Component {
     return (
       <tr>
         <td onClick={this.props.onClick}>{this.props.user.email}</td>
+        <td>{ this.props.user.email.split("@")[1] }</td>
         <td className={expiryClass}>
           { this.props.user.expiry == NEVER_EXPIRES ?
             ''
