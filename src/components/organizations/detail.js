@@ -2,6 +2,10 @@
 
 import * as OrganizationActions from '../../actions/organizationActions';
 import Button from 'react-bootstrap/lib/Button';
+import { bindActionCreators } from 'redux';
+import { relativeDate } from '../../lib/helpers.js';
+import DocumentTitle from 'react-document-title';
+import _ from 'underscore';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import Credentials from './credentials.js';
 import DocumentTitle from 'react-document-title';
@@ -61,7 +65,7 @@ class OrganizationDetail extends React.Component {
       dataField: 'create_date',
       text: 'Created',
       sort: true,
-      formatter: formatDate
+      formatter: relativeDate
     }, {
       dataField: 'actionsDummy',
       isDummyField: true,
