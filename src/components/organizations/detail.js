@@ -6,7 +6,7 @@ import {Link}  from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as OrganizationActions from '../../actions/organizationActions';
 import { bindActionCreators } from 'redux';
-import { formatDate } from '../../lib/helpers.js';
+import { relativeDate } from '../../lib/helpers.js';
 import DocumentTitle from 'react-document-title';
 import _ from 'underscore';
 import ClusterIDLabel from '../shared/cluster_id_label';
@@ -51,7 +51,7 @@ class OrganizationDetail extends React.Component {
       dataField: 'create_date',
       text: 'Created',
       sort: true,
-      formatter: formatDate
+      formatter: relativeDate
     }, {
       dataField: 'actionsDummy',
       isDummyField: true,
