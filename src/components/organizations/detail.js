@@ -13,6 +13,7 @@ import ClusterIDLabel from '../shared/cluster_id_label';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
 import { Breadcrumb } from 'react-breadcrumbs';
+import BootstrapTable from 'react-bootstrap-table-next';
 
 class OrganizationDetail extends React.Component {
   componentDidMount() {
@@ -53,28 +54,10 @@ class OrganizationDetail extends React.Component {
                       this.props.clusters.length === 0 ?
                       <p>No clusters here yet, <Link to='/new-cluster'>create your first!</Link></p>
                       :
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Cluster ID</th>
-                            <th>Name</th>
-                            <th>Created</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            _.map(_.sortBy(this.props.clusters, (cluster) => cluster.name ), (cluster) => {
-                              return (
-                                <tr className="clickable" key={cluster.id} onClick={this.openClusterDetails.bind(this, cluster.id)}>
-                                  <td><ClusterIDLabel clusterID={cluster.id} copyEnabled/></td>
-                                  <td>{cluster.name}</td>
-                                  <td>{formatDate(cluster.create_date)}</td>
-                                </tr>
-                              );
-                            })
-                          }
-                        </tbody>
-                      </table>
+                      <BootstrapTable keyField='id' data={ this.props.clusters }
+                        columns={ this.props.columns } bordered={ false }
+                        defaultSorted={ clusterTableDefaultSorting }
+                        defaultSortDirection='asc' />
                     }
 
                   </div>
@@ -140,14 +123,43 @@ OrganizationDetail.contextTypes = {
 OrganizationDetail.propTypes = {
   actions: PropTypes.object,
   clusters: PropTypes.array,
+  columns: PropTypes.array,
   organization: PropTypes.object,
   dispatch: PropTypes.func,
   match: PropTypes.object
 };
 
+const clusterTableDefaultSorting = [{
+  dataField: 'id',
+  order: 'asc'
+}];
+
+function clusterIDCellFormatter(cell) {
+  return (
+    <ClusterIDLabel clusterID={cell} copyEnabled/>
+  );
+}
+
 function mapStateToProps(state, ownProps) {
   var allClusters = state.entities.clusters.items;
   var clusters = [];
+  var columns = [{
+    dataField: 'id',
+    text: 'Cluster ID',
+    sort: true,
+    formatter: clusterIDCellFormatter
+  }, {
+    dataField: 'name',
+    text: 'Name',
+    sort: true
+  }, {
+    dataField: 'create_date',
+    text: 'Created',
+    sort: true,
+    formatter: function(cell) {
+      return formatDate(cell);
+    }
+  }];
 
   clusters = _.filter(allClusters, (cluster) => {
     return cluster.owner === ownProps.match.params.orgId;
@@ -155,7 +167,8 @@ function mapStateToProps(state, ownProps) {
 
   return {
     organization: state.entities.organizations.items[ownProps.match.params.orgId],
-    clusters: clusters
+    clusters: clusters,
+    columns: columns
   };
 }
 
