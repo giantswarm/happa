@@ -15,7 +15,7 @@
   "mainOutput": "main",
   "dependencies": {
     "auth0-js": "9.7.2",
-    "bootstrap": "3.3.7",
+    "bootstrap": "4.0.0",
     "color-hash": "latest",
     "connected-react-router": "4.3.0",
     "copy-to-clipboard": "~3.0.8",
