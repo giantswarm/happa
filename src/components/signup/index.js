@@ -12,6 +12,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import { validatePassword } from '../../lib/password_validation';
 import { push } from 'connected-react-router';
+import Button from '../button';
 
 // TODO: Figure out a way to make the test suite know about our standard
 // 'window.config' object. Or change the way these config params are passed
@@ -25,8 +26,8 @@ export class SignUp extends React.Component {
     super(props);
 
     this.state = {
-      statusMessage: 'verify_started',
-      checkInviteStatus: 'started',
+      statusMessage: 'verify_completed',
+      checkInviteStatus: 'completed',
       email: undefined,
       passwordField: {value: '', valid: false},
       passwordConfirmationField: {value: '', valid: false},
@@ -103,19 +104,19 @@ export class SignUp extends React.Component {
 
     this.setState({
       currentStep: nextStep
+    }, () => {
+      if (nextStep === 1) {
+        this.password.focus();
+      } else if (nextStep === 2) {
+        this.passwordConfirmation.focus();
+      } else if (nextStep === 3) {
+        this.setState({
+          statusMessage: 'tos_intro'
+        });
+
+        this.passwordConfirmation.blur();
+      }
     });
-
-    if (nextStep === 1) {
-      this.password.focus();
-    } else if (nextStep === 2) {
-      this.passwordConfirmation.focus();
-    } else if (nextStep === 3) {
-      this.setState({
-        statusMessage: 'tos_intro'
-      });
-
-      this.passwordConfirmation.blur();
-    }
   }
 
   accountCreated() {
@@ -368,14 +369,16 @@ export class SignUp extends React.Component {
           </div>
 
           <StatusMessage status={this.state.statusMessage} />
-
-          <div className='signup--submitButton'>
-            {
-              this.state.buttonText[this.state.currentStep] !== '' ? <button className='primary' disabled={ (! this.state.advancable) || this.state.submitting }>{this.state.buttonText[this.state.currentStep]}</button> : null
+            { this.state.buttonText[this.state.currentStep] != '' ?
+              <Button type='submit'
+                    bsStyle='primary'
+                    bsSize='large'
+                    disabled={ (! this.state.advancable) || this.state.submitting }
+                    loading={this.state.submitting}
+                    onClick={this.logIn}>{this.state.buttonText[this.state.currentStep]}</Button>
+              :
+              ''
             }
-
-            { this.state.submitting ? <img className='loader' src='/images/loader_oval_light.svg' /> : null }
-          </div>
         </form>
 
 
