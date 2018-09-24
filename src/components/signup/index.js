@@ -26,8 +26,8 @@ export class SignUp extends React.Component {
     super(props);
 
     this.state = {
-      statusMessage: 'verify_completed',
-      checkInviteStatus: 'completed',
+      statusMessage: 'verify_started',
+      checkInviteStatus: 'started',
       email: undefined,
       passwordField: {value: '', valid: false},
       passwordConfirmationField: {value: '', valid: false},
