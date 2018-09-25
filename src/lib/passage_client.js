@@ -201,6 +201,28 @@ var Passage = function(config) {
       });
 
       return promise;
+    },
+
+    //
+    // getInvitations
+    // ----------
+    // Gets all the invitations on a given installation.
+    // Requires a valid admin JWT token.
+    //
+    getInvitations: function(authToken) {
+      var url = `${config.endpoint}/invites/`;
+
+      var promise = new Promise((resolve) => {
+        resolve(request.get(url)
+          .timeout(config.timeout_ms)
+          .set('ContentType', 'application/json')
+          .set('Authorization', 'Bearer ' + authToken));
+      })
+      .then(x => {
+        return(x.body);
+      });
+
+      return promise;
     }
   };
 };

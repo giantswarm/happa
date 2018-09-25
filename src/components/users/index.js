@@ -3,7 +3,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { usersLoad, userRemoveExpiration, userDelete } from '../../actions/userActions';
+import { invitationsLoad } from '../../actions/invitationActions';
 import UserRow from './user_row';
+import InvitationRow from './invitation_row';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
@@ -28,6 +30,7 @@ class Users extends React.Component {
   componentDidMount() {
     if (this.props.currentUser.isAdmin) {
       this.props.dispatch(usersLoad());
+      this.props.dispatch(invitationsLoad());
     } else {
       this.props.dispatch(push('/'));
     }
@@ -113,7 +116,7 @@ class Users extends React.Component {
             {(() => {
               if (!this.props.users || (this.props.users.isFetching && Object.keys(this.props.users.items).length === 0)) {
                 return <img className='loader' src='/images/loader_oval_light.svg' width='20px' height='20px' />;
-              } else if (Object.keys(this.props.users.items).length === 0) {
+              } else if (Object.keys(this.props.users.items).length === 0 && Object.keys(this.props.invitations.items).length === 0) {
                 return <div>
                   <p>No users in the system yet.</p>
                   </div>;
@@ -125,6 +128,7 @@ class Users extends React.Component {
                         <th>Email</th>
                         <th>Email Domain</th>
                         <th>Expires</th>
+                        <th>Status</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -135,6 +139,15 @@ class Users extends React.Component {
                                                   key={user.email}
                                                   removeExpiration={this.removeExpiration.bind(this, user.email)}
                                                   deleteUser={this.deleteUser.bind(this, user.email)}
+                                   />;
+                          }
+                        )
+                      }
+
+                      {
+                        _.map(_.sortBy(this.props.invitations.items, 'email'), (invitation) => {
+                            return <InvitationRow invitation={invitation}
+                                                  key={invitation.email}
                                    />;
                           }
                         )
@@ -240,6 +253,7 @@ Users.propTypes = {
   dispatch: PropTypes.func,
   currentUser: PropTypes.object,
   users: PropTypes.object,
+  invitations: PropTypes.object,
   installation_name: PropTypes.string,
 };
 
@@ -247,6 +261,7 @@ function mapStateToProps(state) {
   return {
     currentUser: state.app.loggedInUser,
     users: state.entities.users,
+    invitations: state.entities.invitations,
     installation_name: state.app.info.general.installation_name,
   };
 }
