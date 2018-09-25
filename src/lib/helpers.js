@@ -103,12 +103,12 @@ export function validateOrRaise(validatable, constraints) {
 
 export function formatDate(ISO8601DateString) {
   // http://momentjs.com/docs/#/displaying/
-  return moment(ISO8601DateString).utc().format('D MMM YYYY, HH:mm z');
+  return moment.utc(ISO8601DateString).format('D MMM YYYY, HH:mm z');
 }
 
 export function relativeDate(ISO8601DateString) {
   var formatedDate = formatDate(ISO8601DateString);
-  var relativeDate = moment(ISO8601DateString).utc().fromNow();
+  var relativeDate = moment(ISO8601DateString).fromNow();
 
   return <OverlayTrigger placement="top" overlay={
     <Tooltip id="tooltip">{formatedDate}</Tooltip>
