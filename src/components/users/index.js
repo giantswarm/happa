@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { usersLoad, userRemoveExpiration, userDelete } from '../../actions/userActions';
-import { invitationsLoad } from '../../actions/invitationActions';
+import { invitationsLoad, invitationCreate } from '../../actions/invitationActions';
 import UserRow from './user_row';
 import InvitationRow from './invitation_row';
 import _ from 'underscore';
@@ -93,6 +93,35 @@ class Users extends React.Component {
     });
   }
 
+  inviteUser() {
+    this.setState({
+      modal: {
+        template: 'inviteUser',
+        visible: true,
+        loading: false
+      }
+    });
+  }
+
+
+  confirmInviteUser() {
+    this.setState({
+      modal: {
+        template: 'inviteUser',
+        visible: true,
+        loading: true
+      }
+    });
+
+    this.props.dispatch(invitationCreate())
+    .then(() => {
+      this.closeModal();
+    })
+    .catch(() => {
+      this.closeModal();
+    });
+  }
+
   closeModal() {
     this.setState({
       modal: {
@@ -107,7 +136,18 @@ class Users extends React.Component {
       <Breadcrumb data={{title: 'USERS', pathname: '/users/'}}>
         <DocumentTitle title='Users | Giant Swarm'>
           <div>
-            <h1>Users</h1>
+            <div className='row'>
+              <div className='col-7'>
+                <h1>
+                  Users
+                </h1>
+              </div>
+              <div className='col-5'>
+                <div className='pull-right btn-group'>
+                  <Button onClick={this.inviteUser.bind(this)}>INVITE USER</Button>
+                </div>
+              </div>
+            </div>
             <p>This is the list of user accounts on <code>{this.props.installation_name ? this.props.installation_name : 'unknown installation'}</code></p>
             <br/>
             <h5>What about SSO users?</h5>
@@ -235,6 +275,43 @@ class Users extends React.Component {
                         }
                       </BootstrapModal.Footer>
                     </BootstrapModal>;
+
+                  case 'inviteUser':
+                    return <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
+                      <BootstrapModal.Header closeButton>
+                        <BootstrapModal.Title>Invite a New User</BootstrapModal.Title>
+                      </BootstrapModal.Header>
+
+                      <BootstrapModal.Body>
+
+                      </BootstrapModal.Body>
+                      <BootstrapModal.Footer>
+                        <Button
+                          type='submit'
+                          bsStyle='primary'
+                          loading={this.state.modal.loading}
+                          onClick={this.confirmInviteUser.bind(this)}>
+                          {
+                            this.state.modal.loading ?
+                            'Inviting User'
+                            :
+                            'Invite User'
+                          }
+                        </Button>
+
+                        {
+                          this.state.modal.loading ?
+                          null
+                          :
+                          <Button
+                            bsStyle='link'
+                            onClick={this.closeModal.bind(this)}>
+                            Cancel
+                          </Button>
+                        }
+                      </BootstrapModal.Footer>
+                    </BootstrapModal>;
+
                 }
               })()
             }
