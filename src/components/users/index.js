@@ -3,6 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { usersLoad, userRemoveExpiration, userDelete } from '../../actions/userActions';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { invitationsLoad, invitationCreate } from '../../actions/invitationActions';
 import UserRow from './user_row';
 import InvitationRow from './invitation_row';
@@ -23,6 +24,11 @@ class Users extends React.Component {
       modal: {
         visible: false,
         loading: false,
+      },
+      invitationForm: {
+        email: '',
+        organization: props.organizations,
+        sendEmail: true
       }
     };
   }
@@ -99,6 +105,11 @@ class Users extends React.Component {
         template: 'inviteUser',
         visible: true,
         loading: false
+      },
+      invitationForm: {
+        email: '',
+        organization: _.map(this.props.organizations.items, (x) => x.id)[0],
+        sendEmail: true
       }
     });
   }
@@ -113,12 +124,42 @@ class Users extends React.Component {
       }
     });
 
-    this.props.dispatch(invitationCreate())
+    this.props.dispatch(invitationCreate(this.state.invitationForm))
     .then(() => {
       this.closeModal();
     })
     .catch(() => {
       this.closeModal();
+    });
+  }
+
+  handleEmailChange(e) {
+    var invitationForm = Object.assign({}, this.state.invitationForm);
+
+    invitationForm.email = e.target.value;
+
+    this.setState({
+      invitationForm: invitationForm
+    });
+  }
+
+  handleSendEmailChange(e) {
+    var invitationForm = Object.assign({}, this.state.invitationForm);
+    var checked = e.target.checked;
+    invitationForm.sendEmail = checked;
+
+    this.setState({
+      invitationForm: invitationForm
+    });
+  }
+
+  handleOrganizationChange(orgId) {
+    var invitationForm = Object.assign({}, this.state.invitationForm);
+
+    invitationForm.organization = orgId;
+
+    this.setState({
+      invitationForm: invitationForm
     });
   }
 
@@ -283,7 +324,40 @@ class Users extends React.Component {
                       </BootstrapModal.Header>
 
                       <BootstrapModal.Body>
+                        <form>
+                        <p>Creating an invitation is the way to get new people onto this installation.</p>
+                        <p>You can chose whether or not to send the invitee an email, and which organization the invitee should become a member of once they accept their invitation.</p>
+                        <p>Invitations are valid for 48 hours, after which you&apos;ll have to re-invite the person.</p>
 
+                        <div className='textfield'>
+                          <label>Email:</label>
+                          <input autoFocus type='text' onChange={this.handleEmailChange.bind(this)} value={this.state.invitationForm.email} />
+                        </div>
+
+                        <div className='textfield'>
+                          <label>Organization:</label>
+                          <DropdownButton id="organizationDropdown" title={this.state.invitationForm.organization}>
+                            {
+                              _.map(_.sortBy(this.props.organizations.items, 'id'), (organization) =>
+                                <MenuItem key={organization.id} onClick={this.handleOrganizationChange.bind(this, organization.id)}>
+                                  {organization.id}
+                                </MenuItem>
+                              )
+                            }
+                          </DropdownButton>
+                        </div>
+
+                        <div className='textfield'>
+                          <label>Send Email:</label>
+                          <div className='checkbox'>
+                            <label htmlFor='sendEmail'>
+                              <input type='checkbox' onChange={this.handleSendEmailChange.bind(this)} id='sendEmail' checked={this.state.invitationForm.sendEmail} />
+                              Send the invitee an e-mail with the accept invitation link.
+                            </label>
+                          </div>
+                        </div>
+
+                        </form>
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
@@ -330,6 +404,7 @@ Users.propTypes = {
   dispatch: PropTypes.func,
   currentUser: PropTypes.object,
   users: PropTypes.object,
+  organizations: PropTypes.object,
   invitations: PropTypes.object,
   installation_name: PropTypes.string,
 };
@@ -339,6 +414,7 @@ function mapStateToProps(state) {
     currentUser: state.app.loggedInUser,
     users: state.entities.users,
     invitations: state.entities.invitations,
+    organizations: state.entities.organizations,
     installation_name: state.app.info.general.installation_name,
   };
 }

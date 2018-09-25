@@ -51,3 +51,46 @@ export function invitationsLoad() {
     });
   };
 }
+
+// invitationCreate
+// -----------------
+// Create a invitation
+// POST /invite/ to Passage.
+
+export function invitationCreate(invitation) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+
+    var passage = new Passage({endpoint: window.config.passageEndpoint});
+
+    dispatch({type: types.INVITATION_CREATE});
+
+    return passage.createInvitation(token, invitation)
+    .then(result => {
+      dispatch({
+        type: types.INVITATION_CREATE_SUCCESS
+      });
+
+      dispatch(flashAdd({
+        message: 'Successfully invited ' + result.email,
+        class: 'success',
+        ttl: 3000
+      }));
+
+      dispatch(invitationsLoad());
+
+      return result;
+    })
+    .catch(error => {
+      console.error(error);
+      dispatch(flashAdd({
+        message: <div><strong>Something went wrong while trying to create your invitation.</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+        class: 'danger'
+      }));
+
+      dispatch({
+        type: types.INVITATION_CREATE_ERROR
+      });
+    });
+  };
+}
