@@ -108,7 +108,6 @@ class Users extends React.Component {
         <DocumentTitle title='Users | Giant Swarm'>
           <div>
             <h1>Users</h1>
-
             <p>This is the list of user accounts on <code>{this.props.installation_name ? this.props.installation_name : 'unknown installation'}</code></p>
             <br/>
             <h5>What about SSO users?</h5>

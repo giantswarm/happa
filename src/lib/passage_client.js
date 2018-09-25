@@ -213,7 +213,6 @@ var Passage = function(config) {
       var url = `${config.endpoint}/invites/`;
 
       var promise = new Promise((resolve) => {
-
         resolve(request.get(url)
           .timeout(config.timeout_ms)
           .set('ContentType', 'application/json')
