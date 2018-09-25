@@ -34,6 +34,14 @@ class UserRow extends React.Component {
           }
         </td>
         <td>
+          <small>
+          {
+            expirySeconds < 0 ?
+            "EXPIRED" : "ACTIVE"
+          }
+          </small>
+        </td>
+        <td>
           <i className='fa fa-trash clickable'
                title='Delete User'
                onClick={this.props.deleteUser} />
