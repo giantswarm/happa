@@ -39,15 +39,17 @@ export function invitationsLoad() {
       });
     })
     .catch(error => {
-      console.error(error);
       dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to load invitations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+        message: <div><strong>Something went wrong while trying to load invitations</strong><br/>{error.body ? error.body.message : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
         class: 'danger'
       }));
 
       dispatch({
         type: types.INVITATIONS_LOAD_ERROR
       });
+
+      console.error(error);
+      throw(error);
     });
   };
 }
@@ -82,15 +84,17 @@ export function invitationCreate(invitation) {
       return result;
     })
     .catch(error => {
-      console.error(error);
       dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to create your invitation.</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+        message: <div><strong>Something went wrong while trying to create your invitation.</strong><br/>{error.body ? error.body.message : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
         class: 'danger'
       }));
 
       dispatch({
         type: types.INVITATION_CREATE_ERROR
       });
+
+      console.error(error);
+      throw(error);
     });
   };
 }
