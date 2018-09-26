@@ -125,8 +125,16 @@ class Users extends React.Component {
     });
 
     this.props.dispatch(invitationCreate(this.state.invitationForm))
-    .then(() => {
-      this.closeModal();
+    .then((result) => {
+      this.setState({
+        modal: {
+          template: 'inviteUserDone',
+          visible: true,
+          loading: false
+        }
+      });
+
+      console.log(result);
     })
     .catch(() => {
       this.closeModal();
@@ -324,10 +332,9 @@ class Users extends React.Component {
                       </BootstrapModal.Header>
 
                       <BootstrapModal.Body>
-                        <form>
+                        <form onSubmit={(e) => {e.preventDefault();}}>
                         <p>Creating an invitation is the way to get new people onto this installation.</p>
-                        <p>You can chose whether or not to send the invitee an email, and which organization the invitee should become a member of once they accept their invitation.</p>
-                        <p>Invitations are valid for 48 hours, after which you&apos;ll have to re-invite the person.</p>
+                        <p>Invitations are valid for 48 hours.</p>
 
                         <div className='textfield'>
                           <label>Email:</label>
@@ -383,6 +390,24 @@ class Users extends React.Component {
                             Cancel
                           </Button>
                         }
+                      </BootstrapModal.Footer>
+                    </BootstrapModal>;
+
+                  case 'inviteUserDone':
+                    return <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
+                      <BootstrapModal.Header closeButton>
+                        <BootstrapModal.Title>User Invited</BootstrapModal.Title>
+                      </BootstrapModal.Header>
+
+                      <BootstrapModal.Body>
+
+                      </BootstrapModal.Body>
+                      <BootstrapModal.Footer>
+                        <Button
+                          bsStyle='link'
+                          onClick={this.closeModal.bind(this)}>
+                          Close
+                        </Button>
                       </BootstrapModal.Footer>
                     </BootstrapModal>;
 
