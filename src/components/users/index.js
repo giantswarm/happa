@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { usersLoad, userRemoveExpiration, userDelete } from '../../actions/userActions';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
 import { invitationsLoad, invitationCreate } from '../../actions/invitationActions';
 import UserRow from './user_row';
 import InvitationRow from './invitation_row';
@@ -14,6 +15,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { push } from 'connected-react-router';
 import Button from '../button';
+import copy from 'copy-to-clipboard';
 
 class Users extends React.Component {
  constructor(props) {
@@ -108,7 +110,7 @@ class Users extends React.Component {
       },
       invitationForm: {
         email: '',
-        organization: _.map(this.props.organizations.items, (x) => x.id)[0],
+        organization: this.props.selectedOrganization,
         sendEmail: true
       }
     });
@@ -129,12 +131,11 @@ class Users extends React.Component {
       this.setState({
         modal: {
           template: 'inviteUserDone',
+          invitationResult: result,
           visible: true,
           loading: false
         }
       });
-
-      console.log(result);
     })
     .catch(() => {
       this.closeModal();
@@ -178,6 +179,18 @@ class Users extends React.Component {
         loading: false
       }
     });
+  }
+
+  copyToClipboard(value) {
+    this.setState({
+      copied: true
+    });
+
+    setTimeout(() => {this.setState({
+      copied: false
+    });}, 1000);
+
+    copy(value);
   }
 
   render() {
@@ -396,10 +409,30 @@ class Users extends React.Component {
                   case 'inviteUserDone':
                     return <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
                       <BootstrapModal.Header closeButton>
-                        <BootstrapModal.Title>User Invited</BootstrapModal.Title>
+                        <BootstrapModal.Title>{this.state.invitationForm.email} has been Invited</BootstrapModal.Title>
                       </BootstrapModal.Header>
 
                       <BootstrapModal.Body>
+                        <p>Invitation has been created succesfully!</p>
+                        {
+                          this.state.invitationForm.sendEmail ?
+                          <p>An email has been sent to {this.state.invitationForm.email} with further instructions.</p>
+                          :
+                          <p>You&apos;ve chosen not to send them an email. Send them the link below to accept the invitation.</p>
+                        }
+                        <label>Invitation Accept Link:</label><br/>
+                        <code>{ this.state.modal.invitationResult.invitation_accept_link }</code>&nbsp;
+
+                        {
+                          this.state.copied ?
+                            <i className='fa fa-check' aria-hidden='true'></i>
+                          :
+                          <OverlayTrigger placement="top" overlay={
+                              <Tooltip id="tooltip">Copy to clipboard.</Tooltip>
+                            }>
+                            <i className='copy-link fa fa-clipboard'  onClick={this.copyToClipboard.bind(this, this.state.modal.invitationResult.invitation_accept_link)} aria-hidden='true'></i>
+                          </OverlayTrigger>
+                        }
 
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
@@ -430,6 +463,7 @@ Users.propTypes = {
   currentUser: PropTypes.object,
   users: PropTypes.object,
   organizations: PropTypes.object,
+  selectedOrganization: PropTypes.object,
   invitations: PropTypes.object,
   installation_name: PropTypes.string,
 };
@@ -440,6 +474,7 @@ function mapStateToProps(state) {
     users: state.entities.users,
     invitations: state.entities.invitations,
     organizations: state.entities.organizations,
+    selectedOrganization: state.app.selectedOrganization,
     installation_name: state.app.info.general.installation_name,
   };
 }
