@@ -356,7 +356,7 @@ class Users extends React.Component {
 
                         <div className='textfield'>
                           <label>Organization:</label>
-                          <DropdownButton id="organizationDropdown" title={this.state.invitationForm.organization}>
+                          <DropdownButton id="organizationDropdown" className="outline" title={this.state.invitationForm.organization}>
                             {
                               _.map(_.sortBy(this.props.organizations.items, 'id'), (organization) =>
                                 <MenuItem key={organization.id} onClick={this.handleOrganizationChange.bind(this, organization.id)}>

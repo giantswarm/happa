@@ -55,12 +55,12 @@ button:disabled:hover, button:disabled
   >button.outline.dropdown-toggle.btn-default
     background-color: $darkblue
     color: #ccc
-    border: 1px solid #fff
+    border: 1px solid lighten(#4b7a9e, 10%)
 
     &:focus, &:active, &:hover, &:active:focus, &:hover:focus, &:hover:active
       background-color: rgba(255, 255, 255, 0.1)
       color: #fff
-      border: 1px solid #fff
+      border: 1px solid lighten(#4b7a9e, 10%)
 
 .outline, button.outline, .btn-default
   background-color: transparent
@@ -105,8 +105,11 @@ button:disabled:hover, button:disabled
 
 .dropdown
   button.outline
+    border: 1px solid #4b7a9e
+    background-color: #32526a
+
     &:focus, &:active, &:hover, &:active:focus, &:hover:focus, &:hover:active
-      border: 1px solid #fff
+      border: 1px solid lighten(#4b7a9e, 10%)
 
 td
   button.btn
