@@ -36,8 +36,7 @@ class UserRow extends React.Component {
         <td>
           <small>
           {
-            expirySeconds < 0 ?
-            "EXPIRED" : "ACTIVE"
+            expirySeconds < 0 ? 'EXPIRED' : 'ACTIVE'
           }
           </small>
         </td>
