@@ -20,7 +20,8 @@ services:
       DEBUGGING: 1
       HAPPA_BASE_URI: http://localhost:7000
       GIANTSWARM_API_URI: http://testing_api_1:8000
-      GIANTSWARM_API_TOKEN: test
+      GIANTSWARM_USERD_URI: http://testing_userd_1:8000
+      GIANTSWARM_COMPANYD_URI: http://testing_companyd_1:8000
       #NUM_PROXIES: "0"
       RATELIMIT_GLOBAL: 1000 per day, 100 per hour, 30 per minute
       RATELIMIT_STORAGE_URL: redis://redis:6379

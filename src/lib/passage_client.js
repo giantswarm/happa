@@ -201,6 +201,72 @@ var Passage = function(config) {
       });
 
       return promise;
+    },
+
+    //
+    // getInvitations
+    // ----------
+    // Gets all the invitations on a given installation.
+    // Requires a valid admin JWT token.
+    //
+    getInvitations: function(authToken) {
+      var url = `${config.endpoint}/invites/`;
+
+      var promise = new Promise((resolve) => {
+        resolve(request.get(url)
+          .timeout(config.timeout_ms)
+          .set('ContentType', 'application/json')
+          .set('Authorization', 'Bearer ' + authToken));
+      })
+      .then(x => {
+        return(x.body);
+      });
+
+      return promise;
+    },
+
+    //
+    // createInvitation
+    // ----------
+    // Creates an invitation. Even though passage can take multiple organizations
+    // this function is only set up to recieve one.
+    // Requires a valid admin JWT token.
+    //
+    // invitation should be an object like:
+    // {
+    //   email: "invitee@example.com",
+    //   organization: "orgtojoin",
+    //   sendEmail: true
+    // }
+    //
+    createInvitation: function(authToken, invitation) {
+      var url = `${config.endpoint}/invite/`;
+
+      var constraints = {
+        email: { presence: true, email: true },
+        organization: { presence: {allowEmpty: false }},
+        sendEmail: { presence: true }
+      };
+
+      var payload = {
+        email: invitation.email,
+        organizations: [invitation.organization],
+        send_email: invitation.sendEmail
+      };
+
+      var promise = new Promise((resolve) => {
+        helpers.validateOrRaise(invitation, constraints);
+        resolve(request.post(url)
+          .timeout(config.timeout_ms)
+          .send(payload)
+          .set('ContentType', 'application/json')
+          .set('Authorization', 'Bearer ' + authToken));
+      })
+      .then(x => {
+        return(x.body);
+      });
+
+      return promise;
     }
   };
 };
