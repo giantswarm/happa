@@ -144,7 +144,7 @@ class ClusterDetail extends React.Component {
       return false;
     }
 
-    // cluster release_version must be >= 3 on AWS, >= 1 on Azure, >= 2.7.0
+    // cluster release_version must be >= 3 on AWS, >= 1 on Azure, >= 2.7.0 on KVM
     if (this.props.provider === 'aws') {
       if (cmp(this.props.cluster.release_version, '3.0.0') === -1) {
         return false;
