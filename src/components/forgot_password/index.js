@@ -48,8 +48,17 @@ class ForgotPassword extends React.Component {
           }));
           break;
         default:
+          var heading = 'Unable to reset password';
+          var message = 'Something went wrong. Our servers might be down, or perhaps you\'ve made too many requests in a row. Please try again in 5 minutes.';
+
+          if (error.message) {
+            if (error.message.includes('Access-Control-Allow-Origin')) {
+              message = 'Please ensure you have installed the required certificates to talk to the API server.';
+            }
+          }
+
           this.props.dispatch(flashAdd({
-            message: 'Something went wrong. Our servers might be down, or perhaps you\'ve made too many requests in a row. Please try again in 5 minutes.',
+            message: <div><b>{heading}</b><br/>{message}</div>,
             class: 'danger'
           }));
       }
