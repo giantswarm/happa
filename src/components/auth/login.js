@@ -94,22 +94,22 @@ class Login extends React.Component {
           authenticating: false
         });
 
+        var heading = 'Could not log in';
+        var message = 'Something went wrong. Please try again later or contact support: support@giantswarm.io';
+
         if (error.response && error.response.body && error.response.body.code === 'INVALID_CREDENTIALS') {
-          this.props.dispatch(flashAdd({
-            message: <span><b>Could not log in.</b><br/> Credentials appear to be incorrect.</span>,
-            class: 'danger'
-          }));
+          message = 'Credential appear to be incorrect.';
         } else if (error.response && error.response.body && error.response.body.code === 'TOO_MANY_REQUESTS') {
-          this.props.dispatch(flashAdd({
-            message: <span><b>Too many requests</b><br/>Please wait 5 minutes and try again.</span>,
-            class: 'danger'
-          }));
-        } else {
-          this.props.dispatch(flashAdd({
-            message: 'Could not log in. Something went wrong. Please try again later or contact support: support@giantswarm.io',
-            class: 'danger'
-          }));
+          heading = 'Too many requests';
+          message = 'Please wait 5 minutes and try again.';
+        } else if (error.message && error.message.includes('Access-Control-Allow-Origin')) {
+          message = 'Please ensure you have installed the required certificates to talk to the API server.';
         }
+
+        this.props.dispatch(flashAdd({
+          message: <div><b>{heading}</b><br/>{message}</div>,
+          class: 'danger'
+        }));
       });
     }
   }
