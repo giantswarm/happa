@@ -27,65 +27,134 @@ export default rootReducer;
 
 /*
 
-main_store.js
-
 {
   app: {
-    selectedOrganization: '',
-    selectedCluster: '',
-    isConnected: bool, // true if the app has connectivity to the internet
-    firstLoadComplete: false // true after the first load is completed
+    firstLoadComplete: true,
+    selectedOrganization: 'giantswarm',
+    selectedCluster: 'ib7pa'
+
     loggedInUser: {
-      email: '',
-      username: '',
-      authToken: '',
-      idToken: '',
-      isAdmin: false
-    }, // id of the user that is currently logged in
-    info: {"general":{"installation_name":"testbot","provider":"kvm"},"workers":{"count_per_cluster":{"max":0,"default":3}}}
-    }
+      email: 'oliver.ponder@gmail.com',
+      auth: {
+        scheme: 'Bearer',
+        token: '...'
+      },
+      isAdmin: true
+    },
+
+    info: {
+      general: {
+        installation_name: 'ginger',
+        provider: 'aws'
+      },
+      workers: {
+        count_per_cluster: {
+          max: 100,
+          'default': 3
+        },
+        instance_type: {
+          options: [ 'm3.large', ... ],
+          'default': 'm3.large'
+        }
+      }
+    },
   },
 
-  flashMessages: {
-
-  },
-
-  modal: {
-    visible: bool, // true if there should be a modal visible
-    templateValues: {} // an object that the modal template will use
-    template: '' // one of the valid modal templates
-  },
-
-  entities: { // the various entities that this app cares about
+  entities: {
     organizations: {
-      lastUpdated: 123456789,
-      isFetching: bool,
+      lastUpdated: 1538746613900,
+      isFetching: false,
       items: {
         giantswarm: {
-          name: "giantswarm",
-          users: ["oponder"],
-          clusters: ["cluster_id"]
+          id: 'giantswarm',
+          clusters: [],
+          members: [{email: 'pipo02mix@gmail.com'}]
+        },
+        oponder: {
+          id: 'oponder',
+          clusters: [],
+          members: []
         }
       }
     },
 
     clusters: {
-      lastUpdated: 123456789,
-      isFetching: bool,
+      lastUpdated: 0,
+      isFetching: false,
       items: {
-        cluster_id: {
-          name: "Main Cluster",
-          organization: ["oponder"]
+        ib7pa: {
+          id: 'ib7pa',
+          create_date: '2018-10-05T10:54:57Z',
+          name: 'pawel',
+          owner: 'giantswarm',
+          release_version: '5.3.0',
+          metrics: {...},
+          nodes: [],
+          keyPairs: [],
+          api_endpoint: 'https://api.ib7pa.k8s.ginger.eu-central-1.aws.gigantic.io',
+          workers: [
+            {
+              aws: { instance_type: 'm5.large' },
+              memory: { size_gb: 8 },
+              storage: { size_gb: 0 },
+              cpu: { cores: 2 },
+              labels: {}
+            },
+            {
+              aws: { instance_type: 'm5.large' },
+              memory: { size_gb: 8 },
+              storage: { size_gb: 0 },
+              cpu: { cores: 2 },
+              labels: {}
+            },
+            {
+              aws: { instance_type: 'm5.large' },
+              memory: { size_gb: 8 },
+              storage: { size_gb: 0 },
+              cpu: { cores: 2 },
+              labels: {}
+            }
+          ]
         }
       }
     },
 
     releases: {
-      activeRelease: "0.1.0",
+      items: {}
+    },
+
+    users: {
+      lastUpdated: 1538747088527,
+      isFetching: false,
       items: {
-        "0.1.0": {"active":true,"changelog":[{"component":"vault","description":"Vault version updated."}],"components":[{"name":"vault","version":"0.7.3"}],"timestamp":"2017-10-26T16:53:00Z","version":"0.1.0"}
+        'pipo02mix@gmail.com': {
+          email: 'pipo02mix@gmail.com',
+          created: '2018-09-28T14:09:28.024397212Z',
+          expiry: '0001-01-01T00:00:00Z'
+        }
       }
+    },
+
+    invitations: {
+      lastUpdated: 0,
+      isFetching: false,
+      items: {}
     }
+  },
+
+  modal: {
+    visible: false
+  },
+
+  flashMessages: [],
+
+  router: {
+    location: {
+      pathname: '/',
+      search: '',
+      hash: ''
+    },
+    action: 'POP'
   }
 }
 
