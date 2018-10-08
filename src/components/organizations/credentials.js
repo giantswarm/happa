@@ -13,6 +13,7 @@ class Credentials extends React.Component {
   render() {
     var provider = this.props.app.info.general.provider;
 
+    console.log('this.props.credentials:', this.props.credentials);
     if (this.props.credentials.isFetching) {
       return (
         <span>
