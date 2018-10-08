@@ -22,30 +22,22 @@ docker-build-prod:
 # Becomes available at localhost:7000
 develop:
 	@echo
-	@echo "-----------------------------------------------------------"
-	@echo "Starting Happa development environment using Docker Compose"
-	@echo "-----------------------------------------------------------"
+	@echo "-------------------------------------------------------------------"
+	@echo "Starting Happa development environment using docker-compose"
+	@echo "-------------------------------------------------------------------"
 	@echo
 	docker-compose build
 	docker-compose up -d
 
 	@echo
-	@echo "---------------------------"
-	@echo "Creating a development user"
-	@echo "---------------------------"
-	@echo
-	./dev_fixtures.sh
-
-	@echo
-	@echo "------------------------------------------------------------"
-	@echo "Happa development environment is running at localhost:7000."
-	@echo "------------------------------------------------------------"
+	@echo "-------------------------------------------------------------------"
+	@echo "Happa development environment is running at http://localhost:7000."
+	@echo "--------------------------------------------------------------------"
 	@echo
 
 	@echo
-	@echo "A development user has been created:"
-	@echo "Email: developer@example.com"
-	@echo "Password: correct_password"
+	@echo "You will also need the API test setup from https://github.com/giantswarm/api/tree/master/testing"
+	@echo "running. There is also a fixtures.sh script to get you started with users and organizations."
 	@echo
 
 	@echo "To tail the development logs use: make develop-logs"
