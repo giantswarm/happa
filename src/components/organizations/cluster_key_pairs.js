@@ -25,6 +25,7 @@ class ClusterKeyPairs extends React.Component {
       expireTTL: 720,
       description: this.defaultDescription(props.user.email),
       cn_prefix: '',
+      cn_prefix_error: null,
       certificate_organizations: '',
       modal: {
         visible: false,
@@ -51,8 +52,18 @@ class ClusterKeyPairs extends React.Component {
   }
 
   handleCNPrefixChange(e) {
+    var error = null;
+    if (e.target.value !== '') {
+      var regex = /^[a-z0-9][a-z0-9-]*[a-z0-9]$/g;
+      var found = e.target.value.match(regex);
+      if (found === null) {
+        error = 'Please use characters a-z, 0-9 or -';
+      }
+    }
+
     this.setState({
-      cn_prefix: e.target.value
+      cn_prefix: e.target.value,
+      cn_prefix_error: error,
     });
   }
 
@@ -297,7 +308,13 @@ class ClusterKeyPairs extends React.Component {
                           <div className="col-6">
                             <label>Common Name Prefix:</label>
                             <input autoFocus type='text' value={this.state.cn_prefix} onChange={this.handleCNPrefixChange.bind(this)}/>
-                            <div className="text-field-hint">{this.cnPrefix()}.user.api.clusterdomain</div>
+                            <div className="text-field-hint">{
+                              this.state.cn_prefix_error === null
+                              ?
+                              (this.cnPrefix() + '.user.api.clusterdomain')
+                              :
+                              <span className='error'><i className='fa fa-exclamation-triangle' /> { this.state.cn_prefix_error }</span>
+                            }</div>
                           </div>
                           <div className="col-6">
                             <label>Organizations:</label>
@@ -320,6 +337,7 @@ class ClusterKeyPairs extends React.Component {
                       <Button
                         type='submit'
                         bsStyle='primary'
+                        disabled={this.state.cn_prefix_error !== null}
                         loading={this.state.modal.loading}
                         onClick={this.confirmAddKeyPair.bind(this)}>
                         {
