@@ -57,7 +57,7 @@ class ClusterKeyPairs extends React.Component {
       var regex = /^[a-z0-9][a-z0-9-]*[a-z0-9]$/g;
       var found = e.target.value.match(regex);
       if (found === null) {
-        error = 'Please use characters a-z 0-9 and -';
+        error = 'Please use characters a-z, 0-9 or -';
       }
     }
 
