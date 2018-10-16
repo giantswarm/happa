@@ -54,7 +54,7 @@ class ClusterKeyPairs extends React.Component {
   handleCNPrefixChange(e) {
     var error = null;
     if (e.target.value !== '') {
-      var regex = /^[a-z0-9][a-z0-9-]*[a-z0-9]$/g;
+      var regex = /^[a-zA-Z0-9][a-zA-Z0-9@\.-]*[a-zA-Z0-9]$/g;
       var found = e.target.value.match(regex);
       if (found === null) {
         error = 'Please use characters a-z, 0-9 or -';
