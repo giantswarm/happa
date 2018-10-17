@@ -49,6 +49,7 @@ export function clusterLoadDetails(clusterId) {
     })
     .catch((error) => {
       dispatch(clusterLoadDetailsError(clusterId, error));
+      throw(error);
     });
   };
 }
