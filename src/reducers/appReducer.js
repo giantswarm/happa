@@ -62,10 +62,10 @@ export default function appReducer(state = {
 
     case types.LOGIN_SUCCESS:
       localStorage.setItem('user', JSON.stringify(action.userData));
-        var defaultClient = GiantSwarmV4.ApiClient.instance;
-        var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
-        defaultClientAuth.apiKey = action.userData.authToken;
-        defaultClientAuth.apiKeyPrefix = 'giantswarm';
+      var defaultClient = GiantSwarmV4.ApiClient.instance;
+      var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
+      defaultClientAuth.apiKey = action.userData.auth.token;
+      defaultClientAuth.apiKeyPrefix = action.userData.auth.scheme;
 
       return Object.assign({}, state, {
         loggedInUser: action.userData
