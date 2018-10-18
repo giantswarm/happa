@@ -48,7 +48,14 @@ export function clusterLoadDetails(clusterId) {
       return cluster;
     })
     .catch((error) => {
+      console.error(error);
       dispatch(clusterLoadDetailsError(clusterId, error));
+      dispatch(flashAdd({
+          message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
+          key: 'clusterLoadDetailFailure',
+          class: 'danger'
+        }));
+      throw(error);
     });
   };
 }
