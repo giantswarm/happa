@@ -29,9 +29,9 @@ export default rootReducer;
 
 {
   app: {
-    firstLoadComplete: true,
-    selectedOrganization: 'giantswarm',
-    selectedCluster: 'ib7pa'
+    firstLoadComplete: true,             // Becomes true after the first load is completed.
+    selectedOrganization: 'giantswarm',  // The currently selected organization.
+    selectedCluster: 'ib7pa'             // The currently selected cluster.
 
     loggedInUser: {
       email: 'oliver.ponder@gmail.com',
@@ -68,7 +68,7 @@ export default rootReducer;
         giantswarm: {
           id: 'giantswarm',
           clusters: [],
-          members: [{email: 'pipo02mix@gmail.com'}]
+          members: [{email: 'developer@example.com'}]
         },
         oponder: {
           id: 'oponder',
@@ -91,7 +91,7 @@ export default rootReducer;
           metrics: {...},
           nodes: [],
           keyPairs: [],
-          api_endpoint: 'https://api.ib7pa.k8s.ginger.eu-central-1.aws.gigantic.io',
+          api_endpoint: 'https://api.ib7pa.k8s.example.gigantic.io',
           workers: [
             {
               aws: { instance_type: 'm5.large' },
@@ -127,8 +127,8 @@ export default rootReducer;
       lastUpdated: 1538747088527,
       isFetching: false,
       items: {
-        'pipo02mix@gmail.com': {
-          email: 'pipo02mix@gmail.com',
+        'example@developer.com': {
+          email: 'example@developer.com',
           created: '2018-09-28T14:09:28.024397212Z',
           expiry: '0001-01-01T00:00:00Z'
         }
@@ -143,7 +143,9 @@ export default rootReducer;
   },
 
   modal: {
-    visible: false
+    visible: bool,     // true if there should be a modal visible
+    templateValues: {} // an object that the modal template will use
+    template: ''       // one of the valid modal templates
   },
 
   flashMessages: [],
