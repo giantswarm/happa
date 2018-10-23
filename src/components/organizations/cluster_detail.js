@@ -373,7 +373,11 @@ class ClusterDetail extends React.Component {
                   }
                 </div>
               :
-                undefined
+                <div className='app-loading'>
+                  <div className='app-loading-contents'>
+                    <img className='loader' src='/images/loader_oval_light.svg' />
+                  </div>
+                </div>
               }
             </DocumentTitle>
           </Breadcrumb>

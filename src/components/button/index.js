@@ -31,7 +31,7 @@ class Button extends React.Component {
         transitionEnterTimeout={200}
         transitionLeaveTimeout={200}>
         {
-          this.props.loading ? <img className='loader' src='/images/loader_oval_light.svg' /> : null
+          this.props.loading ? <img className={'loader ' + this.props.loadingPosition} src='/images/loader_oval_light.svg' /> : null
         }
       </ReactCSSTransitionGroup>
     </div>;
