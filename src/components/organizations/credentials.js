@@ -23,7 +23,7 @@ class Credentials extends React.Component {
       if (this.props.credentials.items.length === 0) {
 
         var gsctlInfo = <p>You can set credentials to use your own subscription using <a href='https://docs.giantswarm.io/reference/gsctl/update-org-set-credentials/' target='_blank' rel='noopener noreferrer'>our CLI</a></p>;
-        // TODO: show button for setting credentials
+
         if (provider === 'azure') {
           return (
             <div>
