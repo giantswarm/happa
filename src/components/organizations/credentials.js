@@ -16,8 +16,7 @@ class Credentials extends React.Component {
     if (this.props.credentials.isFetching) {
       return (
         <span>
-          <img className='loader' src='/images/loader_oval_light.svg' width='20px' height='20px' />
-          <span>Loading credentials</span>
+          <img className='loader' src='/images/loader_oval_light.svg' width='20px' height='20px' /> <span>Loading credentials</span>
         </span>
       );
     } else {
