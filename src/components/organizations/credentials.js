@@ -79,7 +79,6 @@ class Credentials extends React.Component {
         
         // Azure credential
         } else if (typeof this.props.credentials.items[0].azure !== 'undefined') {
-          console.log(this.props.credentials.items[0].azure);
           return (
             <div>
               {providerWarning}
