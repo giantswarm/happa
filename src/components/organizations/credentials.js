@@ -27,7 +27,7 @@ class Credentials extends React.Component {
         if (provider === 'azure') {
           return (
             <div>
-              <p>No credentials set. Clusters of this organization will be created in the default tenant cluster subscription configured for this installation.</p>
+              <p>No specific provider credentials set. Clusters of this organization will be created in the default tenant cluster subscription configured for this installation.</p>
               { gsctlInfo }
             </div>
           );
