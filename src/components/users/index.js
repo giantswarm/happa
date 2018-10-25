@@ -18,7 +18,7 @@ import Button from '../button';
 import copy from 'copy-to-clipboard';
 
 class Users extends React.Component {
- constructor(props) {
+  constructor(props) {
     super(props);
 
     this.state = {
