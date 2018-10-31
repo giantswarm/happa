@@ -6,8 +6,8 @@ import { usersLoad, userRemoveExpiration, userDelete } from '../../actions/userA
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
 import { invitationsLoad, invitationCreate } from '../../actions/invitationActions';
-import UserRow from './user_row';
-import InvitationRow from './invitation_row';
+// import UserRow from './user_row';
+// import InvitationRow from './invitation_row';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';

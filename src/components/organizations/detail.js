@@ -2,13 +2,10 @@
 
 import * as OrganizationActions from '../../actions/organizationActions';
 import Button from 'react-bootstrap/lib/Button';
-import { bindActionCreators } from 'redux';
 import { relativeDate } from '../../lib/helpers.js';
 import DocumentTitle from 'react-document-title';
-import _ from 'underscore';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import Credentials from './credentials.js';
-import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'underscore';
@@ -16,7 +13,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { Link }  from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { formatDate } from '../../lib/helpers.js';
 import { push } from 'connected-react-router';
 import BootstrapTable from 'react-bootstrap-table-next';
 
@@ -231,9 +227,7 @@ function mapStateToProps(state, ownProps) {
 
   return {
     organization: state.entities.organizations.items[ownProps.match.params.orgId],
-    clusters: clusters,
     app: state.app,
-    columns: columns
     clusters: clusters
   };
 }
