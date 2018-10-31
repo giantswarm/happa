@@ -78,18 +78,9 @@ class OrganizationDetail extends React.Component {
       text: 'Email',
       sort: true
     }, {
-      dataField: 'email',
+      dataField: 'emailDomain',
       text: 'Email Domain',
       sort: true,
-      formatter: function(cell){
-        return cell.split('@')[1];
-      },
-      sortFunc: (a, b, order) => {
-        if (order === 'asc') {
-          return b.split('@')[1] > a.split('@')[1];
-        }
-        return b.split('@')[1] < a.split('@')[1];
-      }
     }, {
       dataField: 'actionsDummy',
       isDummyField: true,
@@ -153,7 +144,7 @@ class OrganizationDetail extends React.Component {
                       this.props.organization.members.length === 0 ?
                       <p>This organization has no members</p>
                       :
-                      <BootstrapTable keyField='email' data={ this.props.organization.members }
+                      <BootstrapTable keyField='email' data={ this.props.membersForTable }
                         columns={ this.getMemberTableColumnsConfig() } bordered={ false }
                         defaultSorted={ memberTableDefaultSorting }
                         defaultSortDirection='asc' />
@@ -187,6 +178,7 @@ OrganizationDetail.propTypes = {
   dispatch: PropTypes.func,
   match: PropTypes.object,
   app: PropTypes.object,
+  membersForTable: PropTypes.array
 };
 
 const clusterTableDefaultSorting = [{
@@ -225,8 +217,13 @@ function mapStateToProps(state, ownProps) {
     return cluster.owner === ownProps.match.params.orgId;
   });
 
+  var membersForTable = _.map(state.entities.organizations.items[ownProps.match.params.orgId].members, (member) => {
+    return Object.assign({}, member, {emailDomain: member.email.split('@')[1]});
+  });
+
   return {
     organization: state.entities.organizations.items[ownProps.match.params.orgId],
+    membersForTable: membersForTable,
     app: state.app,
     clusters: clusters
   };
