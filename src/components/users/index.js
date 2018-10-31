@@ -217,6 +217,11 @@ class Users extends React.Component {
       sort: true,
       formatter: expiryCellFormatter.bind(this)
     }, {
+      dataField: 'status',
+      text: 'STATUS',
+      sort: true,
+      formatter: statusCellFormatter.bind(this)
+    }, {
       dataField: 'actionsDummy',
       isDummyField: true,
       text: '',
@@ -256,7 +261,7 @@ class Users extends React.Component {
                   </div>;
               } else {
 
-                return <BootstrapTable keyField='email' data={ Object.values(this.props.users.items) }
+                return <BootstrapTable keyField='email' data={ Object.values(this.props.invitationsAndUsers) }
                           columns={ this.getTableColumnsConfig() } bordered={ false }
                           defaultSorted={ tableDefaultSorting }
                           defaultSortDirection='asc' />;
@@ -466,6 +471,7 @@ Users.propTypes = {
   currentUser: PropTypes.object,
   users: PropTypes.object,
   organizations: PropTypes.object,
+  invitationsAndUsers: PropTypes.array,
   selectedOrganization: PropTypes.string,
   invitations: PropTypes.object,
   installation_name: PropTypes.string,
@@ -487,9 +493,8 @@ function actionsCellFormatter(cell, row) {
 function expiryCellFormatter(cell, row) {
 
   var expiryClass = '';
-  var expirySeconds = moment(cell).utc().diff(moment().utc()) / 1000;
 
-  if (expirySeconds < (60 * 60 * 24)) {
+  if (isExpiringSoon(cell)) {
     expiryClass = 'expiring';
   }
 
@@ -506,11 +511,83 @@ function expiryCellFormatter(cell, row) {
   }
 }
 
+function statusCellFormatter(cell, row) {
+  var status = cell;
+  var subText = row.invited_by ? 'Invited by ' + row.invited_by : undefined;
+
+  return <div>
+    <small>{status}</small>
+    <small>{subText}</small>
+  </div>;
+}
+
+function statusFor(user) {
+  if (user.invited_by) {
+    return 'PENDING';
+  }
+
+  if (isExpired(user.expiry)) {
+    return 'EXPIRED';
+  }
+
+  if (isExpiringSoon(user.expiry)) {
+    return 'EXPIRING SOON';
+  }
+
+  return 'ACTIVE';
+}
+
+function isExpiringSoon(timestamp) {
+    var expirySeconds = moment(timestamp).utc().diff(moment().utc()) / 1000;
+    if (expirySeconds < (60 * 60 * 24)) {
+      return true;
+    }
+
+    return false;
+}
+
+function isExpired(timestamp) {
+  var expirySeconds = moment(timestamp).utc().diff(moment().utc()) / 1000;
+
+  if (timestamp === NEVER_EXPIRES) {
+    return false;
+  } else if (expirySeconds < 0) {
+    return true;
+  }
+
+  return false;
+}
+
 function mapStateToProps(state) {
+  var users = _.map(state.entities.users.items, (user) => {
+    return {
+      email: user.email,
+      emaildomain: user.emaildomain,
+      created: user.created,
+      expiry: user.expiry,
+      status: statusFor(user)
+    };
+  });
+
+  var invitations = _.map(state.entities.invitations.items, (invitation) => {
+    return {
+      email: invitation.email,
+      emaildomain: invitation.emaildomain,
+      created: invitation.created,
+      expiry: invitation.expiry,
+      invited_by: invitation.invited_by,
+      status: statusFor(invitation),
+    };
+  });
+
+  var invitationsAndUsers = users.concat(invitations);
+
+
   return {
     currentUser: state.app.loggedInUser,
     users: state.entities.users,
     invitations: state.entities.invitations,
+    invitationsAndUsers: invitationsAndUsers,
     organizations: state.entities.organizations,
     selectedOrganization: state.app.selectedOrganization,
     installation_name: state.app.info.general.installation_name,
