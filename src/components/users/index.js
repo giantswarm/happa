@@ -466,7 +466,7 @@ Users.propTypes = {
   currentUser: PropTypes.object,
   users: PropTypes.object,
   organizations: PropTypes.object,
-  selectedOrganization: PropTypes.object,
+  selectedOrganization: PropTypes.string,
   invitations: PropTypes.object,
   installation_name: PropTypes.string,
 };
