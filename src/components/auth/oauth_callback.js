@@ -5,7 +5,6 @@ import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
-// import { flashClearAll } from '../../actions/flashMessageActions';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import Auth from '../../lib/auth0';
@@ -13,27 +12,25 @@ import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 
 class OauthCallback extends React.Component {
+  state = {
+    error: null
+  }
+
   constructor(props) {
     super(props);
 
-    this.state = {
-      error: null
-    };
-  }
-
-  componentWillMount() {
     const auth = new Auth();
 
-    if (/id_token|error/.test(this.props.location.hash)) {
+    if (/id_token|error/.test(props.location.hash)) {
       auth.handleAuthentication((err, authResult) => {
         if (err === null) {
           // Login user officially
-          this.props.actions.auth0Login(authResult)
+          props.actions.auth0Login(authResult)
           .then(() => {
-            this.props.dispatch(push('/'));
+            props.dispatch(push('/'));
           })
           .catch((err) => {
-            console.log(err);
+            console.error(err);
           });
         } else {
           this.setState({error: err});

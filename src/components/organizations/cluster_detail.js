@@ -21,35 +21,29 @@ import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-breadcrumbs';
 
 class ClusterDetail extends React.Component {
+  state = {
+    loading: true
+  }
+  
   constructor (props){
     super(props);
 
-    this.state = {
-      loading: true
-    };
-  }
-
-  componentWillMount() {
-    this.setState({
-      loading: true
-    });
-
-    if (this.props.cluster === undefined) {
-      this.props.dispatch(push('/organizations/'+this.props.organizationId));
+    if (props.cluster === undefined) {
+      props.dispatch(push('/organizations/'+props.organizationId));
       this.setState({
         notfound: true
       });
 
-      this.props.dispatch(flashAdd({
-        message: <div><b>Cluster &quot;{this.props.clusterId}&quot; not found.</b><br/>Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.</div>,
+      props.dispatch(flashAdd({
+        message: <div><b>Cluster &quot;{props.clusterId}&quot; not found.</b><br/>Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.</div>,
         class: 'info',
         ttl: 6000
       }));
 
     } else {
-      this.props.releaseActions.loadReleases()
+      props.releaseActions.loadReleases()
       .then(() => {
-        return this.props.clusterActions.clusterLoadDetails(this.props.cluster.id);
+        return props.clusterActions.clusterLoadDetails(props.cluster.id);
       })
       .then(() => {
         this.setState({
