@@ -6,8 +6,8 @@ import { usersLoad, userRemoveExpiration, userDelete } from '../../actions/userA
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
 import { invitationsLoad, invitationCreate } from '../../actions/invitationActions';
-import UserRow from './user_row';
-import InvitationRow from './invitation_row';
+// import UserRow from './user_row';
+// import InvitationRow from './invitation_row';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
@@ -21,7 +21,7 @@ import { relativeDate } from '../../lib/helpers.js';
 import copy from 'copy-to-clipboard';
 
 class Users extends React.Component {
- constructor(props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -225,6 +225,40 @@ class Users extends React.Component {
     copy(value);
   }
 
+  // Provides the configuraiton for the clusters table
+  getTableColumnsConfig = () => {
+    return [{
+      dataField: 'email',
+      text: 'Email',
+      sort: true
+    }, {
+      dataField: 'emaildomain',
+      text: 'Email Domain',
+      sort: true
+    }, {
+      dataField: 'created',
+      text: 'Created',
+      sort: true,
+      formatter: relativeDate
+    }, {
+      dataField: 'expiry',
+      text: 'Expiry',
+      sort: true,
+      formatter: expiryCellFormatter.bind(this)
+    }, {
+      dataField: 'status',
+      text: 'STATUS',
+      sort: true,
+      formatter: statusCellFormatter.bind(this)
+    }, {
+      dataField: 'actionsDummy',
+      isDummyField: true,
+      text: '',
+      align: 'right',
+      formatter: actionsCellFormatter.bind(this)
+    }];
+  }
+
   render() {
     return (
       <Breadcrumb data={{title: 'USERS', pathname: '/users/'}}>
@@ -255,44 +289,11 @@ class Users extends React.Component {
                   <p>No users in the system yet.</p>
                   </div>;
               } else {
-                return <BootstrapTable keyField='email' data={ Object.values(this.props.users.items) }
+
+                return <BootstrapTable keyField='email' data={ Object.values(this.props.invitationsAndUsers) }
                           columns={ this.getTableColumnsConfig() } bordered={ false }
                           defaultSorted={ tableDefaultSorting }
                           defaultSortDirection='asc' />;
-                return <div>
-                  <table className={this.props.users.isFetching ? 'fetching' : ''}>
-                    <thead>
-                      <tr>
-                        <th>Email</th>
-                        <th>Email Domain</th>
-                        <th>Expires</th>
-                        <th>Status</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {
-                        _.map(_.sortBy(this.props.users.items, 'email'), (user) => {
-                            return <UserRow user={user}
-                                                  key={user.email}
-                                                  removeExpiration={this.removeExpiration.bind(this, user.email)}
-                                                  deleteUser={this.deleteUser.bind(this, user.email)}
-                                   />;
-                          }
-                        )
-                      }
-
-                      {
-                        _.map(_.sortBy(this.props.invitations.items, 'email'), (invitation) => {
-                            return <InvitationRow invitation={invitation}
-                                                  key={invitation.email}
-                                   />;
-                          }
-                        )
-                      }
-                    </tbody>
-                  </table>
-                </div>;
               }
             })()}
 
@@ -499,7 +500,8 @@ Users.propTypes = {
   currentUser: PropTypes.object,
   users: PropTypes.object,
   organizations: PropTypes.object,
-  selectedOrganization: PropTypes.object,
+  invitationsAndUsers: PropTypes.array,
+  selectedOrganization: PropTypes.string,
   invitations: PropTypes.object,
   installation_name: PropTypes.string,
 };
@@ -520,9 +522,8 @@ function actionsCellFormatter(cell, row) {
 function expiryCellFormatter(cell, row) {
 
   var expiryClass = '';
-  var expirySeconds = moment(cell).utc().diff(moment().utc()) / 1000;
 
-  if (expirySeconds < (60 * 60 * 24)) {
+  if (isExpiringSoon(cell)) {
     expiryClass = 'expiring';
   }
 
@@ -539,11 +540,83 @@ function expiryCellFormatter(cell, row) {
   }
 }
 
+function statusCellFormatter(cell, row) {
+  var status = cell;
+  var subText = row.invited_by ? 'Invited by ' + row.invited_by : undefined;
+
+  return <div>
+    <small>{status}</small>
+    <small>{subText}</small>
+  </div>;
+}
+
+function statusFor(user) {
+  if (user.invited_by) {
+    return 'PENDING';
+  }
+
+  if (isExpired(user.expiry)) {
+    return 'EXPIRED';
+  }
+
+  if (isExpiringSoon(user.expiry)) {
+    return 'EXPIRING SOON';
+  }
+
+  return 'ACTIVE';
+}
+
+function isExpiringSoon(timestamp) {
+    var expirySeconds = moment(timestamp).utc().diff(moment().utc()) / 1000;
+    if (expirySeconds < (60 * 60 * 24)) {
+      return true;
+    }
+
+    return false;
+}
+
+function isExpired(timestamp) {
+  var expirySeconds = moment(timestamp).utc().diff(moment().utc()) / 1000;
+
+  if (timestamp === NEVER_EXPIRES) {
+    return false;
+  } else if (expirySeconds < 0) {
+    return true;
+  }
+
+  return false;
+}
+
 function mapStateToProps(state) {
+  var users = _.map(state.entities.users.items, (user) => {
+    return {
+      email: user.email,
+      emaildomain: user.emaildomain,
+      created: user.created,
+      expiry: user.expiry,
+      status: statusFor(user)
+    };
+  });
+
+  var invitations = _.map(state.entities.invitations.items, (invitation) => {
+    return {
+      email: invitation.email,
+      emaildomain: invitation.emaildomain,
+      created: invitation.created,
+      expiry: invitation.expiry,
+      invited_by: invitation.invited_by,
+      status: statusFor(invitation),
+    };
+  });
+
+  var invitationsAndUsers = users.concat(invitations);
+
+
   return {
     currentUser: state.app.loggedInUser,
     users: state.entities.users,
     invitations: state.entities.invitations,
+    invitationsAndUsers: invitationsAndUsers,
     organizations: state.entities.organizations,
     selectedOrganization: state.app.selectedOrganization,
     installation_name: state.app.info.general.installation_name,

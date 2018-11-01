@@ -56,14 +56,7 @@ class ClusterDetail extends React.Component {
           loading: false
         });
       })
-      .catch((error) => {
-        console.error(error);
-
-        this.props.dispatch(flashAdd({
-          message: 'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
-          class: 'danger'
-        }));
-
+      .catch(() => {
         this.setState({
           loading: 'failed'
         });
@@ -380,7 +373,11 @@ class ClusterDetail extends React.Component {
                   }
                 </div>
               :
-                undefined
+                <div className='app-loading'>
+                  <div className='app-loading-contents'>
+                    <img className='loader' src='/images/loader_oval_light.svg' />
+                  </div>
+                </div>
               }
             </DocumentTitle>
           </Breadcrumb>

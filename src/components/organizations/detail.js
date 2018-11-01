@@ -1,18 +1,19 @@
 'use strict';
 
-import React from 'react';
-import Button from 'react-bootstrap/lib/Button';
-import {Link}  from 'react-router-dom';
-import { connect } from 'react-redux';
 import * as OrganizationActions from '../../actions/organizationActions';
-import { bindActionCreators } from 'redux';
+import Button from 'react-bootstrap/lib/Button';
 import { relativeDate } from '../../lib/helpers.js';
 import DocumentTitle from 'react-document-title';
-import _ from 'underscore';
 import ClusterIDLabel from '../shared/cluster_id_label';
+import Credentials from './credentials.js';
 import PropTypes from 'prop-types';
-import { push } from 'connected-react-router';
+import React from 'react';
+import _ from 'underscore';
 import { Breadcrumb } from 'react-breadcrumbs';
+import { Link }  from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import BootstrapTable from 'react-bootstrap-table-next';
 
 class OrganizationDetail extends React.Component {
@@ -34,6 +35,15 @@ class OrganizationDetail extends React.Component {
 
   openClusterDetails = (cluster) => {
     this.props.dispatch(push('/organizations/' + this.props.organization.id + '/clusters/' + cluster));
+  }
+
+  // determine whether the component should deal with BYOC credentials
+  // (not relevant on KVM)
+  canCredentials = (provider) => {
+    if (provider === 'aws' || provider === 'azure') {
+      return true;
+    }
+    return false;
   }
 
   // Provides the configuraiton for the clusters table
@@ -60,7 +70,6 @@ class OrganizationDetail extends React.Component {
       formatter: clusterActionsCellFormatter.bind(this)
     }];
   }
-  
   // Provides the configuraiton for the org members table
   getMemberTableColumnsConfig = () => {
     return [{
@@ -68,18 +77,9 @@ class OrganizationDetail extends React.Component {
       text: 'Email',
       sort: true
     }, {
-      dataField: 'email',
+      dataField: 'emailDomain',
       text: 'Email Domain',
       sort: true,
-      formatter: function(cell){
-        return cell.split('@')[1];
-      },
-      sortFunc: (a, b, order) => {
-        if (order === 'asc') {
-          return b.split('@')[1] > a.split('@')[1];
-        }
-        return b.split('@')[1] < a.split('@')[1];
-      }
     }, {
       dataField: 'actionsDummy',
       isDummyField: true,
@@ -89,9 +89,21 @@ class OrganizationDetail extends React.Component {
     }];
   }
 
-
-
   render() {
+    var credentialsSection;
+    if (this.canCredentials(this.props.app.info.general.provider)) {
+      credentialsSection = (
+        <div className='row section' id='credentials-section'>
+          <div className='col-3'>
+            <h3 className='table-label'>Provider credentials</h3>
+          </div>
+          <div className='col-9'>
+            <Credentials organizationName={this.props.match.params.orgId} />
+          </div>
+        </div>
+      );
+    }
+
     if (this.props.organization) {
       return (
         <Breadcrumb data={{title: this.props.organization.id.toUpperCase(), pathname: '/organizations/' + this.props.organization.id}}>
@@ -129,9 +141,9 @@ class OrganizationDetail extends React.Component {
                   <div className='col-9'>
                     {
                       this.props.organization.members.length === 0 ?
-                      <p>This organization has no members, which shouldn&apos;t really be possible</p>
+                      <p>This organization has no members</p>
                       :
-                      <BootstrapTable keyField='email' data={ this.props.organization.members }
+                      <BootstrapTable keyField='email' data={ this.props.membersForTable }
                         columns={ this.getMemberTableColumnsConfig() } bordered={ false }
                         defaultSorted={ memberTableDefaultSorting }
                         defaultSortDirection='asc' />
@@ -139,6 +151,9 @@ class OrganizationDetail extends React.Component {
                     <Button onClick={this.addMember} bsStyle='default'>Add Member</Button>
                   </div>
                 </div>
+
+                { credentialsSection }
+
               </div>
             </DocumentTitle>
           </Breadcrumb>
@@ -160,7 +175,9 @@ OrganizationDetail.propTypes = {
   clusters: PropTypes.array,
   organization: PropTypes.object,
   dispatch: PropTypes.func,
-  match: PropTypes.object
+  match: PropTypes.object,
+  app: PropTypes.object,
+  membersForTable: PropTypes.array
 };
 
 const clusterTableDefaultSorting = [{
@@ -199,8 +216,14 @@ function mapStateToProps(state, ownProps) {
     return cluster.owner === ownProps.match.params.orgId;
   });
 
+  var membersForTable = _.map(state.entities.organizations.items[ownProps.match.params.orgId].members, (member) => {
+    return Object.assign({}, member, {emailDomain: member.email.split('@')[1]});
+  });
+
   return {
     organization: state.entities.organizations.items[ownProps.match.params.orgId],
+    membersForTable: membersForTable,
+    app: state.app,
     clusters: clusters
   };
 }

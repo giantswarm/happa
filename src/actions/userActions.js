@@ -56,8 +56,8 @@ export function refreshUserInfo() {
       var userData = {
         email: data.email,
         auth: {
-          scheme: scheme,
-          token: token
+          scheme: getState().app.loggedInUser.auth.scheme,
+          token: getState().app.loggedInUser.auth.token,
         }
       };
 

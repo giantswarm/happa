@@ -11,6 +11,7 @@ import NewKVMWorker from './new_kvm_worker.js';
 import NewAWSWorker from './new_aws_worker.js';
 import NewAzureWorker from './new_azure_worker.js';
 import ReleaseSelector from './release_selector.js';
+import ProviderCredentials from './provider_credentials.js';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -324,6 +325,8 @@ class CreateCluster extends React.Component {
                 <ReleaseSelector releaseSelected={this.selectRelease} />
               </div>
             </div>
+
+            <ProviderCredentials organizationName={this.props.selectedOrganization} provider={this.props.provider} />
 
             <div className='row section new-cluster--launch'>
               <div className='col-12'>

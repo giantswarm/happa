@@ -108,7 +108,7 @@ export function formatDate(ISO8601DateString) {
 
 export function relativeDate(ISO8601DateString) {
   var formatedDate = formatDate(ISO8601DateString);
-  var relativeDate = moment(ISO8601DateString).fromNow();
+  var relativeDate = moment.utc(ISO8601DateString).fromNow();
 
   return <OverlayTrigger placement="top" overlay={
     <Tooltip id="tooltip">{formatedDate}</Tooltip>
