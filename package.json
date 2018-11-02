@@ -71,7 +71,7 @@
     "json-loader": "^0.5.7",
     "load-grunt-tasks": "4.0.0",
     "node-sass": "4.9.4",
-    "react-hot-loader": "4.3.11",
+    "react-hot-loader": "4.3.12",
     "redux-immutable-state-invariant": "2.1.0",
     "sass-loader": "7.1.0",
     "style-loader": "0.23.0",
