@@ -3,17 +3,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
 import { organizationCredentialsLoad } from '../../actions/organizationActions';
+
+import AWSAccountID from '../shared/aws_account_id';
 
 class ProviderCredentials extends React.Component {
   componentDidMount() {
     this.props.dispatch(organizationCredentialsLoad(this.props.organizationName));
-  }
-
-  awsAccountIDFromARN(arn) {
-    // get account ID from ARN like 'arn:aws:iam::<YOUR_ACCOUNT_ID>:role/GiantSwarmAdmin'
-    var parts = arn.split(':');
-    return parts[4];
   }
 
   render() {
@@ -23,7 +20,7 @@ class ProviderCredentials extends React.Component {
     if (!this.props.credentials.isFetching && this.props.credentials.items.length > 0) {
       if (this.props.provider === 'aws') {
         showInfo = true;
-        details = <p>This cluster will be created in AWS account <code>{this.awsAccountIDFromARN(this.props.credentials.items[0].aws.roles.awsoperator)}</code>, as set for this organization.</p>;
+        details = <p>This cluster will be created in AWS account <AWSAccountID roleARN={this.props.credentials.items[0].aws.roles.awsoperator} />, as set for this organization.</p>;
       } else if (this.props.provider === 'azure') {
         showInfo = true;
         details = <p>This cluster will be created in Azure subscription <code>{this.props.credentials.items[0].azure.credential.subscription_id}</code> and tenant <code>{this.props.credentials.items[0].azure.credential.tenant_id}</code>, as set for this organization.</p>;
