@@ -18,10 +18,10 @@ import history from '../stores/history';
 import { ConnectedRouter } from 'connected-react-router';
 
 
-require('normalize.css');
-require('bootstrap/dist/css/bootstrap.min.css');
-require('../styles/app.sass');
-require('react-datepicker/dist/react-datepicker.css');
+import 'normalize.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/app.sass';
+import 'react-datepicker/dist/react-datepicker.css';
 
 var appContainer = document.getElementById('app');
 
