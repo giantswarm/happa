@@ -6,6 +6,7 @@
 @import "transitions";
 
 @import "components/app_loading";
+@import "components/aws_account_id";
 @import "components/breadcrumbs";
 @import "components/button";
 @import "components/cluster_dashboard";
@@ -24,7 +25,6 @@
 @import "components/forgot_password";
 @import "components/form";
 @import "components/gadget";
-@import "components/image_analyze_progress";
 @import "components/login_form";
 @import "components/logout";
 @import "components/modal";

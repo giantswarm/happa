@@ -2,6 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import AWSAccountID from '../shared/aws_account_id';
 import { connect } from 'react-redux';
 import { organizationCredentialsLoad } from '../../actions/organizationActions';
 
@@ -52,9 +53,6 @@ class Credentials extends React.Component {
 
         // AWS credential
         if (typeof this.props.credentials.items[0].aws !== 'undefined') {
-          // get account ID from ARN like 'arn:aws:iam::<YOUR_ACCOUNT_ID>:role/GiantSwarmAdmin'
-          var parts = this.props.credentials.items[0].aws.roles.awsoperator.split(':');
-          var accountID = parts[4];
           return (
             <div>
               {providerWarning}
@@ -62,7 +60,7 @@ class Credentials extends React.Component {
                 <tbody>
                   <tr key='account_id'>
                     <td>AWS account ID</td>
-                    <td className='value code'>{ accountID } <a href={'https://' + accountID + '.signin.aws.amazon.com/console'} target='_blank' rel='noopener noreferrer'><i className='fa fa-external-link'></i></a></td>
+                    <td className='value code'><AWSAccountID roleARN={this.props.credentials.items[0].aws.roles.awsoperator}/></td>
                   </tr>
                   <tr key='awsoperator_role'>
                     <td>AWSOperator role ARN</td>
