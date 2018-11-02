@@ -46,17 +46,18 @@ class ClusterDetail extends React.Component {
 
     } else {
       props.releaseActions.loadReleases()
-      .then(() => {
-        return props.clusterActions.clusterLoadDetails(props.cluster.id);
-      })
-      .then(() => {
-        this.setState({
-          loading: false
-        });
-      })
-      .catch(() => {
-        this.setState({
-          loading: 'failed'
+        .then(() => {
+          return props.clusterActions.clusterLoadDetails(props.cluster.id);
+        })
+        .then(() => {
+          this.setState({
+            loading: false
+          });
+        })
+        .catch(() => {
+          this.setState({
+            loading: 'failed'
+          });
         });
       });
     }
