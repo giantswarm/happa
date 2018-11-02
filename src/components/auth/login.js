@@ -133,6 +133,7 @@ class Login extends React.Component {
                 <input value={this.state.email}
                        type='text'
                        id='email'
+                       autoComplete='email'
                        ref={(i) => {this.email = i;}}
                        onChange={this.updateEmail} autoFocus />
               </div>
@@ -142,6 +143,7 @@ class Login extends React.Component {
                 <input value={this.state.password}
                        type='password'
                        id='password'
+                       autoComplete='current-password'
                        ref={(i) => {this.password = i;}}
                        onChange={this.updatePassword} />
               </div>
