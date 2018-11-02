@@ -133,7 +133,7 @@ class Login extends React.Component {
                 <input value={this.state.email}
                        type='text'
                        id='email'
-                       autoComplete='email'
+                       autoComplete='username'
                        ref={(i) => {this.email = i;}}
                        onChange={this.updateEmail} autoFocus />
               </div>
