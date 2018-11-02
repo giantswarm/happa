@@ -20,7 +20,7 @@ import { ConnectedRouter } from 'connected-react-router';
 
 require('normalize.css');
 require('bootstrap/dist/css/bootstrap.min.css');
-require('../styles/app.scss');
+require('../styles/app.sass');
 require('react-datepicker/dist/react-datepicker.css');
 
 var appContainer = document.getElementById('app');
