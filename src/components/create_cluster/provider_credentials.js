@@ -17,8 +17,6 @@ class ProviderCredentials extends React.Component {
   }
 
   render() {
-    console.log('props', this.props);
-
     var showInfo = false;
     var details = <span>Provider credentials for {this.props.organizationName} {this.props.provider}</span>;
 
