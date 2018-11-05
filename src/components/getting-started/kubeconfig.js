@@ -15,6 +15,6 @@ class KubeConfig extends React.Component {
 KubeConfig.propTypes = {
   cluster: PropTypes.object,
   keyPair: PropTypes.object,
-}
+};
 
 export default KubeConfig;
