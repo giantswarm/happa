@@ -59,7 +59,7 @@ module.exports = {
         }
       },
       {
-        test: /\.scss/,
+        test: /\.sass$/,
         loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
       }, {
         test: /\.css$/,
