@@ -162,43 +162,34 @@ CredentialsDisplay.propTypes = {
 class CredentialsForm extends React.Component {
   state = {
     isValid: false,
-    azureSubscriptionID: '',
-    azureTenantID: '',
-    azureClientID: '',
-    azureClientSecret: '',
-    azureClientSecretAgain: '',
+    form: {
+      azureSubscriptionID: '',
+      azureTenantID: '',
+      azureClientID: '',
+      azureClientSecret: '',
+      azureClientSecretAgain: '',
+    }
   };
 
   validateForm = () => {
     console.log(this.state);
-    if (this.state.azureSubscriptionID != '' && this.state.azureTenantID != ''
-      && this.state.azureClientID != '' && this.state.azureClientSecret != '' 
-      && this.state.azureClientSecret === this.state.azureClientSecretAgain) {
+    if (this.state.form.azureSubscriptionID != '' && this.state.form.azureTenantID != ''
+      && this.state.form.azureClientID != '' && this.state.form.azureClientSecret != '' 
+      && this.state.form.azureClientSecret === this.state.form.azureClientSecretAgain) {
         this.setState({isValid: true});
       } else {
         this.setState({isValid: false});
       }
   }
 
-  handleChangeAzureSubscriptionID = (e) => {
-    this.setState({azureSubscriptionID: e.target.value});
-    this.validateForm();
-  }
-  handleChangeAzureTenantID = (e) => {
-    this.setState({azureTenantID: e.target.value});
-    this.validateForm();
-  }
-  handleChangeAzureClientID = (e) => {
-    this.setState({azureClientID: e.target.value});
-    this.validateForm();
-  }
-  handleChangeAzureClientSecret = (e) => {
-    this.setState({azureClientSecret: e.target.value});
-    this.validateForm();
-  }
-  handleChangeAzureClientSecretAgain = (e) => {
-    this.setState({azureClientSecretAgain: e.target.value});
-    this.validateForm();
+  handleChange = (e) => {
+    let fieldName = e.target.name;
+    let fleldVal = e.target.value;
+    this.setState({
+      form: {...this.state.form, [fieldName]: fleldVal}
+    }, () => {
+      this.validateForm();
+    });
   }
 
   handleSubmit = (e) => {
@@ -212,9 +203,10 @@ class CredentialsForm extends React.Component {
       <FormGroup controlId='azureSubscriptionID'>
         <ControlLabel>Azure Subscription ID</ControlLabel>
         <FormControl
+          name='azureSubscriptionID'
           type='text'
           value={this.state.azureSubscriptionID}
-          onChange={this.handleChangeAzureSubscriptionID}
+          onChange={this.handleChange}
         />
         <FormControl.Feedback />
       </FormGroup>
@@ -222,9 +214,10 @@ class CredentialsForm extends React.Component {
       <FormGroup controlId='azureTenantID'>
         <ControlLabel>Azure Tenant ID</ControlLabel>
         <FormControl
+          name='azureTenantID'
           type='text'
           value={this.state.azureTenantID}
-          onChange={this.handleChangeAzureTenantID}
+          onChange={this.handleChange}
         />
         <FormControl.Feedback />
       </FormGroup>
@@ -232,9 +225,10 @@ class CredentialsForm extends React.Component {
       <FormGroup controlId='azureClientID'>
         <ControlLabel>Azure Client ID</ControlLabel>
         <FormControl
+          name='azureClientID'
           type='text'
           value={this.state.azureClientID}
-          onChange={this.handleChangeAzureClientID}
+          onChange={this.handleChange}
         />
         <FormControl.Feedback />
       </FormGroup>
@@ -242,9 +236,10 @@ class CredentialsForm extends React.Component {
       <FormGroup controlId='azureClientSecret'>
         <ControlLabel>Azure Client Secret</ControlLabel>
         <FormControl
+          name='azureClientSecret'
           type='password'
           value={this.state.azureClientSecret}
-          onChange={this.handleChangeAzureClientSecret}
+          onChange={this.handleChange}
         />
         <FormControl.Feedback />
       </FormGroup>
@@ -252,14 +247,15 @@ class CredentialsForm extends React.Component {
       <FormGroup controlId='azureClientSecretAgain'>
         <ControlLabel>Azure Client Secret (again)</ControlLabel>
         <FormControl
+          name='azureClientSecretAgain'
           type='password'
           value={this.state.azureClientSecretAgain}
-          onChange={this.handleChangeAzureClientSecretAgain}
+          onChange={this.handleChange}
         />
         <FormControl.Feedback />
       </FormGroup>
 
-      <Button onClick={this.handleSubmit} bsStyle='default' disabled={!this.state.isValid}>Set Credentials</Button>
+      <Button onClick={this.handleSubmit} bsStyle='primary' disabled={!this.state.isValid}>Set Credentials</Button>
     </form>;
   }
 }
