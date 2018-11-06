@@ -411,24 +411,28 @@ export function organizationCredentialsLoad(orgId) {
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
     organizationsApi.getCredentials(scheme + ' ' + token, orgId)
-    .then((credentials) => {
-      dispatch({
-        type: types.ORGANIZATION_CREDENTIALS_LOAD_SUCCESS,
-        credentials: credentials,
-      });
-    })
-    .catch(error => {
-      dispatch(flashAdd({
-        message: (<div>
-          <strong>Could not load credentials for organization `{orgId}`</strong>
-          <br/>{error.body ? error.body.status_text : 'Please load the page again in a moment'}
-        </div>),
-        class: 'danger'
-      }));
+      .then((credentials) => {
+        dispatch({
+          type: types.ORGANIZATION_CREDENTIALS_LOAD_SUCCESS,
+          credentials: credentials,
+        });
+      })
+      .catch(error => {
+        dispatch(flashAdd({
+          message: (<div>
+            <strong>Could not load credentials for organization `{orgId}`</strong>
+            <br/>{error.body ? error.body.status_text : 'Please load the page again in a moment'}
+          </div>),
+          class: 'danger'
+        }));
 
-      dispatch({
-        type: types.ORGANIZATION_CREDENTIALS_LOAD_ERROR
+        dispatch({
+          type: types.ORGANIZATION_CREDENTIALS_LOAD_ERROR
+        });
       });
+  };
+}
+
     });
   };
 }
