@@ -218,7 +218,7 @@ class ClusterKeyPairs extends React.Component {
         </div>
 
         <div className='row'>
-          <div className='col-9'>
+          <div className='col-12'>
             <p>Key pairs consist of an RSA private key and certificate, signed by the certificate authority (CA) belonging to this cluster. They are used for access to the cluster via the Kubernetes API.</p>
           </div>
         </div>
