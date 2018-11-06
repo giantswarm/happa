@@ -433,6 +433,37 @@ export function organizationCredentialsLoad(orgId) {
   };
 }
 
+export function organizationCredentialsSet(orgId, requestBody) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.ORGANIZATION_CREDENTIALS_SET
     });
+
+    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
+    organizationsApi.setCredentials(scheme + ' ' + token, orgId, requestBody)
+      .then((response) => {
+        console.log('ORGANIZATION_CREDENTIALS_SET_SUCCESS', response);
+        dispatch({
+          type: types.ORGANIZATION_CREDENTIALS_SET_SUCCESS,
+          credentials: response,
+        });
+      })
+      .catch(error => {
+        console.log('ORGANIZATION_CREDENTIALS_SET_ERROR', error);
+        dispatch(flashAdd({
+          message: (<div>
+            <strong>Could not load credentials for organization `{orgId}`</strong>
+            <br/>{error.body ? error.body.status_text : 'Please load the page again in a moment'}
+          </div>),
+          class: 'danger'
+        }));
+
+        dispatch({
+          type: types.ORGANIZATION_CREDENTIALS_SET_ERROR
+        });
+      });
   };
 }
