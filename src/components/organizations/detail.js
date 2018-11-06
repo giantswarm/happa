@@ -123,14 +123,16 @@ class OrganizationDetail extends React.Component {
                   <div className='col-9'>
                     {
                       this.props.clusters.length === 0 ?
-                      <p>No clusters here yet, <Link to='/new-cluster'>create your first!</Link></p>
+                      <p>This organization doesn&apos;t have any clusters.</p>
                       :
                       <BootstrapTable keyField='id' data={ this.props.clusters }
                         columns={ this.getClusterTableColumnsConfig() } bordered={ false }
                         defaultSorted={ clusterTableDefaultSorting }
                         defaultSortDirection='asc' />
                     }
-
+                    <Link to='/new-cluster'>
+                      <Button bsStyle='default'>Create Cluster</Button>
+                    </Link>
                   </div>
                 </div>
 
