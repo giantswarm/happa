@@ -226,29 +226,35 @@ class Users extends React.Component {
   // Provides the configuraiton for the clusters table
   getTableColumnsConfig = () => {
     return [{
+      classes: 'email',
       dataField: 'email',
       text: 'Email',
       sort: true
     }, {
+      classes: 'emaildomain',
       dataField: 'emaildomain',
       text: 'Email Domain',
       sort: true
     }, {
+      classes: 'created',
       dataField: 'created',
       text: 'Created',
       sort: true,
       formatter: relativeDate
     }, {
+      classes: 'expiry',
       dataField: 'expiry',
       text: 'Expiry',
       sort: true,
       formatter: expiryCellFormatter.bind(this)
     }, {
+      classes: 'status',
       dataField: 'status',
       text: 'STATUS',
       sort: true,
       formatter: statusCellFormatter.bind(this)
     }, {
+      classes: 'actions',
       dataField: 'actionsDummy',
       isDummyField: true,
       text: '',
@@ -288,10 +294,12 @@ class Users extends React.Component {
                   </div>;
               } else {
 
-                return <BootstrapTable keyField='email' data={ Object.values(this.props.invitationsAndUsers) }
+                return <div className='users-table'>
+                       <BootstrapTable keyField='email' data={ Object.values(this.props.invitationsAndUsers) }
                           columns={ this.getTableColumnsConfig() } bordered={ false }
                           defaultSorted={ tableDefaultSorting }
-                          defaultSortDirection='asc' />;
+                          defaultSortDirection='asc' />
+                        </div>;
               }
             })()}
 
