@@ -2,9 +2,10 @@
 
 import * as OrganizationActions from '../../actions/organizationActions';
 import Button from 'react-bootstrap/lib/Button';
+import { relativeDate } from '../../lib/helpers.js';
+import DocumentTitle from 'react-document-title';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import Credentials from './credentials.js';
-import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'underscore';
@@ -12,10 +13,14 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { Link }  from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { formatDate } from '../../lib/helpers.js';
 import { push } from 'connected-react-router';
+import BootstrapTable from 'react-bootstrap-table-next';
 
 class OrganizationDetail extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
     this.props.actions.organizationsLoad();
   }
@@ -39,6 +44,49 @@ class OrganizationDetail extends React.Component {
       return true;
     }
     return false;
+  }
+
+  // Provides the configuraiton for the clusters table
+  getClusterTableColumnsConfig = () => {
+    return [{
+      dataField: 'id',
+      text: 'Cluster ID',
+      sort: true,
+      formatter: clusterIDCellFormatter
+    }, {
+      dataField: 'name',
+      text: 'Name',
+      sort: true
+    }, {
+      dataField: 'create_date',
+      text: 'Created',
+      sort: true,
+      formatter: relativeDate
+    }, {
+      dataField: 'actionsDummy',
+      isDummyField: true,
+      text: '',
+      align: 'right',
+      formatter: clusterActionsCellFormatter.bind(this)
+    }];
+  }
+  // Provides the configuraiton for the org members table
+  getMemberTableColumnsConfig = () => {
+    return [{
+      dataField: 'email',
+      text: 'Email',
+      sort: true
+    }, {
+      dataField: 'emailDomain',
+      text: 'Email Domain',
+      sort: true,
+    }, {
+      dataField: 'actionsDummy',
+      isDummyField: true,
+      text: '',
+      align: 'right',
+      formatter: memberActionsCellFormatter.bind(this)
+    }];
   }
 
   render() {
@@ -77,28 +125,10 @@ class OrganizationDetail extends React.Component {
                       this.props.clusters.length === 0 ?
                       <p>No clusters here yet, <Link to='/new-cluster'>create your first!</Link></p>
                       :
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Cluster ID</th>
-                            <th>Name</th>
-                            <th>Created</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            _.map(_.sortBy(this.props.clusters, (cluster) => cluster.name ), (cluster) => {
-                              return (
-                                <tr className="clickable" key={cluster.id} onClick={this.openClusterDetails.bind(this, cluster.id)}>
-                                  <td><ClusterIDLabel clusterID={cluster.id} copyEnabled/></td>
-                                  <td>{cluster.name}</td>
-                                  <td>{formatDate(cluster.create_date)}</td>
-                                </tr>
-                              );
-                            })
-                          }
-                        </tbody>
-                      </table>
+                      <BootstrapTable keyField='id' data={ this.props.clusters }
+                        columns={ this.getClusterTableColumnsConfig() } bordered={ false }
+                        defaultSorted={ clusterTableDefaultSorting }
+                        defaultSortDirection='asc' />
                     }
 
                   </div>
@@ -113,39 +143,15 @@ class OrganizationDetail extends React.Component {
                       this.props.organization.members.length === 0 ?
                       <p>This organization has no members</p>
                       :
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Email</th>
-                            <th>Email Domain</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            _.sortBy(this.props.organization.members, 'email').map((member) => {
-                              return (
-                                <tr key={member.email}>
-                                  <td>{ member.email }</td>
-                                  <td>{ member.email.split('@')[1] }</td>
-                                  <td>
-                                    <div className='contextual'>
-                                      <i className='fa fa-times clickable'
-                                         title='Remove this member'
-                                         onClick={this.removeMember.bind(this, member.email)} />
-                                    </div>
-                                  </td>
-                                </tr>
-                              );
-                            })
-                          }
-                        </tbody>
-                      </table>
+                      <BootstrapTable keyField='email' data={ this.props.membersForTable }
+                        columns={ this.getMemberTableColumnsConfig() } bordered={ false }
+                        defaultSorted={ memberTableDefaultSorting }
+                        defaultSortDirection='asc' />
                     }
                     <Button onClick={this.addMember} bsStyle='default'>Add Member</Button>
                   </div>
                 </div>
-                
+
                 { credentialsSection }
 
               </div>
@@ -171,7 +177,36 @@ OrganizationDetail.propTypes = {
   dispatch: PropTypes.func,
   match: PropTypes.object,
   app: PropTypes.object,
+  membersForTable: PropTypes.array
 };
+
+const clusterTableDefaultSorting = [{
+  dataField: 'id',
+  order: 'asc'
+}];
+
+const memberTableDefaultSorting = [{
+  dataField: 'email',
+  order: 'asc'
+}];
+
+function clusterIDCellFormatter(cell) {
+  return (
+    <ClusterIDLabel clusterID={cell} copyEnabled/>
+  );
+}
+
+function clusterActionsCellFormatter(cell, row) {
+  return (
+    <Button bsStyle='default' type='button' onClick={this.openClusterDetails.bind(this, row.id)}>Details</Button>
+  );
+}
+
+function memberActionsCellFormatter(cell, row) {
+  return (
+    <Button type='button' onClick={this.removeMember.bind(this, row.email)}>Remove</Button>
+  );
+}
 
 function mapStateToProps(state, ownProps) {
   var allClusters = state.entities.clusters.items;
@@ -181,10 +216,15 @@ function mapStateToProps(state, ownProps) {
     return cluster.owner === ownProps.match.params.orgId;
   });
 
+  var membersForTable = _.map(state.entities.organizations.items[ownProps.match.params.orgId].members, (member) => {
+    return Object.assign({}, member, {emailDomain: member.email.split('@')[1]});
+  });
+
   return {
     organization: state.entities.organizations.items[ownProps.match.params.orgId],
-    clusters: clusters,
+    membersForTable: membersForTable,
     app: state.app,
+    clusters: clusters
   };
 }
 

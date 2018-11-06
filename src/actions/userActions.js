@@ -263,6 +263,7 @@ export function usersLoad() {
       var users = {};
 
       _.each(usersArray, (user) => {
+        user.emaildomain = user.email.split('@')[1];
         users[user.email] = user;
       });
 
