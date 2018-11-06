@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from '../button';
 import * as clusterActions from '../../actions/clusterActions';
-import { relativeDate, truncate } from '../../lib/helpers.js';
+import { relativeDate } from '../../lib/helpers.js';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
 import ExpiryHoursPicker from './expiry_hours_picker';
 import { makeKubeConfigTextFile, dedent } from '../../lib/helpers';
@@ -245,12 +245,12 @@ class ClusterKeyPairs extends React.Component {
                   <table>
                     <thead>
                       <tr>
-                        <th>ID</th>
-                        <th>Description</th>
-                        <th>Created</th>
-                        <th>Expires</th>
-                        <th>Common Name (CN)</th>
-                        <th>Organization (O)</th>
+                        <th className='hidden-xs'>ID</th>
+                        <th className='hidden-xs'>Description</th>
+                        <th className='hidden-xs'>Created</th>
+                        <th className='hidden-xs'>Expires</th>
+                        <th className=''>Common Name (CN)</th>
+                        <th className=''>Organization (O)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -264,22 +264,28 @@ class ClusterKeyPairs extends React.Component {
                           }
 
                           return <tr key={keyPair.id}>
-                            <td className="code">
-                              <OverlayTrigger placement="top" overlay={
-                                  <Tooltip id="tooltip">{keyPair.id}</Tooltip>
-                                }>
-                                <span>{truncate(keyPair.id.replace(/:/g, ''), 9)}</span>
+                            <td className='code truncate hidden-xs col-sm-2'>
+                              <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{keyPair.id}</Tooltip>}>
+                                <span>{keyPair.id.replace(/:/g, '')}</span>
                               </OverlayTrigger>
                             </td>
-                            <td>{keyPair.description}</td>
-                            <td>{relativeDate(keyPair.create_date)}</td>
-                            <td className={expiryClass}>{relativeDate(keyPair.expire_date)}</td>
-                            <td className="code">
+                            <td className='truncate hidden-xs col-sm-4'>
+                              <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{keyPair.description}</Tooltip>}>
+                                <span>{keyPair.description}</span>
+                              </OverlayTrigger>
+                            </td>
+                            <td className='truncate hidden-xs col-sm-1'>{relativeDate(keyPair.create_date)}</td>
+                            <td className={`${expiryClass} truncate hidden-xs col-sm-1`}>{relativeDate(keyPair.expire_date)}</td>
+                            <td className='code truncate col-xs-3'>
                               <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{keyPair.common_name}</Tooltip>}>
-                                <span>{truncate(keyPair.common_name, 24)}</span>
+                                <span>{keyPair.common_name}</span>
                               </OverlayTrigger>
                             </td>
-                            <td className="code">{keyPair.certificate_organizations}</td>
+                            <td className='code truncate col-xs-1'>
+                              <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{keyPair.certificate_organizations}</Tooltip>}>
+                                <span>{keyPair.certificate_organizations}</span>
+                              </OverlayTrigger>
+                            </td>
                           </tr>;
                         })
                       }
