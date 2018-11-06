@@ -317,7 +317,7 @@ export function organizationAddMemberConfirm(orgId, email) {
         return dispatch({
           type: types.ORGANIZATION_ADD_MEMBER_ERROR,
           orgId: orgId,
-          errorMessage: `User "${email}"" is already in organization "${orgId}"`
+          errorMessage: `User "${email}" is already in organization "${orgId}"`
         });
       }
     }

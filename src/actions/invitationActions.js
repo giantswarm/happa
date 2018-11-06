@@ -30,6 +30,7 @@ export function invitationsLoad() {
       var invites = {};
 
       _.each(invitesArray, (invite) => {
+        invite.emaildomain = invite.email.split('@')[1];
         invites[invite.email] = invite;
       });
 
