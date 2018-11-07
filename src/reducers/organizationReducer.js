@@ -25,7 +25,7 @@ export default function organizationReducer(state = {lastUpdated: 0, isFetching:
         items: state.items
       };
 
-    case types.ORGANIZATION_DELETE_CONFIRM:
+    case types.ORGANIZATION_DELETE_CONFIRMED:
       return {
         lastUpdated: state.lastUpdated,
         isFetching: state.isFetching,
