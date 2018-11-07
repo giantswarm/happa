@@ -450,6 +450,13 @@ export function organizationCredentialsSet(orgId, requestBody) {
           type: types.ORGANIZATION_CREDENTIALS_SET_SUCCESS,
           credentials: response,
         });
+        
+        dispatch(flashAdd({
+          message: 'Credentials have been stored successfully.',
+          class: 'success',
+          ttl: 3000
+        }));
+
       })
       .catch(error => {
         console.log('ORGANIZATION_CREDENTIALS_SET_ERROR', error);
