@@ -73,3 +73,6 @@ pull-images:
 	docker pull quay.io/giantswarm/mailcatcher:latest
 	docker pull quay.io/giantswarm/giantswarm/mock-api:latest
 	docker pull quay.io/giantswarm/passage:latest
+
+clean:
+	rm -rf .cache dist docker-volumes node_modules
