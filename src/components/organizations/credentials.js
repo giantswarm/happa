@@ -12,6 +12,7 @@ import ControlLabel  from 'react-bootstrap/lib/ControlLabel';
 import FormControl  from 'react-bootstrap/lib/FormControl';
 import FormGroup  from 'react-bootstrap/lib/FormGroup';
 
+
 class Credentials extends React.Component {
   state = {
     formVisible: false,
@@ -30,29 +31,27 @@ class Credentials extends React.Component {
   handleFormSubmit = (data) => {
     console.log('handleFormSubmit', data);
 
-    let body = {};
+    let body = new GiantSwarmV4.V4AddCredentialsRequest({
+      provider: this.props.app.info.general.provider,
+    });
+
     if (this.props.app.info.general.provider === 'azure') {
-      body = {
-        provider: 'azure',
-        azure: {
-          credential: {
-            subscription_id: data.azureSubscriptionID,
-            tenant_id: data.azureTenantID,
-            client_id: data.azureClientID,
-            secret_key: data.azureClientSecret,
-          }
-        }
-      };
+      body.azure = new GiantSwarmV4.V4AddCredentialsRequestAzure({
+        credential: new GiantSwarmV4.V4AddCredentialsRequestAzureCredential({
+          subscription_id: data.azureSubscriptionID,
+          tenant_id: data.azureTenantID,
+          client_id: data.azureClientID,
+          secret_key: data.azureClientSecret,
+        })
+      });
+
     } else if (this.props.app.info.general.provider === 'aws') {
-      body = {
-        provider: 'aws',
-        aws: {
-          roles: {
-            admin: data.awsAdminRoleARN,
-            awsoperator: data.awsOperatorRoleARN,
-          }
-        }
-      };
+      body.aws = new GiantSwarmV4.V4AddCredentialsRequestAws({
+        roles: new GiantSwarmV4.V4AddCredentialsRequestAwsRoles({
+          admin: data.awsAdminRoleARN,
+          awsoperator: data.awsOperatorRoleARN,
+        }),
+      });
     }
 
     this.props.dispatch(organizationCredentialsSet(body));
