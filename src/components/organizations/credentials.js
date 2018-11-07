@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import AWSAccountID from '../shared/aws_account_id';
 import Button from '../button';
 import { connect } from 'react-redux';
-import { organizationCredentialsLoad } from '../../actions/organizationActions';
+import { organizationCredentialsLoad, organizationCredentialsSet } from '../../actions/organizationActions';
 import ControlLabel  from 'react-bootstrap/lib/ControlLabel';
 import FormControl  from 'react-bootstrap/lib/FormControl';
 import FormGroup  from 'react-bootstrap/lib/FormGroup';
@@ -25,8 +25,35 @@ class Credentials extends React.Component {
     });
   }
 
-  handleFormSubmit = () => {
-    console.log('handleFormSubmit');
+  handleFormSubmit = (data) => {
+    console.log('handleFormSubmit', data);
+
+    let body = {};
+    if (this.props.app.info.general.provider === 'azure') {
+      body = {
+        provider: 'azure',
+        azure: {
+          credential: {
+            subscription_id: data.azureSubscriptionID,
+            tenant_id: data.azureTenantID,
+            client_id: data.azureClientID,
+            secret_key: data.azureClientSecret,
+          }
+        }
+      };
+    } else if (this.props.app.info.general.provider === 'aws') {
+      body = {
+        provider: 'aws',
+        aws: {
+          roles: {
+            admin: data.awsAdminRoleARN,
+            awsoperator: data.awsOperatorRoleARN,
+          }
+        }
+      };
+    }
+
+    this.props.dispatch(organizationCredentialsSet(body));
   }
 
   render() {
@@ -168,18 +195,27 @@ class CredentialsForm extends React.Component {
       azureClientID: '',
       azureClientSecret: '',
       azureClientSecretAgain: '',
+      awsAdminRoleARN: '',
+      awsOperatorRoleARN: '',
     }
   };
 
   validateForm = () => {
-    console.log(this.state);
-    if (this.state.form.azureSubscriptionID != '' && this.state.form.azureTenantID != ''
-      && this.state.form.azureClientID != '' && this.state.form.azureClientSecret != '' 
-      && this.state.form.azureClientSecret === this.state.form.azureClientSecretAgain) {
-        this.setState({isValid: true});
+    if (this.props.app.info.general.provider === 'azure') {
+      if (this.state.form.azureSubscriptionID != '' && this.state.form.azureTenantID != ''
+        && this.state.form.azureClientID != '' && this.state.form.azureClientSecret != '' 
+        && this.state.form.azureClientSecret === this.state.form.azureClientSecretAgain) {
+          this.setState({isValid: true});
       } else {
         this.setState({isValid: false});
       }
+    } else {
+      if (this.state.form.awsAdminRoleARN != '' && this.state.form.awsOperatorRoleARN != '') {
+          this.setState({isValid: true});
+      } else {
+        this.setState({isValid: false});
+      }
+    }
   }
 
   handleChange = (e) => {
@@ -193,70 +229,103 @@ class CredentialsForm extends React.Component {
   }
 
   handleSubmit = (e) => {
-    console.log('form submission', e);
-    // TODO: call this.props.onSubmit();
     e.preventDefault();
+    this.props.onSubmit(this.state.form);
   }
 
   render () {
-    return <form>
-      <FormGroup controlId='azureSubscriptionID'>
-        <ControlLabel>Azure Subscription ID</ControlLabel>
-        <FormControl
-          name='azureSubscriptionID'
-          type='text'
-          value={this.state.azureSubscriptionID}
-          onChange={this.handleChange}
-        />
-        <FormControl.Feedback />
-      </FormGroup>
+    if (this.props.app.info.general.provider === 'azure') {
+      return <form>
+        <p>Here you can set credentials for the organization <code>{this.props.organizationName}</code> , to be used by all new clusters created for this organization.</p>
+        <p><strong>Note:</strong> It is currently not possible to modify or delete these credentials once set.</p>
+        
+        <FormGroup controlId='azureSubscriptionID'>
+          <ControlLabel>Azure Subscription ID</ControlLabel>
+          <FormControl
+            name='azureSubscriptionID'
+            type='text'
+            value={this.state.azureSubscriptionID}
+            onChange={this.handleChange}
+          />
+          <FormControl.Feedback />
+        </FormGroup>
 
-      <FormGroup controlId='azureTenantID'>
-        <ControlLabel>Azure Tenant ID</ControlLabel>
-        <FormControl
-          name='azureTenantID'
-          type='text'
-          value={this.state.azureTenantID}
-          onChange={this.handleChange}
-        />
-        <FormControl.Feedback />
-      </FormGroup>
+        <FormGroup controlId='azureTenantID'>
+          <ControlLabel>Azure Tenant ID</ControlLabel>
+          <FormControl
+            name='azureTenantID'
+            type='text'
+            value={this.state.azureTenantID}
+            onChange={this.handleChange}
+          />
+          <FormControl.Feedback />
+        </FormGroup>
 
-      <FormGroup controlId='azureClientID'>
-        <ControlLabel>Azure Client ID</ControlLabel>
-        <FormControl
-          name='azureClientID'
-          type='text'
-          value={this.state.azureClientID}
-          onChange={this.handleChange}
-        />
-        <FormControl.Feedback />
-      </FormGroup>
+        <FormGroup controlId='azureClientID'>
+          <ControlLabel>Azure Client ID</ControlLabel>
+          <FormControl
+            name='azureClientID'
+            type='text'
+            value={this.state.azureClientID}
+            onChange={this.handleChange}
+          />
+          <FormControl.Feedback />
+        </FormGroup>
 
-      <FormGroup controlId='azureClientSecret'>
-        <ControlLabel>Azure Client Secret</ControlLabel>
-        <FormControl
-          name='azureClientSecret'
-          type='password'
-          value={this.state.azureClientSecret}
-          onChange={this.handleChange}
-        />
-        <FormControl.Feedback />
-      </FormGroup>
+        <FormGroup controlId='azureClientSecret'>
+          <ControlLabel>Azure Client Secret</ControlLabel>
+          <FormControl
+            name='azureClientSecret'
+            type='password'
+            value={this.state.azureClientSecret}
+            onChange={this.handleChange}
+          />
+          <FormControl.Feedback />
+        </FormGroup>
 
-      <FormGroup controlId='azureClientSecretAgain'>
-        <ControlLabel>Azure Client Secret (again)</ControlLabel>
-        <FormControl
-          name='azureClientSecretAgain'
-          type='password'
-          value={this.state.azureClientSecretAgain}
-          onChange={this.handleChange}
-        />
-        <FormControl.Feedback />
-      </FormGroup>
+        <FormGroup controlId='azureClientSecretAgain'>
+          <ControlLabel>Azure Client Secret (again)</ControlLabel>
+          <FormControl
+            name='azureClientSecretAgain'
+            type='password'
+            value={this.state.azureClientSecretAgain}
+            onChange={this.handleChange}
+          />
+          <FormControl.Feedback />
+        </FormGroup>
 
-      <Button onClick={this.handleSubmit} bsStyle='primary' disabled={!this.state.isValid}>Set Credentials</Button>
-    </form>;
+        <Button onClick={this.handleSubmit} bsStyle='primary' disabled={!this.state.isValid}>Set Credentials</Button>
+      </form>;
+    } else if (this.props.app.info.general.provider === 'aws') {
+      return <form>
+        <p>Here you can set credentials for the organization <code>{this.props.organizationName}</code> , to be used by all new clusters created for this organization.</p>
+        <p><strong>Note:</strong> It is currently not possible to modify or delete these credentials once set.</p>
+        
+        <FormGroup controlId='awsAdminRoleARN'>
+          <ControlLabel>AWS admin role ARN</ControlLabel>
+          <FormControl
+            name='awsAdminRoleARN'
+            type='text'
+            value={this.state.awsAdminRoleARN}
+            onChange={this.handleChange}
+          />
+          <FormControl.Feedback />
+        </FormGroup>
+
+        <FormGroup controlId='awsOperatorRoleARN'>
+          <ControlLabel>AWS operator role ARN</ControlLabel>
+          <FormControl
+            name='awsOperatorRoleARN'
+            type='text'
+            value={this.state.awsOperatorRoleARN}
+            onChange={this.handleChange}
+          />
+          <FormControl.Feedback />
+        </FormGroup>
+
+        <Button onClick={this.handleSubmit} bsStyle='primary' disabled={!this.state.isValid}>Set Credentials</Button>
+      </form>;
+    }
   }
 }
 
