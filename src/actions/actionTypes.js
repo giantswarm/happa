@@ -1,3 +1,38 @@
+/**
+ * All our redux action types are defined here.
+ * 
+ * Action type names usually follow some conventions.
+ * 
+ * User transactions like deleting a cluster usually involve several action types
+ * named using a common prefix. Example:
+ * 
+ *   'CLUSTER_DELETE'
+ *      Invoked when the user expressed the intend to delete a cluster.
+ *      This is e. g. used to reveal a confirmation dialog.
+ * 
+ *   'CLUSTER_DELETE_CONFIRMED'
+ *      The user has confirmed the intent to delete a cluster.
+ *      This should lead to the actual API call deleting the cluster.
+ * 
+ *   'CLUSTER_DELETE_SUCCESS'
+ *      The API call to delete the cluster was successful.
+ *      
+ *   'CLUSTER_DELETE_ERROR'
+ *      The API call to delete the cluster was not successful.
+ * 
+ * For loading resources we usually use this action name pattern:
+ * 
+ *    '<NOUN>_LOAD'
+ *    '<NOUN>_LOAD_SUCCESS'
+ *    '<NOUN>_LOAD_ERROR'
+ * 
+ * where NOUN can be either a singular or plural version of the resource name,
+ * depending on which fits best.
+ * 
+ * NOUN can also represent the nesting of resources.
+ */
+
+
 'use strict';
 
 // Clusters
@@ -15,7 +50,7 @@ export const CLUSTER_CREATE_SUCCESS = 'CLUSTER_CREATE_SUCCESS';
 export const CLUSTER_CREATE_ERROR = 'CLUSTER_CREATE_ERROR';
 
 export const CLUSTER_DELETE = 'CLUSTER_DELETE';
-export const CLUSTER_DELETE_CONFIRM = 'CLUSTER_DELETE_CONFIRM';
+export const CLUSTER_DELETE_CONFIRMED = 'CLUSTER_DELETE_CONFIRMED';
 export const CLUSTER_DELETE_SUCCESS = 'CLUSTER_DELETE_SUCCESS';
 export const CLUSTER_DELETE_ERROR = 'CLUSTER_DELETE_ERROR';
 
@@ -65,12 +100,12 @@ export const ORGANIZATIONS_LOAD_SUCCESS = 'ORGANIZATIONS_LOAD_SUCCESS';
 export const ORGANIZATIONS_LOAD_ERROR = 'ORGANIZATIONS_LOAD_ERROR';
 
 export const ORGANIZATION_DELETE = 'ORGANIZATION_DELETE';
-export const ORGANIZATION_DELETE_CONFIRM = 'ORGANIZATION_DELETE_CONFIRM';
+export const ORGANIZATION_DELETE_CONFIRMED = 'ORGANIZATION_DELETE_CONFIRMED';
 export const ORGANIZATION_DELETE_SUCCESS = 'ORGANIZATION_DELETE_SUCCESS';
 export const ORGANIZATION_DELETE_ERROR = 'ORGANIZATION_DELETE_ERROR';
 
 export const ORGANIZATION_CREATE = 'ORGANIZATION_CREATE';
-export const ORGANIZATION_CREATE_CONFIRM = 'ORGANIZATION_CREATE_CONFIRM';
+export const ORGANIZATION_CREATE_CONFIRMED = 'ORGANIZATION_CREATE_CONFIRMED';
 export const ORGANIZATION_CREATE_SUCCESS = 'ORGANIZATION_CREATE_SUCCESS';
 export const ORGANIZATION_CREATE_ERROR = 'ORGANIZATION_CREATE_ERROR';
 
@@ -80,13 +115,13 @@ export const ORGANIZATION_CREDENTIALS_LOAD_ERROR = 'ORGANIZATION_CREDENTIALS_LOA
 
 // Organizations - Add / Remove members
 export const ORGANIZATION_ADD_MEMBER = 'ORGANIZATION_ADD_MEMBER';
-export const ORGANIZATION_ADD_MEMBER_CONFIRM = 'ORGANIZATION_ADD_MEMBER_CONFIRM';
+export const ORGANIZATION_ADD_MEMBER_CONFIRMED = 'ORGANIZATION_ADD_MEMBER_CONFIRMED';
 export const ORGANIZATION_ADD_MEMBER_TYPING = 'ORGANIZATION_ADD_MEMBER_TYPING';
 export const ORGANIZATION_ADD_MEMBER_SUCCESS = 'ORGANIZATION_ADD_MEMBER_SUCCESS';
 export const ORGANIZATION_ADD_MEMBER_ERROR = 'ORGANIZATION_ADD_MEMBER_ERROR';
 
 export const ORGANIZATION_REMOVE_MEMBER = 'ORGANIZATION_REMOVE_MEMBER';
-export const ORGANIZATION_REMOVE_MEMBER_CONFIRM = 'ORGANIZATION_REMOVE_MEMBER_CONFIRM';
+export const ORGANIZATION_REMOVE_MEMBER_CONFIRMED = 'ORGANIZATION_REMOVE_MEMBER_CONFIRMED';
 export const ORGANIZATION_REMOVE_MEMBER_SUCCESS = 'ORGANIZATION_REMOVE_MEMBER_SUCCESS';
 export const ORGANIZATION_REMOVE_MEMBER_ERROR = 'ORGANIZATION_REMOVE_MEMBER_ERROR';
 
