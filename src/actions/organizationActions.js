@@ -443,7 +443,7 @@ export function organizationCredentialsSet(orgId, requestBody) {
     });
 
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
-    organizationsApi.setCredentials(scheme + ' ' + token, orgId, requestBody)
+    organizationsApi.addCredentials(scheme + ' ' + token, orgId, requestBody)
       .then((response) => {
         console.log('ORGANIZATION_CREDENTIALS_SET_SUCCESS', response);
         dispatch({
