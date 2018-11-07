@@ -2,10 +2,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import AWSAccountID from '../shared/aws_account_id';
-import Button from '../button';
 import { connect } from 'react-redux';
 import { organizationCredentialsLoad, organizationCredentialsSet } from '../../actions/organizationActions';
+import GiantSwarmV4 from 'giantswarm-v4';
+
+import AWSAccountID from '../shared/aws_account_id';
+import Button from '../button';
 import ControlLabel  from 'react-bootstrap/lib/ControlLabel';
 import FormControl  from 'react-bootstrap/lib/FormControl';
 import FormGroup  from 'react-bootstrap/lib/FormGroup';
