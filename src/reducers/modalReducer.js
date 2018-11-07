@@ -19,7 +19,7 @@ export default function modalReducer(state = {visible: false}, action = undefine
         template: 'clusterDelete'
       };
 
-    case types.CLUSTER_DELETE_CONFIRM:
+    case types.CLUSTER_DELETE_CONFIRMED:
       return {
         visible: true,
         templateValues: {
@@ -39,7 +39,7 @@ export default function modalReducer(state = {visible: false}, action = undefine
         template: 'organizationDelete'
       };
 
-    case types.ORGANIZATION_DELETE_CONFIRM:
+    case types.ORGANIZATION_DELETE_CONFIRMED:
       return {
         visible: true,
         templateValues: {
@@ -58,7 +58,7 @@ export default function modalReducer(state = {visible: false}, action = undefine
         template: 'organizationCreate'
       };
 
-    case types.ORGANIZATION_CREATE_CONFIRM:
+    case types.ORGANIZATION_CREATE_CONFIRMED:
       return {
         visible: true,
         templateValues: {
@@ -81,7 +81,7 @@ export default function modalReducer(state = {visible: false}, action = undefine
         template: 'organizationAddMember'
       };
 
-    case types.ORGANIZATION_ADD_MEMBER_CONFIRM:
+    case types.ORGANIZATION_ADD_MEMBER_CONFIRMED:
       return {
         visible: true,
         templateValues: {orgId: action.orgId, loading: true},
@@ -102,7 +102,7 @@ export default function modalReducer(state = {visible: false}, action = undefine
         template: 'organizationRemoveMember'
       };
 
-    case types.ORGANIZATION_REMOVE_MEMBER_CONFIRM:
+    case types.ORGANIZATION_REMOVE_MEMBER_CONFIRMED:
       return {
         visible: true,
         templateValues: {orgId: action.orgId, email: action.email, loading: true},
