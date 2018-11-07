@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { organizationCredentialsLoad, organizationCredentialsSet } from '../../actions/organizationActions';
-import GiantSwarmV4 from 'giantswarm-v4';
 
 import AWSAccountID from '../shared/aws_account_id';
 import Button from '../button';
@@ -16,6 +15,7 @@ import FormGroup  from 'react-bootstrap/lib/FormGroup';
 class Credentials extends React.Component {
   state = {
     formVisible: false,
+    formData: null,
   };
 
   componentDidMount() {
@@ -31,35 +31,21 @@ class Credentials extends React.Component {
   handleFormSubmit = (data) => {
     console.log('handleFormSubmit', data);
 
-    let body = new GiantSwarmV4.V4AddCredentialsRequest({
-      provider: this.props.app.info.general.provider,
-    });
+    this.props.dispatch(organizationCredentialsSet(this.props.app.info.general.provider, this.props.organizationName, data))
+      .then(() => {
+        this.setState({formVisible: false});
+      })
+      .catch((error) => {
+        console.log(error);
 
-    if (this.props.app.info.general.provider === 'azure') {
-      body.azure = new GiantSwarmV4.V4AddCredentialsRequestAzure({
-        credential: new GiantSwarmV4.V4AddCredentialsRequestAzureCredential({
-          subscription_id: data.azureSubscriptionID,
-          tenant_id: data.azureTenantID,
-          client_id: data.azureClientID,
-          secret_key: data.azureClientSecret,
-        })
+        // persist submitted form data to pre-fill the form again
+        this.setState({formData: data});
       });
-
-    } else if (this.props.app.info.general.provider === 'aws') {
-      body.aws = new GiantSwarmV4.V4AddCredentialsRequestAws({
-        roles: new GiantSwarmV4.V4AddCredentialsRequestAwsRoles({
-          admin: data.awsAdminRoleARN,
-          awsoperator: data.awsOperatorRoleARN,
-        }),
-      });
-    }
-
-    this.props.dispatch(organizationCredentialsSet(body));
   }
 
   render() {
     if (this.state.formVisible) {
-      return <CredentialsForm app={this.props.app} organizationName={this.props.organizationName} credentials={this.props.credentials} onSubmit={this.handleFormSubmit}/>;
+      return <CredentialsForm app={this.props.app} organizationName={this.props.organizationName} credentials={this.props.credentials} onSubmit={this.handleFormSubmit} formData={this.state.formData}/>;
     } else {
       return <CredentialsDisplay app={this.props.app} organizationName={this.props.organizationName} credentials={this.props.credentials} onShowFormClick={this.handleShowFormClick} />;
     }
@@ -67,11 +53,11 @@ class Credentials extends React.Component {
 }
 
 Credentials.propTypes = {
+  actions: PropTypes.object,
+  app: PropTypes.object,
+  credentials: PropTypes.object,
   dispatch: PropTypes.func,
   organizationName: PropTypes.string,
-  actions: PropTypes.object,
-  credentials: PropTypes.object,
-  app: PropTypes.object,
 };
 
 function mapStateToProps(state) {
@@ -237,8 +223,11 @@ class CredentialsForm extends React.Component {
   render () {
     if (this.props.app.info.general.provider === 'azure') {
       return <form>
-        <p>Here you can set credentials for the organization <code>{this.props.organizationName}</code> , to be used by all new clusters created for this organization.</p>
-        <p><strong>Note:</strong> It is currently not possible to modify or delete these credentials once set.</p>
+        <p>Here you can set credentials for the organization <code>{this.props.organizationName}</code> , to be used by
+        all new clusters created for this organization. Find more information on how to prepare an Azure subscription for running 
+        tenant cluster in our <a href='https://docs.giantswarm.io/guides/prepare-azure-subscription-for-tenant-clusters/'
+        target='_blank' rel='noopener noreferrer'>documentation</a>.</p>
+        <p><i className='fa fa-info-circle' /> It is currently not possible to modify or delete these credentials once set.</p>
         
         <FormGroup controlId='azureSubscriptionID'>
           <ControlLabel>Azure Subscription ID</ControlLabel>
@@ -299,8 +288,12 @@ class CredentialsForm extends React.Component {
       </form>;
     } else if (this.props.app.info.general.provider === 'aws') {
       return <form>
-        <p>Here you can set credentials for the organization <code>{this.props.organizationName}</code> , to be used by all new clusters created for this organization.</p>
-        <p><strong>Note:</strong> It is currently not possible to modify or delete these credentials once set.</p>
+        <p>Here you can set credentials for the organization <code>{this.props.organizationName}</code> , to be used by 
+        all new clusters created for this organization. Find more information on how to prepare an AWS for running 
+        tenant cluster in our <a href='https://docs.giantswarm.io/guides/prepare-aws-account-for-tenant-clusters/'
+        target='_blank' rel='noopener noreferrer'>documentation</a>.</p>
+
+        <p><i className='fa fa-info-circle' /> It is currently not possible to modify or delete these credentials once set.</p>
         
         <FormGroup controlId='awsAdminRoleARN'>
           <ControlLabel>AWS admin role ARN</ControlLabel>
@@ -335,6 +328,7 @@ CredentialsForm.propTypes = {
   app: PropTypes.object,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
+  formData: PropTypes.object,
   onSubmit: PropTypes.func,
   organizationName: PropTypes.string,
 };
