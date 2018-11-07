@@ -20,8 +20,6 @@
     "react/prefer-es6-class": [1, "always"],
     "react/no-find-dom-node": 0,
     "no-console": 0,
-
-    // turned off since it reports false positives in regular expressions
     "no-useless-escape": "off"
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
@@ -31,7 +29,7 @@
 
   "settings": {
     "react": {
-      "version": "15.4.2"
+      "version": "16.5.2"
     }
   }
 }
