@@ -33,14 +33,12 @@ services:
     external_links:
       - testing_api_1
 
-    networks:
-      - default
-      - testing_default
-
   redis:
     image: redis:3.2
     ports:
       - "6379:6379"
+    volumes:
+      - $PWD/docker-volumes/redis-data:/data
 
   mailcatcher:
     image: quay.io/giantswarm/mailcatcher:latest
