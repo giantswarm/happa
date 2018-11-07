@@ -197,14 +197,14 @@ export function organizationsLoad() {
   };
 }
 
-// organizationDeleteConfirm is called when the user confirms they want to delete
+// organizationDeleteConfirmed is called when the user confirms they want to delete
 // and organization. It performs the API call to actually delete the organization
 // and dispatches actions accordingly.
-export function organizationDeleteConfirm(orgId) {
+export function organizationDeleteConfirmed(orgId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
-    dispatch({type: types.ORGANIZATION_DELETE_CONFIRM, orgId: orgId});
+    dispatch({type: types.ORGANIZATION_DELETE_CONFIRMED, orgId: orgId});
 
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
@@ -245,15 +245,15 @@ export function organizationCreate() {
   };
 }
 
-// organizationCreateConfirm is called when the user confirms they want to create
+// organizationCreateConfirmed is called when the user confirms they want to create
 // and organization. It performs the API call to actually create the organization
 // and dispatches actions accordingly.
-export function organizationCreateConfirm(orgId) {
+export function organizationCreateConfirmed(orgId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
-    dispatch({type: types.ORGANIZATION_CREATE_CONFIRM});
+    dispatch({type: types.ORGANIZATION_CREATE_CONFIRMED});
 
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
@@ -294,15 +294,15 @@ export function organizationAddMemberTyping(orgId) {
   };
 }
 
-// organizationAddMemberConfirm is called when the user confirms they want to add
+// organizationAddMemberConfirmed is called when the user confirms they want to add
 // a member to an organization. It performs the API call to actually do the job,
 // and dispatches actions accordingly.
 //
 // It also checks if the member is already in the organization before proceeding.
-export function organizationAddMemberConfirm(orgId, email) {
+export function organizationAddMemberConfirmed(orgId, email) {
   return function(dispatch, getState) {
     dispatch({
-      type: types.ORGANIZATION_ADD_MEMBER_CONFIRM,
+      type: types.ORGANIZATION_ADD_MEMBER_CONFIRMED,
       orgId: orgId,
       email: email
     });
@@ -348,16 +348,16 @@ export function organizationAddMemberConfirm(orgId, email) {
   };
 }
 
-// organizationRemoveMemberConfirm is called when the user confirms they want to remove
+// organizationRemoveMemberConfirmed is called when the user confirms they want to remove
 // a member from an organization. It performs the API call to actually do the job,
 // and dispatches actions accordingly.
-export function organizationRemoveMemberConfirm(orgId, email) {
+export function organizationRemoveMemberConfirmed(orgId, email) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
     dispatch({
-      type: types.ORGANIZATION_REMOVE_MEMBER_CONFIRM,
+      type: types.ORGANIZATION_REMOVE_MEMBER_CONFIRMED,
       orgId: orgId,
       email: email
     });
