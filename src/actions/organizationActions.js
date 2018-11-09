@@ -127,73 +127,74 @@ export function organizationsLoad() {
     dispatch({type: types.ORGANIZATIONS_LOAD});
 
     return organizationsApi.getOrganizations(scheme + ' ' + token)
-    .then(organizations => {
-      var organizationsArray = organizations.map((organization) => {
-        return organization.id;
+      .then(organizations => {
+        var organizationsArray = organizations.map((organization) => {
+          return organization.id;
+        });
+
+        var clusters = clustersApi.getClusters(scheme + ' ' + token)
+                      .then(data => {
+                          dispatch(clusterLoadSuccess(data));
+                          return data;
+                      })
+                      .catch((error) => {
+                          console.error(error);
+                          dispatch(clusterLoadError(error));
+                      });
+
+        var orgDetails = Promise.all(_.map(organizationsArray, organizationName => {
+          return organizationsApi.getOrganization(scheme + ' ' + token, organizationName)
+                .then(organization => {
+                  return organization;
+                });
+        }));
+
+        return Promise.all([clusters, orgDetails]);
+      })
+      .then((result) => {
+        var clusters = result[0];
+        var orgDetails = result[1];
+        
+        // create an object with organization IDs as key
+        var organizations = orgDetails.reduce((previous, current) => {
+          var orgId = current.id;
+          var orgDetails = current;
+
+          orgDetails.members = orgDetails.members.sort();
+
+          previous[orgId] = Object.assign(
+            {},
+            {clusters: []},
+            getState().entities.organizations.items[orgId],
+            orgDetails,
+          );
+          return previous;
+        }, {});
+
+        var selectedOrganization = determineSelectedOrganization(organizations);
+        var selectedCluster = determineSelectedCluster(selectedOrganization, clusters);
+
+        return {
+          organizations,
+          selectedOrganization,
+          selectedCluster
+        };
+      })
+      .then((result) => {
+        dispatch(organizationsLoadSuccess(result.organizations, result.selectedOrganization, result.selectedCluster));
+        return null;
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(flashAdd({
+          message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+          class: 'danger'
+        }));
+
+        dispatch({
+          type: types.ORGANIZATIONS_LOAD_ERROR
+        });
       });
-
-      var clusters = clustersApi.getClusters(scheme + ' ' + token)
-                     .then(data => {
-                        dispatch(clusterLoadSuccess(data));
-                        return data;
-                     })
-                     .catch((error) => {
-                        console.error(error);
-                        dispatch(clusterLoadError(error));
-                     });
-
-      var orgDetails = Promise.all(_.map(organizationsArray, organizationName => {
-        return organizationsApi.getOrganization(scheme + ' ' + token, organizationName)
-               .then(organization => {
-                 return organization;
-               });
-      }));
-
-      return Promise.all([clusters, orgDetails]);
-    })
-    .then((result) => {
-      var clusters = result[0];
-      var orgDetails = result[1];
-
-      var organizations = orgDetails.reduce((previous, current) => {
-        var orgId = current.id;
-        var orgDetails = current;
-
-        orgDetails.members = orgDetails.members.sort();
-
-        previous[orgId] = Object.assign(
-          {},
-          {clusters: []},
-          getState().entities.organizations.items[orgId],
-          orgDetails,
-        );
-        return previous;
-      }, {});
-
-      var selectedOrganization = determineSelectedOrganization(organizations);
-      var selectedCluster = determineSelectedCluster(selectedOrganization, clusters);
-
-      return {
-        organizations,
-        selectedOrganization,
-        selectedCluster
-      };
-    })
-    .then((result) => {
-      dispatch(organizationsLoadSuccess(result.organizations, result.selectedOrganization, result.selectedCluster));
-      return null;
-    })
-    .catch(error => {
-      console.error(error);
-      dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
-        class: 'danger'
-      }));
-
-      dispatch({
-        type: types.ORGANIZATIONS_LOAD_ERROR
-      });
-    });
   };
 }
 
@@ -434,17 +435,29 @@ export function organizationCredentialsLoad(orgId) {
   };
 }
 
-// organizationCredentialsSet sets credentials of an organization
-export function organizationCredentialsSet(provider, orgId, data) {
+// organizationCredentialsSet reveals the form necessary to set credentials for an
+// organization.
+export function organizationCredentialsSet() {
+  return function(dispatch) {
+    dispatch({
+      type: types.ORGANIZATION_CREDENTIALS_SET
+    });
+  };
+}
+
+// organizationCredentialsSetConfirmed performs the API request to set the credentials
+// for an organization and handles the result.
+export function organizationCredentialsSetConfirmed(provider, orgId, data) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
     dispatch({
-      type: types.ORGANIZATION_CREDENTIALS_SET
+      type: types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED
     });
 
     let requestBody = new GiantSwarmV4.V4AddCredentialsRequest();
+    requestBody.provider = provider;
 
     if (provider === 'azure') {
       requestBody.azure = new GiantSwarmV4.V4AddCredentialsRequestAzure();
@@ -459,8 +472,7 @@ export function organizationCredentialsSet(provider, orgId, data) {
     console.log('requestBody:', requestBody);
 
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
-    // organizationsApi.addCredentials(scheme + ' ' + token, orgId, requestBody)
-    organizationsApi.addCredentials(scheme + ' ' + token, orgId, {foo: 'bar'}) // deliberately failing.
+    organizationsApi.addCredentials(scheme + ' ' + token, orgId, requestBody)
       .then((response) => {
         // perform the API call
         console.log('ORGANIZATION_CREDENTIALS_SET_SUCCESS', response);

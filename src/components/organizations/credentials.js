@@ -3,7 +3,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { organizationCredentialsLoad, organizationCredentialsSet } from '../../actions/organizationActions';
+import { organizationCredentialsLoad,
+         organizationCredentialsSet,
+         organizationCredentialsSetConfirmed} from '../../actions/organizationActions';
 
 import AWSAccountID from '../shared/aws_account_id';
 import Button from '../button';
@@ -14,40 +16,43 @@ import FormGroup  from 'react-bootstrap/lib/FormGroup';
 
 class Credentials extends React.Component {
   state = {
-    formVisible: false,
-    formData: null,
+    formData: {},
   };
 
   componentDidMount() {
     this.props.dispatch(organizationCredentialsLoad(this.props.organizationName));
   }
 
-  handleShowFormClick = () => {
-    this.setState({
-      formVisible: true,
-    });
+  // handles the click to reveal the form
+  handleShowForm = () => {
+    this.props.dispatch(organizationCredentialsSet());
   }
 
+  /**
+   * handleFormSubmit handles a credential form submission.
+   * We pass on the  
+   */
   handleFormSubmit = (data) => {
-    console.log('handleFormSubmit', data);
-
-    this.props.dispatch(organizationCredentialsSet(this.props.app.info.general.provider, this.props.organizationName, data))
-      .then(() => {
-        this.setState({formVisible: false});
-      })
-      .catch((error) => {
-        console.log(error);
-
-        // persist submitted form data to pre-fill the form again
-        this.setState({formData: data});
-      });
+    // keep the data to have the form filled once again,
+    // in case the user needs to correct an error
+    this.setState({formData: data});
+    this.props.dispatch(organizationCredentialsSetConfirmed(this.props.app.info.general.provider, this.props.organizationName, data));
   }
 
   render() {
-    if (this.state.formVisible) {
-      return <CredentialsForm app={this.props.app} organizationName={this.props.organizationName} credentials={this.props.credentials} onSubmit={this.handleFormSubmit} formData={this.state.formData}/>;
+    if (this.props.organizations.showCredentialsForm) {
+      return <CredentialsForm
+              provider={this.props.app.info.general.provider}
+              organizationName={this.props.organizationName}
+              credentials={this.props.credentials}
+              onSubmit={this.handleFormSubmit}
+              formData={this.state.formData} />;
     } else {
-      return <CredentialsDisplay app={this.props.app} organizationName={this.props.organizationName} credentials={this.props.credentials} onShowFormClick={this.handleShowFormClick} />;
+      return <CredentialsDisplay
+              provider={this.props.app.info.general.provider}
+              organizationName={this.props.organizationName}
+              credentials={this.props.credentials}
+              onShowForm={this.handleShowForm} />;
     }
   }
 }
@@ -58,12 +63,16 @@ Credentials.propTypes = {
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
   organizationName: PropTypes.string,
+  showCredentialsForm: PropTypes.bool,
+  organizations: PropTypes.object,
 };
 
 function mapStateToProps(state) {
   return {
-    credentials: state.entities.credentials,
     app: state.app,
+    credentials: state.entities.credentials,
+    showCredentialsForm: state.showCredentialsForm,
+    organizations: state.entities.organizations,
   };
 }
 
@@ -72,8 +81,6 @@ module.exports = connect(mapStateToProps)(Credentials);
 
 class CredentialsDisplay extends React.Component {
   render() {
-    var provider = this.props.app.info.general.provider;
-
     if (this.props.credentials.isFetching) {
       return (
         <span>
@@ -83,9 +90,9 @@ class CredentialsDisplay extends React.Component {
     } else {
       if (this.props.credentials.items.length === 0) {
 
-        let button = <Button onClick={this.props.onShowFormClick} bsStyle='default' className='small'>Set Credentials</Button>;
+        let button = <Button onClick={this.props.onShowForm} bsStyle='default' className='small'>Set Credentials</Button>;
 
-        if (provider === 'azure') {
+        if (this.props.provider === 'azure') {
           return (
             <div>
               <p>No specific provider credentials set. Clusters of this organization will be created in the default tenant cluster subscription configured for this installation.</p>
@@ -107,8 +114,8 @@ class CredentialsDisplay extends React.Component {
          */
 
         var providerWarning;
-        if (typeof this.props.credentials.items[0][provider] === 'undefined') {
-          providerWarning = <p>Credentials details not matching expectations for provider {provider}</p>;
+        if (typeof this.props.credentials.items[0][this.props.provider] === 'undefined') {
+          providerWarning = <p>Credentials details not matching expectations for provider {this.props.provider}</p>;
         }
 
         // AWS credential
@@ -165,63 +172,86 @@ class CredentialsDisplay extends React.Component {
 }
 
 CredentialsDisplay.propTypes = {
-  dispatch: PropTypes.func,
   organizationName: PropTypes.string,
-  actions: PropTypes.object,
   credentials: PropTypes.object,
-  app: PropTypes.object,
-  onShowFormClick: PropTypes.func,
+  provider: PropTypes.string,
+  onShowForm: PropTypes.func,
 };
 
+
+/**
+ * CredentialsForm is a sub-component of Credentials.
+ * 
+ * As the name indicates, it provides a form to enter credential details.
+ * CredentialsForm does not dispatch any redux actions and it does not
+ * interact with the application state -- this is done by the parent Credentials.
+*/
 class CredentialsForm extends React.Component {
   state = {
     isValid: false,
-    form: {
-      azureSubscriptionID: '',
-      azureTenantID: '',
-      azureClientID: '',
-      azureClientSecret: '',
-      azureClientSecretAgain: '',
-      awsAdminRoleARN: '',
-      awsOperatorRoleARN: '',
-    }
+    azureSubscriptionID: '',
+    azureTenantID: '',
+    azureClientID: '',
+    azureClientSecret: '',
+    azureClientSecretAgain: '',
+    awsAdminRoleARN: '',
+    awsOperatorRoleARN: '',
   };
 
-  validateForm = () => {
-    if (this.props.app.info.general.provider === 'azure') {
-      if (this.state.form.azureSubscriptionID != '' && this.state.form.azureTenantID != ''
-        && this.state.form.azureClientID != '' && this.state.form.azureClientSecret != '' 
-        && this.state.form.azureClientSecret === this.state.form.azureClientSecretAgain) {
+  constructor(props) {
+    super(props);
+
+    // pre-fill form from props in case data is available
+    if (typeof props.formData === 'object') {
+      this.state = props.formData;
+    }
+  }
+
+  /**
+   * validate checks whether the form is submittable with the current
+   * input field values. If yes, this.state.isValid is set to true.
+   */
+  validate = () => {
+    if (this.props.provider === 'azure') {
+      if (this.state.azureSubscriptionID && this.state.azureTenantID && this.state.azureClientID && this.state.azureClientSecret
+        && this.state.azureSubscriptionID !== '' && this.state.azureTenantID !== ''
+        && this.state.azureClientID !== '' && this.state.azureClientSecret !== '' 
+        && this.state.azureClientSecret === this.state.azureClientSecretAgain) {
           this.setState({isValid: true});
       } else {
         this.setState({isValid: false});
       }
     } else {
-      if (this.state.form.awsAdminRoleARN != '' && this.state.form.awsOperatorRoleARN != '') {
-          this.setState({isValid: true});
+      if (this.state.awsAdminRoleARN && this.state.awsOperatorRoleARN && this.state.awsAdminRoleARN !== '' && this.state.awsOperatorRoleARN !== '') {
+        this.setState({isValid: true});
       } else {
         this.setState({isValid: false});
       }
     }
   }
 
+  /**
+   * handleChange copies the current input field value into this.state[fieldname].
+   */
   handleChange = (e) => {
     let fieldName = e.target.name;
     let fleldVal = e.target.value;
-    this.setState({
-      form: {...this.state.form, [fieldName]: fleldVal}
-    }, () => {
-      this.validateForm();
+    this.setState({[fieldName]: fleldVal}, () => {
+      // setState is asynchronous. this is a callback called after setState has been executed.
+      this.validate();
     });
   }
 
+  /**
+   * Passes the current form data on to the parent component
+   */
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.onSubmit(this.state.form);
+    this.props.onSubmit(this.state);
   }
 
   render () {
-    if (this.props.app.info.general.provider === 'azure') {
+    if (this.props.provider === 'azure') {
       return <form>
         <p>Here you can set credentials for the organization <code>{this.props.organizationName}</code> , to be used by
         all new clusters created for this organization. Find more information on how to prepare an Azure subscription for running 
@@ -286,7 +316,7 @@ class CredentialsForm extends React.Component {
 
         <Button onClick={this.handleSubmit} bsStyle='primary' disabled={!this.state.isValid}>Set Credentials</Button>
       </form>;
-    } else if (this.props.app.info.general.provider === 'aws') {
+    } else if (this.props.provider === 'aws') {
       return <form>
         <p>Here you can set credentials for the organization <code>{this.props.organizationName}</code> , to be used by 
         all new clusters created for this organization. Find more information on how to prepare an AWS for running 
@@ -300,7 +330,7 @@ class CredentialsForm extends React.Component {
           <FormControl
             name='awsAdminRoleARN'
             type='text'
-            value={this.state.awsAdminRoleARN}
+            value={this.state.awsAdminRoleARN ? this.state.awsAdminRoleARN : ''}
             onChange={this.handleChange}
           />
           <FormControl.Feedback />
@@ -311,7 +341,7 @@ class CredentialsForm extends React.Component {
           <FormControl
             name='awsOperatorRoleARN'
             type='text'
-            value={this.state.awsOperatorRoleARN}
+            value={this.state.awsOperatorRoleARN ? this.state.awsOperatorRoleARN : ''}
             onChange={this.handleChange}
           />
           <FormControl.Feedback />
@@ -325,9 +355,8 @@ class CredentialsForm extends React.Component {
 
 CredentialsForm.propTypes = {
   actions: PropTypes.object,
-  app: PropTypes.object,
+  provider: PropTypes.string,
   credentials: PropTypes.object,
-  dispatch: PropTypes.func,
   formData: PropTypes.object,
   onSubmit: PropTypes.func,
   organizationName: PropTypes.string,
