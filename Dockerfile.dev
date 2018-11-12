@@ -11,6 +11,10 @@ WORKDIR /usr/src/app
 RUN npm set progress=false
 RUN npm config set registry https://registry.npmjs.org/
 
+# Use node_modules already installed in the current directory
+# to save time
+COPY node_modules /usr/src/app/node_modules
+
 # Install some slow dependencies individually, so they can get cached as layers
 RUN npm install node-sass@4.9.4
 
