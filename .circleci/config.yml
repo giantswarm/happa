@@ -6,6 +6,16 @@ jobs:
     - checkout
 
     - run:
+        name: Save the current month to a temp file (for restore_cache)
+        command: date +"%Y-%m" > /tmp/month
+  
+    - restore_cache:
+          keys:
+            # Find a cache corresponding to this specific package.json checksum
+            # created in this month.
+            - v1-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
+
+    - run:
         name: Install architect
         command: |
           wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
