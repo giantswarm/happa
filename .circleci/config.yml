@@ -30,19 +30,17 @@ jobs:
           ./architect build
 
     - run:
-        name: Start a container from the image we just built
-        command: docker run --name testcontainer -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
-
-    - run:
-        name: Test the container
+        name: Test the image we just built
         command: |
+          docker run --name testcontainer -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
           CURL_OUTPUT=$(curl -s -k https://localhost:8000)
           echo "${CURL_OUTPUT}" | grep Happa
           docker kill testcontainer
 
     - run:
-        name: Copy node_modules from container
+        name: Copy node_modules from build container
         command: |
+          docker images
           docker run --name buildcontainer -d happa-dev
           docker cp buildcontainer:/usr/src/app/node_modules ./node_modules
           docker kill buildcontainer
