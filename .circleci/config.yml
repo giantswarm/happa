@@ -28,11 +28,23 @@ jobs:
           make dist
           ./architect build
 
-    - run: docker run --name testcontainer -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
-    - run: |
-        CURL_OUTPUT=$(curl -s -k https://localhost:8000)
-        echo "${CURL_OUTPUT}" | grep Happa
-    - run: docker kill testcontainer
+    - run:
+        name: Start a container from the image we just built
+        command: docker run --name testcontainer -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+
+    - run:
+        name: Test the container
+        command: |
+          CURL_OUTPUT=$(curl -s -k https://localhost:8000)
+          echo "${CURL_OUTPUT}" | grep Happa
+
+    - run:
+        name: Copy node_modules from container
+        command: docker cp testcontainer:/usr/src/app/node_modules ./node_modules
+
+    - run:
+        name: Stop test container
+        command: docker kill testcontainer
 
     - deploy:
         name: Deploy with architect (master only)
