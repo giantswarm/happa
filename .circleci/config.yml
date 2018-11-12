@@ -40,3 +40,8 @@ jobs:
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
             ./architect deploy
           fi
+
+    - save_cache:
+        key: v1-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
+        paths:
+          - ./node_modules
