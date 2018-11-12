@@ -38,14 +38,14 @@ jobs:
         command: |
           CURL_OUTPUT=$(curl -s -k https://localhost:8000)
           echo "${CURL_OUTPUT}" | grep Happa
+          docker kill testcontainer
 
     - run:
         name: Copy node_modules from container
-        command: docker cp testcontainer:/usr/src/app/node_modules ./node_modules
-
-    - run:
-        name: Stop test container
-        command: docker kill testcontainer
+        command: |
+          docker run --name buildcontainer -d happa-dev
+          docker cp buildcontainer:/usr/src/app/node_modules ./node_modules
+          docker kill buildcontainer
 
     - deploy:
         name: Deploy with architect (master only)
