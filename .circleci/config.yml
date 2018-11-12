@@ -25,6 +25,7 @@ jobs:
     - run:
         name: Build
         command: |
+          mkdir -p node_modules
           make dist
           ./architect build
 
