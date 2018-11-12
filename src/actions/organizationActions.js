@@ -469,13 +469,10 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
         data.awsAdminRoleARN, data.awsOperatorRoleARN);
     }
 
-    console.log('requestBody:', requestBody);
-
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
     organizationsApi.addCredentials(scheme + ' ' + token, orgId, requestBody)
       .then((response) => {
         // perform the API call
-        console.log('ORGANIZATION_CREDENTIALS_SET_SUCCESS', response);
 
         dispatch(flashAdd({
           message: 'Credentials have been stored successfully.',

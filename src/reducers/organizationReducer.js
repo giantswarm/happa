@@ -48,7 +48,6 @@ export default function organizationReducer(state = {lastUpdated: 0, isFetching:
       };
     
     case types.ORGANIZATION_CREDENTIALS_SET:
-      console.debug('ORGANIZATION_CREDENTIALS_SET reducer', state, action);
       return {
         showCredentialsForm: true,
         items: state.items,
