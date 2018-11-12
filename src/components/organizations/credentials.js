@@ -151,7 +151,7 @@ class CredentialsDisplay extends React.Component {
                 <tbody>
                   <tr key='account_id'>
                     <td>Azure subscription ID</td>
-                    <td className='value'>{ this.props.credentials.items[0].azure.credential.subscription_id }</td>
+                    <td className='value code'>{ this.props.credentials.items[0].azure.credential.subscription_id }</td>
                   </tr>
                   <tr key='awsoperator_role'>
                     <td>Azure tenant ID</td>
