@@ -20,7 +20,7 @@ jobs:
         command: |
           test -d node_modules && du -sk node_modules
           echo ""
-          find node_modules -maxdepth 1|sort
+          test -d node_modules && find node_modules -maxdepth 1|sort
   
     - run:
         name: Install architect
