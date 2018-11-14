@@ -27,8 +27,11 @@ jobs:
           ./architect version
 
     - run:
-        name: Install dependencies
-        command: make install-node-modules
+        name: Install dependencies (if not there or empty)
+        command: |
+          if [ "$(du -s node_modules | awk '{print $1}')" -lt "1024" ]; then
+            make install-node-modules
+          fi
 
     - run:
         name: Build web application
