@@ -13,7 +13,7 @@ jobs:
           keys:
             # Find a cache corresponding to this specific package.json checksum
             # created in this month.
-            - v1-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
+            - v2-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
 
     - run:
         name: Install architect
@@ -42,15 +42,13 @@ jobs:
         command: |
           docker images
           docker run --name buildcontainer -d happa-dev:latest sleep 500
-          sleep 10
-          echo ""
-          docker ps
-          echo ""
-          docker logs buildcontainer
+          sleep 2
           echo ""
           docker cp buildcontainer:/usr/src/app/node_modules ./node_modules
           echo ""
-          ls -la .
+          ls -la node_modules
+          echo ""
+          du -sk node_modules
           echo ""
           docker kill buildcontainer
 
@@ -62,6 +60,6 @@ jobs:
           fi
 
     - save_cache:
-        key: v1-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
+        key: v2-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
         paths:
           - ./node_modules
