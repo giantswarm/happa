@@ -1,3 +1,5 @@
+.PHONY: dist
+
 # Default task that Builder will run
 # Builds production assets. Builder takes care of building the production container
 default: dist
@@ -8,20 +10,23 @@ production: dist docker-build-prod
 	docker-compose -f docker-compose-prod.yml up
 
 # Build production assets and save them in the 'dist' folder
-dist: docker-build-dev
+dist:
 	rm -rf dist
 	mkdir dist
-	docker run -p 8000:8000 -v ${PWD}/src:/usr/src/app/src:Z -v ${PWD}/dist:/usr/src/app/dist:Z happa-dev grunt build
-
-# When in CI, build production assets and save them in the 'dist' folder
-dist-ci: docker-build-dev
-	rm -rf dist
-	mkdir dist
-	docker run -p 8000:8000 \
-		-v ${PWD}/src:/usr/src/app/src:Z \
-		-v ${PWD}/dist:/usr/src/app/dist:Z \
-		-v ${PWD}/node_modules:/usr/src/node_modules \
-		happa-dev grunt build
+	docker run --rm -ti \
+		-v ${PWD}/src:/usr/src/app/src \
+		-v ${PWD}/dist:/usr/src/app/dist \
+		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules \
+		-v ${PWD}/package.json:/usr/src/app/package.json \
+		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock \
+		quay.io/giantswarm/happa-build:latest yarn install
+	docker run --rm -ti \
+		-v ${PWD}/src:/usr/src/app/src \
+		-v ${PWD}/dist:/usr/src/app/dist \
+		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules \
+		-v ${PWD}/package.json:/usr/src/app/package.json \
+		-v ${PWD}/Gruntfile.js:/usr/src/app/Gruntfile.js \
+		quay.io/giantswarm/happa-build:latest grunt build
 
 
 check-updates:
@@ -81,11 +86,3 @@ npm-check-updates:
 # Run tests
 test: docker-build-dev
 	docker run -ti -p 8000:8000 -p 8080:8080 -v ${PWD}/src:/usr/src/app/src:Z happa-dev npm test
-
-# update dependency images
-pull-images:
-	docker pull quay.io/giantswarm/fake-metrics-node:latest
-	docker pull quay.io/giantswarm/fake-metrics-prometheus:latest
-	docker pull quay.io/giantswarm/mailcatcher:latest
-	docker pull quay.io/giantswarm/giantswarm/mock-api:latest
-	docker pull quay.io/giantswarm/passage:latest
