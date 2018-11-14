@@ -43,8 +43,15 @@ jobs:
           docker images
           docker run --name buildcontainer -d happa-dev:latest
           sleep 10
+          echo ""
+          docker ps
+          echo ""
           docker logs buildcontainer
+          echo ""
           docker cp buildcontainer:/usr/src/app/node_modules ./node_modules
+          echo ""
+          ls -la .
+          echo ""
           docker kill buildcontainer
 
     - deploy:
