@@ -24,7 +24,7 @@ class InputField extends React.Component {
     };
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     if (props.value != this.state.value) {
       var validation = this.props.validate(props.value);
       this.setState({

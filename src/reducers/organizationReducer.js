@@ -2,6 +2,14 @@
 
 import * as types from '../actions/actionTypes';
 
+/**
+ * organizationReducer manipulates the appplication state based on organization actions.
+ * 
+ * 'items' here ends up in the state's entities.organizations attribute.
+ * 
+ * @param {*} state 
+ * @param {*} action 
+ */
 export default function organizationReducer(state = {lastUpdated: 0, isFetching: false, items: {}}, action = undefined) {
   switch(action.type) {
     case types.ORGANIZATIONS_LOAD:
@@ -37,6 +45,30 @@ export default function organizationReducer(state = {lastUpdated: 0, isFetching:
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: state.items
+      };
+    
+    case types.ORGANIZATION_CREDENTIALS_SET:
+      return {
+        showCredentialsForm: true,
+        items: state.items,
+      };
+
+    case types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED:
+      return {
+        showCredentialsForm: true,
+        items: state.items,
+      };
+
+    case types.ORGANIZATION_CREDENTIALS_SET_ERROR:
+      return {
+        showCredentialsForm: true,
+        items: state.items,
+      };
+
+    case types.ORGANIZATION_CREDENTIALS_SET_SUCCESS:
+      return {
+        showCredentialsForm: false,
+        items: state.items,
       };
 
     default:
