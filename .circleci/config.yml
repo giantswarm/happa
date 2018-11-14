@@ -41,8 +41,9 @@ jobs:
         name: Copy node_modules from build container
         command: |
           docker images
-          docker run --name buildcontainer -d happa-dev
+          docker run --name buildcontainer -d happa-dev:latest
           sleep 10
+          docker logs buildcontainer
           docker cp buildcontainer:/usr/src/app/node_modules ./node_modules
           docker kill buildcontainer
 
