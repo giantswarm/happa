@@ -18,7 +18,7 @@ jobs:
     - run:
         name: Inspect cache
         command: |
-          du -sk node_modules
+          test -d node_modules && du -sk node_modules
           echo ""
           find node_modules -maxdepth 1|sort
   
