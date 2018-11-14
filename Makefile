@@ -26,6 +26,8 @@ dist:
 		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules \
 		-v ${PWD}/package.json:/usr/src/app/package.json \
 		-v ${PWD}/Gruntfile.js:/usr/src/app/Gruntfile.js \
+		-v ${PWD}/webpack.config.js:/usr/src/app/webpack.config.js \
+		-v ${PWD}/webpack.dist.config.js:/usr/src/app/dist.webpack.config.js \
 		quay.io/giantswarm/happa-build:latest grunt build
 
 
