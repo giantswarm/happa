@@ -42,6 +42,7 @@ jobs:
         command: |
           docker images
           docker run --name buildcontainer -d happa-dev
+          sleep 10
           docker cp buildcontainer:/usr/src/app/node_modules ./node_modules
           docker kill buildcontainer
 
