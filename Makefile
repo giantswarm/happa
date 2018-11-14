@@ -13,6 +13,17 @@ dist: docker-build-dev
 	mkdir dist
 	docker run -p 8000:8000 -v ${PWD}/src:/usr/src/app/src:Z -v ${PWD}/dist:/usr/src/app/dist:Z happa-dev grunt build
 
+# When in CI, build production assets and save them in the 'dist' folder
+dist-ci: docker-build-dev
+	rm -rf dist
+	mkdir dist
+	docker run -p 8000:8000 \
+		-v ${PWD}/src:/usr/src/app/src:Z \
+		-v ${PWD}/dist:/usr/src/app/dist:Z \
+		-v ${PWD}/node_modules:/usr/src/node_modules \
+		happa-dev grunt build
+
+
 # Build the production docker container, which is just an nginx server
 # with the files from the dist folder
 docker-build-prod:

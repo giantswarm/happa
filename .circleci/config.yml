@@ -26,7 +26,7 @@ jobs:
         name: Build
         command: |
           mkdir -p node_modules
-          make dist
+          make dist-ci
           ./architect build
 
     - run:
@@ -36,21 +36,6 @@ jobs:
           CURL_OUTPUT=$(curl -s -k https://localhost:8000)
           echo "${CURL_OUTPUT}" | grep Happa
           docker kill testcontainer
-
-    - run:
-        name: Copy node_modules from build container
-        command: |
-          docker images
-          docker run --name buildcontainer -d happa-dev:latest sleep 500
-          sleep 2
-          echo ""
-          docker cp buildcontainer:/usr/src/app/node_modules ./node_modules
-          echo ""
-          ls -la node_modules
-          echo ""
-          du -sk node_modules
-          echo ""
-          docker kill buildcontainer
 
     - deploy:
         name: Deploy with architect (master only)
