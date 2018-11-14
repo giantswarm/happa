@@ -31,10 +31,16 @@ jobs:
           ./architect version
 
     - run:
-        name: Build
-        command: |
-          make dist
-          ./architect build
+        name: Install dependencies
+        command: install-node-modules
+
+    - run:
+        name: Build web application
+        command: make dist
+
+    - run:
+        name: Build Docker image
+        command: ./architect build
 
     - run:
         name: Test the image we just built
