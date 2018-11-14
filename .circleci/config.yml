@@ -32,7 +32,7 @@ jobs:
 
     - run:
         name: Install dependencies
-        command: install-node-modules
+        command: make install-node-modules
 
     - run:
         name: Build web application
