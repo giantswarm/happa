@@ -21,7 +21,7 @@ RUN yarn install
 RUN yarn add grunt
 
 # check for dependency updates
-RUN yarn add npm-check-updates
+RUN npm install -g npm-check-updates
 RUN ncu
 
 # Bundle app source
