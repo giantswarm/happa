@@ -13,7 +13,7 @@ jobs:
           keys:
             # Find a cache corresponding to this specific package.json checksum
             # created in this month.
-            - v3-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
+            - v4-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
     
     - run:
         name: Inspect cache
@@ -52,6 +52,6 @@ jobs:
           fi
 
     - save_cache:
-        key: v3-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
+        key: v4-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
         paths:
           - ./node_modules
