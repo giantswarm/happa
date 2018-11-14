@@ -18,11 +18,11 @@ RUN yarn add node-sass@4.9.4
 COPY package.json /usr/src/app/
 
 RUN yarn install
-RUN yarn add grunt
 
 # check for dependency updates
 RUN npm install -g npm-check-updates
 RUN ncu
+RUN npm install -g grunt
 
 # Bundle app source
 COPY . /usr/src/app
