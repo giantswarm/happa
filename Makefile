@@ -24,6 +24,11 @@ dist-ci: docker-build-dev
 		happa-dev grunt build
 
 
+check-updates:
+	# check for dependency updates
+	docker run -p 8000:8000 -v ${PWD}/src:/usr/src/app/src:Z -v ${PWD}/dist:/usr/src/app/dist:Z \
+		happa-dev npm install -g npm-check-updates && ncu
+
 # Build the production docker container, which is just an nginx server
 # with the files from the dist folder
 docker-build-prod:
