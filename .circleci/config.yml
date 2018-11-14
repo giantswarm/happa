@@ -18,9 +18,9 @@ jobs:
     - run:
         name: Inspect cache
         command: |
-          test -d node_modules && du -sk node_modules
+          (test -d node_modules && du -sk node_modules) || echo "no node_modules"
           echo ""
-          test -d node_modules && find node_modules -maxdepth 1|sort
+          (test -d node_modules && find node_modules -maxdepth 1|sort) || echo "no node_modules"
   
     - run:
         name: Install architect
