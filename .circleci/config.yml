@@ -13,8 +13,15 @@ jobs:
           keys:
             # Find a cache corresponding to this specific package.json checksum
             # created in this month.
-            - v2-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
-
+            - v3-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
+    
+    - run:
+        name: Inspect cache
+        command: |
+          du -sk node_modules
+          echo ""
+          find node_modules -maxdepth 1|sort
+  
     - run:
         name: Install architect
         command: |
@@ -45,6 +52,6 @@ jobs:
           fi
 
     - save_cache:
-        key: v2-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
+        key: v3-npm-deps-{{ checksum "package.json" }}-{{ checksum "/tmp/month" }}
         paths:
           - ./node_modules

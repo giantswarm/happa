@@ -11,21 +11,17 @@ WORKDIR /usr/src/app
 RUN npm set progress=false
 RUN npm config set registry https://registry.npmjs.org/
 
-# Use node_modules already installed in the current directory
-# to save time
-COPY node_modules /usr/src/app/node_modules
-
 # Install some slow dependencies individually, so they can get cached as layers
-RUN npm install node-sass@4.9.4
+RUN yarn add node-sass@4.9.4
 
 # Install app dependencies
 COPY package.json /usr/src/app/
 
-RUN npm install
-RUN npm install -g grunt
+RUN yarn install
+RUN yarn add grunt
 
 # check for dependency updates
-RUN npm install -g npm-check-updates
+RUN yarn add npm-check-updates
 RUN ncu
 
 # Bundle app source
