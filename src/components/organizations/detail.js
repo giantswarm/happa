@@ -98,7 +98,7 @@ class OrganizationDetail extends React.Component {
             <h3 className='table-label'>Provider credentials</h3>
           </div>
           <div className='col-9'>
-            <Credentials organizationName={this.props.match.params.orgId} />
+            <Credentials organizationName={this.props.match.params.orgId}/>
           </div>
         </div>
       );

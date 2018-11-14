@@ -94,7 +94,7 @@ export class SignUp extends React.Component {
     });
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     this.resetForm();
     this.componentDidMount();
   }

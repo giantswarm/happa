@@ -127,73 +127,74 @@ export function organizationsLoad() {
     dispatch({type: types.ORGANIZATIONS_LOAD});
 
     return organizationsApi.getOrganizations(scheme + ' ' + token)
-    .then(organizations => {
-      var organizationsArray = organizations.map((organization) => {
-        return organization.id;
+      .then(organizations => {
+        var organizationsArray = organizations.map((organization) => {
+          return organization.id;
+        });
+
+        var clusters = clustersApi.getClusters(scheme + ' ' + token)
+                      .then(data => {
+                          dispatch(clusterLoadSuccess(data));
+                          return data;
+                      })
+                      .catch((error) => {
+                          console.error(error);
+                          dispatch(clusterLoadError(error));
+                      });
+
+        var orgDetails = Promise.all(_.map(organizationsArray, organizationName => {
+          return organizationsApi.getOrganization(scheme + ' ' + token, organizationName)
+                .then(organization => {
+                  return organization;
+                });
+        }));
+
+        return Promise.all([clusters, orgDetails]);
+      })
+      .then((result) => {
+        var clusters = result[0];
+        var orgDetails = result[1];
+        
+        // create an object with organization IDs as key
+        var organizations = orgDetails.reduce((previous, current) => {
+          var orgId = current.id;
+          var orgDetails = current;
+
+          orgDetails.members = orgDetails.members.sort();
+
+          previous[orgId] = Object.assign(
+            {},
+            {clusters: []},
+            getState().entities.organizations.items[orgId],
+            orgDetails,
+          );
+          return previous;
+        }, {});
+
+        var selectedOrganization = determineSelectedOrganization(organizations);
+        var selectedCluster = determineSelectedCluster(selectedOrganization, clusters);
+
+        return {
+          organizations,
+          selectedOrganization,
+          selectedCluster
+        };
+      })
+      .then((result) => {
+        dispatch(organizationsLoadSuccess(result.organizations, result.selectedOrganization, result.selectedCluster));
+        return null;
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(flashAdd({
+          message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+          class: 'danger'
+        }));
+
+        dispatch({
+          type: types.ORGANIZATIONS_LOAD_ERROR
+        });
       });
-
-      var clusters = clustersApi.getClusters(scheme + ' ' + token)
-                     .then(data => {
-                        dispatch(clusterLoadSuccess(data));
-                        return data;
-                     })
-                     .catch((error) => {
-                        console.error(error);
-                        dispatch(clusterLoadError(error));
-                     });
-
-      var orgDetails = Promise.all(_.map(organizationsArray, organizationName => {
-        return organizationsApi.getOrganization(scheme + ' ' + token, organizationName)
-               .then(organization => {
-                 return organization;
-               });
-      }));
-
-      return Promise.all([clusters, orgDetails]);
-    })
-    .then((result) => {
-      var clusters = result[0];
-      var orgDetails = result[1];
-
-      var organizations = orgDetails.reduce((previous, current) => {
-        var orgId = current.id;
-        var orgDetails = current;
-
-        orgDetails.members = orgDetails.members.sort();
-
-        previous[orgId] = Object.assign(
-          {},
-          {clusters: []},
-          getState().entities.organizations.items[orgId],
-          orgDetails,
-        );
-        return previous;
-      }, {});
-
-      var selectedOrganization = determineSelectedOrganization(organizations);
-      var selectedCluster = determineSelectedCluster(selectedOrganization, clusters);
-
-      return {
-        organizations,
-        selectedOrganization,
-        selectedCluster
-      };
-    })
-    .then((result) => {
-      dispatch(organizationsLoadSuccess(result.organizations, result.selectedOrganization, result.selectedCluster));
-      return null;
-    })
-    .catch(error => {
-      console.error(error);
-      dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to load the list of organizations</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
-        class: 'danger'
-      }));
-
-      dispatch({
-        type: types.ORGANIZATIONS_LOAD_ERROR
-      });
-    });
   };
 }
 
@@ -209,26 +210,26 @@ export function organizationDeleteConfirmed(orgId) {
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
     return organizationsApi.deleteOrganization(scheme + ' ' + token, orgId)
-    .then(() => {return dispatch(organizationsLoad());})
-    .then(dispatch.bind(this, modalHide()))
-    .then(dispatch.bind(this, flashAdd({
-      message: 'Successfully deleted organization: ' + orgId,
-      class: 'success',
-      ttl: 3000
-    })))
-    .then(() => {return dispatch(organizationDeleteSuccess(orgId));})
-    .catch(error => {
-      dispatch(modalHide());
+      .then(() => {return dispatch(organizationsLoad());})
+      .then(dispatch.bind(this, modalHide()))
+      .then(dispatch.bind(this, flashAdd({
+        message: 'Successfully deleted organization: ' + orgId,
+        class: 'success',
+        ttl: 3000
+      })))
+      .then(() => {return dispatch(organizationDeleteSuccess(orgId));})
+      .catch(error => {
+        dispatch(modalHide());
 
-      dispatch(flashAdd({
-        message: <div><strong>Could not delete organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
-        class: 'danger'
-      }));
+        dispatch(flashAdd({
+          message: <div><strong>Could not delete organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+          class: 'danger'
+        }));
 
-      dispatch({
-        type: types.ORGANIZATION_DELETE_ERROR
+        dispatch({
+          type: types.ORGANIZATION_DELETE_ERROR
+        });
       });
-    });
   };
 }
 
@@ -258,25 +259,25 @@ export function organizationCreateConfirmed(orgId) {
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
     return organizationsApi.addOrganization(scheme + ' ' + token, orgId, {})
-    .then(() => {return dispatch(organizationsLoad());})
-    .then(dispatch.bind(this, modalHide()))
-    .then(dispatch.bind(this, flashAdd({
-      message: 'Successfully created organization: ' + orgId,
-      class: 'success',
-      ttl: 3000
-    })))
-    .catch(error => {
-      dispatch(modalHide());
+      .then(() => {return dispatch(organizationsLoad());})
+      .then(dispatch.bind(this, modalHide()))
+      .then(dispatch.bind(this, flashAdd({
+        message: 'Successfully created organization: ' + orgId,
+        class: 'success',
+        ttl: 3000
+      })))
+      .catch(error => {
+        dispatch(modalHide());
 
-      dispatch(flashAdd({
-        message: <div><strong>Could not create organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
-        class: 'danger'
-      }));
+        dispatch(flashAdd({
+          message: <div><strong>Could not create organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+          class: 'danger'
+        }));
 
-      dispatch({
-        type: types.ORGANIZATION_CREATE_ERROR
+        dispatch({
+          type: types.ORGANIZATION_CREATE_ERROR
+        });
       });
-    });
   };
 }
 
@@ -327,24 +328,24 @@ export function organizationAddMemberConfirmed(orgId, email) {
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
     return organizationsApi.getOrganization(scheme + ' ' + token, orgId)
-    .then((organization) => {
-      var members = organization.members.concat([{email: email}]);
-      return organizationsApi.modifyOrganization(scheme + ' ' + token, orgId, {members});
-    })
-    .then(() => {return dispatch(organizationsLoad());})
-    .then(dispatch.bind(this, modalHide()))
-    .then(dispatch.bind(this, flashAdd({
-      message: 'Successfully added `' + email + '` to organization: ' + '`' + orgId + '`',
-      class: 'success',
-      ttl: 3000
-    })))
-    .catch(() => {
-      dispatch({
-        type: types.ORGANIZATION_ADD_MEMBER_ERROR,
-        orgId: orgId,
-        errorMessage: <span>Could not add {email} to organization {orgId}.</span>
+      .then((organization) => {
+        var members = organization.members.concat([{email: email}]);
+        return organizationsApi.modifyOrganization(scheme + ' ' + token, orgId, {members});
+      })
+      .then(() => {return dispatch(organizationsLoad());})
+      .then(dispatch.bind(this, modalHide()))
+      .then(dispatch.bind(this, flashAdd({
+        message: 'Successfully added `' + email + '` to organization: ' + '`' + orgId + '`',
+        class: 'success',
+        ttl: 3000
+      })))
+      .catch(() => {
+        dispatch({
+          type: types.ORGANIZATION_ADD_MEMBER_ERROR,
+          orgId: orgId,
+          errorMessage: <span>Could not add {email} to organization {orgId}.</span>
+        });
       });
-    });
   };
 }
 
@@ -365,29 +366,29 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
     organizationsApi.getOrganization(scheme + ' ' + token, orgId)
-    .then((organization) => {
-      var members = organization.members.filter((member) => {return member.email !== email;});
-      return organizationsApi.modifyOrganization(scheme + ' ' + token, orgId, {members});
-    })
-    .then(() => {return dispatch(organizationsLoad());})
-    .then(dispatch.bind(this, modalHide()))
-    .then(dispatch.bind(this, flashAdd({
-      message: 'Successfully removed `' + email + '` from organization: ' + '`' + orgId + '`',
-      class: 'success',
-      ttl: 3000
-    })))
-    .catch(error => {
-      dispatch(modalHide());
+      .then((organization) => {
+        var members = organization.members.filter((member) => {return member.email !== email;});
+        return organizationsApi.modifyOrganization(scheme + ' ' + token, orgId, {members});
+      })
+      .then(() => {return dispatch(organizationsLoad());})
+      .then(dispatch.bind(this, modalHide()))
+      .then(dispatch.bind(this, flashAdd({
+        message: 'Successfully removed `' + email + '` from organization: ' + '`' + orgId + '`',
+        class: 'success',
+        ttl: 3000
+      })))
+      .catch(error => {
+        dispatch(modalHide());
 
-      dispatch(flashAdd({
-        message: <div><strong>Could not remove user `{email}` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
-        class: 'danger'
-      }));
+        dispatch(flashAdd({
+          message: <div><strong>Could not remove user `{email}` from organization `{orgId}`</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
+          class: 'danger'
+        }));
 
-      dispatch({
-        type: types.ORGANIZATION_REMOVE_MEMBER_ERROR
+        dispatch({
+          type: types.ORGANIZATION_REMOVE_MEMBER_ERROR
+        });
       });
-    });
   };
 }
 
@@ -399,6 +400,7 @@ export function organizationRemoveMember(orgId, email) {
   };
 }
 
+// organizationCredentialsLoad is called to load credentials for an organization.
 export function organizationCredentialsLoad(orgId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
@@ -411,24 +413,95 @@ export function organizationCredentialsLoad(orgId) {
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
     organizationsApi.getCredentials(scheme + ' ' + token, orgId)
-    .then((credentials) => {
-      dispatch({
-        type: types.ORGANIZATION_CREDENTIALS_LOAD_SUCCESS,
-        credentials: credentials,
-      });
-    })
-    .catch(error => {
-      dispatch(flashAdd({
-        message: (<div>
-          <strong>Could not load credentials for organization `{orgId}`</strong>
-          <br/>{error.body ? error.body.status_text : 'Please load the page again in a moment'}
-        </div>),
-        class: 'danger'
-      }));
+      .then((credentials) => {
+        dispatch({
+          type: types.ORGANIZATION_CREDENTIALS_LOAD_SUCCESS,
+          credentials: credentials,
+        });
+      })
+      .catch(error => {
+        dispatch(flashAdd({
+          message: (<div>
+            <strong>Could not load credentials for organization `{orgId}`</strong>
+            <br/>{error.body ? error.body.status_text : 'Please load the page again in a moment'}
+          </div>),
+          class: 'danger'
+        }));
 
-      dispatch({
-        type: types.ORGANIZATION_CREDENTIALS_LOAD_ERROR
+        dispatch({
+          type: types.ORGANIZATION_CREDENTIALS_LOAD_ERROR
+        });
       });
+  };
+}
+
+// organizationCredentialsSet reveals the form necessary to set credentials for an
+// organization.
+export function organizationCredentialsSet() {
+  return function(dispatch) {
+    dispatch({
+      type: types.ORGANIZATION_CREDENTIALS_SET
     });
+  };
+}
+
+// organizationCredentialsSetConfirmed performs the API request to set the credentials
+// for an organization and handles the result.
+export function organizationCredentialsSetConfirmed(provider, orgId, data) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED
+    });
+
+    let requestBody = new GiantSwarmV4.V4AddCredentialsRequest();
+    requestBody.provider = provider;
+
+    if (provider === 'azure') {
+      requestBody.azure = new GiantSwarmV4.V4AddCredentialsRequestAzure();
+      requestBody.azure.credential = new GiantSwarmV4.V4AddCredentialsRequestAzureCredential(
+        data.azureClientID, data.azureClientSecret, data.azureSubscriptionID, data.azureTenantID);
+    } else if (provider === 'aws') {
+      requestBody.aws = new GiantSwarmV4.V4AddCredentialsRequestAws();
+      requestBody.aws.roles = new GiantSwarmV4.V4AddCredentialsRequestAwsRoles(
+        data.awsAdminRoleARN, data.awsOperatorRoleARN);
+    }
+
+    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
+    organizationsApi.addCredentials(scheme + ' ' + token, orgId, requestBody)
+      .then((response) => {
+        // perform the API call
+
+        dispatch(flashAdd({
+          message: 'Credentials have been stored successfully.',
+          class: 'success',
+          ttl: 3000
+        }));
+
+        dispatch({
+          type: types.ORGANIZATION_CREDENTIALS_SET_SUCCESS,
+          response
+        });
+      })
+      .then(() => {
+        // update credentials data for the organization
+        return dispatch(organizationCredentialsLoad(orgId));
+      })
+      .catch(error => {
+        console.log('ORGANIZATION_CREDENTIALS_SET_ERROR', error);
+        dispatch(flashAdd({
+          message: (<div>
+            <strong>Could not set credentials for organization `{orgId}`</strong>
+            <br/>{error.body ? error.body.message : 'Please load the page again in a moment'}
+          </div>),
+          class: 'danger'
+        }));
+
+        dispatch({
+          type: types.ORGANIZATION_CREDENTIALS_SET_ERROR
+        });
+      });
   };
 }

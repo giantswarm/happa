@@ -91,3 +91,6 @@ npm-check-updates:
 # Run tests
 test: docker-build-dev
 	docker run -ti -p 8000:8000 -p 8080:8080 -v ${PWD}/src:/usr/src/app/src:Z happa-dev npm test
+
+clean:
+	rm -rf .cache dist docker-volumes node_modules
