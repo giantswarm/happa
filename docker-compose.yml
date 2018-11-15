@@ -5,11 +5,12 @@ services:
       context: ./
       dockerfile: Dockerfile.dev
     image: happa-dev:latest
-    command: npm start
     ports:
       - "7000:7000"
     volumes:
-      - "./src:/usr/src/app/src:Z"
+      - $PWD/src:/usr/src/app/src:Z
+      # to persist info on used dependencies to the repo
+      - $PWD/yarn.lock:/usr/src/app/yarn.lock
 
   passage:
     image: quay.io/giantswarm/passage:latest
