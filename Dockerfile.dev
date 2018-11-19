@@ -1,30 +1,35 @@
-FROM node:10-slim
+# This Dockerfile is optimized for the use in local development,
+# to build and run a NodeJS container through docker-compose.
+#
+# Main goals are:
+#
+# - src folder gets mounted, so webpack dev server picks up changes
+#   and re-builds automatically
+#
+# - relatively short statup time, at least as long as dependencies
+#   have not changed.
+# 
+# - persist dependencies in use to yarn.lock file, so we can use the
+#   exact same versions in CI builds.
 
-RUN apt-get update && apt-get install -y build-essential python
+FROM quay.io/giantswarm/happa-build:latest
 
-RUN apt-get install -y git-core
-
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+EXPOSE 7000
 
 RUN npm set progress=false
 RUN npm config set registry https://registry.npmjs.org/
 
 # Install some slow dependencies individually, so they can get cached as layers
-RUN npm install node-sass@4.9.4
+RUN yarn add node-sass@4.9.4
 
 # Install app dependencies
 COPY package.json /usr/src/app/
+COPY .eslintrc /usr/src/app/
+COPY ./Gruntfile.js /usr/src/app/
+COPY ./package.json /usr/src/app/
+COPY ./webpack.config.js /usr/src/app/
+COPY ./webpack.dist.config.js /usr/src/app/
 
-RUN npm install
-RUN npm install -g grunt
+COPY ./dev.sh /usr/src/app/
 
-# check for dependency updates
-RUN npm install -g npm-check-updates
-RUN ncu
-
-# Bundle app source
-COPY . /usr/src/app
-
-EXPOSE 8000
+ENTRYPOINT ["/usr/src/app/dev.sh"]

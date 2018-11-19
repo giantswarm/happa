@@ -1,3 +1,5 @@
+.PHONY: dist
+
 # Default task that Builder will run
 # Builds production assets. Builder takes care of building the production container
 default: dist
@@ -8,10 +10,34 @@ production: dist docker-build-prod
 	docker-compose -f docker-compose-prod.yml up
 
 # Build production assets and save them in the 'dist' folder
-dist: docker-build-dev
+install-node-modules:
 	rm -rf dist
 	mkdir dist
-	docker run -p 8000:8000 -v ${PWD}/src:/usr/src/app/src:Z -v ${PWD}/dist:/usr/src/app/dist:Z happa-dev grunt build
+	docker run --rm -ti \
+		-v ${PWD}/src:/usr/src/app/src \
+		-v ${PWD}/dist:/usr/src/app/dist \
+		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules \
+		-v ${PWD}/package.json:/usr/src/app/package.json \
+		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock \
+		quay.io/giantswarm/happa-build:latest yarn install --no-progress
+
+dist:
+	docker run --rm -ti \
+		-v ${PWD}/src:/usr/src/app/src \
+		-v ${PWD}/dist:/usr/src/app/dist \
+		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules \
+		-v ${PWD}/package.json:/usr/src/app/package.json \
+		-v ${PWD}/Gruntfile.js:/usr/src/app/Gruntfile.js \
+		-v ${PWD}/webpack.config.js:/usr/src/app/webpack.config.js \
+		-v ${PWD}/webpack.dist.config.js:/usr/src/app/webpack.dist.config.js \
+		-v ${PWD}/.eslintrc:/usr/src/app/.eslintrc \
+		quay.io/giantswarm/happa-build:latest grunt build
+
+
+check-updates:
+	# check for dependency updates
+	docker run -p 8000:8000 -v ${PWD}/src:/usr/src/app/src:Z -v ${PWD}/dist:/usr/src/app/dist:Z \
+		happa-dev npm install -g npm-check-updates && ncu
 
 # Build the production docker container, which is just an nginx server
 # with the files from the dist folder
@@ -65,14 +91,6 @@ npm-check-updates:
 # Run tests
 test: docker-build-dev
 	docker run -ti -p 8000:8000 -p 8080:8080 -v ${PWD}/src:/usr/src/app/src:Z happa-dev npm test
-
-# update dependency images
-pull-images:
-	docker pull quay.io/giantswarm/fake-metrics-node:latest
-	docker pull quay.io/giantswarm/fake-metrics-prometheus:latest
-	docker pull quay.io/giantswarm/mailcatcher:latest
-	docker pull quay.io/giantswarm/giantswarm/mock-api:latest
-	docker pull quay.io/giantswarm/passage:latest
 
 clean:
 	rm -rf .cache dist docker-volumes node_modules

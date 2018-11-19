@@ -16,7 +16,9 @@ Icon
 
 /package-lock.json
 /node_modules
+/node_modules_linux
 /docker-volumes
+
 .tmp
 /secrets.env
 /dist
