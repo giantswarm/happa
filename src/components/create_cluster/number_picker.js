@@ -5,14 +5,6 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 class NumberPicker extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-
-  }
-
   formatValue() {
     if (this.props.formatter) {
       return this.props.formatter(this.props.value);

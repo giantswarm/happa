@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../button';
 import { modalHide } from '../../actions/modalActions';
-import { organizationDeleteConfirm,
-         organizationCreateConfirm,
-         organizationAddMemberConfirm,
+import { organizationDeleteConfirmed,
+         organizationCreateConfirmed,
+         organizationAddMemberConfirmed,
          organizationAddMemberTyping,
-         organizationRemoveMemberConfirm } from '../../actions/organizationActions';
+         organizationRemoveMemberConfirmed } from '../../actions/organizationActions';
 
-import { clusterDeleteConfirm } from '../../actions/clusterActions';
+import { clusterDeleteConfirmed } from '../../actions/clusterActions';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import EmailField from './email_field';
 import PropTypes from 'prop-types';
@@ -29,12 +29,12 @@ class Modal extends React.Component {
     this.props.dispatch(modalHide());
   }
 
-  deleteClusterConfirm = (clusterId) => {
-    this.props.dispatch(clusterDeleteConfirm(clusterId));
+  deleteClusterConfirmed = (clusterId) => {
+    this.props.dispatch(clusterDeleteConfirmed(clusterId));
   }
 
   deleteOrganisation = (orgId) => {
-    this.props.dispatch(organizationDeleteConfirm(orgId));
+    this.props.dispatch(organizationDeleteConfirmed(orgId));
   }
 
   createOrganisation = (e) => {
@@ -42,7 +42,7 @@ class Modal extends React.Component {
       e.preventDefault();
     }
     var orgId = this.orgId.value;
-    this.props.dispatch(organizationCreateConfirm(orgId));
+    this.props.dispatch(organizationCreateConfirmed(orgId));
   }
 
   addMember = (e) => {
@@ -52,7 +52,7 @@ class Modal extends React.Component {
 
     if (this.state.emailValid) {
       var email = this.email.value();
-      this.props.dispatch(organizationAddMemberConfirm(this.props.modal.templateValues.orgId, email));
+      this.props.dispatch(organizationAddMemberConfirmed(this.props.modal.templateValues.orgId, email));
     }
   }
 
@@ -63,7 +63,7 @@ class Modal extends React.Component {
 
     var email = this.props.modal.templateValues.email;
     var orgId = this.props.modal.templateValues.orgId;
-    this.props.dispatch(organizationRemoveMemberConfirm(orgId, email));
+    this.props.dispatch(organizationRemoveMemberConfirmed(orgId, email));
   }
 
   emailFieldChanged = (emailField) => {
@@ -269,7 +269,7 @@ class Modal extends React.Component {
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
-                onClick={this.deleteClusterConfirm.bind(this, cluster)}>
+                onClick={this.deleteClusterConfirmed.bind(this, cluster)}>
                 {
                   this.props.modal.templateValues.loading ?
                   'Deleting Cluster'

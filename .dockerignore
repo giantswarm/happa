@@ -1,2 +1,2 @@
-node_modules
-secrets.env
+/node_modules
+/secrets.env

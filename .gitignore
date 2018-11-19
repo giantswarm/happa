@@ -14,10 +14,11 @@ Icon
 .Spotlight-V100
 .Trashes
 
-package-lock.json
-node_modules/
-.tmp
-dist
+/package-lock.json
+/node_modules
+/node_modules_linux
+/docker-volumes
 
-swarmvars.json
-secrets.env
+.tmp
+/secrets.env
+/dist

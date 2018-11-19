@@ -7,6 +7,7 @@ import modal from './modalReducer';
 import flashMessages from './flashMessagesReducer';
 import app from './appReducer';
 import releases from './releaseReducer';
+import credentials from './credentialReducer';
 
 const entities = combineReducers({
   organizations,
@@ -14,6 +15,7 @@ const entities = combineReducers({
   releases,
   users,
   invitations,
+  credentials,
 });
 
 const rootReducer = combineReducers({
@@ -77,6 +79,12 @@ export default rootReducer;
         }
       }
     },
+
+    credentials: {
+      items: [],
+      lastUpdated: 12345679,
+      isFetching: true,
+    }
 
     clusters: {
       lastUpdated: 0,

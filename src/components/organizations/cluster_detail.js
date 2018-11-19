@@ -1,66 +1,66 @@
 'use strict';
 
 import _ from 'underscore';
-import ReleaseDetailsModal from '../modal/release_details_modal';
-import React from 'react';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as clusterActions from '../../actions/clusterActions';
-import * as releaseActions from '../../actions/releaseActions';
-import ClusterKeyPairs from './cluster_key_pairs';
-import DocumentTitle from 'react-document-title';
-import { flashAdd } from '../../actions/flashMessageActions';
-import ClusterIDLabel from '../shared/cluster_id_label';
-import { relativeDate } from '../../lib/helpers.js';
-import Button from '../button/index';
-import ScaleClusterModal from './scale_cluster_modal';
-import UpgradeClusterModal from './upgrade_cluster_modal';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import cmp from 'semver-compare';
+import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
-import { Breadcrumb } from 'react-breadcrumbs';
+import React from 'react';
+
+import { flashAdd } from '../../actions/flashMessageActions';
+import { organizationCredentialsLoad } from '../../actions/organizationActions';
+import * as clusterActions from '../../actions/clusterActions';
+import * as releaseActions from '../../actions/releaseActions';
+
+import { relativeDate } from '../../lib/helpers.js';
+import AWSAccountID from '../shared/aws_account_id';
+import Button from '../button/index';
+import ClusterIDLabel from '../shared/cluster_id_label';
+import ClusterKeyPairs from './cluster_key_pairs';
+import ReleaseDetailsModal from '../modal/release_details_modal';
+import ScaleClusterModal from './scale_cluster_modal';
+import UpgradeClusterModal from './upgrade_cluster_modal';
 
 class ClusterDetail extends React.Component {
+  state = {
+    loading: true
+  }
+  
   constructor (props){
     super(props);
 
-    this.state = {
-      loading: true
-    };
-  }
-
-  componentWillMount() {
-    this.setState({
-      loading: true
-    });
-
-    if (this.props.cluster === undefined) {
-      this.props.dispatch(push('/organizations/'+this.props.organizationId));
+    if (props.cluster === undefined) {
+      props.dispatch(push('/organizations/'+props.organizationId));
       this.setState({
         notfound: true
       });
 
-      this.props.dispatch(flashAdd({
-        message: <div><b>Cluster &quot;{this.props.clusterId}&quot; not found.</b><br/>Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.</div>,
+      props.dispatch(flashAdd({
+        message: <div><b>Cluster &quot;{props.clusterId}&quot; not found.</b><br/>Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.</div>,
         class: 'info',
         ttl: 6000
       }));
 
     } else {
-      this.props.releaseActions.loadReleases()
-      .then(() => {
-        return this.props.clusterActions.clusterLoadDetails(this.props.cluster.id);
-      })
-      .then(() => {
-        this.setState({
-          loading: false
+      props.dispatch(organizationCredentialsLoad(props.organizationId));
+
+      props.releaseActions.loadReleases()
+        .then(() => {
+          return props.clusterActions.clusterLoadDetails(props.cluster.id);
+        })
+        .then(() => {
+          this.setState({
+            loading: false
+          });
+        })
+        .catch(() => {
+          this.setState({
+            loading: 'failed'
+          });
         });
-      })
-      .catch(() => {
-        this.setState({
-          loading: 'failed'
-        });
-      });
     }
   }
 
@@ -196,6 +196,36 @@ class ClusterDetail extends React.Component {
       }
     }
 
+    // BYOC provider credential info
+    var credentialInfoRows = [];
+    if (this.props.cluster && this.props.cluster.credential_id && this.props.cluster.credential_id != ''
+      && this.props.credentials.items.length === 1) {
+      // check if we have the right credential info
+      if (this.props.credentials.items[0].id !== this.props.cluster.credential_id) {
+        credentialInfoRows.push(<tr key='providerCredentialsInvalid'>
+          <td>Provider credentials</td>
+          <td className='value'>Error: cluster credentials do not match organization credentials. Please contact support for details.</td>
+        </tr>);
+      }
+      else {
+        if (this.props.provider === 'aws') {
+          credentialInfoRows.push(<tr key='awsAccountID'>
+            <td>AWS account</td>
+            <td className='value code'><AWSAccountID roleARN={this.props.credentials.items[0].aws.roles.awsoperator} /></td>
+          </tr>);
+        } else if (this.props.provider === 'azure') {
+          credentialInfoRows.push(<tr key='azureSubscriptionID'>
+            <td>Azure subscription</td>
+            <td className='value code'>{this.props.credentials.items[0].azure.credential.subscription_id}</td>
+          </tr>);
+          credentialInfoRows.push(<tr key='azureTenantID'>
+            <td>Azure tenant</td>
+            <td className='value code'>{this.props.credentials.items[0].azure.credential.tenant_id}</td>
+          </tr>);
+      }
+      }
+    }
+
     return (
       <Breadcrumb data={{title: this.props.cluster.id, pathname: '/organizations/' + this.props.cluster.owner + '/clusters/' + this.props.cluster.id}}>
         <Breadcrumb data={{title: this.props.cluster.owner.toUpperCase(), pathname: '/organizations/' + this.props.cluster.owner}}>
@@ -241,6 +271,9 @@ class ClusterDetail extends React.Component {
                                 <td>Created</td>
                                 <td className='value'>{this.props.cluster.create_date ? relativeDate(this.props.cluster.create_date) : 'n/a'}</td>
                               </tr>
+                              {
+                                (credentialInfoRows === []) ? undefined : credentialInfoRows
+                              }
                               {
                                 this.props.release ?
                                 <tr>
@@ -372,7 +405,11 @@ class ClusterDetail extends React.Component {
                   }
                 </div>
               :
-                undefined
+                <div className='app-loading'>
+                  <div className='app-loading-contents'>
+                    <img className='loader' src='/images/loader_oval_light.svg' />
+                  </div>
+                </div>
               }
             </DocumentTitle>
           </Breadcrumb>
@@ -391,6 +428,7 @@ ClusterDetail.propTypes = {
   clusterActions: PropTypes.object,
   cluster: PropTypes.object,
   clusterId: PropTypes.string,
+  credentials: PropTypes.object,
   dispatch: PropTypes.func,
   organizationId: PropTypes.string,
   releaseActions: PropTypes.object,
@@ -433,6 +471,7 @@ function mapStateToProps(state, ownProps) {
   }
 
   return {
+    credentials: state.entities.credentials,
     organizationId: ownProps.match.params.orgId,
     cluster: cluster,
     clusterId: ownProps.match.params.clusterId,

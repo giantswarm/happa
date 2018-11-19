@@ -5,11 +5,12 @@ services:
       context: ./
       dockerfile: Dockerfile.dev
     image: happa-dev:latest
-    command: npm start
     ports:
       - "7000:7000"
     volumes:
-      - "./src:/usr/src/app/src:Z"
+      - $PWD/src:/usr/src/app/src:Z
+      # to persist info on used dependencies to the repo
+      - $PWD/yarn.lock:/usr/src/app/yarn.lock
 
   passage:
     image: quay.io/giantswarm/passage:latest
@@ -33,14 +34,12 @@ services:
     external_links:
       - testing_api_1
 
-    networks:
-      - default
-      - testing_default
-
   redis:
     image: redis:3.2
     ports:
       - "6379:6379"
+    volumes:
+      - $PWD/docker-volumes/redis-data:/data
 
   mailcatcher:
     image: quay.io/giantswarm/mailcatcher:latest
