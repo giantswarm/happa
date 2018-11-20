@@ -4,13 +4,13 @@ jobs:
     machine: true
     steps:
     - checkout
-  
+
     - restore_cache:
           keys:
             # Find a cache corresponding to this specific package.json checksum
             # created in this month.
             - v1-npm-deps-{{ checksum "yarn.lock" }}
-    
+
     - run:
         name: Inspect and use cache
         command: |
@@ -18,7 +18,7 @@ jobs:
           echo ""
           find node_modules -maxdepth 1 | sort
           ln -s ./node_modules ./node_modules_linux
-  
+
     - run:
         name: Install architect
         command: |
@@ -32,6 +32,11 @@ jobs:
           if [ "$(du -s node_modules | awk '{print $1}')" -lt "1024" ]; then
             make install-node-modules
           fi
+
+    - run:
+        name: Valdiate code style using prettier
+        command: |
+          make validate-prettier
 
     - run:
         name: Build web application

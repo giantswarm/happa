@@ -9,7 +9,8 @@
   "scripts": {
     "test": "grunt test",
     "start": "grunt serve",
-    "prettier": "prettier --jsx-single-quote --single-quote --trailing-comma es5 --write \"src/**/*.js\""
+    "prettier": "prettier --jsx-single-quote --single-quote --trailing-comma es5 --write \"src/**/*.js\"",
+    "validate-prettier": "prettier --jsx-single-quote --single-quote --trailing-comma es5 --list-different \"src/**/*.js\""
   },
   "dist": "dist",
   "mainInput": "main",
