@@ -53,7 +53,7 @@ class OauthCallback extends React.Component {
       <div>
         <h1>Something went wrong</h1>
         <p>{this.state.error.errorDescription}</p>
-        <Link to="/admin-login">Try again</Link>
+        <Link to='/admin-login'>Try again</Link>
       </div>
     );
   };
@@ -61,7 +61,7 @@ class OauthCallback extends React.Component {
   render() {
     return (
       <div>
-        <div className="login_form--mask" />
+        <div className='login_form--mask' />
 
         <ReactCSSTransitionGroup
           transitionName={`login_form--transition`}
@@ -70,14 +70,14 @@ class OauthCallback extends React.Component {
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
         >
-          <div className="login_form--container col-4 login_form--admin">
-            <div className="login_form--flash-container">
+          <div className='login_form--container col-4 login_form--admin'>
+            <div className='login_form--flash-container'>
               <FlashMessages />
             </div>
             {this.state.error ? (
               this.errorMessage()
             ) : (
-              <img className="loader" src="/images/loader_oval_light.svg" />
+              <img className='loader' src='/images/loader_oval_light.svg' />
             )}
           </div>
         </ReactCSSTransitionGroup>

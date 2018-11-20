@@ -64,9 +64,9 @@ class Home extends React.Component {
         {
           <div>
             {this.props.selectedOrganization ? (
-              <div className="well launch-new-cluster">
-                <Link to="new-cluster">
-                  <Button type="button" bsStyle="primary">
+              <div className='well launch-new-cluster'>
+                <Link to='new-cluster'>
+                  <Button type='button' bsStyle='primary'>
                     Launch New Cluster
                   </Button>
                 </Link>

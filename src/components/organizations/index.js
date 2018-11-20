@@ -40,7 +40,7 @@ class Organizations extends React.Component {
       <Breadcrumb
         data={{ title: 'ORGANIZATIONS', pathname: '/organizations/' }}
       >
-        <DocumentTitle title="Organizations | Giant Swarm">
+        <DocumentTitle title='Organizations | Giant Swarm'>
           <div>
             <h1>Organizations</h1>
             <br />
@@ -51,10 +51,10 @@ class Organizations extends React.Component {
               ) {
                 return (
                   <img
-                    className="loader"
-                    src="/images/loader_oval_light.svg"
-                    width="20px"
-                    height="20px"
+                    className='loader'
+                    src='/images/loader_oval_light.svg'
+                    width='20px'
+                    height='20px'
                   />
                 );
               } else if (
@@ -64,7 +64,7 @@ class Organizations extends React.Component {
                   <div>
                     <p>No organizations, create one using the button below:</p>
                     <Button
-                      bsStyle="default"
+                      bsStyle='default'
                       onClick={this.createOrganization.bind(this)}
                     >
                       Create New Organization
@@ -82,8 +82,8 @@ class Organizations extends React.Component {
                       <thead>
                         <tr>
                           <th>Name</th>
-                          <th className="centered">Clusters</th>
-                          <th className="centered">Members</th>
+                          <th className='centered'>Clusters</th>
+                          <th className='centered'>Members</th>
                           <th />
                         </tr>
                       </thead>
@@ -114,7 +114,7 @@ class Organizations extends React.Component {
                       </tbody>
                     </table>
                     <Button
-                      bsStyle="default"
+                      bsStyle='default'
                       onClick={this.createOrganization.bind(this)}
                     >
                       Create New Organization

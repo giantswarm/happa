@@ -99,10 +99,10 @@ class CredentialsDisplay extends React.Component {
       return (
         <span>
           <img
-            className="loader"
-            src="/images/loader_oval_light.svg"
-            width="20px"
-            height="20px"
+            className='loader'
+            src='/images/loader_oval_light.svg'
+            width='20px'
+            height='20px'
           />{' '}
           <span>Loading credentials</span>
         </span>
@@ -112,8 +112,8 @@ class CredentialsDisplay extends React.Component {
         let button = (
           <Button
             onClick={this.props.onShowForm}
-            bsStyle="default"
-            className="small"
+            bsStyle='default'
+            className='small'
           >
             Set Credentials
           </Button>
@@ -165,13 +165,13 @@ class CredentialsDisplay extends React.Component {
             <div>
               {providerWarning}
               <table
-                className="table resource-details"
+                className='table resource-details'
                 id={'credential-' + this.props.credentials.items[0].id}
               >
                 <tbody>
-                  <tr key="account_id">
+                  <tr key='account_id'>
                     <td>AWS account ID</td>
-                    <td className="value code">
+                    <td className='value code'>
                       <AWSAccountID
                         roleARN={
                           this.props.credentials.items[0].aws.roles.awsoperator
@@ -179,15 +179,15 @@ class CredentialsDisplay extends React.Component {
                       />
                     </td>
                   </tr>
-                  <tr key="awsoperator_role">
+                  <tr key='awsoperator_role'>
                     <td>AWSOperator role ARN</td>
-                    <td className="value code">
+                    <td className='value code'>
                       {this.props.credentials.items[0].aws.roles.awsoperator}
                     </td>
                   </tr>
-                  <tr key="admin_role">
+                  <tr key='admin_role'>
                     <td>Admin role ARN</td>
-                    <td className="value code">
+                    <td className='value code'>
                       {this.props.credentials.items[0].aws.roles.admin}
                     </td>
                   </tr>
@@ -203,29 +203,29 @@ class CredentialsDisplay extends React.Component {
           return (
             <div>
               {providerWarning}
-              <table className="table resource-details">
+              <table className='table resource-details'>
                 <tbody>
-                  <tr key="account_id">
+                  <tr key='account_id'>
                     <td>Azure subscription ID</td>
-                    <td className="value code">
+                    <td className='value code'>
                       {
                         this.props.credentials.items[0].azure.credential
                           .subscription_id
                       }
                     </td>
                   </tr>
-                  <tr key="awsoperator_role">
+                  <tr key='awsoperator_role'>
                     <td>Azure tenant ID</td>
-                    <td className="value code">
+                    <td className='value code'>
                       {
                         this.props.credentials.items[0].azure.credential
                           .tenant_id
                       }
                     </td>
                   </tr>
-                  <tr key="admin_role">
+                  <tr key='admin_role'>
                     <td>Service principal client ID</td>
-                    <td className="value code">
+                    <td className='value code'>
                       {
                         this.props.credentials.items[0].azure.credential
                           .client_id
@@ -342,68 +342,68 @@ class CredentialsForm extends React.Component {
             clusters created for this organization. Find more information on how
             to prepare an Azure subscription for running tenant cluster in our{' '}
             <a
-              href="https://docs.giantswarm.io/guides/prepare-azure-subscription-for-tenant-clusters/"
-              target="_blank"
-              rel="noopener noreferrer"
+              href='https://docs.giantswarm.io/guides/prepare-azure-subscription-for-tenant-clusters/'
+              target='_blank'
+              rel='noopener noreferrer'
             >
               documentation
             </a>
             .
           </p>
           <p>
-            <i className="fa fa-info-circle" /> It is currently not possible to
+            <i className='fa fa-info-circle' /> It is currently not possible to
             modify or delete these credentials once set.
           </p>
 
-          <FormGroup controlId="azureSubscriptionID">
+          <FormGroup controlId='azureSubscriptionID'>
             <ControlLabel>Azure Subscription ID</ControlLabel>
             <FormControl
-              name="azureSubscriptionID"
-              type="text"
+              name='azureSubscriptionID'
+              type='text'
               value={this.state.azureSubscriptionID}
               onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
 
-          <FormGroup controlId="azureTenantID">
+          <FormGroup controlId='azureTenantID'>
             <ControlLabel>Azure Tenant ID</ControlLabel>
             <FormControl
-              name="azureTenantID"
-              type="text"
+              name='azureTenantID'
+              type='text'
               value={this.state.azureTenantID}
               onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
 
-          <FormGroup controlId="azureClientID">
+          <FormGroup controlId='azureClientID'>
             <ControlLabel>Azure Client ID</ControlLabel>
             <FormControl
-              name="azureClientID"
-              type="text"
+              name='azureClientID'
+              type='text'
               value={this.state.azureClientID}
               onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
 
-          <FormGroup controlId="azureClientSecret">
+          <FormGroup controlId='azureClientSecret'>
             <ControlLabel>Azure Client Secret</ControlLabel>
             <FormControl
-              name="azureClientSecret"
-              type="password"
+              name='azureClientSecret'
+              type='password'
               value={this.state.azureClientSecret}
               onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
 
-          <FormGroup controlId="azureClientSecretAgain">
+          <FormGroup controlId='azureClientSecretAgain'>
             <ControlLabel>Azure Client Secret (again)</ControlLabel>
             <FormControl
-              name="azureClientSecretAgain"
-              type="password"
+              name='azureClientSecretAgain'
+              type='password'
               value={this.state.azureClientSecretAgain}
               onChange={this.handleChange}
             />
@@ -412,7 +412,7 @@ class CredentialsForm extends React.Component {
 
           <Button
             onClick={this.handleSubmit}
-            bsStyle="primary"
+            bsStyle='primary'
             disabled={!this.state.isValid}
           >
             Set Credentials
@@ -428,9 +428,9 @@ class CredentialsForm extends React.Component {
             clusters created for this organization. Find more information on how
             to prepare an AWS for running tenant cluster in our{' '}
             <a
-              href="https://docs.giantswarm.io/guides/prepare-aws-account-for-tenant-clusters/"
-              target="_blank"
-              rel="noopener noreferrer"
+              href='https://docs.giantswarm.io/guides/prepare-aws-account-for-tenant-clusters/'
+              target='_blank'
+              rel='noopener noreferrer'
             >
               documentation
             </a>
@@ -438,15 +438,15 @@ class CredentialsForm extends React.Component {
           </p>
 
           <p>
-            <i className="fa fa-info-circle" /> It is currently not possible to
+            <i className='fa fa-info-circle' /> It is currently not possible to
             modify or delete these credentials once set.
           </p>
 
-          <FormGroup controlId="awsAdminRoleARN">
+          <FormGroup controlId='awsAdminRoleARN'>
             <ControlLabel>AWS admin role ARN</ControlLabel>
             <FormControl
-              name="awsAdminRoleARN"
-              type="text"
+              name='awsAdminRoleARN'
+              type='text'
               value={
                 this.state.awsAdminRoleARN ? this.state.awsAdminRoleARN : ''
               }
@@ -455,11 +455,11 @@ class CredentialsForm extends React.Component {
             <FormControl.Feedback />
           </FormGroup>
 
-          <FormGroup controlId="awsOperatorRoleARN">
+          <FormGroup controlId='awsOperatorRoleARN'>
             <ControlLabel>AWS operator role ARN</ControlLabel>
             <FormControl
-              name="awsOperatorRoleARN"
-              type="text"
+              name='awsOperatorRoleARN'
+              type='text'
               value={
                 this.state.awsOperatorRoleARN
                   ? this.state.awsOperatorRoleARN
@@ -472,7 +472,7 @@ class CredentialsForm extends React.Component {
 
           <Button
             onClick={this.handleSubmit}
-            bsStyle="primary"
+            bsStyle='primary'
             disabled={!this.state.isValid}
           >
             Set Credentials

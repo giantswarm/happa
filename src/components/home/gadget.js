@@ -19,11 +19,11 @@ class Gadget extends React.Component {
     return (
       <div className={'gadget ' + this.classes()}>
         <div
-          className="gadget--inner"
+          className='gadget--inner'
           style={{ backgroundColor: this.props.backgroundColor }}
         >
-          <div className="gadget--label">{this.props.label}</div>
-          <div className="gadget--value">
+          <div className='gadget--label'>{this.props.label}</div>
+          <div className='gadget--value'>
             {this.props.metric.outdated
               ? '...'
               : humanFileSize(
@@ -32,7 +32,7 @@ class Gadget extends React.Component {
                   this.props.decimals
                 ).value}
           </div>
-          <div className="gadget--bottom-label">
+          <div className='gadget--bottom-label'>
             {this.props.bottom_label(this.props.metric)}
           </div>
         </div>

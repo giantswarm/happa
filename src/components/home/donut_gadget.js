@@ -62,15 +62,15 @@ class DonutGadget extends React.Component {
     var degrees = cappedPercentage * 360.0;
 
     return (
-      <svg viewBox="-2 -2 4 4">
-        <g fill="none" fillRule="evenodd">
-          <g transform="translate(0 0)" strokeWidth="0.2">
+      <svg viewBox='-2 -2 4 4'>
+        <g fill='none' fillRule='evenodd'>
+          <g transform='translate(0 0)' strokeWidth='0.2'>
             <circle
               stroke={this.shadeColor(this.props.color, 0.01)}
-              strokeOpacity=".5"
-              cx="0"
-              cy="0"
-              r="1.9"
+              strokeOpacity='.5'
+              cx='0'
+              cy='0'
+              r='1.9'
             />
             <path
               stroke={this.props.color}
@@ -109,18 +109,18 @@ class DonutGadget extends React.Component {
   render() {
     return (
       <div className={'gadget gadget-donut ' + this.classes()}>
-        <div className="gadget--inner">
-          <div className="gadget--label">{this.props.label}</div>
+        <div className='gadget--inner'>
+          <div className='gadget--label'>{this.props.label}</div>
           {this.pieChart(this.percentage())}
           {this.isOutdated() ? (
-            <div className="gadget--value">...</div>
+            <div className='gadget--value'>...</div>
           ) : (
-            <div className="gadget--value">
+            <div className='gadget--value'>
               {this.props.large_label(this.percentage())}
             </div>
           )}
 
-          <div className="gadget--bottom-label">
+          <div className='gadget--bottom-label'>
             {this.isOutdated()
               ? 'Unavailable'
               : this.props.bottom_label(

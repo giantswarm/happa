@@ -206,8 +206,8 @@ class ClusterKeyPairs extends React.Component {
     return (
       <a
         href={window.URL.createObjectURL(this.blob())}
-        className="btn btn-default"
-        download="giantswarm-kubeconfig"
+        className='btn btn-default'
+        download='giantswarm-kubeconfig'
       >
         Download
       </a>
@@ -226,15 +226,15 @@ class ClusterKeyPairs extends React.Component {
 
   render() {
     return (
-      <div className="row section cluster_key_pairs">
-        <div className="row">
-          <div className="col-12">
-            <h3 className="table-label">Key Pairs</h3>
+      <div className='row section cluster_key_pairs'>
+        <div className='row'>
+          <div className='col-12'>
+            <h3 className='table-label'>Key Pairs</h3>
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-12">
+        <div className='row'>
+          <div className='col-12'>
             <p>
               Key pairs consist of an RSA private key and certificate, signed by
               the certificate authority (CA) belonging to this cluster. They are
@@ -243,22 +243,22 @@ class ClusterKeyPairs extends React.Component {
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-12">
+        <div className='row'>
+          <div className='col-12'>
             {(() => {
               if (this.state.loading) {
                 return (
                   <p>
                     <img
-                      className="loader"
-                      src="/images/loader_oval_light.svg"
+                      className='loader'
+                      src='/images/loader_oval_light.svg'
                     />
                   </p>
                 );
               } else if (this.state.error) {
                 return (
                   <div>
-                    <div className="flash-messages--flash-message flash-messages--danger">
+                    <div className='flash-messages--flash-message flash-messages--danger'>
                       Something went wrong while trying to load the list of key
                       pairs.
                     </div>
@@ -275,8 +275,8 @@ class ClusterKeyPairs extends React.Component {
                     </p>
                     <Button
                       onClick={this.addKeyPair.bind(this)}
-                      bsStyle="default"
-                      className="small"
+                      bsStyle='default'
+                      className='small'
                     >
                       Create Key Pair
                     </Button>
@@ -288,12 +288,12 @@ class ClusterKeyPairs extends React.Component {
                     <table>
                       <thead>
                         <tr>
-                          <th className="hidden-xs">ID</th>
-                          <th className="hidden-xs">Description</th>
-                          <th className="hidden-xs">Created</th>
-                          <th className="hidden-xs">Expires</th>
-                          <th className="">Common Name (CN)</th>
-                          <th className="">Organization (O)</th>
+                          <th className='hidden-xs'>ID</th>
+                          <th className='hidden-xs'>Description</th>
+                          <th className='hidden-xs'>Created</th>
+                          <th className='hidden-xs'>Expires</th>
+                          <th className=''>Common Name (CN)</th>
+                          <th className=''>Organization (O)</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -314,11 +314,11 @@ class ClusterKeyPairs extends React.Component {
 
                             return (
                               <tr key={keyPair.id}>
-                                <td className="code truncate hidden-xs col-sm-2">
+                                <td className='code truncate hidden-xs col-sm-2'>
                                   <OverlayTrigger
-                                    placement="top"
+                                    placement='top'
                                     overlay={
-                                      <Tooltip id="tooltip">
+                                      <Tooltip id='tooltip'>
                                         {keyPair.id}
                                       </Tooltip>
                                     }
@@ -326,11 +326,11 @@ class ClusterKeyPairs extends React.Component {
                                     <span>{keyPair.id.replace(/:/g, '')}</span>
                                   </OverlayTrigger>
                                 </td>
-                                <td className="truncate hidden-xs col-sm-4">
+                                <td className='truncate hidden-xs col-sm-4'>
                                   <OverlayTrigger
-                                    placement="top"
+                                    placement='top'
                                     overlay={
-                                      <Tooltip id="tooltip">
+                                      <Tooltip id='tooltip'>
                                         {keyPair.description}
                                       </Tooltip>
                                     }
@@ -338,7 +338,7 @@ class ClusterKeyPairs extends React.Component {
                                     <span>{keyPair.description}</span>
                                   </OverlayTrigger>
                                 </td>
-                                <td className="truncate hidden-xs col-sm-1">
+                                <td className='truncate hidden-xs col-sm-1'>
                                   {relativeDate(keyPair.create_date)}
                                 </td>
                                 <td
@@ -346,11 +346,11 @@ class ClusterKeyPairs extends React.Component {
                                 >
                                   {relativeDate(keyPair.expire_date)}
                                 </td>
-                                <td className="code truncate col-xs-3">
+                                <td className='code truncate col-xs-3'>
                                   <OverlayTrigger
-                                    placement="top"
+                                    placement='top'
                                     overlay={
-                                      <Tooltip id="tooltip">
+                                      <Tooltip id='tooltip'>
                                         {keyPair.common_name}
                                       </Tooltip>
                                     }
@@ -358,11 +358,11 @@ class ClusterKeyPairs extends React.Component {
                                     <span>{keyPair.common_name}</span>
                                   </OverlayTrigger>
                                 </td>
-                                <td className="code truncate col-xs-1">
+                                <td className='code truncate col-xs-1'>
                                   <OverlayTrigger
-                                    placement="top"
+                                    placement='top'
                                     overlay={
-                                      <Tooltip id="tooltip">
+                                      <Tooltip id='tooltip'>
                                         {keyPair.certificate_organizations}
                                       </Tooltip>
                                     }
@@ -380,8 +380,8 @@ class ClusterKeyPairs extends React.Component {
                     </table>
                     <Button
                       onClick={this.addKeyPair.bind(this)}
-                      bsStyle="default"
-                      className="small"
+                      bsStyle='default'
+                      className='small'
                     >
                       Create Key Pair
                     </Button>
@@ -396,7 +396,7 @@ class ClusterKeyPairs extends React.Component {
             case 'addKeyPair':
               return (
                 <BootstrapModal
-                  className="create-key-pair-modal"
+                  className='create-key-pair-modal'
                   show={this.state.modal.visible}
                   onHide={this.closeModal.bind(this)}
                 >
@@ -416,47 +416,47 @@ class ClusterKeyPairs extends React.Component {
                         the username, and assigns the Organizations as groups.
                         This allows you to set up role based access rights.
                       </p>
-                      <div className="row">
-                        <div className="col-6">
+                      <div className='row'>
+                        <div className='col-6'>
                           <label>Common Name Prefix:</label>
                           <input
                             autoFocus
-                            type="text"
+                            type='text'
                             value={this.state.cn_prefix}
                             onChange={this.handleCNPrefixChange.bind(this)}
                           />
-                          <div className="text-field-hint">
+                          <div className='text-field-hint'>
                             {this.state.cn_prefix_error === null ? (
                               this.cnPrefix() + '.user.api.clusterdomain'
                             ) : (
-                              <span className="error">
-                                <i className="fa fa-exclamation-triangle" />{' '}
+                              <span className='error'>
+                                <i className='fa fa-exclamation-triangle' />{' '}
                                 {this.state.cn_prefix_error}
                               </span>
                             )}
                           </div>
                         </div>
-                        <div className="col-6">
+                        <div className='col-6'>
                           <label>Organizations:</label>
                           <input
-                            type="text"
+                            type='text'
                             value={this.state.certificate_organizations}
                             onChange={this.handleCertificateOrganizationsChange.bind(
                               this
                             )}
                           />
-                          <div className="text-field-hint">
+                          <div className='text-field-hint'>
                             Comma seperated values. e.g.:
                             admin,blue-team,staging
                           </div>
                         </div>
                       </div>
                       <br />
-                      <div className="row">
-                        <div className="col-12">
+                      <div className='row'>
+                        <div className='col-12'>
                           <label>Description:</label>
                           <input
-                            type="text"
+                            type='text'
                             value={this.state.description}
                             onChange={this.handleDescriptionChange.bind(this)}
                           />
@@ -471,8 +471,8 @@ class ClusterKeyPairs extends React.Component {
                     </BootstrapModal.Body>
                     <BootstrapModal.Footer>
                       <Button
-                        type="submit"
-                        bsStyle="primary"
+                        type='submit'
+                        bsStyle='primary'
                         disabled={this.state.cn_prefix_error !== null}
                         loading={this.state.modal.loading}
                         onClick={this.confirmAddKeyPair.bind(this)}
@@ -484,7 +484,7 @@ class ClusterKeyPairs extends React.Component {
 
                       {this.state.modal.loading ? null : (
                         <Button
-                          bsStyle="link"
+                          bsStyle='link'
                           onClick={this.closeModal.bind(this)}
                         >
                           Cancel
@@ -498,7 +498,7 @@ class ClusterKeyPairs extends React.Component {
             case 'addKeyPairSuccess':
               return (
                 <BootstrapModal
-                  className="create-key-pair-modal--success"
+                  className='create-key-pair-modal--success'
                   show={this.state.modal.visible}
                   onHide={this.closeModal.bind(this)}
                 >
@@ -525,16 +525,16 @@ class ClusterKeyPairs extends React.Component {
 
                     {this.state.copied ? (
                       <Button
-                        bsStyle="default"
+                        bsStyle='default'
                         onClick={this.copyKubeConfig.bind(this)}
                       >
                         &nbsp;&nbsp;
-                        <i className="fa fa-check" aria-hidden="true" />
+                        <i className='fa fa-check' aria-hidden='true' />
                         &nbsp;&nbsp;
                       </Button>
                     ) : (
                       <Button
-                        bsStyle="default"
+                        bsStyle='default'
                         onClick={this.copyKubeConfig.bind(this)}
                       >
                         Copy
@@ -544,7 +544,7 @@ class ClusterKeyPairs extends React.Component {
                     {this.downloadAsFileLink.bind(this)()}
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
-                    <Button bsStyle="link" onClick={this.closeModal.bind(this)}>
+                    <Button bsStyle='link' onClick={this.closeModal.bind(this)}>
                       Close
                     </Button>
                   </BootstrapModal.Footer>
@@ -554,7 +554,7 @@ class ClusterKeyPairs extends React.Component {
             case 'addKeyPairFailure':
               return (
                 <BootstrapModal
-                  className="create-key-pair-modal--success"
+                  className='create-key-pair-modal--success'
                   show={this.state.modal.visible}
                   onHide={this.closeModal.bind(this)}
                 >
@@ -573,7 +573,7 @@ class ClusterKeyPairs extends React.Component {
                     </p>
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
-                    <Button bsStyle="link" onClick={this.closeModal.bind(this)}>
+                    <Button bsStyle='link' onClick={this.closeModal.bind(this)}>
                       Close
                     </Button>
                   </BootstrapModal.Footer>

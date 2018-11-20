@@ -90,23 +90,23 @@ class NewAzureWorker extends React.Component {
   render() {
     var index = this.props.index;
     return (
-      <div className="col-4 new-cluster--worker">
-        <div className="new-cluster--worker-title">
+      <div className='col-4 new-cluster--worker'>
+        <div className='new-cluster--worker-title'>
           {'Azure Worker #' + (index + 1)}
           {index > 0 ? (
             <span
-              className="new-cluster--delete"
+              className='new-cluster--delete'
               onClick={this.props.deleteWorker}
             >
-              <i className="fa fa-times" />
+              <i className='fa fa-times' />
             </span>
           ) : (
             undefined
           )}
         </div>
-        <div className="new-cluster--worker-setting-label">VM Size</div>
+        <div className='new-cluster--worker-setting-label'>VM Size</div>
 
-        <div className="new-cluster--instance-type-selector">
+        <div className='new-cluster--instance-type-selector'>
           <form
             onSubmit={e => {
               e.preventDefault();
@@ -116,7 +116,7 @@ class NewAzureWorker extends React.Component {
               ref={i => {
                 this.vmSize = i;
               }}
-              type="text"
+              type='text'
               value={this.props.worker.vmSize}
               onChange={this.updateVMSize}
               validate={this.validateVMSize}
@@ -132,26 +132,26 @@ class NewAzureWorker extends React.Component {
               }
               onClick={this.showModal}
             >
-              <i className="fa fa-bars" />
+              <i className='fa fa-bars' />
             </div>
           </form>
         </div>
         <BootstrapModal
           show={this.state.modalVisible}
           onHide={this.closeModal}
-          className="new-cluster--instance-type-selector-modal"
+          className='new-cluster--instance-type-selector-modal'
         >
           <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Select a VM Size</BootstrapModal.Title>
           </BootstrapModal.Header>
           <BootstrapModal.Body>
-            <table className="new-cluster--instance-type-selector-table">
+            <table className='new-cluster--instance-type-selector-table'>
               <thead>
                 <tr>
                   <th />
                   <th>Name</th>
-                  <th className="numeric">CPU Cores</th>
-                  <th className="numeric">Memory</th>
+                  <th className='numeric'>CPU Cores</th>
+                  <th className='numeric'>Memory</th>
                 </tr>
               </thead>
               <tbody>
@@ -163,14 +163,14 @@ class NewAzureWorker extends React.Component {
                     >
                       <td>
                         <input
-                          type="radio"
+                          type='radio'
                           readOnly
                           checked={vmSize.name === this.state.preSelectedVMSize}
                         />
                       </td>
                       <td>{vmSize.name}</td>
-                      <td className="numeric">{vmSize.numberOfCores}</td>
-                      <td className="numeric">
+                      <td className='numeric'>{vmSize.numberOfCores}</td>
+                      <td className='numeric'>
                         {(vmSize.memoryInMb / 1000).toFixed(2)} GB
                       </td>
                     </tr>
@@ -180,11 +180,11 @@ class NewAzureWorker extends React.Component {
             </table>
           </BootstrapModal.Body>
           <BootstrapModal.Footer>
-            <Button type="submit" bsStyle="primary" onClick={this.selectVMSize}>
+            <Button type='submit' bsStyle='primary' onClick={this.selectVMSize}>
               Select VM Size
             </Button>
 
-            <Button bsStyle="link" onClick={this.closeModal}>
+            <Button bsStyle='link' onClick={this.closeModal}>
               Cancel
             </Button>
           </BootstrapModal.Footer>

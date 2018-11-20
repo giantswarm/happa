@@ -225,55 +225,55 @@ class SetPassword extends React.Component {
         <form onSubmit={this.submit}>
           <StatusMessage status={this.state.statusMessage} />
 
-          <div className="textfield">
+          <div className='textfield'>
             <PasswordField
               ref={p => {
                 this.password = p;
               }}
-              label="New password"
+              label='New password'
               onStartTyping={this.passwordEditingStarted}
               onChange={this.passwordEditingCompleted}
               autofocus
             />
           </div>
 
-          <div className="textfield">
+          <div className='textfield'>
             <PasswordField
               ref={p => {
                 this.passwordConfirmation = p;
               }}
-              label="Password, once again"
+              label='Password, once again'
               onStartTyping={this.passwordConfirmationEditingStarted}
               onChange={this.passwordConfirmationEditingCompleted}
             />
           </div>
-          <div className="progress_button--container">
+          <div className='progress_button--container'>
             <button
-              type="submit"
-              className="btn primary"
+              type='submit'
+              className='btn primary'
               disabled={this.state.submitting || !this.formIsValid()}
               onClick={this.submit}
             >
               {this.state.submitting ? 'Submitting ...' : 'Submit'}
             </button>
             <ReactCSSTransitionGroup
-              transitionName="slide-right"
+              transitionName='slide-right'
               transitionEnterTimeout={200}
               transitionLeaveTimeout={200}
             >
               {this.state.submitting ? (
-                <img className="loader" src="/images/loader_oval_light.svg" />
+                <img className='loader' src='/images/loader_oval_light.svg' />
               ) : null}
             </ReactCSSTransitionGroup>
           </div>
-          <Link to="/login">Back to login form</Link>
+          <Link to='/login'>Back to login form</Link>
         </form>
       );
     } else {
       if (this.state.verifyingToken) {
         return (
-          <div className="forgot-password--token-validating">
-            <img className="loader" src="/images/loader_oval_light.svg" />
+          <div className='forgot-password--token-validating'>
+            <img className='loader' src='/images/loader_oval_light.svg' />
             <br />
             Validating your token...
           </div>
@@ -281,11 +281,11 @@ class SetPassword extends React.Component {
       } else {
         return (
           <div>
-            <div className="forgot-password--token-validating">
+            <div className='forgot-password--token-validating'>
               Something went wrong.
             </div>
             <br />
-            <Link to="/forgot_password">Request a new token</Link>
+            <Link to='/forgot_password'>Request a new token</Link>
           </div>
         );
       }
@@ -299,12 +299,12 @@ class SetPassword extends React.Component {
           Before we can check your recovery token, please type in your email
           again for verification purposes.
         </p>
-        <div className="textfield">
+        <div className='textfield'>
           <label>Email</label>
           <input
             value={this.state.emailField}
-            type="email"
-            id="email"
+            type='email'
+            id='email'
             ref={i => {
               this.email = i;
             }}
@@ -313,29 +313,29 @@ class SetPassword extends React.Component {
           />
         </div>
 
-        <div className="progress_button--container">
+        <div className='progress_button--container'>
           <button
-            type="submit"
-            className="btn primary"
+            type='submit'
+            className='btn primary'
             disabled={this.state.submitting}
             onClick={this.setEmail}
           >
             {this.state.submitting ? 'Submitting ...' : 'Submit'}
           </button>
           <ReactCSSTransitionGroup
-            transitionName="slide-right"
+            transitionName='slide-right'
             transitionEnterTimeout={200}
             transitionLeaveTimeout={200}
           >
             {this.state.submitting ? (
-              <img className="loader" src="/images/loader_oval_light.svg" />
+              <img className='loader' src='/images/loader_oval_light.svg' />
             ) : null}
           </ReactCSSTransitionGroup>
         </div>
-        <Link to="/login">Back to login form</Link>
+        <Link to='/login'>Back to login form</Link>
         <br />
         <br />
-        <Link to="/forgot_password">Request a new token</Link>
+        <Link to='/forgot_password'>Request a new token</Link>
       </form>
     );
   };
@@ -343,7 +343,7 @@ class SetPassword extends React.Component {
   render() {
     return (
       <div>
-        <div className="login_form--mask" />
+        <div className='login_form--mask' />
 
         <ReactCSSTransitionGroup
           transitionName={`login_form--transition`}
@@ -352,8 +352,8 @@ class SetPassword extends React.Component {
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
         >
-          <div className="login_form--container col-4">
-            <div className="login_form--flash-container">
+          <div className='login_form--container col-4'>
+            <div className='login_form--flash-container'>
               <FlashMessages />
             </div>
             <h1>Set your new password</h1>

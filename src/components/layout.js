@@ -61,45 +61,45 @@ class Layout extends React.Component {
   render() {
     if (!this.props.firstLoadComplete) {
       return (
-        <DocumentTitle title="Loading | Giant Swarm ">
-          <div className="app-loading">
-            <div className="app-loading-contents">
-              <img className="loader" src="/images/loader_oval_light.svg" />
+        <DocumentTitle title='Loading | Giant Swarm '>
+          <div className='app-loading'>
+            <div className='app-loading-contents'>
+              <img className='loader' src='/images/loader_oval_light.svg' />
             </div>
           </div>
         </DocumentTitle>
       );
     } else {
       return (
-        <DocumentTitle title="Giant Swarm">
+        <DocumentTitle title='Giant Swarm'>
           <div>
             <FlashMessages />
-            <nav className="outer-nav">
-              <div className="main-nav col-9">
+            <nav className='outer-nav'>
+              <div className='main-nav col-9'>
                 <a
-                  href="https://giantswarm.io"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href='https://giantswarm.io'
+                  target='_blank'
+                  rel='noopener noreferrer'
                 >
-                  <img className="logo" src="/images/giantswarm_icon.svg" />
+                  <img className='logo' src='/images/giantswarm_icon.svg' />
                 </a>
-                <div className="nav-responsive">
-                  <NavLink to="/" activeClassName="active">
+                <div className='nav-responsive'>
+                  <NavLink to='/' activeClassName='active'>
                     Clusters
                   </NavLink>
-                  <NavLink to="/getting-started/" activeClassName="active">
+                  <NavLink to='/getting-started/' activeClassName='active'>
                     Getting Started
                   </NavLink>
                   <a
-                    href="https://docs.giantswarm.io"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href='https://docs.giantswarm.io'
+                    target='_blank'
+                    rel='noopener noreferrer'
                   >
-                    Documentation <i className="fa fa-external-link" />
+                    Documentation <i className='fa fa-external-link' />
                   </a>
 
                   {this.props.user.isAdmin ? (
-                    <NavLink to="/users/" activeClassName="active">
+                    <NavLink to='/users/' activeClassName='active'>
                       Users
                     </NavLink>
                   ) : (
@@ -107,25 +107,25 @@ class Layout extends React.Component {
                   )}
                 </div>
 
-                <div className="subactions">
-                  <div className="organization_dropdown">
+                <div className='subactions'>
+                  <div className='organization_dropdown'>
                     {_.map(this.props.organizations.items, x => {
                       return x.id;
                     }).length === 0 && !this.props.organizations.isFetching ? (
                       <DropdownButton
                         title={
                           <span>
-                            <span className="label label-default">ORG</span>No
+                            <span className='label label-default'>ORG</span>No
                             organizations
                           </span>
                         }
-                        key="2"
-                        id="org_dropdown"
+                        key='2'
+                        id='org_dropdown'
                       >
                         <MenuItem
                           componentClass={NavLink}
-                          href="/organizations/"
-                          to="/organizations/"
+                          href='/organizations/'
+                          to='/organizations/'
                         >
                           Manage organizations
                         </MenuItem>
@@ -134,16 +134,16 @@ class Layout extends React.Component {
                       <DropdownButton
                         title={
                           <span>
-                            <span className="label label-default">ORG</span>{' '}
+                            <span className='label label-default'>ORG</span>{' '}
                             {this.props.selectedOrganization}
                           </span>
                         }
-                        key="2"
-                        id="org_dropdown"
+                        key='2'
+                        id='org_dropdown'
                       >
                         <MenuItem
                           componentClass={NavLink}
-                          href="/organizations/"
+                          href='/organizations/'
                           to={
                             '/organizations/' + this.props.selectedOrganization
                           }
@@ -153,8 +153,8 @@ class Layout extends React.Component {
                         <MenuItem divider />
                         <MenuItem
                           componentClass={NavLink}
-                          href="/organizations/"
-                          to="/organizations/"
+                          href='/organizations/'
+                          to='/organizations/'
                         >
                           Manage organizations
                         </MenuItem>
@@ -178,30 +178,30 @@ class Layout extends React.Component {
                     )}
                   </div>
                   &nbsp; &nbsp;
-                  <div className="user_dropdown">
+                  <div className='user_dropdown'>
                     <DropdownButton
                       ref={d => {
                         this.user_dropdown = d;
                       }}
                       pullRight={true}
                       title={
-                        <div className="user_dropdown--toggle">
+                        <div className='user_dropdown--toggle'>
                           <Gravatar
                             email={this.props.user.email}
                             size={100}
-                            default="mm"
+                            default='mm'
                           />
                           <span>{this.props.user.email}</span>
                         </div>
                       }
-                      key="1"
-                      id="user_dropdown"
+                      key='1'
+                      id='user_dropdown'
                     >
                       {this.props.user.auth.scheme === 'giantswarm' ? (
                         <MenuItem
                           componentClass={NavLink}
-                          href="/account-settings/"
-                          to="/account-settings/"
+                          href='/account-settings/'
+                          to='/account-settings/'
                         >
                           Account Settings
                         </MenuItem>
@@ -210,8 +210,8 @@ class Layout extends React.Component {
                       )}
                       <MenuItem
                         componentClass={NavLink}
-                        href="/logout"
-                        to="/logout"
+                        href='/logout'
+                        to='/logout'
                       >
                         Logout
                       </MenuItem>
@@ -220,51 +220,51 @@ class Layout extends React.Component {
                 </div>
               </div>
 
-              <div className="breadcrumb-wrapper">
-                <div className="main col-9">
+              <div className='breadcrumb-wrapper'>
+                <div className='main col-9'>
                   <Breadcrumbs />
                 </div>
               </div>
             </nav>
 
-            <div className="main col-9">
+            <div className='main col-9'>
               <Modal />
               <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
                 <Switch>
-                  <Route exact path="/" component={Home} />
+                  <Route exact path='/' component={Home} />
                   <Route
                     exact
-                    path="/getting-started/"
+                    path='/getting-started/'
                     component={GettingStarted}
                   />
                   <Route
                     exact
-                    path="/getting-started/*"
+                    path='/getting-started/*'
                     component={GettingStarted}
                   />
-                  <Route exact path="/users/" component={Users} />
-                  <Route exact path="/new-cluster/" component={CreateCluster} />
+                  <Route exact path='/users/' component={Users} />
+                  <Route exact path='/new-cluster/' component={CreateCluster} />
                   <Route
                     exact
-                    path="/organizations/"
+                    path='/organizations/'
                     component={Organizations}
                   />
                   <Route
                     exact
-                    path="/organizations/:orgId/"
+                    path='/organizations/:orgId/'
                     component={OrganizationDetails}
                   />
                   <Route
                     exact
-                    path="/organizations/:orgId/clusters/:clusterId/"
+                    path='/organizations/:orgId/clusters/:clusterId/'
                     component={ClusterDetails}
                   />
                   <Route
                     exact
-                    path="/account-settings/"
+                    path='/account-settings/'
                     component={AccountSettings}
                   />
-                  <Redirect path="*" to="/" />
+                  <Redirect path='*' to='/' />
                 </Switch>
               </Breadcrumb>
             </div>

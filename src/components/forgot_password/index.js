@@ -52,7 +52,7 @@ class ForgotPassword extends React.Component {
           default:
             var heading = 'Unable to reset password';
             var message =
-              'Something went wrong. Our servers might be down, or perhaps you\'ve made too many requests in a row. Please try again in 5 minutes.';
+              'Something went wrong. Our servers might be down, or perhaps you&apos;ve made too many requests in a row. Please try again in 5 minutes.';
 
             if (error.message) {
               if (error.message.includes('Access-Control-Allow-Origin')) {
@@ -95,9 +95,9 @@ class ForgotPassword extends React.Component {
 
   success = () => {
     return (
-      <div className="forgot-password--token-sent">
+      <div className='forgot-password--token-sent'>
         <h1>
-          <i className="fa fa-envelope" /> Check your mail!
+          <i className='fa fa-envelope' /> Check your mail!
         </h1>
         <p>
           If you have an account, we&apos;ve sent an email to {this.state.email}
@@ -107,12 +107,12 @@ class ForgotPassword extends React.Component {
         <small>
           <p>
             Having trouble? Please contact us via{' '}
-            <a href="mailto:support@giantswarm.io">support@giantswarm.io</a>
+            <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
           </p>
         </small>
 
         <small>
-          <Link to="/login">Back to login form</Link>
+          <Link to='/login'>Back to login form</Link>
         </small>
       </div>
     );
@@ -126,13 +126,13 @@ class ForgotPassword extends React.Component {
           Enter the email you used to sign-up and submit the form. We&apos;ll
           send you a link you can use to set a new password.
         </p>
-        <form onSubmit={this.submit} noValidate="novalidate">
-          <div className="textfield">
+        <form onSubmit={this.submit} noValidate='novalidate'>
+          <div className='textfield'>
             <label>Email</label>
             <input
               value={this.state.email}
-              type="text"
-              id="email"
+              type='text'
+              id='email'
               ref={i => {
                 this.email = i;
               }}
@@ -141,14 +141,14 @@ class ForgotPassword extends React.Component {
             />
           </div>
           <Button
-            type="submit"
-            bsStyle="primary"
+            type='submit'
+            bsStyle='primary'
             loading={this.state.submitting}
             onClick={this.submit}
           >
             {this.state.submitting ? 'Submitting ...' : 'Submit'}
           </Button>
-          <Link to="/login">Back to login form</Link>
+          <Link to='/login'>Back to login form</Link>
         </form>
       </div>
     );
@@ -157,7 +157,7 @@ class ForgotPassword extends React.Component {
   render() {
     return (
       <div>
-        <div className="login_form--mask" />
+        <div className='login_form--mask' />
 
         <ReactCSSTransitionGroup
           transitionName={`login_form--transition`}
@@ -166,8 +166,8 @@ class ForgotPassword extends React.Component {
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
         >
-          <div className="login_form--container col-4">
-            <div className="login_form--flash-container">
+          <div className='login_form--container col-4'>
+            <div className='login_form--flash-container'>
               <FlashMessages />
             </div>
             {this.state.tokenRequested ? this.success() : this.form()}

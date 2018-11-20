@@ -67,8 +67,8 @@ class ClusterDashboardItem extends React.Component {
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
     return (
-      <div className="cluster-dashboard-item row well">
-        <div className="cluster-dashboard-item--label">
+      <div className='cluster-dashboard-item row well'>
+        <div className='cluster-dashboard-item--label'>
           <Link
             to={
               '/organizations/' +
@@ -81,8 +81,8 @@ class ClusterDashboardItem extends React.Component {
           </Link>
         </div>
 
-        <div className="col-8">
-          <div className="cluster-dashboard-item--title">
+        <div className='col-8'>
+          <div className='cluster-dashboard-item--title'>
             <Link
               to={
                 '/organizations/' +
@@ -92,7 +92,7 @@ class ClusterDashboardItem extends React.Component {
               }
             >
               <span
-                className="cluster-dashboard-item--name"
+                className='cluster-dashboard-item--name'
                 style={{ fontWeight: 'bold' }}
               >
                 {this.props.cluster.name}
@@ -135,8 +135,8 @@ class ClusterDashboardItem extends React.Component {
           </div>
         </div>
 
-        <div className="col-3 pull-right">
-          <ButtonGroup className="pull-right">
+        <div className='col-3 pull-right'>
+          <ButtonGroup className='pull-right'>
             <Button onClick={this.goToClusterDetails.bind(this)}>
               Details
             </Button>

@@ -109,11 +109,11 @@ class OrganizationDetail extends React.Component {
     var credentialsSection;
     if (this.canCredentials(this.props.app.info.general.provider)) {
       credentialsSection = (
-        <div className="row section" id="credentials-section">
-          <div className="col-3">
-            <h3 className="table-label">Provider credentials</h3>
+        <div className='row section' id='credentials-section'>
+          <div className='col-3'>
+            <h3 className='table-label'>Provider credentials</h3>
           </div>
-          <div className="col-9">
+          <div className='col-9'>
             <Credentials organizationName={this.props.match.params.orgId} />
           </div>
         </div>
@@ -139,53 +139,53 @@ class OrganizationDetail extends React.Component {
               }
             >
               <div>
-                <div className="row">
-                  <div className="col-12">
+                <div className='row'>
+                  <div className='col-12'>
                     <h1>Organization: {this.props.match.params.orgId}</h1>
                   </div>
                 </div>
 
-                <div className="row section">
-                  <div className="col-3">
-                    <h3 className="table-label">Clusters</h3>
+                <div className='row section'>
+                  <div className='col-3'>
+                    <h3 className='table-label'>Clusters</h3>
                   </div>
-                  <div className="col-9">
+                  <div className='col-9'>
                     {this.props.clusters.length === 0 ? (
                       <p>This organization doesn&apos;t have any clusters.</p>
                     ) : (
                       <BootstrapTable
-                        keyField="id"
+                        keyField='id'
                         data={this.props.clusters}
                         columns={this.getClusterTableColumnsConfig()}
                         bordered={false}
                         defaultSorted={clusterTableDefaultSorting}
-                        defaultSortDirection="asc"
+                        defaultSortDirection='asc'
                       />
                     )}
-                    <Link to="/new-cluster">
-                      <Button bsStyle="default">Create Cluster</Button>
+                    <Link to='/new-cluster'>
+                      <Button bsStyle='default'>Create Cluster</Button>
                     </Link>
                   </div>
                 </div>
 
-                <div className="row section">
-                  <div className="col-3">
-                    <h3 className="table-label">Members</h3>
+                <div className='row section'>
+                  <div className='col-3'>
+                    <h3 className='table-label'>Members</h3>
                   </div>
-                  <div className="col-9">
+                  <div className='col-9'>
                     {this.props.organization.members.length === 0 ? (
                       <p>This organization has no members</p>
                     ) : (
                       <BootstrapTable
-                        keyField="email"
+                        keyField='email'
                         data={this.props.membersForTable}
                         columns={this.getMemberTableColumnsConfig()}
                         bordered={false}
                         defaultSorted={memberTableDefaultSorting}
-                        defaultSortDirection="asc"
+                        defaultSortDirection='asc'
                       />
                     )}
-                    <Button onClick={this.addMember} bsStyle="default">
+                    <Button onClick={this.addMember} bsStyle='default'>
                       Add Member
                     </Button>
                   </div>
@@ -239,8 +239,8 @@ function clusterIDCellFormatter(cell) {
 function clusterActionsCellFormatter(cell, row) {
   return (
     <Button
-      bsStyle="default"
-      type="button"
+      bsStyle='default'
+      type='button'
       onClick={this.openClusterDetails.bind(this, row.id)}
     >
       Details
@@ -250,7 +250,7 @@ function clusterActionsCellFormatter(cell, row) {
 
 function memberActionsCellFormatter(cell, row) {
   return (
-    <Button type="button" onClick={this.removeMember.bind(this, row.email)}>
+    <Button type='button' onClick={this.removeMember.bind(this, row.email)}>
       Remove
     </Button>
   );

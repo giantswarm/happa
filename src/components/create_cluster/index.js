@@ -258,7 +258,7 @@ class CreateCluster extends React.Component {
 
   errorState() {
     return (
-      <div className="new-cluster-error flash-messages--flash-message flash-messages--danger">
+      <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
         <b>Something went wrong while trying to create your cluster.</b>
         <br />
         Perhaps our servers are down, please try again later or contact support:
@@ -283,18 +283,18 @@ class CreateCluster extends React.Component {
             ' | Giant Swarm'
           }
         >
-          <div className="new-cluster">
-            <div className="row">
-              <div className="col-12">
+          <div className='new-cluster'>
+            <div className='row'>
+              <div className='col-12'>
                 <h1>Create a Cluster</h1>
               </div>
             </div>
 
-            <div className="row section">
-              <div className="col-3">
-                <h3 className="table-label">Cluster Name</h3>
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Cluster Name</h3>
               </div>
-              <div className="col-9">
+              <div className='col-9'>
                 <form
                   onSubmit={e => {
                     e.preventDefault();
@@ -307,7 +307,7 @@ class CreateCluster extends React.Component {
                     ref={i => {
                       this.cluster_name = i;
                     }}
-                    type="text"
+                    type='text'
                     value={this.state.clusterName}
                     onChange={this.updateClusterName}
                     autoFocus
@@ -317,18 +317,18 @@ class CreateCluster extends React.Component {
             </div>
 
             <div>
-              <div className="row section">
-                <div className="col-12">
-                  <h3 className="table-label">Worker Node Configuration</h3>
+              <div className='row section'>
+                <div className='col-12'>
+                  <h3 className='table-label'>Worker Node Configuration</h3>
                   {this.props.provider === 'kvm' ? (
-                    <div className="checkbox">
-                      <label htmlFor="syncWorkers">
+                    <div className='checkbox'>
+                      <label htmlFor='syncWorkers'>
                         <input
-                          type="checkbox"
+                          type='checkbox'
                           ref={i => {
                             this.syncWorkers = i;
                           }}
-                          id="syncWorkers"
+                          id='syncWorkers'
                           onChange={this.syncWorkersChanged}
                           checked={this.state.syncWorkers}
                         />
@@ -340,7 +340,7 @@ class CreateCluster extends React.Component {
                   )}
                 </div>
               </div>
-              <div className="row">
+              <div className='row'>
                 {this.state.workers.map((worker, index) => {
                   if (this.props.provider === 'aws') {
                     return (
@@ -386,11 +386,11 @@ class CreateCluster extends React.Component {
                   }
                   onClick={this.addWorker}
                 >
-                  <div className="new-cluster--add-worker-button-title">
+                  <div className='new-cluster--add-worker-button-title'>
                     Add a worker
                   </div>
                   {this.state.workers.length < 3 ? (
-                    <div className="new-cluster--low-worker-warning">
+                    <div className='new-cluster--low-worker-warning'>
                       We recommend that you have at least three worker nodes in
                       a cluster
                     </div>
@@ -401,11 +401,11 @@ class CreateCluster extends React.Component {
               </div>
             </div>
 
-            <div className="row section">
-              <div className="col-3">
-                <h3 className="table-label">Release Version</h3>
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Release Version</h3>
               </div>
-              <div className="col-9">
+              <div className='col-9'>
                 <ReleaseSelector releaseSelected={this.selectRelease} />
               </div>
             </div>
@@ -415,17 +415,17 @@ class CreateCluster extends React.Component {
               provider={this.props.provider}
             />
 
-            <div className="row section new-cluster--launch">
-              <div className="col-12">
+            <div className='row section new-cluster--launch'>
+              <div className='col-12'>
                 <p>
                   Create this cluster now and it will be available for you to
                   use as soon as possible.
                 </p>
                 {this.state.error ? this.errorState() : undefined}
                 <Button
-                  type="button"
-                  bsSize="large"
-                  bsStyle="primary"
+                  type='button'
+                  bsSize='large'
+                  bsStyle='primary'
                   onClick={this.createCluster}
                   loading={this.state.submitting}
                   disabled={!this.valid()}

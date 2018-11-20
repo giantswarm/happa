@@ -85,7 +85,7 @@ class SimpleExample extends React.Component {
     } else {
       var url = `http://helloworld.${this.clusterBaseDomain()}`;
       return (
-        <a href={url} target="_blank" rel="noopener noreferrer">
+        <a href={url} target='_blank' rel='noopener noreferrer'>
           {url}
         </a>
       );
@@ -97,7 +97,7 @@ class SimpleExample extends React.Component {
       <Breadcrumb
         data={{ title: 'EXAMPLE', pathname: '/getting-started/example/' }}
       >
-        <div className="centered col-9">
+        <div className='centered col-9'>
           <h1>Let&apos;s create an example application</h1>
           <p>
             To check if every part of your cluster is running as it should,
@@ -110,9 +110,9 @@ class SimpleExample extends React.Component {
             ingress resource from a manifest hosted on GitHub.
           </p>
 
-          <div className="aside">
+          <div className='aside'>
             <p>
-              <i className="fa fa-graduation-cap" title="For learners" /> If
+              <i className='fa fa-graduation-cap' title='For learners' /> If
               you&apos;re new to Kubernetes: A manifest describes things to
               create in Kubernetes. In this case the manifest describes two
               different things, a service and a deployment. The service is there
@@ -222,9 +222,9 @@ class SimpleExample extends React.Component {
             </Output>
           </CodeBlock>
 
-          <div className="aside">
+          <div className='aside'>
             <p>
-              <i className="fa fa-graduation-cap" title="For learners" /> The
+              <i className='fa fa-graduation-cap' title='For learners' /> The
               exact pod names vary in each case, the first suffix functions a
               bit like a version number for your deployment, this changes with
               updates to the deployment. The last part of the pod name is used
@@ -285,7 +285,7 @@ class SimpleExample extends React.Component {
             </Output>
           </CodeBlock>
 
-          <div className="celebration">
+          <div className='celebration'>
             <span>🎉</span>
             <h3>Congratulations</h3>
             <p>
@@ -294,16 +294,16 @@ class SimpleExample extends React.Component {
             </p>
           </div>
 
-          <div className="component_slider--nav">
-            <Link to="/getting-started/configure/">
+          <div className='component_slider--nav'>
+            <Link to='/getting-started/configure/'>
               <button>
-                <i className="fa fa-caret-left" /> Back
+                <i className='fa fa-caret-left' /> Back
               </button>
             </Link>
 
-            <Link to="/getting-started/next-steps/">
-              <button className="primary">
-                Continue <i className="fa fa-caret-right" />
+            <Link to='/getting-started/next-steps/'>
+              <button className='primary'>
+                Continue <i className='fa fa-caret-right' />
               </button>
             </Link>
           </div>

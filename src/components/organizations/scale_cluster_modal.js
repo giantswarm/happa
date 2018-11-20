@@ -149,17 +149,17 @@ class ScaleClusterModal extends React.Component {
             <BootstrapModal.Body>
               <p>How many workers would you like your cluster to have?</p>
               <NumberPicker
-                label=""
+                label=''
                 stepSize={1}
                 value={this.state.workerCount}
                 onChange={this.updateWorkerCount}
                 min={1}
                 max={99}
-                theme="inmodal"
+                theme='inmodal'
               />
 
               {this.state.workerCount < this.props.cluster.workers.length ? (
-                <div className="flash-messages--flash-message flash-messages--danger">
+                <div className='flash-messages--flash-message flash-messages--danger'>
                   <ul>
                     <li>
                       The selection of the node(s) to be removed is
@@ -175,7 +175,7 @@ class ScaleClusterModal extends React.Component {
                   </ul>
                 </div>
               ) : (
-                <div className="flash-messages--flash-message flash-messages--hidden">
+                <div className='flash-messages--flash-message flash-messages--hidden'>
                   <br />
                   <br />
                   <br />
@@ -185,10 +185,10 @@ class ScaleClusterModal extends React.Component {
             <BootstrapModal.Footer>
               {this.state.workerCount !== this.props.cluster.workers.length ? (
                 <Button
-                  type="submit"
+                  type='submit'
                   bsStyle={this.buttonProperties().style}
                   loading={this.state.loading}
-                  loadingPosition="left"
+                  loadingPosition='left'
                   onClick={this.submit}
                 >
                   {this.buttonProperties().title}
@@ -197,7 +197,7 @@ class ScaleClusterModal extends React.Component {
                 undefined
               )}
               <Button
-                bsStyle="link"
+                bsStyle='link'
                 disabled={this.state.loading}
                 onClick={this.close}
               >
@@ -209,12 +209,12 @@ class ScaleClusterModal extends React.Component {
           <div>
             <BootstrapModal.Body>
               <p>Something went wrong while trying to scale your cluster:</p>
-              <div className="flash-messages--flash-message flash-messages--danger">
+              <div className='flash-messages--flash-message flash-messages--danger'>
                 {this.state.error.body && this.state.error.body.message
                   ? this.state.error.body.message
                   : this.state.error.message}
               </div>
-              <div className="flash-messages--flash-message flash-messages--hidden">
+              <div className='flash-messages--flash-message flash-messages--hidden'>
                 <br />
                 <br />
                 <br />
@@ -222,14 +222,14 @@ class ScaleClusterModal extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                bsStyle="link"
+                bsStyle='link'
                 disabled={this.state.loading}
                 onClick={this.back}
               >
                 Back
               </Button>
               <Button
-                bsStyle="link"
+                bsStyle='link'
                 disabled={this.state.loading}
                 onClick={this.close}
               >

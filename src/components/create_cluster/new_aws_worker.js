@@ -252,23 +252,23 @@ class NewAWSWorker extends React.Component {
   render() {
     var index = this.props.index;
     return (
-      <div className="col-4 new-cluster--worker">
-        <div className="new-cluster--worker-title">
+      <div className='col-4 new-cluster--worker'>
+        <div className='new-cluster--worker-title'>
           {'AWS Worker #' + (index + 1)}
           {index > 0 ? (
             <span
-              className="new-cluster--delete"
+              className='new-cluster--delete'
               onClick={this.props.deleteWorker}
             >
-              <i className="fa fa-times" />
+              <i className='fa fa-times' />
             </span>
           ) : (
             undefined
           )}
         </div>
-        <div className="new-cluster--worker-setting-label">Instance Type</div>
+        <div className='new-cluster--worker-setting-label'>Instance Type</div>
 
-        <div className="new-cluster--instance-type-selector">
+        <div className='new-cluster--instance-type-selector'>
           <form
             onSubmit={e => {
               e.preventDefault();
@@ -278,7 +278,7 @@ class NewAWSWorker extends React.Component {
               ref={i => {
                 this.instance_type = i;
               }}
-              type="text"
+              type='text'
               value={this.props.worker.instanceType}
               onChange={this.updateInstanceType}
               validate={this.validateInstanceType}
@@ -294,27 +294,27 @@ class NewAWSWorker extends React.Component {
               }
               onClick={this.showModal}
             >
-              <i className="fa fa-bars" />
+              <i className='fa fa-bars' />
             </div>
           </form>
         </div>
         <BootstrapModal
           show={this.state.modalVisible}
           onHide={this.closeModal}
-          className="new-cluster--instance-type-selector-modal aws"
+          className='new-cluster--instance-type-selector-modal aws'
         >
           <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Select an Instance Type</BootstrapModal.Title>
           </BootstrapModal.Header>
           <BootstrapModal.Body>
-            <table className="new-cluster--instance-type-selector-table">
+            <table className='new-cluster--instance-type-selector-table'>
               <thead>
                 <tr>
                   <th />
                   <th>Name</th>
                   <th>Description</th>
-                  <th className="numeric">CPU Cores</th>
-                  <th className="numeric">Memory</th>
+                  <th className='numeric'>CPU Cores</th>
+                  <th className='numeric'>Memory</th>
                 </tr>
               </thead>
               <tbody>
@@ -326,7 +326,7 @@ class NewAWSWorker extends React.Component {
                     >
                       <td>
                         <input
-                          type="radio"
+                          type='radio'
                           readOnly
                           checked={
                             instanceType.name ===
@@ -335,11 +335,11 @@ class NewAWSWorker extends React.Component {
                         />
                       </td>
                       <td>{instanceType.name}</td>
-                      <td className="description">
+                      <td className='description'>
                         {instanceType.description}
                       </td>
-                      <td className="numeric">{instanceType.cpuCores}</td>
-                      <td className="numeric">{instanceType.memory}</td>
+                      <td className='numeric'>{instanceType.cpuCores}</td>
+                      <td className='numeric'>{instanceType.memory}</td>
                     </tr>
                   );
                 })}
@@ -348,14 +348,14 @@ class NewAWSWorker extends React.Component {
           </BootstrapModal.Body>
           <BootstrapModal.Footer>
             <Button
-              type="submit"
-              bsStyle="primary"
+              type='submit'
+              bsStyle='primary'
               onClick={this.selectInstanceType}
             >
               Select Instance Type
             </Button>
 
-            <Button bsStyle="link" onClick={this.closeModal}>
+            <Button bsStyle='link' onClick={this.closeModal}>
               Cancel
             </Button>
           </BootstrapModal.Footer>

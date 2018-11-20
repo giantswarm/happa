@@ -23,30 +23,30 @@ class GettingStarted extends React.Component {
             <Switch>
               <Route
                 exact
-                path="/getting-started/"
+                path='/getting-started/'
                 component={Page0_Overview}
               />
               <Route
                 exact
-                path="/getting-started/download/"
+                path='/getting-started/download/'
                 component={Page1_DownloadKubeCTL}
               />
               <Route
                 exact
-                path="/getting-started/configure/"
+                path='/getting-started/configure/'
                 component={Page2_ConfigureKubeCTL}
               />
               <Route
                 exact
-                path="/getting-started/example/"
+                path='/getting-started/example/'
                 component={Page3_SimpleExample}
               />
               <Route
                 exact
-                path="/getting-started/next-steps/"
+                path='/getting-started/next-steps/'
                 component={Page4_NextSteps}
               />
-              <Redirect path="*" to="/getting-started/" />
+              <Redirect path='*' to='/getting-started/' />
             </Switch>
           </div>
         </Breadcrumb>

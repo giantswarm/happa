@@ -70,7 +70,7 @@ class FileBlock extends React.Component {
         href={window.URL.createObjectURL(this.blob())}
         download={this.props.fileName}
       >
-        <i className="fa fa-download" aria-hidden="true" />
+        <i className='fa fa-download' aria-hidden='true' />
       </a>
     );
   }
@@ -83,10 +83,10 @@ class FileBlock extends React.Component {
             ref={d => {
               this.pre = d;
             }}
-            className="content"
+            className='content'
           >
-            <div className="codeblock--filename">{this.props.fileName}</div>
-            <div className="codeblock--filecontents">
+            <div className='codeblock--filename'>{this.props.fileName}</div>
+            <div className='codeblock--filecontents'>
               {this.props.hideText ? (
                 undefined
               ) : (
@@ -95,7 +95,7 @@ class FileBlock extends React.Component {
             </div>
           </div>
           <div
-            className="codeblock--buttons"
+            className='codeblock--buttons'
             onMouseOver={function() {
               this.setState({ hovering: true });
             }.bind(this)}
@@ -105,13 +105,13 @@ class FileBlock extends React.Component {
           >
             {Modernizr.adownload ? this.downloadAsFileLink() : null}
             <a
-              href="#"
+              href='#'
               onClick={this.copyCodeToClipboard}
               onMouseUp={function() {
                 this.setState({ clicked: true });
               }.bind(this)}
             >
-              <i className="fa fa-clipboard" aria-hidden="true" />
+              <i className='fa fa-clipboard' aria-hidden='true' />
             </a>
           </div>
           <ReactCSSTransitionGroup
@@ -121,8 +121,8 @@ class FileBlock extends React.Component {
           >
             {this.state.clicked ? (
               <i
-                className="fa fa-check codeblock--checkmark"
-                aria-hidden="true"
+                className='fa fa-check codeblock--checkmark'
+                aria-hidden='true'
               />
             ) : null}
           </ReactCSSTransitionGroup>

@@ -45,7 +45,7 @@ class ClusterIDLabel extends React.Component {
   render() {
     return (
       <div
-        className="cluster-id-label"
+        className='cluster-id-label'
         onMouseLeave={this.mouseLeave.bind(this)}
       >
         <span
@@ -62,20 +62,20 @@ class ClusterIDLabel extends React.Component {
 
         {this.props.copyEnabled ? (
           this.state.copied ? (
-            <i className="fa fa-check" aria-hidden="true" />
+            <i className='fa fa-check' aria-hidden='true' />
           ) : (
             <OverlayTrigger
-              placement="top"
+              placement='top'
               overlay={
-                <Tooltip id="tooltip">
+                <Tooltip id='tooltip'>
                   Copy {this.props.clusterID} to clipboard.
                 </Tooltip>
               }
             >
               <i
                 onClick={this.copyToClipboard.bind(this)}
-                className="fa fa-clipboard"
-                aria-hidden="true"
+                className='fa fa-clipboard'
+                aria-hidden='true'
               />
             </OverlayTrigger>
           )

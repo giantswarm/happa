@@ -16,19 +16,19 @@ class AccountSettings extends React.Component {
       <Breadcrumb
         data={{ title: 'ACCOUNT SETTINGS', pathname: '/account-settings/' }}
       >
-        <DocumentTitle title="Account Settings | Giant Swarm">
+        <DocumentTitle title='Account Settings | Giant Swarm'>
           <div>
-            <div className="row">
-              <div className="col-12">
+            <div className='row'>
+              <div className='col-12'>
                 <h1>Your Account Settings</h1>
               </div>
             </div>
 
-            <div className="row section">
-              <div className="col-3">
-                <h3 className="table-label">Email</h3>
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Email</h3>
               </div>
-              <div className="col-9">
+              <div className='col-9'>
                 <p>
                   This address is used for logging in and for all communication.
                   Be aware that it is also visible to other members of your
@@ -47,14 +47,14 @@ class AccountSettings extends React.Component {
               actions={this.props.actions}
             />
 
-            <div className="row section">
-              <div className="col-3">
-                <h3 className="table-label">Delete Account</h3>
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Delete Account</h3>
               </div>
-              <div className="col-9">
+              <div className='col-9'>
                 <p>
                   Please send an email to{' '}
-                  <a href="mailto:support@giantswarm.io?subject=Please delete my account">
+                  <a href='mailto:support@giantswarm.io?subject=Please delete my account'>
                     support@giantswarm.io
                   </a>{' '}
                   to delete your account.

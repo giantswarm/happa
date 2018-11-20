@@ -54,13 +54,13 @@ class BarChart extends React.Component {
         }
       >
         <div
-          className="bar-chart--bar"
+          className='bar-chart--bar'
           style={{
             width: `${this.cappedPercentage()}%`,
             backgroundColor: this.props.color,
           }}
         />
-        <div className="bar-chart--value">
+        <div className='bar-chart--value'>
           {this.props.outdated ? '...' : this.props.label}
         </div>
       </div>

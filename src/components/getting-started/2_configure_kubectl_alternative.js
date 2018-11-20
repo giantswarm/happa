@@ -117,8 +117,8 @@ class ConfigKubeCtl extends React.Component {
 
   kubeConfig() {
     return (
-      <div className="created-key-pair">
-        <FileBlock fileName="giantswarm-kubeconfig">
+      <div className='created-key-pair'>
+        <FileBlock fileName='giantswarm-kubeconfig'>
           {`
           apiVersion: v1
           kind: Config
@@ -144,56 +144,56 @@ class ConfigKubeCtl extends React.Component {
               client-key-data: ${btoa(this.state.keyPair.data.client_key_data)}
           `}
         </FileBlock>
-        <div className="well">
+        <div className='well'>
           <h4>Certificate and Key Download</h4>
           {Modernizr.adownload ? (
-            <div className="cert-downloads">
+            <div className='cert-downloads'>
               <a
-                className="button outline"
+                className='button outline'
                 href={window.URL.createObjectURL(
                   new Blob(
                     [this.state.keyPair.data.certificate_authority_data],
                     { type: 'application/plain;charset=utf-8' }
                   )
                 )}
-                download="ca.crt"
+                download='ca.crt'
               >
                 CA CERTIFICATE
               </a>
               <a
-                className="button outline"
+                className='button outline'
                 href={window.URL.createObjectURL(
                   new Blob([this.state.keyPair.data.client_certificate_data], {
                     type: 'application/plain;charset=utf-8',
                   })
                 )}
-                download="client.crt"
+                download='client.crt'
               >
                 CLIENT CERTIFICATE
               </a>
               <a
-                className="button outline"
+                className='button outline'
                 href={window.URL.createObjectURL(
                   new Blob([this.state.keyPair.data.client_key_data], {
                     type: 'application/plain;charset=utf-8',
                   })
                 )}
-                download="client.key"
+                download='client.key'
               >
                 CLIENT KEY
               </a>
             </div>
           ) : (
-            <div className="cert-downloads">
-              <FileBlock fileName="ca.crt" hideText={true}>
+            <div className='cert-downloads'>
+              <FileBlock fileName='ca.crt' hideText={true}>
                 {this.state.keyPair.data.certificate_authority_data}
               </FileBlock>
 
-              <FileBlock fileName="client.crt" hideText={true}>
+              <FileBlock fileName='client.crt' hideText={true}>
                 {this.state.keyPair.data.client_certificate_data}
               </FileBlock>
 
-              <FileBlock fileName="client.key" hideText={true}>
+              <FileBlock fileName='client.key' hideText={true}>
                 {this.state.keyPair.data.client_key_data}
               </FileBlock>
             </div>
@@ -203,7 +203,7 @@ class ConfigKubeCtl extends React.Component {
             These files resemble the certificates in the configuration file
             above. They facilitate authenticated access to services using a web
             browser.{' '}
-            <a href="https://docs.giantswarm.io/guides/accessing-services-from-the-outside/">
+            <a href='https://docs.giantswarm.io/guides/accessing-services-from-the-outside/'>
               Read more in our Docs.
             </a>
           </p>
@@ -238,9 +238,9 @@ class ConfigKubeCtl extends React.Component {
         {this.state.keyPair.generated ? (
           this.kubeConfig()
         ) : (
-          <div className="create-key-pair">
+          <div className='create-key-pair'>
             <Button
-              bsStyle="primary"
+              bsStyle='primary'
               loading={this.state.keyPair.generating}
               onClick={this.generateKeyPair}
             >
@@ -251,9 +251,9 @@ class ConfigKubeCtl extends React.Component {
                 This will create a configuration file containing a new key pair
               </strong>
             </p>
-            <div className="key-pair-error">
+            <div className='key-pair-error'>
               {this.state.keyPair.error ? (
-                <div className="flash-messages--flash-message flash-messages--danger">
+                <div className='flash-messages--flash-message flash-messages--danger'>
                   Request failed. Please try again later or contact support
                 </div>
               ) : null}
@@ -291,9 +291,9 @@ class ConfigKubeCtl extends React.Component {
           </Prompt>
         </CodeBlock>
 
-        <div className="aside">
+        <div className='aside'>
           <p>
-            <i className="fa fa-graduation-cap" title="For learners" /> To save
+            <i className='fa fa-graduation-cap' title='For learners' /> To save
             some time in the future, add the command above to a terminal
             profile, e. g. <code>~/.bash_profile</code> to have it available in
             all new shell sessions.
@@ -318,9 +318,9 @@ class ConfigKubeCtl extends React.Component {
           <Prompt>{`kubectl config use-context giantswarm-default`}</Prompt>
         </CodeBlock>
 
-        <div className="aside">
+        <div className='aside'>
           <p>
-            <i className="fa fa-graduation-cap" title="For learners" /> Again,
+            <i className='fa fa-graduation-cap' title='For learners' /> Again,
             here you can save your future self some time by creating an alias.
           </p>
         </div>

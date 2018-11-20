@@ -15,20 +15,20 @@ class NotFound extends React.Component {
           In any case, what you were looking for isn&apos;t here! Sorry!
         </p>
         <p>
-          Go back to <Link to="/">Home</Link>
+          Go back to <Link to='/'>Home</Link>
         </p>
         <p>
           If you want to contact us about this issue, you can reach us here:
         </p>
         <p>
           Email:{' '}
-          <a href="mailto:support@giantswarm.io">support@giantswarm.io</a>
+          <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
           <br />
           Twitter:{' '}
           <a
-            href="https://www.twitter.com/giantswarm"
-            target="_blank"
-            rel="noopener noreferrer"
+            href='https://www.twitter.com/giantswarm'
+            target='_blank'
+            rel='noopener noreferrer'
           >
             @giantswarm
           </a>

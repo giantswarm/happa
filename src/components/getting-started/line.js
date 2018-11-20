@@ -20,7 +20,7 @@ class Line extends React.Component {
             : 'codeblock--line'
         }
       >
-        <span className="codeblock--prompt-indicator">
+        <span className='codeblock--prompt-indicator'>
           {this.props.prompt ? '$ ' : null}
         </span>
         {this.props.text}

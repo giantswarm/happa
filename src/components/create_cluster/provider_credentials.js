@@ -59,11 +59,11 @@ class ProviderCredentials extends React.Component {
 
     if (showInfo) {
       return (
-        <div className="row section">
-          <div className="col-3">
-            <h3 className="table-label">Provider Credentials</h3>
+        <div className='row section'>
+          <div className='col-3'>
+            <h3 className='table-label'>Provider Credentials</h3>
           </div>
-          <div className="col-9">{details}</div>
+          <div className='col-9'>{details}</div>
         </div>
       );
     } else {

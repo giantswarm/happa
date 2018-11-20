@@ -9,18 +9,18 @@ class StatusMessage extends React.Component {
       verify_started: <span>Verifying invite...</span>,
       verify_completed: (
         <span>
-          Verifying invite... <span className="success">VALID!</span>
+          Verifying invite... <span className='success'>VALID!</span>
         </span>
       ),
       verify_failed: (
         <span>
-          Verifying invite... <span className="error">FAILED!</span>
+          Verifying invite... <span className='error'>FAILED!</span>
           <br /> The server appears to be down. Please try again later.
         </span>
       ),
       invalid_token: (
         <span>
-          Verifying invite... <span className="error">FAILED!</span>
+          Verifying invite... <span className='error'>FAILED!</span>
           <br /> This invite token is not valid. Perhaps you already used it?
         </span>
       ),
@@ -29,12 +29,12 @@ class StatusMessage extends React.Component {
       create_account_started: <span>Creating account... </span>,
       create_account_completed: (
         <span>
-          Creating account... <span className="success">DONE!</span>
+          Creating account... <span className='success'>DONE!</span>
         </span>
       ),
       create_account_failed: (
         <span>
-          Creating account... <span className="error">FAILED!</span>
+          Creating account... <span className='error'>FAILED!</span>
         </span>
       ),
       password_too_short: <span>Please use at least 8 characters</span>,
@@ -64,12 +64,12 @@ class StatusMessage extends React.Component {
 
   render() {
     return (
-      <div className="signup--status">
-        <div className="signup--status-text">
+      <div className='signup--status'>
+        <div className='signup--status-text'>
           {this.statusMessage()[this.props.status] || <span>&nbsp;</span>}
         </div>
         {this.showLoader() ? (
-          <img className="loader" src="/images/loader_oval_light.svg" />
+          <img className='loader' src='/images/loader_oval_light.svg' />
         ) : null}
       </div>
     );

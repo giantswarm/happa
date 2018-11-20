@@ -45,10 +45,10 @@ class PasswordField extends React.Component {
 
   render() {
     return (
-      <div className="textfield">
+      <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
         <input
-          type="password"
+          type='password'
           ref={input => {
             this.input = input;
           }}
@@ -56,7 +56,7 @@ class PasswordField extends React.Component {
           onBlur={this.onBlur}
           onChange={this.onChange}
         />
-        <span className="message">{this.props.validationError}&nbsp;</span>
+        <span className='message'>{this.props.validationError}&nbsp;</span>
       </div>
     );
   }

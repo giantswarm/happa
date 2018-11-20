@@ -101,13 +101,13 @@ export class CodeBlock extends React.Component {
             ref={d => {
               this.pre = d;
             }}
-            className="content"
+            className='content'
           >
             {this.props.children}
           </div>
-          <div className="codeblock--buttons">
+          <div className='codeblock--buttons'>
             <a
-              href="#"
+              href='#'
               onMouseOver={function() {
                 this.setState({ hovering: true });
               }.bind(this)}
@@ -119,7 +119,7 @@ export class CodeBlock extends React.Component {
                 this.setState({ clicked: true });
               }.bind(this)}
             >
-              <i className="fa fa-clipboard" aria-hidden="true" />
+              <i className='fa fa-clipboard' aria-hidden='true' />
             </a>
           </div>
           <ReactCSSTransitionGroup
@@ -129,8 +129,8 @@ export class CodeBlock extends React.Component {
           >
             {this.state.clicked ? (
               <i
-                className="fa fa-check codeblock--checkmark"
-                aria-hidden="true"
+                className='fa fa-check codeblock--checkmark'
+                aria-hidden='true'
               />
             ) : null}
           </ReactCSSTransitionGroup>

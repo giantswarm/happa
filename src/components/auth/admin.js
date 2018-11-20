@@ -22,14 +22,14 @@ class AdminLogin extends React.Component {
   render() {
     return (
       <div>
-        <div className="login_form--mask" />
+        <div className='login_form--mask' />
 
-        <div className="login_form--container login_form--admin col-4">
-          <div className="login_form--flash-container">
+        <div className='login_form--container login_form--admin col-4'>
+          <div className='login_form--flash-container'>
             <FlashMessages />
           </div>
 
-          <img className="loader" src="/images/loader_oval_light.svg" />
+          <img className='loader' src='/images/loader_oval_light.svg' />
           <p>Redirecting you to our authentication provider.</p>
           <p>If nothing happens please let us know in #support.</p>
         </div>

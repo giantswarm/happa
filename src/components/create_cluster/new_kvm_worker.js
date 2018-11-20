@@ -24,15 +24,15 @@ class NewKVMWorker extends React.Component {
     var worker = this.props.worker;
     var index = this.props.index;
     return (
-      <div className="col-4 new-cluster--worker">
-        <div className="new-cluster--worker-title">
+      <div className='col-4 new-cluster--worker'>
+        <div className='new-cluster--worker-title'>
           {'Worker #' + (index + 1)}
           {index > 0 ? (
             <span
-              className="new-cluster--delete"
+              className='new-cluster--delete'
               onClick={this.props.deleteWorker}
             >
-              <i className="fa fa-times" />
+              <i className='fa fa-times' />
             </span>
           ) : (
             undefined
@@ -40,7 +40,7 @@ class NewKVMWorker extends React.Component {
         </div>
 
         <NumberPicker
-          label="CPU Cores"
+          label='CPU Cores'
           stepSize={1}
           value={worker.cpu}
           min={1}
@@ -51,8 +51,8 @@ class NewKVMWorker extends React.Component {
         />
 
         <NumberPicker
-          label="Memory"
-          unit="GB"
+          label='Memory'
+          unit='GB'
           stepSize={1}
           value={worker.memory}
           min={1}
@@ -63,8 +63,8 @@ class NewKVMWorker extends React.Component {
         />
 
         <NumberPicker
-          label="Storage"
-          unit="GB"
+          label='Storage'
+          unit='GB'
           stepSize={10}
           value={worker.storage}
           min={10}

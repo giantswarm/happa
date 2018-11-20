@@ -154,7 +154,7 @@ class ChangePassword extends React.Component {
               Something went wrong while trying to set your password. Perhaps
               our servers are down. Could you try again later, or contact
               support otherwise: &nbsp;
-              <a href="mailto:support@giantswarm.io">support@giantswarm.io</a>
+              <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
             </span>
           );
         }
@@ -170,67 +170,67 @@ class ChangePassword extends React.Component {
 
   render() {
     return (
-      <div className="row section">
-        <div className="col-3">
-          <h3 className="table-label">Password</h3>
+      <div className='row section'>
+        <div className='col-3'>
+          <h3 className='table-label'>Password</h3>
         </div>
-        <div className="col-9">
+        <div className='col-9'>
           <p>Use this form to change your password.</p>
 
-          <form onSubmit={this.submit} className="change_password_form">
-            <div className="textfield small">
+          <form onSubmit={this.submit} className='change_password_form'>
+            <div className='textfield small'>
               <PasswordField
-                label="Current Password"
+                label='Current Password'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
-                id="current_password"
+                id='current_password'
                 ref={p => {
                   this.current_password = p;
                 }}
               />
             </div>
 
-            <div className="textfield small">
+            <div className='textfield small'>
               <PasswordField
-                label="New Password"
+                label='New Password'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
                 validationError={this.state.newPasswordValidationMessage}
-                id="new_password"
+                id='new_password'
                 ref={p => {
                   this.new_password = p;
                 }}
               />
             </div>
 
-            <div className="textfield small">
+            <div className='textfield small'>
               <PasswordField
-                label="New Password (once more)"
+                label='New Password (once more)'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
                 validationError={
                   this.state.newPassworConfirmationValidationMessage
                 }
-                id="new_password_confirmation"
+                id='new_password_confirmation'
                 ref={p => {
                   this.new_password_confirmation = p;
                 }}
               />
             </div>
 
-            <div className="button-area">
+            <div className='button-area'>
               <ReactCSSTransitionGroup
-                transitionName="slide-right"
+                transitionName='slide-right'
                 transitionEnterTimeout={200}
                 transitionLeaveTimeout={200}
               >
                 {this.state.buttonVisible ? (
                   <Button
-                    type="submit"
-                    bsStyle="primary"
+                    type='submit'
+                    bsStyle='primary'
                     disabled={!this.state.formValid}
                     loading={this.state.submitting}
-                    loadingMessage="Saving..."
+                    loadingMessage='Saving...'
                   >
                     Set New Password
                   </Button>
@@ -238,25 +238,25 @@ class ChangePassword extends React.Component {
               </ReactCSSTransitionGroup>
 
               <ReactCSSTransitionGroup
-                transitionName="slide-right"
+                transitionName='slide-right'
                 transitionEnterTimeout={200}
                 transitionLeaveTimeout={200}
               >
                 {this.state.success ? (
-                  <div className="form-success">
-                    <i className="fa fa-check-circle" />
+                  <div className='form-success'>
+                    <i className='fa fa-check-circle' />
                     Password set succesfully
                   </div>
                 ) : null}
               </ReactCSSTransitionGroup>
 
               <ReactCSSTransitionGroup
-                transitionName="slide-right"
+                transitionName='slide-right'
                 transitionEnterTimeout={200}
                 transitionLeaveTimeout={200}
               >
                 {this.state.error ? (
-                  <div className="flash-messages--flash-message flash-messages--danger">
+                  <div className='flash-messages--flash-message flash-messages--danger'>
                     {this.state.errorMessage}
                   </div>
                 ) : null}

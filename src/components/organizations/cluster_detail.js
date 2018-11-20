@@ -195,7 +195,7 @@ class ClusterDetail extends React.Component {
         instanceTypeOrVMSize = (
           <tr>
             <td>EC2 instance type</td>
-            <td className="value code">
+            <td className='value code'>
               {this.props.cluster.workers[0].aws.instance_type}
             </td>
           </tr>
@@ -204,7 +204,7 @@ class ClusterDetail extends React.Component {
         instanceTypeOrVMSize = (
           <tr>
             <td>VM size</td>
-            <td className="value code">
+            <td className='value code'>
               {this.props.cluster.workers[0].azure.vm_size}
             </td>
           </tr>
@@ -225,9 +225,9 @@ class ClusterDetail extends React.Component {
         this.props.credentials.items[0].id !== this.props.cluster.credential_id
       ) {
         credentialInfoRows.push(
-          <tr key="providerCredentialsInvalid">
+          <tr key='providerCredentialsInvalid'>
             <td>Provider credentials</td>
-            <td className="value">
+            <td className='value'>
               Error: cluster credentials do not match organization credentials.
               Please contact support for details.
             </td>
@@ -236,9 +236,9 @@ class ClusterDetail extends React.Component {
       } else {
         if (this.props.provider === 'aws') {
           credentialInfoRows.push(
-            <tr key="awsAccountID">
+            <tr key='awsAccountID'>
               <td>AWS account</td>
-              <td className="value code">
+              <td className='value code'>
                 <AWSAccountID
                   roleARN={
                     this.props.credentials.items[0].aws.roles.awsoperator
@@ -249,9 +249,9 @@ class ClusterDetail extends React.Component {
           );
         } else if (this.props.provider === 'azure') {
           credentialInfoRows.push(
-            <tr key="azureSubscriptionID">
+            <tr key='azureSubscriptionID'>
               <td>Azure subscription</td>
-              <td className="value code">
+              <td className='value code'>
                 {
                   this.props.credentials.items[0].azure.credential
                     .subscription_id
@@ -260,9 +260,9 @@ class ClusterDetail extends React.Component {
             </tr>
           );
           credentialInfoRows.push(
-            <tr key="azureTenantID">
+            <tr key='azureTenantID'>
               <td>Azure tenant</td>
-              <td className="value code">
+              <td className='value code'>
                 {this.props.credentials.items[0].azure.credential.tenant_id}
               </td>
             </tr>
@@ -298,9 +298,9 @@ class ClusterDetail extends React.Component {
             >
               {this.state.loading === false ? (
                 <div>
-                  <div className="cluster-details">
-                    <div className="row">
-                      <div className="col-7">
+                  <div className='cluster-details'>
+                    <div className='row'>
+                      <div className='col-7'>
                         <h1>
                           <ClusterIDLabel
                             clusterID={this.props.cluster.id}
@@ -309,18 +309,18 @@ class ClusterDetail extends React.Component {
                           {this.props.cluster.name}{' '}
                           {this.state.loading ? (
                             <img
-                              className="loader"
-                              width="25px"
-                              height="25px"
-                              src="/images/loader_oval_light.svg"
+                              className='loader'
+                              width='25px'
+                              height='25px'
+                              src='/images/loader_oval_light.svg'
                             />
                           ) : (
                             ''
                           )}
                         </h1>
                       </div>
-                      <div className="col-5">
-                        <div className="pull-right btn-group">
+                      <div className='col-5'>
+                        <div className='pull-right btn-group'>
                           <Button onClick={this.accessCluster}>
                             GET STARTED
                           </Button>
@@ -344,14 +344,14 @@ class ClusterDetail extends React.Component {
                     </div>
                   </div>
                   <div>
-                    <div className="cluster-details">
-                      <div className="row">
-                        <div className="col-12">
-                          <table className="table resource-details">
+                    <div className='cluster-details'>
+                      <div className='row'>
+                        <div className='col-12'>
+                          <table className='table resource-details'>
                             <tbody>
                               <tr>
                                 <td>Created</td>
-                                <td className="value">
+                                <td className='value'>
                                   {this.props.cluster.create_date
                                     ? relativeDate(
                                         this.props.cluster.create_date
@@ -365,7 +365,7 @@ class ClusterDetail extends React.Component {
                               {this.props.release ? (
                                 <tr>
                                   <td>Release version</td>
-                                  <td className="value code">
+                                  <td className='value code'>
                                     <a onClick={this.showReleaseDetails}>
                                       {this.props.cluster.release_version}{' '}
                                       {(() => {
@@ -387,9 +387,9 @@ class ClusterDetail extends React.Component {
                                     {this.canClusterUpgrade() ? (
                                       <a
                                         onClick={this.showUpgradeModal}
-                                        className="upgrade-available"
+                                        className='upgrade-available'
                                       >
-                                        <i className="fa fa-info-circle" />{' '}
+                                        <i className='fa fa-info-circle' />{' '}
                                         Upgrade available
                                       </a>
                                     ) : (
@@ -400,7 +400,7 @@ class ClusterDetail extends React.Component {
                               ) : (
                                 <tr>
                                   <td>Kubernetes version</td>
-                                  <td className="value code">
+                                  <td className='value code'>
                                     {this.props.cluster.kubernetes_version !==
                                       '' &&
                                     this.props.cluster.kubernetes_version !==
@@ -412,7 +412,7 @@ class ClusterDetail extends React.Component {
                               )}
                               <tr>
                                 <td>Kubernetes API endpoint</td>
-                                <td className="value code">
+                                <td className='value code'>
                                   {this.props.cluster.api_endpoint
                                     ? this.props.cluster.api_endpoint
                                     : 'n/a'}
@@ -420,7 +420,7 @@ class ClusterDetail extends React.Component {
                               </tr>
                               <tr>
                                 <td>Number of worker nodes</td>
-                                <td className="value">
+                                <td className='value'>
                                   {this.props.cluster.workers
                                     ? this.props.cluster.workers.length
                                     : 'n/a'}
@@ -429,7 +429,7 @@ class ClusterDetail extends React.Component {
                               {instanceTypeOrVMSize}
                               <tr>
                                 <td>Total CPU cores in worker nodes</td>
-                                <td className="value">
+                                <td className='value'>
                                   {this.getCpusTotal() === null
                                     ? 'n/a'
                                     : this.getCpusTotal()}
@@ -437,7 +437,7 @@ class ClusterDetail extends React.Component {
                               </tr>
                               <tr>
                                 <td>Total RAM in worker nodes</td>
-                                <td className="value">
+                                <td className='value'>
                                   {this.getMemoryTotal() === null
                                     ? 'n/a'
                                     : this.getMemoryTotal()}{' '}
@@ -447,7 +447,7 @@ class ClusterDetail extends React.Component {
                               {this.props.provider === 'kvm' ? (
                                 <tr>
                                   <td>Total storage in worker nodes</td>
-                                  <td className="value">
+                                  <td className='value'>
                                     {this.getStorageTotal() === null
                                       ? 'n/a'
                                       : this.getStorageTotal()}{' '}
@@ -462,7 +462,7 @@ class ClusterDetail extends React.Component {
                                 <tr>
                                   <td>Ingress Ports</td>
                                   <td>
-                                    <dl className="ingress-port-table">
+                                    <dl className='ingress-port-table'>
                                       {this.props.cluster.kvm.port_mappings.reduce(
                                         (acc, item, idx) => {
                                           return acc.concat([
@@ -490,21 +490,21 @@ class ClusterDetail extends React.Component {
 
                     <ClusterKeyPairs cluster={this.props.cluster} />
 
-                    <div className="row section cluster_delete">
-                      <div className="row">
-                        <div className="col-12">
-                          <h3 className="table-label">Delete This Cluster</h3>
+                    <div className='row section cluster_delete'>
+                      <div className='row'>
+                        <div className='col-12'>
+                          <h3 className='table-label'>Delete This Cluster</h3>
                         </div>
                       </div>
-                      <div className="row">
-                        <div className="col-9">
+                      <div className='row'>
+                        <div className='col-9'>
                           <p>
                             All workloads on this cluster will be terminated.
                             Data stored on the worker nodes will be lost. There
                             is no way to undo this action.
                           </p>
                           <Button
-                            bsStyle="danger"
+                            bsStyle='danger'
                             onClick={this.showDeleteClusterModal.bind(
                               this,
                               this.props.cluster
@@ -548,11 +548,11 @@ class ClusterDetail extends React.Component {
                   )}
                 </div>
               ) : (
-                <div className="app-loading">
-                  <div className="app-loading-contents">
+                <div className='app-loading'>
+                  <div className='app-loading-contents'>
                     <img
-                      className="loader"
-                      src="/images/loader_oval_light.svg"
+                      className='loader'
+                      src='/images/loader_oval_light.svg'
                     />
                   </div>
                 </div>

@@ -31,16 +31,16 @@ class Logout extends React.Component {
     return (
       <div>
         <ReactCSSTransitionGroup
-          transitionName="logout--mask--transition"
+          transitionName='logout--mask--transition'
           transitionAppear={true}
           transitionAppearTimeout={400}
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
         >
-          <div className="logout--mask" />
+          <div className='logout--mask' />
         </ReactCSSTransitionGroup>
-        <div className="logout--container">
-          <img className="loader" src="/images/loader_oval_light.svg" />
+        <div className='logout--container'>
+          <img className='loader' src='/images/loader_oval_light.svg' />
         </div>
       </div>
     );

@@ -162,9 +162,9 @@ class ConfigKubeCtl extends React.Component {
             <p>
               Installation via{' '}
               <a
-                href="http://brew.sh/"
-                target="_blank"
-                rel="noopener noreferrer"
+                href='http://brew.sh/'
+                target='_blank'
+                rel='noopener noreferrer'
               >
                 homebrew
               </a>
@@ -225,7 +225,7 @@ class ConfigKubeCtl extends React.Component {
       <Breadcrumb
         data={{ title: 'CONFIGURE', pathname: '/getting-started/configure/' }}
       >
-        <div className="centered col-9">
+        <div className='centered col-9'>
           <h1>
             Configure kubectl for cluster: {this.props.selectedCluster.name}{' '}
             <ClusterIDLabel clusterID={this.props.selectedCluster.id} />
@@ -237,11 +237,11 @@ class ConfigKubeCtl extends React.Component {
                 Before we continue, make sure that you have the right cluster
                 selected to configure access to:
               </p>
-              <div className="well select-cluster">
-                <div className="select-cluster--dropdown-container">
+              <div className='well select-cluster'>
+                <div className='select-cluster--dropdown-container'>
                   <label>Select Cluster:</label>
                   <DropdownButton
-                    id="cluster-slect-dropdown"
+                    id='cluster-slect-dropdown'
                     title={this.friendlyClusterName(this.props.selectedCluster)}
                   >
                     {_.map(this.props.selectedOrgClusters, cluster => (
@@ -274,11 +274,11 @@ class ConfigKubeCtl extends React.Component {
 
           <p>
             In case you can&apos;t install <code>gsctl</code> right now, we
-            provide an <a href="#alternative">alternative solution below.</a>
+            provide an <a href='#alternative'>alternative solution below.</a>
           </p>
 
-          <div className="platform_selector">
-            <ul className="platform_selector--tabs">
+          <div className='platform_selector'>
+            <ul className='platform_selector--tabs'>
               <li
                 className={this.isSelectedPlatform('Linux') ? 'active' : null}
                 onClick={this.selectPlatform.bind(this, 'Linux')}
@@ -310,7 +310,7 @@ class ConfigKubeCtl extends React.Component {
               </li>
             </ul>
 
-            <div className="platform_selector--content">
+            <div className='platform_selector--content'>
               {this.selectedInstallInstructions()}
             </div>
           </div>
@@ -381,9 +381,9 @@ class ConfigKubeCtl extends React.Component {
             </li>
           </ul>
 
-          <div className="aside">
+          <div className='aside'>
             <p>
-              <i className="fa fa-graduation-cap" title="For learners" />{' '}
+              <i className='fa fa-graduation-cap' title='For learners' />{' '}
               <code>--certificate-organizations</code> is a flag that sets what
               group you belong to when authenticating against the Kubernetes
               API. The default superadmin group on RBAC (Role Based Access
@@ -393,15 +393,15 @@ class ConfigKubeCtl extends React.Component {
             </p>
           </div>
 
-          <div className="well" id="alternative">
+          <div className='well' id='alternative'>
             <div
               onClick={this.toggleAlternative}
-              className="toggle-alternative"
+              className='toggle-alternative'
             >
               {this.state.alternativeOpen ? (
-                <i className="fa fa-caret-down" />
+                <i className='fa fa-caret-down' />
               ) : (
-                <i className="fa fa-caret-right" />
+                <i className='fa fa-caret-right' />
               )}
               &nbsp; Show alternative method to configure kubectl without gsctl
             </div>
@@ -436,16 +436,16 @@ class ConfigKubeCtl extends React.Component {
             cluster and dig a little deeper.
           </p>
 
-          <div className="component_slider--nav">
-            <Link to="/getting-started/download/">
+          <div className='component_slider--nav'>
+            <Link to='/getting-started/download/'>
               <button>
-                <i className="fa fa-caret-left" /> Back
+                <i className='fa fa-caret-left' /> Back
               </button>
             </Link>
 
-            <Link to="/getting-started/example/">
-              <button className="primary">
-                Continue <i className="fa fa-caret-right" />
+            <Link to='/getting-started/example/'>
+              <button className='primary'>
+                Continue <i className='fa fa-caret-right' />
               </button>
             </Link>
           </div>

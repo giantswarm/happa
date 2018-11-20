@@ -112,8 +112,8 @@ export function relativeDate(ISO8601DateString) {
 
   return (
     <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip id="tooltip">{formatedDate}</Tooltip>}
+      placement='top'
+      overlay={<Tooltip id='tooltip'>{formatedDate}</Tooltip>}
     >
       <span>{relativeDate}</span>
     </OverlayTrigger>

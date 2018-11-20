@@ -155,93 +155,93 @@ class ExpiryHoursPicker extends React.Component {
 
   render() {
     return (
-      <ul className="expiry-hours-picker">
-        <li className="expiry-hours-picker--granular">
+      <ul className='expiry-hours-picker'>
+        <li className='expiry-hours-picker--granular'>
           <input
-            type="radio"
-            value="relative"
+            type='radio'
+            value='relative'
             onChange={this.onSelectionTypeChanged.bind(this)}
-            name="selectionType"
-            id="relativeCheck"
+            name='selectionType'
+            id='relativeCheck'
             checked={this.state.selectionType === 'relative'}
           />
-          <label htmlFor="relativeCheck">Relatively:</label>
+          <label htmlFor='relativeCheck'>Relatively:</label>
           <input
-            type="text"
-            min="0"
-            max="10"
-            name="years"
+            type='text'
+            min='0'
+            max='10'
+            name='years'
             maxLength={2}
             ref={i => {
               this.years = i;
             }}
             value={this.state.yearsValue}
             onChange={this.handleYearChange.bind(this)}
-            autoComplete="off"
+            autoComplete='off'
           />{' '}
           years
           <input
-            type="text"
-            min="0"
-            max="999"
-            name="months"
+            type='text'
+            min='0'
+            max='999'
+            name='months'
             maxLength={2}
             ref={i => {
               this.months = i;
             }}
             value={this.state.monthsValue}
             onChange={this.handleMonthChange.bind(this)}
-            autoComplete="off"
+            autoComplete='off'
           />{' '}
           months
           <input
-            type="text"
-            min="0"
-            max="999"
-            name="days"
+            type='text'
+            min='0'
+            max='999'
+            name='days'
             maxLength={2}
             ref={i => {
               this.days = i;
             }}
             value={this.state.daysValue}
             onChange={this.handleDayChange.bind(this)}
-            autoComplete="off"
+            autoComplete='off'
           />{' '}
           days
           <input
-            type="text"
-            min="0"
-            max="999"
-            name="hours"
+            type='text'
+            min='0'
+            max='999'
+            name='hours'
             maxLength={2}
             ref={i => {
               this.hours = i;
             }}
             value={this.state.hoursValue}
             onChange={this.handleHourChange.bind(this)}
-            autoComplete="off"
+            autoComplete='off'
           />{' '}
           hours from now
         </li>
         <li>
           <input
-            type="radio"
-            value="date"
+            type='radio'
+            value='date'
             onChange={this.onSelectionTypeChanged.bind(this)}
-            name="selectionType"
-            id="dateCheck"
+            name='selectionType'
+            id='dateCheck'
             checked={this.state.selectionType === 'date'}
           />
-          <label htmlFor="dateCheck">Date:</label>
+          <label htmlFor='dateCheck'>Date:</label>
           <DatePicker
             selected={this.state.expireDate}
             onChange={this.handleDateChange.bind(this)}
-            dateFormat="YYYY-MM-DD"
+            dateFormat='YYYY-MM-DD'
             minDate={moment().add(1, 'day')}
             maxDate={moment().add(30, 'years')}
             showMonthDropdown
             showYearDropdown
-            dropdownMode="select"
+            dropdownMode='select'
           />
         </li>
       </ul>

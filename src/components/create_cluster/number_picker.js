@@ -47,19 +47,19 @@ class NumberPicker extends React.Component {
         }
       >
         {this.props.label ? (
-          <div className="new-cluster--worker-setting-label">
+          <div className='new-cluster--worker-setting-label'>
             {this.props.label}
           </div>
         ) : (
           undefined
         )}
 
-        <div className="new-cluster--worker-setting-control">
+        <div className='new-cluster--worker-setting-control'>
           {this.props.readOnly ? (
             undefined
           ) : (
             <div
-              className="new-cluster--worker-setting-control-decrease"
+              className='new-cluster--worker-setting-control-decrease'
               onClick={this.decrement}
             >
               &ndash;
@@ -70,7 +70,7 @@ class NumberPicker extends React.Component {
             undefined
           ) : (
             <div
-              className="new-cluster--worker-setting-control-increase"
+              className='new-cluster--worker-setting-control-increase'
               onClick={this.increment}
             >
               +

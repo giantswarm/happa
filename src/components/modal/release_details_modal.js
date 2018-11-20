@@ -35,7 +35,7 @@ class ReleaseDetailsModal extends React.Component {
   render() {
     return (
       <BootstrapModal
-        className="release-selector-modal"
+        className='release-selector-modal'
         show={this.state.modalVisible}
         onHide={this.close}
       >
@@ -46,7 +46,7 @@ class ReleaseDetailsModal extends React.Component {
           {_.map(this.props.releases, release => {
             return (
               <div
-                className="release-selector-modal--release-details"
+                className='release-selector-modal--release-details'
                 key={release.version}
               >
                 <h2>
@@ -56,7 +56,7 @@ class ReleaseDetailsModal extends React.Component {
                   // select button, and the cluster detail screen can omit it.
                   this.props.releaseSelected ? (
                     this.props.selectedRelease === release.version ? (
-                      <span className="selected">Selected</span>
+                      <span className='selected'>Selected</span>
                     ) : (
                       <Button
                         onClick={this.selectRelease.bind(this, release.version)}
@@ -68,21 +68,21 @@ class ReleaseDetailsModal extends React.Component {
                     undefined
                   )}
                 </h2>
-                <p className="release-selector-modal--release-details--date">
+                <p className='release-selector-modal--release-details--date'>
                   Released <span>{relativeDate(release.timestamp)}</span>
                 </p>
 
-                <div className="release-selector-modal--components">
+                <div className='release-selector-modal--components'>
                   {_.map(_.sortBy(release.components, 'name'), component => {
                     return (
                       <div
-                        className="release-selector-modal--component"
+                        className='release-selector-modal--component'
                         key={component.name}
                       >
-                        <span className="release-selector-modal--component--name">
+                        <span className='release-selector-modal--component--name'>
                           {component.name}
                         </span>
-                        <span className="release-selector-modal--component--version">
+                        <span className='release-selector-modal--component--version'>
                           {component.version}
                         </span>
                       </div>

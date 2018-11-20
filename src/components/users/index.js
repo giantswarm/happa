@@ -290,14 +290,14 @@ class Users extends React.Component {
   render() {
     return (
       <Breadcrumb data={{ title: 'USERS', pathname: '/users/' }}>
-        <DocumentTitle title="Users | Giant Swarm">
+        <DocumentTitle title='Users | Giant Swarm'>
           <div>
-            <div className="row">
-              <div className="col-7">
+            <div className='row'>
+              <div className='col-7'>
                 <h1>Users</h1>
               </div>
-              <div className="col-5">
-                <div className="pull-right btn-group">
+              <div className='col-5'>
+                <div className='pull-right btn-group'>
                   <Button onClick={this.inviteUser.bind(this)}>
                     INVITE USER
                   </Button>
@@ -327,10 +327,10 @@ class Users extends React.Component {
               ) {
                 return (
                   <img
-                    className="loader"
-                    src="/images/loader_oval_light.svg"
-                    width="20px"
-                    height="20px"
+                    className='loader'
+                    src='/images/loader_oval_light.svg'
+                    width='20px'
+                    height='20px'
                   />
                 );
               } else if (
@@ -344,14 +344,14 @@ class Users extends React.Component {
                 );
               } else {
                 return (
-                  <div className="users-table">
+                  <div className='users-table'>
                     <BootstrapTable
-                      keyField="email"
+                      keyField='email'
                       data={Object.values(this.props.invitationsAndUsers)}
                       columns={this.getTableColumnsConfig()}
                       bordered={false}
                       defaultSorted={tableDefaultSorting}
-                      defaultSortDirection="asc"
+                      defaultSortDirection='asc'
                     />
                   </div>
                 );
@@ -363,7 +363,7 @@ class Users extends React.Component {
                 case 'unexpireUser':
                   return (
                     <BootstrapModal
-                      className="create-key-pair-modal"
+                      className='create-key-pair-modal'
                       show={this.state.modal.visible}
                       onHide={this.closeModal.bind(this)}
                     >
@@ -386,8 +386,8 @@ class Users extends React.Component {
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          type="submit"
-                          bsStyle="primary"
+                          type='submit'
+                          bsStyle='primary'
                           loading={this.state.modal.loading}
                           onClick={this.confirmRemoveExpiration.bind(
                             this,
@@ -401,7 +401,7 @@ class Users extends React.Component {
 
                         {this.state.modal.loading ? null : (
                           <Button
-                            bsStyle="link"
+                            bsStyle='link'
                             onClick={this.closeModal.bind(this)}
                           >
                             Cancel
@@ -414,7 +414,7 @@ class Users extends React.Component {
                 case 'deleteUser':
                   return (
                     <BootstrapModal
-                      className="create-key-pair-modal"
+                      className='create-key-pair-modal'
                       show={this.state.modal.visible}
                       onHide={this.closeModal.bind(this)}
                     >
@@ -433,8 +433,8 @@ class Users extends React.Component {
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          type="submit"
-                          bsStyle="danger"
+                          type='submit'
+                          bsStyle='danger'
                           loading={this.state.modal.loading}
                           onClick={this.confirmDeleteUser.bind(
                             this,
@@ -448,7 +448,7 @@ class Users extends React.Component {
 
                         {this.state.modal.loading ? null : (
                           <Button
-                            bsStyle="link"
+                            bsStyle='link'
                             onClick={this.closeModal.bind(this)}
                           >
                             Cancel
@@ -461,7 +461,7 @@ class Users extends React.Component {
                 case 'inviteUser':
                   return (
                     <BootstrapModal
-                      className="create-key-pair-modal"
+                      className='create-key-pair-modal'
                       show={this.state.modal.visible}
                       onHide={this.closeModal.bind(this)}
                     >
@@ -483,21 +483,21 @@ class Users extends React.Component {
                           </p>
                           <p>Invitations are valid for 48 hours.</p>
 
-                          <div className="textfield">
+                          <div className='textfield'>
                             <label>Email:</label>
                             <input
                               autoFocus
-                              type="text"
+                              type='text'
                               onChange={this.handleEmailChange.bind(this)}
                               value={this.state.invitationForm.email}
                             />
                           </div>
 
-                          <div className="textfield">
+                          <div className='textfield'>
                             <label>Organization:</label>
                             <DropdownButton
-                              id="organizationDropdown"
-                              className="outline"
+                              id='organizationDropdown'
+                              className='outline'
                               title={this.state.invitationForm.organization}
                             >
                               {_.map(
@@ -517,16 +517,16 @@ class Users extends React.Component {
                             </DropdownButton>
                           </div>
 
-                          <div className="textfield">
+                          <div className='textfield'>
                             <label>Send Email:</label>
-                            <div className="checkbox">
-                              <label htmlFor="sendEmail">
+                            <div className='checkbox'>
+                              <label htmlFor='sendEmail'>
                                 <input
-                                  type="checkbox"
+                                  type='checkbox'
                                   onChange={this.handleSendEmailChange.bind(
                                     this
                                   )}
-                                  id="sendEmail"
+                                  id='sendEmail'
                                   checked={this.state.invitationForm.sendEmail}
                                 />
                                 Send the invitee an e-mail with the accept
@@ -538,8 +538,8 @@ class Users extends React.Component {
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          type="submit"
-                          bsStyle="primary"
+                          type='submit'
+                          bsStyle='primary'
                           loading={this.state.modal.loading}
                           onClick={this.confirmInviteUser.bind(this)}
                         >
@@ -550,7 +550,7 @@ class Users extends React.Component {
 
                         {this.state.modal.loading ? null : (
                           <Button
-                            bsStyle="link"
+                            bsStyle='link'
                             onClick={this.closeModal.bind(this)}
                           >
                             Cancel
@@ -563,7 +563,7 @@ class Users extends React.Component {
                 case 'inviteUserDone':
                   return (
                     <BootstrapModal
-                      className="create-key-pair-modal"
+                      className='create-key-pair-modal'
                       show={this.state.modal.visible}
                       onHide={this.closeModal.bind(this)}
                     >
@@ -597,29 +597,29 @@ class Users extends React.Component {
                         </code>
                         &nbsp;
                         {this.state.copied ? (
-                          <i className="fa fa-check" aria-hidden="true" />
+                          <i className='fa fa-check' aria-hidden='true' />
                         ) : (
                           <OverlayTrigger
-                            placement="top"
+                            placement='top'
                             overlay={
-                              <Tooltip id="tooltip">Copy to clipboard.</Tooltip>
+                              <Tooltip id='tooltip'>Copy to clipboard.</Tooltip>
                             }
                           >
                             <i
-                              className="copy-link fa fa-clipboard"
+                              className='copy-link fa fa-clipboard'
                               onClick={this.copyToClipboard.bind(
                                 this,
                                 this.state.modal.invitationResult
                                   .invitation_accept_link
                               )}
-                              aria-hidden="true"
+                              aria-hidden='true'
                             />
                           </OverlayTrigger>
                         )}
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          bsStyle="link"
+                          bsStyle='link'
                           onClick={this.closeModal.bind(this)}
                         >
                           Close
@@ -663,8 +663,8 @@ const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
 function actionsCellFormatter(cell, row) {
   return (
     <Button
-      bsStyle="default"
-      type="button"
+      bsStyle='default'
+      type='button'
       onClick={this.deleteUser.bind(this, row.email)}
     >
       Delete
@@ -686,8 +686,8 @@ function expiryCellFormatter(cell, row) {
       <span className={expiryClass}>
         {relativeDate(cell)} &nbsp;
         <i
-          className="fa fa-times clickable"
-          title="Remove expiration"
+          className='fa fa-times clickable'
+          title='Remove expiration'
           onClick={this.removeExpiration.bind(this, row.email)}
         />
       </span>

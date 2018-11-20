@@ -32,9 +32,9 @@ class FlashMessages extends React.Component {
 
   render() {
     return (
-      <div className="flash-messages--container">
+      <div className='flash-messages--container'>
         <ReactCSSTransitionGroup
-          transitionName="flash-messages--transition"
+          transitionName='flash-messages--transition'
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
         >

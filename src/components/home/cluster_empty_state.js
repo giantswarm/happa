@@ -6,12 +6,12 @@ class ClusterEmptyState extends React.Component {
   render() {
     if (!this.props.selectedOrganization) {
       return (
-        <div className="cluster-dashboard well empty-slate">
-          <div className="cluster-dashboard--overlay">
+        <div className='cluster-dashboard well empty-slate'>
+          <div className='cluster-dashboard--overlay'>
             <h1>Welcome to Giant Swarm!</h1>
             <p>There are no organizations yet in your installation.</p>
             <p>
-              Go to <Link to="organizations">Manage Organizations</Link> to
+              Go to <Link to='organizations'>Manage Organizations</Link> to
               create your first organization, then come back to this screen to
               create your first cluster!
             </p>
@@ -20,8 +20,8 @@ class ClusterEmptyState extends React.Component {
       );
     } else if (this.props.errorLoadingClusters) {
       return (
-        <div className="cluster-dashboard well empty-slate">
-          <div className="cluster-dashboard--overlay">
+        <div className='cluster-dashboard well empty-slate'>
+          <div className='cluster-dashboard--overlay'>
             <h1>
               Error loading clusters for organization{' '}
               <code>{this.props.selectedOrganization}</code>
@@ -39,8 +39,8 @@ class ClusterEmptyState extends React.Component {
       );
     } else {
       return (
-        <div className="cluster-dashboard well empty-slate">
-          <div className="cluster-dashboard--overlay">
+        <div className='cluster-dashboard well empty-slate'>
+          <div className='cluster-dashboard--overlay'>
             <h1>
               Couldn&apos;t find any clusters in organization{' '}
               <code>{this.props.selectedOrganization}</code>
@@ -54,7 +54,7 @@ class ClusterEmptyState extends React.Component {
               organization selector at the top right of the page.
             </p>
           </div>
-          <div className="cluster-dashboard--inner" />
+          <div className='cluster-dashboard--inner' />
         </div>
       );
     }

@@ -156,10 +156,10 @@ class ReleaseSelector extends React.Component {
       <div>
         <p>
           <img
-            className="loader"
-            src="/images/loader_oval_light.svg"
-            width="25px"
-            height="25px"
+            className='loader'
+            src='/images/loader_oval_light.svg'
+            width='25px'
+            height='25px'
           />
         </p>
       </div>
@@ -183,11 +183,11 @@ class ReleaseSelector extends React.Component {
           {kubernetes ? (
             <div>
               <p>This releases contains:</p>
-              <div className="release-selector-modal--component contrast">
-                <span className="release-selector-modal--component--name">
+              <div className='release-selector-modal--component contrast'>
+                <span className='release-selector-modal--component--name'>
                   kubernetes
                 </span>
-                <span className="release-selector-modal--component--version">
+                <span className='release-selector-modal--component--version'>
                   {kubernetes.version}
                 </span>
               </div>
@@ -210,7 +210,7 @@ class ReleaseSelector extends React.Component {
 
   render() {
     return (
-      <div className="new-cluster--release-selector">
+      <div className='new-cluster--release-selector'>
         {this.state.loading
           ? this.loadingContent()
           : this.state.error

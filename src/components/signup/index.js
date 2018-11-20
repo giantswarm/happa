@@ -364,7 +364,7 @@ export class SignUp extends React.Component {
 
   render() {
     return (
-      <div className="signup--container col-6">
+      <div className='signup--container col-6'>
         <h1
           ref={t => {
             this.title = t;
@@ -380,8 +380,8 @@ export class SignUp extends React.Component {
           onSubmit={this.handleSubmit}
           className={'step-' + this.state.currentStep}
         >
-          <div id="passwordGroup">
-            <p className="subtitle">
+          <div id='passwordGroup'>
+            <p className='subtitle'>
               This is your personal Giant Swarm account for the email address{' '}
               {this.state.email}!
             </p>
@@ -390,34 +390,34 @@ export class SignUp extends React.Component {
               ref={p => {
                 this.password = p;
               }}
-              label="Set a password"
+              label='Set a password'
               onStartTyping={this.passwordEditingStarted}
               onChange={this.passwordEditingCompleted}
             />
           </div>
 
-          <div id="passwordConfirmationGroup">
+          <div id='passwordConfirmationGroup'>
             <PasswordField
               ref={f => {
                 this.passwordConfirmation = f;
               }}
-              label="Password, once again"
+              label='Password, once again'
               onStartTyping={this.passwordConfirmationEditingStarted}
               onChange={this.passwordConfirmationEditingCompleted}
             />
           </div>
 
-          <div id="TOSGroup">
+          <div id='TOSGroup'>
             <TermsOfService />
 
-            <div className="checkbox">
-              <label htmlFor="tosAccept">
+            <div className='checkbox'>
+              <label htmlFor='tosAccept'>
                 <input
-                  type="checkbox"
+                  type='checkbox'
                   ref={i => {
                     this.tosAccept = i;
                   }}
-                  id="tosAccept"
+                  id='tosAccept'
                   onChange={this.tosChanged}
                 />
                 I accept the terms of service
@@ -428,9 +428,9 @@ export class SignUp extends React.Component {
           <StatusMessage status={this.state.statusMessage} />
           {this.state.buttonText[this.state.currentStep] != '' ? (
             <Button
-              type="submit"
-              bsStyle="primary"
-              bsSize="large"
+              type='submit'
+              bsStyle='primary'
+              bsSize='large'
               disabled={!this.state.advancable || this.state.submitting}
               loading={this.state.submitting}
               onClick={this.logIn}

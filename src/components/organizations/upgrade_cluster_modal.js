@@ -76,7 +76,7 @@ class UpgradeClusterModal extends React.Component {
     return (
       <div>
         {this.props.release === undefined ? (
-          <div className="flash-messages--flash-message flash-messages--info">
+          <div className='flash-messages--flash-message flash-messages--info'>
             Could not get component information for release version{' '}
             {this.props.cluster.release_version}.<br />
             Unable to show you an exact diff.
@@ -87,24 +87,24 @@ class UpgradeClusterModal extends React.Component {
         <p>
           <b>Component Changes</b>
         </p>
-        <div className="release-selector-modal--components">
+        <div className='release-selector-modal--components'>
           {_.map(_.sortBy(changedComponents, 'name'), diffEdit => {
             if (diffEdit.kind === 'E') {
               let component = components[diffEdit.path[0]];
               return (
                 <div
-                  className="release-selector-modal--component"
+                  className='release-selector-modal--component'
                   key={component.name}
                 >
-                  <span className="release-selector-modal--component--name">
+                  <span className='release-selector-modal--component--name'>
                     {component.name}
                   </span>
-                  <span className="release-selector-modal--component--version">
-                    <span className="lhs">
+                  <span className='release-selector-modal--component--version'>
+                    <span className='lhs'>
                       <span>{diffEdit.lhs}</span>
                       <span />
                     </span>{' '}
-                    <span className="rhs">{diffEdit.rhs}</span>
+                    <span className='rhs'>{diffEdit.rhs}</span>
                   </span>
                 </div>
               );
@@ -114,14 +114,14 @@ class UpgradeClusterModal extends React.Component {
               let component = diffEdit.rhs;
               return (
                 <div
-                  className="release-selector-modal--component"
+                  className='release-selector-modal--component'
                   key={component.name}
                 >
-                  <span className="release-selector-modal--component--name">
+                  <span className='release-selector-modal--component--name'>
                     {component.name}
                   </span>
-                  <span className="release-selector-modal--component--version">
-                    <span className="rhs">{component.version} (added)</span>
+                  <span className='release-selector-modal--component--version'>
+                    <span className='rhs'>{component.version} (added)</span>
                   </span>
                 </div>
               );
@@ -131,14 +131,14 @@ class UpgradeClusterModal extends React.Component {
               let component = diffEdit.lhs;
               return (
                 <div
-                  className="release-selector-modal--component"
+                  className='release-selector-modal--component'
                   key={component.name}
                 >
-                  <span className="release-selector-modal--component--name">
+                  <span className='release-selector-modal--component--name'>
                     {component.name}
                   </span>
-                  <span className="release-selector-modal--component--version">
-                    <span className="lhs">
+                  <span className='release-selector-modal--component--version'>
+                    <span className='lhs'>
                       <span>{component.version}</span> <span>(removed)</span>
                     </span>
                   </span>
@@ -157,13 +157,13 @@ class UpgradeClusterModal extends React.Component {
         {_.map(_.sortBy(unchangedComponents, 'name'), component => {
           return (
             <div
-              className="release-selector-modal--component"
+              className='release-selector-modal--component'
               key={component.name}
             >
-              <span className="release-selector-modal--component--name">
+              <span className='release-selector-modal--component--name'>
                 {component.name}
               </span>
-              <span className="release-selector-modal--component--version">
+              <span className='release-selector-modal--component--version'>
                 {component.version}
               </span>
             </div>
@@ -210,10 +210,10 @@ class UpgradeClusterModal extends React.Component {
           </ul>
         </BootstrapModal.Body>
         <BootstrapModal.Footer>
-          <Button bsStyle="primary" onClick={this.inspectChanges}>
+          <Button bsStyle='primary' onClick={this.inspectChanges}>
             Inspect Changes
           </Button>
-          <Button bsStyle="link" onClick={this.close}>
+          <Button bsStyle='link' onClick={this.close}>
             Cancel
           </Button>
         </BootstrapModal.Footer>
@@ -233,13 +233,13 @@ class UpgradeClusterModal extends React.Component {
         <BootstrapModal.Body>{this.changedComponents()}</BootstrapModal.Body>
         <BootstrapModal.Footer>
           <Button
-            bsStyle="primary"
+            bsStyle='primary'
             onClick={this.submit}
             loading={this.state.loading}
           >
             Start Upgrade
           </Button>
-          <Button bsStyle="link" onClick={this.close}>
+          <Button bsStyle='link' onClick={this.close}>
             Cancel
           </Button>
         </BootstrapModal.Footer>

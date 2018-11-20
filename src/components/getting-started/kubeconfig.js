@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 class KubeConfig extends React.Component {
   render() {
     return (
-      <FileBlock fileName="giantswarm-kubeconfig">
+      <FileBlock fileName='giantswarm-kubeconfig'>
         {makeKubeConfigTextFile(this.props.cluster, this.props.keyPair)}
       </FileBlock>
     );

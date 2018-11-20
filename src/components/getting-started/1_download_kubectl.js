@@ -33,9 +33,9 @@ class DownloadKubeCTL extends React.Component {
             <p>
               Download <code>kubectl</code> from{' '}
               <a
-                href="https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe"
-                target="_blank"
-                rel="noopener noreferrer"
+                href='https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe'
+                target='_blank'
+                rel='noopener noreferrer'
               >
                 https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe
               </a>{' '}
@@ -68,9 +68,9 @@ class DownloadKubeCTL extends React.Component {
             <p>
               Installation via{' '}
               <a
-                href="http://brew.sh/"
-                target="_blank"
-                rel="noopener noreferrer"
+                href='http://brew.sh/'
+                target='_blank'
+                rel='noopener noreferrer'
               >
                 homebrew
               </a>
@@ -136,7 +136,7 @@ class DownloadKubeCTL extends React.Component {
       <Breadcrumb
         data={{ title: 'DOWNLOAD', pathname: '/getting-started/download/' }}
       >
-        <div className="centered col-9">
+        <div className='centered col-9'>
           <h1>Download or update kubectl</h1>
 
           <p>
@@ -144,9 +144,9 @@ class DownloadKubeCTL extends React.Component {
             <code>kubectl</code>, the Kubernetes client CLI, available.
           </p>
 
-          <div className="aside">
+          <div className='aside'>
             <p>
-              <i className="fa fa-graduation-cap" title="For learners" />{' '}
+              <i className='fa fa-graduation-cap' title='For learners' />{' '}
               <code>kubectl</code> is the CLI you’ll use to work with your
               cluster mostly. Some things can be done using the web-based
               Kubernetes Dashboard, but only the CLI provides access to all
@@ -164,8 +164,8 @@ class DownloadKubeCTL extends React.Component {
             <Prompt>{`kubectl version`}</Prompt>
           </CodeBlock>
 
-          <div className="platform_selector">
-            <ul className="platform_selector--tabs">
+          <div className='platform_selector'>
+            <ul className='platform_selector--tabs'>
               <li
                 className={this.isSelectedPlatform('Linux') ? 'active' : null}
                 onClick={this.selectPlatform.bind(this, 'Linux')}
@@ -197,22 +197,22 @@ class DownloadKubeCTL extends React.Component {
               </li>
             </ul>
 
-            <div className="platform_selector--content">
+            <div className='platform_selector--content'>
               {this.selectedInstallInstructions()}
             </div>
           </div>
 
-          <div className="component_slider--nav">
-            <Link to="/getting-started/">
+          <div className='component_slider--nav'>
+            <Link to='/getting-started/'>
               <button>
-                <i className="fa fa-caret-left" />
+                <i className='fa fa-caret-left' />
                 Back
               </button>
             </Link>
 
-            <Link to="/getting-started/configure/">
-              <button className="primary">
-                Continue <i className="fa fa-caret-right" />
+            <Link to='/getting-started/configure/'>
+              <button className='primary'>
+                Continue <i className='fa fa-caret-right' />
               </button>
             </Link>
           </div>

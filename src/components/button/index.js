@@ -26,7 +26,7 @@ import PropTypes from 'prop-types';
 class Button extends React.Component {
   loadingIndicator = position => {
     return (
-      <div className="progress_button--status-indicator">
+      <div className='progress_button--status-indicator'>
         <ReactCSSTransitionGroup
           transitionName={`slide-${position}`}
           transitionEnterTimeout={200}
@@ -35,7 +35,7 @@ class Button extends React.Component {
           {this.props.loading ? (
             <img
               className={'loader ' + this.props.loadingPosition}
-              src="/images/loader_oval_light.svg"
+              src='/images/loader_oval_light.svg'
             />
           ) : null}
         </ReactCSSTransitionGroup>
@@ -45,7 +45,7 @@ class Button extends React.Component {
 
   render() {
     return (
-      <div className="progress_button--container">
+      <div className='progress_button--container'>
         {this.props.loadingPosition === 'left'
           ? this.loadingIndicator(this.props.loadingPosition)
           : undefined}

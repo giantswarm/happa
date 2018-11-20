@@ -109,7 +109,7 @@ class InputField extends React.Component {
 
   render() {
     return (
-      <div className="textfield">
+      <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
         <input
           ref={i => {
@@ -124,7 +124,7 @@ class InputField extends React.Component {
         {// If it is readOnly, don't show validation errors
 
         this.props.readOnly ? null : (
-          <span className="message">{this.state.validationError}&nbsp;</span>
+          <span className='message'>{this.state.validationError}&nbsp;</span>
         )}
       </div>
     );

@@ -24,7 +24,7 @@ class OauthCallback extends React.Component {
 
     return (
       <div>
-        <div className="login_form--mask" />
+        <div className='login_form--mask' />
 
         <ReactCSSTransitionGroup
           transitionName={`login_form--transition`}
@@ -33,8 +33,8 @@ class OauthCallback extends React.Component {
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
         >
-          <div className="login_form--container col-4">
-            <div className="login_form--flash-container">
+          <div className='login_form--container col-4'>
+            <div className='login_form--flash-container'>
               <FlashMessages />
             </div>
 

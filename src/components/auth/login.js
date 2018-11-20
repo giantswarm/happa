@@ -149,7 +149,7 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-        <div className="login_form--mask" />
+        <div className='login_form--mask' />
 
         <ReactCSSTransitionGroup
           transitionName={`login_form--transition`}
@@ -158,20 +158,20 @@ class Login extends React.Component {
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
         >
-          <div className="login_form--container col-4">
-            <div className="login_form--flash-container">
+          <div className='login_form--container col-4'>
+            <div className='login_form--flash-container'>
               <FlashMessages />
             </div>
 
             <h1>Log in to Giant&nbsp;Swarm</h1>
             <form onSubmit={this.logIn}>
-              <div className="textfield">
+              <div className='textfield'>
                 <label>Email</label>
                 <input
                   value={this.state.email}
-                  type="text"
-                  id="email"
-                  autoComplete="username"
+                  type='text'
+                  id='email'
+                  autoComplete='username'
                   ref={i => {
                     this.email = i;
                   }}
@@ -180,13 +180,13 @@ class Login extends React.Component {
                 />
               </div>
 
-              <div className="textfield">
+              <div className='textfield'>
                 <label>Password</label>
                 <input
                   value={this.state.password}
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
+                  type='password'
+                  id='password'
+                  autoComplete='current-password'
                   ref={i => {
                     this.password = i;
                   }}
@@ -195,25 +195,25 @@ class Login extends React.Component {
               </div>
 
               <Button
-                type="submit"
-                bsStyle="primary"
+                type='submit'
+                bsStyle='primary'
                 loading={this.state.authenticating}
                 onClick={this.logIn}
               >
                 Log in
               </Button>
-              <Link to="/forgot_password">Forgot your password?</Link>
+              <Link to='/forgot_password'>Forgot your password?</Link>
             </form>
 
-            <div className="login_form--legal">
+            <div className='login_form--legal'>
               By logging in you acknowledge that we track your activities in
               order to analyze your product usage and improve your experience.
               See our{' '}
-              <a href="https://giantswarm.io/privacypolicy/">Privacy Policy</a>.
+              <a href='https://giantswarm.io/privacypolicy/'>Privacy Policy</a>.
               <br />
               <br />
               Trouble logging in? Please contact us via{' '}
-              <a href="mailto:support@giantswarm.io">support@giantswarm.io</a>
+              <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
             </div>
           </div>
         </ReactCSSTransitionGroup>
