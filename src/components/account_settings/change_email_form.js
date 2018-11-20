@@ -16,19 +16,17 @@ class ChangeEmailForm extends React.Component {
       buttonVisible: false,
       fields: {
         email: {
-          value: this.props.user.email
-        }
-      }
+          value: this.props.user.email,
+        },
+      },
     };
   }
 
   resetForm() {
-    this.setState({
-
-    });
+    this.setState({});
   }
 
-  validateEmail = (e) => {
+  validateEmail = e => {
     var email = e.target.value;
     var buttonVisible;
 
@@ -39,33 +37,33 @@ class ChangeEmailForm extends React.Component {
     }
 
     var newState = update(this.state, {
-      changeEmailSuccess: {$set: false},
-      buttonVisible: {$set: buttonVisible},
+      changeEmailSuccess: { $set: false },
+      buttonVisible: { $set: buttonVisible },
 
       fields: {
         email: {
-          value: {$set: email}
-        }
-      }
+          value: { $set: email },
+        },
+      },
     });
 
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (re.test(email)) {
       newState = update(newState, {
-        changeEmailFormValid: {$set: true},
-        changeEmailFormError: {$set: false},
+        changeEmailFormValid: { $set: true },
+        changeEmailFormError: { $set: false },
       });
     } else {
       newState = update(newState, {
-        changeEmailFormValid: {$set: false},
-        changeEmailFormError: {$set: false},
+        changeEmailFormValid: { $set: false },
+        changeEmailFormError: { $set: false },
       });
     }
 
     this.setState(newState);
-  }
+  };
 
-  submit = (e) => {
+  submit = e => {
     e.preventDefault();
 
     // Don't submit the form if nothing changed.
@@ -77,102 +75,113 @@ class ChangeEmailForm extends React.Component {
 
       this.setState({
         changeEmailFormSubmitting: true,
-        changeEmailFormError: false
+        changeEmailFormError: false,
       });
 
-      usersApi.modifyUser(scheme + ' ' + token, this.props.user.email,
-      {
-        email: this.state.fields.email.value
-      })
-      .then(() => {
-        this.setState({
-          changeEmailFormSubmitting: false,
-          changeEmailSuccess: true,
-          buttonVisible: false
-        });
-      })
-      .then(() => {
-        return this.props.actions.refreshUserInfo();
-      })
-      .catch((error) => {
-        var errorMessage;
+      usersApi
+        .modifyUser(scheme + ' ' + token, this.props.user.email, {
+          email: this.state.fields.email.value,
+        })
+        .then(() => {
+          this.setState({
+            changeEmailFormSubmitting: false,
+            changeEmailSuccess: true,
+            buttonVisible: false,
+          });
+        })
+        .then(() => {
+          return this.props.actions.refreshUserInfo();
+        })
+        .catch(error => {
+          var errorMessage;
 
-        if (error.body && error.body.status_code && error.body.status_code === 10009) {
-          errorMessage = <span>This e-mail is in already in use by a different user. Please choose a different e-mail address</span>;
-        } else {
-          errorMessage = <span>Something went wrong while trying to update your e-mail address.
-            Perhaps our servers are down. Could you try again later,
-            or contact support otherwise:
-            &nbsp;
-            <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
-          </span>;
-        }
+          if (
+            error.body &&
+            error.body.status_code &&
+            error.body.status_code === 10009
+          ) {
+            errorMessage = (
+              <span>
+                This e-mail is in already in use by a different user. Please
+                choose a different e-mail address
+              </span>
+            );
+          } else {
+            errorMessage = (
+              <span>
+                Something went wrong while trying to update your e-mail address.
+                Perhaps our servers are down. Could you try again later, or
+                contact support otherwise: &nbsp;
+                <a href="mailto:support@giantswarm.io">support@giantswarm.io</a>
+              </span>
+            );
+          }
 
-        this.setState({
-          changeEmailFormSubmitting: false,
-          changeEmailFormError: true,
-          buttonVisible: false,
-          errorMessage: errorMessage
+          this.setState({
+            changeEmailFormSubmitting: false,
+            changeEmailFormError: true,
+            buttonVisible: false,
+            errorMessage: errorMessage,
+          });
         });
-      });
     }
-  }
+  };
 
   render() {
     return (
       <div>
         <form className="change_email_form" onSubmit={this.submit}>
-          <input ref={(i) => {this.new_email = i;}} onChange={this.validateEmail} type="text" value={this.state.fields.email.value}/>
+          <input
+            ref={i => {
+              this.new_email = i;
+            }}
+            onChange={this.validateEmail}
+            type="text"
+            value={this.state.fields.email.value}
+          />
 
           <div className="button-area">
             <ReactCSSTransitionGroup
-              transitionName='slide-right'
+              transitionName="slide-right"
               transitionEnterTimeout={200}
-              transitionLeaveTimeout={200}>
-
-              {
-                this.state.buttonVisible ?
-
-                <Button type='submit'
-                        bsStyle='primary'
-                        disabled={!this.state.changeEmailFormValid}
-                        loading={this.state.changeEmailFormSubmitting}
-                        loadingMessage="Saving...">
+              transitionLeaveTimeout={200}
+            >
+              {this.state.buttonVisible ? (
+                <Button
+                  type="submit"
+                  bsStyle="primary"
+                  disabled={!this.state.changeEmailFormValid}
+                  loading={this.state.changeEmailFormSubmitting}
+                  loadingMessage="Saving..."
+                >
                   Set New Email
                 </Button>
-
-                : null
-              }
+              ) : null}
             </ReactCSSTransitionGroup>
 
-
             <ReactCSSTransitionGroup
-              transitionName='slide-right'
+              transitionName="slide-right"
               transitionEnterTimeout={200}
-              transitionLeaveTimeout={200}>
-              {
-                this.state.changeEmailSuccess
-                ?
-                  <div className='form-success'><i className='fa fa-check-circle' />Saved Succesfully</div>
-                :
-                  null
-              }
+              transitionLeaveTimeout={200}
+            >
+              {this.state.changeEmailSuccess ? (
+                <div className="form-success">
+                  <i className="fa fa-check-circle" />
+                  Saved Succesfully
+                </div>
+              ) : null}
             </ReactCSSTransitionGroup>
 
-
             <ReactCSSTransitionGroup
-              transitionName='slide-right'
+              transitionName="slide-right"
               transitionEnterTimeout={200}
-              transitionLeaveTimeout={200}>
-            {
-              this.state.changeEmailFormError
-              ?
-                <div className='flash-messages--flash-message flash-messages--danger'>
+              transitionLeaveTimeout={200}
+            >
+              {this.state.changeEmailFormError ? (
+                <div className="flash-messages--flash-message flash-messages--danger">
                   {this.state.errorMessage}
                 </div>
-              :
-                null
-            }
+              ) : null}
             </ReactCSSTransitionGroup>
           </div>
         </form>
@@ -183,7 +192,7 @@ class ChangeEmailForm extends React.Component {
 
 ChangeEmailForm.propTypes = {
   user: PropTypes.object,
-  actions: PropTypes.object
+  actions: PropTypes.object,
 };
 
 export default ChangeEmailForm;

@@ -13,7 +13,7 @@ const store = configureStore({});
 
 var defaultClient = GiantSwarmV4.ApiClient.instance;
 
-function parseJwt (token) {
+function parseJwt(token) {
   var base64Url = token.split('.')[1];
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   return JSON.parse(window.atob(base64));
@@ -23,9 +23,19 @@ function parseJwt (token) {
 // call to the Giant Swarm API. If the token is expired, renew the token first.
 var origCallApi = defaultClient.callApi.bind(defaultClient);
 
-defaultClient.callApi = function callApi(path, httpMethod, pathParams,
-queryParams, headerParams, formParams, bodyParam, authNames, contentTypes, accepts,
-returnType) {
+defaultClient.callApi = function callApi(
+  path,
+  httpMethod,
+  pathParams,
+  queryParams,
+  headerParams,
+  formParams,
+  bodyParam,
+  authNames,
+  contentTypes,
+  accepts,
+  returnType
+) {
   var defaultClientAuth = this.authentications['AuthorizationHeaderToken'];
 
   // If we're using a JWT token, and it's expired, refresh the token before making
@@ -35,28 +45,53 @@ returnType) {
     var expire = parseJwt(defaultClientAuth.apiKey).exp;
 
     if (now > expire) {
-      return new Promise((resolve) => {
-        resolve(auth0.renewToken()
-        .then((result) => {
-          // Update state with new token.
-          store.dispatch(auth0Login(result));
+      return new Promise(resolve => {
+        resolve(
+          auth0
+            .renewToken()
+            .then(result => {
+              // Update state with new token.
+              store.dispatch(auth0Login(result));
 
-          // Ensure the second attempt uses the new token.
-          headerParams['Authorization'] = 'Bearer ' + result.accessToken;
+              // Ensure the second attempt uses the new token.
+              headerParams['Authorization'] = 'Bearer ' + result.accessToken;
 
-          return origCallApi(path, httpMethod, pathParams, queryParams, headerParams, formParams,
-                             bodyParam, authNames, contentTypes, accepts, returnType);
-        })
-        .catch((err) => {
-          throw(err);
-        }));
+              return origCallApi(
+                path,
+                httpMethod,
+                pathParams,
+                queryParams,
+                headerParams,
+                formParams,
+                bodyParam,
+                authNames,
+                contentTypes,
+                accepts,
+                returnType
+              );
+            })
+            .catch(err => {
+              throw err;
+            })
+        );
       });
     }
   }
 
   // JWT token is not expired, or we're not using a JWT token, so just do the call.
-  return origCallApi(path, httpMethod, pathParams, queryParams, headerParams, formParams,
-  bodyParam, authNames, contentTypes, accepts, returnType);
+  return origCallApi(
+    path,
+    httpMethod,
+    pathParams,
+    queryParams,
+    headerParams,
+    formParams,
+    bodyParam,
+    authNames,
+    contentTypes,
+    accepts,
+    returnType
+  );
 };
 
 export default GiantSwarmV4;

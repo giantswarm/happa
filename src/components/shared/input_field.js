@@ -20,7 +20,7 @@ class InputField extends React.Component {
     this.state = {
       valid: false,
       validationError: '',
-      value: props.value
+      value: props.value,
     };
   }
 
@@ -30,7 +30,7 @@ class InputField extends React.Component {
       this.setState({
         value: props.value,
         valid: validation.valid,
-        validationError: validation.validationError
+        validationError: validation.validationError,
       });
     }
   }
@@ -46,7 +46,7 @@ class InputField extends React.Component {
     if (this.props.onChange) {
       this.props.onChange(this.value());
     }
-  }
+  };
 
   onChange = () => {
     var currentValue = this.input.value;
@@ -67,60 +67,65 @@ class InputField extends React.Component {
       validationError = '';
     }
 
-    this.setState({
-      valid: valid,
-      validationError: validationError,
-      value: currentValue
-    }, () => {
-      if (this.props.onChange) {
-        this.props.onChange(currentValue);
+    this.setState(
+      {
+        valid: valid,
+        validationError: validationError,
+        value: currentValue,
+      },
+      () => {
+        if (this.props.onChange) {
+          this.props.onChange(currentValue);
+        }
       }
-    });
+    );
 
     // Check after a few ms afer stopping typing if it is invalid, and then show an error message
     typingTimer = setTimeout(() => {
       var validation = this.props.validate(currentValue);
-      if (! validation.valid) {
+      if (!validation.valid) {
         this.setState({
-          validationError: validation.validationError
+          validationError: validation.validationError,
         });
       }
     }, doneTypingInterval);
-  }
+  };
 
   value = () => {
     return this.input.value;
-  }
+  };
 
   valid = () => {
     return this.state.valid;
-  }
+  };
 
   focus = () => {
     ReactDOM.findDOMNode(this.input).focus();
-  }
+  };
 
   blur = () => {
     ReactDOM.findDOMNode(this.input).blur();
-  }
+  };
 
   render() {
     return (
-      <div className='textfield'>
+      <div className="textfield">
         <label htmlFor={this.props.name}>{this.props.label}</label>
-        <input ref={(i) => {this.input = i;}} id={this.props.name}
-               value={this.state.value}
-               onBlur={this.onBlur}
-               onChange={this.onChange}
-               readOnly={this.props.readOnly} />
-        {
-          // If it is readOnly, don't show validation errors
+        <input
+          ref={i => {
+            this.input = i;
+          }}
+          id={this.props.name}
+          value={this.state.value}
+          onBlur={this.onBlur}
+          onChange={this.onChange}
+          readOnly={this.props.readOnly}
+        />
+        {// If it is readOnly, don't show validation errors
 
-          this.props.readOnly ?
-          null
-          :
+        this.props.readOnly ? null : (
           <span className="message">{this.state.validationError}&nbsp;</span>
-        }
+        )}
       </div>
     );
   }
@@ -134,7 +139,7 @@ InputField.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   value: PropTypes.string,
-  readOnly: PropTypes.bool
+  readOnly: PropTypes.bool,
 };
 
 export default InputField;

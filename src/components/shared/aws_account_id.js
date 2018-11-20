@@ -9,7 +9,16 @@ class AWSAccountID extends React.Component {
     let accountID = parts[4];
 
     return (
-      <span className='AWSAccountID'>{ accountID } <a href={'https://' + accountID + '.signin.aws.amazon.com/console'} target='_blank' rel='noopener noreferrer'><i className='fa fa-external-link'></i></a></span>
+      <span className="AWSAccountID">
+        {accountID}{' '}
+        <a
+          href={'https://' + accountID + '.signin.aws.amazon.com/console'}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i className="fa fa-external-link" />
+        </a>
+      </span>
     );
   }
 }

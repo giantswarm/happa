@@ -2,29 +2,32 @@
 
 import * as types from '../actions/actionTypes';
 
-export default function userReducer(state = {lastUpdated: 0, isFetching: false, items: {}}, action = undefined) {
+export default function userReducer(
+  state = { lastUpdated: 0, isFetching: false, items: {} },
+  action = undefined
+) {
   var items;
 
-  switch(action.type) {
+  switch (action.type) {
     case types.USERS_LOAD:
       return {
         lastUpdated: state.lastUpdated,
         isFetching: true,
-        items: state.items
+        items: state.items,
       };
 
     case types.USERS_LOAD_SUCCESS:
       return {
         lastUpdated: Date.now(),
         isFetching: false,
-        items: action.users
+        items: action.users,
       };
 
     case types.USERS_LOAD_ERROR:
       return {
         lastUpdated: state.lastUpdated,
         isFetching: false,
-        items: state.items
+        items: state.items,
       };
 
     case types.USERS_REMOVE_EXPIRATION_SUCCESS:
@@ -35,7 +38,7 @@ export default function userReducer(state = {lastUpdated: 0, isFetching: false, 
       return {
         lastUpdated: state.lastUpdated,
         isFetching: false,
-        items: items
+        items: items,
       };
 
     case types.USERS_DELETE_SUCCESS:
@@ -46,7 +49,7 @@ export default function userReducer(state = {lastUpdated: 0, isFetching: false, 
       return {
         lastUpdated: state.lastUpdated,
         isFetching: false,
-        items: items
+        items: items,
       };
 
     default:

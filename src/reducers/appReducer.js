@@ -4,13 +4,12 @@ import * as types from '../actions/actionTypes';
 import GiantSwarmV4 from 'giantswarm-v4';
 import _ from 'underscore';
 
-
 var shutDown = function(state) {
   localStorage.removeItem('user');
 
   return Object.assign({}, state, {
     loggedInUser: {},
-    firstLoadComplete: false
+    firstLoadComplete: false,
   });
 };
 
@@ -18,9 +17,9 @@ function fetchUserFromStorage() {
   var user;
   try {
     user = JSON.parse(localStorage.getItem('user'));
-  } catch(e) {
-    user =  {
-      auth: {}
+  } catch (e) {
+    user = {
+      auth: {},
     };
   }
 
@@ -29,46 +28,49 @@ function fetchUserFromStorage() {
   if (user && user.authToken) {
     user.auth = {
       scheme: 'giantswarm',
-      token: user.authToken
+      token: user.authToken,
     };
   }
 
   return user;
 }
 
-export default function appReducer(state = {
+export default function appReducer(
+  state = {
     selectedOrganization: 'not-yet-loaded',
     firstLoadComplete: false,
     loggedInUser: fetchUserFromStorage(),
     info: {
       general: {
-        provider: ''
-      }
-    }
-  }, action = undefined) {
-
-  switch(action.type) {
+        provider: '',
+      },
+    },
+  },
+  action = undefined
+) {
+  switch (action.type) {
     case types.REFRESH_USER_INFO_SUCCESS:
       localStorage.setItem('user', JSON.stringify(action.userData));
 
       return Object.assign({}, state, {
-        loggedInUser: action.userData
+        loggedInUser: action.userData,
       });
 
     case types.INFO_LOAD_SUCCESS:
       return Object.assign({}, state, {
-        info: action.info
+        info: action.info,
       });
 
     case types.LOGIN_SUCCESS:
       localStorage.setItem('user', JSON.stringify(action.userData));
       var defaultClient = GiantSwarmV4.ApiClient.instance;
-      var defaultClientAuth = defaultClient.authentications['AuthorizationHeaderToken'];
+      var defaultClientAuth =
+        defaultClient.authentications['AuthorizationHeaderToken'];
       defaultClientAuth.apiKey = action.userData.auth.token;
       defaultClientAuth.apiKeyPrefix = action.userData.auth.scheme;
 
       return Object.assign({}, state, {
-        loggedInUser: action.userData
+        loggedInUser: action.userData,
       });
 
     case types.LOGIN_ERROR:
@@ -86,14 +88,14 @@ export default function appReducer(state = {
     case types.ORGANIZATION_SELECT:
       return Object.assign({}, state, {
         selectedOrganization: action.orgId,
-        selectedCluster: action.selectedCluster
+        selectedCluster: action.selectedCluster,
       });
 
     case types.CLUSTER_SELECT:
       localStorage.setItem('app.selectedCluster', action.clusterId);
 
       return Object.assign({}, state, {
-        selectedCluster: action.clusterId
+        selectedCluster: action.clusterId,
       });
 
     case types.ORGANIZATIONS_LOAD_SUCCESS:
@@ -107,7 +109,7 @@ export default function appReducer(state = {
         isAdmin = true;
       }
 
-      var loggedInUser = Object.assign({}, state.loggedInUser, {isAdmin});
+      var loggedInUser = Object.assign({}, state.loggedInUser, { isAdmin });
 
       return Object.assign({}, state, {
         selectedOrganization: action.selectedOrganization,

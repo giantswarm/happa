@@ -28,74 +28,103 @@ class FileBlock extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hovering: false
+      hovering: false,
     };
   }
 
-  copyCodeToClipboard = (e) => {
+  copyCodeToClipboard = e => {
     e.preventDefault();
 
     copy(Helpers.dedent(this.props.children));
 
-    this.setState({clicked: false});
-  }
+    this.setState({ clicked: false });
+  };
 
   classNames() {
     var classNames = [];
 
     classNames.push('codeblock--container');
-    if (this.state.hovering) {classNames.push('hovering');}
-    if (this.state.clicked) {classNames.push('clicked');}
-    if (this.props.hideText) {classNames.push('oneline');}
+    if (this.state.hovering) {
+      classNames.push('hovering');
+    }
+    if (this.state.clicked) {
+      classNames.push('clicked');
+    }
+    if (this.props.hideText) {
+      classNames.push('oneline');
+    }
 
     return classNames.join(' ');
   }
 
   blob() {
-    var blob = new Blob([Helpers.dedent(this.props.children)], {type: 'application/plain;charset=utf-8'});
+    var blob = new Blob([Helpers.dedent(this.props.children)], {
+      type: 'application/plain;charset=utf-8',
+    });
     return blob;
   }
 
   downloadAsFileLink() {
-    return(
-      <a href={window.URL.createObjectURL(this.blob())} download={this.props.fileName}>
-        <i className='fa fa-download' aria-hidden='true'></i>
+    return (
+      <a
+        href={window.URL.createObjectURL(this.blob())}
+        download={this.props.fileName}
+      >
+        <i className="fa fa-download" aria-hidden="true" />
       </a>
     );
   }
 
   render() {
-    return(
+    return (
       <div className={this.classNames()}>
         <pre>
-          <div ref={(d) => {this.pre = d;}} className='content'>
-            <div className='codeblock--filename'>
-              { this.props.fileName }
-            </div>
-            <div className='codeblock--filecontents'>
-            {
-              this.props.hideText
-              ?
-              undefined
-              :
-              <Line text={ Helpers.dedent(this.props.children) } />
-            }
+          <div
+            ref={d => {
+              this.pre = d;
+            }}
+            className="content"
+          >
+            <div className="codeblock--filename">{this.props.fileName}</div>
+            <div className="codeblock--filecontents">
+              {this.props.hideText ? (
+                undefined
+              ) : (
+                <Line text={Helpers.dedent(this.props.children)} />
+              )}
             </div>
           </div>
-          <div className='codeblock--buttons'
-               onMouseOver={function() {this.setState({hovering: true});}.bind(this)}
-               onMouseOut={function() {this.setState({hovering: false});}.bind(this)}>
-            {
-              Modernizr.adownload ? this.downloadAsFileLink() : null
-            }
-            <a href='#' onClick={this.copyCodeToClipboard} onMouseUp={function() {this.setState({clicked: true});}.bind(this)}>
-              <i className='fa fa-clipboard' aria-hidden='true'></i>
+          <div
+            className="codeblock--buttons"
+            onMouseOver={function() {
+              this.setState({ hovering: true });
+            }.bind(this)}
+            onMouseOut={function() {
+              this.setState({ hovering: false });
+            }.bind(this)}
+          >
+            {Modernizr.adownload ? this.downloadAsFileLink() : null}
+            <a
+              href="#"
+              onClick={this.copyCodeToClipboard}
+              onMouseUp={function() {
+                this.setState({ clicked: true });
+              }.bind(this)}
+            >
+              <i className="fa fa-clipboard" aria-hidden="true" />
             </a>
           </div>
-          <ReactCSSTransitionGroup transitionName={'checkmark'} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-            {
-              this.state.clicked ? <i className='fa fa-check codeblock--checkmark' aria-hidden='true'></i> : null
-            }
+          <ReactCSSTransitionGroup
+            transitionName={'checkmark'}
+            transitionEnterTimeout={1000}
+            transitionLeaveTimeout={1000}
+          >
+            {this.state.clicked ? (
+              <i
+                className="fa fa-check codeblock--checkmark"
+                aria-hidden="true"
+              />
+            ) : null}
           </ReactCSSTransitionGroup>
         </pre>
       </div>
@@ -106,7 +135,7 @@ class FileBlock extends React.Component {
 FileBlock.propTypes = {
   children: PropTypes.node,
   fileName: PropTypes.string,
-  hideText: PropTypes.bool
+  hideText: PropTypes.bool,
 };
 
 export default FileBlock;

@@ -14,7 +14,7 @@ class FlashMessage extends React.Component {
     super(props);
 
     this.state = {
-      visible: true
+      visible: true,
     };
   }
 
@@ -23,17 +23,27 @@ class FlashMessage extends React.Component {
       this.props.onDismiss();
     } else {
       this.setState({
-        visible: false
+        visible: false,
       });
     }
-  }
+  };
 
   render() {
     if (this.state.visible) {
       return (
-        <div className={'flash-messages--flash-message' + ' flash-messages--' + this.props.class}>
-          { this.props.message ? this.props.message : this.props.children }
-          <i className='fa fa-times flash-messages--dismiss' aria-hidden='true' onClick={this.dismissFlash}></i>
+        <div
+          className={
+            'flash-messages--flash-message' +
+            ' flash-messages--' +
+            this.props.class
+          }
+        >
+          {this.props.message ? this.props.message : this.props.children}
+          <i
+            className="fa fa-times flash-messages--dismiss"
+            aria-hidden="true"
+            onClick={this.dismissFlash}
+          />
         </div>
       );
     } else {
@@ -43,14 +53,14 @@ class FlashMessage extends React.Component {
 }
 
 FlashMessage.contextTypes = {
-  router: PropTypes.object
+  router: PropTypes.object,
 };
 
 FlashMessage.propTypes = {
   onDismiss: PropTypes.func,
   class: PropTypes.string,
   message: PropTypes.any,
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export default FlashMessage;

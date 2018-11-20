@@ -10,7 +10,11 @@ import { push } from 'connected-react-router';
 
 class Logout extends React.Component {
   componentDidMount() {
-    if (this.props.user && this.props.user.auth && this.props.user.auth.scheme) {
+    if (
+      this.props.user &&
+      this.props.user.auth &&
+      this.props.user.auth.scheme
+    ) {
       if (this.props.user.auth.scheme === 'Bearer') {
         this.props.dispatch(push('/login'));
         this.props.actions.logoutSuccess();
@@ -26,11 +30,17 @@ class Logout extends React.Component {
   render() {
     return (
       <div>
-        <ReactCSSTransitionGroup transitionName='logout--mask--transition' transitionAppear={true} transitionAppearTimeout={400} transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-          <div className='logout--mask'></div>
+        <ReactCSSTransitionGroup
+          transitionName="logout--mask--transition"
+          transitionAppear={true}
+          transitionAppearTimeout={400}
+          transitionEnterTimeout={200}
+          transitionLeaveTimeout={200}
+        >
+          <div className="logout--mask" />
         </ReactCSSTransitionGroup>
-        <div className='logout--container'>
-          <img className='loader' src='/images/loader_oval_light.svg' />
+        <div className="logout--container">
+          <img className="loader" src="/images/loader_oval_light.svg" />
         </div>
       </div>
     );
@@ -38,26 +48,29 @@ class Logout extends React.Component {
 }
 
 Logout.contextTypes = {
-  router: PropTypes.object
+  router: PropTypes.object,
 };
 
 Logout.propTypes = {
   actions: PropTypes.object,
   dispatch: PropTypes.func,
-  user: PropTypes.object
+  user: PropTypes.object,
 };
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(userActions, dispatch),
-    dispatch: dispatch
+    dispatch: dispatch,
   };
 }
 
 function mapStateToProps(state) {
   return {
-    user: state.app.loggedInUser
+    user: state.app.loggedInUser,
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(Logout);
+module.exports = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Logout);

@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import Button from '../button';
 import _ from 'underscore';
@@ -26,35 +26,62 @@ class CreateCluster extends React.Component {
       workerCount: 3,
       syncWorkers: true,
       workers: [
-        { id: 1, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', vmSize: 'Standard_D2s_v3', valid: true },
-        { id: 2, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', vmSize: 'Standard_D2s_v3', valid: true },
-        { id: 3, cpu: 1, memory: 1, storage: 10, instanceType: 'm3.large', vmSize: 'Standard_D2s_v3', valid: true }
+        {
+          id: 1,
+          cpu: 1,
+          memory: 1,
+          storage: 10,
+          instanceType: 'm3.large',
+          vmSize: 'Standard_D2s_v3',
+          valid: true,
+        },
+        {
+          id: 2,
+          cpu: 1,
+          memory: 1,
+          storage: 10,
+          instanceType: 'm3.large',
+          vmSize: 'Standard_D2s_v3',
+          valid: true,
+        },
+        {
+          id: 3,
+          cpu: 1,
+          memory: 1,
+          storage: 10,
+          instanceType: 'm3.large',
+          vmSize: 'Standard_D2s_v3',
+          valid: true,
+        },
       ],
       submitting: false,
       valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
-      error: false
+      error: false,
     };
   }
 
-  updateClusterName = (event) => {
+  updateClusterName = event => {
     this.setState({
-      clusterName: event.target.value
+      clusterName: event.target.value,
     });
-  }
+  };
 
-  updateWorkerCount = (e) => {
+  updateWorkerCount = e => {
     this.setState({
-      workerCount: e.target.value
+      workerCount: e.target.value,
     });
-  }
+  };
 
-  deleteWorker = (workerIndex) => {
-    var workers = _.without(this.state.workers, this.state.workers[workerIndex]);
+  deleteWorker = workerIndex => {
+    var workers = _.without(
+      this.state.workers,
+      this.state.workers[workerIndex]
+    );
 
     this.setState({
-      workers: workers
+      workers: workers,
     });
-  }
+  };
 
   addWorker = () => {
     var newDefaultWorker;
@@ -67,7 +94,7 @@ class CreateCluster extends React.Component {
         storage: this.state.workers[0].storage,
         instanceType: this.state.workers[0].instanceType,
         vmSize: this.state.workers[0].vmSize,
-        valid: this.state.workers[0].valid
+        valid: this.state.workers[0].valid,
       };
     } else {
       newDefaultWorker = {
@@ -77,23 +104,23 @@ class CreateCluster extends React.Component {
         storage: 20,
         instanceType: 'm3.large',
         vmSize: 'Standard_D2s_v3',
-        valid: true
+        valid: true,
       };
     }
 
     var workers = [].concat(this.state.workers, newDefaultWorker);
 
     this.setState({
-      workers: workers
+      workers: workers,
     });
-  }
+  };
 
-  syncWorkersChanged = (e) => {
+  syncWorkersChanged = e => {
     var workers = this.state.workers;
     var worker1 = this.state.workers[0];
 
     if (e.target.checked) {
-      workers = workers.map((worker) => {
+      workers = workers.map(worker => {
         return {
           id: worker.id,
           cpu: worker1.cpu,
@@ -107,13 +134,13 @@ class CreateCluster extends React.Component {
 
     this.setState({
       syncWorkers: e.target.checked,
-      workers: workers
+      workers: workers,
     });
-  }
+  };
 
   createCluster = () => {
     this.setState({
-      submitting: true
+      submitting: true,
     });
 
     var workers = [];
@@ -124,55 +151,59 @@ class CreateCluster extends React.Component {
     // decisions about a meaningful abstraction. For now, going with a easy solution.
 
     if (this.props.provider === 'aws') {
-      workers = this.state.workers.map((worker) => {
+      workers = this.state.workers.map(worker => {
         return {
           aws: {
-            instance_type: worker.instanceType
-          }
+            instance_type: worker.instanceType,
+          },
         };
       });
     } else if (this.props.provider === 'azure') {
-      workers = this.state.workers.map((worker) => {
+      workers = this.state.workers.map(worker => {
         return {
           azure: {
-            vm_size: worker.vmSize
-          }
+            vm_size: worker.vmSize,
+          },
         };
       });
     } else {
-      workers = this.state.workers.map((worker) => {
+      workers = this.state.workers.map(worker => {
         return {
-          memory: {size_gb: worker.memory},
-          storage: {size_gb: worker.storage},
-          cpu: {cores: worker.cpu}
+          memory: { size_gb: worker.memory },
+          storage: { size_gb: worker.storage },
+          cpu: { cores: worker.cpu },
         };
       });
     }
 
+    this.props
+      .dispatch(
+        clusterCreate({
+          name: this.state.clusterName,
+          owner: this.props.selectedOrganization,
+          release_version: this.state.releaseVersion,
+          workers: workers,
+        })
+      )
+      .then(() => {
+        this.props.dispatch(
+          push('/organizations/' + this.props.selectedOrganization)
+        );
+      })
+      .catch(error => {
+        var errorMessage = '';
 
-    this.props.dispatch(clusterCreate({
-      name: this.state.clusterName,
-      owner: this.props.selectedOrganization,
-      release_version: this.state.releaseVersion,
-      workers: workers
-    }))
-    .then(() => {
-      this.props.dispatch(push('/organizations/' + this.props.selectedOrganization));
-    })
-    .catch((error) => {
-      var errorMessage = '';
+        if (error.body && error.body.message) {
+          errorMessage = error.body.message;
+        }
 
-      if (error.body && error.body.message) {
-        errorMessage = error.body.message;
-      }
-
-      this.setState({
-        submitting: false,
-        error: error,
-        errorMessage: errorMessage
+        this.setState({
+          submitting: false,
+          error: error,
+          errorMessage: errorMessage,
+        });
       });
-    });
-  }
+  };
 
   componentDidMount() {
     this.cluster_name.select();
@@ -182,7 +213,7 @@ class CreateCluster extends React.Component {
     var newState;
 
     if (this.state.syncWorkers) {
-      var workers = this.state.workers.map((worker) => {
+      var workers = this.state.workers.map(worker => {
         worker.storage = newWorker.storage;
         worker.cpu = newWorker.cpu;
         worker.memory = newWorker.memory;
@@ -191,11 +222,11 @@ class CreateCluster extends React.Component {
         return worker;
       });
       newState = update(this.state, {
-        workers: {$set: workers}
+        workers: { $set: workers },
       });
     } else {
       newState = update(this.state, {
-        workers: {$splice: [[index, 1, newWorker]]}
+        workers: { $splice: [[index, 1, newWorker]] },
       });
     }
 
@@ -206,7 +237,7 @@ class CreateCluster extends React.Component {
     // If any of the workers aren't valid, return false
     var workers = this.state.workers;
     for (var i = 0; i < workers.length; i++) {
-      if (! workers[i].valid) {
+      if (!workers[i].valid) {
         return false;
       }
     }
@@ -217,127 +248,189 @@ class CreateCluster extends React.Component {
     }
 
     return true;
-  }
+  };
 
-  selectRelease = (releaseVersion) => {
+  selectRelease = releaseVersion => {
     this.setState({
-      releaseVersion
+      releaseVersion,
     });
-  }
+  };
 
   errorState() {
-    return <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
-      <b>Something went wrong while trying to create your cluster.</b><br/>
-      Perhaps our servers are down, please try again later or contact support: support@giantswarm.io<br/>
-      { this.state.errorMessage !== '' ? <pre>{this.state.errorMessage}</pre> : undefined }
-    </div>;
+    return (
+      <div className="new-cluster-error flash-messages--flash-message flash-messages--danger">
+        <b>Something went wrong while trying to create your cluster.</b>
+        <br />
+        Perhaps our servers are down, please try again later or contact support:
+        support@giantswarm.io
+        <br />
+        {this.state.errorMessage !== '' ? (
+          <pre>{this.state.errorMessage}</pre>
+        ) : (
+          undefined
+        )}
+      </div>
+    );
   }
 
   render() {
     return (
-      <Breadcrumb data={{title: 'CREATE CLUSTER', pathname: '/new-cluster/'}}>
-        <DocumentTitle title={'Create Cluster | ' + this.props.selectedOrganization + ' | Giant Swarm'}>
-          <div className='new-cluster'>
-            <div className='row'>
-              <div className='col-12'>
+      <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: '/new-cluster/' }}>
+        <DocumentTitle
+          title={
+            'Create Cluster | ' +
+            this.props.selectedOrganization +
+            ' | Giant Swarm'
+          }
+        >
+          <div className="new-cluster">
+            <div className="row">
+              <div className="col-12">
                 <h1>Create a Cluster</h1>
               </div>
             </div>
 
-            <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Cluster Name</h3>
+            <div className="row section">
+              <div className="col-3">
+                <h3 className="table-label">Cluster Name</h3>
               </div>
-              <div className='col-9'>
-                <form onSubmit={(e) => {e.preventDefault();}}>
-                  <p>Give your cluster a name so you can recognize it in a crowd.</p>
-                  <input ref={(i) => {this.cluster_name = i;}} type="text" value={this.state.clusterName} onChange={this.updateClusterName} autoFocus />
+              <div className="col-9">
+                <form
+                  onSubmit={e => {
+                    e.preventDefault();
+                  }}
+                >
+                  <p>
+                    Give your cluster a name so you can recognize it in a crowd.
+                  </p>
+                  <input
+                    ref={i => {
+                      this.cluster_name = i;
+                    }}
+                    type="text"
+                    value={this.state.clusterName}
+                    onChange={this.updateClusterName}
+                    autoFocus
+                  />
                 </form>
               </div>
             </div>
 
             <div>
-              <div className='row section'>
-                <div className='col-12'>
-                  <h3 className='table-label'>Worker Node Configuration</h3>
-                  {
-                    this.props.provider === 'kvm' ?
-                      <div className='checkbox'>
-                        <label htmlFor='syncWorkers'>
-                          <input type='checkbox' ref={(i) => {this.syncWorkers = i;}} id='syncWorkers' onChange={this.syncWorkersChanged} checked={this.state.syncWorkers}/>
-                          Use same configuration for all worker nodes
-                        </label>
-                      </div>
-                    :
-                      undefined
-                  }
+              <div className="row section">
+                <div className="col-12">
+                  <h3 className="table-label">Worker Node Configuration</h3>
+                  {this.props.provider === 'kvm' ? (
+                    <div className="checkbox">
+                      <label htmlFor="syncWorkers">
+                        <input
+                          type="checkbox"
+                          ref={i => {
+                            this.syncWorkers = i;
+                          }}
+                          id="syncWorkers"
+                          onChange={this.syncWorkersChanged}
+                          checked={this.state.syncWorkers}
+                        />
+                        Use same configuration for all worker nodes
+                      </label>
+                    </div>
+                  ) : (
+                    undefined
+                  )}
                 </div>
               </div>
-              <div className='row'>
-                {
-                  this.state.workers.map((worker, index) => {
-                    if (this.props.provider === 'aws') {
-                      return <NewAWSWorker key={'Worker ' + worker.id}
-                                         allowedInstanceTypes={this.props.allowedInstanceTypes}
-                                         worker={worker}
-                                         index={index}
-                                         readOnly={this.state.syncWorkers && index !== 0}
-                                         deleteWorker={this.deleteWorker.bind(this, index)}
-                                         onWorkerUpdated={this.updateWorker.bind(this, index)} />;
-                    } else if (this.props.provider === 'kvm') {
-                      return <NewKVMWorker key={'Worker ' + worker.id}
-                                         worker={worker}
-                                         index={index}
-                                         readOnly={this.state.syncWorkers && index !== 0}
-                                         deleteWorker={this.deleteWorker.bind(this, index)}
-                                         onWorkerUpdated={this.updateWorker.bind(this, index)} />;
-                    } else if (this.props.provider === 'azure') {
-                      return <NewAzureWorker key={'Worker ' + worker.id}
-                                         allowedVMSizes={this.props.allowedVMSizes}
-                                         worker={worker}
-                                         index={index}
-                                         readOnly={this.state.syncWorkers && index !== 0}
-                                         deleteWorker={this.deleteWorker.bind(this, index)}
-                                         onWorkerUpdated={this.updateWorker.bind(this, index)} />;
-                    }
-                  })
-                }
-                <div className={'col-4 new-cluster--add-worker-button ' + (this.state.workers.length < 3 ? 'warning' : '')} onClick={this.addWorker}>
+              <div className="row">
+                {this.state.workers.map((worker, index) => {
+                  if (this.props.provider === 'aws') {
+                    return (
+                      <NewAWSWorker
+                        key={'Worker ' + worker.id}
+                        allowedInstanceTypes={this.props.allowedInstanceTypes}
+                        worker={worker}
+                        index={index}
+                        readOnly={this.state.syncWorkers && index !== 0}
+                        deleteWorker={this.deleteWorker.bind(this, index)}
+                        onWorkerUpdated={this.updateWorker.bind(this, index)}
+                      />
+                    );
+                  } else if (this.props.provider === 'kvm') {
+                    return (
+                      <NewKVMWorker
+                        key={'Worker ' + worker.id}
+                        worker={worker}
+                        index={index}
+                        readOnly={this.state.syncWorkers && index !== 0}
+                        deleteWorker={this.deleteWorker.bind(this, index)}
+                        onWorkerUpdated={this.updateWorker.bind(this, index)}
+                      />
+                    );
+                  } else if (this.props.provider === 'azure') {
+                    return (
+                      <NewAzureWorker
+                        key={'Worker ' + worker.id}
+                        allowedVMSizes={this.props.allowedVMSizes}
+                        worker={worker}
+                        index={index}
+                        readOnly={this.state.syncWorkers && index !== 0}
+                        deleteWorker={this.deleteWorker.bind(this, index)}
+                        onWorkerUpdated={this.updateWorker.bind(this, index)}
+                      />
+                    );
+                  }
+                })}
+                <div
+                  className={
+                    'col-4 new-cluster--add-worker-button ' +
+                    (this.state.workers.length < 3 ? 'warning' : '')
+                  }
+                  onClick={this.addWorker}
+                >
                   <div className="new-cluster--add-worker-button-title">
                     Add a worker
                   </div>
-                  {
-                    this.state.workers.length < 3 ?
-                      <div className="new-cluster--low-worker-warning">
-                        We recommend that you have at least three worker nodes in a cluster
-                      </div>
-                      : ''
-                  }
+                  {this.state.workers.length < 3 ? (
+                    <div className="new-cluster--low-worker-warning">
+                      We recommend that you have at least three worker nodes in
+                      a cluster
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
             </div>
 
-            <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Release Version</h3>
+            <div className="row section">
+              <div className="col-3">
+                <h3 className="table-label">Release Version</h3>
               </div>
-              <div className='col-9'>
+              <div className="col-9">
                 <ReleaseSelector releaseSelected={this.selectRelease} />
               </div>
             </div>
 
-            <ProviderCredentials organizationName={this.props.selectedOrganization} provider={this.props.provider} />
+            <ProviderCredentials
+              organizationName={this.props.selectedOrganization}
+              provider={this.props.provider}
+            />
 
-            <div className='row section new-cluster--launch'>
-              <div className='col-12'>
-                <p>Create this cluster now and it will be available for you to use as soon as possible.</p>
-                { this.state.error ? this.errorState() : undefined }
-                <Button type='button'
-                        bsSize='large'
-                        bsStyle='primary'
-                        onClick={this.createCluster}
-                        loading={this.state.submitting}
-                        disabled={!this.valid()}>Create Cluster
+            <div className="row section new-cluster--launch">
+              <div className="col-12">
+                <p>
+                  Create this cluster now and it will be available for you to
+                  use as soon as possible.
+                </p>
+                {this.state.error ? this.errorState() : undefined}
+                <Button
+                  type="button"
+                  bsSize="large"
+                  bsStyle="primary"
+                  onClick={this.createCluster}
+                  loading={this.state.submitting}
+                  disabled={!this.valid()}
+                >
+                  Create Cluster
                 </Button>
               </div>
             </div>
@@ -380,8 +473,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch
+    dispatch,
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateCluster);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateCluster);

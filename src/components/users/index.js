@@ -2,10 +2,17 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { usersLoad, userRemoveExpiration, userDelete } from '../../actions/userActions';
+import {
+  usersLoad,
+  userRemoveExpiration,
+  userDelete,
+} from '../../actions/userActions';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
-import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
-import { invitationsLoad, invitationCreate } from '../../actions/invitationActions';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap/lib';
+import {
+  invitationsLoad,
+  invitationCreate,
+} from '../../actions/invitationActions';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
@@ -31,8 +38,8 @@ class Users extends React.Component {
       invitationForm: {
         email: '',
         organization: props.organizations,
-        sendEmail: true
-      }
+        sendEmail: true,
+      },
     };
   }
 
@@ -52,7 +59,7 @@ class Users extends React.Component {
         template: 'unexpireUser',
         visible: true,
         loading: false,
-      }
+      },
     });
   }
 
@@ -61,16 +68,17 @@ class Users extends React.Component {
       modal: {
         visible: true,
         loading: true,
-      }
+      },
     });
 
-    this.props.dispatch(userRemoveExpiration(email))
-    .then(() => {
-      this.closeModal();
-    })
-    .catch(() => {
-      this.closeModal();
-    });
+    this.props
+      .dispatch(userRemoveExpiration(email))
+      .then(() => {
+        this.closeModal();
+      })
+      .catch(() => {
+        this.closeModal();
+      });
   }
 
   deleteUser(email) {
@@ -80,7 +88,7 @@ class Users extends React.Component {
         template: 'deleteUser',
         visible: true,
         loading: false,
-      }
+      },
     });
   }
 
@@ -90,16 +98,17 @@ class Users extends React.Component {
         template: 'deleteUser',
         visible: true,
         loading: true,
-      }
+      },
     });
 
-    this.props.dispatch(userDelete(email))
-    .then(() => {
-      this.closeModal();
-    })
-    .catch(() => {
-      this.closeModal();
-    });
+    this.props
+      .dispatch(userDelete(email))
+      .then(() => {
+        this.closeModal();
+      })
+      .catch(() => {
+        this.closeModal();
+      });
   }
 
   inviteUser() {
@@ -107,40 +116,40 @@ class Users extends React.Component {
       modal: {
         template: 'inviteUser',
         visible: true,
-        loading: false
+        loading: false,
       },
       invitationForm: {
         email: '',
         organization: this.props.selectedOrganization,
-        sendEmail: true
-      }
+        sendEmail: true,
+      },
     });
   }
-
 
   confirmInviteUser() {
     this.setState({
       modal: {
         template: 'inviteUser',
         visible: true,
-        loading: true
-      }
+        loading: true,
+      },
     });
 
-    this.props.dispatch(invitationCreate(this.state.invitationForm))
-    .then((result) => {
-      this.setState({
-        modal: {
-          template: 'inviteUserDone',
-          invitationResult: result,
-          visible: true,
-          loading: false
-        }
+    this.props
+      .dispatch(invitationCreate(this.state.invitationForm))
+      .then(result => {
+        this.setState({
+          modal: {
+            template: 'inviteUserDone',
+            invitationResult: result,
+            visible: true,
+            loading: false,
+          },
+        });
+      })
+      .catch(() => {
+        this.closeModal();
       });
-    })
-    .catch(() => {
-      this.closeModal();
-    });
   }
 
   handleEmailChange(e) {
@@ -149,7 +158,7 @@ class Users extends React.Component {
     invitationForm.email = e.target.value;
 
     this.setState({
-      invitationForm: invitationForm
+      invitationForm: invitationForm,
     });
   }
 
@@ -159,7 +168,7 @@ class Users extends React.Component {
     invitationForm.sendEmail = checked;
 
     this.setState({
-      invitationForm: invitationForm
+      invitationForm: invitationForm,
     });
   }
 
@@ -169,7 +178,7 @@ class Users extends React.Component {
     invitationForm.organization = orgId;
 
     this.setState({
-      invitationForm: invitationForm
+      invitationForm: invitationForm,
     });
   }
 
@@ -177,319 +186,449 @@ class Users extends React.Component {
     this.setState({
       modal: {
         visible: false,
-        loading: false
-      }
+        loading: false,
+      },
     });
   }
 
   // Provides the configuraiton for the clusters table
   getTableColumnsConfig = () => {
-    return [{
-      dataField: 'email',
-      text: 'Email',
-      sort: true
-    }, {
-      dataField: 'emaildomain',
-      text: 'Email Domain',
-      sort: true
-    }, {
-      dataField: 'created',
-      text: 'Created',
-      sort: true,
-      formatter: relativeDate
-    }, {
-      dataField: 'expiry',
-      text: 'Expiry',
-      sort: true,
-      formatter: expiryCellFormatter.bind(this)
-    }, {
-      dataField: 'actionsDummy',
-      isDummyField: true,
-      text: '',
-      align: 'right',
-      formatter: actionsCellFormatter.bind(this)
-    }];
-  }
+    return [
+      {
+        dataField: 'email',
+        text: 'Email',
+        sort: true,
+      },
+      {
+        dataField: 'emaildomain',
+        text: 'Email Domain',
+        sort: true,
+      },
+      {
+        dataField: 'created',
+        text: 'Created',
+        sort: true,
+        formatter: relativeDate,
+      },
+      {
+        dataField: 'expiry',
+        text: 'Expiry',
+        sort: true,
+        formatter: expiryCellFormatter.bind(this),
+      },
+      {
+        dataField: 'actionsDummy',
+        isDummyField: true,
+        text: '',
+        align: 'right',
+        formatter: actionsCellFormatter.bind(this),
+      },
+    ];
+  };
 
   copyToClipboard(value) {
     this.setState({
-      copied: true
+      copied: true,
     });
 
-    setTimeout(() => {this.setState({
-      copied: false
-    });}, 1000);
+    setTimeout(() => {
+      this.setState({
+        copied: false,
+      });
+    }, 1000);
 
     copy(value);
   }
 
   // Provides the configuraiton for the clusters table
   getTableColumnsConfig = () => {
-    return [{
-      classes: 'email',
-      dataField: 'email',
-      text: 'Email',
-      sort: true
-    }, {
-      classes: 'emaildomain',
-      dataField: 'emaildomain',
-      text: 'Email Domain',
-      sort: true
-    }, {
-      classes: 'created',
-      dataField: 'created',
-      text: 'Created',
-      sort: true,
-      formatter: relativeDate
-    }, {
-      classes: 'expiry',
-      dataField: 'expiry',
-      text: 'Expiry',
-      sort: true,
-      formatter: expiryCellFormatter.bind(this)
-    }, {
-      classes: 'status',
-      dataField: 'status',
-      text: 'STATUS',
-      sort: true,
-      formatter: statusCellFormatter.bind(this)
-    }, {
-      classes: 'actions',
-      dataField: 'actionsDummy',
-      isDummyField: true,
-      text: '',
-      align: 'right',
-      formatter: actionsCellFormatter.bind(this)
-    }];
-  }
+    return [
+      {
+        classes: 'email',
+        dataField: 'email',
+        text: 'Email',
+        sort: true,
+      },
+      {
+        classes: 'emaildomain',
+        dataField: 'emaildomain',
+        text: 'Email Domain',
+        sort: true,
+      },
+      {
+        classes: 'created',
+        dataField: 'created',
+        text: 'Created',
+        sort: true,
+        formatter: relativeDate,
+      },
+      {
+        classes: 'expiry',
+        dataField: 'expiry',
+        text: 'Expiry',
+        sort: true,
+        formatter: expiryCellFormatter.bind(this),
+      },
+      {
+        classes: 'status',
+        dataField: 'status',
+        text: 'STATUS',
+        sort: true,
+        formatter: statusCellFormatter.bind(this),
+      },
+      {
+        classes: 'actions',
+        dataField: 'actionsDummy',
+        isDummyField: true,
+        text: '',
+        align: 'right',
+        formatter: actionsCellFormatter.bind(this),
+      },
+    ];
+  };
 
   render() {
     return (
-      <Breadcrumb data={{title: 'USERS', pathname: '/users/'}}>
-        <DocumentTitle title='Users | Giant Swarm'>
+      <Breadcrumb data={{ title: 'USERS', pathname: '/users/' }}>
+        <DocumentTitle title="Users | Giant Swarm">
           <div>
-            <div className='row'>
-              <div className='col-7'>
-                <h1>
-                  Users
-                </h1>
+            <div className="row">
+              <div className="col-7">
+                <h1>Users</h1>
               </div>
-              <div className='col-5'>
-                <div className='pull-right btn-group'>
-                  <Button onClick={this.inviteUser.bind(this)}>INVITE USER</Button>
+              <div className="col-5">
+                <div className="pull-right btn-group">
+                  <Button onClick={this.inviteUser.bind(this)}>
+                    INVITE USER
+                  </Button>
                 </div>
               </div>
             </div>
-            <p>This is the list of user accounts on <code>{this.props.installation_name ? this.props.installation_name : 'unknown installation'}</code></p>
-            <br/>
+            <p>
+              This is the list of user accounts on{' '}
+              <code>
+                {this.props.installation_name
+                  ? this.props.installation_name
+                  : 'unknown installation'}
+              </code>
+            </p>
+            <br />
             <h5>What about SSO users?</h5>
-            <p>SSO users don&apos;t have user objects. They are defined by whatever is in the JWT token being used by that user.</p>
-            <br/>
+            <p>
+              SSO users don&apos;t have user objects. They are defined by
+              whatever is in the JWT token being used by that user.
+            </p>
+            <br />
             {(() => {
-              if (!this.props.users || (this.props.users.isFetching && Object.keys(this.props.users.items).length === 0)) {
-                return <img className='loader' src='/images/loader_oval_light.svg' width='20px' height='20px' />;
-              } else if (Object.keys(this.props.users.items).length === 0 && Object.keys(this.props.invitations.items).length === 0) {
-                return <div>
-                  <p>No users in the system yet.</p>
-                  </div>;
+              if (
+                !this.props.users ||
+                (this.props.users.isFetching &&
+                  Object.keys(this.props.users.items).length === 0)
+              ) {
+                return (
+                  <img
+                    className="loader"
+                    src="/images/loader_oval_light.svg"
+                    width="20px"
+                    height="20px"
+                  />
+                );
+              } else if (
+                Object.keys(this.props.users.items).length === 0 &&
+                Object.keys(this.props.invitations.items).length === 0
+              ) {
+                return (
+                  <div>
+                    <p>No users in the system yet.</p>
+                  </div>
+                );
               } else {
-
-                return <div className='users-table'>
-                       <BootstrapTable keyField='email' data={ Object.values(this.props.invitationsAndUsers) }
-                          columns={ this.getTableColumnsConfig() } bordered={ false }
-                          defaultSorted={ tableDefaultSorting }
-                          defaultSortDirection='asc' />
-                        </div>;
+                return (
+                  <div className="users-table">
+                    <BootstrapTable
+                      keyField="email"
+                      data={Object.values(this.props.invitationsAndUsers)}
+                      columns={this.getTableColumnsConfig()}
+                      bordered={false}
+                      defaultSorted={tableDefaultSorting}
+                      defaultSortDirection="asc"
+                    />
+                  </div>
+                );
               }
             })()}
 
-            {
-              (() => {
-                switch(this.state.modal.template) {
-                  case 'unexpireUser':
-                    return <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
+            {(() => {
+              switch (this.state.modal.template) {
+                case 'unexpireUser':
+                  return (
+                    <BootstrapModal
+                      className="create-key-pair-modal"
+                      show={this.state.modal.visible}
+                      onHide={this.closeModal.bind(this)}
+                    >
                       <BootstrapModal.Header closeButton>
-                        <BootstrapModal.Title>Remove Expiration Date from {this.state.selectedUser}</BootstrapModal.Title>
+                        <BootstrapModal.Title>
+                          Remove Expiration Date from {this.state.selectedUser}
+                        </BootstrapModal.Title>
                       </BootstrapModal.Header>
 
                       <BootstrapModal.Body>
-                        <p>Are you sure you want to remove the expiration date from {this.state.selectedUser}?</p>
+                        <p>
+                          Are you sure you want to remove the expiration date
+                          from {this.state.selectedUser}?
+                        </p>
                         <p>This account will never expire.</p>
-                        <p>If the account was expired, the user will be able to log in again.</p>
+                        <p>
+                          If the account was expired, the user will be able to
+                          log in again.
+                        </p>
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          type='submit'
-                          bsStyle='primary'
+                          type="submit"
+                          bsStyle="primary"
                           loading={this.state.modal.loading}
-                          onClick={this.confirmRemoveExpiration.bind(this, this.state.selectedUser)}>
-                          {
-                            this.state.modal.loading ?
-                            'Removing Expiration'
-                            :
-                            'Remove Expiration'
-                          }
+                          onClick={this.confirmRemoveExpiration.bind(
+                            this,
+                            this.state.selectedUser
+                          )}
+                        >
+                          {this.state.modal.loading
+                            ? 'Removing Expiration'
+                            : 'Remove Expiration'}
                         </Button>
 
-                        {
-                          this.state.modal.loading ?
-                          null
-                          :
+                        {this.state.modal.loading ? null : (
                           <Button
-                            bsStyle='link'
-                            onClick={this.closeModal.bind(this)}>
+                            bsStyle="link"
+                            onClick={this.closeModal.bind(this)}
+                          >
                             Cancel
                           </Button>
-                        }
+                        )}
                       </BootstrapModal.Footer>
-                    </BootstrapModal>;
+                    </BootstrapModal>
+                  );
 
-                  case 'deleteUser':
-                    return <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
+                case 'deleteUser':
+                  return (
+                    <BootstrapModal
+                      className="create-key-pair-modal"
+                      show={this.state.modal.visible}
+                      onHide={this.closeModal.bind(this)}
+                    >
                       <BootstrapModal.Header closeButton>
-                        <BootstrapModal.Title>Delete {this.state.selectedUser}</BootstrapModal.Title>
+                        <BootstrapModal.Title>
+                          Delete {this.state.selectedUser}
+                        </BootstrapModal.Title>
                       </BootstrapModal.Header>
 
                       <BootstrapModal.Body>
-                        <p>Are you sure you want to delete {this.state.selectedUser}?</p>
+                        <p>
+                          Are you sure you want to delete{' '}
+                          {this.state.selectedUser}?
+                        </p>
                         <p>There is no undo.</p>
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          type='submit'
-                          bsStyle='danger'
+                          type="submit"
+                          bsStyle="danger"
                           loading={this.state.modal.loading}
-                          onClick={this.confirmDeleteUser.bind(this, this.state.selectedUser)}>
-                          {
-                            this.state.modal.loading ?
-                            'Deleting User'
-                            :
-                            'Delete User'
-                          }
+                          onClick={this.confirmDeleteUser.bind(
+                            this,
+                            this.state.selectedUser
+                          )}
+                        >
+                          {this.state.modal.loading
+                            ? 'Deleting User'
+                            : 'Delete User'}
                         </Button>
 
-                        {
-                          this.state.modal.loading ?
-                          null
-                          :
+                        {this.state.modal.loading ? null : (
                           <Button
-                            bsStyle='link'
-                            onClick={this.closeModal.bind(this)}>
+                            bsStyle="link"
+                            onClick={this.closeModal.bind(this)}
+                          >
                             Cancel
                           </Button>
-                        }
+                        )}
                       </BootstrapModal.Footer>
-                    </BootstrapModal>;
+                    </BootstrapModal>
+                  );
 
-                  case 'inviteUser':
-                    return <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
+                case 'inviteUser':
+                  return (
+                    <BootstrapModal
+                      className="create-key-pair-modal"
+                      show={this.state.modal.visible}
+                      onHide={this.closeModal.bind(this)}
+                    >
                       <BootstrapModal.Header closeButton>
-                        <BootstrapModal.Title>Invite a New User</BootstrapModal.Title>
+                        <BootstrapModal.Title>
+                          Invite a New User
+                        </BootstrapModal.Title>
                       </BootstrapModal.Header>
 
                       <BootstrapModal.Body>
-                        <form onSubmit={(e) => {e.preventDefault();}}>
-                        <p>Creating an invitation is the way to get new people onto this installation.</p>
-                        <p>Invitations are valid for 48 hours.</p>
+                        <form
+                          onSubmit={e => {
+                            e.preventDefault();
+                          }}
+                        >
+                          <p>
+                            Creating an invitation is the way to get new people
+                            onto this installation.
+                          </p>
+                          <p>Invitations are valid for 48 hours.</p>
 
-                        <div className='textfield'>
-                          <label>Email:</label>
-                          <input autoFocus type='text' onChange={this.handleEmailChange.bind(this)} value={this.state.invitationForm.email} />
-                        </div>
-
-                        <div className='textfield'>
-                          <label>Organization:</label>
-                          <DropdownButton id="organizationDropdown" className="outline" title={this.state.invitationForm.organization}>
-                            {
-                              _.map(_.sortBy(this.props.organizations.items, 'id'), (organization) =>
-                                <MenuItem key={organization.id} onClick={this.handleOrganizationChange.bind(this, organization.id)}>
-                                  {organization.id}
-                                </MenuItem>
-                              )
-                            }
-                          </DropdownButton>
-                        </div>
-
-                        <div className='textfield'>
-                          <label>Send Email:</label>
-                          <div className='checkbox'>
-                            <label htmlFor='sendEmail'>
-                              <input type='checkbox' onChange={this.handleSendEmailChange.bind(this)} id='sendEmail' checked={this.state.invitationForm.sendEmail} />
-                              Send the invitee an e-mail with the accept invitation link.
-                            </label>
+                          <div className="textfield">
+                            <label>Email:</label>
+                            <input
+                              autoFocus
+                              type="text"
+                              onChange={this.handleEmailChange.bind(this)}
+                              value={this.state.invitationForm.email}
+                            />
                           </div>
-                        </div>
 
+                          <div className="textfield">
+                            <label>Organization:</label>
+                            <DropdownButton
+                              id="organizationDropdown"
+                              className="outline"
+                              title={this.state.invitationForm.organization}
+                            >
+                              {_.map(
+                                _.sortBy(this.props.organizations.items, 'id'),
+                                organization => (
+                                  <MenuItem
+                                    key={organization.id}
+                                    onClick={this.handleOrganizationChange.bind(
+                                      this,
+                                      organization.id
+                                    )}
+                                  >
+                                    {organization.id}
+                                  </MenuItem>
+                                )
+                              )}
+                            </DropdownButton>
+                          </div>
+
+                          <div className="textfield">
+                            <label>Send Email:</label>
+                            <div className="checkbox">
+                              <label htmlFor="sendEmail">
+                                <input
+                                  type="checkbox"
+                                  onChange={this.handleSendEmailChange.bind(
+                                    this
+                                  )}
+                                  id="sendEmail"
+                                  checked={this.state.invitationForm.sendEmail}
+                                />
+                                Send the invitee an e-mail with the accept
+                                invitation link.
+                              </label>
+                            </div>
+                          </div>
                         </form>
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          type='submit'
-                          bsStyle='primary'
+                          type="submit"
+                          bsStyle="primary"
                           loading={this.state.modal.loading}
-                          onClick={this.confirmInviteUser.bind(this)}>
-                          {
-                            this.state.modal.loading ?
-                            'Inviting User'
-                            :
-                            'Invite User'
-                          }
+                          onClick={this.confirmInviteUser.bind(this)}
+                        >
+                          {this.state.modal.loading
+                            ? 'Inviting User'
+                            : 'Invite User'}
                         </Button>
 
-                        {
-                          this.state.modal.loading ?
-                          null
-                          :
+                        {this.state.modal.loading ? null : (
                           <Button
-                            bsStyle='link'
-                            onClick={this.closeModal.bind(this)}>
+                            bsStyle="link"
+                            onClick={this.closeModal.bind(this)}
+                          >
                             Cancel
                           </Button>
-                        }
+                        )}
                       </BootstrapModal.Footer>
-                    </BootstrapModal>;
+                    </BootstrapModal>
+                  );
 
-                  case 'inviteUserDone':
-                    return <BootstrapModal className='create-key-pair-modal' show={this.state.modal.visible} onHide={this.closeModal.bind(this)}>
+                case 'inviteUserDone':
+                  return (
+                    <BootstrapModal
+                      className="create-key-pair-modal"
+                      show={this.state.modal.visible}
+                      onHide={this.closeModal.bind(this)}
+                    >
                       <BootstrapModal.Header closeButton>
-                        <BootstrapModal.Title>{this.state.invitationForm.email} has been Invited</BootstrapModal.Title>
+                        <BootstrapModal.Title>
+                          {this.state.invitationForm.email} has been Invited
+                        </BootstrapModal.Title>
                       </BootstrapModal.Header>
 
                       <BootstrapModal.Body>
                         <p>Invitation has been created succesfully!</p>
-                        {
-                          this.state.invitationForm.sendEmail ?
-                          <p>An email has been sent to {this.state.invitationForm.email} with further instructions.</p>
-                          :
-                          <p>You&apos;ve chosen not to send them an email. Send them the link below to accept the invitation.</p>
-                        }
-                        <label>Invitation Accept Link:</label><br/>
-                        <code>{ this.state.modal.invitationResult.invitation_accept_link }</code>&nbsp;
-
-                        {
-                          this.state.copied ?
-                            <i className='fa fa-check' aria-hidden='true'></i>
-                          :
-                          <OverlayTrigger placement="top" overlay={
+                        {this.state.invitationForm.sendEmail ? (
+                          <p>
+                            An email has been sent to{' '}
+                            {this.state.invitationForm.email} with further
+                            instructions.
+                          </p>
+                        ) : (
+                          <p>
+                            You&apos;ve chosen not to send them an email. Send
+                            them the link below to accept the invitation.
+                          </p>
+                        )}
+                        <label>Invitation Accept Link:</label>
+                        <br />
+                        <code>
+                          {
+                            this.state.modal.invitationResult
+                              .invitation_accept_link
+                          }
+                        </code>
+                        &nbsp;
+                        {this.state.copied ? (
+                          <i className="fa fa-check" aria-hidden="true" />
+                        ) : (
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={
                               <Tooltip id="tooltip">Copy to clipboard.</Tooltip>
-                            }>
-                            <i className='copy-link fa fa-clipboard'  onClick={this.copyToClipboard.bind(this, this.state.modal.invitationResult.invitation_accept_link)} aria-hidden='true'></i>
+                            }
+                          >
+                            <i
+                              className="copy-link fa fa-clipboard"
+                              onClick={this.copyToClipboard.bind(
+                                this,
+                                this.state.modal.invitationResult
+                                  .invitation_accept_link
+                              )}
+                              aria-hidden="true"
+                            />
                           </OverlayTrigger>
-                        }
-
+                        )}
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          bsStyle='link'
-                          onClick={this.closeModal.bind(this)}>
+                          bsStyle="link"
+                          onClick={this.closeModal.bind(this)}
+                        >
                           Close
                         </Button>
                       </BootstrapModal.Footer>
-                    </BootstrapModal>;
-
-                }
-              })()
-            }
+                    </BootstrapModal>
+                  );
+              }
+            })()}
           </div>
         </DocumentTitle>
       </Breadcrumb>
@@ -498,7 +637,7 @@ class Users extends React.Component {
 }
 
 Users.contextTypes = {
-  router: PropTypes.object
+  router: PropTypes.object,
 };
 
 Users.propTypes = {
@@ -512,21 +651,28 @@ Users.propTypes = {
   installation_name: PropTypes.string,
 };
 
-const tableDefaultSorting = [{
-  dataField: 'email',
-  order: 'asc'
-}];
+const tableDefaultSorting = [
+  {
+    dataField: 'email',
+    order: 'asc',
+  },
+];
 
 const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
 
 function actionsCellFormatter(cell, row) {
   return (
-    <Button bsStyle='default' type='button' onClick={this.deleteUser.bind(this, row.email)}>Delete</Button>
+    <Button
+      bsStyle="default"
+      type="button"
+      onClick={this.deleteUser.bind(this, row.email)}
+    >
+      Delete
+    </Button>
   );
 }
 
 function expiryCellFormatter(cell, row) {
-
   var expiryClass = '';
 
   if (isExpiringSoon(cell)) {
@@ -534,13 +680,16 @@ function expiryCellFormatter(cell, row) {
   }
 
   if (cell === NEVER_EXPIRES) {
-    return ('');
+    return '';
   } else {
     return (
-      <span className={expiryClass}>{ relativeDate(cell) } &nbsp;
-          <i className='fa fa-times clickable'
-                title='Remove expiration'
-                onClick={this.removeExpiration.bind(this, row.email)} />
+      <span className={expiryClass}>
+        {relativeDate(cell)} &nbsp;
+        <i
+          className="fa fa-times clickable"
+          title="Remove expiration"
+          onClick={this.removeExpiration.bind(this, row.email)}
+        />
       </span>
     );
   }
@@ -550,10 +699,12 @@ function statusCellFormatter(cell, row) {
   var status = cell;
   var subText = row.invited_by ? 'Invited by ' + row.invited_by : undefined;
 
-  return <div>
-    <small>{status}</small>
-    <small>{subText}</small>
-  </div>;
+  return (
+    <div>
+      <small>{status}</small>
+      <small>{subText}</small>
+    </div>
+  );
 }
 
 function statusFor(user) {
@@ -573,16 +724,22 @@ function statusFor(user) {
 }
 
 function isExpiringSoon(timestamp) {
-    var expirySeconds = moment(timestamp).utc().diff(moment().utc()) / 1000;
-    if (expirySeconds < (60 * 60 * 24)) {
-      return true;
-    }
+  var expirySeconds =
+    moment(timestamp)
+      .utc()
+      .diff(moment().utc()) / 1000;
+  if (expirySeconds < 60 * 60 * 24) {
+    return true;
+  }
 
-    return false;
+  return false;
 }
 
 function isExpired(timestamp) {
-  var expirySeconds = moment(timestamp).utc().diff(moment().utc()) / 1000;
+  var expirySeconds =
+    moment(timestamp)
+      .utc()
+      .diff(moment().utc()) / 1000;
 
   if (timestamp === NEVER_EXPIRES) {
     return false;
@@ -594,17 +751,17 @@ function isExpired(timestamp) {
 }
 
 function mapStateToProps(state) {
-  var users = _.map(state.entities.users.items, (user) => {
+  var users = _.map(state.entities.users.items, user => {
     return {
       email: user.email,
       emaildomain: user.emaildomain,
       created: user.created,
       expiry: user.expiry,
-      status: statusFor(user)
+      status: statusFor(user),
     };
   });
 
-  var invitations = _.map(state.entities.invitations.items, (invitation) => {
+  var invitations = _.map(state.entities.invitations.items, invitation => {
     return {
       email: invitation.email,
       emaildomain: invitation.emaildomain,
@@ -616,7 +773,6 @@ function mapStateToProps(state) {
   });
 
   var invitationsAndUsers = users.concat(invitations);
-
 
   return {
     currentUser: state.app.loggedInUser,

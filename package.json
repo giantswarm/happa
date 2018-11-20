@@ -9,7 +9,7 @@
   "scripts": {
     "test": "grunt test",
     "start": "grunt serve",
-    "prettier": "prettier"
+    "prettier": "prettier --single-quote --trailing-comma es5 --write \"src/**/*.js\""
   },
   "dist": "dist",
   "mainInput": "main",

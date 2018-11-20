@@ -17,14 +17,12 @@ import configureStore from '../stores/configureStore';
 import history from '../stores/history';
 import { ConnectedRouter } from 'connected-react-router';
 
-
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/app.sass';
 import 'react-datepicker/dist/react-datepicker.css';
 
 var appContainer = document.getElementById('app');
-
 
 const store = configureStore({});
 
@@ -33,15 +31,18 @@ render(
     <ConnectedRouter history={history}>
       <div>
         <Switch>
-        <Route path="/admin-login" component={adminLogin} />
-        <Route path="/login" component={login} />
-        <Route path="/logout" component={logout} />
-        <Route path="/forgot_password/:token/" component={forgot_password_set_password} />
-        <Route path="/forgot_password" component={forgot_password_index} />
-        <Route path="/signup/:token" component={signup} />
-        <Route path="/oauth/callback" component={oauth_callback} />
+          <Route path="/admin-login" component={adminLogin} />
+          <Route path="/login" component={login} />
+          <Route path="/logout" component={logout} />
+          <Route
+            path="/forgot_password/:token/"
+            component={forgot_password_set_password}
+          />
+          <Route path="/forgot_password" component={forgot_password_index} />
+          <Route path="/signup/:token" component={signup} />
+          <Route path="/oauth/callback" component={oauth_callback} />
 
-        <Route path='/' component={Layout} />
+          <Route path="/" component={Layout} />
         </Switch>
       </div>
     </ConnectedRouter>

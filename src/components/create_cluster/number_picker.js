@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 class NumberPicker extends React.Component {
@@ -13,60 +13,69 @@ class NumberPicker extends React.Component {
     }
   }
 
-  triggerOnChange = (newValue) => {
-    if(this.props.onChange) {
+  triggerOnChange = newValue => {
+    if (this.props.onChange) {
       this.props.onChange(newValue);
     }
-  }
+  };
 
   increment = () => {
     var currentValue = this.props.value;
-    var desiredValue = (currentValue + this.props.stepSize);
+    var desiredValue = currentValue + this.props.stepSize;
 
     if (currentValue < this.props.max) {
       this.triggerOnChange(Math.min(this.props.max, desiredValue));
     }
-  }
+  };
 
   decrement = () => {
     var currentValue = this.props.value;
-    var desiredValue = (currentValue - this.props.stepSize);
+    var desiredValue = currentValue - this.props.stepSize;
 
     if (currentValue > this.props.min) {
       this.triggerOnChange(Math.max(this.props.min, desiredValue));
     }
-  }
+  };
 
   render() {
     return (
-      <div className={'new-cluster--worker-setting-row ' + ( this.props.readOnly ? 'readonly ' : ' ' ) + ( this.props.theme)}>
-        {
-          this.props.label ?
+      <div
+        className={
+          'new-cluster--worker-setting-row ' +
+          (this.props.readOnly ? 'readonly ' : ' ') +
+          this.props.theme
+        }
+      >
+        {this.props.label ? (
           <div className="new-cluster--worker-setting-label">
             {this.props.label}
           </div>
-          :
+        ) : (
           undefined
-        }
+        )}
 
         <div className="new-cluster--worker-setting-control">
-          {
-            this.props.readOnly ?
+          {this.props.readOnly ? (
             undefined
-            :
-            <div className="new-cluster--worker-setting-control-decrease" onClick={this.decrement} >
+          ) : (
+            <div
+              className="new-cluster--worker-setting-control-decrease"
+              onClick={this.decrement}
+            >
               &ndash;
             </div>
-          }
+          )}
           {this.formatValue()}
-          {
-            this.props.readOnly ?
+          {this.props.readOnly ? (
             undefined
-            :
-            <div className="new-cluster--worker-setting-control-increase" onClick={this.increment}>
+          ) : (
+            <div
+              className="new-cluster--worker-setting-control-increase"
+              onClick={this.increment}
+            >
               +
             </div>
-          }
+          )}
         </div>
       </div>
     );
@@ -83,7 +92,7 @@ NumberPicker.propTypes = {
   max: PropTypes.number,
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
-  theme: PropTypes.string
+  theme: PropTypes.string,
 };
 
 function mapStateToProps() {
@@ -94,4 +103,7 @@ function mapDispatchToProps() {
   return {};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NumberPicker);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NumberPicker);

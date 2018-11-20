@@ -12,14 +12,14 @@ class ChangePassword extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state ={
-      formValid: false
+    this.state = {
+      formValid: false,
     };
   }
 
   currentPasswordValid = () => {
     return this.current_password.value();
-  }
+  };
 
   newPasswordValid = () => {
     var password = this.new_password.value();
@@ -29,38 +29,45 @@ class ChangePassword extends React.Component {
     if (validationResult.statusMessage === 'password_too_short') {
       validationResult.statusMessage = 'Your new password is too short';
     } else if (validationResult.statusMessage === 'password_not_just_numbers') {
-      validationResult.statusMessage = 'Please pick a new password that is not just numbers';
+      validationResult.statusMessage =
+        'Please pick a new password that is not just numbers';
     } else if (validationResult.statusMessage === 'password_not_just_letters') {
-      validationResult.statusMessage = 'Please pick a new password that is not just upper case / lower case letters';
+      validationResult.statusMessage =
+        'Please pick a new password that is not just upper case / lower case letters';
     } else if (validationResult.statusMessage === 'password_ok') {
       validationResult.statusMessage = '';
     }
 
     this.setState({
-      newPasswordValidationMessage: validationResult.statusMessage
+      newPasswordValidationMessage: validationResult.statusMessage,
     });
 
-
-
     return validationResult.valid;
-  }
+  };
 
   newPasswordConfirmationValid = () => {
     var password = this.new_password.value();
     var passwordConfirmation = this.new_password_confirmation.value();
 
-    if (password !== passwordConfirmation && (password && passwordConfirmation)) {
+    if (
+      password !== passwordConfirmation &&
+      (password && passwordConfirmation)
+    ) {
       this.setState({
-        newPassworConfirmationValidationMessage: 'Password confirmation does not match'
+        newPassworConfirmationValidationMessage:
+          'Password confirmation does not match',
       });
     } else {
       this.setState({
-        newPassworConfirmationValidationMessage: ''
+        newPassworConfirmationValidationMessage: '',
       });
     }
 
-    return this.new_password.value() && (this.new_password.value() === this.new_password_confirmation.value());
-  }
+    return (
+      this.new_password.value() &&
+      this.new_password.value() === this.new_password_confirmation.value()
+    );
+  };
 
   passwordEditingStarted() {
     // NOOP
@@ -70,12 +77,12 @@ class ChangePassword extends React.Component {
     if (this.current_password.value()) {
       this.setState({
         buttonVisible: true,
-        error: false
+        error: false,
       });
     } else {
       this.setState({
         buttonVisible: false,
-        error: false
+        error: false,
       });
     }
 
@@ -87,23 +94,23 @@ class ChangePassword extends React.Component {
       this.setState({
         formValid: true,
         success: false,
-        error: false
+        error: false,
       });
     } else {
       this.setState({
         formValid: false,
         success: false,
-        error: false
+        error: false,
       });
     }
-  }
+  };
 
-  submit = (e) => {
+  submit = e => {
     e.preventDefault();
 
     this.setState({
       submitting: true,
-      error: false
+      error: false,
     });
 
     var token = this.props.user.auth.token;
@@ -111,136 +118,148 @@ class ChangePassword extends React.Component {
 
     var usersApi = new GiantSwarmV4.UsersApi();
 
-    usersApi.modifyPassword(scheme + ' ' + token, this.props.user.email,
-    {
-      old_password_base64: this.current_password.value(),
-      new_password_base64: this.new_password.value()
-    })
-    .then(() => {
-      this.setState({
-        success: true,
-        submitting: false,
-        error: false,
-        buttonVisible: false
-      });
-    })
-    .then(() => {
-      return this.props.actions.giantswarmLogin(this.props.user.email, this.new_password.value());
-    })
-    .catch((error) => {
-      var errorMessage;
+    usersApi
+      .modifyPassword(scheme + ' ' + token, this.props.user.email, {
+        old_password_base64: this.current_password.value(),
+        new_password_base64: this.new_password.value(),
+      })
+      .then(() => {
+        this.setState({
+          success: true,
+          submitting: false,
+          error: false,
+          buttonVisible: false,
+        });
+      })
+      .then(() => {
+        return this.props.actions.giantswarmLogin(
+          this.props.user.email,
+          this.new_password.value()
+        );
+      })
+      .catch(error => {
+        var errorMessage;
 
-      if (error.body && error.body.status_code && error.body.status_code === 10010) {
-        errorMessage = <span>Your current password doesn&apos;t seem to be right.</span>;
-      } else {
-        errorMessage = <span>Something went wrong while trying to set your password.
-          Perhaps our servers are down. Could you try again later,
-          or contact support otherwise:
-          &nbsp;
-          <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
-        </span>;
-      }
+        if (
+          error.body &&
+          error.body.status_code &&
+          error.body.status_code === 10010
+        ) {
+          errorMessage = (
+            <span>Your current password doesn&apos;t seem to be right.</span>
+          );
+        } else {
+          errorMessage = (
+            <span>
+              Something went wrong while trying to set your password. Perhaps
+              our servers are down. Could you try again later, or contact
+              support otherwise: &nbsp;
+              <a href="mailto:support@giantswarm.io">support@giantswarm.io</a>
+            </span>
+          );
+        }
 
-      this.setState({
-        error: true,
-        submitting: false,
-        buttonVisible: false,
-        errorMessage: errorMessage
+        this.setState({
+          error: true,
+          submitting: false,
+          buttonVisible: false,
+          errorMessage: errorMessage,
+        });
       });
-    });
-  }
+  };
 
   render() {
     return (
-      <div className='row section'>
-        <div className='col-3'>
-          <h3 className='table-label'>Password</h3>
+      <div className="row section">
+        <div className="col-3">
+          <h3 className="table-label">Password</h3>
         </div>
-        <div className='col-9'>
-          <p>
-            Use this form to change your password.
-          </p>
+        <div className="col-9">
+          <p>Use this form to change your password.</p>
 
-          <form onSubmit={this.submit} className="change_password_form" >
-            <div className='textfield small'>
+          <form onSubmit={this.submit} className="change_password_form">
+            <div className="textfield small">
               <PasswordField
                 label="Current Password"
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
-                id='current_password'
-                ref={(p) => {this.current_password = p;}}
+                id="current_password"
+                ref={p => {
+                  this.current_password = p;
+                }}
               />
             </div>
 
-            <div className='textfield small'>
+            <div className="textfield small">
               <PasswordField
                 label="New Password"
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
                 validationError={this.state.newPasswordValidationMessage}
-                id='new_password'
-                ref={(p) => {this.new_password = p;}}
+                id="new_password"
+                ref={p => {
+                  this.new_password = p;
+                }}
               />
             </div>
 
-            <div className='textfield small'>
+            <div className="textfield small">
               <PasswordField
                 label="New Password (once more)"
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
-                validationError={this.state.newPassworConfirmationValidationMessage}
-                id='new_password_confirmation'
-                ref={(p) => {this.new_password_confirmation = p;}}
+                validationError={
+                  this.state.newPassworConfirmationValidationMessage
+                }
+                id="new_password_confirmation"
+                ref={p => {
+                  this.new_password_confirmation = p;
+                }}
               />
             </div>
 
             <div className="button-area">
               <ReactCSSTransitionGroup
-                transitionName='slide-right'
+                transitionName="slide-right"
                 transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}>
-                {
-                  this.state.buttonVisible ?
-
-                  <Button type='submit'
-                          bsStyle='primary'
-                          disabled={!this.state.formValid}
-                          loading={this.state.submitting}
-                          loadingMessage="Saving...">
+                transitionLeaveTimeout={200}
+              >
+                {this.state.buttonVisible ? (
+                  <Button
+                    type="submit"
+                    bsStyle="primary"
+                    disabled={!this.state.formValid}
+                    loading={this.state.submitting}
+                    loadingMessage="Saving..."
+                  >
                     Set New Password
                   </Button>
-
-                  : null
-                }
+                ) : null}
               </ReactCSSTransitionGroup>
 
               <ReactCSSTransitionGroup
-                transitionName='slide-right'
+                transitionName="slide-right"
                 transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}>
-                {
-                  this.state.success
-                  ?
-                    <div className='form-success'><i className='fa fa-check-circle' />Password set succesfully</div>
-                  :
-                    null
-                }
+                transitionLeaveTimeout={200}
+              >
+                {this.state.success ? (
+                  <div className="form-success">
+                    <i className="fa fa-check-circle" />
+                    Password set succesfully
+                  </div>
+                ) : null}
               </ReactCSSTransitionGroup>
 
-
               <ReactCSSTransitionGroup
-                transitionName='slide-right'
+                transitionName="slide-right"
                 transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}>
-              {
-                this.state.error
-                ?
-                  <div className='flash-messages--flash-message flash-messages--danger'>
+                transitionLeaveTimeout={200}
+              >
+                {this.state.error ? (
+                  <div className="flash-messages--flash-message flash-messages--danger">
                     {this.state.errorMessage}
                   </div>
-                :
-                  null
-              }
+                ) : null}
               </ReactCSSTransitionGroup>
             </div>
           </form>
@@ -252,7 +271,7 @@ class ChangePassword extends React.Component {
 
 ChangePassword.propTypes = {
   user: PropTypes.object,
-  actions: PropTypes.object
+  actions: PropTypes.object,
 };
 
 export default ChangePassword;

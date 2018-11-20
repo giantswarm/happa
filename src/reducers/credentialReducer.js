@@ -2,12 +2,15 @@
 
 import * as types from '../actions/actionTypes';
 
-export default function credentialReducer(state = {
+export default function credentialReducer(
+  state = {
     lastUpdated: 0,
     isFetching: false,
-    items: []
-  }, action = undefined) {
-  switch(action.type) {
+    items: [],
+  },
+  action = undefined
+) {
+  switch (action.type) {
     case types.ORGANIZATION_CREDENTIALS_LOAD:
       return {
         lastUpdated: state.lastUpdated,
@@ -26,7 +29,7 @@ export default function credentialReducer(state = {
       return {
         lastUpdated: state.lastUpdated,
         isFetching: false,
-        items: state.items
+        items: state.items,
       };
 
     default:

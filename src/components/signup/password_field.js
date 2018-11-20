@@ -21,7 +21,7 @@ class PasswordField extends React.Component {
   onBlur = () => {
     clearTimeout(typingTimer);
     this.props.onChange(this.input.value);
-  }
+  };
 
   onChange = () => {
     this.props.onStartTyping(this.input.value);
@@ -29,25 +29,33 @@ class PasswordField extends React.Component {
     typingTimer = setTimeout(() => {
       this.props.onChange(this.input.value);
     }, doneTypingInterval);
-  }
+  };
 
   value = () => {
     return this.input.value;
-  }
+  };
 
   focus = () => {
     ReactDOM.findDOMNode(this.input).focus();
-  }
+  };
 
   blur = () => {
     ReactDOM.findDOMNode(this.input).blur();
-  }
+  };
 
   render() {
     return (
-      <div className='textfield'>
+      <div className="textfield">
         <label htmlFor={this.props.name}>{this.props.label}</label>
-        <input type='password' ref={ (input) => { this.input = input; } } id={this.props.name} onBlur={this.onBlur} onChange={this.onChange} />
+        <input
+          type="password"
+          ref={input => {
+            this.input = input;
+          }}
+          id={this.props.name}
+          onBlur={this.onBlur}
+          onChange={this.onChange}
+        />
         <span className="message">{this.props.validationError}&nbsp;</span>
       </div>
     );
@@ -60,7 +68,7 @@ PasswordField.propTypes = {
   onStartTyping: PropTypes.func,
   name: PropTypes.string,
   label: PropTypes.string,
-  validationError: PropTypes.string
+  validationError: PropTypes.string,
 };
 
 export default PasswordField;
