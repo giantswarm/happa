@@ -20,9 +20,9 @@ var Passage = function(config) {
     endpoint: {
       presence: true,
       url: {
-        allowLocal: true
-      }
-    }
+        allowLocal: true,
+      },
+    },
   };
 
   helpers.validateOrRaise(config, constraints);
@@ -40,21 +40,19 @@ var Passage = function(config) {
     //
     checkInvite: function(params) {
       var constraints = {
-        token: { presence: true }
+        token: { presence: true },
       };
 
       var url = `${config.endpoint}/invite/${params.token}`;
 
-      var promise = new Promise((resolve) => {
+      var promise = new Promise(resolve => {
         helpers.validateOrRaise(params, constraints);
-        resolve(request.get(url)
-        .timeout(config.timeout_ms));
-      })
-      .then(x => {
+        resolve(request.get(url).timeout(config.timeout_ms));
+      }).then(x => {
         if (x.body.is_valid) {
-          return(x.body);
+          return x.body;
         } else {
-          throw(Error('InvalidToken'));
+          throw Error('InvalidToken');
         }
       });
 
@@ -70,7 +68,7 @@ var Passage = function(config) {
     createAccount: function(params) {
       var constraints = {
         inviteToken: { presence: true },
-        password: { presence: true }
+        password: { presence: true },
       };
 
       var url = `${config.endpoint}/accounts/`;
@@ -78,19 +76,21 @@ var Passage = function(config) {
       // Passage is not expecting camelcase in its json body
       // Converting it here.
       var payload = {
-        'invite_token': params.inviteToken,
-        'password': params.password
+        invite_token: params.inviteToken,
+        password: params.password,
       };
 
-      var promise = new Promise((resolve) => {
+      var promise = new Promise(resolve => {
         helpers.validateOrRaise(params, constraints);
-        resolve(request.post(url)
-          .timeout(config.timeout_ms)
-          .send(payload)
-          .set('ContentType', 'application/json'));
-      })
-      .then(x => {
-        return(x.body);
+        resolve(
+          request
+            .post(url)
+            .timeout(config.timeout_ms)
+            .send(payload)
+            .set('ContentType', 'application/json')
+        );
+      }).then(x => {
+        return x.body;
       });
 
       return promise;
@@ -104,24 +104,26 @@ var Passage = function(config) {
     //
     requestPasswordRecoveryToken: function(params) {
       var constraints = {
-        email: { presence: true, email: true }
+        email: { presence: true, email: true },
       };
 
       var url = `${config.endpoint}/recovery/`;
 
       var payload = {
-        email: params.email
+        email: params.email,
       };
 
-      var promise = new Promise((resolve) => {
+      var promise = new Promise(resolve => {
         helpers.validateOrRaise(params, constraints);
-        resolve(request.post(url)
-          .timeout(config.timeout_ms)
-          .send(payload)
-          .set('ContentType', 'application/json'));
-      })
-      .then(x => {
-        return(x.body);
+        resolve(
+          request
+            .post(url)
+            .timeout(config.timeout_ms)
+            .send(payload)
+            .set('ContentType', 'application/json')
+        );
+      }).then(x => {
+        return x.body;
       });
 
       return promise;
@@ -139,27 +141,29 @@ var Passage = function(config) {
     verifyPasswordRecoveryToken: function(params) {
       var constraints = {
         email: { presence: true, email: true },
-        token: { presence: true }
+        token: { presence: true },
       };
 
       var url = `${config.endpoint}/recovery/${params.token}/`;
 
       var payload = {
-        email: params.email
+        email: params.email,
       };
 
-      var promise = new Promise((resolve) => {
+      var promise = new Promise(resolve => {
         helpers.validateOrRaise(params, constraints);
-        resolve(request.post(url)
-          .timeout(config.timeout_ms)
-          .send(payload)
-          .set('ContentType', 'application/json'));
-      })
-      .then(x => {
+        resolve(
+          request
+            .post(url)
+            .timeout(config.timeout_ms)
+            .send(payload)
+            .set('ContentType', 'application/json')
+        );
+      }).then(x => {
         if (x.body.is_valid) {
-          return(x.body);
+          return x.body;
         } else {
-          throw(new Error('Invalid Token'));
+          throw new Error('Invalid Token');
         }
       });
 
@@ -179,25 +183,27 @@ var Passage = function(config) {
       var constraints = {
         email: { presence: true, email: true },
         token: { presence: true },
-        password: { presence: true }
+        password: { presence: true },
       };
 
       var url = `${config.endpoint}/recovery/${params.token}/password/`;
 
       var payload = {
         email: params.email,
-        password: params.password
+        password: params.password,
       };
 
-      var promise = new Promise((resolve) => {
+      var promise = new Promise(resolve => {
         helpers.validateOrRaise(params, constraints);
-        resolve(request.post(url)
-          .timeout(config.timeout_ms)
-          .send(payload)
-          .set('ContentType', 'application/json'));
-      })
-      .then(x => {
-        return(x.body);
+        resolve(
+          request
+            .post(url)
+            .timeout(config.timeout_ms)
+            .send(payload)
+            .set('ContentType', 'application/json')
+        );
+      }).then(x => {
+        return x.body;
       });
 
       return promise;
@@ -212,14 +218,16 @@ var Passage = function(config) {
     getInvitations: function(authToken) {
       var url = `${config.endpoint}/invites/`;
 
-      var promise = new Promise((resolve) => {
-        resolve(request.get(url)
-          .timeout(config.timeout_ms)
-          .set('ContentType', 'application/json')
-          .set('Authorization', 'Bearer ' + authToken));
-      })
-      .then(x => {
-        return(x.body);
+      var promise = new Promise(resolve => {
+        resolve(
+          request
+            .get(url)
+            .timeout(config.timeout_ms)
+            .set('ContentType', 'application/json')
+            .set('Authorization', 'Bearer ' + authToken)
+        );
+      }).then(x => {
+        return x.body;
       });
 
       return promise;
@@ -244,30 +252,32 @@ var Passage = function(config) {
 
       var constraints = {
         email: { presence: true, email: true },
-        organization: { presence: {allowEmpty: false }},
-        sendEmail: { presence: true }
+        organization: { presence: { allowEmpty: false } },
+        sendEmail: { presence: true },
       };
 
       var payload = {
         email: invitation.email,
         organizations: [invitation.organization],
-        send_email: invitation.sendEmail
+        send_email: invitation.sendEmail,
       };
 
-      var promise = new Promise((resolve) => {
+      var promise = new Promise(resolve => {
         helpers.validateOrRaise(invitation, constraints);
-        resolve(request.post(url)
-          .timeout(config.timeout_ms)
-          .send(payload)
-          .set('ContentType', 'application/json')
-          .set('Authorization', 'Bearer ' + authToken));
-      })
-      .then(x => {
-        return(x.body);
+        resolve(
+          request
+            .post(url)
+            .timeout(config.timeout_ms)
+            .send(payload)
+            .set('ContentType', 'application/json')
+            .set('Authorization', 'Bearer ' + authToken)
+        );
+      }).then(x => {
+        return x.body;
       });
 
       return promise;
-    }
+    },
   };
 };
 

@@ -1,25 +1,29 @@
 'use strict';
 
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import ClusterDashboardItem from './cluster_dashboard_item';
 import ClusterEmptyState from './cluster_empty_state';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import Button from '../button';
-import {Link}  from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 
 class Home extends React.Component {
-
   componentDidMount() {
     this.fetchClusterDetails(this.props.clusters);
   }
 
   componentDidUpdate(prevProps) {
-    if (! _.isEqual(_.map(this.props.clusters, x => x.id), _.map(prevProps.clusters, x => x.id))) {
+    if (
+      !_.isEqual(
+        _.map(this.props.clusters, x => x.id),
+        _.map(prevProps.clusters, x => x.id)
+      )
+    ) {
       this.fetchClusterDetails(this.props.clusters);
     }
   }
@@ -29,20 +33,26 @@ class Home extends React.Component {
   }
 
   clusterIds(clusters) {
-    return this.clustersSortedById(clusters).map((cluster) => cluster.id);
+    return this.clustersSortedById(clusters).map(cluster => cluster.id);
   }
 
   fetchClusterDetails(clusters) {
     return Promise.all(
-      _.flatten(clusters.map((cluster) => {
-        return [this.props.actions.clusterLoadDetails(cluster.id)];
-      }))
+      _.flatten(
+        clusters.map(cluster => {
+          return [this.props.actions.clusterLoadDetails(cluster.id)];
+        })
+      )
     );
   }
 
   title() {
     if (this.props.selectedOrganization) {
-      return 'Cluster Overview | ' + this.props.selectedOrganization + ' | Giant Swarm';
+      return (
+        'Cluster Overview | ' +
+        this.props.selectedOrganization +
+        ' | Giant Swarm'
+      );
     } else {
       return 'Cluster Overview | Giant Swarm';
     }
@@ -51,37 +61,47 @@ class Home extends React.Component {
   render() {
     return (
       <DocumentTitle title={this.title()}>
-      {
-        <div>
-          {
-            this.props.selectedOrganization ?
+        {
+          <div>
+            {this.props.selectedOrganization ? (
               <div className='well launch-new-cluster'>
-
                 <Link to='new-cluster'>
-                  <Button type='button' bsStyle='primary'>Launch New Cluster</Button>
+                  <Button type='button' bsStyle='primary'>
+                    Launch New Cluster
+                  </Button>
                 </Link>
-                {
-                  this.props.clusters.length === 0 ?
-                  'Ready to launch your first cluster? Click the green button!'
-                  :
-                  ''
-                }
+                {this.props.clusters.length === 0
+                  ? 'Ready to launch your first cluster? Click the green button!'
+                  : ''}
               </div>
-            :
-            undefined
-          }
+            ) : (
+              undefined
+            )}
 
-          {
-            this.props.clusters.length === 0 ? <ClusterEmptyState errorLoadingClusters={this.props.errorLoadingClusters} selectedOrganization={this.props.selectedOrganization} organizations={this.props.organizations} /> : null
-          }
+            {this.props.clusters.length === 0 ? (
+              <ClusterEmptyState
+                errorLoadingClusters={this.props.errorLoadingClusters}
+                selectedOrganization={this.props.selectedOrganization}
+                organizations={this.props.organizations}
+              />
+            ) : null}
 
-          {
-            _.map(_.sortBy(this.props.clusters, (cluster) => cluster.name), (cluster) => {
-              return <ClusterDashboardItem selectedOrganization={this.props.selectedOrganization} animate={true} key={cluster.id} cluster={cluster} />;
-            }, (cluster) => cluster.id)
-          }
-        </div>
-      }
+            {_.map(
+              _.sortBy(this.props.clusters, cluster => cluster.name),
+              cluster => {
+                return (
+                  <ClusterDashboardItem
+                    selectedOrganization={this.props.selectedOrganization}
+                    animate={true}
+                    key={cluster.id}
+                    cluster={cluster}
+                  />
+                );
+              },
+              cluster => cluster.id
+            )}
+          </div>
+        }
       </DocumentTitle>
     );
   }
@@ -92,7 +112,7 @@ Home.propTypes = {
   actions: PropTypes.object,
   selectedOrganization: PropTypes.string,
   organizations: PropTypes.object,
-  errorLoadingClusters: PropTypes.bool
+  errorLoadingClusters: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
@@ -103,7 +123,7 @@ function mapStateToProps(state) {
 
   var clusters = [];
   if (selectedOrganization) {
-    clusters = _.filter(allClusters, (cluster) => {
+    clusters = _.filter(allClusters, cluster => {
       return cluster.owner === selectedOrganization;
     });
   }
@@ -112,15 +132,18 @@ function mapStateToProps(state) {
     clusters: clusters,
     organizations: organizations,
     errorLoadingClusters: errorLoadingClusters,
-    selectedOrganization: selectedOrganization
+    selectedOrganization: selectedOrganization,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
-    dispatch: dispatch
+    dispatch: dispatch,
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);

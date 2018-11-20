@@ -26,39 +26,48 @@ import UpgradeClusterModal from './upgrade_cluster_modal';
 
 class ClusterDetail extends React.Component {
   state = {
-    loading: true
-  }
-  
-  constructor (props){
+    loading: true,
+  };
+
+  constructor(props) {
     super(props);
 
     if (props.cluster === undefined) {
-      props.dispatch(push('/organizations/'+props.organizationId));
+      props.dispatch(push('/organizations/' + props.organizationId));
       this.setState({
-        notfound: true
+        notfound: true,
       });
 
-      props.dispatch(flashAdd({
-        message: <div><b>Cluster &quot;{props.clusterId}&quot; not found.</b><br/>Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.</div>,
-        class: 'info',
-        ttl: 6000
-      }));
-
+      props.dispatch(
+        flashAdd({
+          message: (
+            <div>
+              <b>Cluster &quot;{props.clusterId}&quot; not found.</b>
+              <br />
+              Please make sure the Cluster ID is correct and that you have
+              access to the organization that it belongs to.
+            </div>
+          ),
+          class: 'info',
+          ttl: 6000,
+        })
+      );
     } else {
       props.dispatch(organizationCredentialsLoad(props.organizationId));
 
-      props.releaseActions.loadReleases()
+      props.releaseActions
+        .loadReleases()
         .then(() => {
           return props.clusterActions.clusterLoadDetails(props.cluster.id);
         })
         .then(() => {
           this.setState({
-            loading: false
+            loading: false,
           });
         })
         .catch(() => {
           this.setState({
-            loading: 'failed'
+            loading: 'failed',
           });
         });
     }
@@ -69,7 +78,7 @@ class ClusterDetail extends React.Component {
       return null;
     }
     var m = 0.0;
-    for (var i=0; i<this.props.cluster.workers.length; i++) {
+    for (var i = 0; i < this.props.cluster.workers.length; i++) {
       m += this.props.cluster.workers[i].memory.size_gb;
     }
     return m.toFixed(2);
@@ -80,7 +89,7 @@ class ClusterDetail extends React.Component {
       return null;
     }
     var s = 0.0;
-    for (var i=0; i<this.props.cluster.workers.length; i++) {
+    for (var i = 0; i < this.props.cluster.workers.length; i++) {
       s += this.props.cluster.workers[i].storage.size_gb;
     }
     return s.toFixed(2);
@@ -91,7 +100,7 @@ class ClusterDetail extends React.Component {
       return null;
     }
     var c = 0;
-    for (var i=0; i<this.props.cluster.workers.length; i++) {
+    for (var i = 0; i < this.props.cluster.workers.length; i++) {
       c += this.props.cluster.workers[i].cpu.cores;
     }
     return c;
@@ -103,16 +112,16 @@ class ClusterDetail extends React.Component {
 
   showReleaseDetails = () => {
     this.releaseDetailsModal.show();
-  }
+  };
 
   showScalingModal = () => {
     this.scaleClusterModal.getWrappedInstance().reset();
     this.scaleClusterModal.getWrappedInstance().show();
-  }
+  };
 
   showUpgradeModal = () => {
     this.upgradeClusterModal.getWrappedInstance().show();
-  }
+  };
 
   clusterName() {
     if (this.props.cluster) {
@@ -166,7 +175,10 @@ class ClusterDetail extends React.Component {
     }
 
     // on Azure, release version must be >= 1.0.0
-    if (this.props.provider === 'azure' && cmp(this.props.cluster.release_version, '1.0.0') !== -1) {
+    if (
+      this.props.provider === 'azure' &&
+      cmp(this.props.cluster.release_version, '1.0.0') !== -1
+    ) {
       return true;
     }
   }
@@ -174,23 +186,27 @@ class ClusterDetail extends React.Component {
   accessCluster = () => {
     this.props.clusterActions.clusterSelect(this.props.cluster.id);
     this.props.dispatch(push('/getting-started/'));
-  }
+  };
 
   render() {
-    var instanceTypeOrVMSize = <tr/>;
+    var instanceTypeOrVMSize = <tr />;
     if (this.state.loading === false) {
       if (this.props.provider === 'aws') {
         instanceTypeOrVMSize = (
           <tr>
             <td>EC2 instance type</td>
-            <td className='value code'>{this.props.cluster.workers[0].aws.instance_type}</td>
+            <td className='value code'>
+              {this.props.cluster.workers[0].aws.instance_type}
+            </td>
           </tr>
         );
       } else if (this.props.provider === 'azure') {
         instanceTypeOrVMSize = (
           <tr>
             <td>VM size</td>
-            <td className='value code'>{this.props.cluster.workers[0].azure.vm_size}</td>
+            <td className='value code'>
+              {this.props.cluster.workers[0].azure.vm_size}
+            </td>
           </tr>
         );
       }
@@ -198,170 +214,274 @@ class ClusterDetail extends React.Component {
 
     // BYOC provider credential info
     var credentialInfoRows = [];
-    if (this.props.cluster && this.props.cluster.credential_id && this.props.cluster.credential_id != ''
-      && this.props.credentials.items.length === 1) {
+    if (
+      this.props.cluster &&
+      this.props.cluster.credential_id &&
+      this.props.cluster.credential_id != '' &&
+      this.props.credentials.items.length === 1
+    ) {
       // check if we have the right credential info
-      if (this.props.credentials.items[0].id !== this.props.cluster.credential_id) {
-        credentialInfoRows.push(<tr key='providerCredentialsInvalid'>
-          <td>Provider credentials</td>
-          <td className='value'>Error: cluster credentials do not match organization credentials. Please contact support for details.</td>
-        </tr>);
-      }
-      else {
+      if (
+        this.props.credentials.items[0].id !== this.props.cluster.credential_id
+      ) {
+        credentialInfoRows.push(
+          <tr key='providerCredentialsInvalid'>
+            <td>Provider credentials</td>
+            <td className='value'>
+              Error: cluster credentials do not match organization credentials.
+              Please contact support for details.
+            </td>
+          </tr>
+        );
+      } else {
         if (this.props.provider === 'aws') {
-          credentialInfoRows.push(<tr key='awsAccountID'>
-            <td>AWS account</td>
-            <td className='value code'><AWSAccountID roleARN={this.props.credentials.items[0].aws.roles.awsoperator} /></td>
-          </tr>);
+          credentialInfoRows.push(
+            <tr key='awsAccountID'>
+              <td>AWS account</td>
+              <td className='value code'>
+                <AWSAccountID
+                  roleARN={
+                    this.props.credentials.items[0].aws.roles.awsoperator
+                  }
+                />
+              </td>
+            </tr>
+          );
         } else if (this.props.provider === 'azure') {
-          credentialInfoRows.push(<tr key='azureSubscriptionID'>
-            <td>Azure subscription</td>
-            <td className='value code'>{this.props.credentials.items[0].azure.credential.subscription_id}</td>
-          </tr>);
-          credentialInfoRows.push(<tr key='azureTenantID'>
-            <td>Azure tenant</td>
-            <td className='value code'>{this.props.credentials.items[0].azure.credential.tenant_id}</td>
-          </tr>);
-      }
+          credentialInfoRows.push(
+            <tr key='azureSubscriptionID'>
+              <td>Azure subscription</td>
+              <td className='value code'>
+                {
+                  this.props.credentials.items[0].azure.credential
+                    .subscription_id
+                }
+              </td>
+            </tr>
+          );
+          credentialInfoRows.push(
+            <tr key='azureTenantID'>
+              <td>Azure tenant</td>
+              <td className='value code'>
+                {this.props.credentials.items[0].azure.credential.tenant_id}
+              </td>
+            </tr>
+          );
+        }
       }
     }
 
     return (
-      <Breadcrumb data={{title: this.props.cluster.id, pathname: '/organizations/' + this.props.cluster.owner + '/clusters/' + this.props.cluster.id}}>
-        <Breadcrumb data={{title: this.props.cluster.owner.toUpperCase(), pathname: '/organizations/' + this.props.cluster.owner}}>
-          <Breadcrumb data={{title: 'ORGANIZATIONS', pathname: '/organizations/'}}>
-            <DocumentTitle title={'Cluster Details | ' + this.clusterName() +  ' | Giant Swarm'}>
-              { this.state.loading === false ?
+      <Breadcrumb
+        data={{
+          title: this.props.cluster.id,
+          pathname:
+            '/organizations/' +
+            this.props.cluster.owner +
+            '/clusters/' +
+            this.props.cluster.id,
+        }}
+      >
+        <Breadcrumb
+          data={{
+            title: this.props.cluster.owner.toUpperCase(),
+            pathname: '/organizations/' + this.props.cluster.owner,
+          }}
+        >
+          <Breadcrumb
+            data={{ title: 'ORGANIZATIONS', pathname: '/organizations/' }}
+          >
+            <DocumentTitle
+              title={
+                'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'
+              }
+            >
+              {this.state.loading === false ? (
                 <div>
-                  <div className="cluster-details">
+                  <div className='cluster-details'>
                     <div className='row'>
                       <div className='col-7'>
                         <h1>
-                          <ClusterIDLabel clusterID={this.props.cluster.id} copyEnabled />
-                          {' '}
-                          {this.props.cluster.name} {this.state.loading ? <img className='loader' width="25px" height="25px" src='/images/loader_oval_light.svg'/> : ''}
+                          <ClusterIDLabel
+                            clusterID={this.props.cluster.id}
+                            copyEnabled
+                          />{' '}
+                          {this.props.cluster.name}{' '}
+                          {this.state.loading ? (
+                            <img
+                              className='loader'
+                              width='25px'
+                              height='25px'
+                              src='/images/loader_oval_light.svg'
+                            />
+                          ) : (
+                            ''
+                          )}
                         </h1>
                       </div>
                       <div className='col-5'>
                         <div className='pull-right btn-group'>
-                          <Button onClick={this.accessCluster}>GET STARTED</Button>
-                          {
-                            this.canClusterScale() ?
-                            <Button onClick={this.showScalingModal}>SCALE</Button>
-                            : undefined
-                          }
+                          <Button onClick={this.accessCluster}>
+                            GET STARTED
+                          </Button>
+                          {this.canClusterScale() ? (
+                            <Button onClick={this.showScalingModal}>
+                              SCALE
+                            </Button>
+                          ) : (
+                            undefined
+                          )}
 
-                          {
-                            this.canClusterUpgrade() ?
-                            <Button onClick={this.showUpgradeModal}>UPGRADE</Button>
-                            : undefined
-                          }
-
+                          {this.canClusterUpgrade() ? (
+                            <Button onClick={this.showUpgradeModal}>
+                              UPGRADE
+                            </Button>
+                          ) : (
+                            undefined
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
                   <div>
-                    <div className="cluster-details">
+                    <div className='cluster-details'>
                       <div className='row'>
                         <div className='col-12'>
                           <table className='table resource-details'>
                             <tbody>
                               <tr>
                                 <td>Created</td>
-                                <td className='value'>{this.props.cluster.create_date ? relativeDate(this.props.cluster.create_date) : 'n/a'}</td>
+                                <td className='value'>
+                                  {this.props.cluster.create_date
+                                    ? relativeDate(
+                                        this.props.cluster.create_date
+                                      )
+                                    : 'n/a'}
+                                </td>
                               </tr>
-                              {
-                                (credentialInfoRows === []) ? undefined : credentialInfoRows
-                              }
-                              {
-                                this.props.release ?
+                              {credentialInfoRows === []
+                                ? undefined
+                                : credentialInfoRows}
+                              {this.props.release ? (
                                 <tr>
                                   <td>Release version</td>
                                   <td className='value code'>
                                     <a onClick={this.showReleaseDetails}>
-                                      {this.props.cluster.release_version}
-                                      {' '}
-                                      {
-                                        (() => {
-                                          var kubernetes = _.find(this.props.release.components, component => component.name === 'kubernetes');
-                                          if (kubernetes) {
-                                            return <span>
-                                            &mdash; includes Kubernetes {kubernetes.version}
-                                            </span>;
-                                          }
-                                        })()
-                                      }
-                                    </a>
-                                    {' '}
-                                    {
-                                      this.canClusterUpgrade() ?
-                                      <a onClick={this.showUpgradeModal} className='upgrade-available'>
-                                        <i className='fa fa-info-circle' /> Upgrade available
+                                      {this.props.cluster.release_version}{' '}
+                                      {(() => {
+                                        var kubernetes = _.find(
+                                          this.props.release.components,
+                                          component =>
+                                            component.name === 'kubernetes'
+                                        );
+                                        if (kubernetes) {
+                                          return (
+                                            <span>
+                                              &mdash; includes Kubernetes{' '}
+                                              {kubernetes.version}
+                                            </span>
+                                          );
+                                        }
+                                      })()}
+                                    </a>{' '}
+                                    {this.canClusterUpgrade() ? (
+                                      <a
+                                        onClick={this.showUpgradeModal}
+                                        className='upgrade-available'
+                                      >
+                                        <i className='fa fa-info-circle' />{' '}
+                                        Upgrade available
                                       </a>
-                                      :
+                                    ) : (
                                       undefined
-                                    }
+                                    )}
                                   </td>
                                 </tr>
-                                :
+                              ) : (
                                 <tr>
                                   <td>Kubernetes version</td>
                                   <td className='value code'>
-                                    {
-                                      this.props.cluster.kubernetes_version !== '' && this.props.cluster.kubernetes_version !== undefined ?
-                                      this.props.cluster.kubernetes_version
-                                      :
-                                      'n/a'
-                                    }
+                                    {this.props.cluster.kubernetes_version !==
+                                      '' &&
+                                    this.props.cluster.kubernetes_version !==
+                                      undefined
+                                      ? this.props.cluster.kubernetes_version
+                                      : 'n/a'}
                                   </td>
                                 </tr>
-                              }
+                              )}
                               <tr>
                                 <td>Kubernetes API endpoint</td>
-                                <td className='value code'>{this.props.cluster.api_endpoint ? this.props.cluster.api_endpoint : 'n/a'}</td>
+                                <td className='value code'>
+                                  {this.props.cluster.api_endpoint
+                                    ? this.props.cluster.api_endpoint
+                                    : 'n/a'}
+                                </td>
                               </tr>
                               <tr>
                                 <td>Number of worker nodes</td>
                                 <td className='value'>
-                                  {this.props.cluster.workers ? this.props.cluster.workers.length : 'n/a'}
+                                  {this.props.cluster.workers
+                                    ? this.props.cluster.workers.length
+                                    : 'n/a'}
                                 </td>
                               </tr>
                               {instanceTypeOrVMSize}
                               <tr>
                                 <td>Total CPU cores in worker nodes</td>
-                                <td className='value'>{this.getCpusTotal() === null ? 'n/a' : this.getCpusTotal()}</td>
+                                <td className='value'>
+                                  {this.getCpusTotal() === null
+                                    ? 'n/a'
+                                    : this.getCpusTotal()}
+                                </td>
                               </tr>
                               <tr>
                                 <td>Total RAM in worker nodes</td>
-                                <td className='value'>{this.getMemoryTotal() === null ? 'n/a' : this.getMemoryTotal()} GB</td>
+                                <td className='value'>
+                                  {this.getMemoryTotal() === null
+                                    ? 'n/a'
+                                    : this.getMemoryTotal()}{' '}
+                                  GB
+                                </td>
                               </tr>
-                              {
-                                this.props.provider === 'kvm' ?
+                              {this.props.provider === 'kvm' ? (
                                 <tr>
                                   <td>Total storage in worker nodes</td>
-                                  <td className='value'>{this.getStorageTotal() === null ? 'n/a' : this.getStorageTotal()} GB</td>
+                                  <td className='value'>
+                                    {this.getStorageTotal() === null
+                                      ? 'n/a'
+                                      : this.getStorageTotal()}{' '}
+                                    GB
+                                  </td>
                                 </tr>
-                                : undefined
-                              }
-                              {
-                                this.props.cluster.kvm && this.props.cluster.kvm.port_mappings ?
+                              ) : (
+                                undefined
+                              )}
+                              {this.props.cluster.kvm &&
+                              this.props.cluster.kvm.port_mappings ? (
                                 <tr>
                                   <td>Ingress Ports</td>
                                   <td>
-                                    <dl className="ingress-port-table">
-                                      {this.props.cluster.kvm.port_mappings.reduce((acc, item, idx) => {
-                                        return acc.concat([
-                                          <dt key={`def-${idx}`}><code>{item.protocol}</code></dt>,
-                                          <dd key={`term-${idx}`}>{item.port}</dd>
-                                        ]);
-                                      }, [])}
+                                    <dl className='ingress-port-table'>
+                                      {this.props.cluster.kvm.port_mappings.reduce(
+                                        (acc, item, idx) => {
+                                          return acc.concat([
+                                            <dt key={`def-${idx}`}>
+                                              <code>{item.protocol}</code>
+                                            </dt>,
+                                            <dd key={`term-${idx}`}>
+                                              {item.port}
+                                            </dd>,
+                                          ]);
+                                        },
+                                        []
+                                      )}
                                     </dl>
                                   </td>
                                 </tr>
-                                :
+                              ) : (
                                 undefined
-                              }
+                              )}
                             </tbody>
                           </table>
                         </div>
@@ -378,39 +498,65 @@ class ClusterDetail extends React.Component {
                       </div>
                       <div className='row'>
                         <div className='col-9'>
-                          <p>All workloads on this cluster will be terminated. Data stored on the worker nodes will be lost. There is no way to undo this action.</p>
-                          <Button bsStyle='danger' onClick={this.showDeleteClusterModal.bind(this, this.props.cluster)}>Delete Cluster</Button>
+                          <p>
+                            All workloads on this cluster will be terminated.
+                            Data stored on the worker nodes will be lost. There
+                            is no way to undo this action.
+                          </p>
+                          <Button
+                            bsStyle='danger'
+                            onClick={this.showDeleteClusterModal.bind(
+                              this,
+                              this.props.cluster
+                            )}
+                          >
+                            Delete Cluster
+                          </Button>
                         </div>
                       </div>
                     </div>
-                    <ScaleClusterModal ref={(s) => {this.scaleClusterModal = s;}}
-                                       cluster={this.props.cluster}
-                                       user={this.props.user}/>
+                    <ScaleClusterModal
+                      ref={s => {
+                        this.scaleClusterModal = s;
+                      }}
+                      cluster={this.props.cluster}
+                      user={this.props.user}
+                    />
 
-                    {
-                      this.props.targetRelease ?
-                      <UpgradeClusterModal ref={(s) => {this.upgradeClusterModal = s;}}
-                                           cluster={this.props.cluster}
-                                           release={this.props.release}
-                                           targetRelease={this.props.targetRelease} />
-                      :
+                    {this.props.targetRelease ? (
+                      <UpgradeClusterModal
+                        ref={s => {
+                          this.upgradeClusterModal = s;
+                        }}
+                        cluster={this.props.cluster}
+                        release={this.props.release}
+                        targetRelease={this.props.targetRelease}
+                      />
+                    ) : (
                       undefined
-                    }
+                    )}
                   </div>
-                  {
-                    this.props.release ?
-                    <ReleaseDetailsModal ref={(r) => {this.releaseDetailsModal = r;}}
-                                         releases={[this.props.release]} />
-                    : undefined
-                  }
+                  {this.props.release ? (
+                    <ReleaseDetailsModal
+                      ref={r => {
+                        this.releaseDetailsModal = r;
+                      }}
+                      releases={[this.props.release]}
+                    />
+                  ) : (
+                    undefined
+                  )}
                 </div>
-              :
+              ) : (
                 <div className='app-loading'>
                   <div className='app-loading-contents'>
-                    <img className='loader' src='/images/loader_oval_light.svg' />
+                    <img
+                      className='loader'
+                      src='/images/loader_oval_light.svg'
+                    />
                   </div>
                 </div>
-              }
+              )}
             </DocumentTitle>
           </Breadcrumb>
         </Breadcrumb>
@@ -420,9 +566,8 @@ class ClusterDetail extends React.Component {
 }
 
 ClusterDetail.contextTypes = {
-  router: PropTypes.object
+  router: PropTypes.object,
 };
-
 
 ClusterDetail.propTypes = {
   clusterActions: PropTypes.object,
@@ -448,11 +593,11 @@ function mapStateToProps(state, ownProps) {
       release = state.entities.releases.items[cluster.release_version];
     }
 
-    let activeReleases = _.filter(state.entities.releases.items, (x) => {
+    let activeReleases = _.filter(state.entities.releases.items, x => {
       return x.active;
     });
 
-    let availableVersions = _.map(activeReleases, (x) => {
+    let availableVersions = _.map(activeReleases, x => {
       return x.version;
     }).sort(cmp);
 
@@ -465,8 +610,14 @@ function mapStateToProps(state, ownProps) {
       availableVersions.sort(cmp);
     }
 
-    if (availableVersions.length > availableVersions.indexOf(cluster.release_version)) {
-      targetReleaseVersion = availableVersions[availableVersions.indexOf(cluster.release_version) + 1];
+    if (
+      availableVersions.length >
+      availableVersions.indexOf(cluster.release_version)
+    ) {
+      targetReleaseVersion =
+        availableVersions[
+          availableVersions.indexOf(cluster.release_version) + 1
+        ];
     }
   }
 
@@ -478,7 +629,7 @@ function mapStateToProps(state, ownProps) {
     provider: state.app.info.general.provider,
     release: release,
     targetRelease: state.entities.releases.items[targetReleaseVersion],
-    user: state.app.loggedInUser
+    user: state.app.loggedInUser,
   };
 }
 
@@ -486,8 +637,11 @@ function mapDispatchToProps(dispatch) {
   return {
     clusterActions: bindActionCreators(clusterActions, dispatch),
     releaseActions: bindActionCreators(releaseActions, dispatch),
-    dispatch: dispatch
+    dispatch: dispatch,
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClusterDetail);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ClusterDetail);

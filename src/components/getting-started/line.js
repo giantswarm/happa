@@ -13,8 +13,16 @@ import PropTypes from 'prop-types';
 class Line extends React.Component {
   render() {
     return (
-      <div className={this.props.prompt ? 'codeblock--line codeblock--prompt' : 'codeblock--line'}>
-        <span className='codeblock--prompt-indicator'>{this.props.prompt ? '$ ' : null}</span>
+      <div
+        className={
+          this.props.prompt
+            ? 'codeblock--line codeblock--prompt'
+            : 'codeblock--line'
+        }
+      >
+        <span className='codeblock--prompt-indicator'>
+          {this.props.prompt ? '$ ' : null}
+        </span>
         {this.props.text}
       </div>
     );
@@ -23,7 +31,7 @@ class Line extends React.Component {
 
 Line.propTypes = {
   prompt: PropTypes.bool,
-  text: PropTypes.string
+  text: PropTypes.string,
 };
 
 export default Line;

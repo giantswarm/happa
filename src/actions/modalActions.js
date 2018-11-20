@@ -3,5 +3,5 @@
 import * as types from './actionTypes';
 
 export function modalHide() {
-  return {type: types.MODAL_HIDE};
+  return { type: types.MODAL_HIDE };
 }

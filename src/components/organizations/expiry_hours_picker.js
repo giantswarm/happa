@@ -4,7 +4,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 
 class ExpiryHoursPicker extends React.Component {
- constructor(props) {
+  constructor(props) {
     super();
 
     let years = 0;
@@ -13,93 +13,131 @@ class ExpiryHoursPicker extends React.Component {
     let hours = 0;
 
     years = Math.floor(props.initialValue / 8760);
-    months = Math.floor((props.initialValue - (years * 8760)) / 720);
-    days = Math.floor((props.initialValue - (years * 8760) - (months * 720)) / 24);
-    hours = Math.floor((props.initialValue - (years * 8760) - (months * 720) - (days * 24)));
+    months = Math.floor((props.initialValue - years * 8760) / 720);
+    days = Math.floor((props.initialValue - years * 8760 - months * 720) / 24);
+    hours = Math.floor(
+      props.initialValue - years * 8760 - months * 720 - days * 24
+    );
 
     this.state = {
       yearsValue: years,
       monthsValue: months,
       daysValue: days,
       hoursValue: hours,
-      expireDate: moment().add(props.initialValue, 'hours').utc(),
-      selectionType: 'relative'
+      expireDate: moment()
+        .add(props.initialValue, 'hours')
+        .utc(),
+      selectionType: 'relative',
     };
 
     // to set the week start to Monday
     moment.updateLocale('en', {
-      week : {
-        dow : 1,
-      }
+      week: {
+        dow: 1,
+      },
     });
   }
 
   handleDateChange(date) {
-    this.setState({
-      expireDate: date,
-      selectionType: 'date'
-    }, () => { this.updateTTL(); });
+    this.setState(
+      {
+        expireDate: date,
+        selectionType: 'date',
+      },
+      () => {
+        this.updateTTL();
+      }
+    );
   }
 
   handleYearChange(event) {
     var value = parseInt(event.target.value) || 0;
-    this.setState({
-      yearsValue: value,
-      selectionType: 'relative'
-    }, () => { this.updateTTL(); });
+    this.setState(
+      {
+        yearsValue: value,
+        selectionType: 'relative',
+      },
+      () => {
+        this.updateTTL();
+      }
+    );
   }
 
   handleMonthChange(event) {
     var value = parseInt(event.target.value) || 0;
-    this.setState({
-      monthsValue: value,
-      selectionType: 'relative'
-    }, () => { this.updateTTL(); });
+    this.setState(
+      {
+        monthsValue: value,
+        selectionType: 'relative',
+      },
+      () => {
+        this.updateTTL();
+      }
+    );
   }
 
   handleDayChange(event) {
     var value = parseInt(event.target.value) || 0;
-    this.setState({
-      daysValue: value,
-      selectionType: 'relative'
-    }, () => { this.updateTTL(); });
+    this.setState(
+      {
+        daysValue: value,
+        selectionType: 'relative',
+      },
+      () => {
+        this.updateTTL();
+      }
+    );
   }
 
   handleHourChange(event) {
     var value = parseInt(event.target.value) || 0;
-    this.setState({
-      hoursValue: value,
-      selectionType: 'relative'
-    }, () => { this.updateTTL(); });
+    this.setState(
+      {
+        hoursValue: value,
+        selectionType: 'relative',
+      },
+      () => {
+        this.updateTTL();
+      }
+    );
   }
 
   onSelectionTypeChanged(event) {
-    this.setState({
-      selectionType: event.target.value
-    }, () => { this.updateTTL(); });
+    this.setState(
+      {
+        selectionType: event.target.value,
+      },
+      () => {
+        this.updateTTL();
+      }
+    );
   }
 
   updateTTL() {
     var expireDate; // The expiration date the user intends
-                    // This will either come straight from the date picker state
-                    // or calculated based on values from the various year/month/day/hour
-                    // inputs.
+    // This will either come straight from the date picker state
+    // or calculated based on values from the various year/month/day/hour
+    // inputs.
     var TTL;
 
     if (this.state.selectionType === 'date') {
       // expireDate is at the start of the day of whatever the user picked.
-      expireDate = this.state.expireDate.utc().startOf('day').clone();
-
+      expireDate = this.state.expireDate
+        .utc()
+        .startOf('day')
+        .clone();
     } else if (this.state.selectionType === 'relative') {
       // Calculate hours based on years, months, days, hours chosen
-      expireDate = moment().utc().add(this.state.yearsValue, 'years');
+      expireDate = moment()
+        .utc()
+        .add(this.state.yearsValue, 'years');
       expireDate.add(this.state.monthsValue, 'months');
       expireDate.add(this.state.daysValue, 'days');
       expireDate.add(this.state.hoursValue, 'hours');
 
       // Set date picker to this value too
       this.setState({
-        expireDate: expireDate
+        expireDate: expireDate,
       });
     }
 
@@ -117,31 +155,84 @@ class ExpiryHoursPicker extends React.Component {
 
   render() {
     return (
-      <ul className="expiry-hours-picker">
+      <ul className='expiry-hours-picker'>
         <li className='expiry-hours-picker--granular'>
-          <input type='radio'
-                 value="relative"
-                 onChange={this.onSelectionTypeChanged.bind(this)}
-                 name="selectionType"
-                 id="relativeCheck"
-                 checked={this.state.selectionType === 'relative'}
+          <input
+            type='radio'
+            value='relative'
+            onChange={this.onSelectionTypeChanged.bind(this)}
+            name='selectionType'
+            id='relativeCheck'
+            checked={this.state.selectionType === 'relative'}
           />
-
-          <label htmlFor="relativeCheck">Relatively:</label>
-          <input type='text' min="0" max="10" name="years" maxLength={2} ref={(i) => {this.years = i;}} value={this.state.yearsValue} onChange={this.handleYearChange.bind(this)} autoComplete="off"/> years
-          <input type='text' min="0" max="999" name="months" maxLength={2} ref={(i) => {this.months = i;}} value={this.state.monthsValue} onChange={this.handleMonthChange.bind(this)} autoComplete="off"/> months
-          <input type='text' min="0" max="999" name="days" maxLength={2} ref={(i) => {this.days = i;}} value={this.state.daysValue} onChange={this.handleDayChange.bind(this)} autoComplete="off"/> days
-          <input type='text' min="0" max="999" name="hours" maxLength={2} ref={(i) => {this.hours = i;}} value={this.state.hoursValue} onChange={this.handleHourChange.bind(this)} autoComplete="off"/> hours from now
+          <label htmlFor='relativeCheck'>Relatively:</label>
+          <input
+            type='text'
+            min='0'
+            max='10'
+            name='years'
+            maxLength={2}
+            ref={i => {
+              this.years = i;
+            }}
+            value={this.state.yearsValue}
+            onChange={this.handleYearChange.bind(this)}
+            autoComplete='off'
+          />{' '}
+          years
+          <input
+            type='text'
+            min='0'
+            max='999'
+            name='months'
+            maxLength={2}
+            ref={i => {
+              this.months = i;
+            }}
+            value={this.state.monthsValue}
+            onChange={this.handleMonthChange.bind(this)}
+            autoComplete='off'
+          />{' '}
+          months
+          <input
+            type='text'
+            min='0'
+            max='999'
+            name='days'
+            maxLength={2}
+            ref={i => {
+              this.days = i;
+            }}
+            value={this.state.daysValue}
+            onChange={this.handleDayChange.bind(this)}
+            autoComplete='off'
+          />{' '}
+          days
+          <input
+            type='text'
+            min='0'
+            max='999'
+            name='hours'
+            maxLength={2}
+            ref={i => {
+              this.hours = i;
+            }}
+            value={this.state.hoursValue}
+            onChange={this.handleHourChange.bind(this)}
+            autoComplete='off'
+          />{' '}
+          hours from now
         </li>
         <li>
-          <input type='radio'
-                 value="date"
-                 onChange={this.onSelectionTypeChanged.bind(this)}
-                 name="selectionType"
-                 id="dateCheck"
-                 checked={this.state.selectionType === 'date'}
+          <input
+            type='radio'
+            value='date'
+            onChange={this.onSelectionTypeChanged.bind(this)}
+            name='selectionType'
+            id='dateCheck'
+            checked={this.state.selectionType === 'date'}
           />
-          <label htmlFor="dateCheck">Date:</label>
+          <label htmlFor='dateCheck'>Date:</label>
           <DatePicker
             selected={this.state.expireDate}
             onChange={this.handleDateChange.bind(this)}
@@ -160,7 +251,7 @@ class ExpiryHoursPicker extends React.Component {
 
 ExpiryHoursPicker.propTypes = {
   onChange: PropTypes.func,
-  initialValue: PropTypes.number
+  initialValue: PropTypes.number,
 };
 
 export default ExpiryHoursPicker;

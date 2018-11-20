@@ -11,27 +11,27 @@ import _ from 'underscore';
 export function loginSuccess(userData) {
   return {
     type: types.LOGIN_SUCCESS,
-    userData
+    userData,
   };
 }
 
 export function loginError(errorMessage) {
   return {
     type: types.LOGIN_ERROR,
-    errorMessage
+    errorMessage,
   };
 }
 
 export function logoutSuccess() {
   return {
-    type: types.LOGOUT_SUCCESS
+    type: types.LOGOUT_SUCCESS,
   };
 }
 
 export function logoutError(errorMessage) {
   return {
     type: types.LOGOUT_ERROR,
-    errorMessage
+    errorMessage,
   };
 }
 
@@ -44,36 +44,37 @@ export function refreshUserInfo() {
     if (!getState().app.loggedInUser) {
       dispatch({
         type: types.REFRESH_USER_INFO_ERROR,
-        error: 'No logged in user to refresh.'
+        error: 'No logged in user to refresh.',
       });
-      throw('No logged in user to refresh.');
+      throw 'No logged in user to refresh.';
     }
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
-    return usersApi.getCurrentUser(scheme + ' ' + token)
-    .then((data) => {
-      var userData = {
-        email: data.email,
-        auth: {
-          scheme: getState().app.loggedInUser.auth.scheme,
-          token: getState().app.loggedInUser.auth.token,
-        }
-      };
+    return usersApi
+      .getCurrentUser(scheme + ' ' + token)
+      .then(data => {
+        var userData = {
+          email: data.email,
+          auth: {
+            scheme: getState().app.loggedInUser.auth.scheme,
+            token: getState().app.loggedInUser.auth.token,
+          },
+        };
 
-      dispatch({
-        type: types.REFRESH_USER_INFO_SUCCESS,
-        userData: userData
+        dispatch({
+          type: types.REFRESH_USER_INFO_SUCCESS,
+          userData: userData,
+        });
+      })
+      .then(getInfo().bind(this, dispatch, getState))
+      .catch(error => {
+        dispatch({
+          type: types.REFRESH_USER_INFO_ERROR,
+          error: error,
+        });
+        throw error;
       });
-    })
-    .then(getInfo().bind(this, dispatch, getState))
-    .catch((error) => {
-      dispatch({
-        type: types.REFRESH_USER_INFO_ERROR,
-        error: error
-      });
-      throw(error);
-    });
   };
 }
 
@@ -87,8 +88,8 @@ export function auth0Login(authResult) {
         email: authResult.idTokenPayload.email,
         auth: {
           scheme: 'Bearer',
-          token: authResult.accessToken
-        }
+          token: authResult.accessToken,
+        },
       };
 
       resolve(dispatch(loginSuccess(userData)));
@@ -109,39 +110,42 @@ export function giantswarmLogin(email, password) {
 
     dispatch({
       type: types.LOGIN,
-      email: email
-    });
-
-    return authTokensApi.createAuthToken({
       email: email,
-      password_base64: Base64.encode(password)
-    })
-    .then((response) => {
-      authToken = response.auth_token;
-      return usersApi.getCurrentUser('giantswarm' + ' ' + response.auth_token);
-    })
-    .then((data) => {
-      var userData = {
-        email: data.email,
-        auth: {
-          scheme: 'giantswarm',
-          token: authToken
-        }
-      };
-
-      return userData;
-    })
-    .then((userData) => {
-      dispatch(loginSuccess(userData));
-      return userData;
-    })
-    .then(getInfo().bind(this, dispatch, getState))
-    .catch(error => {
-      dispatch(loginError(error));
-      dispatch(push('/login'));
-      console.error(error);
-      throw(error);
     });
+
+    return authTokensApi
+      .createAuthToken({
+        email: email,
+        password_base64: Base64.encode(password),
+      })
+      .then(response => {
+        authToken = response.auth_token;
+        return usersApi.getCurrentUser(
+          'giantswarm' + ' ' + response.auth_token
+        );
+      })
+      .then(data => {
+        var userData = {
+          email: data.email,
+          auth: {
+            scheme: 'giantswarm',
+            token: authToken,
+          },
+        };
+
+        return userData;
+      })
+      .then(userData => {
+        dispatch(loginSuccess(userData));
+        return userData;
+      })
+      .then(getInfo().bind(this, dispatch, getState))
+      .catch(error => {
+        dispatch(loginError(error));
+        dispatch(push('/login'));
+        console.error(error);
+        throw error;
+      });
   };
 }
 
@@ -153,26 +157,27 @@ export function giantswarmLogout() {
     var authToken;
     if (getState().app.loggedInUser) {
       authToken = getState().app.loggedInUser.auth.token;
-    } else  {
+    } else {
       authToken = undefined;
     }
 
     var authTokensApi = new GiantSwarmV4.AuthTokensApi();
 
     dispatch({
-      type: types.LOGOUT
+      type: types.LOGOUT,
     });
 
-    return authTokensApi.deleteAuthToken('giantswarm ' + authToken)
-    .then(() => {
-      dispatch(push('/login'));
-      return dispatch(logoutSuccess());
-    })
-    .catch((error) => {
-      dispatch(push('/login'));
-      dispatch(logoutError(error));
-      throw error;
-    });
+    return authTokensApi
+      .deleteAuthToken('giantswarm ' + authToken)
+      .then(() => {
+        dispatch(push('/login'));
+        return dispatch(logoutSuccess());
+      })
+      .catch(error => {
+        dispatch(push('/login'));
+        dispatch(logoutError(error));
+        throw error;
+      });
   };
 }
 
@@ -181,26 +186,33 @@ export function giantswarmLogout() {
 // as add a flash message to let the user know we couldn't authenticate them.
 export function unauthorized() {
   return function(dispatch) {
-
     // Clear any lingering flash error messages that would pop up due to failed
     // requests.
     dispatch(flashClearAll());
 
     // Let the user know he has been logged out due to a probably expired
     // or deleted token.
-    dispatch(flashAdd({
-      key: 'unauthorized', // We set a key explicitly for this flash message
-                           // so that multiple fires do not produce
-                           // multiple flash messages in the ui.
-                           // (Since there could be more than 1 request going on
-                           // that would trigger this unauthorized dispatch)
+    dispatch(
+      flashAdd({
+        key: 'unauthorized', // We set a key explicitly for this flash message
+        // so that multiple fires do not produce
+        // multiple flash messages in the ui.
+        // (Since there could be more than 1 request going on
+        // that would trigger this unauthorized dispatch)
 
-      message: <div><b>Unable to authenticate</b><br/>Please log in again.</div>,
-      class: 'danger'
-    }));
+        message: (
+          <div>
+            <b>Unable to authenticate</b>
+            <br />
+            Please log in again.
+          </div>
+        ),
+        class: 'danger',
+      })
+    );
 
     dispatch({
-      type: types.UNAUTHORIZED
+      type: types.UNAUTHORIZED,
     });
 
     dispatch(push('/login'));
@@ -218,24 +230,25 @@ export function getInfo() {
     var infoApi = new GiantSwarmV4.InfoApi();
 
     dispatch({
-      type: types.INFO_LOAD
+      type: types.INFO_LOAD,
     });
 
-    return infoApi.getInfo(scheme + ' ' + token)
-    .then((info) => {
-      dispatch({
-        type: types.INFO_LOAD_SUCCESS,
-        info: info
+    return infoApi
+      .getInfo(scheme + ' ' + token)
+      .then(info => {
+        dispatch({
+          type: types.INFO_LOAD_SUCCESS,
+          info: info,
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: types.INFO_LOAD_ERROR,
+          error: error,
+        });
+        console.error(error);
+        throw error;
       });
-    })
-    .catch((error) => {
-      dispatch({
-        type: types.INFO_LOAD_ERROR,
-        error: error
-      });
-      console.error(error);
-      throw(error);
-    });
   };
 }
 
@@ -253,39 +266,53 @@ export function usersLoad() {
     var alreadyFetching = getState().entities.users.isFetching;
 
     if (alreadyFetching) {
-      return new Promise((resolve) => { resolve(); });
+      return new Promise(resolve => {
+        resolve();
+      });
     }
 
-    dispatch({type: types.USERS_LOAD});
+    dispatch({ type: types.USERS_LOAD });
 
-    return usersApi.getUsers(scheme + ' ' + token)
-    .then(usersArray => {
-      var users = {};
+    return usersApi
+      .getUsers(scheme + ' ' + token)
+      .then(usersArray => {
+        var users = {};
 
-      _.each(usersArray, (user) => {
-        user.emaildomain = user.email.split('@')[1];
-        users[user.email] = user;
+        _.each(usersArray, user => {
+          user.emaildomain = user.email.split('@')[1];
+          users[user.email] = user;
+        });
+
+        dispatch({
+          type: types.USERS_LOAD_SUCCESS,
+          users,
+        });
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(
+          flashAdd({
+            message: (
+              <div>
+                <strong>
+                  Something went wrong while trying to load all users
+                </strong>
+                <br />
+                {error.body
+                  ? error.body.status_text
+                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
+              </div>
+            ),
+            class: 'danger',
+          })
+        );
+
+        dispatch({
+          type: types.USERS_LOAD_ERROR,
+        });
       });
-
-      dispatch({
-        type: types.USERS_LOAD_SUCCESS,
-        users,
-      });
-    })
-    .catch(error => {
-      console.error(error);
-      dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to load all users</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
-        class: 'danger'
-      }));
-
-      dispatch({
-        type: types.USERS_LOAD_ERROR
-      });
-    });
   };
 }
-
 
 // userRemoveExpiration
 // ----------------
@@ -298,26 +325,40 @@ export function userRemoveExpiration(email) {
 
     var usersApi = new GiantSwarmV4.UsersApi();
 
-    dispatch({type: types.USERS_REMOVE_EXPIRATION});
+    dispatch({ type: types.USERS_REMOVE_EXPIRATION });
 
-    return usersApi.modifyUser(scheme + ' ' + token, email, {'expiry': NEVER_EXPIRES})
-    .then(user => {
-      dispatch({
-        type: types.USERS_REMOVE_EXPIRATION_SUCCESS,
-        user,
-      });
-    })
-    .catch(error => {
-      console.error(error);
-      dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to remove expiration from this user</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
-        class: 'danger'
-      }));
+    return usersApi
+      .modifyUser(scheme + ' ' + token, email, { expiry: NEVER_EXPIRES })
+      .then(user => {
+        dispatch({
+          type: types.USERS_REMOVE_EXPIRATION_SUCCESS,
+          user,
+        });
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(
+          flashAdd({
+            message: (
+              <div>
+                <strong>
+                  Something went wrong while trying to remove expiration from
+                  this user
+                </strong>
+                <br />
+                {error.body
+                  ? error.body.status_text
+                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
+              </div>
+            ),
+            class: 'danger',
+          })
+        );
 
-      dispatch({
-        type: types.USERS_REMOVE_EXPIRATION_ERROR
+        dispatch({
+          type: types.USERS_REMOVE_EXPIRATION_ERROR,
+        });
       });
-    });
   };
 }
 
@@ -331,25 +372,38 @@ export function userDelete(email) {
 
     var usersApi = new GiantSwarmV4.UsersApi();
 
-    dispatch({type: types.USERS_DELETE});
+    dispatch({ type: types.USERS_DELETE });
 
-    return usersApi.deleteUser(scheme + ' ' + token, email)
-    .then(() => {
-      dispatch({
-        type: types.USERS_DELETE_SUCCESS,
-        email,
-      });
-    })
-    .catch(error => {
-      console.error(error);
-      dispatch(flashAdd({
-        message: <div><strong>Something went wrong while trying to delete this user</strong><br/>{error.body ? error.body.status_text : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}</div>,
-        class: 'danger'
-      }));
+    return usersApi
+      .deleteUser(scheme + ' ' + token, email)
+      .then(() => {
+        dispatch({
+          type: types.USERS_DELETE_SUCCESS,
+          email,
+        });
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(
+          flashAdd({
+            message: (
+              <div>
+                <strong>
+                  Something went wrong while trying to delete this user
+                </strong>
+                <br />
+                {error.body
+                  ? error.body.status_text
+                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
+              </div>
+            ),
+            class: 'danger',
+          })
+        );
 
-      dispatch({
-        type: types.USERS_DELETE_ERROR
+        dispatch({
+          type: types.USERS_DELETE_ERROR,
+        });
       });
-    });
   };
 }

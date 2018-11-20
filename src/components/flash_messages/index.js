@@ -15,19 +15,30 @@ import { flashRemove } from '../../actions/flashMessageActions';
 import PropTypes from 'prop-types';
 
 class FlashMessages extends React.Component {
-  makeFlashComponent = (flashMessage) => {
-    return <FlashMessage message={flashMessage.message} key={flashMessage.key} class={flashMessage.class} onDismiss={this.dismissFlash.bind(this, flashMessage)}/>;
-  }
+  makeFlashComponent = flashMessage => {
+    return (
+      <FlashMessage
+        message={flashMessage.message}
+        key={flashMessage.key}
+        class={flashMessage.class}
+        onDismiss={this.dismissFlash.bind(this, flashMessage)}
+      />
+    );
+  };
 
-  dismissFlash = (flashMessage) => {
+  dismissFlash = flashMessage => {
     this.props.dispatch(flashRemove(flashMessage));
-  }
+  };
 
   render() {
     return (
       <div className='flash-messages--container'>
-        <ReactCSSTransitionGroup transitionName='flash-messages--transition' transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-          { _.map(this.props.flashMessages.toArray(), this.makeFlashComponent) }
+        <ReactCSSTransitionGroup
+          transitionName='flash-messages--transition'
+          transitionEnterTimeout={200}
+          transitionLeaveTimeout={200}
+        >
+          {_.map(this.props.flashMessages.toArray(), this.makeFlashComponent)}
         </ReactCSSTransitionGroup>
       </div>
     );
@@ -35,17 +46,17 @@ class FlashMessages extends React.Component {
 }
 
 FlashMessages.contextTypes = {
-  router: PropTypes.object
+  router: PropTypes.object,
 };
 
 FlashMessages.propTypes = {
   flashMessages: PropTypes.object,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
 };
 
 function mapStateToProps(state) {
   return {
-    flashMessages: state.flashMessages
+    flashMessages: state.flashMessages,
   };
 }
 

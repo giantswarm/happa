@@ -19,7 +19,6 @@
 // Output and Prompt can be in any order. The copy to clipboard button will only
 // take the content in the Prompt tags.
 
-
 import React from 'react';
 import copy from 'copy-to-clipboard';
 import Line from './line';
@@ -29,13 +28,13 @@ import PropTypes from 'prop-types';
 
 export class Prompt extends React.Component {
   render() {
-    return <Line prompt={true} text={Helpers.dedent(this.props.children)}/>;
+    return <Line prompt={true} text={Helpers.dedent(this.props.children)} />;
   }
 }
 
 export class Output extends React.Component {
   render() {
-    return <Line prompt={false} text={Helpers.dedent(this.props.children)}/>;
+    return <Line prompt={false} text={Helpers.dedent(this.props.children)} />;
   }
 }
 
@@ -44,15 +43,19 @@ export class CodeBlock extends React.Component {
     super(props);
 
     this.state = {
-      hovering: false
+      hovering: false,
     };
   }
 
   promptLinesAsString() {
     var string = React.Children.toArray(this.props.children)
-                               .filter(function(x){ return (x.type === Prompt); })
-                               .map(function(x){ return x.props.children; })
-                               .join('\n');
+      .filter(function(x) {
+        return x.type === Prompt;
+      })
+      .map(function(x) {
+        return x.props.children;
+      })
+      .join('\n');
 
     return Helpers.dedent(string);
   }
@@ -62,7 +65,7 @@ export class CodeBlock extends React.Component {
 
     copy(this.promptLinesAsString());
 
-    this.setState({clicked: false});
+    this.setState({ clicked: false });
   }
 
   classNames() {
@@ -77,34 +80,59 @@ export class CodeBlock extends React.Component {
     }, []);
 
     classNames.push('codeblock--container');
-    if (this.state.hovering) {classNames.push('hovering');}
-    if (this.state.clicked) {classNames.push('clicked');}
-    if (childrenArray.length === 1) {classNames.push('oneline');}
+    if (this.state.hovering) {
+      classNames.push('hovering');
+    }
+    if (this.state.clicked) {
+      classNames.push('clicked');
+    }
+    if (childrenArray.length === 1) {
+      classNames.push('oneline');
+    }
 
     return classNames.join(' ');
   }
 
   render() {
-    return(
+    return (
       <div className={this.classNames()}>
         <pre>
-          <div ref={(d) => {this.pre = d;}} className='content'>
-            { this.props.children }
+          <div
+            ref={d => {
+              this.pre = d;
+            }}
+            className='content'
+          >
+            {this.props.children}
           </div>
           <div className='codeblock--buttons'>
-            <a href='#'
-               onMouseOver={function() {this.setState({hovering: true});}.bind(this)}
-               onMouseOut={function() {this.setState({hovering: false});}.bind(this)}
-               onClick={this.copyCodeToClipboard.bind(this)}
-               onMouseUp={function() {this.setState({clicked: true});}.bind(this)}
+            <a
+              href='#'
+              onMouseOver={function() {
+                this.setState({ hovering: true });
+              }.bind(this)}
+              onMouseOut={function() {
+                this.setState({ hovering: false });
+              }.bind(this)}
+              onClick={this.copyCodeToClipboard.bind(this)}
+              onMouseUp={function() {
+                this.setState({ clicked: true });
+              }.bind(this)}
             >
-              <i className='fa fa-clipboard' aria-hidden='true'></i>
+              <i className='fa fa-clipboard' aria-hidden='true' />
             </a>
           </div>
-          <ReactCSSTransitionGroup transitionName={'checkmark'} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-            {
-              this.state.clicked ? <i className='fa fa-check codeblock--checkmark' aria-hidden='true'></i> : null
-            }
+          <ReactCSSTransitionGroup
+            transitionName={'checkmark'}
+            transitionEnterTimeout={1000}
+            transitionLeaveTimeout={1000}
+          >
+            {this.state.clicked ? (
+              <i
+                className='fa fa-check codeblock--checkmark'
+                aria-hidden='true'
+              />
+            ) : null}
           </ReactCSSTransitionGroup>
         </pre>
       </div>
@@ -113,13 +141,13 @@ export class CodeBlock extends React.Component {
 }
 
 Prompt.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 Output.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 CodeBlock.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };

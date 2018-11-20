@@ -8,7 +8,9 @@
   "test": "test",
   "scripts": {
     "test": "grunt test",
-    "start": "grunt serve"
+    "start": "grunt serve",
+    "prettier": "prettier --jsx-single-quote --single-quote --trailing-comma es5 --write \"src/**/*.js\"",
+    "validate-prettier": "prettier --jsx-single-quote --single-quote --trailing-comma es5 --list-different \"src/**/*.js\""
   },
   "dist": "dist",
   "mainInput": "main",
@@ -72,6 +74,7 @@
     "json-loader": "^0.5.7",
     "load-grunt-tasks": "4.0.0",
     "node-sass": "4.9.4",
+    "prettier": "1.15.2",
     "react-hot-loader": "4.3.12",
     "redux-immutable-state-invariant": "2.1.0",
     "sass-loader": "7.1.0",

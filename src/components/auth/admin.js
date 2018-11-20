@@ -2,7 +2,7 @@
 
 import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { flashClearAll } from '../../actions/flashMessageActions';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
@@ -22,7 +22,7 @@ class AdminLogin extends React.Component {
   render() {
     return (
       <div>
-        <div className='login_form--mask'></div>
+        <div className='login_form--mask' />
 
         <div className='login_form--container login_form--admin col-4'>
           <div className='login_form--flash-container'>
@@ -41,21 +41,24 @@ class AdminLogin extends React.Component {
 AdminLogin.propTypes = {
   dispatch: PropTypes.func,
   flashMessages: PropTypes.object,
-  actions: PropTypes.object
+  actions: PropTypes.object,
 };
 
 function mapStateToProps(state) {
   return {
     user: state.app.loggedInUser,
-    flashMessages: state.flashMessages
+    flashMessages: state.flashMessages,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(userActions, dispatch),
-    dispatch: dispatch
+    dispatch: dispatch,
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(AdminLogin);
+module.exports = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AdminLogin);

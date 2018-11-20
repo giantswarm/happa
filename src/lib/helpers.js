@@ -2,7 +2,7 @@
 import validate from 'validate.js';
 import moment from 'moment';
 import React from 'react';
-import {OverlayTrigger, Tooltip} from 'react-bootstrap/lib';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap/lib';
 import _ from 'underscore';
 
 export function dedent(strings, ...values) {
@@ -17,11 +17,9 @@ export function dedent(strings, ...values) {
   // first, perform interpolation
   let result = '';
   for (let i = 0; i < raw.length; i++) {
-    result += raw[i].
-
-
+    result += raw[i]
       // handle escaped backticks
-      replace(/\\`/g, '`');
+      .replace(/\\`/g, '`');
 
     if (i < values.length) {
       result += values[i];
@@ -45,7 +43,7 @@ export function dedent(strings, ...values) {
   });
 
   if (mindent !== null) {
-    result = lines.map(l => l[0] === ' ' ? l.slice(mindent) : l).join('\n');
+    result = lines.map(l => (l[0] === ' ' ? l.slice(mindent) : l)).join('\n');
   }
 
   // dedent eats leading and trailing whitespace too
@@ -55,32 +53,32 @@ export function dedent(strings, ...values) {
   return result.replace(/\\n/g, '\n');
 }
 
-export function humanFileSize(bytes, si=true, decimals=1) {
-    // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
-    var thresh = si ? 1000 : 1024;
+export function humanFileSize(bytes, si = true, decimals = 1) {
+  // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
+  var thresh = si ? 1000 : 1024;
 
-    if(Math.abs(bytes) < thresh) {
-      return {
-        value: bytes.toFixed(decimals),
-        unit: 'B'
-      };
-    }
-
-    var units = si
-        ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
-        : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
-
-    var u = -1;
-
-    do {
-        bytes /= thresh;
-        ++u;
-    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
-
+  if (Math.abs(bytes) < thresh) {
     return {
       value: bytes.toFixed(decimals),
-      unit: units[u]
+      unit: 'B',
     };
+  }
+
+  var units = si
+    ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+
+  var u = -1;
+
+  do {
+    bytes /= thresh;
+    ++u;
+  } while (Math.abs(bytes) >= thresh && u < units.length - 1);
+
+  return {
+    value: bytes.toFixed(decimals),
+    unit: units[u],
+  };
 }
 
 // validateOrRaise
@@ -89,15 +87,17 @@ export function humanFileSize(bytes, si=true, decimals=1) {
 // Raises a TypeError with helpful message if the validation fails.
 //
 export function validateOrRaise(validatable, constraints) {
-  var validationErrors = validate(validatable, constraints, {fullMessages: false});
+  var validationErrors = validate(validatable, constraints, {
+    fullMessages: false,
+  });
 
-  if(validationErrors){
+  if (validationErrors) {
     // If there are validation errors, throw a TypeError that has readable
     // information about what went wrong.
     var messages = _.map(validationErrors, (errorMessages, field) => {
       return field + ': ' + errorMessages.join(', ');
     });
-    throw(new TypeError(messages.join('\n')));
+    throw new TypeError(messages.join('\n'));
   }
 }
 
@@ -110,21 +110,26 @@ export function relativeDate(ISO8601DateString) {
   var formatedDate = formatDate(ISO8601DateString);
   var relativeDate = moment.utc(ISO8601DateString).fromNow();
 
-  return <OverlayTrigger placement="top" overlay={
-    <Tooltip id="tooltip">{formatedDate}</Tooltip>
-  }>
-    <span>{relativeDate}</span>
-  </OverlayTrigger>;
+  return (
+    <OverlayTrigger
+      placement='top'
+      overlay={<Tooltip id='tooltip'>{formatedDate}</Tooltip>}
+    >
+      <span>{relativeDate}</span>
+    </OverlayTrigger>
+  );
 }
 
 export function toTitleCase(str) {
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-  return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+  return str.replace(/\w\S*/g, function(txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
 }
 
-export function  truncate(string, maxLength=20) {
+export function truncate(string, maxLength = 20) {
   if (string.length > maxLength) {
-    return string.substring(0,maxLength) + '\u2026';
+    return string.substring(0, maxLength) + '\u2026';
   } else {
     return string;
   }
@@ -136,7 +141,9 @@ export function makeKubeConfigTextFile(cluster, keyPairResult) {
     kind: Config
     clusters:
     - cluster:
-        certificate-authority-data: ${btoa(keyPairResult.certificate_authority_data)}
+        certificate-authority-data: ${btoa(
+          keyPairResult.certificate_authority_data
+        )}
         server: ${cluster.api_endpoint}
       name: ${cluster.name}
     contexts:
@@ -158,7 +165,7 @@ export function makeKubeConfigTextFile(cluster, keyPairResult) {
 export function clustersForOrg(orgId, allClusters) {
   var clusters = [];
 
-  clusters = _.filter(allClusters, (cluster) => {
+  clusters = _.filter(allClusters, cluster => {
     return cluster.owner === orgId;
   });
 

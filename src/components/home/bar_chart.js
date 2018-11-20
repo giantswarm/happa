@@ -18,7 +18,7 @@ class BarChart extends React.Component {
 
     this.state = {
       percentage: initialPercentage,
-      firstShow: true
+      firstShow: true,
     };
   }
 
@@ -30,7 +30,7 @@ class BarChart extends React.Component {
     if (this.props.animate) {
       this.props.setTimeout(() => {
         this.setState({
-          percentage: this.props.percentage
+          percentage: this.props.percentage,
         });
       }, 200);
     }
@@ -38,7 +38,7 @@ class BarChart extends React.Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
-      percentage: nextProps.percentage
+      percentage: nextProps.percentage,
     });
   }
 
@@ -48,16 +48,20 @@ class BarChart extends React.Component {
 
   render() {
     return (
-      <div className={'bar-chart ' + ( this.props.outdated ? 'bar-chart--outdated' : '' )}>
-        <div className='bar-chart--bar' style={{width: `${this.cappedPercentage()}%`, backgroundColor: this.props.color}}>
-        </div>
+      <div
+        className={
+          'bar-chart ' + (this.props.outdated ? 'bar-chart--outdated' : '')
+        }
+      >
+        <div
+          className='bar-chart--bar'
+          style={{
+            width: `${this.cappedPercentage()}%`,
+            backgroundColor: this.props.color,
+          }}
+        />
         <div className='bar-chart--value'>
-          {
-            this.props.outdated ?
-            '...'
-            :
-            this.props.label
-          }
+          {this.props.outdated ? '...' : this.props.label}
         </div>
       </div>
     );
@@ -70,7 +74,7 @@ BarChart.propTypes = {
   setTimeout: PropTypes.func,
   outdated: PropTypes.bool,
   color: PropTypes.string,
-  label: PropTypes.string
+  label: PropTypes.string,
 };
 
 export default ReactTimeout(BarChart);

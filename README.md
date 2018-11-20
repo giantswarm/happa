@@ -1,6 +1,8 @@
 Happa
 =====
 
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+
 Giant Swarm's web interface. It lets users:
 
 - View and manage clusters
@@ -136,3 +138,20 @@ Checking for outdated dependencies
 ----------------------------------
 
 To see what dependencies have updates run `make npm-check-updates`
+
+
+Code Style
+----------
+
+Happa's Code Style is determined by `prettier`. Please make sure files in the
+`src` directory have passed through `prettier` before committing them to the repo.
+
+A CI step will enforce that this has happened, failing the CI if it detects that
+`prettier` would make any changes.
+
+You can run `prettier` on the whole codebase using `yarn run prettier`.
+
+We use the following config params:
+- `--jsx-single-quote`
+- `--single-quote`
+- `--trailing-comma es5`

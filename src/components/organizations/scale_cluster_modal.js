@@ -12,96 +12,98 @@ import * as flashActions from '../../actions/flashMessageActions';
 import PropTypes from 'prop-types';
 
 class ScaleClusterModal extends React.Component {
-  constructor (props){
+  constructor(props) {
     super(props);
 
     this.state = {
       modalVisible: false,
-      workerCount: props.cluster.workers.length
+      workerCount: props.cluster.workers.length,
     };
   }
 
   componentDidMount() {
-    this.setState({
-
-    });
+    this.setState({});
   }
 
   reset = () => {
     this.setState({
       workerCount: this.props.cluster.workers.length,
       loading: false,
-      error: null
+      error: null,
     });
-  }
+  };
 
   back = () => {
     this.setState({
       loading: false,
-      error: null
+      error: null,
     });
-  }
+  };
 
   show = () => {
     this.setState({
-      modalVisible: true
+      modalVisible: true,
     });
-  }
+  };
 
   close = () => {
     this.setState({
-      modalVisible: false
+      modalVisible: false,
     });
-  }
+  };
 
-  updateWorkerCount = (count) => {
+  updateWorkerCount = count => {
     this.setState({
-      workerCount: count
+      workerCount: count,
     });
-  }
+  };
 
   submit = () => {
-    this.setState({
-      loading: true
-    }, () => {
-      var workers = [];
+    this.setState(
+      {
+        loading: true,
+      },
+      () => {
+        var workers = [];
 
-      for (var i = 0; i < this.state.workerCount; i++) {
-        workers.push({});
+        for (var i = 0; i < this.state.workerCount; i++) {
+          workers.push({});
+        }
+
+        this.props.clusterActions
+          .clusterPatch({ id: this.props.cluster.id, workers: workers })
+          .then(patchedCluster => {
+            this.setState({
+              loading: false,
+            });
+
+            this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
+            this.props.flashActions.flashAdd({
+              message: 'Successfully scaled cluster',
+              class: 'success',
+              ttl: 3000,
+            });
+            this.close();
+          })
+          .catch(error => {
+            this.setState({
+              loading: false,
+              error: error,
+            });
+          });
       }
-
-      this.props.clusterActions.clusterPatch({id: this.props.cluster.id, workers: workers})
-      .then((patchedCluster) => {
-        this.setState({
-          loading: false
-        });
-
-        this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
-        this.props.flashActions.flashAdd({
-          message: 'Successfully scaled cluster',
-          class: 'success',
-          ttl: 3000
-        });
-        this.close();
-      })
-      .catch((error) => {
-        this.setState({
-          loading: false,
-          error: error
-        });
-      });
-    });
+    );
 
     setTimeout(() => {
       this.setState({
-        loading: false
+        loading: false,
       });
     }, 2000);
-  }
+  };
 
   workerDelta = () => {
-    return (this.state.workerCount - this.props.cluster.workers.length);
-  }
+    return this.state.workerCount - this.props.cluster.workers.length;
+  };
 
   pluralize = () => {
     var pluralize = 's';
@@ -111,7 +113,7 @@ class ScaleClusterModal extends React.Component {
     }
 
     return pluralize;
-  }
+  };
 
   buttonProperties = () => {
     var workerDelta = this.workerDelta();
@@ -120,110 +122,122 @@ class ScaleClusterModal extends React.Component {
     if (workerDelta > 0) {
       return {
         title: `Add ${workerDelta} worker node${pluralize}`,
-        style: 'success'
+        style: 'success',
       };
     }
 
     if (workerDelta < 0) {
       return {
         title: `Remove ${Math.abs(workerDelta)} worker node${pluralize}`,
-        style: 'danger'
+        style: 'danger',
       };
     }
-  }
+  };
 
   render() {
     return (
       <BootstrapModal show={this.state.modalVisible} onHide={this.close}>
         <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title>Scale workers on: <ClusterIDLabel clusterID={this.props.cluster.id} /> <strong>{this.props.cluster.name}</strong></BootstrapModal.Title>
+          <BootstrapModal.Title>
+            Scale workers on:{' '}
+            <ClusterIDLabel clusterID={this.props.cluster.id} />{' '}
+            <strong>{this.props.cluster.name}</strong>
+          </BootstrapModal.Title>
         </BootstrapModal.Header>
-        {
-          !this.state.error ?
-            <div>
-              <BootstrapModal.Body>
-                <p>How many workers would you like your cluster to have?</p>
-                <NumberPicker label=""
-                              stepSize={1}
-                              value={this.state.workerCount}
-                              onChange={this.updateWorkerCount}
-                              min={1} max={99}
-                              theme="inmodal"
-                />
+        {!this.state.error ? (
+          <div>
+            <BootstrapModal.Body>
+              <p>How many workers would you like your cluster to have?</p>
+              <NumberPicker
+                label=''
+                stepSize={1}
+                value={this.state.workerCount}
+                onChange={this.updateWorkerCount}
+                min={1}
+                max={99}
+                theme='inmodal'
+              />
 
-                {
-                  this.state.workerCount < this.props.cluster.workers.length ?
-                    <div className='flash-messages--flash-message flash-messages--danger'>
-                      <ul>
-                        <li>The selection of the node(s) to be removed is non-deterministic. </li>
-                        <li>Workloads on the worker nodes to be removed will be terminated.</li>
-                        <li>Data stored on the removed worker nodes will be lost.</li>
-                      </ul>
-                    </div>
-                  :
-                    <div className='flash-messages--flash-message flash-messages--hidden'>
-                      <br/>
-                      <br/>
-                      <br/>
-                    </div>
-                }
-              </BootstrapModal.Body>
-              <BootstrapModal.Footer>
-                {
-                  this.state.workerCount !== this.props.cluster.workers.length ?
-                    <Button
-                      type='submit'
-                      bsStyle={this.buttonProperties().style}
-                      loading={this.state.loading}
-                      loadingPosition="left"
-                      onClick={this.submit}>
-                      {this.buttonProperties().title}
-                    </Button>
-                  :
-                  undefined
-                }
-                <Button
-                  bsStyle='link'
-                  disabled={this.state.loading}
-                  onClick={this.close}>
-                  Cancel
-                </Button>
-              </BootstrapModal.Footer>
-            </div>
-          :
-            <div>
-              <BootstrapModal.Body>
-                <p>Something went wrong while trying to scale your cluster:</p>
+              {this.state.workerCount < this.props.cluster.workers.length ? (
                 <div className='flash-messages--flash-message flash-messages--danger'>
-                {
-                  this.state.error.body && this.state.error.body.message ?
-                    this.state.error.body.message
-                  :
-                    this.state.error.message
-                }
+                  <ul>
+                    <li>
+                      The selection of the node(s) to be removed is
+                      non-deterministic.{' '}
+                    </li>
+                    <li>
+                      Workloads on the worker nodes to be removed will be
+                      terminated.
+                    </li>
+                    <li>
+                      Data stored on the removed worker nodes will be lost.
+                    </li>
+                  </ul>
                 </div>
+              ) : (
                 <div className='flash-messages--flash-message flash-messages--hidden'>
-                  <br/>
-                  <br/>
-                  <br/>
+                  <br />
+                  <br />
+                  <br />
                 </div>
-              </BootstrapModal.Body>
-              <BootstrapModal.Footer>
+              )}
+            </BootstrapModal.Body>
+            <BootstrapModal.Footer>
+              {this.state.workerCount !== this.props.cluster.workers.length ? (
                 <Button
-                  bsStyle='link'
-                  disabled={this.state.loading}
-                  onClick={this.back}>
-                  Back
+                  type='submit'
+                  bsStyle={this.buttonProperties().style}
+                  loading={this.state.loading}
+                  loadingPosition='left'
+                  onClick={this.submit}
+                >
+                  {this.buttonProperties().title}
                 </Button>
-                <Button
-                  bsStyle='link'
-                  disabled={this.state.loading}
-                  onClick={this.close}>
-                  Cancel
-                </Button>
-              </BootstrapModal.Footer>
-            </div>
-        }
+              ) : (
+                undefined
+              )}
+              <Button
+                bsStyle='link'
+                disabled={this.state.loading}
+                onClick={this.close}
+              >
+                Cancel
+              </Button>
+            </BootstrapModal.Footer>
+          </div>
+        ) : (
+          <div>
+            <BootstrapModal.Body>
+              <p>Something went wrong while trying to scale your cluster:</p>
+              <div className='flash-messages--flash-message flash-messages--danger'>
+                {this.state.error.body && this.state.error.body.message
+                  ? this.state.error.body.message
+                  : this.state.error.message}
+              </div>
+              <div className='flash-messages--flash-message flash-messages--hidden'>
+                <br />
+                <br />
+                <br />
+              </div>
+            </BootstrapModal.Body>
+            <BootstrapModal.Footer>
+              <Button
+                bsStyle='link'
+                disabled={this.state.loading}
+                onClick={this.back}
+              >
+                Back
+              </Button>
+              <Button
+                bsStyle='link'
+                disabled={this.state.loading}
+                onClick={this.close}
+              >
+                Cancel
+              </Button>
+            </BootstrapModal.Footer>
+          </div>
+        )}
       </BootstrapModal>
     );
   }
@@ -234,7 +248,7 @@ ScaleClusterModal.propTypes = {
   giantSwarm: PropTypes.func,
   user: PropTypes.object,
   clusterActions: PropTypes.object,
-  flashActions: PropTypes.object
+  flashActions: PropTypes.object,
 };
 
 function mapDispatchToProps(dispatch) {
@@ -244,5 +258,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(undefined, mapDispatchToProps, undefined, {withRef: true})(ScaleClusterModal);
-
+export default connect(
+  undefined,
+  mapDispatchToProps,
+  undefined,
+  { withRef: true }
+)(ScaleClusterModal);

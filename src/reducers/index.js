@@ -22,7 +22,7 @@ const rootReducer = combineReducers({
   app,
   entities,
   modal,
-  flashMessages
+  flashMessages,
 });
 
 export default rootReducer;

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import DocumentTitle from 'react-document-title';
-import {Route, Switch, Redirect}  from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Page0_Overview from './0_overview.js';
 import Page1_DownloadKubeCTL from './1_download_kubectl.js';
@@ -13,24 +13,44 @@ import Page4_NextSteps from './4_next_steps.js';
 import { Breadcrumb } from 'react-breadcrumbs';
 
 class GettingStarted extends React.Component {
-
   render() {
     return (
       <DocumentTitle title={'Getting Started | Giant Swarm'}>
-        <Breadcrumb data={{title: 'GETTING STARTED', pathname: '/getting-started/'}}>
+        <Breadcrumb
+          data={{ title: 'GETTING STARTED', pathname: '/getting-started/' }}
+        >
           <div>
             <Switch>
-              <Route exact path="/getting-started/" component={Page0_Overview} />
-              <Route exact path="/getting-started/download/" component={Page1_DownloadKubeCTL} />
-              <Route exact path="/getting-started/configure/" component={Page2_ConfigureKubeCTL} />
-              <Route exact path="/getting-started/example/" component={Page3_SimpleExample} />
-              <Route exact path="/getting-started/next-steps/" component={Page4_NextSteps} />
-              <Redirect path="*" to="/getting-started/" />
+              <Route
+                exact
+                path='/getting-started/'
+                component={Page0_Overview}
+              />
+              <Route
+                exact
+                path='/getting-started/download/'
+                component={Page1_DownloadKubeCTL}
+              />
+              <Route
+                exact
+                path='/getting-started/configure/'
+                component={Page2_ConfigureKubeCTL}
+              />
+              <Route
+                exact
+                path='/getting-started/example/'
+                component={Page3_SimpleExample}
+              />
+              <Route
+                exact
+                path='/getting-started/next-steps/'
+                component={Page4_NextSteps}
+              />
+              <Redirect path='*' to='/getting-started/' />
             </Switch>
           </div>
         </Breadcrumb>
       </DocumentTitle>
-
     );
   }
 }

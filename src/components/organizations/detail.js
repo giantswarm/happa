@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'underscore';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { Link }  from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
@@ -27,67 +27,83 @@ class OrganizationDetail extends React.Component {
 
   addMember = () => {
     this.props.actions.organizationAddMember(this.props.organization.id);
-  }
+  };
 
-  removeMember = (email) => {
-    this.props.actions.organizationRemoveMember(this.props.organization.id, email);
-  }
+  removeMember = email => {
+    this.props.actions.organizationRemoveMember(
+      this.props.organization.id,
+      email
+    );
+  };
 
-  openClusterDetails = (cluster) => {
-    this.props.dispatch(push('/organizations/' + this.props.organization.id + '/clusters/' + cluster));
-  }
+  openClusterDetails = cluster => {
+    this.props.dispatch(
+      push(
+        '/organizations/' + this.props.organization.id + '/clusters/' + cluster
+      )
+    );
+  };
 
   // determine whether the component should deal with BYOC credentials
   // (not relevant on KVM)
-  canCredentials = (provider) => {
+  canCredentials = provider => {
     if (provider === 'aws' || provider === 'azure') {
       return true;
     }
     return false;
-  }
+  };
 
   // Provides the configuraiton for the clusters table
   getClusterTableColumnsConfig = () => {
-    return [{
-      dataField: 'id',
-      text: 'Cluster ID',
-      sort: true,
-      formatter: clusterIDCellFormatter
-    }, {
-      dataField: 'name',
-      text: 'Name',
-      sort: true
-    }, {
-      dataField: 'create_date',
-      text: 'Created',
-      sort: true,
-      formatter: relativeDate
-    }, {
-      dataField: 'actionsDummy',
-      isDummyField: true,
-      text: '',
-      align: 'right',
-      formatter: clusterActionsCellFormatter.bind(this)
-    }];
-  }
+    return [
+      {
+        dataField: 'id',
+        text: 'Cluster ID',
+        sort: true,
+        formatter: clusterIDCellFormatter,
+      },
+      {
+        dataField: 'name',
+        text: 'Name',
+        sort: true,
+      },
+      {
+        dataField: 'create_date',
+        text: 'Created',
+        sort: true,
+        formatter: relativeDate,
+      },
+      {
+        dataField: 'actionsDummy',
+        isDummyField: true,
+        text: '',
+        align: 'right',
+        formatter: clusterActionsCellFormatter.bind(this),
+      },
+    ];
+  };
   // Provides the configuraiton for the org members table
   getMemberTableColumnsConfig = () => {
-    return [{
-      dataField: 'email',
-      text: 'Email',
-      sort: true
-    }, {
-      dataField: 'emailDomain',
-      text: 'Email Domain',
-      sort: true,
-    }, {
-      dataField: 'actionsDummy',
-      isDummyField: true,
-      text: '',
-      align: 'right',
-      formatter: memberActionsCellFormatter.bind(this)
-    }];
-  }
+    return [
+      {
+        dataField: 'email',
+        text: 'Email',
+        sort: true,
+      },
+      {
+        dataField: 'emailDomain',
+        text: 'Email Domain',
+        sort: true,
+      },
+      {
+        dataField: 'actionsDummy',
+        isDummyField: true,
+        text: '',
+        align: 'right',
+        formatter: memberActionsCellFormatter.bind(this),
+      },
+    ];
+  };
 
   render() {
     var credentialsSection;
@@ -98,7 +114,7 @@ class OrganizationDetail extends React.Component {
             <h3 className='table-label'>Provider credentials</h3>
           </div>
           <div className='col-9'>
-            <Credentials organizationName={this.props.match.params.orgId}/>
+            <Credentials organizationName={this.props.match.params.orgId} />
           </div>
         </div>
       );
@@ -106,9 +122,22 @@ class OrganizationDetail extends React.Component {
 
     if (this.props.organization) {
       return (
-        <Breadcrumb data={{title: this.props.organization.id.toUpperCase(), pathname: '/organizations/' + this.props.organization.id}}>
-          <Breadcrumb data={{title: 'ORGANIZATIONS', pathname: '/organizations/'}}>
-            <DocumentTitle title={'Organization Details | ' + this.props.organization.id +  ' | Giant Swarm'}>
+        <Breadcrumb
+          data={{
+            title: this.props.organization.id.toUpperCase(),
+            pathname: '/organizations/' + this.props.organization.id,
+          }}
+        >
+          <Breadcrumb
+            data={{ title: 'ORGANIZATIONS', pathname: '/organizations/' }}
+          >
+            <DocumentTitle
+              title={
+                'Organization Details | ' +
+                this.props.organization.id +
+                ' | Giant Swarm'
+              }
+            >
               <div>
                 <div className='row'>
                   <div className='col-12'>
@@ -121,15 +150,18 @@ class OrganizationDetail extends React.Component {
                     <h3 className='table-label'>Clusters</h3>
                   </div>
                   <div className='col-9'>
-                    {
-                      this.props.clusters.length === 0 ?
+                    {this.props.clusters.length === 0 ? (
                       <p>This organization doesn&apos;t have any clusters.</p>
-                      :
-                      <BootstrapTable keyField='id' data={ this.props.clusters }
-                        columns={ this.getClusterTableColumnsConfig() } bordered={ false }
-                        defaultSorted={ clusterTableDefaultSorting }
-                        defaultSortDirection='asc' />
-                    }
+                    ) : (
+                      <BootstrapTable
+                        keyField='id'
+                        data={this.props.clusters}
+                        columns={this.getClusterTableColumnsConfig()}
+                        bordered={false}
+                        defaultSorted={clusterTableDefaultSorting}
+                        defaultSortDirection='asc'
+                      />
+                    )}
                     <Link to='/new-cluster'>
                       <Button bsStyle='default'>Create Cluster</Button>
                     </Link>
@@ -141,21 +173,25 @@ class OrganizationDetail extends React.Component {
                     <h3 className='table-label'>Members</h3>
                   </div>
                   <div className='col-9'>
-                    {
-                      this.props.organization.members.length === 0 ?
+                    {this.props.organization.members.length === 0 ? (
                       <p>This organization has no members</p>
-                      :
-                      <BootstrapTable keyField='email' data={ this.props.membersForTable }
-                        columns={ this.getMemberTableColumnsConfig() } bordered={ false }
-                        defaultSorted={ memberTableDefaultSorting }
-                        defaultSortDirection='asc' />
-                    }
-                    <Button onClick={this.addMember} bsStyle='default'>Add Member</Button>
+                    ) : (
+                      <BootstrapTable
+                        keyField='email'
+                        data={this.props.membersForTable}
+                        columns={this.getMemberTableColumnsConfig()}
+                        bordered={false}
+                        defaultSorted={memberTableDefaultSorting}
+                        defaultSortDirection='asc'
+                      />
+                    )}
+                    <Button onClick={this.addMember} bsStyle='default'>
+                      Add Member
+                    </Button>
                   </div>
                 </div>
 
-                { credentialsSection }
-
+                {credentialsSection}
               </div>
             </DocumentTitle>
           </Breadcrumb>
@@ -169,7 +205,7 @@ class OrganizationDetail extends React.Component {
 }
 
 OrganizationDetail.contextTypes = {
-  router: PropTypes.object
+  router: PropTypes.object,
 };
 
 OrganizationDetail.propTypes = {
@@ -179,34 +215,44 @@ OrganizationDetail.propTypes = {
   dispatch: PropTypes.func,
   match: PropTypes.object,
   app: PropTypes.object,
-  membersForTable: PropTypes.array
+  membersForTable: PropTypes.array,
 };
 
-const clusterTableDefaultSorting = [{
-  dataField: 'id',
-  order: 'asc'
-}];
+const clusterTableDefaultSorting = [
+  {
+    dataField: 'id',
+    order: 'asc',
+  },
+];
 
-const memberTableDefaultSorting = [{
-  dataField: 'email',
-  order: 'asc'
-}];
+const memberTableDefaultSorting = [
+  {
+    dataField: 'email',
+    order: 'asc',
+  },
+];
 
 function clusterIDCellFormatter(cell) {
-  return (
-    <ClusterIDLabel clusterID={cell} copyEnabled/>
-  );
+  return <ClusterIDLabel clusterID={cell} copyEnabled />;
 }
 
 function clusterActionsCellFormatter(cell, row) {
   return (
-    <Button bsStyle='default' type='button' onClick={this.openClusterDetails.bind(this, row.id)}>Details</Button>
+    <Button
+      bsStyle='default'
+      type='button'
+      onClick={this.openClusterDetails.bind(this, row.id)}
+    >
+      Details
+    </Button>
   );
 }
 
 function memberActionsCellFormatter(cell, row) {
   return (
-    <Button type='button' onClick={this.removeMember.bind(this, row.email)}>Remove</Button>
+    <Button type='button' onClick={this.removeMember.bind(this, row.email)}>
+      Remove
+    </Button>
   );
 }
 
@@ -214,27 +260,36 @@ function mapStateToProps(state, ownProps) {
   var allClusters = state.entities.clusters.items;
   var clusters = [];
 
-  clusters = _.filter(allClusters, (cluster) => {
+  clusters = _.filter(allClusters, cluster => {
     return cluster.owner === ownProps.match.params.orgId;
   });
 
-  var membersForTable = _.map(state.entities.organizations.items[ownProps.match.params.orgId].members, (member) => {
-    return Object.assign({}, member, {emailDomain: member.email.split('@')[1]});
-  });
+  var membersForTable = _.map(
+    state.entities.organizations.items[ownProps.match.params.orgId].members,
+    member => {
+      return Object.assign({}, member, {
+        emailDomain: member.email.split('@')[1],
+      });
+    }
+  );
 
   return {
-    organization: state.entities.organizations.items[ownProps.match.params.orgId],
+    organization:
+      state.entities.organizations.items[ownProps.match.params.orgId],
     membersForTable: membersForTable,
     app: state.app,
-    clusters: clusters
+    clusters: clusters,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(OrganizationActions, dispatch),
-    dispatch: dispatch
+    dispatch: dispatch,
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(OrganizationDetail);
+module.exports = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OrganizationDetail);

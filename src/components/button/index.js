@@ -24,35 +24,45 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import PropTypes from 'prop-types';
 
 class Button extends React.Component {
-  loadingIndicator = (position) => {
-    return <div className='progress_button--status-indicator'>
-      <ReactCSSTransitionGroup
-        transitionName={`slide-${position}`}
-        transitionEnterTimeout={200}
-        transitionLeaveTimeout={200}>
-        {
-          this.props.loading ? <img className={'loader ' + this.props.loadingPosition} src='/images/loader_oval_light.svg' /> : null
-        }
-      </ReactCSSTransitionGroup>
-    </div>;
+  loadingIndicator = position => {
+    return (
+      <div className='progress_button--status-indicator'>
+        <ReactCSSTransitionGroup
+          transitionName={`slide-${position}`}
+          transitionEnterTimeout={200}
+          transitionLeaveTimeout={200}
+        >
+          {this.props.loading ? (
+            <img
+              className={'loader ' + this.props.loadingPosition}
+              src='/images/loader_oval_light.svg'
+            />
+          ) : null}
+        </ReactCSSTransitionGroup>
+      </div>
+    );
   };
 
   render() {
     return (
       <div className='progress_button--container'>
-        { this.props.loadingPosition === 'left' ? this.loadingIndicator(this.props.loadingPosition) : undefined }
+        {this.props.loadingPosition === 'left'
+          ? this.loadingIndicator(this.props.loadingPosition)
+          : undefined}
 
         <BsButton
           type={this.props.type}
           bsSize={this.props.bsSize}
           bsStyle={this.props.bsStyle}
           onClick={this.props.onClick}
-          disabled={this.props.disabled || this.props.loading}>
-
+          disabled={this.props.disabled || this.props.loading}
+        >
           {this.props.children}
         </BsButton>
 
-        { this.props.loadingPosition === 'right' ? this.loadingIndicator(this.props.loadingPosition) : undefined }
+        {this.props.loadingPosition === 'right'
+          ? this.loadingIndicator(this.props.loadingPosition)
+          : undefined}
       </div>
     );
   }
@@ -66,11 +76,11 @@ Button.propTypes = {
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
   loadingPosition: PropTypes.string,
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 Button.defaultProps = {
-  loadingPosition: 'right'
+  loadingPosition: 'right',
 };
 
 export default Button;
