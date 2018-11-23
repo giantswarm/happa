@@ -7,3 +7,5 @@ data:
   passage-endpoint: {{ .Values.Installation.V1.GiantSwarm.Passage.Address }}
   api-endpoint: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
   ingress-base-domain: {{ .Values.Installation.V1.Guest.Kubernetes.IngressController.BaseDomain }}
+  aws-capabilities-json: '{{ .Values.Installation.V1.Provider.AWS.EC2.Instance.Capabilities | toJson }}'
+  azure-capabilities-json: '{{ .Values.Installation.V1.Provider.Azure.VM.VmSize.Capabilities | toJson }}'
