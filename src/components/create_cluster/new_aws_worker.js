@@ -16,21 +16,21 @@ class NewAWSWorker extends React.Component {
     var devInstanceTypes = {
       'm3.large': {
         description: 'M3 General Purpose Large',
-        memory_size_gb: '7.5 GB',
+        memory_size_gb: '7.5',
         cpu_cores: '2',
-        storage_size_gb: '32 GB',
+        storage_size_gb: '32',
       },
       'm3.xlarge': {
         description: 'M3 General Purpose Extra Large',
-        memory_size_gb: '15 GB',
+        memory_size_gb: '15',
         cpu_cores: '4',
-        storage_size_gb: '80 GB',
+        storage_size_gb: '80',
       },
       'm3.2xlarge': {
         description: 'M3 General Purpose Double Extra Large',
-        memory_size_gb: '30 GB',
+        memory_size_gb: '30',
         cpu_cores: '8',
-        storage_size_gb: '160 GB',
+        storage_size_gb: '160',
       },
     };
 
@@ -213,7 +213,9 @@ class NewAWSWorker extends React.Component {
                         {instanceType.description}
                       </td>
                       <td className='numeric'>{instanceType.cpu_cores}</td>
-                      <td className='numeric'>{instanceType.memory_size_gb}</td>
+                      <td className='numeric'>
+                        {instanceType.memory_size_gb} GB
+                      </td>
                     </tr>
                   );
                 })}
