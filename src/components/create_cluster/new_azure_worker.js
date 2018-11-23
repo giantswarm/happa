@@ -4,17 +4,59 @@ import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../button';
 import InputField from '../shared/input_field';
-import AzureCapabilities from './azure_capabilities.js';
 import PropTypes from 'prop-types';
 
 class NewAzureWorker extends React.Component {
   constructor(props) {
     super(props);
 
-    var allVMSizes = AzureCapabilities;
-    var availableVMSizes = allVMSizes.filter(
-      x => props.allowedVMSizes.indexOf(x.name) !== -1
-    );
+    // devInstanceTypes are placeholder instance types for the dev environment.
+    // In the dev environment window.config.azureCapabilitiesJson is not set to anything.
+    // It would normally be set by the value in the installations repo.
+    var devVMSizes = {
+      Standard_A2_v2: {
+        additionalProperties: {},
+        maxDataDiskCount: 4,
+        memoryInMb: 4294.967296,
+        name: 'Standard_A2_v2',
+        numberOfCores: 2,
+        osDiskSizeInMb: 1047552,
+        resourceDiskSizeInMb: 21474.83648,
+      },
+      Standard_A4_v2: {
+        additionalProperties: {},
+        maxDataDiskCount: 8,
+        memoryInMb: 8589.934592,
+        name: 'Standard_A4_v2',
+        numberOfCores: 4,
+        osDiskSizeInMb: 1047552,
+        resourceDiskSizeInMb: 42949.67296,
+      },
+      Standard_A8_v2: {
+        additionalProperties: {},
+        maxDataDiskCount: 16,
+        memoryInMb: 17179.869184,
+        name: 'Standard_A8_v2',
+        numberOfCores: 8,
+        osDiskSizeInMb: 1047552,
+        resourceDiskSizeInMb: 85899.34592,
+      },
+    };
+
+    // Use devVMSizes unless there is something set for window.config.azureCapabilitiesJSON
+    var vmSizes = devVMSizes;
+    if (window.config.azureCapabilitiesJSON != '') {
+      vmSizes = JSON.parse(window.config.azureCapabilitiesJSON);
+    }
+
+    var availableVMSizes = [];
+    // Filter the list down to only the allowed vm sizes.
+    // Push the instance type into the list of allowed vm sizes
+    Object.keys(vmSizes).forEach(function(key) {
+      if (props.allowedVMSizes.indexOf(key) !== -1) {
+        availableVMSizes.push(vmSizes[key]);
+      }
+    });
 
     this.state = {
       modalVisible: false,

@@ -42,6 +42,16 @@ spec:
           mountPath: /etc/nginx/config
 
         env:
+        - name: AWS_CAPABILITIES_JSON
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: aws-capabilities-json
+        - name: AZURE_CAPABILITIES_JSON
+          valueFrom:
+            configMapKeyRef:
+              name: happa-configmap
+              key: azure-capabilities-json
         - name: PASSAGE_ENDPOINT
           valueFrom:
             configMapKeyRef:
