@@ -42,6 +42,10 @@ export default function appReducer(
     loggedInUser: fetchUserFromStorage(),
     info: {
       general: {
+        availability_zones: {
+          default: 0,
+          max: 0,
+        },
         provider: '',
       },
     },

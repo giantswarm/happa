@@ -10,6 +10,7 @@ import update from 'react-addons-update';
 import NewKVMWorker from './new_kvm_worker.js';
 import NewAWSWorker from './new_aws_worker.js';
 import NewAzureWorker from './new_azure_worker.js';
+import NumberPicker from './number_picker.js';
 import ReleaseSelector from './release_selector.js';
 import ProviderCredentials from './provider_credentials.js';
 import PropTypes from 'prop-types';
@@ -21,6 +22,7 @@ class CreateCluster extends React.Component {
     super(props);
 
     this.state = {
+      availabilityZones: 1,
       releaseVersion: '',
       clusterName: 'My cluster',
       workerCount: 3,
@@ -59,6 +61,12 @@ class CreateCluster extends React.Component {
       error: false,
     };
   }
+
+  updateAvailabilityZones = n => {
+    this.setState({
+      availabilityZones: n,
+    });
+  };
 
   updateClusterName = event => {
     this.setState({
@@ -179,6 +187,7 @@ class CreateCluster extends React.Component {
     this.props
       .dispatch(
         clusterCreate({
+          availability_zones: this.state.availabilityZones,
           name: this.state.clusterName,
           owner: this.props.selectedOrganization,
           release_version: this.state.releaseVersion,
@@ -316,6 +325,33 @@ class CreateCluster extends React.Component {
               </div>
             </div>
 
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Availability Zones</h3>
+              </div>
+              <div className='col-9'>
+                <form
+                  onSubmit={e => {
+                    e.preventDefault();
+                  }}
+                >
+                  <p>
+                    Select the number of availability zones for your nodes.
+                  </p>
+                  <div className='col-3'>
+                    <NumberPicker
+                      label=''
+                      stepSize={1}
+                      value={this.state.availabilityZones}
+                      min={this.props.minAvailabilityZones}
+                      max={this.props.maxAvailabilityZones}
+                      onChange={this.updateAvailabilityZones}
+                    />
+                  </div>
+                </form>
+              </div>
+            </div>
+
             <div>
               <div className='row section'>
                 <div className='col-12'>
@@ -442,6 +478,8 @@ class CreateCluster extends React.Component {
 }
 
 CreateCluster.propTypes = {
+  minAvailabilityZones: PropTypes.number,
+  maxAvailabilityZones: PropTypes.number,
   allowedInstanceTypes: PropTypes.array,
   allowedVMSizes: PropTypes.array,
   selectedOrganization: PropTypes.string,
@@ -450,6 +488,8 @@ CreateCluster.propTypes = {
 };
 
 function mapStateToProps(state) {
+  var minAvailabilityZones = state.app.info.general.availability_zones.default;
+  var maxAvailabilityZones = state.app.info.general.availability_zones.max;
   var selectedOrganization = state.app.selectedOrganization;
   var provider = state.app.info.general.provider;
 
@@ -464,6 +504,8 @@ function mapStateToProps(state) {
   }
 
   return {
+    minAvailabilityZones,
+    maxAvailabilityZones,
     allowedInstanceTypes,
     allowedVMSizes,
     provider,
