@@ -351,14 +351,20 @@ class CreateCluster extends React.Component {
                             min={this.props.minAvailabilityZones}
                             max={this.props.maxAvailabilityZones}
                             onChange={this.updateAvailabilityZones}
+                            readOnly={false}
                           />
                         </div>
                       </div>
                     ) : (
-                      <p>
-                        Selection of availability zones is only possible for
-                        release version 6.1.0 or greater.
-                      </p>
+                      <div>
+                        <p>
+                          Selection of availability zones is only possible for
+                          release version 6.1.0 or greater.
+                        </p>
+                        <div className='col-3'>
+                          <NumberPicker value={1} readOnly={true} />
+                        </div>
+                      </div>
                     )
                   ) : (
                     <p>
