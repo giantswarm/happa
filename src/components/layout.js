@@ -53,22 +53,26 @@ class Layout extends React.Component {
         .catch(error => {
           if (error.status === 401) {
             this.props.flashActions.flashAdd({
-              message: 'Please log in again, your previously saved credentials appear to be invalid.',
+              message:
+                'Please log in again, your previously saved credentials appear to be invalid.',
               class: 'warning',
             });
 
             this.props.dispatch(push('/login'));
           } else {
             this.props.flashActions.flashAdd({
-              message: (<div>
-                <strong>
-                  Something went wrong while trying to load user and organization information.
-                </strong>
-                <br />
-                {error.body
-                  ? error.body.status_text
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>),
+              message: (
+                <div>
+                  <strong>
+                    Something went wrong while trying to load user and
+                    organization information.
+                  </strong>
+                  <br />
+                  {error.body
+                    ? error.body.status_text
+                    : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
+                </div>
+              ),
               class: 'warning',
             });
           }
