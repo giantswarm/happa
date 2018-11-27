@@ -68,9 +68,8 @@ class Layout extends React.Component {
                     organization information.
                   </strong>
                   <br />
-                  {error.body
-                    ? error.body.status_text
-                    : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
+                  Please try again later or contact support:
+                  support@giantswarm.io
                 </div>
               ),
               class: 'warning',
