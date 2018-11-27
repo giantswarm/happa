@@ -21,6 +21,15 @@ install-node-modules:
 		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock \
 		quay.io/giantswarm/happa-build:latest yarn install --no-progress
 
+run-prettier:
+	docker run --rm -ti \
+    -v ${PWD}/src:/usr/src/app/src \
+    -v ${PWD}/dist:/usr/src/app/dist \
+    -v ${PWD}/node_modules_linux:/usr/src/app/node_modules \
+    -v ${PWD}/package.json:/usr/src/app/package.json \
+    -v ${PWD}/yarn.lock:/usr/src/app/yarn.lock \
+    quay.io/giantswarm/happa-build:latest yarn run prettier
+
 validate-prettier:
 	docker run --rm -ti \
 		-v ${PWD}/src:/usr/src/app/src \
