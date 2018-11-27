@@ -215,7 +215,7 @@ class ClusterDetail extends React.Component {
     var availabilityZonesOrNothing = null;
     if (this.props.cluster.availability_zones) {
       availabilityZonesOrNothing = <tr>
-        <td>Number of availablility zones</td>
+        <td>Availablility zones</td>
         <td className='value'>
           {this.props.cluster.availability_zones.join(', ')}
         </td>
