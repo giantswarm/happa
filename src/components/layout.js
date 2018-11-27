@@ -31,6 +31,7 @@ import { Breadcrumbs, Breadcrumb } from 'react-breadcrumbs';
 
 var defaultClient = GiantSwarmV4.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
+defaultClient.timeout = 10000;
 var defaultClientAuth =
   defaultClient.authentications['AuthorizationHeaderToken'];
 
