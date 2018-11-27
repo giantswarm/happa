@@ -490,29 +490,25 @@ class ClusterDetail extends React.Component {
 
                     <ClusterKeyPairs cluster={this.props.cluster} />
 
-                    <div className='row section cluster_delete'>
+                    <div className='row section cluster_delete col-12'>
                       <div className='row'>
-                        <div className='col-12'>
-                          <h3 className='table-label'>Delete This Cluster</h3>
-                        </div>
+                        <h3 className='table-label'>Delete This Cluster</h3>
                       </div>
                       <div className='row'>
-                        <div className='col-9'>
-                          <p>
-                            All workloads on this cluster will be terminated.
-                            Data stored on the worker nodes will be lost. There
-                            is no way to undo this action.
-                          </p>
-                          <Button
-                            bsStyle='danger'
-                            onClick={this.showDeleteClusterModal.bind(
-                              this,
-                              this.props.cluster
-                            )}
-                          >
-                            Delete Cluster
-                          </Button>
-                        </div>
+                        <p>
+                          All workloads on this cluster will be terminated. Data
+                          stored on the worker nodes will be lost. There is no
+                          way to undo this action.
+                        </p>
+                        <Button
+                          bsStyle='danger'
+                          onClick={this.showDeleteClusterModal.bind(
+                            this,
+                            this.props.cluster
+                          )}
+                        >
+                          Delete Cluster
+                        </Button>
                       </div>
                     </div>
                     <ScaleClusterModal
