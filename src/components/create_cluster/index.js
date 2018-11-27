@@ -337,6 +337,12 @@ class CreateCluster extends React.Component {
                   }}
                 >
                   {this.props.provider === 'aws' ? (
+                    // For now we want to handle cases where older clusters do
+                    // still not support AZ selection. The special handling here
+                    // can be removed once all clusters run at least on 6.1.0.
+                    //
+                    //     https://github.com/giantswarm/giantswarm/pull/2202
+                    //
                     cmp(this.state.releaseVersion, '6.0.0') === 1 ? (
                       <div>
                         <p>
