@@ -368,8 +368,8 @@ class CreateCluster extends React.Component {
                     )
                   ) : (
                     <p>
-                      Selection of availability zones on this installation is
-                      limited to 1 availability zone.
+                      In this installation it is not possible to use more than
+                      one availability zone for worker nodes.
                     </p>
                   )}
                 </form>
