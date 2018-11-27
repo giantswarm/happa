@@ -419,6 +419,14 @@ class ClusterDetail extends React.Component {
                                 </td>
                               </tr>
                               <tr>
+                                <td>Number of availablility zones</td>
+                                <td className='value'>
+                                  {this.props.cluster.availability_zones
+                                    ? this.props.cluster.availability_zones
+                                    : '1'}
+                                </td>
+                              </tr>
+                              <tr>
                                 <td>Number of worker nodes</td>
                                 <td className='value'>
                                   {this.props.cluster.workers
