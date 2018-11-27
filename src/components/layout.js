@@ -41,6 +41,9 @@ class Layout extends React.Component {
       defaultClientAuth.apiKeyPrefix = this.props.user.auth.scheme;
       defaultClientAuth.apiKey = this.props.user.auth.token;
 
+      // This is the first component that loads,
+      // and refreshUserInfo and the subsequent organisationsLoad() are the
+      // first calls happa makes to the API.
       this.props.actions
         .refreshUserInfo()
         .then(() => {
@@ -48,6 +51,28 @@ class Layout extends React.Component {
           return null;
         })
         .catch(error => {
+          if (error.status === 401) {
+            this.props.flashActions.flashAdd({
+              message: 'Please log in again, your previously saved credentials appear to be invalid.',
+              class: 'warning',
+            });
+
+            this.props.dispatch(push('/login'));
+          } else {
+            this.props.flashActions.flashAdd({
+              message: (<div>
+                <strong>
+                  Something went wrong while trying to load user and organization information.
+                </strong>
+                <br />
+                {error.body
+                  ? error.body.status_text
+                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
+              </div>),
+              class: 'warning',
+            });
+          }
+
           throw error;
         });
     } else {
@@ -64,6 +89,7 @@ class Layout extends React.Component {
       return (
         <DocumentTitle title='Loading | Giant Swarm '>
           <div className='app-loading'>
+            <FlashMessages />
             <div className='app-loading-contents'>
               <img className='loader' src='/images/loader_oval_light.svg' />
             </div>
