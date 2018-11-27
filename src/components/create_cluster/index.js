@@ -16,6 +16,7 @@ import ProviderCredentials from './provider_credentials.js';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
 import { Breadcrumb } from 'react-breadcrumbs';
+import cmp from 'semver-compare';
 
 class CreateCluster extends React.Component {
   constructor(props) {
@@ -335,17 +336,29 @@ class CreateCluster extends React.Component {
                     e.preventDefault();
                   }}
                 >
-                  <p>Select the number of availability zones for your nodes.</p>
-                  <div className='col-3'>
-                    <NumberPicker
-                      label=''
-                      stepSize={1}
-                      value={this.state.availabilityZones}
-                      min={this.props.minAvailabilityZones}
-                      max={this.props.maxAvailabilityZones}
-                      onChange={this.updateAvailabilityZones}
-                    />
-                  </div>
+                {this.props.provider === 'aws' ? (
+
+                  (cmp(this.state.releaseVersion, '6.0.0') === 1) ? (
+                    <div>
+                      <p>Select the number of availability zones for your nodes.</p>
+                      <div className='col-3'>
+                        <NumberPicker
+                          label=''
+                          stepSize={1}
+                          value={this.state.availabilityZones}
+                          min={this.props.minAvailabilityZones}
+                          max={this.props.maxAvailabilityZones}
+                          onChange={this.updateAvailabilityZones}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <p>Selection of availability zones is only possible for release version 6.1.0 or greater.</p>
+                  )
+
+                ) : (
+                  <p>Selection of availability zones on this installation is limited to 1 availability zone.</p>
+                )}
                 </form>
               </div>
             </div>
