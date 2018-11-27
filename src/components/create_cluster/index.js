@@ -335,9 +335,7 @@ class CreateCluster extends React.Component {
                     e.preventDefault();
                   }}
                 >
-                  <p>
-                    Select the number of availability zones for your nodes.
-                  </p>
+                  <p>Select the number of availability zones for your nodes.</p>
                   <div className='col-3'>
                     <NumberPicker
                       label=''
