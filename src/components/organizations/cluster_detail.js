@@ -212,6 +212,16 @@ class ClusterDetail extends React.Component {
       }
     }
 
+    var availabilityZonesOrNothing = null;
+    if (this.props.cluster.availability_zones) {
+      availabilityZonesOrNothing = <tr>
+        <td>Number of availablility zones</td>
+        <td className='value'>
+          {this.props.cluster.availability_zones.join(', ')}
+        </td>
+      </tr>;
+    }
+
     // BYOC provider credential info
     var credentialInfoRows = [];
     if (
@@ -418,14 +428,7 @@ class ClusterDetail extends React.Component {
                                     : 'n/a'}
                                 </td>
                               </tr>
-                              <tr>
-                                <td>Number of availablility zones</td>
-                                <td className='value'>
-                                  {this.props.cluster.availability_zones
-                                    ? this.props.cluster.availability_zones
-                                    : '1'}
-                                </td>
-                              </tr>
+                              {availabilityZonesOrNothing}
                               <tr>
                                 <td>Number of worker nodes</td>
                                 <td className='value'>
