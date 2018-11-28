@@ -72,10 +72,10 @@
     opacity: 0.5
 
   &.inmodal
-    .new-cluster--worker-setting-control
+    .number-picker--control
       width: 25%
 
-    .new-cluster--worker-setting-control-increase, .new-cluster--worker-setting-control-decrease
+    .number-picker--control-increase, .number-picker--control-decrease
       background-color: lighten(#3b5f7b, 10%)
 
 .new-cluster--worker-setting-label
@@ -83,7 +83,7 @@
   display: inline-block
   line-height: 35px
 
-.new-cluster--worker-setting-control
+.number-picker--control
   width: 60%
   display: inline-block
   height: 35px
@@ -93,7 +93,7 @@
   border-radius: 5px
   position: relative
 
-.new-cluster--worker-setting-control-increase, .new-cluster--worker-setting-control-decrease
+.number-picker--control-increase, .number-picker--control-decrease
   position: absolute
   top: 0px
   width: 35px
@@ -112,21 +112,15 @@
     background-color: darken(#3b5f7b, 6%)
     color: #aaa
 
-.new-cluster--worker-setting-control-increase
+.number-picker--control-increase
   right: 0px
   border-top-right-radius: 5px
   border-bottom-right-radius: 5px
 
-.new-cluster--worker-setting-control-decrease
+.number-picker--control-decrease
   left: 0px
   border-top-left-radius: 5px
   border-bottom-left-radius: 5px
-
-.new-cluster--worker-setting-label-control
-  width: 100%
-  background-color: #2a5067
-  border-radius: 5px
-  padding: 10px
 
 .new-cluster--add-worker-button
   border-radius: 5px
