@@ -1,9 +1,8 @@
-Happa
-=====
-
 [![CircleCI](https://circleci.com/gh/giantswarm/happa/tree/master.svg?style=shield&circle-token=6e98ba111259986b590f228cd20e20fcea3dd2e5)](https://circleci.com/gh/giantswarm/happa/tree/master)
 [![Docker Repository on Quay](https://quay.io/repository/giantswarm/happa/status?token=f90886ab-d4af-4c3f-b814-45bc317c2cd6 "Docker Repository on Quay")](https://quay.io/repository/giantswarm/happa)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=shield)](https://github.com/prettier/prettier)
+
+#Happa
 
 Giant Swarm's web interface. It lets users:
 
