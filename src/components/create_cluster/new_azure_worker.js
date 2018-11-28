@@ -26,7 +26,8 @@ class NewAzureWorker extends React.Component {
       },
       Standard_A4_v2: {
         additionalProperties: {},
-        description: 'Here is a longer description that might be too long for the field',
+        description:
+          'Here is a longer description that might be too long for the field',
         maxDataDiskCount: 8,
         memoryInMb: 8589.934592,
         name: 'Standard_A4_v2',
@@ -215,9 +216,7 @@ class NewAzureWorker extends React.Component {
                         />
                       </td>
                       <td>{vmSize.name}</td>
-                      <td className='description'>
-                        {vmSize.description}
-                      </td>
+                      <td className='description'>{vmSize.description}</td>
                       <td className='numeric'>{vmSize.numberOfCores}</td>
                       <td className='numeric'>
                         {(vmSize.memoryInMb / 1000).toFixed(2)} GB
