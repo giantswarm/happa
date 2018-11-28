@@ -10,12 +10,13 @@ class NewAzureWorker extends React.Component {
   constructor(props) {
     super(props);
 
-    // devInstanceTypes are placeholder instance types for the dev environment.
+    // devVMSizes are placeholder VM sizes for the dev environment.
     // In the dev environment window.config.azureCapabilitiesJson is not set to anything.
     // It would normally be set by the value in the installations repo.
     var devVMSizes = {
       Standard_A2_v2: {
         additionalProperties: {},
+        description: 'This is some description',
         maxDataDiskCount: 4,
         memoryInMb: 4294.967296,
         name: 'Standard_A2_v2',
@@ -25,6 +26,7 @@ class NewAzureWorker extends React.Component {
       },
       Standard_A4_v2: {
         additionalProperties: {},
+        description: 'Here is a longer description that might be too long for the field',
         maxDataDiskCount: 8,
         memoryInMb: 8589.934592,
         name: 'Standard_A4_v2',
@@ -34,6 +36,7 @@ class NewAzureWorker extends React.Component {
       },
       Standard_A8_v2: {
         additionalProperties: {},
+        description: 'Another VM size description text',
         maxDataDiskCount: 16,
         memoryInMb: 17179.869184,
         name: 'Standard_A8_v2',
