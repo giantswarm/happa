@@ -1,7 +1,8 @@
 'use strict';
 import React from 'react';
 import { CodeBlock, Prompt } from './codeblock';
-import { DropdownButton, MenuItem } from 'react-bootstrap';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { connect } from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';

@@ -7,8 +7,10 @@ import {
   userRemoveExpiration,
   userDelete,
 } from '../../actions/userActions';
-import { DropdownButton, MenuItem } from 'react-bootstrap';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap/lib';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import {
   invitationsLoad,
   invitationCreate,

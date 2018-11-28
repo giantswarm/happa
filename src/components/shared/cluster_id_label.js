@@ -2,7 +2,8 @@
 import React from 'react';
 import ColorHash from 'color-hash';
 import PropTypes from 'prop-types';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap/lib';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import copy from 'copy-to-clipboard';
 
 var colorHashCache = {};
