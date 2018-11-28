@@ -184,7 +184,7 @@ class NewAzureWorker extends React.Component {
         <BootstrapModal
           show={this.state.modalVisible}
           onHide={this.closeModal}
-          className='new-cluster--instance-type-selector-modal'
+          className='new-cluster--instance-type-selector-modal azure'
         >
           <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Select a VM Size</BootstrapModal.Title>
@@ -195,6 +195,7 @@ class NewAzureWorker extends React.Component {
                 <tr>
                   <th />
                   <th>Name</th>
+                  <th>Description</th>
                   <th className='numeric'>CPU Cores</th>
                   <th className='numeric'>Memory</th>
                 </tr>
@@ -214,6 +215,9 @@ class NewAzureWorker extends React.Component {
                         />
                       </td>
                       <td>{vmSize.name}</td>
+                      <td className='description'>
+                        {vmSize.description}
+                      </td>
                       <td className='numeric'>{vmSize.numberOfCores}</td>
                       <td className='numeric'>
                         {(vmSize.memoryInMb / 1000).toFixed(2)} GB
