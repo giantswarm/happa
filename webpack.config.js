@@ -94,7 +94,10 @@ module.exports = {
 
   plugins: [
     new webpack.HotModuleReplacementPlugin({debug: true}),
-    new webpack.NoEmitOnErrorsPlugin({debug: true})
+    new webpack.NoEmitOnErrorsPlugin({debug: true}),
+
+    // Ignore locale data from the moment package, which we don't use.
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ]
 
 };

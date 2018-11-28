@@ -5,7 +5,7 @@ import * as clusterActions from '../../actions/clusterActions';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import { Link } from 'react-router-dom';
 import { relativeDate } from '../../lib/helpers.js';
-import { ButtonGroup } from 'react-bootstrap';
+import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import Button from '../button/index';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
