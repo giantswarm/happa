@@ -229,11 +229,12 @@ function clusterIDCellFormatter(cell) {
 
 function clusterActionsCellFormatter(cell, row) {
   return (
-    <Link to={'/organizations/' + this.props.organization.id + '/clusters/' + row.id}>
-      <Button
-        bsStyle='default'
-        type='button'
-      >
+    <Link
+      to={
+        '/organizations/' + this.props.organization.id + '/clusters/' + row.id
+      }
+    >
+      <Button bsStyle='default' type='button'>
         Details
       </Button>
     </Link>
