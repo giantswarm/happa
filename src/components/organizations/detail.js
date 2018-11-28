@@ -13,7 +13,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
 import BootstrapTable from 'react-bootstrap-table-next';
 
 class OrganizationDetail extends React.Component {
@@ -33,14 +32,6 @@ class OrganizationDetail extends React.Component {
     this.props.actions.organizationRemoveMember(
       this.props.organization.id,
       email
-    );
-  };
-
-  openClusterDetails = cluster => {
-    this.props.dispatch(
-      push(
-        '/organizations/' + this.props.organization.id + '/clusters/' + cluster
-      )
     );
   };
 
@@ -238,13 +229,14 @@ function clusterIDCellFormatter(cell) {
 
 function clusterActionsCellFormatter(cell, row) {
   return (
-    <Button
-      bsStyle='default'
-      type='button'
-      onClick={this.openClusterDetails.bind(this, row.id)}
-    >
-      Details
-    </Button>
+    <Link to={'/organizations/' + this.props.organization.id + '/clusters/' + row.id}>
+      <Button
+        bsStyle='default'
+        type='button'
+      >
+        Details
+      </Button>
+    </Link>
   );
 }
 
