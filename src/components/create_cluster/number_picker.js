@@ -39,7 +39,7 @@ class NumberPicker extends React.Component {
 
   render() {
     return (
-      <div className={`number-picker ${this.props.theme} ${this.props.readOnly ? 'readonly ' : ''}`}>
+      <div className={`number-picker ${this.props.theme ? this.props.theme : ''} ${this.props.readOnly ? 'readonly ' : ''}`}>
         {this.props.label ? (
           <div className='number-picker--label'>
             {this.props.label}
