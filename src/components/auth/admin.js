@@ -7,7 +7,7 @@ import { flashClearAll } from '../../actions/flashMessageActions';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import Auth0 from '../../lib/auth0';
-import {isJwtExpired} from '../../lib/helpers';
+import { isJwtExpired } from '../../lib/helpers';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
 
@@ -15,8 +15,12 @@ class AdminLogin extends React.Component {
   componentDidMount() {
     const auth0 = new Auth0();
 
-    if (this.props.user && this.props.user.auth && this.props.user.auth.scheme === 'Bearer') {
-      if(isJwtExpired(this.props.user.auth.token)) {
+    if (
+      this.props.user &&
+      this.props.user.auth &&
+      this.props.user.auth.scheme === 'Bearer'
+    ) {
+      if (isJwtExpired(this.props.user.auth.token)) {
         // Token is expired. Try to renew it silently, and if that succeeds, redirect
         // the user to the dashboard. Otherwise, send them to Auth0 to refresh the token that way.
         auth0
@@ -59,7 +63,10 @@ class AdminLogin extends React.Component {
           </div>
 
           <img className='loader' src='/images/loader_oval_light.svg' />
-          <p>Verifying credentials, and redirecting to our authentication provider if necessary.</p>
+          <p>
+            Verifying credentials, and redirecting to our authentication
+            provider if necessary.
+          </p>
           <p>If nothing happens please let us know in #support.</p>
         </div>
       </div>
@@ -71,7 +78,7 @@ AdminLogin.propTypes = {
   dispatch: PropTypes.func,
   flashMessages: PropTypes.object,
   actions: PropTypes.object,
-  user: PropTypes.object
+  user: PropTypes.object,
 };
 
 function mapStateToProps(state) {

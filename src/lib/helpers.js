@@ -182,5 +182,5 @@ export function isJwtExpired(token) {
   var now = Math.round(Date.now() / 1000); // Browsers have millisecond precision, which we don't need.
   var expire = parsedToken.exp;
 
-  return (now > expire);
+  return now > expire;
 }
