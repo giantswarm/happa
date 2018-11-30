@@ -39,37 +39,39 @@ class NumberPicker extends React.Component {
 
   render() {
     return (
-      <div className={`number-picker ${this.props.theme ? this.props.theme : ''} ${this.props.readOnly ? 'readonly ' : ''}`}>
+      <div
+        className={`number-picker ${this.props.theme ? this.props.theme : ''} ${
+          this.props.readOnly ? 'readonly ' : ''
+        }`}
+      >
         {this.props.label ? (
-          <div className='number-picker--label'>
-            {this.props.label}
-          </div>
+          <div className='number-picker--label'>{this.props.label}</div>
         ) : (
-            undefined
-          )}
+          undefined
+        )}
 
         <div className='number-picker--control'>
           {this.props.readOnly ? (
             undefined
           ) : (
-              <div
-                className='number-picker--control-decrease'
-                onClick={this.decrement}
-              >
-                &ndash;
+            <div
+              className='number-picker--control-decrease'
+              onClick={this.decrement}
+            >
+              &ndash;
             </div>
-            )}
+          )}
           <span className='number-picker--value'>{this.formatValue()}</span>
           {this.props.readOnly ? (
             undefined
           ) : (
-              <div
-                className='number-picker--control-increase'
-                onClick={this.increment}
-              >
-                +
+            <div
+              className='number-picker--control-increase'
+              onClick={this.increment}
+            >
+              +
             </div>
-            )}
+          )}
         </div>
       </div>
     );
