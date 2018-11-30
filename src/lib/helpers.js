@@ -172,3 +172,15 @@ export function clustersForOrg(orgId, allClusters) {
 
   return clusters;
 }
+
+// isJwtExpired expired takes a JWT token and will return true if it is expired.
+export function isJwtExpired(token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var parsedToken = JSON.parse(window.atob(base64));
+
+  var now = Math.round(Date.now() / 1000); // Browsers have millisecond precision, which we don't need.
+  var expire = parsedToken.exp;
+
+  return now > expire;
+}
