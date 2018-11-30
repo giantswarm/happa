@@ -2,7 +2,8 @@
 import validate from 'validate.js';
 import moment from 'moment';
 import React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap/lib';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import _ from 'underscore';
 
 export function dedent(strings, ...values) {
@@ -170,4 +171,16 @@ export function clustersForOrg(orgId, allClusters) {
   });
 
   return clusters;
+}
+
+// isJwtExpired expired takes a JWT token and will return true if it is expired.
+export function isJwtExpired(token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var parsedToken = JSON.parse(window.atob(base64));
+
+  var now = Math.round(Date.now() / 1000); // Browsers have millisecond precision, which we don't need.
+  var expire = parsedToken.exp;
+
+  return now > expire;
 }

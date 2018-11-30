@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 services:
   happa:
     build:
@@ -16,23 +16,18 @@ services:
     image: quay.io/giantswarm/passage:latest
     ports:
       - "5001:8000"
-
     environment:
       DEBUGGING: 1
       HAPPA_BASE_URI: http://localhost:7000
-      GIANTSWARM_API_URI: http://testing_api_1:8000
-      GIANTSWARM_USERD_URI: http://testing_userd_1:8000
-      GIANTSWARM_COMPANYD_URI: http://testing_companyd_1:8000
+      GIANTSWARM_API_URI: http://api:8000
+      GIANTSWARM_USERD_URI: http://userd:8000
+      GIANTSWARM_COMPANYD_URI: http://companyd:8000
       #NUM_PROXIES: "0"
       RATELIMIT_GLOBAL: 1000 per day, 100 per hour, 30 per minute
       RATELIMIT_STORAGE_URL: redis://redis:6379
-
     links:
       - redis:redis
       - mailcatcher:mailcatcher
-
-    external_links:
-      - testing_api_1
 
   redis:
     image: redis:3.2
@@ -46,10 +41,10 @@ services:
     ports:
       - "1080:1080"
       - "1025:1025"
-
     depends_on:
       - redis
 
 networks:
-  testing_default:
-    external: true
+  default:
+    external:
+      name: testing_default

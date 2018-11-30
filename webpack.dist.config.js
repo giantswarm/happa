@@ -91,7 +91,10 @@ module.exports = {
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
-    })
+    }),
+
+    // Ignore locale data from the moment package, which we don't use.
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ]
 
 };

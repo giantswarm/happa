@@ -19,49 +19,45 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import cmp from 'semver-compare';
 
 class CreateCluster extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      availabilityZones: 1,
-      releaseVersion: '',
-      clusterName: 'My cluster',
-      workerCount: 3,
-      syncWorkers: true,
-      workers: [
-        {
-          id: 1,
-          cpu: 1,
-          memory: 1,
-          storage: 10,
-          instanceType: 'm3.large',
-          vmSize: 'Standard_D2s_v3',
-          valid: true,
-        },
-        {
-          id: 2,
-          cpu: 1,
-          memory: 1,
-          storage: 10,
-          instanceType: 'm3.large',
-          vmSize: 'Standard_D2s_v3',
-          valid: true,
-        },
-        {
-          id: 3,
-          cpu: 1,
-          memory: 1,
-          storage: 10,
-          instanceType: 'm3.large',
-          vmSize: 'Standard_D2s_v3',
-          valid: true,
-        },
-      ],
-      submitting: false,
-      valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
-      error: false,
-    };
-  }
+  state = {
+    availabilityZones: 1,
+    releaseVersion: '',
+    clusterName: 'My cluster',
+    workerCount: 3,
+    syncWorkers: true,
+    workers: [
+      {
+        id: 1,
+        cpu: 1,
+        memory: 1,
+        storage: 10,
+        instanceType: 'm3.large',
+        vmSize: 'Standard_D2s_v3',
+        valid: true,
+      },
+      {
+        id: 2,
+        cpu: 1,
+        memory: 1,
+        storage: 10,
+        instanceType: 'm3.large',
+        vmSize: 'Standard_D2s_v3',
+        valid: true,
+      },
+      {
+        id: 3,
+        cpu: 1,
+        memory: 1,
+        storage: 10,
+        instanceType: 'm3.large',
+        vmSize: 'Standard_D2s_v3',
+        valid: true,
+      },
+    ],
+    submitting: false,
+    valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
+    error: false,
+  };
 
   updateAvailabilityZones = n => {
     this.setState({
