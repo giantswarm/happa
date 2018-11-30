@@ -52,24 +52,24 @@ class NumberPicker extends React.Component {
           {this.props.readOnly ? (
             undefined
           ) : (
-            <div
-              className='number-picker--control-decrease'
-              onClick={this.decrement}
-            >
-              &ndash;
+              <div
+                className='number-picker--control-decrease'
+                onClick={this.decrement}
+              >
+                &ndash;
             </div>
-          )}
+            )}
           <span className='number-picker--value'>{this.formatValue()}</span>
           {this.props.readOnly ? (
             undefined
           ) : (
-            <div
-              className='number-picker--control-increase'
-              onClick={this.increment}
-            >
-              +
+              <div
+                className='number-picker--control-increase'
+                onClick={this.increment}
+              >
+                +
             </div>
-          )}
+            )}
         </div>
       </div>
     );
