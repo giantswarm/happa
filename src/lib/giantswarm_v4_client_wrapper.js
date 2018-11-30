@@ -7,17 +7,12 @@ import GiantSwarmV4 from 'giantswarm-v4';
 import Auth0 from '../lib/auth0';
 import configureStore from '../stores/configureStore';
 import { auth0Login } from '../actions/userActions';
+import {isJwtExpired} from '../lib/helpers';
 
 const auth0 = new Auth0();
 const store = configureStore({});
 
 var defaultClient = GiantSwarmV4.ApiClient.instance;
-
-function parseJwt(token) {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  return JSON.parse(window.atob(base64));
-}
 
 // Patch the client's callApi function to check the JWT token before making a
 // call to the Giant Swarm API. If the token is expired, renew the token first.
@@ -41,10 +36,7 @@ defaultClient.callApi = function callApi(
   // If we're using a JWT token, and it's expired, refresh the token before making
   // any call.
   if (defaultClientAuth.apiKeyPrefix === 'Bearer' && defaultClientAuth.apiKey) {
-    var now = Math.round(Date.now() / 1000); // Browsers have millisecond precision, which we don't need.
-    var expire = parseJwt(defaultClientAuth.apiKey).exp;
-
-    if (now > expire) {
+    if (isJwtExpired(defaultClientAuth.apiKey)) {
       return new Promise(resolve => {
         resolve(
           auth0
