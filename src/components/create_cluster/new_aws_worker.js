@@ -41,9 +41,8 @@ class NewAWSWorker extends React.Component {
     }
 
     var availableInstanceTypes = [];
-    // Filter the list down to only the allowed instance types.
-    // Push the instance type into the list of allowed instance types, add the
-    // name to the object.
+    // TODO this probably can be cleaned up somehow since the settings here
+    // changed.
     Object.keys(instanceTypes).forEach(function(key) {
       if (props.allowedInstanceTypes.indexOf(key) !== -1) {
         availableInstanceTypes.push(
@@ -124,24 +123,8 @@ class NewAWSWorker extends React.Component {
   };
 
   render() {
-    var index = this.props.index;
     return (
-      <div className='col-4 new-cluster--worker'>
-        <div className='new-cluster--worker-title'>
-          {'AWS Worker #' + (index + 1)}
-          {index > 0 ? (
-            <span
-              className='new-cluster--delete'
-              onClick={this.props.deleteWorker}
-            >
-              <i className='fa fa-times' />
-            </span>
-          ) : (
-            undefined
-          )}
-        </div>
-        <div className='new-cluster--worker-setting-label'>Instance Type</div>
-
+      <div className='col-3'>
         <div className='new-cluster--instance-type-selector'>
           <form
             onSubmit={e => {

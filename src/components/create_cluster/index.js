@@ -35,24 +35,6 @@ class CreateCluster extends React.Component {
         vmSize: 'Standard_D2s_v3',
         valid: true,
       },
-      {
-        id: 2,
-        cpu: 1,
-        memory: 1,
-        storage: 10,
-        instanceType: 'm3.large',
-        vmSize: 'Standard_D2s_v3',
-        valid: true,
-      },
-      {
-        id: 3,
-        cpu: 1,
-        memory: 1,
-        storage: 10,
-        instanceType: 'm3.large',
-        vmSize: 'Standard_D2s_v3',
-        valid: true,
-      },
     ],
     submitting: false,
     valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
@@ -309,7 +291,7 @@ class CreateCluster extends React.Component {
                   <p>
                     Give your cluster a name so you can recognize it in a crowd.
                   </p>
-                  <input
+                  <input className='col-4'
                     ref={i => {
                       this.cluster_name = i;
                     }}
@@ -380,8 +362,8 @@ class CreateCluster extends React.Component {
 
             <div>
               <div className='row section'>
-                <div className='col-12'>
-                  <h3 className='table-label'>Worker Node Configuration</h3>
+                <div className='col-3'>
+                  <h3 className='table-label'>Instance Type</h3>
                   {this.props.provider === 'kvm' ? (
                     <div className='checkbox'>
                       <label htmlFor='syncWorkers'>
@@ -401,8 +383,6 @@ class CreateCluster extends React.Component {
                     undefined
                   )}
                 </div>
-              </div>
-              <div className='row'>
                 {this.state.workers.map((worker, index) => {
                   if (this.props.provider === 'aws') {
                     return (
@@ -441,25 +421,54 @@ class CreateCluster extends React.Component {
                     );
                   }
                 })}
-                <div
-                  className={
-                    'col-4 new-cluster--add-worker-button ' +
-                    (this.state.workers.length < 3 ? 'warning' : '')
-                  }
-                  onClick={this.addWorker}
+              </div>
+            </div>
+
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Node Count</h3>
+              </div>
+              <div className='col-9'>
+                <form
+                  onSubmit={e => {
+                    e.preventDefault();
+                  }}
                 >
-                  <div className='new-cluster--add-worker-button-title'>
-                    Add a worker
-                  </div>
-                  {this.state.workers.length < 3 ? (
-                    <div className='new-cluster--low-worker-warning'>
-                      We recommend that you have at least three worker nodes in
-                      a cluster
+                  <div>
+                    <p>
+                      To have full control over cluster scaling, set both
+                      numbers to the same value.
+                    </p>
+                    <div className='col-3'>
+                      <p>
+                        Minimum number of nodes.
+                      </p>
+                      <NumberPicker
+                        label=''
+                        stepSize={1}
+                        value={this.state.availabilityZones}
+                        min={this.props.minAvailabilityZones}
+                        max={this.props.maxAvailabilityZones}
+                        onChange={this.updateAvailabilityZones}
+                        readOnly={false}
+                      />
                     </div>
-                  ) : (
-                    ''
-                  )}
-                </div>
+                    <div className='col-3'>
+                      <p>
+                        Maximum number of nodes.
+                      </p>
+                      <NumberPicker
+                        label=''
+                        stepSize={1}
+                        value={this.state.availabilityZones}
+                        min={this.props.minAvailabilityZones}
+                        max={this.props.maxAvailabilityZones}
+                        onChange={this.updateAvailabilityZones}
+                        readOnly={false}
+                      />
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
 
