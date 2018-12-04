@@ -291,7 +291,8 @@ class CreateCluster extends React.Component {
                   <p>
                     Give your cluster a name so you can recognize it in a crowd.
                   </p>
-                  <input className='col-4'
+                  <input
+                    className='col-4'
                     ref={i => {
                       this.cluster_name = i;
                     }}
@@ -440,9 +441,7 @@ class CreateCluster extends React.Component {
                       numbers to the same value.
                     </p>
                     <div className='col-3'>
-                      <p>
-                        Minimum number of nodes.
-                      </p>
+                      <p>Minimum number of nodes.</p>
                       <NumberPicker
                         label=''
                         stepSize={1}
@@ -454,9 +453,7 @@ class CreateCluster extends React.Component {
                       />
                     </div>
                     <div className='col-3'>
-                      <p>
-                        Maximum number of nodes.
-                      </p>
+                      <p>Maximum number of nodes.</p>
                       <NumberPicker
                         label=''
                         stepSize={1}
