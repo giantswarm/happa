@@ -141,8 +141,7 @@ Checking for outdated dependencies
 To see what dependencies have updates run `make npm-check-updates`
 
 
-Code Style
-----------
+# Code Style
 
 Happa's Code Style is determined by `prettier`. Please make sure files in the
 `src` directory have passed through `prettier` before committing them to the repo.
