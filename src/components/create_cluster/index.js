@@ -441,7 +441,7 @@ class CreateCluster extends React.Component {
                       numbers to the same value.
                     </p>
                     <div className='col-3'>
-                      <p>Minimum number of nodes.</p>
+                      <p>Minimum</p>
                       <NumberPicker
                         label=''
                         stepSize={1}
@@ -453,7 +453,7 @@ class CreateCluster extends React.Component {
                       />
                     </div>
                     <div className='col-3'>
-                      <p>Maximum number of nodes.</p>
+                      <p>Maximum</p>
                       <NumberPicker
                         label=''
                         stepSize={1}
