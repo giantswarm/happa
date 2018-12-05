@@ -124,7 +124,7 @@ class InputField extends React.Component {
         {// If it is readOnly, don't show validation errors
 
         this.props.readOnly ? null : (
-          <span className='message'>{this.state.validationError}</span>
+          <span className='message'>{this.state.validationError}&nbsp;</span>
         )}
       </div>
     );
