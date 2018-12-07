@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 class NumberPicker extends React.Component {
+  state = { inputValue: this.props.value };
+
   formatValue() {
     if (this.props.formatter) {
       return this.props.formatter(this.props.value);
@@ -16,6 +18,9 @@ class NumberPicker extends React.Component {
   triggerOnChange = newValue => {
     if (this.props.onChange) {
       this.props.onChange(newValue);
+      this.setState({
+        inputValue: newValue,
+      });
     }
   };
 
@@ -34,6 +39,30 @@ class NumberPicker extends React.Component {
 
     if (currentValue > this.props.min) {
       this.triggerOnChange(Math.max(this.props.min, desiredValue));
+    }
+  };
+
+  updateInput = e => {
+    this.setState({
+      inputValue: e.target.value,
+    });
+  };
+
+  validateInput = () => {
+    var desiredValue = this.state.inputValue;
+
+    if (desiredValue === '') {
+      // If the user left the input empty, return it to the original value.
+      this.triggerOnChange(this.props.value);
+    } else if (desiredValue > this.props.max) {
+      // If the user typed in something greater than the max, set it to the max.
+      this.triggerOnChange(this.props.max);
+    } else if (desiredValue < this.props.min) {
+      // If the user typed in something smaller than the min, set it to the min.
+      this.triggerOnChange(this.props.min);
+    } else {
+      // Finally, if the user typed in a reasonable value, use it.
+      this.triggerOnChange(parseInt(desiredValue));
     }
   };
 
@@ -61,7 +90,17 @@ class NumberPicker extends React.Component {
               &ndash;
             </div>
           )}
-          <span className='number-picker--value'>{this.formatValue()}</span>
+          <span className='number-picker--value'>
+            <input
+              type='number'
+              disabled={this.props.readOnly}
+              min={this.props.min}
+              max={this.props.max}
+              value={this.state.inputValue}
+              onChange={this.updateInput}
+              onBlur={this.validateInput}
+            />
+          </span>
           {this.props.readOnly ? (
             undefined
           ) : (
