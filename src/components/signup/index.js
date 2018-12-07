@@ -90,9 +90,11 @@ export class SignUp extends React.Component {
       });
   }
 
-  componentDidUpdate() {
-    this.resetForm();
-    this.componentDidMount();
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.token != this.props.match.params.token) {
+      this.resetForm();
+      this.componentDidMount();
+    }
   }
 
   advanceForm() {
