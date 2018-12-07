@@ -667,15 +667,19 @@ const tableDefaultSorting = [
 const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
 
 function actionsCellFormatter(cell, row) {
-  return (
-    <Button
-      bsStyle='default'
-      type='button'
-      onClick={this.deleteUser.bind(this, row.email)}
-    >
-      Delete
-    </Button>
-  );
+  if (row.invited_by) {
+    return '';
+  } else {
+    return (
+      <Button
+        bsStyle='default'
+        type='button'
+        onClick={this.deleteUser.bind(this, row.email)}
+      >
+        Delete
+      </Button>
+    );
+  }
 }
 
 function expiryCellFormatter(cell, row) {
