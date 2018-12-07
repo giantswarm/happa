@@ -36,10 +36,12 @@ class BarChart extends React.Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState({
-      percentage: nextProps.percentage,
-    });
+  componentDidUpdate(prevProps) {
+    if (this.props.percentage !== prevProps.percentage) {
+      this.setState({
+        percentage: this.props.percentage,
+      });
+    }
   }
 
   cappedPercentage() {
