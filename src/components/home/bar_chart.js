@@ -39,7 +39,7 @@ class BarChart extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.percentage !== prevProps.percentage) {
       this.setState({
-        percentage: this.props.percentage
+        percentage: this.props.percentage,
       });
     }
   }
