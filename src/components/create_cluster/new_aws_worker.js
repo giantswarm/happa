@@ -41,8 +41,9 @@ class NewAWSWorker extends React.Component {
     }
 
     var availableInstanceTypes = [];
-    // TODO this probably can be cleaned up somehow since the settings here
-    // changed.
+    // Filter the list down to only the allowed instance types. Push the
+    // instance type into the list of allowed instance types, add the name to
+    // the object.
     Object.keys(instanceTypes).forEach(function(key) {
       if (props.allowedInstanceTypes.indexOf(key) !== -1) {
         availableInstanceTypes.push(
