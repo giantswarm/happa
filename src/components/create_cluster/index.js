@@ -6,6 +6,7 @@ import DocumentTitle from 'react-document-title';
 import Button from '../button';
 import { clusterCreate } from '../../actions/clusterActions';
 import NumberPicker from './number_picker.js';
+import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
 import ReleaseSelector from './release_selector.js';
 import ProviderCredentials from './provider_credentials.js';
 import PropTypes from 'prop-types';
@@ -14,18 +15,36 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import cmp from 'semver-compare';
 
 class CreateCluster extends React.Component {
-  state = {
-    availabilityZones: 1,
-    releaseVersion: '',
-    clusterName: 'My cluster',
-    scaling: {
-      min: 3,
-      max: 3,
-    },
-    submitting: false,
-    valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
-    error: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      availabilityZones: 1,
+      releaseVersion: '',
+      clusterName: 'My cluster',
+      scaling: {
+        min: 3,
+        max: 3,
+      },
+      submitting: false,
+      valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
+      error: false,
+      aws: {
+        instanceType: {
+          valid: true,
+          value: props.defaultInstanceType,
+        },
+      },
+      azure: {
+        vmSize: '',
+      },
+      kvm: {
+        cpuCores: 0,
+        memorySize: 0,
+        diskSize: 0,
+      },
+    };
+  }
 
   updateAvailabilityZones = n => {
     this.setState({
@@ -157,6 +176,16 @@ class CreateCluster extends React.Component {
     );
   }
 
+  updateAWSInstanceType = value => {
+    this.setState({
+      aws: {
+        instanceType: {
+          value: value.value,
+        },
+      },
+    });
+  };
+
   valid() {
     return true;
   }
@@ -263,6 +292,20 @@ class CreateCluster extends React.Component {
 
             <div className='row section'>
               <div className='col-3'>
+                <h3 className='table-label'>Instance Type</h3>
+              </div>
+              <div className='col-9'>
+                <AWSInstanceTypeSelector
+                  allowedInstanceTypes={this.props.allowedInstanceTypes}
+                  value={this.state.aws.instanceType}
+                  readOnly={false}
+                  onChange={this.updateAWSInstanceType}
+                />
+              </div>
+            </div>
+
+            <div className='row section'>
+              <div className='col-3'>
                 <h3 className='table-label'>Node Count</h3>
               </div>
               <div className='col-9'>
@@ -352,6 +395,7 @@ CreateCluster.propTypes = {
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,
   provider: PropTypes.string,
+  defaultInstanceType: PropTypes.string,
 };
 
 function mapStateToProps(state) {
@@ -359,6 +403,7 @@ function mapStateToProps(state) {
   var maxAvailabilityZones = state.app.info.general.availability_zones.max;
   var selectedOrganization = state.app.selectedOrganization;
   var provider = state.app.info.general.provider;
+  var defaultInstanceType = 'm3.large';
 
   var allowedInstanceTypes = [];
   if (provider === 'aws') {
@@ -376,6 +421,7 @@ function mapStateToProps(state) {
     allowedInstanceTypes,
     allowedVMSizes,
     provider,
+    defaultInstanceType,
     selectedOrganization,
   };
 }
