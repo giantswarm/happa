@@ -22,24 +22,20 @@ window.config = window.config || { passageEndpoint: 'http://localhost:5000' };
 var passage = new Passage({ endpoint: window.config.passageEndpoint });
 
 export class SignUp extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      statusMessage: 'verify_started',
-      checkInviteStatus: 'started',
-      email: undefined,
-      passwordField: { value: '', valid: false },
-      passwordConfirmationField: { value: '', valid: false },
-      termsOfServiceField: { value: false, valid: false },
-      formValid: undefined,
-      submitting: false,
-      buttonText: ['', 'Next', 'Next', 'Create your account now'],
-      formSteps: ['', 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
-      currentStep: 0,
-      advancable: false,
-    };
-  }
+  state = {
+    statusMessage: 'verify_started',
+    checkInviteStatus: 'started',
+    email: undefined,
+    passwordField: { value: '', valid: false },
+    passwordConfirmationField: { value: '', valid: false },
+    termsOfServiceField: { value: false, valid: false },
+    formValid: undefined,
+    submitting: false,
+    buttonText: ['', 'Next', 'Next', 'Create your account now'],
+    formSteps: ['', 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
+    currentStep: 0,
+    advancable: false,
+  };
 
   resetForm() {
     this.setState({
@@ -98,9 +94,11 @@ export class SignUp extends React.Component {
       });
   }
 
-  UNSAFE_componentWillReceiveProps() {
-    this.resetForm();
-    this.componentDidMount();
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.token != this.props.match.params.token) {
+      this.resetForm();
+      this.componentDidMount();
+    }
   }
 
   advanceForm() {

@@ -11,7 +11,7 @@ var doneTypingInterval = 250; // ms
 // A subcomponent that emits 'onChange' when the user has stopped typing
 // after 250 ms or after leaving the field
 //
-// And shows a error message if a supplied validation function returns fails
+// And shows an error message if a supplied validation function returns fails
 
 class InputField extends React.Component {
   constructor(props) {
@@ -24,20 +24,21 @@ class InputField extends React.Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps(props) {
-    if (props.value != this.state.value) {
-      var validation = this.props.validate(props.value);
-      this.setState({
-        value: props.value,
-        valid: validation.valid,
-        validationError: validation.validationError,
-      });
-    }
-  }
-
   componentDidMount() {
     if (this.props.autofocus) {
       this.input.focus();
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.value != this.state.value) {
+      var validation = this.props.validate(this.props.value);
+
+      this.setState({
+        value: this.props.value,
+        valid: validation.valid,
+        validationError: validation.validationError,
+      });
     }
   }
 

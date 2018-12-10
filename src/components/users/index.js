@@ -47,8 +47,9 @@ class Users extends React.Component {
 
   componentDidMount() {
     if (this.props.currentUser.isAdmin) {
-      this.props.dispatch(usersLoad());
-      this.props.dispatch(invitationsLoad());
+      this.props
+        .dispatch(usersLoad())
+        .then(this.props.dispatch(invitationsLoad()));
     } else {
       this.props.dispatch(push('/'));
     }
@@ -138,7 +139,10 @@ class Users extends React.Component {
     });
 
     this.props
-      .dispatch(invitationCreate(this.state.invitationForm))
+      .dispatch(usersLoad()) // Hack to ensure fresh Giant Swarm access token before inviting the user.
+      .then(() => {
+        return this.props.dispatch(invitationCreate(this.state.invitationForm));
+      })
       .then(result => {
         this.setState({
           modal: {
@@ -663,15 +667,19 @@ const tableDefaultSorting = [
 const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
 
 function actionsCellFormatter(cell, row) {
-  return (
-    <Button
-      bsStyle='default'
-      type='button'
-      onClick={this.deleteUser.bind(this, row.email)}
-    >
-      Delete
-    </Button>
-  );
+  if (row.invited_by) {
+    return '';
+  } else {
+    return (
+      <Button
+        bsStyle='default'
+        type='button'
+        onClick={this.deleteUser.bind(this, row.email)}
+      >
+        Delete
+      </Button>
+    );
+  }
 }
 
 function expiryCellFormatter(cell, row) {
