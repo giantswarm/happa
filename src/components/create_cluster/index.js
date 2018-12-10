@@ -273,8 +273,7 @@ class CreateCluster extends React.Component {
                 >
                   <div>
                     <p>
-                      To have full control over cluster scaling, set both
-                      numbers to the same value.
+                      To disable autoscaling, set both numbers to the same value
                     </p>
                     <div className='col-3'>
                       <p>Minimum</p>
