@@ -53,23 +53,25 @@ jobs:
           CURL_OUTPUT=$(curl -s -k https://localhost:8000)
           echo "${CURL_OUTPUT}" | grep Happa
 
-          docker run --rm \
-            -v $PWD:/out \
-            -v $PWD/dev-shm:/dev/shm \
-            -e GH_USER_AUTH_TOKEN=${RELEASE_TOKEN} \
-            quay.io/giantswarm/lighthouse \
-            lighthouse-github-reporter \
-              --urls https://localhost:8000 \
-              --prId $CIRCLE_PR_NUMBER \
-              --reporterUserName taylorbot \
-              --noiseLevel low \
-              --owner $CIRCLE_PROJECT_USERNAME \
-              --repository $CIRCLE_PROJECT_REPONAME \
-              --pwa 60 \
-              --performance 100 \
-              --accessibility 50 \
-              --bestPractices 60 \
-              --seo 0
+          if [ "$CIRCLE_PR_NUMBER" != "" ]; then
+            docker run --rm \
+              -v $PWD:/out \
+              -v $PWD/dev-shm:/dev/shm \
+              -e GH_USER_AUTH_TOKEN=${RELEASE_TOKEN} \
+              quay.io/giantswarm/lighthouse \
+              lighthouse-github-reporter \
+                -u https://localhost:8000 \
+                --prId $CIRCLE_PR_NUMBER \
+                --reporterUserName taylorbot \
+                --noiseLevel low \
+                --owner $CIRCLE_PROJECT_USERNAME \
+                --repository $CIRCLE_PROJECT_REPONAME \
+                --pwa 60 \
+                --performance 100 \
+                --accessibility 50 \
+                --bestPractices 60 \
+                --seo 0
+          fi
 
           docker kill testcontainer
 
