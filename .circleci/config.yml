@@ -47,20 +47,21 @@ jobs:
         command: ./architect build
 
     - run:
-        name: Test the image we just built
+        name: Launch container for tests
         command: |
           docker run --name testcontainer -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
           CURL_OUTPUT=$(curl -s -k https://localhost:8000)
           echo "${CURL_OUTPUT}" | grep Happa
 
+    - run:
+        name: Lighthouse audits
+        command: |
           docker run --rm \
             -v $PWD:/out \
             -v $PWD/dev-shm:/dev/shm \
             --link testcontainer:testcontainer \
             quay.io/giantswarm/lighthouse:add-ci-runner \
               ci-run.sh https://testcontainer:8000/
-
-          docker kill testcontainer
 
     - deploy:
         name: Deploy with architect (master only)
