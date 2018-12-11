@@ -59,8 +59,8 @@ jobs:
               -v $PWD/dev-shm:/dev/shm \
               -e GH_USER_AUTH_TOKEN=${RELEASE_TOKEN} \
               quay.io/giantswarm/lighthouse \
-              lighthouse-github-reporter \
-                -u https://localhost:8000 \
+              lighthouse-github-reporter run \
+                --urls https://localhost:8000 \
                 --prId $(basename $CIRCLE_PULL_REQUEST) \
                 --reporterUserName taylorbot \
                 --noiseLevel low \
