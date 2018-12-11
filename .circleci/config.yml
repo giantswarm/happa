@@ -55,7 +55,8 @@ jobs:
 
           if [ "$CIRCLE_PULL_REQUEST" != "" ]; then
             docker run --rm \
-              -w $PWD \
+              -v $PWD:/workdir \
+              -w /workdir \
               -v $PWD:/out \
               -v $PWD/dev-shm:/dev/shm \
               -e GH_USER_AUTH_TOKEN=${RELEASE_TOKEN} \
