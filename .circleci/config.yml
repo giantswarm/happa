@@ -60,6 +60,7 @@ jobs:
               -v $PWD:/out \
               -v $PWD/dev-shm:/dev/shm \
               -e GH_USER_AUTH_TOKEN=${RELEASE_TOKEN} \
+              --network container:testcontainer \
               quay.io/giantswarm/lighthouse \
               lighthouse-github-reporter run \
                 --urls https://localhost:8000 \
