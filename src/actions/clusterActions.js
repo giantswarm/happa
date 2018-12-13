@@ -73,7 +73,7 @@ export function clusterLoadStatus(clusterId) {
     var scheme = getState().app.loggedInUser.auth.scheme;
 
     dispatch({
-      type: types.CLUSTER_LOAD_DETAILS,
+      type: types.CLUSTER_LOAD_STATUS,
       clusterId,
     });
 
