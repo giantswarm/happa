@@ -179,6 +179,17 @@ export default function clusterReducer(
         items: items,
       };
 
+    case types.CLUSTER_LOAD_STATUS_SUCCESS:
+      console.log(state);
+      return {
+        numberOfNodes: 3,
+      };
+
+    case types.CLUSTER_LOAD_STATUS_ERROR:
+      return {
+        numberOfNodes: 0,
+      };
+
     case types.CLUSTER_LOAD_METRICS:
       items = Object.assign({}, state.items);
 

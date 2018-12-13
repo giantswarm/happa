@@ -106,6 +106,12 @@ class ClusterDetail extends React.Component {
     return c;
   }
 
+  getNumberOfNodes() {
+    console.log(this.state);
+    console.log(this.props);
+    return 3;
+  }
+
   showDeleteClusterModal(cluster) {
     this.props.clusterActions.clusterDelete(cluster);
   }
@@ -434,9 +440,9 @@ class ClusterDetail extends React.Component {
                               <tr>
                                 <td>Number of worker nodes</td>
                                 <td className='value'>
-                                  {this.props.cluster.workers
-                                    ? this.props.cluster.workers.length
-                                    : 'n/a'}
+                                  {this.getNumberOfNodes() === null
+                                    ? 'n/a'
+                                    : this.getNumberOfNodes()}
                                 </td>
                               </tr>
                               {instanceTypeOrVMSize}

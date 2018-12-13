@@ -63,6 +63,44 @@ export function clusterLoadDetails(clusterId) {
   };
 }
 
+// clusterLoadStatus
+// =============================================================
+// Takes a clusterId and loads status for that cluster.
+
+export function clusterLoadStatus(clusterId) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.CLUSTER_LOAD_DETAILS,
+      clusterId,
+    });
+
+    var clustersApi = new GiantSwarmV4.ClustersApi();
+
+    return clustersApi
+      .getClusterStatus(scheme + ' ' + token, clusterId)
+      .then(status => {
+        dispatch(clusterLoadStatusSuccess(status));
+        return status;
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(clusterLoadStatusError(clusterId, error));
+        dispatch(
+          flashAdd({
+            message:
+              'Something went wrong while trying to load the cluster status. Please try again later or contact support: support@giantswarm.io',
+            key: 'clusterLoadStatusFailure',
+            class: 'danger',
+          })
+        );
+        throw error;
+      });
+  };
+}
+
 // clusterCreate
 // ==============================================================
 // Takes a cluster object and tries to create it. Dispatches CLUSTER_CREATE_SUCCESS
@@ -228,6 +266,20 @@ export function clusterLoadDetailsSuccess(cluster) {
 export function clusterLoadDetailsError(error) {
   return {
     type: types.CLUSTER_LOAD_DETAILS_ERROR,
+    error,
+  };
+}
+
+export function clusterLoadStatusSuccess(status) {
+  return {
+    type: types.CLUSTER_LOAD_STATUS_SUCCESS,
+    status,
+  };
+}
+
+export function clusterLoadStatusError(error) {
+  return {
+    type: types.CLUSTER_LOAD_STATUS_ERROR,
     error,
   };
 }
