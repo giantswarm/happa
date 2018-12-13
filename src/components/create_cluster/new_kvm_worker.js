@@ -5,18 +5,18 @@ import NumberPicker from './number_picker.js';
 import PropTypes from 'prop-types';
 
 class NewKVMWorker extends React.Component {
-  updateWorkerCPU = cpu => {
-    this.props.worker.cpu = cpu;
+  updateWorkerCPU = numberPicker => {
+    this.props.worker.cpu = numberPicker.value;
     this.props.onWorkerUpdated(this.props.worker);
   };
 
-  updateWorkerMemory = memory => {
-    this.props.worker.memory = memory;
+  updateWorkerMemory = numberPicker => {
+    this.props.worker.memory = numberPicker.value;
     this.props.onWorkerUpdated(this.props.worker);
   };
 
-  updateWorkerStorage = storage => {
-    this.props.worker.storage = storage;
+  updateWorkerStorage = numberPicker => {
+    this.props.worker.storage = numberPicker.value;
     this.props.onWorkerUpdated(this.props.worker);
   };
 
@@ -48,6 +48,7 @@ class NewKVMWorker extends React.Component {
           workerId={worker.id}
           onChange={this.updateWorkerCPU}
           readOnly={this.props.readOnly}
+          key={'worker-cpu-'+index+this.props.readOnly}
         />
 
         <NumberPicker
@@ -60,6 +61,7 @@ class NewKVMWorker extends React.Component {
           workerId={worker.id}
           onChange={this.updateWorkerMemory}
           readOnly={this.props.readOnly}
+          key={'worker-memory-'+index+this.props.readOnly}
         />
 
         <NumberPicker
@@ -72,6 +74,7 @@ class NewKVMWorker extends React.Component {
           workerId={worker.id}
           onChange={this.updateWorkerStorage}
           readOnly={this.props.readOnly}
+          key={'worker-storage-'+index+this.props.readOnly}
         />
       </div>
     );
