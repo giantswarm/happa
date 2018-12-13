@@ -170,6 +170,7 @@ class NumberPicker extends React.Component {
               disabled={this.props.readOnly}
               min={this.props.min}
               max={this.props.max}
+              step={this.props.stepSize}
               value={
                 this.props.readOnly ? this.props.value : this.state.inputValue
               }
