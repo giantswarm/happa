@@ -20,7 +20,10 @@ import cmp from 'semver-compare';
 
 class CreateCluster extends React.Component {
   state = {
-    availabilityZones: 1,
+    availabilityZonesPicker: {
+      value: 1,
+      valid: true
+    },
     releaseVersion: '',
     clusterName: 'My cluster',
     workerCount: 3,
@@ -59,9 +62,12 @@ class CreateCluster extends React.Component {
     error: false,
   };
 
-  updateAvailabilityZones = n => {
+  updateAvailabilityZonesPicker = numberPicker => {
     this.setState({
-      availabilityZones: n,
+      availabilityZonesPicker: {
+        value: numberPicker.value,
+        valid: numberPicker.valid
+      },
     });
   };
 
@@ -184,7 +190,7 @@ class CreateCluster extends React.Component {
     this.props
       .dispatch(
         clusterCreate({
-          availability_zones: this.state.availabilityZones,
+          availability_zones: this.state.availabilityZonesPicker.value,
           name: this.state.clusterName,
           owner: this.props.selectedOrganization,
           release_version: this.state.releaseVersion,
@@ -250,6 +256,11 @@ class CreateCluster extends React.Component {
 
     // If any of the releaseVersion hasn't been set yet, return false
     if (this.state.releaseVersion === '') {
+      return false;
+    }
+
+    // If the availabilityZonesPicker is invalid, return false
+    if (!this.state.availabilityZonesPicker.valid) {
       return false;
     }
 
@@ -343,10 +354,10 @@ class CreateCluster extends React.Component {
                         <NumberPicker
                           label=''
                           stepSize={1}
-                          value={this.state.availabilityZones}
+                          value={this.state.availabilityZonesPicker.value}
                           min={this.props.minAvailabilityZones}
                           max={this.props.maxAvailabilityZones}
-                          onChange={this.updateAvailabilityZones}
+                          onChange={this.updateAvailabilityZonesPicker}
                           readOnly={false}
                         />
                       </div>
