@@ -4,24 +4,52 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+// NumberPicker is a component that allows a user to pick a number by
+// incrementing / decrementing a value or typing it straight into the input
+// field.
+//
+// It only allows whole numbers.
+//
+// State explanation:
+//
+// inputValue - The current value of the input field. This might not be a valid
+//              number since users should be able to clear the input before they
+//              type in a new value.
+//
+// value - The derived value of the number picker. This will always be a valid
+//         number and will be set to 0 if the the input value is invalid.
+//
+// valid - A boolean that represents whether or not the inputvalue is valid.
+//
+// validationError - A string that explains why the inputValue is not valid.
+//
+//
+// Why do we need both inputValue and value?
+// Because when a user wants to type a number, he has to first clear the
+// current value. Say a user wants to type 30, but the input currently has the
+// value 1 in it. Then for a moment the input has an empty string in it,
+// which would break various things (like increment / decrement) if we were to
+// use the inputs value as the true value for this number picker at all times.
+//
+// Lifecycle:
+//
+// This component contains an normal html input field. When this input field
+// changes, its value is validated. Afterwards the parent component is
+// notified of the change through the passed in onChange callback function.
+// The onChange function recieves an object with the value and validity of
+// the number picker:
+//
+// {
+//   value: 13,
+//   valid: true
+// }
+
 class NumberPicker extends React.Component {
-  state = { inputValue: this.props.value };
-
-  formatValue() {
-    if (this.props.formatter) {
-      return this.props.formatter(this.props.value);
-    } else {
-      return [this.props.value, this.props.unit].join(' ');
-    }
-  }
-
-  triggerOnChange = newValue => {
-    if (this.props.onChange) {
-      this.props.onChange(newValue);
-      this.setState({
-        inputValue: newValue,
-      });
-    }
+  state = {
+    inputValue: this.props.value,
+    value: this.props.value,
+    valid: true,
+    validationError: '',
   };
 
   increment = () => {
@@ -29,7 +57,7 @@ class NumberPicker extends React.Component {
     var desiredValue = currentValue + this.props.stepSize;
 
     if (currentValue < this.props.max) {
-      this.triggerOnChange(Math.min(this.props.max, desiredValue));
+      this.updateInput({'target': {'value': Math.min(this.props.max, desiredValue)}});
     }
   };
 
@@ -38,33 +66,70 @@ class NumberPicker extends React.Component {
     var desiredValue = currentValue - this.props.stepSize;
 
     if (currentValue > this.props.min) {
-      this.triggerOnChange(Math.max(this.props.min, desiredValue));
+      this.updateInput({'target': {'value': Math.max(this.props.min, desiredValue)}});
     }
   };
 
   updateInput = e => {
+    var desiredValue = e.target.value;
+
+    // Validate.
+    var {value, valid, validationError} = this.validateInput(desiredValue);
+
+    // Update state.
     this.setState({
-      inputValue: e.target.value,
+      inputValue: desiredValue,
+      value: value,
+      valid: valid,
+      validationError: validationError
+    }, () => {
+      // Notify Parent.
+      if (this.props.onChange) {
+        this.props.onChange({
+          value: this.state.value,
+          valid: this.state.valid
+        });
+      }
     });
   };
 
-  validateInput = () => {
-    var desiredValue = this.state.inputValue;
-
+  validateInput = (desiredValue) => {
     if (desiredValue === '') {
-      // If the user left the input empty, return it to the original value.
-      this.triggerOnChange(this.props.value);
+      return {
+        value: 0,
+        valid: false,
+        validationError: 'Field must not be empty.'
+      };
     } else if (desiredValue > this.props.max) {
-      // If the user typed in something greater than the max, set it to the max.
-      this.triggerOnChange(this.props.max);
+      return {
+        value: parseInt(desiredValue),
+        valid: false,
+        validationError: 'Value must not be larger than ' + this.props.max + '.'
+      };
     } else if (desiredValue < this.props.min) {
-      // If the user typed in something smaller than the min, set it to the min.
-      this.triggerOnChange(this.props.min);
+      return {
+        value: parseInt(desiredValue),
+        valid: false,
+        validationError: 'Value must not be smaller than ' + this.props.min + '.'
+      };
+    } else if (!isWholeNumber(parseFloat(desiredValue))) {
+      return {
+        value: parseInt(desiredValue),
+        valid: false,
+        validationError: 'Value must be a whole number'
+      };
     } else {
-      // Finally, if the user typed in a reasonable value, use it.
-      this.triggerOnChange(parseInt(desiredValue));
+      return {
+        value: parseInt(desiredValue),
+        valid: true,
+        validationError: ''
+      };
     }
   };
+
+  handleFocus = (event) => {
+    event.target.select();
+  }
 
   render() {
     return (
@@ -98,7 +163,7 @@ class NumberPicker extends React.Component {
               max={this.props.max}
               value={this.state.inputValue}
               onChange={this.updateInput}
-              onBlur={this.validateInput}
+              onFocus={this.handleFocus}
             />
           </span>
           {this.props.readOnly ? (
@@ -112,6 +177,9 @@ class NumberPicker extends React.Component {
             </div>
           )}
         </div>
+        <small className='number-picker--validation-error'>
+          {this.state.validationError}&nbsp;
+        </small>
       </div>
     );
   }
@@ -122,7 +190,6 @@ NumberPicker.propTypes = {
   label: PropTypes.string,
   value: PropTypes.number,
   stepSize: PropTypes.number,
-  formatter: PropTypes.func,
   min: PropTypes.number,
   max: PropTypes.number,
   onChange: PropTypes.func,
@@ -136,6 +203,14 @@ function mapStateToProps() {
 
 function mapDispatchToProps() {
   return {};
+}
+
+function isWholeNumber(value) {
+  if (typeof value === 'number' && value % 1 === 0) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 export default connect(

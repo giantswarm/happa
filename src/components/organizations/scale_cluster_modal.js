@@ -17,7 +17,10 @@ class ScaleClusterModal extends React.Component {
 
     this.state = {
       modalVisible: false,
-      workerCount: props.cluster.workers.length,
+      numberPicker: {
+        value: props.cluster.workers.length,
+        valid: true
+      }
     };
   }
 
@@ -27,7 +30,10 @@ class ScaleClusterModal extends React.Component {
 
   reset = () => {
     this.setState({
-      workerCount: this.props.cluster.workers.length,
+      numberPicker: {
+        value: this.props.cluster.workers.length,
+        valid: true
+      },
       loading: false,
       error: null,
     });
@@ -52,9 +58,9 @@ class ScaleClusterModal extends React.Component {
     });
   };
 
-  updateWorkerCount = count => {
+  updateNumberPicker = numberPicker => {
     this.setState({
-      workerCount: count,
+      numberPicker
     });
   };
 
@@ -66,16 +72,14 @@ class ScaleClusterModal extends React.Component {
       () => {
         var workers = [];
 
-        for (var i = 0; i < this.state.workerCount; i++) {
+        for (var i = 0; i < this.state.numberPicker.value; i++) {
           workers.push({});
         }
 
         this.props.clusterActions
           .clusterPatch({ id: this.props.cluster.id, workers: workers })
           .then(patchedCluster => {
-            this.setState({
-              loading: false,
-            });
+            this.close();
 
             this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
             this.props.flashActions.flashAdd({
@@ -83,7 +87,6 @@ class ScaleClusterModal extends React.Component {
               class: 'success',
               ttl: 3000,
             });
-            this.close();
           })
           .catch(error => {
             this.setState({
@@ -102,7 +105,7 @@ class ScaleClusterModal extends React.Component {
   };
 
   workerDelta = () => {
-    return this.state.workerCount - this.props.cluster.workers.length;
+    return this.state.numberPicker.value - this.props.cluster.workers.length;
   };
 
   pluralize = () => {
@@ -119,10 +122,17 @@ class ScaleClusterModal extends React.Component {
     var workerDelta = this.workerDelta();
     var pluralize = this.pluralize();
 
+    if (workerDelta === 0) {
+      return {
+        disabled: true
+      };
+    }
+
     if (workerDelta > 0) {
       return {
         title: `Add ${workerDelta} worker node${pluralize}`,
         style: 'success',
+        disabled: !this.state.numberPicker.valid
       };
     }
 
@@ -130,6 +140,7 @@ class ScaleClusterModal extends React.Component {
       return {
         title: `Remove ${Math.abs(workerDelta)} worker node${pluralize}`,
         style: 'danger',
+        disabled: !this.state.numberPicker.valid
       };
     }
   };
@@ -151,14 +162,14 @@ class ScaleClusterModal extends React.Component {
               <NumberPicker
                 label=''
                 stepSize={1}
-                value={this.state.workerCount}
-                onChange={this.updateWorkerCount}
+                value={this.state.numberPicker.value}
+                onChange={this.updateNumberPicker}
                 min={1}
                 max={99}
                 theme='inmodal'
               />
 
-              {this.state.workerCount < this.props.cluster.workers.length ? (
+              {(this.state.numberPicker.value < this.props.cluster.workers.length) && (this.state.numberPicker.valid) ? (
                 <div className='flash-messages--flash-message flash-messages--danger'>
                   <ul>
                     <li>
@@ -183,19 +194,20 @@ class ScaleClusterModal extends React.Component {
               )}
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
-              {this.state.workerCount !== this.props.cluster.workers.length ? (
+              {this.buttonProperties().disabled ?
+                undefined
+                :
                 <Button
                   type='submit'
                   bsStyle={this.buttonProperties().style}
                   loading={this.state.loading}
                   loadingPosition='left'
                   onClick={this.submit}
+                  disabled={this.buttonProperties().disabled}
                 >
                   {this.buttonProperties().title}
                 </Button>
-              ) : (
-                undefined
-              )}
+              }
               <Button
                 bsStyle='link'
                 disabled={this.state.loading}
