@@ -19,7 +19,10 @@ class CreateCluster extends React.Component {
     super(props);
 
     this.state = {
-      availabilityZones: 1,
+      availabilityZonesPicker: {
+        value: 1,
+        valid: true,
+      },
       releaseVersion: '',
       clusterName: 'My cluster',
       scaling: {
@@ -46,9 +49,12 @@ class CreateCluster extends React.Component {
     };
   }
 
-  updateAvailabilityZones = n => {
+  updateAvailabilityZonesPicker = numberPicker => {
     this.setState({
-      availabilityZones: n,
+      availabilityZonesPicker: {
+        value: numberPicker.value,
+        valid: numberPicker.valid,
+      },
     });
   };
 
@@ -118,7 +124,7 @@ class CreateCluster extends React.Component {
     this.props
       .dispatch(
         clusterCreate({
-          availability_zones: this.state.availabilityZones,
+          availability_zones: this.state.availabilityZonesPicker.value,
           scaling: {
             min: this.state.scaling.min,
             max: this.state.scaling.max,
@@ -187,6 +193,16 @@ class CreateCluster extends React.Component {
   };
 
   valid() {
+    // If any of the releaseVersion hasn't been set yet, return false
+    if (this.state.releaseVersion === '') {
+      return false;
+    }
+
+    // If the availabilityZonesPicker is invalid, return false
+    if (!this.state.availabilityZonesPicker.valid) {
+      return false;
+    }
+
     return true;
   }
 
@@ -239,54 +255,47 @@ class CreateCluster extends React.Component {
                 <h3 className='table-label'>Availability Zones</h3>
               </div>
               <div className='col-9'>
-                <form
-                  onSubmit={e => {
-                    e.preventDefault();
-                  }}
-                >
-                  {this.props.provider === 'aws' ? (
-                    // For now we want to handle cases where older clusters do
-                    // still not support AZ selection. The special handling here
-                    // can be removed once all clusters run at least on 6.1.0.
-                    //
-                    //     https://github.com/giantswarm/giantswarm/pull/2202
-                    //
-                    cmp(this.state.releaseVersion, '6.0.0') === 1 ? (
-                      <div>
-                        <p>
-                          Select the number of availability zones for your
-                          nodes.
-                        </p>
-                        <div className='col-3'>
-                          <NumberPicker
-                            label=''
-                            stepSize={1}
-                            value={this.state.availabilityZones}
-                            min={this.props.minAvailabilityZones}
-                            max={this.props.maxAvailabilityZones}
-                            onChange={this.updateAvailabilityZones}
-                            readOnly={false}
-                          />
-                        </div>
+                {this.props.provider === 'aws' ? (
+                  // For now we want to handle cases where older clusters do
+                  // still not support AZ selection. The special handling here
+                  // can be removed once all clusters run at least on 6.1.0.
+                  //
+                  //     https://github.com/giantswarm/giantswarm/pull/2202
+                  //
+                  cmp(this.state.releaseVersion, '6.0.0') === 1 ? (
+                    <div>
+                      <p>
+                        Select the number of availability zones for your nodes.
+                      </p>
+                      <div className='col-3'>
+                        <NumberPicker
+                          label=''
+                          stepSize={1}
+                          value={this.state.availabilityZonesPicker.value}
+                          min={this.props.minAvailabilityZones}
+                          max={this.props.maxAvailabilityZones}
+                          onChange={this.updateAvailabilityZonesPicker}
+                          readOnly={false}
+                        />
                       </div>
-                    ) : (
-                      <div>
-                        <p>
-                          Selection of availability zones is only possible for
-                          release version 6.1.0 or greater.
-                        </p>
-                        <div className='col-3'>
-                          <NumberPicker value={1} readOnly={true} />
-                        </div>
-                      </div>
-                    )
+                    </div>
                   ) : (
-                    <p>
-                      In this installation it is not possible to use more than
-                      one availability zone for worker nodes.
-                    </p>
-                  )}
-                </form>
+                    <div>
+                      <p>
+                        Selection of availability zones is only possible for
+                        release version 6.1.0 or greater.
+                      </p>
+                      <div className='col-3'>
+                        <NumberPicker value={1} readOnly={true} />
+                      </div>
+                    </div>
+                  )
+                ) : (
+                  <p>
+                    In this installation it is not possible to use more than one
+                    availability zone for worker nodes.
+                  </p>
+                )}
               </div>
             </div>
 
