@@ -6,7 +6,7 @@
 .number-picker--label
   display: inline-block
   width: 150px
-  
+
 .number-picker--control
   width: 160px
   display: inline-block
@@ -16,6 +16,10 @@
   text-align: center
   border-radius: 5px
   position: relative
+  margin-bottom: 5px
+
+.number-picker--validation-error
+  color: #fcc
 
 .number-picker--control-increase, .number-picker--control-decrease
   position: absolute
@@ -49,5 +53,10 @@
   border-top-left-radius: 5px
   border-bottom-left-radius: 5px
 
-.number-picker--value
+.number-picker--value input
   display: inline-block
+  background-color: inherit
+  border: none
+  text-align: center
+  width: 100%
+  padding-left: 10px
