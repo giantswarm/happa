@@ -45,6 +45,7 @@ export function clusterLoadDetails(clusterId) {
       .getCluster(scheme + ' ' + token, clusterId)
       .then(cluster => {
         dispatch(clusterLoadDetailsSuccess(cluster));
+        dispatch(clusterLoadStatus(clusterId));
         return cluster;
       })
       .catch(error => {
