@@ -58,20 +58,21 @@ class CreateCluster extends React.Component {
     });
   };
 
-  updateScalingMin = n => {
+  updateScalingMin = numberPicker => {
+    console.log(numberPicker);
     this.setState({
       scaling: {
-        min: n,
+        min: numberPicker.value,
         max: this.state.scaling.max,
       },
     });
   };
 
-  updateScalingMax = n => {
+  updateScalingMax = numberPicker => {
     this.setState({
       scaling: {
         min: this.state.scaling.min,
-        max: n,
+        max: numberPicker.value,
       },
     });
   };
