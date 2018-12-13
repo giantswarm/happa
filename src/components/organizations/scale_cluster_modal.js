@@ -96,12 +96,6 @@ class ScaleClusterModal extends React.Component {
           });
       }
     );
-
-    setTimeout(() => {
-      this.setState({
-        loading: false,
-      });
-    }, 2000);
   };
 
   workerDelta = () => {
