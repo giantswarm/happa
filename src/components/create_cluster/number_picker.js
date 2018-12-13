@@ -57,7 +57,9 @@ class NumberPicker extends React.Component {
     var desiredValue = currentValue + this.props.stepSize;
 
     if (currentValue < this.props.max) {
-      this.updateInput({'target': {'value': Math.min(this.props.max, desiredValue)}});
+      this.updateInput({
+        target: { value: Math.min(this.props.max, desiredValue) },
+      });
     }
   };
 
@@ -66,7 +68,9 @@ class NumberPicker extends React.Component {
     var desiredValue = currentValue - this.props.stepSize;
 
     if (currentValue > this.props.min) {
-      this.updateInput({'target': {'value': Math.max(this.props.min, desiredValue)}});
+      this.updateInput({
+        target: { value: Math.max(this.props.min, desiredValue) },
+      });
     }
   };
 
@@ -74,62 +78,67 @@ class NumberPicker extends React.Component {
     var desiredValue = e.target.value;
 
     // Validate.
-    var {value, valid, validationError} = this.validateInput(desiredValue);
+    var { value, valid, validationError } = this.validateInput(desiredValue);
 
     // Update state.
-    this.setState({
-      inputValue: desiredValue,
-      value: value,
-      valid: valid,
-      validationError: validationError
-    }, () => {
-      // Notify Parent.
-      if (this.props.onChange) {
-        this.props.onChange({
-          value: this.state.value,
-          valid: this.state.valid
-        });
+    this.setState(
+      {
+        inputValue: desiredValue,
+        value: value,
+        valid: valid,
+        validationError: validationError,
+      },
+      () => {
+        // Notify Parent.
+        if (this.props.onChange) {
+          this.props.onChange({
+            value: this.state.value,
+            valid: this.state.valid,
+          });
+        }
       }
-    });
+    );
   };
 
-  validateInput = (desiredValue) => {
+  validateInput = desiredValue => {
     if (desiredValue === '') {
       return {
         value: 0,
         valid: false,
-        validationError: 'Field must not be empty.'
+        validationError: 'Field must not be empty.',
       };
     } else if (desiredValue > this.props.max) {
       return {
         value: parseInt(desiredValue),
         valid: false,
-        validationError: 'Value must not be larger than ' + this.props.max + '.'
+        validationError:
+          'Value must not be larger than ' + this.props.max + '.',
       };
     } else if (desiredValue < this.props.min) {
       return {
         value: parseInt(desiredValue),
         valid: false,
-        validationError: 'Value must not be smaller than ' + this.props.min + '.'
+        validationError:
+          'Value must not be smaller than ' + this.props.min + '.',
       };
     } else if (!isWholeNumber(parseFloat(desiredValue))) {
       return {
         value: parseInt(desiredValue),
         valid: false,
-        validationError: 'Value must be a whole number'
+        validationError: 'Value must be a whole number',
       };
     } else {
       return {
         value: parseInt(desiredValue),
         valid: true,
-        validationError: ''
+        validationError: '',
       };
     }
   };
 
-  handleFocus = (event) => {
+  handleFocus = event => {
     event.target.select();
-  }
+  };
 
   render() {
     return (
@@ -161,7 +170,9 @@ class NumberPicker extends React.Component {
               disabled={this.props.readOnly}
               min={this.props.min}
               max={this.props.max}
-              value={this.props.readOnly ? this.props.value : this.state.inputValue}
+              value={
+                this.props.readOnly ? this.props.value : this.state.inputValue
+              }
               onChange={this.updateInput}
               onFocus={this.handleFocus}
             />

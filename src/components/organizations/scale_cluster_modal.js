@@ -19,8 +19,8 @@ class ScaleClusterModal extends React.Component {
       modalVisible: false,
       numberPicker: {
         value: props.cluster.workers.length,
-        valid: true
-      }
+        valid: true,
+      },
     };
   }
 
@@ -32,7 +32,7 @@ class ScaleClusterModal extends React.Component {
     this.setState({
       numberPicker: {
         value: this.props.cluster.workers.length,
-        valid: true
+        valid: true,
       },
       loading: false,
       error: null,
@@ -60,7 +60,7 @@ class ScaleClusterModal extends React.Component {
 
   updateNumberPicker = numberPicker => {
     this.setState({
-      numberPicker
+      numberPicker,
     });
   };
 
@@ -118,7 +118,7 @@ class ScaleClusterModal extends React.Component {
 
     if (workerDelta === 0) {
       return {
-        disabled: true
+        disabled: true,
       };
     }
 
@@ -126,7 +126,7 @@ class ScaleClusterModal extends React.Component {
       return {
         title: `Add ${workerDelta} worker node${pluralize}`,
         style: 'success',
-        disabled: !this.state.numberPicker.valid
+        disabled: !this.state.numberPicker.valid,
       };
     }
 
@@ -134,7 +134,7 @@ class ScaleClusterModal extends React.Component {
       return {
         title: `Remove ${Math.abs(workerDelta)} worker node${pluralize}`,
         style: 'danger',
-        disabled: !this.state.numberPicker.valid
+        disabled: !this.state.numberPicker.valid,
       };
     }
   };
@@ -163,7 +163,9 @@ class ScaleClusterModal extends React.Component {
                 theme='inmodal'
               />
 
-              {(this.state.numberPicker.value < this.props.cluster.workers.length) && (this.state.numberPicker.valid) ? (
+              {this.state.numberPicker.value <
+                this.props.cluster.workers.length &&
+              this.state.numberPicker.valid ? (
                 <div className='flash-messages--flash-message flash-messages--danger'>
                   <ul>
                     <li>
@@ -188,9 +190,9 @@ class ScaleClusterModal extends React.Component {
               )}
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
-              {this.buttonProperties().disabled ?
+              {this.buttonProperties().disabled ? (
                 undefined
-                :
+              ) : (
                 <Button
                   type='submit'
                   bsStyle={this.buttonProperties().style}
@@ -201,7 +203,7 @@ class ScaleClusterModal extends React.Component {
                 >
                   {this.buttonProperties().title}
                 </Button>
-              }
+              )}
               <Button
                 bsStyle='link'
                 disabled={this.state.loading}

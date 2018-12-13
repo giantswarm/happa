@@ -22,7 +22,7 @@ class CreateCluster extends React.Component {
   state = {
     availabilityZonesPicker: {
       value: 1,
-      valid: true
+      valid: true,
     },
     releaseVersion: '',
     clusterName: 'My cluster',
@@ -66,7 +66,7 @@ class CreateCluster extends React.Component {
     this.setState({
       availabilityZonesPicker: {
         value: numberPicker.value,
-        valid: numberPicker.valid
+        valid: numberPicker.valid,
       },
     });
   };
