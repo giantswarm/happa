@@ -23,18 +23,20 @@ class CreateCluster extends React.Component {
     clusterName: 'My cluster',
     scaling: {
       min: 3,
+      minValid: true,
       max: 3,
+      maxValid: true,
     },
     submitting: false,
     valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
     error: false,
   };
 
-  updateAvailabilityZonesPicker = numberPicker => {
+  updateAvailabilityZonesPicker = n => {
     this.setState({
       availabilityZonesPicker: {
-        value: numberPicker.value,
-        valid: numberPicker.valid,
+        value: n.value,
+        valid: n.valid,
       },
     });
   };
@@ -42,8 +44,10 @@ class CreateCluster extends React.Component {
   updateScalingMin = n => {
     this.setState({
       scaling: {
-        min: n,
+        min: n.value,
+        minValid: n.valid,
         max: this.state.scaling.max,
+        maxValid: this.state.scaling.maxValid,
       },
     });
   };
@@ -52,7 +56,9 @@ class CreateCluster extends React.Component {
     this.setState({
       scaling: {
         min: this.state.scaling.min,
-        max: n,
+        minValid: this.state.scaling.minValid,
+        max: n.value,
+        maxValid: n.valid,
       },
     });
   };
@@ -171,6 +177,16 @@ class CreateCluster extends React.Component {
 
     // If the availabilityZonesPicker is invalid, return false
     if (!this.state.availabilityZonesPicker.valid) {
+      return false;
+    }
+
+    // If the min scaling numberpicker is invalid, return false
+    if (!this.state.scaling.minValid) {
+      return false;
+    }
+
+    // If the max scaling numberpickers is invalid, return false
+    if (!this.state.scaling.maxValid) {
       return false;
     }
 
