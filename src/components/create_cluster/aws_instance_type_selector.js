@@ -6,7 +6,7 @@ import Button from '../button';
 import InputField from '../shared/input_field';
 import PropTypes from 'prop-types';
 
-class NewAWSWorker extends React.Component {
+class AWSInstanceTypeSelector extends React.Component {
   constructor(props) {
     super(props);
 
@@ -54,7 +54,7 @@ class NewAWSWorker extends React.Component {
 
     this.state = {
       modalVisible: false,
-      preSelectedInstanceTypeName: props.worker.instanceType,
+      preSelectedInstanceTypeName: props.value.value,
       instanceTypes: availableInstanceTypes,
     };
   }
@@ -63,7 +63,7 @@ class NewAWSWorker extends React.Component {
     if (!this.props.readOnly) {
       this.setState({
         modalVisible: true,
-        preSelectedInstanceTypeName: this.props.worker.instanceType,
+        preSelectedInstanceTypeName: this.props.value.value,
       });
     }
   };
@@ -74,9 +74,11 @@ class NewAWSWorker extends React.Component {
     });
   };
 
-  updateInstanceType = value => {
-    this.props.worker.instanceType = value;
-    this.props.onWorkerUpdated(this.props.worker);
+  updateInstanceType = instanceType => {
+    this.props.onChange({
+      valid: this.state.valid,
+      value: instanceType,
+    });
   };
 
   buttonClass() {
@@ -94,38 +96,42 @@ class NewAWSWorker extends React.Component {
   }
 
   selectInstanceType = () => {
-    this.props.worker.instanceType = this.state.preSelectedInstanceTypeName;
-    this.props.onWorkerUpdated(this.props.worker);
+    this.props.onChange({
+      value: this.state.preSelectedInstanceTypeName,
+      valid: true,
+    });
     this.closeModal();
   };
 
   validateInstanceType = instanceTypeName => {
+    var valid;
+    var validationError;
+
     var validInstanceTypes = this.state.instanceTypes.map(x => {
       return x.name;
     });
 
     if (validInstanceTypes.indexOf(instanceTypeName) != -1) {
-      this.props.worker.valid = true;
-      this.props.onWorkerUpdated(this.props.worker);
-
-      return {
-        valid: true,
-        validationError: '',
-      };
+      valid = true;
+      validationError = '';
+    } else {
+      valid = false;
+      validationError = 'Please enter a valid instance type';
     }
 
-    this.props.worker.valid = false;
-    this.props.onWorkerUpdated(this.props.worker);
+    this.setState({
+      valid: valid,
+    });
 
     return {
-      valid: false,
-      validationError: 'Please enter a valid instance type',
+      valid: valid,
+      validationError: validationError,
     };
   };
 
   render() {
     return (
-      <div className='col-3'>
+      <div className='col-4'>
         <div className='new-cluster--instance-type-selector'>
           <form
             onSubmit={e => {
@@ -137,14 +143,13 @@ class NewAWSWorker extends React.Component {
                 this.instance_type = i;
               }}
               type='text'
-              value={this.props.worker.instanceType}
+              value={this.props.value}
               onChange={this.updateInstanceType}
               validate={this.validateInstanceType}
               autoFocus
               readOnly={this.props.readOnly}
             />
 
-            <span>{this.props.worker.valid}</span>
             <div
               className={
                 'new-cluster--instance-type-selector-button ' +
@@ -225,13 +230,11 @@ class NewAWSWorker extends React.Component {
   }
 }
 
-NewAWSWorker.propTypes = {
+AWSInstanceTypeSelector.propTypes = {
   allowedInstanceTypes: PropTypes.array,
-  worker: PropTypes.object,
-  index: PropTypes.number,
+  value: PropTypes.string,
   readOnly: PropTypes.bool,
-  deleteWorker: PropTypes.func,
-  onWorkerUpdated: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
-export default NewAWSWorker;
+export default AWSInstanceTypeSelector;
