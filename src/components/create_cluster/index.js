@@ -27,7 +27,9 @@ class CreateCluster extends React.Component {
       clusterName: 'My cluster',
       scaling: {
         min: 3,
+        minValid: true,
         max: 3,
+        maxValid: true,
       },
       submitting: false,
       valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
@@ -49,11 +51,11 @@ class CreateCluster extends React.Component {
     };
   }
 
-  updateAvailabilityZonesPicker = numberPicker => {
+  updateAvailabilityZonesPicker = n => {
     this.setState({
       availabilityZonesPicker: {
-        value: numberPicker.value,
-        valid: numberPicker.valid,
+        value: n.value,
+        valid: n.valid,
       },
     });
   };
@@ -63,7 +65,9 @@ class CreateCluster extends React.Component {
     this.setState({
       scaling: {
         min: numberPicker.value,
+        minValid: numberPicker.valid,
         max: this.state.scaling.max,
+        maxValid: this.state.scaling.maxValid,
       },
     });
   };
@@ -72,7 +76,9 @@ class CreateCluster extends React.Component {
     this.setState({
       scaling: {
         min: this.state.scaling.min,
+        minValid: this.state.scaling.minValid,
         max: numberPicker.value,
+        maxValid: numberPicker.valid,
       },
     });
   };
@@ -188,6 +194,7 @@ class CreateCluster extends React.Component {
       aws: {
         instanceType: {
           value: value.value,
+          valid: value.valid,
         },
       },
     });
@@ -201,6 +208,21 @@ class CreateCluster extends React.Component {
 
     // If the availabilityZonesPicker is invalid, return false
     if (!this.state.availabilityZonesPicker.valid) {
+      return false;
+    }
+
+    // If the min scaling numberpicker is invalid, return false
+    if (!this.state.scaling.minValid) {
+      return false;
+    }
+
+    // If the max scaling numberpickers is invalid, return false
+    if (!this.state.scaling.maxValid) {
+      return false;
+    }
+
+    // If the aws instance type is invalid, return false
+    if (!this.state.aws.instanceType.valid) {
       return false;
     }
 
@@ -307,7 +329,7 @@ class CreateCluster extends React.Component {
               <div className='col-9'>
                 <AWSInstanceTypeSelector
                   allowedInstanceTypes={this.props.allowedInstanceTypes}
-                  value={this.state.aws.instanceType}
+                  value={this.state.aws.instanceType.value}
                   readOnly={false}
                   onChange={this.updateAWSInstanceType}
                 />

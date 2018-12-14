@@ -75,7 +75,6 @@ class AWSInstanceTypeSelector extends React.Component {
   };
 
   updateInstanceType = instanceType => {
-    console.log(instanceType);
     this.props.onChange({
       valid: this.state.valid,
       value: instanceType,
@@ -97,7 +96,10 @@ class AWSInstanceTypeSelector extends React.Component {
   }
 
   selectInstanceType = () => {
-    this.props.onChange(this.state.preSelectedInstanceTypeName);
+    this.props.onChange({
+      value: this.state.preSelectedInstanceTypeName,
+      valid: true,
+    });
     this.closeModal();
   };
 
@@ -141,7 +143,7 @@ class AWSInstanceTypeSelector extends React.Component {
                 this.instance_type = i;
               }}
               type='text'
-              value={this.props.value.value}
+              value={this.props.value}
               onChange={this.updateInstanceType}
               validate={this.validateInstanceType}
               autoFocus
@@ -230,7 +232,7 @@ class AWSInstanceTypeSelector extends React.Component {
 
 AWSInstanceTypeSelector.propTypes = {
   allowedInstanceTypes: PropTypes.array,
-  value: PropTypes.object,
+  value: PropTypes.string,
   readOnly: PropTypes.bool,
   onChange: PropTypes.func,
 };
