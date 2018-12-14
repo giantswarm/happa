@@ -29,7 +29,7 @@ class CreateCluster extends React.Component {
         min: 3,
         minValid: true,
         max: 3,
-        maxValid: true
+        maxValid: true,
       },
       submitting: false,
       valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
@@ -61,7 +61,6 @@ class CreateCluster extends React.Component {
   };
 
   updateScalingMin = n => {
-    console.log(numberPicker);
     this.setState({
       scaling: {
         min: n.value,
@@ -194,6 +193,7 @@ class CreateCluster extends React.Component {
       aws: {
         instanceType: {
           value: value.value,
+          valid: value.valid,
         },
       },
     });
@@ -217,6 +217,11 @@ class CreateCluster extends React.Component {
 
     // If the max scaling numberpickers is invalid, return false
     if (!this.state.scaling.maxValid) {
+      return false;
+    }
+
+    // If the aws instance type is invalid, return false
+    if (!this.state.aws.instanceType.valid) {
       return false;
     }
 
@@ -323,7 +328,7 @@ class CreateCluster extends React.Component {
               <div className='col-9'>
                 <AWSInstanceTypeSelector
                   allowedInstanceTypes={this.props.allowedInstanceTypes}
-                  value={this.state.aws.instanceType}
+                  value={this.state.aws.instanceType.value}
                   readOnly={false}
                   onChange={this.updateAWSInstanceType}
                 />
