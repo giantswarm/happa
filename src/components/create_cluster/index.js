@@ -48,9 +48,10 @@ class CreateCluster extends React.Component {
         },
       },
       kvm: {
-        cpuCores: 0,
-        memorySize: 0,
-        diskSize: 0,
+        cpuCores: props.defaultCPUCores,
+        memorySize: props.defaultMemorySize,
+        diskSize: props.defaultDiskSize,
+        valid: true,
       },
     };
   }
@@ -476,6 +477,9 @@ CreateCluster.propTypes = {
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
   defaultVMSize: PropTypes.string,
+  defaultCPUCores: PropTypes.number,
+  defaultMemorySize: PropTypes.number,
+  defaultDiskSize: PropTypes.number,
 };
 
 function mapStateToProps(state) {
@@ -485,6 +489,9 @@ function mapStateToProps(state) {
   var provider = state.app.info.general.provider;
   var defaultInstanceType = 'm3.large'; // TODO
   var defaultVMSize = 'Standard_A2_v2'; // TODO
+  var defaultCPUCores = 1; // TODO
+  var defaultMemorySize = 1; // TODO
+  var defaultDiskSize = 1; // TODO
 
   var allowedInstanceTypes = [];
   if (provider === 'aws') {
@@ -504,6 +511,9 @@ function mapStateToProps(state) {
     provider,
     defaultInstanceType,
     defaultVMSize,
+    defaultCPUCores,
+    defaultMemorySize,
+    defaultDiskSize,
     selectedOrganization,
   };
 }
