@@ -10,7 +10,7 @@ class VMSizeSelector extends React.Component {
   constructor(props) {
     super(props);
 
-   // devVMSizes are placeholder VM sizes for the dev environment.
+    // devVMSizes are placeholder VM sizes for the dev environment.
     // In the dev environment window.config.azureCapabilitiesJson is not set to anything.
     // It would normally be set by the value in the installations repo.
     var devVMSizes = {
@@ -105,7 +105,7 @@ class VMSizeSelector extends React.Component {
     });
   }
 
-  selectInstanceType = () => {
+  selectVMSize = () => {
     this.props.onChange({
       value: this.state.preSelectedVMSize,
       valid: true,
@@ -174,7 +174,7 @@ class VMSizeSelector extends React.Component {
           className='new-cluster--instance-type-selector-modal aws'
         >
           <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Select an Instance Type</BootstrapModal.Title>
+            <BootstrapModal.Title>Select a VM Size</BootstrapModal.Title>
           </BootstrapModal.Header>
           <BootstrapModal.Body>
             <table className='new-cluster--instance-type-selector-table'>
@@ -198,16 +198,11 @@ class VMSizeSelector extends React.Component {
                         <input
                           type='radio'
                           readOnly
-                          checked={
-                            vmSize.name ===
-                            this.state.preSelectedVMSize
-                          }
+                          checked={vmSize.name === this.state.preSelectedVMSize}
                         />
                       </td>
                       <td>{vmSize.name}</td>
-                      <td className='description'>
-                        {vmSize.description}
-                      </td>
+                      <td className='description'>{vmSize.description}</td>
                       <td className='numeric'>{vmSize.numberOfCores}</td>
                       <td className='numeric'>
                         {(vmSize.memoryInMb / 1000).toFixed(2)} GB
@@ -219,12 +214,8 @@ class VMSizeSelector extends React.Component {
             </table>
           </BootstrapModal.Body>
           <BootstrapModal.Footer>
-            <Button
-              type='submit'
-              bsStyle='primary'
-              onClick={this.selectInstanceType}
-            >
-              Select Instance Type
+            <Button type='submit' bsStyle='primary' onClick={this.selectVMSize}>
+              Select VM Size
             </Button>
 
             <Button bsStyle='link' onClick={this.closeModal}>

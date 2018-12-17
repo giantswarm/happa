@@ -117,7 +117,7 @@ class CreateCluster extends React.Component {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           azure: {
-            vm_size: this.state.azure.vmSize.value
+            vm_size: this.state.azure.vmSize.value,
           },
         });
       }
