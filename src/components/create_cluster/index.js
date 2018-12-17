@@ -322,22 +322,43 @@ class CreateCluster extends React.Component {
               </div>
             </div>
 
-            <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Instance Type</h3>
-              </div>
-              <div className='col-9'>
-                <p>
-                  Select the instance type for your worker nodes.
-                </p>
-                <AWSInstanceTypeSelector
-                  allowedInstanceTypes={this.props.allowedInstanceTypes}
-                  value={this.state.aws.instanceType.value}
-                  readOnly={false}
-                  onChange={this.updateAWSInstanceType}
-                />
-              </div>
-            </div>
+            {(() => {
+              switch (this.props.provider) {
+                case 'aws':
+                  return (
+                    <div className='row section'>
+                      <div className='col-3'>
+                        <h3 className='table-label'>Instance Type</h3>
+                      </div>
+                      <div className='col-9'>
+                        <p>Select the instance type for your worker nodes.</p>
+                        <AWSInstanceTypeSelector
+                          allowedInstanceTypes={this.props.allowedInstanceTypes}
+                          value={this.state.aws.instanceType.value}
+                          readOnly={false}
+                          onChange={this.updateAWSInstanceType}
+                        />
+                      </div>
+                    </div>
+                  );
+                case 'kvm':
+                  return (
+                    <div className='row section'>
+                      <div className='col-3'>
+                        <h3 className='table-label'>TODO: KVM</h3>
+                      </div>
+                    </div>
+                  );
+                case 'azure':
+                  return (
+                    <div className='row section'>
+                      <div className='col-3'>
+                        <h3 className='table-label'>TODO: AZURE</h3>
+                      </div>
+                    </div>
+                  );
+              }
+            })()}
 
             <div className='row section'>
               <div className='col-3'>
