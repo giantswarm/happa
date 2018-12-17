@@ -48,18 +48,18 @@ class CreateCluster extends React.Component {
         },
       },
       kvm: {
-        cpuCores:{
+        cpuCores: {
           value: props.defaultCPUCores,
           valid: true,
         },
-        memorySize:{
+        memorySize: {
           value: props.defaultMemorySize,
           valid: true,
         },
-        diskSize:{
+        diskSize: {
           value: props.defaultDiskSize,
           valid: true,
-        }
+        },
       },
     };
   }
@@ -293,7 +293,13 @@ class CreateCluster extends React.Component {
     }
 
     // If the kvm worker is invalid, return false
-    if (!(this.state.kvm.cpuCores.valid && this.state.kvm.memorySize.valid && this.state.kvm.diskSize.valid)) {
+    if (
+      !(
+        this.state.kvm.cpuCores.valid &&
+        this.state.kvm.memorySize.valid &&
+        this.state.kvm.diskSize.valid
+      )
+    ) {
       return false;
     }
 
@@ -419,7 +425,10 @@ class CreateCluster extends React.Component {
                         <h3 className='table-label'>Worker Configuration</h3>
                       </div>
                       <div className='col-9'>
-                        <p>Configure the amount of CPU, RAM and Storage for your workers.</p>
+                        <p>
+                          Configure the amount of CPU, RAM and Storage for your
+                          workers.
+                        </p>
 
                         <NumberPicker
                           label='CPU Cores'
@@ -429,7 +438,7 @@ class CreateCluster extends React.Component {
                           max={999}
                           onChange={this.updateCPUCores}
                         />
-                        <br/>
+                        <br />
 
                         <NumberPicker
                           label='Memory'
@@ -440,7 +449,7 @@ class CreateCluster extends React.Component {
                           max={999}
                           onChange={this.updateMemorySize}
                         />
-                        <br/>
+                        <br />
 
                         <NumberPicker
                           label='Storage'
