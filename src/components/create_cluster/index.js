@@ -133,9 +133,9 @@ class CreateCluster extends React.Component {
     } else {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
-          memory: { size_gb: 0 }, // TODO
-          storage: { size_gb: 0 }, // TODO
-          cpu: { cores: 0 }, // TODO
+          memory: { size_gb: this.state.kvm.memorySize.value },
+          storage: { size_gb: this.state.kvm.diskSize.value },
+          cpu: { cores: this.state.kvm.cpuCores.value },
         });
       }
     }
