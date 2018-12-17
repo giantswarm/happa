@@ -48,10 +48,18 @@ class CreateCluster extends React.Component {
         },
       },
       kvm: {
-        cpuCores: props.defaultCPUCores,
-        memorySize: props.defaultMemorySize,
-        diskSize: props.defaultDiskSize,
-        valid: true,
+        cpuCores:{
+          value: props.defaultCPUCores,
+          valid: true,
+        },
+        memorySize:{
+          value: props.defaultMemorySize,
+          valid: true,
+        },
+        diskSize:{
+          value: props.defaultDiskSize,
+          valid: true,
+        }
       },
     };
   }
@@ -215,6 +223,45 @@ class CreateCluster extends React.Component {
     });
   };
 
+  updateCPUCores = value => {
+    this.setState({
+      kvm: {
+        cpuCores: {
+          value: value.value,
+          valid: value.valid,
+        },
+        memorySize: this.state.kvm.memorySize,
+        diskSize: this.state.kvm.diskSize,
+      },
+    });
+  };
+
+  updateMemorySize = value => {
+    this.setState({
+      kvm: {
+        cpuCores: this.state.kvm.cpuCores,
+        memorySize: {
+          value: value.value,
+          valid: value.valid,
+        },
+        diskSize: this.state.kvm.diskSize,
+      },
+    });
+  };
+
+  updateDiskSize = value => {
+    this.setState({
+      kvm: {
+        cpuCores: this.state.kvm.cpuCores,
+        memorySize: this.state.kvm.memorySize,
+        diskSize: {
+          value: value.value,
+          valid: value.valid,
+        },
+      },
+    });
+  };
+
   valid() {
     // If any of the releaseVersion hasn't been set yet, return false
     if (this.state.releaseVersion === '') {
@@ -238,6 +285,11 @@ class CreateCluster extends React.Component {
 
     // If the aws instance type is invalid, return false
     if (!this.state.aws.instanceType.valid) {
+      return false;
+    }
+
+    // If the kvm worker is invalid, return false
+    if (!(this.state.kvm.cpuCores.valid && this.state.kvm.memorySize.valid && this.state.kvm.diskSize.valid)) {
       return false;
     }
 
@@ -360,7 +412,41 @@ class CreateCluster extends React.Component {
                   return (
                     <div className='row section'>
                       <div className='col-3'>
-                        <h3 className='table-label'>TODO: KVM</h3>
+                        <h3 className='table-label'>Worker Configuration</h3>
+                      </div>
+                      <div className='col-9'>
+                        <p>Configure the amount of CPU, RAM and Storage for your workers.</p>
+
+                        <NumberPicker
+                          label='CPU Cores'
+                          stepSize={1}
+                          value={this.state.kvm.cpuCores.value}
+                          min={1}
+                          max={999}
+                          onChange={this.updateCPUCores}
+                        />
+                        <br/>
+
+                        <NumberPicker
+                          label='Memory'
+                          unit='GB'
+                          stepSize={1}
+                          value={this.state.kvm.memorySize.value}
+                          min={1}
+                          max={999}
+                          onChange={this.updateMemorySize}
+                        />
+                        <br/>
+
+                        <NumberPicker
+                          label='Storage'
+                          unit='GB'
+                          stepSize={10}
+                          value={this.state.kvm.diskSize.value}
+                          min={10}
+                          max={999}
+                          onChange={this.updateDiskSize}
+                        />
                       </div>
                     </div>
                   );
