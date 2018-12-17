@@ -588,14 +588,20 @@ function mapStateToProps(state) {
   var provider = state.app.info.general.provider;
 
   var defaultInstanceType;
-  if (state.app.info.workers.instance_type && state.app.info.workers.instance_type.default) {
+  if (
+    state.app.info.workers.instance_type &&
+    state.app.info.workers.instance_type.default
+  ) {
     defaultInstanceType = state.app.info.workers.instance_type.default;
   } else {
     defaultInstanceType = 'm3.large';
   }
 
   var defaultVMSize;
-  if (state.app.info.workers.vm_size && state.app.info.workers.vm_size.default) {
+  if (
+    state.app.info.workers.vm_size &&
+    state.app.info.workers.vm_size.default
+  ) {
     defaultVMSize = state.app.info.workers.vm_size.default;
   } else {
     defaultVMSize = 'Standard_D2s_v3';
