@@ -7,6 +7,7 @@ import Button from '../button';
 import { clusterCreate } from '../../actions/clusterActions';
 import NumberPicker from './number_picker.js';
 import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
+import VMSizeSelector from './vm_size_selector.js';
 import ReleaseSelector from './release_selector.js';
 import ProviderCredentials from './provider_credentials.js';
 import PropTypes from 'prop-types';
@@ -41,7 +42,10 @@ class CreateCluster extends React.Component {
         },
       },
       azure: {
-        vmSize: '',
+        vmSize: {
+          valid: true,
+          value: props.defaultVMSize,
+        },
       },
       kvm: {
         cpuCores: 0,
@@ -61,7 +65,6 @@ class CreateCluster extends React.Component {
   };
 
   updateScalingMin = numberPicker => {
-    console.log(numberPicker);
     this.setState({
       scaling: {
         min: numberPicker.value,
@@ -114,7 +117,7 @@ class CreateCluster extends React.Component {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           azure: {
-            vm_size: 'Standard_A2_v2', // TODO
+            vm_size: this.state.azure.vmSize.value
           },
         });
       }
@@ -193,6 +196,17 @@ class CreateCluster extends React.Component {
     this.setState({
       aws: {
         instanceType: {
+          value: value.value,
+          valid: value.valid,
+        },
+      },
+    });
+  };
+
+  updateVMSize = value => {
+    this.setState({
+      azure: {
+        vmSize: {
           value: value.value,
           valid: value.valid,
         },
@@ -353,7 +367,16 @@ class CreateCluster extends React.Component {
                   return (
                     <div className='row section'>
                       <div className='col-3'>
-                        <h3 className='table-label'>TODO: AZURE</h3>
+                        <h3 className='table-label'>VM Size</h3>
+                      </div>
+                      <div className='col-9'>
+                        <p>Select the vm size for your worker nodes.</p>
+                        <VMSizeSelector
+                          allowedVMSizes={this.props.allowedVMSizes}
+                          value={this.state.azure.vmSize.value}
+                          readOnly={false}
+                          onChange={this.updateVMSize}
+                        />
                       </div>
                     </div>
                   );
@@ -452,6 +475,7 @@ CreateCluster.propTypes = {
   dispatch: PropTypes.func,
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
+  defaultVMSize: PropTypes.string,
 };
 
 function mapStateToProps(state) {
@@ -459,7 +483,8 @@ function mapStateToProps(state) {
   var maxAvailabilityZones = state.app.info.general.availability_zones.max;
   var selectedOrganization = state.app.selectedOrganization;
   var provider = state.app.info.general.provider;
-  var defaultInstanceType = 'm3.large';
+  var defaultInstanceType = 'm3.large'; // TODO
+  var defaultVMSize = 'Standard_A2_v2'; // TODO
 
   var allowedInstanceTypes = [];
   if (provider === 'aws') {
@@ -478,6 +503,7 @@ function mapStateToProps(state) {
     allowedVMSizes,
     provider,
     defaultInstanceType,
+    defaultVMSize,
     selectedOrganization,
   };
 }
