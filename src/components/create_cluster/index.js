@@ -109,7 +109,7 @@ class CreateCluster extends React.Component {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           aws: {
-            instance_type: 'm3.large', // TODO
+            instance_type: this.state.aws.instanceType.value,
           },
         });
       }
