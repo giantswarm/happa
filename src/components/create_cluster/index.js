@@ -327,6 +327,9 @@ class CreateCluster extends React.Component {
                 <h3 className='table-label'>Instance Type</h3>
               </div>
               <div className='col-9'>
+                <p>
+                  Select the instance type for your worker nodes.
+                </p>
                 <AWSInstanceTypeSelector
                   allowedInstanceTypes={this.props.allowedInstanceTypes}
                   value={this.state.aws.instanceType.value}
