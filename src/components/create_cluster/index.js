@@ -288,6 +288,10 @@ class CreateCluster extends React.Component {
       return false;
     }
 
+    if (!this.state.azure.vmSize.valid) {
+      return false;
+    }
+
     // If the kvm worker is invalid, return false
     if (!(this.state.kvm.cpuCores.valid && this.state.kvm.memorySize.valid && this.state.kvm.diskSize.valid)) {
       return false;
