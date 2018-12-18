@@ -27,7 +27,6 @@ class NodeCountSelector extends React.Component {
   updateScalingMin = numberPicker => {
     this.setState({
       scaling: {
-        automatic: this.state.scaling.automatic,
         min: numberPicker.value,
         minValid: numberPicker.valid,
         max: this.state.scaling.max,
@@ -39,7 +38,6 @@ class NodeCountSelector extends React.Component {
   updateScalingMax = numberPicker => {
     this.setState({
       scaling: {
-        automatic: this.state.scaling.automatic,
         min: this.state.scaling.min,
         minValid: this.state.scaling.minValid,
         max: numberPicker.value,
@@ -51,7 +49,6 @@ class NodeCountSelector extends React.Component {
   updateNodeCount = numberPicker => {
     this.setState({
       scaling: {
-        automatic: false,
         min: numberPicker.value,
         minValid: numberPicker.valid,
         max: numberPicker.value,
