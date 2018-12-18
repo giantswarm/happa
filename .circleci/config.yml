@@ -51,6 +51,7 @@ jobs:
         command: |
           if [ "${CIRCLE_BRANCH}" != "master" ]; then
             docker pull quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
+            docker run --name happa-master -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
           fi
 
           docker run --name happa-branch -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
