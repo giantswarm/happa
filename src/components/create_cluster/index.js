@@ -174,6 +174,8 @@ class CreateCluster extends React.Component {
       return false;
     }
 
+    // In order to have support for automatic scaling and therefore for scaling
+    // limits, provider must be AWS and cluster release >= 6.1.0.
     return (cmp(releaseVer, '6.1.0') === 1);
   }
 
