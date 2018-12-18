@@ -176,7 +176,7 @@ class CreateCluster extends React.Component {
 
     // In order to have support for automatic scaling and therefore for scaling
     // limits, provider must be AWS and cluster release >= 6.1.0.
-    return (cmp(releaseVer, '6.1.0') === 1);
+    return cmp(releaseVer, '6.1.0') === 1;
   }
 
   selectRelease = releaseVersion => {
@@ -486,7 +486,10 @@ class CreateCluster extends React.Component {
 
             <div className='row section'>
               <NodeCountSelector
-                autoscalingEnabled={this.isScalingAutomatic(this.props.provider, this.state.releaseVersion)}
+                autoscalingEnabled={this.isScalingAutomatic(
+                  this.props.provider,
+                  this.state.releaseVersion
+                )}
                 scaling={this.state.scaling}
                 readOnly={false}
                 onChange={this.UpdateScaling}

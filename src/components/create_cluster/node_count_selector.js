@@ -55,7 +55,7 @@ class NodeCountSelector extends React.Component {
         maxValid: numberPicker.valid,
       },
     });
-  }
+  };
 
   handleFocus = event => {
     event.target.select();
