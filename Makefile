@@ -14,47 +14,47 @@ install-node-modules:
 	rm -rf dist
 	mkdir dist
 	docker run --rm -ti \
-		-v ${PWD}/src:/usr/src/app/src \
-		-v ${PWD}/dist:/usr/src/app/dist \
-		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules \
-		-v ${PWD}/package.json:/usr/src/app/package.json \
-		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock \
+		-v ${PWD}/src:/usr/src/app/src:z \
+		-v ${PWD}/dist:/usr/src/app/dist:z \
+		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
+		-v ${PWD}/package.json:/usr/src/app/package.json:z \
+		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock:z \
 		quay.io/giantswarm/happa-build:latest yarn install --no-progress
 
 run-prettier:
 	docker run --rm -ti \
-    -v ${PWD}/src:/usr/src/app/src \
-    -v ${PWD}/dist:/usr/src/app/dist \
-    -v ${PWD}/node_modules_linux:/usr/src/app/node_modules \
-    -v ${PWD}/package.json:/usr/src/app/package.json \
-    -v ${PWD}/yarn.lock:/usr/src/app/yarn.lock \
+    -v ${PWD}/src:/usr/src/app/src:z \
+    -v ${PWD}/dist:/usr/src/app/dist:z \
+    -v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
+    -v ${PWD}/package.json:/usr/src/app/package.json:z \
+    -v ${PWD}/yarn.lock:/usr/src/app/yarn.lock:z \
     quay.io/giantswarm/happa-build:latest yarn run prettier
 
 validate-prettier:
 	docker run --rm -ti \
-		-v ${PWD}/src:/usr/src/app/src \
-		-v ${PWD}/dist:/usr/src/app/dist \
-		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules \
-		-v ${PWD}/package.json:/usr/src/app/package.json \
-		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock \
+		-v ${PWD}/src:/usr/src/app/src:z \
+		-v ${PWD}/dist:/usr/src/app/dist:z \
+		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
+		-v ${PWD}/package.json:/usr/src/app/package.json:z \
+		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock:z \
 		quay.io/giantswarm/happa-build:latest yarn run validate-prettier
 
 dist:
 	docker run --rm -ti \
-		-v ${PWD}/src:/usr/src/app/src \
-		-v ${PWD}/dist:/usr/src/app/dist \
-		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules \
-		-v ${PWD}/package.json:/usr/src/app/package.json \
-		-v ${PWD}/Gruntfile.js:/usr/src/app/Gruntfile.js \
-		-v ${PWD}/webpack.config.js:/usr/src/app/webpack.config.js \
-		-v ${PWD}/webpack.dist.config.js:/usr/src/app/webpack.dist.config.js \
-		-v ${PWD}/.eslintrc:/usr/src/app/.eslintrc \
+		-v ${PWD}/src:/usr/src/app/src:z \
+		-v ${PWD}/dist:/usr/src/app/dist:z \
+		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
+		-v ${PWD}/package.json:/usr/src/app/package.json:z \
+		-v ${PWD}/Gruntfile.js:/usr/src/app/Gruntfile.js:z \
+		-v ${PWD}/webpack.config.js:/usr/src/app/webpack.config.js:z \
+		-v ${PWD}/webpack.dist.config.js:/usr/src/app/webpack.dist.config.js:z \
+		-v ${PWD}/.eslintrc:/usr/src/app/.eslintrc:z \
 		quay.io/giantswarm/happa-build:latest grunt build
 
 
 check-updates:
 	# check for dependency updates
-	docker run -p 8000:8000 -v ${PWD}/src:/usr/src/app/src:Z -v ${PWD}/dist:/usr/src/app/dist:Z \
+	docker run -p 8000:8000 -v ${PWD}/src:/usr/src/app/src:z -v ${PWD}/dist:/usr/src/app/dist:z \
 		happa-dev npm install -g npm-check-updates && ncu
 
 # Build the production docker container, which is just an nginx server
@@ -108,7 +108,7 @@ npm-check-updates:
 
 # Run tests
 test: docker-build-dev
-	docker run -ti -p 8000:8000 -p 8080:8080 -v ${PWD}/src:/usr/src/app/src:Z happa-dev npm test
+	docker run -ti -p 8000:8000 -p 8080:8080 -v ${PWD}/src:/usr/src/app/src:z happa-dev npm test
 
 clean:
 	rm -rf .cache dist docker-volumes node_modules
