@@ -6,7 +6,7 @@ import Button from '../button';
 import InputField from '../shared/input_field';
 import PropTypes from 'prop-types';
 
-class NewAzureWorker extends React.Component {
+class VMSizeSelector extends React.Component {
   constructor(props) {
     super(props);
 
@@ -64,7 +64,7 @@ class NewAzureWorker extends React.Component {
 
     this.state = {
       modalVisible: false,
-      preSelectedVMSize: props.worker.vmSize,
+      preSelectedVMSize: props.value,
       vmSizes: availableVMSizes,
     };
   }
@@ -73,7 +73,7 @@ class NewAzureWorker extends React.Component {
     if (!this.props.readOnly) {
       this.setState({
         modalVisible: true,
-        preSelectedVMSize: this.props.worker.vmSize,
+        preSelectedVMSize: this.props.value,
       });
     }
   };
@@ -84,9 +84,11 @@ class NewAzureWorker extends React.Component {
     });
   };
 
-  updateVMSize = value => {
-    this.props.worker.vmSize = value;
-    this.props.onWorkerUpdated(this.props.worker);
+  updateVMSize = vmSize => {
+    this.props.onChange({
+      valid: this.state.valid,
+      value: vmSize,
+    });
   };
 
   buttonClass() {
@@ -104,54 +106,42 @@ class NewAzureWorker extends React.Component {
   }
 
   selectVMSize = () => {
-    this.props.worker.vmSize = this.state.preSelectedVMSize;
-    this.props.onWorkerUpdated(this.props.worker);
+    this.props.onChange({
+      value: this.state.preSelectedVMSize,
+      valid: true,
+    });
     this.closeModal();
   };
 
   validateVMSize = vmSize => {
+    var valid;
+    var validationError;
+
     var validVMSizes = this.state.vmSizes.map(x => {
       return x.name;
     });
 
     if (validVMSizes.indexOf(vmSize) != -1) {
-      this.props.worker.valid = true;
-      this.props.onWorkerUpdated(this.props.worker);
-
-      return {
-        valid: true,
-        validationError: '',
-      };
+      valid = true;
+      validationError = '';
+    } else {
+      valid = false;
+      validationError = 'Please enter a valid vm size';
     }
 
-    this.props.worker.valid = false;
-    this.props.onWorkerUpdated(this.props.worker);
+    this.setState({
+      valid: valid,
+    });
 
     return {
-      valid: false,
-      validationError: 'Please enter a valid vm size',
+      valid: valid,
+      validationError: validationError,
     };
   };
 
   render() {
-    var index = this.props.index;
     return (
-      <div className='col-4 new-cluster--worker'>
-        <div className='new-cluster--worker-title'>
-          {'Azure Worker #' + (index + 1)}
-          {index > 0 ? (
-            <span
-              className='new-cluster--delete'
-              onClick={this.props.deleteWorker}
-            >
-              <i className='fa fa-times' />
-            </span>
-          ) : (
-            undefined
-          )}
-        </div>
-        <div className='new-cluster--worker-setting-label'>VM Size</div>
-
+      <div className='col-4'>
         <div className='new-cluster--instance-type-selector'>
           <form
             onSubmit={e => {
@@ -159,18 +149,14 @@ class NewAzureWorker extends React.Component {
             }}
           >
             <InputField
-              ref={i => {
-                this.vmSize = i;
-              }}
               type='text'
-              value={this.props.worker.vmSize}
+              value={this.props.value}
               onChange={this.updateVMSize}
               validate={this.validateVMSize}
               autoFocus
               readOnly={this.props.readOnly}
             />
 
-            <span>{this.props.worker.valid}</span>
             <div
               className={
                 'new-cluster--instance-type-selector-button ' +
@@ -185,7 +171,7 @@ class NewAzureWorker extends React.Component {
         <BootstrapModal
           show={this.state.modalVisible}
           onHide={this.closeModal}
-          className='new-cluster--instance-type-selector-modal azure'
+          className='new-cluster--instance-type-selector-modal aws'
         >
           <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Select a VM Size</BootstrapModal.Title>
@@ -242,13 +228,11 @@ class NewAzureWorker extends React.Component {
   }
 }
 
-NewAzureWorker.propTypes = {
+VMSizeSelector.propTypes = {
   allowedVMSizes: PropTypes.array,
-  worker: PropTypes.object,
-  index: PropTypes.number,
+  value: PropTypes.string,
   readOnly: PropTypes.bool,
-  deleteWorker: PropTypes.func,
-  onWorkerUpdated: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
-export default NewAzureWorker;
+export default VMSizeSelector;

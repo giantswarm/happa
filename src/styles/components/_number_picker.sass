@@ -41,22 +41,31 @@
     background-color: darken(#3b5f7b, 6%)
     color: #aaa
 
-.number-picker--control-increase
+.number-picker .number-picker--control-increase
   display: inline-block
   right: 0px
   border-top-right-radius: 5px
   border-bottom-right-radius: 5px
 
-.number-picker--control-decrease
+.number-picker .number-picker--control-decrease
   display: inline-block
   left: 0px
   border-top-left-radius: 5px
   border-bottom-left-radius: 5px
 
-.number-picker--value input
+.number-picker .number-picker--value input
   display: inline-block
   background-color: inherit
   border: none
   text-align: center
   width: 100%
-  padding-left: 10px
+  height: 100%;
+  outline: none;
+
+.number-picker .number-picker--value input:focus
+  outline: none;
+
+.number-picker .number-picker--value input[type=number]::-webkit-inner-spin-button,
+.number-picker .number-picker--value input[type=number]::-webkit-outer-spin-button
+  -webkit-appearance: none;
+  margin: 0;

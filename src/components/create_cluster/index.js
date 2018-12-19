@@ -5,7 +5,10 @@ import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import Button from '../button';
 import { clusterCreate } from '../../actions/clusterActions';
+import NodeCountSelector from './node_count_selector.js';
 import NumberPicker from './number_picker.js';
+import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
+import VMSizeSelector from './vm_size_selector.js';
 import ReleaseSelector from './release_selector.js';
 import ProviderCredentials from './provider_credentials.js';
 import PropTypes from 'prop-types';
@@ -14,45 +17,71 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import cmp from 'semver-compare';
 
 class CreateCluster extends React.Component {
-  state = {
-    availabilityZonesPicker: {
-      value: 1,
-      valid: true,
-    },
-    releaseVersion: '',
-    clusterName: 'My cluster',
-    scaling: {
-      min: 3,
-      max: 3,
-    },
-    submitting: false,
-    valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
-    error: false,
-  };
+  constructor(props) {
+    super(props);
 
-  updateAvailabilityZonesPicker = numberPicker => {
+    this.state = {
+      availabilityZonesPicker: {
+        value: 1,
+        valid: true,
+      },
+      releaseVersion: '',
+      clusterName: 'My cluster',
+      scaling: {
+        automatic: false,
+        min: 3,
+        minValid: true,
+        max: 3,
+        maxValid: true,
+      },
+      submitting: false,
+      valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
+      error: false,
+      aws: {
+        instanceType: {
+          valid: true,
+          value: props.defaultInstanceType,
+        },
+      },
+      azure: {
+        vmSize: {
+          valid: true,
+          value: props.defaultVMSize,
+        },
+      },
+      kvm: {
+        cpuCores: {
+          value: props.defaultCPUCores,
+          valid: true,
+        },
+        memorySize: {
+          value: props.defaultMemorySize,
+          valid: true,
+        },
+        diskSize: {
+          value: props.defaultDiskSize,
+          valid: true,
+        },
+      },
+    };
+  }
+
+  updateAvailabilityZonesPicker = n => {
     this.setState({
       availabilityZonesPicker: {
-        value: numberPicker.value,
-        valid: numberPicker.valid,
+        value: n.value,
+        valid: n.valid,
       },
     });
   };
 
-  updateScalingMin = n => {
+  updateScaling = nodeCountSelector => {
     this.setState({
       scaling: {
-        min: n,
-        max: this.state.scaling.max,
-      },
-    });
-  };
-
-  updateScalingMax = n => {
-    this.setState({
-      scaling: {
-        min: this.state.scaling.min,
-        max: n,
+        min: nodeCountSelector.scaling.min,
+        minValid: nodeCountSelector.scaling.minValid,
+        max: nodeCountSelector.scaling.max,
+        maxValid: nodeCountSelector.scaling.maxValid,
       },
     });
   };
@@ -80,7 +109,7 @@ class CreateCluster extends React.Component {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           aws: {
-            instance_type: 'm3.large', // TODO
+            instance_type: this.state.aws.instanceType.value,
           },
         });
       }
@@ -88,16 +117,16 @@ class CreateCluster extends React.Component {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           azure: {
-            vm_size: 'Standard_A2_v2', // TODO
+            vm_size: this.state.azure.vmSize.value,
           },
         });
       }
     } else {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
-          memory: { size_gb: 0 }, // TODO
-          storage: { size_gb: 0 }, // TODO
-          cpu: { cores: 0 }, // TODO
+          memory: { size_gb: this.state.kvm.memorySize.value },
+          storage: { size_gb: this.state.kvm.diskSize.value },
+          cpu: { cores: this.state.kvm.cpuCores.value },
         });
       }
     }
@@ -140,6 +169,16 @@ class CreateCluster extends React.Component {
     this.cluster_name.select();
   }
 
+  isScalingAutomatic(provider, releaseVer) {
+    if (provider != 'aws') {
+      return false;
+    }
+
+    // In order to have support for automatic scaling and therefore for scaling
+    // limits, provider must be AWS and cluster release >= 6.1.0.
+    return cmp(releaseVer, '6.1.0') === 1;
+  }
+
   selectRelease = releaseVersion => {
     this.setState({
       releaseVersion,
@@ -163,6 +202,67 @@ class CreateCluster extends React.Component {
     );
   }
 
+  updateAWSInstanceType = value => {
+    this.setState({
+      aws: {
+        instanceType: {
+          value: value.value,
+          valid: value.valid,
+        },
+      },
+    });
+  };
+
+  updateVMSize = value => {
+    this.setState({
+      azure: {
+        vmSize: {
+          value: value.value,
+          valid: value.valid,
+        },
+      },
+    });
+  };
+
+  updateCPUCores = value => {
+    this.setState({
+      kvm: {
+        cpuCores: {
+          value: value.value,
+          valid: value.valid,
+        },
+        memorySize: this.state.kvm.memorySize,
+        diskSize: this.state.kvm.diskSize,
+      },
+    });
+  };
+
+  updateMemorySize = value => {
+    this.setState({
+      kvm: {
+        cpuCores: this.state.kvm.cpuCores,
+        memorySize: {
+          value: value.value,
+          valid: value.valid,
+        },
+        diskSize: this.state.kvm.diskSize,
+      },
+    });
+  };
+
+  updateDiskSize = value => {
+    this.setState({
+      kvm: {
+        cpuCores: this.state.kvm.cpuCores,
+        memorySize: this.state.kvm.memorySize,
+        diskSize: {
+          value: value.value,
+          valid: value.valid,
+        },
+      },
+    });
+  };
+
   valid() {
     // If any of the releaseVersion hasn't been set yet, return false
     if (this.state.releaseVersion === '') {
@@ -171,6 +271,36 @@ class CreateCluster extends React.Component {
 
     // If the availabilityZonesPicker is invalid, return false
     if (!this.state.availabilityZonesPicker.valid) {
+      return false;
+    }
+
+    // If the min scaling numberpicker is invalid, return false
+    if (!this.state.scaling.minValid) {
+      return false;
+    }
+
+    // If the max scaling numberpickers is invalid, return false
+    if (!this.state.scaling.maxValid) {
+      return false;
+    }
+
+    // If the aws instance type is invalid, return false
+    if (!this.state.aws.instanceType.valid) {
+      return false;
+    }
+
+    if (!this.state.azure.vmSize.valid) {
+      return false;
+    }
+
+    // If the kvm worker is invalid, return false
+    if (
+      !(
+        this.state.kvm.cpuCores.valid &&
+        this.state.kvm.memorySize.valid &&
+        this.state.kvm.diskSize.valid
+      )
+    ) {
       return false;
     }
 
@@ -270,47 +400,100 @@ class CreateCluster extends React.Component {
               </div>
             </div>
 
+            {(() => {
+              switch (this.props.provider) {
+                case 'aws':
+                  return (
+                    <div className='row section'>
+                      <div className='col-3'>
+                        <h3 className='table-label'>Instance Type</h3>
+                      </div>
+                      <div className='col-9'>
+                        <p>Select the instance type for your worker nodes.</p>
+                        <AWSInstanceTypeSelector
+                          allowedInstanceTypes={this.props.allowedInstanceTypes}
+                          value={this.state.aws.instanceType.value}
+                          readOnly={false}
+                          onChange={this.updateAWSInstanceType}
+                        />
+                      </div>
+                    </div>
+                  );
+                case 'kvm':
+                  return (
+                    <div className='row section'>
+                      <div className='col-3'>
+                        <h3 className='table-label'>Worker Configuration</h3>
+                      </div>
+                      <div className='col-9'>
+                        <p>
+                          Configure the amount of CPU, RAM and Storage for your
+                          workers.
+                        </p>
+
+                        <NumberPicker
+                          label='CPU Cores'
+                          stepSize={1}
+                          value={this.state.kvm.cpuCores.value}
+                          min={1}
+                          max={999}
+                          onChange={this.updateCPUCores}
+                        />
+                        <br />
+
+                        <NumberPicker
+                          label='Memory'
+                          unit='GB'
+                          stepSize={1}
+                          value={this.state.kvm.memorySize.value}
+                          min={1}
+                          max={999}
+                          onChange={this.updateMemorySize}
+                        />
+                        <br />
+
+                        <NumberPicker
+                          label='Storage'
+                          unit='GB'
+                          stepSize={10}
+                          value={this.state.kvm.diskSize.value}
+                          min={10}
+                          max={999}
+                          onChange={this.updateDiskSize}
+                        />
+                      </div>
+                    </div>
+                  );
+                case 'azure':
+                  return (
+                    <div className='row section'>
+                      <div className='col-3'>
+                        <h3 className='table-label'>VM Size</h3>
+                      </div>
+                      <div className='col-9'>
+                        <p>Select the vm size for your worker nodes.</p>
+                        <VMSizeSelector
+                          allowedVMSizes={this.props.allowedVMSizes}
+                          value={this.state.azure.vmSize.value}
+                          readOnly={false}
+                          onChange={this.updateVMSize}
+                        />
+                      </div>
+                    </div>
+                  );
+              }
+            })()}
+
             <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Node Count</h3>
-              </div>
-              <div className='col-9'>
-                <form
-                  onSubmit={e => {
-                    e.preventDefault();
-                  }}
-                >
-                  <div>
-                    <p>
-                      To disable autoscaling, set both numbers to the same value
-                    </p>
-                    <div className='col-3'>
-                      <p>Minimum</p>
-                      <NumberPicker
-                        label=''
-                        stepSize={1}
-                        value={this.state.scaling.min}
-                        min={1}
-                        max={this.state.scaling.max}
-                        onChange={this.updateScalingMin}
-                        readOnly={false}
-                      />
-                    </div>
-                    <div className='col-3'>
-                      <p>Maximum</p>
-                      <NumberPicker
-                        label=''
-                        stepSize={1}
-                        value={this.state.scaling.max}
-                        min={this.state.scaling.min}
-                        max={99} // TODO
-                        onChange={this.updateScalingMax}
-                        readOnly={false}
-                      />
-                    </div>
-                  </div>
-                </form>
-              </div>
+              <NodeCountSelector
+                autoscalingEnabled={this.isScalingAutomatic(
+                  this.props.provider,
+                  this.state.releaseVersion
+                )}
+                scaling={this.state.scaling}
+                readOnly={false}
+                onChange={this.UpdateScaling}
+              />
             </div>
 
             <div className='row section'>
@@ -361,6 +544,11 @@ CreateCluster.propTypes = {
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,
   provider: PropTypes.string,
+  defaultInstanceType: PropTypes.string,
+  defaultVMSize: PropTypes.string,
+  defaultCPUCores: PropTypes.number,
+  defaultMemorySize: PropTypes.number,
+  defaultDiskSize: PropTypes.number,
 };
 
 function mapStateToProps(state) {
@@ -368,6 +556,11 @@ function mapStateToProps(state) {
   var maxAvailabilityZones = state.app.info.general.availability_zones.max;
   var selectedOrganization = state.app.selectedOrganization;
   var provider = state.app.info.general.provider;
+  var defaultInstanceType = 'm3.large'; // TODO
+  var defaultVMSize = 'Standard_A2_v2'; // TODO
+  var defaultCPUCores = 1; // TODO
+  var defaultMemorySize = 1; // TODO
+  var defaultDiskSize = 1; // TODO
 
   var allowedInstanceTypes = [];
   if (provider === 'aws') {
@@ -385,6 +578,11 @@ function mapStateToProps(state) {
     allowedInstanceTypes,
     allowedVMSizes,
     provider,
+    defaultInstanceType,
+    defaultVMSize,
+    defaultCPUCores,
+    defaultMemorySize,
+    defaultDiskSize,
     selectedOrganization,
   };
 }
