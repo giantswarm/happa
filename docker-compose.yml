@@ -8,9 +8,9 @@ services:
     ports:
       - "7000:7000"
     volumes:
-      - $PWD/src:/usr/src/app/src:Z
+      - $PWD/src:/usr/src/app/src:z
       # to persist info on used dependencies to the repo
-      - $PWD/yarn.lock:/usr/src/app/yarn.lock
+      - $PWD/yarn.lock:/usr/src/app/yarn.lock:z
 
   passage:
     image: quay.io/giantswarm/passage:latest
@@ -34,7 +34,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - $PWD/docker-volumes/redis-data:/data
+      - $PWD/docker-volumes/redis-data:/data:z
 
   mailcatcher:
     image: quay.io/giantswarm/mailcatcher:latest

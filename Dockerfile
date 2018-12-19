@@ -1,4 +1,4 @@
-FROM nginx:1.13-alpine
+FROM nginx:1.14-alpine
 
 ADD dist /www
 
