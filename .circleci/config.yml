@@ -62,10 +62,18 @@ jobs:
         name: Lighthouse audits
         command: |
           if [ "${CIRCLE_BRANCH}" != "master" ]; then
-            lighthouse-keeper audit --url http://happa-master:8000/ --name master --docker-link happa-master:happa-master
+            lighthouse-keeper audit \
+              --url https://happa-master:8000/ \
+              --name master \
+              --docker-link happa-master:happa-master \
+              --ignore-certificate-errors
           fi
 
-          lighthouse-keeper audit --url http://happa-branch:8000/ --name branch --docker-link happa-branch:happa-branch
+          lighthouse-keeper audit \
+            --url https://happa-branch:8000/ \
+            --name branch \
+            --docker-link happa-branch:happa-branch \
+            --ignore-certificate-errors
 
           echo "Lighthouse report for ${CIRCLE_BRANCH}:"
           lighthouse-keeper view --input branch.json
