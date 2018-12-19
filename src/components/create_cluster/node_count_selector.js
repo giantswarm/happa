@@ -79,7 +79,7 @@ class NodeCountSelector extends React.Component {
                   To disable autoscaling, set both numbers to the same value
                 </p>
                 <div className='col-3'>
-                  <p>Minimum</p>
+                  <label>Minimum</label>
                   <NumberPicker
                     label=''
                     stepSize={1}
@@ -91,7 +91,7 @@ class NodeCountSelector extends React.Component {
                   />
                 </div>
                 <div className='col-3'>
-                  <p>Maximum</p>
+                  <label>Maximum</label>
                   <NumberPicker
                     label=''
                     stepSize={1}
@@ -121,7 +121,7 @@ class NodeCountSelector extends React.Component {
             >
               <div>
                 <div className='col-3'>
-                  <p>Number of nodes</p>
+                  <label>Number of nodes</label>
                   <NumberPicker
                     label=''
                     stepSize={1}
