@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import Button from '../button';
 import { clusterCreate } from '../../actions/clusterActions';
+import NodeCountSelector from './node_count_selector.js';
 import NumberPicker from './number_picker.js';
 import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
 import VMSizeSelector from './vm_size_selector.js';
@@ -27,6 +28,7 @@ class CreateCluster extends React.Component {
       releaseVersion: '',
       clusterName: 'My cluster',
       scaling: {
+        automatic: false,
         min: 3,
         minValid: true,
         max: 3,
@@ -73,24 +75,13 @@ class CreateCluster extends React.Component {
     });
   };
 
-  updateScalingMin = numberPicker => {
+  updateScaling = nodeCountSelector => {
     this.setState({
       scaling: {
-        min: numberPicker.value,
-        minValid: numberPicker.valid,
-        max: this.state.scaling.max,
-        maxValid: this.state.scaling.maxValid,
-      },
-    });
-  };
-
-  updateScalingMax = numberPicker => {
-    this.setState({
-      scaling: {
-        min: this.state.scaling.min,
-        minValid: this.state.scaling.minValid,
-        max: numberPicker.value,
-        maxValid: numberPicker.valid,
+        min: nodeCountSelector.scaling.min,
+        minValid: nodeCountSelector.scaling.minValid,
+        max: nodeCountSelector.scaling.max,
+        maxValid: nodeCountSelector.scaling.maxValid,
       },
     });
   };
@@ -176,6 +167,16 @@ class CreateCluster extends React.Component {
 
   componentDidMount() {
     this.cluster_name.select();
+  }
+
+  isScalingAutomatic(provider, releaseVer) {
+    if (provider != 'aws') {
+      return false;
+    }
+
+    // In order to have support for automatic scaling and therefore for scaling
+    // limits, provider must be AWS and cluster release >= 6.1.0.
+    return cmp(releaseVer, '6.1.0') === 1;
   }
 
   selectRelease = releaseVersion => {
@@ -484,46 +485,15 @@ class CreateCluster extends React.Component {
             })()}
 
             <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Node Count</h3>
-              </div>
-              <div className='col-9'>
-                <form
-                  onSubmit={e => {
-                    e.preventDefault();
-                  }}
-                >
-                  <div>
-                    <p>
-                      To disable autoscaling, set both numbers to the same value
-                    </p>
-                    <div className='col-3'>
-                      <p>Minimum</p>
-                      <NumberPicker
-                        label=''
-                        stepSize={1}
-                        value={this.state.scaling.min}
-                        min={1}
-                        max={this.state.scaling.max}
-                        onChange={this.updateScalingMin}
-                        readOnly={false}
-                      />
-                    </div>
-                    <div className='col-3'>
-                      <p>Maximum</p>
-                      <NumberPicker
-                        label=''
-                        stepSize={1}
-                        value={this.state.scaling.max}
-                        min={this.state.scaling.min}
-                        max={99} // TODO
-                        onChange={this.updateScalingMax}
-                        readOnly={false}
-                      />
-                    </div>
-                  </div>
-                </form>
-              </div>
+              <NodeCountSelector
+                autoscalingEnabled={this.isScalingAutomatic(
+                  this.props.provider,
+                  this.state.releaseVersion
+                )}
+                scaling={this.state.scaling}
+                readOnly={false}
+                onChange={this.UpdateScaling}
+              />
             </div>
 
             <div className='row section'>
