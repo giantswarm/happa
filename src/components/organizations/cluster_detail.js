@@ -107,8 +107,6 @@ class ClusterDetail extends React.Component {
   }
 
   getNumberOfNodes() {
-    console.log(this.state);
-    console.log(this.props);
     return 3;
   }
 

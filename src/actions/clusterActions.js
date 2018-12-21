@@ -83,7 +83,7 @@ export function clusterLoadStatus(clusterId) {
     return clustersApi
       .getClusterStatus(scheme + ' ' + token, clusterId)
       .then(status => {
-        dispatch(clusterLoadStatusSuccess(status));
+        dispatch(clusterLoadStatusSuccess(clusterId, status));
         return status;
       })
       .catch(error => {
@@ -271,9 +271,10 @@ export function clusterLoadDetailsError(error) {
   };
 }
 
-export function clusterLoadStatusSuccess(status) {
+export function clusterLoadStatusSuccess(clusterId, status) {
   return {
     type: types.CLUSTER_LOAD_STATUS_SUCCESS,
+    clusterId,
     status,
   };
 }

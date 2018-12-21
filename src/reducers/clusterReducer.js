@@ -180,9 +180,18 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_STATUS_SUCCESS:
-      console.log(state);
+      items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign(
+        {},
+        items[action.clusterId],
+        action.status,
+      );
+
       return {
-        numberOfNodes: 3,
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items,
       };
 
     case types.CLUSTER_LOAD_STATUS_ERROR:
