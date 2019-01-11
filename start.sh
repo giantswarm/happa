@@ -25,9 +25,6 @@ else
   sed -i "s|environment: 'development'|environment: 'docker-container'|" /www/index.html
 fi
 
-sed -i "s|version: 'development'|version: '$(cat /www/VERSION)'|" /www/index.html
-
-sed -i "s|VERSION|$(cat /www/VERSION)|" /etc/nginx/nginx.conf
 
 echo ""
 echo "--- Starting Happa nginx server ---"
