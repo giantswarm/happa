@@ -185,7 +185,9 @@ export default function clusterReducer(
       items[action.clusterId] = Object.assign(
         {},
         items[action.clusterId],
-        action.status,
+        {
+          status: action.status,
+        }
       );
 
       return {

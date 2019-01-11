@@ -5,6 +5,7 @@ import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
 import React from 'react';
 import GiantSwarmV4 from 'giantswarm-v4';
+import APIClusterStatusClient from '../lib/api_status_client';
 import { push } from 'connected-react-router';
 
 // clusterSelect
@@ -78,9 +79,9 @@ export function clusterLoadStatus(clusterId) {
       clusterId,
     });
 
-    var clustersApi = new GiantSwarmV4.ClustersApi();
+    var apiClusterStatus = new APIClusterStatusClient({endpoint:  window.config.apiEndpoint });
 
-    return clustersApi
+    return apiClusterStatus
       .getClusterStatus(scheme + ' ' + token, clusterId)
       .then(status => {
         dispatch(clusterLoadStatusSuccess(clusterId, status));

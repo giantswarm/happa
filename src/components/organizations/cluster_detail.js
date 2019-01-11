@@ -106,8 +106,39 @@ class ClusterDetail extends React.Component {
     return c;
   }
 
+
+  getDesiredNumberOfNodes() {
+    if (Object.keys(this.props.cluster).includes('status') && this.props.cluster.status != null) {
+      return this.props.cluster.status.cluster.scaling.desiredCapacity;
+    }
+    return null;
+  }
+
   getNumberOfNodes() {
-    return 3;
+    if (Object.keys(this.props.cluster).includes('status') && this.props.cluster.status != null) {
+      var nodes = this.props.cluster.status.cluster.nodes;
+      if (nodes.length == 0) {
+        return 0;
+      }
+
+      var workers = 0;
+      nodes.forEach(node => {
+        if (Object.keys(node).includes('labels')) {
+          if (node.labels['role'] === 'worker') {
+            workers++;
+          }
+        }
+      });
+
+      if (workers === 0) {
+          // No node labels available? Fallback to assumption that one of the
+          // nodes is master and rest are workers.
+          workers = nodes.length - 1;
+      }
+
+      return workers;
+    }
+    return null;
   }
 
   showDeleteClusterModal(cluster) {
@@ -214,6 +245,18 @@ class ClusterDetail extends React.Component {
           </tr>
         );
       }
+    }
+
+    var scalingLimitsOrNothing = null;
+    if (Object.keys(this.props.cluster).includes('scaling') && this.props.cluster.scaling.min > 0) {
+      scalingLimitsOrNothing = (
+        <tr>
+          <td>Scaling Limits</td>
+          <td className='value'>
+            {this.props.cluster.scaling.min + '-' + this.props.cluster.scaling.max}
+          </td>
+        </tr>
+      );
     }
 
     var availabilityZonesOrNothing = null;
@@ -435,8 +478,18 @@ class ClusterDetail extends React.Component {
                                 </td>
                               </tr>
                               {availabilityZonesOrNothing}
+                              {scalingLimitsOrNothing}
                               <tr>
-                                <td>Number of worker nodes</td>
+                                <td>Number of desired worker nodes</td>
+                                <td className='value'>
+                                  {this.getDesiredNumberOfNodes() === null
+                                    ? 'n/a'
+                                    : this.getDesiredNumberOfNodes()}
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>Number of running worker nodes</td>
                                 <td className='value'>
                                   {this.getNumberOfNodes() === null
                                     ? 'n/a'
