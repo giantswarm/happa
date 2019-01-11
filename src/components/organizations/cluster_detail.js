@@ -106,16 +106,21 @@ class ClusterDetail extends React.Component {
     return c;
   }
 
-
   getDesiredNumberOfNodes() {
-    if (Object.keys(this.props.cluster).includes('status') && this.props.cluster.status != null) {
+    if (
+      Object.keys(this.props.cluster).includes('status') &&
+      this.props.cluster.status != null
+    ) {
       return this.props.cluster.status.cluster.scaling.desiredCapacity;
     }
     return null;
   }
 
   getNumberOfNodes() {
-    if (Object.keys(this.props.cluster).includes('status') && this.props.cluster.status != null) {
+    if (
+      Object.keys(this.props.cluster).includes('status') &&
+      this.props.cluster.status != null
+    ) {
       var nodes = this.props.cluster.status.cluster.nodes;
       if (nodes.length == 0) {
         return 0;
@@ -131,9 +136,9 @@ class ClusterDetail extends React.Component {
       });
 
       if (workers === 0) {
-          // No node labels available? Fallback to assumption that one of the
-          // nodes is master and rest are workers.
-          workers = nodes.length - 1;
+        // No node labels available? Fallback to assumption that one of the
+        // nodes is master and rest are workers.
+        workers = nodes.length - 1;
       }
 
       return workers;
@@ -248,12 +253,17 @@ class ClusterDetail extends React.Component {
     }
 
     var scalingLimitsOrNothing = null;
-    if (Object.keys(this.props.cluster).includes('scaling') && this.props.cluster.scaling.min > 0) {
+    if (
+      Object.keys(this.props.cluster).includes('scaling') &&
+      this.props.cluster.scaling.min > 0
+    ) {
       scalingLimitsOrNothing = (
         <tr>
           <td>Scaling Limits</td>
           <td className='value'>
-            {this.props.cluster.scaling.min + '-' + this.props.cluster.scaling.max}
+            {this.props.cluster.scaling.min +
+              '-' +
+              this.props.cluster.scaling.max}
           </td>
         </tr>
       );

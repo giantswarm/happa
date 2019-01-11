@@ -79,7 +79,9 @@ export function clusterLoadStatus(clusterId) {
       clusterId,
     });
 
-    var apiClusterStatus = new APIClusterStatusClient({endpoint:  window.config.apiEndpoint });
+    var apiClusterStatus = new APIClusterStatusClient({
+      endpoint: window.config.apiEndpoint,
+    });
 
     return apiClusterStatus
       .getClusterStatus(scheme + ' ' + token, clusterId)

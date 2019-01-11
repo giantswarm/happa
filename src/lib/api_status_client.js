@@ -46,7 +46,8 @@ var APIClusterStatusClient = function(config) {
             .get(url)
             .timeout(config.timeout_ms)
             .set('Accept', 'application/json')
-            .set('Authorization', authHeaderVal));
+            .set('Authorization', authHeaderVal)
+        );
       }).then(x => {
         return x.body;
       });

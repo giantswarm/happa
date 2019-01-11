@@ -182,13 +182,9 @@ export default function clusterReducer(
     case types.CLUSTER_LOAD_STATUS_SUCCESS:
       items = Object.assign({}, state.items);
 
-      items[action.clusterId] = Object.assign(
-        {},
-        items[action.clusterId],
-        {
-          status: action.status,
-        }
-      );
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {
+        status: action.status,
+      });
 
       return {
         lastUpdated: state.lastUpdated,
