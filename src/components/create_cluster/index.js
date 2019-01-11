@@ -442,7 +442,7 @@ class CreateCluster extends React.Component {
                         <br />
 
                         <NumberPicker
-                          label='Memory'
+                          label='Memory (GB)'
                           unit='GB'
                           stepSize={1}
                           value={this.state.kvm.memorySize.value}
@@ -453,7 +453,7 @@ class CreateCluster extends React.Component {
                         <br />
 
                         <NumberPicker
-                          label='Storage'
+                          label='Storage (GB)'
                           unit='GB'
                           stepSize={10}
                           value={this.state.kvm.diskSize.value}
@@ -556,11 +556,30 @@ function mapStateToProps(state) {
   var maxAvailabilityZones = state.app.info.general.availability_zones.max;
   var selectedOrganization = state.app.selectedOrganization;
   var provider = state.app.info.general.provider;
-  var defaultInstanceType = 'm3.large'; // TODO
-  var defaultVMSize = 'Standard_A2_v2'; // TODO
+
+  var defaultInstanceType;
+  if (
+    state.app.info.workers.instance_type &&
+    state.app.info.workers.instance_type.default
+  ) {
+    defaultInstanceType = state.app.info.workers.instance_type.default;
+  } else {
+    defaultInstanceType = 'm3.large';
+  }
+
+  var defaultVMSize;
+  if (
+    state.app.info.workers.vm_size &&
+    state.app.info.workers.vm_size.default
+  ) {
+    defaultVMSize = state.app.info.workers.vm_size.default;
+  } else {
+    defaultVMSize = 'Standard_D2s_v3';
+  }
+
   var defaultCPUCores = 1; // TODO
   var defaultMemorySize = 1; // TODO
-  var defaultDiskSize = 1; // TODO
+  var defaultDiskSize = 20; // TODO
 
   var allowedInstanceTypes = [];
   if (provider === 'aws') {

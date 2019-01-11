@@ -88,8 +88,8 @@ jobs:
               --input branch.json --inputlabel "this branch" \
               --github-token "${RELEASE_TOKEN}" \
               --github-owner giantswarm \
-              --github-repo $CIRCLE_PROJECT_REPONAME \
-              --github-issue $(basename $CIRCLE_PULL_REQUEST)
+              --github-repo ${CIRCLE_PROJECT_REPONAME} \
+              --github-issue $(basename ${CIRCLE_PULL_REQUEST})
           fi
 
     - deploy:
