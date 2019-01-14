@@ -181,9 +181,10 @@ class Users extends React.Component {
     // Don't allow adding non @giantswarm.io emails to the giantswarm org
     // since we know there is a serverside validation against that as well.
     if (invitationForm.organization === 'giantswarm') {
-      if (! isGiantSwarmEmail(invitationForm.email)) {
+      if (!isGiantSwarmEmail(invitationForm.email)) {
         invitationForm.valid = false;
-        invitationForm.error = 'Only @giantswarm.io domains may be invited to the giantswarm organization.';
+        invitationForm.error =
+          'Only @giantswarm.io domains may be invited to the giantswarm organization.';
       }
     }
 
@@ -564,13 +565,13 @@ class Users extends React.Component {
                               </label>
                             </div>
                           </div>
-                          { this.state.invitationForm.error !== '' ?
+                          {this.state.invitationForm.error !== '' ? (
                             <div className='flash-messages--flash-message flash-messages--danger'>
                               {this.state.invitationForm.error}
                             </div>
-                            :
+                          ) : (
                             undefined
-                          }
+                          )}
                         </form>
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
@@ -578,7 +579,7 @@ class Users extends React.Component {
                           type='submit'
                           bsStyle='primary'
                           loading={this.state.modal.loading}
-                          disabled={! this.state.invitationForm.valid}
+                          disabled={!this.state.invitationForm.valid}
                           onClick={this.confirmInviteUser.bind(this)}
                         >
                           {this.state.modal.loading
