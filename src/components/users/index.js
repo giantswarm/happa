@@ -39,8 +39,10 @@ class Users extends React.Component {
       },
       invitationForm: {
         email: '',
+        error: '',
         organization: props.organizations,
         sendEmail: true,
+        valid: true,
       },
     };
   }
@@ -123,8 +125,10 @@ class Users extends React.Component {
       },
       invitationForm: {
         email: '',
+        error: '',
         organization: this.props.selectedOrganization,
         sendEmail: true,
+        valid: true,
       },
     });
   }
@@ -163,9 +167,28 @@ class Users extends React.Component {
 
     invitationForm.email = e.target.value;
 
+    invitationForm = this.validateInvitationForm(invitationForm);
+
     this.setState({
       invitationForm: invitationForm,
     });
+  }
+
+  validateInvitationForm(invitationForm) {
+    invitationForm.valid = true;
+    invitationForm.error = '';
+
+    // Don't allow adding non @giantswarm.io emails to the giantswarm org
+    // since we know there is a serverside validation against that as well.
+    if (invitationForm.organization === 'giantswarm') {
+      if (!isGiantSwarmEmail(invitationForm.email)) {
+        invitationForm.valid = false;
+        invitationForm.error =
+          'Only @giantswarm.io domains may be invited to the giantswarm organization.';
+      }
+    }
+
+    return invitationForm;
   }
 
   handleSendEmailChange(e) {
@@ -182,6 +205,8 @@ class Users extends React.Component {
     var invitationForm = Object.assign({}, this.state.invitationForm);
 
     invitationForm.organization = orgId;
+
+    invitationForm = this.validateInvitationForm(invitationForm);
 
     this.setState({
       invitationForm: invitationForm,
@@ -540,6 +565,13 @@ class Users extends React.Component {
                               </label>
                             </div>
                           </div>
+                          {this.state.invitationForm.error !== '' ? (
+                            <div className='flash-messages--flash-message flash-messages--danger'>
+                              {this.state.invitationForm.error}
+                            </div>
+                          ) : (
+                            undefined
+                          )}
                         </form>
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
@@ -547,6 +579,7 @@ class Users extends React.Component {
                           type='submit'
                           bsStyle='primary'
                           loading={this.state.modal.loading}
+                          disabled={!this.state.invitationForm.valid}
                           onClick={this.confirmInviteUser.bind(this)}
                         >
                           {this.state.modal.loading
@@ -758,6 +791,19 @@ function isExpired(timestamp) {
   }
 
   return false;
+}
+
+function isGiantSwarmEmail(email) {
+  if (email && typeof email === 'string') {
+    var domain = email.split('@')[1];
+    if (domain === 'giantswarm.io') {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 function mapStateToProps(state) {
