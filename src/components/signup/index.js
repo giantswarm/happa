@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { validatePassword } from '../../lib/password_validation';
 import { push } from 'connected-react-router';
-import Button from '../button';
+import Button from '../shared/button';
 
 // TODO: Figure out a way to make the test suite know about our standard
 // 'window.config' object. Or change the way these config params are passed

@@ -10,7 +10,7 @@ import {
 } from '../../actions/organizationActions';
 
 import AWSAccountID from '../shared/aws_account_id';
-import Button from '../button';
+import Button from '../shared/button';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
