@@ -166,8 +166,7 @@ We use the following config params:
 - `--trailing-comma es5`
 
 
-Pre commit hooks
-----------------
+### Pre commit hooks
 
 To avoid pushing code that will fail the CI due to codestyle issues, you can add
 the following as a pre-commit hook.
