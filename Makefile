@@ -37,7 +37,7 @@ validate-prettier:
 		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
 		-v ${PWD}/package.json:/usr/src/app/package.json:z \
 		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock:z \
-		quay.io/giantswarm/happa-build:latest yarn run validate-prettier
+		quay.io/giantswarm/happa-build:latest yarn run validate-prettier --no-color
 
 dist:
 	docker run --rm -ti \
