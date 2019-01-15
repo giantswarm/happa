@@ -31,7 +31,7 @@ run-prettier:
     quay.io/giantswarm/happa-build:latest yarn run prettier
 
 validate-prettier:
-	docker run --rm -ti \
+	docker run --rm -t \
 		-v ${PWD}/src:/usr/src/app/src:z \
 		-v ${PWD}/dist:/usr/src/app/dist:z \
 		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
