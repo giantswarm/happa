@@ -253,8 +253,6 @@ class ScaleClusterModal extends React.Component {
 
 ScaleClusterModal.propTypes = {
   cluster: PropTypes.object,
-  giantSwarm: PropTypes.func,
-  user: PropTypes.object,
   clusterActions: PropTypes.object,
   flashActions: PropTypes.object,
 };

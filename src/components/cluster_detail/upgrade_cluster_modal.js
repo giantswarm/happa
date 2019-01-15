@@ -315,10 +315,8 @@ UpgradeClusterModal.propTypes = {
   cluster: PropTypes.object,
   clusterActions: PropTypes.object,
   flashActions: PropTypes.object,
-  giantSwarm: PropTypes.func,
   release: PropTypes.object,
   targetRelease: PropTypes.object,
-  user: PropTypes.object,
 };
 
 function mapDispatchToProps(dispatch) {

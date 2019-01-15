@@ -529,7 +529,6 @@ class ClusterDetail extends React.Component {
                         this.scaleClusterModal = s;
                       }}
                       cluster={this.props.cluster}
-                      user={this.props.user}
                     />
 
                     {this.props.targetRelease ? (
