@@ -49,9 +49,6 @@ export default function appReducer(
         provider: '',
       },
     },
-    status: {
-      numberOfNodes: 0,
-    },
   },
   action = undefined
 ) {
