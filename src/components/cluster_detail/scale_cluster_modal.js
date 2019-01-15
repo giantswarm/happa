@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ClusterIDLabel from '../shared/cluster_id_label';
-import Button from '../button/index';
+import Button from '../shared/button';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import NumberPicker from '../create_cluster/number_picker.js';
 import { connect } from 'react-redux';

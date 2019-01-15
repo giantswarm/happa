@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
-import Button from '../button';
+import Button from '../shared/button';
 import _ from 'underscore';
 import { clusterCreate } from '../../actions/clusterActions';
 import update from 'react-addons-update';
