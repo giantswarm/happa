@@ -22,7 +22,7 @@ import GettingStarted from './getting-started/index';
 import Users from './users/index';
 import Organizations from './organizations/index';
 import OrganizationDetails from './organizations/detail';
-import ClusterDetails from './organizations/cluster_detail';
+import ClusterDetails from './cluster_detail/index';
 import AccountSettings from './account_settings/index';
 import CreateCluster from './create_cluster/index';
 import Home from './home/index';

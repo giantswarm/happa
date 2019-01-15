@@ -2,7 +2,7 @@
 
 import React from 'react';
 import cmp from 'semver-compare';
-import Button from '../button';
+import Button from '../shared/button';
 import { connect } from 'react-redux';
 import { loadReleases } from '../../actions/releaseActions';
 import { flashAdd } from '../../actions/flashMessageActions';

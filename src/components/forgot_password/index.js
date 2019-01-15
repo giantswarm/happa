@@ -6,7 +6,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Link } from 'react-router-dom';
 import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 import { connect } from 'react-redux';
-import Button from '../button';
+import Button from '../shared/button';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';

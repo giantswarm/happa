@@ -6,7 +6,7 @@ import ClusterDashboardItem from './cluster_dashboard_item';
 import ClusterEmptyState from './cluster_empty_state';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import Button from '../button';
+import Button from '../shared/button';
 import { Link } from 'react-router-dom';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';

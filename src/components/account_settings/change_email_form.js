@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../button';
+import Button from '../shared/button';
 import update from 'react-addons-update';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import PropTypes from 'prop-types';

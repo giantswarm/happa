@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../button';
+import Button from '../shared/button';
 import { modalHide } from '../../actions/modalActions';
 import {
   organizationDeleteConfirmed,
@@ -15,7 +15,7 @@ import {
 
 import { clusterDeleteConfirmed } from '../../actions/clusterActions';
 import ClusterIDLabel from '../shared/cluster_id_label';
-import EmailField from './email_field';
+import EmailField from '../shared/email_field';
 import PropTypes from 'prop-types';
 
 class Modal extends React.Component {

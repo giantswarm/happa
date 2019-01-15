@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import Button from '../button';
+import Button from '../shared/button';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import GiantSwarmV4 from 'giantswarm-v4';
 import { validatePassword } from '../../lib/password_validation';
