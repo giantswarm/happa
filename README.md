@@ -171,10 +171,14 @@ We use the following config params:
 To avoid pushing code that will fail the CI due to codestyle issues, you can add
 the following as a pre-commit hook.
 
-```
-#!/bin/sh
+```bash
+#!/bin/bash
 
-make validate-prettier
+git diff --name-only --cached | grep "\.js$"
+
+if [ $? -eq 0 ]; then
+  make validate-prettier
+fi
 ```
 
 To add a pre-commit hook, save the above as a file called `pre-commit` in the
