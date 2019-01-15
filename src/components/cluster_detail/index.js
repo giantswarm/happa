@@ -17,9 +17,9 @@ import * as releaseActions from '../../actions/releaseActions';
 
 import { relativeDate } from '../../lib/helpers.js';
 import AWSAccountID from '../shared/aws_account_id';
-import Button from '../button/index';
+import Button from '../shared/button';
 import ClusterIDLabel from '../shared/cluster_id_label';
-import ClusterKeyPairs from './cluster_key_pairs';
+import ClusterKeyPairs from './key_pairs';
 import ReleaseDetailsModal from '../modal/release_details_modal';
 import ScaleClusterModal from './scale_cluster_modal';
 import UpgradeClusterModal from './upgrade_cluster_modal';

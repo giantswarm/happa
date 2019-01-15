@@ -8,7 +8,7 @@ import {
   organizationSelect,
 } from '../../actions/organizationActions';
 import { connect } from 'react-redux';
-import OrganizationRow from './organizationRow';
+import OrganizationRow from './organization_row';
 import Button from 'react-bootstrap/lib/Button';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
-import Button from '../button';
+import Button from '../shared/button';
 import platform from '../../lib/platform';
 import PropTypes from 'prop-types';
 

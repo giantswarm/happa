@@ -4,7 +4,7 @@ import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Link } from 'react-router-dom';
-import Button from '../button';
+import Button from '../shared/button';
 import { connect } from 'react-redux';
 import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
 import * as userActions from '../../actions/userActions';

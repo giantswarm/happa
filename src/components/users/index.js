@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-breadcrumbs';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { push } from 'connected-react-router';
-import Button from '../button';
+import Button from '../shared/button';
 import BootstrapTable from 'react-bootstrap-table-next';
 import moment from 'moment';
 import { relativeDate } from '../../lib/helpers.js';
