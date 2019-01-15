@@ -12,9 +12,10 @@ Giant Swarm's web interface. It lets users:
 - Add / remove members from organizations
 - Learn how to get started with their kubernetes clusters by following a guide
 
-You can see it in action at: https://happa-g8s.giantswarm.io
+Happa is intended to be deployed to our control planes and acts as a client to our
+API.
 
-![Screenshot of Happa](https://cloud.githubusercontent.com/assets/455309/22954790/c31fb514-f318-11e6-8ca3-33cece9e9094.png)
+![Screenshot of Happa](https://user-images.githubusercontent.com/455309/51164968-a5320780-18d9-11e9-91c5-10ad144d7ada.png)
 
 It is a Single Page React Application that runs in modern browsers.
 
@@ -32,12 +33,11 @@ the dockercompose file there:
 
 ```
 cd $GOPATH/src/github.com/giantswarm/api/testing
-docker-compose up -d
-docker-compose up -d cluster-service userd companyd    # sometimes these services start too soon and crash
-./fixtures.sh
+make up
 ```
 
-`./fixtures.sh` will create the initial user and organization you can log in with.
+As part of `make up`, `./fixtures.sh` will run and create the initial user and
+organization you can log in with.
 
 You should now be able to start happa's development server with:
 
@@ -70,7 +70,7 @@ There are no automated tests for Happa at the moment.
 Deploying
 ---------
 
-This project is continuously deployed to G8S using CircleCI.
+This project is continuously deployed to our installations using CircleCI.
 
 Building / Running locally
 --------------------------
@@ -99,10 +99,18 @@ Use environment variables to adjust the behavior of this application in producti
 |-------------|-----------|-------|
 |API_ENDPOINT |URL to Giant Swarm's API.|http://docker.dev:9000|
 |PASSAGE_ENDPOINT|URL to Passage, which helps users when they lose their password or have been invited to create an account.|http://docker.dev:5001|
+|INGRESS_BASE_DOMAIN|The ingress base domain of the installation that Happa is on. This affects the getting started guide.|k8s.sample.io|
+|AWS_CAPABILITIES_JSON|A JSON array representing all the details of AWS instance types. This has been extracted so that we have a single point of truth for this information||
+|AZURE_CAPABILITIES_JSON|A JSON array representing all the details of Azure vm sizes. This has been extracted so that we have a single point of truth for this information||
 |ENVIRONMENT  |A string that indicates where Happa is running. |development|
 
-In development, environment variables are not applied. This is because the development container does not start in the same way
-that the production container does.
+These environment variables affect the config object in `index.html`.
+A startup script (`start.sh`) applies the values from the environment variables
+to `index.html` by editing the file. This way Happa remains a fully static website
+that can be served by nginx.
+
+In development, environment variables are not applied. This is because the development container
+does not start in the same way that the production container does.
 
 Redux in a nutshell
 --------------------
