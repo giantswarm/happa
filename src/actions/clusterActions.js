@@ -5,6 +5,7 @@ import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
 import React from 'react';
 import GiantSwarmV4 from 'giantswarm-v4';
+import APIClusterStatusClient from '../lib/api_status_client';
 import { push } from 'connected-react-router';
 
 // clusterSelect
@@ -45,6 +46,7 @@ export function clusterLoadDetails(clusterId) {
       .getCluster(scheme + ' ' + token, clusterId)
       .then(cluster => {
         dispatch(clusterLoadDetailsSuccess(cluster));
+        dispatch(clusterLoadStatus(clusterId));
         return cluster;
       })
       .catch(error => {
@@ -55,6 +57,46 @@ export function clusterLoadDetails(clusterId) {
             message:
               'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
             key: 'clusterLoadDetailFailure',
+            class: 'danger',
+          })
+        );
+        throw error;
+      });
+  };
+}
+
+// clusterLoadStatus
+// =============================================================
+// Takes a clusterId and loads status for that cluster.
+
+export function clusterLoadStatus(clusterId) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.CLUSTER_LOAD_STATUS,
+      clusterId,
+    });
+
+    var apiClusterStatus = new APIClusterStatusClient({
+      endpoint: window.config.apiEndpoint,
+    });
+
+    return apiClusterStatus
+      .getClusterStatus(scheme + ' ' + token, clusterId)
+      .then(status => {
+        dispatch(clusterLoadStatusSuccess(clusterId, status));
+        return status;
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(clusterLoadStatusError(clusterId, error));
+        dispatch(
+          flashAdd({
+            message:
+              'Something went wrong while trying to load the cluster status. Please try again later or contact support: support@giantswarm.io',
+            key: 'clusterLoadStatusFailure',
             class: 'danger',
           })
         );
@@ -228,6 +270,21 @@ export function clusterLoadDetailsSuccess(cluster) {
 export function clusterLoadDetailsError(error) {
   return {
     type: types.CLUSTER_LOAD_DETAILS_ERROR,
+    error,
+  };
+}
+
+export function clusterLoadStatusSuccess(clusterId, status) {
+  return {
+    type: types.CLUSTER_LOAD_STATUS_SUCCESS,
+    clusterId,
+    status,
+  };
+}
+
+export function clusterLoadStatusError(error) {
+  return {
+    type: types.CLUSTER_LOAD_STATUS_ERROR,
     error,
   };
 }
