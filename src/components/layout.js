@@ -48,8 +48,7 @@ class Layout extends React.Component {
       this.props.actions
         .refreshUserInfo()
         .then(() => {
-          this.props.dispatch(organizationsLoad());
-          return null;
+          return this.props.dispatch(organizationsLoad());
         })
         .catch(error => {
           if (error.status === 401) {
@@ -77,7 +76,7 @@ class Layout extends React.Component {
             });
           }
 
-          throw error;
+          console.error(error);
         });
     } else {
       this.props.dispatch(push('/login'));

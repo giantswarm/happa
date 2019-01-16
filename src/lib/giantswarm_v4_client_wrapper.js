@@ -37,36 +37,35 @@ defaultClient.callApi = function callApi(
   // any call.
   if (defaultClientAuth.apiKeyPrefix === 'Bearer' && defaultClientAuth.apiKey) {
     if (isJwtExpired(defaultClientAuth.apiKey)) {
-      return new Promise(resolve => {
-        resolve(
-          auth0
-            .renewToken()
-            .then(result => {
-              // Update state with new token.
-              store.dispatch(auth0Login(result));
+      return auth0
+        .renewToken()
+        .then(result => {
+          // Update state with new token.
+          store.dispatch(auth0Login(result));
 
-              // Ensure the second attempt uses the new token.
-              headerParams['Authorization'] = 'Bearer ' + result.accessToken;
+          // Ensure the second attempt uses the new token.
+          headerParams['Authorization'] = 'Bearer ' + result.accessToken;
 
-              return origCallApi(
-                path,
-                httpMethod,
-                pathParams,
-                queryParams,
-                headerParams,
-                formParams,
-                bodyParam,
-                authNames,
-                contentTypes,
-                accepts,
-                returnType
-              );
-            })
-            .catch(err => {
-              throw err;
-            })
-        );
-      });
+          return origCallApi(
+            path,
+            httpMethod,
+            pathParams,
+            queryParams,
+            headerParams,
+            formParams,
+            bodyParam,
+            authNames,
+            contentTypes,
+            accepts,
+            returnType
+          );
+        })
+        .catch(err => {
+          err.status = 401; // Add 'status: 401' to the error object
+          // so the layout component can treat auth0
+          // login required errors correctly.
+          throw err;
+        });
     }
   }
 
