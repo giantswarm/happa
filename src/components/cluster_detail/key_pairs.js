@@ -4,7 +4,7 @@ import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Button from '../button';
+import Button from '../shared/button';
 import * as clusterActions from '../../actions/clusterActions';
 import { relativeDate } from '../../lib/helpers.js';
 import Tooltip from 'react-bootstrap/lib/Tooltip';

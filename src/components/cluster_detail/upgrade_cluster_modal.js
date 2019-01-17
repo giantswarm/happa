@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import Button from '../button/index';
+import Button from '../shared/button';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -315,10 +315,8 @@ UpgradeClusterModal.propTypes = {
   cluster: PropTypes.object,
   clusterActions: PropTypes.object,
   flashActions: PropTypes.object,
-  giantSwarm: PropTypes.func,
   release: PropTypes.object,
   targetRelease: PropTypes.object,
-  user: PropTypes.object,
 };
 
 function mapDispatchToProps(dispatch) {

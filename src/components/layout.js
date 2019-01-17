@@ -22,7 +22,7 @@ import GettingStarted from './getting-started/index';
 import Users from './users/index';
 import Organizations from './organizations/index';
 import OrganizationDetails from './organizations/detail';
-import ClusterDetails from './organizations/cluster_detail';
+import ClusterDetails from './cluster_detail/index';
 import AccountSettings from './account_settings/index';
 import CreateCluster from './create_cluster/index';
 import Home from './home/index';
@@ -48,8 +48,7 @@ class Layout extends React.Component {
       this.props.actions
         .refreshUserInfo()
         .then(() => {
-          this.props.dispatch(organizationsLoad());
-          return null;
+          return this.props.dispatch(organizationsLoad());
         })
         .catch(error => {
           if (error.status === 401) {
@@ -77,7 +76,7 @@ class Layout extends React.Component {
             });
           }
 
-          throw error;
+          console.error(error);
         });
     } else {
       this.props.dispatch(push('/login'));

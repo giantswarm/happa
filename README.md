@@ -163,3 +163,24 @@ We use the following config params:
 - `--jsx-single-quote`
 - `--single-quote`
 - `--trailing-comma es5`
+
+
+### Pre commit hooks
+
+To avoid pushing code that will fail the CI due to codestyle issues, you can add
+the following as a pre-commit hook.
+
+```bash
+#!/bin/bash
+
+git diff --name-only --cached | grep "\.js$"
+
+if [ $? -eq 0 ]; then
+  make validate-prettier
+fi
+```
+
+To add a pre-commit hook, save the above as a file called `pre-commit` in the
+`.git/hooks` folder.
+
+Make sure it has has `0755` as the permission.
