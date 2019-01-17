@@ -22,7 +22,7 @@
     "connected-react-router": "4.5.0",
     "copy-to-clipboard": "~3.0.8",
     "deep-diff": "1.0.2",
-    "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client.git#master",
+    "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client.git#auto-scaling",
     "immutable": "3.8.2",
     "js-base64": "2.4.9",
     "moment": "2.22.2",

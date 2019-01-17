@@ -4,9 +4,10 @@ import React from 'react';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import Button from '../shared/button';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import NumberPicker from '../create_cluster/number_picker.js';
+import NodeCountSelector from '../shared/node_count_selector';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import cmp from 'semver-compare';
 import * as clusterActions from '../../actions/clusterActions';
 import * as flashActions from '../../actions/flashMessageActions';
 import PropTypes from 'prop-types';
@@ -17,9 +18,12 @@ class ScaleClusterModal extends React.Component {
 
     this.state = {
       modalVisible: false,
-      numberPicker: {
-        value: props.cluster.workers.length,
-        valid: true,
+      scaling: {
+        automatic: false,
+        min: props.cluster.scaling.min,
+        minValid: true,
+        max: props.cluster.scaling.max,
+        maxValid: true,
       },
     };
   }
@@ -30,9 +34,12 @@ class ScaleClusterModal extends React.Component {
 
   reset = () => {
     this.setState({
-      numberPicker: {
-        value: this.props.cluster.workers.length,
-        valid: true,
+      scaling: {
+        automatic: false,
+        min: this.props.cluster.scaling.min,
+        minValid: true,
+        max: this.props.cluster.scaling.max,
+        maxValid: true,
       },
       loading: false,
       error: null,
@@ -58,9 +65,24 @@ class ScaleClusterModal extends React.Component {
     });
   };
 
-  updateNumberPicker = numberPicker => {
+  isScalingAutomatic(provider, releaseVer) {
+    if (provider != 'aws') {
+      return false;
+    }
+
+    // In order to have support for automatic scaling and therefore for scaling
+    // limits, provider must be AWS and cluster release >= 6.1.0.
+    return cmp(releaseVer, '6.1.0') === 1;
+  }
+
+  updateScaling = nodeCountSelector => {
     this.setState({
-      numberPicker,
+      scaling: {
+        min: nodeCountSelector.scaling.min,
+        minValid: nodeCountSelector.scaling.minValid,
+        max: nodeCountSelector.scaling.max,
+        maxValid: nodeCountSelector.scaling.maxValid,
+      },
     });
   };
 
@@ -70,14 +92,13 @@ class ScaleClusterModal extends React.Component {
         loading: true,
       },
       () => {
-        var workers = [];
-
-        for (var i = 0; i < this.state.numberPicker.value; i++) {
-          workers.push({});
-        }
+        var scaling = {
+          min: this.state.scaling.min,
+          max: this.state.scaling.max,
+        };
 
         this.props.clusterActions
-          .clusterPatch({ id: this.props.cluster.id, workers: workers })
+          .clusterPatch({ id: this.props.cluster.id, scaling: scaling })
           .then(patchedCluster => {
             this.close();
 
@@ -99,7 +120,27 @@ class ScaleClusterModal extends React.Component {
   };
 
   workerDelta = () => {
-    return this.state.numberPicker.value - this.props.cluster.workers.length;
+    if (
+      this.props.cluster.status.cluster.scaling.desiredCapacity <
+      this.state.scaling.min
+    ) {
+      return (
+        this.state.scaling.min -
+        this.props.cluster.status.cluster.scaling.desiredCapacity
+      );
+    }
+
+    if (
+      this.props.cluster.status.cluster.scaling.desiredCapacity >
+      this.state.scaling.max
+    ) {
+      return (
+        this.state.scaling.max -
+        this.props.cluster.status.cluster.scaling.desiredCapacity
+      );
+    }
+
+    return this.state.scaling.min - this.props.cluster.scaling.min;
   };
 
   pluralize = () => {
@@ -126,7 +167,7 @@ class ScaleClusterModal extends React.Component {
       return {
         title: `Add ${workerDelta} worker node${pluralize}`,
         style: 'success',
-        disabled: !this.state.numberPicker.valid,
+        disabled: !(this.state.scaling.minValid && this.state.scaling.maxValid),
       };
     }
 
@@ -134,7 +175,7 @@ class ScaleClusterModal extends React.Component {
       return {
         title: `Remove ${Math.abs(workerDelta)} worker node${pluralize}`,
         style: 'danger',
-        disabled: !this.state.numberPicker.valid,
+        disabled: !(this.state.scaling.minValid && this.state.scaling.maxValid),
       };
     }
   };
@@ -153,19 +194,19 @@ class ScaleClusterModal extends React.Component {
           <div>
             <BootstrapModal.Body>
               <p>How many workers would you like your cluster to have?</p>
-              <NumberPicker
-                label=''
-                stepSize={1}
-                value={this.state.numberPicker.value}
-                onChange={this.updateNumberPicker}
-                min={1}
-                max={99}
-                theme='inmodal'
+              <NodeCountSelector
+                autoscalingEnabled={this.isScalingAutomatic(
+                  this.props.provider,
+                  this.props.cluster.release_version
+                )}
+                scaling={this.state.scaling}
+                readOnly={false}
+                onChange={this.updateScaling}
               />
 
-              {this.state.numberPicker.value <
-                this.props.cluster.workers.length &&
-              this.state.numberPicker.valid ? (
+              {this.state.scaling.min <
+                this.props.cluster.status.cluster.scaling.desiredCapacity &&
+              this.state.scaling.minValid ? (
                 <div className='flash-messages--flash-message flash-messages--danger'>
                   <ul>
                     <li>
@@ -255,6 +296,7 @@ ScaleClusterModal.propTypes = {
   cluster: PropTypes.object,
   clusterActions: PropTypes.object,
   flashActions: PropTypes.object,
+  provider: PropTypes.string,
 };
 
 function mapDispatchToProps(dispatch) {

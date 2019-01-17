@@ -40,13 +40,17 @@ export function clusterLoadDetails(clusterId) {
       clusterId,
     });
 
+    var cluster;
     var clustersApi = new GiantSwarmV4.ClustersApi();
 
     return clustersApi
       .getCluster(scheme + ' ' + token, clusterId)
-      .then(cluster => {
+      .then(c => {
+        cluster = c;
+        return dispatch(clusterLoadStatus(clusterId));
+      })
+      .then(() => {
         dispatch(clusterLoadDetailsSuccess(cluster));
-        dispatch(clusterLoadStatus(clusterId));
         return cluster;
       })
       .catch(error => {

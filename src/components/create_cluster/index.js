@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import Button from '../shared/button';
 import { clusterCreate } from '../../actions/clusterActions';
-import NodeCountSelector from './node_count_selector.js';
-import NumberPicker from './number_picker.js';
+import NodeCountSelector from '../shared/node_count_selector.js';
+import NumberPicker from '../shared/number_picker.js';
 import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
 import VMSizeSelector from './vm_size_selector.js';
 import ReleaseSelector from './release_selector.js';
@@ -129,6 +129,18 @@ class CreateCluster extends React.Component {
           cpu: { cores: this.state.kvm.cpuCores.value },
         });
       }
+    }
+
+    // Adjust final workers array when cluster uses auto scaling. This is currently
+    // only in AWS and from release 6.1.0 onwards.
+    if (
+      this.isScalingAutomatic(this.props.provider, this.state.releaseVersion) &&
+      workers.length > 1
+    ) {
+      // Only one worker is allowed to be present when auto scaling is enabled.
+      var firstWorker = workers[0];
+      workers = [];
+      workers.push(firstWorker);
     }
 
     this.props
@@ -492,7 +504,7 @@ class CreateCluster extends React.Component {
                 )}
                 scaling={this.state.scaling}
                 readOnly={false}
-                onChange={this.UpdateScaling}
+                onChange={this.updateScaling}
               />
             </div>
 
