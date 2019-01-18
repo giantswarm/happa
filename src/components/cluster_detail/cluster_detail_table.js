@@ -119,8 +119,8 @@ class ClusterDetailTable extends React.Component {
           <td>Scaling Limits</td>
           <td className='value'>
             {this.props.cluster.scaling.min +
-              '-' +
-              this.props.cluster.scaling.max}
+            '  -  ' +
+            this.props.cluster.scaling.max}
           </td>
         </tr>
       );
