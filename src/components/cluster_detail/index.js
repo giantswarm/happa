@@ -19,6 +19,7 @@ import Button from '../shared/button';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import ClusterKeyPairs from './key_pairs';
 import ClusterDetailTable from './cluster_detail_table';
+import ClusterApps from './cluster_apps';
 import ScaleClusterModal from './scale_cluster_modal';
 import UpgradeClusterModal from './upgrade_cluster_modal';
 
@@ -229,6 +230,7 @@ class ClusterDetail extends React.Component {
                         credentials={this.props.credentials}
                         release={this.props.release}
                       />
+                      <ClusterApps cluster={this.props.cluster} />
                       <ClusterKeyPairs cluster={this.props.cluster} />
 
                       <div className='row section cluster_delete col-12'>
