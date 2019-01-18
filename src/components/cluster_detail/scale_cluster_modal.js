@@ -143,7 +143,7 @@ class ScaleClusterModal extends React.Component {
     return 0;
   };
 
-  pluralize = (nodes) => {
+  pluralize = nodes => {
     var pluralize = 's';
 
     if (Math.abs(nodes) === 1) {
@@ -157,20 +157,39 @@ class ScaleClusterModal extends React.Component {
     var workerDelta = this.workerDelta();
     var pluralizeWorkers = this.pluralize(workerDelta);
 
-    if (this.isScalingAutomatic(this.props.provider, this.props.cluster.release_version)) {
-      if (this.state.scaling.min > this.props.cluster.status.cluster.scaling.desiredCapacity) {
-        workerDelta = this.state.scaling.min - this.props.cluster.status.cluster.scaling.desiredCapacity;
+    if (
+      this.isScalingAutomatic(
+        this.props.provider,
+        this.props.cluster.release_version
+      )
+    ) {
+      if (
+        this.state.scaling.min >
+        this.props.cluster.status.cluster.scaling.desiredCapacity
+      ) {
+        workerDelta =
+          this.state.scaling.min -
+          this.props.cluster.status.cluster.scaling.desiredCapacity;
         return {
-          title: `Increase minimum number of nodes by ${workerDelta} worker node${this.pluralize(workerDelta)}`,
+          title: `Increase minimum number of nodes by ${workerDelta} worker node${this.pluralize(
+            workerDelta
+          )}`,
           style: 'success',
           disabled: !this.state.scaling.minValid,
         };
       }
 
-      if (this.state.scaling.max < this.props.cluster.status.cluster.scaling.desiredCapacity) {
-        workerDelta = this.props.cluster.status.cluster.scaling.desiredCapacity - this.state.scaling.max;
+      if (
+        this.state.scaling.max <
+        this.props.cluster.status.cluster.scaling.desiredCapacity
+      ) {
+        workerDelta =
+          this.props.cluster.status.cluster.scaling.desiredCapacity -
+          this.state.scaling.max;
         return {
-          title: `Remove ${Math.abs(workerDelta)} worker node${this.pluralize(workerDelta)}`,
+          title: `Remove ${Math.abs(workerDelta)} worker node${this.pluralize(
+            workerDelta
+          )}`,
           style: 'danger',
           disabled: !this.state.scaling.maxValid,
         };
@@ -178,16 +197,20 @@ class ScaleClusterModal extends React.Component {
 
       if (this.state.scaling.min != this.props.cluster.scaling.min) {
         return {
-          disabled: !(this.state.scaling.minValid && this.state.scaling.maxValid),
-        }
+          disabled: !(
+            this.state.scaling.minValid && this.state.scaling.maxValid
+          ),
+        };
       }
 
       if (this.state.scaling.max != this.props.cluster.scaling.max) {
         return {
           title: 'Scale',
           style: 'success',
-          disabled: !(this.state.scaling.minValid && this.state.scaling.maxValid),
-        }
+          disabled: !(
+            this.state.scaling.minValid && this.state.scaling.maxValid
+          ),
+        };
       }
     }
 
@@ -228,7 +251,7 @@ class ScaleClusterModal extends React.Component {
           <div>
             <BootstrapModal.Body>
               <p>How many workers would you like your cluster to have?</p>
-              <div className="row section">
+              <div className='row section'>
                 <NodeCountSelector
                   autoscalingEnabled={this.isScalingAutomatic(
                     this.props.provider,
