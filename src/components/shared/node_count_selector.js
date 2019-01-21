@@ -25,36 +25,51 @@ class NodeCountSelector extends React.Component {
   };
 
   updateScalingMin = numberPicker => {
-    this.setState({
-      scaling: {
-        min: numberPicker.value,
-        minValid: numberPicker.valid,
-        max: this.state.scaling.max,
-        maxValid: this.state.scaling.maxValid,
+    this.setState(
+      {
+        scaling: {
+          min: numberPicker.value,
+          minValid: numberPicker.valid,
+          max: this.state.scaling.max,
+          maxValid: this.state.scaling.maxValid,
+        },
       },
-    });
+      () => {
+        this.props.onChange(this.state);
+      }
+    );
   };
 
   updateScalingMax = numberPicker => {
-    this.setState({
-      scaling: {
-        min: this.state.scaling.min,
-        minValid: this.state.scaling.minValid,
-        max: numberPicker.value,
-        maxValid: numberPicker.valid,
+    this.setState(
+      {
+        scaling: {
+          min: this.state.scaling.min,
+          minValid: this.state.scaling.minValid,
+          max: numberPicker.value,
+          maxValid: numberPicker.valid,
+        },
       },
-    });
+      () => {
+        this.props.onChange(this.state);
+      }
+    );
   };
 
   updateNodeCount = numberPicker => {
-    this.setState({
-      scaling: {
-        min: numberPicker.value,
-        minValid: numberPicker.valid,
-        max: numberPicker.value,
-        maxValid: numberPicker.valid,
+    this.setState(
+      {
+        scaling: {
+          min: numberPicker.value,
+          minValid: numberPicker.valid,
+          max: numberPicker.value,
+          maxValid: numberPicker.valid,
+        },
       },
-    });
+      () => {
+        this.props.onChange(this.state);
+      }
+    );
   };
 
   handleFocus = event => {
@@ -78,7 +93,7 @@ class NodeCountSelector extends React.Component {
                 <p>
                   To disable autoscaling, set both numbers to the same value
                 </p>
-                <div className='col-3'>
+                <div className='col-6'>
                   <label>Minimum</label>
                   <NumberPicker
                     label=''
@@ -90,7 +105,7 @@ class NodeCountSelector extends React.Component {
                     readOnly={false}
                   />
                 </div>
-                <div className='col-3'>
+                <div className='col-6'>
                   <label>Maximum</label>
                   <NumberPicker
                     label=''
