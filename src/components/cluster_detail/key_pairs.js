@@ -15,7 +15,7 @@ import copy from 'copy-to-clipboard';
 import _ from 'underscore';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { debounce } from "throttle-debounce";
+import { debounce } from 'throttle-debounce';
 
 class ClusterKeyPairs extends React.Component {
   constructor(props) {
@@ -58,17 +58,23 @@ class ClusterKeyPairs extends React.Component {
     var inputValue = e.target.value;
 
     if (this.state.cn_prefix_error) {
-      this.setState({
-        cn_prefix: inputValue,
-      }, () => {
-        this.CNPrefixValidation(inputValue);
-      });
+      this.setState(
+        {
+          cn_prefix: inputValue,
+        },
+        () => {
+          this.CNPrefixValidation(inputValue);
+        }
+      );
     } else {
-      this.setState({
-        cn_prefix: inputValue,
-      }, () => {
-        this.CNPrefixValidationDebounced(inputValue);
-      });
+      this.setState(
+        {
+          cn_prefix: inputValue,
+        },
+        () => {
+          this.CNPrefixValidationDebounced(inputValue);
+        }
+      );
     }
   }
 
@@ -78,7 +84,7 @@ class ClusterKeyPairs extends React.Component {
       var endRegex = /[a-zA-Z0-9]$/g;
       var regex = /^[a-zA-Z0-9][a-zA-Z0-9@\.-]*[a-zA-Z0-9]$/g;
       if (!endRegex.test(value)) {
-        error = 'The CN prefix must end with a-z, A-Z, 0-9'
+        error = 'The CN prefix must end with a-z, A-Z, 0-9';
       } else if (!regex.test(value)) {
         error = 'The CN prefix must contain only a-z, A-Z, 0-9 or -';
       }
