@@ -15,6 +15,7 @@ import copy from 'copy-to-clipboard';
 import _ from 'underscore';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { debounce } from 'throttle-debounce';
 
 class ClusterKeyPairs extends React.Component {
   constructor(props) {
@@ -34,6 +35,7 @@ class ClusterKeyPairs extends React.Component {
         template: 'addKeyPair',
       },
     };
+    this.CNPrefixValidationDebounced = debounce(1000, this.CNPrefixValidation);
   }
 
   defaultDescription(email) {
@@ -53,17 +55,42 @@ class ClusterKeyPairs extends React.Component {
   }
 
   handleCNPrefixChange(e) {
+    var inputValue = e.target.value;
+
+    if (this.state.cn_prefix_error) {
+      this.setState(
+        {
+          cn_prefix: inputValue,
+        },
+        () => {
+          this.CNPrefixValidation(inputValue);
+        }
+      );
+    } else {
+      this.setState(
+        {
+          cn_prefix: inputValue,
+        },
+        () => {
+          this.CNPrefixValidationDebounced(inputValue);
+        }
+      );
+    }
+  }
+
+  CNPrefixValidation(value) {
     var error = null;
-    if (e.target.value !== '') {
+    if (value !== '') {
+      var endRegex = /[a-zA-Z0-9]$/g;
       var regex = /^[a-zA-Z0-9][a-zA-Z0-9@\.-]*[a-zA-Z0-9]$/g;
-      var found = e.target.value.match(regex);
-      if (found === null) {
-        error = 'Please use characters a-z, 0-9 or -';
+      if (!endRegex.test(value)) {
+        error = 'The CN prefix must end with a-z, A-Z, 0-9';
+      } else if (!regex.test(value)) {
+        error = 'The CN prefix must contain only a-z, A-Z, 0-9 or -';
       }
     }
 
     this.setState({
-      cn_prefix: e.target.value,
       cn_prefix_error: error,
     });
   }
