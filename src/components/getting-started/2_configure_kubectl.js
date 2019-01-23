@@ -10,7 +10,6 @@ import _ from 'underscore';
 import { flashAdd } from '../../actions/flashMessageActions';
 import platform from '../../lib/platform';
 import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
-import request from 'superagent-bluebird-promise';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import { clustersForOrg } from '../../lib/helpers';
 import PropTypes from 'prop-types';
@@ -25,21 +24,10 @@ class ConfigKubeCtl extends React.Component {
       loading: true,
       selectedPlatform: platform,
       alternativeOpen: false,
-      gsctlVersion: '0.2.0',
     };
   }
 
   componentDidMount() {
-    request
-      .get('https://downloads.giantswarm.io/gsctl/VERSION')
-      .then(response => {
-        if (response.text) {
-          this.setState({
-            gsctlVersion: response.text,
-          });
-        }
-      });
-
     if (this.props.selectedCluster.nullObject) {
       this.props.dispatch(
         flashAdd({
@@ -103,103 +91,86 @@ class ConfigKubeCtl extends React.Component {
         return (
           <div>
             <p>
-              Download{' '}
-              <a
-                href={
-                  'http://downloads.giantswarm.io/gsctl/' +
-                  this.state.gsctlVersion +
-                  '/gsctl-' +
-                  this.state.gsctlVersion +
-                  '-windows-amd64.zip'
-                }
-              >
-                <code>gsctl</code> for Windows (64 Bit)
+              <a href='http://scoop.sh/' rel='noopener noreferrer'>
+                scoop
               </a>{' '}
-              or{' '}
-              <a
-                href={
-                  'http://downloads.giantswarm.io/gsctl/' +
-                  this.state.gsctlVersion +
-                  '/gsctl-' +
-                  this.state.gsctlVersion +
-                  '-windows-386.zip'
-                }
-              >
-                32 Bit
-              </a>
+              enables convenient installs and updates for Windows PowerShell
+              users. Before you can install gsctl for the first time, execute
+              this:
             </p>
-            <p>
-              Copy the contained <code>gsctl.exe</code> to a convenient location
-            </p>
-          </div>
-        );
-      case 'MacWithoutBrew':
-        return (
-          <div>
             <CodeBlock>
               <Prompt>
-                {`curl -O http://downloads.giantswarm.io/gsctl/` +
-                  this.state.gsctlVersion +
-                  `/gsctl-` +
-                  this.state.gsctlVersion +
-                  `-darwin-amd64.tar.gz`}
-              </Prompt>
-              <Prompt>
-                {`tar xzf gsctl-` +
-                  this.state.gsctlVersion +
-                  `-darwin-amd64.tar.gz`}
-              </Prompt>
-              <Prompt>
-                {`sudo cp gsctl-` +
-                  this.state.gsctlVersion +
-                  `-darwin-amd64/gsctl /usr/local/bin/`}
+                scoop bucket add giantswarm
+                https://github.com/giantswarm/scoop-bucket.git
               </Prompt>
             </CodeBlock>
+            <p>To install:</p>
+            <CodeBlock>
+              <Prompt>scoop install gsctl</Prompt>
+            </CodeBlock>
+            <p>To update:</p>
+            <CodeBlock>
+              <Prompt>scoop update gsctl</Prompt>
+            </CodeBlock>
+            <p>
+              To install without scoop, download the latest release{' '}
+              <a
+                href='https://github.com/giantswarm/gsctl/releases'
+                rel='noopener noreferrer'
+              >
+                from GitHub
+              </a>
+              , unpack the binary and move it to a location covered by your{' '}
+              <code>PATH</code> environment variable.
+            </p>
           </div>
         );
       case 'Mac':
         return (
           <div>
             <p>
-              Installation via{' '}
-              <a
-                href='http://brew.sh/'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                homebrew
-              </a>
-              :
+              Homebrew provides the most convenient way to install gsctl and
+              keep it up to date. To install, use this command:
             </p>
 
             <CodeBlock>
-              <Prompt>{`brew tap giantswarm/giantswarm`}</Prompt>
-              <Prompt>{`brew install gsctl`}</Prompt>
+              <Prompt>brew tap giantswarm/giantswarm</Prompt>
+              <Prompt>brew install gsctl</Prompt>
             </CodeBlock>
+
+            <p>For updating:</p>
+
+            <CodeBlock>
+              <Prompt>brew upgrade gsctl</Prompt>
+            </CodeBlock>
+
+            <p>
+              To install without homebrew, download the latest release{' '}
+              <a
+                href='https://github.com/giantswarm/gsctl/releases'
+                rel='noopener noreferrer'
+              >
+                from GitHub
+              </a>
+              , unpack the binary and move it to a location covered by your{' '}
+              <code>PATH</code> environment variable.
+            </p>
           </div>
         );
       case 'Linux':
         return (
           <div>
-            <CodeBlock>
-              <Prompt>
-                {`curl -O http://downloads.giantswarm.io/gsctl/` +
-                  this.state.gsctlVersion +
-                  `/gsctl-` +
-                  this.state.gsctlVersion +
-                  `-linux-amd64.tar.gz`}
-              </Prompt>
-              <Prompt>
-                {`tar xzf gsctl-` +
-                  this.state.gsctlVersion +
-                  `-linux-amd64.tar.gz`}
-              </Prompt>
-              <Prompt>
-                {`sudo cp gsctl-` +
-                  this.state.gsctlVersion +
-                  `-linux-amd64/gsctl /usr/local/bin/`}
-              </Prompt>
-            </CodeBlock>
+            <p>
+              Download the latest release{' '}
+              <a
+                href='https://github.com/giantswarm/gsctl/releases'
+                rel='noopener noreferrer'
+              >
+                from GitHub
+              </a>
+              , unpack the binary and move it to a location covered by your{' '}
+              <code>PATH</code> environment variable.
+            </p>
           </div>
         );
       default:
@@ -291,16 +262,7 @@ class ConfigKubeCtl extends React.Component {
                 className={this.isSelectedPlatform('Mac') ? 'active' : null}
                 onClick={this.selectPlatform.bind(this, 'Mac')}
               >
-                Mac Homebrew
-              </li>
-
-              <li
-                className={
-                  this.isSelectedPlatform('MacWithoutBrew') ? 'active' : null
-                }
-                onClick={this.selectPlatform.bind(this, 'MacWithoutBrew')}
-              >
-                Mac
+                Mac OS
               </li>
 
               <li
