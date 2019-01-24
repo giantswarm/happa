@@ -86,6 +86,16 @@ class ScaleClusterModal extends React.Component {
     });
   };
 
+  getCurrentDesiredCapacity = () => {
+    if (
+      Object.keys(this.props.cluster).includes('status') &&
+      this.props.cluster.status != null
+    ) {
+      return this.props.cluster.status.cluster.scaling.desiredCapacity;
+    }
+    return 0;
+  };
+
   submit = () => {
     this.setState(
       {
@@ -120,24 +130,19 @@ class ScaleClusterModal extends React.Component {
   };
 
   workerDelta = () => {
-    if (
-      this.props.cluster.status.cluster.scaling.desiredCapacity <
-      this.state.scaling.min
-    ) {
-      return (
-        this.state.scaling.min -
-        this.props.cluster.status.cluster.scaling.desiredCapacity
-      );
+    if (this.getCurrentDesiredCapacity() < this.state.scaling.min) {
+      return this.state.scaling.min - this.getCurrentDesiredCapacity;
+    }
+
+    if (this.getCurrentDesiredCapacity() > this.state.scaling.max) {
+      return this.state.scaling.max - this.getCurrentDesiredCapacity();
     }
 
     if (
-      this.props.cluster.status.cluster.scaling.desiredCapacity >
-      this.state.scaling.max
+      this.state.scaling.min == this.state.scaling.max &&
+      this.getCurrentDesiredCapacity() < this.state.scaling.max
     ) {
-      return (
-        this.state.scaling.max -
-        this.props.cluster.status.cluster.scaling.desiredCapacity
-      );
+      return this.getCurrentDesiredCapacity() - this.state.scaling.max;
     }
 
     return 0;
@@ -163,13 +168,8 @@ class ScaleClusterModal extends React.Component {
         this.props.cluster.release_version
       )
     ) {
-      if (
-        this.state.scaling.min >
-        this.props.cluster.status.cluster.scaling.desiredCapacity
-      ) {
-        workerDelta =
-          this.state.scaling.min -
-          this.props.cluster.status.cluster.scaling.desiredCapacity;
+      if (this.state.scaling.min > this.getCurrentDesiredCapacity()) {
+        workerDelta = this.state.scaling.min - this.getCurrentDesiredCapacity();
         return {
           title: `Increase minimum number of nodes by ${workerDelta} worker node${this.pluralize(
             workerDelta
@@ -179,13 +179,8 @@ class ScaleClusterModal extends React.Component {
         };
       }
 
-      if (
-        this.state.scaling.max <
-        this.props.cluster.status.cluster.scaling.desiredCapacity
-      ) {
-        workerDelta =
-          this.props.cluster.status.cluster.scaling.desiredCapacity -
-          this.state.scaling.max;
+      if (this.state.scaling.max < this.getCurrentDesiredCapacity()) {
+        workerDelta = this.getCurrentDesiredCapacity() - this.state.scaling.max;
         return {
           title: `Remove ${Math.abs(workerDelta)} worker node${this.pluralize(
             workerDelta
@@ -197,6 +192,8 @@ class ScaleClusterModal extends React.Component {
 
       if (this.state.scaling.min != this.props.cluster.scaling.min) {
         return {
+          title: 'Scale',
+          style: 'success',
           disabled: !(
             this.state.scaling.minValid && this.state.scaling.maxValid
           ),
@@ -212,6 +209,10 @@ class ScaleClusterModal extends React.Component {
           ),
         };
       }
+
+      return {
+        disabled: true,
+      };
     }
 
     if (workerDelta === 0) {
@@ -235,6 +236,10 @@ class ScaleClusterModal extends React.Component {
         disabled: !(this.state.scaling.minValid && this.state.scaling.maxValid),
       };
     }
+
+    return {
+      disabled: true,
+    };
   };
 
   render() {
@@ -262,8 +267,7 @@ class ScaleClusterModal extends React.Component {
                   onChange={this.updateScaling}
                 />
               </div>
-              {this.state.scaling.min <
-                this.props.cluster.status.cluster.scaling.desiredCapacity &&
+              {this.state.scaling.min < this.getCurrentDesiredCapacity() &&
               this.state.scaling.minValid ? (
                 <div className='flash-messages--flash-message flash-messages--danger'>
                   <ul>

@@ -192,6 +192,19 @@ export default function clusterReducer(
         items: items,
       };
 
+    case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
+      items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {
+        status: null,
+      });
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items,
+      };
+
     case types.CLUSTER_LOAD_STATUS_ERROR:
       items = Object.assign({}, state.items);
 
