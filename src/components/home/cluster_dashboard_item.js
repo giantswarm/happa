@@ -48,6 +48,36 @@ class ClusterDashboardItem extends React.Component {
     return c;
   }
 
+  getNumberOfNodes() {
+    if (
+      Object.keys(this.props.cluster).includes('status') &&
+      this.props.cluster.status != null
+    ) {
+      var nodes = this.props.cluster.status.cluster.nodes;
+      if (nodes.length == 0) {
+        return 0;
+      }
+
+      var workers = 0;
+      nodes.forEach(node => {
+        if (Object.keys(node).includes('labels')) {
+          if (node.labels['role'] === 'worker') {
+            workers++;
+          }
+        }
+      });
+
+      if (workers === 0) {
+        // No node labels available? Fallback to assumption that one of the
+        // nodes is master and rest are workers.
+        workers = nodes.length - 1;
+      }
+
+      return workers;
+    }
+    return null;
+  }
+
   accessCluster() {
     this.props.actions.clusterSelect(this.props.cluster.id);
     this.props.dispatch(push('/getting-started/'));
@@ -117,12 +147,8 @@ class ClusterDashboardItem extends React.Component {
             )}
           </div>
           <div>
-            <b>
-              {this.props.cluster.workers
-                ? this.props.cluster.workers.length
-                : 'n/a'}
-            </b>{' '}
-            nodes · <b>{memory ? memory : 'n/a'}</b> GB RAM ·{' '}
+            <b>{this.getNumberOfNodes()}</b> nodes ·{' '}
+            <b>{memory ? memory : 'n/a'}</b> GB RAM ·{' '}
             <b>{cpus ? cpus : 'n/a'}</b> CPUs
             {this.props.cluster.kvm ? (
               <span>
