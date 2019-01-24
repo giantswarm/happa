@@ -95,16 +95,20 @@ export function clusterLoadStatus(clusterId) {
       })
       .catch(error => {
         console.error(error);
-        dispatch(clusterLoadStatusError(clusterId, error));
-        dispatch(
-          flashAdd({
-            message:
-              'Something went wrong while trying to load the cluster status. Please try again later or contact support: support@giantswarm.io',
-            key: 'clusterLoadStatusFailure',
-            class: 'danger',
-          })
-        );
-        throw error;
+        if (error.status === 404) {
+          dispatch(clusterLoadStatusNotFound(clusterId));
+        } else {
+          dispatch(clusterLoadStatusError(clusterId, error));
+          dispatch(
+            flashAdd({
+              message:
+                'Something went wrong while trying to load the cluster status. Please try again later or contact support: support@giantswarm.io',
+              key: 'clusterLoadStatusFailure',
+              class: 'danger',
+            })
+          );
+          throw error;
+        }
       });
   };
 }
@@ -283,6 +287,13 @@ export function clusterLoadStatusSuccess(clusterId, status) {
     type: types.CLUSTER_LOAD_STATUS_SUCCESS,
     clusterId,
     status,
+  };
+}
+
+export function clusterLoadStatusNotFound(clusterId) {
+  return {
+    type: types.CLUSTER_LOAD_STATUS_NOT_FOUND,
+    clusterId,
   };
 }
 
