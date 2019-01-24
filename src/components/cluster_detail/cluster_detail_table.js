@@ -127,12 +127,29 @@ class ClusterDetailTable extends React.Component {
     }
 
     var availabilityZonesOrNothing = null;
-    if (this.props.cluster.availability_zones) {
+    if (
+      this.props.provider === 'aws' &&
+      this.props.cluster.availability_zones
+    ) {
       availabilityZonesOrNothing = (
         <tr>
           <td>Availablility zones</td>
           <td className='value'>
             {this.props.cluster.availability_zones.join(', ')}
+          </td>
+        </tr>
+      );
+    }
+
+    var numberOfDesiredNodesOrNothing = null;
+    if (this.props.provider === 'aws') {
+      numberOfDesiredNodesOrNothing = (
+        <tr>
+          <td>Number of desired worker nodes</td>
+          <td className='value'>
+            {this.getDesiredNumberOfNodes() === null
+              ? 'n/a'
+              : this.getDesiredNumberOfNodes()}
           </td>
         </tr>
       );
@@ -265,14 +282,7 @@ class ClusterDetailTable extends React.Component {
                 </tr>
                 {availabilityZonesOrNothing}
                 {scalingLimitsOrNothing}
-                <tr>
-                  <td>Number of desired worker nodes</td>
-                  <td className='value'>
-                    {this.getDesiredNumberOfNodes() === null
-                      ? 'n/a'
-                      : this.getDesiredNumberOfNodes()}
-                  </td>
-                </tr>
+                {numberOfDesiredNodesOrNothing}
                 <tr>
                   <td>Number of running worker nodes</td>
                   <td className='value'>
