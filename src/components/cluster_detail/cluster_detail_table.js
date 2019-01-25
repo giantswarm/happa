@@ -47,7 +47,7 @@ class ClusterDetailTable extends React.Component {
       var workers = 0;
       nodes.forEach(node => {
         if (Object.keys(node).includes('labels')) {
-          if (node.labels['role'] === 'worker') {
+          if (node.labels['role'] != 'master') {
             workers++;
           }
         }
