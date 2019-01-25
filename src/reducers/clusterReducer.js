@@ -128,8 +128,12 @@ export default function clusterReducer(
           items[cluster.id],
           ensureMetricKeysAreAvailable(cluster)
         );
+
+        // Guard against API that returns null for certain values when they are
+        // empty.
         items[cluster.id].nodes = items[cluster.id].nodes || [];
         items[cluster.id].keyPairs = items[cluster.id].keyPairs || [];
+        items[cluster.id].scaling = items[cluster.id].scaling || {};
       });
 
       return {
