@@ -79,10 +79,11 @@ module.exports = function (grunt) {
             filter: 'isFile'
           },
           {
-            flatten: true,
+            flatten: false,
             expand: true,
-            src: ['<%= pkg.src %>/images/*'],
-            dest: '<%= pkg.dist %>/images/'
+            cwd: '<%= pkg.src %>',
+            src: ['images/**'],
+            dest: '<%= pkg.dist %>'
           },
           {
             flatten: true,
