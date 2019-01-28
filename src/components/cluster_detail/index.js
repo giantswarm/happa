@@ -230,7 +230,7 @@ class ClusterDetail extends React.Component {
                         credentials={this.props.credentials}
                         release={this.props.release}
                       />
-                      <ClusterApps cluster={this.props.cluster} />
+                      <ClusterApps release={this.props.release} />
                       <ClusterKeyPairs cluster={this.props.cluster} />
 
                       <div className='row section cluster_delete col-12'>
