@@ -1,6 +1,5 @@
 'use strict';
 
-import Modal from './modal/index';
 import * as FlashActions from '../actions/flashMessageActions';
 import * as UserActions from '../actions/userActions';
 import AccountSettings from './account_settings/index';
@@ -14,6 +13,7 @@ import FlashMessages from './flash_messages/index';
 import GettingStarted from './getting-started/index';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home/index';
+import Modals from './modals/index';
 import Navigation from './navigation/index';
 import {
   organizationSelect,
@@ -101,12 +101,12 @@ class Layout extends React.Component {
         <DocumentTitle title='Giant Swarm'>
           <React.Fragment>
             <FlashMessages />
-              <Modal />
             <Navigation
               user={this.props.user}
               organizations={this.props.organizations}
               selectedOrganization={this.props.selectedOrganization}
             />
+            <Modals />
             <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
               <div className='main col-9'>
                 <Switch>

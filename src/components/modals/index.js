@@ -18,7 +18,7 @@ import ClusterIDLabel from '../shared/cluster_id_label';
 import EmailField from '../shared/email_field';
 import PropTypes from 'prop-types';
 
-class Modal extends React.Component {
+class Modals extends React.Component {
   constructor(props) {
     super(props);
 
@@ -319,7 +319,7 @@ class Modal extends React.Component {
   }
 }
 
-Modal.propTypes = {
+Modals.propTypes = {
   dispatch: PropTypes.func,
   modal: PropTypes.object,
   clusters: PropTypes.object,
@@ -334,4 +334,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Modal);
+export default connect(mapStateToProps)(Modals);
