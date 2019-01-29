@@ -1,22 +1,23 @@
 'use strict';
 
 import 'babel-polyfill';
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { render } from 'react-dom';
-import Layout from './layout';
 import adminLogin from './auth/admin';
-import login from './auth/login';
-import logout from './auth/logout';
-import signup from './signup/index';
-import oauth_callback from './auth/oauth_callback.js';
+import configureStore from '../stores/configureStore';
+import { ConnectedRouter } from 'connected-react-router';
 import forgot_password_index from './forgot_password/index';
 import forgot_password_set_password from './forgot_password/set_password';
-import { Provider } from 'react-redux';
-import configureStore from '../stores/configureStore';
 import history from '../stores/history';
-import { ConnectedRouter } from 'connected-react-router';
+import Layout from './layout';
+import login from './auth/login';
+import logout from './auth/logout';
+import oauth_callback from './auth/oauth_callback.js';
+import { Provider } from 'react-redux';
+import React from 'react';
+import { render } from 'react-dom';
+import { Route, Switch } from 'react-router-dom';
+import signup from './signup/index';
 
+// CSS Imports.
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/app.sass';
