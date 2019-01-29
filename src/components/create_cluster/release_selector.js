@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { loadReleases } from '../../actions/releaseActions';
 import { flashAdd } from '../../actions/flashMessageActions';
 import _ from 'underscore';
-import ReleaseDetailsModal from '../modal/release_details_modal';
+import ReleaseDetailsModal from '../modals/release_details_modal';
 import PropTypes from 'prop-types';
 
 class ReleaseSelector extends React.Component {
