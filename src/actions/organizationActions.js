@@ -320,8 +320,19 @@ export function organizationCreateConfirmed(orgId) {
 
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
+    // When creating an org as a normal user, we must add ourselves to the org.
+    // As an admin however, you can't add yourself to an org, because admins
+    // don't actually have any user accounts in userd. So for admins,
+    // we leave the members array empty.
+    var members = [];
+    if (!getState().app.loggedInUser.isAdmin) {
+      members = [{ email: getState().app.loggedInUser.email }];
+    }
+
     return organizationsApi
-      .addOrganization(scheme + ' ' + token, orgId, {})
+      .addOrganization(scheme + ' ' + token, orgId, {
+        members: members,
+      })
       .then(() => {
         return dispatch(organizationsLoad());
       })
