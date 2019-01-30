@@ -15,10 +15,7 @@ import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home/index';
 import Modals from './modals/index';
 import Navigation from './navigation/index';
-import {
-  organizationSelect,
-  organizationsLoad,
-} from '../actions/organizationActions';
+import { organizationsLoad } from '../actions/organizationActions';
 import OrganizationDetails from './organizations/detail';
 import Organizations from './organizations/index';
 import PropTypes from 'prop-types';
@@ -79,10 +76,6 @@ class Layout extends React.Component {
       this.props.dispatch(push('/login'));
     }
   }
-
-  selectOrganization = orgId => {
-    this.props.dispatch(organizationSelect(orgId));
-  };
 
   render() {
     if (!this.props.firstLoadComplete) {
