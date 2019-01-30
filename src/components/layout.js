@@ -1,34 +1,31 @@
 'use strict';
 
-import React from 'react';
-import { Redirect, NavLink, Route, Switch } from 'react-router-dom';
-import FlashMessages from './flash_messages/index';
-import Modal from './modal/index';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
-import { connect } from 'react-redux';
-import _ from 'underscore';
+import * as FlashActions from '../actions/flashMessageActions';
+import * as UserActions from '../actions/userActions';
+import AccountSettings from './account_settings/index';
 import { bindActionCreators } from 'redux';
+import { Breadcrumb } from 'react-breadcrumbs';
+import ClusterDetails from './cluster_detail/index';
+import { connect } from 'react-redux';
+import CreateCluster from './create_cluster/index';
+import DocumentTitle from 'react-document-title';
+import FlashMessages from './flash_messages/index';
+import GettingStarted from './getting-started/index';
+import GiantSwarmV4 from 'giantswarm-v4';
+import Home from './home/index';
+import Modals from './modals/index';
+import Navigation from './navigation/index';
 import {
   organizationSelect,
   organizationsLoad,
 } from '../actions/organizationActions';
-import * as UserActions from '../actions/userActions';
-import * as FlashActions from '../actions/flashMessageActions';
-import Gravatar from 'react-gravatar';
-import DocumentTitle from 'react-document-title';
-import PropTypes from 'prop-types';
-import GettingStarted from './getting-started/index';
-import Users from './users/index';
-import Organizations from './organizations/index';
 import OrganizationDetails from './organizations/detail';
-import ClusterDetails from './cluster_detail/index';
-import AccountSettings from './account_settings/index';
-import CreateCluster from './create_cluster/index';
-import Home from './home/index';
-import GiantSwarmV4 from 'giantswarm-v4';
+import Organizations from './organizations/index';
+import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
-import { Breadcrumbs, Breadcrumb } from 'react-breadcrumbs';
+import React from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import Users from './users/index';
 
 var defaultClient = GiantSwarmV4.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
@@ -102,164 +99,16 @@ class Layout extends React.Component {
     } else {
       return (
         <DocumentTitle title='Giant Swarm'>
-          <div>
+          <React.Fragment>
             <FlashMessages />
-            <nav className='outer-nav'>
-              <div className='main-nav col-9'>
-                <a
-                  href='https://giantswarm.io'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  <img className='logo' src='/images/giantswarm_icon.svg' />
-                </a>
-                <div className='nav-responsive'>
-                  <NavLink to='/' activeClassName='active'>
-                    Clusters
-                  </NavLink>
-                  <NavLink to='/getting-started/' activeClassName='active'>
-                    Getting Started
-                  </NavLink>
-                  <a
-                    href='https://docs.giantswarm.io'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    Documentation <i className='fa fa-external-link' />
-                  </a>
-
-                  {this.props.user.isAdmin ? (
-                    <NavLink to='/users/' activeClassName='active'>
-                      Users
-                    </NavLink>
-                  ) : (
-                    undefined
-                  )}
-                </div>
-
-                <div className='subactions'>
-                  <div className='organization_dropdown'>
-                    {_.map(this.props.organizations.items, x => {
-                      return x.id;
-                    }).length === 0 && !this.props.organizations.isFetching ? (
-                      <DropdownButton
-                        title={
-                          <span>
-                            <span className='label label-default'>ORG</span>No
-                            organizations
-                          </span>
-                        }
-                        key='2'
-                        id='org_dropdown'
-                      >
-                        <MenuItem
-                          componentClass={NavLink}
-                          href='/organizations/'
-                          to='/organizations/'
-                        >
-                          Manage organizations
-                        </MenuItem>
-                      </DropdownButton>
-                    ) : (
-                      <DropdownButton
-                        title={
-                          <span>
-                            <span className='label label-default'>ORG</span>{' '}
-                            {this.props.selectedOrganization}
-                          </span>
-                        }
-                        key='2'
-                        id='org_dropdown'
-                      >
-                        <MenuItem
-                          componentClass={NavLink}
-                          href='/organizations/'
-                          to={
-                            '/organizations/' + this.props.selectedOrganization
-                          }
-                        >
-                          Details for {this.props.selectedOrganization}
-                        </MenuItem>
-                        <MenuItem divider />
-                        <MenuItem
-                          componentClass={NavLink}
-                          href='/organizations/'
-                          to='/organizations/'
-                        >
-                          Manage organizations
-                        </MenuItem>
-                        <MenuItem divider />
-                        <MenuItem header>Switch Organization</MenuItem>
-                        {_.map(
-                          _.sortBy(this.props.organizations.items, 'id'),
-                          org => {
-                            return (
-                              <MenuItem
-                                onSelect={this.selectOrganization}
-                                eventKey={org.id}
-                                key={org.id}
-                              >
-                                {org.id}
-                              </MenuItem>
-                            );
-                          }
-                        )}
-                      </DropdownButton>
-                    )}
-                  </div>
-                  &nbsp; &nbsp;
-                  <div className='user_dropdown'>
-                    <DropdownButton
-                      ref={d => {
-                        this.user_dropdown = d;
-                      }}
-                      pullRight={true}
-                      title={
-                        <div className='user_dropdown--toggle'>
-                          <Gravatar
-                            email={this.props.user.email}
-                            size={100}
-                            default='mm'
-                          />
-                          <span>{this.props.user.email}</span>
-                        </div>
-                      }
-                      key='1'
-                      id='user_dropdown'
-                    >
-                      {this.props.user.auth.scheme === 'giantswarm' ? (
-                        <MenuItem
-                          componentClass={NavLink}
-                          href='/account-settings/'
-                          to='/account-settings/'
-                        >
-                          Account Settings
-                        </MenuItem>
-                      ) : (
-                        undefined
-                      )}
-                      <MenuItem
-                        componentClass={NavLink}
-                        href='/logout'
-                        to='/logout'
-                      >
-                        Logout
-                      </MenuItem>
-                    </DropdownButton>
-                  </div>
-                </div>
-              </div>
-
-              <div className='breadcrumb-wrapper'>
-                <div className='main col-9'>
-                  <Breadcrumbs />
-                </div>
-              </div>
-            </nav>
-
-            <div className='main col-9'>
-              <Modal />
-              <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
+            <Navigation
+              user={this.props.user}
+              organizations={this.props.organizations}
+              selectedOrganization={this.props.selectedOrganization}
+            />
+            <Modals />
+            <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
+              <div className='main col-9'>
                 <Switch>
                   <Route exact path='/' component={Home} />
                   <Route
@@ -296,9 +145,9 @@ class Layout extends React.Component {
                   />
                   <Redirect path='*' to='/' />
                 </Switch>
-              </Breadcrumb>
-            </div>
-          </div>
+              </div>
+            </Breadcrumb>
+          </React.Fragment>
         </DocumentTitle>
       );
     }
