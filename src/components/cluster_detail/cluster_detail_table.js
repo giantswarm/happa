@@ -116,11 +116,13 @@ class ClusterDetailTable extends React.Component {
     ) {
       scalingLimitsOrNothing = (
         <tr>
-          <td>Scaling Limits</td>
+          <td>Worker node scaling</td>
           <td className='value'>
-            {this.props.cluster.scaling.min +
-              '  -  ' +
-              this.props.cluster.scaling.max}
+            {this.props.cluster.scaling.min === this.props.cluster.scaling.max
+              ? `pinned at ${this.props.cluster.scaling.min}`
+              : `autoscaling between ${this.props.cluster.scaling.min} and ${
+                  this.props.cluster.scaling.max
+                }`}
           </td>
         </tr>
       );
