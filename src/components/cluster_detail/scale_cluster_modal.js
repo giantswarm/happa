@@ -114,7 +114,8 @@ class ScaleClusterModal extends React.Component {
 
             this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
             this.props.flashActions.flashAdd({
-              message: 'Successfully scaled cluster',
+              message:
+                'The cluster will be scaled within the next couple of minutes',
               class: 'success',
               ttl: 3000,
             });

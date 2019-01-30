@@ -116,11 +116,13 @@ class ClusterDetailTable extends React.Component {
     ) {
       scalingLimitsOrNothing = (
         <tr>
-          <td>Scaling Limits</td>
+          <td>Worker node scaling</td>
           <td className='value'>
-            {this.props.cluster.scaling.min +
-              '  -  ' +
-              this.props.cluster.scaling.max}
+            {this.props.cluster.scaling.min === this.props.cluster.scaling.max
+              ? `pinned at ${this.props.cluster.scaling.min}`
+              : `autoscaling between ${this.props.cluster.scaling.min} and ${
+                  this.props.cluster.scaling.max
+                }`}
           </td>
         </tr>
       );
@@ -145,7 +147,7 @@ class ClusterDetailTable extends React.Component {
     if (this.props.provider === 'aws') {
       numberOfDesiredNodesOrNothing = (
         <tr>
-          <td>Number of desired worker nodes</td>
+          <td>Desired worker node count</td>
           <td className='value'>
             {this.getDesiredNumberOfNodes() === null
               ? 'n/a'
@@ -284,7 +286,7 @@ class ClusterDetailTable extends React.Component {
                 {scalingLimitsOrNothing}
                 {numberOfDesiredNodesOrNothing}
                 <tr>
-                  <td>Number of running worker nodes</td>
+                  <td>Worker nodes running</td>
                   <td className='value'>
                     {this.getNumberOfNodes() === null
                       ? 'n/a'
