@@ -147,7 +147,7 @@ class ClusterDetailTable extends React.Component {
     if (this.props.provider === 'aws') {
       numberOfDesiredNodesOrNothing = (
         <tr>
-          <td>Number of desired worker nodes</td>
+          <td>Desired worker node count</td>
           <td className='value'>
             {this.getDesiredNumberOfNodes() === null
               ? 'n/a'
