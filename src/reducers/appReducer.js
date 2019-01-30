@@ -143,6 +143,7 @@ export default function appReducer(
 
       // Determine if the user should be considered an admin.
       var isAdmin = false;
+      console.log(action.organizations);
 
       var organizations = Object.entries(action.organizations).map(
         ([, o]) => o.id

@@ -43,7 +43,10 @@ class Layout extends React.Component {
       this.props.actions
         .refreshUserInfo()
         .then(() => {
-          return this.props.dispatch(organizationsLoad());
+          return Promise.all([
+            this.props.dispatch(organizationsLoad()),
+            this.props.dispatch(clustersLoad()),
+          ]);
         })
         .then(() => {
           this.props.dispatch(clustersLoad());
