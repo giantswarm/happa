@@ -286,7 +286,7 @@ class ClusterDetailTable extends React.Component {
                 {scalingLimitsOrNothing}
                 {numberOfDesiredNodesOrNothing}
                 <tr>
-                  <td>Number of running worker nodes</td>
+                  <td>Worker nodes running</td>
                   <td className='value'>
                     {this.getNumberOfNodes() === null
                       ? 'n/a'
