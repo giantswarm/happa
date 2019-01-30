@@ -1,75 +1,11 @@
 'use strict';
 
 import * as types from './actionTypes';
-import _ from 'underscore';
 import { modalHide } from './modalActions';
 import { flashAdd } from './flashMessageActions';
-import { clusterLoadSuccess, clusterLoadError } from './clusterActions';
 import React from 'react';
 import GiantSwarmV4 from 'giantswarm-v4';
 import { push } from 'connected-react-router';
-
-// determineSelectedOrganization takes a list of organizations and looks into
-// localstorage to see what the user had selected already (if anything) as their
-// selected organization.
-//
-// Using this information, it ensures we always have a valid organization selected.
-var determineSelectedOrganization = function(organizations) {
-  var allOrganizations = _.map(organizations, x => x.id);
-  var previouslySelectedOrganization = localStorage.getItem(
-    'app.selectedOrganization'
-  );
-  var organizationStillExists =
-    allOrganizations.indexOf(previouslySelectedOrganization) > -1;
-  var selectedOrganization;
-
-  if (previouslySelectedOrganization && organizationStillExists) {
-    // The user had an organization selected, and it still exists.
-    // So we stay on it.
-    selectedOrganization = previouslySelectedOrganization;
-  } else {
-    // The user didn't have an organization selected yet, or the one
-    // they selected is gone. Switch to the first organization in the list.
-    var firstOrganization = _.map(organizations, x => {
-      return x.id;
-    })[0];
-    localStorage.setItem('app.selectedOrganization', firstOrganization);
-
-    selectedOrganization = firstOrganization;
-  }
-
-  return selectedOrganization;
-};
-
-// determineSelectedCluster takes a list of clusters and an organization and looks into
-// localstorage to see what the user had selected already (if anything) as their
-// selected cluster.
-//
-// Using this information, it ensures we always have a valid cluster selected.
-var determineSelectedCluster = function(selectedOrganization, clusters) {
-  var previouslySelectedCluster = localStorage.getItem('app.selectedCluster');
-  var orgClusters = _.filter(
-    clusters,
-    cluster => cluster.owner === selectedOrganization
-  );
-
-  var clusterStillExists =
-    _.map(orgClusters, x => x.id).indexOf(previouslySelectedCluster) > -1;
-  var selectedCluster;
-
-  if (previouslySelectedCluster && clusterStillExists) {
-    selectedCluster = previouslySelectedCluster;
-  } else {
-    if (orgClusters.length > 0) {
-      selectedCluster = orgClusters[0].id;
-    } else {
-      selectedCluster = undefined;
-    }
-    localStorage.setItem('app.selectedCluster', selectedCluster);
-  }
-
-  return selectedCluster;
-};
 
 // organizationSelect sets the organization that the user is focusing on and
 // stores it in localstorage so that it persists when the users comes back
@@ -77,22 +13,12 @@ var determineSelectedCluster = function(selectedOrganization, clusters) {
 //
 // It also ensures we have a valid cluster selected.
 export function organizationSelect(orgId) {
-  return function(dispatch, getState) {
-    localStorage.setItem('app.selectedOrganization', orgId);
-
-    // We're changing to a different organization
-    // Make sure we have a reasonable value for selectedCluster.
-    var selectedCluster = determineSelectedCluster(
-      orgId,
-      getState().entities.clusters.items
-    );
-
+  return function(dispatch) {
     dispatch(push('/'));
 
     return dispatch({
       type: types.ORGANIZATION_SELECT,
       orgId,
-      selectedCluster,
     });
   };
 }
@@ -128,7 +54,6 @@ export function organizationsLoad() {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
-    var clustersApi = new GiantSwarmV4.ClustersApi();
     var organizationsApi = new GiantSwarmV4.OrganizationsApi();
 
     var alreadyFetching = getState().entities.organizations.isFetching;
@@ -148,19 +73,8 @@ export function organizationsLoad() {
           return organization.id;
         });
 
-        var clusters = clustersApi
-          .getClusters(scheme + ' ' + token)
-          .then(data => {
-            dispatch(clusterLoadSuccess(data));
-            return data;
-          })
-          .catch(error => {
-            console.error(error);
-            dispatch(clusterLoadError(error));
-          });
-
         var orgDetails = Promise.all(
-          _.map(organizationsArray, organizationName => {
+          organizationsArray.map(organizationName => {
             return organizationsApi
               .getOrganization(scheme + ' ' + token, organizationName)
               .then(organization => {
@@ -169,12 +83,9 @@ export function organizationsLoad() {
           })
         );
 
-        return Promise.all([clusters, orgDetails]);
+        return orgDetails;
       })
-      .then(result => {
-        var clusters = result[0];
-        var orgDetails = result[1];
-
+      .then(orgDetails => {
         // create an object with organization IDs as key
         var organizations = orgDetails.reduce((previous, current) => {
           var orgId = current.id;
@@ -184,34 +95,13 @@ export function organizationsLoad() {
 
           previous[orgId] = Object.assign(
             {},
-            { clusters: [] },
             getState().entities.organizations.items[orgId],
             orgDetails
           );
           return previous;
         }, {});
 
-        var selectedOrganization = determineSelectedOrganization(organizations);
-        var selectedCluster = determineSelectedCluster(
-          selectedOrganization,
-          clusters
-        );
-
-        return {
-          organizations,
-          selectedOrganization,
-          selectedCluster,
-        };
-      })
-      .then(result => {
-        dispatch(
-          organizationsLoadSuccess(
-            result.organizations,
-            result.selectedOrganization,
-            result.selectedCluster
-          )
-        );
-        return null;
+        return dispatch(organizationsLoadSuccess(organizations));
       })
       .catch(error => {
         console.error(error);

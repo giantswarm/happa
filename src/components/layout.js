@@ -6,6 +6,7 @@ import AccountSettings from './account_settings/index';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import ClusterDetails from './cluster_detail/index';
+import { clustersLoad } from '../actions/clusterActions';
 import { connect } from 'react-redux';
 import CreateCluster from './create_cluster/index';
 import DocumentTitle from 'react-document-title';
@@ -43,6 +44,9 @@ class Layout extends React.Component {
         .refreshUserInfo()
         .then(() => {
           return this.props.dispatch(organizationsLoad());
+        })
+        .then(() => {
+          this.props.dispatch(clustersLoad());
         })
         .catch(error => {
           if (error.status === 401) {

@@ -119,7 +119,7 @@ export default function clusterReducer(
   var clusterDetails;
 
   switch (action.type) {
-    case types.CLUSTER_LOAD_SUCCESS:
+    case types.CLUSTERS_LOAD_SUCCESS:
       items = {};
 
       _.each(action.clusters, cluster => {
@@ -138,7 +138,7 @@ export default function clusterReducer(
         items: items,
       };
 
-    case types.CLUSTER_LOAD_ERROR:
+    case types.CLUSTERS_LOAD_ERROR:
       return {
         lastUpdated: Date.now(),
         isFetching: false,

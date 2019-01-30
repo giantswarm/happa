@@ -7,6 +7,32 @@ import React from 'react';
 import GiantSwarmV4 from 'giantswarm-v4';
 import { push } from 'connected-react-router';
 
+// clustersLoad
+// -----------------
+// Performs the getClusters API call and dispatches the clustersLoadSuccess
+// action.
+//
+export function clustersLoad() {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+    var clustersApi = new GiantSwarmV4.ClustersApi();
+
+    dispatch({ type: types.CLUSTERS_LOAD });
+
+    return clustersApi
+      .getClusters(scheme + ' ' + token)
+      .then(data => {
+        dispatch(clustersLoadSuccess(data));
+        return data;
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(clustersLoadError(error));
+      });
+  };
+}
+
 // clusterSelect
 // =============================================================
 // Sets which cluster is in "focus". For pages that reference a
@@ -268,16 +294,16 @@ export function clusterDeleteError(clusterId, error) {
   };
 }
 
-export function clusterLoadSuccess(clusters) {
+export function clustersLoadSuccess(clusters) {
   return {
-    type: types.CLUSTER_LOAD_SUCCESS,
+    type: types.CLUSTERS_LOAD_SUCCESS,
     clusters: clusters,
   };
 }
 
-export function clusterLoadError(error) {
+export function clustersLoadError(error) {
   return {
-    type: types.CLUSTER_LOAD_ERROR,
+    type: types.CLUSTERS_LOAD_ERROR,
     error: error,
   };
 }
