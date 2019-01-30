@@ -179,16 +179,16 @@ class CredentialsDisplay extends React.Component {
                       />
                     </td>
                   </tr>
-                  <tr key='awsoperator_role'>
-                    <td>AWSOperator role ARN</td>
-                    <td className='value code'>
-                      {this.props.credentials.items[0].aws.roles.awsoperator}
-                    </td>
-                  </tr>
                   <tr key='admin_role'>
                     <td>Admin role ARN</td>
                     <td className='value code'>
                       {this.props.credentials.items[0].aws.roles.admin}
+                    </td>
+                  </tr>
+                  <tr key='awsoperator_role'>
+                    <td>AWS Operator role ARN</td>
+                    <td className='value code'>
+                      {this.props.credentials.items[0].aws.roles.awsoperator}
                     </td>
                   </tr>
                 </tbody>
