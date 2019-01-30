@@ -327,9 +327,7 @@ function mapStateToProps(state, ownProps) {
       return x.active;
     });
 
-    let availableVersions = _.map(activeReleases, x => {
-      return x.version;
-    }).sort(cmp);
+    let availableVersions = activeReleases.map(x => x.version).sort(cmp);
 
     // Guard against the release version of this cluster not being in the /v4/releases/
     // response.

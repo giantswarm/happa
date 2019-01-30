@@ -95,9 +95,11 @@ export function validateOrRaise(validatable, constraints) {
   if (validationErrors) {
     // If there are validation errors, throw a TypeError that has readable
     // information about what went wrong.
-    var messages = _.map(validationErrors, (errorMessages, field) => {
-      return field + ': ' + errorMessages.join(', ');
-    });
+    var messages = Object.entries(validationErrors).map(
+      ([field, errorMessages]) => {
+        return field + ': ' + errorMessages.join(', ');
+      }
+    );
     throw new TypeError(messages.join('\n'));
   }
 }

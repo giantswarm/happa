@@ -6,7 +6,6 @@ import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { connect } from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import _ from 'underscore';
 import { flashAdd } from '../../actions/flashMessageActions';
 import platform from '../../lib/platform';
 import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
@@ -216,7 +215,7 @@ class ConfigKubeCtl extends React.Component {
                     id='cluster-slect-dropdown'
                     title={this.friendlyClusterName(this.props.selectedCluster)}
                   >
-                    {_.map(this.props.selectedOrgClusters, cluster => (
+                    {this.props.selectedOrgClusters.map(cluster => (
                       <MenuItem
                         key={cluster.id}
                         onClick={this.selectCluster.bind(this, cluster.id)}
