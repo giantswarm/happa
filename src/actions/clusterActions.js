@@ -198,7 +198,7 @@ export function clusterDeleteConfirmed(cluster) {
         dispatch(
           flashAdd({
             message: (
-              <div>Cluster &lsquo;{cluster.id}&lsquo; deleted succesfully</div>
+              <div>Cluster &lsquo;{cluster.id}&lsquo; will be deleted soon</div>
             ),
             class: 'success',
             ttl: 3000,
