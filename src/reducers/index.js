@@ -69,12 +69,10 @@ export default rootReducer;
       items: {
         giantswarm: {
           id: 'giantswarm',
-          clusters: [],
           members: [{email: 'developer@example.com'}]
         },
         oponder: {
           id: 'oponder',
-          clusters: [],
           members: []
         }
       }

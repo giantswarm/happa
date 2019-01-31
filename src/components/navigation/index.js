@@ -1,15 +1,21 @@
 'use strict';
 
 import _ from 'underscore';
+import { connect } from 'react-redux';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import Gravatar from 'react-gravatar';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
+import { organizationSelect } from '../../actions/organizationActions';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { NavLink } from 'react-router-dom';
 
 class Navigation extends React.Component {
+  selectOrganization = orgId => {
+    this.props.dispatch(organizationSelect(orgId));
+  };
+
   render() {
     return (
       <nav className='outer-nav'>
@@ -166,6 +172,18 @@ Navigation.propTypes = {
   user: PropTypes.object,
   organizations: PropTypes.object,
   selectedOrganization: PropTypes.string,
+  dispatch: PropTypes.func,
 };
 
-module.exports = Navigation;
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch: dispatch,
+  };
+}
+
+module.exports = connect(
+  () => {
+    return {};
+  },
+  mapDispatchToProps
+)(Navigation);

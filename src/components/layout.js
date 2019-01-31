@@ -6,6 +6,7 @@ import AccountSettings from './account_settings/index';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import ClusterDetails from './cluster_detail/index';
+import { clustersLoad } from '../actions/clusterActions';
 import { connect } from 'react-redux';
 import CreateCluster from './create_cluster/index';
 import DocumentTitle from 'react-document-title';
@@ -15,10 +16,7 @@ import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home/index';
 import Modals from './modals/index';
 import Navigation from './navigation/index';
-import {
-  organizationSelect,
-  organizationsLoad,
-} from '../actions/organizationActions';
+import { organizationsLoad } from '../actions/organizationActions';
 import OrganizationDetails from './organizations/detail';
 import Organizations from './organizations/index';
 import PropTypes from 'prop-types';
@@ -46,6 +44,9 @@ class Layout extends React.Component {
         .refreshUserInfo()
         .then(() => {
           return this.props.dispatch(organizationsLoad());
+        })
+        .then(() => {
+          this.props.dispatch(clustersLoad());
         })
         .catch(error => {
           if (error.status === 401) {
@@ -79,10 +80,6 @@ class Layout extends React.Component {
       this.props.dispatch(push('/login'));
     }
   }
-
-  selectOrganization = orgId => {
-    this.props.dispatch(organizationSelect(orgId));
-  };
 
   render() {
     if (!this.props.firstLoadComplete) {

@@ -2,7 +2,6 @@
 
 import * as types from '../actions/actionTypes';
 import GiantSwarmV4 from 'giantswarm-v4';
-import _ from 'underscore';
 
 var shutDown = function(state) {
   localStorage.removeItem('user');
@@ -35,9 +34,43 @@ function fetchUserFromStorage() {
   return user;
 }
 
+function fetchSelectedOrganizationFromStorage() {
+  return localStorage.getItem('app.selectedOrganization');
+}
+
+function fetchSelectedClusterFromStorage() {
+  return localStorage.getItem('app.selectedCluster');
+}
+
+// determineSelectedOrganization takes a current list of organizations and the
+// users selectedOrganization (which could be stale, i.e. deleted by someone
+// else)
+//
+// Using this information, it ensures we always have a valid organization selected.
+var determineSelectedOrganization = function(
+  organizations,
+  selectedOrganization
+) {
+  var organizationStillExists =
+    organizations.indexOf(selectedOrganization) > -1;
+
+  if (selectedOrganization && organizationStillExists) {
+    // The user had an organization selected, and it still exists.
+    // So we stay on it.
+  } else {
+    // The user didn't have an organization selected yet, or the one
+    // they selected is gone. Switch to the first organization in the list.
+    var firstOrganization = organizations[0];
+    selectedOrganization = firstOrganization;
+  }
+
+  return selectedOrganization;
+};
+
 export default function appReducer(
   state = {
-    selectedOrganization: 'not-yet-loaded',
+    selectedOrganization: fetchSelectedOrganizationFromStorage(),
+    selectedCluster: fetchSelectedClusterFromStorage(),
     firstLoadComplete: false,
     loggedInUser: fetchUserFromStorage(),
     info: {
@@ -90,9 +123,12 @@ export default function appReducer(
       return shutDown(state);
 
     case types.ORGANIZATION_SELECT:
+      localStorage.setItem('app.selectedOrganization', action.orgId);
+      localStorage.setItem('app.selectedCluster', undefined);
+
       return Object.assign({}, state, {
         selectedOrganization: action.orgId,
-        selectedCluster: action.selectedCluster,
+        selectedCluster: undefined,
       });
 
     case types.CLUSTER_SELECT:
@@ -104,22 +140,34 @@ export default function appReducer(
 
     case types.ORGANIZATIONS_LOAD_SUCCESS:
       // Organizations have been loaded.
-      // Determine if the user should be considered an admin.
 
+      // Determine if the user should be considered an admin.
       var isAdmin = false;
 
-      var organizations = _.map(action.organizations, o => o.id);
+      var organizations = Object.entries(action.organizations).map(
+        ([, o]) => o.id
+      );
       if (organizations.indexOf('giantswarm') != -1) {
         isAdmin = true;
       }
 
       var loggedInUser = Object.assign({}, state.loggedInUser, { isAdmin });
 
+      // Deterimine what organization should be selected.
+      var selectedOrganization = determineSelectedOrganization(
+        organizations,
+        state.selectedOrganization
+      );
+      localStorage.setItem('app.selectedOrganization', selectedOrganization);
+
       return Object.assign({}, state, {
-        selectedOrganization: action.selectedOrganization,
-        selectedCluster: action.selectedCluster,
-        firstLoadComplete: true,
+        selectedOrganization: selectedOrganization,
         loggedInUser,
+      });
+
+    case types.CLUSTERS_LOAD_SUCCESS:
+      return Object.assign({}, state, {
+        firstLoadComplete: true,
       });
 
     default:
