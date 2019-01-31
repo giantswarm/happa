@@ -59,7 +59,7 @@ class UpgradeClusterModal extends React.Component {
 
     var changedComponents = diff.diff(components, targetComponents);
 
-    var changedComponentNames = _.map(changedComponents, diffEdit => {
+    var changedComponentNames = changedComponents.map(diffEdit => {
       let component = components[diffEdit.path[0]];
 
       if (component) {
@@ -88,7 +88,7 @@ class UpgradeClusterModal extends React.Component {
           <b>Component Changes</b>
         </p>
         <div className='release-selector-modal--components'>
-          {_.map(_.sortBy(changedComponents, 'name'), diffEdit => {
+          {_.sortBy(changedComponents, 'name').map(diffEdit => {
             if (diffEdit.kind === 'E') {
               let component = components[diffEdit.path[0]];
               return (
@@ -154,7 +154,7 @@ class UpgradeClusterModal extends React.Component {
         ) : (
           undefined
         )}
-        {_.map(_.sortBy(unchangedComponents, 'name'), component => {
+        {_.sortBy(unchangedComponents, 'name').map(component => {
           return (
             <div
               className='release-selector-modal--component'
@@ -174,7 +174,7 @@ class UpgradeClusterModal extends React.Component {
           <b>Changes</b>
         </p>
         <ul>
-          {_.map(this.props.targetRelease.changelog, (changelog, i) => {
+          {this.props.targetRelease.changelog.map((changelog, i) => {
             return (
               <li key={changelog.component + i}>
                 <b>{changelog.component}:</b> {changelog.description}

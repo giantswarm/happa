@@ -53,9 +53,8 @@ class Navigation extends React.Component {
 
           <div className='subactions'>
             <div className='organization_dropdown'>
-              {_.map(this.props.organizations.items, x => {
-                return x.id;
-              }).length === 0 && !this.props.organizations.isFetching ? (
+              {Object.entries(this.props.organizations.items).length === 0 &&
+              !this.props.organizations.isFetching ? (
                 <DropdownButton
                   title={
                     <span>
@@ -102,20 +101,17 @@ class Navigation extends React.Component {
                   </MenuItem>
                   <MenuItem divider />
                   <MenuItem header>Switch Organization</MenuItem>
-                  {_.map(
-                    _.sortBy(this.props.organizations.items, 'id'),
-                    org => {
-                      return (
-                        <MenuItem
-                          onSelect={this.selectOrganization}
-                          eventKey={org.id}
-                          key={org.id}
-                        >
-                          {org.id}
-                        </MenuItem>
-                      );
-                    }
-                  )}
+                  {_.sortBy(this.props.organizations.items, 'id').map(org => {
+                    return (
+                      <MenuItem
+                        onSelect={this.selectOrganization}
+                        eventKey={org.id}
+                        key={org.id}
+                      >
+                        {org.id}
+                      </MenuItem>
+                    );
+                  })}
                 </DropdownButton>
               )}
             </div>

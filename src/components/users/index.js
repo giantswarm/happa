@@ -531,20 +531,20 @@ class Users extends React.Component {
                               className='outline'
                               title={this.state.invitationForm.organization}
                             >
-                              {_.map(
-                                _.sortBy(this.props.organizations.items, 'id'),
-                                organization => (
-                                  <MenuItem
-                                    key={organization.id}
-                                    onClick={this.handleOrganizationChange.bind(
-                                      this,
-                                      organization.id
-                                    )}
-                                  >
-                                    {organization.id}
-                                  </MenuItem>
-                                )
-                              )}
+                              {_.sortBy(
+                                this.props.organizations.items,
+                                'id'
+                              ).map(organization => (
+                                <MenuItem
+                                  key={organization.id}
+                                  onClick={this.handleOrganizationChange.bind(
+                                    this,
+                                    organization.id
+                                  )}
+                                >
+                                  {organization.id}
+                                </MenuItem>
+                              ))}
                             </DropdownButton>
                           </div>
 
@@ -807,7 +807,7 @@ function isGiantSwarmEmail(email) {
 }
 
 function mapStateToProps(state) {
-  var users = _.map(state.entities.users.items, user => {
+  var users = Object.entries(state.entities.users.items).map(([, user]) => {
     return {
       email: user.email,
       emaildomain: user.emaildomain,
@@ -817,16 +817,18 @@ function mapStateToProps(state) {
     };
   });
 
-  var invitations = _.map(state.entities.invitations.items, invitation => {
-    return {
-      email: invitation.email,
-      emaildomain: invitation.emaildomain,
-      created: invitation.created,
-      expiry: invitation.expiry,
-      invited_by: invitation.invited_by,
-      status: statusFor(invitation),
-    };
-  });
+  var invitations = Object.entries(state.entities.invitations.items).map(
+    ([, invitation]) => {
+      return {
+        email: invitation.email,
+        emaildomain: invitation.emaildomain,
+        created: invitation.created,
+        expiry: invitation.expiry,
+        invited_by: invitation.invited_by,
+        status: statusFor(invitation),
+      };
+    }
+  );
 
   var invitationsAndUsers = users.concat(invitations);
 

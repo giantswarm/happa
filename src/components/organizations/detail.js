@@ -257,14 +257,13 @@ function mapStateToProps(state, ownProps) {
     return cluster.owner === ownProps.match.params.orgId;
   });
 
-  var membersForTable = _.map(
-    state.entities.organizations.items[ownProps.match.params.orgId].members,
-    member => {
-      return Object.assign({}, member, {
-        emailDomain: member.email.split('@')[1],
-      });
-    }
-  );
+  var membersForTable = state.entities.organizations.items[
+    ownProps.match.params.orgId
+  ].members.map(member => {
+    return Object.assign({}, member, {
+      emailDomain: member.email.split('@')[1],
+    });
+  });
 
   return {
     organization:

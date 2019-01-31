@@ -321,12 +321,9 @@ class ClusterKeyPairs extends React.Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {_.map(
-                          _.sortBy(
-                            this.props.cluster.keyPairs,
-                            'create_date'
-                          ).reverse(),
-                          keyPair => {
+                        {_.sortBy(this.props.cluster.keyPairs, 'create_date')
+                          .reverse()
+                          .map(keyPair => {
                             var expiryClass = '';
                             var expirySeconds =
                               moment(keyPair.expire_date)
@@ -398,8 +395,7 @@ class ClusterKeyPairs extends React.Component {
                                 </td>
                               </tr>
                             );
-                          }
-                        )}
+                          })}
                       </tbody>
                     </table>
                     <Button
