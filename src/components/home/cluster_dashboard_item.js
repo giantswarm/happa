@@ -16,36 +16,29 @@ class ClusterDashboardItem extends React.Component {
   }
 
   getMemoryTotal() {
-    if (!this.props.cluster.workers) {
+    var workers = this.getNumberOfNodes();
+    if (workers === null || !this.props.cluster.workers) {
       return null;
     }
-    var m = 0.0;
-    for (var i = 0; i < this.props.cluster.workers.length; i++) {
-      m += this.props.cluster.workers[i].memory.size_gb;
-    }
+    var m = workers * this.props.cluster.workers[0].memory.size_gb;
     return m.toFixed(2);
   }
 
   getStorageTotal() {
-    if (!this.props.cluster.workers) {
+    var workers = this.getNumberOfNodes();
+    if (workers === null || !this.props.cluster.workers) {
       return null;
     }
-    var s = 0.0;
-    for (var i = 0; i < this.props.cluster.workers.length; i++) {
-      s += this.props.cluster.workers[i].storage.size_gb;
-    }
+    var s = workers * this.props.cluster.workers[0].storage.size_gb;
     return s.toFixed(2);
   }
 
   getCpusTotal() {
-    if (!this.props.cluster.workers) {
+    var workers = this.getNumberOfNodes();
+    if (workers === null || !this.props.cluster.workers) {
       return null;
     }
-    var c = 0;
-    for (var i = 0; i < this.props.cluster.workers.length; i++) {
-      c += this.props.cluster.workers[i].cpu.cores;
-    }
-    return c;
+    return workers * this.props.cluster.workers[0].cpu.cores;
   }
 
   getNumberOfNodes() {
