@@ -44,6 +44,11 @@ class ClusterApps extends React.Component {
       logoUrl: '/images/app_icons/kubernetes@2x.png',
       category: 'essentials',
     },
+    'metrics-server': {
+      name: 'metrics-server',
+      logoUrl: '/images/app_icons/metrics_server@2x.png',
+      category: 'essentials',
+    },
     'kube-state-metrics': {
       name: 'kube-state-metrics',
       logoUrl: '/images/app_icons/kube_state_metrics@2x.png',
@@ -57,11 +62,6 @@ class ClusterApps extends React.Component {
     'cert-exporter': {
       name: 'cert-exporter',
       logoUrl: '/images/app_icons/chart_operator@2x.png',
-      category: 'management',
-    },
-    'metrics-server': {
-      name: 'metrics-server',
-      logoUrl: '/images/app_icons/metrics_server@2x.png',
       category: 'management',
     },
     'net-exporter': {
