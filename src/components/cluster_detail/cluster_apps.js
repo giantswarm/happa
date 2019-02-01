@@ -14,44 +14,39 @@ import PropTypes from 'prop-types';
 
 class ClusterApps extends React.Component {
   appMetas = {
-    calico: {
+    'calico': {
       name: 'calico',
       logoUrl: '/images/app_icons/calico@2x.png',
       category: 'essentials',
     },
-    containerlinux: {
+    'containerlinux': {
       name: 'containerlinux',
       logoUrl: '/images/app_icons/container_linux@2x.png',
       category: 'essentials',
     },
-    coredns: {
+    'coredns': {
       name: 'coredns',
       logoUrl: '/images/app_icons/coredns@2x.png',
       category: 'essentials',
     },
-    docker: {
+    'docker': {
       name: 'docker',
       logoUrl: '/images/app_icons/docker@2x.png',
       category: 'essentials',
     },
-    kubernetes: {
-      name: 'kubernetes',
-      logoUrl: '/images/app_icons/kubernetes@2x.png',
-      category: 'essentials',
-    },
-    etcd: {
+    'etcd': {
       name: 'etcd',
       logoUrl: '/images/app_icons/etcd@2x.png',
+      category: 'essentials',
+    },
+    'kubernetes': {
+      name: 'kubernetes',
+      logoUrl: '/images/app_icons/kubernetes@2x.png',
       category: 'essentials',
     },
     'kube-state-metrics': {
       name: 'kube-state-metrics',
       logoUrl: '/images/app_icons/kube_state_metrics@2x.png',
-      category: 'management',
-    },
-    'node-exporter': {
-      name: 'node-exporter',
-      logoUrl: '/images/app_icons/node_exporter@2x.png',
       category: 'management',
     },
     'chart-operator': {
@@ -64,9 +59,19 @@ class ClusterApps extends React.Component {
       logoUrl: '/images/app_icons/chart_operator@2x.png',
       category: 'management',
     },
+    'metrics-server': {
+      name: 'metrics-server',
+      logoUrl: '/images/app_icons/metrics_server@2x.png',
+      category: 'management',
+    },
     'net-exporter': {
       name: 'net-exporter',
       logoUrl: '/images/app_icons/chart_operator@2x.png',
+      category: 'management',
+    },
+    'node-exporter': {
+      name: 'node-exporter',
+      logoUrl: '/images/app_icons/node_exporter@2x.png',
       category: 'management',
     },
     'nginx-ingress-controller': {
