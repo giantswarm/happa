@@ -38,7 +38,7 @@ class ClusterDashboardItem extends React.Component {
     if (workers === null || !this.props.cluster.workers) {
       return null;
     }
-    return (workers * this.props.cluster.workers[0].cpu.cores);
+    return workers * this.props.cluster.workers[0].cpu.cores;
   }
 
   getNumberOfNodes() {
