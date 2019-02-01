@@ -46,9 +46,8 @@ class ReleaseSelector extends React.Component {
         if (this.props.activeSortedReleases.length > 0) {
           selectableReleases = this.props.activeSortedReleases;
         } else {
-          selectableReleases = _.map(
-            this.props.releases,
-            release => release.version
+          selectableReleases = Object.entries(this.props.releases).map(
+            ([, release]) => release.version
           );
           this.informWIP();
         }
@@ -221,7 +220,7 @@ class ReleaseSelector extends React.Component {
           ref={r => {
             this.releaseDetailsModal = r;
           }}
-          releases={_.map(this.state.selectableReleases, version => {
+          releases={this.state.selectableReleases.map(version => {
             return this.props.releases[version];
           })}
           selectedRelease={this.state.selectedRelease}
@@ -252,10 +251,7 @@ function mapStateToProps(state) {
   var releases = Object.assign({}, state.entities.releases.items);
 
   var activeSortedReleases = _.filter(releases, release => release.active);
-  activeSortedReleases = _.map(
-    activeSortedReleases,
-    release => release.version
-  );
+  activeSortedReleases = activeSortedReleases.map(release => release.version);
   activeSortedReleases.sort(cmp).reverse();
 
   return {

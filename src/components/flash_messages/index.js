@@ -9,7 +9,6 @@
 import FlashMessage from './flash_message';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import _ from 'underscore';
 import { connect } from 'react-redux';
 import { flashRemove } from '../../actions/flashMessageActions';
 import PropTypes from 'prop-types';
@@ -38,7 +37,7 @@ class FlashMessages extends React.Component {
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
         >
-          {_.map(this.props.flashMessages.toArray(), this.makeFlashComponent)}
+          {this.props.flashMessages.toArray().map(this.makeFlashComponent)}
         </ReactCSSTransitionGroup>
       </div>
     );

@@ -311,7 +311,7 @@ export default function clusterReducer(
       items = Object.assign({}, state.items);
 
       // Add expire_date to keyPairs based on ttl_hours
-      var keyPairs = _.map(action.keyPairs, keyPair => {
+      var keyPairs = Object.entries(action.keyPairs).map(([, keyPair]) => {
         keyPair.expire_date = moment(keyPair.create_date)
           .utc()
           .add(keyPair.ttl_hours, 'hours');

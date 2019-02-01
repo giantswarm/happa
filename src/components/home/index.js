@@ -20,8 +20,8 @@ class Home extends React.Component {
   componentDidUpdate(prevProps) {
     if (
       !_.isEqual(
-        _.map(this.props.clusters, x => x.id),
-        _.map(prevProps.clusters, x => x.id)
+        this.props.clusters.map(x => x.id),
+        prevProps.clusters.map(x => x.id)
       )
     ) {
       this.fetchClusterDetails(this.props.clusters);
@@ -86,8 +86,7 @@ class Home extends React.Component {
               />
             ) : null}
 
-            {_.map(
-              _.sortBy(this.props.clusters, cluster => cluster.name),
+            {_.sortBy(this.props.clusters, cluster => cluster.name).map(
               cluster => {
                 return (
                   <ClusterDashboardItem

@@ -43,7 +43,7 @@ class ReleaseDetailsModal extends React.Component {
           <BootstrapModal.Title>Release Details</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
-          {_.map(this.props.releases, release => {
+          {this.props.releases.map(release => {
             return (
               <div
                 className='release-selector-modal--release-details'
@@ -73,7 +73,7 @@ class ReleaseDetailsModal extends React.Component {
                 </p>
 
                 <div className='release-selector-modal--components'>
-                  {_.map(_.sortBy(release.components, 'name'), component => {
+                  {_.sortBy(release.components, 'name').map(component => {
                     return (
                       <div
                         className='release-selector-modal--component'
@@ -91,7 +91,7 @@ class ReleaseDetailsModal extends React.Component {
                 </div>
                 <p>Changes</p>
                 <ul>
-                  {_.map(release.changelog, (changelog, i) => {
+                  {release.changelog.map((changelog, i) => {
                     return (
                       <li key={changelog.component + i}>
                         <b>{changelog.component}:</b> {changelog.description}

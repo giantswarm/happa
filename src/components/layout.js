@@ -48,6 +48,9 @@ class Layout extends React.Component {
         .then(() => {
           this.props.dispatch(clustersLoad());
         })
+        .then(() => {
+          this.props.dispatch(clustersLoad());
+        })
         .catch(error => {
           if (error.status === 401) {
             this.props.flashActions.flashAdd({

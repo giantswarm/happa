@@ -88,8 +88,7 @@ class Organizations extends React.Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {_.map(
-                          _.sortBy(this.props.organizations.items, 'id'),
+                        {_.sortBy(this.props.organizations.items, 'id').map(
                           organization => {
                             return (
                               <OrganizationRow
