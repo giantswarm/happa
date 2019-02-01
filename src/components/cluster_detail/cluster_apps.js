@@ -100,7 +100,7 @@ class ClusterApps extends React.Component {
     {
       name: 'RBAC and PSP defaults',
       logoUrl: '/images/app_icons/rbac_and_psp_defaults@2x.png',
-      category: 'management',
+      category: 'essentials',
       version: 'n/a',
     },
   ];
