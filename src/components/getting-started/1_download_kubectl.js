@@ -33,11 +33,11 @@ class DownloadKubeCTL extends React.Component {
             <p>
               Download <code>kubectl</code> from{' '}
               <a
-                href='https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe'
+                href='https://storage.googleapis.com/kubernetes-release/release/v1.11.7/bin/windows/amd64/kubectl.exe'
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/windows/amd64/kubectl.exe
+                https://storage.googleapis.com/kubernetes-release/release/v1.11.7/bin/windows/amd64/kubectl.exe
               </a>{' '}
               to a folder of your choice and make it available in your
               environment PATH variable.
@@ -51,7 +51,7 @@ class DownloadKubeCTL extends React.Component {
 
             <CodeBlock>
               <Prompt>
-                {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/darwin/amd64/kubectl`}
+                {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.11.7/bin/darwin/amd64/kubectl`}
               </Prompt>
               <Prompt>{`chmod +x kubectl`}</Prompt>
               <Prompt>{`sudo cp kubectl /usr/local/bin/kubectl`}</Prompt>
@@ -108,7 +108,7 @@ class DownloadKubeCTL extends React.Component {
 
             <CodeBlock>
               <Prompt>
-                {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.7.5/bin/linux/amd64/kubectl`}
+                {`curl -O https://storage.googleapis.com/kubernetes-release/release/v1.11.7/bin/linux/amd64/kubectl`}
               </Prompt>
               <Prompt>{`chmod +x kubectl`}</Prompt>
               <Prompt>{`sudo cp kubectl /usr/local/bin/kubectl`}</Prompt>
