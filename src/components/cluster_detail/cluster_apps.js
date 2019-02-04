@@ -34,24 +34,24 @@ class ClusterApps extends React.Component {
       logoUrl: '/images/app_icons/docker@2x.png',
       category: 'essentials',
     },
-    kubernetes: {
-      name: 'kubernetes',
-      logoUrl: '/images/app_icons/kubernetes@2x.png',
-      category: 'essentials',
-    },
     etcd: {
       name: 'etcd',
       logoUrl: '/images/app_icons/etcd@2x.png',
       category: 'essentials',
     },
+    kubernetes: {
+      name: 'kubernetes',
+      logoUrl: '/images/app_icons/kubernetes@2x.png',
+      category: 'essentials',
+    },
+    'metrics-server': {
+      name: 'metrics-server',
+      logoUrl: '/images/app_icons/metrics_server@2x.png',
+      category: 'essentials',
+    },
     'kube-state-metrics': {
       name: 'kube-state-metrics',
       logoUrl: '/images/app_icons/kube_state_metrics@2x.png',
-      category: 'management',
-    },
-    'node-exporter': {
-      name: 'node-exporter',
-      logoUrl: '/images/app_icons/node_exporter@2x.png',
       category: 'management',
     },
     'chart-operator': {
@@ -67,6 +67,11 @@ class ClusterApps extends React.Component {
     'net-exporter': {
       name: 'net-exporter',
       logoUrl: '/images/app_icons/chart_operator@2x.png',
+      category: 'management',
+    },
+    'node-exporter': {
+      name: 'node-exporter',
+      logoUrl: '/images/app_icons/node_exporter@2x.png',
       category: 'management',
     },
     'nginx-ingress-controller': {
@@ -95,7 +100,7 @@ class ClusterApps extends React.Component {
     {
       name: 'RBAC and PSP defaults',
       logoUrl: '/images/app_icons/rbac_and_psp_defaults@2x.png',
-      category: 'management',
+      category: 'essentials',
       version: 'n/a',
     },
   ];
