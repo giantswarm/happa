@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { relativeDate } from '../../lib/helpers.js';
 import AWSAccountID from '../shared/aws_account_id';
 import ReleaseDetailsModal from '../modals/release_details_modal';
+import cmp from 'semver-compare';
 
 class ClusterDetailTable extends React.Component {
   showReleaseDetails = () => {
@@ -14,6 +15,16 @@ class ClusterDetailTable extends React.Component {
   };
 
   getDesiredNumberOfNodes() {
+    // Desired number of nodes only makes sense with auto-scaling and that is
+    // only available on AWS starting from release 6.3.0 onwards.
+    if (
+      this.props.provider != 'aws' ||
+      cmp(this.props.release.version, '6.2.0') != 1
+    ) {
+      return null;
+    }
+
+    // Is AWSConfig.Status present yet?
     if (
       Object.keys(this.props.cluster).includes('status') &&
       this.props.cluster.status != null
@@ -137,15 +148,12 @@ class ClusterDetailTable extends React.Component {
     }
 
     var numberOfDesiredNodesOrNothing = null;
-    if (this.props.provider === 'aws') {
+    var desiredNumberOfNodes = this.getDesiredNumberOfNodes();
+    if (desiredNumberOfNodes != null) {
       numberOfDesiredNodesOrNothing = (
         <tr>
           <td>Desired worker node count</td>
-          <td className='value'>
-            {this.getDesiredNumberOfNodes() === null
-              ? 'n/a'
-              : this.getDesiredNumberOfNodes()}
-          </td>
+          <td className='value'>{desiredNumberOfNodes}</td>
         </tr>
       );
     }
