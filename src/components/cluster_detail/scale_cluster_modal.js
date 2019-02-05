@@ -131,6 +131,17 @@ class ScaleClusterModal extends React.Component {
   };
 
   workerDelta = () => {
+    if (
+      !this.isScalingAutomatic(
+        this.props.provider,
+        this.props.cluster.release_version
+      )
+    ) {
+      // On non-auto-scaling clusters scaling.min == scaling.max so comparing
+      // only min between props and current state works.
+      return this.state.scaling.min - this.props.cluster.scaling.min;
+    }
+
     if (this.getCurrentDesiredCapacity() < this.state.scaling.min) {
       return this.state.scaling.min - this.getCurrentDesiredCapacity;
     }
