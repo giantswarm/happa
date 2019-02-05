@@ -55,7 +55,7 @@ class ClusterDetailTable extends React.Component {
 
   getMemoryTotal() {
     var workers = this.getNumberOfNodes();
-    if (workers === null || !this.props.cluster.workers) {
+    if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
     var m = workers * this.props.cluster.workers[0].memory.size_gb;
@@ -64,7 +64,7 @@ class ClusterDetailTable extends React.Component {
 
   getStorageTotal() {
     var workers = this.getNumberOfNodes();
-    if (workers === null || !this.props.cluster.workers) {
+    if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
     var s = workers * this.props.cluster.workers[0].storage.size_gb;
@@ -73,7 +73,7 @@ class ClusterDetailTable extends React.Component {
 
   getCpusTotal() {
     var workers = this.getNumberOfNodes();
-    if (workers === null || !this.props.cluster.workers) {
+    if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
     return workers * this.props.cluster.workers[0].cpu.cores;
