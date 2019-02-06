@@ -141,12 +141,12 @@ class ClusterDashboardItem extends React.Component {
           </div>
           <div>
             <b>{this.getNumberOfNodes()}</b> nodes ·{' '}
-            <b>{memory ? memory : 'n/a'}</b> GB RAM ·{' '}
-            <b>{cpus ? cpus : 'n/a'}</b> CPUs
+            <b>{memory ? memory : '0'}</b> GB RAM · <b>{cpus ? cpus : '0'}</b>{' '}
+            CPUs
             {this.props.cluster.kvm ? (
               <span>
                 {' '}
-                · <b>{storage ? storage : 'n/a'}</b> GB storage
+                · <b>{storage ? storage : '0'}</b> GB storage
               </span>
             ) : (
               undefined
