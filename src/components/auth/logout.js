@@ -47,10 +47,6 @@ class Logout extends React.Component {
   }
 }
 
-Logout.contextTypes = {
-  router: PropTypes.object,
-};
-
 Logout.propTypes = {
   actions: PropTypes.object,
   dispatch: PropTypes.func,

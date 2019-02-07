@@ -196,10 +196,6 @@ class OrganizationDetail extends React.Component {
   }
 }
 
-OrganizationDetail.contextTypes = {
-  router: PropTypes.object,
-};
-
 OrganizationDetail.propTypes = {
   actions: PropTypes.object,
   clusters: PropTypes.array,
