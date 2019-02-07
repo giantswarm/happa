@@ -216,10 +216,6 @@ class ClusterDashboardItem extends React.Component {
   }
 }
 
-ClusterDashboardItem.contextTypes = {
-  router: PropTypes.object,
-};
-
 ClusterDashboardItem.propTypes = {
   cluster: PropTypes.object,
   actions: PropTypes.object,
