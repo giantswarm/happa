@@ -145,10 +145,10 @@ class ClusterApps extends React.Component {
     return (
       <React.Fragment>
         <div className='row section cluster-apps'>
-          <h3 className='table-label'>Managed Apps</h3>
+          <h3 className='table-label'>Managed Apps (Preview)</h3>
           <p>
-            Start deploying managed apps like monitoring, log storage, and
-            others simply by selecting from our catalog.
+            Soon you will be able to deploy managed apps like monitoring, log
+            storage, and more simply by selecting from our catalog.
           </p>
 
           <NavLink
