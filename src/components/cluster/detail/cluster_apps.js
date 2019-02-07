@@ -1,3 +1,6 @@
+import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import Button from '../../shared/button';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -141,7 +144,24 @@ class ClusterApps extends React.Component {
 
     return (
       <React.Fragment>
-        <div className='row cluster-apps'>
+        <div className='row section cluster-apps'>
+          <h3 className='table-label'>Managed Apps</h3>
+          <p>
+            Start deploying managed apps like monitoring, log storage, and
+            others simply by selecting from our catalog.
+          </p>
+
+          <NavLink
+            to={`/organizations/${this.props.organizationId}/clusters/${
+              this.props.clusterId
+            }/app-catalog/`}
+          >
+            <Button>Browse Apps</Button>
+          </NavLink>
+        </div>
+
+        <div className='row section cluster-apps'>
+          <h3 className='table-label'>Preinstalled Services</h3>
           <p>
             These services are preinstalled on your cluster and managed by Giant
             Swarm.
@@ -171,7 +191,12 @@ class ClusterApps extends React.Component {
 }
 
 ClusterApps.propTypes = {
+  clusterId: PropTypes.string,
+  organizationId: PropTypes.string,
   release: PropTypes.object,
 };
 
-export default ClusterApps;
+export default connect(
+  null,
+  null
+)(ClusterApps);
