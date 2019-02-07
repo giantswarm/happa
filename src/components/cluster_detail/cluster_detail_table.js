@@ -290,7 +290,7 @@ class ClusterDetailTable extends React.Component {
                   <td>Worker nodes running</td>
                   <td className='value'>
                     {this.getNumberOfNodes() === null
-                      ? 'n/a'
+                      ? '0'
                       : this.getNumberOfNodes()}
                   </td>
                 </tr>
@@ -298,14 +298,14 @@ class ClusterDetailTable extends React.Component {
                 <tr>
                   <td>Total CPU cores in worker nodes</td>
                   <td className='value'>
-                    {this.getCpusTotal() === null ? 'n/a' : this.getCpusTotal()}
+                    {this.getCpusTotal() === null ? '0' : this.getCpusTotal()}
                   </td>
                 </tr>
                 <tr>
                   <td>Total RAM in worker nodes</td>
                   <td className='value'>
                     {this.getMemoryTotal() === null
-                      ? 'n/a'
+                      ? '0'
                       : this.getMemoryTotal()}{' '}
                     GB
                   </td>
@@ -315,7 +315,7 @@ class ClusterDetailTable extends React.Component {
                     <td>Total storage in worker nodes</td>
                     <td className='value'>
                       {this.getStorageTotal() === null
-                        ? 'n/a'
+                        ? '0'
                         : this.getStorageTotal()}{' '}
                       GB
                     </td>
