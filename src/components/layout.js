@@ -91,6 +91,7 @@ class Layout extends React.Component {
               user={this.props.user}
               organizations={this.props.organizations}
               selectedOrganization={this.props.selectedOrganization}
+              location={this.props.location}
             />
             <Modals />
             <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
@@ -112,6 +113,7 @@ class Layout extends React.Component {
 }
 
 Layout.propTypes = {
+  location: PropTypes.object,
   children: PropTypes.object,
   routes: PropTypes.array,
   params: PropTypes.object,
@@ -121,7 +123,6 @@ Layout.propTypes = {
   firstLoadComplete: PropTypes.bool,
   dispatch: PropTypes.func,
   actions: PropTypes.object,
-  path: PropTypes.string,
 };
 
 function mapStateToProps(state) {
@@ -130,7 +131,6 @@ function mapStateToProps(state) {
     user: state.app.loggedInUser,
     selectedOrganization: state.app.selectedOrganization,
     firstLoadComplete: state.app.firstLoadComplete,
-    path: state.router.location.pathname,
   };
 }
 
