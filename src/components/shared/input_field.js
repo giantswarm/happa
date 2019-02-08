@@ -30,16 +30,21 @@ class InputField extends React.Component {
     }
   }
 
-  componentDidUpdate() {
-    if (this.props.value != this.state.value) {
-      var validation = this.props.validate(this.props.value);
+  static getDerivedStateFromProps(props, state) {
+    if (props.value != state.value) {
+      var validation = props.validate(props.value);
 
-      this.setState({
-        value: this.props.value,
+      return {
+        value: props.value,
         valid: validation.valid,
         validationError: validation.validationError,
-      });
+      };
     }
+    return null;
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return nextProps.value !== this.props.value;
   }
 
   onBlur = () => {
