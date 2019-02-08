@@ -19,6 +19,11 @@ class ClusterApps extends React.Component {
       logoUrl: '/images/app_icons/calico@2x.png',
       category: 'essentials',
     },
+    'cluster-autoscaler': {
+      name: 'cluster-autoscaler',
+      logoUrl: '/images/app_icons/cluster_autoscaler@2x.png',
+      category: 'essentials',
+    },
     containerlinux: {
       name: 'containerlinux',
       logoUrl: '/images/app_icons/container_linux@2x.png',
