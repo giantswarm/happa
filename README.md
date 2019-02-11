@@ -4,7 +4,7 @@
 
 # Happa
 
-Giant Swarm's web interface. It lets users:
+The Giant Swarm web user interface. It lets users:
 
 - View and manage clusters
 - Manage their account
@@ -12,26 +12,28 @@ Giant Swarm's web interface. It lets users:
 - Add / remove members from organizations
 - Learn how to get started with their kubernetes clusters by following a guide
 
-Happa is intended to be deployed to our control planes and acts as a client to our
-API.
+Happa is intended to be deployed to Giant Swarm control planes and acts as a client to the Giant Swarm API.
 
 ![Screenshot of Happa](https://user-images.githubusercontent.com/455309/51164968-a5320780-18d9-11e9-91c5-10ad144d7ada.png)
 
-It is a Single Page React Application that runs in modern browsers.
-
-It currently depends on `api` and `passage`.
+Happa is a single page JavaScript application using React and runs in modern browsers.
 
 ## Getting started with development / demoing
 
-Requirements:
- - `docker`,
- - `giantswarm/api`
+Happa has to be configured for an API endpoint. There are two alternative methods
+when running happa locally:
 
+- (A) Bring up the API suite locally. See [giantswarm/api/](https://github.com/giantswarm/api/tree/master/testing) for details.
+- (B) Modify the base config in [index.html](https://github.com/giantswarm/happa/blob/master/src/index.html) to point to a test installation.
+
+### For (A) – Bring up the API suite locally
+
+This requires Docker and `docker-compose`.
 
 Start the `api` and dependencies first by going to the `api` repo and running
 the dockercompose file there:
 
-```
+```nohighlight
 cd $GOPATH/src/github.com/giantswarm/api/testing
 make up
 ```
@@ -39,28 +41,41 @@ make up
 As part of `make up`, `./fixtures.sh` will run and create the initial user and
 organization you can log in with.
 
-You should now be able to start happa's development server with:
+### For (B)
 
+Find the `apiEndpoint` setting and set it to the API endpoit of the test
+installation you want to use.
+
+If you want to test password resetting and other user account transactions,
+also adapt `passageEndpoint`.
+
+### For (A) and (B)
+
+You should now be able to start happa's development server from within this
+(giantswarm/happa) repo like so:
+
+```nohighlight
+docker-compose up --build
 ```
-# From this repo, so no longer in api/testing
-make develop
-```
+It can take a minute or two for dependencies to be available.
+Wait for a line like `: Compiled successfully.` to appear in the console.
+This shows that the dev server is ready to handle requests.
 
-Then visit `localhost:7000`
+Then visit http://localhost:7000/
 
-Any changes should cause the browser to reload automatically.
+Any code changes should cause the browser to reload automatically.
 
 Once everything is up you can log in as `developer@giantswarm.io` with
 `password` as your password.
 
 If you want to test out things like the forgot password feature, all e-mail ends up in
-the mailcatcher app running at `localhost:1080`
+the mailcatcher app running at http://localhost:1080/
 
 ## Tear down the dev / demo environment
 
-Pressing `ctrl-c` after `make develop` will not stop the development environment.
-You should `docker-compose down && docker-compose rm` to fully clean up
-after yourself.
+Hit `Ctrl-C` to escape from `docker-compose` log output.
+
+Use `docker-compose stop` to stop containers or `docker-compose down` to remove them.
 
 Running tests
 -------------
