@@ -17,7 +17,8 @@ export default function configureStore(initialState) {
       initialState,
       compose(
         applyMiddleware(routerMiddleware(history), thunk),
-        window.devToolsExtension ? window.devToolsExtension() : f => f
+        window.__REDUX_DEVTOOLS_EXTENSION__ &&
+          window.__REDUX_DEVTOOLS_EXTENSION__()
       )
     );
 
