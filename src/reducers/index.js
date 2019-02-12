@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { connectRouter } from 'connected-react-router';
 import organizations from './organizationReducer';
 import users from './userReducer';
 import invitations from './invitationReducer';
@@ -18,12 +19,14 @@ const entities = combineReducers({
   credentials,
 });
 
-const rootReducer = combineReducers({
-  app,
-  entities,
-  modal,
-  flashMessages,
-});
+const rootReducer = history =>
+  combineReducers({
+    router: connectRouter(history),
+    app,
+    entities,
+    modal,
+    flashMessages,
+  });
 
 export default rootReducer;
 
