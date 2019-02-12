@@ -35,7 +35,7 @@
     "react-addons-test-utils": "~15.6.2",
     "react-addons-update": "~15.6.2",
     "react-bootstrap": "0.32.4",
-    "react-bootstrap-table-next": "^1.4.0",
+    "react-bootstrap-table-next": "2.1.1",
     "react-breadcrumbs": "2.1.6",
     "react-datepicker": "1.6.0",
     "react-document-title": "2.0.3",

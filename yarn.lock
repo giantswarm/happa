@@ -5140,8 +5140,8 @@ platform@1.3.5:
   resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.5.tgz#fb6958c696e07e2918d2eeda0f0bc9448d733444"
 
 popper.js@^1.14.1:
-  version "1.14.5"
-  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.5.tgz#98abcce7c7c34c4ee47fcbc6b3da8af2c0a127bc"
+  version "1.14.7"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.7.tgz#e31ec06cfac6a97a53280c3e55e4e0c860e7738e"
 
 portfinder@^1.0.9:
   version "1.0.19"
@@ -5419,9 +5419,9 @@ react-addons-update@~15.6.2:
     fbjs "^0.8.9"
     object-assign "^4.1.0"
 
-react-bootstrap-table-next@^1.4.0:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/react-bootstrap-table-next/-/react-bootstrap-table-next-1.4.1.tgz#c82ddd8301d6b0ebcd51ec64c5f52c6f326f59ef"
+react-bootstrap-table-next@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-table-next/-/react-bootstrap-table-next-2.1.1.tgz#9dfe2217da4f06ff16e12835db9cf6e6e5ad92fc"
   dependencies:
     classnames "2.2.5"
     underscore "1.9.1"
