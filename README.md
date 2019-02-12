@@ -30,7 +30,7 @@ when running happa locally:
 
 This requires Docker and `docker-compose`.
 
-Start the `api` and dependencies first by going to the `api` repo and running
+Start the `api` and dependencies first by going to the `api` [repo](https://github.com/giantswarm/api) and running
 the dockercompose file there:
 
 ```nohighlight
