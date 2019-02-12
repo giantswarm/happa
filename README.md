@@ -47,7 +47,7 @@ Find the `apiEndpoint` setting in `src/index.html` and set it to the API endpoin
 installation you want to use.
 
 If you want to test password resetting and other user account transactions,
-also adapt `passageEndpoint`.
+also adapt `passageEndpoint` value.
 
 ### For (A) and (B)
 
