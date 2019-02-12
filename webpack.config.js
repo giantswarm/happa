@@ -53,7 +53,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['env'],
+            presets: ['@babel/preset-env'],
             plugins: ['transform-react-jsx', 'transform-class-properties']
           }
         }

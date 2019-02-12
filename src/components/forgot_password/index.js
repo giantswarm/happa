@@ -190,7 +190,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(
+export default connect(
   null,
   mapDispatchToProps
 )(ForgotPassword);

@@ -59,4 +59,4 @@ function mapStateToProps(state) {
   };
 }
 
-module.exports = connect(mapStateToProps)(FlashMessages);
+export default connect(mapStateToProps)(FlashMessages);
