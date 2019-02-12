@@ -16,7 +16,7 @@ Happa is intended to be deployed to Giant Swarm control planes and acts as a cli
 
 ![Screenshot of Happa](https://user-images.githubusercontent.com/455309/51164968-a5320780-18d9-11e9-91c5-10ad144d7ada.png)
 
-Happa is a single page JavaScript application using React and runs in modern browsers.
+Happa is a single page JavaScript application using React+Redux and runs in modern browsers.
 
 ## Getting started with development / demoing
 
