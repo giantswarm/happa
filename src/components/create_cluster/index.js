@@ -4,13 +4,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import Button from '../shared/button';
-import _ from 'underscore';
 import { clusterCreate } from '../../actions/clusterActions';
-import update from 'react-addons-update';
-import NewKVMWorker from './new_kvm_worker.js';
-import NewAWSWorker from './new_aws_worker.js';
-import NewAzureWorker from './new_azure_worker.js';
-import NumberPicker from './number_picker.js';
+import NodeCountSelector from '../shared/node_count_selector.js';
+import NumberPicker from '../shared/number_picker.js';
+import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
+import VMSizeSelector from './vm_size_selector.js';
 import ReleaseSelector from './release_selector.js';
 import ProviderCredentials from './provider_credentials.js';
 import PropTypes from 'prop-types';
@@ -19,54 +17,71 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import cmp from 'semver-compare';
 
 class CreateCluster extends React.Component {
-  state = {
-    availabilityZonesPicker: {
-      value: 1,
-      valid: true,
-    },
-    releaseVersion: '',
-    clusterName: 'My cluster',
-    workerCount: 3,
-    syncWorkers: true,
-    workers: [
-      {
-        id: 1,
-        cpu: 1,
-        memory: 1,
-        storage: 10,
-        instanceType: 'm3.large',
-        vmSize: 'Standard_D2s_v3',
-        valid: true,
-      },
-      {
-        id: 2,
-        cpu: 1,
-        memory: 1,
-        storage: 10,
-        instanceType: 'm3.large',
-        vmSize: 'Standard_D2s_v3',
-        valid: true,
-      },
-      {
-        id: 3,
-        cpu: 1,
-        memory: 1,
-        storage: 10,
-        instanceType: 'm3.large',
-        vmSize: 'Standard_D2s_v3',
-        valid: true,
-      },
-    ],
-    submitting: false,
-    valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
-    error: false,
-  };
+  constructor(props) {
+    super(props);
 
-  updateAvailabilityZonesPicker = numberPicker => {
+    this.state = {
+      availabilityZonesPicker: {
+        value: 1,
+        valid: true,
+      },
+      releaseVersion: '',
+      clusterName: 'My cluster',
+      scaling: {
+        automatic: false,
+        min: 3,
+        minValid: true,
+        max: 3,
+        maxValid: true,
+      },
+      submitting: false,
+      valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
+      error: false,
+      aws: {
+        instanceType: {
+          valid: true,
+          value: props.defaultInstanceType,
+        },
+      },
+      azure: {
+        vmSize: {
+          valid: true,
+          value: props.defaultVMSize,
+        },
+      },
+      kvm: {
+        cpuCores: {
+          value: props.defaultCPUCores,
+          valid: true,
+        },
+        memorySize: {
+          value: props.defaultMemorySize,
+          valid: true,
+        },
+        diskSize: {
+          value: props.defaultDiskSize,
+          valid: true,
+        },
+      },
+    };
+  }
+
+  updateAvailabilityZonesPicker = n => {
     this.setState({
       availabilityZonesPicker: {
-        value: numberPicker.value,
-        valid: numberPicker.valid,
+        value: n.value,
+        valid: n.valid,
+      },
+    });
+  };
+
+  updateScaling = nodeCountSelector => {
+    this.setState({
+      scaling: {
+        min: nodeCountSelector.scaling.min,
+        minValid: nodeCountSelector.scaling.minValid,
+        max: nodeCountSelector.scaling.max,
+        maxValid: nodeCountSelector.scaling.maxValid,
       },
     });
   };
@@ -77,120 +92,65 @@ class CreateCluster extends React.Component {
     });
   };
 
-  updateWorkerCount = e => {
-    this.setState({
-      workerCount: e.target.value,
-    });
-  };
-
-  deleteWorker = workerIndex => {
-    var workers = _.without(
-      this.state.workers,
-      this.state.workers[workerIndex]
-    );
-
-    this.setState({
-      workers: workers,
-    });
-  };
-
-  addWorker = () => {
-    var newDefaultWorker;
-
-    if (this.state.syncWorkers) {
-      newDefaultWorker = {
-        id: Date.now(),
-        cpu: this.state.workers[0].cpu,
-        memory: this.state.workers[0].memory,
-        storage: this.state.workers[0].storage,
-        instanceType: this.state.workers[0].instanceType,
-        vmSize: this.state.workers[0].vmSize,
-        valid: this.state.workers[0].valid,
-      };
-    } else {
-      newDefaultWorker = {
-        id: Date.now(),
-        cpu: 1,
-        memory: 1,
-        storage: 20,
-        instanceType: 'm3.large',
-        vmSize: 'Standard_D2s_v3',
-        valid: true,
-      };
-    }
-
-    var workers = [].concat(this.state.workers, newDefaultWorker);
-
-    this.setState({
-      workers: workers,
-    });
-  };
-
-  syncWorkersChanged = e => {
-    var workers = this.state.workers;
-    var worker1 = this.state.workers[0];
-
-    if (e.target.checked) {
-      workers = workers.map(worker => {
-        return {
-          id: worker.id,
-          cpu: worker1.cpu,
-          memory: worker1.memory,
-          storage: worker1.storage,
-          instanceType: worker1.instanceType,
-          valid: worker1.valid,
-        };
-      });
-    }
-
-    this.setState({
-      syncWorkers: e.target.checked,
-      workers: workers,
-    });
-  };
-
   createCluster = () => {
     this.setState({
       submitting: true,
     });
 
+    var i;
     var workers = [];
 
-    // TODO/FYI: This IF / ELSE on this.props.provider is a antipattern
-    // that will spread throughout the codebase if we are not careful.
-    // I am waiting for the 'third' cluster type that we support to be able to make
-    // decisions about a meaningful abstraction. For now, going with a easy solution.
+    // TODO/FYI: This IF / ELSE on this.props.provider is a antipattern that
+    // will spread throughout the codebase if we are not careful. I am waiting
+    // for the 'third' cluster type that we support to be able to make decisions
+    // about a meaningful abstraction. For now, going with a easy solution.
 
     if (this.props.provider === 'aws') {
-      workers = this.state.workers.map(worker => {
-        return {
+      for (i = 0; i < this.state.scaling.min; i++) {
+        workers.push({
           aws: {
-            instance_type: worker.instanceType,
+            instance_type: this.state.aws.instanceType.value,
           },
-        };
-      });
+        });
+      }
     } else if (this.props.provider === 'azure') {
-      workers = this.state.workers.map(worker => {
-        return {
+      for (i = 0; i < this.state.scaling.min; i++) {
+        workers.push({
           azure: {
-            vm_size: worker.vmSize,
+            vm_size: this.state.azure.vmSize.value,
           },
-        };
-      });
+        });
+      }
     } else {
-      workers = this.state.workers.map(worker => {
-        return {
-          memory: { size_gb: worker.memory },
-          storage: { size_gb: worker.storage },
-          cpu: { cores: worker.cpu },
-        };
-      });
+      for (i = 0; i < this.state.scaling.min; i++) {
+        workers.push({
+          memory: { size_gb: this.state.kvm.memorySize.value },
+          storage: { size_gb: this.state.kvm.diskSize.value },
+          cpu: { cores: this.state.kvm.cpuCores.value },
+        });
+      }
+    }
+
+    // Adjust final workers array when cluster uses auto scaling. This is currently
+    // only in AWS and from release 6.1.0 onwards.
+    if (
+      this.isScalingAutomatic(this.props.provider, this.state.releaseVersion) &&
+      workers.length > 1
+    ) {
+      // Only one worker is allowed to be present when auto scaling is enabled.
+      var firstWorker = workers[0];
+      workers = [];
+      workers.push(firstWorker);
     }
 
     this.props
       .dispatch(
         clusterCreate({
           availability_zones: this.state.availabilityZonesPicker.value,
+          scaling: {
+            min: this.state.scaling.min,
+            max: this.state.scaling.max,
+          },
           name: this.state.clusterName,
           owner: this.props.selectedOrganization,
           release_version: this.state.releaseVersion,
@@ -221,51 +181,15 @@ class CreateCluster extends React.Component {
     this.cluster_name.select();
   }
 
-  updateWorker(index, newWorker) {
-    var newState;
-
-    if (this.state.syncWorkers) {
-      var workers = this.state.workers.map(worker => {
-        worker.storage = newWorker.storage;
-        worker.cpu = newWorker.cpu;
-        worker.memory = newWorker.memory;
-        worker.instanceType = newWorker.instanceType;
-        worker.vmSize = newWorker.vmSize;
-        return worker;
-      });
-      newState = update(this.state, {
-        workers: { $set: workers },
-      });
-    } else {
-      newState = update(this.state, {
-        workers: { $splice: [[index, 1, newWorker]] },
-      });
+  isScalingAutomatic(provider, releaseVer) {
+    if (provider != 'aws') {
+      return false;
     }
 
-    this.setState(newState);
+    // In order to have support for automatic scaling and therefore for scaling
+    // limits, provider must be AWS and cluster release >= 6.3.0.
+    return cmp(releaseVer, '6.2.0') === 1;
   }
-
-  valid = () => {
-    // If any of the workers aren't valid, return false
-    var workers = this.state.workers;
-    for (var i = 0; i < workers.length; i++) {
-      if (!workers[i].valid) {
-        return false;
-      }
-    }
-
-    // If any of the releaseVersion hasn't been set yet, return false
-    if (this.state.releaseVersion === '') {
-      return false;
-    }
-
-    // If the availabilityZonesPicker is invalid, return false
-    if (!this.state.availabilityZonesPicker.valid) {
-      return false;
-    }
-
-    return true;
-  };
 
   selectRelease = releaseVersion => {
     this.setState({
@@ -288,6 +212,111 @@ class CreateCluster extends React.Component {
         )}
       </div>
     );
+  }
+
+  updateAWSInstanceType = value => {
+    this.setState({
+      aws: {
+        instanceType: {
+          value: value.value,
+          valid: value.valid,
+        },
+      },
+    });
+  };
+
+  updateVMSize = value => {
+    this.setState({
+      azure: {
+        vmSize: {
+          value: value.value,
+          valid: value.valid,
+        },
+      },
+    });
+  };
+
+  updateCPUCores = value => {
+    this.setState({
+      kvm: {
+        cpuCores: {
+          value: value.value,
+          valid: value.valid,
+        },
+        memorySize: this.state.kvm.memorySize,
+        diskSize: this.state.kvm.diskSize,
+      },
+    });
+  };
+
+  updateMemorySize = value => {
+    this.setState({
+      kvm: {
+        cpuCores: this.state.kvm.cpuCores,
+        memorySize: {
+          value: value.value,
+          valid: value.valid,
+        },
+        diskSize: this.state.kvm.diskSize,
+      },
+    });
+  };
+
+  updateDiskSize = value => {
+    this.setState({
+      kvm: {
+        cpuCores: this.state.kvm.cpuCores,
+        memorySize: this.state.kvm.memorySize,
+        diskSize: {
+          value: value.value,
+          valid: value.valid,
+        },
+      },
+    });
+  };
+
+  valid() {
+    // If any of the releaseVersion hasn't been set yet, return false
+    if (this.state.releaseVersion === '') {
+      return false;
+    }
+
+    // If the availabilityZonesPicker is invalid, return false
+    if (!this.state.availabilityZonesPicker.valid) {
+      return false;
+    }
+
+    // If the min scaling numberpicker is invalid, return false
+    if (!this.state.scaling.minValid) {
+      return false;
+    }
+
+    // If the max scaling numberpickers is invalid, return false
+    if (!this.state.scaling.maxValid) {
+      return false;
+    }
+
+    // If the aws instance type is invalid, return false
+    if (!this.state.aws.instanceType.valid) {
+      return false;
+    }
+
+    if (!this.state.azure.vmSize.valid) {
+      return false;
+    }
+
+    // If the kvm worker is invalid, return false
+    if (
+      !(
+        this.state.kvm.cpuCores.valid &&
+        this.state.kvm.memorySize.valid &&
+        this.state.kvm.diskSize.valid
+      )
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   render() {
@@ -321,6 +350,7 @@ class CreateCluster extends React.Component {
                     Give your cluster a name so you can recognize it in a crowd.
                   </p>
                   <input
+                    className='col-4'
                     ref={i => {
                       this.cluster_name = i;
                     }}
@@ -382,89 +412,100 @@ class CreateCluster extends React.Component {
               </div>
             </div>
 
-            <div>
-              <div className='row section'>
-                <div className='col-12'>
-                  <h3 className='table-label'>Worker Node Configuration</h3>
-                  {this.props.provider === 'kvm' ? (
-                    <div className='checkbox'>
-                      <label htmlFor='syncWorkers'>
-                        <input
-                          type='checkbox'
-                          ref={i => {
-                            this.syncWorkers = i;
-                          }}
-                          id='syncWorkers'
-                          onChange={this.syncWorkersChanged}
-                          checked={this.state.syncWorkers}
+            {(() => {
+              switch (this.props.provider) {
+                case 'aws':
+                  return (
+                    <div className='row section'>
+                      <div className='col-3'>
+                        <h3 className='table-label'>Instance Type</h3>
+                      </div>
+                      <div className='col-9'>
+                        <p>Select the instance type for your worker nodes.</p>
+                        <AWSInstanceTypeSelector
+                          allowedInstanceTypes={this.props.allowedInstanceTypes}
+                          value={this.state.aws.instanceType.value}
+                          readOnly={false}
+                          onChange={this.updateAWSInstanceType}
                         />
-                        Use same configuration for all worker nodes
-                      </label>
+                      </div>
                     </div>
-                  ) : (
-                    undefined
-                  )}
-                </div>
-              </div>
-              <div className='row'>
-                {this.state.workers.map((worker, index) => {
-                  if (this.props.provider === 'aws') {
-                    return (
-                      <NewAWSWorker
-                        key={'Worker ' + worker.id}
-                        allowedInstanceTypes={this.props.allowedInstanceTypes}
-                        worker={worker}
-                        index={index}
-                        readOnly={this.state.syncWorkers && index !== 0}
-                        deleteWorker={this.deleteWorker.bind(this, index)}
-                        onWorkerUpdated={this.updateWorker.bind(this, index)}
-                      />
-                    );
-                  } else if (this.props.provider === 'kvm') {
-                    return (
-                      <NewKVMWorker
-                        key={'Worker ' + worker.id}
-                        worker={worker}
-                        index={index}
-                        readOnly={this.state.syncWorkers && index !== 0}
-                        deleteWorker={this.deleteWorker.bind(this, index)}
-                        onWorkerUpdated={this.updateWorker.bind(this, index)}
-                      />
-                    );
-                  } else if (this.props.provider === 'azure') {
-                    return (
-                      <NewAzureWorker
-                        key={'Worker ' + worker.id}
-                        allowedVMSizes={this.props.allowedVMSizes}
-                        worker={worker}
-                        index={index}
-                        readOnly={this.state.syncWorkers && index !== 0}
-                        deleteWorker={this.deleteWorker.bind(this, index)}
-                        onWorkerUpdated={this.updateWorker.bind(this, index)}
-                      />
-                    );
-                  }
-                })}
-                <div
-                  className={
-                    'col-4 new-cluster--add-worker-button ' +
-                    (this.state.workers.length < 3 ? 'warning' : '')
-                  }
-                  onClick={this.addWorker}
-                >
-                  <div className='new-cluster--add-worker-button-title'>
-                    Add a worker
-                  </div>
-                  {this.state.workers.length < 3 ? (
-                    <div className='new-cluster--low-worker-warning'>
-                      We recommend that you have at least three worker nodes in
-                      a cluster
+                  );
+                case 'kvm':
+                  return (
+                    <div className='row section'>
+                      <div className='col-3'>
+                        <h3 className='table-label'>Worker Configuration</h3>
+                      </div>
+                      <div className='col-9'>
+                        <p>
+                          Configure the amount of CPU, RAM and Storage for your
+                          workers.
+                        </p>
+
+                        <NumberPicker
+                          label='CPU Cores'
+                          stepSize={1}
+                          value={this.state.kvm.cpuCores.value}
+                          min={1}
+                          max={999}
+                          onChange={this.updateCPUCores}
+                        />
+                        <br />
+
+                        <NumberPicker
+                          label='Memory (GB)'
+                          unit='GB'
+                          stepSize={1}
+                          value={this.state.kvm.memorySize.value}
+                          min={1}
+                          max={999}
+                          onChange={this.updateMemorySize}
+                        />
+                        <br />
+
+                        <NumberPicker
+                          label='Storage (GB)'
+                          unit='GB'
+                          stepSize={10}
+                          value={this.state.kvm.diskSize.value}
+                          min={10}
+                          max={999}
+                          onChange={this.updateDiskSize}
+                        />
+                      </div>
                     </div>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              </div>
+                  );
+                case 'azure':
+                  return (
+                    <div className='row section'>
+                      <div className='col-3'>
+                        <h3 className='table-label'>VM Size</h3>
+                      </div>
+                      <div className='col-9'>
+                        <p>Select the vm size for your worker nodes.</p>
+                        <VMSizeSelector
+                          allowedVMSizes={this.props.allowedVMSizes}
+                          value={this.state.azure.vmSize.value}
+                          readOnly={false}
+                          onChange={this.updateVMSize}
+                        />
+                      </div>
+                    </div>
+                  );
+              }
+            })()}
+
+            <div className='row section'>
+              <NodeCountSelector
+                autoscalingEnabled={this.isScalingAutomatic(
+                  this.props.provider,
+                  this.state.releaseVersion
+                )}
+                scaling={this.state.scaling}
+                readOnly={false}
+                onChange={this.updateScaling}
+              />
             </div>
 
             <div className='row section'>
@@ -515,6 +556,11 @@ CreateCluster.propTypes = {
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,
   provider: PropTypes.string,
+  defaultInstanceType: PropTypes.string,
+  defaultVMSize: PropTypes.string,
+  defaultCPUCores: PropTypes.number,
+  defaultMemorySize: PropTypes.number,
+  defaultDiskSize: PropTypes.number,
 };
 
 function mapStateToProps(state) {
@@ -522,6 +568,30 @@ function mapStateToProps(state) {
   var maxAvailabilityZones = state.app.info.general.availability_zones.max;
   var selectedOrganization = state.app.selectedOrganization;
   var provider = state.app.info.general.provider;
+
+  var defaultInstanceType;
+  if (
+    state.app.info.workers.instance_type &&
+    state.app.info.workers.instance_type.default
+  ) {
+    defaultInstanceType = state.app.info.workers.instance_type.default;
+  } else {
+    defaultInstanceType = 'm3.large';
+  }
+
+  var defaultVMSize;
+  if (
+    state.app.info.workers.vm_size &&
+    state.app.info.workers.vm_size.default
+  ) {
+    defaultVMSize = state.app.info.workers.vm_size.default;
+  } else {
+    defaultVMSize = 'Standard_D2s_v3';
+  }
+
+  var defaultCPUCores = 1; // TODO
+  var defaultMemorySize = 1; // TODO
+  var defaultDiskSize = 20; // TODO
 
   var allowedInstanceTypes = [];
   if (provider === 'aws') {
@@ -539,6 +609,11 @@ function mapStateToProps(state) {
     allowedInstanceTypes,
     allowedVMSizes,
     provider,
+    defaultInstanceType,
+    defaultVMSize,
+    defaultCPUCores,
+    defaultMemorySize,
+    defaultDiskSize,
     selectedOrganization,
   };
 }

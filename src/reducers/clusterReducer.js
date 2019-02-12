@@ -128,8 +128,12 @@ export default function clusterReducer(
           items[cluster.id],
           ensureMetricKeysAreAvailable(cluster)
         );
+
+        // Guard against API that returns null for certain values when they are
+        // empty.
         items[cluster.id].nodes = items[cluster.id].nodes || [];
         items[cluster.id].keyPairs = items[cluster.id].keyPairs || [];
+        items[cluster.id].scaling = items[cluster.id].scaling || {};
       });
 
       return {
@@ -167,6 +171,45 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_DETAILS_ERROR:
+      items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {
+        errorLoading: true,
+      });
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items,
+      };
+
+    case types.CLUSTER_LOAD_STATUS_SUCCESS:
+      items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {
+        status: action.status,
+      });
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items,
+      };
+
+    case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
+      items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {
+        status: null,
+      });
+
+      return {
+        lastUpdated: state.lastUpdated,
+        isFetching: false,
+        items: items,
+      };
+
+    case types.CLUSTER_LOAD_STATUS_ERROR:
       items = Object.assign({}, state.items);
 
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {

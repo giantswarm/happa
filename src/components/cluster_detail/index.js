@@ -125,6 +125,14 @@ class ClusterDetail extends React.Component {
 
   // Determine whether the cluster can be scaled
   canClusterScale() {
+    if (
+      !Object.keys(this.props.cluster).includes('status') ||
+      this.props.cluster.status == null
+    ) {
+      // Cluster doesn't have status object yet.
+      return false;
+    }
+
     if (this.props.provider === 'aws') {
       return true;
     }
@@ -263,6 +271,7 @@ class ClusterDetail extends React.Component {
                           this.scaleClusterModal = s;
                         }}
                         cluster={this.props.cluster}
+                        provider={this.props.provider}
                       />
 
                       {this.props.targetRelease ? (

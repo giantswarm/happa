@@ -16,36 +16,59 @@ class ClusterDashboardItem extends React.Component {
   }
 
   getMemoryTotal() {
-    if (!this.props.cluster.workers) {
+    var workers = this.getNumberOfNodes();
+    if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
-    var m = 0.0;
-    for (var i = 0; i < this.props.cluster.workers.length; i++) {
-      m += this.props.cluster.workers[i].memory.size_gb;
-    }
+    var m = workers * this.props.cluster.workers[0].memory.size_gb;
     return m.toFixed(2);
   }
 
   getStorageTotal() {
-    if (!this.props.cluster.workers) {
+    var workers = this.getNumberOfNodes();
+    if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
-    var s = 0.0;
-    for (var i = 0; i < this.props.cluster.workers.length; i++) {
-      s += this.props.cluster.workers[i].storage.size_gb;
-    }
+    var s = workers * this.props.cluster.workers[0].storage.size_gb;
     return s.toFixed(2);
   }
 
   getCpusTotal() {
-    if (!this.props.cluster.workers) {
+    var workers = this.getNumberOfNodes();
+    if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
-    var c = 0;
-    for (var i = 0; i < this.props.cluster.workers.length; i++) {
-      c += this.props.cluster.workers[i].cpu.cores;
+    return workers * this.props.cluster.workers[0].cpu.cores;
+  }
+
+  getNumberOfNodes() {
+    if (
+      Object.keys(this.props.cluster).includes('status') &&
+      this.props.cluster.status != null
+    ) {
+      var nodes = this.props.cluster.status.cluster.nodes;
+      if (nodes.length == 0) {
+        return 0;
+      }
+
+      var workers = 0;
+      nodes.forEach(node => {
+        if (Object.keys(node).includes('labels')) {
+          if (node.labels['role'] != 'master') {
+            workers++;
+          }
+        }
+      });
+
+      if (workers === 0) {
+        // No node labels available? Fallback to assumption that one of the
+        // nodes is master and rest are workers.
+        workers = nodes.length - 1;
+      }
+
+      return workers;
     }
-    return c;
+    return null;
   }
 
   accessCluster() {
@@ -117,17 +140,13 @@ class ClusterDashboardItem extends React.Component {
             )}
           </div>
           <div>
-            <b>
-              {this.props.cluster.workers
-                ? this.props.cluster.workers.length
-                : 'n/a'}
-            </b>{' '}
-            nodes · <b>{memory ? memory : 'n/a'}</b> GB RAM ·{' '}
-            <b>{cpus ? cpus : 'n/a'}</b> CPUs
+            <b>{this.getNumberOfNodes()}</b> nodes ·{' '}
+            <b>{memory ? memory : '0'}</b> GB RAM · <b>{cpus ? cpus : '0'}</b>{' '}
+            CPUs
             {this.props.cluster.kvm ? (
               <span>
                 {' '}
-                · <b>{storage ? storage : 'n/a'}</b> GB storage
+                · <b>{storage ? storage : '0'}</b> GB storage
               </span>
             ) : (
               undefined

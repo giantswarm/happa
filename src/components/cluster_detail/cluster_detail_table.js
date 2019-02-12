@@ -7,43 +7,87 @@ import PropTypes from 'prop-types';
 import { relativeDate } from '../../lib/helpers.js';
 import AWSAccountID from '../shared/aws_account_id';
 import ReleaseDetailsModal from '../modals/release_details_modal';
+import cmp from 'semver-compare';
 
 class ClusterDetailTable extends React.Component {
   showReleaseDetails = () => {
     this.releaseDetailsModal.show();
   };
 
-  getMemoryTotal() {
-    if (!this.props.cluster.workers) {
+  getDesiredNumberOfNodes() {
+    // Desired number of nodes only makes sense with auto-scaling and that is
+    // only available on AWS starting from release 6.3.0 onwards.
+    if (
+      this.props.provider != 'aws' ||
+      cmp(this.props.cluster.release_version, '6.2.0') != 1
+    ) {
       return null;
     }
-    var m = 0.0;
-    for (var i = 0; i < this.props.cluster.workers.length; i++) {
-      m += this.props.cluster.workers[i].memory.size_gb;
+
+    // Is AWSConfig.Status present yet?
+    if (
+      Object.keys(this.props.cluster).includes('status') &&
+      this.props.cluster.status != null
+    ) {
+      return this.props.cluster.status.cluster.scaling.desiredCapacity;
     }
+    return null;
+  }
+
+  getNumberOfNodes() {
+    if (
+      Object.keys(this.props.cluster).includes('status') &&
+      this.props.cluster.status != null
+    ) {
+      var nodes = this.props.cluster.status.cluster.nodes;
+      if (nodes.length == 0) {
+        return 0;
+      }
+
+      var workers = 0;
+      nodes.forEach(node => {
+        if (Object.keys(node).includes('labels')) {
+          if (node.labels['role'] != 'master') {
+            workers++;
+          }
+        }
+      });
+
+      if (workers === 0) {
+        // No node labels available? Fallback to assumption that one of the
+        // nodes is master and rest are workers.
+        workers = nodes.length - 1;
+      }
+
+      return workers;
+    }
+    return null;
+  }
+
+  getMemoryTotal() {
+    var workers = this.getNumberOfNodes();
+    if (workers === null || workers === 0 || !this.props.cluster.workers) {
+      return null;
+    }
+    var m = workers * this.props.cluster.workers[0].memory.size_gb;
     return m.toFixed(2);
   }
 
   getStorageTotal() {
-    if (!this.props.cluster.workers) {
+    var workers = this.getNumberOfNodes();
+    if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
-    var s = 0.0;
-    for (var i = 0; i < this.props.cluster.workers.length; i++) {
-      s += this.props.cluster.workers[i].storage.size_gb;
-    }
+    var s = workers * this.props.cluster.workers[0].storage.size_gb;
     return s.toFixed(2);
   }
 
   getCpusTotal() {
-    if (!this.props.cluster.workers) {
+    var workers = this.getNumberOfNodes();
+    if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
-    var c = 0;
-    for (var i = 0; i < this.props.cluster.workers.length; i++) {
-      c += this.props.cluster.workers[i].cpu.cores;
-    }
-    return c;
+    return workers * this.props.cluster.workers[0].cpu.cores;
   }
 
   render() {
@@ -69,14 +113,47 @@ class ClusterDetailTable extends React.Component {
       );
     }
 
+    var scalingLimitsOrNothing = null;
+    if (
+      Object.keys(this.props.cluster).includes('scaling') &&
+      this.props.cluster.scaling.min > 0
+    ) {
+      scalingLimitsOrNothing = (
+        <tr>
+          <td>Worker node scaling</td>
+          <td className='value'>
+            {this.props.cluster.scaling.min === this.props.cluster.scaling.max
+              ? `pinned at ${this.props.cluster.scaling.min}`
+              : `autoscaling between ${this.props.cluster.scaling.min} and ${
+                  this.props.cluster.scaling.max
+                }`}
+          </td>
+        </tr>
+      );
+    }
+
     var availabilityZonesOrNothing = null;
-    if (this.props.cluster.availability_zones) {
+    if (
+      this.props.provider === 'aws' &&
+      this.props.cluster.availability_zones
+    ) {
       availabilityZonesOrNothing = (
         <tr>
           <td>Availablility zones</td>
           <td className='value'>
             {this.props.cluster.availability_zones.join(', ')}
           </td>
+        </tr>
+      );
+    }
+
+    var numberOfDesiredNodesOrNothing = null;
+    var desiredNumberOfNodes = this.getDesiredNumberOfNodes();
+    if (desiredNumberOfNodes != null) {
+      numberOfDesiredNodesOrNothing = (
+        <tr>
+          <td>Desired worker node count</td>
+          <td className='value'>{desiredNumberOfNodes}</td>
         </tr>
       );
     }
@@ -207,26 +284,28 @@ class ClusterDetailTable extends React.Component {
                   </td>
                 </tr>
                 {availabilityZonesOrNothing}
+                {scalingLimitsOrNothing}
+                {numberOfDesiredNodesOrNothing}
                 <tr>
-                  <td>Number of worker nodes</td>
+                  <td>Worker nodes running</td>
                   <td className='value'>
-                    {this.props.cluster.workers
-                      ? this.props.cluster.workers.length
-                      : 'n/a'}
+                    {this.getNumberOfNodes() === null
+                      ? '0'
+                      : this.getNumberOfNodes()}
                   </td>
                 </tr>
                 {instanceTypeOrVMSize}
                 <tr>
                   <td>Total CPU cores in worker nodes</td>
                   <td className='value'>
-                    {this.getCpusTotal() === null ? 'n/a' : this.getCpusTotal()}
+                    {this.getCpusTotal() === null ? '0' : this.getCpusTotal()}
                   </td>
                 </tr>
                 <tr>
                   <td>Total RAM in worker nodes</td>
                   <td className='value'>
                     {this.getMemoryTotal() === null
-                      ? 'n/a'
+                      ? '0'
                       : this.getMemoryTotal()}{' '}
                     GB
                   </td>
@@ -236,7 +315,7 @@ class ClusterDetailTable extends React.Component {
                     <td>Total storage in worker nodes</td>
                     <td className='value'>
                       {this.getStorageTotal() === null
-                        ? 'n/a'
+                        ? '0'
                         : this.getStorageTotal()}{' '}
                       GB
                     </td>
