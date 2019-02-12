@@ -43,7 +43,7 @@ organization you can log in with.
 
 ### For (B)
 
-Find the `apiEndpoint` setting and set it to the API endpoit of the test
+Find the `apiEndpoint` setting in `src/index.html` and set it to the API endpoint of the test
 installation you want to use.
 
 If you want to test password resetting and other user account transactions,
