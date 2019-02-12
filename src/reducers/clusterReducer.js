@@ -158,11 +158,23 @@ export default function clusterReducer(
         items[action.cluster.id],
         action.cluster
       );
+
       items[action.cluster.id] = Object.assign(
         {},
         items[action.cluster.id],
         ensureWorkersHaveAWSkey(action.cluster)
       );
+
+      // Fill in scaling values when they aren't supplied.
+      if (
+        items[action.cluster.id].scaling.min === undefined &&
+        items[action.cluster.id].scaling.max === undefined
+      ) {
+        items[action.cluster.id].scaling.min =
+          items[action.cluster.id].workers.length;
+        items[action.cluster.id].scaling.max =
+          items[action.cluster.id].workers.length;
+      }
 
       return {
         lastUpdated: state.lastUpdated,
