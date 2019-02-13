@@ -1,7 +1,6 @@
 'use strict';
 
 import * as types from '../actions/actionTypes';
-import update from 'react-addons-update';
 import moment from 'moment';
 import _ from 'underscore';
 
@@ -68,55 +67,11 @@ var ensureWorkersHaveAWSkey = function(clusterDetails) {
   return clusterDetails;
 };
 
-// determineIfOutdated
-// ----------------------------
-// Loop over all metrics and add outdated: true where the timestamp
-// for a metric is too far in the past
-var determineIfOutdated = function(clusterDetails) {
-  clusterDetails.metrics = clusterDetails.metrics || {};
-  for (var metricKey of metricKeys) {
-    clusterDetails.metrics[metricKey] = Object.assign(
-      {},
-      clusterDetails.metrics[metricKey],
-      { outdated: isOutdated(clusterDetails.metrics[metricKey].timestamp) }
-    );
-
-    for (var node in clusterDetails.nodes) {
-      if (clusterDetails.nodes.hasOwnProperty(node)) {
-        clusterDetails.nodes[node][metricKey] = Object.assign(
-          {},
-          clusterDetails.nodes[node][metricKey],
-          { outdated: isOutdated(clusterDetails.metrics[metricKey].timestamp) }
-        );
-      }
-    }
-  }
-
-  return clusterDetails;
-};
-
-// isOutdated
-// ----------------------
-// Takes a timestamp and returns true or false if it is outdated
-
-var isOutdated = function(timestamp) {
-  var momentTime = moment.utc(timestamp);
-  var now = moment.utc(moment());
-  var diff = now.diff(momentTime, 'seconds');
-
-  if (diff > 60) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
 export default function clusterReducer(
   state = { lastUpdated: 0, isFetching: false, items: {} },
   action = undefined
 ) {
   var items;
-  var clusterDetails;
 
   switch (action.type) {
     case types.CLUSTERS_LOAD_SUCCESS:
@@ -226,78 +181,6 @@ export default function clusterReducer(
 
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         errorLoading: true,
-      });
-
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: items,
-      };
-
-    case types.CLUSTER_LOAD_METRICS:
-      items = Object.assign({}, state.items);
-
-      clusterDetails = update(items[action.clusterId], {
-        metricsLoading: { $set: true },
-      });
-
-      items[action.clusterId] = clusterDetails;
-
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: items,
-      };
-
-    case types.CLUSTER_LOAD_METRICS_SUCCESS:
-      var nodes = {};
-      var metrics = action.metrics;
-
-      for (var metricName in metrics.nodes) {
-        if (metrics.nodes.hasOwnProperty(metricName)) {
-          if (metrics.nodes[metricName]) {
-            for (var nodeMetric of metrics.nodes[metricName].instances) {
-              nodes[nodeMetric.instance] = Object.assign(
-                {},
-                nodes[nodeMetric.instance]
-              );
-              nodes[nodeMetric.instance].id = nodeMetric.instance;
-              nodes[nodeMetric.instance][metricName] = {
-                value: nodeMetric.value,
-                unit: metrics.nodes[metricName].unit,
-                timestamp: nodeMetric.timestamp,
-              };
-            }
-          }
-        }
-      }
-
-      items = Object.assign({}, state.items);
-
-      clusterDetails = update(items[action.clusterId], {
-        errorLoadingMetrics: { $set: false },
-        metricsLoading: { $set: false },
-        metricsLoadedFirstTime: { $set: true },
-        metrics: { $set: metrics.cluster },
-        nodes: { $set: nodes },
-      });
-
-      clusterDetails = ensureMetricKeysAreAvailable(clusterDetails);
-      clusterDetails = determineIfOutdated(clusterDetails);
-
-      items[action.clusterId] = clusterDetails;
-
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: items,
-      };
-
-    case types.CLUSTER_LOAD_METRICS_ERROR:
-      items = Object.assign({}, state.items);
-
-      items[action.clusterId] = Object.assign({}, items[action.clusterId], {
-        errorLoadingMetrics: true,
       });
 
       return {

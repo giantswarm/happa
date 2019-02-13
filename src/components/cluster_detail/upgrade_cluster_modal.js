@@ -330,5 +330,5 @@ export default connect(
   undefined,
   mapDispatchToProps,
   undefined,
-  { withRef: true }
+  { forwardRef: true }
 )(UpgradeClusterModal);
