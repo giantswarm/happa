@@ -8,6 +8,8 @@ import history from './history';
 
 var store;
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 export default function configureStore(initialState) {
   if (store) {
     return store;
@@ -15,11 +17,7 @@ export default function configureStore(initialState) {
     store = createStore(
       rootReducer(history),
       initialState,
-      compose(
-        applyMiddleware(routerMiddleware(history), thunk),
-        window.__REDUX_DEVTOOLS_EXTENSION__ &&
-          window.__REDUX_DEVTOOLS_EXTENSION__()
-      )
+      composeEnhancers(applyMiddleware(routerMiddleware(history), thunk))
     );
 
     return store;
