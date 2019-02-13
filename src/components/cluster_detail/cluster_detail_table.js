@@ -19,7 +19,7 @@ class ClusterDetailTable extends React.Component {
     // only available on AWS starting from release 6.3.0 onwards.
     if (
       this.props.provider != 'aws' ||
-      cmp(this.props.cluster.release_version, '6.2.0') != 1
+      cmp(this.props.cluster.release_version, '6.2.99') != 1
     ) {
       return null;
     }
