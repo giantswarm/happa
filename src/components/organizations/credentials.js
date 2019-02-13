@@ -91,7 +91,7 @@ function mapStateToProps(state) {
   };
 }
 
-module.exports = connect(mapStateToProps)(Credentials);
+export default connect(mapStateToProps)(Credentials);
 
 class CredentialsDisplay extends React.Component {
   render() {

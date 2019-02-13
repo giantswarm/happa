@@ -74,12 +74,12 @@ class ClusterDetail extends React.Component {
   }
 
   showScalingModal = () => {
-    this.scaleClusterModal.getWrappedInstance().reset();
-    this.scaleClusterModal.getWrappedInstance().show();
+    this.scaleClusterModal.reset();
+    this.scaleClusterModal.show();
   };
 
   showUpgradeModal = () => {
-    this.upgradeClusterModal.getWrappedInstance().show();
+    this.upgradeClusterModal.show();
   };
 
   clusterName() {
