@@ -345,7 +345,7 @@ class ConfigKubeCtl extends React.Component {
 
           <div className='aside'>
             <p>
-              <i className='fa fa-graduation-cap' title='For learners' />{' '}
+              <i className='fa fa-info' title='For learners' />{' '}
               <code>--certificate-organizations</code> is a flag that sets what
               group you belong to when authenticating against the Kubernetes
               API. The default superadmin group on RBAC (Role Based Access
