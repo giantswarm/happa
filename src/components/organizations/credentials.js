@@ -351,8 +351,8 @@ class CredentialsForm extends React.Component {
             .
           </p>
           <p>
-            <i className='fa fa-info-circle' /> It is currently not possible to
-            modify or delete these credentials once set.
+            <i className='fa fa-info' /> It is currently not possible to modify
+            or delete these credentials once set.
           </p>
 
           <FormGroup controlId='azureSubscriptionID'>
@@ -438,8 +438,8 @@ class CredentialsForm extends React.Component {
           </p>
 
           <p>
-            <i className='fa fa-info-circle' /> It is currently not possible to
-            modify or delete these credentials once set.
+            <i className='fa fa-info' /> It is currently not possible to modify
+            or delete these credentials once set.
           </p>
 
           <FormGroup controlId='awsAdminRoleARN'>

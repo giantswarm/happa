@@ -16,7 +16,7 @@ class AWSAccountID extends React.Component {
           target='_blank'
           rel='noopener noreferrer'
         >
-          <i className='fa fa-external-link' />
+          <i className='fa fa-open-in-new' />
         </a>
       </span>
     );

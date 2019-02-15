@@ -166,7 +166,7 @@ class ChangeEmailForm extends React.Component {
             >
               {this.state.changeEmailSuccess ? (
                 <div className='form-success'>
-                  <i className='fa fa-check-circle' />
+                  <i className='fa fa-done' />
                   Saved Succesfully
                 </div>
               ) : null}

@@ -63,7 +63,7 @@ class ClusterIDLabel extends React.Component {
 
         {this.props.copyEnabled ? (
           this.state.copied ? (
-            <i className='fa fa-check' aria-hidden='true' />
+            <i className='fa fa-done' aria-hidden='true' />
           ) : (
             <OverlayTrigger
               placement='top'
@@ -75,7 +75,7 @@ class ClusterIDLabel extends React.Component {
             >
               <i
                 onClick={this.copyToClipboard.bind(this)}
-                className='fa fa-clipboard'
+                className='fa fa-content-copy'
                 aria-hidden='true'
               />
             </OverlayTrigger>

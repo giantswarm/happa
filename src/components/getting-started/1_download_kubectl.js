@@ -146,7 +146,7 @@ class DownloadKubeCTL extends React.Component {
 
           <div className='aside'>
             <p>
-              <i className='fa fa-graduation-cap' title='For learners' />{' '}
+              <i className='fa fa-info' title='For learners' />{' '}
               <code>kubectl</code> is the CLI you’ll use to work with your
               cluster mostly. Some things can be done using the web-based
               Kubernetes Dashboard, but only the CLI provides access to all
@@ -205,14 +205,14 @@ class DownloadKubeCTL extends React.Component {
           <div className='component_slider--nav'>
             <Link to='/getting-started/'>
               <button>
-                <i className='fa fa-caret-left' />
+                <i className='fa fa-chevron-left' />
                 Back
               </button>
             </Link>
 
             <Link to='/getting-started/configure/'>
               <button className='primary'>
-                Continue <i className='fa fa-caret-right' />
+                Continue <i className='fa fa-chevron-right' />
               </button>
             </Link>
           </div>

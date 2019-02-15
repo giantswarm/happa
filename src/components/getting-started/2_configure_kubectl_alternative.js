@@ -293,10 +293,10 @@ class ConfigKubeCtl extends React.Component {
 
         <div className='aside'>
           <p>
-            <i className='fa fa-graduation-cap' title='For learners' /> To save
-            some time in the future, add the command above to a terminal
-            profile, e. g. <code>~/.bash_profile</code> to have it available in
-            all new shell sessions.
+            <i className='fa fa-info' title='For learners' /> To save some time
+            in the future, add the command above to a terminal profile, e. g.{' '}
+            <code>~/.bash_profile</code> to have it available in all new shell
+            sessions.
           </p>
         </div>
 
@@ -320,8 +320,8 @@ class ConfigKubeCtl extends React.Component {
 
         <div className='aside'>
           <p>
-            <i className='fa fa-graduation-cap' title='For learners' /> Again,
-            here you can save your future self some time by creating an alias.
+            <i className='fa fa-info' title='For learners' /> Again, here you
+            can save your future self some time by creating an alias.
           </p>
         </div>
       </div>
