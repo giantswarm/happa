@@ -361,9 +361,9 @@ class ConfigKubeCtl extends React.Component {
               className='toggle-alternative'
             >
               {this.state.alternativeOpen ? (
-                <i className='fa fa-caret-down' />
+                <i className='fa fa-chevron-down' />
               ) : (
-                <i className='fa fa-caret-right' />
+                <i className='fa fa-chevron-right' />
               )}
               &nbsp; Show alternative method to configure kubectl without gsctl
             </div>
@@ -401,13 +401,13 @@ class ConfigKubeCtl extends React.Component {
           <div className='component_slider--nav'>
             <Link to='/getting-started/download/'>
               <button>
-                <i className='fa fa-caret-left' /> Back
+                <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>
 
             <Link to='/getting-started/example/'>
               <button className='primary'>
-                Continue <i className='fa fa-caret-right' />
+                Continue <i className='fa fa-chevron-right' />
               </button>
             </Link>
           </div>

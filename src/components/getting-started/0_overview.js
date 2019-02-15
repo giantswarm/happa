@@ -67,7 +67,7 @@ class Overview extends React.Component {
         <div className='component_slider--nav'>
           <Link to='/getting-started/download/'>
             <button className='primary'>
-              Start <i className='fa fa-caret-right' />
+              Start <i className='fa fa-chevron-right' />
             </button>
           </Link>
         </div>

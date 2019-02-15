@@ -19,7 +19,7 @@ class OrganizationRow extends React.Component {
         <td>
           <div className='contextual'>
             <i
-              className='fa fa-times clickable'
+              className='fa fa-delete clickable'
               title='Delete this organization'
               onClick={this.props.onDelete}
             />

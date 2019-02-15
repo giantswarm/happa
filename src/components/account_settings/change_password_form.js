@@ -244,7 +244,7 @@ class ChangePassword extends React.Component {
               >
                 {this.state.success ? (
                   <div className='form-success'>
-                    <i className='fa fa-check-circle' />
+                    <i className='fa fa-done' />
                     Password set succesfully
                   </div>
                 ) : null}

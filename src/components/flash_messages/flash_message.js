@@ -40,7 +40,7 @@ class FlashMessage extends React.Component {
         >
           {this.props.message ? this.props.message : this.props.children}
           <i
-            className='fa fa-times flash-messages--dismiss'
+            className='fa fa-close flash-messages--dismiss'
             aria-hidden='true'
             onClick={this.dismissFlash}
           />

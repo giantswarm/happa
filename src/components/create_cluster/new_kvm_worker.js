@@ -32,7 +32,7 @@ class NewKVMWorker extends React.Component {
               className='new-cluster--delete'
               onClick={this.props.deleteWorker}
             >
-              <i className='fa fa-times' />
+              <i className='fa fa-close' />
             </span>
           ) : (
             undefined

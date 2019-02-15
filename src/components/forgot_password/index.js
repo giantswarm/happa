@@ -97,7 +97,7 @@ class ForgotPassword extends React.Component {
     return (
       <div className='forgot-password--token-sent'>
         <h1>
-          <i className='fa fa-envelope' /> Check your mail!
+          <i className='fa fa-email' /> Check your mail!
         </h1>
         <p>
           If you have an account, we&apos;ve sent an email to {this.state.email}

@@ -70,7 +70,7 @@ class FileBlock extends React.Component {
         href={window.URL.createObjectURL(this.blob())}
         download={this.props.fileName}
       >
-        <i className='fa fa-download' aria-hidden='true' />
+        <i className='fa fa-file-download' aria-hidden='true' />
       </a>
     );
   }
@@ -111,7 +111,7 @@ class FileBlock extends React.Component {
                 this.setState({ clicked: true });
               }.bind(this)}
             >
-              <i className='fa fa-clipboard' aria-hidden='true' />
+              <i className='fa fa-content-copy' aria-hidden='true' />
             </a>
           </div>
           <ReactCSSTransitionGroup
@@ -121,7 +121,7 @@ class FileBlock extends React.Component {
           >
             {this.state.clicked ? (
               <i
-                className='fa fa-check codeblock--checkmark'
+                className='fa fa-done codeblock--checkmark'
                 aria-hidden='true'
               />
             ) : null}

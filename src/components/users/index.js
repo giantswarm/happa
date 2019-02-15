@@ -636,7 +636,7 @@ class Users extends React.Component {
                         </code>
                         &nbsp;
                         {this.state.copied ? (
-                          <i className='fa fa-check' aria-hidden='true' />
+                          <i className='fa fa-done' aria-hidden='true' />
                         ) : (
                           <OverlayTrigger
                             placement='top'
@@ -645,7 +645,7 @@ class Users extends React.Component {
                             }
                           >
                             <i
-                              className='copy-link fa fa-clipboard'
+                              className='copy-link fa fa-content-copy'
                               onClick={this.copyToClipboard.bind(
                                 this,
                                 this.state.modal.invitationResult
@@ -729,7 +729,7 @@ function expiryCellFormatter(cell, row) {
       <span className={expiryClass}>
         {relativeDate(cell)} &nbsp;
         <i
-          className='fa fa-times clickable'
+          className='fa fa-close clickable'
           title='Remove expiration'
           onClick={this.removeExpiration.bind(this, row.email)}
         />

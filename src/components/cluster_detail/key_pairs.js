@@ -450,7 +450,7 @@ class ClusterKeyPairs extends React.Component {
                               this.cnPrefix() + '.user.api.clusterdomain'
                             ) : (
                               <span className='error'>
-                                <i className='fa fa-exclamation-triangle' />{' '}
+                                <i className='fa fa-warning' />{' '}
                                 {this.state.cn_prefix_error}
                               </span>
                             )}
@@ -549,7 +549,7 @@ class ClusterKeyPairs extends React.Component {
                         onClick={this.copyKubeConfig.bind(this)}
                       >
                         &nbsp;&nbsp;
-                        <i className='fa fa-check' aria-hidden='true' />
+                        <i className='fa fa-done' aria-hidden='true' />
                         &nbsp;&nbsp;
                       </Button>
                     ) : (

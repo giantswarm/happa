@@ -74,7 +74,7 @@ class NextSteps extends React.Component {
           <div className='component_slider--nav'>
             <Link to='/getting-started/configure/'>
               <button>
-                <i className='fa fa-caret-left' /> Back
+                <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>
           </div>

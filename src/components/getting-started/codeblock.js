@@ -119,7 +119,7 @@ export class CodeBlock extends React.Component {
                 this.setState({ clicked: true });
               }.bind(this)}
             >
-              <i className='fa fa-clipboard' aria-hidden='true' />
+              <i className='fa fa-content-copy' aria-hidden='true' />
             </a>
           </div>
           <ReactCSSTransitionGroup
@@ -129,7 +129,7 @@ export class CodeBlock extends React.Component {
           >
             {this.state.clicked ? (
               <i
-                className='fa fa-check codeblock--checkmark'
+                className='fa fa-done codeblock--checkmark'
                 aria-hidden='true'
               />
             ) : null}

@@ -39,7 +39,7 @@ class Navigation extends React.Component {
               target='_blank'
               rel='noopener noreferrer'
             >
-              Documentation <i className='fa fa-external-link' />
+              Documentation <i className='fa fa-open-in-new' />
             </a>
 
             {this.props.user.isAdmin ? (

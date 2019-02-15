@@ -205,14 +205,14 @@ class DownloadKubeCTL extends React.Component {
           <div className='component_slider--nav'>
             <Link to='/getting-started/'>
               <button>
-                <i className='fa fa-caret-left' />
+                <i className='fa fa-chevron-left' />
                 Back
               </button>
             </Link>
 
             <Link to='/getting-started/configure/'>
               <button className='primary'>
-                Continue <i className='fa fa-caret-right' />
+                Continue <i className='fa fa-chevron-right' />
               </button>
             </Link>
           </div>
