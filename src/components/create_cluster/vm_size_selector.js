@@ -164,7 +164,7 @@ class VMSizeSelector extends React.Component {
               }
               onClick={this.showModal}
             >
-              <i className='fa fa-bars' />
+              <i className='fa fa-menu' />
             </div>
           </form>
         </div>
