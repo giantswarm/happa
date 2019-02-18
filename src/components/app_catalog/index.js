@@ -2,8 +2,8 @@
 
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
+import Search from './search';
 import React from 'react';
 
 class CatalogIndex extends React.Component {
@@ -45,9 +45,9 @@ class CatalogIndex extends React.Component {
             <Breadcrumb
               data={{ title: 'ORGANIZATIONS', pathname: '/organizations/' }}
             >
-              <DocumentTitle title={'App Catalog | Giant Swarm '}>
-                <h1>App Catalog</h1>
-              </DocumentTitle>
+              <div className='app-catalog'>
+                <Search />
+              </div>
             </Breadcrumb>
           </Breadcrumb>
         </Breadcrumb>
