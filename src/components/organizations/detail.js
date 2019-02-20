@@ -179,7 +179,7 @@ class OrganizationDetail extends React.Component {
                       />
                     )}
                     <Button onClick={this.addMember} bsStyle='default'>
-                      Add Member
+                      <i className='fa fa-add-circle' /> Add Member
                     </Button>
                   </div>
                 </div>
