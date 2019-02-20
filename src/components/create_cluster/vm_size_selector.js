@@ -54,11 +54,10 @@ class VMSizeSelector extends React.Component {
     }
 
     var availableVMSizes = [];
-    // Filter the list down to only the allowed vm sizes.
-    // Push the instance type into the list of allowed vm sizes
-    Object.keys(vmSizes).forEach(function(key) {
-      if (props.allowedVMSizes.indexOf(key) !== -1) {
-        availableVMSizes.push(vmSizes[key]);
+    // Create a list of only the allowed VM sizes.
+    props.allowedVMSizes.forEach(function(vs) {
+      if (typeof vmSizes[vs] === 'object') {
+        availableVMSizes.push(vmSizes[vs]);
       }
     });
 
