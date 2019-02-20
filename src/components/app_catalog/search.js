@@ -163,7 +163,7 @@ class CatalogIndex extends React.Component {
         <React.Fragment>
           <Loading loading={this.state.loading}>
             <h1>
-              App Katalog
+              App Katalog (Preview)
               <form>
                 <div className='input-with-icon'>
                   <i className='fa fa-search' />
