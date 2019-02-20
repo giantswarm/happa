@@ -295,13 +295,21 @@ class SimpleExample extends React.Component {
           </div>
 
           <div className='component_slider--nav'>
-            <Link to='/getting-started/configure/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/configure/`}
+            >
               <button>
                 <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>
 
-            <Link to='/getting-started/next-steps/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/next-steps/`}
+            >
               <button className='primary'>
                 Continue <i className='fa fa-chevron-right' />
               </button>
@@ -314,10 +322,11 @@ class SimpleExample extends React.Component {
 }
 
 SimpleExample.propTypes = {
+  actions: PropTypes.object,
   cluster: PropTypes.object,
   dispatch: PropTypes.func,
-  actions: PropTypes.object,
   goToSlide: PropTypes.func,
+  match: PropTypes.object,
 };
 
 function mapStateToProps(state) {

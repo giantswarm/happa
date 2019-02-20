@@ -399,13 +399,21 @@ class ConfigKubeCtl extends React.Component {
           </p>
 
           <div className='component_slider--nav'>
-            <Link to='/getting-started/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/`}
+            >
               <button>
                 <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>
 
-            <Link to='/getting-started/example/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/example/`}
+            >
               <button className='primary'>
                 Continue <i className='fa fa-chevron-right' />
               </button>
@@ -418,13 +426,14 @@ class ConfigKubeCtl extends React.Component {
 }
 
 ConfigKubeCtl.propTypes = {
-  selectedCluster: PropTypes.object,
+  actions: PropTypes.object,
   clusters: PropTypes.object,
   dispatch: PropTypes.func,
-  actions: PropTypes.object,
+  goToSlide: PropTypes.func,
+  match: PropTypes.object,
+  selectedCluster: PropTypes.object,
   selectedOrgClusters: PropTypes.array,
   user: PropTypes.object,
-  goToSlide: PropTypes.func,
 };
 
 function mapStateToProps(state) {

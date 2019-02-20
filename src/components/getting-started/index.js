@@ -10,6 +10,7 @@ import Page2_SimpleExample from './2_simple_example.js';
 import Page3_NextSteps from './3_next_steps.js';
 
 import { Breadcrumb } from 'react-breadcrumbs';
+import PropTypes from 'prop-types';
 
 class GettingStarted extends React.Component {
   render() {
@@ -22,25 +23,28 @@ class GettingStarted extends React.Component {
             <Switch>
               <Route
                 exact
-                path='/getting-started/'
+                path='/organizations/:orgId/clusters/:clusterId/getting-started/'
                 component={Page0_Overview}
               />
               <Route
                 exact
-                path='/getting-started/configure/'
+                path='/organizations/:orgId/clusters/:clusterId/getting-started/configure/'
                 component={Page1_ConfigureKubeCTL}
               />
               <Route
                 exact
-                path='/getting-started/example/'
+                path='/organizations/:orgId/clusters/:clusterId/getting-started/example/'
                 component={Page2_SimpleExample}
               />
               <Route
                 exact
-                path='/getting-started/next-steps/'
+                path='/organizations/:orgId/clusters/:clusterId/getting-started/next-steps/'
                 component={Page3_NextSteps}
               />
-              <Redirect path='*' to='/getting-started/' />
+              <Redirect
+                path='*'
+                to='/organizations/:orgId/clusters/:clusterId/getting-started/'
+              />
             </Switch>
           </div>
         </Breadcrumb>
@@ -48,5 +52,9 @@ class GettingStarted extends React.Component {
     );
   }
 }
+
+GettingStarted.propTypes = {
+  match: PropTypes.object,
+};
 
 export default GettingStarted;

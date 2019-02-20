@@ -21,7 +21,11 @@ class Overview extends React.Component {
         <h1>Get started with your Kubernetes cluster</h1>
         <ol className='step_selector row'>
           <li className='col-4 col-12-sm'>
-            <Link to='/getting-started/configure/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/configure/`}
+            >
               <span className='step_selector--step-number'>1.</span>
               <span className='step_selector--step-title'>Get access</span>
               <span className='step_selector--step-description'>
@@ -31,7 +35,11 @@ class Overview extends React.Component {
             </Link>
           </li>
           <li className='col-4 col-12-sm'>
-            <Link to='/getting-started/example/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/example/`}
+            >
               <span className='step_selector--step-number'>2.</span>
               <span className='step_selector--step-title'>
                 Run a simple example
@@ -43,7 +51,11 @@ class Overview extends React.Component {
             </Link>
           </li>
           <li className='col-4 col-12-sm'>
-            <Link to='/getting-started/next-steps'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/next-steps/`}
+            >
               <span className='step_selector--step-number'>3.</span>
               <span className='step_selector--step-title'>Next steps</span>
               <span className='step_selector--step-description'>
@@ -55,7 +67,11 @@ class Overview extends React.Component {
         </ol>
 
         <div className='component_slider--nav'>
-          <Link to='/getting-started/configure/'>
+          <Link
+            to={`/organizations/${this.props.match.params.orgId}/clusters/${
+              this.props.match.params.clusterId
+            }/getting-started/configure/`}
+          >
             <button className='primary'>
               Start <i className='fa fa-chevron-right' />
             </button>
@@ -67,6 +83,7 @@ class Overview extends React.Component {
 }
 
 Overview.propTypes = {
+  match: PropTypes.object,
   goToSlide: PropTypes.func,
 };
 

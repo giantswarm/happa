@@ -72,7 +72,11 @@ class NextSteps extends React.Component {
           </p>
 
           <div className='component_slider--nav'>
-            <Link to='/getting-started/configure/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/configure/`}
+            >
               <button>
                 <i className='fa fa-chevron-left' /> Back
               </button>
@@ -86,6 +90,7 @@ class NextSteps extends React.Component {
 
 NextSteps.propTypes = {
   goToSlide: PropTypes.func,
+  match: PropTypes.object,
 };
 
 export default NextSteps;
