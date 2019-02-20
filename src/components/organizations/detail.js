@@ -154,7 +154,9 @@ class OrganizationDetail extends React.Component {
                       />
                     )}
                     <Link to='/new-cluster'>
-                      <Button bsStyle='default'>Create Cluster</Button>
+                      <Button bsStyle='default'>
+                        <i className='fa fa-add-circle' /> Create Cluster
+                      </Button>
                     </Link>
                   </div>
                 </div>
