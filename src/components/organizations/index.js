@@ -67,7 +67,7 @@ class Organizations extends React.Component {
                       bsStyle='default'
                       onClick={this.createOrganization.bind(this)}
                     >
-                      Create New Organization
+                      <i className='fa fa-add-circle' /> Create New Organization
                     </Button>
                   </div>
                 );
