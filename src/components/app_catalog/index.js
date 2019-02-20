@@ -17,7 +17,7 @@ class CatalogIndex extends React.Component {
     return (
       <Breadcrumb
         data={{
-          title: 'App Catalog'.toUpperCase(),
+          title: 'App Katalog'.toUpperCase(),
           pathname:
             '/organizations/' +
             this.props.organizationId +
@@ -46,7 +46,7 @@ class CatalogIndex extends React.Component {
               data={{ title: 'ORGANIZATIONS', pathname: '/organizations/' }}
             >
               <div className='app-catalog'>
-                <Search />
+                <Search location={this.props.location} />
               </div>
             </Breadcrumb>
           </Breadcrumb>
@@ -57,6 +57,8 @@ class CatalogIndex extends React.Component {
 }
 
 CatalogIndex.propTypes = {
+  match: PropTypes.object,
+  location: PropTypes.object,
   clusterId: PropTypes.string,
   organizationId: PropTypes.string,
 };
