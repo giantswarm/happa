@@ -31,9 +31,6 @@ class Navigation extends React.Component {
             <NavLink to='/' activeClassName='active'>
               Clusters
             </NavLink>
-            <NavLink to='/getting-started/' activeClassName='active'>
-              Getting Started
-            </NavLink>
             <a
               href='https://docs.giantswarm.io'
               target='_blank'
