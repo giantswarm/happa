@@ -329,9 +329,9 @@ SimpleExample.propTypes = {
   match: PropTypes.object,
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   var selectedCluster =
-    state.entities.clusters.items[state.app.selectedCluster];
+    state.entities.clusters.items[ownProps.match.params.clusterId];
 
   return {
     cluster: selectedCluster,

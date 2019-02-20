@@ -36,7 +36,6 @@ export default rootReducer;
   app: {
     firstLoadComplete: true,             // Becomes true after the first load is completed.
     selectedOrganization: 'giantswarm',  // The currently selected organization.
-    selectedCluster: 'ib7pa'             // The currently selected cluster.
 
     loggedInUser: {
       email: 'oliver.ponder@gmail.com',

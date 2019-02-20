@@ -329,19 +329,6 @@ class ConfigKubeCtl extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  var selectedCluster =
-    state.entities.clusters.items[state.app.selectedCluster];
-
-  return {
-    cluster: selectedCluster,
-    allClusters:
-      state.entities.organizations.items[state.app.selectedOrganization]
-        .clusters,
-    user: state.app.loggedInUser,
-  };
-}
-
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
@@ -357,6 +344,6 @@ ConfigKubeCtl.propTypes = {
 };
 
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps
 )(ConfigKubeCtl);
