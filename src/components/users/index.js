@@ -330,7 +330,7 @@ class Users extends React.Component {
               <div className='col-5'>
                 <div className='pull-right btn-group'>
                   <Button onClick={this.inviteUser.bind(this)}>
-                    INVITE USER
+                    <i className='fa fa-add-circle' /> INVITE USER
                   </Button>
                 </div>
               </div>
