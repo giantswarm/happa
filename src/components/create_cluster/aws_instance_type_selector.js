@@ -41,13 +41,11 @@ class AWSInstanceTypeSelector extends React.Component {
     }
 
     var availableInstanceTypes = [];
-    // Filter the list down to only the allowed instance types. Push the
-    // instance type into the list of allowed instance types, add the name to
-    // the object.
-    Object.keys(instanceTypes).forEach(function(key) {
-      if (props.allowedInstanceTypes.indexOf(key) !== -1) {
+    // Create a list of only the allowed instance types
+    props.allowedInstanceTypes.forEach(function(it) {
+      if (typeof instanceTypes[it] === 'object') {
         availableInstanceTypes.push(
-          Object.assign({}, instanceTypes[key], { name: key })
+          Object.assign({}, instanceTypes[it], { name: it })
         );
       }
     });
