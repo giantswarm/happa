@@ -171,7 +171,15 @@ class ConfigKubeCtl extends React.Component {
   render() {
     return (
       <Breadcrumb
-        data={{ title: 'CONFIGURE', pathname: '/getting-started/configure/' }}
+        data={{
+          title: 'CONFIGURE',
+          pathname:
+            '/organizations/' +
+            this.props.match.params.orgId +
+            '/clusters/' +
+            this.props.match.params.clusterId +
+            '/getting-started/configure/',
+        }}
       >
         <div className='centered col-9'>
           <h1>

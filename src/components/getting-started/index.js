@@ -17,36 +17,66 @@ class GettingStarted extends React.Component {
     return (
       <DocumentTitle title={'Getting Started | Giant Swarm'}>
         <Breadcrumb
-          data={{ title: 'GETTING STARTED', pathname: '/getting-started/' }}
+          data={{
+            title: 'GETTING STARTED',
+            pathname:
+              '/organizations/' +
+              this.props.match.params.orgId +
+              '/clusters/' +
+              this.props.match.params.clusterId +
+              '/getting-started/',
+          }}
         >
-          <div>
-            <Switch>
-              <Route
-                exact
-                path='/organizations/:orgId/clusters/:clusterId/getting-started/'
-                component={Page0_Overview}
-              />
-              <Route
-                exact
-                path='/organizations/:orgId/clusters/:clusterId/getting-started/configure/'
-                component={Page1_ConfigureKubeCTL}
-              />
-              <Route
-                exact
-                path='/organizations/:orgId/clusters/:clusterId/getting-started/example/'
-                component={Page2_SimpleExample}
-              />
-              <Route
-                exact
-                path='/organizations/:orgId/clusters/:clusterId/getting-started/next-steps/'
-                component={Page3_NextSteps}
-              />
-              <Redirect
-                path='*'
-                to='/organizations/:orgId/clusters/:clusterId/getting-started/'
-              />
-            </Switch>
-          </div>
+          <Breadcrumb
+            data={{
+              title: this.props.match.params.clusterId,
+              pathname:
+                '/organizations/' +
+                this.props.match.params.orgId +
+                '/clusters/' +
+                this.props.match.params.clusterId,
+            }}
+          >
+            <Breadcrumb
+              data={{
+                title: this.props.match.params.orgId.toUpperCase(),
+                pathname: '/organizations/' + this.props.match.params.orgId,
+              }}
+            >
+              <Breadcrumb
+                data={{ title: 'ORGANIZATIONS', pathname: '/organizations/' }}
+              >
+                <div>
+                  <Switch>
+                    <Route
+                      exact
+                      path='/organizations/:orgId/clusters/:clusterId/getting-started/'
+                      component={Page0_Overview}
+                    />
+                    <Route
+                      exact
+                      path='/organizations/:orgId/clusters/:clusterId/getting-started/configure/'
+                      component={Page1_ConfigureKubeCTL}
+                    />
+                    <Route
+                      exact
+                      path='/organizations/:orgId/clusters/:clusterId/getting-started/example/'
+                      component={Page2_SimpleExample}
+                    />
+                    <Route
+                      exact
+                      path='/organizations/:orgId/clusters/:clusterId/getting-started/next-steps/'
+                      component={Page3_NextSteps}
+                    />
+                    <Redirect
+                      path='*'
+                      to='/organizations/:orgId/clusters/:clusterId/getting-started/'
+                    />
+                  </Switch>
+                </div>
+              </Breadcrumb>
+            </Breadcrumb>
+          </Breadcrumb>
         </Breadcrumb>
       </DocumentTitle>
     );

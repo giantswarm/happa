@@ -8,7 +8,15 @@ class NextSteps extends React.Component {
   render() {
     return (
       <Breadcrumb
-        data={{ title: 'NEXT STEPS', pathname: '/getting-started/next-steps/' }}
+        data={{
+          title: 'NEXT-STEPS',
+          pathname:
+            '/organizations/' +
+            this.props.match.params.orgId +
+            '/clusters/' +
+            this.props.match.params.clusterId +
+            '/getting-started/next-steps/',
+        }}
       >
         <div className='centered col-9'>
           <h1>Where to go from here?</h1>

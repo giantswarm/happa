@@ -95,7 +95,15 @@ class SimpleExample extends React.Component {
   render() {
     return (
       <Breadcrumb
-        data={{ title: 'EXAMPLE', pathname: '/getting-started/example/' }}
+        data={{
+          title: 'EXAMPLE',
+          pathname:
+            '/organizations/' +
+            this.props.match.params.orgId +
+            '/clusters/' +
+            this.props.match.params.clusterId +
+            '/getting-started/example/',
+        }}
       >
         <div className='centered col-9'>
           <h1>Let&apos;s create an example application</h1>
