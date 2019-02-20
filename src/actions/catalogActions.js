@@ -19,7 +19,8 @@ let catalogsToLoad = {
           name: 'Prometheus',
           appVersion: '1.0.0',
           version: '1.0.0',
-          icon: '',
+          icon:
+            'https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png',
           screenshotUrls: ['', ''],
           description: '',
         },
