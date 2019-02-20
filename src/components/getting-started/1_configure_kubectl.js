@@ -8,7 +8,7 @@ import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
 import platform from '../../lib/platform';
-import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
+import ConfigureKubeCtlAlternative from './1_configure_kubectl_alternative';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import { clustersForOrg } from '../../lib/helpers';
 import PropTypes from 'prop-types';
@@ -399,7 +399,7 @@ class ConfigKubeCtl extends React.Component {
           </p>
 
           <div className='component_slider--nav'>
-            <Link to='/getting-started/download/'>
+            <Link to='/getting-started/'>
               <button>
                 <i className='fa fa-chevron-left' /> Back
               </button>
