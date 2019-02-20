@@ -34,14 +34,6 @@ class Navigation extends React.Component {
             <NavLink to='/organizations/' activeClassName='active'>
               Organizations
             </NavLink>
-            <a
-              href='https://docs.giantswarm.io'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              Documentation <i className='fa fa-open-in-new' />
-            </a>
-
             {this.props.user.isAdmin ? (
               <NavLink to='/users/' activeClassName='active'>
                 Users
@@ -49,6 +41,13 @@ class Navigation extends React.Component {
             ) : (
               undefined
             )}
+            <a
+              href='https://docs.giantswarm.io'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Documentation <i className='fa fa-open-in-new' />
+            </a>
           </div>
 
           <div className='subactions'>
