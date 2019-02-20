@@ -117,6 +117,7 @@ Layout.propTypes = {
   children: PropTypes.object,
   routes: PropTypes.array,
   params: PropTypes.object,
+  match: PropTypes.object,
   user: PropTypes.object,
   organizations: PropTypes.object,
   selectedOrganization: PropTypes.string,
