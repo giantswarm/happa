@@ -28,8 +28,11 @@ class Navigation extends React.Component {
             <img className='logo' src='/images/giantswarm_icon.svg' />
           </a>
           <div className='nav-responsive'>
-            <NavLink to='/' activeClassName='active'>
+            <NavLink exact to='/' activeClassName='active'>
               Clusters
+            </NavLink>
+            <NavLink to='/organizations/' activeClassName='active'>
+              Organizations
             </NavLink>
             <a
               href='https://docs.giantswarm.io'
