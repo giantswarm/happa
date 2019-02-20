@@ -156,7 +156,7 @@ class ClusterDashboardItem extends React.Component {
             <Button onClick={this.goToClusterDetails.bind(this)}>
               Details
             </Button>
-            <Button onClick={this.accessCluster.bind(this)}>Access</Button>
+            <Button onClick={this.accessCluster.bind(this)}>Get Started</Button>
           </ButtonGroup>
         </div>
       </div>
