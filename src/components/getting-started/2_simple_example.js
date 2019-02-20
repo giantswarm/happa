@@ -293,15 +293,6 @@ class SimpleExample extends React.Component {
             </Output>
           </CodeBlock>
 
-          <div className='celebration'>
-            <span>🎉</span>
-            <h3>Congratulations</h3>
-            <p>
-              You have created &ndash; and destroyed &ndash; your first
-              application on your brand new Kubernetes cluster on Giant Swarm.
-            </p>
-          </div>
-
           <div className='component_slider--nav'>
             <Link
               to={`/organizations/${this.props.match.params.orgId}/clusters/${
@@ -319,7 +310,7 @@ class SimpleExample extends React.Component {
               }/getting-started/next-steps/`}
             >
               <button className='primary'>
-                Continue <i className='fa fa-chevron-right' />
+                Finish <i className='fa fa-chevron-right' />
               </button>
             </Link>
           </div>

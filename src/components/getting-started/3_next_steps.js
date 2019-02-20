@@ -19,8 +19,16 @@ class NextSteps extends React.Component {
         }}
       >
         <div className='centered col-9'>
-          <h1>Where to go from here?</h1>
+          <h1>
+            <span>🎉</span> Congratulations
+          </h1>
+          <p>
+            You have created &ndash; and destroyed &ndash; your first
+            application on your brand new Kubernetes cluster on Giant Swarm.
+          </p>
+          <br />
 
+          <h3>Where to go from here?</h3>
           <p>
             Now that you have a running Kubernetes cluster, you can use it to
             deploy anything you like on it.
