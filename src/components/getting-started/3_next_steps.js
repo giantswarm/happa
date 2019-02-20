@@ -40,7 +40,7 @@ class NextSteps extends React.Component {
           </p>
 
           <p>
-            If you have not done so already, you should get acquainted with the
+            If you have not done so already, you should get acquainted with the{' '}
             <a
               href='https://blog.giantswarm.io/understanding-basic-kubernetes-concepts-i-introduction-to-pods-labels-replicas/'
               target='_blank'
@@ -60,7 +60,7 @@ class NextSteps extends React.Component {
             >
               Documentation
             </a>
-            , including an
+            , including an{' '}
             <a
               href='https://docs.giantswarm.io/basics/kubernetes-fundamentals/'
               target='_blank'
