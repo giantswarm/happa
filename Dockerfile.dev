@@ -8,7 +8,7 @@
 #
 # - relatively short statup time, at least as long as dependencies
 #   have not changed.
-# 
+#
 # - persist dependencies in use to yarn.lock file, so we can use the
 #   exact same versions in CI builds.
 
@@ -30,6 +30,6 @@ COPY ./package.json /usr/src/app/
 COPY ./webpack.config.js /usr/src/app/
 COPY ./webpack.dist.config.js /usr/src/app/
 
-COPY ./dev.sh /usr/src/app/
+COPY ./scripts/dev.sh /usr/src/app/
 
 ENTRYPOINT ["/usr/src/app/dev.sh"]
