@@ -1,6 +1,9 @@
 FROM nginx:1.14-alpine
 
+RUN apk add jq
+
 ADD dist /www
+ADD package.json /
 
 RUN rm -r /etc/nginx/conf.d
 RUN mkdir -p /etc/nginx/config
