@@ -302,7 +302,7 @@ class ClusterKeyPairs extends React.Component {
                       bsStyle='default'
                       className='small'
                     >
-                      Create Key Pair
+                      <i className='fa fa-add-circle' /> Create Key Pair
                     </Button>
                   </div>
                 );
@@ -403,7 +403,7 @@ class ClusterKeyPairs extends React.Component {
                       bsStyle='default'
                       className='small'
                     >
-                      Create Key Pair
+                      <i className='fa fa-add-circle' /> Create Key Pair
                     </Button>
                   </div>
                 );
