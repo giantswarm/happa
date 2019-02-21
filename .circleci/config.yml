@@ -55,6 +55,7 @@ jobs:
           fi
 
           docker run --name happa-branch -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+          sleep 2
           CURL_OUTPUT=$(curl -s -k https://localhost:8000)
           echo "${CURL_OUTPUT}" | grep Happa
 
