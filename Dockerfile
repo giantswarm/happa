@@ -6,7 +6,7 @@ RUN rm -r /etc/nginx/conf.d
 RUN mkdir -p /etc/nginx/config
 ADD nginx.conf /etc/nginx/config
 
-ADD start.sh /
+ADD scripts/start.sh /
 
 # Test certifiates will be overwritten in production by configmap
 ADD test/certs /etc/nginx/certs

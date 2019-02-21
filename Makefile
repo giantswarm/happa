@@ -4,11 +4,6 @@
 # Builds production assets. Builder takes care of building the production container
 default: dist
 
-# Build and run the production environment
-# becomes available at localhost
-production: dist docker-build-prod
-	docker-compose -f docker-compose-prod.yml up
-
 # Build production assets and save them in the 'dist' folder
 install-node-modules:
 	rm -rf dist

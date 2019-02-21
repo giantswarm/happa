@@ -1,4 +1,7 @@
 #!/bin/sh
+
+# This script replaces some placeholders in index.html with values from the
+# environment. It is used for Happa's production deployment.
 if [ -n "$API_ENDPOINT" ]; then
   sed -i "s|apiEndpoint: 'http://localhost:8000'|apiEndpoint: '$API_ENDPOINT'|" /www/index.html
 fi
