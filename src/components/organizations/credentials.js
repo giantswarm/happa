@@ -456,7 +456,9 @@ class CredentialsForm extends React.Component {
           </FormGroup>
 
           <FormGroup controlId='awsOperatorRoleARN'>
-            <ControlLabel>AWS operator role ARN (GiantSwarmAWSOperator)</ControlLabel>
+            <ControlLabel>
+              AWS operator role ARN (GiantSwarmAWSOperator)
+            </ControlLabel>
             <FormControl
               name='awsOperatorRoleARN'
               type='text'
