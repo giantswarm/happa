@@ -28,6 +28,8 @@ else
   sed -i "s|environment: 'development'|environment: 'docker-container'|" /www/index.html
 fi
 
+# This sets the VERSION placeholder in the footer to the version specified in package.json
+sed -i "s/VERSION/$(jq -r .version package.json)/g" /www/index.html
 
 echo ""
 echo "--- Starting Happa nginx server ---"
