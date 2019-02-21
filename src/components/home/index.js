@@ -67,7 +67,7 @@ class Home extends React.Component {
               <div className='well launch-new-cluster'>
                 <Link to='new-cluster'>
                   <Button type='button' bsStyle='primary'>
-                    Launch New Cluster
+                    <i className='fa fa-add-circle' /> Launch New Cluster
                   </Button>
                 </Link>
                 {this.props.clusters.length === 0
