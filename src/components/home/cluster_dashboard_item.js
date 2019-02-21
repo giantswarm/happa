@@ -124,29 +124,25 @@ class ClusterDashboardItem extends React.Component {
           </div>
 
           <div>
-            Organization: <b>{this.props.selectedOrganization}</b> · Created{' '}
-            <b>{relativeDate(this.props.cluster.create_date)}</b> ·
-            {this.props.cluster.release_version &&
-            this.props.cluster.release_version !== '' ? (
-              <span>
-                {' '}
-                Release Version <b>{this.props.cluster.release_version}</b>
-              </span>
-            ) : (
-              <span>
-                {' '}
-                Kubernetes <b>{this.props.cluster.kubernetes_version}</b>
-              </span>
-            )}
+            <i className='fa fa-version-tag' title='Release version' />{' '}
+            {this.props.cluster.release_version}
+            {' · Kubernetes '}
+            {this.props.cluster.kubernetes_version
+              ? this.props.cluster.kubernetes_version
+              : 'n/a'}
+            {' · Created '}
+            {relativeDate(this.props.cluster.create_date)}
           </div>
           <div>
-            <b>{this.getNumberOfNodes()}</b> nodes ·{' '}
-            <b>{memory ? memory : '0'}</b> GB RAM · <b>{cpus ? cpus : '0'}</b>{' '}
-            CPUs
+            {this.getNumberOfNodes()} nodes
+            {' · '}
+            {cpus ? cpus : '0'} CPU cores
+            {' · '}
+            {memory ? memory : '0'} GB RAM
             {this.props.cluster.kvm ? (
               <span>
-                {' '}
-                · <b>{storage ? storage : '0'}</b> GB storage
+                {' · '}
+                {storage ? storage : '0'} GB storage
               </span>
             ) : (
               undefined

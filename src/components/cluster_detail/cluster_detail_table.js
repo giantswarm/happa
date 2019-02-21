@@ -237,6 +237,7 @@ class ClusterDetailTable extends React.Component {
                     <td>Release version</td>
                     <td className='value code'>
                       <a onClick={this.showReleaseDetails}>
+                        <i className='fa fa-version-tag' />{' '}
                         {this.props.cluster.release_version}{' '}
                         {(() => {
                           var kubernetes = _.find(
