@@ -184,6 +184,11 @@ class AWSInstanceTypeSelector extends React.Component {
                     <tr
                       key={instanceType.name}
                       onClick={this.preSelect.bind(this, instanceType.name)}
+                      className={
+                        instanceType.name === this.state.selectedInstanceType
+                          ? 'selected'
+                          : ''
+                      }
                     >
                       <td>
                         <input
