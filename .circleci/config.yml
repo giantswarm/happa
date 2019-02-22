@@ -65,6 +65,17 @@ jobs:
         command: make dist
 
     - run:
+        name: Create VERSION file
+        command: |
+          tag=$(git tag --points-at HEAD)
+          if [ -z "$tag" ]
+          then
+            git rev-parse HEAD | cut -c-5 > VERSION
+          else
+            git tag --points-at HEAD | tr '\n' ' ' > VERSION
+          fi
+
+    - run:
         name: Build Docker image
         command: ./architect build
 

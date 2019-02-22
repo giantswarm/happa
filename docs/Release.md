@@ -1,7 +1,6 @@
 # How to publish a release
 
-TL;DR: Releasing involves bumping the version in package.json and running a
-script that will create and push a tag to the GitHub repository. Our CI takes
+TL;DR: Releasing involves pushing a tag to the GitHub repository. Our CI takes
 over from there and auto deploys the release to our installations.
 
 ## Prerequisites
@@ -15,8 +14,7 @@ CircleCI must be set up with certain environment variables:
 
 ## Create and push a new release
 
-All you have to do is edit package.json and set the `version` key to the new
-version you want to release. After that run `scripts/release.sh`
+All you have to do is push a tag. CI will take care of it from there.
 
 Follow CircleCI's progress in https://circleci.com/gh/giantswarm/happa/.
 
