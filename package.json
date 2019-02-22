@@ -12,6 +12,11 @@
     "prettier": "prettier --jsx-single-quote --single-quote --trailing-comma es5 --write \"src/**/*.js\"",
     "validate-prettier": "prettier --no-color --jsx-single-quote --single-quote --trailing-comma es5 --list-different \"src/**/*.js\""
   },
+  "prettier": {
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "trailingComma": "es5"
+  },
   "dist": "dist",
   "mainInput": "main",
   "mainOutput": "main",
