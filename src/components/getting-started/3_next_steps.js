@@ -8,11 +8,27 @@ class NextSteps extends React.Component {
   render() {
     return (
       <Breadcrumb
-        data={{ title: 'NEXT STEPS', pathname: '/getting-started/next-steps/' }}
+        data={{
+          title: 'NEXT-STEPS',
+          pathname:
+            '/organizations/' +
+            this.props.match.params.orgId +
+            '/clusters/' +
+            this.props.match.params.clusterId +
+            '/getting-started/next-steps/',
+        }}
       >
         <div className='centered col-9'>
-          <h1>Where to go from here?</h1>
+          <h1>
+            <span>🎉</span> Congratulations
+          </h1>
+          <p>
+            You have created &ndash; and destroyed &ndash; your first
+            application on your brand new Kubernetes cluster on Giant Swarm.
+          </p>
+          <br />
 
+          <h3>Where to go from here?</h3>
           <p>
             Now that you have a running Kubernetes cluster, you can use it to
             deploy anything you like on it.
@@ -32,7 +48,7 @@ class NextSteps extends React.Component {
           </p>
 
           <p>
-            If you have not done so already, you should get acquainted with the
+            If you have not done so already, you should get acquainted with the{' '}
             <a
               href='https://blog.giantswarm.io/understanding-basic-kubernetes-concepts-i-introduction-to-pods-labels-replicas/'
               target='_blank'
@@ -52,7 +68,7 @@ class NextSteps extends React.Component {
             >
               Documentation
             </a>
-            , including an
+            , including an{' '}
             <a
               href='https://docs.giantswarm.io/basics/kubernetes-fundamentals/'
               target='_blank'
@@ -72,7 +88,11 @@ class NextSteps extends React.Component {
           </p>
 
           <div className='component_slider--nav'>
-            <Link to='/getting-started/configure/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/example/`}
+            >
               <button>
                 <i className='fa fa-chevron-left' /> Back
               </button>
@@ -86,6 +106,7 @@ class NextSteps extends React.Component {
 
 NextSteps.propTypes = {
   goToSlide: PropTypes.func,
+  match: PropTypes.object,
 };
 
 export default NextSteps;

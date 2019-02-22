@@ -73,8 +73,15 @@ class ClusterDashboardItem extends React.Component {
   }
 
   accessCluster() {
-    this.props.actions.clusterSelect(this.props.cluster.id);
-    this.props.dispatch(push('/getting-started/'));
+    this.props.dispatch(
+      push(
+        '/organizations/' +
+          this.props.cluster.owner +
+          '/clusters/' +
+          this.props.cluster.id +
+          '/getting-started/'
+      )
+    );
   }
 
   goToClusterDetails() {
@@ -156,7 +163,10 @@ class ClusterDashboardItem extends React.Component {
             <Button onClick={this.goToClusterDetails.bind(this)}>
               Details
             </Button>
-            <Button onClick={this.accessCluster.bind(this)}>Access</Button>
+            <Button onClick={this.accessCluster.bind(this)}>
+              <i className='fa fa-start' />
+              Get Started
+            </Button>
           </ButtonGroup>
         </div>
       </div>

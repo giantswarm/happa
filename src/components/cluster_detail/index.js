@@ -151,8 +151,15 @@ class ClusterDetail extends React.Component {
   }
 
   accessCluster = () => {
-    this.props.clusterActions.clusterSelect(this.props.cluster.id);
-    this.props.dispatch(push('/getting-started/'));
+    this.props.dispatch(
+      push(
+        '/organizations/' +
+          this.props.cluster.owner +
+          '/clusters/' +
+          this.props.cluster.id +
+          '/getting-started/'
+      )
+    );
   };
 
   render() {
