@@ -85,7 +85,8 @@ There are no automated tests for Happa at the moment.
 Deploying
 ---------
 
-This project is continuously deployed to our installations using CircleCI.
+Commits to the master branch are continuously deployed to Giant Swarm test installations.
+Tagged releases are continuously deployed to all installations.
 
 Building / Running locally
 --------------------------
@@ -199,3 +200,7 @@ To add a pre-commit hook, save the above as a file called `pre-commit` in the
 `.git/hooks` folder.
 
 Make sure it has has `0755` as the permission.
+
+### Publishing a Release
+
+See [docs/Release.md](https://github.com/giantswarm/happa/blob/master/docs/Release.md)

@@ -28,6 +28,9 @@ else
   sed -i "s|environment: 'development'|environment: 'docker-container'|" /www/index.html
 fi
 
+# This sets the VERSION placeholder in the footer to the version specified in the
+# VERSION file.
+sed -i "s/VERSION/$(cat VERSION |  tr '\n' ' ')/g" /www/index.html
 
 echo ""
 echo "--- Starting Happa nginx server ---"
