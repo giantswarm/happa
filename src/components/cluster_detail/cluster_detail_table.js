@@ -140,7 +140,7 @@ class ClusterDetailTable extends React.Component {
       availabilityZonesOrNothing = (
         <tr>
           <td>Availablility zones</td>
-          <td className='value'>
+          <td className='value code'>
             {this.props.cluster.availability_zones.join(', ')}
           </td>
         </tr>
