@@ -9,8 +9,8 @@
   "scripts": {
     "test": "grunt test",
     "start": "grunt serve",
-    "prettier": "prettier --jsx-single-quote --single-quote --trailing-comma es5 --write \"src/**/*.js\"",
-    "validate-prettier": "prettier --no-color --jsx-single-quote --single-quote --trailing-comma es5 --list-different \"src/**/*.js\""
+    "prettier": "prettier --write \"src/**/*.js\"",
+    "validate-prettier": "prettier --no-color --list-different \"src/**/*.js\""
   },
   "prettier": {
     "singleQuote": true,
