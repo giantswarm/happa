@@ -262,7 +262,7 @@ class ClusterDetail extends React.Component {
                               this.props.cluster
                             )}
                           >
-                            Delete Cluster
+                            <i className='fa fa-delete' /> Delete Cluster
                           </Button>
                         </div>
                       </div>
