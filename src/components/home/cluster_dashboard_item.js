@@ -134,10 +134,6 @@ class ClusterDashboardItem extends React.Component {
           <div>
             <i className='fa fa-version-tag' title='Release version' />{' '}
             {this.props.cluster.release_version}
-            {' · Kubernetes '}
-            {this.props.cluster.kubernetes_version
-              ? this.props.cluster.kubernetes_version
-              : 'n/a'}
             {' · Created '}
             {relativeDate(this.props.cluster.create_date)}
           </div>
