@@ -52,7 +52,7 @@ class AWSInstanceTypeSelector extends React.Component {
 
     this.state = {
       modalVisible: false,
-      preSelectedInstanceTypeName: props.value.value,
+      selectedInstanceType: props.value,
       instanceTypes: availableInstanceTypes,
     };
   }
@@ -61,7 +61,7 @@ class AWSInstanceTypeSelector extends React.Component {
     if (!this.props.readOnly) {
       this.setState({
         modalVisible: true,
-        preSelectedInstanceTypeName: this.props.value.value,
+        selectedInstanceType: this.props.value,
       });
     }
   };
