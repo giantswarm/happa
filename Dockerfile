@@ -1,6 +1,6 @@
 FROM nginx:1.14-alpine
 
-RUN apk add jq
+RUN apk --no-cache add jq
 
 ADD dist /www
 ADD package.json /
