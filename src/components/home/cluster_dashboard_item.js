@@ -68,7 +68,8 @@ class ClusterDashboardItem extends React.Component {
 
       return workers;
     }
-    return null;
+
+    return 0;
   }
 
   accessCluster() {
