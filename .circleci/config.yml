@@ -1,4 +1,26 @@
 version: 2
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy-to-all:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+            branches:
+              ignore: /.*/
+      - deploy-to-testing:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - versioning
+
 jobs:
   build:
     machine: true
@@ -34,7 +56,7 @@ jobs:
           fi
 
     - run:
-        name: Valdiate code style using prettier
+        name: Validate code style using prettier
         command: |
           make validate-prettier
 
@@ -93,14 +115,29 @@ jobs:
               --github-issue $(basename ${CIRCLE_PULL_REQUEST})
           fi
 
-    - deploy:
-        name: Deploy with architect (master only)
-        command: |
-          if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            ./architect deploy
-          fi
-
     - save_cache:
         key: v1-npm-deps-{{ checksum "yarn.lock" }}
         paths:
           - ./node_modules
+
+  deploy-to-testing:
+    machine: true
+    steps:
+    - checkout
+    - deploy:
+        name: Deploy with architect to testing envs
+        command: |
+          wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+          chmod +x ./architect
+          ./architect deploy --group=testing
+
+  deploy-to-all:
+    machine: true
+    steps:
+    - checkout
+    - deploy:
+        name: Deploy with architect to all envs
+        command: |
+          wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+          chmod +x ./architect
+          ./architect deploy
