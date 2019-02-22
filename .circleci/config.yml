@@ -117,7 +117,7 @@ jobs:
           echo "Lighthouse report for ${CIRCLE_BRANCH}:"
           lighthouse-keeper view --input branch.json
 
-          if [ "${CIRCLE_BRANCH}" != "master" ]; then
+          if [[ "${CIRCLE_BRANCH}" != "master" && -n "${CIRCLE_PULL_REQUEST}" ]]; then
             echo "Lighthouse report for master:"
             lighthouse-keeper view --input master.json
 
