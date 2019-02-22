@@ -52,7 +52,7 @@ class AWSInstanceTypeSelector extends React.Component {
 
     this.state = {
       modalVisible: false,
-      preSelectedInstanceTypeName: props.value.value,
+      selectedInstanceType: props.value,
       instanceTypes: availableInstanceTypes,
     };
   }
@@ -61,7 +61,7 @@ class AWSInstanceTypeSelector extends React.Component {
     if (!this.props.readOnly) {
       this.setState({
         modalVisible: true,
-        preSelectedInstanceTypeName: this.props.value.value,
+        selectedInstanceType: this.props.value,
       });
     }
   };
@@ -89,13 +89,13 @@ class AWSInstanceTypeSelector extends React.Component {
 
   preSelect(instanceTypeName) {
     this.setState({
-      preSelectedInstanceTypeName: instanceTypeName,
+      selectedInstanceType: instanceTypeName,
     });
   }
 
   selectInstanceType = () => {
     this.props.onChange({
-      value: this.state.preSelectedInstanceTypeName,
+      value: this.state.selectedInstanceType,
       valid: true,
     });
     this.closeModal();
@@ -191,7 +191,7 @@ class AWSInstanceTypeSelector extends React.Component {
                           readOnly
                           checked={
                             instanceType.name ===
-                            this.state.preSelectedInstanceTypeName
+                            this.state.selectedInstanceType
                           }
                         />
                       </td>
