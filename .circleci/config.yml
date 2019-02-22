@@ -19,7 +19,7 @@ workflows:
           filters:
             branches:
               only:
-                - versioning
+                - master
 
 jobs:
   build:
