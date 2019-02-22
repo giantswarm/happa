@@ -89,13 +89,13 @@ class AWSInstanceTypeSelector extends React.Component {
 
   preSelect(instanceTypeName) {
     this.setState({
-      preSelectedInstanceTypeName: instanceTypeName,
+      selectedInstanceType: instanceTypeName,
     });
   }
 
   selectInstanceType = () => {
     this.props.onChange({
-      value: this.state.preSelectedInstanceTypeName,
+      value: this.state.selectedInstanceType,
       valid: true,
     });
     this.closeModal();
@@ -191,7 +191,7 @@ class AWSInstanceTypeSelector extends React.Component {
                           readOnly
                           checked={
                             instanceType.name ===
-                            this.state.preSelectedInstanceTypeName
+                            this.state.selectedInstanceType
                           }
                         />
                       </td>
