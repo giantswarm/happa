@@ -95,10 +95,55 @@ class Layout extends React.Component {
             <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
               <div className='main col-9'>
                 <Switch>
+<<<<<<< HEAD
                   <Route exact path='/'                  component={Home} />
                   <Route exact path='/users'            component={Users} />                  
                   <Route       path='/organizations'     component={Organizations} />
                   <Route exact path='/account-settings' component={AccountSettings} />
+=======
+                  <Route exact path='/' component={Home} />
+                  <Route exact path='/users/' component={Users} />
+                  <Route exact path='/new-cluster/' component={CreateCluster} />
+                  <Route
+                    exact
+                    path='/organizations/'
+                    component={Organizations}
+                  />
+                  <Route
+                    exact
+                    path='/organizations/:orgId/'
+                    component={OrganizationDetails}
+                  />
+                  <Route
+                    exact
+                    path='/organizations/:orgId/clusters/:clusterId/'
+                    component={ClusterDetails}
+                  />
+                  <Route
+                    exact
+                    path='/organizations/:orgId/clusters/:clusterId/getting-started/*'
+                    component={GettingStarted}
+                  />
+                  <Route
+                    exact
+                    path='/app-katalog/*'
+                    component={() => {
+                      return <AppCatalog location={this.props.location} />;
+                    }}
+                  />
+                  <Route
+                    exact
+                    path='/app-katalog/:repo/:app'
+                    component={() => {
+                      return <AppCatalog location={this.props.location} />;
+                    }}
+                  />
+                  <Route
+                    exact
+                    path='/account-settings/'
+                    component={AccountSettings}
+                  />
+>>>>>>> Add app catalog to top level nav.
                   <Redirect path='*' to='/' />
                 </Switch>
               </div>
