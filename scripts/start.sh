@@ -40,7 +40,7 @@ if [ $STRLENGTH -gt 30 ]; then
   echo "\"${VERSION}\""
 fi
 
-sed -i "s/VERSION/${VERSION}/g" /www/index.html
+sed -i "s|VERSION|${VERSION}|g" /www/index.html
 
 echo ""
 echo "--- Starting Happa nginx server ---"
