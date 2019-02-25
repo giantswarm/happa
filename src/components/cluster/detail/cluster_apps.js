@@ -153,11 +153,7 @@ class ClusterApps extends React.Component {
             storage, and more simply by selecting from our App Katalog.
           </p>
 
-          <NavLink
-            to={`/organizations/${this.props.organizationId}/clusters/${
-              this.props.clusterId
-            }/app-catalog/`}
-          >
+          <NavLink to={`/app-katalog/`}>
             <Button>Browse App Katalog</Button>
           </NavLink>
         </div>

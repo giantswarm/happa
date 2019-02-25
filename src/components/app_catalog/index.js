@@ -18,39 +18,12 @@ class CatalogIndex extends React.Component {
       <Breadcrumb
         data={{
           title: 'App Katalog'.toUpperCase(),
-          pathname:
-            '/organizations/' +
-            this.props.organizationId +
-            '/clusters/' +
-            this.props.clusterId +
-            '/app-catalog/',
+          pathname: '/app-katalog/',
         }}
       >
-        <Breadcrumb
-          data={{
-            title: this.props.clusterId,
-            pathname:
-              '/organizations/' +
-              this.props.organizationId +
-              '/clusters/' +
-              this.props.clusterId,
-          }}
-        >
-          <Breadcrumb
-            data={{
-              title: this.props.organizationId.toUpperCase(),
-              pathname: '/organizations/' + this.props.organizationId,
-            }}
-          >
-            <Breadcrumb
-              data={{ title: 'ORGANIZATIONS', pathname: '/organizations/' }}
-            >
-              <div className='app-catalog'>
-                <Search location={this.props.location} />
-              </div>
-            </Breadcrumb>
-          </Breadcrumb>
-        </Breadcrumb>
+        <div className='app-catalog'>
+          <Search location={this.props.location} />
+        </div>
       </Breadcrumb>
     );
   }
@@ -59,16 +32,9 @@ class CatalogIndex extends React.Component {
 CatalogIndex.propTypes = {
   match: PropTypes.object,
   location: PropTypes.object,
-  clusterId: PropTypes.string,
-  organizationId: PropTypes.string,
 };
 
-function mapStateToProps(state, ownProps) {
-  return {
-    organizationId: ownProps.match.params.orgId,
-    clusterId: ownProps.match.params.clusterId,
-  };
-}
+function mapStateToProps() {}
 
 function mapDispatchToProps() {
   return {};

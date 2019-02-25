@@ -214,10 +214,11 @@ class ClusterDetail extends React.Component {
                       <div className='col-5'>
                         <div className='pull-right btn-group'>
                           <Button onClick={this.accessCluster}>
-                            GET STARTED
+                            <i className='fa fa-start' /> GET STARTED
                           </Button>
                           {this.canClusterScale() ? (
                             <Button onClick={this.showScalingModal}>
+                              <i className='fa fa-scale' />
                               SCALE
                             </Button>
                           ) : (
@@ -226,6 +227,7 @@ class ClusterDetail extends React.Component {
 
                           {this.canClusterUpgrade() ? (
                             <Button onClick={this.showUpgradeModal}>
+                              <i className='fa fa-version-upgrade' />
                               UPGRADE
                             </Button>
                           ) : (

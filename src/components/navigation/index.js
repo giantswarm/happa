@@ -34,6 +34,9 @@ class Navigation extends React.Component {
             <NavLink to='/organizations/' activeClassName='active'>
               Organizations
             </NavLink>
+            <NavLink exact to='/app-katalog/' activeClassName='active'>
+              App Katalog
+            </NavLink>
             {this.props.user.isAdmin ? (
               <NavLink to='/users/' activeClassName='active'>
                 Users
