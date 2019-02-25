@@ -30,7 +30,7 @@ fi
 
 # This sets the VERSION placeholder in the footer to the version specified in the
 # VERSION file.
-VERSION=$(cat VERSION | tr '\n' ' ')
+VERSION=$(cat VERSION | tr -d '\n')
 
 echo "VERSION=${VERSION}"
 
