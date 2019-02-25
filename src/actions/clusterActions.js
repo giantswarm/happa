@@ -34,24 +34,6 @@ export function clustersLoad() {
   };
 }
 
-// clusterSelect
-// =============================================================
-// Sets which cluster is in "focus". For pages that reference a
-// specific cluster, the "focused" cluster will be used.
-//
-// The only page that really cares about that right now is the
-// configure page in the getting started guide.
-//
-
-export function clusterSelect(clusterId) {
-  return function(dispatch) {
-    return dispatch({
-      type: types.CLUSTER_SELECT,
-      clusterId,
-    });
-  };
-}
-
 // clusterLoadDetails
 // =============================================================
 // Takes a clusterId and loads details for that cluster

@@ -1,16 +1,13 @@
 'use strict';
 import React from 'react';
 import { CodeBlock, Prompt } from './codeblock';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { connect } from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { flashAdd } from '../../actions/flashMessageActions';
 import platform from '../../lib/platform';
-import ConfigureKubeCtlAlternative from './2_configure_kubectl_alternative';
+import ConfigureKubeCtlAlternative from './1_configure_kubectl_alternative';
 import ClusterIDLabel from '../shared/cluster_id_label';
-import { clustersForOrg } from '../../lib/helpers';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -27,51 +24,31 @@ class ConfigKubeCtl extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.selectedCluster.nullObject) {
-      this.props.dispatch(
-        flashAdd({
-          message: (
-            <span>
-              <b>This organization has no clusters</b>
-              <br />
-              We&apos;ve inserted values for a sample cluster.
-            </span>
-          ),
-          class: 'info',
-          ttl: 3000,
-        })
-      );
+    this.setState({
+      loading: true,
+    });
 
-      this.setState({
-        loading: 'failed',
-      });
-    } else {
-      this.setState({
-        loading: true,
-      });
-
-      this.props.actions
-        .clusterLoadDetails(this.props.selectedCluster.id)
-        .then(() => {
-          this.setState({
-            loading: false,
-          });
-        })
-        .catch(() => {
-          this.props.dispatch(
-            flashAdd({
-              message:
-                'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
-              class: 'danger',
-              ttl: 3000,
-            })
-          );
-
-          this.setState({
-            loading: 'failed',
-          });
+    this.props.actions
+      .clusterLoadDetails(this.props.selectedCluster.id)
+      .then(() => {
+        this.setState({
+          loading: false,
         });
-    }
+      })
+      .catch(() => {
+        this.props.dispatch(
+          flashAdd({
+            message:
+              'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
+            class: 'danger',
+            ttl: 3000,
+          })
+        );
+
+        this.setState({
+          loading: 'failed',
+        });
+      });
   }
 
   selectCluster(clusterId) {
@@ -194,47 +171,21 @@ class ConfigKubeCtl extends React.Component {
   render() {
     return (
       <Breadcrumb
-        data={{ title: 'CONFIGURE', pathname: '/getting-started/configure/' }}
+        data={{
+          title: 'CONFIGURE',
+          pathname:
+            '/organizations/' +
+            this.props.match.params.orgId +
+            '/clusters/' +
+            this.props.match.params.clusterId +
+            '/getting-started/configure/',
+        }}
       >
         <div className='centered col-9'>
           <h1>
             Configure kubectl for cluster: {this.props.selectedCluster.name}{' '}
             <ClusterIDLabel clusterID={this.props.selectedCluster.id} />
           </h1>
-
-          {this.props.selectedOrgClusters.length > 1 ? (
-            <div>
-              <p>
-                Before we continue, make sure that you have the right cluster
-                selected to configure access to:
-              </p>
-              <div className='well select-cluster'>
-                <div className='select-cluster--dropdown-container'>
-                  <label>Select Cluster:</label>
-                  <DropdownButton
-                    id='cluster-slect-dropdown'
-                    title={this.friendlyClusterName(this.props.selectedCluster)}
-                  >
-                    {this.props.selectedOrgClusters.map(cluster => (
-                      <MenuItem
-                        key={cluster.id}
-                        onClick={this.selectCluster.bind(this, cluster.id)}
-                      >
-                        {this.friendlyClusterName(cluster)}
-                      </MenuItem>
-                    ))}
-                  </DropdownButton>
-                </div>
-
-                <p>
-                  You might have access to additional clusters after switching
-                  to a different organization.
-                </p>
-              </div>
-            </div>
-          ) : (
-            undefined
-          )}
 
           <p>
             The <code>gsctl</code> command line utility provides access to your
@@ -368,7 +319,10 @@ class ConfigKubeCtl extends React.Component {
               &nbsp; Show alternative method to configure kubectl without gsctl
             </div>
             {this.state.alternativeOpen ? (
-              <ConfigureKubeCtlAlternative />
+              <ConfigureKubeCtlAlternative
+                cluster={this.props.selectedCluster}
+                user={this.props.user}
+              />
             ) : (
               undefined
             )}
@@ -399,13 +353,21 @@ class ConfigKubeCtl extends React.Component {
           </p>
 
           <div className='component_slider--nav'>
-            <Link to='/getting-started/download/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/`}
+            >
               <button>
                 <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>
 
-            <Link to='/getting-started/example/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/example/`}
+            >
               <button className='primary'>
                 Continue <i className='fa fa-chevron-right' />
               </button>
@@ -418,46 +380,21 @@ class ConfigKubeCtl extends React.Component {
 }
 
 ConfigKubeCtl.propTypes = {
-  selectedCluster: PropTypes.object,
+  actions: PropTypes.object,
   clusters: PropTypes.object,
   dispatch: PropTypes.func,
-  actions: PropTypes.object,
-  selectedOrgClusters: PropTypes.array,
-  user: PropTypes.object,
   goToSlide: PropTypes.func,
+  match: PropTypes.object,
+  selectedCluster: PropTypes.object,
+  user: PropTypes.object,
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   var selectedCluster =
-    state.entities.clusters.items[state.app.selectedCluster];
-  var selectedOrgClusters = [];
-
-  if (state.app.selectedOrganization) {
-    selectedOrgClusters = clustersForOrg(
-      state.app.selectedOrganization,
-      state.entities.clusters.items
-    );
-  }
-
-  // If we can't find the selected cluster
-  // create a nullObject that acts like a selectedCluster
-  // so most of the page will work
-  if (selectedCluster === undefined) {
-    if (selectedOrgClusters.length === 0) {
-      selectedCluster = {
-        id: '12345',
-        name: 'Sample Cluster',
-        nullObject: true,
-      };
-    } else {
-      selectedCluster =
-        state.entities.clusters.items[selectedOrgClusters[0].id];
-    }
-  }
+    state.entities.clusters.items[ownProps.match.params.clusterId];
 
   return {
     selectedCluster: selectedCluster,
-    selectedOrgClusters: selectedOrgClusters,
     clusters: state.entities.clusters,
     user: state.app.loggedInUser,
   };

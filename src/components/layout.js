@@ -111,16 +111,6 @@ class Layout extends React.Component {
               <div className='main col-9'>
                 <Switch>
                   <Route exact path='/' component={Home} />
-                  <Route
-                    exact
-                    path='/getting-started/'
-                    component={GettingStarted}
-                  />
-                  <Route
-                    exact
-                    path='/getting-started/*'
-                    component={GettingStarted}
-                  />
                   <Route exact path='/users/' component={Users} />
                   <Route exact path='/new-cluster/' component={CreateCluster} />
                   <Route
@@ -137,6 +127,16 @@ class Layout extends React.Component {
                     exact
                     path='/organizations/:orgId/clusters/:clusterId/'
                     component={ClusterDetails}
+                  />
+                  <Route
+                    exact
+                    path='/organizations/:orgId/clusters/:clusterId/getting-started/'
+                    component={GettingStarted}
+                  />
+                  <Route
+                    exact
+                    path='/organizations/:orgId/clusters/:clusterId/getting-started/*'
+                    component={GettingStarted}
                   />
                   <Route
                     exact

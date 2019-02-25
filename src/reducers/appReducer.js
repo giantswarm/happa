@@ -38,10 +38,6 @@ function fetchSelectedOrganizationFromStorage() {
   return localStorage.getItem('app.selectedOrganization');
 }
 
-function fetchSelectedClusterFromStorage() {
-  return localStorage.getItem('app.selectedCluster');
-}
-
 // determineSelectedOrganization takes a current list of organizations and the
 // users selectedOrganization (which could be stale, i.e. deleted by someone
 // else)
@@ -70,7 +66,6 @@ var determineSelectedOrganization = function(
 export default function appReducer(
   state = {
     selectedOrganization: fetchSelectedOrganizationFromStorage(),
-    selectedCluster: fetchSelectedClusterFromStorage(),
     firstLoadComplete: false,
     loggedInUser: fetchUserFromStorage(),
     info: {
@@ -124,18 +119,9 @@ export default function appReducer(
 
     case types.ORGANIZATION_SELECT:
       localStorage.setItem('app.selectedOrganization', action.orgId);
-      localStorage.setItem('app.selectedCluster', undefined);
 
       return Object.assign({}, state, {
         selectedOrganization: action.orgId,
-        selectedCluster: undefined,
-      });
-
-    case types.CLUSTER_SELECT:
-      localStorage.setItem('app.selectedCluster', action.clusterId);
-
-      return Object.assign({}, state, {
-        selectedCluster: action.clusterId,
       });
 
     case types.ORGANIZATIONS_LOAD_SUCCESS:

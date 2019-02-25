@@ -30,16 +30,11 @@ export function organizationDeleteSuccess(orgId) {
   };
 }
 
-export function organizationsLoadSuccess(
-  organizations,
-  selectedOrganization,
-  selectedCluster
-) {
+export function organizationsLoadSuccess(organizations, selectedOrganization) {
   return {
     type: types.ORGANIZATIONS_LOAD_SUCCESS,
     organizations,
     selectedOrganization,
-    selectedCluster,
   };
 }
 

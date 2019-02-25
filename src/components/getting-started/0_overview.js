@@ -20,19 +20,13 @@ class Overview extends React.Component {
       <div className='centered col-10'>
         <h1>Get started with your Kubernetes cluster</h1>
         <ol className='step_selector row'>
-          <li className='col-3 col-6-sm'>
-            <Link to='/getting-started/download/'>
+          <li className='col-4 col-12-sm'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/configure/`}
+            >
               <span className='step_selector--step-number'>1.</span>
-              <span className='step_selector--step-title'>Install kubectl</span>
-              <span className='step_selector--step-description'>
-                Ensure that you have the most recent version of Kubernetes CLI
-                installed
-              </span>
-            </Link>
-          </li>
-          <li className='col-3 col-6-sm'>
-            <Link to='/getting-started/configure/'>
-              <span className='step_selector--step-number'>2.</span>
               <span className='step_selector--step-title'>Get access</span>
               <span className='step_selector--step-description'>
                 Enable your Kubernetes CLI to access your Kubernetes cluster at
@@ -40,9 +34,13 @@ class Overview extends React.Component {
               </span>
             </Link>
           </li>
-          <li className='col-3 col-6-sm'>
-            <Link to='/getting-started/example/'>
-              <span className='step_selector--step-number'>3.</span>
+          <li className='col-4 col-12-sm'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/example/`}
+            >
+              <span className='step_selector--step-number'>2.</span>
               <span className='step_selector--step-title'>
                 Run a simple example
               </span>
@@ -52,9 +50,13 @@ class Overview extends React.Component {
               </span>
             </Link>
           </li>
-          <li className='col-3 col-6-sm'>
-            <Link to='/getting-started/next-steps'>
-              <span className='step_selector--step-number'>4.</span>
+          <li className='col-4 col-12-sm'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/next-steps/`}
+            >
+              <span className='step_selector--step-number'>3.</span>
               <span className='step_selector--step-title'>Next steps</span>
               <span className='step_selector--step-description'>
                 We point you to some useful next best actions, like setting up
@@ -65,7 +67,11 @@ class Overview extends React.Component {
         </ol>
 
         <div className='component_slider--nav'>
-          <Link to='/getting-started/download/'>
+          <Link
+            to={`/organizations/${this.props.match.params.orgId}/clusters/${
+              this.props.match.params.clusterId
+            }/getting-started/configure/`}
+          >
             <button className='primary'>
               Start <i className='fa fa-chevron-right' />
             </button>
@@ -77,6 +83,7 @@ class Overview extends React.Component {
 }
 
 Overview.propTypes = {
+  match: PropTypes.object,
   goToSlide: PropTypes.func,
 };
 

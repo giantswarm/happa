@@ -95,7 +95,15 @@ class SimpleExample extends React.Component {
   render() {
     return (
       <Breadcrumb
-        data={{ title: 'EXAMPLE', pathname: '/getting-started/example/' }}
+        data={{
+          title: 'EXAMPLE',
+          pathname:
+            '/organizations/' +
+            this.props.match.params.orgId +
+            '/clusters/' +
+            this.props.match.params.clusterId +
+            '/getting-started/example/',
+        }}
       >
         <div className='centered col-9'>
           <h1>Let&apos;s create an example application</h1>
@@ -285,25 +293,24 @@ class SimpleExample extends React.Component {
             </Output>
           </CodeBlock>
 
-          <div className='celebration'>
-            <span>🎉</span>
-            <h3>Congratulations</h3>
-            <p>
-              You have created &ndash; and destroyed &ndash; your first
-              application on your brand new Kubernetes cluster on Giant Swarm.
-            </p>
-          </div>
-
           <div className='component_slider--nav'>
-            <Link to='/getting-started/configure/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/configure/`}
+            >
               <button>
                 <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>
 
-            <Link to='/getting-started/next-steps/'>
+            <Link
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${
+                this.props.match.params.clusterId
+              }/getting-started/next-steps/`}
+            >
               <button className='primary'>
-                Continue <i className='fa fa-chevron-right' />
+                Finish <i className='fa fa-chevron-right' />
               </button>
             </Link>
           </div>
@@ -314,15 +321,16 @@ class SimpleExample extends React.Component {
 }
 
 SimpleExample.propTypes = {
+  actions: PropTypes.object,
   cluster: PropTypes.object,
   dispatch: PropTypes.func,
-  actions: PropTypes.object,
   goToSlide: PropTypes.func,
+  match: PropTypes.object,
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   var selectedCluster =
-    state.entities.clusters.items[state.app.selectedCluster];
+    state.entities.clusters.items[ownProps.match.params.clusterId];
 
   return {
     cluster: selectedCluster,

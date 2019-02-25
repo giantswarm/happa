@@ -1,4 +1,31 @@
 version: 2
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+            branches:
+              only: /.*/
+      - deploy-to-all:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+            branches:
+              ignore: /.*/
+      - deploy-to-testing:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+
 jobs:
   build:
     machine: true
@@ -34,13 +61,24 @@ jobs:
           fi
 
     - run:
-        name: Valdiate code style using prettier
+        name: Validate code style using prettier
         command: |
           make validate-prettier
 
     - run:
         name: Build web application
         command: make dist
+
+    - run:
+        name: Create VERSION file
+        command: |
+          tag=$(git tag --points-at HEAD)
+          if [ -z "$tag" ]
+          then
+            git rev-parse HEAD | cut -c-5 > VERSION
+          else
+            git tag --points-at HEAD | tr '\n' ' ' > VERSION
+          fi
 
     - run:
         name: Build Docker image
@@ -55,6 +93,7 @@ jobs:
           fi
 
           docker run --name happa-branch -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+          sleep 2
           CURL_OUTPUT=$(curl -s -k https://localhost:8000)
           echo "${CURL_OUTPUT}" | grep Happa
 
@@ -78,7 +117,7 @@ jobs:
           echo "Lighthouse report for ${CIRCLE_BRANCH}:"
           lighthouse-keeper view --input branch.json
 
-          if [ "${CIRCLE_BRANCH}" != "master" ]; then
+          if [[ "${CIRCLE_BRANCH}" != "master" && -n "${CIRCLE_PULL_REQUEST}" ]]; then
             echo "Lighthouse report for master:"
             lighthouse-keeper view --input master.json
 
@@ -92,14 +131,29 @@ jobs:
               --github-issue $(basename ${CIRCLE_PULL_REQUEST})
           fi
 
-    - deploy:
-        name: Deploy with architect (master only)
-        command: |
-          if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            ./architect deploy
-          fi
-
     - save_cache:
         key: v1-npm-deps-{{ checksum "yarn.lock" }}
         paths:
           - ./node_modules
+
+  deploy-to-testing:
+    machine: true
+    steps:
+    - checkout
+    - deploy:
+        name: Deploy with architect to testing envs
+        command: |
+          wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+          chmod +x ./architect
+          ./architect deploy --group=testing
+
+  deploy-to-all:
+    machine: true
+    steps:
+    - checkout
+    - deploy:
+        name: Deploy with architect to all envs
+        command: |
+          wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+          chmod +x ./architect
+          ./architect deploy
