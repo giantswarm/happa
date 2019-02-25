@@ -34,7 +34,9 @@ CatalogIndex.propTypes = {
   location: PropTypes.object,
 };
 
-function mapStateToProps() {}
+function mapStateToProps() {
+  return {};
+}
 
 function mapDispatchToProps() {
   return {};

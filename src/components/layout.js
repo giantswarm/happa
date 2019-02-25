@@ -128,17 +128,13 @@ class Layout extends React.Component {
                   />
                   <Route
                     exact
-                    path='/app-katalog/*'
-                    component={() => {
-                      return <AppCatalog location={this.props.location} />;
-                    }}
+                    path='/app-katalog/'
+                    component={AppCatalog}
                   />
                   <Route
                     exact
                     path='/app-katalog/:repo/:app'
-                    component={() => {
-                      return <AppCatalog location={this.props.location} />;
-                    }}
+                    component={AppCatalog}
                   />
                   <Route
                     exact
