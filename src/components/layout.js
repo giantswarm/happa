@@ -1,4 +1,5 @@
 import * as UserActions from '../actions/userActions';
+import AccountSettings from './account_settings';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clustersLoad } from '../actions/clusterActions';
@@ -7,7 +8,6 @@ import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
 import { organizationsLoad } from '../actions/organizationActions';
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import AccountSettings from './account_settings';
 import DocumentTitle from 'react-document-title';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home';
