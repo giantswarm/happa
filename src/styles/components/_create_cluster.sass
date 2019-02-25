@@ -163,7 +163,8 @@
       width: 138px
 
       &:first-child
-        width: 30px
+        width: 48px
+        padding-left: 10px
 
 .new-cluster--instance-type-selector-table
   margin-bottom: -10px
@@ -187,7 +188,7 @@
     width: 148px
 
     &:first-child
-      width: 30px
+      width: 48px
 
   tbody
     height: 300px
@@ -195,6 +196,9 @@
 
   tbody tr
     cursor: pointer
+  
+  tbody .selected
+    background-color: lighten($darkblue, 8%)
 
   td
     vertical-align: top
