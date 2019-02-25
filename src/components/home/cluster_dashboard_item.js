@@ -11,10 +11,6 @@ import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
 
 class ClusterDashboardItem extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   getMemoryTotal() {
     var workers = this.getNumberOfNodes();
     if (workers === null || workers === 0 || !this.props.cluster.workers) {
