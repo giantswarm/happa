@@ -4,7 +4,7 @@ import { catalogsLoad } from '../../actions/catalogActions';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
-import { push } from 'connected-react-router';
+import { replace } from 'connected-react-router';
 import React from 'react';
 
 class CatalogIndex extends React.Component {
@@ -37,7 +37,7 @@ class CatalogIndex extends React.Component {
     });
 
     this.props.dispatch(
-      push({
+      replace({
         search:
           '?' +
           new URLSearchParams({
@@ -146,7 +146,7 @@ class CatalogIndex extends React.Component {
     });
 
     this.props.dispatch(
-      push({
+      replace({
         search:
           '?' +
           new URLSearchParams({
