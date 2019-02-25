@@ -32,8 +32,6 @@ fi
 # VERSION file.
 VERSION=$(cat VERSION | tr '\n' ' ' | tr -d '[:space:]')
 
-echo "VERSION=${VERSION}"
-
 STRLENGTH=$(echo -n $VERSION | wc -m)
 if [ $STRLENGTH -gt 30 ]; then
   # VERSION is a commit hash, not a tag
@@ -41,9 +39,7 @@ if [ $STRLENGTH -gt 30 ]; then
   VERSION="<a href=\"https://github.com/giantswarm/happa/commit/${VERSION}\">${SHORTVERSION}</a>"
 fi
 
-echo "VERSION=$VERSION"
-
-sed -i 's/VERSION/'"${VERSION}"'/g' /www/index.html
+sed -i "s/VERSION/${VERSION}/g" /www/index.html
 
 echo ""
 echo "--- Starting Happa nginx server ---"
