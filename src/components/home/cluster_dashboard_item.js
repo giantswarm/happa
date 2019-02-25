@@ -80,15 +80,6 @@ class ClusterDashboardItem extends React.Component {
     );
   }
 
-  goToClusterDetails() {
-    var url =
-      '/organizations/' +
-      this.props.selectedOrganization +
-      '/clusters/' +
-      this.props.cluster.id;
-    this.props.dispatch(push(url));
-  }
-
   render() {
     var memory = this.getMemoryTotal();
     var storage = this.getStorageTotal();
@@ -152,9 +143,6 @@ class ClusterDashboardItem extends React.Component {
 
         <div className='cluster-dashboard-item--buttons'>
           <ButtonGroup>
-            <Button onClick={this.goToClusterDetails.bind(this)}>
-              Details
-            </Button>
             <Button onClick={this.accessCluster.bind(this)}>
               <i className='fa fa-start' />
               Get Started
