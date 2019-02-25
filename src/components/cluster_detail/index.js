@@ -255,32 +255,9 @@ class ClusterDetail extends React.Component {
 
                     <ClusterKeyPairs cluster={this.props.cluster} />
 
-<<<<<<< HEAD
-                      <div className='row section cluster_delete col-12'>
-                        <div className='row'>
-                          <h3 className='table-label'>Delete This Cluster</h3>
-                        </div>
-                        <div className='row'>
-                          <p>
-                            All workloads on this cluster will be terminated.
-                            Data stored on the worker nodes will be lost. There
-                            is no way to undo this action.
-                          </p>
-                          <Button
-                            bsStyle='danger'
-                            onClick={this.showDeleteClusterModal.bind(
-                              this,
-                              this.props.cluster
-                            )}
-                          >
-                            <i className='fa fa-delete' /> Delete Cluster
-                          </Button>
-                        </div>
-=======
                     <div className='row section cluster_delete col-12'>
                       <div className='row'>
                         <h3 className='table-label'>Delete This Cluster</h3>
->>>>>>> Add placeholder page for the app catalog and a way to get there.
                       </div>
                       <div className='row'>
                         <p>
