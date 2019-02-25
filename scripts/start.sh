@@ -38,7 +38,9 @@ if [ $STRLENGTH -gt 30 ]; then
   VERSION="<a href=\"https://github.com/giantswarm/happa/commit/${VERSION}\">${SHORTVERSION}</a>"
 fi
 
-sed -i "s/VERSION/${VERSION}/g" /www/index.html
+echo "VERSION=$VERSION"
+
+sed -i ".bak" "s/VERSION/$VERSION/g" /www/index.html
 
 echo ""
 echo "--- Starting Happa nginx server ---"
