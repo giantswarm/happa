@@ -30,7 +30,15 @@ fi
 
 # This sets the VERSION placeholder in the footer to the version specified in the
 # VERSION file.
-sed -i "s/VERSION/$(cat VERSION |  tr '\n' ' ')/g" /www/index.html
+VERSION=$(cat VERSION | tr '\n' ' ')
+STRLENGTH=$(echo -n $VERSION | wc -m)
+if [ $STRLENGTH -gt 30 ]; then
+  # VERSION is a commit hash, not a tag
+  SHORTVERSION=$(echo -n $VERSION | cut -c-5)
+  VERSION="<a href=\"https://github.com/giantswarm/happa/commit/${VERSION}\">${SHORTVERSION}</a>"
+fi
+
+sed -i "s/VERSION/${VERSION}/g" /www/index.html
 
 echo ""
 echo "--- Starting Happa nginx server ---"
