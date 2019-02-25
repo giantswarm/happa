@@ -31,6 +31,9 @@ fi
 # This sets the VERSION placeholder in the footer to the version specified in the
 # VERSION file.
 VERSION=$(cat VERSION | tr '\n' ' ')
+
+echo "VERSION=${VERSION}"
+
 STRLENGTH=$(echo -n $VERSION | wc -m)
 if [ $STRLENGTH -gt 30 ]; then
   # VERSION is a commit hash, not a tag
