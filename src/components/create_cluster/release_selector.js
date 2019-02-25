@@ -181,7 +181,7 @@ class ReleaseSelector extends React.Component {
 
           {kubernetes ? (
             <div>
-              <p>This releases contains:</p>
+              <p>This release contains:</p>
               <div className='release-selector-modal--component contrast'>
                 <span className='release-selector-modal--component--name'>
                   kubernetes
