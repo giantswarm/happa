@@ -126,11 +126,7 @@ class Layout extends React.Component {
                     path='/organizations/:orgId/clusters/:clusterId/getting-started/*'
                     component={GettingStarted}
                   />
-                  <Route
-                    exact
-                    path='/app-katalog/'
-                    component={AppCatalog}
-                  />
+                  <Route exact path='/app-katalog/' component={AppCatalog} />
                   <Route
                     exact
                     path='/app-katalog/:repo/:app'
