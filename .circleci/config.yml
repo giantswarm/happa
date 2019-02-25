@@ -4,7 +4,12 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build
+      - build:
+          filters:
+            tags:
+              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+            branches:
+              only: /.*/
       - deploy-to-all:
           requires:
             - build
@@ -112,7 +117,7 @@ jobs:
           echo "Lighthouse report for ${CIRCLE_BRANCH}:"
           lighthouse-keeper view --input branch.json
 
-          if [ "${CIRCLE_BRANCH}" != "master" ]; then
+          if [[ "${CIRCLE_BRANCH}" != "master" && -n "${CIRCLE_PULL_REQUEST}" ]]; then
             echo "Lighthouse report for master:"
             lighthouse-keeper view --input master.json
 
