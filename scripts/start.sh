@@ -43,7 +43,7 @@ fi
 
 echo "VERSION=$VERSION"
 
-sed -i ".bak" "s/VERSION/$VERSION/g" /www/index.html
+sed -i=bak "s/VERSION/$VERSION/g" /www/index.html
 
 echo ""
 echo "--- Starting Happa nginx server ---"
