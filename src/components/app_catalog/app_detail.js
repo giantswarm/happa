@@ -1,6 +1,6 @@
 'use strict';
 
-import { catalogsLoad } from '../../actions/catalogActions';
+import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
@@ -15,19 +15,44 @@ class AppDetail extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title={'App Catalog | Giant Swarm '}>
-        <React.Fragment>
-          <h1>App Detail</h1>
-        </React.Fragment>
+      <DocumentTitle title={'App Detail | Giant Swarm '}>
+        <Breadcrumb
+          data={{
+            title: 'Test App',
+            pathname: '/app-katalog/repo/test/',
+          }}
+        >
+          <React.Fragment>
+            <h1>App Detail</h1>
+          </React.Fragment>
+        </Breadcrumb>
       </DocumentTitle>
     );
   }
 }
 
-AppDetail.propTypes = {};
+AppDetail.propTypes = {
+  appVersions: PropTypes.array,
+  match: PropTypes.object,
+};
 
-function mapStateToProps(state) {
-  return {};
+function mapStateToProps(state, ownProps) {
+  var repo = decodeURIComponent(ownProps.match.params.repo);
+  var appName = decodeURIComponent(ownProps.match.params.app);
+  console.log(appName);
+  var appVersions = [];
+  if (
+    state.entities.catalogs.items[repo] &&
+    state.entities.catalogs.items[repo].apps[appName]
+  ) {
+    appVersions = state.entities.catalogs.items[repo].apps[appName];
+  }
+
+  console.log(appVersions);
+
+  return {
+    appVersions,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
