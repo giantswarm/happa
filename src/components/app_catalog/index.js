@@ -35,21 +35,31 @@ class CatalogIndex extends React.Component {
         }}
       >
         <div className='app-catalog'>
-          <Switch>
-            <Route
-              exact //
-              path='/app-katalog/'
-              component={Search}
-            />
-            <Route
-              exact //
-              path='/app-katalog/:repo/:app'
-              component={AppDetail}
-            />
-          </Switch>
+          <Loading loading={this.state.loading}>
+            <Switch>
+              <Route
+                exact //
+                path='/app-katalog/'
+                component={Search}
+              />
+              <Route
+                exact //
+                path='/app-katalog/:repo/:app'
+                component={AppDetail}
+              />
+            </Switch>
+          </Loading>
         </div>
       </Breadcrumb>
     );
+  }
+}
+
+function Loading(props) {
+  if (props.loading) {
+    return <img className='loader' src='/images/loader_oval_light.svg' />;
+  } else {
+    return props.children;
   }
 }
 

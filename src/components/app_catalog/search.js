@@ -153,90 +153,77 @@ class CatalogIndex extends React.Component {
     return (
       <DocumentTitle title={'App Katalog | Giant Swarm '}>
         <React.Fragment>
-          <Loading loading={this.props.loading}>
-            <h1>
-              App Katalog (Preview)
-              <form>
-                <div className='input-with-icon'>
-                  <i className='fa fa-search' />
-                  <input
-                    type='text'
-                    onChange={this.updateSearchQuery.bind(this)}
-                    value={this.state.searchQuery}
-                  />
-                </div>
-              </form>
-            </h1>
-            <div className='app-catalog-overview'>
-              <div className='repo-selection'>
-                <h4>Repository</h4>
-                <ul>
-                  <li className={this.classNameFor('All')}>
-                    <a onClick={this.selectRepo.bind(this, 'All')}>All</a>
-                  </li>
-                  {Object.getOwnPropertyNames(this.props.catalogs.items).map(
-                    catalogName => {
-                      return (
-                        <li
-                          className={this.classNameFor(catalogName)}
-                          key={catalogName}
-                        >
-                          <a onClick={this.selectRepo.bind(this, catalogName)}>
-                            {catalogName}
-                          </a>
-                        </li>
-                      );
-                    }
-                  )}
-                </ul>
+          <h1>
+            App Katalog (Preview)
+            <form>
+              <div className='input-with-icon'>
+                <i className='fa fa-search' />
+                <input
+                  type='text'
+                  onChange={this.updateSearchQuery.bind(this)}
+                  value={this.state.searchQuery}
+                />
               </div>
-
-              <div className='apps'>
-                {this.apps(this.props.catalogs.items, this.filter()).map(
-                  app => {
+            </form>
+          </h1>
+          <div className='app-catalog-overview'>
+            <div className='repo-selection'>
+              <h4>Repository</h4>
+              <ul>
+                <li className={this.classNameFor('All')}>
+                  <a onClick={this.selectRepo.bind(this, 'All')}>All</a>
+                </li>
+                {Object.getOwnPropertyNames(this.props.catalogs.items).map(
+                  catalogName => {
                     return (
-                      <Link
-                        className='app'
-                        key={app.repoName + '/' + app.name}
-                        to={app.detailUrl}
+                      <li
+                        className={this.classNameFor(catalogName)}
+                        key={catalogName}
                       >
-                        {app.repoName === 'giantswarm/stable' ? (
-                          <div className='badge'>MANAGED</div>
-                        ) : (
-                          undefined
-                        )}
-
-                        <div className='app-icon'>
-                          {this.state.imgPromises[app.name] ||
-                            this.iconSrcFor(app)}
-                        </div>
-                        <div className='app-details'>
-                          <span className='app-version'>{app.version}</span>
-                          <h3>{app.name}</h3>
-                          <span className='app-repo'>{app.repoName}</span>
-                        </div>
-                      </Link>
+                        <a onClick={this.selectRepo.bind(this, catalogName)}>
+                          {catalogName}
+                        </a>
+                      </li>
                     );
                   }
                 )}
-                <div className='app-flex-fix' />
-                <div className='app-flex-fix' />
-                <div className='app-flex-fix' />
-                <div className='app-flex-fix' />
-              </div>
+              </ul>
             </div>
-          </Loading>
+
+            <div className='apps'>
+              {this.apps(this.props.catalogs.items, this.filter()).map(app => {
+                return (
+                  <Link
+                    className='app'
+                    key={app.repoName + '/' + app.name}
+                    to={app.detailUrl}
+                  >
+                    {app.repoName === 'giantswarm/stable' ? (
+                      <div className='badge'>MANAGED</div>
+                    ) : (
+                      undefined
+                    )}
+
+                    <div className='app-icon'>
+                      {this.state.imgPromises[app.name] || this.iconSrcFor(app)}
+                    </div>
+                    <div className='app-details'>
+                      <span className='app-version'>{app.version}</span>
+                      <h3>{app.name}</h3>
+                      <span className='app-repo'>{app.repoName}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+              <div className='app-flex-fix' />
+              <div className='app-flex-fix' />
+              <div className='app-flex-fix' />
+              <div className='app-flex-fix' />
+            </div>
+          </div>
         </React.Fragment>
       </DocumentTitle>
     );
-  }
-}
-
-function Loading(props) {
-  if (props.loading) {
-    return <img className='loader' src='/images/loader_oval_light.svg' />;
-  } else {
-    return props.children;
   }
 }
 
