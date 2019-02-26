@@ -23,7 +23,7 @@ class AppDetail extends React.Component {
           }}
         >
           <React.Fragment>
-            <h1>App Detail</h1>
+            <h1>{this.props.appVersions[0].name}</h1>
           </React.Fragment>
         </Breadcrumb>
       </DocumentTitle>
@@ -39,7 +39,7 @@ AppDetail.propTypes = {
 function mapStateToProps(state, ownProps) {
   var repo = decodeURIComponent(ownProps.match.params.repo);
   var appName = decodeURIComponent(ownProps.match.params.app);
-  console.log(appName);
+
   var appVersions = [];
   if (
     state.entities.catalogs.items[repo] &&
@@ -48,9 +48,8 @@ function mapStateToProps(state, ownProps) {
     appVersions = state.entities.catalogs.items[repo].apps[appName];
   }
 
-  console.log(appVersions);
-
   return {
+    loading: state.entities.catalogs.isFetching,
     appVersions,
   };
 }
