@@ -1,10 +1,10 @@
 'use strict';
 
-import { catalogsLoad } from '../../actions/catalogActions';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import { replace } from 'connected-react-router';
+import { Link } from 'react-router-dom';
 import React from 'react';
 
 class CatalogIndex extends React.Component {
@@ -18,7 +18,6 @@ class CatalogIndex extends React.Component {
     let selectedRepo = query.get('repo');
 
     this.state = {
-      loading: true,
       selectedRepo: selectedRepo || 'All',
       searchQuery: q || '',
       imgPromises: {},
@@ -48,14 +47,6 @@ class CatalogIndex extends React.Component {
     );
   }
 
-  componentDidMount() {
-    this.props.dispatch(catalogsLoad()).then(() => {
-      this.setState({
-        loading: false,
-      });
-    });
-  }
-
   // filter returns a filter object based on the current state
   filter() {
     return {
@@ -73,12 +64,13 @@ class CatalogIndex extends React.Component {
     // And add the repoName so we know what repo an app belongs to.
     for (var id in catalogs) {
       if (catalogs.hasOwnProperty(id)) {
-        let apps = Array.from(Object.values(catalogs[id].apps));
-        apps = apps.map(app => {
+        let apps = Array.from(Object.entries(catalogs[id].apps));
+        apps = apps.map(([key, app]) => {
           app.repoName = id;
           app.name = app[0].name;
           app.version = app[0].version;
           app.icon = app[0].icon;
+          app.detailUrl = app.repoName.replace('/', '%2F') + '/' + key + '/';
           return app;
         });
         allApps.push(...apps);
@@ -161,7 +153,7 @@ class CatalogIndex extends React.Component {
     return (
       <DocumentTitle title={'App Katalog | Giant Swarm '}>
         <React.Fragment>
-          <Loading loading={this.state.loading}>
+          <Loading loading={this.props.loading}>
             <h1>
               App Katalog (Preview)
               <form>
@@ -203,7 +195,11 @@ class CatalogIndex extends React.Component {
                 {this.apps(this.props.catalogs.items, this.filter()).map(
                   app => {
                     return (
-                      <div className='app' key={app.repoName + '/' + app.name}>
+                      <Link
+                        className='app'
+                        key={app.repoName + '/' + app.name}
+                        to={app.detailUrl}
+                      >
                         {app.repoName === 'giantswarm/stable' ? (
                           <div className='badge'>MANAGED</div>
                         ) : (
@@ -219,7 +215,7 @@ class CatalogIndex extends React.Component {
                           <h3>{app.name}</h3>
                           <span className='app-repo'>{app.repoName}</span>
                         </div>
-                      </div>
+                      </Link>
                     );
                   }
                 )}
@@ -276,12 +272,14 @@ CatalogIndex.propTypes = {
   clusterId: PropTypes.string,
   dispatch: PropTypes.func,
   location: PropTypes.object,
+  loading: PropTypes.bool,
   organizationId: PropTypes.string,
 };
 
 function mapStateToProps(state) {
   return {
     catalogs: state.entities.catalogs,
+    loading: state.entities.catalogs.isFetching,
   };
 }
 

@@ -25,16 +25,6 @@ let catalogsToLoad = {
           description: '',
         },
       ],
-      'something-else': [
-        {
-          name: 'Something Else',
-          appVersion: '1.0.0',
-          version: '2.0.0',
-          icon: '',
-          screenshotUrls: ['', ''],
-          description: '',
-        },
-      ],
     },
   },
   'giantswarm/incubator': {
@@ -54,16 +44,6 @@ let catalogsToLoad = {
           screenshotUrls: ['', ''],
           description: '',
           shortDescription: '',
-        },
-      ],
-      'something-else': [
-        {
-          name: 'Something Else',
-          version: '3.0.0',
-          appVersion: '1.0.0',
-          icon: '',
-          screenshotUrls: ['', ''],
-          description: '',
         },
       ],
     },
