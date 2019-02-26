@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import BootstrapTable from 'react-bootstrap-table-next';
+import cmp from 'semver-compare';
 
 class OrganizationDetail extends React.Component {
   constructor(props) {
@@ -63,6 +64,17 @@ class OrganizationDetail extends React.Component {
         text: 'Created',
         sort: true,
         formatter: relativeDate,
+      },
+      {
+        dataField: 'release_version',
+        text: 'Release',
+        sort: true,
+        sortFunc: (a, b, order) => {
+          if (order === 'desc') {
+            return cmp(a, b) * -1;
+          }
+          return cmp(a, b);
+        },
       },
       {
         dataField: 'actionsDummy',
