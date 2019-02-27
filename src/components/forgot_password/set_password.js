@@ -15,36 +15,34 @@ import { validatePassword } from '../../lib/password_validation';
 import { push } from 'connected-react-router';
 
 class SetPassword extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    password: '',
+    passwordConfirmation: '',
+    email: '',
+    emailField: '',
 
-    this.state = {
-      password: '',
-      passwordConfirmation: '',
-      email: localStorage.getItem('user.email') || '',
-      emailField: '',
+    submitting: false,
 
-      submitting: false,
+    passwordField: {
+      valid: false,
+      value: '',
+    },
 
-      passwordField: {
-        valid: false,
-        value: '',
-      },
+    passwordConfirmationField: {
+      valid: false,
+      value: '',
+    },
 
-      passwordConfirmationField: {
-        valid: false,
-        value: '',
-      },
+    formIsValid: false,
 
-      formIsValid: false,
-
-      verifyingToken: false,
-      tokenValid: false,
-      statusMessage: 'enter_password',
-    };
-  }
+    verifyingToken: false,
+    tokenValid: false,
+    statusMessage: 'enter_password',
+  };
 
   componentDidMount() {
+    this.setState({ email: localStorage.getItem('user.email') || '' });
+
     // If we have the email already from localstorage, verify the token immediately.
     if (this.state.email) {
       this.verifyToken();
