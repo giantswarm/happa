@@ -11,7 +11,7 @@ import Auth from '../../lib/auth0';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 
-class OauthCallback extends React.Component {
+class OAuthCallback extends React.Component {
   state = {
     error: null,
   };
@@ -86,7 +86,7 @@ class OauthCallback extends React.Component {
   }
 }
 
-OauthCallback.propTypes = {
+OAuthCallback.propTypes = {
   actions: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
@@ -111,4 +111,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(OauthCallback);
+)(OAuthCallback);
