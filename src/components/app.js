@@ -4,7 +4,7 @@ import 'babel-polyfill';
 import AdminLogin from './auth/admin';
 import configureStore from '../stores/configureStore';
 import { ConnectedRouter } from 'connected-react-router';
-import forgot_password_index from './forgot_password/index';
+import ForgotPassword from './forgot_password/index';
 import forgot_password_set_password from './forgot_password/set_password';
 import history from '../stores/history';
 import Layout from './layout';
@@ -39,7 +39,7 @@ render(
             path='/forgot_password/:token/'
             component={forgot_password_set_password}
           />
-          <Route path='/forgot_password' component={forgot_password_index} />
+          <Route path='/forgot_password' component={ForgotPassword} />
           <Route path='/signup/:token' component={SignUp} />
           <Route path='/oauth/callback' component={OAuthCallback} />
 
