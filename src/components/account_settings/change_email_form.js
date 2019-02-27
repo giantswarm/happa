@@ -16,7 +16,7 @@ class ChangeEmailForm extends React.Component {
       buttonVisible: false,
       fields: {
         email: {
-          value: this.props.user.email,
+          value: props.user.email,
         },
       },
     };
