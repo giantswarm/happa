@@ -19,13 +19,9 @@ import EmailField from '../shared/email_field';
 import PropTypes from 'prop-types';
 
 class Modals extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      emailValid: false,
-    };
-  }
+  state = {
+    emailValid: false,
+  };
 
   close = () => {
     this.props.dispatch(modalHide());

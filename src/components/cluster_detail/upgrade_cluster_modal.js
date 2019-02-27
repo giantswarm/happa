@@ -12,15 +12,11 @@ import _ from 'underscore';
 import PropTypes from 'prop-types';
 
 class UpgradeClusterModal extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: false,
-      modalVisible: false,
-      page: 'about-upgrading',
-    };
-  }
+  state = {
+    loading: false,
+    modalVisible: false,
+    page: 'about-upgrading',
+  };
 
   show = () => {
     this.setState({

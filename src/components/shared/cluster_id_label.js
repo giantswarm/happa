@@ -9,13 +9,9 @@ import copy from 'copy-to-clipboard';
 var colorHashCache = {};
 
 class ClusterIDLabel extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      copied: false,
-    };
-  }
+  state = {
+    copied: false,
+  };
 
   calculateColour(str) {
     if (!colorHashCache[str]) {

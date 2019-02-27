@@ -13,20 +13,17 @@ import PropTypes from 'prop-types';
 var Modernizr = window.Modernizr;
 
 class ConfigKubeCtl extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      selectedPlatform: platform,
-      alternativeOpen: false,
-      keyPair: {
-        generated: false,
-        generating: false,
-        error: false,
-        data: null,
-      },
-    };
-  }
+  state = {
+    loading: true,
+    selectedPlatform: platform,
+    alternativeOpen: false,
+    keyPair: {
+      generated: false,
+      generating: false,
+      error: false,
+      data: null,
+    },
+  };
 
   generateKeyPair = () => {
     this.setState({

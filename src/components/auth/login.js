@@ -13,14 +13,10 @@ import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      email: '',
-      password: '',
-    };
-  }
+  state = {
+    email: '',
+    password: '',
+  };
 
   componentWillUnmount() {
     this.props.dispatch(flashClearAll());

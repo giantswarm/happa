@@ -12,14 +12,14 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 class ForgotPassword extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    submitting: false,
+    tokenRequested: false,
+    email: '',
+  };
 
-    this.state = {
-      submitting: false,
-      tokenRequested: false,
-      email: localStorage.getItem('user.email') || '',
-    };
+  componentDidMount() {
+    this.setState({ email: localStorage.getItem('user.email') || '' });
   }
 
   submit = event => {

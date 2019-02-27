@@ -14,17 +14,14 @@ var doneTypingInterval = 250; // ms
 // And shows an error message if a supplied validation function returns fails
 
 class InputField extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      valid: false,
-      validationError: '',
-      value: props.value,
-    };
-  }
+  state = {
+    valid: false,
+    validationError: '',
+    value: null,
+  };
 
   componentDidMount() {
+    this.setState({ value: this.props.value });
     if (this.props.autofocus) {
       this.input.focus();
     }
