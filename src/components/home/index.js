@@ -68,7 +68,10 @@ class Home extends React.Component {
   showNotification() {
     new Noty({
       type: this.state.notyType,
-      text: 'This is a success message that will vanish after 5 seconds.',
+      text:
+        'This is a <code>' +
+        this.state.notyType +
+        '</code> message that will vanish after it´s timeout period is reached.',
       timeout: 20000,
       theme: this.state.notyTheme,
       layout: this.state.notyLayout,
