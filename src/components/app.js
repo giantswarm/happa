@@ -15,7 +15,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import { render } from 'react-dom';
 import { Route, Switch } from 'react-router-dom';
-import signup from './signup/index';
+import SignUp from './signup/index';
 
 // CSS Imports.
 import 'normalize.css';
@@ -40,7 +40,7 @@ render(
             component={forgot_password_set_password}
           />
           <Route path='/forgot_password' component={forgot_password_index} />
-          <Route path='/signup/:token' component={signup} />
+          <Route path='/signup/:token' component={SignUp} />
           <Route path='/oauth/callback' component={oauth_callback} />
 
           <Route path='/' component={Layout} />
