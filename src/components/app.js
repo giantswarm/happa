@@ -5,7 +5,7 @@ import AdminLogin from './auth/admin';
 import configureStore from '../stores/configureStore';
 import { ConnectedRouter } from 'connected-react-router';
 import ForgotPassword from './forgot_password/index';
-import forgot_password_set_password from './forgot_password/set_password';
+import SetPassword from './forgot_password/set_password';
 import history from '../stores/history';
 import Layout from './layout';
 import Login from './auth/login';
@@ -35,10 +35,7 @@ render(
           <Route path='/admin-login' component={AdminLogin} />
           <Route path='/login' component={Login} />
           <Route path='/logout' component={Logout} />
-          <Route
-            path='/forgot_password/:token/'
-            component={forgot_password_set_password}
-          />
+          <Route path='/forgot_password/:token/' component={SetPassword} />
           <Route path='/forgot_password' component={ForgotPassword} />
           <Route path='/signup/:token' component={SignUp} />
           <Route path='/oauth/callback' component={OAuthCallback} />
