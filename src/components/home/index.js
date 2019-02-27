@@ -72,6 +72,7 @@ class Home extends React.Component {
       timeout: 20000,
       theme: this.state.notyTheme,
       layout: this.state.notyLayout,
+      visibilityControl: true,
     }).show();
   }
 
