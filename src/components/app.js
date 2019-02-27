@@ -8,8 +8,8 @@ import forgot_password_index from './forgot_password/index';
 import forgot_password_set_password from './forgot_password/set_password';
 import history from '../stores/history';
 import Layout from './layout';
-import login from './auth/login';
 import logout from './auth/logout';
+import Login from './auth/login';
 import oauth_callback from './auth/oauth_callback.js';
 import { Provider } from 'react-redux';
 import React from 'react';
@@ -33,8 +33,8 @@ render(
       <div>
         <Switch>
           <Route path='/admin-login' component={AdminLogin} />
-          <Route path='/login' component={login} />
           <Route path='/logout' component={logout} />
+          <Route path='/login' component={Login} />
           <Route
             path='/forgot_password/:token/'
             component={forgot_password_set_password}
