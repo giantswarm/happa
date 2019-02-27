@@ -1,7 +1,7 @@
 'use strict';
 
 import 'babel-polyfill';
-import adminLogin from './auth/admin';
+import AdminLogin from './auth/admin';
 import configureStore from '../stores/configureStore';
 import { ConnectedRouter } from 'connected-react-router';
 import forgot_password_index from './forgot_password/index';
@@ -32,7 +32,7 @@ render(
     <ConnectedRouter history={history}>
       <div>
         <Switch>
-          <Route path='/admin-login' component={adminLogin} />
+          <Route path='/admin-login' component={AdminLogin} />
           <Route path='/login' component={login} />
           <Route path='/logout' component={logout} />
           <Route
