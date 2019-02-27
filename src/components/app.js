@@ -10,7 +10,7 @@ import history from '../stores/history';
 import Layout from './layout';
 import Login from './auth/login';
 import Logout from './auth/logout';
-import oauth_callback from './auth/oauth_callback.js';
+import OAuthCallback from './auth/oauth_callback.js';
 import { Provider } from 'react-redux';
 import React from 'react';
 import { render } from 'react-dom';
@@ -41,7 +41,7 @@ render(
           />
           <Route path='/forgot_password' component={forgot_password_index} />
           <Route path='/signup/:token' component={SignUp} />
-          <Route path='/oauth/callback' component={oauth_callback} />
+          <Route path='/oauth/callback' component={OAuthCallback} />
 
           <Route path='/' component={Layout} />
         </Switch>
