@@ -11,8 +11,15 @@ import { Link } from 'react-router-dom';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
+import Noty from 'noty';
 
 class Home extends React.Component {
+  state = {
+    notyTheme: 'mint',
+    notyLayout: 'topLeft',
+    notyType: 'success',
+  };
+
   componentDidMount() {
     this.fetchClusterDetails(this.props.clusters);
   }
@@ -58,11 +65,100 @@ class Home extends React.Component {
     }
   }
 
+  showNotification() {
+    new Noty({
+      type: this.state.notyType,
+      text: 'This is a success message that will vanish after 5 seconds.',
+      timeout: 5000,
+      theme: this.state.notyTheme,
+      layout: this.state.notyLayout,
+    }).show();
+  }
+
+  setNotyTheme(event) {
+    this.setState({ notyTheme: event.target.value });
+  }
+
+  setNotyLayout(event) {
+    this.setState({ notyLayout: event.target.value });
+  }
+
+  setNotyType(event) {
+    this.setState({ notyType: event.target.value });
+  }
+
   render() {
     return (
       <DocumentTitle title={this.title()}>
         {
           <div>
+            <div className='well'>
+              <form className='form-inline'>
+                <div className='form-group'>
+                  <label htmlFor='notyTheme'>Theme</label>
+                  <select
+                    className='form-control'
+                    id='notyTheme'
+                    onChange={this.setNotyTheme.bind(this)}
+                    defaultValue={this.state.notyTheme}
+                  >
+                    <option>bootstrap-v3</option>
+                    <option>bootstrap-v4</option>
+                    <option>light</option>
+                    <option>metroui</option>
+                    <option>mint</option>
+                    <option>nest</option>
+                    <option>relax</option>
+                    <option>semanticui</option>
+                    <option>sunset</option>
+                  </select>
+                </div>
+
+                <div className='form-group'>
+                  <label htmlFor='notyTheme'>Layout</label>
+                  <select
+                    className='form-control'
+                    id='notyLayout'
+                    onChange={this.setNotyLayout.bind(this)}
+                    defaultValue={this.state.notyLayout}
+                  >
+                    <option>top</option>
+                    <option>topLeft</option>
+                    <option>topCenter</option>
+                    <option>topRight</option>
+                    <option>center</option>
+                    <option>centerLeft</option>
+                    <option>centerRight</option>
+                    <option>bottom</option>
+                    <option>bottomLeft</option>
+                    <option>bottomCenter</option>
+                    <option>bottomRight</option>
+                  </select>
+                </div>
+
+                <div className='form-group'>
+                  <label htmlFor='notyType'>Type</label>
+                  <select
+                    className='form-control'
+                    id='notyType'
+                    onChange={this.setNotyType.bind(this)}
+                    defaultValue={this.state.notyType}
+                  >
+                    <option>alert</option>
+                    <option>success</option>
+                    <option>error</option>
+                    <option>warning</option>
+                    <option>info</option>
+                  </select>
+                </div>
+              </form>
+
+              <br />
+
+              <Button type='button' onClick={e => this.showNotification(e)}>
+                Create Notification
+              </Button>
+            </div>
             {this.props.selectedOrganization ? (
               <div className='well launch-new-cluster'>
                 <Link to='new-cluster'>

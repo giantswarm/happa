@@ -22,6 +22,7 @@ import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/app.sass';
 import 'react-datepicker/dist/react-datepicker.css';
+import 'noty/lib/noty.css';
 
 var appContainer = document.getElementById('app');
 
