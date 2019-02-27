@@ -19,11 +19,17 @@ class CatalogIndex extends React.Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(catalogsLoad()).then(() => {
+    if (this.props.catalogs.lastUpdated === 0) {
+      this.props.dispatch(catalogsLoad()).then(() => {
+        this.setState({
+          loading: false,
+        });
+      });
+    } else {
       this.setState({
         loading: false,
       });
-    });
+    }
   }
 
   render() {
@@ -64,13 +70,16 @@ function Loading(props) {
 }
 
 CatalogIndex.propTypes = {
+  catalogs: PropTypes.object,
   dispatch: PropTypes.func,
   location: PropTypes.object,
   match: PropTypes.object,
 };
 
-function mapStateToProps() {
-  return {};
+function mapStateToProps(state) {
+  return {
+    catalogs: state.entities.catalogs,
+  };
 }
 
 function mapDispatchToProps(dispatch) {

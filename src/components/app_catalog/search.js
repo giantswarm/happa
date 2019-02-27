@@ -102,6 +102,10 @@ class CatalogIndex extends React.Component {
   // placeholder if it doesn't. While it is fetching it returns a loading spinner.
   // It makes sure to check only once per app.
   iconSrcFor(app) {
+    if (this.state.imgPromises[app.name]) {
+      return this.state.imgPromises[app.name];
+    }
+
     let url = app.icon;
     if (!this.fetching[app.name]) {
       testImage(url).then(
@@ -204,9 +208,7 @@ class CatalogIndex extends React.Component {
                       undefined
                     )}
 
-                    <div className='app-icon'>
-                      {this.state.imgPromises[app.name] || this.iconSrcFor(app)}
-                    </div>
+                    <div className='app-icon'>{this.iconSrcFor(app)}</div>
                     <div className='app-details'>
                       <span className='app-version'>{app.version}</span>
                       <h3>{app.name}</h3>
