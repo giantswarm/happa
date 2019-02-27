@@ -15,7 +15,7 @@ import Noty from 'noty';
 
 class Home extends React.Component {
   state = {
-    notyTheme: 'mint',
+    notyTheme: 'bootstrap-v3',
     notyLayout: 'topLeft',
     notyType: 'success',
   };
@@ -107,7 +107,6 @@ class Home extends React.Component {
                     <option>light</option>
                     <option>metroui</option>
                     <option>mint</option>
-                    <option>nest</option>
                     <option>relax</option>
                     <option>semanticui</option>
                     <option>sunset</option>
