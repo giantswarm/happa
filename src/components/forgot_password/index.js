@@ -1,6 +1,5 @@
 'use strict';
 
-import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Link } from 'react-router-dom';
@@ -167,9 +166,6 @@ class ForgotPassword extends React.Component {
           transitionLeaveTimeout={200}
         >
           <div className='login_form--container col-4'>
-            <div className='login_form--flash-container'>
-              <FlashMessages />
-            </div>
             {this.state.tokenRequested ? this.success() : this.form()}
           </div>
         </ReactCSSTransitionGroup>

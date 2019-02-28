@@ -1,6 +1,5 @@
 'use strict';
 
-import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import { connect } from 'react-redux';
 import { flashClearAll } from '../../actions/flashMessageActions';
@@ -58,10 +57,6 @@ class AdminLogin extends React.Component {
         <div className='login_form--mask' />
 
         <div className='login_form--container login_form--admin col-4'>
-          <div className='login_form--flash-container'>
-            <FlashMessages />
-          </div>
-
           <img className='loader' src='/images/loader_oval_light.svg' />
           <p>
             Verifying credentials, and redirecting to our authentication

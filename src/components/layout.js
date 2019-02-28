@@ -10,7 +10,6 @@ import { clustersLoad } from '../actions/clusterActions';
 import { connect } from 'react-redux';
 import CreateCluster from './create_cluster/index';
 import DocumentTitle from 'react-document-title';
-import FlashMessages from './flash_messages/index';
 import GettingStarted from './getting-started/index';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home/index';
@@ -89,7 +88,6 @@ class Layout extends React.Component {
       return (
         <DocumentTitle title='Loading | Giant Swarm '>
           <div className='app-loading'>
-            <FlashMessages />
             <div className='app-loading-contents'>
               <img className='loader' src='/images/loader_oval_light.svg' />
             </div>
@@ -100,7 +98,6 @@ class Layout extends React.Component {
       return (
         <DocumentTitle title='Giant Swarm'>
           <React.Fragment>
-            <FlashMessages />
             <Navigation
               user={this.props.user}
               organizations={this.props.organizations}
