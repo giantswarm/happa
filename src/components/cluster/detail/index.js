@@ -4,7 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ClusterDetailView from './view';
-import { Route, Switch } from 'react-router-dom';
+import GettingStarted from '../../getting-started';
+import { Route, Redirect, Switch } from 'react-router-dom';
 
 class ClusterDetailIndex extends React.Component {
   render() {
@@ -14,6 +15,16 @@ class ClusterDetailIndex extends React.Component {
           exact
           path={`${this.props.match.path}`}
           render={() => <ClusterDetailView {...this.props} />}
+        />
+
+        <Route
+          path={`${this.props.match.path}/getting-started/`}
+          render={() => <GettingStarted {...this.props} />}
+        />
+
+        <Redirect
+          path={`${this.props.match.path}/*`}
+          to={`${this.props.match.url}`}
         />
       </Switch>
     );

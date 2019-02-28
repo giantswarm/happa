@@ -14,13 +14,12 @@ class Cluster extends React.Component {
     return (
       <Breadcrumb
         data={{
-          title: this.props.cluster.id,
+          title: this.props.match.params.clusterId,
           pathname: this.props.match.url,
         }}
       >
         <Switch>
           <Route
-            exact
             path={`${this.props.match.path}`}
             render={() => <ClusterDetailIndex {...this.props} />}
           />

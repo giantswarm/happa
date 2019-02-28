@@ -15,7 +15,6 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import cmp from 'semver-compare';
 
 class OrganizationDetail extends React.Component {
-
   constructor(props) {
     super(props);
   }
