@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import DetailView from './view';
-import ClusterDetailIndex from '../../clusters/';
+import ClusterDetailIndex from '../../cluster/';
 import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Route, Switch } from 'react-router-dom';
