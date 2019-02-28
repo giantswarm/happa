@@ -27,7 +27,6 @@ class CreateCluster extends React.Component {
         value: 1,
         valid: true,
       },
-      region: 'eu-central-1',
       releaseVersion: '',
       clusterName: 'My cluster',
       scaling: {
@@ -45,6 +44,7 @@ class CreateCluster extends React.Component {
           valid: true,
           value: props.defaultInstanceType,
         },
+        region: 'eu-central-1',
       },
       azure: {
         vmSize: {
@@ -464,7 +464,7 @@ class CreateCluster extends React.Component {
                             <DropdownButton
                               id='region'
                               className='outline'
-                              title={this.state.region}
+                              title={this.state.aws.region}
                             >
                               {this.getAvailableRegions().map(region => (
                                 <MenuItem
