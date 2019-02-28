@@ -5,18 +5,15 @@ import * as UserActions from '../actions/userActions';
 import AccountSettings from './account_settings/index';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
-import ClusterDetails from './cluster_detail/index';
 import { clustersLoad } from '../actions/clusterActions';
 import { connect } from 'react-redux';
 import CreateCluster from './create_cluster/index';
 import DocumentTitle from 'react-document-title';
-import GettingStarted from './getting-started/index';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home/index';
 import Modals from './modals/index';
 import Navigation from './navigation/index';
 import { organizationsLoad } from '../actions/organizationActions';
-import OrganizationDetails from './organizations/detail';
 import Organizations from './organizations/index';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
@@ -87,6 +84,7 @@ class Layout extends React.Component {
         </DocumentTitle>
       );
     } else {
+      // prettier-ignore
       return (
         <DocumentTitle title='Giant Swarm'>
           <React.Fragment>
@@ -99,39 +97,11 @@ class Layout extends React.Component {
             <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
               <div className='main col-9'>
                 <Switch>
-                  <Route exact path='/' component={Home} />
-                  <Route exact path='/users/' component={Users} />
-                  <Route exact path='/new-cluster/' component={CreateCluster} />
-                  <Route
-                    exact
-                    path='/organizations/'
-                    component={Organizations}
-                  />
-                  <Route
-                    exact
-                    path='/organizations/:orgId/'
-                    component={OrganizationDetails}
-                  />
-                  <Route
-                    exact
-                    path='/organizations/:orgId/clusters/:clusterId/'
-                    component={ClusterDetails}
-                  />
-                  <Route
-                    exact
-                    path='/organizations/:orgId/clusters/:clusterId/getting-started/'
-                    component={GettingStarted}
-                  />
-                  <Route
-                    exact
-                    path='/organizations/:orgId/clusters/:clusterId/getting-started/*'
-                    component={GettingStarted}
-                  />
-                  <Route
-                    exact
-                    path='/account-settings/'
-                    component={AccountSettings}
-                  />
+                  <Route exact path='/'                  component={Home} />
+                  <Route exact path='/users/'            component={Users} />
+                  <Route exact path='/new-cluster/'      component={CreateCluster} />
+                  <Route       path='/organizations'     component={Organizations} />
+                  <Route exact path='/account-settings/' component={AccountSettings} />
                   <Redirect path='*' to='/' />
                 </Switch>
               </div>

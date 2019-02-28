@@ -17,8 +17,9 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import cmp from 'semver-compare';
 
 class OrganizationDetail extends React.Component {
-  componentDidMount() {
-    this.props.actions.organizationsLoad();
+
+  constructor(props) {
+    super(props);
   }
 
   addMember = () => {
@@ -124,78 +125,74 @@ class OrganizationDetail extends React.Component {
         <Breadcrumb
           data={{
             title: this.props.organization.id.toUpperCase(),
-            pathname: '/organizations/' + this.props.organization.id,
+            pathname: this.props.match.url,
           }}
         >
-          <Breadcrumb
-            data={{ title: 'ORGANIZATIONS', pathname: '/organizations/' }}
+          <DocumentTitle
+            title={
+              'Organization Details | ' +
+              this.props.organization.id +
+              ' | Giant Swarm'
+            }
           >
-            <DocumentTitle
-              title={
-                'Organization Details | ' +
-                this.props.organization.id +
-                ' | Giant Swarm'
-              }
-            >
-              <div>
-                <div className='row'>
-                  <div className='col-12'>
-                    <h1>Organization: {this.props.match.params.orgId}</h1>
-                  </div>
+            <div>
+              <div className='row'>
+                <div className='col-12'>
+                  <h1>Organization: {this.props.match.params.orgId}</h1>
                 </div>
-
-                <div className='row section'>
-                  <div className='col-3'>
-                    <h3 className='table-label'>Clusters</h3>
-                  </div>
-                  <div className='col-9'>
-                    {this.props.clusters.length === 0 ? (
-                      <p>This organization doesn&apos;t have any clusters.</p>
-                    ) : (
-                      <BootstrapTable
-                        keyField='id'
-                        data={this.props.clusters}
-                        columns={this.getClusterTableColumnsConfig()}
-                        bordered={false}
-                        defaultSorted={clusterTableDefaultSorting}
-                        defaultSortDirection='asc'
-                      />
-                    )}
-                    <Link to='/new-cluster'>
-                      <Button bsStyle='default'>
-                        <i className='fa fa-add-circle' /> Create Cluster
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-
-                <div className='row section'>
-                  <div className='col-3'>
-                    <h3 className='table-label'>Members</h3>
-                  </div>
-                  <div className='col-9'>
-                    {this.props.organization.members.length === 0 ? (
-                      <p>This organization has no members</p>
-                    ) : (
-                      <BootstrapTable
-                        keyField='email'
-                        data={this.props.membersForTable}
-                        columns={this.getMemberTableColumnsConfig()}
-                        bordered={false}
-                        defaultSorted={memberTableDefaultSorting}
-                        defaultSortDirection='asc'
-                      />
-                    )}
-                    <Button onClick={this.addMember} bsStyle='default'>
-                      <i className='fa fa-add-circle' /> Add Member
-                    </Button>
-                  </div>
-                </div>
-
-                {credentialsSection}
               </div>
-            </DocumentTitle>
-          </Breadcrumb>
+
+              <div className='row section'>
+                <div className='col-3'>
+                  <h3 className='table-label'>Clusters</h3>
+                </div>
+                <div className='col-9'>
+                  {this.props.clusters.length === 0 ? (
+                    <p>This organization doesn&apos;t have any clusters.</p>
+                  ) : (
+                    <BootstrapTable
+                      keyField='id'
+                      data={this.props.clusters}
+                      columns={this.getClusterTableColumnsConfig()}
+                      bordered={false}
+                      defaultSorted={clusterTableDefaultSorting}
+                      defaultSortDirection='asc'
+                    />
+                  )}
+                  <Link to='/new-cluster'>
+                    <Button bsStyle='default'>
+                      <i className='fa fa-add-circle' /> Create Cluster
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+
+              <div className='row section'>
+                <div className='col-3'>
+                  <h3 className='table-label'>Members</h3>
+                </div>
+                <div className='col-9'>
+                  {this.props.organization.members.length === 0 ? (
+                    <p>This organization has no members</p>
+                  ) : (
+                    <BootstrapTable
+                      keyField='email'
+                      data={this.props.membersForTable}
+                      columns={this.getMemberTableColumnsConfig()}
+                      bordered={false}
+                      defaultSorted={memberTableDefaultSorting}
+                      defaultSortDirection='asc'
+                    />
+                  )}
+                  <Button onClick={this.addMember} bsStyle='default'>
+                    <i className='fa fa-add-circle' /> Add Member
+                  </Button>
+                </div>
+              </div>
+
+              {credentialsSection}
+            </div>
+          </DocumentTitle>
         </Breadcrumb>
       );
     } else {
