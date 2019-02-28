@@ -5,7 +5,6 @@ import users from './userReducer';
 import invitations from './invitationReducer';
 import clusters from './clusterReducer';
 import modal from './modalReducer';
-import flashMessages from './flashMessagesReducer';
 import app from './appReducer';
 import releases from './releaseReducer';
 import credentials from './credentialReducer';
@@ -25,7 +24,6 @@ const rootReducer = history =>
     app,
     entities,
     modal,
-    flashMessages,
   });
 
 export default rootReducer;
@@ -155,8 +153,6 @@ export default rootReducer;
     templateValues: {} // an object that the modal template will use
     template: ''       // one of the valid modal templates
   },
-
-  flashMessages: [],
 
   router: {
     location: {
