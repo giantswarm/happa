@@ -455,13 +455,14 @@ class CreateCluster extends React.Component {
               switch (this.props.provider) {
                 case 'aws':
                   return (
-                    <div>
-                      <p>
-                        Select AWS Region for your cluster.
-                      </p>
+                  <div>
+                    <div className='row section'>
                       <div className='col-3'>
-                         <div className='textfield'>
-                            <label>Region:</label>
+                        <h3 className='table-label'>AWS Region</h3>
+                      </div>
+                      <div className='col-9'>
+                         <div className='col-6'>
+                            <p>Select AWS Region for your cluster.</p>
                             <DropdownButton
                               id='region'
                               className='outline'
@@ -481,6 +482,7 @@ class CreateCluster extends React.Component {
                             </DropdownButton>
                           </div>
                       </div>
+                    </div>
                     <div className='row section'>
                       <div className='col-3'>
                         <h3 className='table-label'>Instance Type</h3>
