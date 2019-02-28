@@ -4,6 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import Button from '../shared/button';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import { clusterCreate } from '../../actions/clusterActions';
 import NodeCountSelector from '../shared/node_count_selector.js';
 import NumberPicker from '../shared/number_picker.js';
@@ -25,6 +27,7 @@ class CreateCluster extends React.Component {
         value: 1,
         valid: true,
       },
+      region: 'eu-central-1',
       releaseVersion: '',
       clusterName: 'My cluster',
       scaling: {
@@ -197,6 +200,31 @@ class CreateCluster extends React.Component {
     });
   };
 
+  getAvailableRegions() {
+      var regions = [
+          'us-east-1',
+          'us-east-2',
+          'us-west-1',
+          'us-west-2',
+          'ap-south-1',
+          'ap-northeast-1',
+          'ap-northeast-2',
+          'ap-northeast-3',
+          'ap-southeast-1',
+          'ap-southeast-2',
+          'ca-central-1',
+          'eu-central-1',
+          'eu-west-1',
+          'eu-west-2',
+          'eu-west-3',
+          'eu-north-1',
+          'sa-east-1',
+          'us-gov-east-1',
+          'us-gov-west-1',
+      ];
+      return regions;
+  }
+
   errorState() {
     return (
       <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
@@ -213,6 +241,16 @@ class CreateCluster extends React.Component {
       </div>
     );
   }
+
+  updateAWSRegion = value => {
+    console.log(value);
+    this.setState({
+        aws: {
+            instanceType: this.state.aws.instanceType,
+            region: value,
+        }
+    });
+  };
 
   updateAWSInstanceType = value => {
     this.setState({
@@ -416,6 +454,32 @@ class CreateCluster extends React.Component {
               switch (this.props.provider) {
                 case 'aws':
                   return (
+                    <div>
+                      <p>
+                        Select AWS Region for your cluster.
+                      </p>
+                      <div className='col-3'>
+                         <div className='textfield'>
+                            <label>Region:</label>
+                            <DropdownButton
+                              id='region'
+                              className='outline'
+                              title={this.state.region}
+                            >
+                              {this.getAvailableRegions().map(region => (
+                                <MenuItem
+                                  key={region}
+                                  onClick={this.updateAWSRegion.bind(
+                                    this,
+                                    region
+                                  )}
+                                >
+                                  {region}
+                                </MenuItem>
+                              ))}
+                            </DropdownButton>
+                          </div>
+                      </div>
                     <div className='row section'>
                       <div className='col-3'>
                         <h3 className='table-label'>Instance Type</h3>
@@ -430,6 +494,7 @@ class CreateCluster extends React.Component {
                         />
                       </div>
                     </div>
+                  </div>
                   );
                 case 'kvm':
                   return (
