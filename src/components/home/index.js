@@ -76,6 +76,9 @@ class Home extends React.Component {
       theme: this.state.notyTheme,
       layout: this.state.notyLayout,
       visibilityControl: true,
+      animation: {
+        close: 'flash_message_close',
+      },
     }).show();
   }
 
