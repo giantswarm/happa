@@ -202,28 +202,28 @@ class CreateCluster extends React.Component {
   };
 
   getAvailableRegions() {
-      var regions = [
-          'us-east-1',
-          'us-east-2',
-          'us-west-1',
-          'us-west-2',
-          'ap-south-1',
-          'ap-northeast-1',
-          'ap-northeast-2',
-          'ap-northeast-3',
-          'ap-southeast-1',
-          'ap-southeast-2',
-          'ca-central-1',
-          'eu-central-1',
-          'eu-west-1',
-          'eu-west-2',
-          'eu-west-3',
-          'eu-north-1',
-          'sa-east-1',
-          'us-gov-east-1',
-          'us-gov-west-1',
-      ];
-      return regions;
+    var regions = [
+      'us-east-1',
+      'us-east-2',
+      'us-west-1',
+      'us-west-2',
+      'ap-south-1',
+      'ap-northeast-1',
+      'ap-northeast-2',
+      'ap-northeast-3',
+      'ap-southeast-1',
+      'ap-southeast-2',
+      'ca-central-1',
+      'eu-central-1',
+      'eu-west-1',
+      'eu-west-2',
+      'eu-west-3',
+      'eu-north-1',
+      'sa-east-1',
+      'us-gov-east-1',
+      'us-gov-west-1',
+    ];
+    return regions;
   }
 
   errorState() {
@@ -246,10 +246,10 @@ class CreateCluster extends React.Component {
   updateAWSRegion = value => {
     console.log(value);
     this.setState({
-        aws: {
-            instanceType: this.state.aws.instanceType,
-            region: value,
-        }
+      aws: {
+        instanceType: this.state.aws.instanceType,
+        region: value,
+      },
     });
   };
 
@@ -455,13 +455,13 @@ class CreateCluster extends React.Component {
               switch (this.props.provider) {
                 case 'aws':
                   return (
-                  <div>
-                    <div className='row section'>
-                      <div className='col-3'>
-                        <h3 className='table-label'>AWS Region</h3>
-                      </div>
-                      <div className='col-9'>
-                         <div className='col-6'>
+                    <div>
+                      <div className='row section'>
+                        <div className='col-3'>
+                          <h3 className='table-label'>AWS Region</h3>
+                        </div>
+                        <div className='col-9'>
+                          <div className='col-6'>
                             <p>Select AWS Region for your cluster.</p>
                             <DropdownButton
                               id='region'
@@ -481,23 +481,25 @@ class CreateCluster extends React.Component {
                               ))}
                             </DropdownButton>
                           </div>
+                        </div>
+                      </div>
+                      <div className='row section'>
+                        <div className='col-3'>
+                          <h3 className='table-label'>Instance Type</h3>
+                        </div>
+                        <div className='col-9'>
+                          <p>Select the instance type for your worker nodes.</p>
+                          <AWSInstanceTypeSelector
+                            allowedInstanceTypes={
+                              this.props.allowedInstanceTypes
+                            }
+                            value={this.state.aws.instanceType.value}
+                            readOnly={false}
+                            onChange={this.updateAWSInstanceType}
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className='row section'>
-                      <div className='col-3'>
-                        <h3 className='table-label'>Instance Type</h3>
-                      </div>
-                      <div className='col-9'>
-                        <p>Select the instance type for your worker nodes.</p>
-                        <AWSInstanceTypeSelector
-                          allowedInstanceTypes={this.props.allowedInstanceTypes}
-                          value={this.state.aws.instanceType.value}
-                          readOnly={false}
-                          onChange={this.updateAWSInstanceType}
-                        />
-                      </div>
-                    </div>
-                  </div>
                   );
                 case 'kvm':
                   return (
