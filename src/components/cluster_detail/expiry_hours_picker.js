@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 class ExpiryHoursPicker extends React.Component {
   constructor(props) {
-    super();
+    super(props);
 
     let years = 0;
     let months = 0;

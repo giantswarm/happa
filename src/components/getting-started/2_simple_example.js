@@ -10,16 +10,10 @@ import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 
 class SimpleExample extends React.Component {
-  constructor(props) {
-    super(props);
-
-    var ingressBaseDomain = window.config.ingressBaseDomain;
-
-    this.state = {
-      loading: true,
-      ingressBaseDomain: ingressBaseDomain,
-    };
-  }
+  state = {
+    loading: true,
+    ingressBaseDomain: window.config.ingressBaseDomain,
+  };
 
   clusterBaseDomain() {
     if (this.props.cluster) {

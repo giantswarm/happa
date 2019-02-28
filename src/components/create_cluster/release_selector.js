@@ -11,16 +11,12 @@ import ReleaseDetailsModal from '../modals/release_details_modal';
 import PropTypes from 'prop-types';
 
 class ReleaseSelector extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-      error: false,
-      selectedRelease: '',
-      selectableReleases: [],
-    };
-  }
+  state = {
+    loading: true,
+    error: false,
+    selectedRelease: '',
+    selectableReleases: [],
+  };
 
   componentDidMount() {
     this.loadReleases();

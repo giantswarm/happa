@@ -18,23 +18,24 @@ import moment from 'moment';
 import { debounce } from 'throttle-debounce';
 
 class ClusterKeyPairs extends React.Component {
+  state = {
+    loading: true,
+    error: false,
+    expireTTL: 720,
+    description: '',
+    cn_prefix: '',
+    cn_prefix_error: null,
+    certificate_organizations: '',
+    modal: {
+      visible: false,
+      loading: false,
+      template: 'addKeyPair',
+    },
+  };
+
   constructor(props) {
     super(props);
 
-    this.state = {
-      loading: true,
-      error: false,
-      expireTTL: 720,
-      description: this.defaultDescription(props.user.email),
-      cn_prefix: '',
-      cn_prefix_error: null,
-      certificate_organizations: '',
-      modal: {
-        visible: false,
-        loading: false,
-        template: 'addKeyPair',
-      },
-    };
     this.CNPrefixValidationDebounced = debounce(1000, this.CNPrefixValidation);
   }
 
@@ -102,6 +103,9 @@ class ClusterKeyPairs extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({
+      description: this.defaultDescription(this.props.user.email),
+    });
     this.loadKeyPairs();
   }
 

@@ -10,13 +10,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class FlashMessage extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      visible: true,
-    };
-  }
+  state = {
+    visible: true,
+  };
 
   dismissFlash = () => {
     if (this.props.onDismiss) {

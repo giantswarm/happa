@@ -1,21 +1,21 @@
 'use strict';
 
 import 'babel-polyfill';
-import adminLogin from './auth/admin';
+import AdminLogin from './auth/admin';
 import configureStore from '../stores/configureStore';
 import { ConnectedRouter } from 'connected-react-router';
-import forgot_password_index from './forgot_password/index';
-import forgot_password_set_password from './forgot_password/set_password';
+import ForgotPassword from './forgot_password/index';
+import SetPassword from './forgot_password/set_password';
 import history from '../stores/history';
 import Layout from './layout';
-import login from './auth/login';
-import logout from './auth/logout';
-import oauth_callback from './auth/oauth_callback.js';
+import Login from './auth/login';
+import Logout from './auth/logout';
+import OAuthCallback from './auth/oauth_callback.js';
 import { Provider } from 'react-redux';
 import React from 'react';
 import { render } from 'react-dom';
 import { Route, Switch } from 'react-router-dom';
-import signup from './signup/index';
+import SignUp from './signup/index';
 
 // CSS Imports.
 import 'normalize.css';
@@ -33,16 +33,13 @@ render(
     <ConnectedRouter history={history}>
       <div>
         <Switch>
-          <Route path='/admin-login' component={adminLogin} />
-          <Route path='/login' component={login} />
-          <Route path='/logout' component={logout} />
-          <Route
-            path='/forgot_password/:token/'
-            component={forgot_password_set_password}
-          />
-          <Route path='/forgot_password' component={forgot_password_index} />
-          <Route path='/signup/:token' component={signup} />
-          <Route path='/oauth/callback' component={oauth_callback} />
+          <Route path='/admin-login' component={AdminLogin} />
+          <Route path='/login' component={Login} />
+          <Route path='/logout' component={Logout} />
+          <Route path='/forgot_password/:token/' component={SetPassword} />
+          <Route path='/forgot_password' component={ForgotPassword} />
+          <Route path='/signup/:token' component={SignUp} />
+          <Route path='/oauth/callback' component={OAuthCallback} />
 
           <Route path='/' component={Layout} />
         </Switch>

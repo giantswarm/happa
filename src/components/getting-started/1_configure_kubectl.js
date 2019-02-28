@@ -13,15 +13,11 @@ import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
 
 class ConfigKubeCtl extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-      selectedPlatform: platform,
-      alternativeOpen: false,
-    };
-  }
+  state = {
+    loading: true,
+    selectedPlatform: platform,
+    alternativeOpen: false,
+  };
 
   componentDidMount() {
     this.setState({

@@ -16,14 +16,10 @@ var doneTypingInterval = 250; // ms
 var validationRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 class EmailField extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      valid: false,
-      validationError: '',
-    };
-  }
+  state = {
+    valid: false,
+    validationError: '',
+  };
 
   componentDidMount() {
     if (this.props.autofocus) {
