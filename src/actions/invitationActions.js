@@ -80,12 +80,9 @@ export function invitationCreate(invitation) {
           type: types.INVITATION_CREATE_SUCCESS,
         });
 
-        new FlashMessage(
-          'User <code>' + result.email + '</code> will be invited',
-          messageType.SUCCESS,
-          messageTTL.MEDIUM,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
+        // We show no flash message here,
+        // as the success is reported directly in the
+        // modal dialog that's kept open.
 
         dispatch(invitationsLoad());
 
