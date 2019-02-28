@@ -2,7 +2,7 @@
 
 import * as types from './actionTypes';
 import { modalHide } from './modalActions';
-import { flashAdd } from './flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from './flashMessageActions';
 import React from 'react';
 import GiantSwarmV4 from 'giantswarm-v4';
 import { push } from 'connected-react-router';
@@ -99,23 +99,13 @@ export function organizationsLoad() {
         return dispatch(organizationsLoadSuccess(organizations));
       })
       .catch(error => {
-        console.error(error);
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>
-                  Something went wrong while trying to load the list of
-                  organizations
-                </strong>
-                <br />
-                {error.body
-                  ? error.body.status_text
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>
-            ),
-            class: 'danger',
-          })
+        console.error('Error loading organizations:', error);
+
+        new FlashMessage(
+          'An error occurred as we tried to load organizations.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io.'
         );
 
         dispatch({
@@ -139,38 +129,27 @@ export function organizationDeleteConfirmed(orgId) {
     return organizationsApi
       .deleteOrganization(scheme + ' ' + token, orgId)
       .then(() => {
+        new FlashMessage(
+          'Organization  <code>' + orgId + '</code> deleted',
+          messageType.INFO,
+          messageTTL.SHORT
+        );
+
         return dispatch(organizationsLoad());
       })
       .then(dispatch.bind(this, modalHide()))
-      .then(
-        dispatch.bind(
-          this,
-          flashAdd({
-            message: 'Successfully deleted organization: ' + orgId,
-            class: 'success',
-            ttl: 3000,
-          })
-        )
-      )
       .then(() => {
         return dispatch(organizationDeleteSuccess(orgId));
       })
       .catch(error => {
         dispatch(modalHide());
+        console.error('Error deleting organization:', error);
 
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>Could not delete organization `{orgId}`</strong>
-                <br />
-                {error.body
-                  ? error.body.status_text
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>
-            ),
-            class: 'danger',
-          })
+        new FlashMessage(
+          'Could not delete organization <code>' + orgId + '</code>.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again or contact support at support@giantswarm.io.'
         );
 
         dispatch({
@@ -219,35 +198,29 @@ export function organizationCreateConfirmed(orgId) {
         members: members,
       })
       .then(() => {
+        // Success
+        new FlashMessage(
+          'Organization <code>' + orgId + '</code> has been created',
+          messageType.SUCCESS,
+          messageTTL.SHORT
+        );
+
+        dispatch({
+          type: types.ORGANIZATION_CREATE_SUCCESS,
+        });
+
         return dispatch(organizationsLoad());
       })
       .then(dispatch.bind(this, modalHide()))
-      .then(
-        dispatch.bind(
-          this,
-          flashAdd({
-            message: 'Successfully created organization: ' + orgId,
-            class: 'success',
-            ttl: 3000,
-          })
-        )
-      )
       .catch(error => {
+        console.log('Error creating organization:', error);
         dispatch(modalHide());
 
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>Could not create organization `{orgId}`</strong>
-                <br />
-                {error.body
-                  ? error.body.status_text
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>
-            ),
-            class: 'danger',
-          })
+        new FlashMessage(
+          'Could not create organization <code>' + orgId + '</code>',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again in a moment or contact support at support@giantswarm.io'
         );
 
         dispatch({
@@ -319,25 +292,19 @@ export function organizationAddMemberConfirmed(orgId, email) {
         );
       })
       .then(() => {
+        new FlashMessage(
+          'Added <code>' +
+            email +
+            '</code> to organization <code>' +
+            orgId +
+            '</code>',
+          messageType.ERROR,
+          messageTTL.MEDIUM
+        );
+
         return dispatch(organizationsLoad());
       })
       .then(dispatch.bind(this, modalHide()))
-      .then(
-        dispatch.bind(
-          this,
-          flashAdd({
-            message:
-              'Successfully added `' +
-              email +
-              '` to organization: ' +
-              '`' +
-              orgId +
-              '`',
-            class: 'success',
-            ttl: 3000,
-          })
-        )
-      )
       .catch(() => {
         dispatch({
           type: types.ORGANIZATION_ADD_MEMBER_ERROR,
@@ -381,43 +348,31 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
         );
       })
       .then(() => {
+        new FlashMessage(
+          'Removed <code>' +
+            email +
+            '</code> from organization <code>' +
+            orgId +
+            '</code>',
+          messageType.INFO,
+          messageTTL.MEDIUM
+        );
+
         return dispatch(organizationsLoad());
       })
       .then(dispatch.bind(this, modalHide()))
-      .then(
-        dispatch.bind(
-          this,
-          flashAdd({
-            message:
-              'Successfully removed `' +
-              email +
-              '` from organization: ' +
-              '`' +
-              orgId +
-              '`',
-            class: 'success',
-            ttl: 3000,
-          })
-        )
-      )
       .catch(error => {
+        console.log('Error removing member from org:', error);
         dispatch(modalHide());
 
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>
-                  Could not remove user `{email}` from organization `{orgId}`
-                </strong>
-                <br />
-                {error.body
-                  ? error.body.status_text
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>
-            ),
-            class: 'danger',
-          })
+        new FlashMessage(
+          'Error removing <code>' +
+            email +
+            '</code> from organization <code>' +
+            orgId +
+            '</code>',
+          messageType.ERROR,
+          messageTTL.LONG
         );
 
         dispatch({
@@ -456,21 +411,12 @@ export function organizationCredentialsLoad(orgId) {
         });
       })
       .catch(error => {
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>
-                  Could not load credentials for organization `{orgId}`
-                </strong>
-                <br />
-                {error.body
-                  ? error.body.status_text
-                  : 'Please load the page again in a moment'}
-              </div>
-            ),
-            class: 'danger',
-          })
+        console.error('Error loading credentials for organization:', error);
+        new FlashMessage(
+          'Could not load credentials for <code>' + orgId + '</code>.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again in a moment or contact support at support@giantswarm.io.'
         );
 
         dispatch({
@@ -524,14 +470,10 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
     organizationsApi
       .addCredentials(scheme + ' ' + token, orgId, requestBody)
       .then(response => {
-        // perform the API call
-
-        dispatch(
-          flashAdd({
-            message: 'Credentials have been stored successfully.',
-            class: 'success',
-            ttl: 3000,
-          })
+        new FlashMessage(
+          'Credentials have been stored successfully',
+          messageType.INFO,
+          messageTTL.SHORT
         );
 
         dispatch({
@@ -544,22 +486,15 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
         return dispatch(organizationCredentialsLoad(orgId));
       })
       .catch(error => {
-        console.log('ORGANIZATION_CREDENTIALS_SET_ERROR', error);
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>
-                  Could not set credentials for organization `{orgId}`
-                </strong>
-                <br />
-                {error.body
-                  ? error.body.message
-                  : 'Please load the page again in a moment'}
-              </div>
-            ),
-            class: 'danger',
-          })
+        console.error('ORGANIZATION_CREDENTIALS_SET_ERROR', error);
+
+        new FlashMessage(
+          'Could not set credentials for organization <code>' +
+            orgId +
+            '</code>.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again in a moment or contact support at support@giantswarm.io.'
         );
 
         dispatch({
