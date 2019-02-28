@@ -15,15 +15,15 @@ import { organizationCredentialsLoad } from '../../actions/organizationActions';
 import * as clusterActions from '../../actions/clusterActions';
 import * as releaseActions from '../../actions/releaseActions';
 
-import Button from '../shared/button';
-import ClusterIDLabel from '../shared/cluster_id_label';
+import Button from '../../shared/button';
+import ClusterIDLabel from '../../shared/cluster_id_label';
 import ClusterKeyPairs from './key_pairs';
 import ClusterDetailTable from './cluster_detail_table';
 import ClusterApps from './cluster_apps';
 import ScaleClusterModal from './scale_cluster_modal';
 import UpgradeClusterModal from './upgrade_cluster_modal';
 
-class ClusterDetail extends React.Component {
+class ClusterDetailView extends React.Component {
   state = {
     loading: true,
   };
@@ -292,11 +292,11 @@ class ClusterDetail extends React.Component {
   }
 }
 
-ClusterDetail.contextTypes = {
+ClusterDetailView.contextTypes = {
   router: PropTypes.object,
 };
 
-ClusterDetail.propTypes = {
+ClusterDetailView.propTypes = {
   clusterActions: PropTypes.object,
   cluster: PropTypes.object,
   clusterId: PropTypes.string,
@@ -369,4 +369,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ClusterDetail);
+)(ClusterDetailView);

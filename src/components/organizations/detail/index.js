@@ -3,6 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import DetailView from './view';
+import ClusterDetailIndex from '../../clusters/';
 import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Route, Switch } from 'react-router-dom';
@@ -22,6 +23,11 @@ class DetailIndex extends React.Component {
             exact
             path={`${this.props.match.path}`}
             render={() => <DetailView {...this.props} />}
+          />
+          <Route
+            exact
+            path={`${this.props.match.path}/clusters/:clusterId`}
+            component={ClusterDetailIndex}
           />
         </Switch>
       </Breadcrumb>

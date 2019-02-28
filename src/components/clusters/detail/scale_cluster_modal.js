@@ -1,10 +1,10 @@
 'use strict';
 
 import React from 'react';
-import ClusterIDLabel from '../shared/cluster_id_label';
-import Button from '../shared/button';
+import ClusterIDLabel from '../../shared/cluster_id_label';
+import Button from '../../shared/button';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import NodeCountSelector from '../shared/node_count_selector';
+import NodeCountSelector from '../../shared/node_count_selector';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cmp from 'semver-compare';

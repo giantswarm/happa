@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import Button from '../shared/button';
+import Button from '../../shared/button';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
