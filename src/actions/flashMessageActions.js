@@ -49,23 +49,6 @@ export class FlashMessage {
   }
 }
 
-// TODO: remove this as all occurrences are replaced with
-// new FlashMessage()
-export function flashAdd(flashMessage) {
-  console.log('flashAdd called with message:', flashMessage);
-  new Noty({
-    type: flashMessage.class,
-    text: flashMessage.message,
-    timeout: flashMessage.ttl || false,
-    theme: 'bootstrap-v3',
-    layout: 'topRight',
-    visibilityControl: true,
-    animation: {
-      close: 'flash_message_close',
-    },
-  }).show();
-}
-
 /**
  * Remove all queued messages and close those that are displayed.
  */
