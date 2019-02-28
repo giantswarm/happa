@@ -1,6 +1,10 @@
 'use strict';
 
-import * as FlashActions from '../actions/flashMessageActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+} from '../actions/flashMessageActions';
 import * as UserActions from '../actions/userActions';
 import AccountSettings from './account_settings/index';
 import { bindActionCreators } from 'redux';
@@ -51,32 +55,24 @@ class Layout extends React.Component {
           this.props.dispatch(clustersLoad());
         })
         .catch(error => {
+          console.error('Error refreshing user info', error);
+
           if (error.status === 401) {
-            this.props.flashActions.flashAdd({
-              message:
-                'Please log in again, your previously saved credentials appear to be invalid.',
-              class: 'warning',
-            });
+            new FlashMessage(
+              'Please log in again, as your previously saved credentials appear to be invalid.',
+              messageType.WARNING,
+              messageTTL.MEDIUM
+            );
 
             this.props.dispatch(push('/login'));
           } else {
-            this.props.flashActions.flashAdd({
-              message: (
-                <div>
-                  <strong>
-                    Something went wrong while trying to load user and
-                    organization information.
-                  </strong>
-                  <br />
-                  Please try again later or contact support:
-                  support@giantswarm.io
-                </div>
-              ),
-              class: 'warning',
-            });
+            new FlashMessage(
+              'Something went wrong while trying to load user and organization information.',
+              messageType.ERROR,
+              messageTTL.LONG,
+              'Please try again in a moment or contact support: support@giantswarm.io'
+            );
           }
-
-          console.error(error);
         });
     } else {
       this.props.dispatch(push('/login'));
@@ -161,7 +157,6 @@ Layout.propTypes = {
   firstLoadComplete: PropTypes.bool,
   dispatch: PropTypes.func,
   actions: PropTypes.object,
-  flashActions: PropTypes.object,
   path: PropTypes.string,
 };
 
@@ -178,7 +173,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(UserActions, dispatch),
-    flashActions: bindActionCreators(FlashActions, dispatch),
     dispatch: dispatch,
   };
 }

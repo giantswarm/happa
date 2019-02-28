@@ -5,7 +5,11 @@ import FileBlock from './fileblock';
 import { connect } from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import { flashAdd } from '../../actions/flashMessageActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+} from '../../actions/flashMessageActions';
 import Button from '../shared/button';
 import platform from '../../lib/platform';
 import PropTypes from 'prop-types';
@@ -66,18 +70,11 @@ class ConfigKubeCtl extends React.Component {
 
   componentDidMount() {
     if (!this.props.cluster) {
-      this.props.dispatch(
-        flashAdd({
-          message: (
-            <span>
-              <b>This organization has no clusters</b>
-              <br />
-              This page might not work as expected.
-            </span>
-          ),
-          class: 'danger',
-          ttl: 3000,
-        })
+      new FlashMessage(
+        'This organization has no clusters',
+        messageType.INFO,
+        messageTTL.LONG,
+        'Functions on this page might not work as expected'
       );
 
       this.setState({
@@ -96,13 +93,11 @@ class ConfigKubeCtl extends React.Component {
           });
         })
         .catch(() => {
-          this.props.dispatch(
-            flashAdd({
-              message:
-                'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
-              class: 'danger',
-              ttl: 3000,
-            })
+          new FlashMessage(
+            'Something went wrong while trying to load cluster details.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
           );
 
           this.setState({

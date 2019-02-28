@@ -9,7 +9,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cmp from 'semver-compare';
 import * as clusterActions from '../../actions/clusterActions';
-import * as flashActions from '../../actions/flashMessageActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+} from '../../actions/flashMessageActions';
 import PropTypes from 'prop-types';
 
 class ScaleClusterModal extends React.Component {
@@ -112,13 +116,13 @@ class ScaleClusterModal extends React.Component {
           .then(patchedCluster => {
             this.close();
 
+            new FlashMessage(
+              'The cluster will be scaled within the next couple of minutes.',
+              messageType.SUCCESS,
+              messageTTL.SHORT
+            );
+
             this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
-            this.props.flashActions.flashAdd({
-              message:
-                'The cluster will be scaled within the next couple of minutes',
-              class: 'success',
-              ttl: 3000,
-            });
           })
           .catch(error => {
             this.setState({
@@ -369,14 +373,12 @@ class ScaleClusterModal extends React.Component {
 ScaleClusterModal.propTypes = {
   cluster: PropTypes.object,
   clusterActions: PropTypes.object,
-  flashActions: PropTypes.object,
   provider: PropTypes.string,
 };
 
 function mapDispatchToProps(dispatch) {
   return {
     clusterActions: bindActionCreators(clusterActions, dispatch),
-    flashActions: bindActionCreators(flashActions, dispatch),
   };
 }
 
