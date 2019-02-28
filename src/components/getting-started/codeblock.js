@@ -39,13 +39,9 @@ export class Output extends React.Component {
 }
 
 export class CodeBlock extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      hovering: false,
-    };
-  }
+  state = {
+    hovering: false,
+  };
 
   promptLinesAsString() {
     var string = React.Children.toArray(this.props.children)

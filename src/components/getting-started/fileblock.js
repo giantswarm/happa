@@ -25,12 +25,9 @@ import * as Helpers from '../../lib/helpers';
 import PropTypes from 'prop-types';
 
 class FileBlock extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      hovering: false,
-    };
-  }
+  state = {
+    hovering: false,
+  };
 
   copyCodeToClipboard = e => {
     e.preventDefault();

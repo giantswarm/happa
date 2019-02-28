@@ -9,13 +9,9 @@ import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
 
 class ChangePassword extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      formValid: false,
-    };
-  }
+  state = {
+    formValid: false,
+  };
 
   currentPasswordValid = () => {
     return this.current_password.value();

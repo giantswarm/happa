@@ -11,10 +11,6 @@ import QueryString from 'query-string';
 import PropTypes from 'prop-types';
 
 class OauthCallback extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentWillUnmount() {
     this.props.dispatch(flashClearAll());
   }

@@ -8,13 +8,9 @@ import { relativeDate } from '../../lib/helpers.js';
 import PropTypes from 'prop-types';
 
 class ReleaseDetailsModal extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      modalVisible: false,
-    };
-  }
+  state = {
+    modalVisible: false,
+  };
 
   show = () => {
     this.setState({
