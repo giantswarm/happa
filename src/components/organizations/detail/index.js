@@ -6,7 +6,7 @@ import DetailView from './view';
 import ClusterDetailIndex from '../../cluster/';
 import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Redirect, Switch } from 'react-router-dom';
 import _ from 'underscore';
 
 class DetailIndex extends React.Component {
@@ -25,9 +25,12 @@ class DetailIndex extends React.Component {
             render={() => <DetailView {...this.props} />}
           />
           <Route
-            exact
             path={`${this.props.match.path}/clusters/:clusterId`}
             component={ClusterDetailIndex}
+          />
+          <Redirect
+            path={`${this.props.match.path}/*`}
+            to={`${this.props.match.url}`}
           />
         </Switch>
       </Breadcrumb>
