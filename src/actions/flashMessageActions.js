@@ -66,6 +66,16 @@ export function flashAdd(flashMessage) {
   }).show();
 }
 
-export function flashClearAll() {
-  return {};
+/**
+ * Remove all queued messages and close those that are displayed.
+ */
+export function clearQueues() {
+  Noty.closeAll();
+}
+
+/**
+ * Remove all messages from the given queue and close the displayed ones.
+ */
+export function clearQueue(queueName) {
+  Noty.closeAll(queueName);
 }
