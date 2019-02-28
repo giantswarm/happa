@@ -16,7 +16,7 @@ import Noty from 'noty';
 class Home extends React.Component {
   state = {
     notyTheme: 'bootstrap-v3',
-    notyLayout: 'topLeft',
+    notyLayout: 'topRight',
     notyType: 'success',
   };
 
@@ -72,7 +72,7 @@ class Home extends React.Component {
         'This is a <code>' +
         this.state.notyType +
         '</code> message that will vanish after it´s timeout period is reached.',
-      timeout: 20000,
+      timeout: 10000,
       theme: this.state.notyTheme,
       layout: this.state.notyLayout,
       visibilityControl: true,
