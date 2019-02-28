@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import Detail from './detail';
+import Detail from './detail/';
 import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-breadcrumbs';
-import List from './list';
+import List from './list/';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 class Organizations extends React.Component {

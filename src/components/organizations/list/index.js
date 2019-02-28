@@ -5,13 +5,13 @@ import {
   organizationDelete,
   organizationCreate,
   organizationSelect,
-} from '../../actions/organizationActions';
+} from '../../../actions/organizationActions';
 import { connect } from 'react-redux';
 import OrganizationRow from './organization_row';
 import Button from 'react-bootstrap/lib/Button';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
-import { clustersForOrg } from '../../lib/helpers';
+import { clustersForOrg } from '../../../lib/helpers';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
 
