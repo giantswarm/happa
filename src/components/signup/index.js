@@ -6,7 +6,11 @@ import PasswordField from './password_field';
 import StatusMessage from './status_message';
 import TermsOfService from './terms_of_service';
 import * as userActions from '../../actions/userActions';
-import { flashAdd } from '../../actions/flashMessageActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+} from '../../actions/flashMessageActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -128,11 +132,10 @@ export class SignUp extends React.Component {
     // Delay a bit so the user sees the DONE message
     // and then transition to the getting started guide
     //
-    this.props.dispatch(
-      flashAdd({
-        message: 'Account created! Welcome to Giant Swarm.',
-        class: 'success',
-      })
+    new FlashMessage(
+      'Account created. Welcome to Giant Swarm!',
+      messageType.SUCCESS,
+      messageTTL.MEDIUM
     );
 
     setTimeout(() => {

@@ -5,7 +5,12 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Link } from 'react-router-dom';
 import PasswordField from '../signup/password_field';
 import StatusMessage from '../signup/status_message';
-import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+  clearQueues,
+} from '../../actions/flashMessageActions';
 import { connect } from 'react-redux';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
@@ -69,22 +74,18 @@ class SetPassword extends React.Component {
       .catch(error => {
         switch (error.name) {
           case 'TypeError':
-            this.props.dispatch(
-              flashAdd({
-                message: 'Please provide a (valid) email address',
-                class: 'danger',
-              })
+            new FlashMessage(
+              'Please provide a (valid) email address',
+              messageType.ERROR,
+              messageTTL.MEDIUM
             );
-
             break;
           case 'Error':
-            this.props.dispatch(
-              flashAdd({
-                message: 'The reset token appears to be invalid.',
-                class: 'danger',
-              })
+            new FlashMessage(
+              'The reset token appears to be invalid.',
+              messageType.ERROR,
+              messageTTL.MEDIUM
             );
-
             break;
         }
 
@@ -113,20 +114,20 @@ class SetPassword extends React.Component {
           submitting: false,
         });
 
-        this.props.dispatch(flashClearAll());
+        clearQueues();
         this.props.dispatch(push('/'));
-        this.props.dispatch(
-          flashAdd({
-            message: 'Password set successfully! Welcome back!',
-            class: 'success',
-          })
+
+        new FlashMessage(
+          'Password set successfully. Now please log in using the new password.',
+          messageType.SUCCESS,
+          messageTTL.MEDIUM
         );
       });
   };
 
   setEmail = event => {
     event.preventDefault();
-    this.props.dispatch(flashClearAll());
+    clearQueues();
     this.setState(
       {
         email: this.state.emailField,
@@ -138,7 +139,7 @@ class SetPassword extends React.Component {
   };
 
   updateEmail = event => {
-    this.props.dispatch(flashClearAll());
+    clearQueues();
 
     this.setState({
       emailField: event.target.value,

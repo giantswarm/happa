@@ -4,7 +4,11 @@ import { CodeBlock, Prompt } from './codeblock';
 import { connect } from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import { flashAdd } from '../../actions/flashMessageActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+} from '../../actions/flashMessageActions';
 import platform from '../../lib/platform';
 import ConfigureKubeCtlAlternative from './1_configure_kubectl_alternative';
 import ClusterIDLabel from '../shared/cluster_id_label';
@@ -32,13 +36,11 @@ class ConfigKubeCtl extends React.Component {
         });
       })
       .catch(() => {
-        this.props.dispatch(
-          flashAdd({
-            message:
-              'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
-            class: 'danger',
-            ttl: 3000,
-          })
+        new FlashMessage(
+          'Something went wrong while trying to load cluster details.',
+          messageType.ERROR,
+          messageTTL.MEDIUM,
+          'Please try again later or contact support: support@giantswarm.io'
         );
 
         this.setState({

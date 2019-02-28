@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { flashClearAll } from '../../actions/flashMessageActions';
+import { clearQueues } from '../../actions/flashMessageActions';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import Auth0 from '../../lib/auth0';
@@ -48,7 +48,7 @@ class AdminLogin extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.dispatch(flashClearAll());
+    clearQueues();
   }
 
   render() {

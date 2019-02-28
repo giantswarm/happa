@@ -5,7 +5,11 @@ import cmp from 'semver-compare';
 import Button from '../shared/button';
 import { connect } from 'react-redux';
 import { loadReleases } from '../../actions/releaseActions';
-import { flashAdd } from '../../actions/flashMessageActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+} from '../../actions/flashMessageActions';
 import _ from 'underscore';
 import ReleaseDetailsModal from '../modals/release_details_modal';
 import PropTypes from 'prop-types';
@@ -62,26 +66,11 @@ class ReleaseSelector extends React.Component {
           error: true,
         });
 
-        this.props.dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <b>
-                  Something went wrong while trying to fetch the list of
-                  releases.
-                </b>
-                <br />
-                Perhaps our servers are down, please try again later or contact
-                support: support@giantswarm.io
-                {error.body && error.body.message ? (
-                  <pre>{error.body.message}</pre>
-                ) : (
-                  ''
-                )}
-              </div>
-            ),
-            class: 'danger',
-          })
+        new FlashMessage(
+          'Something went wrong while trying to fetch the list of releases.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'please try again later or contact support: support@giantswarm.io'
         );
 
         throw error;
@@ -90,35 +79,23 @@ class ReleaseSelector extends React.Component {
 
   // Lets non admin users know that creating a cluster will probably fail for them,
   // since all releases are WIP and only admins can create clusters from WIP releases.
+  //
+  // TODO: Remove this, as there are releases for Azure now.
   informWIP() {
     if (!this.props.user.isAdmin) {
       if (this.props.provider === 'azure') {
-        this.props.dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <b>Support for Microsoft Azure is still in an early stage.</b>
-                <br />
-                There is no active release yet. To create a cluster you will
-                need admin permissions.
-              </div>
-            ),
-            class: 'info',
-          })
+        new FlashMessage(
+          'Support for Microsoft Azure is still in an early stage.',
+          messageType.INFO,
+          messageTTL.FOREVER,
+          'There is no active release yet. To create a cluster you will need admin permissions.'
         );
       } else {
-        this.props.dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <b>No active releases available at the moment.</b>
-                <br />
-                There is no active release yet. To create a cluster you will
-                need admin permissions.
-              </div>
-            ),
-            class: 'info',
-          })
+        new FlashMessage(
+          'No active releases available at the moment.',
+          messageType.INFO,
+          messageTTL.FOREVER,
+          'There is no active release yet. To create a cluster you will need admin permissions.'
         );
       }
     }

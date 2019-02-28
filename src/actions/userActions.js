@@ -1,7 +1,11 @@
 'use strict';
 
-import { flashAdd, flashClearAll } from './flashMessageActions';
-import React from 'react';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+  clearQueues,
+} from './flashMessageActions';
 import * as types from './actionTypes';
 import GiantSwarmV4 from '../lib/giantswarm_v4_client_wrapper';
 import { Base64 } from 'js-base64';
@@ -141,9 +145,11 @@ export function giantswarmLogin(email, password) {
       })
       .then(getInfo().bind(this, dispatch, getState))
       .catch(error => {
+        console.error('Error trying to log in:', error);
+
         dispatch(loginError(error));
         dispatch(push('/login'));
-        console.error(error);
+
         throw error;
       });
   };
@@ -186,29 +192,20 @@ export function giantswarmLogout() {
 // as add a flash message to let the user know we couldn't authenticate them.
 export function unauthorized() {
   return function(dispatch) {
-    // Clear any lingering flash error messages that would pop up due to failed
+    // Clear any lingering flash messages that would pop up due to failed
     // requests.
-    dispatch(flashClearAll());
+    clearQueues();
 
     // Let the user know he has been logged out due to a probably expired
     // or deleted token.
-    dispatch(
-      flashAdd({
-        key: 'unauthorized', // We set a key explicitly for this flash message
-        // so that multiple fires do not produce
-        // multiple flash messages in the ui.
-        // (Since there could be more than 1 request going on
-        // that would trigger this unauthorized dispatch)
-
-        message: (
-          <div>
-            <b>Unable to authenticate</b>
-            <br />
-            Please log in again.
-          </div>
-        ),
-        class: 'danger',
-      })
+    // TODO: Avoid this message firing multiple times from different queries,
+    // maybe by using a custom queue with length 1.
+    // See https://ned.im/noty/#/api?id=api-static-methods
+    new FlashMessage(
+      'Not authorized for API requests.',
+      messageType.ERROR,
+      messageTTL.MEDIUM,
+      'Seems like you have been logged out. Please log in again.'
     );
 
     dispatch({
@@ -242,11 +239,13 @@ export function getInfo() {
         });
       })
       .catch(error => {
+        console.error('Error loading installation info:', error);
+
         dispatch({
           type: types.INFO_LOAD_ERROR,
           error: error,
         });
-        console.error(error);
+
         throw error;
       });
   };
@@ -290,21 +289,12 @@ export function usersLoad() {
       })
       .catch(error => {
         console.error(error);
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>
-                  Something went wrong while trying to load all users
-                </strong>
-                <br />
-                {error.body
-                  ? error.body.status_text
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>
-            ),
-            class: 'danger',
-          })
+
+        new FlashMessage(
+          'Something went wrong while trying to load all users',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again.'
         );
 
         dispatch({
@@ -336,23 +326,12 @@ export function userRemoveExpiration(email) {
         });
       })
       .catch(error => {
-        console.error(error);
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>
-                  Something went wrong while trying to remove expiration from
-                  this user
-                </strong>
-                <br />
-                {error.body
-                  ? error.body.status_text
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>
-            ),
-            class: 'danger',
-          })
+        console.error('Error removing user expiration:', error);
+
+        new FlashMessage(
+          'Something went wrong while trying to remove expiration from this user',
+          messageType.ERROR,
+          messageTTL.MEDIUM
         );
 
         dispatch({
@@ -383,22 +362,13 @@ export function userDelete(email) {
         });
       })
       .catch(error => {
-        console.error(error);
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>
-                  Something went wrong while trying to delete this user
-                </strong>
-                <br />
-                {error.body
-                  ? error.body.status_text
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>
-            ),
-            class: 'danger',
-          })
+        console.error('Error when deleting user:', error);
+
+        new FlashMessage(
+          'Something went wrong while trying to delete this user',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
         );
 
         dispatch({
