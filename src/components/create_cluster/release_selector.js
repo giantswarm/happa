@@ -250,8 +250,8 @@ function mapStateToProps(state) {
   var provider = state.app.info.general.provider;
   var releases = Object.assign({}, state.entities.releases.items);
 
-  var activeSortedReleases = _.filter(releases, release => release.active);
-  activeSortedReleases = activeSortedReleases.map(release => release.version);
+  //var activeSortedReleases = _.filter(releases, release => release.active);
+  var activeSortedReleases = _.map(releases, release => release.version); //activeSortedReleases.map(release => release.version);
   activeSortedReleases.sort(cmp).reverse();
 
   return {
