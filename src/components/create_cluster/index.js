@@ -156,6 +156,7 @@ class CreateCluster extends React.Component {
           },
           name: this.state.clusterName,
           owner: this.props.selectedOrganization,
+          region: this.state.aws.region,
           release_version: this.state.releaseVersion,
           workers: workers,
         })
