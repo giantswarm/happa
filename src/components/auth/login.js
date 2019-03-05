@@ -32,9 +32,7 @@ class Login extends React.Component {
 
   updateEmail = event => {
     // Clear flash messages if there are any.
-    if (this.props.flashMessages.size > 0) {
-      clearQueues();
-    }
+    clearQueues();
 
     this.setState({
       email: event.target.value,
@@ -43,9 +41,7 @@ class Login extends React.Component {
 
   updatePassword = event => {
     // Clear flash messages if there are any.
-    if (this.props.flashMessages.size > 0) {
-      clearQueues();
-    }
+    clearQueues();
 
     this.setState({
       password: event.target.value,
