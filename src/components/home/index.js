@@ -11,15 +11,8 @@ import { Link } from 'react-router-dom';
 import _ from 'underscore';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
-import Noty from 'noty';
 
 class Home extends React.Component {
-  state = {
-    notyTheme: 'bootstrap-v3',
-    notyLayout: 'topRight',
-    notyType: 'success',
-  };
-
   componentDidMount() {
     this.fetchClusterDetails(this.props.clusters);
   }
@@ -65,106 +58,11 @@ class Home extends React.Component {
     }
   }
 
-  showNotification() {
-    new Noty({
-      type: this.state.notyType,
-      text:
-        'This is a <code>' +
-        this.state.notyType +
-        '</code> message that will vanish after it´s timeout period is reached.',
-      timeout: 10000,
-      theme: this.state.notyTheme,
-      layout: this.state.notyLayout,
-      visibilityControl: true,
-      animation: {
-        close: 'flash_message_close',
-      },
-    }).show();
-  }
-
-  setNotyTheme(event) {
-    this.setState({ notyTheme: event.target.value });
-  }
-
-  setNotyLayout(event) {
-    this.setState({ notyLayout: event.target.value });
-  }
-
-  setNotyType(event) {
-    this.setState({ notyType: event.target.value });
-  }
-
   render() {
     return (
       <DocumentTitle title={this.title()}>
         {
           <div>
-            <div className='well'>
-              <form className='form-inline'>
-                <div className='form-group'>
-                  <label htmlFor='notyTheme'>Theme</label>
-                  <select
-                    className='form-control'
-                    id='notyTheme'
-                    onChange={this.setNotyTheme.bind(this)}
-                    defaultValue={this.state.notyTheme}
-                  >
-                    <option>bootstrap-v3</option>
-                    <option>bootstrap-v4</option>
-                    <option>light</option>
-                    <option>metroui</option>
-                    <option>mint</option>
-                    <option>relax</option>
-                    <option>semanticui</option>
-                    <option>sunset</option>
-                  </select>
-                </div>
-
-                <div className='form-group'>
-                  <label htmlFor='notyTheme'>Layout</label>
-                  <select
-                    className='form-control'
-                    id='notyLayout'
-                    onChange={this.setNotyLayout.bind(this)}
-                    defaultValue={this.state.notyLayout}
-                  >
-                    <option>top</option>
-                    <option>topLeft</option>
-                    <option>topCenter</option>
-                    <option>topRight</option>
-                    <option>center</option>
-                    <option>centerLeft</option>
-                    <option>centerRight</option>
-                    <option>bottom</option>
-                    <option>bottomLeft</option>
-                    <option>bottomCenter</option>
-                    <option>bottomRight</option>
-                  </select>
-                </div>
-
-                <div className='form-group'>
-                  <label htmlFor='notyType'>Type</label>
-                  <select
-                    className='form-control'
-                    id='notyType'
-                    onChange={this.setNotyType.bind(this)}
-                    defaultValue={this.state.notyType}
-                  >
-                    <option>alert</option>
-                    <option>success</option>
-                    <option>error</option>
-                    <option>warning</option>
-                    <option>info</option>
-                  </select>
-                </div>
-              </form>
-
-              <br />
-
-              <Button type='button' onClick={e => this.showNotification(e)}>
-                Create Notification
-              </Button>
-            </div>
             {this.props.selectedOrganization ? (
               <div className='well launch-new-cluster'>
                 <Link to='new-cluster'>
