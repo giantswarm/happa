@@ -22,10 +22,6 @@ class Login extends React.Component {
     password: '',
   };
 
-  componentWillUnmount() {
-    clearQueues();
-  }
-
   onAuthenticateFailed = message => {
     new FlashMessage(message, messageType.ERROR, messageTTL.LONG);
   };
