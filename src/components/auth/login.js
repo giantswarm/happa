@@ -71,8 +71,6 @@ class Login extends React.Component {
       this.props.actions
         .giantswarmLogin(this.state.email, this.state.password)
         .then(() => {
-          new FlashMessage('Welcome!', messageType.SUCCESS, messageTTL.SHORT);
-
           this.props.dispatch(push('/'));
 
           return null;
