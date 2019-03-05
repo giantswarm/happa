@@ -187,9 +187,12 @@ export function giantswarmLogout() {
   };
 }
 
-// unauthorized is mean to be called whenever a API call results in an
-// unauthorized error. It will dispatch the `UNAUTHORIZED` action, as well
-// as add a flash message to let the user know we couldn't authenticate them.
+/**
+ * To be called whenever a API call results in a "401 Unauthorized" error.
+ *
+ * It will dispatch the UNAUTHORIZED action, as well as add a
+ * flash message to let the user know we couldn't authenticate them.
+ */
 export function unauthorized() {
   return function(dispatch) {
     // Clear any lingering flash messages that would pop up due to failed
