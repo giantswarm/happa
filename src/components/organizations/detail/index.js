@@ -25,7 +25,7 @@ class DetailIndex extends React.Component {
             render={() => <DetailView {...this.props} />}
           />
           <Route
-            path={`${this.props.match.path}/clusters/:clusterId`}
+            path={`${this.props.match.path}/clusters`}
             component={ClusterDetailIndex}
           />
           <Redirect

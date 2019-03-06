@@ -8,8 +8,12 @@ import NodeCountSelector from '../../shared/node_count_selector';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cmp from 'semver-compare';
-import * as clusterActions from '../../actions/clusterActions';
-import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
+import * as clusterActions from '../../../actions/clusterActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+} from '../../../lib/flash_message';
 import PropTypes from 'prop-types';
 
 class ScaleClusterModal extends React.Component {

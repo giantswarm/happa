@@ -150,7 +150,11 @@ class OrganizationDetail extends React.Component {
                     defaultSortDirection='asc'
                   />
                 )}
-                <Link to='/new-cluster'>
+                <Link
+                  to={`/organizations/${
+                    this.props.organization.id
+                  }/clusters/new/`}
+                >
                   <Button bsStyle='default'>
                     <i className='fa fa-add-circle' /> Create Cluster
                   </Button>
