@@ -10,11 +10,7 @@ import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-} from '../../actions/flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
 import { organizationCredentialsLoad } from '../../actions/organizationActions';
 import * as clusterActions from '../../actions/clusterActions';
 import * as releaseActions from '../../actions/releaseActions';

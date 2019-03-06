@@ -5,11 +5,7 @@ import FileBlock from './fileblock';
 import { connect } from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-} from '../../actions/flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
 import Button from '../shared/button';
 import platform from '../../lib/platform';
 import PropTypes from 'prop-types';

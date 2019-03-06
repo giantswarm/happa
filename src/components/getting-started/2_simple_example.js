@@ -4,11 +4,7 @@ import { CodeBlock, Prompt, Output } from './codeblock';
 import { connect } from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-} from '../../actions/flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';

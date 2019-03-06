@@ -5,7 +5,7 @@ import {
   messageType,
   messageTTL,
   clearQueues,
-} from './flashMessageActions';
+} from '../lib/flash_message';
 import * as types from './actionTypes';
 import GiantSwarmV4 from '../lib/giantswarm_v4_client_wrapper';
 import { Base64 } from 'js-base64';

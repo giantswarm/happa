@@ -10,7 +10,7 @@ import {
   messageType,
   messageTTL,
   clearQueues,
-} from '../../actions/flashMessageActions';
+} from '../../lib/flash_message';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';

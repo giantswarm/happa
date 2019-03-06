@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
-import { clearQueues } from '../../actions/flashMessageActions';
+import { clearQueues } from '../../lib/flash_message';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import QueryString from 'query-string';

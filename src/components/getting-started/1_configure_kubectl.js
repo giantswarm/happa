@@ -4,11 +4,7 @@ import { CodeBlock, Prompt } from './codeblock';
 import { connect } from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-} from '../../actions/flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
 import platform from '../../lib/platform';
 import ConfigureKubeCtlAlternative from './1_configure_kubectl_alternative';
 import ClusterIDLabel from '../shared/cluster_id_label';

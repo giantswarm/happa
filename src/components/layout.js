@@ -1,10 +1,6 @@
 'use strict';
 
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-} from '../actions/flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../lib/flash_message';
 import * as UserActions from '../actions/userActions';
 import AccountSettings from './account_settings/index';
 import { bindActionCreators } from 'redux';

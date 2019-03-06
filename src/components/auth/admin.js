@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { clearQueues } from '../../actions/flashMessageActions';
+import { clearQueues } from '../../lib/flash_message';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import Auth0 from '../../lib/auth0';

@@ -8,7 +8,7 @@ import {
   messageType,
   messageTTL,
   clearQueues,
-} from '../../actions/flashMessageActions';
+} from '../../lib/flash_message';
 import { connect } from 'react-redux';
 import Button from '../shared/button';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';

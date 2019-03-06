@@ -6,11 +6,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from '../../actions/clusterActions';
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-} from '../../actions/flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
 import diff from 'deep-diff';
 import _ from 'underscore';
 import PropTypes from 'prop-types';

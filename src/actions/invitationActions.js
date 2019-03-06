@@ -1,6 +1,6 @@
 'use strict';
 
-import { FlashMessage, messageType, messageTTL } from './flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../lib/flash_message';
 import * as types from './actionTypes';
 import Passage from '../lib/passage_client';
 import _ from 'underscore';

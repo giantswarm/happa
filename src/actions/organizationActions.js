@@ -2,7 +2,7 @@
 
 import * as types from './actionTypes';
 import { modalHide } from './modalActions';
-import { FlashMessage, messageType, messageTTL } from './flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../lib/flash_message';
 import React from 'react';
 import GiantSwarmV4 from 'giantswarm-v4';
 import { push } from 'connected-react-router';

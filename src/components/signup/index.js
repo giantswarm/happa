@@ -6,11 +6,7 @@ import PasswordField from './password_field';
 import StatusMessage from './status_message';
 import TermsOfService from './terms_of_service';
 import * as userActions from '../../actions/userActions';
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-} from '../../actions/flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
