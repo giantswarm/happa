@@ -19,8 +19,8 @@ class Overview extends React.Component {
     return (
       <div className='centered col-10'>
         <h1>Get started with your Kubernetes cluster</h1>
-        <ol className='step_selector row'>
-          <li className='col-4 col-12-sm'>
+        <ol className='step_selector'>
+          <li>
             <Link
               to={`/organizations/${this.props.match.params.orgId}/clusters/${
                 this.props.match.params.clusterId
@@ -34,7 +34,7 @@ class Overview extends React.Component {
               </span>
             </Link>
           </li>
-          <li className='col-4 col-12-sm'>
+          <li>
             <Link
               to={`/organizations/${this.props.match.params.orgId}/clusters/${
                 this.props.match.params.clusterId
@@ -50,7 +50,7 @@ class Overview extends React.Component {
               </span>
             </Link>
           </li>
-          <li className='col-4 col-12-sm'>
+          <li>
             <Link
               to={`/organizations/${this.props.match.params.orgId}/clusters/${
                 this.props.match.params.clusterId
