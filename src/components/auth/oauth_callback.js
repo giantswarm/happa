@@ -1,6 +1,5 @@
 'use strict';
 
-import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
@@ -71,9 +70,6 @@ class OAuthCallback extends React.Component {
           transitionLeaveTimeout={200}
         >
           <div className='login_form--container col-4 login_form--admin'>
-            <div className='login_form--flash-container'>
-              <FlashMessages />
-            </div>
             {this.state.error ? (
               this.errorMessage()
             ) : (

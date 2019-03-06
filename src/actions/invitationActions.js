@@ -1,7 +1,6 @@
 'use strict';
 
-import { flashAdd } from './flashMessageActions';
-import React from 'react';
+import { FlashMessage, messageType, messageTTL } from '../lib/flash_message';
 import * as types from './actionTypes';
 import Passage from '../lib/passage_client';
 import _ from 'underscore';
@@ -43,28 +42,19 @@ export function invitationsLoad() {
         });
       })
       .catch(error => {
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>
-                  Something went wrong while trying to load invitations
-                </strong>
-                <br />
-                {error.body
-                  ? error.body.message
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>
-            ),
-            class: 'danger',
-          })
+        console.error('Error when loading invitation:', error);
+
+        new FlashMessage(
+          'Something went wrong while trying to load invitations',
+          messageType.ERROR,
+          messageTTL.MEDIUM,
+          'Please try again later or contact support: support@giantswarm.io'
         );
 
         dispatch({
           type: types.INVITATIONS_LOAD_ERROR,
         });
 
-        console.error(error);
         throw error;
       });
   };
@@ -90,41 +80,28 @@ export function invitationCreate(invitation) {
           type: types.INVITATION_CREATE_SUCCESS,
         });
 
-        dispatch(
-          flashAdd({
-            message: 'Successfully invited ' + result.email,
-            class: 'success',
-            ttl: 3000,
-          })
-        );
+        // We show no flash message here,
+        // as the success is reported directly in the
+        // modal dialog that's kept open.
 
         dispatch(invitationsLoad());
 
         return result;
       })
       .catch(error => {
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                <strong>
-                  Something went wrong while trying to create your invitation.
-                </strong>
-                <br />
-                {error.body
-                  ? error.body.message
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>
-            ),
-            class: 'danger',
-          })
+        console.error('Error inviting user:', error);
+
+        new FlashMessage(
+          'Something went wrong while trying to create your invitation.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
         );
 
         dispatch({
           type: types.INVITATION_CREATE_ERROR,
         });
 
-        console.error(error);
         throw error;
       });
   };

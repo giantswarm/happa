@@ -1,10 +1,9 @@
 'use strict';
 
-import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
-import { flashClearAll } from '../../actions/flashMessageActions';
+import { clearQueues } from '../../lib/flash_message';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import QueryString from 'query-string';
@@ -12,7 +11,7 @@ import PropTypes from 'prop-types';
 
 class OauthCallback extends React.Component {
   componentWillUnmount() {
-    this.props.dispatch(flashClearAll());
+    clearQueues();
   }
 
   render() {
@@ -30,10 +29,6 @@ class OauthCallback extends React.Component {
           transitionLeaveTimeout={200}
         >
           <div className='login_form--container col-4'>
-            <div className='login_form--flash-container'>
-              <FlashMessages />
-            </div>
-
             <h1>OAuth Callback</h1>
             <p>
               This is where we process and store the token and move on to what

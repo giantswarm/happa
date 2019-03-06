@@ -10,7 +10,7 @@ import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { flashAdd } from '../../actions/flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
 import { organizationCredentialsLoad } from '../../actions/organizationActions';
 import * as clusterActions from '../../actions/clusterActions';
 import * as releaseActions from '../../actions/releaseActions';
@@ -34,19 +34,11 @@ class ClusterDetail extends React.Component {
     if (props.cluster === undefined) {
       props.dispatch(push('/organizations/' + props.organizationId));
 
-      props.dispatch(
-        flashAdd({
-          message: (
-            <div>
-              <b>Cluster &quot;{props.clusterId}&quot; not found.</b>
-              <br />
-              Please make sure the Cluster ID is correct and that you have
-              access to the organization that it belongs to.
-            </div>
-          ),
-          class: 'info',
-          ttl: 6000,
-        })
+      new FlashMessage(
+        'Cluster <code>' + props.clusterId + '</code> not found',
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.'
       );
     } else {
       props.dispatch(organizationCredentialsLoad(props.organizationId));

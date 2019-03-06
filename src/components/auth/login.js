@@ -1,12 +1,16 @@
 'use strict';
 
-import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Link } from 'react-router-dom';
 import Button from '../shared/button';
 import { connect } from 'react-redux';
-import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+  clearQueues,
+} from '../../lib/flash_message';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';
@@ -18,24 +22,13 @@ class Login extends React.Component {
     password: '',
   };
 
-  componentWillUnmount() {
-    this.props.dispatch(flashClearAll());
-  }
-
   onAuthenticateFailed = message => {
-    this.props.dispatch(
-      flashAdd({
-        message: message,
-        class: 'danger',
-      })
-    );
+    new FlashMessage(message, messageType.ERROR, messageTTL.LONG);
   };
 
   updateEmail = event => {
     // Clear flash messages if there are any.
-    if (this.props.flashMessages.size > 0) {
-      this.props.dispatch(flashClearAll());
-    }
+    clearQueues();
 
     this.setState({
       email: event.target.value,
@@ -44,9 +37,7 @@ class Login extends React.Component {
 
   updatePassword = event => {
     // Clear flash messages if there are any.
-    if (this.props.flashMessages.size > 0) {
-      this.props.dispatch(flashClearAll());
-    }
+    clearQueues();
 
     this.setState({
       password: event.target.value,
@@ -56,22 +47,19 @@ class Login extends React.Component {
   logIn = e => {
     e.preventDefault();
 
-    this.props.dispatch(flashClearAll());
+    clearQueues();
 
     if (!this.state.email) {
-      this.props.dispatch(
-        flashAdd({
-          message:
-            'Please provide the email address that you used for registration.',
-          class: 'danger',
-        })
+      new FlashMessage(
+        'Please provide the email address that you used for registration.',
+        messageType.ERROR,
+        messageTTL.LONG
       );
     } else if (!this.state.password) {
-      this.props.dispatch(
-        flashAdd({
-          message: 'Please enter your password.',
-          class: 'danger',
-        })
+      new FlashMessage(
+        'Please enter your password.',
+        messageType.ERROR,
+        messageTTL.LONG
       );
     }
 
@@ -83,14 +71,6 @@ class Login extends React.Component {
       this.props.actions
         .giantswarmLogin(this.state.email, this.state.password)
         .then(() => {
-          this.props.dispatch(
-            flashAdd({
-              message: 'Welcome!',
-              class: 'success',
-              ttl: 3000,
-            })
-          );
-
           this.props.dispatch(push('/'));
 
           return null;
@@ -125,17 +105,11 @@ class Login extends React.Component {
               'Please ensure you have installed the required certificates to talk to the API server.';
           }
 
-          this.props.dispatch(
-            flashAdd({
-              message: (
-                <div>
-                  <b>{heading}</b>
-                  <br />
-                  {message}
-                </div>
-              ),
-              class: 'danger',
-            })
+          new FlashMessage(
+            heading,
+            messageType.ERROR,
+            messageTTL.LONG,
+            message
           );
         });
     }
@@ -155,10 +129,6 @@ class Login extends React.Component {
           transitionLeaveTimeout={200}
         >
           <div className='login_form--container col-4'>
-            <div className='login_form--flash-container'>
-              <FlashMessages />
-            </div>
-
             <h1>Log in to Giant&nbsp;Swarm</h1>
             <form onSubmit={this.logIn}>
               <div className='textfield'>

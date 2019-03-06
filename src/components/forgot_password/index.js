@@ -1,10 +1,14 @@
 'use strict';
 
-import FlashMessages from '../flash_messages/index.js';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Link } from 'react-router-dom';
-import { flashAdd, flashClearAll } from '../../actions/flashMessageActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+  clearQueues,
+} from '../../lib/flash_message';
 import { connect } from 'react-redux';
 import Button from '../shared/button';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
@@ -24,7 +28,7 @@ class ForgotPassword extends React.Component {
 
   submit = event => {
     event.preventDefault();
-    this.props.dispatch(flashClearAll());
+    clearQueues();
 
     this.setState({
       submitting: true,
@@ -42,11 +46,10 @@ class ForgotPassword extends React.Component {
       .catch(error => {
         switch (error.name) {
           case 'TypeError':
-            this.props.dispatch(
-              flashAdd({
-                message: 'Please provide a (valid) email address',
-                class: 'danger',
-              })
+            new FlashMessage(
+              'Please provide a (valid) email address',
+              messageType.ERROR,
+              messageTTL.MEDIUM
             );
             break;
           default:
@@ -61,17 +64,11 @@ class ForgotPassword extends React.Component {
               }
             }
 
-            this.props.dispatch(
-              flashAdd({
-                message: (
-                  <div>
-                    <b>{heading}</b>
-                    <br />
-                    {message}
-                  </div>
-                ),
-                class: 'danger',
-              })
+            new FlashMessage(
+              heading,
+              messageType.ERROR,
+              messageTTL.LONG,
+              message
             );
         }
 
@@ -83,11 +80,11 @@ class ForgotPassword extends React.Component {
   };
 
   componentWillUnmount() {
-    this.props.dispatch(flashClearAll());
+    clearQueues();
   }
 
   updateEmail = event => {
-    this.props.dispatch(flashClearAll());
+    clearQueues();
     this.setState({
       email: event.target.value,
     });
@@ -167,9 +164,6 @@ class ForgotPassword extends React.Component {
           transitionLeaveTimeout={200}
         >
           <div className='login_form--container col-4'>
-            <div className='login_form--flash-container'>
-              <FlashMessages />
-            </div>
             {this.state.tokenRequested ? this.success() : this.form()}
           </div>
         </ReactCSSTransitionGroup>

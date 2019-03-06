@@ -2,8 +2,7 @@
 
 import * as types from './actionTypes';
 import { modalHide } from './modalActions';
-import { flashAdd } from './flashMessageActions';
-import React from 'react';
+import { FlashMessage, messageType, messageTTL } from '../lib/flash_message';
 import GiantSwarmV4 from 'giantswarm-v4';
 import APIClusterStatusClient from '../lib/api_status_client';
 import { push } from 'connected-react-router';
@@ -62,16 +61,16 @@ export function clusterLoadDetails(clusterId) {
         return cluster;
       })
       .catch(error => {
-        console.error(error);
+        console.error('Error loading cluster details:', error);
         dispatch(clusterLoadDetailsError(clusterId, error));
-        dispatch(
-          flashAdd({
-            message:
-              'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
-            key: 'clusterLoadDetailFailure',
-            class: 'danger',
-          })
+
+        new FlashMessage(
+          'Something went wrong while trying to load cluster details.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
         );
+
         throw error;
       });
   };
@@ -107,14 +106,14 @@ export function clusterLoadStatus(clusterId) {
           dispatch(clusterLoadStatusNotFound(clusterId));
         } else {
           dispatch(clusterLoadStatusError(clusterId, error));
-          dispatch(
-            flashAdd({
-              message:
-                'Something went wrong while trying to load the cluster status. Please try again later or contact support: support@giantswarm.io',
-              key: 'clusterLoadStatusFailure',
-              class: 'danger',
-            })
+
+          new FlashMessage(
+            'Something went wrong while trying to load the cluster status.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
           );
+
           throw error;
         }
       });
@@ -153,17 +152,12 @@ export function clusterCreate(cluster) {
 
         dispatch(clusterCreateSuccess(clusterId));
 
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                &quot;{cluster.name}&quot; with ID: &quot;{clusterId}&quot; is
-                being created!
-              </div>
-            ),
-            class: 'success',
-            ttl: 3000,
-          })
+        new FlashMessage(
+          'Your new cluster with ID <code>' +
+            clusterId +
+            '</code> is being created.',
+          messageType.SUCCESS,
+          messageTTL.MEDIUM
         );
 
         return dispatch(clusterLoadDetails(clusterId));
@@ -203,33 +197,23 @@ export function clusterDeleteConfirmed(cluster) {
         dispatch(clusterDeleteSuccess(cluster.id));
 
         dispatch(modalHide());
-        dispatch(
-          flashAdd({
-            message: (
-              <div>Cluster &lsquo;{cluster.id}&lsquo; will be deleted soon</div>
-            ),
-            class: 'success',
-            ttl: 3000,
-          })
+
+        new FlashMessage(
+          'Cluster <code>' + cluster.id + '</code> will be deleted',
+          messageType.INFO,
+          messageTTL.SHORT
         );
       })
       .catch(error => {
         dispatch(modalHide());
-        dispatch(
-          flashAdd({
-            message: (
-              <div>
-                Something went wrong while trying to delete cluster:{' '}
-                {cluster.id}
-                <br />
-                {error.body
-                  ? error.body.status_text
-                  : 'Perhaps our servers are down, please try again later or contact support: support@giantswarm.io'}
-              </div>
-            ),
-            class: 'danger',
-            ttl: 3000,
-          })
+
+        new FlashMessage(
+          'An error occurred when trying to delete cluster <code>' +
+            cluster.id +
+            '</code>.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
         );
 
         console.error(error);

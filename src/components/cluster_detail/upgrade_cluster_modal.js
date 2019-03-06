@@ -6,7 +6,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as clusterActions from '../../actions/clusterActions';
-import * as flashActions from '../../actions/flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
 import diff from 'deep-diff';
 import _ from 'underscore';
 import PropTypes from 'prop-types';
@@ -265,17 +265,14 @@ class UpgradeClusterModal extends React.Component {
                 this.props.clusterActions.clusterLoadDetailsSuccess(
                   patchedCluster
                 );
-                this.props.flashActions.flashAdd({
-                  message: (
-                    <div>
-                      <strong>Successfully requested cluster upgrade.</strong>
-                      <br />
-                      Keep an eye on <code>kubectl get nodes</code> to see the
-                      progress of the upgrade.
-                    </div>
-                  ),
-                  class: 'success',
-                });
+
+                new FlashMessage(
+                  'Cluster upgrade initiated.',
+                  messageType.INFO,
+                  messageTTL.MEDIUM,
+                  'Keep an eye on <code>kubectl get nodes</code> to follow the upgrade progress.'
+                );
+
                 this.close();
               }
             );
@@ -310,7 +307,6 @@ class UpgradeClusterModal extends React.Component {
 UpgradeClusterModal.propTypes = {
   cluster: PropTypes.object,
   clusterActions: PropTypes.object,
-  flashActions: PropTypes.object,
   release: PropTypes.object,
   targetRelease: PropTypes.object,
 };
@@ -318,7 +314,6 @@ UpgradeClusterModal.propTypes = {
 function mapDispatchToProps(dispatch) {
   return {
     clusterActions: bindActionCreators(clusterActions, dispatch),
-    flashActions: bindActionCreators(flashActions, dispatch),
   };
 }
 

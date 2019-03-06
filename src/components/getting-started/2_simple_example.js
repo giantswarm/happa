@@ -4,7 +4,7 @@ import { CodeBlock, Prompt, Output } from './codeblock';
 import { connect } from 'react-redux';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import { flashAdd } from '../../actions/flashMessageActions';
+import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -25,18 +25,11 @@ class SimpleExample extends React.Component {
 
   componentDidMount() {
     if (!this.props.cluster) {
-      this.props.dispatch(
-        flashAdd({
-          message: (
-            <span>
-              <b>This organization has no clusters</b>
-              <br />
-              This page might not work as expected.
-            </span>
-          ),
-          class: 'danger',
-          ttl: 3000,
-        })
+      new FlashMessage(
+        'This organization has no clusters.',
+        messageType.ERROR,
+        messageTTL.MEDIUM,
+        'This page might not work as expected.'
       );
 
       this.setState({
@@ -55,13 +48,11 @@ class SimpleExample extends React.Component {
           });
         })
         .catch(() => {
-          this.props.dispatch(
-            flashAdd({
-              message:
-                'Something went wrong while trying to load cluster details. Please try again later or contact support: support@giantswarm.io',
-              class: 'danger',
-              ttl: 3000,
-            })
+          new FlashMessage(
+            'Something went wrong while trying to load cluster details.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
           );
 
           this.setState({
