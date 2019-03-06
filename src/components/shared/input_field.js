@@ -144,7 +144,7 @@ InputField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   readOnly: PropTypes.bool,
-  type: PropTypes.stringm,
+  type: PropTypes.string,
 };
 
 export default InputField;
