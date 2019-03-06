@@ -118,6 +118,7 @@ class InputField extends React.Component {
           ref={i => {
             this.input = i;
           }}
+          type={this.props.type}
           id={this.props.name}
           value={this.state.value}
           onBlur={this.onBlur}
@@ -143,6 +144,7 @@ InputField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   readOnly: PropTypes.bool,
+  type: PropTypes.stringm,
 };
 
 export default InputField;
