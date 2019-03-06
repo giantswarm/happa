@@ -23,9 +23,10 @@ export const messageTTL = {
 
 export class FlashMessage {
   constructor(text, type, ttl, subtext) {
-    this.text = text;
+    // make sure to only pass escaped HTML to this.text!
+    this.text = '<p>' + escapeHTML(text) + '</p>';
     if (subtext) {
-      this.text = '<p>' + text + '</p><p>' + subtext + '</p>';
+      this.text += '<p>' + escapeHTML(subtext) + '</p>';
     }
 
     this.timeout = false;
@@ -61,4 +62,27 @@ export function clearQueues() {
  */
 export function clearQueue(queueName) {
   Noty.closeAll(queueName);
+}
+
+/**
+ * Escapes HTML in a notification text.
+ *
+ * The following tag can be used (in lowercase only, without attributes):
+ *
+ *   <code>...</code>
+ *
+ * @param {string} unsafe
+ * @returns {string}
+ */
+function escapeHTML(unsafe) {
+  var safe = unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+  safe = safe
+    .replace('&lt;code&gt;', '<code>')
+    .replace('&lt;/code&gt;', '</code>');
+  return safe;
 }
