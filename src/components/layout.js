@@ -97,7 +97,7 @@ class Layout extends React.Component {
             />
             <Modals />
             <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
-              <div className='main col-9'>
+              <div className='main col-11'>
                 <Switch>
                   <Route exact path='/' component={Home} />
                   <Route exact path='/users/' component={Users} />
