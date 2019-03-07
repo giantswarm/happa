@@ -8,7 +8,7 @@ import { clusterCreate } from '../../actions/clusterActions';
 import NodeCountSelector from '../shared/node_count_selector.js';
 import NumberPicker from '../shared/number_picker.js';
 import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
-import VMSizeSelector from './vm_size_selector.js';
+import AzureVMSizeSelector from './azure_vm_size_selector.js';
 import ReleaseSelector from './release_selector.js';
 import ProviderCredentials from './provider_credentials.js';
 import PropTypes from 'prop-types';
@@ -484,7 +484,7 @@ class CreateCluster extends React.Component {
                       </div>
                       <div className='col-9'>
                         <p>Select the vm size for your worker nodes.</p>
-                        <VMSizeSelector
+                        <AzureVMSizeSelector
                           allowedVMSizes={this.props.allowedVMSizes}
                           value={this.state.azure.vmSize.value}
                           readOnly={false}
