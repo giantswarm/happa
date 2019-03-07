@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import ClusterDetailIndex from './detail/';
+import ClusterDetail from './detail/';
 import NewCluster from './new/';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ class Cluster extends React.Component {
         />
         <Route
           path={`${this.props.match.path}/:clusterId`}
-          component={ClusterDetailIndex}
+          component={ClusterDetail}
         />
         <Redirect
           path={`${this.props.match.path}/*`}

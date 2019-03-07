@@ -2,7 +2,7 @@
 
 import { FlashMessage, messageType, messageTTL } from '../lib/flash_message';
 import * as UserActions from '../actions/userActions';
-import AccountSettings from './account_settings/index';
+import AccountSettings from './account_settings';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clustersLoad } from '../actions/clusterActions';
@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home';
-import Modals from './modals/index';
+import Modals from './modals';
 import Navigation from './navigation';
 import { organizationsLoad } from '../actions/organizationActions';
 import Organizations from './organizations';
