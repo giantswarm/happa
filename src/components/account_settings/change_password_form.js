@@ -7,6 +7,7 @@ import GiantSwarmV4 from 'giantswarm-v4';
 import { validatePassword } from '../../lib/password_validation';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
+import { Base64 } from 'js-base64';
 
 class ChangePassword extends React.Component {
   state = {
@@ -116,8 +117,8 @@ class ChangePassword extends React.Component {
 
     usersApi
       .modifyPassword(scheme + ' ' + token, this.props.user.email, {
-        old_password_base64: this.current_password.value(),
-        new_password_base64: this.new_password.value(),
+        current_password_base64: Base64.encode(this.current_password.value()),
+        new_password_base64: Base64.encode(this.new_password.value()),
       })
       .then(() => {
         this.setState({
