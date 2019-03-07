@@ -771,7 +771,8 @@ function isExpiringSoon(timestamp) {
     moment(timestamp)
       .utc()
       .diff(moment().utc()) / 1000;
-  if (expirySeconds < 60 * 60 * 24) {
+
+  if (expirySeconds > 0 && expirySeconds < 60 * 60 * 24) {
     return true;
   }
 
