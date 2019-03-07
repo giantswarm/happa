@@ -1,41 +1,43 @@
 .step_selector
+  display: flex
+  flex-flow: wrap
+  justify-content: space-around
   padding: 0px
-  margin: 40px 0px
-  height: 180px
+  margin: 40px -10px
   list-style-type: none
 
   li
+    margin: 10px
+    flex-grow: 1
+    width: 30%
+
     a
       display: block
-      background-color: #4f6e81
+      background-color: lighten($darkblue, 10%)
       border-radius: 5px
-      height: 180px
+      height: 100%
       text-align: center
       margin-bottom: 20px
-      font-size: 14px
-      padding: 15px 10px
+      padding: 15px 20px
 
       &:hover
-        background-color: lighten(#4f6e81, 4%)
+        background-color: lighten($darkblue, 15%)
 
         .step_selector--step-number
-          color: lighten(#4f6e81, 50%)
+          color: lighten($darkblue, 70%)
 
         .step_selector--step-description
-            color: lighten(#4f6e81, 50%)
+            color: lighten($darkblue, 70%)
 
       .step_selector--step-number
         font-size: 30px
         font-weight: 800
         display: block
-        color: lighten(#4f6e81, 14%)
+        color: lighten($darkblue, 40%)
 
       .step_selector--step-title
         font-weight: 800
         display: block
-
-      .step_selector--step-description
-        font-size: 12px
 
     a
       text-decoration: none
