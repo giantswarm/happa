@@ -1,10 +1,10 @@
 'use strict';
 
-import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import View from './view';
 import { Route, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import React from 'react';
+import View from './view';
 
 class Organizations extends React.Component {
   render() {

@@ -1,16 +1,16 @@
 'use strict';
 
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-  clearQueues,
-} from '../lib/flash_message';
 import * as types from './actionTypes';
-import GiantSwarmV4 from '../lib/giantswarm_v4_client_wrapper';
 import { Base64 } from 'js-base64';
+import {
+  clearQueues,
+  FlashMessage,
+  messageTTL,
+  messageType,
+} from '../lib/flash_message';
 import { push } from 'connected-react-router';
 import _ from 'underscore';
+import GiantSwarmV4 from '../lib/giantswarm_v4_client_wrapper';
 
 export function loginSuccess(userData) {
   return {

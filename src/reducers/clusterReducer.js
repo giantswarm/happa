@@ -1,8 +1,8 @@
 'use strict';
 
 import * as types from '../actions/actionTypes';
-import moment from 'moment';
 import _ from 'underscore';
+import moment from 'moment';
 
 var metricKeys = [
   'cpu_cores',

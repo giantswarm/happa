@@ -1,16 +1,14 @@
 'use strict';
 
-import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
-import { Route, Switch, Redirect } from 'react-router-dom';
-
 import Page0_Overview from './0_overview.js';
 import Page1_ConfigureKubeCTL from './1_configure_kubectl.js';
 import Page2_SimpleExample from './2_simple_example.js';
 import Page3_NextSteps from './3_next_steps.js';
-
-import { Breadcrumb } from 'react-breadcrumbs';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class GettingStarted extends React.Component {
   render() {

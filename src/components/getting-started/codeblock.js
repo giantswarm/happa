@@ -1,5 +1,12 @@
 'use strict';
 
+import * as Helpers from '../../lib/helpers';
+import copy from 'copy-to-clipboard';
+import Line from './line';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
 // CodeBlock
 // Use this to show some commands and output to the user.
 // User's can copy the commands to their clipboard easily.
@@ -18,13 +25,6 @@
 //
 // Output and Prompt can be in any order. The copy to clipboard button will only
 // take the content in the Prompt tags.
-
-import React from 'react';
-import copy from 'copy-to-clipboard';
-import Line from './line';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import * as Helpers from '../../lib/helpers';
-import PropTypes from 'prop-types';
 
 export class Prompt extends React.Component {
   render() {

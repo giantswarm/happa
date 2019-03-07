@@ -1,22 +1,22 @@
 'use strict';
 
-import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { Link } from 'react-router-dom';
-import PasswordField from '../signup/password_field';
-import StatusMessage from '../signup/status_message';
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-  clearQueues,
-} from '../../lib/flash_message';
-import { connect } from 'react-redux';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
-import { validatePassword } from '../../lib/password_validation';
+import {
+  clearQueues,
+  FlashMessage,
+  messageTTL,
+  messageType,
+} from '../../lib/flash_message';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
+import { validatePassword } from '../../lib/password_validation';
+import PasswordField from '../signup/password_field';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import StatusMessage from '../signup/status_message';
 
 class SetPassword extends React.Component {
   constructor(props) {

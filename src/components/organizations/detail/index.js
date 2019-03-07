@@ -1,13 +1,13 @@
 'use strict';
 
-import React from 'react';
-import { connect } from 'react-redux';
-import DetailView from './view';
-import ClusterDetailIndex from '../../cluster/';
-import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import _ from 'underscore';
+import ClusterDetailIndex from '../../cluster/';
+import DetailView from './view';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 class DetailIndex extends React.Component {
   render() {

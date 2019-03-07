@@ -1,10 +1,10 @@
 'use strict';
 
-import { createStore, applyMiddleware, compose } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux';
 import { routerMiddleware } from 'connected-react-router';
+import history from './history';
 import rootReducer from '../reducers';
 import thunk from 'redux-thunk';
-import history from './history';
 
 var store;
 

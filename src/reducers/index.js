@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
-import organizations from './organizationReducer';
-import users from './userReducer';
-import invitations from './invitationReducer';
-import clusters from './clusterReducer';
-import modal from './modalReducer';
 import app from './appReducer';
-import releases from './releaseReducer';
+import clusters from './clusterReducer';
 import credentials from './credentialReducer';
+import invitations from './invitationReducer';
+import modal from './modalReducer';
+import organizations from './organizationReducer';
+import releases from './releaseReducer';
+import users from './userReducer';
 
 const entities = combineReducers({
   organizations,

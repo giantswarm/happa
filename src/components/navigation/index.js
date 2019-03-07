@@ -1,15 +1,15 @@
 'use strict';
 
-import _ from 'underscore';
+import { Breadcrumbs } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { organizationSelect } from '../../actions/organizationActions';
+import _ from 'underscore';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import Gravatar from 'react-gravatar';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
-import { organizationSelect } from '../../actions/organizationActions';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Breadcrumbs } from 'react-breadcrumbs';
-import { NavLink } from 'react-router-dom';
 
 class Navigation extends React.Component {
   selectOrganization = orgId => {

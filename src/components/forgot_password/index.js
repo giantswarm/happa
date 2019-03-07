@@ -1,19 +1,19 @@
 'use strict';
 
-import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { Link } from 'react-router-dom';
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-  clearQueues,
-} from '../../lib/flash_message';
-import { connect } from 'react-redux';
-import Button from '../shared/button';
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
+import {
+  clearQueues,
+  FlashMessage,
+  messageTTL,
+  messageType,
+} from '../../lib/flash_message';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import Button from '../shared/button';
 import PropTypes from 'prop-types';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class ForgotPassword extends React.Component {
   state = {

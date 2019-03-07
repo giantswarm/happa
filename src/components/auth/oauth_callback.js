@@ -1,14 +1,14 @@
 'use strict';
 
-import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
-import Auth from '../../lib/auth0';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
+import Auth from '../../lib/auth0';
 import PropTypes from 'prop-types';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class OAuthCallback extends React.Component {
   state = {

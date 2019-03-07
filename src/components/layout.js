@@ -1,23 +1,23 @@
 'use strict';
 
-import { FlashMessage, messageType, messageTTL } from '../lib/flash_message';
 import * as UserActions from '../actions/userActions';
-import AccountSettings from './account_settings';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clustersLoad } from '../actions/clusterActions';
 import { connect } from 'react-redux';
+import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
+import { organizationsLoad } from '../actions/organizationActions';
+import { push } from 'connected-react-router';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import AccountSettings from './account_settings';
 import DocumentTitle from 'react-document-title';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home';
 import Modals from './modals';
 import Navigation from './navigation';
-import { organizationsLoad } from '../actions/organizationActions';
 import Organizations from './organizations';
 import PropTypes from 'prop-types';
-import { push } from 'connected-react-router';
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
 import Users from './users';
 
 var defaultClient = GiantSwarmV4.ApiClient.instance;

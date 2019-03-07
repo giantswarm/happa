@@ -1,19 +1,19 @@
 'use strict';
 
-import React from 'react';
-import Button from '../../shared/button';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import * as clusterActions from '../../../actions/clusterActions';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import {
   FlashMessage,
-  messageType,
   messageTTL,
+  messageType,
 } from '../../../lib/flash_message';
-import diff from 'deep-diff';
 import _ from 'underscore';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import Button from '../../shared/button';
+import diff from 'deep-diff';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class UpgradeClusterModal extends React.Component {
   state = {

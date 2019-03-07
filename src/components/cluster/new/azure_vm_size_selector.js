@@ -1,10 +1,10 @@
 'use strict';
 
-import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../../shared/button';
 import InputField from '../../shared/input_field';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class AzureVMSizeSelector extends React.Component {
   constructor(props) {

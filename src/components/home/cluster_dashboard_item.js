@@ -1,14 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+'use strict';
+
 import * as clusterActions from '../../actions/clusterActions';
-import ClusterIDLabel from '../shared/cluster_id_label';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { relativeDate } from '../../lib/helpers.js';
-import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
-import Button from '../shared/button';
-import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
+import { relativeDate } from '../../lib/helpers.js';
+import Button from '../shared/button';
+import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
+import ClusterIDLabel from '../shared/cluster_id_label';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 class ClusterDashboardItem extends React.Component {
   getMemoryTotal() {

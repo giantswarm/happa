@@ -1,11 +1,11 @@
 'use strict';
 
-import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import ClusterDetail from './detail/';
 import NewCluster from './new/';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 class Cluster extends React.Component {
   render() {

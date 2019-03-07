@@ -1,14 +1,15 @@
 'use strict';
-import React from 'react';
-import { CodeBlock, Prompt } from './codeblock';
-import FileBlock from './fileblock';
-import { connect } from 'react-redux';
+
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
+import { CodeBlock, Prompt } from './codeblock';
+import { connect } from 'react-redux';
+import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
 import Button from '../shared/button';
+import FileBlock from './fileblock';
 import platform from '../../lib/platform';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 var Modernizr = window.Modernizr;
 

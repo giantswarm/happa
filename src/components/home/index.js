@@ -1,16 +1,16 @@
 'use strict';
 
-import React from 'react';
-import { connect } from 'react-redux';
-import ClusterDashboardItem from './cluster_dashboard_item';
-import ClusterEmptyState from './cluster_empty_state';
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import Button from '../shared/button';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import _ from 'underscore';
+import Button from '../shared/button';
+import ClusterDashboardItem from './cluster_dashboard_item';
+import ClusterEmptyState from './cluster_empty_state';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class Home extends React.Component {
   componentDidMount() {

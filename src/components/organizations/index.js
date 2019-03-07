@@ -1,12 +1,12 @@
 'use strict';
 
-import React from 'react';
-import { connect } from 'react-redux';
-import Detail from './detail/';
-import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-breadcrumbs';
-import List from './list/';
+import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import Detail from './detail/';
+import List from './list/';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 class Organizations extends React.Component {
   render() {

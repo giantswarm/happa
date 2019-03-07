@@ -1,13 +1,13 @@
 'use strict';
 
-import React from 'react';
-import Button from '../shared/button';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import GiantSwarmV4 from 'giantswarm-v4';
+import { Base64 } from 'js-base64';
 import { validatePassword } from '../../lib/password_validation';
+import Button from '../shared/button';
+import GiantSwarmV4 from 'giantswarm-v4';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
-import { Base64 } from 'js-base64';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class ChangePassword extends React.Component {
   state = {

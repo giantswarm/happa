@@ -1,7 +1,7 @@
 'use strict';
 
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 // This component gets a list of managed services from the release endpoint
 // and tries to organize them in a predefined way.
