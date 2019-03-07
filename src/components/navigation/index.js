@@ -19,7 +19,7 @@ class Navigation extends React.Component {
   render() {
     return (
       <nav className='outer-nav'>
-        <div className='main-nav col-9'>
+        <div className='main-nav col-12'>
           <a
             href='https://giantswarm.io'
             target='_blank'
@@ -154,7 +154,7 @@ class Navigation extends React.Component {
         </div>
 
         <div className='breadcrumb-wrapper'>
-          <div className='main col-9'>
+          <div className='main col-12'>
             <Breadcrumbs />
           </div>
         </div>
