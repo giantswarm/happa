@@ -192,6 +192,11 @@ class AzureVMSizeSelector extends React.Component {
                     <tr
                       key={vmSize.name}
                       onClick={this.preSelect.bind(this, vmSize.name)}
+                      className={
+                        vmSize.name === this.state.preSelectedVMSize
+                          ? 'selected'
+                          : ''
+                      }
                     >
                       <td>
                         <input
