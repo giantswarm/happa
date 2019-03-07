@@ -321,7 +321,9 @@ class CreateCluster extends React.Component {
 
   render() {
     return (
-      <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: '/new-cluster/' }}>
+      <Breadcrumb
+        data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
+      >
         <DocumentTitle
           title={
             'Create Cluster | ' +
@@ -561,6 +563,7 @@ CreateCluster.propTypes = {
   defaultCPUCores: PropTypes.number,
   defaultMemorySize: PropTypes.number,
   defaultDiskSize: PropTypes.number,
+  match: PropTypes.object,
 };
 
 function mapStateToProps(state) {

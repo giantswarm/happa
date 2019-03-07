@@ -1,6 +1,7 @@
 'use strict';
 
 import _ from 'underscore';
+import { Breadcrumb } from 'react-breadcrumbs';
 import cmp from 'semver-compare';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -12,23 +13,30 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 class ClusterDetailIndex extends React.Component {
   render() {
     return (
-      <Switch>
-        <Route
-          exact
-          path={`${this.props.match.path}`}
-          render={() => <ClusterDetailView {...this.props} />}
-        />
+      <Breadcrumb
+        data={{
+          title: this.props.match.params.clusterId,
+          pathname: this.props.match.url,
+        }}
+      >
+        <Switch>
+          <Route
+            exact
+            path={`${this.props.match.path}`}
+            render={() => <ClusterDetailView {...this.props} />}
+          />
 
-        <Route
-          path={`${this.props.match.path}/getting-started/`}
-          render={() => <GettingStarted {...this.props} />}
-        />
+          <Route
+            path={`${this.props.match.path}/getting-started/`}
+            render={() => <GettingStarted {...this.props} />}
+          />
 
-        <Redirect
-          path={`${this.props.match.path}/*`}
-          to={`${this.props.match.url}`}
-        />
-      </Switch>
+          <Redirect
+            path={`${this.props.match.path}/*`}
+            to={`${this.props.match.url}`}
+          />
+        </Switch>
+      </Breadcrumb>
     );
   }
 }

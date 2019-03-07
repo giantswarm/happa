@@ -1,6 +1,5 @@
 'use strict';
 
-import { Breadcrumb } from 'react-breadcrumbs';
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -11,28 +10,21 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 class Cluster extends React.Component {
   render() {
     return (
-      <Breadcrumb
-        data={{
-          title: this.props.match.params.clusterId,
-          pathname: this.props.match.url,
-        }}
-      >
-        <Switch>
-          <Route
-            exact
-            path={`${this.props.match.path}/new`}
-            render={() => <NewCluster {...this.props} />}
-          />
-          <Route
-            path={`${this.props.match.path}/:clusterId`}
-            component={ClusterDetailIndex}
-          />
-          <Redirect
-            path={`${this.props.match.path}/*`}
-            to={`${this.props.match.url}`}
-          />
-        </Switch>
-      </Breadcrumb>
+      <Switch>
+        <Route
+          exact
+          path={`${this.props.match.path}/new`}
+          component={NewCluster}
+        />
+        <Route
+          path={`${this.props.match.path}/:clusterId`}
+          component={ClusterDetailIndex}
+        />
+        <Redirect
+          path={`${this.props.match.path}/*`}
+          to={`${this.props.match.url}`}
+        />
+      </Switch>
     );
   }
 }
