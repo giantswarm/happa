@@ -6,7 +6,7 @@ import Button from '../shared/button';
 import InputField from '../shared/input_field';
 import PropTypes from 'prop-types';
 
-class VMSizeSelector extends React.Component {
+class AzureVMSizeSelector extends React.Component {
   constructor(props) {
     super(props);
 
@@ -227,11 +227,11 @@ class VMSizeSelector extends React.Component {
   }
 }
 
-VMSizeSelector.propTypes = {
+AzureVMSizeSelector.propTypes = {
   allowedVMSizes: PropTypes.array,
   value: PropTypes.string,
   readOnly: PropTypes.bool,
   onChange: PropTypes.func,
 };
 
-export default VMSizeSelector;
+export default AzureVMSizeSelector;
