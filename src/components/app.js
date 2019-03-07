@@ -17,10 +17,14 @@ import React from 'react';
 import SetPassword from './forgot_password/set_password';
 import SignUp from './signup/index';
 
-// CSS Imports.
-import '../styles/app.sass';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// CSS Imports
+// Keep the blank lines to allow for a certain ordering!
+
 import 'normalize.css';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import '../styles/app.sass';
 import 'noty/lib/noty.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
