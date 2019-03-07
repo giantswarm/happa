@@ -2,8 +2,8 @@
 
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../shared/button';
-import InputField from '../shared/input_field';
+import Button from '../../shared/button';
+import InputField from '../../shared/input_field';
 import PropTypes from 'prop-types';
 
 class AzureVMSizeSelector extends React.Component {
