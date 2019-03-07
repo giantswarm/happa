@@ -1,15 +1,13 @@
 'use strict';
 
-import * as OrganizationActions from '../../actions/organizationActions';
+import * as OrganizationActions from '../../../actions/organizationActions';
 import Button from 'react-bootstrap/lib/Button';
-import { relativeDate } from '../../lib/helpers.js';
+import { relativeDate } from '../../../lib/helpers.js';
 import DocumentTitle from 'react-document-title';
-import ClusterIDLabel from '../shared/cluster_id_label';
+import ClusterIDLabel from '../../shared/cluster_id_label';
 import Credentials from './credentials.js';
 import PropTypes from 'prop-types';
 import React from 'react';
-import _ from 'underscore';
-import { Breadcrumb } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -17,8 +15,8 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import cmp from 'semver-compare';
 
 class OrganizationDetail extends React.Component {
-  componentDidMount() {
-    this.props.actions.organizationsLoad();
+  constructor(props) {
+    super(props);
   }
 
   addMember = () => {
@@ -121,82 +119,75 @@ class OrganizationDetail extends React.Component {
 
     if (this.props.organization) {
       return (
-        <Breadcrumb
-          data={{
-            title: this.props.organization.id.toUpperCase(),
-            pathname: '/organizations/' + this.props.organization.id,
-          }}
+        <DocumentTitle
+          title={
+            'Organization Details | ' +
+            this.props.organization.id +
+            ' | Giant Swarm'
+          }
         >
-          <Breadcrumb
-            data={{ title: 'ORGANIZATIONS', pathname: '/organizations/' }}
-          >
-            <DocumentTitle
-              title={
-                'Organization Details | ' +
-                this.props.organization.id +
-                ' | Giant Swarm'
-              }
-            >
-              <div>
-                <div className='row'>
-                  <div className='col-12'>
-                    <h1>Organization: {this.props.match.params.orgId}</h1>
-                  </div>
-                </div>
-
-                <div className='row section'>
-                  <div className='col-3'>
-                    <h3 className='table-label'>Clusters</h3>
-                  </div>
-                  <div className='col-9'>
-                    {this.props.clusters.length === 0 ? (
-                      <p>This organization doesn&apos;t have any clusters.</p>
-                    ) : (
-                      <BootstrapTable
-                        keyField='id'
-                        data={this.props.clusters}
-                        columns={this.getClusterTableColumnsConfig()}
-                        bordered={false}
-                        defaultSorted={clusterTableDefaultSorting}
-                        defaultSortDirection='asc'
-                      />
-                    )}
-                    <Link to='/new-cluster'>
-                      <Button bsStyle='default'>
-                        <i className='fa fa-add-circle' /> Create Cluster
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-
-                <div className='row section'>
-                  <div className='col-3'>
-                    <h3 className='table-label'>Members</h3>
-                  </div>
-                  <div className='col-9'>
-                    {this.props.organization.members.length === 0 ? (
-                      <p>This organization has no members</p>
-                    ) : (
-                      <BootstrapTable
-                        keyField='email'
-                        data={this.props.membersForTable}
-                        columns={this.getMemberTableColumnsConfig()}
-                        bordered={false}
-                        defaultSorted={memberTableDefaultSorting}
-                        defaultSortDirection='asc'
-                      />
-                    )}
-                    <Button onClick={this.addMember} bsStyle='default'>
-                      <i className='fa fa-add-circle' /> Add Member
-                    </Button>
-                  </div>
-                </div>
-
-                {credentialsSection}
+          <div>
+            <div className='row'>
+              <div className='col-12'>
+                <h1>Organization: {this.props.match.params.orgId}</h1>
               </div>
-            </DocumentTitle>
-          </Breadcrumb>
-        </Breadcrumb>
+            </div>
+
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Clusters</h3>
+              </div>
+              <div className='col-9'>
+                {this.props.clusters.length === 0 ? (
+                  <p>This organization doesn&apos;t have any clusters.</p>
+                ) : (
+                  <BootstrapTable
+                    keyField='id'
+                    data={this.props.clusters}
+                    columns={this.getClusterTableColumnsConfig()}
+                    bordered={false}
+                    defaultSorted={clusterTableDefaultSorting}
+                    defaultSortDirection='asc'
+                  />
+                )}
+                <Link
+                  to={`/organizations/${
+                    this.props.organization.id
+                  }/clusters/new/`}
+                >
+                  <Button bsStyle='default'>
+                    <i className='fa fa-add-circle' /> Create Cluster
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            <div className='row section'>
+              <div className='col-3'>
+                <h3 className='table-label'>Members</h3>
+              </div>
+              <div className='col-9'>
+                {this.props.organization.members.length === 0 ? (
+                  <p>This organization has no members</p>
+                ) : (
+                  <BootstrapTable
+                    keyField='email'
+                    data={this.props.membersForTable}
+                    columns={this.getMemberTableColumnsConfig()}
+                    bordered={false}
+                    defaultSorted={memberTableDefaultSorting}
+                    defaultSortDirection='asc'
+                  />
+                )}
+                <Button onClick={this.addMember} bsStyle='default'>
+                  <i className='fa fa-add-circle' /> Add Member
+                </Button>
+              </div>
+            </div>
+
+            {credentialsSection}
+          </div>
+        </DocumentTitle>
       );
     } else {
       // 404 or fetching
@@ -259,39 +250,13 @@ function memberActionsCellFormatter(cell, row) {
   );
 }
 
-function mapStateToProps(state, ownProps) {
-  var allClusters = state.entities.clusters.items;
-  var clusters = [];
-
-  clusters = _.filter(allClusters, cluster => {
-    return cluster.owner === ownProps.match.params.orgId;
-  });
-
-  var membersForTable = state.entities.organizations.items[
-    ownProps.match.params.orgId
-  ].members.map(member => {
-    return Object.assign({}, member, {
-      emailDomain: member.email.split('@')[1],
-    });
-  });
-
-  return {
-    organization:
-      state.entities.organizations.items[ownProps.match.params.orgId],
-    membersForTable: membersForTable,
-    app: state.app,
-    clusters: clusters,
-  };
-}
-
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(OrganizationActions, dispatch),
-    dispatch: dispatch,
   };
 }
 
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps
 )(OrganizationDetail);

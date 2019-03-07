@@ -27,56 +27,34 @@ class GettingStarted extends React.Component {
               '/getting-started/',
           }}
         >
-          <Breadcrumb
-            data={{
-              title: this.props.match.params.clusterId,
-              pathname:
-                '/organizations/' +
-                this.props.match.params.orgId +
-                '/clusters/' +
-                this.props.match.params.clusterId,
-            }}
-          >
-            <Breadcrumb
-              data={{
-                title: this.props.match.params.orgId.toUpperCase(),
-                pathname: '/organizations/' + this.props.match.params.orgId,
-              }}
-            >
-              <Breadcrumb
-                data={{ title: 'ORGANIZATIONS', pathname: '/organizations/' }}
-              >
-                <div>
-                  <Switch>
-                    <Route
-                      exact
-                      path='/organizations/:orgId/clusters/:clusterId/getting-started/'
-                      component={Page0_Overview}
-                    />
-                    <Route
-                      exact
-                      path='/organizations/:orgId/clusters/:clusterId/getting-started/configure/'
-                      component={Page1_ConfigureKubeCTL}
-                    />
-                    <Route
-                      exact
-                      path='/organizations/:orgId/clusters/:clusterId/getting-started/example/'
-                      component={Page2_SimpleExample}
-                    />
-                    <Route
-                      exact
-                      path='/organizations/:orgId/clusters/:clusterId/getting-started/next-steps/'
-                      component={Page3_NextSteps}
-                    />
-                    <Redirect
-                      path='*'
-                      to='/organizations/:orgId/clusters/:clusterId/getting-started/'
-                    />
-                  </Switch>
-                </div>
-              </Breadcrumb>
-            </Breadcrumb>
-          </Breadcrumb>
+          <div>
+            <Switch>
+              <Route
+                exact
+                path='/organizations/:orgId/clusters/:clusterId/getting-started/'
+                component={Page0_Overview}
+              />
+              <Route
+                exact
+                path='/organizations/:orgId/clusters/:clusterId/getting-started/configure/'
+                component={Page1_ConfigureKubeCTL}
+              />
+              <Route
+                exact
+                path='/organizations/:orgId/clusters/:clusterId/getting-started/example/'
+                component={Page2_SimpleExample}
+              />
+              <Route
+                exact
+                path='/organizations/:orgId/clusters/:clusterId/getting-started/next-steps/'
+                component={Page3_NextSteps}
+              />
+              <Redirect
+                path='*'
+                to='/organizations/:orgId/clusters/:clusterId/getting-started/'
+              />
+            </Switch>
+          </div>
         </Breadcrumb>
       </DocumentTitle>
     );

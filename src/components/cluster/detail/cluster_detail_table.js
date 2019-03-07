@@ -4,9 +4,9 @@ import _ from 'underscore';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { relativeDate } from '../../lib/helpers.js';
-import AWSAccountID from '../shared/aws_account_id';
-import ReleaseDetailsModal from '../modals/release_details_modal';
+import { relativeDate } from '../../../lib/helpers.js';
+import AWSAccountID from '../../shared/aws_account_id';
+import ReleaseDetailsModal from '../../modals/release_details_modal';
 import cmp from 'semver-compare';
 
 class ClusterDetailTable extends React.Component {

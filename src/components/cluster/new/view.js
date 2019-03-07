@@ -3,10 +3,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
-import Button from '../shared/button';
-import { clusterCreate } from '../../actions/clusterActions';
-import NodeCountSelector from '../shared/node_count_selector.js';
-import NumberPicker from '../shared/number_picker.js';
+import Button from '../../shared/button';
+import { clusterCreate } from '../../../actions/clusterActions';
+import NodeCountSelector from '../../shared/node_count_selector.js';
+import NumberPicker from '../../shared/number_picker.js';
 import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
 import AzureVMSizeSelector from './azure_vm_size_selector.js';
 import ReleaseSelector from './release_selector.js';
@@ -321,7 +321,9 @@ class CreateCluster extends React.Component {
 
   render() {
     return (
-      <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: '/new-cluster/' }}>
+      <Breadcrumb
+        data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
+      >
         <DocumentTitle
           title={
             'Create Cluster | ' +
@@ -561,6 +563,7 @@ CreateCluster.propTypes = {
   defaultCPUCores: PropTypes.number,
   defaultMemorySize: PropTypes.number,
   defaultDiskSize: PropTypes.number,
+  match: PropTypes.object,
 };
 
 function mapStateToProps(state) {
