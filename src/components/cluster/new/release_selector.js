@@ -2,12 +2,16 @@
 
 import React from 'react';
 import cmp from 'semver-compare';
-import Button from '../shared/button';
+import Button from '../../shared/button';
 import { connect } from 'react-redux';
-import { loadReleases } from '../../actions/releaseActions';
-import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
+import { loadReleases } from '../../../actions/releaseActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+} from '../../../lib/flash_message';
 import _ from 'underscore';
-import ReleaseDetailsModal from '../modals/release_details_modal';
+import ReleaseDetailsModal from '../../modals/release_details_modal';
 import PropTypes from 'prop-types';
 
 class ReleaseSelector extends React.Component {

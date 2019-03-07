@@ -1,15 +1,19 @@
 'use strict';
 
 import React from 'react';
-import ClusterIDLabel from '../shared/cluster_id_label';
-import Button from '../shared/button';
+import ClusterIDLabel from '../../shared/cluster_id_label';
+import Button from '../../shared/button';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import NodeCountSelector from '../shared/node_count_selector';
+import NodeCountSelector from '../../shared/node_count_selector';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import cmp from 'semver-compare';
-import * as clusterActions from '../../actions/clusterActions';
-import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
+import * as clusterActions from '../../../actions/clusterActions';
+import {
+  FlashMessage,
+  messageType,
+  messageTTL,
+} from '../../../lib/flash_message';
 import PropTypes from 'prop-types';
 
 class ScaleClusterModal extends React.Component {

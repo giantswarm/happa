@@ -2,58 +2,69 @@
 
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../shared/button';
-import InputField from '../shared/input_field';
+import Button from '../../shared/button';
+import InputField from '../../shared/input_field';
 import PropTypes from 'prop-types';
 
-class AWSInstanceTypeSelector extends React.Component {
+class AzureVMSizeSelector extends React.Component {
   constructor(props) {
     super(props);
 
-    // devInstanceTypes are placeholder instance types for the dev environment.
-    // In the dev environment window.config.awsCapabilitiesJson is not set to anything.
+    // devVMSizes are placeholder VM sizes for the dev environment.
+    // In the dev environment window.config.azureCapabilitiesJson is not set to anything.
     // It would normally be set by the value in the installations repo.
-    var devInstanceTypes = {
-      'm3.large': {
-        description: 'M3 General Purpose Large',
-        memory_size_gb: '7.5',
-        cpu_cores: '2',
-        storage_size_gb: '32',
+    var devVMSizes = {
+      Standard_A2_v2: {
+        additionalProperties: {},
+        description: 'This is some description',
+        maxDataDiskCount: 4,
+        memoryInMb: 4294.967296,
+        name: 'Standard_A2_v2',
+        numberOfCores: 2,
+        osDiskSizeInMb: 1047552,
+        resourceDiskSizeInMb: 21474.83648,
       },
-      'm3.xlarge': {
-        description: 'M3 General Purpose Extra Large',
-        memory_size_gb: '15',
-        cpu_cores: '4',
-        storage_size_gb: '80',
+      Standard_A4_v2: {
+        additionalProperties: {},
+        description:
+          'Here is a longer description that might be too long for the field',
+        maxDataDiskCount: 8,
+        memoryInMb: 8589.934592,
+        name: 'Standard_A4_v2',
+        numberOfCores: 4,
+        osDiskSizeInMb: 1047552,
+        resourceDiskSizeInMb: 42949.67296,
       },
-      'm3.2xlarge': {
-        description: 'M3 General Purpose Double Extra Large',
-        memory_size_gb: '30',
-        cpu_cores: '8',
-        storage_size_gb: '160',
+      Standard_A8_v2: {
+        additionalProperties: {},
+        description: 'Another VM size description text',
+        maxDataDiskCount: 16,
+        memoryInMb: 17179.869184,
+        name: 'Standard_A8_v2',
+        numberOfCores: 8,
+        osDiskSizeInMb: 1047552,
+        resourceDiskSizeInMb: 85899.34592,
       },
     };
 
-    // Use devInstanceTypes unless there is something set for window.config.awsCapabilitiesJSON
-    var instanceTypes = devInstanceTypes;
-    if (window.config.awsCapabilitiesJSON != '') {
-      instanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
+    // Use devVMSizes unless there is something set for window.config.azureCapabilitiesJSON
+    var vmSizes = devVMSizes;
+    if (window.config.azureCapabilitiesJSON != '') {
+      vmSizes = JSON.parse(window.config.azureCapabilitiesJSON);
     }
 
-    var availableInstanceTypes = [];
-    // Create a list of only the allowed instance types
-    props.allowedInstanceTypes.forEach(function(it) {
-      if (typeof instanceTypes[it] === 'object') {
-        availableInstanceTypes.push(
-          Object.assign({}, instanceTypes[it], { name: it })
-        );
+    var availableVMSizes = [];
+    // Create a list of only the allowed VM sizes.
+    props.allowedVMSizes.forEach(function(vs) {
+      if (typeof vmSizes[vs] === 'object') {
+        availableVMSizes.push(vmSizes[vs]);
       }
     });
 
     this.state = {
       modalVisible: false,
-      selectedInstanceType: props.value,
-      instanceTypes: availableInstanceTypes,
+      preSelectedVMSize: props.value,
+      vmSizes: availableVMSizes,
     };
   }
 
@@ -61,7 +72,7 @@ class AWSInstanceTypeSelector extends React.Component {
     if (!this.props.readOnly) {
       this.setState({
         modalVisible: true,
-        selectedInstanceType: this.props.value,
+        preSelectedVMSize: this.props.value,
       });
     }
   };
@@ -72,10 +83,10 @@ class AWSInstanceTypeSelector extends React.Component {
     });
   };
 
-  updateInstanceType = instanceType => {
+  updateVMSize = vmSize => {
     this.props.onChange({
       valid: this.state.valid,
-      value: instanceType,
+      value: vmSize,
     });
   };
 
@@ -87,34 +98,34 @@ class AWSInstanceTypeSelector extends React.Component {
     }
   }
 
-  preSelect(instanceTypeName) {
+  preSelect(vmSize) {
     this.setState({
-      selectedInstanceType: instanceTypeName,
+      preSelectedVMSize: vmSize,
     });
   }
 
-  selectInstanceType = () => {
+  selectVMSize = () => {
     this.props.onChange({
-      value: this.state.selectedInstanceType,
+      value: this.state.preSelectedVMSize,
       valid: true,
     });
     this.closeModal();
   };
 
-  validateInstanceType = instanceTypeName => {
+  validateVMSize = vmSize => {
     var valid;
     var validationError;
 
-    var validInstanceTypes = this.state.instanceTypes.map(x => {
+    var validVMSizes = this.state.vmSizes.map(x => {
       return x.name;
     });
 
-    if (validInstanceTypes.indexOf(instanceTypeName) != -1) {
+    if (validVMSizes.indexOf(vmSize) != -1) {
       valid = true;
       validationError = '';
     } else {
       valid = false;
-      validationError = 'Please enter a valid instance type';
+      validationError = 'Please enter a valid vm size';
     }
 
     this.setState({
@@ -137,13 +148,10 @@ class AWSInstanceTypeSelector extends React.Component {
             }}
           >
             <InputField
-              ref={i => {
-                this.instance_type = i;
-              }}
               type='text'
               value={this.props.value}
-              onChange={this.updateInstanceType}
-              validate={this.validateInstanceType}
+              onChange={this.updateVMSize}
+              validate={this.validateVMSize}
               autoFocus
               readOnly={this.props.readOnly}
             />
@@ -165,7 +173,7 @@ class AWSInstanceTypeSelector extends React.Component {
           className='new-cluster--instance-type-selector-modal aws'
         >
           <BootstrapModal.Header closeButton>
-            <BootstrapModal.Title>Select an Instance Type</BootstrapModal.Title>
+            <BootstrapModal.Title>Select a VM Size</BootstrapModal.Title>
           </BootstrapModal.Header>
           <BootstrapModal.Body>
             <table className='new-cluster--instance-type-selector-table'>
@@ -179,13 +187,13 @@ class AWSInstanceTypeSelector extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.state.instanceTypes.map(instanceType => {
+                {this.state.vmSizes.map(vmSize => {
                   return (
                     <tr
-                      key={instanceType.name}
-                      onClick={this.preSelect.bind(this, instanceType.name)}
+                      key={vmSize.name}
+                      onClick={this.preSelect.bind(this, vmSize.name)}
                       className={
-                        instanceType.name === this.state.selectedInstanceType
+                        vmSize.name === this.state.preSelectedVMSize
                           ? 'selected'
                           : ''
                       }
@@ -194,19 +202,14 @@ class AWSInstanceTypeSelector extends React.Component {
                         <input
                           type='radio'
                           readOnly
-                          checked={
-                            instanceType.name ===
-                            this.state.selectedInstanceType
-                          }
+                          checked={vmSize.name === this.state.preSelectedVMSize}
                         />
                       </td>
-                      <td>{instanceType.name}</td>
-                      <td className='description'>
-                        {instanceType.description}
-                      </td>
-                      <td className='numeric'>{instanceType.cpu_cores}</td>
+                      <td>{vmSize.name}</td>
+                      <td className='description'>{vmSize.description}</td>
+                      <td className='numeric'>{vmSize.numberOfCores}</td>
                       <td className='numeric'>
-                        {instanceType.memory_size_gb} GB
+                        {(vmSize.memoryInMb / 1000).toFixed(2)} GB
                       </td>
                     </tr>
                   );
@@ -215,12 +218,8 @@ class AWSInstanceTypeSelector extends React.Component {
             </table>
           </BootstrapModal.Body>
           <BootstrapModal.Footer>
-            <Button
-              type='submit'
-              bsStyle='primary'
-              onClick={this.selectInstanceType}
-            >
-              Select Instance Type
+            <Button type='submit' bsStyle='primary' onClick={this.selectVMSize}>
+              Select VM Size
             </Button>
 
             <Button bsStyle='link' onClick={this.closeModal}>
@@ -233,11 +232,11 @@ class AWSInstanceTypeSelector extends React.Component {
   }
 }
 
-AWSInstanceTypeSelector.propTypes = {
-  allowedInstanceTypes: PropTypes.array,
+AzureVMSizeSelector.propTypes = {
+  allowedVMSizes: PropTypes.array,
   value: PropTypes.string,
   readOnly: PropTypes.bool,
   onChange: PropTypes.func,
 };
 
-export default AWSInstanceTypeSelector;
+export default AzureVMSizeSelector;

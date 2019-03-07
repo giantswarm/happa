@@ -2,11 +2,11 @@
 
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../shared/button';
-import InputField from '../shared/input_field';
+import Button from '../../shared/button';
+import InputField from '../../shared/input_field';
 import PropTypes from 'prop-types';
 
-class AzureVMSizeSelector extends React.Component {
+class VMSizeSelector extends React.Component {
   constructor(props) {
     super(props);
 
@@ -192,11 +192,6 @@ class AzureVMSizeSelector extends React.Component {
                     <tr
                       key={vmSize.name}
                       onClick={this.preSelect.bind(this, vmSize.name)}
-                      className={
-                        vmSize.name === this.state.preSelectedVMSize
-                          ? 'selected'
-                          : ''
-                      }
                     >
                       <td>
                         <input
@@ -232,11 +227,11 @@ class AzureVMSizeSelector extends React.Component {
   }
 }
 
-AzureVMSizeSelector.propTypes = {
+VMSizeSelector.propTypes = {
   allowedVMSizes: PropTypes.array,
   value: PropTypes.string,
   readOnly: PropTypes.bool,
   onChange: PropTypes.func,
 };
 
-export default AzureVMSizeSelector;
+export default VMSizeSelector;
