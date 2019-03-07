@@ -9,6 +9,7 @@ services:
       - "7000:7000"
     volumes:
       - $PWD/src:/usr/src/app/src:z
+      - $PWD/.eslintrc:/usr/src/app/.eslintrc:z
       # to persist info on used dependencies to the repo
       - $PWD/yarn.lock:/usr/src/app/yarn.lock:z
 
