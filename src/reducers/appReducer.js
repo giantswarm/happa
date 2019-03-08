@@ -102,7 +102,7 @@ export default function appReducer(
       defaultClientAuth.apiKeyPrefix = action.userData.auth.scheme;
 
       return Object.assign({}, state, {
-        loggedInUser: action.userData,
+        loggedInUser: Object.assign({}, state.loggedInUser, action.userData),
       });
 
     case types.LOGIN_ERROR:
