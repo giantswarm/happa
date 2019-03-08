@@ -1,6 +1,7 @@
 'use strict';
-import React from 'react';
+
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class AWSAccountID extends React.Component {
   render() {

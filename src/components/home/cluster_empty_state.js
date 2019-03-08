@@ -1,6 +1,8 @@
-import React from 'react';
+'use strict';
+
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class ClusterEmptyState extends React.Component {
   render() {

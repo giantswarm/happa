@@ -1,31 +1,31 @@
 'use strict';
 
-import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import {
-  usersLoad,
-  userRemoveExpiration,
-  userDelete,
-} from '../../actions/userActions';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
-import {
-  invitationsLoad,
   invitationCreate,
+  invitationsLoad,
 } from '../../actions/invitationActions';
-import _ from 'underscore';
-import DocumentTitle from 'react-document-title';
-import PropTypes from 'prop-types';
-import { Breadcrumb } from 'react-breadcrumbs';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { push } from 'connected-react-router';
-import Button from '../shared/button';
-import BootstrapTable from 'react-bootstrap-table-next';
-import moment from 'moment';
 import { relativeDate } from '../../lib/helpers.js';
+import {
+  userDelete,
+  userRemoveExpiration,
+  usersLoad,
+} from '../../actions/userActions';
+import _ from 'underscore';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import BootstrapTable from 'react-bootstrap-table-next';
+import Button from '../shared/button';
 import copy from 'copy-to-clipboard';
+import DocumentTitle from 'react-document-title';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
+import moment from 'moment';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import PropTypes from 'prop-types';
+import React from 'react';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 class Users extends React.Component {
   constructor(props) {

@@ -1,8 +1,8 @@
 'use strict';
 
-import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 // NumberPicker is a component that allows a user to pick a number by
 // incrementing / decrementing a value or typing it straight into the input

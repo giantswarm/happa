@@ -1,9 +1,9 @@
 'use strict';
 
-import React from 'react';
 import { connect } from 'react-redux';
 import NumberPicker from './number_picker.js';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 // NodeCountSelector is a component that allows a user to pick a number of
 // nodes by incrementing / decrementing a node count value or adjusting min and

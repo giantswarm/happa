@@ -1,9 +1,9 @@
 'use strict';
 
-import { FlashMessage, messageType, messageTTL } from '../lib/flash_message';
 import * as types from './actionTypes';
-import Passage from '../lib/passage_client';
+import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
 import _ from 'underscore';
+import Passage from '../lib/passage_client';
 
 // invitationsLoad
 // -----------------

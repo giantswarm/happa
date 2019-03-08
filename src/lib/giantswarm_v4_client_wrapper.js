@@ -3,11 +3,11 @@
 // A wrapper for the GiantSwarm V4 JS Client
 // It initializes the client with the right end point.
 
-import GiantSwarmV4 from 'giantswarm-v4';
-import Auth0 from '../lib/auth0';
-import configureStore from '../stores/configureStore';
 import { auth0Login } from '../actions/userActions';
 import { isJwtExpired } from '../lib/helpers';
+import Auth0 from '../lib/auth0';
+import configureStore from '../stores/configureStore';
+import GiantSwarmV4 from 'giantswarm-v4';
 
 const auth0 = new Auth0();
 const store = configureStore({});

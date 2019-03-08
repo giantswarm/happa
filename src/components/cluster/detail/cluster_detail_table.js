@@ -1,13 +1,12 @@
 'use strict';
 
-import _ from 'underscore';
-import React from 'react';
-import PropTypes from 'prop-types';
-
 import { relativeDate } from '../../../lib/helpers.js';
+import _ from 'underscore';
 import AWSAccountID from '../../shared/aws_account_id';
-import ReleaseDetailsModal from '../../modals/release_details_modal';
 import cmp from 'semver-compare';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ClusterDetailTable extends React.Component {
   showReleaseDetails = () => {

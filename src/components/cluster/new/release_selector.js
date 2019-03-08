@@ -1,18 +1,18 @@
 'use strict';
 
-import React from 'react';
-import cmp from 'semver-compare';
-import Button from '../../shared/button';
 import { connect } from 'react-redux';
-import { loadReleases } from '../../../actions/releaseActions';
 import {
   FlashMessage,
-  messageType,
   messageTTL,
+  messageType,
 } from '../../../lib/flash_message';
+import { loadReleases } from '../../../actions/releaseActions';
 import _ from 'underscore';
-import ReleaseDetailsModal from '../../modals/release_details_modal';
+import Button from '../../shared/button';
+import cmp from 'semver-compare';
 import PropTypes from 'prop-types';
+import React from 'react';
+import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ReleaseSelector extends React.Component {
   state = {

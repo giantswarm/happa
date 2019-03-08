@@ -1,8 +1,9 @@
 'use strict';
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+
 import { Breadcrumb } from 'react-breadcrumbs';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 class NextSteps extends React.Component {
   render() {

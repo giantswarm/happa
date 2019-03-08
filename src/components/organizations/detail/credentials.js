@@ -1,19 +1,18 @@
 'use strict';
 
-import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   organizationCredentialsLoad,
   organizationCredentialsSet,
   organizationCredentialsSetConfirmed,
 } from '../../../actions/organizationActions';
-
 import AWSAccountID from '../../shared/aws_account_id';
 import Button from '../../shared/button';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 class Credentials extends React.Component {
   state = {

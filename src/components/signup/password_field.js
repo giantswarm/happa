@@ -1,7 +1,9 @@
 'use strict';
+
+import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
+
 var typingTimer;
 var doneTypingInterval = 250; // ms
 

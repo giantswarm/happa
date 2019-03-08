@@ -1,12 +1,12 @@
 'use strict';
 
+import * as userActions from '../../actions/userActions';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
+import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as userActions from '../../actions/userActions';
-import PropTypes from 'prop-types';
-import { push } from 'connected-react-router';
 
 class Logout extends React.Component {
   componentDidMount() {

@@ -1,21 +1,21 @@
 'use strict';
 
-import React from 'react';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import Button from '../../shared/button';
 import * as clusterActions from '../../../actions/clusterActions';
-import { relativeDate } from '../../../lib/helpers.js';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import ExpiryHoursPicker from './expiry_hours_picker';
-import { makeKubeConfigTextFile, dedent } from '../../../lib/helpers';
-import copy from 'copy-to-clipboard';
-import _ from 'underscore';
-import PropTypes from 'prop-types';
-import moment from 'moment';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { debounce } from 'throttle-debounce';
+import { dedent, makeKubeConfigTextFile } from '../../../lib/helpers';
+import { relativeDate } from '../../../lib/helpers.js';
+import _ from 'underscore';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import Button from '../../shared/button';
+import copy from 'copy-to-clipboard';
+import ExpiryHoursPicker from './expiry_hours_picker';
+import moment from 'moment';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import PropTypes from 'prop-types';
+import React from 'react';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 class ClusterKeyPairs extends React.Component {
   state = {

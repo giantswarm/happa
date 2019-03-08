@@ -1,28 +1,32 @@
 'use strict';
 
 import 'babel-polyfill';
+import { ConnectedRouter } from 'connected-react-router';
+import { Provider } from 'react-redux';
+import { render } from 'react-dom';
+import { Route, Switch } from 'react-router-dom';
 import AdminLogin from './auth/admin';
 import configureStore from '../stores/configureStore';
-import { ConnectedRouter } from 'connected-react-router';
 import ForgotPassword from './forgot_password/index';
-import SetPassword from './forgot_password/set_password';
 import history from '../stores/history';
 import Layout from './layout';
 import Login from './auth/login';
 import Logout from './auth/logout';
 import OAuthCallback from './auth/oauth_callback.js';
-import { Provider } from 'react-redux';
 import React from 'react';
-import { render } from 'react-dom';
-import { Route, Switch } from 'react-router-dom';
+import SetPassword from './forgot_password/set_password';
 import SignUp from './signup/index';
 
-// CSS Imports.
+// CSS Imports
+// Keep the blank lines to allow for a certain ordering!
+
 import 'normalize.css';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import '../styles/app.sass';
-import 'react-datepicker/dist/react-datepicker.css';
 import 'noty/lib/noty.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 var appContainer = document.getElementById('app');
 

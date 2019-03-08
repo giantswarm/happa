@@ -1,5 +1,12 @@
 'use strict';
 
+import * as Helpers from '../../lib/helpers';
+import copy from 'copy-to-clipboard';
+import Line from './line';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
 // FileBlock
 // Use this to show the contents of a file to a user.
 // The user can then easily download the file or copy it to clipboard
@@ -17,12 +24,6 @@
 //
 
 var Modernizr = window.Modernizr;
-import React from 'react';
-import copy from 'copy-to-clipboard';
-import Line from './line';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import * as Helpers from '../../lib/helpers';
-import PropTypes from 'prop-types';
 
 class FileBlock extends React.Component {
   state = {

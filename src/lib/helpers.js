@@ -1,10 +1,11 @@
 'use strict';
-import validate from 'validate.js';
-import moment from 'moment';
-import React from 'react';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
+
 import _ from 'underscore';
+import moment from 'moment';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import React from 'react';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
+import validate from 'validate.js';
 
 export function dedent(strings, ...values) {
   let raw;

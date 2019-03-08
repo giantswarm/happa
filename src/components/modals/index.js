@@ -1,22 +1,21 @@
 'use strict';
 
-import React from 'react';
+import { clusterDeleteConfirmed } from '../../actions/clusterActions';
 import { connect } from 'react-redux';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../shared/button';
 import { modalHide } from '../../actions/modalActions';
 import {
-  organizationDeleteConfirmed,
-  organizationCreateConfirmed,
   organizationAddMemberConfirmed,
   organizationAddMemberTyping,
+  organizationCreateConfirmed,
+  organizationDeleteConfirmed,
   organizationRemoveMemberConfirmed,
 } from '../../actions/organizationActions';
-
-import { clusterDeleteConfirmed } from '../../actions/clusterActions';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import Button from '../shared/button';
 import ClusterIDLabel from '../shared/cluster_id_label';
 import EmailField from '../shared/email_field';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class Modals extends React.Component {
   state = {

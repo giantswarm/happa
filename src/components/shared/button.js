@@ -1,5 +1,10 @@
 'use strict';
 
+import BsButton from 'react-bootstrap/lib/Button';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
 // Button
 //
 // <Button
@@ -17,11 +22,6 @@
 //
 // You can also disable the button by setting the disabled prop to true.
 //
-
-import React from 'react';
-import BsButton from 'react-bootstrap/lib/Button';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import PropTypes from 'prop-types';
 
 class Button extends React.Component {
   loadingIndicator = position => {

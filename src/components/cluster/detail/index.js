@@ -1,14 +1,14 @@
 'use strict';
 
-import _ from 'underscore';
 import { Breadcrumb } from 'react-breadcrumbs';
-import cmp from 'semver-compare';
-import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import _ from 'underscore';
 import ClusterDetailView from './view';
+import cmp from 'semver-compare';
 import GettingStarted from '../../getting-started';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 class ClusterDetailIndex extends React.Component {
   render() {

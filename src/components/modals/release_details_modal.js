@@ -1,11 +1,11 @@
 'use strict';
 
+import { relativeDate } from '../../lib/helpers.js';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../shared/button';
-import React from 'react';
-import { relativeDate } from '../../lib/helpers.js';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class ReleaseDetailsModal extends React.Component {
   state = {

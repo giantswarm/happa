@@ -1,9 +1,11 @@
-import React from 'react';
+'use strict';
+
 import Button from '../shared/button';
-import update from 'react-addons-update';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import PropTypes from 'prop-types';
 import GiantSwarmV4 from 'giantswarm-v4';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import update from 'react-addons-update';
 
 class ChangeEmailForm extends React.Component {
   constructor(props) {

@@ -1,11 +1,11 @@
 'use strict';
 
 import * as types from './actionTypes';
+import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
 import { modalHide } from './modalActions';
-import { FlashMessage, messageType, messageTTL } from '../lib/flash_message';
-import GiantSwarmV4 from 'giantswarm-v4';
-import APIClusterStatusClient from '../lib/api_status_client';
 import { push } from 'connected-react-router';
+import APIClusterStatusClient from '../lib/api_status_client';
+import GiantSwarmV4 from 'giantswarm-v4';
 
 // clustersLoad
 // -----------------

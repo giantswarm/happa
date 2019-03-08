@@ -1,18 +1,18 @@
 'use strict';
 
-import React from 'react';
-import Passage from '../../lib/passage_client';
-import PasswordField from './password_field';
-import StatusMessage from './status_message';
-import TermsOfService from './terms_of_service';
 import * as userActions from '../../actions/userActions';
-import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { validatePassword } from '../../lib/password_validation';
+import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
 import { push } from 'connected-react-router';
+import { validatePassword } from '../../lib/password_validation';
 import Button from '../shared/button';
+import Passage from '../../lib/passage_client';
+import PasswordField from './password_field';
+import PropTypes from 'prop-types';
+import React from 'react';
+import StatusMessage from './status_message';
+import TermsOfService from './terms_of_service';
 
 // TODO: Figure out a way to make the test suite know about our standard
 // 'window.config' object. Or change the way these config params are passed

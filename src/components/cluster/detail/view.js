@@ -1,27 +1,25 @@
 'use strict';
 
+import * as clusterActions from '../../../actions/clusterActions';
+import * as releaseActions from '../../../actions/releaseActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import {
+  FlashMessage,
+  messageTTL,
+  messageType,
+} from '../../../lib/flash_message';
+import { organizationCredentialsLoad } from '../../../actions/organizationActions';
 import { push } from 'connected-react-router';
+import Button from '../../shared/button';
+import ClusterApps from './cluster_apps';
+import ClusterDetailTable from './cluster_detail_table';
+import ClusterIDLabel from '../../shared/cluster_id_label';
+import ClusterKeyPairs from './key_pairs';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
-
-import {
-  FlashMessage,
-  messageType,
-  messageTTL,
-} from '../../../lib/flash_message';
-import { organizationCredentialsLoad } from '../../../actions/organizationActions';
-import * as clusterActions from '../../../actions/clusterActions';
-import * as releaseActions from '../../../actions/releaseActions';
-
-import Button from '../../shared/button';
-import ClusterIDLabel from '../../shared/cluster_id_label';
-import ClusterKeyPairs from './key_pairs';
-import ClusterDetailTable from './cluster_detail_table';
-import ClusterApps from './cluster_apps';
 import ScaleClusterModal from './scale_cluster_modal';
 import UpgradeClusterModal from './upgrade_cluster_modal';
 

@@ -1,14 +1,14 @@
 'use strict';
 
-import React from 'react';
-import { connect } from 'react-redux';
-import { clearQueues } from '../../lib/flash_message';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
-import Auth0 from '../../lib/auth0';
+import { clearQueues } from '../../lib/flash_message';
+import { connect } from 'react-redux';
 import { isJwtExpired } from '../../lib/helpers';
-import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
+import Auth0 from '../../lib/auth0';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 class AdminLogin extends React.Component {
   componentDidMount() {

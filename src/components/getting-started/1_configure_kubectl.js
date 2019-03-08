@@ -1,16 +1,17 @@
 'use strict';
-import React from 'react';
-import { CodeBlock, Prompt } from './codeblock';
-import { connect } from 'react-redux';
+
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import { FlashMessage, messageType, messageTTL } from '../../lib/flash_message';
-import platform from '../../lib/platform';
-import ConfigureKubeCtlAlternative from './1_configure_kubectl_alternative';
-import ClusterIDLabel from '../shared/cluster_id_label';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'react-breadcrumbs';
+import { CodeBlock, Prompt } from './codeblock';
+import { connect } from 'react-redux';
+import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
+import { Link } from 'react-router-dom';
+import ClusterIDLabel from '../shared/cluster_id_label';
+import ConfigureKubeCtlAlternative from './1_configure_kubectl_alternative';
+import platform from '../../lib/platform';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 class ConfigKubeCtl extends React.Component {
   state = {

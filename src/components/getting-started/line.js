@@ -1,14 +1,14 @@
 'use strict';
 
+import PropTypes from 'prop-types';
+import React from 'react';
+
 // Line
 // Used in CodeBlock and FileBlock
 // <Line prompt={true} text='Some text' />;
 //
 // prompt: Display this line as a prompt or not (adds the dollar sign before the text)
 // text: The text that this line should display
-
-import React from 'react';
-import PropTypes from 'prop-types';
 
 class Line extends React.Component {
   render() {
