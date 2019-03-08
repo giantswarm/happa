@@ -9,6 +9,7 @@ import { relativeDate } from '../../lib/helpers.js';
 import Button from '../shared/button';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import ClusterIDLabel from '../shared/cluster_id_label';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -86,6 +87,15 @@ class ClusterDashboardItem extends React.Component {
     var memory = this.getMemoryTotal();
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
+
+    var age = Math.abs(
+      moment(this.props.cluster.create_date)
+        .utc()
+        .diff(moment().utc()) / 1000
+    );
+
+    var younger_than_thirty_days = age < 30 * 24 * 60 * 60;
+
     return (
       <div className='cluster-dashboard-item well'>
         <div className='cluster-dashboard-item--label'>
@@ -144,12 +154,16 @@ class ClusterDashboardItem extends React.Component {
         </div>
 
         <div className='cluster-dashboard-item--buttons'>
-          <ButtonGroup>
-            <Button onClick={this.accessCluster.bind(this)}>
-              <i className='fa fa-start' />
-              Get Started
-            </Button>
-          </ButtonGroup>
+          {younger_than_thirty_days ? (
+            <ButtonGroup>
+              <Button onClick={this.accessCluster.bind(this)}>
+                <i className='fa fa-start' />
+                Get Started
+              </Button>
+            </ButtonGroup>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     );
