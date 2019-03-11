@@ -1,6 +1,7 @@
 'use strict';
 
 import { Breadcrumb } from 'react-breadcrumbs';
+import Button from '../../shared/button';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router-dom';
@@ -24,11 +25,24 @@ class AppDetail extends React.Component {
             pathname: this.props.match.url,
           }}
         >
-          <React.Fragment>
-            <h1>{this.props.appVersions[0].name}</h1>
-            <p>{this.props.appVersions[0].description}</p>
-            <Link to='/app-katalog'>Back to the App Katalog</Link>
-          </React.Fragment>
+          <div className='app-detail'>
+            <div className='app-detail--header clearfix'>
+              <img src={this.props.appVersions[0].icon} />
+              <h2>{this.props.appVersions[0].name}</h2>
+              {this.props.appVersions[0].keywords.map(x => (
+                <span key={x} className='keyword'>
+                  {x}
+                </span>
+              ))}
+            </div>
+
+            <div className='app-detail--body'>
+              <p>{this.props.appVersions[0].description}</p>
+            </div>
+            <Button>
+              <Link to='/app-katalog'>Back to the App Katalog</Link>
+            </Button>
+          </div>
         </Breadcrumb>
       </DocumentTitle>
     );
