@@ -1,4 +1,5 @@
 import * as UserActions from '../actions/userActions';
+import AppCatalog from './app_catalog';
 import AccountSettings from './account_settings';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -96,9 +97,10 @@ class Layout extends React.Component {
               <div className='main col-9'>
                 <Switch>
                   <Route exact path='/'                  component={Home} />
-                  <Route exact path='/users'            component={Users} />                  
+                  <Route       path='/app-katalog'       component={AppCatalog} />         
+                  <Route exact path='/users'             component={Users} />                  
                   <Route       path='/organizations'     component={Organizations} />
-                  <Route exact path='/account-settings' component={AccountSettings} />
+                  <Route exact path='/account-settings'  component={AccountSettings} />
                   <Redirect path='*' to='/' />
                 </Switch>
               </div>

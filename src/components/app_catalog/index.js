@@ -1,11 +1,11 @@
 'use strict';
 
-import AppDetail from './app_detail';
+import Detail from './detail';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { catalogsLoad } from '../../actions/catalogActions';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Search from './search';
+import List from './list';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
@@ -43,15 +43,11 @@ class CatalogIndex extends React.Component {
         <div className='app-catalog'>
           <Loading loading={this.state.loading}>
             <Switch>
+              <Route exact path={`${this.props.match.path}`} component={List} />
               <Route
-                exact //
-                path='/app-katalog/'
-                component={Search}
-              />
-              <Route
-                exact //
-                path='/app-katalog/:repo/:app'
-                component={AppDetail}
+                exact
+                path={`${this.props.match.path}/:repo/:app`}
+                component={Detail}
               />
             </Switch>
           </Loading>

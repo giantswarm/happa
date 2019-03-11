@@ -3,6 +3,7 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -14,16 +15,19 @@ class AppDetail extends React.Component {
   }
 
   render() {
+    console.log(this.props.appVersions[0]);
     return (
-      <DocumentTitle title={'App Detail | Giant Swarm '}>
+      <DocumentTitle title={`${this.props.appVersions[0].name} | Giant Swarm `}>
         <Breadcrumb
           data={{
-            title: 'Test App',
-            pathname: '/app-katalog/repo/test/',
+            title: this.props.appVersions[0].name,
+            pathname: this.props.match.url,
           }}
         >
           <React.Fragment>
             <h1>{this.props.appVersions[0].name}</h1>
+            <p>{this.props.appVersions[0].description}</p>
+            <Link to='/app-katalog'>Back to the App Katalog</Link>
           </React.Fragment>
         </Breadcrumb>
       </DocumentTitle>
