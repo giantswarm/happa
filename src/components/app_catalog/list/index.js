@@ -7,7 +7,7 @@ import { replace } from 'connected-react-router';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
-class CatalogIndex extends React.Component {
+class List extends React.Component {
   fetching = {};
 
   constructor(props) {
@@ -256,7 +256,7 @@ function testImage(url) {
   return imgPromise;
 }
 
-CatalogIndex.propTypes = {
+List.propTypes = {
   catalogs: PropTypes.object,
   clusterId: PropTypes.string,
   dispatch: PropTypes.func,
@@ -281,4 +281,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CatalogIndex);
+)(List);
