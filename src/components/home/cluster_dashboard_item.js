@@ -71,6 +71,19 @@ class ClusterDashboardItem extends React.Component {
     return 0;
   }
 
+  /**
+   * Returns true if the cluster is younger than 30 days
+   */
+  clusterYoungerThan30Days() {
+    var age = Math.abs(
+      moment(this.props.cluster.create_date)
+        .utc()
+        .diff(moment().utc()) / 1000
+    );
+
+    return age < 30 * 24 * 60 * 60;
+  }
+
   accessCluster() {
     this.props.dispatch(
       push(
@@ -87,14 +100,6 @@ class ClusterDashboardItem extends React.Component {
     var memory = this.getMemoryTotal();
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
-
-    var age = Math.abs(
-      moment(this.props.cluster.create_date)
-        .utc()
-        .diff(moment().utc()) / 1000
-    );
-
-    var younger_than_thirty_days = age < 30 * 24 * 60 * 60;
 
     return (
       <div className='cluster-dashboard-item well'>
@@ -154,7 +159,7 @@ class ClusterDashboardItem extends React.Component {
         </div>
 
         <div className='cluster-dashboard-item--buttons'>
-          {younger_than_thirty_days ? (
+          {this.clusterYoungerThan30Days() ? (
             <ButtonGroup>
               <Button onClick={this.accessCluster.bind(this)}>
                 <i className='fa fa-start' />
