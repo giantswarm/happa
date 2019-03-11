@@ -367,6 +367,15 @@ class CreateCluster extends React.Component {
 
             <div className='row section'>
               <div className='col-3'>
+                <h3 className='table-label'>Release Version</h3>
+              </div>
+              <div className='col-9'>
+                <ReleaseSelector releaseSelected={this.selectRelease} />
+              </div>
+            </div>
+
+            <div className='row section'>
+              <div className='col-3'>
                 <h3 className='table-label'>Availability Zones</h3>
               </div>
               <div className='col-9'>
@@ -508,15 +517,6 @@ class CreateCluster extends React.Component {
                 readOnly={false}
                 onChange={this.updateScaling}
               />
-            </div>
-
-            <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Release Version</h3>
-              </div>
-              <div className='col-9'>
-                <ReleaseSelector releaseSelected={this.selectRelease} />
-              </div>
             </div>
 
             <ProviderCredentials
