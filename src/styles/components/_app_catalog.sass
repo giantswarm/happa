@@ -57,7 +57,7 @@
       width: 24%
       flex-shrink: 0
       border-radius: 4px
-      height: 160px
+      height: 175px
       background-color: #2f556a
       margin-bottom: 20px
       position: relative
@@ -134,11 +134,29 @@
         margin: auto
         vertical-align: middle
 
+.app-detail
+  small
+    text-transform: uppercase
+    font-size: 10px
 
 .app-detail--header
   border-bottom: 1px solid #2a5a74
   padding-bottom: 15px
   margin-bottom: 15px
+  display: flex
+
+  .keywords
+    margin-bottom: 15px
+
+  .version
+    small
+      display: inline
+
+    code
+      margin-right: 15px
+
+  h2
+    margin-top: 0px
 
   .keyword
     font-size: 12px
@@ -148,9 +166,47 @@
     border-radius: 4px
     padding: 7px
 
+.app-detail--icon
+  height: 120px
+  width: 120px
+  background-color: #fff
+  padding: 10px
+  text-align: center
+  border-radius: 5px
+  margin-right: 15px
+  flex: 0 0 120px
+
   img
-    width: 100px
-    border-radius: 5px
-    margin-right: 15px
-    float: left
+    max-width: 100px
+    max-height: 75px
+    position: relative
+    top: 50%
+    transform: translateY(-50%)
+
+.app-detail--body
+  code
+    background-color: transparent
+    padding: 0px
+
+  ul
+    margin-bottom: 15px
+    padding: 0px
+    list-style-type: none
+
+    li
+      margin: 0px
+
+.app-detail--title
+  flex: 1 100%
+
+.app-detail--install
+  flex: 0 0 120px
+  text-align: center
+  .progress_button--container
+    margin-top: 0px
+    margin-bottom: 5px
+    margin-right: 0px
+  small
+    font-size: 12px
+
 
