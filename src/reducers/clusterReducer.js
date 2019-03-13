@@ -68,7 +68,7 @@ var ensureWorkersHaveAWSkey = function(clusterDetails) {
 };
 
 export default function clusterReducer(
-  state = { lastUpdated: 0, isFetching: false, items: {} },
+  state = { lastUpdated: null, isFetching: false, items: {} },
   action = undefined
 ) {
   var items;
@@ -84,6 +84,8 @@ export default function clusterReducer(
           ensureMetricKeysAreAvailable(cluster)
         );
 
+        items[cluster.id].lastUpdated = Date.now();
+
         // Guard against API that returns null for certain values when they are
         // empty.
         items[cluster.id].nodes = items[cluster.id].nodes || [];
@@ -92,14 +94,14 @@ export default function clusterReducer(
       });
 
       return {
-        lastUpdated: state.lastUpdated,
+        lastUpdated: Date.now(),
         isFetching: false,
         items: items,
       };
 
     case types.CLUSTERS_LOAD_ERROR:
       return {
-        lastUpdated: Date.now(),
+        lastUpdated: state.lastUpdated,
         isFetching: false,
         errorLoading: true,
         items: items,
@@ -156,6 +158,8 @@ export default function clusterReducer(
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         status: action.status,
       });
+
+      items[action.clusterId].status.lastUpdated = Date.now();
 
       return {
         lastUpdated: state.lastUpdated,

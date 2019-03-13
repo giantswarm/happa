@@ -61,6 +61,72 @@ class ClusterDetailView extends React.Component {
     }
   }
 
+  componentDidMount = () => {
+    this.registerRefreshInterval();
+
+    if (typeof document.hidden !== 'undefined') {
+      // Opera 12.10 and Firefox 18 and later support
+      this.hidden = 'hidden';
+      this.visibilityChange = 'visibilitychange';
+    } else if (typeof document.msHidden !== 'undefined') {
+      this.hidden = 'msHidden';
+      this.visibilityChange = 'msvisibilitychange';
+    } else if (typeof document.webkitHidden !== 'undefined') {
+      this.hidden = 'webkitHidden';
+      this.visibilityChange = 'webkitvisibilitychange';
+    }
+
+    if (
+      typeof document.addEventListener === 'undefined' ||
+      this.hidden === undefined
+    ) {
+      console.debug(
+        'This piece of code requires a browser that supports the Page Visibility API.'
+      );
+    } else {
+      // Handle page visibility change
+      document.addEventListener(
+        this.visibilityChange,
+        this.handleVisibilityChange,
+        false
+      );
+    }
+  };
+
+  componentWillUnmount = () => {
+    window.clearInterval(this.loadDataInterval);
+    document.removeEventListener(
+      this.visibilityChange,
+      this.handleVisibilityChange,
+      false
+    );
+  };
+
+  registerRefreshInterval = () => {
+    var refreshInterval = 30 * 1000; // 30 seconds
+    this.loadDataInterval = window.setInterval(
+      this.refreshClusterData,
+      refreshInterval
+    );
+  };
+
+  refreshClusterData = () => {
+    console.debug('This is refreshClusterData', new Date());
+    // load new data
+    this.props.clusterActions.clusterLoadDetails(this.props.cluster.id);
+  };
+
+  handleVisibilityChange = () => {
+    if (document[this.hidden]) {
+      console.debug('Page just got hidden');
+      window.clearInterval(this.loadDataInterval);
+    } else {
+      console.debug('Page just got revealed');
+      this.refreshClusterData();
+      this.registerRefreshInterval();
+    }
+  };
+
   showDeleteClusterModal(cluster) {
     this.props.clusterActions.clusterDelete(cluster);
   }

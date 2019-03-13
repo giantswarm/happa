@@ -4,11 +4,29 @@ import { relativeDate } from '../../../lib/helpers.js';
 import _ from 'underscore';
 import AWSAccountID from '../../shared/aws_account_id';
 import cmp from 'semver-compare';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ClusterDetailTable extends React.Component {
+  componentDidMount = () => {
+    this.registerRefreshInterval();
+  };
+
+  componentWillUnmount = () => {
+    window.clearInterval(this.reRenderInterval);
+  };
+
+  registerRefreshInterval = () => {
+    // set re-rendering to update relative date/time values
+    var refreshInterval = 10 * 1000; // 10 seconds
+    this.reRenderInterval = window.setInterval(() => {
+      // enforce re-rendering
+      this.setState({ enforceReRender: Date.now() });
+    }, refreshInterval);
+  };
+
   showReleaseDetails = () => {
     this.releaseDetailsModal.show();
   };
@@ -87,6 +105,21 @@ class ClusterDetailTable extends React.Component {
       return null;
     }
     return workers * this.props.cluster.workers[0].cpu.cores;
+  }
+
+  /**
+   * Returns the proper last updated info string based on available
+   * cluster and/or status information.
+   */
+  lastUpdatedLabel() {
+    if (
+      this.props.cluster &&
+      this.props.cluster.status &&
+      this.props.cluster.status.lastUpdated
+    ) {
+      return moment(this.props.cluster.status.lastUpdated).fromNow();
+    }
+    return 'n/a';
   }
 
   render() {
@@ -348,6 +381,15 @@ class ClusterDetailTable extends React.Component {
                 )}
               </tbody>
             </table>
+            <p className='last-updated'>
+              <small>
+                This table is auto-refreshing. Details last fetched{' '}
+                <span className='last-updated-datestring'>
+                  {this.lastUpdatedLabel()}
+                </span>
+                . <span className='beta-tag'>BETA</span>
+              </small>
+            </p>
           </div>
           {this.props.release ? (
             <ReleaseDetailsModal
@@ -367,11 +409,12 @@ class ClusterDetailTable extends React.Component {
 
 ClusterDetailTable.propTypes = {
   canClusterUpgrade: PropTypes.bool,
-  showUpgradeModal: PropTypes.func,
   cluster: PropTypes.object,
-  provider: PropTypes.string,
   credentials: PropTypes.object,
+  lastUpdated: PropTypes.number,
+  provider: PropTypes.string,
   release: PropTypes.object,
+  showUpgradeModal: PropTypes.func,
 };
 
 export default ClusterDetailTable;
