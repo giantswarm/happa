@@ -26,7 +26,7 @@ class AppDetail extends React.Component {
           }}
         >
           <div className='app-detail'>
-            <Link to='/app-katalog'>
+            <Link to='/app-katalog/'>
               <i className='fa fa-chevron-left' aria-hidden='true' />
               Back to the App Katalog
             </Link>
@@ -51,7 +51,7 @@ class AppDetail extends React.Component {
                 </div>
 
                 <div className='version'>
-                  <small>Version</small>{' '}
+                  <small>Chart Version</small>{' '}
                   <code>{this.props.appVersions[0].version}</code>
                   <small>App Version</small>{' '}
                   <code>{this.props.appVersions[0].appVersion}</code>
