@@ -16,7 +16,6 @@ class AppDetail extends React.Component {
   }
 
   render() {
-    console.log(this.props.appVersions[0]);
     return (
       <DocumentTitle title={`${this.props.appVersions[0].name} | Giant Swarm `}>
         <Breadcrumb
