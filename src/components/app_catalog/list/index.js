@@ -70,7 +70,12 @@ class List extends React.Component {
           app.name = app[0].name;
           app.version = app[0].version;
           app.icon = app[0].icon;
-          app.detailUrl = app.repoName.replace('/', '%2F') + '/' + key + '/';
+          app.detailUrl =
+            this.props.match.url +
+            app.repoName.replace('/', '%2F') +
+            '/' +
+            key +
+            '/';
           return app;
         });
         allApps.push(...apps);
@@ -262,6 +267,7 @@ List.propTypes = {
   dispatch: PropTypes.func,
   location: PropTypes.object,
   loading: PropTypes.bool,
+  match: PropTypes.object,
   organizationId: PropTypes.string,
 };
 
