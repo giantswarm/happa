@@ -42,11 +42,6 @@ class RefreshableLabel extends React.Component {
       prevState.dataItems !== this.state.dataItems
     ) {
       if (prevState.dataItems !== null) {
-        console.debug(
-          'RefreshableLabel detected dataItems change',
-          prevProps.dataItems,
-          this.props.dataItems
-        );
         this.setState({
           changed: true,
         });
