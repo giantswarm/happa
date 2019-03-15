@@ -80,7 +80,7 @@ class ClusterDetailView extends React.Component {
       typeof document.addEventListener === 'undefined' ||
       this.hidden === undefined
     ) {
-      console.debug(
+      console.log(
         'This piece of code requires a browser that supports the Page Visibility API.'
       );
     } else {
@@ -111,17 +111,13 @@ class ClusterDetailView extends React.Component {
   };
 
   refreshClusterData = () => {
-    console.debug('This is refreshClusterData', new Date());
-    // load new data
     this.props.clusterActions.clusterLoadDetails(this.props.cluster.id);
   };
 
   handleVisibilityChange = () => {
     if (document[this.hidden]) {
-      console.debug('Page just got hidden');
       window.clearInterval(this.loadDataInterval);
     } else {
-      console.debug('Page just got revealed');
       this.refreshClusterData();
       this.registerRefreshInterval();
     }
