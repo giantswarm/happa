@@ -1,3 +1,9 @@
+@keyframes yellowfade
+    from
+      background: #e8d986
+    to
+      background: transparent
+  
 .cluster-details
   h1
     margin-bottom: 0px
@@ -36,3 +42,16 @@
       padding: 0px 4px
       line-height: 1.25em
       border-radius: 2px
+  
+  .refreshable-label
+    display: inline-block
+    line-height: 1.7
+    border-radius: 2px
+    margin-left: -5px
+    padding-left: 5px
+    padding-right: 5px
+
+    &.changed
+      animation-name: yellowfade
+      animation-duration: 2s
+      animation-timing-function: ease
