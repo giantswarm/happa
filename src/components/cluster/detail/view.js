@@ -16,6 +16,7 @@ import ClusterApps from './cluster_apps';
 import ClusterDetailTable from './cluster_detail_table';
 import ClusterIDLabel from '../../shared/cluster_id_label';
 import ClusterKeyPairs from './key_pairs';
+import ClusterName from '../../shared/cluster_name';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
@@ -232,7 +233,11 @@ class ClusterDetailView extends React.Component {
                         clusterID={this.props.cluster.id}
                         copyEnabled
                       />{' '}
-                      {this.props.cluster.name}{' '}
+                      <ClusterName
+                        id={this.props.cluster.id}
+                        name={this.props.cluster.name}
+                        dispatchFunc={this.props.dispatch}
+                      />{' '}
                       {this.state.loading ? (
                         <img
                           className='loader'
