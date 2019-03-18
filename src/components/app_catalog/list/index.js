@@ -1,10 +1,10 @@
 'use strict';
 
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { replace } from 'connected-react-router';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
-import { replace } from 'connected-react-router';
-import { Link } from 'react-router-dom';
 import React from 'react';
 
 class List extends React.Component {
