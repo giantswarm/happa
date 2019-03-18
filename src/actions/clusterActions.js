@@ -203,6 +203,9 @@ export function clusterDeleteConfirmed(cluster) {
           messageType.INFO,
           messageTTL.SHORT
         );
+
+        // ensure refreshing of the clusters list
+        dispatch(clustersLoad());
       })
       .catch(error => {
         dispatch(modalHide());
