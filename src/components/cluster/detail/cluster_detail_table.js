@@ -4,11 +4,34 @@ import { relativeDate } from '../../../lib/helpers.js';
 import _ from 'underscore';
 import AWSAccountID from '../../shared/aws_account_id';
 import cmp from 'semver-compare';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RefreshableLabel from '../../shared/refreshable_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ClusterDetailTable extends React.Component {
+  state = {
+    modifiedPropsPaths: [],
+  };
+
+  componentDidMount = () => {
+    this.registerRefreshInterval();
+  };
+
+  componentWillUnmount = () => {
+    window.clearInterval(this.reRenderInterval);
+  };
+
+  registerRefreshInterval = () => {
+    // set re-rendering to update relative date/time values
+    var refreshInterval = 10 * 1000; // 10 seconds
+    this.reRenderInterval = window.setInterval(() => {
+      // enforce re-rendering
+      this.setState({ enforceReRender: Date.now() });
+    }, refreshInterval);
+  };
+
   showReleaseDetails = () => {
     this.releaseDetailsModal.show();
   };
@@ -89,6 +112,21 @@ class ClusterDetailTable extends React.Component {
     return workers * this.props.cluster.workers[0].cpu.cores;
   }
 
+  /**
+   * Returns the proper last updated info string based on available
+   * cluster and/or status information.
+   */
+  lastUpdatedLabel() {
+    if (
+      this.props.cluster &&
+      this.props.cluster.status &&
+      this.props.cluster.status.lastUpdated
+    ) {
+      return moment(this.props.cluster.status.lastUpdated).fromNow();
+    }
+    return 'n/a';
+  }
+
   render() {
     var instanceTypeOrVMSize = <tr />;
 
@@ -121,11 +159,21 @@ class ClusterDetailTable extends React.Component {
         <tr>
           <td>Worker node scaling</td>
           <td className='value'>
-            {this.props.cluster.scaling.min === this.props.cluster.scaling.max
-              ? `pinned at ${this.props.cluster.scaling.min}`
-              : `autoscaling between ${this.props.cluster.scaling.min} and ${
-                  this.props.cluster.scaling.max
-                }`}
+            <RefreshableLabel
+              dataItems={[
+                this.props.cluster.scaling.min,
+                this.props.cluster.scaling.max,
+              ]}
+            >
+              <span>
+                {this.props.cluster.scaling.min ===
+                this.props.cluster.scaling.max
+                  ? `pinned at ${this.props.cluster.scaling.min}`
+                  : `autoscaling between ${
+                      this.props.cluster.scaling.min
+                    } and ${this.props.cluster.scaling.max}`}
+              </span>
+            </RefreshableLabel>
           </td>
         </tr>
       );
@@ -136,12 +184,14 @@ class ClusterDetailTable extends React.Component {
       this.props.provider === 'aws' &&
       this.props.cluster.availability_zones
     ) {
+      var azs = this.props.cluster.availability_zones.map(az => {
+        return <code key={az}>{az}</code>;
+      });
+
       availabilityZonesOrNothing = (
         <tr>
           <td>Availablility zones</td>
-          <td className='value code'>
-            {this.props.cluster.availability_zones.join(', ')}
-          </td>
+          <td className='value'>{azs}</td>
         </tr>
       );
     }
@@ -152,7 +202,15 @@ class ClusterDetailTable extends React.Component {
       numberOfDesiredNodesOrNothing = (
         <tr>
           <td>Desired worker node count</td>
-          <td className='value'>{desiredNumberOfNodes}</td>
+          <td className='value'>
+            <RefreshableLabel
+              dataItems={[
+                this.props.cluster.status.cluster.scaling.desiredCapacity,
+              ]}
+            >
+              <span>{desiredNumberOfNodes}</span>
+            </RefreshableLabel>
+          </td>
         </tr>
       );
     }
@@ -234,34 +292,41 @@ class ClusterDetailTable extends React.Component {
                 {this.props.release ? (
                   <tr>
                     <td>Release version</td>
-                    <td className='value code'>
-                      <a onClick={this.showReleaseDetails}>
-                        <i className='fa fa-version-tag' />{' '}
-                        {this.props.cluster.release_version}{' '}
-                        {(() => {
-                          var kubernetes = _.find(
-                            this.props.release.components,
-                            component => component.name === 'kubernetes'
-                          );
-                          if (kubernetes) {
-                            return (
-                              <span>
-                                &mdash; includes Kubernetes {kubernetes.version}
-                              </span>
-                            );
-                          }
-                        })()}
-                      </a>{' '}
-                      {this.props.canClusterUpgrade ? (
-                        <a
-                          onClick={this.props.showUpgradeModal}
-                          className='upgrade-available'
-                        >
-                          <i className='fa fa-info' /> Upgrade available
-                        </a>
-                      ) : (
-                        undefined
-                      )}
+                    <td className='value'>
+                      <RefreshableLabel
+                        dataItems={[this.props.cluster.release_version]}
+                      >
+                        <span>
+                          <a onClick={this.showReleaseDetails}>
+                            <i className='fa fa-version-tag' />{' '}
+                            {this.props.cluster.release_version}{' '}
+                            {(() => {
+                              var kubernetes = _.find(
+                                this.props.release.components,
+                                component => component.name === 'kubernetes'
+                              );
+                              if (kubernetes) {
+                                return (
+                                  <span>
+                                    &mdash; includes Kubernetes{' '}
+                                    {kubernetes.version}
+                                  </span>
+                                );
+                              }
+                            })()}
+                          </a>{' '}
+                          {this.props.canClusterUpgrade ? (
+                            <a
+                              onClick={this.props.showUpgradeModal}
+                              className='upgrade-available'
+                            >
+                              <i className='fa fa-info' /> Upgrade available
+                            </a>
+                          ) : (
+                            undefined
+                          )}
+                        </span>
+                      </RefreshableLabel>
                     </td>
                   </tr>
                 ) : (
@@ -289,35 +354,61 @@ class ClusterDetailTable extends React.Component {
                 <tr>
                   <td>Worker nodes running</td>
                   <td className='value'>
-                    {this.getNumberOfNodes() === null
-                      ? '0'
-                      : this.getNumberOfNodes()}
+                    <RefreshableLabel
+                      dataItems={[this.props.cluster.workers.length]}
+                    >
+                      <span>
+                        {this.getNumberOfNodes() === null
+                          ? '0'
+                          : this.getNumberOfNodes()}
+                      </span>
+                    </RefreshableLabel>
                   </td>
                 </tr>
                 {instanceTypeOrVMSize}
                 <tr>
                   <td>Total CPU cores in worker nodes</td>
                   <td className='value'>
-                    {this.getCpusTotal() === null ? '0' : this.getCpusTotal()}
+                    <RefreshableLabel
+                      dataItems={[this.props.cluster.workers.length]}
+                    >
+                      <span>
+                        {this.getCpusTotal() === null
+                          ? '0'
+                          : this.getCpusTotal()}
+                      </span>
+                    </RefreshableLabel>
                   </td>
                 </tr>
                 <tr>
                   <td>Total RAM in worker nodes</td>
                   <td className='value'>
-                    {this.getMemoryTotal() === null
-                      ? '0'
-                      : this.getMemoryTotal()}{' '}
-                    GB
+                    <RefreshableLabel
+                      dataItems={[this.props.cluster.workers.length]}
+                    >
+                      <span>
+                        {this.getMemoryTotal() === null
+                          ? '0'
+                          : this.getMemoryTotal()}{' '}
+                        GB
+                      </span>
+                    </RefreshableLabel>
                   </td>
                 </tr>
                 {this.props.provider === 'kvm' ? (
                   <tr>
                     <td>Total storage in worker nodes</td>
                     <td className='value'>
-                      {this.getStorageTotal() === null
-                        ? '0'
-                        : this.getStorageTotal()}{' '}
-                      GB
+                      <RefreshableLabel
+                        dataItems={[this.props.cluster.workers.length]}
+                      >
+                        <span>
+                          {this.getStorageTotal() === null
+                            ? '0'
+                            : this.getStorageTotal()}{' '}
+                          GB
+                        </span>
+                      </RefreshableLabel>
                     </td>
                   </tr>
                 ) : (
@@ -348,6 +439,15 @@ class ClusterDetailTable extends React.Component {
                 )}
               </tbody>
             </table>
+            <p className='last-updated'>
+              <small>
+                This table is auto-refreshing. Details last fetched{' '}
+                <span className='last-updated-datestring'>
+                  {this.lastUpdatedLabel()}
+                </span>
+                . <span className='beta-tag'>BETA</span>
+              </small>
+            </p>
           </div>
           {this.props.release ? (
             <ReleaseDetailsModal
@@ -367,11 +467,12 @@ class ClusterDetailTable extends React.Component {
 
 ClusterDetailTable.propTypes = {
   canClusterUpgrade: PropTypes.bool,
-  showUpgradeModal: PropTypes.func,
   cluster: PropTypes.object,
-  provider: PropTypes.string,
   credentials: PropTypes.object,
+  lastUpdated: PropTypes.number,
+  provider: PropTypes.string,
   release: PropTypes.object,
+  showUpgradeModal: PropTypes.func,
 };
 
 export default ClusterDetailTable;

@@ -1,3 +1,9 @@
+@keyframes yellowfade
+    from
+      background: #e8d986
+    to
+      background: transparent
+  
 .cluster-details
   h1
     margin-bottom: 0px
@@ -20,4 +26,32 @@
 
     dd
       margin-bottom: 5px
+  
+  .resource-details
+    margin-bottom: 7px
 
+  .last-updated
+    margin-left: 10px
+
+    .beta-tag
+      font-size: 0.9em
+      text-transform: uppercase
+      background-color: #ccc
+      color: $darkblue
+      display: inline-block
+      padding: 0px 4px
+      line-height: 1.25em
+      border-radius: 2px
+  
+  .refreshable-label
+    display: inline-block
+    line-height: 1.7
+    border-radius: 2px
+    margin-left: -5px
+    padding-left: 5px
+    padding-right: 5px
+
+    &.changed
+      animation-name: yellowfade
+      animation-duration: 2s
+      animation-timing-function: ease
