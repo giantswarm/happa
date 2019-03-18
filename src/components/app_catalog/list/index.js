@@ -20,7 +20,7 @@ class List extends React.Component {
     this.state = {
       selectedRepo: selectedRepo || 'All',
       searchQuery: q || '',
-      imgPromises: {},
+      iconErrors: {},
     };
   }
 
@@ -103,44 +103,6 @@ class List extends React.Component {
     }
   }
 
-  // iconSrcFor checks the icon src for a app to make sure it exists and sets a
-  // placeholder if it doesn't. While it is fetching it returns a loading spinner.
-  // It makes sure to check only once per app.
-  iconSrcFor(app) {
-    if (this.state.imgPromises[app.name]) {
-      return this.state.imgPromises[app.name];
-    }
-
-    let url = app.icon;
-    if (!this.fetching[app.name]) {
-      testImage(url).then(
-        imgElement => {
-          this.setState(state => {
-            let imgPromises = {};
-            imgPromises[app.name] = <img src={imgElement.src} />;
-            return {
-              imgPromises: Object.assign({}, imgPromises, state.imgPromises),
-            };
-          });
-        },
-
-        () => {
-          this.setState(state => {
-            let imgPromises = {};
-            imgPromises[app.name] = <h3>{app.name}</h3>;
-            return {
-              imgPromises: Object.assign({}, imgPromises, state.imgPromises),
-            };
-          });
-        }
-      );
-    }
-
-    this.fetching[app.name] = true;
-
-    return <img className='loader' src='/images/loader_oval_light.svg' />;
-  }
-
   updateSearchQuery(e) {
     this.setState({
       searchQuery: e.target.value,
@@ -156,6 +118,15 @@ class List extends React.Component {
           }).toString(),
       })
     );
+  }
+
+  imgError(app) {
+    var iconErrors = {};
+    iconErrors[app.icon] = true;
+
+    this.setState({
+      iconErrors: Object.assign({}, this.state.iconErrors, iconErrors),
+    });
   }
 
   render() {
@@ -213,7 +184,16 @@ class List extends React.Component {
                       undefined
                     )}
 
-                    <div className='app-icon'>{this.iconSrcFor(app)}</div>
+                    <div className='app-icon'>
+                      {app.icon && !this.state.iconErrors[app.icon] ? (
+                        <img
+                          src={app.icon}
+                          onError={this.imgError.bind(this, app)}
+                        />
+                      ) : (
+                        <h3>{app.name}</h3>
+                      )}
+                    </div>
                     <div className='app-details'>
                       <span className='app-version'>{app.version}</span>
                       <h3>{app.name}</h3>
@@ -232,33 +212,6 @@ class List extends React.Component {
       </DocumentTitle>
     );
   }
-}
-
-function testImage(url) {
-  // Define the promise
-  const imgPromise = new Promise(function imgPromise(resolve, reject) {
-    if (url === undefined) {
-      reject();
-    } else {
-      // Create the image
-      const imgElement = new Image();
-
-      // When image is loaded, resolve the promise
-      imgElement.addEventListener('load', function imgOnLoad() {
-        resolve(this);
-      });
-
-      // When there's an error during load, reject the promise
-      imgElement.addEventListener('error', function imgOnError() {
-        reject(this);
-      });
-
-      // Assign URL
-      imgElement.src = url;
-    }
-  });
-
-  return imgPromise;
 }
 
 List.propTypes = {
