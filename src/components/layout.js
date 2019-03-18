@@ -1,8 +1,6 @@
 'use strict';
 
 import * as UserActions from '../actions/userActions';
-import AppCatalog from './app_catalog';
-import AccountSettings from './account_settings';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clustersLoad } from '../actions/clusterActions';
@@ -11,6 +9,8 @@ import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
 import { organizationsLoad } from '../actions/organizationActions';
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import AccountSettings from './account_settings';
+import AppCatalog from './app_catalog';
 import DocumentTitle from 'react-document-title';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home';
@@ -99,8 +99,8 @@ class Layout extends React.Component {
               <div className='main col-9'>
                 <Switch>
                   <Route exact path='/'                  component={Home} />
-                  <Route       path='/app-katalog'       component={AppCatalog} />         
-                  <Route exact path='/users'             component={Users} />                  
+                  <Route       path='/app-katalog'       component={AppCatalog} />
+                  <Route exact path='/users'             component={Users} />
                   <Route       path='/organizations'     component={Organizations} />
                   <Route exact path='/account-settings'  component={AccountSettings} />
                   <Redirect path='*' to='/' />

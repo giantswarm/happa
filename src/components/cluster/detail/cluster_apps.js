@@ -1,8 +1,8 @@
 'use strict';
 
-import Button from '../../shared/button';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import Button from '../../shared/button';
 import PropTypes from 'prop-types';
 import React from 'react';
 

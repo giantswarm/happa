@@ -1,10 +1,10 @@
 'use strict';
 
 import { Breadcrumb } from 'react-breadcrumbs';
-import Button from '../../shared/button';
 import { connect } from 'react-redux';
-import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router-dom';
+import Button from '../../shared/button';
+import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 

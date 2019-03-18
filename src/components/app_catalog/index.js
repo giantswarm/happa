@@ -1,13 +1,13 @@
 'use strict';
 
-import Detail from './detail';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { catalogsLoad } from '../../actions/catalogActions';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import List from './list';
-import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import Detail from './detail';
+import List from './list';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 class CatalogIndex extends React.Component {
   state = {
