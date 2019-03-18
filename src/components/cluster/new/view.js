@@ -157,9 +157,15 @@ class CreateCluster extends React.Component {
           workers: workers,
         })
       )
-      .then(() => {
+      .then(cluster => {
+        // after successful creation, redirect to cluster details
         this.props.dispatch(
-          push('/organizations/' + this.props.selectedOrganization)
+          push(
+            '/organizations/' +
+              this.props.selectedOrganization +
+              '/clusters/' +
+              cluster.id
+          )
         );
       })
       .catch(error => {
