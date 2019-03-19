@@ -123,7 +123,7 @@ export function clusterLoadStatus(clusterId) {
 // clusterCreate
 // ==============================================================
 // Takes a cluster object and tries to create it. Dispatches CLUSTER_CREATE_SUCCESS
-// on success or CLUSTER_DELETE_ERROR on error.
+// on success or CLUSTER_CREATE_ERROR on error.
 
 export function clusterCreate(cluster) {
   return function(dispatch, getState) {
