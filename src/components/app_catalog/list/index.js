@@ -3,6 +3,7 @@
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { replace } from 'connected-react-router';
+import Button from '../../shared/button';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -15,42 +16,38 @@ class List extends React.Component {
 
     let query = new URLSearchParams(props.location.search);
     let q = query.get('q');
-    let selectedRepo = query.get('repo');
 
     this.state = {
-      selectedRepo: selectedRepo || 'All',
+      filters: [],
       searchQuery: q || '',
       iconErrors: {},
     };
   }
 
-  classNameFor(repo) {
-    if (repo === this.state.selectedRepo) {
+  classNameFor(filter) {
+    if (this.state.filters.indexOf(filter) > -1) {
       return 'selected';
     }
   }
 
-  selectRepo(repo) {
-    this.setState({
-      selectedRepo: repo,
-    });
+  toggleFilter(filter) {
+    var activeFilters = this.state.filters;
+    var filterIndex = activeFilters.indexOf(filter);
+    if (filterIndex === -1) {
+      activeFilters.push(filter);
+    } else {
+      activeFilters.splice(filterIndex, 1);
+    }
 
-    this.props.dispatch(
-      replace({
-        search:
-          '?' +
-          new URLSearchParams({
-            repo: repo,
-            q: this.state.searchQuery,
-          }).toString(),
-      })
-    );
+    this.setState({
+      activeFilters: activeFilters,
+    });
   }
 
   // filter returns a filter object based on the current state
   filter() {
     return {
-      repo: this.state.selectedRepo,
+      filters: this.state.filters,
       searchQuery: this.state.searchQuery,
     };
   }
@@ -58,6 +55,18 @@ class List extends React.Component {
   // apps is a pure function that takes a filter and all the catalogs and returns
   // a filtered set of apps
   apps(catalogs, filter) {
+    var filterRepoMapping = {
+      Managed: 'giantswarm/stable',
+      Incubator: 'giantswarm/incubator',
+      Community: 'helm/stable',
+    };
+
+    // Take the friendly named filters and turn them into an array of repo names.
+    // For example: Takes ['Managed', 'Community'] and turns it into ['giantswarm/stable', 'helm/stable'];
+    var repoFilters = filter.filters.map(filter => {
+      return filterRepoMapping[filter];
+    });
+
     let allApps = [];
 
     // Flatten all the apps we know about into a single array.
@@ -84,14 +93,16 @@ class List extends React.Component {
 
     let apps = [];
 
-    if (filter.repo === 'All') {
+    // Managed / Incubator / Community filter.
+    if (filter.filters.length === 0) {
       apps = allApps;
     } else {
       apps = allApps.filter(app => {
-        return app.repoName === filter.repo;
+        return repoFilters.includes(app.repoName);
       });
     }
 
+    // Search query filter.
     if (filter.searchQuery === '') {
       return apps;
     } else {
@@ -118,6 +129,13 @@ class List extends React.Component {
           }).toString(),
       })
     );
+  }
+
+  resetFilters() {
+    this.setState({
+      filters: [],
+      searchQuery: '',
+    });
   }
 
   imgError(app) {
@@ -148,60 +166,67 @@ class List extends React.Component {
           </h1>
           <div className='app-catalog-overview'>
             <div className='repo-selection'>
-              <h4>Repository</h4>
+              <h4>Filter</h4>
               <ul>
-                <li className={this.classNameFor('All')}>
-                  <a onClick={this.selectRepo.bind(this, 'All')}>All</a>
-                </li>
-                {Object.getOwnPropertyNames(this.props.catalogs.items).map(
-                  catalogName => {
-                    return (
-                      <li
-                        className={this.classNameFor(catalogName)}
-                        key={catalogName}
-                      >
-                        <a onClick={this.selectRepo.bind(this, catalogName)}>
-                          {catalogName}
-                        </a>
-                      </li>
-                    );
-                  }
-                )}
+                {['Managed', 'Incubator', 'Community'].map(filter => {
+                  return (
+                    <li className={this.classNameFor(filter)} key={filter}>
+                      <a onClick={this.toggleFilter.bind(this, filter)}>
+                        {filter}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
 
             <div className='apps'>
-              {this.apps(this.props.catalogs.items, this.filter()).map(app => {
-                return (
-                  <Link
-                    className='app'
-                    key={app.repoName + '/' + app.name}
-                    to={app.detailUrl}
-                  >
-                    {app.repoName === 'giantswarm/stable' ? (
-                      <div className='badge'>MANAGED</div>
-                    ) : (
-                      undefined
-                    )}
+              {(() => {
+                var apps = this.apps(this.props.catalogs.items, this.filter());
+                if (apps.length === 0) {
+                  return (
+                    <div className='emptystate'>
+                      No apps matched your search query and filter combination.
+                      <br />
+                      <Button onClick={this.resetFilters.bind(this)}>
+                        Clear search query and filters
+                      </Button>
+                    </div>
+                  );
+                } else {
+                  return apps.map(app => {
+                    return (
+                      <Link
+                        className='app'
+                        key={app.repoName + '/' + app.name}
+                        to={app.detailUrl}
+                      >
+                        {app.repoName === 'giantswarm/stable' ? (
+                          <div className='badge'>MANAGED</div>
+                        ) : (
+                          undefined
+                        )}
 
-                    <div className='app-icon'>
-                      {app.icon && !this.state.iconErrors[app.icon] ? (
-                        <img
-                          src={app.icon}
-                          onError={this.imgError.bind(this, app)}
-                        />
-                      ) : (
-                        <h3>{app.name}</h3>
-                      )}
-                    </div>
-                    <div className='app-details'>
-                      <span className='app-version'>{app.version}</span>
-                      <h3>{app.name}</h3>
-                      <span className='app-repo'>{app.repoName}</span>
-                    </div>
-                  </Link>
-                );
-              })}
+                        <div className='app-icon'>
+                          {app.icon && !this.state.iconErrors[app.icon] ? (
+                            <img
+                              src={app.icon}
+                              onError={this.imgError.bind(this, app)}
+                            />
+                          ) : (
+                            <h3>{app.name}</h3>
+                          )}
+                        </div>
+                        <div className='app-details'>
+                          <span className='app-version'>{app.version}</span>
+                          <h3>{app.name}</h3>
+                          <span className='app-repo'>{app.repoName}</span>
+                        </div>
+                      </Link>
+                    );
+                  });
+                }
+              })()}
               <div className='app-flex-fix' />
               <div className='app-flex-fix' />
               <div className='app-flex-fix' />
