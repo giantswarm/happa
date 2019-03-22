@@ -19,27 +19,30 @@ class ClusterName extends React.Component {
     this.state = {
       // editing is true while the widget is in edit mode.
       editing: false,
-      // saving is true while the widget submits data, before the
-      // editing is confirmed.
-      error: null,
-      saving: false,
+      // name is a copy of the actual cluster name
       name: props.name,
+      // inputFieldValue is what the input field currently holds
+      inputFieldValue: props.name,
     };
   }
 
   activateEditMode = () => {
-    this.setState({ editing: true });
+    this.setState({
+      editing: true,
+      inputFieldValue: this.state.name,
+    });
   };
 
   deactivateEditMode = () => {
     this.setState({
       editing: false,
-      name: this.props.name,
+      // revert input
+      inputFieldValue: this.state.name,
     });
   };
 
   handleChange = evt => {
-    this.setState({ name: evt.target.value });
+    this.setState({ inputFieldValue: evt.target.value });
   };
 
   handleSubmit = evt => {
@@ -55,18 +58,17 @@ class ClusterName extends React.Component {
       return;
     }
 
-    console.debug('Form submitted and valid!');
     this.props
       .dispatchFunc(
         clusterPatch({
           id: this.props.id,
-          name: this.state.name,
+          name: this.state.inputFieldValue,
         })
       )
-      .then(successObject => {
-        console.debug('dispatch success', successObject);
+      .then(() => {
         this.setState({
           editing: false,
+          name: this.state.inputFieldValue,
         });
 
         new FlashMessage(
@@ -80,10 +82,7 @@ class ClusterName extends React.Component {
   handleKey = evt => {
     // 27 = Escape key
     if (evt.keyCode === 27) {
-      this.setState({
-        editing: false,
-        name: this.props.name, // revert name change
-      });
+      this.deactivateEditMode();
     }
   };
 
@@ -95,9 +94,6 @@ class ClusterName extends React.Component {
       };
     }
 
-    if (this.state.error !== null) {
-      this.setState({ error: null });
-    }
     return true;
   };
 
@@ -109,7 +105,7 @@ class ClusterName extends React.Component {
           <input
             type='text'
             name='cluster-name'
-            value={this.state.name}
+            value={this.state.inputFieldValue}
             autoFocus
             onChange={this.handleChange}
             onKeyUp={this.handleKey}
