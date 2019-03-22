@@ -20,6 +20,7 @@ import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactTimeout from 'react-timeout';
 import ScaleClusterModal from './scale_cluster_modal';
 import UpgradeClusterModal from './upgrade_cluster_modal';
 
@@ -104,10 +105,7 @@ class ClusterDetailView extends React.Component {
 
   registerRefreshInterval = () => {
     var refreshInterval = 30 * 1000; // 30 seconds
-    this.loadDataInterval = window.setInterval(
-      this.refreshClusterData,
-      refreshInterval
-    );
+    this.props.setInterval(this.refreshClusterData, refreshInterval);
   };
 
   refreshClusterData = () => {
@@ -355,6 +353,7 @@ ClusterDetailView.propTypes = {
   releaseActions: PropTypes.object,
   release: PropTypes.object,
   provider: PropTypes.string,
+  setInterval: PropTypes.func,
   targetRelease: PropTypes.object,
   user: PropTypes.object,
 };
@@ -370,4 +369,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   undefined,
   mapDispatchToProps
-)(ClusterDetailView);
+)(ReactTimeout(ClusterDetailView));
