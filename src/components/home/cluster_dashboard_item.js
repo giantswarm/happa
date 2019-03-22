@@ -14,33 +14,57 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class ClusterDashboardItem extends React.Component {
-  getMemoryTotal() {
+  state = {
+    enforceReRender: null,
+  };
+
+  componentDidMount() {
+    this.registerReRenderInterval();
+  }
+
+  componentWillUnmount() {
+    window.clearInterval(this.reRenderInterval);
+  }
+
+  /**
+   * Activates periodic re-rendering to keep displayed info, like relative
+   * dates, fresh.
+   */
+  registerReRenderInterval = () => {
+    var refreshInterval = 10 * 1000; // 10 seconds
+    this.reRenderInterval = window.setInterval(() => {
+      // enforce re-rendering by state change
+      this.setState({ enforceReRender: Date.now() });
+    }, refreshInterval);
+  };
+
+  getMemoryTotal = () => {
     var workers = this.getNumberOfNodes();
     if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
     var m = workers * this.props.cluster.workers[0].memory.size_gb;
     return m.toFixed(2);
-  }
+  };
 
-  getStorageTotal() {
+  getStorageTotal = () => {
     var workers = this.getNumberOfNodes();
     if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
     var s = workers * this.props.cluster.workers[0].storage.size_gb;
     return s.toFixed(2);
-  }
+  };
 
-  getCpusTotal() {
+  getCpusTotal = () => {
     var workers = this.getNumberOfNodes();
     if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
     return workers * this.props.cluster.workers[0].cpu.cores;
-  }
+  };
 
-  getNumberOfNodes() {
+  getNumberOfNodes = () => {
     if (
       Object.keys(this.props.cluster).includes('status') &&
       this.props.cluster.status != null
@@ -69,7 +93,7 @@ class ClusterDashboardItem extends React.Component {
     }
 
     return 0;
-  }
+  };
 
   /**
    * Returns true if the cluster is younger than 30 days
@@ -84,7 +108,7 @@ class ClusterDashboardItem extends React.Component {
     return age < 30 * 24 * 60 * 60;
   }
 
-  accessCluster() {
+  accessCluster = () => {
     this.props.dispatch(
       push(
         '/organizations/' +
@@ -94,9 +118,10 @@ class ClusterDashboardItem extends React.Component {
           '/getting-started/'
       )
     );
-  }
+  };
 
   render() {
+    console.debug('ClusterDashboardItem render() ', this.props.cluster.name);
     var memory = this.getMemoryTotal();
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
@@ -161,7 +186,7 @@ class ClusterDashboardItem extends React.Component {
         <div className='cluster-dashboard-item--buttons'>
           {this.clusterYoungerThan30Days() ? (
             <ButtonGroup>
-              <Button onClick={this.accessCluster.bind(this)}>
+              <Button onClick={this.accessCluster}>
                 <i className='fa fa-start' />
                 Get Started
               </Button>
