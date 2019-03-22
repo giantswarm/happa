@@ -11,10 +11,6 @@ import RefreshableLabel from '../../shared/refreshable_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ClusterDetailTable extends React.Component {
-  state = {
-    modifiedPropsPaths: [],
-  };
-
   componentDidMount = () => {
     this.registerRefreshInterval();
   };
