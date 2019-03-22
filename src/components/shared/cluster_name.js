@@ -31,6 +31,13 @@ class ClusterName extends React.Component {
     this.setState({ editing: true });
   };
 
+  deactivateEditMode = () => {
+    this.setState({
+      editing: false,
+      name: this.props.name,
+    });
+  };
+
   handleChange = evt => {
     this.setState({ name: evt.target.value });
   };
@@ -108,7 +115,10 @@ class ClusterName extends React.Component {
             onKeyUp={this.handleKey}
             autoComplete='off'
           />
-          <Button type='submit'>OK</Button>
+          <div className='btn-group'>
+            <Button type='submit'>OK</Button>
+            <Button onClick={this.deactivateEditMode}>Cancel</Button>
+          </div>
         </form>
       );
     }
