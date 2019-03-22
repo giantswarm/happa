@@ -94,18 +94,21 @@ class ClusterDetailView extends React.Component {
     }
   };
 
-  componentWillUnmount = () => {
-    window.clearInterval(this.loadDataInterval);
+  componentWillUnmount() {
+    this.props.clearInterval(this.loadDataInterval);
     document.removeEventListener(
       this.visibilityChange,
       this.handleVisibilityChange,
       false
     );
-  };
+  }
 
   registerRefreshInterval = () => {
     var refreshInterval = 30 * 1000; // 30 seconds
-    this.props.setInterval(this.refreshClusterData, refreshInterval);
+    this.loadDataInterval = this.props.setInterval(
+      this.refreshClusterData,
+      refreshInterval
+    );
   };
 
   refreshClusterData = () => {
@@ -114,7 +117,7 @@ class ClusterDetailView extends React.Component {
 
   handleVisibilityChange = () => {
     if (document[this.hidden]) {
-      window.clearInterval(this.loadDataInterval);
+      this.props.clearInterval(this.loadDataInterval);
     } else {
       this.refreshClusterData();
       this.registerRefreshInterval();
@@ -344,6 +347,7 @@ ClusterDetailView.contextTypes = {
 };
 
 ClusterDetailView.propTypes = {
+  clearInterval: PropTypes.func,
   clusterActions: PropTypes.object,
   cluster: PropTypes.object,
   clusterId: PropTypes.string,
