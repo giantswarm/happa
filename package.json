@@ -50,7 +50,7 @@
     "react-redux": "6.0.0",
     "react-router": "4.3.1",
     "react-router-dom": "4.3.1",
-    "react-timeout": "1.2.0",
+    "react-timeout": "1.1.2",
     "redux": "4.0.1",
     "redux-thunk": "2.3.0",
     "semver-compare": "1.0.0",

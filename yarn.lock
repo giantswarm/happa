@@ -6487,10 +6487,10 @@ react-side-effect@^1.0.2:
     exenv "^1.2.1"
     shallowequal "^1.0.1"
 
-react-timeout@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-timeout/-/react-timeout-1.2.0.tgz#7b5691cd6ab9f22773d82432f5707a00d601dafe"
-  integrity sha512-HJTmeeNsG3fHmnVkw8cCwAJNmcxf6H/A3vbiS9QKsfxMsgDtDK2oopeReMeLsH/TK1nq8BumL1yYVbcuOX8wGA==
+react-timeout@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/react-timeout/-/react-timeout-1.1.2.tgz#df6da252abf16d5542abdf12e14999930c7cde9f"
+  integrity sha512-cW1Uz6C9W+czP/odtA4kz+6dl07QqiEEPw3AILHgKgoIanFATaIhW3LfwaOuPqB/0fcd+46BuqSWwdYXHX4veQ==
   dependencies:
     create-react-class "^15.5.2"
     hoist-non-react-statics "^2.3.1"
