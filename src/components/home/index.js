@@ -13,12 +13,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class Home extends React.Component {
-  componentDidMount = () => {
+  componentDidMount() {
     this.registerRefreshInterval();
     this.fetchClusterDetails(this.props.clusters);
-  };
+  }
 
-  componentDidUpdate = prevProps => {
+  componentDidUpdate(prevProps) {
+    console.debug('componentDidUpdate: prevProps.clusters', prevProps.clusters);
+    console.debug(
+      'componentDidUpdate: this.props.clusters',
+      this.props.clusters
+    );
+
     // load cluster details if cluster list has changed
     if (
       !_.isEqual(
@@ -28,11 +34,11 @@ class Home extends React.Component {
     ) {
       this.fetchClusterDetails(this.props.clusters);
     }
-  };
+  }
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     window.clearInterval(this.refreshInterval);
-  };
+  }
 
   /**
    * Load clusters list periodically
@@ -78,7 +84,8 @@ class Home extends React.Component {
     }
   };
 
-  render = () => {
+  render() {
+    console.debug('Home render()');
     return (
       <DocumentTitle title={this.title()}>
         {
@@ -127,7 +134,7 @@ class Home extends React.Component {
         }
       </DocumentTitle>
     );
-  };
+  }
 }
 
 Home.propTypes = {
