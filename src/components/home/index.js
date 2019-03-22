@@ -13,11 +13,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class Home extends React.Component {
-  componentDidMount() {
+  componentDidMount = () => {
+    this.registerRefreshInterval();
     this.fetchClusterDetails(this.props.clusters);
-  }
+  };
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate = prevProps => {
+    // load cluster details if cluster list has changed
     if (
       !_.isEqual(
         this.props.clusters.map(x => x.id),
@@ -26,17 +28,32 @@ class Home extends React.Component {
     ) {
       this.fetchClusterDetails(this.props.clusters);
     }
-  }
+  };
 
-  clustersSortedById(clusters) {
+  componentWillUnmount = () => {
+    window.clearInterval(this.refreshInterval);
+  };
+
+  /**
+   * Load clusters list periodically
+   */
+  registerRefreshInterval = () => {
+    var refreshIntervalDuration = 30 * 1000; // 30 seconds
+    this.refreshInterval = window.setInterval(
+      this.refreshClustersList,
+      refreshIntervalDuration
+    );
+  };
+
+  refreshClustersList = () => {
+    this.props.actions.clustersLoad();
+  };
+
+  clustersSortedById = clusters => {
     return _.sortBy(clusters, 'id');
-  }
+  };
 
-  clusterIds(clusters) {
-    return this.clustersSortedById(clusters).map(cluster => cluster.id);
-  }
-
-  fetchClusterDetails(clusters) {
+  fetchClusterDetails = clusters => {
     return Promise.all(
       _.flatten(
         clusters.map(cluster => {
@@ -44,9 +61,12 @@ class Home extends React.Component {
         })
       )
     );
-  }
+  };
 
-  title() {
+  /**
+   * Returns the string to use as the document.title
+   */
+  title = () => {
     if (this.props.selectedOrganization) {
       return (
         'Cluster Overview | ' +
@@ -56,9 +76,9 @@ class Home extends React.Component {
     } else {
       return 'Cluster Overview | Giant Swarm';
     }
-  }
+  };
 
-  render() {
+  render = () => {
     return (
       <DocumentTitle title={this.title()}>
         {
@@ -107,7 +127,7 @@ class Home extends React.Component {
         }
       </DocumentTitle>
     );
-  }
+  };
 }
 
 Home.propTypes = {
