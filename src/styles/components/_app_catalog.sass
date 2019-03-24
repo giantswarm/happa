@@ -219,4 +219,37 @@
   small
     font-size: 12px
 
+.app-catalog--repos
+  display: flex
+  flex-flow: row wrap
+  margin-top: 10px
 
+.app-catalog--repo
+  flex: 0 0 260px
+  margin-right: 25px
+  margin-bottom: 30px
+
+  &:hover
+    text-decoration: none
+
+    .app-catalog--card
+      transform: scale(1.02)
+      box-shadow: 0px 0px 10px darken(#1e4156, 8%);
+
+  p
+    padding: 0px 20px
+
+.app-catalog--card
+  background-color: #fff
+  padding: 12px 0px
+  border-radius: 5px
+  text-align: center
+  margin-bottom: 10px
+
+  h3
+    color: #1e4156
+    margin: 0px
+    font-weight: 700
+
+  img
+    height: 80px

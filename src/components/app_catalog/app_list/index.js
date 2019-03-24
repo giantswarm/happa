@@ -8,9 +8,7 @@ import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class List extends React.Component {
-  fetching = {};
-
+class AppList extends React.Component {
   constructor(props) {
     super();
 
@@ -239,7 +237,7 @@ class List extends React.Component {
   }
 }
 
-List.propTypes = {
+AppList.propTypes = {
   catalogs: PropTypes.object,
   clusterId: PropTypes.string,
   dispatch: PropTypes.func,
@@ -265,4 +263,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(List);
+)(AppList);
