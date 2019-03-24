@@ -4,8 +4,9 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { catalogsLoad } from '../../actions/catalogActions';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+import AppList from './app_list';
+import Catalogs from './catalogs';
 import Detail from './detail';
-import List from './list';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -43,7 +44,16 @@ class CatalogIndex extends React.Component {
         <div className='app-catalog'>
           <Loading loading={this.state.loading}>
             <Switch>
-              <Route exact path={`${this.props.match.path}`} component={List} />
+              <Route
+                exact
+                path={`${this.props.match.path}`}
+                component={Catalogs}
+              />
+              <Route
+                exact
+                path={`${this.props.match.path}/:repo`}
+                component={AppList}
+              />
               <Route
                 exact
                 path={`${this.props.match.path}/:repo/:app`}

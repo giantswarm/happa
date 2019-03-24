@@ -9,12 +9,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class AppDetail extends React.Component {
-  state = {};
-
-  constructor() {
-    super();
-  }
-
   render() {
     return (
       <DocumentTitle title={`${this.props.appVersions[0].name} | Giant Swarm `}>
