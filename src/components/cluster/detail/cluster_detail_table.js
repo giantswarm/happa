@@ -348,7 +348,11 @@ class ClusterDetailTable extends React.Component {
                   <td>Worker nodes running</td>
                   <td className='value'>
                     <RefreshableLabel
-                      dataItems={[this.props.cluster.workers.length]}
+                      dataItems={[
+                        typeof this.props.cluster.workers === 'object'
+                          ? this.props.cluster.workers.length
+                          : null,
+                      ]}
                     >
                       <span>
                         {this.getNumberOfNodes() === null
@@ -363,7 +367,11 @@ class ClusterDetailTable extends React.Component {
                   <td>Total CPU cores in worker nodes</td>
                   <td className='value'>
                     <RefreshableLabel
-                      dataItems={[this.props.cluster.workers.length]}
+                      dataItems={[
+                        typeof this.props.cluster.workers === 'object'
+                          ? this.props.cluster.workers.length
+                          : null,
+                      ]}
                     >
                       <span>
                         {this.getCpusTotal() === null
@@ -377,7 +385,11 @@ class ClusterDetailTable extends React.Component {
                   <td>Total RAM in worker nodes</td>
                   <td className='value'>
                     <RefreshableLabel
-                      dataItems={[this.props.cluster.workers.length]}
+                      dataItems={[
+                        typeof this.props.cluster.workers === 'object'
+                          ? this.props.cluster.workers.length
+                          : null,
+                      ]}
                     >
                       <span>
                         {this.getMemoryTotal() === null
@@ -393,7 +405,11 @@ class ClusterDetailTable extends React.Component {
                     <td>Total storage in worker nodes</td>
                     <td className='value'>
                       <RefreshableLabel
-                        dataItems={[this.props.cluster.workers.length]}
+                        dataItems={[
+                          typeof this.props.cluster.workers === 'object'
+                            ? this.props.cluster.workers.length
+                            : null,
+                        ]}
                       >
                         <span>
                           {this.getStorageTotal() === null

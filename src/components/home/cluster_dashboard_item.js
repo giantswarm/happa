@@ -189,7 +189,7 @@ class ClusterDashboardItem extends React.Component {
               <span>
                 {' · '}
                 <RefreshableLabel dataItems={[storage]}>
-                  {storage ? storage : '0'} GB storage
+                  <span>{storage ? storage : '0'} GB storage</span>
                 </RefreshableLabel>
               </span>
             ) : (
