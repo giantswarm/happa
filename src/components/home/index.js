@@ -68,7 +68,7 @@ class Home extends React.Component {
     }
   };
 
-  fetchClusterDetails = clusters => {
+  fetchClusterDetails(clusters) {
     return Promise.all(
       _.flatten(
         clusters.map(cluster => {
@@ -76,12 +76,12 @@ class Home extends React.Component {
         })
       )
     );
-  };
+  }
 
   /**
    * Returns the string to use as the document.title
    */
-  title = () => {
+  title() {
     if (this.props.selectedOrganization) {
       return (
         'Cluster Overview | ' +
@@ -91,7 +91,7 @@ class Home extends React.Component {
     } else {
       return 'Cluster Overview | Giant Swarm';
     }
-  };
+  }
 
   /**
    * Returns the proper last updated info string based on available
