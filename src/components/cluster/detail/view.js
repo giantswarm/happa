@@ -93,14 +93,14 @@ class ClusterDetailView extends React.Component {
     }
   };
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     window.clearInterval(this.loadDataInterval);
     document.removeEventListener(
       this.visibilityChange,
       this.handleVisibilityChange,
       false
     );
-  };
+  }
 
   registerRefreshInterval = () => {
     var refreshInterval = 30 * 1000; // 30 seconds
