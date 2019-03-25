@@ -12,6 +12,7 @@ import ClusterIDLabel from '../shared/cluster_id_label';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RefreshableLabel from '../shared/refreshable_label';
 
 class ClusterDashboardItem extends React.Component {
   state = {
@@ -124,6 +125,7 @@ class ClusterDashboardItem extends React.Component {
     var memory = this.getMemoryTotal();
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
+    var numNodes = this.getNumberOfNodes();
 
     return (
       <div className='cluster-dashboard-item well'>
@@ -150,31 +152,45 @@ class ClusterDashboardItem extends React.Component {
                 this.props.cluster.id
               }
             >
-              <span
-                className='cluster-dashboard-item--name'
-                style={{ fontWeight: 'bold' }}
-              >
-                {this.props.cluster.name}
-              </span>
+              <RefreshableLabel dataItems={[this.props.cluster.name]}>
+                <span
+                  className='cluster-dashboard-item--name'
+                  style={{ fontWeight: 'bold' }}
+                >
+                  {this.props.cluster.name}
+                </span>
+              </RefreshableLabel>
             </Link>
           </div>
 
           <div>
-            <i className='fa fa-version-tag' title='Release version' />{' '}
-            {this.props.cluster.release_version}
+            <RefreshableLabel dataItems={[this.props.cluster.release_version]}>
+              <span>
+                <i className='fa fa-version-tag' title='Release version' />{' '}
+                {this.props.cluster.release_version}
+              </span>
+            </RefreshableLabel>
             {' · Created '}
             {relativeDate(this.props.cluster.create_date)}
           </div>
           <div>
-            {this.getNumberOfNodes()} nodes
+            <RefreshableLabel dataItems={[numNodes]}>
+              <span>{numNodes} nodes</span>
+            </RefreshableLabel>
             {' · '}
-            {cpus ? cpus : '0'} CPU cores
+            <RefreshableLabel dataItems={[cpus]}>
+              <span>{cpus ? cpus : '0'} CPU cores</span>
+            </RefreshableLabel>
             {' · '}
-            {memory ? memory : '0'} GB RAM
+            <RefreshableLabel dataItems={[memory]}>
+              <span>{memory ? memory : '0'} GB RAM</span>
+            </RefreshableLabel>
             {this.props.cluster.kvm ? (
               <span>
                 {' · '}
-                {storage ? storage : '0'} GB storage
+                <RefreshableLabel dataItems={[storage]}>
+                  {storage ? storage : '0'} GB storage
+                </RefreshableLabel>
               </span>
             ) : (
               undefined
