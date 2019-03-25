@@ -11,10 +11,24 @@
     100%
         opacity: 1
         transform: translateY(0)
-  
+
+
+.cluster-list-item-enter
+  opacity: 0
+
+.cluster-list-item-enter-active
+  opacity: 1
+  transition: opacity 500ms ease-in
+
+.cluster-list-item-exit
+  opacity: 1
+
+.cluster-list-item-exit-active
+  opacity: 0
+  transition: opacity 500ms ease-in
+
 .cluster-dashboard-item
   display: flex
-  animation: slide-up .3s ease-in-out
 
   b
     font-weight: 400

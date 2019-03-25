@@ -3,6 +3,7 @@
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import _ from 'underscore';
 import Button from '../shared/button';
@@ -117,19 +118,27 @@ class Home extends React.Component {
               />
             ) : null}
 
-            {_.sortBy(this.props.clusters, cluster => cluster.name).map(
-              cluster => {
-                return (
-                  <ClusterDashboardItem
-                    selectedOrganization={this.props.selectedOrganization}
-                    animate={true}
-                    key={cluster.id}
-                    cluster={cluster}
-                  />
-                );
-              },
-              cluster => cluster.id
-            )}
+            <TransitionGroup className='cluster-list'>
+              {_.sortBy(this.props.clusters, cluster => cluster.name).map(
+                cluster => {
+                  return (
+                    <CSSTransition
+                      key={cluster.id}
+                      timeout={500}
+                      classNames='cluster-list-item'
+                    >
+                      <ClusterDashboardItem
+                        selectedOrganization={this.props.selectedOrganization}
+                        animate={true}
+                        key={cluster.id}
+                        cluster={cluster}
+                      />
+                    </CSSTransition>
+                  );
+                },
+                cluster => cluster.id
+              )}
+            </TransitionGroup>
           </div>
         }
       </DocumentTitle>
