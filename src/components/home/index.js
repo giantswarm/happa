@@ -10,6 +10,7 @@ import Button from '../shared/button';
 import ClusterDashboardItem from './cluster_dashboard_item';
 import ClusterEmptyState from './cluster_empty_state';
 import DocumentTitle from 'react-document-title';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -20,12 +21,6 @@ class Home extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.debug('componentDidUpdate: prevProps.clusters', prevProps.clusters);
-    console.debug(
-      'componentDidUpdate: this.props.clusters',
-      this.props.clusters
-    );
-
     // load cluster details if cluster list has changed
     if (
       !_.isEqual(
@@ -86,7 +81,6 @@ class Home extends React.Component {
   };
 
   render() {
-    console.debug('Home render()');
     return (
       <DocumentTitle title={this.title()}>
         {

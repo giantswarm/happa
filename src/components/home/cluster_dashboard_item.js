@@ -121,7 +121,6 @@ class ClusterDashboardItem extends React.Component {
   };
 
   render() {
-    console.debug('ClusterDashboardItem render() ', this.props.cluster.name);
     var memory = this.getMemoryTotal();
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
