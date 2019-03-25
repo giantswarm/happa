@@ -20,7 +20,7 @@ Follow CircleCI's progress in https://circleci.com/gh/giantswarm/happa/.
 
 ### Semantic versioning (semver) semantics
 
-Releases are numbered after the semver system. As the notion of a breaking bs. non-breaking change isn't very meaningful for a GUI application, here is the system we apply:
+Releases are numbered after the semver system. As the notion of a breaking vs. non-breaking change isn't very meaningful for a GUI application, here is the system we apply:
 
 - Patch bump for smallest changes or fixes that will apply without the user knowing about them
 - Minor bump for changes (usually additions) in functionality that will require users to know about them in order to benefit from them
