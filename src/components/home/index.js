@@ -68,10 +68,6 @@ class Home extends React.Component {
     }
   };
 
-  clustersSortedById = clusters => {
-    return _.sortBy(clusters, 'id');
-  };
-
   fetchClusterDetails = clusters => {
     return Promise.all(
       _.flatten(
