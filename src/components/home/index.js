@@ -80,6 +80,18 @@ class Home extends React.Component {
     }
   };
 
+  /**
+   * Returns the proper last updated info string based on available
+   * cluster and/or status information.
+   */
+  lastUpdatedLabel = () => {
+    var maxTimestamp = 0;
+    this.props.clusters.forEach(cluster => {
+      maxTimestamp = Math.max(maxTimestamp, cluster.lastUpdated);
+    });
+    return moment(maxTimestamp).fromNow();
+  };
+
   render() {
     return (
       <DocumentTitle title={this.title()}>
@@ -133,6 +145,18 @@ class Home extends React.Component {
                 cluster => cluster.id
               )}
             </TransitionGroup>
+
+            {this.props.clusters.length > 0 ? (
+              <p className='last-updated'>
+                <small>
+                  This table is auto-refreshing. Details last fetched{' '}
+                  <span className='last-updated-datestring'>
+                    {this.lastUpdatedLabel()}
+                  </span>
+                  . <span className='beta-tag'>BETA</span>
+                </small>
+              </p>
+            ) : null}
           </div>
         }
       </DocumentTitle>
