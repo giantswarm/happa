@@ -39,33 +39,33 @@ class ClusterDashboardItem extends React.Component {
     }, refreshInterval);
   };
 
-  getMemoryTotal = () => {
+  getMemoryTotal() {
     var workers = this.getNumberOfNodes();
     if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
     var m = workers * this.props.cluster.workers[0].memory.size_gb;
     return m.toFixed(2);
-  };
+  }
 
-  getStorageTotal = () => {
+  getStorageTotal() {
     var workers = this.getNumberOfNodes();
     if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
     var s = workers * this.props.cluster.workers[0].storage.size_gb;
     return s.toFixed(2);
-  };
+  }
 
-  getCpusTotal = () => {
+  getCpusTotal() {
     var workers = this.getNumberOfNodes();
     if (workers === null || workers === 0 || !this.props.cluster.workers) {
       return null;
     }
     return workers * this.props.cluster.workers[0].cpu.cores;
-  };
+  }
 
-  getNumberOfNodes = () => {
+  getNumberOfNodes() {
     if (
       Object.keys(this.props.cluster).includes('status') &&
       this.props.cluster.status != null
@@ -94,7 +94,7 @@ class ClusterDashboardItem extends React.Component {
     }
 
     return 0;
-  };
+  }
 
   /**
    * Returns true if the cluster is younger than 30 days
