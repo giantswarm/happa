@@ -11,12 +11,20 @@ import ClusterDashboardItem from './cluster_dashboard_item';
 import ClusterEmptyState from './cluster_empty_state';
 import DocumentTitle from 'react-document-title';
 import moment from 'moment';
+import PageVisibilityTracker from '../../lib/page_visibility_tracker';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactTimeout from 'react-timeout';
 
 class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.visibilityTracker = new PageVisibilityTracker();
+  }
+
   componentDidMount() {
     this.registerRefreshInterval();
+    this.visibilityTracker.addEventListener(this.handleVisibilityChange);
     this.fetchClusterDetails(this.props.clusters);
   }
 
@@ -33,7 +41,7 @@ class Home extends React.Component {
   }
 
   componentWillUnmount() {
-    window.clearInterval(this.refreshInterval);
+    this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
   }
 
   /**
@@ -49,6 +57,15 @@ class Home extends React.Component {
 
   refreshClustersList = () => {
     this.props.actions.clustersLoad();
+  };
+
+  handleVisibilityChange = () => {
+    if (this.visibilityTracker.isVisible()) {
+      this.props.clearInterval(this.refreshInterval);
+    } else {
+      this.refreshClustersList();
+      this.registerRefreshInterval();
+    }
   };
 
   clustersSortedById = clusters => {
@@ -165,6 +182,7 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
+  clearInterval: PropTypes.func,
   clusters: PropTypes.array,
   actions: PropTypes.object,
   selectedOrganization: PropTypes.string,
@@ -203,4 +221,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Home);
+)(ReactTimeout(Home));
