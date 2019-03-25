@@ -60,7 +60,7 @@ class Home extends React.Component {
   };
 
   handleVisibilityChange = () => {
-    if (this.visibilityTracker.isVisible()) {
+    if (!this.visibilityTracker.isVisible()) {
       this.props.clearInterval(this.refreshInterval);
     } else {
       this.refreshClustersList();

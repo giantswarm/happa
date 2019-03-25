@@ -89,7 +89,7 @@ class ClusterDetailView extends React.Component {
   };
 
   handleVisibilityChange = () => {
-    if (this.visibilityTracker.isVisible()) {
+    if (!this.visibilityTracker.isVisible()) {
       this.props.clearInterval(this.loadDataInterval);
     } else {
       this.refreshClusterData();
