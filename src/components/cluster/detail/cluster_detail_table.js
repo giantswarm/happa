@@ -7,22 +7,19 @@ import cmp from 'semver-compare';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactTimeout from 'react-timeout';
 import RefreshableLabel from '../../shared/refreshable_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ClusterDetailTable extends React.Component {
-  componentDidMount = () => {
+  componentDidMount() {
     this.registerRefreshInterval();
-  };
-
-  componentWillUnmount = () => {
-    window.clearInterval(this.reRenderInterval);
-  };
+  }
 
   registerRefreshInterval = () => {
     // set re-rendering to update relative date/time values
     var refreshInterval = 10 * 1000; // 10 seconds
-    this.reRenderInterval = window.setInterval(() => {
+    this.props.setInterval(() => {
       // enforce re-rendering
       this.setState({ enforceReRender: Date.now() });
     }, refreshInterval);
@@ -468,7 +465,8 @@ ClusterDetailTable.propTypes = {
   lastUpdated: PropTypes.number,
   provider: PropTypes.string,
   release: PropTypes.object,
+  setInterval: PropTypes.func,
   showUpgradeModal: PropTypes.func,
 };
 
-export default ClusterDetailTable;
+export default ReactTimeout(ClusterDetailTable);
