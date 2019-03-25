@@ -21,6 +21,7 @@ import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactTimeout from 'react-timeout';
 import ScaleClusterModal from './scale_cluster_modal';
 import UpgradeClusterModal from './upgrade_cluster_modal';
 
@@ -94,18 +95,18 @@ class ClusterDetailView extends React.Component {
     }
   };
 
-  componentWillUnmount = () => {
-    window.clearInterval(this.loadDataInterval);
+  componentWillUnmount() {
+    this.props.clearInterval(this.loadDataInterval);
     document.removeEventListener(
       this.visibilityChange,
       this.handleVisibilityChange,
       false
     );
-  };
+  }
 
   registerRefreshInterval = () => {
     var refreshInterval = 30 * 1000; // 30 seconds
-    this.loadDataInterval = window.setInterval(
+    this.loadDataInterval = this.props.setInterval(
       this.refreshClusterData,
       refreshInterval
     );
@@ -117,7 +118,7 @@ class ClusterDetailView extends React.Component {
 
   handleVisibilityChange = () => {
     if (document[this.hidden]) {
-      window.clearInterval(this.loadDataInterval);
+      this.props.clearInterval(this.loadDataInterval);
     } else {
       this.refreshClusterData();
       this.registerRefreshInterval();
@@ -374,6 +375,7 @@ ClusterDetailView.contextTypes = {
 };
 
 ClusterDetailView.propTypes = {
+  clearInterval: PropTypes.func,
   clusterActions: PropTypes.object,
   cluster: PropTypes.object,
   clusterId: PropTypes.string,
@@ -383,6 +385,7 @@ ClusterDetailView.propTypes = {
   releaseActions: PropTypes.object,
   release: PropTypes.object,
   provider: PropTypes.string,
+  setInterval: PropTypes.func,
   targetRelease: PropTypes.object,
   user: PropTypes.object,
 };
@@ -398,4 +401,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   undefined,
   mapDispatchToProps
-)(ClusterDetailView);
+)(ReactTimeout(ClusterDetailView));
