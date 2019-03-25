@@ -12,8 +12,33 @@ import ClusterIDLabel from '../shared/cluster_id_label';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RefreshableLabel from '../shared/refreshable_label';
 
 class ClusterDashboardItem extends React.Component {
+  state = {
+    enforceReRender: null,
+  };
+
+  componentDidMount() {
+    this.registerReRenderInterval();
+  }
+
+  componentWillUnmount() {
+    window.clearInterval(this.reRenderInterval);
+  }
+
+  /**
+   * Activates periodic re-rendering to keep displayed info, like relative
+   * dates, fresh.
+   */
+  registerReRenderInterval = () => {
+    var refreshInterval = 10 * 1000; // 10 seconds
+    this.reRenderInterval = window.setInterval(() => {
+      // enforce re-rendering by state change
+      this.setState({ enforceReRender: Date.now() });
+    }, refreshInterval);
+  };
+
   getMemoryTotal() {
     var workers = this.getNumberOfNodes();
     if (workers === null || workers === 0 || !this.props.cluster.workers) {
@@ -84,7 +109,7 @@ class ClusterDashboardItem extends React.Component {
     return age < 30 * 24 * 60 * 60;
   }
 
-  accessCluster() {
+  accessCluster = () => {
     this.props.dispatch(
       push(
         '/organizations/' +
@@ -94,12 +119,13 @@ class ClusterDashboardItem extends React.Component {
           '/getting-started/'
       )
     );
-  }
+  };
 
   render() {
     var memory = this.getMemoryTotal();
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
+    var numNodes = this.getNumberOfNodes();
 
     return (
       <div className='cluster-dashboard-item well'>
@@ -126,31 +152,45 @@ class ClusterDashboardItem extends React.Component {
                 this.props.cluster.id
               }
             >
-              <span
-                className='cluster-dashboard-item--name'
-                style={{ fontWeight: 'bold' }}
-              >
-                {this.props.cluster.name}
-              </span>
+              <RefreshableLabel dataItems={[this.props.cluster.name]}>
+                <span
+                  className='cluster-dashboard-item--name'
+                  style={{ fontWeight: 'bold' }}
+                >
+                  {this.props.cluster.name}
+                </span>
+              </RefreshableLabel>
             </Link>
           </div>
 
           <div>
-            <i className='fa fa-version-tag' title='Release version' />{' '}
-            {this.props.cluster.release_version}
+            <RefreshableLabel dataItems={[this.props.cluster.release_version]}>
+              <span>
+                <i className='fa fa-version-tag' title='Release version' />{' '}
+                {this.props.cluster.release_version}
+              </span>
+            </RefreshableLabel>
             {' · Created '}
             {relativeDate(this.props.cluster.create_date)}
           </div>
           <div>
-            {this.getNumberOfNodes()} nodes
+            <RefreshableLabel dataItems={[numNodes]}>
+              <span>{numNodes} nodes</span>
+            </RefreshableLabel>
             {' · '}
-            {cpus ? cpus : '0'} CPU cores
+            <RefreshableLabel dataItems={[cpus]}>
+              <span>{cpus ? cpus : '0'} CPU cores</span>
+            </RefreshableLabel>
             {' · '}
-            {memory ? memory : '0'} GB RAM
+            <RefreshableLabel dataItems={[memory]}>
+              <span>{memory ? memory : '0'} GB RAM</span>
+            </RefreshableLabel>
             {this.props.cluster.kvm ? (
               <span>
                 {' · '}
-                {storage ? storage : '0'} GB storage
+                <RefreshableLabel dataItems={[storage]}>
+                  {storage ? storage : '0'} GB storage
+                </RefreshableLabel>
               </span>
             ) : (
               undefined
@@ -161,7 +201,7 @@ class ClusterDashboardItem extends React.Component {
         <div className='cluster-dashboard-item--buttons'>
           {this.clusterYoungerThan30Days() ? (
             <ButtonGroup>
-              <Button onClick={this.accessCluster.bind(this)}>
+              <Button onClick={this.accessCluster}>
                 <i className='fa fa-start' />
                 Get Started
               </Button>

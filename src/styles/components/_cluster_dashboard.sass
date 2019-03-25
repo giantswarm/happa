@@ -1,3 +1,32 @@
+@keyframes expand
+  from
+    transform: scale(1, 0)
+    opacity: 0
+    background: #5470B0
+
+@keyframes slide-up
+    0%
+        opacity: 0
+        transform: translateY(20px)
+    100%
+        opacity: 1
+        transform: translateY(0)
+
+
+.cluster-list-item-enter
+  opacity: 0
+
+.cluster-list-item-enter-active
+  opacity: 1
+  transition: opacity 500ms ease-in
+
+.cluster-list-item-exit
+  opacity: 1
+
+.cluster-list-item-exit-active
+  opacity: 0
+  transition: opacity 500ms ease-in
+
 .cluster-dashboard-item
   display: flex
 

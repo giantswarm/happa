@@ -3,21 +3,33 @@
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import _ from 'underscore';
 import Button from '../shared/button';
 import ClusterDashboardItem from './cluster_dashboard_item';
 import ClusterEmptyState from './cluster_empty_state';
 import DocumentTitle from 'react-document-title';
+import moment from 'moment';
+import PageVisibilityTracker from '../../lib/page_visibility_tracker';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactTimeout from 'react-timeout';
 
 class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.visibilityTracker = new PageVisibilityTracker();
+  }
+
   componentDidMount() {
+    this.registerRefreshInterval();
+    this.visibilityTracker.addEventListener(this.handleVisibilityChange);
     this.fetchClusterDetails(this.props.clusters);
   }
 
   componentDidUpdate(prevProps) {
+    // load cluster details if cluster list has changed
     if (
       !_.isEqual(
         this.props.clusters.map(x => x.id),
@@ -28,13 +40,33 @@ class Home extends React.Component {
     }
   }
 
-  clustersSortedById(clusters) {
-    return _.sortBy(clusters, 'id');
+  componentWillUnmount() {
+    this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
   }
 
-  clusterIds(clusters) {
-    return this.clustersSortedById(clusters).map(cluster => cluster.id);
-  }
+  /**
+   * Load clusters list periodically
+   */
+  registerRefreshInterval = () => {
+    var refreshIntervalDuration = 30 * 1000; // 30 seconds
+    this.refreshInterval = window.setInterval(
+      this.refreshClustersList,
+      refreshIntervalDuration
+    );
+  };
+
+  refreshClustersList = () => {
+    this.props.actions.clustersLoad();
+  };
+
+  handleVisibilityChange = () => {
+    if (!this.visibilityTracker.isVisible()) {
+      this.props.clearInterval(this.refreshInterval);
+    } else {
+      this.refreshClustersList();
+      this.registerRefreshInterval();
+    }
+  };
 
   fetchClusterDetails(clusters) {
     return Promise.all(
@@ -46,6 +78,9 @@ class Home extends React.Component {
     );
   }
 
+  /**
+   * Returns the string to use as the document.title
+   */
   title() {
     if (this.props.selectedOrganization) {
       return (
@@ -57,6 +92,18 @@ class Home extends React.Component {
       return 'Cluster Overview | Giant Swarm';
     }
   }
+
+  /**
+   * Returns the proper last updated info string based on available
+   * cluster and/or status information.
+   */
+  lastUpdatedLabel = () => {
+    var maxTimestamp = 0;
+    this.props.clusters.forEach(cluster => {
+      maxTimestamp = Math.max(maxTimestamp, cluster.lastUpdated);
+    });
+    return moment(maxTimestamp).fromNow();
+  };
 
   render() {
     return (
@@ -90,19 +137,39 @@ class Home extends React.Component {
               />
             ) : null}
 
-            {_.sortBy(this.props.clusters, cluster => cluster.name).map(
-              cluster => {
-                return (
-                  <ClusterDashboardItem
-                    selectedOrganization={this.props.selectedOrganization}
-                    animate={true}
-                    key={cluster.id}
-                    cluster={cluster}
-                  />
-                );
-              },
-              cluster => cluster.id
-            )}
+            <TransitionGroup className='cluster-list'>
+              {_.sortBy(this.props.clusters, cluster => cluster.name).map(
+                cluster => {
+                  return (
+                    <CSSTransition
+                      key={cluster.id}
+                      timeout={500}
+                      classNames='cluster-list-item'
+                    >
+                      <ClusterDashboardItem
+                        selectedOrganization={this.props.selectedOrganization}
+                        animate={true}
+                        key={cluster.id}
+                        cluster={cluster}
+                      />
+                    </CSSTransition>
+                  );
+                },
+                cluster => cluster.id
+              )}
+            </TransitionGroup>
+
+            {this.props.clusters.length > 0 ? (
+              <p className='last-updated'>
+                <small>
+                  This table is auto-refreshing. Details last fetched{' '}
+                  <span className='last-updated-datestring'>
+                    {this.lastUpdatedLabel()}
+                  </span>
+                  . <span className='beta-tag'>BETA</span>
+                </small>
+              </p>
+            ) : null}
           </div>
         }
       </DocumentTitle>
@@ -111,6 +178,7 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
+  clearInterval: PropTypes.func,
   clusters: PropTypes.array,
   actions: PropTypes.object,
   selectedOrganization: PropTypes.string,
@@ -149,4 +217,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Home);
+)(ReactTimeout(Home));

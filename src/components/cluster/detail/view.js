@@ -19,6 +19,7 @@ import ClusterKeyPairs from './key_pairs';
 import ClusterName from '../../shared/cluster_name';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
+import PageVisibilityTracker from '../../../lib/page_visibility_tracker';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
@@ -61,47 +62,18 @@ class ClusterDetailView extends React.Component {
           });
         });
     }
+
+    this.visibilityTracker = new PageVisibilityTracker();
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.registerRefreshInterval();
-
-    if (typeof document.hidden !== 'undefined') {
-      // Opera 12.10 and Firefox 18 and later support
-      this.hidden = 'hidden';
-      this.visibilityChange = 'visibilitychange';
-    } else if (typeof document.msHidden !== 'undefined') {
-      this.hidden = 'msHidden';
-      this.visibilityChange = 'msvisibilitychange';
-    } else if (typeof document.webkitHidden !== 'undefined') {
-      this.hidden = 'webkitHidden';
-      this.visibilityChange = 'webkitvisibilitychange';
-    }
-
-    if (
-      typeof document.addEventListener === 'undefined' ||
-      this.hidden === undefined
-    ) {
-      console.log(
-        'This piece of code requires a browser that supports the Page Visibility API.'
-      );
-    } else {
-      // Handle page visibility change
-      document.addEventListener(
-        this.visibilityChange,
-        this.handleVisibilityChange,
-        false
-      );
-    }
-  };
+    this.visibilityTracker.addEventListener(this.handleVisibilityChange);
+  }
 
   componentWillUnmount() {
     this.props.clearInterval(this.loadDataInterval);
-    document.removeEventListener(
-      this.visibilityChange,
-      this.handleVisibilityChange,
-      false
-    );
+    this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
   }
 
   registerRefreshInterval = () => {
@@ -117,7 +89,7 @@ class ClusterDetailView extends React.Component {
   };
 
   handleVisibilityChange = () => {
-    if (document[this.hidden]) {
+    if (!this.visibilityTracker.isVisible()) {
       this.props.clearInterval(this.loadDataInterval);
     } else {
       this.refreshClusterData();
