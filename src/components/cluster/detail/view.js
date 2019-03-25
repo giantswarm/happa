@@ -16,6 +16,7 @@ import ClusterApps from './cluster_apps';
 import ClusterDetailTable from './cluster_detail_table';
 import ClusterIDLabel from '../../shared/cluster_id_label';
 import ClusterKeyPairs from './key_pairs';
+import ClusterName from '../../shared/cluster_name';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
@@ -227,13 +228,17 @@ class ClusterDetailView extends React.Component {
             <div>
               <div className='cluster-details'>
                 <div className='row'>
-                  <div className='col-7'>
+                  <div className='col-sm-12 col-md-7 col-9'>
                     <h1>
                       <ClusterIDLabel
                         clusterID={this.props.cluster.id}
                         copyEnabled
                       />{' '}
-                      {this.props.cluster.name}{' '}
+                      <ClusterName
+                        id={this.props.cluster.id}
+                        name={this.props.cluster.name}
+                        dispatchFunc={this.props.dispatch}
+                      />{' '}
                       {this.state.loading ? (
                         <img
                           className='loader'
@@ -246,8 +251,31 @@ class ClusterDetailView extends React.Component {
                       )}
                     </h1>
                   </div>
-                  <div className='col-5'>
-                    <div className='pull-right btn-group'>
+                  <div className='col-sm-12 col-md-5 col-3'>
+                    <div
+                      className='btn-group visible-xs-block visible-sm-block visible-md-block'
+                      style={{ marginTop: 10 }}
+                    >
+                      <Button onClick={this.accessCluster}>
+                        <i className='fa fa-start' /> GET STARTED
+                      </Button>
+                      {this.canClusterScale() ? (
+                        <Button onClick={this.showScalingModal}>
+                          <i className='fa fa-scale' /> SCALE
+                        </Button>
+                      ) : (
+                        undefined
+                      )}
+
+                      {this.canClusterUpgrade() ? (
+                        <Button onClick={this.showUpgradeModal}>
+                          <i className='fa fa-version-upgrade' /> UPGRADE
+                        </Button>
+                      ) : (
+                        undefined
+                      )}
+                    </div>
+                    <div className='pull-right btn-group visible-lg-block'>
                       <Button onClick={this.accessCluster}>
                         <i className='fa fa-start' /> GET STARTED
                       </Button>
