@@ -128,7 +128,9 @@ class ClusterDetailTable extends React.Component {
         <tr>
           <td>EC2 instance type</td>
           <td className='value code'>
-            {this.props.cluster.workers[0].aws.instance_type}
+            {this.props.cluster.workers
+              ? this.props.cluster.workers[0].aws.instance_type
+              : null}
           </td>
         </tr>
       );
@@ -137,7 +139,9 @@ class ClusterDetailTable extends React.Component {
         <tr>
           <td>VM size</td>
           <td className='value code'>
-            {this.props.cluster.workers[0].azure.vm_size}
+            {this.props.cluster.workers
+              ? this.props.cluster.workers[0].azure.vm_size
+              : null}
           </td>
         </tr>
       );
