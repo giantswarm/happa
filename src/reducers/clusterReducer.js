@@ -4,11 +4,12 @@ import * as types from '../actions/actionTypes';
 import _ from 'underscore';
 import moment from 'moment';
 
-
-// ensureWorkersHaveAWSkey
-// -----------------------
-// Since the API omits the 'aws' key from workers on kvm installations, I will
-// add it back here with dummy values if it is not present.
+/**
+ * Since the API omits the 'aws' key from workers on kvm installations, I will
+ * add it back here with dummy values if it is not present.
+ *
+ * @param {Object} clusterDetails Cluster object
+ */
 var ensureWorkersHaveAWSkey = function(clusterDetails) {
   clusterDetails.workers = clusterDetails.workers || [];
 
@@ -29,14 +30,24 @@ export default function clusterReducer(
 
   switch (action.type) {
     case types.CLUSTERS_LOAD_SUCCESS:
-      items = {};
+      // if state was populated previously, let new data overwrite old data partially
+      var prevClusterIDs = Object.keys(state.items).sort();
+
+      // use existing state's items and update it
+      items = Object.assign(state.items, action.clusters);
+
+      var newClusterIDs = _.map(_.toArray(action.clusters), item => {
+        return item.id;
+      }).sort();
+
+      // account for deleted clusters
+      var deleted = _.difference(prevClusterIDs, newClusterIDs);
+      deleted.forEach(deletedClusterID => {
+        delete items[deletedClusterID];
+      });
 
       _.each(action.clusters, cluster => {
-        items[cluster.id] = Object.assign(
-          {},
-          items[cluster.id],
-          ensureMetricKeysAreAvailable(cluster)
-        );
+        items[cluster.id] = Object.assign({}, items[cluster.id], cluster);
 
         items[cluster.id].lastUpdated = Date.now();
 
@@ -62,16 +73,9 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
-      items = Object.assign({}, state.items);
+      items = Object.assign(state.items, {});
 
       items[action.cluster.id] = Object.assign(
-        {},
-        items[action.cluster.id],
-        action.cluster
-      );
-
-      items[action.cluster.id] = Object.assign(
-        {},
         items[action.cluster.id],
         ensureWorkersHaveAWSkey(action.cluster)
       );
