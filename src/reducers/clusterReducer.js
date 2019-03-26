@@ -4,52 +4,6 @@ import * as types from '../actions/actionTypes';
 import _ from 'underscore';
 import moment from 'moment';
 
-var metricKeys = [
-  'cpu_cores',
-  'cpu_used',
-  'ram_available',
-  'ram_used',
-  'pod_count',
-  'container_count',
-  'node_storage_limit',
-  'node_storage_used',
-  'network_traffic_incoming',
-  'network_traffic_outgoing',
-];
-
-// ensureMetricKeysAreAvailable
-// ----------------------------
-// Make sure that expected metrics keys are present on cluster and nodes
-// since Desmotes will omit them if they are not found in Prometheus
-var ensureMetricKeysAreAvailable = function(clusterDetails) {
-  clusterDetails.metrics = clusterDetails.metrics || {};
-  for (var metricKey of metricKeys) {
-    clusterDetails.metrics[metricKey] = Object.assign(
-      {},
-      {
-        value: 0,
-        unit: 'unknown',
-        timestamp: 0,
-      },
-      clusterDetails.metrics[metricKey]
-    );
-    for (var node in clusterDetails.nodes) {
-      if (clusterDetails.nodes.hasOwnProperty(node)) {
-        clusterDetails.nodes[node][metricKey] = Object.assign(
-          {},
-          {
-            value: 0,
-            unit: 'unknown',
-            timestamp: 0,
-          },
-          clusterDetails.nodes[node][metricKey]
-        );
-      }
-    }
-  }
-
-  return clusterDetails;
-};
 
 // ensureWorkersHaveAWSkey
 // -----------------------
