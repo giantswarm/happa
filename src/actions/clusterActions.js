@@ -7,11 +7,10 @@ import { push } from 'connected-react-router';
 import APIClusterStatusClient from '../lib/api_status_client';
 import GiantSwarmV4 from 'giantswarm-v4';
 
-// clustersLoad
-// -----------------
-// Performs the getClusters API call and dispatches the clustersLoadSuccess
-// action.
-//
+/**
+ * Performs the getClusters API call and dispatches the clustersLoadSuccess
+ * action.
+ */
 export function clustersLoad() {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
@@ -33,10 +32,11 @@ export function clustersLoad() {
   };
 }
 
-// clusterLoadDetails
-// =============================================================
-// Takes a clusterId and loads details for that cluster
-
+/**
+ * Takes a clusterId and loads details for that cluster
+ *
+ * @param {String} clusterId Cluster ID
+ */
 export function clusterLoadDetails(clusterId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
@@ -76,10 +76,11 @@ export function clusterLoadDetails(clusterId) {
   };
 }
 
-// clusterLoadStatus
-// =============================================================
-// Takes a clusterId and loads status for that cluster.
-
+/**
+ * Takes a clusterId and loads status for that cluster.
+ *
+ * @param {String} clusterId Cluster ID
+ */
 export function clusterLoadStatus(clusterId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
@@ -120,11 +121,12 @@ export function clusterLoadStatus(clusterId) {
   };
 }
 
-// clusterCreate
-// ==============================================================
-// Takes a cluster object and tries to create it. Dispatches CLUSTER_CREATE_SUCCESS
-// on success or CLUSTER_CREATE_ERROR on error.
-
+/**
+ * Takes a cluster object and tries to create it. Dispatches CLUSTER_CREATE_SUCCESS
+ * on success or CLUSTER_CREATE_ERROR on error.
+ *
+ * @param {Object} cluster Cluster definition object
+ */
 export function clusterCreate(cluster) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
@@ -170,14 +172,12 @@ export function clusterCreate(cluster) {
   };
 }
 
-// clusterDeleteConfirmed
-// ==============================================================
-// Takes a cluster object and deletes that cluster. Dispatches CLUSTER_DELETE_SUCCESS
-// on success or CLUSTER_DELETE_ERROR on error.
-//
-// required param:
-//  cluster: {id: "string", owner: "string"}
-
+/**
+ * Takes a cluster object and deletes that cluster. Dispatches CLUSTER_DELETE_SUCCESS
+ * on success or CLUSTER_DELETE_ERROR on error.
+ *
+ * @param {Object} cluster Cluster definition object, containing ID and owner
+ */
 export function clusterDeleteConfirmed(cluster) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
@@ -225,12 +225,13 @@ export function clusterDeleteConfirmed(cluster) {
   };
 }
 
-// clusterLoadKeyPairs
-// ==============================================================
-// Takes a clusterId and loads its key pairs.
-// dispatches CLUSTER_LOAD_KEY_PAIRS_SUCCESS on success or CLUSTER_LOAD_KEY_PAIRS_ERROR
-// on error.
-
+/**
+ * Takes a clusterId and loads its key pairs.
+ * dispatches CLUSTER_LOAD_KEY_PAIRS_SUCCESS on success or CLUSTER_LOAD_KEY_PAIRS_ERROR
+ * on error.
+ *
+ * @param {String} clusterId Cluster ID
+ */
 export function clusterLoadKeyPairs(clusterId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
@@ -349,12 +350,13 @@ export function clustersLoadError(error) {
   };
 }
 
-// clusterPatch
-// ==============================================================
-// Takes a cluster object and tries to patch it.
-// dispatches CLUSTER_PATCH_SUCCESS on success or CLUSTER_PATCH_ERROR
-// on error.
-
+/**
+ * Takes a cluster object and tries to patch it.
+ * Dispatches CLUSTER_PATCH_SUCCESS on success or CLUSTER_PATCH_ERROR
+ * on error.
+ *
+ * @param {Object} cluster Cluster modification object
+ */
 export function clusterPatch(cluster) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
@@ -391,12 +393,14 @@ export function clusterPatch(cluster) {
   };
 }
 
-// clusterCreateKeyPair
-// ==============================================================
-// Creates a keypair for a cluster.
-// dispatches CLUSTER_CREATE_KEYPAIR_SUCCESS on success or CLUSTER_CREATE_KEYPAIR_ERROR
-// on error.
-
+/**
+ * Creates a keypair for a cluster.
+ * Dispatches CLUSTER_CREATE_KEYPAIR_SUCCESS on success or CLUSTER_CREATE_KEYPAIR_ERROR
+ * on error.
+ *
+ * @param {String} clusterId Cluster ID
+ * @param {Object} keypair   Key pair object
+ */
 export function clusterCreateKeyPair(clusterId, keypair) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
