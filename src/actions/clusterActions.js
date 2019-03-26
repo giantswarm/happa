@@ -33,7 +33,7 @@ export function clustersLoad() {
 }
 
 /**
- * Takes a clusterId and loads details for that cluster
+ * Loads details for a cluster.
  *
  * @param {String} clusterId Cluster ID
  */
