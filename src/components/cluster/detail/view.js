@@ -200,9 +200,9 @@ class ClusterDetailView extends React.Component {
             title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
           >
             <div className='cluster-details'>
-              <div className='row' style={{ marginBottom: '10px' }}>
+              <div className='row' style={{ marginBottom: '20px' }}>
                 <div className='col-sm-12 col-md-7 col-9'>
-                  <h1>
+                  <h1 style={{ marginLeft: '-10px' }}>
                     <ClusterIDLabel
                       clusterID={this.props.cluster.id}
                       copyEnabled
