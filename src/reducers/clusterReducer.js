@@ -34,7 +34,7 @@ export default function clusterReducer(
       var prevClusterIDs = Object.keys(state.items).sort();
 
       // use existing state's items and update it
-      items = Object.assign(state.items, action.clusters);
+      items = Object.assign({}, state.items, action.clusters);
 
       var newClusterIDs = _.map(_.toArray(action.clusters), item => {
         return item.id;
@@ -73,9 +73,10 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
-      items = Object.assign(state.items, {});
+      items = Object.assign({}, state.items);
 
       items[action.cluster.id] = Object.assign(
+        {},
         items[action.cluster.id],
         ensureWorkersHaveAWSkey(action.cluster)
       );
