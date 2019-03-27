@@ -165,8 +165,8 @@ class ClusterDetailTable extends React.Component {
               <span>
                 {this.props.cluster.scaling.min ===
                 this.props.cluster.scaling.max
-                  ? `pinned at ${this.props.cluster.scaling.min}`
-                  : `autoscaling between ${
+                  ? `Pinned at ${this.props.cluster.scaling.min}`
+                  : `Autoscaling between ${
                       this.props.cluster.scaling.min
                     } and ${this.props.cluster.scaling.max}`}
               </span>

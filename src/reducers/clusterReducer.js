@@ -4,57 +4,12 @@ import * as types from '../actions/actionTypes';
 import _ from 'underscore';
 import moment from 'moment';
 
-var metricKeys = [
-  'cpu_cores',
-  'cpu_used',
-  'ram_available',
-  'ram_used',
-  'pod_count',
-  'container_count',
-  'node_storage_limit',
-  'node_storage_used',
-  'network_traffic_incoming',
-  'network_traffic_outgoing',
-];
-
-// ensureMetricKeysAreAvailable
-// ----------------------------
-// Make sure that expected metrics keys are present on cluster and nodes
-// since Desmotes will omit them if they are not found in Prometheus
-var ensureMetricKeysAreAvailable = function(clusterDetails) {
-  clusterDetails.metrics = clusterDetails.metrics || {};
-  for (var metricKey of metricKeys) {
-    clusterDetails.metrics[metricKey] = Object.assign(
-      {},
-      {
-        value: 0,
-        unit: 'unknown',
-        timestamp: 0,
-      },
-      clusterDetails.metrics[metricKey]
-    );
-    for (var node in clusterDetails.nodes) {
-      if (clusterDetails.nodes.hasOwnProperty(node)) {
-        clusterDetails.nodes[node][metricKey] = Object.assign(
-          {},
-          {
-            value: 0,
-            unit: 'unknown',
-            timestamp: 0,
-          },
-          clusterDetails.nodes[node][metricKey]
-        );
-      }
-    }
-  }
-
-  return clusterDetails;
-};
-
-// ensureWorkersHaveAWSkey
-// -----------------------
-// Since the API omits the 'aws' key from workers on kvm installations, I will
-// add it back here with dummy values if it is not present.
+/**
+ * Since the API omits the 'aws' key from workers on kvm installations, I will
+ * add it back here with dummy values if it is not present.
+ *
+ * @param {Object} clusterDetails Cluster object
+ */
 var ensureWorkersHaveAWSkey = function(clusterDetails) {
   clusterDetails.workers = clusterDetails.workers || [];
 
@@ -75,14 +30,24 @@ export default function clusterReducer(
 
   switch (action.type) {
     case types.CLUSTERS_LOAD_SUCCESS:
-      items = {};
+      // if state was populated previously, let new data overwrite old data partially
+      var prevClusterIDs = Object.keys(state.items).sort();
+
+      // use existing state's items and update it
+      items = Object.assign({}, state.items, action.clusters);
+
+      var newClusterIDs = _.map(_.toArray(action.clusters), item => {
+        return item.id;
+      }).sort();
+
+      // account for deleted clusters
+      var deleted = _.difference(prevClusterIDs, newClusterIDs);
+      deleted.forEach(deletedClusterID => {
+        delete items[deletedClusterID];
+      });
 
       _.each(action.clusters, cluster => {
-        items[cluster.id] = Object.assign(
-          {},
-          items[cluster.id],
-          ensureMetricKeysAreAvailable(cluster)
-        );
+        items[cluster.id] = Object.assign({}, items[cluster.id], cluster);
 
         items[cluster.id].lastUpdated = Date.now();
 
@@ -109,12 +74,6 @@ export default function clusterReducer(
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
       items = Object.assign({}, state.items);
-
-      items[action.cluster.id] = Object.assign(
-        {},
-        items[action.cluster.id],
-        action.cluster
-      );
 
       items[action.cluster.id] = Object.assign(
         {},
