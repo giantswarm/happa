@@ -272,7 +272,12 @@ class ClusterDetailView extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-12'>
-                  <Tabs defaultActiveKey={1} id='tabs'>
+                  <Tabs
+                    justify
+                    animation={false}
+                    defaultActiveKey={1}
+                    id='tabs'
+                  >
                     <Tab eventKey={1} title='General'>
                       <ClusterDetailTable
                         canClusterUpgrade={this.canClusterUpgrade()}
