@@ -293,8 +293,8 @@ class ClusterDetailView extends React.Component {
                           Key Pairs and Managed Services are gone?
                         </h3>
                         <p>
-                          No, we just moved them into separate tabs to clean up
-                          a bit.
+                          No, we just moved them into separate tabs above to
+                          clean up a bit.
                         </p>
                       </div>
 
