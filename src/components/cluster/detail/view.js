@@ -283,6 +283,16 @@ class ClusterDetailView extends React.Component {
                         release={this.props.release}
                       />
 
+                      <div className='row section col-12'>
+                        <h3 className='table-label'>
+                          Key Pairs and Managed Services are gone?
+                        </h3>
+                        <p>
+                          No, we just moved them into separate tabs to clean up
+                          a bit.
+                        </p>
+                      </div>
+
                       <div className='row section cluster_delete col-12'>
                         <div className='row'>
                           <h3 className='table-label'>Delete This Cluster</h3>
