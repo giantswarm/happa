@@ -34,7 +34,7 @@ export default function clusterReducer(
       var prevClusterIDs = Object.keys(state.items).sort();
 
       // use existing state's items and update it
-      items = Object.assign({}, state.items, action.clusters);
+      items = Object.assign({}, state.items);
 
       var newClusterIDs = _.map(_.toArray(action.clusters), item => {
         return item.id;
