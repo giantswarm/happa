@@ -346,7 +346,9 @@ class ClusterKeyPairs extends React.Component {
                                       </Tooltip>
                                     }
                                   >
-                                    <span>{keyPair.description}</span>
+                                    <div style={{ overflow: 'hidden' }}>
+                                      <span>{keyPair.description}</span>
+                                    </div>
                                   </OverlayTrigger>
                                   <Copyable copyText={keyPair.id}>
                                     <small>
