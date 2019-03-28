@@ -337,7 +337,7 @@ class ClusterKeyPairs extends React.Component {
 
                             return (
                               <tr key={keyPair.id}>
-                                <td className='truncate hidden-xs col-sm-4'>
+                                <td className='truncate hidden-xs'>
                                   <OverlayTrigger
                                     placement='top'
                                     overlay={
@@ -354,19 +354,23 @@ class ClusterKeyPairs extends React.Component {
                                     </small>
                                   </Copyable>
                                 </td>
-                                <td className='truncate hidden-xs col-sm-1'>
+                                <td
+                                  className='truncate hidden-xs'
+                                  style={{ width: '120px' }}
+                                >
                                   <small>
                                     {relativeDate(keyPair.create_date)}
                                   </small>
                                 </td>
                                 <td
-                                  className={`${expiryClass} truncate hidden-xs col-sm-1`}
+                                  className={`${expiryClass} truncate hidden-xs`}
+                                  style={{ width: '120px' }}
                                 >
                                   <small>
                                     {relativeDate(keyPair.expire_date)}
                                   </small>
                                 </td>
-                                <td className='code truncate col-xs-3'>
+                                <td className='code truncate'>
                                   <Copyable copyText={keyPair.common_name}>
                                     <OverlayTrigger
                                       placement='top'
@@ -380,7 +384,7 @@ class ClusterKeyPairs extends React.Component {
                                     </OverlayTrigger>
                                   </Copyable>
                                 </td>
-                                <td className='code truncate col-xs-1'>
+                                <td className='code truncate'>
                                   <Copyable
                                     copyText={keyPair.certificate_organizations}
                                   >
