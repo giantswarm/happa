@@ -254,8 +254,6 @@ class ClusterKeyPairs extends React.Component {
     }
   }
 
-  downloadKubeConfig() {}
-
   render() {
     return (
       <div className='row section cluster_key_pairs col-12'>
