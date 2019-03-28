@@ -3,7 +3,7 @@
   position: relative
   overflow: inherit
   text-overflow: inherit
-  display: block
+  display: inherit
 
   .copyable-content
     position: relative
@@ -21,3 +21,15 @@
     position: absolute
     display: inline-block
     opacity: 0
+
+.truncate
+  .copyable
+    display: inline-block
+    max-width: 100%
+
+  .copyable-content
+    display: block
+    small
+      text-overflow: ellipsis
+      display: inline-block
+      width: 100%

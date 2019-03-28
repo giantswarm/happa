@@ -374,34 +374,16 @@ class ClusterKeyPairs extends React.Component {
                                 </td>
                                 <td className='code truncate'>
                                   <Copyable copyText={keyPair.common_name}>
-                                    <OverlayTrigger
-                                      placement='top'
-                                      overlay={
-                                        <Tooltip id='tooltip'>
-                                          {keyPair.common_name}
-                                        </Tooltip>
-                                      }
-                                    >
-                                      <small>{keyPair.common_name}</small>
-                                    </OverlayTrigger>
+                                    <small>{keyPair.common_name}</small>
                                   </Copyable>
                                 </td>
                                 <td className='code truncate'>
                                   <Copyable
                                     copyText={keyPair.certificate_organizations}
                                   >
-                                    <OverlayTrigger
-                                      placement='top'
-                                      overlay={
-                                        <Tooltip id='tooltip'>
-                                          {keyPair.certificate_organizations}
-                                        </Tooltip>
-                                      }
-                                    >
-                                      <small>
-                                        {keyPair.certificate_organizations}
-                                      </small>
-                                    </OverlayTrigger>
+                                    <small>
+                                      {keyPair.certificate_organizations}
+                                    </small>
                                   </Copyable>
                                 </td>
                               </tr>
