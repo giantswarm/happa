@@ -11,14 +11,7 @@ class Copyable extends React.Component {
     copied: false,
   };
 
-  constructor(props) {
-    super(props);
-
-    this.copyToClipboard = this.copyToClipboard.bind(this);
-    this.mouseLeave = this.mouseLeave.bind(this);
-  }
-
-  copyToClipboard(e) {
+  copyToClipboard = e => {
     e.preventDefault();
     e.stopPropagation();
     copy(this.props.copyText);
@@ -26,13 +19,13 @@ class Copyable extends React.Component {
     this.setState({
       copied: true,
     });
-  }
+  };
 
-  mouseLeave() {
+  mouseLeave = () => {
     this.setState({
       copied: false,
     });
-  }
+  };
 
   render() {
     return (
