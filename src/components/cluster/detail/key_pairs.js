@@ -10,6 +10,7 @@ import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../../shared/button';
 import copy from 'copy-to-clipboard';
+import Copyable from '../../shared/copyable';
 import ExpiryHoursPicker from './expiry_hours_picker';
 import moment from 'moment';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -314,7 +315,6 @@ class ClusterKeyPairs extends React.Component {
                     <table>
                       <thead>
                         <tr>
-                          <th className='hidden-xs'>ID</th>
                           <th className='hidden-xs'>Description</th>
                           <th className='hidden-xs'>Created</th>
                           <th className='hidden-xs'>Expires</th>
@@ -337,19 +337,7 @@ class ClusterKeyPairs extends React.Component {
 
                             return (
                               <tr key={keyPair.id}>
-                                <td className='code truncate hidden-xs col-sm-2'>
-                                  <OverlayTrigger
-                                    placement='top'
-                                    overlay={
-                                      <Tooltip id='tooltip'>
-                                        {keyPair.id}
-                                      </Tooltip>
-                                    }
-                                  >
-                                    <span>{keyPair.id.replace(/:/g, '')}</span>
-                                  </OverlayTrigger>
-                                </td>
-                                <td className='truncate hidden-xs col-sm-4'>
+                                <td className='truncate hidden-xs'>
                                   <OverlayTrigger
                                     placement='top'
                                     overlay={
@@ -358,42 +346,45 @@ class ClusterKeyPairs extends React.Component {
                                       </Tooltip>
                                     }
                                   >
-                                    <span>{keyPair.description}</span>
+                                    <div style={{ overflow: 'hidden' }}>
+                                      <span>{keyPair.description}</span>
+                                    </div>
                                   </OverlayTrigger>
-                                </td>
-                                <td className='truncate hidden-xs col-sm-1'>
-                                  {relativeDate(keyPair.create_date)}
+                                  <Copyable copyText={keyPair.id}>
+                                    <small>
+                                      ID: {keyPair.id.replace(/:/g, '')}
+                                    </small>
+                                  </Copyable>
                                 </td>
                                 <td
-                                  className={`${expiryClass} truncate hidden-xs col-sm-1`}
+                                  className='truncate hidden-xs'
+                                  style={{ width: '120px' }}
                                 >
-                                  {relativeDate(keyPair.expire_date)}
+                                  <small>
+                                    {relativeDate(keyPair.create_date)}
+                                  </small>
                                 </td>
-                                <td className='code truncate col-xs-3'>
-                                  <OverlayTrigger
-                                    placement='top'
-                                    overlay={
-                                      <Tooltip id='tooltip'>
-                                        {keyPair.common_name}
-                                      </Tooltip>
-                                    }
-                                  >
-                                    <span>{keyPair.common_name}</span>
-                                  </OverlayTrigger>
+                                <td
+                                  className={`${expiryClass} truncate hidden-xs`}
+                                  style={{ width: '120px' }}
+                                >
+                                  <small>
+                                    {relativeDate(keyPair.expire_date)}
+                                  </small>
                                 </td>
-                                <td className='code truncate col-xs-1'>
-                                  <OverlayTrigger
-                                    placement='top'
-                                    overlay={
-                                      <Tooltip id='tooltip'>
-                                        {keyPair.certificate_organizations}
-                                      </Tooltip>
-                                    }
+                                <td className='code truncate'>
+                                  <Copyable copyText={keyPair.common_name}>
+                                    <small>{keyPair.common_name}</small>
+                                  </Copyable>
+                                </td>
+                                <td className='code truncate'>
+                                  <Copyable
+                                    copyText={keyPair.certificate_organizations}
                                   >
-                                    <span>
+                                    <small>
                                       {keyPair.certificate_organizations}
-                                    </span>
-                                  </OverlayTrigger>
+                                    </small>
+                                  </Copyable>
                                 </td>
                               </tr>
                             );
