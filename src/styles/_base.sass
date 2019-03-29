@@ -112,6 +112,23 @@ div.tooltip-inner
 		opacity: 1.0
 		background-color: transparent
 
+.nav-tabs > li > a
+	text-decoration: none
+	
+	&:hover
+		background-color: rgba(255, 255, 255, 0.2)
+		color: #fff
+
+.nav-tabs
+	margin-bottom: 20px
+
+.nav-tabs > li.active > a
+	background-color: $darkblue
+	color: #fff
+	&:hover, &:focus
+		background-color: $darkblue
+		color: #fff
+
 .beta-tag
 	font-size: 0.9em
 	text-transform: uppercase

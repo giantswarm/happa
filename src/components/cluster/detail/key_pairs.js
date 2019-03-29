@@ -257,11 +257,7 @@ class ClusterKeyPairs extends React.Component {
 
   render() {
     return (
-      <div className='row section cluster_key_pairs col-12'>
-        <div className='row'>
-          <h3 className='table-label'>Key Pairs</h3>
-        </div>
-
+      <div className='row cluster_key_pairs col-12'>
         <div className='row'>
           <p>
             Key pairs consist of an RSA private key and certificate, signed by

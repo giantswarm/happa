@@ -143,8 +143,7 @@ class ClusterApps extends React.Component {
 
     return (
       <React.Fragment>
-        <div className='row section cluster-apps'>
-          <h3 className='table-label'>Managed Services</h3>
+        <div className='row cluster-apps'>
           <p>
             These services are preinstalled on your cluster and managed by Giant
             Swarm.
