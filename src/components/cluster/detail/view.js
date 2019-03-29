@@ -273,7 +273,6 @@ class ClusterDetailView extends React.Component {
               <div className='row'>
                 <div className='col-12'>
                   <Tabs
-                    justify
                     animation={false}
                     defaultActiveKey={1}
                     id='tabs'
