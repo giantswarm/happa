@@ -267,7 +267,7 @@ class ClusterKeyPairs extends React.Component {
         classes: 'truncate',
       },
       {
-        dataField: 'created',
+        dataField: 'create_date',
         text: 'Created',
         sort: true,
         formatter: this.createdCellFormatter,
