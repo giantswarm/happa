@@ -28,7 +28,6 @@
     "copy-to-clipboard": "3.0.8",
     "deep-diff": "1.0.2",
     "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client.git#master",
-    "history": "4.9.0",
     "immutable": "3.8.2",
     "js-base64": "2.5.1",
     "moment": "2.24.0",
