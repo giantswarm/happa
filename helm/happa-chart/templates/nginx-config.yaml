@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: happa-nginx-config
   namespace: giantswarm
+  labels:
+    app: happa
 
 data:
   nginx.conf: |
