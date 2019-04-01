@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: happa-configmap
   namespace: giantswarm
+  labels:
+    app: happa
 data:
   passage-endpoint: {{ .Values.Installation.V1.GiantSwarm.Passage.Address }}
   api-endpoint: {{ .Values.Installation.V1.GiantSwarm.API.Address }}
