@@ -3,6 +3,7 @@
 import { relativeDate } from '../../../lib/helpers.js';
 import _ from 'underscore';
 import AWSAccountID from '../../shared/aws_account_id';
+import Button from '../../shared/button';
 import cmp from 'semver-compare';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -12,6 +13,18 @@ import RefreshableLabel from '../../shared/refreshable_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ClusterDetailTable extends React.Component {
+  constructor(props) {
+    super(props);
+
+    if (window.config.awsCapabilitiesJSON != '') {
+      this.awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
+    }
+
+    if (window.config.azureCapabilitiesJSON != '') {
+      this.azureVMSizes = JSON.parse(window.config.azureCapabilitiesJSON);
+    }
+  }
+
   componentDidMount() {
     this.registerRefreshInterval();
   }
@@ -121,27 +134,63 @@ class ClusterDetailTable extends React.Component {
   }
 
   render() {
-    var instanceTypeOrVMSize = <tr />;
-
+    var instanceTypeOrVMSize = null;
     if (this.props.provider === 'aws') {
+      let details = <span />;
+      if (
+        this.props.cluster.workers &&
+        typeof this.props.cluster.workers[0].aws.instance_type !==
+          'undefined' &&
+        this.awsInstanceTypes[this.props.cluster.workers[0].aws.instance_type]
+      ) {
+        let t = this.awsInstanceTypes[
+          this.props.cluster.workers[0].aws.instance_type
+        ];
+        details = (
+          <span>
+            &mdash; {t.cpu_cores} CPUs, {t.memory_size_gb.toFixed(0)} GB RAM
+          </span>
+        );
+      }
       instanceTypeOrVMSize = (
         <tr>
           <td>EC2 instance type</td>
-          <td className='value code'>
-            {this.props.cluster.workers
-              ? this.props.cluster.workers[0].aws.instance_type
-              : null}
+          <td className='value'>
+            {this.props.cluster.workers ? (
+              <span>
+                <code>{this.props.cluster.workers[0].aws.instance_type}</code>{' '}
+                {details}
+              </span>
+            ) : null}
           </td>
         </tr>
       );
     } else if (this.props.provider === 'azure') {
+      let details = <span />;
+      if (
+        this.props.cluster.workers &&
+        typeof this.props.cluster.workers[0].azure.vm_size !== 'undefined' &&
+        this.azureVMSizes[this.props.cluster.workers[0].azure.vm_size]
+      ) {
+        let t = this.azureVMSizes[this.props.cluster.workers[0].azure.vm_size];
+        details = (
+          <span>
+            &mdash; {t.numberOfCores} CPUs, {(t.memoryInMb / 1000.0).toFixed(1)}{' '}
+            GB RAM
+          </span>
+        );
+      }
+
       instanceTypeOrVMSize = (
         <tr>
           <td>VM size</td>
-          <td className='value code'>
-            {this.props.cluster.workers
-              ? this.props.cluster.workers[0].azure.vm_size
-              : null}
+          <td className='value'>
+            {this.props.cluster.workers ? (
+              <span>
+                <code>{this.props.cluster.workers[0].azure.vm_size}</code>{' '}
+                {details}
+              </span>
+            ) : null}
           </td>
         </tr>
       );
@@ -171,19 +220,27 @@ class ClusterDetailTable extends React.Component {
                     } and ${this.props.cluster.scaling.max}`}
               </span>
             </RefreshableLabel>
+
+            <span className='padding-left-10'>
+              <Button onClick={this.props.showScalingModal}>
+                <i className='fa fa-scale' /> SCALE
+              </Button>
+            </span>
           </td>
         </tr>
       );
     }
 
     var availabilityZonesOrNothing = null;
-    if (
-      this.props.provider === 'aws' &&
-      this.props.cluster.availability_zones
-    ) {
-      var azs = this.props.cluster.availability_zones.map(az => {
-        return <code key={az}>{az}</code>;
-      });
+    if (this.props.provider === 'aws') {
+      var azs = <span>n/a</span>;
+
+      if (this.props.cluster && this.props.cluster.availability_zones) {
+        azs = this.props.cluster.availability_zones.map(az => {
+          return <code key={az}>{az}</code>;
+        });
+        console.debug('azs:', azs);
+      }
 
       availabilityZonesOrNothing = (
         <tr>
@@ -211,6 +268,86 @@ class ClusterDetailTable extends React.Component {
         </tr>
       );
     }
+
+    var workerNodeStorageOrNothing = null;
+    if (this.props.provider === 'kvm') {
+      workerNodeStorageOrNothing = (
+        <tr>
+          <td>Total storage in worker nodes</td>
+          <td className='value'>
+            <RefreshableLabel
+              dataItems={[
+                typeof this.props.cluster.workers === 'object'
+                  ? this.props.cluster.workers.length
+                  : null,
+              ]}
+            >
+              <span>
+                {this.getStorageTotal() === null ? '0' : this.getStorageTotal()}{' '}
+                GB
+              </span>
+            </RefreshableLabel>
+          </td>
+        </tr>
+      );
+    }
+
+    var workerNodeCPU = (
+      <tr>
+        <td>Total CPU cores in worker nodes</td>
+        <td className='value'>
+          <RefreshableLabel
+            dataItems={[
+              typeof this.props.cluster.workers === 'object'
+                ? this.props.cluster.workers.length
+                : null,
+            ]}
+          >
+            <span>
+              {this.getCpusTotal() === null ? '0' : this.getCpusTotal()}
+            </span>
+          </RefreshableLabel>
+        </td>
+      </tr>
+    );
+
+    var workerNodeMemory = (
+      <tr>
+        <td>Total RAM in worker nodes</td>
+        <td className='value'>
+          <RefreshableLabel
+            dataItems={[
+              typeof this.props.cluster.workers === 'object'
+                ? this.props.cluster.workers.length
+                : null,
+            ]}
+          >
+            <span>
+              {this.getMemoryTotal() === null ? '0' : this.getMemoryTotal()} GB
+            </span>
+          </RefreshableLabel>
+        </td>
+      </tr>
+    );
+
+    var workerNodesRunning = (
+      <tr>
+        <td>Worker nodes running</td>
+        <td className='value'>
+          <RefreshableLabel
+            dataItems={[
+              typeof this.props.cluster.workers === 'object'
+                ? this.props.cluster.workers.length
+                : null,
+            ]}
+          >
+            <span>
+              {this.getNumberOfNodes() === null ? '0' : this.getNumberOfNodes()}
+            </span>
+          </RefreshableLabel>
+        </td>
+      </tr>
+    );
 
     // BYOC provider credential info
     var credentialInfoRows = [];
@@ -285,7 +422,9 @@ class ClusterDetailTable extends React.Component {
                       : 'n/a'}
                   </td>
                 </tr>
+
                 {credentialInfoRows === [] ? undefined : credentialInfoRows}
+
                 {this.props.release ? (
                   <tr>
                     <td>Release version</td>
@@ -315,7 +454,7 @@ class ClusterDetailTable extends React.Component {
                           {this.props.canClusterUpgrade ? (
                             <a
                               onClick={this.props.showUpgradeModal}
-                              className='upgrade-available'
+                              className='upgrade-available padding-left-10'
                             >
                               <i className='fa fa-info' /> Upgrade available
                             </a>
@@ -337,6 +476,7 @@ class ClusterDetailTable extends React.Component {
                     </td>
                   </tr>
                 )}
+
                 <tr>
                   <td>Kubernetes API endpoint</td>
                   <td className='value code'>
@@ -345,88 +485,9 @@ class ClusterDetailTable extends React.Component {
                       : 'n/a'}
                   </td>
                 </tr>
+
                 {availabilityZonesOrNothing}
-                {scalingLimitsOrNothing}
-                {numberOfDesiredNodesOrNothing}
-                <tr>
-                  <td>Worker nodes running</td>
-                  <td className='value'>
-                    <RefreshableLabel
-                      dataItems={[
-                        typeof this.props.cluster.workers === 'object'
-                          ? this.props.cluster.workers.length
-                          : null,
-                      ]}
-                    >
-                      <span>
-                        {this.getNumberOfNodes() === null
-                          ? '0'
-                          : this.getNumberOfNodes()}
-                      </span>
-                    </RefreshableLabel>
-                  </td>
-                </tr>
-                {instanceTypeOrVMSize}
-                <tr>
-                  <td>Total CPU cores in worker nodes</td>
-                  <td className='value'>
-                    <RefreshableLabel
-                      dataItems={[
-                        typeof this.props.cluster.workers === 'object'
-                          ? this.props.cluster.workers.length
-                          : null,
-                      ]}
-                    >
-                      <span>
-                        {this.getCpusTotal() === null
-                          ? '0'
-                          : this.getCpusTotal()}
-                      </span>
-                    </RefreshableLabel>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Total RAM in worker nodes</td>
-                  <td className='value'>
-                    <RefreshableLabel
-                      dataItems={[
-                        typeof this.props.cluster.workers === 'object'
-                          ? this.props.cluster.workers.length
-                          : null,
-                      ]}
-                    >
-                      <span>
-                        {this.getMemoryTotal() === null
-                          ? '0'
-                          : this.getMemoryTotal()}{' '}
-                        GB
-                      </span>
-                    </RefreshableLabel>
-                  </td>
-                </tr>
-                {this.props.provider === 'kvm' ? (
-                  <tr>
-                    <td>Total storage in worker nodes</td>
-                    <td className='value'>
-                      <RefreshableLabel
-                        dataItems={[
-                          typeof this.props.cluster.workers === 'object'
-                            ? this.props.cluster.workers.length
-                            : null,
-                        ]}
-                      >
-                        <span>
-                          {this.getStorageTotal() === null
-                            ? '0'
-                            : this.getStorageTotal()}{' '}
-                          GB
-                        </span>
-                      </RefreshableLabel>
-                    </td>
-                  </tr>
-                ) : (
-                  undefined
-                )}
+
                 {this.props.cluster.kvm &&
                 this.props.cluster.kvm.port_mappings ? (
                   <tr>
@@ -450,11 +511,25 @@ class ClusterDetailTable extends React.Component {
                 ) : (
                   undefined
                 )}
+
+                {instanceTypeOrVMSize}
+
+                {scalingLimitsOrNothing}
+
+                {numberOfDesiredNodesOrNothing}
+
+                {workerNodesRunning}
+
+                {workerNodeCPU}
+
+                {workerNodeMemory}
+
+                {workerNodeStorageOrNothing}
               </tbody>
             </table>
             <p className='last-updated'>
               <small>
-                This table is auto-refreshing. Details last fetched{' '}
+                The information above is auto-refreshing. Details last fetched{' '}
                 <span className='last-updated-datestring'>
                   {this.lastUpdatedLabel()}
                 </span>
@@ -486,6 +561,7 @@ ClusterDetailTable.propTypes = {
   provider: PropTypes.string,
   release: PropTypes.object,
   setInterval: PropTypes.func,
+  showScalingModal: PropTypes.func,
   showUpgradeModal: PropTypes.func,
 };
 

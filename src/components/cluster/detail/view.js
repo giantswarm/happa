@@ -239,14 +239,6 @@ class ClusterDetailView extends React.Component {
                     ) : (
                       undefined
                     )}
-
-                    {this.canClusterUpgrade() ? (
-                      <Button onClick={this.showUpgradeModal}>
-                        <i className='fa fa-version-upgrade' /> UPGRADE
-                      </Button>
-                    ) : (
-                      undefined
-                    )}
                   </div>
                   <div className='pull-right btn-group visible-lg-block'>
                     <Button onClick={this.accessCluster}>
@@ -259,29 +251,17 @@ class ClusterDetailView extends React.Component {
                     ) : (
                       undefined
                     )}
-
-                    {this.canClusterUpgrade() ? (
-                      <Button onClick={this.showUpgradeModal}>
-                        <i className='fa fa-version-upgrade' /> UPGRADE
-                      </Button>
-                    ) : (
-                      undefined
-                    )}
                   </div>
                 </div>
               </div>
               <div className='row'>
                 <div className='col-12'>
-                  <Tabs
-                    justify
-                    animation={false}
-                    defaultActiveKey={1}
-                    id='tabs'
-                  >
+                  <Tabs animation={false} defaultActiveKey={1} id='tabs'>
                     <Tab eventKey={1} title='General'>
                       <ClusterDetailTable
                         canClusterUpgrade={this.canClusterUpgrade()}
                         showUpgradeModal={this.showUpgradeModal}
+                        showScalingModal={this.showScalingModal}
                         cluster={this.props.cluster}
                         provider={this.props.provider}
                         credentials={this.props.credentials}
