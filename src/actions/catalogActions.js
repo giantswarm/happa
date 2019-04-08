@@ -6,12 +6,14 @@ import yaml from 'js-yaml';
 let mockLoadingTime = 1000;
 
 let catalogsToLoad = {
-  'giantswarm/stable': {
-    name: 'giantswarm/stable',
+  managed: {
+    name: 'managed',
+    title: 'Managed',
     description:
-      'This application repository contains apps that are fully managed and supported by Giant Swarm.',
+      'These charts are covered by an SLA. You install the app and we make sure it keeps running.',
     url:
       'https://raw.githubusercontent.com/giantswarm/app-catalog/master/index.yaml',
+    logoUrl: '/images/repo_icons/managed.png',
     mockResponse: true,
     apps: {
       prometheus: [
@@ -27,33 +29,14 @@ let catalogsToLoad = {
       ],
     },
   },
-  'giantswarm/incubator': {
-    name: 'giantswarm/incubator',
+  community: {
+    name: 'community',
+    title: 'Community',
     description:
-      'This application repository contains apps that are fully managed and supported by Giant Swarm.',
-    url:
-      'https://raw.githubusercontent.com/giantswarm/app-catalog/master/index.yaml',
-    mockResponse: true,
-    apps: {
-      prometheus: [
-        {
-          name: 'Prometheus',
-          version: '2.0.0',
-          appVersion: '1.0.0',
-          icon: '',
-          screenshotUrls: ['', ''],
-          description: '',
-          shortDescription: '',
-        },
-      ],
-    },
-  },
-  'helm/stable': {
-    name: 'helm/stable',
-    description:
-      'This application repository contains apps from the communnity helm repository.',
+      'The helm/stable repository contains a large number of charts. Giant Swarm offers no SLA on these apps/charts. Proceed with caution.',
     url:
       'https://cors-anywhere.herokuapp.com/https://kubernetes-charts.storage.googleapis.com/index.yaml',
+    logoUrl: '/images/repo_icons/community.png',
     mockResponse: false,
     apps: {},
   },

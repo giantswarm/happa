@@ -3608,9 +3608,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-"giantswarm-v4@git+https://github.com/giantswarm/giantswarm-js-client.git#master":
+"giantswarm-v4@git+https://github.com/giantswarm/giantswarm-js-client.git#app-katalog":
   version "4.0.0"
-  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#9754225c80bfe24f160a8739789b920b651d30e9"
+  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#14cb0c78b46914197c27e0e8d68a78fca450275b"
   dependencies:
     superagent "3.8.3"
 
