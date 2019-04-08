@@ -406,6 +406,9 @@ class ClusterKeyPairs extends React.Component {
                       data={this.props.cluster.keyPairs}
                       columns={this.getKeypairsTableColumnsConfig()}
                       bordered={false}
+                      defaultSorted={[
+                        { dataField: 'create_date', order: 'desc' },
+                      ]}
                       defaultSortDirection='asc'
                     />
                     <Button
