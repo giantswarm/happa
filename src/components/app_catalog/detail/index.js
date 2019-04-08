@@ -19,7 +19,7 @@ class AppDetail extends React.Component {
           }}
         >
           <div className='app-detail'>
-            <Link to='/app-katalog/'>
+            <Link to={'/app-katalog/'}>
               <i className='fa fa-chevron-left' aria-hidden='true' />
               Back to the App Katalog
             </Link>

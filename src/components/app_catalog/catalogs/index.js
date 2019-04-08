@@ -10,13 +10,10 @@ class Catalogs extends React.Component {
     return (
       <DocumentTitle title={`App Katalog | Giant Swarm `}>
         <React.Fragment>
-          <h1>App Katalog (Preview)</h1>
+          <h1>App Katalog</h1>
           <p>
             The App Katalog provides you with an easy way to browse and install
             charts from helm repositories.
-            <br />
-            It comes preconfigured with 3 repositories: &quot;Managed&quot;,
-            &quot;Incubator&quot;, and &quot;Community&quot;.
           </p>
           <p>
             <b>Preview Limitations:</b>
@@ -28,46 +25,22 @@ class Catalogs extends React.Component {
           <br />
           <small>Pick a repository:</small>
           <div className='app-catalog--repos'>
-            <Link to='/app-katalog/managed' className='app-catalog--repo'>
-              <div className='app-catalog--card'>
-                <h3>Managed</h3>
-                <img src='/images/repo_icons/managed.png' />
-              </div>
-              <p>
-                These charts are covered by an SLA. You install the app and we
-                make sure it keeps running.
-              </p>
-            </Link>
-
-            <Link to='/app-katalog/incubator' className='app-catalog--repo'>
-              <div className='app-catalog--card'>
-                <h3>Incubator</h3>
-                <img src='/images/repo_icons/incubator.png' />
-              </div>
-              <p>
-                This is our testing ground. Apps in this repository will
-                graduate to Managed when they are considered safe and stable.
-                Help us by testing these charts and giving us any feedback.
-              </p>
-            </Link>
-
-            <Link to='/app-katalog/community' className='app-catalog--repo'>
-              <div className='app-catalog--card'>
-                <h3>Community</h3>
-                <img src='/images/repo_icons/community.png' />
-              </div>
-              <p>
-                The helm/stable repository contains a large number of charts.
-                Giant Swarm offers no SLA on these apps/charts. Proceed with
-                caution.
-              </p>
-            </Link>
+            {Object.keys(this.props.catalogs.items).map(catalogName => {
+              return (
+                <Link
+                  key={this.props.catalogs.items[catalogName].name}
+                  to={'/app-katalog/' + catalogName + '/'}
+                  className='app-catalog--repo'
+                >
+                  <div className='app-catalog--card'>
+                    <h3>{this.props.catalogs.items[catalogName].title}</h3>
+                    <img src={this.props.catalogs.items[catalogName].logoUrl} />
+                  </div>
+                  <p>{this.props.catalogs.items[catalogName].description}</p>
+                </Link>
+              );
+            })}
           </div>
-          <br />
-          <br />
-          <a href='#'>
-            <small>Browse charts from all repositories at once</small>
-          </a>
         </React.Fragment>
       </DocumentTitle>
     );
@@ -75,7 +48,7 @@ class Catalogs extends React.Component {
 }
 
 Catalogs.propTypes = {
-  appVersions: PropTypes.array,
+  catalogs: PropTypes.object,
   match: PropTypes.object,
 };
 

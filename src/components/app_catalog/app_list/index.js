@@ -22,26 +22,6 @@ class AppList extends React.Component {
     };
   }
 
-  classNameFor(filter) {
-    if (this.state.filters.indexOf(filter) > -1) {
-      return 'selected';
-    }
-  }
-
-  toggleFilter(filter) {
-    var activeFilters = this.state.filters;
-    var filterIndex = activeFilters.indexOf(filter);
-    if (filterIndex === -1) {
-      activeFilters.push(filter);
-    } else {
-      activeFilters.splice(filterIndex, 1);
-    }
-
-    this.setState({
-      activeFilters: activeFilters,
-    });
-  }
-
   // filter returns a filter object based on the current state
   filter() {
     return {
@@ -78,7 +58,7 @@ class AppList extends React.Component {
           app.version = app[0].version;
           app.icon = app[0].icon;
           app.detailUrl =
-            this.props.match.url +
+            '/app-katalog/' +
             app.repoName.replace('/', '%2F') +
             '/' +
             key +
@@ -122,7 +102,6 @@ class AppList extends React.Component {
         search:
           '?' +
           new URLSearchParams({
-            repo: this.state.selectedRepo,
             q: e.target.value,
           }).toString(),
       })
@@ -150,7 +129,7 @@ class AppList extends React.Component {
       <DocumentTitle title={'App Katalog | Giant Swarm '}>
         <React.Fragment>
           <h1>
-            App Katalog (Preview)
+            App Katalog: Managed
             <form>
               <div className='input-with-icon'>
                 <i className='fa fa-search' />
@@ -163,28 +142,13 @@ class AppList extends React.Component {
             </form>
           </h1>
           <div className='app-catalog-overview'>
-            <div className='repo-selection'>
-              <h4>Filter</h4>
-              <ul>
-                {['Managed', 'Incubator', 'Community'].map(filter => {
-                  return (
-                    <li className={this.classNameFor(filter)} key={filter}>
-                      <a onClick={this.toggleFilter.bind(this, filter)}>
-                        {filter}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
             <div className='apps'>
               {(() => {
                 var apps = this.apps(this.props.catalogs.items, this.filter());
                 if (apps.length === 0) {
                   return (
                     <div className='emptystate'>
-                      No apps matched your search query and filter combination.
+                      No apps matched your search query
                       <br />
                       <Button onClick={this.resetFilters.bind(this)}>
                         Clear search query and filters
@@ -199,7 +163,7 @@ class AppList extends React.Component {
                         key={app.repoName + '/' + app.name}
                         to={app.detailUrl}
                       >
-                        {app.repoName === 'giantswarm/stable' ? (
+                        {app.repoName === 'managed' ? (
                           <div className='badge'>MANAGED</div>
                         ) : (
                           undefined
