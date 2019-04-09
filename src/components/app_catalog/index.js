@@ -3,6 +3,7 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { catalogsLoad } from '../../actions/catalogActions';
 import { connect } from 'react-redux';
+import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
 import { Route, Switch } from 'react-router-dom';
 import AppList from './app_list';
 import Catalogs from './catalogs';
@@ -21,11 +22,21 @@ class CatalogIndex extends React.Component {
 
   componentDidMount() {
     if (this.props.catalogs.lastUpdated === 0) {
-      this.props.dispatch(catalogsLoad()).then(() => {
-        this.setState({
-          loading: false,
+      this.props
+        .dispatch(catalogsLoad())
+        .then(() => {
+          this.setState({
+            loading: false,
+          });
+        })
+        .catch(() => {
+          new FlashMessage(
+            'Something went wrong while trying to load the App Katalog.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
+          );
         });
-      });
     } else {
       this.setState({
         loading: false,
