@@ -35,9 +35,12 @@ class AppDetail extends React.Component {
               <br />
               <br />
               <div className='app-detail--header clearfix'>
-                <div className='app-detail--icon'>
-                  <img src={this.props.appVersions[0].icon} />
-                </div>
+                {this.props.appVersions[0].icon &&
+                  this.props.appVersions[0].icon !== '' && (
+                    <div className='app-detail--icon'>
+                      <img src={this.props.appVersions[0].icon} />
+                    </div>
+                  )}
 
                 <div className='app-detail--title'>
                   <h2>{this.props.appVersions[0].name}</h2>
