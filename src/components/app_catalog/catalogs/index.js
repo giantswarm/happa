@@ -13,7 +13,7 @@ class Catalogs extends React.Component {
           <h1>App Katalog</h1>
           <p>
             The App Katalog provides you with an easy way to browse and install
-            charts from helm repositories.
+            apps.
           </p>
           <br />
           {Object.keys(this.props.catalogs.items).length === 0 ? (
@@ -27,7 +27,7 @@ class Catalogs extends React.Component {
             </p>
           ) : (
             <React.Fragment>
-              <small>Pick a repository:</small>
+              <small>Pick a catalog:</small>
               <div className='app-catalog--repos'>
                 {Object.keys(this.props.catalogs.items).map(catalogName => {
                   return (
