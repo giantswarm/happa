@@ -6,12 +6,7 @@ import yaml from 'js-yaml';
 
 // loadCatalog takes a catalog object and tries to load further data.
 function loadCatalog(catalog) {
-  return fetch(
-    'https://cors-anywhere.herokuapp.com/' +
-      catalog.spec.storage.URL +
-      '/index.yaml',
-    { mode: 'cors' }
-  )
+  return fetch(catalog.spec.storage.URL + 'index.yaml', { mode: 'cors' })
     .then(response => {
       return response.text();
     })
@@ -42,8 +37,6 @@ export function catalogsLoad() {
     var appKatalogApi = new GiantSwarmV4.AppKatalogApi();
 
     return appKatalogApi.getAppCatalogs(scheme + ' ' + token).then(catalogs => {
-      console.log(catalogs);
-
       let loadCatalogPromises = [];
 
       var l = catalogs.length;
