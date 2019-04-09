@@ -43,7 +43,7 @@ class AppDetail extends React.Component {
                   )}
 
                 <div className='app-detail--title'>
-                  <h2>{this.props.appVersions[0].name}</h2>
+                  <h1>{this.props.appVersions[0].name}</h1>
                   <div className='keywords'>
                     {this.props.appVersions[0].keywords
                       ? this.props.appVersions[0].keywords.map(x => (
