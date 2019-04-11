@@ -55,9 +55,9 @@ class AppDetail extends React.Component {
                   </div>
 
                   <div className='version'>
-                    <small>Chart Version</small>{' '}
-                    <code>{this.props.appVersions[0].version}</code>
-                    <small>App Version</small>{' '}
+                    <small>Chart&nbsp;Version</small>&nbsp;
+                    <code>{this.props.appVersions[0].version}</code>{' '}
+                    <small>App&nbsp;Version</small>&nbsp;
                     <code>{this.props.appVersions[0].appVersion}</code>
                   </div>
                 </div>
