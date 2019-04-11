@@ -137,41 +137,47 @@ class AppList extends React.Component {
                       <React.Fragment>
                         {apps.map(app => {
                           return (
-                            <Link
-                              className='app'
+                            <div
+                              className='app-container'
                               key={app.repoName + '/' + app.name}
-                              to={
-                                '/app-katalog/' +
-                                this.props.catalog.metadata.name +
-                                '/' +
-                                app.name
-                              }
                             >
-                              {app.repoName === 'managed' ? (
-                                <div className='badge'>MANAGED</div>
-                              ) : (
-                                undefined
-                              )}
-
-                              <div className='app-icon'>
-                                {app.icon &&
-                                !this.state.iconErrors[app.icon] ? (
-                                  <img
-                                    src={app.icon}
-                                    onError={this.imgError.bind(this, app)}
-                                  />
+                              <Link
+                                className='app'
+                                to={
+                                  '/app-katalog/' +
+                                  this.props.catalog.metadata.name +
+                                  '/' +
+                                  app.name
+                                }
+                              >
+                                {app.repoName === 'managed' ? (
+                                  <div className='badge'>MANAGED</div>
                                 ) : (
-                                  <h3>{app.name}</h3>
+                                  undefined
                                 )}
-                              </div>
-                              <div className='app-details'>
-                                <span className='app-version'>
-                                  {app.version}
-                                </span>
-                                <h3>{app.name}</h3>
-                                <span className='app-repo'>{app.repoName}</span>
-                              </div>
-                            </Link>
+
+                                <div className='app-icon'>
+                                  {app.icon &&
+                                  !this.state.iconErrors[app.icon] ? (
+                                    <img
+                                      src={app.icon}
+                                      onError={this.imgError.bind(this, app)}
+                                    />
+                                  ) : (
+                                    <h3>{app.name}</h3>
+                                  )}
+                                </div>
+                                <div className='app-details'>
+                                  <span className='app-version'>
+                                    {app.version}
+                                  </span>
+                                  <h3>{app.name}</h3>
+                                  <span className='app-repo'>
+                                    {app.repoName}
+                                  </span>
+                                </div>
+                              </Link>
+                            </div>
                           );
                         })}
                         <div className='app-flex-fix' />

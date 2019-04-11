@@ -9,6 +9,9 @@
       width: 300px
       font-size: 14px
 
+      @media only screen and (max-width: $breakpoint-large)
+        float: none
+
   .loader
     margin: 0px auto
     display: block
@@ -59,15 +62,38 @@
       button
         margin-top: 15px
 
-    .app
-      border: 1px solid #2a5974
-      overflow: hidden
-      width: 24%
+    .app-flex-fix
+      width: 25%
       flex-shrink: 0
+      height: 0px
+
+    .app-container
+      width: 25%
+      flex-shrink: 0
+      padding-right: 20px
+      margin-bottom: 20px
+
+      @media only screen and (max-width: $breakpoint-large)
+        width: 33%
+        &:nth-child(3n+0)
+          padding-right: 0px
+
+      @media only screen and (max-width: $breakpoint-med)
+        width: 33%
+        &:nth-child(3n+0)
+          padding-right: 0px
+
+      @media only screen and (max-width: $breakpoint-small)
+        width: 100%
+        padding-right: 0px
+
+    .app
+      display: block
+      border: 1px solid #2a5974
+      width: 100%
       border-radius: 4px
       height: 175px
       background-color: #2f556a
-      margin-bottom: 20px
       position: relative
       cursor: pointer
 
@@ -86,12 +112,6 @@
         left: -40px
         box-sizing: border-box
         z-index: 20
-
-    .app-flex-fix
-      width: 24%
-      flex-shrink: 0
-      height: 0px
-
 
     .app-details
       padding: 10px
