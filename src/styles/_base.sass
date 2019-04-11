@@ -8,9 +8,11 @@ html
 	height: 100%
 
 body
-  display: flex
-  flex-direction: column
-  min-height: 100vh
+	display: flex
+	flex-direction: column
+	min-height: 100vh
+	@media only screen and (max-width: $breakpoint-med)
+		padding: 0px 10px
 
 #app
 	flex: 1 0 auto
@@ -58,6 +60,9 @@ p, small, ul
 	position: relative
 	z-index: 0
 
+	@media only screen and (max-width: $breakpoint-large) and (min-width: $breakpoint-med)
+		min-width: 800px
+
 a
 	color: #f7f7f7
 
@@ -100,7 +105,7 @@ h3, h1
 		float: right
 
 div.tooltip-inner
-  max-width: 350px
+	max-width: 350px
 
 .close
 	font-weight: 300
@@ -114,7 +119,7 @@ div.tooltip-inner
 
 .nav-tabs > li > a
 	text-decoration: none
-	
+
 	&:hover
 		background-color: rgba(255, 255, 255, 0.2)
 		color: #fff
