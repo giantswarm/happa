@@ -23,6 +23,8 @@
   .main-nav
     margin: auto
 
+    @media only screen and (max-width: $breakpoint-large) and (min-width: $breakpoint-med)
+      min-width: 800px
 
     &> a
       float: left
@@ -71,6 +73,8 @@
     vertical-align: middle
     position: relative
     top: -1px
+    @media only screen and (max-width: $breakpoint-med)
+      margin-left: 10px
 
   .main-nav
     .nav-responsive > a
