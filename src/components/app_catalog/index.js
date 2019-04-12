@@ -80,7 +80,13 @@ class CatalogIndex extends React.Component {
 
 function Loading(props) {
   if (props.loading) {
-    return <img className='loader' src='/images/loader_oval_light.svg' />;
+    return (
+      <div className='app-loading'>
+        <div className='app-loading-contents'>
+          <img className='loader' src='/images/loader_oval_light.svg' />
+        </div>
+      </div>
+    );
   } else {
     return props.children;
   }
