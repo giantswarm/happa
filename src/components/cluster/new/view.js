@@ -514,15 +514,20 @@ class CreateCluster extends React.Component {
             })()}
 
             <div className='row section'>
-              <NodeCountSelector
-                autoscalingEnabled={this.isScalingAutomatic(
-                  this.props.provider,
-                  this.state.releaseVersion
-                )}
-                scaling={this.state.scaling}
-                readOnly={false}
-                onChange={this.updateScaling}
-              />
+              <div className='col-3'>
+                <h3 className='table-label'>Node Count</h3>
+              </div>
+              <div className='col-9'>
+                <NodeCountSelector
+                  autoscalingEnabled={this.isScalingAutomatic(
+                    this.props.provider,
+                    this.state.releaseVersion
+                  )}
+                  scaling={this.state.scaling}
+                  readOnly={false}
+                  onChange={this.updateScaling}
+                />
+              </div>
             </div>
 
             <ProviderCredentials
