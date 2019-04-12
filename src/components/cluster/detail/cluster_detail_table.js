@@ -222,9 +222,7 @@ class ClusterDetailTable extends React.Component {
             </RefreshableLabel>
 
             <span className='padding-left-10'>
-              <Button onClick={this.props.showScalingModal}>
-                <i className='fa fa-scale' /> SCALE
-              </Button>
+              <Button onClick={this.props.showScalingModal}>Edit</Button>
             </span>
           </td>
         </tr>
