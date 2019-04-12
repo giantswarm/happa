@@ -221,7 +221,7 @@ class ClusterDetailTable extends React.Component {
               </span>
             </RefreshableLabel>
 
-            <span className='padding-left-10'>
+            <span className='resource-details-button'>
               <Button onClick={this.props.showScalingModal}>Edit</Button>
             </span>
           </td>
