@@ -342,11 +342,14 @@ class ClusterKeyPairs extends React.Component {
   }
 
   organizationFormatter(cell, row) {
-    return (
-      <Copyable copyText={row.certificate_organizations}>
-        <CertificateOrgsLabel value={row.certificate_organizations} />
-      </Copyable>
-    );
+    if (row.certificate_organizations !== '') {
+      return (
+        <Copyable copyText={row.certificate_organizations}>
+          <CertificateOrgsLabel value={row.certificate_organizations} />
+        </Copyable>
+      );
+    }
+    return <span />;
   }
 
   render() {

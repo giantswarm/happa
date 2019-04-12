@@ -5,6 +5,10 @@ import React from 'react';
 
 class CertificateOrgsLabel extends React.Component {
   render() {
+    if (this.props.value === '') {
+      return <span />;
+    }
+
     var orgs = this.props.value.split(',');
     orgs.sort();
     var orgLabels = [];
