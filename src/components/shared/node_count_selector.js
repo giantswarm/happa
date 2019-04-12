@@ -79,75 +79,62 @@ class NodeCountSelector extends React.Component {
   render() {
     if (this.props.autoscalingEnabled === true) {
       return (
-        <div>
-          <div className='col-3'>
-            <h3 className='table-label'>Node Count</h3>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+          }}
+        >
+          <div className='row'>
+            <div className='col-6'>
+              <label>Minimum</label>
+              <NumberPicker
+                label=''
+                stepSize={1}
+                value={this.state.scaling.min}
+                min={1}
+                max={this.state.scaling.max}
+                onChange={this.updateScalingMin}
+                readOnly={false}
+              />
+            </div>
+            <div className='col-6'>
+              <label>Maximum</label>
+              <NumberPicker
+                label=''
+                stepSize={1}
+                value={this.state.scaling.max}
+                min={this.state.scaling.min}
+                max={99} // TODO
+                onChange={this.updateScalingMax}
+                readOnly={false}
+              />
+            </div>
           </div>
-          <div className='col-9'>
-            <form
-              onSubmit={e => {
-                e.preventDefault();
-              }}
-            >
-              <div>
-                <p>
-                  To disable autoscaling, set both numbers to the same value
-                </p>
-                <div className='col-6'>
-                  <label>Minimum</label>
-                  <NumberPicker
-                    label=''
-                    stepSize={1}
-                    value={this.state.scaling.min}
-                    min={1}
-                    max={this.state.scaling.max}
-                    onChange={this.updateScalingMin}
-                    readOnly={false}
-                  />
-                </div>
-                <div className='col-6'>
-                  <label>Maximum</label>
-                  <NumberPicker
-                    label=''
-                    stepSize={1}
-                    value={this.state.scaling.max}
-                    min={this.state.scaling.min}
-                    max={99} // TODO
-                    onChange={this.updateScalingMax}
-                    readOnly={false}
-                  />
-                </div>
-              </div>
-            </form>
+          <div className='row'>
+            <div className='col-12'>
+              <p>To disable autoscaling, set both numbers to the same value</p>
+            </div>
           </div>
-        </div>
+        </form>
       );
     } else {
       return (
-        <div>
-          <div className='col-3'>
-            <h3 className='table-label'>Node Count</h3>
-          </div>
-          <div className='col-9'>
+        <div className='row'>
+          <div className='col-12'>
             <form
               onSubmit={e => {
                 e.preventDefault();
               }}
             >
-              <div>
-                <div className='col-3'>
-                  <label>Number of nodes</label>
-                  <NumberPicker
-                    label=''
-                    stepSize={1}
-                    value={this.state.scaling.max}
-                    min={1}
-                    max={99} // TODO
-                    onChange={this.updateNodeCount}
-                    readOnly={false}
-                  />
-                </div>
-              </div>
+              <NumberPicker
+                label=''
+                stepSize={1}
+                value={this.state.scaling.max}
+                min={1}
+                max={99} // TODO
+                onChange={this.updateNodeCount}
+                readOnly={false}
+              />
             </form>
           </div>
         </div>
