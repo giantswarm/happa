@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { debounce } from 'throttle-debounce';
 import { dedent, makeKubeConfigTextFile } from '../../../lib/helpers';
 import { relativeDate } from '../../../lib/helpers.js';
-import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
+import BootstrapTable from 'react-bootstrap-table-next';
 import Button from '../../shared/button';
 import copy from 'copy-to-clipboard';
 import Copyable from '../../shared/copyable';
@@ -255,6 +255,99 @@ class ClusterKeyPairs extends React.Component {
     }
   }
 
+  // Provides the configuration for the keypairs table
+  getKeypairsTableColumnsConfig = () => {
+    return [
+      {
+        dataField: 'id',
+        text: 'Description / ID',
+        sort: true,
+        formatter: this.descriptionCellFormatter,
+        style: { maxWidth: '200px' },
+        classes: 'truncate',
+      },
+      {
+        dataField: 'create_date',
+        text: 'Created',
+        sort: true,
+        formatter: this.createdCellFormatter,
+      },
+      {
+        dataField: 'expire_date',
+        text: 'Expiry',
+        sort: true,
+        formatter: this.expireDateCellFormatter,
+      },
+      {
+        dataField: 'common_name',
+        text: 'Common Name (CN)',
+        sort: true,
+        formatter: this.commonNameFormatter,
+        classes: 'truncate',
+      },
+      {
+        dataField: 'certificate_organizations',
+        text: 'Organization (O)',
+        sort: true,
+        formatter: this.organizationFormatter,
+        classes: 'truncate',
+      },
+    ];
+  };
+
+  descriptionCellFormatter(cell, row) {
+    return (
+      <React.Fragment>
+        <OverlayTrigger
+          placement='top'
+          overlay={<Tooltip id='tooltip'>{row.description}</Tooltip>}
+        >
+          <div style={{ overflow: 'hidden' }}>
+            <span>{row.description}</span>
+          </div>
+        </OverlayTrigger>
+        <Copyable copyText={row.id.replace(/:/g, '')}>
+          <small>ID: {row.id.replace(/:/g, '')}</small>
+        </Copyable>
+      </React.Fragment>
+    );
+  }
+
+  createdCellFormatter(cell, row) {
+    return <small>{relativeDate(row.create_date)}</small>;
+  }
+
+  expireDateCellFormatter(cell, row) {
+    var expiryClass = '';
+    var expirySeconds =
+      moment(row.expire_date)
+        .utc()
+        .diff(moment().utc()) / 1000;
+    if (Math.abs(expirySeconds) < 60 * 60 * 24) {
+      expiryClass = 'expiring';
+    }
+
+    return (
+      <small className={expiryClass}>{relativeDate(row.expire_date)}</small>
+    );
+  }
+
+  commonNameFormatter(cell, row) {
+    return (
+      <Copyable copyText={row.common_name}>
+        <small>{row.common_name}</small>
+      </Copyable>
+    );
+  }
+
+  organizationFormatter(cell, row) {
+    return (
+      <Copyable copyText={row.certificate_organizations}>
+        <small>{row.certificate_organizations}</small>
+      </Copyable>
+    );
+  }
+
   render() {
     return (
       <div className='row cluster_key_pairs col-12'>
@@ -308,85 +401,16 @@ class ClusterKeyPairs extends React.Component {
               } else {
                 return (
                   <div>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th className='hidden-xs'>Description</th>
-                          <th className='hidden-xs'>Created</th>
-                          <th className='hidden-xs'>Expires</th>
-                          <th className=''>Common Name (CN)</th>
-                          <th className=''>Organization (O)</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {_.sortBy(this.props.cluster.keyPairs, 'create_date')
-                          .reverse()
-                          .map(keyPair => {
-                            var expiryClass = '';
-                            var expirySeconds =
-                              moment(keyPair.expire_date)
-                                .utc()
-                                .diff(moment().utc()) / 1000;
-                            if (Math.abs(expirySeconds) < 60 * 60 * 24) {
-                              expiryClass = 'expiring';
-                            }
-
-                            return (
-                              <tr key={keyPair.id}>
-                                <td className='truncate hidden-xs'>
-                                  <OverlayTrigger
-                                    placement='top'
-                                    overlay={
-                                      <Tooltip id='tooltip'>
-                                        {keyPair.description}
-                                      </Tooltip>
-                                    }
-                                  >
-                                    <div style={{ overflow: 'hidden' }}>
-                                      <span>{keyPair.description}</span>
-                                    </div>
-                                  </OverlayTrigger>
-                                  <Copyable copyText={keyPair.id}>
-                                    <small>
-                                      ID: {keyPair.id.replace(/:/g, '')}
-                                    </small>
-                                  </Copyable>
-                                </td>
-                                <td
-                                  className='truncate hidden-xs'
-                                  style={{ width: '120px' }}
-                                >
-                                  <small>
-                                    {relativeDate(keyPair.create_date)}
-                                  </small>
-                                </td>
-                                <td
-                                  className={`${expiryClass} truncate hidden-xs`}
-                                  style={{ width: '120px' }}
-                                >
-                                  <small>
-                                    {relativeDate(keyPair.expire_date)}
-                                  </small>
-                                </td>
-                                <td className='code truncate'>
-                                  <Copyable copyText={keyPair.common_name}>
-                                    <small>{keyPair.common_name}</small>
-                                  </Copyable>
-                                </td>
-                                <td className='code truncate'>
-                                  <Copyable
-                                    copyText={keyPair.certificate_organizations}
-                                  >
-                                    <small>
-                                      {keyPair.certificate_organizations}
-                                    </small>
-                                  </Copyable>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                      </tbody>
-                    </table>
+                    <BootstrapTable
+                      keyField='id'
+                      data={this.props.cluster.keyPairs}
+                      columns={this.getKeypairsTableColumnsConfig()}
+                      bordered={false}
+                      defaultSorted={[
+                        { dataField: 'create_date', order: 'desc' },
+                      ]}
+                      defaultSortDirection='asc'
+                    />
                     <Button
                       onClick={this.addKeyPair.bind(this)}
                       bsStyle='default'

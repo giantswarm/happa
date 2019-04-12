@@ -32,6 +32,10 @@ var appContainer = document.getElementById('app');
 
 const store = configureStore({});
 
+history.listen(() => {
+  window.scrollTo(0, 0);
+});
+
 render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
