@@ -9,6 +9,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class AppDetail extends React.Component {
+  state = {};
+
+  imgError() {
+    this.setState({
+      imgError: true,
+    });
+  }
+
   render() {
     return (
       <Breadcrumb
@@ -36,9 +44,13 @@ class AppDetail extends React.Component {
               <br />
               <div className='app-detail--header clearfix'>
                 {this.props.appVersions[0].icon &&
-                  this.props.appVersions[0].icon !== '' && (
+                  this.props.appVersions[0].icon !== '' &&
+                  !this.state.imgError && (
                     <div className='app-detail--icon'>
-                      <img src={this.props.appVersions[0].icon} />
+                      <img
+                        onError={this.imgError.bind(this)}
+                        src={this.props.appVersions[0].icon}
+                      />
                     </div>
                   )}
 
