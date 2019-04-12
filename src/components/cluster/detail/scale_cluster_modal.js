@@ -263,9 +263,8 @@ class ScaleClusterModal extends React.Component {
       <BootstrapModal show={this.state.modalVisible} onHide={this.close}>
         <BootstrapModal.Header closeButton>
           <BootstrapModal.Title>
-            Scale workers on:{' '}
-            <ClusterIDLabel clusterID={this.props.cluster.id} />{' '}
-            <strong>{this.props.cluster.name}</strong>
+            Edit scaling settings for{' '}
+            <ClusterIDLabel clusterID={this.props.cluster.id} />
           </BootstrapModal.Title>
         </BootstrapModal.Header>
         {!this.state.error ? (
