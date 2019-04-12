@@ -232,41 +232,11 @@ class ClusterDetailView extends React.Component {
                     <Button onClick={this.accessCluster}>
                       <i className='fa fa-start' /> GET STARTED
                     </Button>
-                    {this.canClusterScale() ? (
-                      <Button onClick={this.showScalingModal}>
-                        <i className='fa fa-scale' /> SCALE
-                      </Button>
-                    ) : (
-                      undefined
-                    )}
-
-                    {this.canClusterUpgrade() ? (
-                      <Button onClick={this.showUpgradeModal}>
-                        <i className='fa fa-version-upgrade' /> UPGRADE
-                      </Button>
-                    ) : (
-                      undefined
-                    )}
                   </div>
                   <div className='pull-right btn-group visible-lg-block'>
                     <Button onClick={this.accessCluster}>
                       <i className='fa fa-start' /> GET STARTED
                     </Button>
-                    {this.canClusterScale() ? (
-                      <Button onClick={this.showScalingModal}>
-                        <i className='fa fa-scale' /> SCALE
-                      </Button>
-                    ) : (
-                      undefined
-                    )}
-
-                    {this.canClusterUpgrade() ? (
-                      <Button onClick={this.showUpgradeModal}>
-                        <i className='fa fa-version-upgrade' /> UPGRADE
-                      </Button>
-                    ) : (
-                      undefined
-                    )}
                   </div>
                 </div>
               </div>
@@ -277,6 +247,7 @@ class ClusterDetailView extends React.Component {
                       <ClusterDetailTable
                         canClusterUpgrade={this.canClusterUpgrade()}
                         showUpgradeModal={this.showUpgradeModal}
+                        showScalingModal={this.showScalingModal}
                         cluster={this.props.cluster}
                         provider={this.props.provider}
                         credentials={this.props.credentials}
