@@ -180,6 +180,56 @@ class ClusterDetailView extends React.Component {
     }
   }
 
+  getNumberOfNodes() {
+    if (
+      Object.keys(this.props.cluster).includes('status') &&
+      this.props.cluster.status != null
+    ) {
+      var nodes = this.props.cluster.status.cluster.nodes;
+      if (nodes.length == 0) {
+        return 0;
+      }
+
+      var workers = 0;
+      nodes.forEach(node => {
+        if (Object.keys(node).includes('labels')) {
+          if (node.labels['role'] != 'master') {
+            workers++;
+          }
+        }
+      });
+
+      if (workers === 0) {
+        // No node labels available? Fallback to assumption that one of the
+        // nodes is master and rest are workers.
+        workers = nodes.length - 1;
+      }
+
+      return workers;
+    }
+    return null;
+  }
+
+  getDesiredNumberOfNodes() {
+    // Desired number of nodes only makes sense with auto-scaling and that is
+    // only available on AWS starting from release 6.3.0 onwards.
+    if (
+      this.props.provider != 'aws' ||
+      cmp(this.props.cluster.release_version, '6.2.99') != 1
+    ) {
+      return null;
+    }
+
+    // Is AWSConfig.Status present yet?
+    if (
+      Object.keys(this.props.cluster).includes('status') &&
+      this.props.cluster.status != null
+    ) {
+      return this.props.cluster.status.cluster.scaling.desiredCapacity;
+    }
+    return null;
+  }
+
   accessCluster = () => {
     this.props.dispatch(
       push(
@@ -252,6 +302,8 @@ class ClusterDetailView extends React.Component {
                         provider={this.props.provider}
                         credentials={this.props.credentials}
                         release={this.props.release}
+                        workerNodesRunning={this.getNumberOfNodes()}
+                        workerNodesDesired={this.getDesiredNumberOfNodes()}
                       />
 
                       <div className='row section col-12'>
@@ -304,6 +356,8 @@ class ClusterDetailView extends React.Component {
                 }}
                 cluster={this.props.cluster}
                 provider={this.props.provider}
+                workerNodesRunning={this.getNumberOfNodes()}
+                workerNodesDesired={this.getDesiredNumberOfNodes()}
               />
 
               {this.props.targetRelease ? (

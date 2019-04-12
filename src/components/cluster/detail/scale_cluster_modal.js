@@ -97,16 +97,6 @@ class ScaleClusterModal extends React.Component {
     });
   };
 
-  getCurrentDesiredCapacity = () => {
-    if (
-      Object.keys(this.props.cluster).includes('status') &&
-      this.props.cluster.status != null
-    ) {
-      return this.props.cluster.status.cluster.scaling.desiredCapacity;
-    }
-    return 0;
-  };
-
   submit = () => {
     this.setState(
       {
@@ -153,19 +143,19 @@ class ScaleClusterModal extends React.Component {
       return this.state.scaling.min - this.props.cluster.scaling.min;
     }
 
-    if (this.getCurrentDesiredCapacity() < this.state.scaling.min) {
-      return this.state.scaling.min - this.getCurrentDesiredCapacity;
+    if (this.props.workerNodesDesired < this.state.scaling.min) {
+      return this.state.scaling.min - this.props.workerNodesDesired;
     }
 
-    if (this.getCurrentDesiredCapacity() > this.state.scaling.max) {
-      return this.state.scaling.max - this.getCurrentDesiredCapacity();
+    if (this.props.workerNodesDesired > this.state.scaling.max) {
+      return this.state.scaling.max - this.props.workerNodesDesired;
     }
 
     if (
       this.state.scaling.min == this.state.scaling.max &&
-      this.getCurrentDesiredCapacity() < this.state.scaling.max
+      this.props.workerNodesDesired < this.state.scaling.max
     ) {
-      return this.getCurrentDesiredCapacity() - this.state.scaling.max;
+      return this.props.workerNodesDesired - this.state.scaling.max;
     }
 
     return 0;
@@ -191,8 +181,8 @@ class ScaleClusterModal extends React.Component {
         this.props.cluster.release_version
       )
     ) {
-      if (this.state.scaling.min > this.getCurrentDesiredCapacity()) {
-        workerDelta = this.state.scaling.min - this.getCurrentDesiredCapacity();
+      if (this.state.scaling.min > this.props.workerNodesDesired) {
+        workerDelta = this.state.scaling.min - this.props.workerNodesDesired;
         return {
           title: `Increase minimum number of nodes by ${workerDelta} worker node${this.pluralize(
             workerDelta
@@ -202,8 +192,10 @@ class ScaleClusterModal extends React.Component {
         };
       }
 
-      if (this.state.scaling.max < this.getCurrentDesiredCapacity()) {
-        workerDelta = this.getCurrentDesiredCapacity() - this.state.scaling.max;
+      if (this.state.scaling.max < this.props.workerNodesDesired) {
+        workerDelta = Math.abs(
+          this.props.workerNodesDesired - this.state.scaling.max
+        );
         return {
           title: `Remove ${Math.abs(workerDelta)} worker node${this.pluralize(
             workerDelta
