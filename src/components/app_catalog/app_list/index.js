@@ -90,7 +90,7 @@ class AppList extends React.Component {
     return (
       <Breadcrumb
         data={{
-          title: this.props.catalog.metadata.name,
+          title: this.props.catalog.metadata.name.toUpperCase(),
           pathname: this.props.match.url,
         }}
       >

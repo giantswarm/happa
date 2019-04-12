@@ -13,18 +13,18 @@ class AppDetail extends React.Component {
     return (
       <Breadcrumb
         data={{
-          title: this.props.match.params.repo,
+          title: this.props.match.params.repo.toUpperCase(),
           pathname: '/app-katalog/' + this.props.match.params.repo + '/',
         }}
       >
-        <DocumentTitle
-          title={`${this.props.appVersions[0].name} | Giant Swarm `}
+        <Breadcrumb
+          data={{
+            title: this.props.appVersions[0].name.toUpperCase(),
+            pathname: this.props.match.url,
+          }}
         >
-          <Breadcrumb
-            data={{
-              title: this.props.appVersions[0].name,
-              pathname: this.props.match.url,
-            }}
+          <DocumentTitle
+            title={`${this.props.appVersions[0].name} | Giant Swarm `}
           >
             <div className='app-detail'>
               <Link to={'/app-katalog/' + this.props.match.params.repo + '/'}>
@@ -137,8 +137,8 @@ class AppDetail extends React.Component {
                 )}
               </div>
             </div>
-          </Breadcrumb>
-        </DocumentTitle>
+          </DocumentTitle>
+        </Breadcrumb>
       </Breadcrumb>
     );
   }
