@@ -17,11 +17,7 @@ class CertificateOrgsLabel extends React.Component {
       if (element === 'system:masters') {
         classNames += ' isadmin';
       }
-      orgLabels.push(
-        <span className={classNames}>
-          <code>{element}</code>
-        </span>
-      );
+      orgLabels.push(<span className={classNames}>{element}</span>);
     });
     return orgLabels;
   }
