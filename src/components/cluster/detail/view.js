@@ -232,25 +232,11 @@ class ClusterDetailView extends React.Component {
                     <Button onClick={this.accessCluster}>
                       <i className='fa fa-start' /> GET STARTED
                     </Button>
-                    {this.canClusterScale() ? (
-                      <Button onClick={this.showScalingModal}>
-                        <i className='fa fa-scale' /> SCALE
-                      </Button>
-                    ) : (
-                      undefined
-                    )}
                   </div>
                   <div className='pull-right btn-group visible-lg-block'>
                     <Button onClick={this.accessCluster}>
                       <i className='fa fa-start' /> GET STARTED
                     </Button>
-                    {this.canClusterScale() ? (
-                      <Button onClick={this.showScalingModal}>
-                        <i className='fa fa-scale' /> SCALE
-                      </Button>
-                    ) : (
-                      undefined
-                    )}
                   </div>
                 </div>
               </div>
