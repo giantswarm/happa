@@ -111,6 +111,16 @@ class AppList extends React.Component {
                     onChange={this.updateSearchQuery.bind(this)}
                     value={this.state.searchQuery}
                   />
+                  {this.state.searchQuery !== '' ? (
+                    <a
+                      className='clearQuery'
+                      onClick={this.resetFilters.bind(this)}
+                    >
+                      <i className='fa fa-close' />
+                    </a>
+                  ) : (
+                    undefined
+                  )}
                 </div>
               </form>
             </h1>
