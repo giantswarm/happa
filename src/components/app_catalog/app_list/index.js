@@ -53,7 +53,7 @@ class AppList extends React.Component {
     }
   }
 
-  updateSearchQuery(e) {
+  updateSearchQuery = e => {
     this.setState({
       searchQuery: e.target.value,
     });
@@ -67,23 +67,24 @@ class AppList extends React.Component {
           }).toString(),
       })
     );
-  }
+  };
 
-  resetFilters() {
+  resetFilters = () => {
     this.setState({
       filters: [],
       searchQuery: '',
     });
-  }
+  };
 
-  imgError(app) {
+  imgError = e => {
+    let imageUrl = e.target.src;
     var iconErrors = {};
-    iconErrors[app.icon] = true;
+    iconErrors[imageUrl] = true;
 
     this.setState({
       iconErrors: Object.assign({}, this.state.iconErrors, iconErrors),
     });
-  }
+  };
 
   render() {
     return (
@@ -108,14 +109,11 @@ class AppList extends React.Component {
                   <i className='fa fa-search' />
                   <input
                     type='text'
-                    onChange={this.updateSearchQuery.bind(this)}
+                    onChange={this.updateSearchQuery}
                     value={this.state.searchQuery}
                   />
                   {this.state.searchQuery !== '' ? (
-                    <a
-                      className='clearQuery'
-                      onClick={this.resetFilters.bind(this)}
-                    >
+                    <a className='clearQuery' onClick={this.resetFilters}>
                       <i className='fa fa-close' />
                     </a>
                   ) : (
@@ -167,7 +165,7 @@ class AppList extends React.Component {
                                   !this.state.iconErrors[app.icon] ? (
                                     <img
                                       src={app.icon}
-                                      onError={this.imgError.bind(this, app)}
+                                      onError={this.imgError}
                                     />
                                   ) : (
                                     <h3>{app.name}</h3>
