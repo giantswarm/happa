@@ -69,7 +69,14 @@ class ScaleClusterModal extends React.Component {
     });
   };
 
-  isScalingAutomatic(provider, releaseVer) {
+  /**
+   * Returns true if autoscaling of worker nodes is possible in this
+   * tenant cluster.
+   *
+   * @param String Provider identifier (aws, azure, kvm)
+   * @param String Semantic release version number
+   */
+  supportsAutoscaling(provider, releaseVer) {
     if (provider != 'aws') {
       return false;
     }
@@ -136,7 +143,7 @@ class ScaleClusterModal extends React.Component {
 
   workerDelta = () => {
     if (
-      !this.isScalingAutomatic(
+      !this.supportsAutoscaling(
         this.props.provider,
         this.props.cluster.release_version
       )
@@ -179,7 +186,7 @@ class ScaleClusterModal extends React.Component {
     var pluralizeWorkers = this.pluralize(workerDelta);
 
     if (
-      this.isScalingAutomatic(
+      this.supportsAutoscaling(
         this.props.provider,
         this.props.cluster.release_version
       )
@@ -273,7 +280,7 @@ class ScaleClusterModal extends React.Component {
               <p>How many workers would you like your cluster to have?</p>
               <div className='row section'>
                 <NodeCountSelector
-                  autoscalingEnabled={this.isScalingAutomatic(
+                  autoscalingEnabled={this.supportsAutoscaling(
                     this.props.provider,
                     this.props.cluster.release_version
                   )}
