@@ -168,12 +168,9 @@ class AppList extends React.Component {
                                   )}
                                 </div>
                                 <div className='app-details'>
+                                  <h3>{app.name}</h3>
                                   <span className='app-version'>
                                     {app.version}
-                                  </span>
-                                  <h3>{app.name}</h3>
-                                  <span className='app-repo'>
-                                    {app.repoName}
                                   </span>
                                 </div>
                               </Link>
