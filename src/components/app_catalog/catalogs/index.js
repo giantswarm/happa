@@ -15,7 +15,6 @@ class Catalogs extends React.Component {
             The App Katalog provides you with an easy way to browse and install
             apps.
           </p>
-          <br />
           {Object.keys(this.props.catalogs.items).length === 0 ? (
             <p className='well'>
               <b>Could not find any appcatalogs:</b>
@@ -27,7 +26,6 @@ class Catalogs extends React.Component {
             </p>
           ) : (
             <React.Fragment>
-              <small>Pick a catalog:</small>
               <div className='app-catalog--repos'>
                 {Object.keys(this.props.catalogs.items).map(catalogName => {
                   return (
