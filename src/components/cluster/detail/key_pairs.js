@@ -9,6 +9,7 @@ import { relativeDate } from '../../../lib/helpers.js';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from '../../shared/button';
+import CertificateOrgsLabel from './certificate_orgs_label';
 import copy from 'copy-to-clipboard';
 import Copyable from '../../shared/copyable';
 import ExpiryHoursPicker from './expiry_hours_picker';
@@ -343,7 +344,7 @@ class ClusterKeyPairs extends React.Component {
   organizationFormatter(cell, row) {
     return (
       <Copyable copyText={row.certificate_organizations}>
-        <small>{row.certificate_organizations}</small>
+        <CertificateOrgsLabel value={row.certificate_organizations} />
       </Copyable>
     );
   }
