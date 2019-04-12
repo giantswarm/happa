@@ -11,11 +11,11 @@ import React from 'react';
 class AppDetail extends React.Component {
   state = {};
 
-  imgError() {
+  imgError = () => {
     this.setState({
       imgError: true,
     });
-  }
+  };
 
   render() {
     return (
@@ -48,7 +48,7 @@ class AppDetail extends React.Component {
                   !this.state.imgError && (
                     <div className='app-detail--icon'>
                       <img
-                        onError={this.imgError.bind(this)}
+                        onError={this.imgError}
                         src={this.props.appVersions[0].icon}
                       />
                     </div>
