@@ -4,7 +4,6 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { replace } from 'connected-react-router';
-import Button from '../../shared/button';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -125,11 +124,8 @@ class AppList extends React.Component {
                   if (apps.length === 0) {
                     return (
                       <div className='emptystate'>
-                        No apps matched your search query
-                        <br />
-                        <Button onClick={this.resetFilters.bind(this)}>
-                          Clear search query
-                        </Button>
+                        No apps matched your search query: &quot;
+                        {this.state.searchQuery}&quot;
                       </div>
                     );
                   } else {
