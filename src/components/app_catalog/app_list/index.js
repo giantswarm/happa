@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { replace } from 'connected-react-router';
 import DocumentTitle from 'react-document-title';
+import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -18,6 +19,21 @@ class AppList extends React.Component {
 
     let query = new URLSearchParams(props.location.search);
     let q = query.get('q');
+
+    var appsArray = Object.values(props.catalog.apps).map(
+      appVersions => appVersions[0]
+    );
+
+    this.index = lunr(function() {
+      this.ref('name');
+      this.field('name');
+      this.field('description');
+      this.field('keywords');
+
+      appsArray.forEach(function(app) {
+        this.add(app);
+      }, this);
+    });
 
     this.state = {
       filters: [],
@@ -46,23 +62,19 @@ class AppList extends React.Component {
   // filterApps is a pure function that takes a filter a list of all apps and returns
   // a filtered set of apps
   filterApps(allApps, filter) {
-    let apps = Array.from(Object.entries(allApps));
-    apps = apps.map(([, app]) => {
-      app.name = app[0].name;
-      app.version = app[0].version;
-      app.icon = app[0].icon;
-      return app;
-    });
+    console.log('f');
+    // Lunr search
+    var lunrResults = this.index.search(filter.searchQuery).map(x => x.ref);
 
     // Search query filter.
     if (filter.searchQuery === '') {
-      return apps;
+      return Object.values(allApps);
     } else {
-      return apps.filter(app => {
-        return (
-          app.name.toUpperCase().indexOf(filter.searchQuery.toUpperCase()) > -1
-        );
+      var result = lunrResults.map(appName => {
+        return allApps[appName];
       });
+
+      return result;
     }
   }
 
@@ -152,12 +164,18 @@ class AppList extends React.Component {
                   } else {
                     return (
                       <React.Fragment>
-                        {apps.map(app => {
+                        {apps.map(appVersions => {
                           return (
                             <div
                               className='app-container'
-                              key={app.repoName + '/' + app.name}
-                              ref={ref => (this.appRefs[app.name] = ref)}
+                              key={
+                                appVersions[0].repoName +
+                                '/' +
+                                appVersions[0].name
+                              }
+                              ref={ref =>
+                                (this.appRefs[appVersions[0].name] = ref)
+                              }
                             >
                               <Link
                                 className='app'
@@ -165,32 +183,34 @@ class AppList extends React.Component {
                                   '/managed-apps/' +
                                   this.props.catalog.metadata.name +
                                   '/' +
-                                  app.name +
+                                  appVersions[0].name +
                                   '?q=' +
                                   this.state.searchQuery
                                 }
                               >
-                                {app.repoName === 'managed' ? (
+                                {appVersions[0].repoName === 'managed' ? (
                                   <div className='badge'>MANAGED</div>
                                 ) : (
                                   undefined
                                 )}
 
                                 <div className='app-icon'>
-                                  {app.icon &&
-                                  !this.state.iconErrors[app.icon] ? (
+                                  {appVersions[0].icon &&
+                                  !this.state.iconErrors[
+                                    appVersions[0].icon
+                                  ] ? (
                                     <img
-                                      src={app.icon}
+                                      src={appVersions[0].icon}
                                       onError={this.imgError}
                                     />
                                   ) : (
-                                    <h3>{app.name}</h3>
+                                    <h3>{appVersions[0].name}</h3>
                                   )}
                                 </div>
                                 <div className='app-details'>
-                                  <h3>{app.name}</h3>
+                                  <h3>{appVersions[0].name}</h3>
                                   <span className='app-version'>
-                                    {app.version}
+                                    {appVersions[0].version}
                                   </span>
                                 </div>
                               </Link>
