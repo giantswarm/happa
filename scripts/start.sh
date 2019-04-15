@@ -15,7 +15,7 @@ if [ -n "$INGRESS_BASE_DOMAIN" ]; then
 fi
 
 if [ -n "$AWS_CAPABILITIES_JSON" ]; then
-  sed -i "s|awsCapabilitiesJSON: ''|awsCapabilitiesJSON: '$AWS_CAPABILITIES_JSON'|" /www/index.html
+  sed -i "s|awsCapabilitiesJSON: .*|awsCapabilitiesJSON: '$AWS_CAPABILITIES_JSON'|" /www/index.html
 fi
 
 if [ -n "$AZURE_CAPABILITIES_JSON" ]; then
