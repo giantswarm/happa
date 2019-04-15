@@ -64,7 +64,9 @@ class AppList extends React.Component {
   filterApps(allApps, filter) {
     console.log('f');
     // Lunr search
-    var lunrResults = this.index.search(filter.searchQuery).map(x => x.ref);
+    var lunrResults = this.index
+      .search(filter.searchQuery + ' ' + filter.searchQuery + '*')
+      .map(x => x.ref);
 
     // Search query filter.
     if (filter.searchQuery === '') {
