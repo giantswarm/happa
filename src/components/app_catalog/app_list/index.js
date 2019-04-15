@@ -9,6 +9,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class AppList extends React.Component {
+  // Contains refs to all the app-container divs in dom so that we can
+  // scroll to them if needed.
+  appRefs = {};
+
   constructor(props) {
     super();
 
@@ -20,6 +24,13 @@ class AppList extends React.Component {
       searchQuery: q || '',
       iconErrors: {},
     };
+  }
+
+  componentDidMount() {
+    // The hash value of the url is used by the app detail screen's back button
+    // to indicate what app we should scroll to.
+    var scrolToApp = this.props.location.hash.substring(1);
+    window.scrollTo(0, this.appRefs[scrolToApp].offsetTop - 150);
   }
 
   // filter returns a filter object based on the current state
@@ -144,6 +155,7 @@ class AppList extends React.Component {
                             <div
                               className='app-container'
                               key={app.repoName + '/' + app.name}
+                              ref={ref => (this.appRefs[app.name] = ref)}
                             >
                               <Link
                                 className='app'
@@ -151,7 +163,9 @@ class AppList extends React.Component {
                                   '/app-katalog/' +
                                   this.props.catalog.metadata.name +
                                   '/' +
-                                  app.name
+                                  app.name +
+                                  '?q=' +
+                                  this.state.searchQuery
                                 }
                               >
                                 {app.repoName === 'managed' ? (
