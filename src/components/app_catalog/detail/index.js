@@ -17,6 +17,17 @@ class AppDetail extends React.Component {
     });
   };
 
+  constructor(props) {
+    super(props);
+
+    let query = new URLSearchParams(props.location.search);
+    let q = query.get('q');
+
+    this.state = {
+      q,
+    };
+  }
+
   render() {
     return (
       <Breadcrumb
@@ -35,9 +46,18 @@ class AppDetail extends React.Component {
             title={`${this.props.appVersions[0].name} | Giant Swarm `}
           >
             <div className='app-detail'>
-              <Link to={'/app-katalog/' + this.props.match.params.repo + '/'}>
+              <Link
+                to={
+                  '/app-katalog/' +
+                  this.props.match.params.repo +
+                  '/?q=' +
+                  this.state.q +
+                  '#' +
+                  this.props.appVersions[0].name
+                }
+              >
                 <i className='fa fa-chevron-left' aria-hidden='true' />
-                Back
+                Back to &quot;{this.props.repo.spec.title}&quot;
               </Link>
 
               <br />
@@ -158,7 +178,9 @@ class AppDetail extends React.Component {
 
 AppDetail.propTypes = {
   appVersions: PropTypes.array,
+  location: PropTypes.object,
   match: PropTypes.object,
+  repo: PropTypes.object,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -176,6 +198,7 @@ function mapStateToProps(state, ownProps) {
   return {
     loading: state.entities.catalogs.isFetching,
     appVersions,
+    repo: state.entities.catalogs.items[repo],
   };
 }
 
