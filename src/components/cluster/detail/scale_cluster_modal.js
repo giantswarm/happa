@@ -3,6 +3,7 @@
 import * as clusterActions from '../../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import {
   FlashMessage,
   messageTTL,
@@ -17,6 +18,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class ScaleClusterModal extends React.Component {
+  rollupAnimationDuration = 500;
+
   constructor(props) {
     super(props);
 
@@ -270,34 +273,55 @@ class ScaleClusterModal extends React.Component {
         )
       ) {
         warnings.push(
-          <p key='node-removal'>
-            <i className='fa fa-warning' /> The cluster currently has{' '}
-            {this.props.workerNodesRunning} worker nodes running. By setting the
-            maximum lower than that, you enforce the removal of{' '}
-            {diff === 1 ? 'one node' : diff + ' nodes'}. This could result in
-            unscheduled workloads.
-          </p>
+          <CSSTransition
+            key={1}
+            classNames='rollup'
+            enter={true}
+            exit={true}
+            timeout={this.rollupAnimationDuration}
+          >
+            <p key='node-removal'>
+              <i className='fa fa-warning' /> The cluster currently has{' '}
+              {this.props.workerNodesRunning} worker nodes running. By setting
+              the maximum lower than that, you enforce the removal of{' '}
+              {diff === 1 ? 'one node' : diff + ' nodes'}. This could result in
+              unscheduled workloads.
+            </p>
+          </CSSTransition>
         );
       } else {
         warnings.push(
-          <p key='node-removal'>
-            <i className='fa fa-warning' /> You are about to enforce the removal
-            of {diff === 1 ? 'one node' : diff + ' nodes'}. Please make sure the
-            cluster has enough capacity to schedule all workloads.
-          </p>
+          <CSSTransition
+            key={2}
+            classNames='rollup'
+            timeout={this.rollupAnimationDuration}
+          >
+            <p key='node-removal'>
+              <i className='fa fa-warning' /> You are about to enforce the
+              removal of {diff === 1 ? 'one node' : diff + ' nodes'}. Please
+              make sure the cluster has enough capacity to schedule all
+              workloads.
+            </p>
+          </CSSTransition>
         );
       }
     }
 
     if (this.state.scaling.min < 3) {
       warnings.push(
-        <p key='unsupported'>
-          <i className='fa fa-warning' /> With less than 3 worker nodes, the
-          cluster does not fall under the Giant Swarm{' '}
-          <abbr title='Service Level Agreement'>SLA</abbr>. Giant Swarm staff
-          will not be alerted in case of problems and will not provide proactive
-          support.
-        </p>
+        <CSSTransition
+          key={3}
+          classNames='rollup'
+          timeout={this.rollupAnimationDuration}
+        >
+          <p key='unsupported'>
+            <i className='fa fa-warning' /> With less than 3 worker nodes, the
+            cluster does not fall under the Giant Swarm{' '}
+            <abbr title='Service Level Agreement'>SLA</abbr>. Giant Swarm staff
+            will not be alerted in case of problems and will not provide
+            proactive support.
+          </p>
+        </CSSTransition>
       );
     }
 
@@ -322,7 +346,7 @@ class ScaleClusterModal extends React.Component {
             onChange={this.updateScaling}
           />
         </div>
-        {warnings}
+        <TransitionGroup>{warnings}</TransitionGroup>
       </BootstrapModal.Body>
     );
     var footer = (
