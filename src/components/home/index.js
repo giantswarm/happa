@@ -192,12 +192,7 @@ function mapStateToProps(state) {
   var allClusters = state.entities.clusters.items;
   var errorLoadingClusters = state.entities.clusters.errorLoading;
 
-  var clusters = [];
-  if (selectedOrganization) {
-    clusters = _.filter(allClusters, cluster => {
-      return cluster.owner === selectedOrganization;
-    });
-  }
+  var clusters = Object.values(allClusters);
 
   return {
     clusters: clusters,
