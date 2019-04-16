@@ -4,7 +4,6 @@ import { relativeDate } from '../../../lib/helpers.js';
 import _ from 'underscore';
 import AWSAccountID from '../../shared/aws_account_id';
 import Button from '../../shared/button';
-import cmp from 'semver-compare';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -42,80 +41,45 @@ class ClusterDetailTable extends React.Component {
     this.releaseDetailsModal.show();
   };
 
-  getDesiredNumberOfNodes() {
-    // Desired number of nodes only makes sense with auto-scaling and that is
-    // only available on AWS starting from release 6.3.0 onwards.
-    if (
-      this.props.provider != 'aws' ||
-      cmp(this.props.cluster.release_version, '6.2.99') != 1
-    ) {
-      return null;
-    }
-
-    // Is AWSConfig.Status present yet?
-    if (
-      Object.keys(this.props.cluster).includes('status') &&
-      this.props.cluster.status != null
-    ) {
-      return this.props.cluster.status.cluster.scaling.desiredCapacity;
-    }
-    return null;
-  }
-
-  getNumberOfNodes() {
-    if (
-      Object.keys(this.props.cluster).includes('status') &&
-      this.props.cluster.status != null
-    ) {
-      var nodes = this.props.cluster.status.cluster.nodes;
-      if (nodes.length == 0) {
-        return 0;
-      }
-
-      var workers = 0;
-      nodes.forEach(node => {
-        if (Object.keys(node).includes('labels')) {
-          if (node.labels['role'] != 'master') {
-            workers++;
-          }
-        }
-      });
-
-      if (workers === 0) {
-        // No node labels available? Fallback to assumption that one of the
-        // nodes is master and rest are workers.
-        workers = nodes.length - 1;
-      }
-
-      return workers;
-    }
-    return null;
-  }
-
   getMemoryTotal() {
-    var workers = this.getNumberOfNodes();
-    if (workers === null || workers === 0 || !this.props.cluster.workers) {
+    if (
+      this.props.workerNodesRunning === null ||
+      this.props.workerNodesRunning === 0 ||
+      !this.props.cluster.workers
+    ) {
       return null;
     }
-    var m = workers * this.props.cluster.workers[0].memory.size_gb;
+    var m =
+      this.props.workerNodesRunning *
+      this.props.cluster.workers[0].memory.size_gb;
     return m.toFixed(2);
   }
 
   getStorageTotal() {
-    var workers = this.getNumberOfNodes();
-    if (workers === null || workers === 0 || !this.props.cluster.workers) {
+    if (
+      this.props.workerNodesRunning === null ||
+      this.props.workerNodesRunning === 0 ||
+      !this.props.cluster.workers
+    ) {
       return null;
     }
-    var s = workers * this.props.cluster.workers[0].storage.size_gb;
+    var s =
+      this.props.workerNodesRunning *
+      this.props.cluster.workers[0].storage.size_gb;
     return s.toFixed(2);
   }
 
   getCpusTotal() {
-    var workers = this.getNumberOfNodes();
-    if (workers === null || workers === 0 || !this.props.cluster.workers) {
+    if (
+      this.props.workerNodesRunning === null ||
+      this.props.workerNodesRunning === 0 ||
+      !this.props.cluster.workers
+    ) {
       return null;
     }
-    return workers * this.props.cluster.workers[0].cpu.cores;
+    return (
+      this.props.workerNodesRunning * this.props.cluster.workers[0].cpu.cores
+    );
   }
 
   /**
@@ -237,7 +201,6 @@ class ClusterDetailTable extends React.Component {
         azs = this.props.cluster.availability_zones.map(az => {
           return <code key={az}>{az}</code>;
         });
-        console.debug('azs:', azs);
       }
 
       availabilityZonesOrNothing = (
@@ -249,8 +212,7 @@ class ClusterDetailTable extends React.Component {
     }
 
     var numberOfDesiredNodesOrNothing = null;
-    var desiredNumberOfNodes = this.getDesiredNumberOfNodes();
-    if (desiredNumberOfNodes != null) {
+    if (this.props.workerNodesDesired != null) {
       numberOfDesiredNodesOrNothing = (
         <tr>
           <td>Desired worker node count</td>
@@ -260,7 +222,7 @@ class ClusterDetailTable extends React.Component {
                 this.props.cluster.status.cluster.scaling.desiredCapacity,
               ]}
             >
-              <span>{desiredNumberOfNodes}</span>
+              <span>{this.props.workerNodesDesired}</span>
             </RefreshableLabel>
           </td>
         </tr>
@@ -340,7 +302,9 @@ class ClusterDetailTable extends React.Component {
             ]}
           >
             <span>
-              {this.getNumberOfNodes() === null ? '0' : this.getNumberOfNodes()}
+              {this.props.workerNodesRunning === null
+                ? '0'
+                : this.props.workerNodesRunning}
             </span>
           </RefreshableLabel>
         </td>
@@ -561,6 +525,8 @@ ClusterDetailTable.propTypes = {
   setInterval: PropTypes.func,
   showScalingModal: PropTypes.func,
   showUpgradeModal: PropTypes.func,
+  workerNodesRunning: PropTypes.number,
+  workerNodesDesired: PropTypes.number,
 };
 
 export default ReactTimeout(ClusterDetailTable);

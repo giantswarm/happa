@@ -112,7 +112,11 @@ class NodeCountSelector extends React.Component {
           </div>
           <div className='row'>
             <div className='col-12'>
-              <p>To disable autoscaling, set both numbers to the same value.</p>
+              <p>
+                {this.state.scaling.min === this.state.scaling.max
+                  ? 'To enable autoscaling, set minimum and maximum to different values.'
+                  : 'To disable autoscaling, set both numbers to the same value.'}
+              </p>
             </div>
           </div>
         </form>

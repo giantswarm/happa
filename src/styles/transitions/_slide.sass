@@ -47,3 +47,22 @@ $slide-curve: ease-out
 .slide-right-leave.slide-right-leave-active
   opacity: 0
 
+
+// rollup is an animation where an element grows from zero to full height on entry
+// and shrinks the same way on removal.
+
+.rollup-enter
+  max-height: 0px
+
+.rollup-enter-active
+  max-height: 500px
+  overflow-y: hidden
+  transition: max-height .5s ease-in-out
+
+.rollup-exit
+  max-height: 500px
+
+.rollup-exit-active
+  max-height: 0px
+  overflow-y: hidden
+  transition: max-height .5s ease-in-out
