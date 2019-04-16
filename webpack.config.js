@@ -50,21 +50,17 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: ['transform-react-jsx', 'transform-class-properties']
-          }
-        }
+        loader: 'babel-loader'
       },
       {
         test: /\.sass$/,
         loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
-      }, {
+      },
+      {
         test: /\.css$/,
         loader: 'style-loader!css-loader'
-      }, {
+      },
+      {
         test: /\.(png|jpg|svg)$/,
         loader: 'url-loader?limit=8192'
       },

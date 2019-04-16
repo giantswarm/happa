@@ -6,7 +6,7 @@ import React from 'react';
 class CertificateOrgsLabel extends React.Component {
   render() {
     if (this.props.value === '') {
-      return <span />;
+      return null;
     }
 
     var orgs = this.props.value.split(',');
@@ -18,7 +18,7 @@ class CertificateOrgsLabel extends React.Component {
         classNames += ' isadmin';
       }
       orgLabels.push(
-        <span key={element} className={classNames}>
+        <span className={classNames} key={element}>
           {element}
         </span>
       );
@@ -28,7 +28,7 @@ class CertificateOrgsLabel extends React.Component {
 }
 
 CertificateOrgsLabel.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.string.isRequired,
 };
 
 export default CertificateOrgsLabel;

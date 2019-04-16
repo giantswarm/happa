@@ -22,3 +22,6 @@ Icon
 .tmp
 /secrets.env
 /dist
+
+# Test Coverage (Jest)
+/coverage
