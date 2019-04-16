@@ -237,7 +237,6 @@ class ClusterDetailTable extends React.Component {
         azs = this.props.cluster.availability_zones.map(az => {
           return <code key={az}>{az}</code>;
         });
-        console.debug('azs:', azs);
       }
 
       availabilityZonesOrNothing = (
