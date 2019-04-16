@@ -4,7 +4,6 @@ import { Breadcrumbs } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { organizationSelect } from '../../actions/organizationActions';
-import _ from 'underscore';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import Gravatar from 'react-gravatar';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
@@ -51,70 +50,6 @@ class Navigation extends React.Component {
           </div>
 
           <div className='subactions'>
-            <div className='organization_dropdown'>
-              {Object.entries(this.props.organizations.items).length === 0 &&
-              !this.props.organizations.isFetching ? (
-                <DropdownButton
-                  title={
-                    <span>
-                      <span className='label label-default'>ORG</span>No
-                      organizations
-                    </span>
-                  }
-                  key='2'
-                  id='org_dropdown'
-                >
-                  <MenuItem
-                    componentClass={NavLink}
-                    href='/organizations/'
-                    to='/organizations/'
-                  >
-                    Manage organizations
-                  </MenuItem>
-                </DropdownButton>
-              ) : (
-                <DropdownButton
-                  title={
-                    <span>
-                      <span className='label label-default'>ORG</span>{' '}
-                      {this.props.selectedOrganization}
-                    </span>
-                  }
-                  key='2'
-                  id='org_dropdown'
-                >
-                  <MenuItem
-                    componentClass={NavLink}
-                    href='/organizations/'
-                    to={'/organizations/' + this.props.selectedOrganization}
-                  >
-                    Details for {this.props.selectedOrganization}
-                  </MenuItem>
-                  <MenuItem divider />
-                  <MenuItem
-                    componentClass={NavLink}
-                    href='/organizations/'
-                    to='/organizations/'
-                  >
-                    Manage organizations
-                  </MenuItem>
-                  <MenuItem divider />
-                  <MenuItem header>Switch Organization</MenuItem>
-                  {_.sortBy(this.props.organizations.items, 'id').map(org => {
-                    return (
-                      <MenuItem
-                        onSelect={this.selectOrganization}
-                        eventKey={org.id}
-                        key={org.id}
-                      >
-                        {org.id}
-                      </MenuItem>
-                    );
-                  })}
-                </DropdownButton>
-              )}
-            </div>
-            &nbsp; &nbsp;
             <div className='user_dropdown'>
               <DropdownButton
                 ref={d => {
