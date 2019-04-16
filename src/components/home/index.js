@@ -147,7 +147,7 @@ class Home extends React.Component {
                       classNames='cluster-list-item'
                     >
                       <ClusterDashboardItem
-                        selectedOrganization={this.props.selectedOrganization}
+                        owner={cluster.owner}
                         animate={true}
                         key={cluster.id}
                         cluster={cluster}

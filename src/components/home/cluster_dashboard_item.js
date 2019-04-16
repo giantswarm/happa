@@ -133,7 +133,7 @@ class ClusterDashboardItem extends React.Component {
           <Link
             to={
               '/organizations/' +
-              this.props.selectedOrganization +
+              this.props.owner +
               '/clusters/' +
               this.props.cluster.id
             }
@@ -147,7 +147,7 @@ class ClusterDashboardItem extends React.Component {
             <Link
               to={
                 '/organizations/' +
-                this.props.selectedOrganization +
+                this.props.owner +
                 '/clusters/' +
                 this.props.cluster.id
               }
@@ -172,6 +172,8 @@ class ClusterDashboardItem extends React.Component {
             </RefreshableLabel>
             {' · Created '}
             {relativeDate(this.props.cluster.create_date)}
+            {' · '}
+            {this.props.owner}
           </div>
           <div>
             <RefreshableLabel dataItems={[numNodes]}>
@@ -224,7 +226,7 @@ ClusterDashboardItem.propTypes = {
   actions: PropTypes.object,
   className: PropTypes.string,
   children: PropTypes.array,
-  selectedOrganization: PropTypes.string,
+  owner: PropTypes.string,
   animate: PropTypes.bool,
   dispatch: PropTypes.func,
 };
