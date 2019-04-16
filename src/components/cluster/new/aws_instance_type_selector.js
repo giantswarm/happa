@@ -10,32 +10,8 @@ class AWSInstanceTypeSelector extends React.Component {
   constructor(props) {
     super(props);
 
-    // devInstanceTypes are placeholder instance types for the dev environment.
-    // In the dev environment window.config.awsCapabilitiesJson is not set to anything.
-    // It would normally be set by the value in the installations repo.
-    var devInstanceTypes = {
-      'm3.large': {
-        description: 'M3 General Purpose Large',
-        memory_size_gb: '7.5',
-        cpu_cores: '2',
-        storage_size_gb: '32',
-      },
-      'm3.xlarge': {
-        description: 'M3 General Purpose Extra Large',
-        memory_size_gb: '15',
-        cpu_cores: '4',
-        storage_size_gb: '80',
-      },
-      'm3.2xlarge': {
-        description: 'M3 General Purpose Double Extra Large',
-        memory_size_gb: '30',
-        cpu_cores: '8',
-        storage_size_gb: '160',
-      },
-    };
+    var instanceTypes = {};
 
-    // Use devInstanceTypes unless there is something set for window.config.awsCapabilitiesJSON
-    var instanceTypes = devInstanceTypes;
     if (window.config.awsCapabilitiesJSON != '') {
       instanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
     }
