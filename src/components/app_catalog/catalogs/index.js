@@ -12,7 +12,7 @@ class Catalogs extends React.Component {
         <React.Fragment>
           <h1>Managed Apps</h1>
           <p>
-            Browse and deploy apps from various sources, including managed and
+            Browse and deploy apps from various sources, including managed apps
             covered by SLAs from Giant Swarm.
           </p>
           {Object.keys(this.props.catalogs.items).length === 0 ? (
