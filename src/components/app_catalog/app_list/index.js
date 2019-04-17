@@ -29,8 +29,10 @@ class AppList extends React.Component {
   componentDidMount() {
     // The hash value of the url is used by the app detail screen's back button
     // to indicate what app we should scroll to.
-    var scrolToApp = this.props.location.hash.substring(1);
-    window.scrollTo(0, this.appRefs[scrolToApp].offsetTop - 150);
+    var scrollToApp = this.props.location.hash.substring(1);
+    if (scrollToApp && scrollToApp !== '') {
+      window.scrollTo(0, this.appRefs[scrollToApp].offsetTop - 150);
+    }
   }
 
   // filter returns a filter object based on the current state
