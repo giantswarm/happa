@@ -31,7 +31,7 @@ class CatalogIndex extends React.Component {
         })
         .catch(() => {
           new FlashMessage(
-            'Something went wrong while trying to load the App Katalog.',
+            'Something went wrong while trying to load the catalogs.',
             messageType.ERROR,
             messageTTL.LONG,
             'Please try again later or contact support: support@giantswarm.io'
