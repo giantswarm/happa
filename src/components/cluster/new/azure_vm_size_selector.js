@@ -10,45 +10,7 @@ class AzureVMSizeSelector extends React.Component {
   constructor(props) {
     super(props);
 
-    // devVMSizes are placeholder VM sizes for the dev environment.
-    // In the dev environment window.config.azureCapabilitiesJson is not set to anything.
-    // It would normally be set by the value in the installations repo.
-    var devVMSizes = {
-      Standard_A2_v2: {
-        additionalProperties: {},
-        description: 'This is some description',
-        maxDataDiskCount: 4,
-        memoryInMb: 4294.967296,
-        name: 'Standard_A2_v2',
-        numberOfCores: 2,
-        osDiskSizeInMb: 1047552,
-        resourceDiskSizeInMb: 21474.83648,
-      },
-      Standard_A4_v2: {
-        additionalProperties: {},
-        description:
-          'Here is a longer description that might be too long for the field',
-        maxDataDiskCount: 8,
-        memoryInMb: 8589.934592,
-        name: 'Standard_A4_v2',
-        numberOfCores: 4,
-        osDiskSizeInMb: 1047552,
-        resourceDiskSizeInMb: 42949.67296,
-      },
-      Standard_A8_v2: {
-        additionalProperties: {},
-        description: 'Another VM size description text',
-        maxDataDiskCount: 16,
-        memoryInMb: 17179.869184,
-        name: 'Standard_A8_v2',
-        numberOfCores: 8,
-        osDiskSizeInMb: 1047552,
-        resourceDiskSizeInMb: 85899.34592,
-      },
-    };
-
-    // Use devVMSizes unless there is something set for window.config.azureCapabilitiesJSON
-    var vmSizes = devVMSizes;
+    var vmSizes = {};
     if (window.config.azureCapabilitiesJSON != '') {
       vmSizes = JSON.parse(window.config.azureCapabilitiesJSON);
     }
