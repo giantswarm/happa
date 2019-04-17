@@ -55,6 +55,7 @@ class StatusMessage extends React.Component {
         <span>Waiting for you to check that mark... again</span>
       ),
       all_good: <span>Ready to create your account!</span>,
+      logging_in: <span>Logging in...</span>,
     };
   }
 

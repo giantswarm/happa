@@ -38,13 +38,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: ['transform-react-jsx', 'transform-class-properties']
-          }
-        }
+        loader: 'babel-loader'
       },
       {
         test: /\.sass/,

@@ -102,6 +102,10 @@ class SetPassword extends React.Component {
     this.props.actions
       .giantswarmLogin(this.state.email, this.state.passwordField.value)
       .then(() => {
+        this.setState({
+          statusMessage: 'logging_in',
+        });
+
         this.props.dispatch(push('/'));
 
         return null;
