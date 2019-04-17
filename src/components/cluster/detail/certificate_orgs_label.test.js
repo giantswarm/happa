@@ -17,7 +17,7 @@ it('renders single label without crashing', () => {
   ReactDOM.render(<CertificateOrgsLabel value={'foobar'} />, div);
 });
 
-it('renders multiply labels without crashing', () => {
+it('renders multiple labels without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(<CertificateOrgsLabel value={'foobar,foo,bar'} />, div);
 });
@@ -27,7 +27,7 @@ it('renders empty label without crashing', () => {
   ReactDOM.render(<CertificateOrgsLabel value={''} />, div);
 });
 
-it('renders multiply labels in alphabetic order', () => {
+it('renders multiple labels in alphabetic order', () => {
   const label = shallow(
     <CertificateOrgsLabel value={'Exa,Mega,Atto,Zepto,Yokto'} />
   );
@@ -63,14 +63,14 @@ it('renders multiply labels in alphabetic order', () => {
   ).toEqual('Zepto');
 });
 
-it('system:masters has a special isadmin class', () => {
+it('gives system:masters a special isadmin class', () => {
   const label = shallow(<CertificateOrgsLabel value={'system:masters'} />);
   expect(label.text()).toEqual('system:masters');
   expect(label.hasClass('orglabel')).toBe(true);
   expect(label.hasClass('isadmin')).toBe(true);
 });
 
-it('system:user does not get special isadmin class', () => {
+it('does not give system:user the special isadmin class', () => {
   const label = shallow(<CertificateOrgsLabel value={'system:user'} />);
   expect(label.text()).toEqual('system:user');
   expect(label.hasClass('orglabel')).toBe(true);
