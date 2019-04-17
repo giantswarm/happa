@@ -2,10 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class CertificateOrgsLabel extends React.Component {
-  static propTypes = {
-    value: PropTypes.string.isRequired,
-  };
-
   render() {
     return this.props.value
       .split(',')
@@ -22,5 +18,9 @@ class CertificateOrgsLabel extends React.Component {
       ));
   }
 }
+
+CertificateOrgsLabel.propTypes = {
+  value: PropTypes.string,
+};
 
 export default CertificateOrgsLabel;
