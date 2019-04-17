@@ -59,13 +59,12 @@ class AppList extends React.Component {
     };
   }
 
-  // filterApps is a pure function that takes a filter a list of all apps and returns
+  // filterApps is a function that takes a filter and a list of all apps and returns
   // a filtered set of apps
   filterApps(allApps, filter) {
-    console.log('f');
     // Lunr search
     var lunrResults = this.index
-      .search(filter.searchQuery + ' ' + filter.searchQuery + '*')
+      .search(filter.searchQuery.trim() + ' ' + filter.searchQuery.trim() + '*')
       .map(x => x.ref);
 
     // Search query filter.
