@@ -8,12 +8,12 @@ import React from 'react';
 class Catalogs extends React.Component {
   render() {
     return (
-      <DocumentTitle title={`App Katalog | Giant Swarm `}>
+      <DocumentTitle title={`Managed Apps | Giant Swarm `}>
         <React.Fragment>
-          <h1>App Katalog</h1>
+          <h1>Managed Apps</h1>
           <p>
-            The App Katalog provides you with an easy way to browse and install
-            apps.
+            Browse and deploy apps from various sources, including managed and
+            covered by SLAs from Giant Swarm.
           </p>
           {Object.keys(this.props.catalogs.items).length === 0 ? (
             <p className='well'>
@@ -31,7 +31,7 @@ class Catalogs extends React.Component {
                   return (
                     <Link
                       key={this.props.catalogs.items[catalogName].metadata.name}
-                      to={'/app-katalog/' + catalogName + '/'}
+                      to={'/managed-apps/' + catalogName + '/'}
                       className='app-catalog--repo'
                     >
                       <div className='app-catalog--card'>
@@ -59,8 +59,8 @@ class Catalogs extends React.Component {
           <p className='well'>
             <b>Preview Limitations:</b>
             <br />
-            During the preview you&apos;ll only be able to browse the App
-            Katalog. Installing apps is coming soon!
+            During the preview you&apos;ll only be able to browse apps.
+            Installing apps is coming soon!
           </p>
         </React.Fragment>
       </DocumentTitle>

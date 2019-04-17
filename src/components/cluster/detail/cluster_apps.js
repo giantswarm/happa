@@ -148,11 +148,11 @@ class ClusterApps extends React.Component {
           <h3 className='table-label'>Managed Apps (Preview)</h3>
           <p>
             Soon you will be able to deploy managed apps like monitoring, log
-            storage, and more simply by selecting from our App Katalog.
+            storage, and more simply by selecting from our catalog.
           </p>
 
-          <NavLink to={`/app-katalog/`}>
-            <Button>Browse App Katalog</Button>
+          <NavLink to={`/managed-apps/`}>
+            <Button>Browse Managed Apps</Button>
           </NavLink>
         </div>
 

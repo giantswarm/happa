@@ -105,16 +105,16 @@ class AppList extends React.Component {
           pathname: this.props.match.url,
         }}
       >
-        <DocumentTitle title={'App Katalog | Giant Swarm '}>
+        <DocumentTitle title={'Managed Apps | Giant Swarm '}>
           <React.Fragment>
-            <Link to={'/app-katalog/'}>
+            <Link to={'/managed-apps/'}>
               <i className='fa fa-chevron-left' aria-hidden='true' />
               Back to all catalogs
             </Link>
             <br />
             <br />
             <h1>
-              App Katalog: {this.props.catalog.spec.title}
+              {this.props.catalog.spec.title}
               <form>
                 <div className='input-with-icon'>
                   <i className='fa fa-search' />
@@ -160,7 +160,7 @@ class AppList extends React.Component {
                               <Link
                                 className='app'
                                 to={
-                                  '/app-katalog/' +
+                                  '/managed-apps/' +
                                   this.props.catalog.metadata.name +
                                   '/' +
                                   app.name +
