@@ -4,14 +4,6 @@ import { shallow } from 'enzyme';
 
 import CertificateOrgsLabel from './certificate_orgs_label.js';
 
-// Component only checks for props.value === '' and does not check undefined so it will crash without value
-/*
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<CertificateOrgsLabel />, div);
-});
-*/
-
 it('renders single label without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(<CertificateOrgsLabel value={'foobar'} />, div);
