@@ -105,15 +105,11 @@ class SetPassword extends React.Component {
         this.props.dispatch(push('/'));
 
         return null;
-      }).catch(error => {
+      })
+      .catch(error => {
         var [heading, message] = parseErrorMessages(error);
 
-        new FlashMessage(
-          heading,
-          messageType.ERROR,
-          messageTTL.LONG,
-          message
-        );
+        new FlashMessage(heading, messageType.ERROR, messageTTL.LONG, message);
       });
   }
 
@@ -396,7 +392,10 @@ SetPassword.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ ...forgotPasswordActions, giantswarmLogin }, dispatch),
+    actions: bindActionCreators(
+      { ...forgotPasswordActions, giantswarmLogin },
+      dispatch
+    ),
     dispatch: dispatch,
   };
 }
