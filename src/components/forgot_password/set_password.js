@@ -134,7 +134,7 @@ class SetPassword extends React.Component {
         clearQueues();
 
         new FlashMessage(
-          'Password set successfully. Now you will be logged in.',
+          'Password set successfully. Welcome back!',
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );
