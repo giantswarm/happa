@@ -102,6 +102,12 @@ class SetPassword extends React.Component {
     this.props.actions
       .giantswarmLogin(this.state.email, this.state.passwordField.value)
       .then(() => {
+        new FlashMessage(
+          'Password set successfully. Welcome back!',
+          messageType.SUCCESS,
+          messageTTL.MEDIUM
+        );
+
         this.props.dispatch(push('/'));
 
         return null;
@@ -132,12 +138,6 @@ class SetPassword extends React.Component {
         });
 
         clearQueues();
-
-        new FlashMessage(
-          'Password set successfully. Welcome back!',
-          messageType.SUCCESS,
-          messageTTL.MEDIUM
-        );
 
         this.loginUser();
       });
