@@ -10,7 +10,7 @@ import {
 } from '../../lib/flash_message';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { parseErrorMessages } from './utils';
+import { parseErrorMessages } from './_parse_error_messages';
 import { push } from 'connected-react-router';
 import Button from '../shared/button';
 import PropTypes from 'prop-types';

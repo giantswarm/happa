@@ -11,7 +11,7 @@ import {
 import { connect } from 'react-redux';
 import { giantswarmLogin } from '../../actions/userActions';
 import { Link } from 'react-router-dom';
-import { parseErrorMessages } from '../auth/utils';
+import { parseErrorMessages } from '../auth/_parse_error_messages';
 import { push } from 'connected-react-router';
 import { validatePassword } from '../../lib/password_validation';
 import PasswordField from '../signup/password_field';
