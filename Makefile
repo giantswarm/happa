@@ -40,6 +40,7 @@ dist:
 		-v ${PWD}/dist:/usr/src/app/dist:z \
 		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
 		-v ${PWD}/package.json:/usr/src/app/package.json:z \
+		-v ${PWD}/.babelrc:/usr/src/app/.babelrc:z \
 		-v ${PWD}/Gruntfile.js:/usr/src/app/Gruntfile.js:z \
 		-v ${PWD}/webpack.config.js:/usr/src/app/webpack.config.js:z \
 		-v ${PWD}/webpack.dist.config.js:/usr/src/app/webpack.dist.config.js:z \

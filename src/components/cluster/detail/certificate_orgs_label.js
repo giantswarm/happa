@@ -1,29 +1,21 @@
-'use strict';
-
 import PropTypes from 'prop-types';
 import React from 'react';
 
 class CertificateOrgsLabel extends React.Component {
   render() {
-    if (this.props.value === '') {
-      return <span />;
-    }
-
-    var orgs = this.props.value.split(',');
-    orgs.sort();
-    var orgLabels = [];
-    orgs.forEach(element => {
-      var classNames = 'orglabel';
-      if (element === 'system:masters') {
-        classNames += ' isadmin';
-      }
-      orgLabels.push(
-        <span key={element} className={classNames}>
+    return this.props.value
+      .split(',')
+      .sort()
+      .map(element => (
+        <span
+          className={
+            'orglabel ' + (element === 'system:masters' ? 'isadmin' : null)
+          }
+          key={element}
+        >
           {element}
         </span>
-      );
-    });
-    return orgLabels;
+      ));
   }
 }
 

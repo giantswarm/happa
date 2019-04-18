@@ -66,6 +66,14 @@ jobs:
           make validate-prettier
 
     - run:
+        name: Install yarn and run tests
+        command: |
+          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+          echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+          sudo apt-get update && sudo apt-get install yarn
+          yarn test
+
+    - run:
         name: Build web application
         command: make dist
 
