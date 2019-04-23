@@ -9,7 +9,9 @@ import {
   messageType,
 } from '../../lib/flash_message';
 import { connect } from 'react-redux';
+import { giantswarmLogin } from '../../actions/userActions';
 import { Link } from 'react-router-dom';
+import { parseErrorMessages } from '../auth/_parse_error_messages';
 import { push } from 'connected-react-router';
 import { validatePassword } from '../../lib/password_validation';
 import PasswordField from '../signup/password_field';
@@ -96,6 +98,27 @@ class SetPassword extends React.Component {
       });
   }
 
+  loginUser() {
+    this.props.actions
+      .giantswarmLogin(this.state.email, this.state.passwordField.value)
+      .then(() => {
+        new FlashMessage(
+          'Password set successfully. Welcome back!',
+          messageType.SUCCESS,
+          messageTTL.MEDIUM
+        );
+
+        this.props.dispatch(push('/'));
+
+        return null;
+      })
+      .catch(error => {
+        var [heading, message] = parseErrorMessages(error);
+
+        new FlashMessage(heading, messageType.ERROR, messageTTL.LONG, message);
+      });
+  }
+
   submit = event => {
     event.preventDefault();
 
@@ -115,13 +138,8 @@ class SetPassword extends React.Component {
         });
 
         clearQueues();
-        this.props.dispatch(push('/'));
 
-        new FlashMessage(
-          'Password set successfully. Now please log in using the new password.',
-          messageType.SUCCESS,
-          messageTTL.MEDIUM
-        );
+        this.loginUser();
       });
   };
 
@@ -374,7 +392,10 @@ SetPassword.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(forgotPasswordActions, dispatch),
+    actions: bindActionCreators(
+      { ...forgotPasswordActions, giantswarmLogin },
+      dispatch
+    ),
     dispatch: dispatch,
   };
 }
