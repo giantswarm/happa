@@ -193,7 +193,7 @@ class ClusterDetailView extends React.Component {
       var workers = 0;
       nodes.forEach(node => {
         if (Object.keys(node).includes('labels')) {
-          if (node.labels['role'] != 'master') {
+          if (node.labels['role'] != 'master' || node.labels['kubernetes.io/role'] != 'master') {
             workers++;
           }
         }
