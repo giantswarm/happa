@@ -79,7 +79,7 @@ class ClusterDashboardItem extends React.Component {
       nodes.forEach(node => {
         if (Object.keys(node).includes('labels')) {
           if (
-            node.labels['role'] != 'master' ||
+            node.labels['role'] != 'master' &&
             node.labels['kubernetes.io/role'] != 'master'
           ) {
             workers++;
