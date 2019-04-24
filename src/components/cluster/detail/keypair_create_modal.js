@@ -39,7 +39,7 @@ class KeyPairCreateModal extends React.Component {
     return blob;
   }
 
-  copyKubeConfig(e) {
+  copyKubeConfig = (e) => {
     e.preventDefault();
     copy(this.state.kubeconfig);
     this.setState(
@@ -56,7 +56,7 @@ class KeyPairCreateModal extends React.Component {
     );
   }
 
-  confirmAddKeyPair(e) {
+  confirmAddKeyPair = (e) => {
     if (e) {
       e.preventDefault();
     }
@@ -109,7 +109,7 @@ class KeyPairCreateModal extends React.Component {
     );
   }
 
-  downloadAsFileLink() {
+  downloadAsFileLink  = () => {
     return (
       <a
         href={window.URL.createObjectURL(this.blob())}
@@ -158,7 +158,7 @@ class KeyPairCreateModal extends React.Component {
     });
   }
 
-  handleCNPrefixChange(e) {
+  handleCNPrefixChange = (e) => {
     var inputValue = e.target.value;
 
     if (this.state.cn_prefix_error) {
@@ -182,19 +182,19 @@ class KeyPairCreateModal extends React.Component {
     }
   }
 
-  handleCertificateOrganizationsChange(e) {
+  handleCertificateOrganizationsChange = (e) => {
     this.setState({
       certificate_organizations: e.target.value,
     });
   }
 
-  handleTTLChange(ttl) {
+  handleTTLChange = (ttl) => {
     this.setState({
       expireTTL: ttl,
     });
   }
 
-  handleDescriptionChange(e) {
+  handleDescriptionChange = (e) => {
     this.setState({
       description: e.target.value,
     });
@@ -227,7 +227,7 @@ class KeyPairCreateModal extends React.Component {
                       Create New Key Pair
                     </BootstrapModal.Title>
                   </BootstrapModal.Header>
-                  <form onSubmit={this.confirmAddKeyPair.bind(this)}>
+                  <form onSubmit={this.confirmAddKeyPair}>
                     <BootstrapModal.Body>
                       <p>
                         A key pair grants you access to the Kubernetes API of
@@ -245,7 +245,7 @@ class KeyPairCreateModal extends React.Component {
                             autoFocus
                             type='text'
                             value={this.state.cn_prefix}
-                            onChange={this.handleCNPrefixChange.bind(this)}
+                            onChange={this.handleCNPrefixChange}
                           />
                           <div className='text-field-hint'>
                             {this.state.cn_prefix_error === null ? (
@@ -263,9 +263,7 @@ class KeyPairCreateModal extends React.Component {
                           <input
                             type='text'
                             value={this.state.certificate_organizations}
-                            onChange={this.handleCertificateOrganizationsChange.bind(
-                              this
-                            )}
+                            onChange={this.handleCertificateOrganizationsChange}
                           />
                           <div className='text-field-hint'>
                             Comma seperated values. e.g.:
@@ -280,14 +278,14 @@ class KeyPairCreateModal extends React.Component {
                           <input
                             type='text'
                             value={this.state.description}
-                            onChange={this.handleDescriptionChange.bind(this)}
+                            onChange={this.handleDescriptionChange}
                           />
                         </div>
                       </div>
                       <br />
                       <label>Expires:</label>
                       <ExpiryHoursPicker
-                        onChange={this.handleTTLChange.bind(this)}
+                        onChange={this.handleTTLChange}
                         initialValue={this.state.expireTTL}
                       />
                     </BootstrapModal.Body>
@@ -297,7 +295,7 @@ class KeyPairCreateModal extends React.Component {
                         bsStyle='primary'
                         disabled={this.state.cn_prefix_error !== null}
                         loading={this.state.modal.loading}
-                        onClick={this.confirmAddKeyPair.bind(this)}
+                        onClick={this.confirmAddKeyPair}
                       >
                         {this.state.modal.loading
                           ? 'Creating Key Pair'
@@ -348,7 +346,7 @@ class KeyPairCreateModal extends React.Component {
                     {this.state.copied ? (
                       <Button
                         bsStyle='default'
-                        onClick={this.copyKubeConfig.bind(this)}
+                        onClick={this.copyKubeConfig}
                       >
                         &nbsp;&nbsp;
                         <i className='fa fa-done' aria-hidden='true' />
@@ -357,13 +355,13 @@ class KeyPairCreateModal extends React.Component {
                     ) : (
                       <Button
                         bsStyle='default'
-                        onClick={this.copyKubeConfig.bind(this)}
+                        onClick={this.copyKubeConfig}
                       >
                         Copy
                       </Button>
                     )}
 
-                    {this.downloadAsFileLink.bind(this)()}
+                    {this.downloadAsFileLink()}
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
                     <Button bsStyle='link' onClick={this.close}>
