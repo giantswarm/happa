@@ -44,7 +44,9 @@ const KeyPairCreateModal = props => {
   };
 
   const [expireTTL, setExpireTTL] = useState(720);
-  const [description, setDescription] = useState(defaultDescription(props.user.email));
+  const [description, setDescription] = useState(
+    defaultDescription(props.user.email)
+  );
   const [copied, setCopied] = useState(false);
   const [kubeconfig, setKubeconfig] = useState(false);
   const [cnPrefix, setCNPrefix] = useState('');
