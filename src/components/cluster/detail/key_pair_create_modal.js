@@ -88,7 +88,7 @@ const KeyPairCreateModal = props => {
     props.actions
       .clusterCreateKeyPair(props.cluster.id, {
         certificate_organizations: certificateOrganizations,
-        cnPrefix: cnPrefix,
+        cn_prefix: cnPrefix,
         description: description,
         ttl_hours: expireTTL,
       })
