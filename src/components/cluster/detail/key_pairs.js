@@ -30,7 +30,7 @@ class ClusterKeyPairs extends React.Component {
   };
 
   constructor(props) {
-    super(props);    
+    super(props);
   }
 
   componentDidMount() {
@@ -61,11 +61,6 @@ class ClusterKeyPairs extends React.Component {
           });
         }, 500);
       });
-  }
-
-  addKeyPair() {
-    this.KeypairCreateModal.close();
-    this.KeypairCreateModal.show();
   }
 
   // Provides the configuration for the keypairs table
@@ -205,13 +200,6 @@ class ClusterKeyPairs extends React.Component {
                     <p>
                       No key pairs yet. Why don&apos;t you create your first?
                     </p>
-                    <Button
-                      onClick={this.addKeyPair.bind(this)}
-                      bsStyle='default'
-                      className='small'
-                    >
-                      <i className='fa fa-add-circle' /> Create Key Pair
-                    </Button>
                   </div>
                 );
               } else {
@@ -227,27 +215,17 @@ class ClusterKeyPairs extends React.Component {
                       ]}
                       defaultSortDirection='asc'
                     />
-                    <Button
-                      onClick={this.addKeyPair.bind(this)}
-                      bsStyle='default'
-                      className='small'
-                    >
-                      <i className='fa fa-add-circle' /> Create Key Pair
-                    </Button>
                   </div>
                 );
               }
             })()}
+            <KeypairCreateModal
+              user={this.props.user}
+              cluster={this.props.cluster}
+              actions={this.props.actions}
+            />
           </div>
         </div>
-        <KeypairCreateModal
-          user={this.props.user}
-          cluster={this.props.cluster}
-          actions={this.props.actions}
-          ref={r => {
-            this.KeypairCreateModal = r;
-          }}
-        />
       </div>
     );
   }
