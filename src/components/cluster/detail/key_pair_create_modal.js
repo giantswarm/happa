@@ -145,7 +145,6 @@ const KeyPairCreateModal = props => {
   };
 
   const cnPrefixValidation = value => {
-    console.log('validating');
     var error = null;
     if (value !== '') {
       var endRegex = /[a-zA-Z0-9]$/g;
