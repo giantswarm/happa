@@ -82,7 +82,7 @@ function escapeHTML(unsafe) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
   safe = safe
-    .replace('&lt;code&gt;', '<code>')
-    .replace('&lt;/code&gt;', '</code>');
+    .replace(/&lt;code&gt;/g, '<code>')
+    .replace(/&lt;\/code&gt;/g, '</code>');
   return safe;
 }

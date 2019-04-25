@@ -298,7 +298,7 @@ export function organizationAddMemberConfirmed(orgId, email) {
             '</code> to organization <code>' +
             orgId +
             '</code>',
-          messageType.ERROR,
+          messageType.SUCCESS,
           messageTTL.MEDIUM
         );
 
