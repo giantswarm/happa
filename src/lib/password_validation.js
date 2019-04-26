@@ -1,5 +1,3 @@
-'use strict';
-
 export function validatePassword(password) {
   var valid = false;
   var statusMessage = '';

@@ -1,5 +1,3 @@
-'use strict';
-
 import { relativeDate } from '../../lib/helpers.js';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';

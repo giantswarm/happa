@@ -1,5 +1,3 @@
-'use strict';
-
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ClusterDetail from './detail/';

@@ -1,5 +1,3 @@
-'use strict';
-
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from '../../../actions/clusterActions';
 import { connect } from 'react-redux';

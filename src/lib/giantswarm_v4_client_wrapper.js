@@ -1,5 +1,3 @@
-'use strict';
-
 // A wrapper for the GiantSwarm V4 JS Client
 // It initializes the client with the right end point.
 

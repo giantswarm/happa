@@ -1,5 +1,3 @@
-'use strict';
-
 import Button from '../shared/button';
 import GiantSwarmV4 from 'giantswarm-v4';
 import PropTypes from 'prop-types';

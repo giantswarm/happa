@@ -1,5 +1,3 @@
-'use strict';
-
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../../shared/button';
 import InputField from '../../shared/input_field';

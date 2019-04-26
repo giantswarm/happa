@@ -1,5 +1,3 @@
-'use strict';
-
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import { clearQueues } from '../../lib/flash_message';

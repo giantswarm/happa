@@ -1,5 +1,3 @@
-'use strict';
-
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
 import { modalHide } from './modalActions';

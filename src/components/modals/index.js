@@ -1,5 +1,3 @@
-'use strict';
-
 import { clusterDeleteConfirmed } from '../../actions/clusterActions';
 import { connect } from 'react-redux';
 import { modalHide } from '../../actions/modalActions';

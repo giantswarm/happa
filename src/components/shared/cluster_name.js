@@ -1,5 +1,3 @@
-'use strict';
-
 import { clusterPatch } from '../../actions/clusterActions';
 import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
 import Button from '../shared/button';

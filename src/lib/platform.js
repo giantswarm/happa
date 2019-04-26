@@ -1,5 +1,3 @@
-'use strict';
-
 //
 // A wrapper around platform.js that returns just:
 // 'Windows', 'Mac', 'Linux', or 'Unknown'

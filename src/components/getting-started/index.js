@@ -1,5 +1,3 @@
-'use strict';
-
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';

@@ -1,5 +1,3 @@
-'use strict';
-
 import * as clusterActions from '../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { CodeBlock, Prompt } from './codeblock';

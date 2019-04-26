@@ -1,5 +1,3 @@
-'use strict';
-
 import * as Helpers from '../../lib/helpers';
 import copy from 'copy-to-clipboard';
 import Line from './line';

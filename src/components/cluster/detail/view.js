@@ -1,5 +1,3 @@
-'use strict';
-
 import * as clusterActions from '../../../actions/clusterActions';
 import * as releaseActions from '../../../actions/releaseActions';
 import { bindActionCreators } from 'redux';

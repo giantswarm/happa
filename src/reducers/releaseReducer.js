@@ -1,5 +1,3 @@
-'use strict';
-
 import * as types from '../actions/actionTypes';
 import _ from 'underscore';
 

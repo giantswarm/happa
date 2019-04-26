@@ -1,5 +1,3 @@
-'use strict';
-
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';

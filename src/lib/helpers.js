@@ -1,5 +1,3 @@
-'use strict';
-
 import _ from 'underscore';
 import moment from 'moment';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';

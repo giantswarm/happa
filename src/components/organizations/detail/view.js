@@ -1,5 +1,3 @@
-'use strict';
-
 import * as OrganizationActions from '../../../actions/organizationActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';

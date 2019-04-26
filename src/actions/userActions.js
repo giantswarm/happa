@@ -1,5 +1,3 @@
-'use strict';
-
 import * as types from './actionTypes';
 import { Base64 } from 'js-base64';
 import {
