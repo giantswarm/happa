@@ -1,5 +1,3 @@
-'use strict';
-
 import { Breadcrumb } from 'react-breadcrumbs';
 import { catalogsLoad } from '../../actions/catalogActions';
 import { connect } from 'react-redux';
@@ -48,8 +46,8 @@ class CatalogIndex extends React.Component {
     return (
       <Breadcrumb
         data={{
-          title: 'App Katalog'.toUpperCase(),
-          pathname: '/app-katalog/',
+          title: 'Managed Apps'.toUpperCase(),
+          pathname: '/managed-apps/',
         }}
       >
         <div className='app-catalog'>

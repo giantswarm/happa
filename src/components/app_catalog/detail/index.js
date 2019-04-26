@@ -1,5 +1,3 @@
-'use strict';
-
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';

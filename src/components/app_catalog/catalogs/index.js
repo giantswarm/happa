@@ -1,5 +1,3 @@
-'use strict';
-
 import { Link } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';

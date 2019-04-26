@@ -1,5 +1,3 @@
-'use strict';
-
 import * as types from './actionTypes';
 import GiantSwarmV4 from 'giantswarm-v4';
 import yaml from 'js-yaml';
