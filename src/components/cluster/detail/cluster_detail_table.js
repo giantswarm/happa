@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { relativeDate } from '../../../lib/helpers.js';
 import _ from 'underscore';

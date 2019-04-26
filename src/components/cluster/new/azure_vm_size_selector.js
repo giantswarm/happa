@@ -1,4 +1,4 @@
-'use strict';
+
 
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../../shared/button';

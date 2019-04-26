@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { Base64 } from 'js-base64';
 import { validatePassword } from '../../lib/password_validation';

@@ -1,4 +1,4 @@
-'use strict';
+
 
 import BsButton from 'react-bootstrap/lib/Button';
 import PropTypes from 'prop-types';

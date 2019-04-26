@@ -1,4 +1,4 @@
-'use strict';
+
 
 //
 // A wrapper around platform.js that returns just:

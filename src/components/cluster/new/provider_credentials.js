@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { connect } from 'react-redux';
 import { organizationCredentialsLoad } from '../../../actions/organizationActions';

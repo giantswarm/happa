@@ -1,4 +1,4 @@
-'use strict';
+
 
 import _ from 'underscore';
 import PropTypes from 'prop-types';

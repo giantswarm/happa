@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { clusterDeleteConfirmed } from '../../actions/clusterActions';
 import { connect } from 'react-redux';

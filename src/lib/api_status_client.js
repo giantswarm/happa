@@ -1,4 +1,4 @@
-'use strict';
+
 
 var request = require('superagent-bluebird-promise');
 var helpers = require('./helpers');

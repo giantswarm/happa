@@ -1,4 +1,4 @@
-'use strict';
+
 
 import DatePicker from 'react-datepicker';
 import moment from 'moment';

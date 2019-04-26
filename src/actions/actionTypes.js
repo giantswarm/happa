@@ -32,7 +32,7 @@
  * NOUN can also represent the nesting of resources.
  */
 
-'use strict';
+
 
 // Clusters
 export const CLUSTER_LOAD_DETAILS = 'CLUSTER_LOAD_DETAILS';

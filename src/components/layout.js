@@ -1,4 +1,4 @@
-'use strict';
+
 
 import * as UserActions from '../actions/userActions';
 import { bindActionCreators } from 'redux';

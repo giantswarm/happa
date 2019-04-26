@@ -1,4 +1,4 @@
-'use strict';
+
 
 import copy from 'copy-to-clipboard';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';

@@ -1,4 +1,4 @@
-'use strict';
+
 
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
