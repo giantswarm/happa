@@ -1,5 +1,3 @@
-
-
 import { applyMiddleware, compose, createStore } from 'redux';
 import { routerMiddleware } from 'connected-react-router';
 import history from './history';

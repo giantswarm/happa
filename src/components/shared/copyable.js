@@ -1,5 +1,3 @@
-
-
 import copy from 'copy-to-clipboard';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';

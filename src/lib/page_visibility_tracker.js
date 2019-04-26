@@ -1,5 +1,3 @@
-
-
 class PageVisibilityTracker {
   constructor() {
     // client-independent tracking of visibility change

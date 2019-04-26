@@ -1,5 +1,3 @@
-
-
 import * as types from '../actions/actionTypes';
 import GiantSwarmV4 from 'giantswarm-v4';
 

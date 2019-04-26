@@ -1,5 +1,3 @@
-
-
 import _ from 'underscore';
 import PropTypes from 'prop-types';
 import React from 'react';

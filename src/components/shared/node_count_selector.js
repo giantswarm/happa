@@ -1,5 +1,3 @@
-
-
 import { connect } from 'react-redux';
 import NumberPicker from './number_picker.js';
 import PropTypes from 'prop-types';

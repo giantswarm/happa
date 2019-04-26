@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 
 class TermsOfService extends React.Component {

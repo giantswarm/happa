@@ -1,5 +1,3 @@
-
-
 import Noty from 'noty';
 
 // messageType affects the visual markup to distinguish severity

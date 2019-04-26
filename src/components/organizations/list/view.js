@@ -1,5 +1,3 @@
-
-
 import { clustersForOrg } from '../../../lib/helpers';
 import { connect } from 'react-redux';
 import {

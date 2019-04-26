@@ -1,5 +1,3 @@
-
-
 import ColorHash from 'color-hash';
 import copy from 'copy-to-clipboard';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';

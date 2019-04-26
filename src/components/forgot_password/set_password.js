@@ -1,5 +1,3 @@
-
-
 import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
 import {

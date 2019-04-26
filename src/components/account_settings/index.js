@@ -1,5 +1,3 @@
-
-
 import * as UserActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';

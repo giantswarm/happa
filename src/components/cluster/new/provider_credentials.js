@@ -1,5 +1,3 @@
-
-
 import { connect } from 'react-redux';
 import { organizationCredentialsLoad } from '../../../actions/organizationActions';
 import AWSAccountID from '../../shared/aws_account_id';

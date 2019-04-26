@@ -1,5 +1,3 @@
-
-
 import * as types from './actionTypes';
 import Passage from '../lib/passage_client';
 
