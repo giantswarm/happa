@@ -23,7 +23,7 @@ import React from 'react';
 import ReactTimeout from 'react-timeout';
 import ScaleClusterModal from './scale_cluster_modal';
 import Tab from 'react-bootstrap/lib/Tab';
-import Tabs from 'react-bootstrap/lib/Tabs';
+import Tabs from './tabs';
 import UpgradeClusterModal from './upgrade_cluster_modal';
 
 class ClusterDetailView extends React.Component {
@@ -293,7 +293,7 @@ class ClusterDetailView extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-12'>
-                  <Tabs animation={false} defaultActiveKey={1} id='tabs'>
+                  <Tabs>
                     <Tab eventKey={1} title='General'>
                       <ClusterDetailTable
                         canClusterUpgrade={this.canClusterUpgrade()}
