@@ -7,6 +7,7 @@ import Button from '../../shared/button';
 import CertificateOrgsLabel from './certificate_orgs_label';
 import Copyable from '../../shared/copyable';
 import KeypairCreateModal from './key_pair_create_modal';
+import KeypairDetailModal from './generic_modal';
 import moment from 'moment';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
@@ -22,6 +23,12 @@ class ClusterKeyPairs extends React.Component {
     cn_prefix: '',
     cn_prefix_error: null,
     certificate_organizations: '',
+    keypairModal: {
+      visible: false,
+      keypair: {
+        id: '',
+      },
+    },
     modal: {
       visible: false,
       loading: false,
@@ -140,13 +147,17 @@ class ClusterKeyPairs extends React.Component {
     );
   }
 
-  commonNameFormatter(cell, row) {
+  commonNameFormatter = (cell, row) => {
     return (
-      <Copyable copyText={row.common_name}>
-        <small>{row.common_name}</small>
-      </Copyable>
+      <React.Fragment>
+        <Copyable copyText={row.common_name}>
+          <small>{row.common_name}</small>
+        </Copyable>
+        <br />
+        <Button onClick={this.showKeypairModal.bind(this, row)}>Details</Button>
+      </React.Fragment>
     );
-  }
+  };
 
   organizationFormatter(cell, row) {
     if (row.certificate_organizations !== '') {
@@ -158,6 +169,29 @@ class ClusterKeyPairs extends React.Component {
     }
     return <span />;
   }
+
+  bindShowModal = showFunc => {
+    this.showModal = showFunc;
+  };
+
+  showKeypairModal = row => {
+    this.setState({
+      keypairModal: {
+        visible: true,
+        keypair: {
+          id: row.id,
+        },
+      },
+    });
+  };
+
+  hideKeypairModal = () => {
+    this.setState({
+      keypairModal: {
+        visible: false,
+      },
+    });
+  };
 
   render() {
     return (
@@ -224,6 +258,16 @@ class ClusterKeyPairs extends React.Component {
               cluster={this.props.cluster}
               actions={this.props.actions}
             />
+
+            <KeypairDetailModal
+              visible={this.state.keypairModal.visible}
+              title='Key Pair Detail'
+              onClose={this.hideKeypairModal}
+            >
+              ID:
+              {this.state.keypairModal.keypair &&
+                this.state.keypairModal.keypair.id}
+            </KeypairDetailModal>
           </div>
         </div>
       </div>
