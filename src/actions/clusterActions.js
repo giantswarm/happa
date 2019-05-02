@@ -132,6 +132,11 @@ export function clusterLoadStatus(clusterId) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
+    dispatch({
+      type: types.CLUSTER_LOAD_STATUS,
+      clusterId,
+    });
+
     var apiClusterStatus = new APIClusterStatusClient({
       endpoint: window.config.apiEndpoint,
     });
