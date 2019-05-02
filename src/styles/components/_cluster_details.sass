@@ -38,6 +38,34 @@
     margin-left: 2px
 
 .cluster_key_pairs
+  .react-bootstrap-table table
+    table-layout: auto
+  
+  .certificate-orgs-column
+    max-width: 350px
+    white-space: wrap
+    display: table-cell
+    overflow-wrap: normal
+    word-break: break-all
+
+.keypairdetails
+
+  .modal-body
+    overflow-x: auto
+
+  .labelvaluepair
+    margin-bottom: 1em
+
+  .labelvaluepair--label
+    font-size: 12px
+    text-transform: uppercase
+    color: #ccc
+
+.cluster_key_pairs, .keypairdetails
+  .certificate-orgs-label
+    display: flex
+    flex-wrap: wrap
+
   .orglabel
     margin-right: 2px
     font-family: Inconsolata, monospace
@@ -45,12 +73,9 @@
     font-weight: 400
     border-radius: 3px
     padding: 3px 5px
+    margin-right: 3px
+    margin-bottom: 3px
     color: #c7c5bd
     background-color: darken($darkblue, 5%)
-
-  .orglabel.isadmin
-    background-color: #4e272d
-    color: #ccc
-
-  .react-bootstrap-table table
-    table-layout: auto
+    white-space: nowrap
+    display: inline-block
