@@ -31,6 +31,54 @@ export function clustersLoad() {
 }
 
 /**
+ * Loads apps for a cluster.
+ *
+ * @param {String} clusterId Cluster ID
+ */
+export function clusterLoadApps(clusterId) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.CLUSTER_LOAD_APPS,
+      clusterId,
+    });
+
+    var managedAppsApi = new GiantSwarmV4.ManagedAppsApi();
+
+    return managedAppsApi
+      .getClusterApps(scheme + ' ' + token, clusterId)
+      .then(apps => {
+        dispatch({
+          type: types.CLUSTER_LOAD_APPS_SUCCESS,
+          clusterId,
+          apps,
+        });
+
+        return apps;
+      })
+      .catch(error => {
+        console.error('Error loading cluster details:', error);
+        dispatch({
+          type: types.CLUSTER_LOAD_APPS_ERROR,
+          clusterId,
+          error,
+        });
+
+        new FlashMessage(
+          'Something went wrong while trying to load cluster details.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        throw error;
+      });
+  };
+}
+
+/**
  * Loads details for a cluster.
  *
  * @param {String} clusterId Cluster ID
@@ -83,11 +131,6 @@ export function clusterLoadStatus(clusterId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
-
-    dispatch({
-      type: types.CLUSTER_LOAD_STATUS,
-      clusterId,
-    });
 
     var apiClusterStatus = new APIClusterStatusClient({
       endpoint: window.config.apiEndpoint,
