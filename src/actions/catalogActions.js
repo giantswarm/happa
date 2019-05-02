@@ -32,9 +32,9 @@ export function catalogsLoad() {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
-    var appKatalogApi = new GiantSwarmV4.AppKatalogApi();
+    var managedAppsApi = new GiantSwarmV4.ManagedAppsApi();
 
-    return appKatalogApi.getAppCatalogs(scheme + ' ' + token).then(catalogs => {
+    return managedAppsApi.getAppCatalogs(scheme + ' ' + token).then(catalogs => {
       let loadCatalogPromises = [];
 
       var l = catalogs.length;
