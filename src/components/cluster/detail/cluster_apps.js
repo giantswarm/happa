@@ -144,8 +144,7 @@ class ClusterApps extends React.Component {
 
     return (
       <React.Fragment>
-        <div className='row section cluster-apps'>
-          <h3 className='table-label'>Managed Apps (Preview)</h3>
+        <div className='row'>
           <p>
             Soon you will be able to deploy managed apps like monitoring, log
             storage, and more simply by selecting from our catalog.
