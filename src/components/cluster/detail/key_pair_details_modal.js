@@ -45,7 +45,7 @@ class KeyPairDetailsModal extends React.Component {
             <div className='labelvaluepair--label'>ID</div>
             <div className='labelvaluepair--value code'>
               <Copyable copyText={this.props.keyPair.id}>
-                {this.props.keyPair.id}
+                <span>{this.props.keyPair.id}</span>
               </Copyable>
             </div>
           </div>
@@ -53,9 +53,13 @@ class KeyPairDetailsModal extends React.Component {
           <div className='labelvaluepair'>
             <div className='labelvaluepair--label'>Common Name (CN)</div>
             <div className='labelvaluepair--value code breaking'>
-              <Copyable copyText={this.props.keyPair.common_name}>
-                {this.props.keyPair.common_name}
-              </Copyable>
+              {this.props.keyPair.common_name === '' ? (
+                <span>n/</span>
+              ) : (
+                <Copyable copyText={this.props.keyPair.common_name}>
+                  <span>{this.props.keyPair.common_name}</span>
+                </Copyable>
+              )}
             </div>
           </div>
 
@@ -64,11 +68,17 @@ class KeyPairDetailsModal extends React.Component {
               Certificate Organizations (O)
             </div>
             <div className='labelvaluepair--value'>
-              <Copyable copyText={this.props.keyPair.certificate_organizations}>
-                <CertificateOrgsLabel
-                  value={this.props.keyPair.certificate_organizations}
-                />
-              </Copyable>
+              {this.props.keyPair.certificate_organizations === '' ? (
+                <span>n/a</span>
+              ) : (
+                <Copyable
+                  copyText={this.props.keyPair.certificate_organizations}
+                >
+                  <CertificateOrgsLabel
+                    value={this.props.keyPair.certificate_organizations}
+                  />
+                </Copyable>
+              )}
             </div>
           </div>
 
@@ -89,7 +99,11 @@ class KeyPairDetailsModal extends React.Component {
           <div className='labelvaluepair'>
             <div className='labelvaluepair--label'>Description</div>
             <div className='labelvaluepair--value'>
-              {this.props.keyPair.description}
+              {this.props.keyPair.description === '' ? (
+                <span>n/a</span>
+              ) : (
+                this.props.keyPair.description
+              )}
             </div>
           </div>
         </div>
