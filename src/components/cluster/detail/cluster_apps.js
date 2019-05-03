@@ -186,8 +186,6 @@ class ClusterApps extends React.Component {
 }
 
 ClusterApps.propTypes = {
-  clusterId: PropTypes.string,
-  organizationId: PropTypes.string,
   release: PropTypes.object,
 };
 
