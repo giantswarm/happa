@@ -5,12 +5,14 @@ import { CodeBlock, Output, Prompt } from './codeblock';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
 import { Link } from 'react-router-dom';
+import platform from '../../lib/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 class SimpleExample extends React.Component {
   state = {
     loading: true,
+    selectedPlatform: platform,
     ingressBaseDomain: window.config.ingressBaseDomain,
   };
 
@@ -20,6 +22,22 @@ class SimpleExample extends React.Component {
     } else {
       return `12345.${this.state.ingressBaseDomain}`;
     }
+  }
+
+  selectPlatform(platform) {
+    this.setState({
+      selectedPlatform: platform,
+    });
+  }
+
+  selectedSedCommand() {
+    return `sed -i${this.state.selectedPlatform === 'Mac' ? ' ' : ''}` +
+      `"" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" ` +
+      `helloworld-manifest.yaml`
+  }
+
+  isSelectedPlatform(platform) {
+    return this.state.selectedPlatform === platform;
   }
 
   componentDidMount() {
@@ -130,13 +148,32 @@ class SimpleExample extends React.Component {
             <code>YOUR_CLUSTER_BASE_DOMAIN</code> with{' '}
             <code>{this.clusterBaseDomain()}</code>.
           </p>
-          <CodeBlock>
-            <Prompt>
-              {`
-                  sed -i "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" helloworld-manifest.yaml
-                `}
-            </Prompt>
-          </CodeBlock>
+
+          <div className='platform_selector'>
+            <ul className='platform_selector--tabs'>
+              <li
+                className={this.isSelectedPlatform('Linux') ? 'active' : null}
+                onClick={this.selectPlatform.bind(this, 'Linux')}
+              >
+                Linux
+              </li>
+
+              <li
+                className={this.isSelectedPlatform('Mac') ? 'active' : null}
+                onClick={this.selectPlatform.bind(this, 'Mac')}
+              >
+                Mac OS
+              </li>
+            </ul>
+
+            <div className='platform_selector--content'>
+              <CodeBlock>
+                <Prompt>
+                  {this.selectedSedCommand()}
+                </Prompt>
+              </CodeBlock>
+            </div>
+          </div>
 
           <p>Finally apply the manifest to your cluster:</p>
           <CodeBlock>
