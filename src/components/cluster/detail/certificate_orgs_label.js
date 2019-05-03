@@ -20,17 +20,22 @@ class CertificateOrgsLabel extends React.Component {
         {this.props.value
           .split(',')
           .sort()
-          .map(element => (
-            <span
-              className={
-                'orglabel ' + (element === 'system:masters' ? 'isadmin' : '')
-              }
-              style={{ backgroundColor: this.calculateColour(element) }}
-              key={element}
-            >
-              {element}
-            </span>
-          ))}
+          .map(element => {
+            if (element != '') {
+              return (
+                <span
+                  className={
+                    'orglabel ' +
+                    (element === 'system:masters' ? 'isadmin' : '')
+                  }
+                  style={{ backgroundColor: this.calculateColour(element) }}
+                  key={element}
+                >
+                  {element}
+                </span>
+              );
+            }
+          })}
       </div>
     );
   }
