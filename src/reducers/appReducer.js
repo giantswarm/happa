@@ -124,18 +124,11 @@ export default function appReducer(
 
     case types.ORGANIZATIONS_LOAD_SUCCESS:
       // Organizations have been loaded.
-
-      // Determine if the user should be considered an admin.
-      var isAdmin = false;
-
       var organizations = Object.entries(action.organizations).map(
         ([, o]) => o.id
       );
-      if (organizations.indexOf('giantswarm') != -1) {
-        isAdmin = true;
-      }
 
-      var loggedInUser = Object.assign({}, state.loggedInUser, { isAdmin });
+      var loggedInUser = Object.assign({}, state.loggedInUser);
 
       // Deterimine what organization should be selected.
       var selectedOrganization = determineSelectedOrganization(

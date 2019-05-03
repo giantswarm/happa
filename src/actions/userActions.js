@@ -62,6 +62,7 @@ export function refreshUserInfo() {
             scheme: getState().app.loggedInUser.auth.scheme,
             token: getState().app.loggedInUser.auth.token,
           },
+          isAdmin: getState().app.loggedInUser.isAdmin,
         };
 
         dispatch({
@@ -86,12 +87,18 @@ export function refreshUserInfo() {
 export function auth0Login(authResult) {
   return function(dispatch) {
     return new Promise(function(resolve) {
+      let isAdmin = false;
+      if (authResult.idTokenPayload['https://giantswarm.io/groups'] === 'api-admin') {
+        isAdmin = true;
+      }
+
       var userData = {
         email: authResult.idTokenPayload.email,
         auth: {
           scheme: 'Bearer',
           token: authResult.accessToken,
         },
+        isAdmin: isAdmin,
       };
 
       resolve(dispatch(loginSuccess(userData)));
