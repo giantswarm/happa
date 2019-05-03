@@ -90,7 +90,7 @@ class KeyPairDetailsModal extends React.Component {
           </div>
 
           <div className='labelvaluepair'>
-            <div className='labelvaluepair--label'>Expires</div>
+            <div className='labelvaluepair--label'>Expiry</div>
             <div className='labelvaluepair--value'>
               {this.expireDate(this.props.keyPair.expire_date)}
             </div>
