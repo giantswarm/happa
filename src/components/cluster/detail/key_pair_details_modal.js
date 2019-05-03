@@ -52,7 +52,7 @@ class KeyPairDetailsModal extends React.Component {
 
           <div className='labelvaluepair'>
             <div className='labelvaluepair--label'>Common Name (CN)</div>
-            <div className='labelvaluepair--value code'>
+            <div className='labelvaluepair--value code breaking'>
               <Copyable copyText={this.props.keyPair.common_name}>
                 {this.props.keyPair.common_name}
               </Copyable>
