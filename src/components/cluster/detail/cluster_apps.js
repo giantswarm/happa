@@ -146,7 +146,7 @@ class ClusterApps extends React.Component {
       <React.Fragment>
         <div className='row'>
           <p>
-            Soon you will be able to deploy managed apps like monitoring, log
+            Soon you will be able to install managed apps like monitoring, log
             storage, and more simply by selecting from our catalog.
           </p>
 
