@@ -133,7 +133,7 @@ class SimpleExample extends React.Component {
           <CodeBlock>
             <Prompt>
               {`
-                  sed -i "" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" helloworld-manifest.yaml
+                  sed -i "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" helloworld-manifest.yaml
                 `}
             </Prompt>
           </CodeBlock>
