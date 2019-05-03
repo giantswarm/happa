@@ -347,7 +347,10 @@ class ClusterDetailView extends React.Component {
                     </Tab>
                     <Tab eventKey={3} title='Managed Apps'>
                       {this.props.release && (
-                        <ClusterApps release={this.props.release} />
+                        <ClusterApps
+                          installedApps={this.props.cluster.apps}
+                          release={this.props.release}
+                        />
                       )}
                     </Tab>
                   </Tabs>

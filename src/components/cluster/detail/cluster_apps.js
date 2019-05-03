@@ -144,6 +144,11 @@ class ClusterApps extends React.Component {
 
     return (
       <React.Fragment>
+        {this.props.installedApps && this.props.installedApps.length > 0 && (
+          <div className='row'>
+            <h1>You&apos;ve got apps!</h1>
+          </div>
+        )}
         <div className='row'>
           <p>
             Soon you will be able to install managed apps like monitoring, log
@@ -186,6 +191,7 @@ class ClusterApps extends React.Component {
 }
 
 ClusterApps.propTypes = {
+  installedApps: PropTypes.array,
   release: PropTypes.object,
 };
 
