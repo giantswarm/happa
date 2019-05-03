@@ -17,12 +17,26 @@ it('renders without crashing', () => {
 
 it('doesnt render a block for installed apps if there are none', () => {
   const noApps = [];
-  const clusterApps = mount(<Router><ClusterApps installedApps={noApps} /></Router>);
+  const clusterApps = mount(
+    <Router>
+      <ClusterApps installedApps={noApps} />
+    </Router>
+  );
   expect(clusterApps.find('#installed-apps').exists()).toEqual(false);
 });
 
 it('renders a block for installed apps if there are some', () => {
-  const someApps = [{}];
-  const clusterApps = mount(<Router><ClusterApps installedApps={someApps} /></Router>);
+  const someApps = [
+    {
+      metadata: {
+        name: 'test-app',
+      },
+    },
+  ];
+  const clusterApps = mount(
+    <Router>
+      <ClusterApps installedApps={someApps} />
+    </Router>
+  );
   expect(clusterApps.find('#installed-apps').exists()).toEqual(true);
 });

@@ -168,7 +168,11 @@ export default function clusterReducer(
 
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         isFetchingApps: false,
-        apps: action.apps,
+
+        // For some reason the array that we get back
+        // from the generated js client does not have
+        // .map on it. So I make a new one here.
+        apps: Array(...action.apps),
       });
 
       return {

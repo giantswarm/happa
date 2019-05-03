@@ -151,12 +151,20 @@ class ClusterApps extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.props.installedApps && this.props.installedApps.length > 0 && (
-          <div className='row' id='installed-apps'>
-            <h1>You&apos;ve got apps!</h1>
-          </div>
-        )}
         <div className='row'>
+          {this.props.installedApps && this.props.installedApps.length > 0 && (
+            <div id='installed-apps'>
+              <h3 className='table-label'>Installed Apps</h3>
+              {this.props.installedApps.map(app => {
+                return (
+                  <div className='installed-apps--app' key={app.metadata.name}>
+                    {app.metadata.name}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           <p>
             Soon you will be able to install managed apps like monitoring, log
             storage, and more simply by selecting from our catalog.
