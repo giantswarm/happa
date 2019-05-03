@@ -152,7 +152,7 @@ class ClusterApps extends React.Component {
     return (
       <React.Fragment>
         {this.props.installedApps && this.props.installedApps.length > 0 && (
-          <div className='row'>
+          <div className='row' id='installed-apps'>
             <h1>You&apos;ve got apps!</h1>
           </div>
         )}
