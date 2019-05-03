@@ -24,6 +24,7 @@ RUN yarn add node-sass@4.9.4
 
 # Install app dependencies
 COPY package.json /usr/src/app/
+COPY .babelrc /usr/src/app/
 COPY .eslintrc /usr/src/app/
 COPY ./Gruntfile.js /usr/src/app/
 COPY ./package.json /usr/src/app/
