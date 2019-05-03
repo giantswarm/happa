@@ -88,7 +88,10 @@ export function auth0Login(authResult) {
   return function(dispatch) {
     return new Promise(function(resolve) {
       let isAdmin = false;
-      if (authResult.idTokenPayload['https://giantswarm.io/groups'] === 'api-admin') {
+      if (
+        authResult.idTokenPayload['https://giantswarm.io/groups'] ===
+        'api-admin'
+      ) {
         isAdmin = true;
       }
 
