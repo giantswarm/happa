@@ -110,7 +110,11 @@ class ClusterApps extends React.Component {
     },
   ];
 
-  render() {
+  preinstalledApps() {
+    if (this.props.release === undefined) {
+      return {};
+    }
+
     var displayApps = {
       essentials: [],
       management: [],
@@ -141,6 +145,10 @@ class ClusterApps extends React.Component {
       displayApps[appMeta.category].push(appMeta);
     }
 
+    return displayApps;
+  }
+
+  render() {
     return (
       <React.Fragment>
         {this.props.installedApps && this.props.installedApps.length > 0 && (
@@ -166,11 +174,11 @@ class ClusterApps extends React.Component {
             Swarm.
           </p>
           <div className='row'>
-            {Object.keys(displayApps).map(appCategory => {
+            {Object.keys(this.preinstalledApps()).map(appCategory => {
               return (
                 <div className='col-4' key={appCategory}>
                   <h6>{appCategory}</h6>
-                  {displayApps[appCategory].map(app => {
+                  {this.preinstalledApps()[appCategory].map(app => {
                     return (
                       <div className='cluster-apps--app' key={app.name}>
                         <img src={app.logoUrl} alt={app.title + ' icon'} />
