@@ -150,7 +150,7 @@ class SimpleExample extends React.Component {
         </p>
 
           <p>
-            If you are on Linux or macOS you can use the command below to do this.
+            If you are on Linux or Mac OS you can use the command below to do this.
             Windows users willl have to use their favorite text editor and manually
           edit the <code>helloworld-manifest.yaml</code> file.
         </p>
