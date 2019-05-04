@@ -33,7 +33,7 @@ class SimpleExample extends React.Component {
   selectedSedCommand() {
     return `sed -i${this.state.selectedPlatform === 'Mac' ? ' ' : ''}` +
       `"" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" ` +
-      `helloworld-manifest.yaml`
+      `helloworld-manifest.yaml`;
   }
 
   isSelectedPlatform(platform) {
@@ -144,10 +144,16 @@ class SimpleExample extends React.Component {
           </CodeBlock>
 
           <p>
-            Next use <code>sed</code> to replace the placeholder{' '}
+            Next replace the placeholder{' '}
             <code>YOUR_CLUSTER_BASE_DOMAIN</code> with{' '}
             <code>{this.clusterBaseDomain()}</code>.
-          </p>
+        </p>
+
+          <p>
+            If you are on Linux or macOS you can use the command below to do this.
+            Windows users willl have to use their favorite text editor and manually
+          edit the <code>helloworld-manifest.yaml</code> file.
+        </p>
 
           <div className='platform_selector'>
             <ul className='platform_selector--tabs'>
