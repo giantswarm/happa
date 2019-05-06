@@ -31,9 +31,11 @@ class SimpleExample extends React.Component {
   }
 
   selectedSedCommand() {
-    return `sed -i${this.state.selectedPlatform === 'Mac' ? ' ' : ''}` +
+    return (
+      `sed -i${this.state.selectedPlatform === 'Mac' ? ' ' : ''}` +
       `"" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" ` +
-      `helloworld-manifest.yaml`;
+      `helloworld-manifest.yaml`
+    );
   }
 
   isSelectedPlatform(platform) {
@@ -144,16 +146,15 @@ class SimpleExample extends React.Component {
           </CodeBlock>
 
           <p>
-            Next replace the placeholder{' '}
-            <code>YOUR_CLUSTER_BASE_DOMAIN</code> with{' '}
-            <code>{this.clusterBaseDomain()}</code>.
-        </p>
+            Next replace the placeholder <code>YOUR_CLUSTER_BASE_DOMAIN</code>{' '}
+            with <code>{this.clusterBaseDomain()}</code>.
+          </p>
 
           <p>
-            If you are on Linux or Mac OS you can use the command below to do this.
-            Windows users willl have to use their favorite text editor and manually
-          edit the <code>helloworld-manifest.yaml</code> file.
-        </p>
+            If you are on Linux or Mac OS you can use the command below to do
+            this. Windows users willl have to use their favorite text editor and
+            manually edit the <code>helloworld-manifest.yaml</code> file.
+          </p>
 
           <div className='platform_selector'>
             <ul className='platform_selector--tabs'>
@@ -174,9 +175,7 @@ class SimpleExample extends React.Component {
 
             <div className='platform_selector--content'>
               <CodeBlock>
-                <Prompt>
-                  {this.selectedSedCommand()}
-                </Prompt>
+                <Prompt>{this.selectedSedCommand()}</Prompt>
               </CodeBlock>
             </div>
           </div>
