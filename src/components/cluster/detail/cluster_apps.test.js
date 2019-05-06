@@ -23,6 +23,20 @@ it('doesnt render a block for installed apps if there are none', () => {
     </Router>
   );
   expect(clusterApps.find('#installed-apps').exists()).toEqual(false);
+  expect(clusterApps.find('#error-loading-apps').exists()).toEqual(false);
+  expect(clusterApps.find('#no-apps-found').exists()).toEqual(true);
+});
+
+it('renders an error message if there was an error loading apps', () => {
+  const noApps = [];
+  const clusterApps = mount(
+    <Router>
+      <ClusterApps errorLoading={true} />
+    </Router>
+  );
+  expect(clusterApps.find('#error-loading-apps').exists()).toEqual(true);
+  expect(clusterApps.find('#installed-apps').exists()).toEqual(false);
+  expect(clusterApps.find('#no-apps-found').exists()).toEqual(false);
 });
 
 it('renders a block for installed apps if there are some', () => {
@@ -39,4 +53,6 @@ it('renders a block for installed apps if there are some', () => {
     </Router>
   );
   expect(clusterApps.find('#installed-apps').exists()).toEqual(true);
+  expect(clusterApps.find('#error-loading-apps').exists()).toEqual(false);
+  expect(clusterApps.find('#no-apps-found').exists()).toEqual(false);
 });
