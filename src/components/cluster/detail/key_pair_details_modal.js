@@ -8,7 +8,14 @@ import React from 'react';
 
 class KeyPairDetailsModal extends React.Component {
   createDate(date) {
-    return <span>{moment(date).format('D MMM YYYY, HH:mm z')}</span>;
+    return (
+      <span>
+        {moment(date)
+          .utc()
+          .format('D MMM YYYY, HH:mm z')}{' '}
+        &ndash; {relativeDate(date)}
+      </span>
+    );
   }
 
   expireDate(expiry) {
