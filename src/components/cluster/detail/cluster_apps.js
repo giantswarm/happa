@@ -148,46 +148,84 @@ class ClusterApps extends React.Component {
     return displayApps;
   }
 
+  imgError = e => {
+    let imageUrl = e.target.src;
+    var iconErrors = {};
+    iconErrors[imageUrl] = true;
+
+    this.setState({
+      iconErrors: Object.assign({}, this.state.iconErrors, iconErrors),
+    });
+  };
+
   render() {
     return (
       <React.Fragment>
-        {this.props.errorLoading && (
-          <p className='well'>
-            <b>Error Loading Apps:</b>
-            <br />
-            We had some trouble loading the list of apps you&apos;ve installed
-            on this cluster. Please refresh the page to try again.
-          </p>
-        )}
-        <div className='row'>
-          {this.props.installedApps && this.props.installedApps.length > 0 && (
-            <div id='installed-apps'>
-              <h3 className='table-label'>Installed Apps</h3>
-              {this.props.installedApps.map(app => {
-                return (
-                  <div className='installed-apps--app' key={app.metadata.name}>
-                    {app.metadata.name}
-                  </div>
-                );
-              })}
+        <div id='installed-apps'>
+          <h3 className='table-label'>Installed Apps</h3>
+          <div className='row'>
+            {this.props.installedApps && this.props.installedApps.length === 0 && (
+              <p className='well'>
+                <b>No apps installed on this cluster:</b>
+                <br />
+                It&apos;s not yet possible to install an app from Happa. But you
+                can browse the app catalog to get an idea of what you&apos;ll be
+                able to install soon!
+              </p>
+            )}
+
+            {this.props.errorLoading && (
+              <p className='well'>
+                <b>Error Loading Apps:</b>
+                <br />
+                We had some trouble loading the list of apps you&apos;ve
+                installed on this cluster. Please refresh the page to try again.
+              </p>
+            )}
+            {this.props.installedApps && this.props.installedApps.length > 0 && (
+              <React.Fragment>
+                {this.props.installedApps.map(app => {
+                  return (
+                    <div
+                      className='installed-apps--app'
+                      key={app.metadata.name}
+                    >
+                      {app.logoUrl && !this.state.iconErrors[app.logoUrl] && (
+                        <img
+                          src={app.logoUrl}
+                          alt={app.metadata.name + ' icon'}
+                          width='36'
+                          height='36'
+                          onError={this.imgError}
+                        />
+                      )}
+                      {app.metadata.name}
+                      <small>
+                        App Version:{' '}
+                        {app.status.app_version
+                          ? app.status.app_version
+                          : 'n/a'}
+                        &nbsp;
+                      </small>
+                    </div>
+                  );
+                })}
+              </React.Fragment>
+            )}
+
+            <div className='browse-managed-apps'>
+              <NavLink to={`/managed-apps/`}>
+                <Button>Browse Managed Apps</Button>
+              </NavLink>
             </div>
-          )}
-
-          <p>
-            Soon you will be able to install managed apps like monitoring, log
-            storage, and more simply by selecting from our catalog.
-          </p>
-
-          <NavLink to={`/managed-apps/`}>
-            <Button>Browse Managed Apps</Button>
-          </NavLink>
+          </div>
         </div>
 
         <div className='row section cluster-apps'>
-          <h3 className='table-label'>Preinstalled Services</h3>
+          <h3 className='table-label'>Preinstalled Apps</h3>
           <p>
-            These services are preinstalled on your cluster and managed by Giant
-            Swarm.
+            These apps and services are preinstalled on your cluster and managed
+            by Giant Swarm.
           </p>
           <div className='row'>
             {Object.keys(this.preinstalledApps()).map(appCategory => {
