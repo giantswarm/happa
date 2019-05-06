@@ -29,6 +29,7 @@ import UpgradeClusterModal from './upgrade_cluster_modal';
 class ClusterDetailView extends React.Component {
   state = {
     loading: true,
+    errorLoadingApps: false,
   };
 
   constructor(props) {
@@ -52,9 +53,6 @@ class ClusterDetailView extends React.Component {
           return props.clusterActions.clusterLoadDetails(props.cluster.id);
         })
         .then(() => {
-          return props.clusterActions.clusterLoadApps(props.cluster.id);
-        })
-        .then(() => {
           this.setState({
             loading: false,
           });
@@ -62,6 +60,19 @@ class ClusterDetailView extends React.Component {
         .catch(() => {
           this.setState({
             loading: 'failed',
+          });
+        })
+        .then(() => {
+          return props.clusterActions.clusterLoadApps(props.cluster.id);
+        })
+        .then(() => {
+          this.setState({
+            errorLoadingApps: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            errorLoadingApps: true,
           });
         });
     }
@@ -348,6 +359,7 @@ class ClusterDetailView extends React.Component {
                     <Tab eventKey={3} title='Managed Apps'>
                       {this.props.release && (
                         <ClusterApps
+                          errorLoading={this.state.errorLoadingApps}
                           installedApps={this.props.cluster.apps}
                           release={this.props.release}
                         />

@@ -59,7 +59,7 @@ export function clusterLoadApps(clusterId) {
         return apps;
       })
       .catch(error => {
-        console.error('Error loading cluster details:', error);
+        console.error('Error loading cluster apps:', error);
         dispatch({
           type: types.CLUSTER_LOAD_APPS_ERROR,
           clusterId,
@@ -67,7 +67,7 @@ export function clusterLoadApps(clusterId) {
         });
 
         new FlashMessage(
-          'Something went wrong while trying to load cluster details.',
+          'Something went wrong while trying to load apps installed on this cluster.',
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'

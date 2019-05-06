@@ -151,6 +151,14 @@ class ClusterApps extends React.Component {
   render() {
     return (
       <React.Fragment>
+        {this.props.errorLoading && (
+          <p className='well'>
+            <b>Error Loading Apps:</b>
+            <br />
+            We had some trouble loading the list of apps you&apos;ve installed
+            on this cluster. Please refresh the page to try again.
+          </p>
+        )}
         <div className='row'>
           {this.props.installedApps && this.props.installedApps.length > 0 && (
             <div id='installed-apps'>
@@ -206,6 +214,7 @@ class ClusterApps extends React.Component {
 }
 
 ClusterApps.propTypes = {
+  errorLoading: PropTypes.bool,
   installedApps: PropTypes.array,
   release: PropTypes.object,
 };
