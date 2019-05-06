@@ -24,10 +24,7 @@ class CertificateOrgsLabel extends React.Component {
             if (element != '') {
               return (
                 <span
-                  className={
-                    'orglabel ' +
-                    (element === 'system:masters' ? 'isadmin' : '')
-                  }
+                  className={'orglabel'}
                   style={{ backgroundColor: this.calculateColour(element) }}
                   key={element}
                 >
