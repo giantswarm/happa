@@ -54,17 +54,3 @@ it('renders multiple labels in alphabetic order', () => {
       .props().children
   ).toEqual('Zepto');
 });
-
-it('gives system:masters a special isadmin class', () => {
-  const label = shallow(<CertificateOrgsLabel value={'system:masters'} />);
-  expect(label.text()).toEqual('system:masters');
-  expect(label.hasClass('orglabel')).toBe(true);
-  expect(label.hasClass('isadmin')).toBe(true);
-});
-
-it('does not give system:user the special isadmin class', () => {
-  const label = shallow(<CertificateOrgsLabel value={'system:user'} />);
-  expect(label.text()).toEqual('system:user');
-  expect(label.hasClass('orglabel')).toBe(true);
-  expect(label.hasClass('isadmin')).toBe(false);
-});

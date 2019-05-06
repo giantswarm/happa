@@ -7,11 +7,10 @@ import Button from '../../shared/button';
 import CertificateOrgsLabel from './certificate_orgs_label';
 import Copyable from '../../shared/copyable';
 import KeypairCreateModal from './key_pair_create_modal';
+import KeyPairDetailsModal from './key_pair_details_modal';
 import moment from 'moment';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 class ClusterKeyPairs extends React.Component {
   state = {
@@ -27,14 +26,20 @@ class ClusterKeyPairs extends React.Component {
       loading: false,
       template: 'addKeyPair',
     },
+    keyPairDetailsModal: {
+      visible: false,
+      keyPair: null,
+    },
   };
 
-  constructor(props) {
-    super(props);
-  }
+  apiEndpointHostname = '';
 
   componentDidMount() {
     this.loadKeyPairs();
+
+    this.apiEndpointHostname = new URL(
+      this.props.cluster.api_endpoint
+    ).hostname;
   }
 
   loadKeyPairs() {
@@ -67,12 +72,17 @@ class ClusterKeyPairs extends React.Component {
   getKeypairsTableColumnsConfig = () => {
     return [
       {
-        dataField: 'id',
-        text: 'Description / ID',
+        dataField: 'common_name',
+        text: 'Common Name (CN)',
         sort: true,
-        formatter: this.descriptionCellFormatter,
-        style: { maxWidth: '200px' },
-        classes: 'truncate',
+        formatter: this.commonNameFormatter,
+      },
+      {
+        dataField: 'certificate_organizations',
+        text: 'Organization (O)',
+        sort: true,
+        formatter: this.organizationFormatter,
+        classes: 'certificate-orgs-column',
       },
       {
         dataField: 'create_date',
@@ -87,39 +97,13 @@ class ClusterKeyPairs extends React.Component {
         formatter: this.expireDateCellFormatter,
       },
       {
-        dataField: 'common_name',
-        text: 'Common Name (CN)',
-        sort: true,
-        formatter: this.commonNameFormatter,
-        classes: 'truncate',
-      },
-      {
-        dataField: 'certificate_organizations',
-        text: 'Organization (O)',
-        sort: true,
-        formatter: this.organizationFormatter,
-        classes: 'truncate',
+        dataField: 'id',
+        text: '',
+        sort: false,
+        formatter: this.actionsCellFormatter,
       },
     ];
   };
-
-  descriptionCellFormatter(cell, row) {
-    return (
-      <React.Fragment>
-        <OverlayTrigger
-          placement='top'
-          overlay={<Tooltip id='tooltip'>{row.description}</Tooltip>}
-        >
-          <div style={{ overflow: 'hidden' }}>
-            <span>{row.description}</span>
-          </div>
-        </OverlayTrigger>
-        <Copyable copyText={row.id.replace(/:/g, '')}>
-          <small>ID: {row.id.replace(/:/g, '')}</small>
-        </Copyable>
-      </React.Fragment>
-    );
-  }
 
   createdCellFormatter(cell, row) {
     return <small>{relativeDate(row.create_date)}</small>;
@@ -140,13 +124,19 @@ class ClusterKeyPairs extends React.Component {
     );
   }
 
-  commonNameFormatter(cell, row) {
+  /**
+   * Replaces a common suffix in every CN string, returns it as copyable
+   */
+  commonNameFormatter = (cell, row) => {
+    let displayName = row.common_name;
+    displayName = displayName.replace('.' + this.apiEndpointHostname, '...');
+
     return (
       <Copyable copyText={row.common_name}>
-        <small>{row.common_name}</small>
+        <small>{displayName}</small>
       </Copyable>
     );
-  }
+  };
 
   organizationFormatter(cell, row) {
     if (row.certificate_organizations !== '') {
@@ -158,6 +148,30 @@ class ClusterKeyPairs extends React.Component {
     }
     return <span />;
   }
+
+  showKeyPairModal = row => {
+    this.setState({
+      keyPairDetailsModal: {
+        visible: true,
+        keyPair: row,
+      },
+    });
+  };
+
+  hideKeyPairModal = () => {
+    this.setState({
+      keyPairDetailsModal: {
+        visible: false,
+        keyPair: null,
+      },
+    });
+  };
+
+  actionsCellFormatter = (cell, row) => {
+    return (
+      <Button onClick={this.showKeyPairModal.bind(this, row)}>Details</Button>
+    );
+  };
 
   render() {
     return (
@@ -223,6 +237,11 @@ class ClusterKeyPairs extends React.Component {
               user={this.props.user}
               cluster={this.props.cluster}
               actions={this.props.actions}
+            />
+            <KeyPairDetailsModal
+              visible={this.state.keyPairDetailsModal.visible}
+              keyPair={this.state.keyPairDetailsModal.keyPair}
+              onClose={this.hideKeyPairModal}
             />
           </div>
         </div>
