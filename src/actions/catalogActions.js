@@ -34,31 +34,33 @@ export function catalogsLoad() {
 
     var managedAppsApi = new GiantSwarmV4.ManagedAppsApi();
 
-    return managedAppsApi.getAppCatalogs(scheme + ' ' + token).then(catalogs => {
-      let loadCatalogPromises = [];
+    return managedAppsApi
+      .getAppCatalogs(scheme + ' ' + token)
+      .then(catalogs => {
+        let loadCatalogPromises = [];
 
-      var l = catalogs.length;
-      for (var i = 0; i < l; i++) {
-        loadCatalogPromises.push(loadCatalog(catalogs[i]));
-      }
+        var l = catalogs.length;
+        for (var i = 0; i < l; i++) {
+          loadCatalogPromises.push(loadCatalog(catalogs[i]));
+        }
 
-      return Promise.all(loadCatalogPromises)
-        .then(loadedCatalogs => {
-          let catalogs = {};
+        return Promise.all(loadCatalogPromises)
+          .then(loadedCatalogs => {
+            let catalogs = {};
 
-          loadedCatalogs.forEach(catalog => {
-            catalogs[catalog.metadata.name] = catalog;
+            loadedCatalogs.forEach(catalog => {
+              catalogs[catalog.metadata.name] = catalog;
+            });
+
+            dispatch({
+              type: types.CATALOGS_LOAD_SUCCESS,
+              catalogs: catalogs,
+            });
+          })
+          .catch(error => {
+            console.error(error);
+            throw error;
           });
-
-          dispatch({
-            type: types.CATALOGS_LOAD_SUCCESS,
-            catalogs: catalogs,
-          });
-        })
-        .catch(error => {
-          console.error(error);
-          throw error;
-        });
-    });
+      });
   };
 }
