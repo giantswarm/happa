@@ -42,9 +42,6 @@ class Layout extends React.Component {
         .then(() => {
           this.props.dispatch(clustersLoad());
         })
-        .then(() => {
-          this.props.dispatch(clustersLoad());
-        })
         .catch(error => {
           console.error('Error refreshing user info', error);
 
