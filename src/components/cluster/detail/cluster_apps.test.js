@@ -15,11 +15,24 @@ it('renders without crashing', () => {
   );
 });
 
+it('doesnt show the installed apps section at all when showInstalledAppsBlock is false', () => {
+  const noApps = [];
+  const clusterApps = mount(
+    <Router>
+      <ClusterApps showInstalledAppsBlock={false} />
+    </Router>
+  );
+  expect(clusterApps.find('#installed-apps-section').exists()).toEqual(false);
+  expect(clusterApps.find('#installed-apps').exists()).toEqual(false);
+  expect(clusterApps.find('#error-loading-apps').exists()).toEqual(false);
+  expect(clusterApps.find('#no-apps-found').exists()).toEqual(false);
+});
+
 it('doesnt render a block for installed apps if there are none', () => {
   const noApps = [];
   const clusterApps = mount(
     <Router>
-      <ClusterApps installedApps={noApps} />
+      <ClusterApps installedApps={noApps} showInstalledAppsBlock={true} />
     </Router>
   );
   expect(clusterApps.find('#installed-apps').exists()).toEqual(false);
@@ -31,7 +44,7 @@ it('renders an error message if there was an error loading apps', () => {
   const noApps = [];
   const clusterApps = mount(
     <Router>
-      <ClusterApps errorLoading={true} />
+      <ClusterApps errorLoading={true} showInstalledAppsBlock={true} />
     </Router>
   );
   expect(clusterApps.find('#error-loading-apps').exists()).toEqual(true);
@@ -49,7 +62,7 @@ it('renders a block for installed apps if there are some', () => {
   ];
   const clusterApps = mount(
     <Router>
-      <ClusterApps installedApps={someApps} />
+      <ClusterApps installedApps={someApps} showInstalledAppsBlock={true} />
     </Router>
   );
   expect(clusterApps.find('#installed-apps').exists()).toEqual(true);
