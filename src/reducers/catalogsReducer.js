@@ -13,7 +13,7 @@ export default function catalogsReducer(
       return {
         lastUpdated: state.lastUpdated,
         isFetching: true,
-        items: [],
+        items: state.items,
       };
 
     case types.CATALOGS_LOAD_SUCCESS:
