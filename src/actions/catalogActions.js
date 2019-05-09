@@ -3,7 +3,7 @@ import GiantSwarmV4 from 'giantswarm-v4';
 import yaml from 'js-yaml';
 
 // loadCatalog takes a catalog object and tries to load further data.
-function loadCatalog(catalog) {
+function loadCatalogIndex(catalog) {
   return fetch(catalog.spec.storage.URL + 'index.yaml', { mode: 'cors' })
     .then(response => {
       return response.text();
@@ -37,30 +37,57 @@ export function catalogsLoad() {
     return managedAppsApi
       .getAppCatalogs(scheme + ' ' + token)
       .then(catalogs => {
-        let loadCatalogPromises = [];
+        let catalogsDict = {};
 
-        var l = catalogs.length;
-        for (var i = 0; i < l; i++) {
-          loadCatalogPromises.push(loadCatalog(catalogs[i]));
-        }
+        // Swagger generated API client returns weird array objects.
+        // This "Array.from" ensures I have a normal array with map and forEach on it.
+        catalogs = Array.from(catalogs);
 
-        return Promise.all(loadCatalogPromises)
-          .then(loadedCatalogs => {
-            let catalogs = {};
+        catalogs.forEach(catalog => {
+          catalogsDict[catalog.metadata.name] = catalog;
+        });
 
-            loadedCatalogs.forEach(catalog => {
-              catalogs[catalog.metadata.name] = catalog;
-            });
+        dispatch({
+          type: types.CATALOGS_LOAD_SUCCESS,
+          catalogs: catalogsDict,
+        });
 
-            dispatch({
-              type: types.CATALOGS_LOAD_SUCCESS,
-              catalogs: catalogs,
-            });
-          })
-          .catch(error => {
-            console.error(error);
-            throw error;
-          });
+        return catalogsDict;
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch({
+          type: types.CATALOGS_LOAD_ERROR,
+          error: error,
+        });
+        throw error;
+      });
+  };
+}
+
+export function catalogLoadIndex(catalog) {
+  return function(dispatch) {
+    dispatch({
+      type: types.CATALOG_LOAD_INDEX,
+      catalogName: catalog.metadata.name,
+    });
+
+    loadCatalogIndex(catalog)
+      .then(loadedCatalog => {
+        dispatch({
+          type: types.CATALOG_LOAD_INDEX_SUCCESS,
+          catalog: loadedCatalog,
+        });
+      })
+
+      .catch(error => {
+        console.error(error);
+        dispatch({
+          type: types.CATALOG_LOAD_INDEX_ERROR,
+          error: error,
+          catalogName: catalog.metadata.name,
+        });
+        throw error;
       });
   };
 }

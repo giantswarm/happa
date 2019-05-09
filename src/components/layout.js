@@ -1,6 +1,7 @@
 import * as UserActions from '../actions/userActions';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
+import { catalogsLoad } from '../actions/catalogActions';
 import { clustersLoad } from '../actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
@@ -41,6 +42,9 @@ class Layout extends React.Component {
         })
         .then(() => {
           this.props.dispatch(clustersLoad());
+        })
+        .then(() => {
+          this.props.dispatch(catalogsLoad());
         })
         .catch(error => {
           console.error('Error refreshing user info', error);
@@ -87,6 +91,7 @@ class Layout extends React.Component {
               user={this.props.user}
               organizations={this.props.organizations}
               selectedOrganization={this.props.selectedOrganization}
+              showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
               location={this.props.location}
             />
             <Modals />
@@ -121,6 +126,7 @@ Layout.propTypes = {
   firstLoadComplete: PropTypes.bool,
   dispatch: PropTypes.func,
   actions: PropTypes.object,
+  catalogs: PropTypes.object,
 };
 
 function mapStateToProps(state) {
@@ -129,6 +135,7 @@ function mapStateToProps(state) {
     user: state.app.loggedInUser,
     selectedOrganization: state.app.selectedOrganization,
     firstLoadComplete: state.app.firstLoadComplete,
+    catalogs: state.entities.catalogs,
   };
 }
 

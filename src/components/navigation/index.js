@@ -32,9 +32,11 @@ class Navigation extends React.Component {
             <NavLink to='/organizations/' activeClassName='active'>
               Organizations
             </NavLink>
-            <NavLink exact to='/managed-apps/' activeClassName='active'>
-              Managed Apps
-            </NavLink>
+            {this.props.showAppCatalog && (
+              <NavLink exact to='/managed-apps/' activeClassName='active'>
+                Managed Apps
+              </NavLink>
+            )}
             {this.props.user.isAdmin ? (
               <NavLink to='/users/' activeClassName='active'>
                 Users
@@ -166,6 +168,7 @@ class Navigation extends React.Component {
 
 Navigation.propTypes = {
   user: PropTypes.object,
+  showAppCatalog: PropTypes.bool,
   organizations: PropTypes.object,
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,

@@ -1,5 +1,5 @@
 import { Breadcrumb } from 'react-breadcrumbs';
-import { catalogsLoad } from '../../actions/catalogActions';
+import { catalogLoadIndex, catalogsLoad } from '../../actions/catalogActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
 import { Route, Switch } from 'react-router-dom';
@@ -19,27 +19,27 @@ class CatalogIndex extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.catalogs.lastUpdated === 0) {
-      this.props
-        .dispatch(catalogsLoad())
-        .then(() => {
-          this.setState({
-            loading: false,
-          });
-        })
-        .catch(() => {
-          new FlashMessage(
-            'Something went wrong while trying to load the catalogs.',
-            messageType.ERROR,
-            messageTTL.LONG,
-            'Please try again later or contact support: support@giantswarm.io'
-          );
+    this.props
+      .dispatch(catalogsLoad())
+      .then((catalogs) => {
+        Object.keys(catalogs).forEach(catalog => {
+          this.props.dispatch(catalogLoadIndex(catalogs[catalog]));
         });
-    } else {
-      this.setState({
-        loading: false,
+      })
+      .then(() => {
+        this.setState({
+          loading: false,
+        });
+      })
+      .catch((error) => {
+        new FlashMessage(
+          'Something went wrong while trying to load the catalogs.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+        console.error(error);
       });
-    }
   }
 
   render() {
