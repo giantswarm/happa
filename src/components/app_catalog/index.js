@@ -22,9 +22,11 @@ class CatalogIndex extends React.Component {
     this.props
       .dispatch(catalogsLoad())
       .then(catalogs => {
-        Object.keys(catalogs).forEach(catalog => {
-          this.props.dispatch(catalogLoadIndex(catalogs[catalog]));
+        let promises = Object.keys(catalogs).map(catalog => {
+          return this.props.dispatch(catalogLoadIndex(catalogs[catalog]));
         });
+
+        return Promise.all(promises);
       })
       .then(() => {
         this.setState({
