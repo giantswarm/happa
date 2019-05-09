@@ -150,6 +150,50 @@ export default function clusterReducer(
         items: items,
       };
 
+    case types.CLUSTER_LOAD_APPS:
+      items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {
+        isFetchingApps: true,
+      });
+
+      return {
+        lastUpdated: Date.now(),
+        isFetching: false,
+        items: items,
+      };
+
+    case types.CLUSTER_LOAD_APPS_SUCCESS:
+      items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {
+        isFetchingApps: false,
+
+        // For some reason the array that we get back
+        // from the generated js client does not have
+        // .map on it. So I make a new one here.
+        apps: Array(...action.apps),
+      });
+
+      return {
+        lastUpdated: Date.now(),
+        isFetching: false,
+        items: items,
+      };
+
+    case types.CLUSTER_LOAD_APPS_ERROR:
+      items = Object.assign({}, state.items);
+
+      items[action.clusterId] = Object.assign({}, items[action.clusterId], {
+        isFetchingApps: false,
+      });
+
+      return {
+        lastUpdated: Date.now(),
+        isFetching: false,
+        items: items,
+      };
+
     case types.CLUSTER_LOAD_KEY_PAIRS:
       items = Object.assign({}, state.items);
 

@@ -129,6 +129,9 @@ export default rootReducer;
           nodes: [],
           keyPairs: [],
           api_endpoint: 'https://api.ib7pa.k8s.example.gigantic.io',
+          apps: [
+            {}
+          ],
           workers: [
             {
               aws: { instance_type: 'm5.large' },
