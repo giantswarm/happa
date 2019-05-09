@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 import { connect } from 'react-redux';
-=======
->>>>>>> add-catalog
 import { NavLink } from 'react-router-dom';
 import Button from '../../shared/button';
 import PropTypes from 'prop-types';
@@ -251,11 +248,8 @@ class ClusterApps extends React.Component {
 }
 
 ClusterApps.propTypes = {
-<<<<<<< HEAD
-=======
   errorLoading: PropTypes.bool,
   installedApps: PropTypes.array,
->>>>>>> add-catalog
   clusterId: PropTypes.string,
   organizationId: PropTypes.string,
   release: PropTypes.object,
