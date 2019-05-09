@@ -45,6 +45,7 @@ ClusterDetailIndex.propTypes = {
 };
 
 ClusterDetailIndex.propTypes = {
+  catalogs: PropTypes.object,
   clusterActions: PropTypes.object,
   cluster: PropTypes.object,
   clusterId: PropTypes.string,
@@ -96,6 +97,7 @@ function mapStateToProps(state, ownProps) {
   return {
     credentials: state.entities.credentials,
     organizationId: ownProps.match.params.orgId,
+    catalogs: state.entities.catalogs,
     cluster: cluster,
     clusterId: ownProps.match.params.clusterId,
     provider: state.app.info.general.provider,

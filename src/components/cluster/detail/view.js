@@ -359,6 +359,9 @@ class ClusterDetailView extends React.Component {
                     <Tab eventKey={3} title='Managed Apps'>
                       {this.props.release && (
                         <ClusterApps
+                          showInstalledAppsBlock={
+                            Object.keys(this.props.catalogs.items).length > 0
+                          }
                           errorLoading={this.state.errorLoadingApps}
                           installedApps={this.props.cluster.apps}
                           release={this.props.release}
@@ -410,6 +413,7 @@ ClusterDetailView.contextTypes = {
 };
 
 ClusterDetailView.propTypes = {
+  catalogs: PropTypes.object,
   clearInterval: PropTypes.func,
   clusterActions: PropTypes.object,
   cluster: PropTypes.object,
