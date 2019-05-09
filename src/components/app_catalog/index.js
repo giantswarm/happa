@@ -21,7 +21,7 @@ class CatalogIndex extends React.Component {
   componentDidMount() {
     this.props
       .dispatch(catalogsLoad())
-      .then((catalogs) => {
+      .then(catalogs => {
         Object.keys(catalogs).forEach(catalog => {
           this.props.dispatch(catalogLoadIndex(catalogs[catalog]));
         });
@@ -31,7 +31,7 @@ class CatalogIndex extends React.Component {
           loading: false,
         });
       })
-      .catch((error) => {
+      .catch(error => {
         new FlashMessage(
           'Something went wrong while trying to load the catalogs.',
           messageType.ERROR,
