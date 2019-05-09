@@ -45,9 +45,9 @@ export function clusterLoadApps(clusterId) {
       clusterId,
     });
 
-    var managedAppsApi = new GiantSwarmV4.ManagedAppsApi();
+    var appsApi = new GiantSwarmV4.AppsApi();
 
-    return managedAppsApi
+    return appsApi
       .getClusterApps(scheme + ' ' + token, clusterId)
       .then(apps => {
         dispatch({
