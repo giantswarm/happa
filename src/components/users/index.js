@@ -673,10 +673,6 @@ class Users extends React.Component {
   }
 }
 
-Users.contextTypes = {
-  router: PropTypes.object,
-};
-
 Users.propTypes = {
   dispatch: PropTypes.func,
   currentUser: PropTypes.object,

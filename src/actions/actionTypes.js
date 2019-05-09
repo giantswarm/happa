@@ -32,6 +32,16 @@
  * NOUN can also represent the nesting of resources.
  */
 
+// Catalogs - Loading all the catalogs from the k8s api
+export const CATALOGS_LOAD = 'CATALOGS_LOAD';
+export const CATALOGS_LOAD_SUCCESS = 'CATALOGS_LOAD_SUCCESS';
+export const CATALOGS_LOAD_ERROR = 'CATALOGS_LOAD_ERROR';
+
+// Catalog - Loading an individual catalog's index.yaml
+export const CATALOG_LOAD_INDEX = 'CATALOG_LOAD_INDEX';
+export const CATALOG_LOAD_INDEX_SUCCESS = 'CATALOG_LOAD_INDEX_SUCCESS';
+export const CATALOG_LOAD_INDEX_ERROR = 'CATALOG_LOAD_INDEX_ERROR';
+
 // Clusters
 export const CLUSTER_LOAD_DETAILS = 'CLUSTER_LOAD_DETAILS';
 export const CLUSTER_LOAD_DETAILS_SUCCESS = 'CLUSTER_LOAD_DETAILS_SUCCESS';

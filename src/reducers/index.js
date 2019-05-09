@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import app from './appReducer';
+import catalogs from './catalogsReducer';
 import clusters from './clusterReducer';
 import credentials from './credentialReducer';
 import invitations from './invitationReducer';
@@ -10,12 +11,13 @@ import releases from './releaseReducer';
 import users from './userReducer';
 
 const entities = combineReducers({
-  organizations,
+  catalogs,
   clusters,
+  credentials,
+  invitations,
+  organizations,
   releases,
   users,
-  invitations,
-  credentials,
 });
 
 const rootReducer = history =>
@@ -63,6 +65,35 @@ export default rootReducer;
   },
 
   entities: {
+    catalogs: {
+      lastUpdated: 1538746613900,
+      isFetching: false,
+      items: {
+        'sample-catalog': {
+          id: 'sample-catalog',
+          apps: {
+            prometheus: {
+              name: "Prometheus",
+              logoUrl: "",
+              version: "1.0.0",
+              descriptionMarkdown: "",
+            }
+          }
+        },
+        'other-catalog': {
+          id: 'other-catalog',
+          apps: {
+            companyApp: {
+              name: "Company App",
+              logoUrl: "",
+              version: "1.0.0",
+              descriptionMarkdown: "",
+            }
+          }
+        },
+      }
+    },
+
     organizations: {
       lastUpdated: 1538746613900,
       isFetching: false,

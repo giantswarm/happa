@@ -1,6 +1,7 @@
 import * as UserActions from '../actions/userActions';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
+import { catalogsLoad } from '../actions/catalogActions';
 import { clustersLoad } from '../actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
@@ -8,6 +9,7 @@ import { organizationsLoad } from '../actions/organizationActions';
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import AccountSettings from './account_settings';
+import AppCatalog from './app_catalog';
 import DocumentTitle from 'react-document-title';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home';
@@ -42,7 +44,7 @@ class Layout extends React.Component {
           this.props.dispatch(clustersLoad());
         })
         .then(() => {
-          this.props.dispatch(clustersLoad());
+          this.props.dispatch(catalogsLoad());
         })
         .catch(error => {
           console.error('Error refreshing user info', error);
@@ -89,15 +91,18 @@ class Layout extends React.Component {
               user={this.props.user}
               organizations={this.props.organizations}
               selectedOrganization={this.props.selectedOrganization}
+              showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
+              location={this.props.location}
             />
             <Modals />
             <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
               <div className='main col-9'>
                 <Switch>
                   <Route exact path='/'                  component={Home} />
-                  <Route exact path='/users'            component={Users} />                  
+                  <Route       path='/managed-apps'       component={AppCatalog} />
+                  <Route exact path='/users'             component={Users} />
                   <Route       path='/organizations'     component={Organizations} />
-                  <Route exact path='/account-settings' component={AccountSettings} />
+                  <Route exact path='/account-settings'  component={AccountSettings} />
                   <Redirect path='*' to='/' />
                 </Switch>
               </div>
@@ -110,16 +115,18 @@ class Layout extends React.Component {
 }
 
 Layout.propTypes = {
+  location: PropTypes.object,
   children: PropTypes.object,
   routes: PropTypes.array,
   params: PropTypes.object,
+  match: PropTypes.object,
   user: PropTypes.object,
   organizations: PropTypes.object,
   selectedOrganization: PropTypes.string,
   firstLoadComplete: PropTypes.bool,
   dispatch: PropTypes.func,
   actions: PropTypes.object,
-  path: PropTypes.string,
+  catalogs: PropTypes.object,
 };
 
 function mapStateToProps(state) {
@@ -128,7 +135,7 @@ function mapStateToProps(state) {
     user: state.app.loggedInUser,
     selectedOrganization: state.app.selectedOrganization,
     firstLoadComplete: state.app.firstLoadComplete,
-    path: state.router.location.pathname,
+    catalogs: state.entities.catalogs,
   };
 }
 
