@@ -249,6 +249,8 @@ class ClusterApps extends React.Component {
 ClusterApps.propTypes = {
   errorLoading: PropTypes.bool,
   installedApps: PropTypes.array,
+  clusterId: PropTypes.string,
+  organizationId: PropTypes.string,
   release: PropTypes.object,
 };
 
