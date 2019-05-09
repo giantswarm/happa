@@ -72,7 +72,7 @@ export function catalogLoadIndex(catalog) {
       catalogName: catalog.metadata.name,
     });
 
-    loadCatalogIndex(catalog)
+    return loadCatalogIndex(catalog)
       .then(loadedCatalog => {
         dispatch({
           type: types.CATALOG_LOAD_INDEX_SUCCESS,
