@@ -32,6 +32,16 @@
  * NOUN can also represent the nesting of resources.
  */
 
+// Catalogs - Loading all the catalogs from the k8s api
+export const CATALOGS_LOAD = 'CATALOGS_LOAD';
+export const CATALOGS_LOAD_SUCCESS = 'CATALOGS_LOAD_SUCCESS';
+export const CATALOGS_LOAD_ERROR = 'CATALOGS_LOAD_ERROR';
+
+// Catalog - Loading an individual catalog's index.yaml
+export const CATALOG_LOAD_INDEX = 'CATALOG_LOAD_INDEX';
+export const CATALOG_LOAD_INDEX_SUCCESS = 'CATALOG_LOAD_INDEX_SUCCESS';
+export const CATALOG_LOAD_INDEX_ERROR = 'CATALOG_LOAD_INDEX_ERROR';
+
 // Clusters
 export const CLUSTER_LOAD_DETAILS = 'CLUSTER_LOAD_DETAILS';
 export const CLUSTER_LOAD_DETAILS_SUCCESS = 'CLUSTER_LOAD_DETAILS_SUCCESS';
@@ -58,6 +68,11 @@ export const CLUSTER_DELETE_ERROR = 'CLUSTER_DELETE_ERROR';
 export const CLUSTER_PATCH = 'CLUSTER_PATCH';
 export const CLUSTER_PATCH_SUCCESS = 'CLUSTER_PATCH_SUCCESS';
 export const CLUSTER_PATCH_ERROR = 'CLUSTER_PATCH_ERROR';
+
+// Clusters - Apps
+export const CLUSTER_LOAD_APPS = 'CLUSTER_LOAD_APPS';
+export const CLUSTER_LOAD_APPS_SUCCESS = 'CLUSTER_LOAD_APPS_SUCCESS';
+export const CLUSTER_LOAD_APPS_ERROR = 'CLUSTER_LOAD_APPS_ERROR';
 
 // Clusters - Key Pairs
 export const CLUSTER_LOAD_KEY_PAIRS = 'CLUSTER_LOAD_KEY_PAIRS';

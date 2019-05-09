@@ -1,6 +1,6 @@
 {
   "name": "happa",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "description": "",
   "repository": "",
   "private": true,
@@ -19,21 +19,28 @@
     "trailingComma": "es5"
   },
   "jest": {
-    "setupFilesAfterEnv": ["./src/setupTests.js"]
+    "setupFilesAfterEnv": [
+      "./src/setupTests.js"
+    ]
   },
   "dist": "dist",
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
     "auth0-js": "9.10.1",
+    "bluebird": "^3.5.3",
     "bootstrap": "3.4.1",
+    "classnames": "^2.2.5",
     "color-hash": "latest",
     "connected-react-router": "6.3.2",
     "copy-to-clipboard": "3.1.0",
     "deep-diff": "1.0.2",
     "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client.git#master",
+    "history": "^4.7.2",
     "immutable": "3.8.2",
     "js-base64": "2.5.1",
+    "js-yaml": "^3.12.1",
+    "lunr": "^2.3.6",
     "moment": "2.24.0",
     "normalize.css": "8.0.1",
     "noty": "^3.1.4",
@@ -58,6 +65,7 @@
     "redux": "4.0.1",
     "redux-thunk": "2.3.0",
     "semver-compare": "1.0.0",
+    "superagent": "3.8.3",
     "superagent-bluebird-promise": "4.2.0",
     "underscore": "1.9.1",
     "validate.js": "0.12.0"

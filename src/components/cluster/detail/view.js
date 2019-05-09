@@ -29,6 +29,7 @@ import UpgradeClusterModal from './upgrade_cluster_modal';
 class ClusterDetailView extends React.Component {
   state = {
     loading: true,
+    errorLoadingApps: false,
   };
 
   constructor(props) {
@@ -59,6 +60,19 @@ class ClusterDetailView extends React.Component {
         .catch(() => {
           this.setState({
             loading: 'failed',
+          });
+        })
+        .then(() => {
+          return props.clusterActions.clusterLoadApps(props.cluster.id);
+        })
+        .then(() => {
+          this.setState({
+            errorLoadingApps: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            errorLoadingApps: true,
           });
         });
     }
@@ -342,9 +356,16 @@ class ClusterDetailView extends React.Component {
                     <Tab eventKey={2} title='Key Pairs'>
                       <ClusterKeyPairs cluster={this.props.cluster} />
                     </Tab>
-                    <Tab eventKey={3} title='Managed Services'>
+                    <Tab eventKey={3} title='Managed Apps'>
                       {this.props.release && (
-                        <ClusterApps release={this.props.release} />
+                        <ClusterApps
+                          showInstalledAppsBlock={
+                            Object.keys(this.props.catalogs.items).length > 0
+                          }
+                          errorLoading={this.state.errorLoadingApps}
+                          installedApps={this.props.cluster.apps}
+                          release={this.props.release}
+                        />
                       )}
                     </Tab>
                   </Tabs>
@@ -392,6 +413,7 @@ ClusterDetailView.contextTypes = {
 };
 
 ClusterDetailView.propTypes = {
+  catalogs: PropTypes.object,
   clearInterval: PropTypes.func,
   clusterActions: PropTypes.object,
   cluster: PropTypes.object,

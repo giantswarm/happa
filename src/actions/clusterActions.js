@@ -31,6 +31,54 @@ export function clustersLoad() {
 }
 
 /**
+ * Loads apps for a cluster.
+ *
+ * @param {String} clusterId Cluster ID
+ */
+export function clusterLoadApps(clusterId) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.CLUSTER_LOAD_APPS,
+      clusterId,
+    });
+
+    var appsApi = new GiantSwarmV4.AppsApi();
+
+    return appsApi
+      .getClusterApps(scheme + ' ' + token, clusterId)
+      .then(apps => {
+        dispatch({
+          type: types.CLUSTER_LOAD_APPS_SUCCESS,
+          clusterId,
+          apps,
+        });
+
+        return apps;
+      })
+      .catch(error => {
+        console.error('Error loading cluster apps:', error);
+        dispatch({
+          type: types.CLUSTER_LOAD_APPS_ERROR,
+          clusterId,
+          error,
+        });
+
+        new FlashMessage(
+          'Something went wrong while trying to load apps installed on this cluster.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        throw error;
+      });
+  };
+}
+
+/**
  * Loads details for a cluster.
  *
  * @param {String} clusterId Cluster ID
