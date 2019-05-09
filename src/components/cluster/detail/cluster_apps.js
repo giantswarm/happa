@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Button from '../../shared/button';
 import PropTypes from 'prop-types';
@@ -255,7 +254,4 @@ ClusterApps.propTypes = {
   release: PropTypes.object,
 };
 
-export default connect(
-  null,
-  null
-)(ClusterApps);
+export default ClusterApps;
