@@ -378,13 +378,13 @@ class CreateCluster extends React.Component {
               </div>
             </div>
 
-            <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Availability Zones</h3>
-              </div>
-              <div className='col-9'>
-                {this.props.provider === 'aws' ? (
-                  // For now we want to handle cases where older clusters do
+            {this.props.provider === 'aws' ? (
+              <div className='row section'>
+                <div className='col-3'>
+                  <h3 className='table-label'>Availability Zones</h3>
+                </div>
+                <div className='col-9'>
+                  {// For now we want to handle cases where older clusters do
                   // still not support AZ selection. The special handling here
                   // can be removed once all clusters run at least on 6.1.0.
                   //
@@ -417,15 +417,10 @@ class CreateCluster extends React.Component {
                         <NumberPicker value={1} readOnly={true} />
                       </div>
                     </div>
-                  )
-                ) : (
-                  <p>
-                    In this installation it is not possible to use more than one
-                    availability zone for worker nodes.
-                  </p>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
+            ) : null}
 
             {(() => {
               switch (this.props.provider) {
