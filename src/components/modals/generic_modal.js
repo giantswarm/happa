@@ -15,9 +15,13 @@ const GenericModal = props => {
       </BootstrapModal.Header>
       <BootstrapModal.Body>{props.children}</BootstrapModal.Body>
       <BootstrapModal.Footer>
-        <Button bsStyle='link' onClick={props.onClose}>
-          Close
-        </Button>
+        {props.footer ? (
+          props.footer
+        ) : (
+          <Button bsStyle='link' onClick={props.onClose}>
+            Close
+          </Button>
+        )}
       </BootstrapModal.Footer>
     </BootstrapModal>
   );
@@ -25,6 +29,7 @@ const GenericModal = props => {
 
 GenericModal.propTypes = {
   children: PropTypes.node,
+  footer: PropTypes.node,
   onClose: PropTypes.func,
   title: PropTypes.node,
   visible: PropTypes.bool,

@@ -1,17 +1,31 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Button from '../../shared/button';
 import DocumentTitle from 'react-document-title';
+import InstallAppModal from './install_app_modal';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 class AppDetail extends React.Component {
-  state = {};
+  state = {
+    installAppModalVisible: false,
+  };
 
   imgError = () => {
     this.setState({
       imgError: true,
+    });
+  };
+
+  openInstallAppModal = () => {
+    this.setState({
+      installAppModalVisible: true,
+    });
+  };
+
+  closeInstallAppModal = () => {
+    this.setState({
+      installAppModalVisible: false,
     });
   };
 
@@ -93,8 +107,10 @@ class AppDetail extends React.Component {
                 </div>
 
                 <div className='app-detail--install'>
-                  <Button disabled>Install</Button>
-                  <small>Coming soon</small>
+                  <InstallAppModal
+                    visible={this.state.installAppModalVisible}
+                    onClose={this.closeInstallAppModal}
+                  />
                 </div>
               </div>
 
