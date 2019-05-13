@@ -14,13 +14,14 @@ const InstallAppModal = props => {
   const APP_FORM_PAGE = 'APP_FORM_PAGE';
 
   const pages = [CLUSTER_PICKER_PAGE, APP_FORM_PAGE];
-  const [page, setPage] = useState(1);
-  const [visible, setVisible] = useState(true);
+  const [page, setPage] = useState(0);
+  const [visible, setVisible] = useState(false);
   const [clusterID, setClusterID] = useState('');
   const [name, setName] = useState('');
   const [namespace, setNamespace] = useState('');
   const [nameError, setNameError] = useState('');
   const [namespaceError, setNamespaceError] = useState('');
+  const [loading, setLoading] = useState(false);
 
 
   const next = () => {
@@ -94,6 +95,7 @@ const InstallAppModal = props => {
   };
 
   const createApp = () => {
+    setLoading(true);
     props
       .dispatch(
         clusterInstallApp(
@@ -118,7 +120,8 @@ const InstallAppModal = props => {
         );
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
+        setLoading(false);
       });
   };
 
@@ -169,7 +172,7 @@ const InstallAppModal = props => {
                 }
                 footer={
                   <React.Fragment>
-                    <Button bsStyle='primary' onClick={createApp} disabled={anyValidationErrors()}>
+                    <Button bsStyle='primary' onClick={createApp} loading={loading} disabled={anyValidationErrors()}>
                       Install App
                     </Button>
                     <Button bsStyle='link' onClick={onClose}>
