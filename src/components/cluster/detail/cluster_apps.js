@@ -170,9 +170,7 @@ class ClusterApps extends React.Component {
                   <p className='well' id='no-apps-found'>
                     <b>No apps installed on this cluster:</b>
                     <br />
-                    It&apos;s not yet possible to install an app from Happa. But
-                    you can browse the app catalog to get an idea of what
-                    you&apos;ll be able to install soon!
+                    Browse the app catalog below and pick an app to install!
                   </p>
                 )}
 
