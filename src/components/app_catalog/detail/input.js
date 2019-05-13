@@ -36,6 +36,15 @@ const Icon = styled.i({
   marginRight: 5,
 });
 
+const ValidationError = styled.span({
+  fontSize: 12,
+  color: theme.COLORS.yellow1
+});
+
+const Hint = styled.span({
+  fontSize: 12,
+});
+
 const TextInput = props => {
   const onChange = e => {
     if (props.onChange) {
@@ -62,6 +71,9 @@ const TextInput = props => {
           onChange={onChange}
         />
       </InputWrapper>
+      {
+        props.validationError ? <ValidationError><i className='fa fa-warning' /> { props.validationError}</ValidationError> : <Hint>&nbsp;</Hint>
+      }
     </Wrapper>
   );
 };
@@ -71,6 +83,7 @@ TextInput.propTypes = {
   icon: PropTypes.string,
   label: PropTypes.string,
   onChange: PropTypes.func,
+  validationError: PropTypes.string,
   value: PropTypes.string,
 };
 

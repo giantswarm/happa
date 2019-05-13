@@ -23,6 +23,7 @@ const InstallAppForm = props => {
         label='Application Name:'
         description='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
         onChange={updateName}
+        validationError={props.nameError}
         value={props.name}
       />
 
@@ -30,6 +31,7 @@ const InstallAppForm = props => {
         label='Namespace:'
         description='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
         onChange={updateNamespace}
+        validationError={props.namespaceError}
         value={props.namespace}
       />
     </FormWrapper>
@@ -38,7 +40,9 @@ const InstallAppForm = props => {
 
 InstallAppForm.propTypes = {
   name: PropTypes.string,
+  nameError: PropTypes.string,
   namespace: PropTypes.string,
+  namespaceError: PropTypes.string,
   onChangeName: PropTypes.func,
   onChangeNamespace: PropTypes.func,
 };

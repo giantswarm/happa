@@ -8,6 +8,7 @@ export const COLORS = {
   white1: '#FFFFFF',
   white2: '#D7D7D7',
   white3: '#B9C1C8',
+  yellow1: '#ddb03a',
 };
 
 export const BORDER_RADIUS = '4px';

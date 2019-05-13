@@ -14,11 +14,14 @@ const InstallAppModal = props => {
   const APP_FORM_PAGE = 'APP_FORM_PAGE';
 
   const pages = [CLUSTER_PICKER_PAGE, APP_FORM_PAGE];
-  const [page, setPage] = useState(0);
-  const [visible, setVisible] = useState(false);
+  const [page, setPage] = useState(1);
+  const [visible, setVisible] = useState(true);
   const [clusterID, setClusterID] = useState('');
   const [name, setName] = useState('');
   const [namespace, setNamespace] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [namespaceError, setNamespaceError] = useState('');
+
 
   const next = () => {
     if (page < pages.length - 1) {
@@ -32,6 +35,10 @@ const InstallAppModal = props => {
   //   }
   // };
 
+  const maxLength = 253;
+  const validateCharacters = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
+  const validateStartEnd = /^[a-z0-9](.*[a-z0-9])?$/;
+
   const onClose = () => {
     setVisible(false);
   };
@@ -39,13 +46,51 @@ const InstallAppModal = props => {
   const openModal = () => {
     setPage(0);
     setName(props.app.name);
+    setNameError('');
     setNamespace(props.app.name);
+    setNamespaceError('');
     setVisible(true);
   };
 
   const onSelectCluster = clusterID => {
     setClusterID(clusterID);
     next();
+  };
+
+  const updateName = (newName) => {
+    if (namespace === name) {  // If name and namespace are synced up, keep them that way.
+      updateNamespace(newName);
+    }
+    setName(newName);
+
+    setNameError(validate(newName));
+  };
+
+  const updateNamespace = (namespace) => {
+    setNamespace(namespace);
+    setNamespaceError(validate(namespace));
+  };
+
+  const validate = (str) => {
+    if (str.length > maxLength) {
+      return 'must not be longer than 253 characters';
+    }
+
+    if (!str.match(validateStartEnd)) {
+      return 'must start and end with lower case alphanumeric characters';
+    }
+
+    if (!str.match(validateCharacters)) {
+      return 'must consist of lower case alphanumeric characters, \'-\' or \'.\'';
+    }
+
+    return '';
+  };
+
+  const anyValidationErrors = () => {
+    if (namespaceError != '' || nameError != '') {
+      return true;
+    }
   };
 
   const createApp = () => {
@@ -124,7 +169,7 @@ const InstallAppModal = props => {
                 }
                 footer={
                   <React.Fragment>
-                    <Button bsStyle='primary' onClick={createApp}>
+                    <Button bsStyle='primary' onClick={createApp} disabled={anyValidationErrors()}>
                       Install App
                     </Button>
                     <Button bsStyle='link' onClick={onClose}>
@@ -136,8 +181,10 @@ const InstallAppModal = props => {
                 <InstallAppForm
                   name={name}
                   namespace={namespace}
-                  onChangeName={setName}
-                  onChangeNamespace={setNamespace}
+                  nameError={nameError}
+                  namespaceError={namespaceError}
+                  onChangeName={updateName}
+                  onChangeNamespace={updateNamespace}
                 />
               </GenericModal>
             );
