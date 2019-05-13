@@ -206,7 +206,7 @@ class ClusterApps extends React.Component {
                         <small>
                           App Version:{' '}
                           {app.status && app.status.app_version
-                            ? app.status.app_version
+                            ? app.status.version
                             : 'n/a'}
                           &nbsp;
                         </small>
