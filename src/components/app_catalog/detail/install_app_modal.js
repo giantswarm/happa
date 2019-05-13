@@ -15,6 +15,8 @@ const InstallAppModal = props => {
   const [page, setPage] = useState(0);
   const [visible, setVisible] = useState(false);
   const [clusterID, setClusterID] = useState('');
+  const [name, setName] = useState('');
+  const [namespace, setNamespace] = useState('');
 
   const next = () => {
     if (page < pages.length - 1) {
@@ -44,7 +46,9 @@ const InstallAppModal = props => {
 
   const createApp = () => {
     console.log('creating app');
-    console.log(clusterID);
+    console.log('clusterid', clusterID);
+    console.log('name', name);
+    console.log('namespace', namespace);
     onClose();
   };
 
@@ -103,7 +107,7 @@ const InstallAppModal = props => {
                   </React.Fragment>
                 }
               >
-                <InstallAppForm />
+                <InstallAppForm name={name} namespace={namespace} onChangeName={setName} onChangeNamespace={setNamespace}/>
               </GenericModal>
             );
         }

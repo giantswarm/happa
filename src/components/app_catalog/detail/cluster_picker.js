@@ -1,5 +1,6 @@
 import * as theme from '../../../lib/theme';
 import ClusterIDLabel from '../../shared/cluster_id_label';
+import Input from './input';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
@@ -8,28 +9,6 @@ const ClusterPickerWrapper = styled.div({
   display: 'flex',
   flexDirection: 'column',
   height: 400,
-});
-
-const Input = styled.input({
-  backgroundColor: theme.COLORS.shade5,
-  border: '1px solid ' + theme.COLORS.shade6,
-  borderRadius: theme.BORDER_RADIUS,
-  fontSize: 14,
-  lineHeight: 'normal',
-  padding: '8px 10px',
-  width: '100%',
-});
-
-const InputWrapper = styled.div({
-  alignItems: 'center',
-  display: 'flex',
-  marginBottom: 15,
-});
-
-const Icon = styled.i({
-  color: theme.COLORS.white3,
-  fontSize: 24,
-  marginRight: 5,
 });
 
 const ClusterList = styled.div({
@@ -73,10 +52,7 @@ const ClusterPicker = props => {
 
   return (
     <ClusterPickerWrapper>
-      <InputWrapper>
-        <Icon className='fa fa-search' />
-        <Input type='text' />
-      </InputWrapper>
+      <Input icon='search' />
       <ClusterList>
         {props.clusters.map(cluster => {
           return (
