@@ -91,7 +91,13 @@ class AppDetail extends React.Component {
                 </div>
 
                 <div className='app-detail--install'>
-                  <InstallAppModal />
+                  <InstallAppModal
+                    app={{
+                      name: this.props.appVersions[0].name,
+                      version: this.props.appVersions[0].version,
+                      catalog: this.props.repo.metadata.name,
+                    }}
+                  />
                 </div>
               </div>
 

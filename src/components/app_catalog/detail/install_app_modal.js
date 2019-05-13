@@ -1,4 +1,6 @@
+import { clusterInstallApp } from '../../../actions/clusterActions';
 import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import Button from '../../shared/button';
 import ClusterIDLabel from '../../shared/cluster_id_label';
 import ClusterPicker from './cluster_picker';
@@ -36,6 +38,8 @@ const InstallAppModal = props => {
 
   const openModal = () => {
     setPage(0);
+    setName(props.app.name);
+    setNamespace(props.app.name);
     setVisible(true);
   };
 
@@ -45,11 +49,32 @@ const InstallAppModal = props => {
   };
 
   const createApp = () => {
-    console.log('creating app');
-    console.log('clusterid', clusterID);
-    console.log('name', name);
-    console.log('namespace', namespace);
-    onClose();
+    props
+      .dispatch(
+        clusterInstallApp(
+          {
+            name: name,
+            catalog: props.app.catalog,
+            chartName: props.app.name,
+            version: props.app.version,
+            namespace: namespace,
+          },
+          clusterID
+        )
+      )
+      .then(() => {
+        onClose();
+        props.dispatch(
+          push(
+            `/organizations/${
+              props.clusters.find(c => c.id === clusterID).owner
+            }/clusters/${clusterID}/`
+          )
+        );
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   return (
@@ -65,7 +90,7 @@ const InstallAppModal = props => {
                 {...props}
                 visible={visible}
                 onClose={onClose}
-                title={'Install an App: Pick a cluster'}
+                title={`Install ${props.app.name}: Pick a cluster`}
                 footer={
                   <React.Fragment>
                     <Button bsStyle='primary' onClick={next}>
@@ -93,7 +118,8 @@ const InstallAppModal = props => {
                 onClose={onClose}
                 title={
                   <React.Fragment>
-                    Install an App on <ClusterIDLabel clusterID={clusterID} />
+                    {`Install ${props.app.name} on`}{' '}
+                    <ClusterIDLabel clusterID={clusterID} />
                   </React.Fragment>
                 }
                 footer={
@@ -107,7 +133,12 @@ const InstallAppModal = props => {
                   </React.Fragment>
                 }
               >
-                <InstallAppForm name={name} namespace={namespace} onChangeName={setName} onChangeNamespace={setNamespace}/>
+                <InstallAppForm
+                  name={name}
+                  namespace={namespace}
+                  onChangeName={setName}
+                  onChangeNamespace={setNamespace}
+                />
               </GenericModal>
             );
         }
@@ -117,10 +148,9 @@ const InstallAppModal = props => {
 };
 
 InstallAppModal.propTypes = {
-  className: PropTypes.string,
+  app: PropTypes.object,
   clusters: PropTypes.array,
-  onClose: PropTypes.func,
-  visible: PropTypes.bool,
+  dispatch: PropTypes.func,
 };
 
 function mapStateToProps(state) {
@@ -135,4 +165,13 @@ function mapStateToProps(state) {
   return { clusters };
 }
 
-export default connect(mapStateToProps)(InstallAppModal);
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch: dispatch,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(InstallAppModal);

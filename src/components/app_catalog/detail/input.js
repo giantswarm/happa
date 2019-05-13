@@ -6,8 +6,8 @@ import styled from '@emotion/styled';
 const Wrapper = styled.div({
   marginBottom: 15,
   ':last-child': {
-    marginBottom: 0
-  }
+    marginBottom: 0,
+  },
 });
 
 const Text = styled.div({
@@ -37,7 +37,7 @@ const Icon = styled.i({
 });
 
 const TextInput = props => {
-  const onChange = (e) => {
+  const onChange = e => {
     if (props.onChange) {
       props.onChange(e.target.value);
     }
@@ -55,7 +55,12 @@ const TextInput = props => {
       </Text>
       <InputWrapper>
         {props.icon ? <Icon className={'fa fa-' + props.icon} /> : undefined}
-        <Input type='text' id={props.label} value={props.value} onChange={onChange} />
+        <Input
+          type='text'
+          id={props.label}
+          value={props.value}
+          onChange={onChange}
+        />
       </InputWrapper>
     </Wrapper>
   );
@@ -66,7 +71,7 @@ TextInput.propTypes = {
   icon: PropTypes.string,
   label: PropTypes.string,
   onChange: PropTypes.func,
-  value: PropTypes.string
+  value: PropTypes.string,
 };
 
 export default TextInput;

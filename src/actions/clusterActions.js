@@ -79,6 +79,65 @@ export function clusterLoadApps(clusterId) {
 }
 
 /**
+ * Takes an app and a cluster id and tries to install it. Dispatches CLUSTER_INSTALL_APP_SUCCESS
+ * on success or CLUSTER_INSTALL_APP_ERROR on error.
+ *
+ * @param {Object} app App definition object.
+ * @param {Object} clusterID Where to install the app.
+ */
+export function clusterInstallApp(app, clusterID) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.CLUSTER_INSTALL_APP,
+      clusterID,
+      app,
+    });
+
+    var appsApi = new GiantSwarmV4.AppsApi();
+
+    return appsApi
+      .createClusterApp(scheme + ' ' + token, clusterID, app.name, {
+        body: {
+          spec: {
+            catalog: app.catalog,
+            name: app.chartName,
+            namespace: app.namespace,
+            version: app.version,
+          },
+        },
+      })
+      .then(() => {
+        dispatch({
+          type: types.CLUSTER_INSTALL_APP_SUCCESS,
+          clusterID,
+          app,
+        });
+
+        new FlashMessage(
+          `Your app <code>${
+            app.name
+          }</code> is being installed on <code>${clusterID}</code>`,
+          messageType.SUCCESS,
+          messageTTL.MEDIUM
+        );
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch({
+          type: types.CLUSTER_INSTALL_APP_ERROR,
+          clusterID,
+          app,
+          error,
+        });
+        throw error;
+      });
+  };
+}
+
+/**
  * Loads details for a cluster.
  *
  * @param {String} clusterId Cluster ID

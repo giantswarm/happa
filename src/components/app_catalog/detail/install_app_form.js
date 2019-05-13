@@ -8,12 +8,12 @@ const FormWrapper = styled.div({
   flexDirection: 'column',
 });
 
-const InstallAppForm = (props) => {
-  const updateName = (name) => {
+const InstallAppForm = props => {
+  const updateName = name => {
     props.onChangeName(name);
   };
 
-  const updateNamespace = (namespace) => {
+  const updateNamespace = namespace => {
     props.onChangeNamespace(namespace);
   };
 
@@ -40,7 +40,7 @@ InstallAppForm.propTypes = {
   name: PropTypes.string,
   namespace: PropTypes.string,
   onChangeName: PropTypes.func,
-  onChangeNamespace: PropTypes.func
+  onChangeNamespace: PropTypes.func,
 };
 
 export default InstallAppForm;
