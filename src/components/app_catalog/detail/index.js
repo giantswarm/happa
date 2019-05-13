@@ -7,25 +7,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class AppDetail extends React.Component {
-  state = {
-    installAppModalVisible: false,
-  };
-
   imgError = () => {
     this.setState({
       imgError: true,
-    });
-  };
-
-  openInstallAppModal = () => {
-    this.setState({
-      installAppModalVisible: true,
-    });
-  };
-
-  closeInstallAppModal = () => {
-    this.setState({
-      installAppModalVisible: false,
     });
   };
 
@@ -107,10 +91,7 @@ class AppDetail extends React.Component {
                 </div>
 
                 <div className='app-detail--install'>
-                  <InstallAppModal
-                    visible={this.state.installAppModalVisible}
-                    onClose={this.closeInstallAppModal}
-                  />
+                  <InstallAppModal />
                 </div>
               </div>
 
