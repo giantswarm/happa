@@ -42,6 +42,12 @@ export const CATALOG_LOAD_INDEX = 'CATALOG_LOAD_INDEX';
 export const CATALOG_LOAD_INDEX_SUCCESS = 'CATALOG_LOAD_INDEX_SUCCESS';
 export const CATALOG_LOAD_INDEX_ERROR = 'CATALOG_LOAD_INDEX_ERROR';
 
+// Cluster Select
+// This action is for setting a Cluster ID in the state.
+// It is used for example for keeping context when moving from the cluster detail page.
+// To the  app catalog.
+export const CLUSTER_SELECT = 'CLUSTER_SELECT';
+
 // Clusters
 export const CLUSTER_LOAD_DETAILS = 'CLUSTER_LOAD_DETAILS';
 export const CLUSTER_LOAD_DETAILS_SUCCESS = 'CLUSTER_LOAD_DETAILS_SUCCESS';

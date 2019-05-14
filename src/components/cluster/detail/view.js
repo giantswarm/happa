@@ -359,6 +359,8 @@ class ClusterDetailView extends React.Component {
                     <Tab eventKey={3} title='Managed Apps'>
                       {this.props.release && (
                         <ClusterApps
+                          dispatch={this.props.dispatch}
+                          clusterId={this.props.clusterId}
                           showInstalledAppsBlock={
                             Object.keys(this.props.catalogs.items).length > 0
                           }

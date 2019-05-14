@@ -93,10 +93,11 @@ class AppDetail extends React.Component {
                 <div className='app-detail--install'>
                   <InstallAppModal
                     app={{
+                      catalog: this.props.repo.metadata.name,
                       name: this.props.appVersions[0].name,
                       version: this.props.appVersions[0].version,
-                      catalog: this.props.repo.metadata.name,
                     }}
+                    selectedClusterID={this.props.selectedClusterID}
                   />
                 </div>
               </div>
@@ -182,6 +183,7 @@ AppDetail.propTypes = {
   location: PropTypes.object,
   match: PropTypes.object,
   repo: PropTypes.object,
+  selectedClusterID: PropTypes.string,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -200,6 +202,7 @@ function mapStateToProps(state, ownProps) {
     loading: state.entities.catalogs.isFetching,
     appVersions,
     repo: state.entities.catalogs.items[repo],
+    selectedClusterID: state.app.selectedClusterID,
   };
 }
 

@@ -17,7 +17,7 @@ const InstallAppModal = props => {
   const pages = [CLUSTER_PICKER_PAGE, APP_FORM_PAGE];
   const [page, setPage] = useState(0);
   const [visible, setVisible] = useState(false);
-  const [clusterID, setClusterID] = useState('');
+  const [clusterID, setClusterID] = useState(props.selectedClusterID);
   const [name, setName] = useState('');
   const [namespace, setNamespace] = useState('');
   const [nameError, setNameError] = useState('');
@@ -31,11 +31,11 @@ const InstallAppModal = props => {
     }
   };
 
-  // const previous = () => {
-  //   if (page > 0) {
-  //     setPage(page - 1);
-  //   }
-  // };
+  const previous = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
 
   const maxLength = 253;
   const validateCharacters = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
@@ -46,7 +46,11 @@ const InstallAppModal = props => {
   };
 
   const openModal = () => {
-    setPage(0);
+    if (clusterID) {
+      setPage(1);
+    } else {
+      setPage(0);
+    }
     setName(props.app.name);
     setNameError('');
     setNamespace(props.app.name);
@@ -204,6 +208,9 @@ const InstallAppModal = props => {
                     >
                       Install App
                     </Button>
+                    <Button bsStyle='link' onClick={previous}>
+                      Pick a different Cluster
+                    </Button>
                     <Button bsStyle='link' onClick={onClose}>
                       Cancel
                     </Button>
@@ -230,6 +237,7 @@ InstallAppModal.propTypes = {
   app: PropTypes.object,
   clusters: PropTypes.array,
   dispatch: PropTypes.func,
+  selectedClusterID: PropTypes.string,
 };
 
 function mapStateToProps(state) {
