@@ -132,6 +132,13 @@ export function clusterInstallApp(app, clusterID) {
           app,
           error,
         });
+
+        new FlashMessage(
+          'An error occurred when trying to install your app' + error,
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
         throw error;
       });
   };
