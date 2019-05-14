@@ -54,12 +54,6 @@ class Catalogs extends React.Component {
               </div>
             </React.Fragment>
           )}
-          <p className='well'>
-            <b>Preview Limitations:</b>
-            <br />
-            During the preview you&apos;ll only be able to browse apps.
-            Installing apps is coming soon!
-          </p>
         </React.Fragment>
       </DocumentTitle>
     );
