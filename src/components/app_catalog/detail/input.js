@@ -38,7 +38,7 @@ const Icon = styled.i({
 
 const ValidationError = styled.span({
   fontSize: 12,
-  color: theme.COLORS.yellow1
+  color: theme.COLORS.yellow1,
 });
 
 const Hint = styled.span({
@@ -71,9 +71,13 @@ const TextInput = props => {
           onChange={onChange}
         />
       </InputWrapper>
-      {
-        props.validationError ? <ValidationError><i className='fa fa-warning' /> { props.validationError}</ValidationError> : <Hint>&nbsp;</Hint>
-      }
+      {props.validationError ? (
+        <ValidationError>
+          <i className='fa fa-warning' /> {props.validationError}
+        </ValidationError>
+      ) : (
+        <Hint />
+      )}
     </Wrapper>
   );
 };

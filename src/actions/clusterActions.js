@@ -125,7 +125,6 @@ export function clusterInstallApp(app, clusterID) {
         );
       })
       .catch(error => {
-        console.error(error);
         dispatch({
           type: types.CLUSTER_INSTALL_APP_ERROR,
           clusterID,
@@ -133,12 +132,28 @@ export function clusterInstallApp(app, clusterID) {
           error,
         });
 
-        new FlashMessage(
-          'An error occurred when trying to install your app' + error,
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
+        if (error.status === 409) {
+          new FlashMessage(
+            `An app called <code>${
+              app.name
+            }</code> already exists on cluster <code>${clusterID}</code>`,
+            messageType.ERROR,
+            messageTTL.LONG
+          );
+        } else if (error.status === 400) {
+          new FlashMessage(
+            `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
+            messageType.ERROR,
+            messageTTL.LONG
+          );
+        } else {
+          new FlashMessage(
+            `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`,
+            messageType.ERROR,
+            messageTTL.LONG
+          );
+        }
+
         throw error;
       });
   };

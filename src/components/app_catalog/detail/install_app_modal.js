@@ -23,7 +23,6 @@ const InstallAppModal = props => {
   const [namespaceError, setNamespaceError] = useState('');
   const [loading, setLoading] = useState(false);
 
-
   const next = () => {
     if (page < pages.length - 1) {
       setPage(page + 1);
@@ -58,8 +57,9 @@ const InstallAppModal = props => {
     next();
   };
 
-  const updateName = (newName) => {
-    if (namespace === name) {  // If name and namespace are synced up, keep them that way.
+  const updateName = newName => {
+    if (namespace === name) {
+      // If name and namespace are synced up, keep them that way.
       updateNamespace(newName);
     }
     setName(newName);
@@ -67,12 +67,12 @@ const InstallAppModal = props => {
     setNameError(validate(newName));
   };
 
-  const updateNamespace = (namespace) => {
+  const updateNamespace = namespace => {
     setNamespace(namespace);
     setNamespaceError(validate(namespace));
   };
 
-  const validate = (str) => {
+  const validate = str => {
     if (str.length > maxLength) {
       return 'must not be longer than 253 characters';
     }
@@ -119,8 +119,7 @@ const InstallAppModal = props => {
           )
         );
       })
-      .catch(error => {
-        console.error(error);
+      .catch(() => {
         setLoading(false);
       });
   };
@@ -172,7 +171,12 @@ const InstallAppModal = props => {
                 }
                 footer={
                   <React.Fragment>
-                    <Button bsStyle='primary' onClick={createApp} loading={loading} disabled={anyValidationErrors()}>
+                    <Button
+                      bsStyle='primary'
+                      onClick={createApp}
+                      loading={loading}
+                      disabled={anyValidationErrors()}
+                    >
                       Install App
                     </Button>
                     <Button bsStyle='link' onClick={onClose}>
