@@ -162,7 +162,7 @@ class ClusterApps extends React.Component {
   openAppCatalog = () => {
     console.log(this.props.clusterId);
     this.props.dispatch(selectCluster(this.props.clusterId));
-    this.props.dispatch(push('/managed-apps/'));
+    this.props.dispatch(push('/apps/'));
   };
 
   render() {
@@ -220,10 +220,8 @@ class ClusterApps extends React.Component {
                 </div>
               )}
 
-              <div className='browse-managed-apps'>
-                <Button onClick={this.openAppCatalog}>
-                  Browse Managed Apps
-                </Button>
+              <div className='browse-apps'>
+                <Button onClick={this.openAppCatalog}>Browse Apps</Button>
               </div>
             </div>
           </div>

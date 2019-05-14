@@ -6,9 +6,9 @@ import React from 'react';
 class Catalogs extends React.Component {
   render() {
     return (
-      <DocumentTitle title={`Managed Apps | Giant Swarm `}>
+      <DocumentTitle title={`Apps | Giant Swarm `}>
         <React.Fragment>
-          <h1>Managed Apps</h1>
+          <h1>Apps</h1>
           <p>
             Browse and deploy apps from various sources, including managed apps
             covered by SLAs from Giant Swarm.
@@ -29,7 +29,7 @@ class Catalogs extends React.Component {
                   return (
                     <Link
                       key={this.props.catalogs.items[catalogName].metadata.name}
-                      to={'/managed-apps/' + catalogName + '/'}
+                      to={'/apps/' + catalogName + '/'}
                       className='app-catalog--repo'
                     >
                       <div className='app-catalog--card'>

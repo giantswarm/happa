@@ -29,7 +29,7 @@ class AppDetail extends React.Component {
       <Breadcrumb
         data={{
           title: this.props.match.params.repo.toUpperCase(),
-          pathname: '/managed-apps/' + this.props.match.params.repo + '/',
+          pathname: '/apps/' + this.props.match.params.repo + '/',
         }}
       >
         <Breadcrumb
@@ -44,7 +44,7 @@ class AppDetail extends React.Component {
             <div className='app-detail'>
               <Link
                 to={
-                  '/managed-apps/' +
+                  '/apps/' +
                   this.props.match.params.repo +
                   '/?q=' +
                   this.state.q +

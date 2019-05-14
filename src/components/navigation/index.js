@@ -33,8 +33,8 @@ class Navigation extends React.Component {
               Organizations
             </NavLink>
             {this.props.showAppCatalog && (
-              <NavLink exact to='/managed-apps/' activeClassName='active'>
-                Managed Apps
+              <NavLink exact to='/apps/' activeClassName='active'>
+                Apps
               </NavLink>
             )}
             {this.props.user.isAdmin ? (

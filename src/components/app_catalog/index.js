@@ -48,8 +48,8 @@ class CatalogIndex extends React.Component {
     return (
       <Breadcrumb
         data={{
-          title: 'Managed Apps'.toUpperCase(),
-          pathname: '/managed-apps/',
+          title: 'Apps'.toUpperCase(),
+          pathname: '/apps/',
         }}
       >
         <div className='app-catalog'>

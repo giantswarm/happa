@@ -118,9 +118,9 @@ class AppList extends React.Component {
           pathname: this.props.match.url,
         }}
       >
-        <DocumentTitle title={'Managed Apps | Giant Swarm '}>
+        <DocumentTitle title={'Apps | Giant Swarm '}>
           <React.Fragment>
-            <Link to={'/managed-apps/'}>
+            <Link to={'/apps/'}>
               <i className='fa fa-chevron-left' aria-hidden='true' />
               Back to all catalogs
             </Link>
@@ -179,7 +179,7 @@ class AppList extends React.Component {
                               <Link
                                 className='app'
                                 to={
-                                  '/managed-apps/' +
+                                  '/apps/' +
                                   this.props.catalog.metadata.name +
                                   '/' +
                                   appVersions[0].name +
