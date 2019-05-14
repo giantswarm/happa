@@ -175,7 +175,7 @@ class ClusterApps extends React.Component {
               {this.props.installedApps &&
                 this.props.installedApps.length === 0 && (
                   <p className='well' id='no-apps-found'>
-                    <b>No apps installed on this cluster:</b>
+                    <b>No apps installed on this cluster</b>
                     <br />
                     Browse the app catalog below and pick an app to install!
                   </p>
