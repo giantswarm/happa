@@ -76,7 +76,7 @@ const TextInput = props => {
           <i className='fa fa-warning' /> {props.validationError}
         </ValidationError>
       ) : (
-        <Hint />
+        <Hint>{props.hint}</Hint>
       )}
     </Wrapper>
   );
@@ -84,6 +84,7 @@ const TextInput = props => {
 
 TextInput.propTypes = {
   description: PropTypes.string,
+  hint: PropTypes.string,
   icon: PropTypes.string,
   label: PropTypes.string,
   onChange: PropTypes.func,

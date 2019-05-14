@@ -24,6 +24,7 @@ const InstallAppForm = props => {
         description='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
         onChange={updateName}
         validationError={props.nameError}
+        hint={<React.Fragment>&nbsp;</React.Fragment>}
         value={props.name}
       />
 
@@ -32,6 +33,7 @@ const InstallAppForm = props => {
         description='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
         onChange={updateNamespace}
         validationError={props.namespaceError}
+        hint={<React.Fragment>&nbsp;</React.Fragment>}
         value={props.namespace}
       />
     </FormWrapper>
