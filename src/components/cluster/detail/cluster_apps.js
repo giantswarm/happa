@@ -202,11 +202,7 @@ class ClusterApps extends React.Component {
                         )}
                         {app.metadata.name}
                         <small>
-                          App Version:{' '}
-                          {app.status && app.status.app_version
-                            ? app.status.version
-                            : 'n/a'}
-                          &nbsp;
+                          App Version: {app.spec.version}
                         </small>
                       </div>
                     );
