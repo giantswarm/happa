@@ -6,6 +6,7 @@ import ClusterIDLabel from '../../shared/cluster_id_label';
 import ClusterPicker from './cluster_picker';
 import GenericModal from '../../modals/generic_modal';
 import InstallAppForm from './install_app_form';
+import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
@@ -22,6 +23,7 @@ const InstallAppModal = props => {
   const [nameError, setNameError] = useState('');
   const [namespaceError, setNamespaceError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState('');
 
   const next = () => {
     if (page < pages.length - 1) {
@@ -56,6 +58,27 @@ const InstallAppModal = props => {
     setClusterID(clusterID);
     next();
   };
+
+  const lunrIndex = lunr(function() {
+    this.ref('id');
+    this.field('name');
+    this.field('owner');
+    this.field('id');
+
+    props.clusters.forEach(function(cluster) {
+      this.add(cluster);
+    }, this);
+  });
+
+  let clusters = props.clusters;
+
+  if (query !== '') {
+    clusters = lunrIndex
+      .search(query.trim() + ' ' + query.trim() + '*')
+      .map(result => {
+        return props.clusters.find(cluster => cluster.id === result.ref);
+      });
+  }
 
   const updateName = newName => {
     if (namespace === name) {
@@ -151,8 +174,10 @@ const InstallAppModal = props => {
               >
                 <ClusterPicker
                   selectedClusterID={clusterID}
-                  clusters={props.clusters}
+                  clusters={clusters}
+                  onChangeQuery={setQuery}
                   onSelectCluster={onSelectCluster}
+                  query={query}
                 />
               </GenericModal>
             );

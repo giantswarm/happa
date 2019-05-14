@@ -43,6 +43,12 @@ const Organisation = styled.div({
   fontSize: 12,
 });
 
+const NoSearchResults = styled.div({
+  fontSize: 16,
+  textAlign: 'center',
+  marginTop: 50,
+});
+
 const ClusterPicker = props => {
   const onSelectCluster = e => {
     if (props.onSelectCluster) {
@@ -52,8 +58,14 @@ const ClusterPicker = props => {
 
   return (
     <ClusterPickerWrapper>
-      <Input icon='search' />
+      <Input icon='search' onChange={props.onChangeQuery} value={props.query} />
       <ClusterList>
+        {props.clusters.length === 0 && (
+          <NoSearchResults>
+            No clusters matched your search query: &quot;{props.query}&quot;
+          </NoSearchResults>
+        )}
+
         {props.clusters.map(cluster => {
           return (
             <Cluster
@@ -78,6 +90,8 @@ const ClusterPicker = props => {
 ClusterPicker.propTypes = {
   clusters: PropTypes.array,
   selectedClusterID: PropTypes.string,
+  query: PropTypes.string,
+  onChangeQuery: PropTypes.func,
   onSelectCluster: PropTypes.func,
 };
 
