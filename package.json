@@ -27,6 +27,8 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
+    "@emotion/core": "^10.0.10",
+    "@emotion/styled": "^10.0.11",
     "auth0-js": "9.10.1",
     "bluebird": "^3.5.3",
     "bootstrap": "3.4.1",

@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom';
+import { push } from 'connected-react-router';
+import { selectCluster } from '../../../actions/appActions';
 import Button from '../../shared/button';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -158,6 +159,11 @@ class ClusterApps extends React.Component {
     });
   };
 
+  openAppCatalog = () => {
+    this.props.dispatch(selectCluster(this.props.clusterId));
+    this.props.dispatch(push('/apps/'));
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -168,11 +174,9 @@ class ClusterApps extends React.Component {
               {this.props.installedApps &&
                 this.props.installedApps.length === 0 && (
                   <p className='well' id='no-apps-found'>
-                    <b>No apps installed on this cluster:</b>
+                    <b>No apps installed on this cluster</b>
                     <br />
-                    It&apos;s not yet possible to install an app from Happa. But
-                    you can browse the app catalog to get an idea of what
-                    you&apos;ll be able to install soon!
+                    Browse the app catalog below and pick an app to install!
                   </p>
                 )}
 
@@ -205,10 +209,9 @@ class ClusterApps extends React.Component {
                         {app.metadata.name}
                         <small>
                           App Version:{' '}
-                          {app.status && app.status.app_version
-                            ? app.status.version
+                          {app && app.spec && app.spec.version
+                            ? app.spec.version
                             : 'n/a'}
-                          &nbsp;
                         </small>
                       </div>
                     );
@@ -216,10 +219,8 @@ class ClusterApps extends React.Component {
                 </div>
               )}
 
-              <div className='browse-managed-apps'>
-                <NavLink to={`/managed-apps/`}>
-                  <Button>Browse Managed Apps</Button>
-                </NavLink>
+              <div className='browse-apps'>
+                <Button onClick={this.openAppCatalog}>Browse Apps</Button>
               </div>
             </div>
           </div>
@@ -256,6 +257,7 @@ class ClusterApps extends React.Component {
 }
 
 ClusterApps.propTypes = {
+  dispatch: PropTypes.func,
   errorLoading: PropTypes.bool,
   installedApps: PropTypes.array,
   showInstalledAppsBlock: PropTypes.bool,

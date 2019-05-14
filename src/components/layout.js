@@ -99,7 +99,7 @@ class Layout extends React.Component {
               <div className='main col-9'>
                 <Switch>
                   <Route exact path='/'                  component={Home} />
-                  <Route       path='/managed-apps'       component={AppCatalog} />
+                  <Route       path='/apps'       component={AppCatalog} />
                   <Route exact path='/users'             component={Users} />
                   <Route       path='/organizations'     component={Organizations} />
                   <Route exact path='/account-settings'  component={AccountSettings} />

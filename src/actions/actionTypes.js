@@ -42,6 +42,12 @@ export const CATALOG_LOAD_INDEX = 'CATALOG_LOAD_INDEX';
 export const CATALOG_LOAD_INDEX_SUCCESS = 'CATALOG_LOAD_INDEX_SUCCESS';
 export const CATALOG_LOAD_INDEX_ERROR = 'CATALOG_LOAD_INDEX_ERROR';
 
+// Cluster Select
+// This action is for setting a Cluster ID in the state.
+// It is used for example for keeping context when moving from the cluster detail page.
+// To the  app catalog.
+export const CLUSTER_SELECT = 'CLUSTER_SELECT';
+
 // Clusters
 export const CLUSTER_LOAD_DETAILS = 'CLUSTER_LOAD_DETAILS';
 export const CLUSTER_LOAD_DETAILS_SUCCESS = 'CLUSTER_LOAD_DETAILS_SUCCESS';
@@ -73,6 +79,10 @@ export const CLUSTER_PATCH_ERROR = 'CLUSTER_PATCH_ERROR';
 export const CLUSTER_LOAD_APPS = 'CLUSTER_LOAD_APPS';
 export const CLUSTER_LOAD_APPS_SUCCESS = 'CLUSTER_LOAD_APPS_SUCCESS';
 export const CLUSTER_LOAD_APPS_ERROR = 'CLUSTER_LOAD_APPS_ERROR';
+
+export const CLUSTER_INSTALL_APP = 'CLUSTER_INSTALL_APP';
+export const CLUSTER_INSTALL_APP_SUCCESS = 'CLUSTER_INSTALL_APP_SUCCESS';
+export const CLUSTER_INSTALL_APP_ERROR = 'CLUSTER_INSTALL_APP_ERROR';
 
 // Clusters - Key Pairs
 export const CLUSTER_LOAD_KEY_PAIRS = 'CLUSTER_LOAD_KEY_PAIRS';

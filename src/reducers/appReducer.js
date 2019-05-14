@@ -64,6 +64,7 @@ var determineSelectedOrganization = function(
 export default function appReducer(
   state = {
     selectedOrganization: fetchSelectedOrganizationFromStorage(),
+    selectedClusterID: undefined,
     firstLoadComplete: false,
     loggedInUser: fetchUserFromStorage(),
     info: {
@@ -145,6 +146,11 @@ export default function appReducer(
     case types.CLUSTERS_LOAD_SUCCESS:
       return Object.assign({}, state, {
         firstLoadComplete: true,
+      });
+
+    case types.CLUSTER_SELECT:
+      return Object.assign({}, state, {
+        selectedClusterID: action.clusterID,
       });
 
     default:

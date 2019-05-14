@@ -1,14 +1,12 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Button from '../../shared/button';
 import DocumentTitle from 'react-document-title';
+import InstallAppModal from './install_app_modal';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 class AppDetail extends React.Component {
-  state = {};
-
   imgError = () => {
     this.setState({
       imgError: true,
@@ -31,7 +29,7 @@ class AppDetail extends React.Component {
       <Breadcrumb
         data={{
           title: this.props.match.params.repo.toUpperCase(),
-          pathname: '/managed-apps/' + this.props.match.params.repo + '/',
+          pathname: '/apps/' + this.props.match.params.repo + '/',
         }}
       >
         <Breadcrumb
@@ -46,7 +44,7 @@ class AppDetail extends React.Component {
             <div className='app-detail'>
               <Link
                 to={
-                  '/managed-apps/' +
+                  '/apps/' +
                   this.props.match.params.repo +
                   '/?q=' +
                   this.state.q +
@@ -93,8 +91,14 @@ class AppDetail extends React.Component {
                 </div>
 
                 <div className='app-detail--install'>
-                  <Button disabled>Install</Button>
-                  <small>Coming soon</small>
+                  <InstallAppModal
+                    app={{
+                      catalog: this.props.repo.metadata.name,
+                      name: this.props.appVersions[0].name,
+                      version: this.props.appVersions[0].version,
+                    }}
+                    selectedClusterID={this.props.selectedClusterID}
+                  />
                 </div>
               </div>
 
@@ -179,6 +183,7 @@ AppDetail.propTypes = {
   location: PropTypes.object,
   match: PropTypes.object,
   repo: PropTypes.object,
+  selectedClusterID: PropTypes.string,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -197,6 +202,7 @@ function mapStateToProps(state, ownProps) {
     loading: state.entities.catalogs.isFetching,
     appVersions,
     repo: state.entities.catalogs.items[repo],
+    selectedClusterID: state.app.selectedClusterID,
   };
 }
 
