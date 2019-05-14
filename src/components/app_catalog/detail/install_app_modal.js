@@ -82,7 +82,7 @@ const InstallAppModal = props => {
     }
 
     if (!str.match(validateCharacters)) {
-      return 'must consist of lower case alphanumeric characters, \'-\' or \'.\'';
+      return `must consist of lower case alphanumeric characters, '-' or '.'`;
     }
 
     return '';
