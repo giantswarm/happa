@@ -6,10 +6,19 @@ import yaml from 'js-yaml';
 function loadCatalogIndex(catalog) {
   return fetch(catalog.spec.storage.URL + 'index.yaml', { mode: 'cors' })
     .catch(() => {
-      console.log(`Fetch error for ${catalog.spec.storage.URL}, attempting with cors anywhere.`);
-      return fetch('https://cors-anywhere.herokuapp.com/' + catalog.spec.storage.URL + 'index.yaml', { mode: 'cors' });
+      console.log(
+        `Fetch error for ${
+          catalog.spec.storage.URL
+        }, attempting with cors anywhere.`
+      );
+      return fetch(
+        'https://cors-anywhere.herokuapp.com/' +
+          catalog.spec.storage.URL +
+          'index.yaml',
+        { mode: 'cors' }
+      );
     })
-    .catch((error) => {
+    .catch(error => {
       console.error('Fetch error: ', error);
       throw error;
     })
