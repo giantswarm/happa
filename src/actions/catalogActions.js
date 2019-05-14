@@ -5,8 +5,29 @@ import yaml from 'js-yaml';
 // loadCatalog takes a catalog object and tries to load further data.
 function loadCatalogIndex(catalog) {
   return fetch(catalog.spec.storage.URL + 'index.yaml', { mode: 'cors' })
+    .catch(() => {
+      console.log(
+        `Fetch error for ${
+          catalog.spec.storage.URL
+        }, attempting with cors anywhere.`
+      );
+      return fetch(
+        'https://cors-anywhere.herokuapp.com/' +
+          catalog.spec.storage.URL +
+          'index.yaml',
+        { mode: 'cors' }
+      );
+    })
+    .catch(error => {
+      console.error('Fetch error: ', error);
+      throw error;
+    })
     .then(response => {
-      return response.text();
+      if (response.status === 200) {
+        return response.text();
+      } else {
+        throw `Could not fetch index.yaml at ${catalog.spec.storage.URL}`;
+      }
     })
     .then(body => {
       let rawCatalog = yaml.safeLoad(body);
@@ -14,7 +35,7 @@ function loadCatalogIndex(catalog) {
       return catalog;
     })
     .catch(error => {
-      console.error(error);
+      console.error('YAML error: ', error);
       throw error;
     });
 }
