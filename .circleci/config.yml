@@ -49,7 +49,14 @@ jobs:
     - run:
         name: Install CI tools
         command: |
-          wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+          if [ -z "$RELEASE_TOKEN" ]
+          then
+            echo 'Building a forked pull request. So fetching architect without a RELEASE TOKEN. This has the potential to hit rate limits.'
+            wget -q https://github.com/giantswarm/architect/releases/download/no-push-flag/architect
+          else
+            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+          fi
+
           chmod +x ./architect
           go get github.com/giantswarm/lighthouse-keeper && go install github.com/giantswarm/lighthouse-keeper
 
@@ -90,7 +97,16 @@ jobs:
 
     - run:
         name: Build Docker image
-        command: ./architect build
+        command: |
+          if [ -z "$RELEASE_TOKEN" ]
+          then
+            echo 'Building a forked pull request. So building without pushing to our repo.'
+            ./architect build --no-push
+          else
+            ./architect build
+          fi
+
+
 
     - run:
         name: Launch container for tests
