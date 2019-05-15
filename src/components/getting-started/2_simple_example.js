@@ -5,12 +5,14 @@ import { CodeBlock, Output, Prompt } from './codeblock';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
 import { Link } from 'react-router-dom';
+import platform from '../../lib/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 class SimpleExample extends React.Component {
   state = {
     loading: true,
+    selectedPlatform: platform,
     ingressBaseDomain: window.config.ingressBaseDomain,
   };
 
@@ -20,6 +22,24 @@ class SimpleExample extends React.Component {
     } else {
       return `12345.${this.state.ingressBaseDomain}`;
     }
+  }
+
+  selectPlatform(platform) {
+    this.setState({
+      selectedPlatform: platform,
+    });
+  }
+
+  selectedSedCommand() {
+    return (
+      `sed -i${this.state.selectedPlatform === 'Mac' ? ' ' : ''}` +
+      `"" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" ` +
+      `helloworld-manifest.yaml`
+    );
+  }
+
+  isSelectedPlatform(platform) {
+    return this.state.selectedPlatform === platform;
   }
 
   componentDidMount() {
@@ -126,17 +146,39 @@ class SimpleExample extends React.Component {
           </CodeBlock>
 
           <p>
-            Next use <code>sed</code> to replace the placeholder{' '}
-            <code>YOUR_CLUSTER_BASE_DOMAIN</code> with{' '}
-            <code>{this.clusterBaseDomain()}</code>.
+            Next replace the placeholder <code>YOUR_CLUSTER_BASE_DOMAIN</code>{' '}
+            with <code>{this.clusterBaseDomain()}</code>.
           </p>
-          <CodeBlock>
-            <Prompt>
-              {`
-                  sed -i "" "s/YOUR_CLUSTER_BASE_DOMAIN/${this.clusterBaseDomain()}/" helloworld-manifest.yaml
-                `}
-            </Prompt>
-          </CodeBlock>
+
+          <p>
+            If you are on Linux or Mac OS you can use the command below to do
+            this. Windows users willl have to use their favorite text editor and
+            manually edit the <code>helloworld-manifest.yaml</code> file.
+          </p>
+
+          <div className='platform_selector'>
+            <ul className='platform_selector--tabs'>
+              <li
+                className={this.isSelectedPlatform('Linux') ? 'active' : null}
+                onClick={this.selectPlatform.bind(this, 'Linux')}
+              >
+                Linux
+              </li>
+
+              <li
+                className={this.isSelectedPlatform('Mac') ? 'active' : null}
+                onClick={this.selectPlatform.bind(this, 'Mac')}
+              >
+                Mac OS
+              </li>
+            </ul>
+
+            <div className='platform_selector--content'>
+              <CodeBlock>
+                <Prompt>{this.selectedSedCommand()}</Prompt>
+              </CodeBlock>
+            </div>
+          </div>
 
           <p>Finally apply the manifest to your cluster:</p>
           <CodeBlock>

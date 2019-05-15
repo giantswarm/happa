@@ -1,6 +1,9 @@
 Contributors (sorted alphabetically) 
 ============================================
 
+- [Stephan Brauer](https://github.com/ls42)
+  - Discovered our sed command didn't work for linux users and contributed a thorough fix.
+
 - [Felix Oben](https://github.com/foben)
   - Updated our kubectl links to the latest version.
 
