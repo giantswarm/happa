@@ -378,10 +378,6 @@ class SetPassword extends React.Component {
   }
 }
 
-SetPassword.contextTypes = {
-  router: PropTypes.object,
-};
-
 SetPassword.propTypes = {
   actions: PropTypes.object,
   match: PropTypes.object,

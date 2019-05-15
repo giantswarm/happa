@@ -31,6 +31,135 @@ export function clustersLoad() {
 }
 
 /**
+ * Loads apps for a cluster.
+ *
+ * @param {String} clusterId Cluster ID
+ */
+export function clusterLoadApps(clusterId) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.CLUSTER_LOAD_APPS,
+      clusterId,
+    });
+
+    var appsApi = new GiantSwarmV4.AppsApi();
+
+    return appsApi
+      .getClusterApps(scheme + ' ' + token, clusterId)
+      .then(apps => {
+        dispatch({
+          type: types.CLUSTER_LOAD_APPS_SUCCESS,
+          clusterId,
+          apps,
+        });
+
+        return apps;
+      })
+      .catch(error => {
+        console.error('Error loading cluster apps:', error);
+        dispatch({
+          type: types.CLUSTER_LOAD_APPS_ERROR,
+          clusterId,
+          error,
+        });
+
+        new FlashMessage(
+          'Something went wrong while trying to load apps installed on this cluster.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        throw error;
+      });
+  };
+}
+
+/**
+ * Takes an app and a cluster id and tries to install it. Dispatches CLUSTER_INSTALL_APP_SUCCESS
+ * on success or CLUSTER_INSTALL_APP_ERROR on error.
+ *
+ * @param {Object} app App definition object.
+ * @param {Object} clusterID Where to install the app.
+ */
+export function clusterInstallApp(app, clusterID) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.CLUSTER_INSTALL_APP,
+      clusterID,
+      app,
+    });
+
+    var appsApi = new GiantSwarmV4.AppsApi();
+
+    return appsApi
+      .createClusterApp(scheme + ' ' + token, clusterID, app.name, {
+        body: {
+          spec: {
+            catalog: app.catalog,
+            name: app.chartName,
+            namespace: app.namespace,
+            version: app.version,
+          },
+        },
+      })
+      .then(() => {
+        dispatch({
+          type: types.CLUSTER_INSTALL_APP_SUCCESS,
+          clusterID,
+          app,
+        });
+
+        new FlashMessage(
+          `Your app <code>${
+            app.name
+          }</code> is being installed on <code>${clusterID}</code>`,
+          messageType.SUCCESS,
+          messageTTL.MEDIUM
+        );
+      })
+      .catch(error => {
+        dispatch({
+          type: types.CLUSTER_INSTALL_APP_ERROR,
+          clusterID,
+          app,
+          error,
+        });
+
+        if (error.status === 409) {
+          new FlashMessage(
+            `An app called <code>${
+              app.name
+            }</code> already exists on cluster <code>${clusterID}</code>`,
+            messageType.ERROR,
+            messageTTL.LONG
+          );
+        } else if (error.status === 400) {
+          new FlashMessage(
+            `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
+            messageType.ERROR,
+            messageTTL.LONG
+          );
+        } else {
+          new FlashMessage(
+            `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`,
+            messageType.ERROR,
+            messageTTL.LONG
+          );
+        }
+
+        throw error;
+      });
+  };
+}
+
+/**
  * Loads details for a cluster.
  *
  * @param {String} clusterId Cluster ID

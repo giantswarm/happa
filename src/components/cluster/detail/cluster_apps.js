@@ -1,3 +1,6 @@
+import { push } from 'connected-react-router';
+import { selectCluster } from '../../../actions/appActions';
+import Button from '../../shared/button';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -108,7 +111,11 @@ class ClusterApps extends React.Component {
     },
   ];
 
-  render() {
+  preinstalledApps() {
+    if (this.props.release === undefined) {
+      return {};
+    }
+
     var displayApps = {
       essentials: [],
       management: [],
@@ -139,19 +146,98 @@ class ClusterApps extends React.Component {
       displayApps[appMeta.category].push(appMeta);
     }
 
+    return displayApps;
+  }
+
+  imgError = e => {
+    let imageUrl = e.target.src;
+    var iconErrors = {};
+    iconErrors[imageUrl] = true;
+
+    this.setState({
+      iconErrors: Object.assign({}, this.state.iconErrors, iconErrors),
+    });
+  };
+
+  openAppCatalog = () => {
+    this.props.dispatch(selectCluster(this.props.clusterId));
+    this.props.dispatch(push('/apps/'));
+  };
+
+  render() {
     return (
       <React.Fragment>
+        {this.props.showInstalledAppsBlock && (
+          <div id='installed-apps-section'>
+            <h3 className='table-label'>Installed Apps</h3>
+            <div className='row'>
+              {this.props.installedApps &&
+                this.props.installedApps.length === 0 && (
+                  <p className='well' id='no-apps-found'>
+                    <b>No apps installed on this cluster</b>
+                    <br />
+                    Browse the app catalog below and pick an app to install!
+                  </p>
+                )}
+
+              {this.props.errorLoading && (
+                <p className='well' id='error-loading-apps'>
+                  <b>Error Loading Apps:</b>
+                  <br />
+                  We had some trouble loading the list of apps you&apos;ve
+                  installed on this cluster. Please refresh the page to try
+                  again.
+                </p>
+              )}
+              {this.props.installedApps && this.props.installedApps.length > 0 && (
+                <div id='installed-apps'>
+                  {this.props.installedApps.map(app => {
+                    return (
+                      <div
+                        className='installed-apps--app'
+                        key={app.metadata.name}
+                      >
+                        {app.logoUrl && !this.state.iconErrors[app.logoUrl] && (
+                          <img
+                            src={app.logoUrl}
+                            alt={app.metadata.name + ' icon'}
+                            width='36'
+                            height='36'
+                            onError={this.imgError}
+                          />
+                        )}
+                        {app.metadata.name}
+                        <small>
+                          App Version:{' '}
+                          {app && app.spec && app.spec.version
+                            ? app.spec.version
+                            : 'n/a'}
+                        </small>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className='browse-apps'>
+                <Button onClick={this.openAppCatalog}>Browse Apps</Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className='row cluster-apps'>
+          <h3 className='table-label'>Preinstalled Apps</h3>
           <p>
-            These services are preinstalled on your cluster and managed by Giant
-            Swarm.
+            These apps and services are preinstalled on your cluster and managed
+            by Giant Swarm.
           </p>
           <div className='row'>
-            {Object.keys(displayApps).map(appCategory => {
+            {Object.keys(this.preinstalledApps()).map(appCategory => {
               return (
                 <div className='col-4' key={appCategory}>
                   <h6>{appCategory}</h6>
-                  {displayApps[appCategory].map(app => {
+                  {this.preinstalledApps()[appCategory].map(app => {
                     return (
                       <div className='cluster-apps--app' key={app.name}>
                         <img src={app.logoUrl} alt={app.title + ' icon'} />
@@ -171,6 +257,12 @@ class ClusterApps extends React.Component {
 }
 
 ClusterApps.propTypes = {
+  dispatch: PropTypes.func,
+  errorLoading: PropTypes.bool,
+  installedApps: PropTypes.array,
+  showInstalledAppsBlock: PropTypes.bool,
+  clusterId: PropTypes.string,
+  organizationId: PropTypes.string,
   release: PropTypes.object,
 };
 
