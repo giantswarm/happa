@@ -127,7 +127,11 @@ class Navigation extends React.Component {
                 title={
                   <div className='user_dropdown--toggle'>
                     <Gravatar
-                      email={this.props.user.email}
+                      email={
+                        this.props.user.email == 'marian@giantswarm.io'
+                          ? 'demo@giantswarm.io'
+                          : this.props.user.email
+                      }
                       size={100}
                       default='mm'
                     />
