@@ -136,7 +136,11 @@ class Navigation extends React.Component {
                       size={100}
                       default='mm'
                     />
-                    <span>{this.props.user.email}</span>
+                    <span>
+                      {this.props.user.email == 'marian@giantswarm.io'
+                        ? 'demo@giantswarm.io'
+                        : this.props.user.email}
+                    </span>
                   </div>
                 }
                 key='1'
