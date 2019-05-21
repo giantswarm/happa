@@ -37,7 +37,8 @@ class Navigation extends React.Component {
                 Apps
               </NavLink>
             )}
-            {this.props.user.isAdmin ? (
+            {this.props.user.isAdmin &&
+            this.props.user.email !== 'marian@giantswarm.io' ? (
               <NavLink to='/users/' activeClassName='active'>
                 Users
               </NavLink>
