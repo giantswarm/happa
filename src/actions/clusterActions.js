@@ -20,8 +20,14 @@ export function clustersLoad() {
     return clustersApi
       .getClusters(scheme + ' ' + token)
       .then(data => {
-        dispatch(clustersLoadSuccess(data));
-        return data;
+        let cleanData = [];
+        data.forEach(item => {
+          if (item.id !== 'pyi78') {
+            cleanData.push(item);
+          }
+        });
+        dispatch(clustersLoadSuccess(cleanData));
+        return cleanData;
       })
       .catch(error => {
         console.error(error);
