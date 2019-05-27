@@ -101,7 +101,7 @@ jobs:
           if [ -z "$RELEASE_TOKEN" ]
           then
             echo 'Building a forked pull request. So building without pushing to our repo.'
-            ./architect build --no-push
+            ./architect build --push=false
           else
             ./architect build
           fi
