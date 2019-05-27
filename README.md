@@ -204,3 +204,5 @@ Make sure it has has `0755` as the permission.
 ### Publishing a Release
 
 See [docs/Release.md](https://github.com/giantswarm/happa/blob/master/docs/Release.md)
+
+### Testing Forked Builds
