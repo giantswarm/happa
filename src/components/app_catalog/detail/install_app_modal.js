@@ -115,7 +115,7 @@ const InstallAppModal = props => {
           let parsedYAML = yaml.safeLoad(e.target.result);
           setValuesYAML(parsedYAML);
           setValuesYAMLError('');
-        } catch(err) {
+        } catch (err) {
           setValuesYAMLError('Unable to parse valid YAML from this file.');
         }
       };

@@ -64,11 +64,7 @@ const TextInput = props => {
       </Text>
       <InputWrapper>
         {props.icon ? <Icon className={'fa fa-' + props.icon} /> : undefined}
-        <Input
-          type='file'
-          id={props.label}
-          onChange={onChange}
-        />
+        <Input type='file' id={props.label} onChange={onChange} />
       </InputWrapper>
       {props.validationError ? (
         <ValidationError>
