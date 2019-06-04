@@ -9,6 +9,7 @@ import InstallAppForm from './install_app_form';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import yaml from 'js-yaml';
 
 const InstallAppModal = props => {
   const CLUSTER_PICKER_PAGE = 'CLUSTER_PICKER_PAGE';
@@ -18,10 +19,16 @@ const InstallAppModal = props => {
   const [page, setPage] = useState(0);
   const [visible, setVisible] = useState(false);
   const [clusterID, setClusterID] = useState(props.selectedClusterID);
+
   const [name, setName] = useState('');
-  const [namespace, setNamespace] = useState('');
   const [nameError, setNameError] = useState('');
+
+  const [namespace, setNamespace] = useState('');
   const [namespaceError, setNamespaceError] = useState('');
+
+  const [valuesYAML, setValuesYAML] = useState({});
+  const [valuesYAMLError, setValuesYAMLError] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
 
@@ -99,6 +106,24 @@ const InstallAppModal = props => {
     setNamespaceError(validate(namespace));
   };
 
+  const updateValuesYAML = files => {
+    var reader = new FileReader();
+
+    reader.onload = (function() {
+      return function(e) {
+        try {
+          let parsedYAML = yaml.safeLoad(e.target.result);
+          setValuesYAML(parsedYAML);
+          setValuesYAMLError('');
+        } catch(err) {
+          setValuesYAMLError('Unable to parse valid YAML from this file.');
+        }
+      };
+    })(files[0]);
+
+    reader.readAsText(files[0]);
+  };
+
   const validate = str => {
     if (str.length > maxLength) {
       return 'must not be longer than 253 characters';
@@ -116,7 +141,7 @@ const InstallAppModal = props => {
   };
 
   const anyValidationErrors = () => {
-    if (namespaceError != '' || nameError != '') {
+    if (namespaceError != '' || nameError != '' || valuesYAMLError != '') {
       return true;
     }
   };
@@ -219,11 +244,14 @@ const InstallAppModal = props => {
               >
                 <InstallAppForm
                   name={name}
-                  namespace={namespace}
                   nameError={nameError}
+                  namespace={namespace}
                   namespaceError={namespaceError}
+                  valuesYAML={valuesYAML}
+                  valuesYAMLError={valuesYAMLError}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
+                  onChangeValuesYAML={updateValuesYAML}
                 />
               </GenericModal>
             );

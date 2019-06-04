@@ -1,3 +1,4 @@
+import FileInput from './fileinput';
 import Input from './input';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -15,6 +16,10 @@ const InstallAppForm = props => {
 
   const updateNamespace = namespace => {
     props.onChangeNamespace(namespace);
+  };
+
+  const updateValuesYAML = files => {
+    props.onChangeValuesYAML(files);
   };
 
   return (
@@ -36,6 +41,15 @@ const InstallAppForm = props => {
         hint={<React.Fragment>&nbsp;</React.Fragment>}
         value={props.namespace}
       />
+
+      <FileInput
+        label='User Configuration Configmap:'
+        description='Apps can be configured using a values.yaml file. If you have one already, you can upload it here already.'
+        onChange={updateValuesYAML}
+        validationError={props.valuesYAMLError}
+        hint={<React.Fragment>&nbsp;</React.Fragment>}
+        value={props.valuesYAML}
+      />
     </FormWrapper>
   );
 };
@@ -45,8 +59,11 @@ InstallAppForm.propTypes = {
   nameError: PropTypes.string,
   namespace: PropTypes.string,
   namespaceError: PropTypes.string,
+  valuesYAMLError: PropTypes.string,
+  valuesYAML: PropTypes.string,
   onChangeName: PropTypes.func,
   onChangeNamespace: PropTypes.func,
+  onChangeValuesYAML: PropTypes.func,
 };
 
 export default InstallAppForm;
