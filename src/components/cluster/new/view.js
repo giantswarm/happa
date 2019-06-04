@@ -5,6 +5,7 @@ import { push } from 'connected-react-router';
 import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
 import AzureVMSizeSelector from './azure_vm_size_selector.js';
 import Button from '../../shared/button';
+import ClusterCreationDuration from './cluster_creation_duration';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import NodeCountSelector from '../../shared/node_count_selector.js';
@@ -530,10 +531,10 @@ class CreateCluster extends React.Component {
 
             <div className='row section new-cluster--launch'>
               <div className='col-12'>
-                <p>
-                  Create this cluster now and it will be available for you to
-                  use as soon as possible.
-                </p>
+                <ClusterCreationDuration
+                  stats={this.props.clusterCreationStats}
+                />
+
                 {this.state.error ? this.errorState() : undefined}
                 <Button
                   type='button'
@@ -568,6 +569,7 @@ CreateCluster.propTypes = {
   defaultMemorySize: PropTypes.number,
   defaultDiskSize: PropTypes.number,
   match: PropTypes.object,
+  clusterCreationStats: PropTypes.object,
 };
 
 function mapStateToProps(state) {
@@ -575,6 +577,7 @@ function mapStateToProps(state) {
   var maxAvailabilityZones = state.app.info.general.availability_zones.max;
   var selectedOrganization = state.app.selectedOrganization;
   var provider = state.app.info.general.provider;
+  var clusterCreationStats = state.app.info.stats.cluster_creation_duration;
 
   var defaultInstanceType;
   if (
@@ -622,6 +625,7 @@ function mapStateToProps(state) {
     defaultMemorySize,
     defaultDiskSize,
     selectedOrganization,
+    clusterCreationStats,
   };
 }
 
