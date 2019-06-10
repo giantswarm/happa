@@ -134,7 +134,6 @@ class ClusterDetailView extends React.Component {
 
   // Determine whether the current cluster can be upgraded
   canClusterUpgrade() {
-
     // cluster must have a release_version
     if (this.props.cluster.release_version === '') return false;
 
