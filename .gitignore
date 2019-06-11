@@ -1,5 +1,6 @@
 ### SublimeText ###
 *.sublime-workspace
+.vscode
 
 ### OSX ###
 .DS_Store
