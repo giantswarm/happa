@@ -117,9 +117,7 @@ export function clusterInstallApp(app, clusterID) {
         });
 
         new FlashMessage(
-          `Your app <code>${
-            app.name
-          }</code> is being installed on <code>${clusterID}</code>`,
+          `Your app <code>${app.name}</code> is being installed on <code>${clusterID}</code>`,
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );
@@ -134,9 +132,7 @@ export function clusterInstallApp(app, clusterID) {
 
         if (error.status === 409) {
           new FlashMessage(
-            `An app called <code>${
-              app.name
-            }</code> already exists on cluster <code>${clusterID}</code>`,
+            `An app called <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );

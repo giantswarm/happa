@@ -88,9 +88,7 @@ class NextSteps extends React.Component {
 
           <div className='component_slider--nav'>
             <Link
-              to={`/organizations/${this.props.match.params.orgId}/clusters/${
-                this.props.match.params.clusterId
-              }/getting-started/example/`}
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/example/`}
             >
               <button>
                 <i className='fa fa-chevron-left' /> Back

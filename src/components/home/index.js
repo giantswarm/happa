@@ -111,9 +111,7 @@ class Home extends React.Component {
             {this.props.selectedOrganization ? (
               <div className='well launch-new-cluster'>
                 <Link
-                  to={`/organizations/${
-                    this.props.selectedOrganization
-                  }/clusters/new/`}
+                  to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
                 >
                   <Button type='button' bsStyle='primary'>
                     <i className='fa fa-add-circle' /> Launch New Cluster
