@@ -15,23 +15,25 @@ import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import styled from '@emotion/styled';
 
-const ForgotPasswordStyles = styled.div({
-  position: 'relative',
-  margin: 'auto',
-  marginTop: -'40px',
-  width: '33%',
-  zIndex: 1,
-  button: {
-    zIndex: 10,
-  },
-  form: {
-    marginTop: '20px',
-    marginBottom: '40px',
-  },
-  a: {
-    fontSize: '14px',
-  },
-});
+const ForgotPasswordStyles = withTheme(
+  styled.div({
+    position: 'relative',
+    margin: 'auto',
+    marginTop: -'40px',
+    width: '33%',
+    zIndex: 1,
+    button: {
+      zIndex: 10,
+    },
+    form: {
+      marginTop: '20px',
+      marginBottom: '40px',
+    },
+    a: {
+      fontSize: '14px',
+    },
+  })
+);
 
 class ForgotPassword extends React.Component {
   state = {
@@ -193,10 +195,6 @@ class ForgotPassword extends React.Component {
 ForgotPassword.propTypes = {
   actions: PropTypes.object,
   dispatch: PropTypes.func,
-  theme: PropTypes.shape({
-    color: PropTypes.obj,
-    border_radius: PropTypes.string,
-  }),
 };
 
 function mapDispatchToProps(dispatch) {
@@ -209,4 +207,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   null,
   mapDispatchToProps
-)(withTheme(ForgotPassword));
+)(ForgotPassword);
