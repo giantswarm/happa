@@ -22,18 +22,16 @@ const ForgotPasswordStyles = styled.div({
   width: '33%',
   zIndex: 1,
   button: {
-    zIndex: 10
+    zIndex: 10,
   },
   form: {
     marginTop: '20px',
     marginBottom: '40px',
   },
   a: {
-    fontSize: '14px'
+    fontSize: '14px',
   },
 });
-
-
 
 class ForgotPassword extends React.Component {
   state = {
@@ -197,8 +195,8 @@ ForgotPassword.propTypes = {
   dispatch: PropTypes.func,
   theme: PropTypes.shape({
     color: PropTypes.obj,
-    border_radius: PropTypes.string
-  })
+    border_radius: PropTypes.string,
+  }),
 };
 
 function mapDispatchToProps(dispatch) {

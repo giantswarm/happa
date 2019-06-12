@@ -11,10 +11,9 @@ export const COLORS = {
   yellow1: '#ddb03a',
 };
 
-  export const BORDER_RADIUS = '4px';
+export const BORDER_RADIUS = '4px';
 
-
-const theme =  {
+const theme = {
   colors: {
     shade1: '#1E4156',
     shade2: '#224A61',
