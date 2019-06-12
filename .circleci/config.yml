@@ -102,7 +102,7 @@ jobs:
 
           docker run --name happa-branch -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
           sleep 2
-          CURL_OUTPUT=$(curl -s -k https://localhost:8000)
+          CURL_OUTPUT=$(curl -s http://localhost:8000)
           echo "${CURL_OUTPUT}" | grep Happa
 
     - run:
@@ -110,17 +110,15 @@ jobs:
         command: |
           if [ "${CIRCLE_BRANCH}" != "master" ]; then
             lighthouse-keeper audit \
-              --url https://happa-master:8000/ \
+              --url http://happa-master:8000/ \
               --name master \
-              --docker-link happa-master:happa-master \
-              --ignore-certificate-errors
+              --docker-link happa-master:happa-master
           fi
 
           lighthouse-keeper audit \
-            --url https://happa-branch:8000/ \
+            --url http://happa-branch:8000/ \
             --name branch \
-            --docker-link happa-branch:happa-branch \
-            --ignore-certificate-errors
+            --docker-link happa-branch:happa-branch
 
           echo "Lighthouse report for ${CIRCLE_BRANCH}:"
           lighthouse-keeper view --input branch.json
