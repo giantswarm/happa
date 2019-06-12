@@ -149,9 +149,7 @@ class OrganizationDetail extends React.Component {
                   />
                 )}
                 <Link
-                  to={`/organizations/${
-                    this.props.organization.id
-                  }/clusters/new/`}
+                  to={`/organizations/${this.props.organization.id}/clusters/new/`}
                 >
                   <Button bsStyle='default'>
                     <i className='fa fa-add-circle' /> Create Cluster

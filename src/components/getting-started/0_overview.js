@@ -21,9 +21,7 @@ class Overview extends React.Component {
         <ol className='step_selector'>
           <li>
             <Link
-              to={`/organizations/${this.props.match.params.orgId}/clusters/${
-                this.props.match.params.clusterId
-              }/getting-started/configure/`}
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/configure/`}
             >
               <span className='step_selector--step-number'>1.</span>
               <span className='step_selector--step-title'>Get access</span>
@@ -35,9 +33,7 @@ class Overview extends React.Component {
           </li>
           <li>
             <Link
-              to={`/organizations/${this.props.match.params.orgId}/clusters/${
-                this.props.match.params.clusterId
-              }/getting-started/example/`}
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/example/`}
             >
               <span className='step_selector--step-number'>2.</span>
               <span className='step_selector--step-title'>
@@ -51,9 +47,7 @@ class Overview extends React.Component {
           </li>
           <li>
             <Link
-              to={`/organizations/${this.props.match.params.orgId}/clusters/${
-                this.props.match.params.clusterId
-              }/getting-started/next-steps/`}
+              to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/next-steps/`}
             >
               <span className='step_selector--step-number'>3.</span>
               <span className='step_selector--step-title'>Next steps</span>
@@ -67,9 +61,7 @@ class Overview extends React.Component {
 
         <div className='component_slider--nav'>
           <Link
-            to={`/organizations/${this.props.match.params.orgId}/clusters/${
-              this.props.match.params.clusterId
-            }/getting-started/configure/`}
+            to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/configure/`}
           >
             <button className='primary'>
               Start <i className='fa fa-chevron-right' />
