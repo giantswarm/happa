@@ -206,9 +206,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const ForgotPasswordWithTheme = withTheme(ForgotPassword);
-
 export default connect(
   null,
   mapDispatchToProps
-)(ForgotPasswordWithTheme);
+)(withTheme(ForgotPassword));
