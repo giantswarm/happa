@@ -8,32 +8,11 @@ import {
 } from '../../lib/flash_message';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { withTheme } from 'emotion-theming';
 import Button from '../shared/button';
+import LoginFormContainer from '../UI/login_form_container';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import styled from '@emotion/styled';
-
-const ForgotPasswordStyles = withTheme(
-  styled.div({
-    position: 'relative',
-    margin: 'auto',
-    marginTop: -'40px',
-    width: '33%',
-    zIndex: 1,
-    button: {
-      zIndex: 10,
-    },
-    form: {
-      marginTop: '20px',
-      marginBottom: '40px',
-    },
-    a: {
-      fontSize: '14px',
-    },
-  })
-);
 
 class ForgotPassword extends React.Component {
   state = {
@@ -183,9 +162,9 @@ class ForgotPassword extends React.Component {
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
         >
-          <ForgotPasswordStyles>
+          <LoginFormContainer>
             {this.state.tokenRequested ? this.success() : this.form()}
-          </ForgotPasswordStyles>
+          </LoginFormContainer>
         </ReactCSSTransitionGroup>
       </div>
     );
