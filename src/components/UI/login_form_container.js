@@ -23,13 +23,8 @@ const LoginWrapper = withTheme(
   })
 );
 
-
 const LoginFormContainer = props => {
-  return (
-    <LoginWrapper>
-      {props.children}
-    </LoginWrapper>
-  );
+  return <LoginWrapper>{props.children}</LoginWrapper>;
 };
 
 LoginFormContainer.propTypes = {
