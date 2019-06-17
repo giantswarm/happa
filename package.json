@@ -37,7 +37,7 @@
     "connected-react-router": "6.4.0",
     "copy-to-clipboard": "3.2.0",
     "deep-diff": "1.0.2",
-    "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client.git#master",
+    "giantswarm-v4": "git+https://github.com/giantswarm/giantswarm-js-client.git#app-config",
     "history": "^4.7.2",
     "immutable": "3.8.2",
     "js-base64": "2.5.1",
