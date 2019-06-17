@@ -148,6 +148,7 @@ const InstallAppModal = props => {
 
   const createApp = () => {
     setLoading(true);
+
     props
       .dispatch(
         clusterInstallApp(
@@ -157,6 +158,7 @@ const InstallAppModal = props => {
             chartName: props.app.name,
             version: props.app.version,
             namespace: namespace,
+            valuesYAML: valuesYAML,
           },
           clusterID
         )
