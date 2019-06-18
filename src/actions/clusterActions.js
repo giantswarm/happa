@@ -123,7 +123,7 @@ export function clusterInstallApp(app, clusterID) {
           .catch(error => {
             if (error.status === 409) {
               new FlashMessage(
-                `The user configuration configmap for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
+                `The user configuration ConfigMap for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
                 messageType.ERROR,
                 messageTTL.LONG
               );
