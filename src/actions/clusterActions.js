@@ -129,7 +129,7 @@ export function clusterInstallApp(app, clusterID) {
               );
             } else if (error.status === 400) {
               new FlashMessage(
-                `Your user configuration configmap appears to be invalid. Please make sure all fields are filled in correctly.`,
+                `Your user configuration ConfigMap appears to be invalid. Please make sure all fields are filled in correctly.`,
                 messageType.ERROR,
                 messageTTL.LONG
               );
