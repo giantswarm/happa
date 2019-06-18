@@ -135,7 +135,7 @@ export function clusterInstallApp(app, clusterID) {
               );
             } else {
               new FlashMessage(
-                `Something went wrong while trying to create the user configuration configmap. Please try again later or contact support: support@giantswarm.io`,
+                `Something went wrong while trying to create the user configuration ConfigMap. Please try again later or contact support: support@giantswarm.io`,
                 messageType.ERROR,
                 messageTTL.LONG
               );
