@@ -34,9 +34,7 @@ class ConfigKubeCtl extends React.Component {
 
     this.props.actions
       .clusterCreateKeyPair(this.props.cluster.id, {
-        description: `Added by user ${
-          this.props.user.email
-        } using the Happa web interface.`,
+        description: `Added by user ${this.props.user.email} using the Happa web interface.`,
         certificate_organizations: 'system:masters',
       })
       .then(keypair => {

@@ -17,10 +17,6 @@ spec:
       labels:
         app: happa
     spec:
-      volumes:
-        - name: nginx-config
-          configMap:
-            name: happa-nginx-config
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -36,10 +32,6 @@ spec:
       containers:
       - name: happa
         image: quay.io/giantswarm/happa:[[ .SHA ]]
-
-        volumeMounts:
-        - name: nginx-config
-          mountPath: /etc/nginx/config
 
         env:
         - name: AWS_CAPABILITIES_JSON

@@ -134,32 +134,12 @@ class ClusterDetailView extends React.Component {
 
   // Determine whether the current cluster can be upgraded
   canClusterUpgrade() {
-    // the user must be an admin
-    if (this.props.user.isAdmin !== true) {
-      return false;
-    }
-
     // cluster must have a release_version
     if (this.props.cluster.release_version === '') return false;
 
     // a target release to upgrade to must be defined
     if (!!this.props.targetRelease !== true) {
       return false;
-    }
-
-    // cluster release_version must be >= 3 on AWS, >= 1 on Azure, >= 2.7.0 on KVM
-    if (this.props.provider === 'aws') {
-      if (cmp(this.props.cluster.release_version, '3.0.0') === -1) {
-        return false;
-      }
-    } else if (this.props.provider === 'azure') {
-      if (cmp(this.props.cluster.release_version, '1.0.0') === -1) {
-        return false;
-      }
-    } else if (this.props.provider === 'kvm') {
-      if (cmp(this.props.cluster.release_version, '2.7.0') === -1) {
-        return false;
-      }
     }
 
     return true;
@@ -320,16 +300,6 @@ class ClusterDetailView extends React.Component {
                         workerNodesRunning={this.getNumberOfNodes()}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
                       />
-
-                      <div className='row section col-12'>
-                        <h3 className='table-label'>
-                          Key Pairs and Managed Services are gone?
-                        </h3>
-                        <p>
-                          No, we just moved them into separate tabs above to
-                          clean up a bit.
-                        </p>
-                      </div>
 
                       <div className='row section cluster_delete col-12'>
                         <div className='row'>

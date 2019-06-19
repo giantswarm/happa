@@ -7,9 +7,7 @@ function loadCatalogIndex(catalog) {
   return fetch(catalog.spec.storage.URL + 'index.yaml', { mode: 'cors' })
     .catch(() => {
       console.log(
-        `Fetch error for ${
-          catalog.spec.storage.URL
-        }, attempting with cors anywhere.`
+        `Fetch error for ${catalog.spec.storage.URL}, attempting with cors anywhere.`
       );
       return fetch(
         'https://cors-anywhere.herokuapp.com/' +
