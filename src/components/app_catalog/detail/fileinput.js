@@ -48,7 +48,7 @@ const Hint = styled.span({
 const TextInput = props => {
   const onChange = e => {
     if (props.onChange) {
-      props.onChange(e.target.value);
+      props.onChange(e.target.files);
     }
   };
 
@@ -64,12 +64,7 @@ const TextInput = props => {
       </Text>
       <InputWrapper>
         {props.icon ? <Icon className={'fa fa-' + props.icon} /> : undefined}
-        <Input
-          type='text'
-          id={props.label}
-          value={props.value}
-          onChange={onChange}
-        />
+        <Input type='file' id={props.label} onChange={onChange} />
       </InputWrapper>
       {props.validationError ? (
         <ValidationError>
@@ -84,7 +79,7 @@ const TextInput = props => {
 
 TextInput.propTypes = {
   description: PropTypes.string,
-  hint: PropTypes.object,
+  hint: PropTypes.string,
   icon: PropTypes.string,
   label: PropTypes.string,
   onChange: PropTypes.func,

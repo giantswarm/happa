@@ -327,7 +327,7 @@ class ClusterDetailView extends React.Component {
                       <ClusterKeyPairs cluster={this.props.cluster} />
                     </Tab>
                     <Tab eventKey={3} title='Apps'>
-                      {this.props.release && (
+                      {this.props.release ? (
                         <ClusterApps
                           dispatch={this.props.dispatch}
                           clusterId={this.props.clusterId}
@@ -338,6 +338,16 @@ class ClusterDetailView extends React.Component {
                           installedApps={this.props.cluster.apps}
                           release={this.props.release}
                         />
+                      ) : (
+                        <div className='well'>
+                          We had some trouble loading this pane. Please come
+                          back later or contact support in your slack channel or
+                          at{' '}
+                          <a href='mailto:support@giantswarm.io'>
+                            support@giantswarm.io
+                          </a>
+                          .
+                        </div>
                       )}
                     </Tab>
                   </Tabs>

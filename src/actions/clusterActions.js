@@ -82,6 +82,11 @@ export function clusterLoadApps(clusterId) {
  * Takes an app and a cluster id and tries to install it. Dispatches CLUSTER_INSTALL_APP_SUCCESS
  * on success or CLUSTER_INSTALL_APP_ERROR on error.
  *
+ * If the app has valuesYAML set to a non empty object, then
+ * this will first try to create the user config configmap
+ * before creating the app, and it will make sure to fill in the
+ * user_config configmap fields correctly when making the app.
+ *
  * @param {Object} app App definition object.
  * @param {Object} clusterID Where to install the app.
  */
@@ -98,16 +103,90 @@ export function clusterInstallApp(app, clusterID) {
 
     var appsApi = new GiantSwarmV4.AppsApi();
 
-    return appsApi
-      .createClusterApp(scheme + ' ' + token, clusterID, app.name, {
-        body: {
-          spec: {
-            catalog: app.catalog,
-            name: app.chartName,
-            namespace: app.namespace,
-            version: app.version,
-          },
-        },
+    var optionalCreateAppConfiguration = new Promise((resolve, reject) => {
+      if (Object.keys(app.valuesYAML).length !== 0) {
+        // If we have user config that we want to create, then
+        // fire off the call to create it.
+        appsApi
+          .createClusterAppConfig(scheme + ' ' + token, clusterID, app.name, {
+            body: app.valuesYAML,
+          })
+          .then(() => {
+            // The call succeeded, resolve with a configmap
+            // object that the next call can use to associate
+            // the app with the configmap.
+            resolve({
+              name: app.name + '-user-values',
+              namespace: clusterID,
+            });
+          })
+          .catch(error => {
+            if (error.status === 409) {
+              new FlashMessage(
+                `The user configuration ConfigMap for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
+                messageType.ERROR,
+                messageTTL.LONG
+              );
+            } else if (error.status === 400) {
+              new FlashMessage(
+                `Your user configuration ConfigMap appears to be invalid. Please make sure all fields are filled in correctly.`,
+                messageType.ERROR,
+                messageTTL.LONG
+              );
+            } else {
+              new FlashMessage(
+                `Something went wrong while trying to create the user configuration ConfigMap. Please try again later or contact support: support@giantswarm.io`,
+                messageType.ERROR,
+                messageTTL.LONG
+              );
+            }
+
+            reject(error);
+          });
+      } else {
+        // Otherwise, no user config, so don't do anything.
+        resolve({});
+      }
+    });
+
+    return optionalCreateAppConfiguration
+      .then(configmap => {
+        return appsApi
+          .createClusterApp(scheme + ' ' + token, clusterID, app.name, {
+            body: {
+              spec: {
+                catalog: app.catalog,
+                name: app.chartName,
+                namespace: app.namespace,
+                version: app.version,
+                user_config: {
+                  configmap: configmap,
+                },
+              },
+            },
+          })
+          .catch(error => {
+            if (error.status === 409) {
+              new FlashMessage(
+                `An app called <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
+                messageType.ERROR,
+                messageTTL.LONG
+              );
+            } else if (error.status === 400) {
+              new FlashMessage(
+                `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
+                messageType.ERROR,
+                messageTTL.LONG
+              );
+            } else {
+              new FlashMessage(
+                `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`,
+                messageType.ERROR,
+                messageTTL.LONG
+              );
+            }
+            throw error;
+          });
       })
       .then(() => {
         dispatch({
@@ -129,26 +208,6 @@ export function clusterInstallApp(app, clusterID) {
           app,
           error,
         });
-
-        if (error.status === 409) {
-          new FlashMessage(
-            `An app called <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
-            messageType.ERROR,
-            messageTTL.LONG
-          );
-        } else if (error.status === 400) {
-          new FlashMessage(
-            `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
-            messageType.ERROR,
-            messageTTL.LONG
-          );
-        } else {
-          new FlashMessage(
-            `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`,
-            messageType.ERROR,
-            messageTTL.LONG
-          );
-        }
 
         throw error;
       });
