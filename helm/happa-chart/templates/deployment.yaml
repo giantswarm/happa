@@ -29,10 +29,13 @@ spec:
                     values:
                     - happa
               topologyKey: kubernetes.io/hostname
+      serviceAccountName: happa
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
       containers:
       - name: happa
         image: quay.io/giantswarm/happa:[[ .SHA ]]
-
         env:
         - name: AWS_CAPABILITIES_JSON
           valueFrom:
