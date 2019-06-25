@@ -29,10 +29,10 @@ spec:
                     values:
                     - happa
               topologyKey: kubernetes.io/hostname
-      serviceAccountName: happa
+      serviceAccountName: {{ .Values.name }}
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
+        runAsUser: {{ .Values.userID }}
+        runAsGroup: {{ .Values.groupID }}
       containers:
       - name: happa
         image: quay.io/giantswarm/happa:[[ .SHA ]]
