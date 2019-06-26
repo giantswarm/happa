@@ -13,6 +13,11 @@ const theme = {
     red: 'red',
   },
   border_radius: '4px',
+  breakpoints: {
+    small: '540px',
+    med: '825px',
+    large: '1200px',
+  }
 };
 
 export default theme;

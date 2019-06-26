@@ -148,7 +148,7 @@ class AppList extends React.Component {
               </form>
             </h1>
             <div className='app-catalog-overview'>
-              <div className='apps'>
+              <div className='apps' style={{ justifyContent: 'flex-start' }}> {/* TODO make its own UI component? */}
                 {(() => {
                   var apps = this.filterApps(
                     this.props.catalog.apps,
