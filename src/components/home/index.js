@@ -29,7 +29,8 @@ class Home extends React.Component {
   componentDidUpdate(prevProps) {
     // load cluster details if cluster list has changed
     if (
-      !_.isEqual( // inmutability?
+      !_.isEqual(
+        // inmutability?
         this.props.clusters.map(x => x.id),
         prevProps.clusters.map(x => x.id)
       )

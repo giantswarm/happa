@@ -10,7 +10,7 @@ const theme = {
     white2: '#D7D7D7',
     white3: '#B9C1C8',
     yellow1: '#ddb03a',
-    red: 'red'
+    red: 'red',
   },
   border_radius: '4px',
 };
