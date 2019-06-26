@@ -63,7 +63,7 @@ class Overview extends React.Component {
           <Link
             to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/configure/`}
           >
-            <button className='primary'>
+            <button className='primary' type='button'>
               Start <i className='fa fa-chevron-right' />
             </button>
           </Link>
