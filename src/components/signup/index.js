@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
 import { push } from 'connected-react-router';
 import { validatePassword } from '../../lib/password_validation';
-import Button from '../shared/button';
+import Button from '../UI/button';
 import Passage from '../../lib/passage_client';
 import PasswordField from './password_field';
 import PropTypes from 'prop-types';

@@ -1,4 +1,4 @@
-import Button from '../shared/button';
+import Button from '../UI/button';
 import GiantSwarmV4 from 'giantswarm-v4';
 import PropTypes from 'prop-types';
 import React from 'react';

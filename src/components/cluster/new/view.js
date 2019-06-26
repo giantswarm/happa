@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
 import AzureVMSizeSelector from './azure_vm_size_selector.js';
-import Button from '../../shared/button';
+import Button from '../../UI/button';
 import ClusterCreationDuration from './cluster_creation_duration';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';

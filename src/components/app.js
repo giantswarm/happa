@@ -15,7 +15,7 @@ import OAuthCallback from './auth/oauth_callback.js';
 import React from 'react';
 import SetPassword from './forgot_password/set_password';
 import SignUp from './signup/index';
-import theme from '../lib/theme';
+import theme from './UI/theme';
 
 // CSS Imports
 // Keep the blank lines to allow for a certain ordering!

@@ -8,7 +8,7 @@ import {
 } from '../../../lib/flash_message';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../../shared/button';
+import Button from '../../UI/button';
 import diff from 'deep-diff';
 import PropTypes from 'prop-types';
 import React from 'react';

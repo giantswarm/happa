@@ -1,6 +1,6 @@
 import { clusterPatch } from '../../actions/clusterActions';
 import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
-import Button from '../shared/button';
+import Button from '../UI/button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
