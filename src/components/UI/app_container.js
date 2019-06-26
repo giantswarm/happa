@@ -8,23 +8,24 @@ const Wrapper = styled.div(props => ({
   flexShrink: '0',
   margin: '0 20px 20px 0',
   '&:nth-of-type(4n + 0)': {
-    marginRight: '0px'
+    marginRight: '0px',
   },
 
   [`@media only screen and (max-width: ${props.theme.breakpoints.large})`]: {
     width: 'calc(33.333% - 13.333px)',
-    '&:nth-of-type(4n + 0)': { // we are unsetting the 4n + 0 rule one above
-      marginRight: '20px'
+    '&:nth-of-type(4n + 0)': {
+      // we are unsetting the 4n + 0 rule one above
+      marginRight: '20px',
     },
     '&:nth-of-type(3n + 0)': {
-      marginRight: '0px'
-    }
+      marginRight: '0px',
+    },
   },
 
   [`@media only screen and (max-width: ${props.theme.breakpoints.small})`]: {
     width: '100%',
-    marginRight: '0px'
-  }
+    marginRight: '0px',
+  },
 }));
 
 const AppContainer = props => {
@@ -41,8 +42,8 @@ const AppContainer = props => {
           {appVersions[0].icon && !iconErrors[appVersions[0].icon] ? (
             <img src={appVersions[0].icon} onError={imgError} />
           ) : (
-              <h3>{appVersions[0].name}</h3>
-            )}
+            <h3>{appVersions[0].name}</h3>
+          )}
         </div>
         <div className='app-details'>
           <h3>{appVersions[0].name}</h3>
