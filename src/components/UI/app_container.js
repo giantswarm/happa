@@ -13,8 +13,8 @@ const Wrapper = styled.div(props => ({
 
   [`@media only screen and (max-width: ${props.theme.breakpoints.large})`]: {
     width: 'calc(33.333% - 13.333px)',
+    // we are unsetting the 4n + 0 rule one above
     '&:nth-of-type(4n + 0)': {
-      // we are unsetting the 4n + 0 rule one above
       marginRight: '20px',
     },
     '&:nth-of-type(3n + 0)': {
@@ -30,24 +30,25 @@ const Wrapper = styled.div(props => ({
 
 const AppContainer = props => {
   const { appVersions, catalog, searchQuery, iconErrors, imgError } = props;
+  const { icon, name, repoName, version } = appVersions[0];
   const to = `/apps/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
   return (
     <Wrapper>
       <Link className='app' to={to}>
-        {appVersions[0].repoName === 'managed' && ( // This is always false. Is this ok?
+        {repoName === 'managed' && ( // This is always false. Is this ok?
           <div className='badge'>MANAGED</div>
         )}
         <div className='app-icon'>
-          {appVersions[0].icon && !iconErrors[appVersions[0].icon] ? (
-            <img src={appVersions[0].icon} onError={imgError} />
+          {icon && !iconErrors[icon] ? (
+            <img src={icon} onError={imgError} />
           ) : (
-            <h3>{appVersions[0].name}</h3>
-          )}
+              <h3>{name}</h3>
+            )}
         </div>
         <div className='app-details'>
-          <h3>{appVersions[0].name}</h3>
-          <span className='app-version'>{appVersions[0].version}</span>
+          <h3>{name}</h3>
+          <span className='app-version'>{version}</span>
         </div>
       </Link>
     </Wrapper>
