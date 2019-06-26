@@ -2,6 +2,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { replace } from 'connected-react-router';
+import AppContainer from '../../UI/app_container';
 import DocumentTitle from 'react-document-title';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';
@@ -22,13 +23,13 @@ class AppList extends React.Component {
       appVersions => appVersions[0]
     );
 
-    this.index = lunr(function() {
+    this.index = lunr(function () {
       this.ref('name');
       this.field('name');
       this.field('description');
       this.field('keywords');
 
-      appsArray.forEach(function(app) {
+      appsArray.forEach(function (app) {
         this.add(app);
       }, this);
     });
@@ -141,8 +142,8 @@ class AppList extends React.Component {
                       <i className='fa fa-close' />
                     </a>
                   ) : (
-                    undefined
-                  )}
+                      undefined
+                    )}
                 </div>
               </form>
             </h1>
@@ -164,56 +165,19 @@ class AppList extends React.Component {
                     return (
                       <React.Fragment>
                         {apps.map(appVersions => {
+                          const key = `${appVersions[0].repoName}/${appVersions[0].name}`;
                           return (
-                            <div
-                              className='app-container'
-                              key={
-                                appVersions[0].repoName +
-                                '/' +
-                                appVersions[0].name
-                              }
+                            <AppContainer
+                              key={key}
                               ref={ref =>
                                 (this.appRefs[appVersions[0].name] = ref)
                               }
-                            >
-                              <Link
-                                className='app'
-                                to={
-                                  '/apps/' +
-                                  this.props.catalog.metadata.name +
-                                  '/' +
-                                  appVersions[0].name +
-                                  '?q=' +
-                                  this.state.searchQuery
-                                }
-                              >
-                                {appVersions[0].repoName === 'managed' ? (
-                                  <div className='badge'>MANAGED</div>
-                                ) : (
-                                  undefined
-                                )}
-
-                                <div className='app-icon'>
-                                  {appVersions[0].icon &&
-                                  !this.state.iconErrors[
-                                    appVersions[0].icon
-                                  ] ? (
-                                    <img
-                                      src={appVersions[0].icon}
-                                      onError={this.imgError}
-                                    />
-                                  ) : (
-                                    <h3>{appVersions[0].name}</h3>
-                                  )}
-                                </div>
-                                <div className='app-details'>
-                                  <h3>{appVersions[0].name}</h3>
-                                  <span className='app-version'>
-                                    {appVersions[0].version}
-                                  </span>
-                                </div>
-                              </Link>
-                            </div>
+                              appVersions={appVersions}
+                              catalog={this.props.catalog}
+                              searchQuery={this.state.searchQuery}
+                              iconErrors={this.state.iconErrors}
+                              imgError={this.imgError}
+                            />
                           );
                         })}
                         <div className='app-flex-fix' />
