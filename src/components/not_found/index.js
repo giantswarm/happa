@@ -1,7 +1,5 @@
-'use strict';
-
-import React from 'react';
 import { Link } from 'react-router-dom';
+import React from 'react';
 
 class NotFound extends React.Component {
   render() {
@@ -27,8 +25,8 @@ class NotFound extends React.Component {
           Twitter:{' '}
           <a
             href='https://www.twitter.com/giantswarm'
-            target='_blank'
             rel='noopener noreferrer'
+            target='_blank'
           >
             @giantswarm
           </a>

@@ -121,25 +121,25 @@ class ForgotPassword extends React.Component {
           Enter the email you used to sign-up and submit the form. We&apos;ll
           send you a link you can use to set a new password.
         </p>
-        <form onSubmit={this.submit} noValidate='novalidate'>
+        <form noValidate='novalidate' onSubmit={this.submit}>
           <div className='textfield'>
             <label>Email</label>
             <input
-              value={this.state.email}
-              type='text'
+              autoFocus
               id='email'
+              onChange={this.updateEmail}
               ref={i => {
                 this.email = i;
               }}
-              onChange={this.updateEmail}
-              autoFocus
+              type='text'
+              value={this.state.email}
             />
           </div>
           <Button
-            type='submit'
             bsStyle='primary'
             loading={this.state.submitting}
             onClick={this.submit}
+            type='submit'
           >
             {this.state.submitting ? 'Submitting ...' : 'Submit'}
           </Button>
@@ -155,11 +155,11 @@ class ForgotPassword extends React.Component {
         <div className='login_form--mask' />
 
         <ReactCSSTransitionGroup
-          transitionName={`login_form--transition`}
           transitionAppear={true}
           transitionAppearTimeout={200}
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
+          transitionName={`login_form--transition`}
         >
           <div className='login_form--container col-4'>
             {this.state.tokenRequested ? this.success() : this.form()}

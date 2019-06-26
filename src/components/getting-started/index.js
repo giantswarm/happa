@@ -26,24 +26,24 @@ class GettingStarted extends React.Component {
           <div>
             <Switch>
               <Route
+                component={Page0_Overview}
                 exact
                 path='/organizations/:orgId/clusters/:clusterId/getting-started/'
-                component={Page0_Overview}
               />
               <Route
+                component={Page1_ConfigureKubeCTL}
                 exact
                 path='/organizations/:orgId/clusters/:clusterId/getting-started/configure/'
-                component={Page1_ConfigureKubeCTL}
               />
               <Route
+                component={Page2_SimpleExample}
                 exact
                 path='/organizations/:orgId/clusters/:clusterId/getting-started/example/'
-                component={Page2_SimpleExample}
               />
               <Route
+                component={Page3_NextSteps}
                 exact
                 path='/organizations/:orgId/clusters/:clusterId/getting-started/next-steps/'
-                component={Page3_NextSteps}
               />
               <Redirect
                 path='*'

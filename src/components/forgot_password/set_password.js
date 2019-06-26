@@ -243,39 +243,39 @@ class SetPassword extends React.Component {
 
           <div className='textfield'>
             <PasswordField
+              autofocus
+              label='New password'
+              onChange={this.passwordEditingCompleted}
+              onStartTyping={this.passwordEditingStarted}
               ref={p => {
                 this.password = p;
               }}
-              label='New password'
-              onStartTyping={this.passwordEditingStarted}
-              onChange={this.passwordEditingCompleted}
-              autofocus
             />
           </div>
 
           <div className='textfield'>
             <PasswordField
+              label='Password, once again'
+              onChange={this.passwordConfirmationEditingCompleted}
+              onStartTyping={this.passwordConfirmationEditingStarted}
               ref={p => {
                 this.passwordConfirmation = p;
               }}
-              label='Password, once again'
-              onStartTyping={this.passwordConfirmationEditingStarted}
-              onChange={this.passwordConfirmationEditingCompleted}
             />
           </div>
           <div className='progress_button--container'>
             <button
-              type='submit'
               className='btn primary'
               disabled={this.state.submitting || !this.formIsValid()}
               onClick={this.submit}
+              type='submit'
             >
               {this.state.submitting ? 'Submitting ...' : 'Submit'}
             </button>
             <ReactCSSTransitionGroup
-              transitionName='slide-right'
               transitionEnterTimeout={200}
               transitionLeaveTimeout={200}
+              transitionName='slide-right'
             >
               {this.state.submitting ? (
                 <img className='loader' src='/images/loader_oval_light.svg' />
@@ -318,30 +318,30 @@ class SetPassword extends React.Component {
         <div className='textfield'>
           <label>Email</label>
           <input
-            value={this.state.emailField}
-            type='email'
+            autoFocus
             id='email'
+            onChange={this.updateEmail}
             ref={i => {
               this.email = i;
             }}
-            onChange={this.updateEmail}
-            autoFocus
+            type='email'
+            value={this.state.emailField}
           />
         </div>
 
         <div className='progress_button--container'>
           <button
-            type='submit'
             className='btn primary'
             disabled={this.state.submitting}
             onClick={this.setEmail}
+            type='submit'
           >
             {this.state.submitting ? 'Submitting ...' : 'Submit'}
           </button>
           <ReactCSSTransitionGroup
-            transitionName='slide-right'
             transitionEnterTimeout={200}
             transitionLeaveTimeout={200}
+            transitionName='slide-right'
           >
             {this.state.submitting ? (
               <img className='loader' src='/images/loader_oval_light.svg' />
@@ -362,11 +362,11 @@ class SetPassword extends React.Component {
         <div className='login_form--mask' />
 
         <ReactCSSTransitionGroup
-          transitionName={`login_form--transition`}
           transitionAppear={true}
           transitionAppearTimeout={200}
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
+          transitionName={`login_form--transition`}
         >
           <div className='login_form--container col-4'>
             <h1>Set your new password</h1>

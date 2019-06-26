@@ -25,8 +25,8 @@ class CertificateOrgsLabel extends React.Component {
               return (
                 <span
                   className={'orglabel'}
-                  style={{ backgroundColor: this.calculateColour(element) }}
                   key={element}
+                  style={{ backgroundColor: this.calculateColour(element) }}
                 >
                   {element}
                 </span>

@@ -37,13 +37,13 @@ class Copyable extends React.Component {
 
         <div className='copyable-tooltip'>
           {this.state.copied ? (
-            <i className='fa fa-done' aria-hidden='true' />
+            <i aria-hidden='true' className='fa fa-done' />
           ) : (
             <OverlayTrigger
-              placement='top'
               overlay={<Tooltip id='tooltip'>Copy to clipboard.</Tooltip>}
+              placement='top'
             >
-              <i className='fa fa-content-copy' aria-hidden='true' />
+              <i aria-hidden='true' className='fa fa-content-copy' />
             </OverlayTrigger>
           )}
         </div>

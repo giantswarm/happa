@@ -1,8 +1,6 @@
-'use strict';
-
-import React from 'react';
 import { humanFileSize } from '../../lib/helpers';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class Gadget extends React.Component {
   classes() {

@@ -1,6 +1,6 @@
+import { shallow } from 'enzyme';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { shallow } from 'enzyme';
 
 import CertificateOrgsLabel from './certificate_orgs_label.js';
 

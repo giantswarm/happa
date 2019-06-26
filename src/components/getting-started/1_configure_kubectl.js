@@ -301,8 +301,8 @@ class ConfigKubeCtl extends React.Component {
 
           <div className='well' id='alternative'>
             <div
-              onClick={this.toggleAlternative}
               className='toggle-alternative'
+              onClick={this.toggleAlternative}
             >
               {this.state.alternativeOpen ? (
                 <i className='fa fa-chevron-down' />

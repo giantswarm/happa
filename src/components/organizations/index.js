@@ -13,8 +13,8 @@ class Organizations extends React.Component {
         data={{ title: 'ORGANIZATIONS', pathname: this.props.match.url }}
       >
         <Switch>
-          <Route exact path={`${this.props.match.path}`} component={List} />
-          <Route path={`${this.props.match.path}/:orgId`} component={Detail} />
+          <Route component={List} exact path={`${this.props.match.path}`} />
+          <Route component={Detail} path={`${this.props.match.path}/:orgId`} />
           <Redirect
             path={`${this.props.match.path}*`}
             to={`${this.props.match.url}`}

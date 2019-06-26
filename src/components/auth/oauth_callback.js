@@ -61,11 +61,11 @@ class OAuthCallback extends React.Component {
         <div className='login_form--mask' />
 
         <ReactCSSTransitionGroup
-          transitionName={`login_form--transition`}
           transitionAppear={true}
           transitionAppearTimeout={200}
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
+          transitionName={`login_form--transition`}
         >
           <div className='login_form--container col-4 login_form--admin'>
             {this.state.error ? (
