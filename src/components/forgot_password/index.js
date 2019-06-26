@@ -9,6 +9,7 @@ import {
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Button from '../shared/button';
+import LoginFormContainer from '../UI/login_form_container';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -161,9 +162,9 @@ class ForgotPassword extends React.Component {
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
         >
-          <div className='login_form--container col-4'>
+          <LoginFormContainer>
             {this.state.tokenRequested ? this.success() : this.form()}
-          </div>
+          </LoginFormContainer>
         </ReactCSSTransitionGroup>
       </div>
     );
