@@ -10,13 +10,13 @@ class Cluster extends React.Component {
     return (
       <Switch>
         <Route
+          component={NewCluster}
           exact
           path={`${this.props.match.path}/new`}
-          component={NewCluster}
         />
         <Route
-          path={`${this.props.match.path}/:clusterId`}
           component={ClusterDetail}
+          path={`${this.props.match.path}/:clusterId`}
         />
         <Redirect
           path={`${this.props.match.path}/*`}

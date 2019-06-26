@@ -61,14 +61,14 @@ class CatalogIndex extends React.Component {
                 render={() => <Catalogs {...this.props} />}
               />
               <Route
+                component={AppList}
                 exact
                 path={`${this.props.match.path}/:repo`}
-                component={AppList}
               />
               <Route
+                component={Detail}
                 exact
                 path={`${this.props.match.path}/:repo/:app`}
-                component={Detail}
               />
             </Switch>
           </Loading>

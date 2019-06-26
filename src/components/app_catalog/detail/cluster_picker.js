@@ -69,12 +69,12 @@ const ClusterPicker = props => {
         {props.clusters.map(cluster => {
           return (
             <Cluster
-              onClick={onSelectCluster}
-              data-clusterid={cluster.id}
-              key={cluster.id}
               className={
                 cluster.id === props.selectedClusterID ? 'selected' : ''
               }
+              data-clusterid={cluster.id}
+              key={cluster.id}
+              onClick={onSelectCluster}
             >
               <ClusterIDLabel clusterID={cluster.id} />
               <ClusterTitle>{cluster.name}</ClusterTitle>

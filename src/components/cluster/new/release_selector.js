@@ -127,9 +127,9 @@ class ReleaseSelector extends React.Component {
         <p>
           <img
             className='loader'
+            height='25px'
             src='/images/loader_oval_light.svg'
             width='25px'
-            height='25px'
           />
         </p>
       </div>
@@ -191,11 +191,11 @@ class ReleaseSelector extends React.Component {
           ref={r => {
             this.releaseDetailsModal = r;
           }}
+          releaseSelected={this.selectRelease.bind(this)}
           releases={this.state.selectableReleases.map(version => {
             return this.props.releases[version];
           })}
           selectedRelease={this.state.selectedRelease}
-          releaseSelected={this.selectRelease.bind(this)}
         />
       </div>
     );

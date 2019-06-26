@@ -113,7 +113,7 @@ class Home extends React.Component {
                 <Link
                   to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
                 >
-                  <Button type='button' bsStyle='primary'>
+                  <Button bsStyle='primary' type='button'>
                     <i className='fa fa-add-circle' /> Launch New Cluster
                   </Button>
                 </Link>
@@ -128,8 +128,8 @@ class Home extends React.Component {
             {this.props.clusters.length === 0 ? (
               <ClusterEmptyState
                 errorLoadingClusters={this.props.errorLoadingClusters}
-                selectedOrganization={this.props.selectedOrganization}
                 organizations={this.props.organizations}
+                selectedOrganization={this.props.selectedOrganization}
               />
             ) : null}
 
@@ -138,15 +138,15 @@ class Home extends React.Component {
                 cluster => {
                   return (
                     <CSSTransition
+                      classNames='cluster-list-item'
                       key={cluster.id}
                       timeout={500}
-                      classNames='cluster-list-item'
                     >
                       <ClusterDashboardItem
-                        selectedOrganization={this.props.selectedOrganization}
                         animate={true}
-                        key={cluster.id}
                         cluster={cluster}
+                        key={cluster.id}
+                        selectedOrganization={this.props.selectedOrganization}
                       />
                     </CSSTransition>
                   );

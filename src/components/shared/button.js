@@ -26,9 +26,9 @@ class Button extends React.Component {
     return (
       <div className='progress_button--status-indicator'>
         <ReactCSSTransitionGroup
-          transitionName={`slide-${position}`}
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
+          transitionName={`slide-${position}`}
         >
           {this.props.loading ? (
             <img
@@ -49,11 +49,11 @@ class Button extends React.Component {
           : undefined}
 
         <BsButton
-          type={this.props.type}
           bsSize={this.props.bsSize}
           bsStyle={this.props.bsStyle}
-          onClick={this.props.onClick}
           disabled={this.props.disabled || this.props.loading}
+          onClick={this.props.onClick}
+          type={this.props.type}
         >
           {this.props.children}
         </BsButton>

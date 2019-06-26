@@ -87,8 +87,8 @@ class Modals extends React.Component {
       case 'organizationDelete':
         return (
           <BootstrapModal
-            show={this.props.modal.visible}
             onHide={this.close.bind(this)}
+            show={this.props.modal.visible}
           >
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>
@@ -104,7 +104,6 @@ class Modals extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                type='submit'
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
@@ -112,6 +111,7 @@ class Modals extends React.Component {
                   this,
                   this.props.modal.templateValues.orgId
                 )}
+                type='submit'
               >
                 {this.props.modal.templateValues.loading
                   ? 'Deleting Organization'
@@ -130,8 +130,8 @@ class Modals extends React.Component {
       case 'organizationCreate':
         return (
           <BootstrapModal
-            show={this.props.modal.visible}
             onHide={this.close.bind(this)}
+            show={this.props.modal.visible}
           >
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>
@@ -142,21 +142,21 @@ class Modals extends React.Component {
               <form onSubmit={this.createOrganisation.bind(this)}>
                 <label>Organization Name:</label>
                 <input
+                  autoFocus
                   ref={i => {
                     this.orgId = i;
                   }}
-                  autoFocus
                   type='text'
                 />
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                type='submit'
                 bsStyle='primary'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
                 onClick={this.createOrganisation.bind(this)}
+                type='submit'
               >
                 {this.props.modal.templateValues.loading
                   ? 'Creating Organization'
@@ -175,8 +175,8 @@ class Modals extends React.Component {
       case 'organizationAddMember':
         return (
           <BootstrapModal
-            show={this.props.modal.visible}
             onHide={this.close.bind(this)}
+            show={this.props.modal.visible}
           >
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>Add a Member</BootstrapModal.Title>
@@ -190,24 +190,24 @@ class Modals extends React.Component {
               <form onSubmit={this.addMember.bind(this)}>
                 <label>Email:</label>
                 <EmailField
+                  autofocus
+                  errorMessage={this.props.modal.templateValues.errorMessage}
                   name='email'
+                  onChange={this.emailFieldChanged.bind(this)}
                   ref={e => {
                     this.email = e;
                   }}
-                  onChange={this.emailFieldChanged.bind(this)}
-                  errorMessage={this.props.modal.templateValues.errorMessage}
-                  autofocus
                 />
               </form>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                type='submit'
                 bsStyle='primary'
-                loading={this.props.modal.templateValues.loading}
                 disabled={!this.state.emailValid}
+                loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
                 onClick={this.addMember.bind(this)}
+                type='submit'
               >
                 {this.props.modal.templateValues.loading
                   ? 'Adding Member'
@@ -226,8 +226,8 @@ class Modals extends React.Component {
       case 'organizationRemoveMember':
         return (
           <BootstrapModal
-            show={this.props.modal.visible}
             onHide={this.close.bind(this)}
+            show={this.props.modal.visible}
           >
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>Remove Member</BootstrapModal.Title>
@@ -241,11 +241,11 @@ class Modals extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                type='submit'
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
                 onClick={this.removeMember.bind(this)}
+                type='submit'
               >
                 {this.props.modal.templateValues.loading
                   ? 'Removing Member'
@@ -267,8 +267,8 @@ class Modals extends React.Component {
         var clusterName = this.props.modal.templateValues.cluster.name;
         return (
           <BootstrapModal
-            show={this.props.modal.visible}
             onHide={this.close.bind(this)}
+            show={this.props.modal.visible}
           >
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>
@@ -286,11 +286,11 @@ class Modals extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                type='submit'
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
                 onClick={this.deleteClusterConfirmed.bind(this, cluster)}
+                type='submit'
               >
                 {this.props.modal.templateValues.loading
                   ? 'Deleting Cluster'

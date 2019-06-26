@@ -253,16 +253,16 @@ class ClusterDetailView extends React.Component {
                       copyEnabled
                     />{' '}
                     <ClusterName
+                      dispatchFunc={this.props.dispatch}
                       id={this.props.cluster.id}
                       name={this.props.cluster.name}
-                      dispatchFunc={this.props.dispatch}
                     />{' '}
                     {this.state.loading ? (
                       <img
                         className='loader'
-                        width='25px'
                         height='25px'
                         src='/images/loader_oval_light.svg'
+                        width='25px'
                       />
                     ) : (
                       ''
@@ -291,14 +291,14 @@ class ClusterDetailView extends React.Component {
                     <Tab eventKey={1} title='General'>
                       <ClusterDetailTable
                         canClusterUpgrade={this.canClusterUpgrade()}
-                        showUpgradeModal={this.showUpgradeModal}
-                        showScalingModal={this.showScalingModal}
                         cluster={this.props.cluster}
-                        provider={this.props.provider}
                         credentials={this.props.credentials}
+                        provider={this.props.provider}
                         release={this.props.release}
-                        workerNodesRunning={this.getNumberOfNodes()}
+                        showScalingModal={this.showScalingModal}
+                        showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
+                        workerNodesRunning={this.getNumberOfNodes()}
                       />
 
                       <div className='row section cluster_delete col-12'>
@@ -329,14 +329,14 @@ class ClusterDetailView extends React.Component {
                     <Tab eventKey={3} title='Apps'>
                       {this.props.release ? (
                         <ClusterApps
-                          dispatch={this.props.dispatch}
                           clusterId={this.props.clusterId}
-                          showInstalledAppsBlock={
-                            Object.keys(this.props.catalogs.items).length > 0
-                          }
+                          dispatch={this.props.dispatch}
                           errorLoading={this.state.errorLoadingApps}
                           installedApps={this.props.cluster.apps}
                           release={this.props.release}
+                          showInstalledAppsBlock={
+                            Object.keys(this.props.catalogs.items).length > 0
+                          }
                         />
                       ) : (
                         <div className='well'>
@@ -355,21 +355,21 @@ class ClusterDetailView extends React.Component {
               </div>
 
               <ScaleClusterModal
+                cluster={this.props.cluster}
+                provider={this.props.provider}
                 ref={s => {
                   this.scaleClusterModal = s;
                 }}
-                cluster={this.props.cluster}
-                provider={this.props.provider}
-                workerNodesRunning={this.getNumberOfNodes()}
                 workerNodesDesired={this.getDesiredNumberOfNodes()}
+                workerNodesRunning={this.getNumberOfNodes()}
               />
 
               {this.props.targetRelease ? (
                 <UpgradeClusterModal
+                  cluster={this.props.cluster}
                   ref={s => {
                     this.upgradeClusterModal = s;
                   }}
-                  cluster={this.props.cluster}
                   release={this.props.release}
                   targetRelease={this.props.targetRelease}
                 />

@@ -23,8 +23,8 @@ class DetailIndex extends React.Component {
             render={() => <DetailView {...this.props} />}
           />
           <Route
-            path={`${this.props.match.path}/clusters`}
             component={ClusterDetailIndex}
+            path={`${this.props.match.path}/clusters`}
           />
           <Redirect
             path={`${this.props.match.path}/*`}

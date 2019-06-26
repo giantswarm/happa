@@ -63,10 +63,10 @@ class FileBlock extends React.Component {
   downloadAsFileLink() {
     return (
       <a
-        href={window.URL.createObjectURL(this.blob())}
         download={this.props.fileName}
+        href={window.URL.createObjectURL(this.blob())}
       >
-        <i className='fa fa-file-download' aria-hidden='true' />
+        <i aria-hidden='true' className='fa fa-file-download' />
       </a>
     );
   }
@@ -76,10 +76,10 @@ class FileBlock extends React.Component {
       <div className={this.classNames()}>
         <pre>
           <div
+            className='content'
             ref={d => {
               this.pre = d;
             }}
-            className='content'
           >
             <div className='codeblock--filename'>{this.props.fileName}</div>
             <div className='codeblock--filecontents'>
@@ -92,11 +92,11 @@ class FileBlock extends React.Component {
           </div>
           <div
             className='codeblock--buttons'
-            onMouseOver={function() {
-              this.setState({ hovering: true });
-            }.bind(this)}
             onMouseOut={function() {
               this.setState({ hovering: false });
+            }.bind(this)}
+            onMouseOver={function() {
+              this.setState({ hovering: true });
             }.bind(this)}
           >
             {Modernizr.adownload ? this.downloadAsFileLink() : null}
@@ -107,18 +107,18 @@ class FileBlock extends React.Component {
                 this.setState({ clicked: true });
               }.bind(this)}
             >
-              <i className='fa fa-content-copy' aria-hidden='true' />
+              <i aria-hidden='true' className='fa fa-content-copy' />
             </a>
           </div>
           <ReactCSSTransitionGroup
-            transitionName={'checkmark'}
             transitionEnterTimeout={1000}
             transitionLeaveTimeout={1000}
+            transitionName={'checkmark'}
           >
             {this.state.clicked ? (
               <i
-                className='fa fa-done codeblock--checkmark'
                 aria-hidden='true'
+                className='fa fa-done codeblock--checkmark'
               />
             ) : null}
           </ReactCSSTransitionGroup>

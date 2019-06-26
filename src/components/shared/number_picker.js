@@ -164,16 +164,16 @@ class NumberPicker extends React.Component {
           )}
           <span className='number-picker--value'>
             <input
-              type='number'
               disabled={this.props.readOnly}
-              min={this.props.min}
               max={this.props.max}
+              min={this.props.min}
+              onChange={this.updateInput}
+              onFocus={this.handleFocus}
               step={this.props.stepSize}
+              type='number'
               value={
                 this.props.readOnly ? this.props.value : this.state.inputValue
               }
-              onChange={this.updateInput}
-              onFocus={this.handleFocus}
             />
           </span>
           {this.props.readOnly ? (

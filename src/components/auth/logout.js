@@ -29,11 +29,11 @@ class Logout extends React.Component {
     return (
       <div>
         <ReactCSSTransitionGroup
-          transitionName='logout--mask--transition'
           transitionAppear={true}
           transitionAppearTimeout={400}
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
+          transitionName='logout--mask--transition'
         >
           <div className='logout--mask' />
         </ReactCSSTransitionGroup>

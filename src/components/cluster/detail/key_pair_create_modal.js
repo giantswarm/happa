@@ -86,9 +86,9 @@ const KeyPairCreateModal = props => {
   const downloadAsFileLink = () => {
     return (
       <a
-        href={window.URL.createObjectURL(blob())}
         className='btn btn-default'
         download='giantswarm-kubeconfig'
+        href={window.URL.createObjectURL(blob())}
       >
         Download
       </a>
@@ -176,7 +176,7 @@ const KeyPairCreateModal = props => {
 
   return (
     <React.Fragment>
-      <Button onClick={show} bsStyle='default' className='small'>
+      <Button bsStyle='default' className='small' onClick={show}>
         <i className='fa fa-add-circle' /> Create Key Pair
       </Button>
       {(() => {
@@ -185,8 +185,8 @@ const KeyPairCreateModal = props => {
             return (
               <BootstrapModal
                 className='create-key-pair-modal'
-                show={modal.visible}
                 onHide={close}
+                show={modal.visible}
               >
                 <BootstrapModal.Header closeButton>
                   <BootstrapModal.Title>
@@ -209,9 +209,9 @@ const KeyPairCreateModal = props => {
                         <label>Common Name Prefix:</label>
                         <input
                           autoFocus
+                          onChange={handleCNPrefixChange}
                           type='text'
                           value={cnPrefix}
-                          onChange={handleCNPrefixChange}
                         />
                         <div className='text-field-hint'>
                           {cnPrefixError === null ? (
@@ -226,9 +226,9 @@ const KeyPairCreateModal = props => {
                       <div className='col-6'>
                         <label>Organizations:</label>
                         <input
+                          onChange={handleCertificateOrganizationsChange}
                           type='text'
                           value={certificateOrganizations}
-                          onChange={handleCertificateOrganizationsChange}
                         />
                         <div className='text-field-hint'>
                           Comma seperated values. e.g.: admin,blue-team,staging
@@ -240,26 +240,26 @@ const KeyPairCreateModal = props => {
                       <div className='col-12'>
                         <label>Description:</label>
                         <input
+                          onChange={handleDescriptionChange}
                           type='text'
                           value={description}
-                          onChange={handleDescriptionChange}
                         />
                       </div>
                     </div>
                     <br />
                     <label>Expires:</label>
                     <ExpiryHoursPicker
-                      onChange={handleTTLChange}
                       initialValue={expireTTL}
+                      onChange={handleTTLChange}
                     />
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
                     <Button
-                      type='submit'
                       bsStyle='primary'
                       disabled={cnPrefixError !== null}
                       loading={modal.loading}
                       onClick={confirmAddKeyPair}
+                      type='submit'
                     >
                       {modal.loading ? 'Creating Key Pair' : 'Create Key Pair'}
                     </Button>
@@ -278,8 +278,8 @@ const KeyPairCreateModal = props => {
             return (
               <BootstrapModal
                 className='create-key-pair-modal--success'
-                show={modal.visible}
                 onHide={close}
+                show={modal.visible}
               >
                 <BootstrapModal.Header closeButton>
                   <BootstrapModal.Title>
@@ -299,13 +299,13 @@ const KeyPairCreateModal = props => {
                   </p>
 
                   <form>
-                    <textarea value={kubeconfig} readOnly />
+                    <textarea readOnly value={kubeconfig} />
                   </form>
 
                   {copied ? (
                     <Button bsStyle='default' onClick={copyKubeConfig}>
                       &nbsp;&nbsp;
-                      <i className='fa fa-done' aria-hidden='true' />
+                      <i aria-hidden='true' className='fa fa-done' />
                       &nbsp;&nbsp;
                     </Button>
                   ) : (
@@ -328,8 +328,8 @@ const KeyPairCreateModal = props => {
             return (
               <BootstrapModal
                 className='create-key-pair-modal--success'
-                show={modal.visible}
                 onHide={close}
+                show={modal.visible}
               >
                 <BootstrapModal.Header closeButton>
                   <BootstrapModal.Title>

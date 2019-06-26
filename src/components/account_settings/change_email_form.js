@@ -132,27 +132,27 @@ class ChangeEmailForm extends React.Component {
       <div>
         <form className='change_email_form' onSubmit={this.submit}>
           <input
+            onChange={this.validateEmail}
             ref={i => {
               this.new_email = i;
             }}
-            onChange={this.validateEmail}
             type='text'
             value={this.state.fields.email.value}
           />
 
           <div className='button-area'>
             <ReactCSSTransitionGroup
-              transitionName='slide-right'
               transitionEnterTimeout={200}
               transitionLeaveTimeout={200}
+              transitionName='slide-right'
             >
               {this.state.buttonVisible ? (
                 <Button
-                  type='submit'
                   bsStyle='primary'
                   disabled={!this.state.changeEmailFormValid}
                   loading={this.state.changeEmailFormSubmitting}
                   loadingMessage='Saving...'
+                  type='submit'
                 >
                   Set New Email
                 </Button>
@@ -160,9 +160,9 @@ class ChangeEmailForm extends React.Component {
             </ReactCSSTransitionGroup>
 
             <ReactCSSTransitionGroup
-              transitionName='slide-right'
               transitionEnterTimeout={200}
               transitionLeaveTimeout={200}
+              transitionName='slide-right'
             >
               {this.state.changeEmailSuccess ? (
                 <div className='form-success'>
@@ -173,9 +173,9 @@ class ChangeEmailForm extends React.Component {
             </ReactCSSTransitionGroup>
 
             <ReactCSSTransitionGroup
-              transitionName='slide-right'
               transitionEnterTimeout={200}
               transitionLeaveTimeout={200}
+              transitionName='slide-right'
             >
               {this.state.changeEmailFormError ? (
                 <div className='flash-messages--flash-message flash-messages--danger'>

@@ -28,9 +28,9 @@ class Catalogs extends React.Component {
                 {Object.keys(this.props.catalogs.items).map(catalogName => {
                   return (
                     <Link
+                      className='app-catalog--repo'
                       key={this.props.catalogs.items[catalogName].metadata.name}
                       to={'/apps/' + catalogName + '/'}
-                      className='app-catalog--repo'
                     >
                       <div className='app-catalog--card'>
                         <h3>

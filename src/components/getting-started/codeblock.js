@@ -92,39 +92,39 @@ export class CodeBlock extends React.Component {
       <div className={this.classNames()}>
         <pre>
           <div
+            className='content'
             ref={d => {
               this.pre = d;
             }}
-            className='content'
           >
             {this.props.children}
           </div>
           <div className='codeblock--buttons'>
             <a
               href='#'
-              onMouseOver={function() {
-                this.setState({ hovering: true });
-              }.bind(this)}
+              onClick={this.copyCodeToClipboard.bind(this)}
               onMouseOut={function() {
                 this.setState({ hovering: false });
               }.bind(this)}
-              onClick={this.copyCodeToClipboard.bind(this)}
+              onMouseOver={function() {
+                this.setState({ hovering: true });
+              }.bind(this)}
               onMouseUp={function() {
                 this.setState({ clicked: true });
               }.bind(this)}
             >
-              <i className='fa fa-content-copy' aria-hidden='true' />
+              <i aria-hidden='true' className='fa fa-content-copy' />
             </a>
           </div>
           <ReactCSSTransitionGroup
-            transitionName={'checkmark'}
             transitionEnterTimeout={1000}
             transitionLeaveTimeout={1000}
+            transitionName={'checkmark'}
           >
             {this.state.clicked ? (
               <i
-                className='fa fa-done codeblock--checkmark'
                 aria-hidden='true'
+                className='fa fa-done codeblock--checkmark'
               />
             ) : null}
           </ReactCSSTransitionGroup>

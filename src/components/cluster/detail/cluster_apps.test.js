@@ -1,7 +1,7 @@
+import { mount } from 'enzyme';
 import { BrowserRouter as Router } from 'react-router-dom';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { mount } from 'enzyme';
 
 import ClusterApps from './cluster_apps.js';
 

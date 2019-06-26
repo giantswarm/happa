@@ -42,10 +42,10 @@ class KeyPairDetailsModal extends React.Component {
 
     return (
       <GenericModal
-        visible={this.props.visible}
-        title='Key Pair Details'
-        onClose={this.props.onClose}
         className='keypairdetails'
+        onClose={this.props.onClose}
+        title='Key Pair Details'
+        visible={this.props.visible}
       >
         <div>
           <div className='labelvaluepair'>

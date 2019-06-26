@@ -41,9 +41,9 @@ class List extends React.Component {
               return (
                 <img
                   className='loader'
+                  height='20px'
                   src='/images/loader_oval_light.svg'
                   width='20px'
-                  height='20px'
                 />
               );
             } else if (
@@ -81,7 +81,6 @@ class List extends React.Component {
                         organization => {
                           return (
                             <OrganizationRow
-                              organization={organization}
                               clusters={clustersForOrg(
                                 organization.id,
                                 this.props.clusters
@@ -95,6 +94,7 @@ class List extends React.Component {
                                 this,
                                 organization.id
                               )}
+                              organization={organization}
                             />
                           );
                         }

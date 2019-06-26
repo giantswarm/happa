@@ -12,8 +12,8 @@ class AWSAccountID extends React.Component {
         {accountID}{' '}
         <a
           href={'https://' + accountID + '.signin.aws.amazon.com/console'}
-          target='_blank'
           rel='noopener noreferrer'
+          target='_blank'
         >
           <i className='fa fa-open-in-new' />
         </a>
