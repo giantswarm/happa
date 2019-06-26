@@ -191,10 +191,10 @@ class ReleaseSelector extends React.Component {
           ref={r => {
             this.releaseDetailsModal = r;
           }}
+          releaseSelected={this.selectRelease.bind(this)}
           releases={this.state.selectableReleases.map(version => {
             return this.props.releases[version];
           })}
-          releaseSelected={this.selectRelease.bind(this)}
           selectedRelease={this.state.selectedRelease}
         />
       </div>
