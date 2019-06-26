@@ -105,38 +105,6 @@ jobs:
           CURL_OUTPUT=$(curl -s http://localhost:8000)
           echo "${CURL_OUTPUT}" | grep Happa
 
-    - run:
-        name: Lighthouse audits
-        command: |
-          if [ "${CIRCLE_BRANCH}" != "master" ]; then
-            lighthouse-keeper audit \
-              --url http://happa-master:8000/ \
-              --name master \
-              --docker-link happa-master:happa-master
-          fi
-
-          lighthouse-keeper audit \
-            --url http://happa-branch:8000/ \
-            --name branch \
-            --docker-link happa-branch:happa-branch
-
-          echo "Lighthouse report for ${CIRCLE_BRANCH}:"
-          lighthouse-keeper view --input branch.json
-
-          if [[ "${CIRCLE_BRANCH}" != "master" && -n "${CIRCLE_PULL_REQUEST}" ]]; then
-            echo "Lighthouse report for master:"
-            lighthouse-keeper view --input master.json
-
-            echo "\nComparison:"
-            lighthouse-keeper compare \
-              --input master.json --inputlabel master \
-              --input branch.json --inputlabel "this branch" \
-              --github-token "${RELEASE_TOKEN}" \
-              --github-owner giantswarm \
-              --github-repo ${CIRCLE_PROJECT_REPONAME} \
-              --github-issue $(basename ${CIRCLE_PULL_REQUEST})
-          fi
-
     - save_cache:
         key: v1-npm-deps-{{ checksum "yarn.lock" }}
         paths:
