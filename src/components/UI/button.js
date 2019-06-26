@@ -1,7 +1,7 @@
 import BsButton from 'react-bootstrap/lib/Button';
+import LoadingIndicator from './loadingIndicator';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 // Button
 //
@@ -21,50 +21,35 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 // You can also disable the button by setting the disabled prop to true.
 //
 
-class Button extends React.Component {
-  loadingIndicator = position => {
-    return (
-      <div className='progress_button--status-indicator'>
-        <ReactCSSTransitionGroup
-          transitionName={`slide-${position}`}
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
-        >
-          {this.props.loading ? (
-            <img
-              className={'loader ' + this.props.loadingPosition}
-              src='/images/loader_oval_light.svg'
-            />
-          ) : null}
-        </ReactCSSTransitionGroup>
-      </div>
-    );
-  };
+const Button = props => {
+  const { loadingPosition, loading } = props;
 
-  render() {
-    return (
-      <div className='progress_button--container'>
-        {this.props.loadingPosition === 'left'
-          ? this.loadingIndicator(this.props.loadingPosition)
-          : undefined}
+  return (
+    <div className='progress_button--container'>
+      {loadingPosition === 'left' ? (
+        <LoadingIndicator loading={loading} loadingPosition={loadingPosition} />
+      ) : (
+        undefined
+      )}
 
-        <BsButton
-          type={this.props.type}
-          bsSize={this.props.bsSize}
-          bsStyle={this.props.bsStyle}
-          onClick={this.props.onClick}
-          disabled={this.props.disabled || this.props.loading}
-        >
-          {this.props.children}
-        </BsButton>
+      <BsButton
+        type={props.type}
+        bsSize={props.bsSize}
+        bsStyle={props.bsStyle}
+        onClick={props.onClick}
+        disabled={props.disabled || props.loading}
+      >
+        {props.children}
+      </BsButton>
 
-        {this.props.loadingPosition === 'right'
-          ? this.loadingIndicator(this.props.loadingPosition)
-          : undefined}
-      </div>
-    );
-  }
-}
+      {loadingPosition === 'right' ? (
+        <LoadingIndicator loading={loading} loadingPosition={loadingPosition} />
+      ) : (
+        undefined
+      )}
+    </div>
+  );
+};
 
 Button.propTypes = {
   type: PropTypes.string,
