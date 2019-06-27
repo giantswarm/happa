@@ -127,8 +127,8 @@ class AppContainer extends React.Component {
             {icon && !iconErrors[icon] ? (
               <img onError={imgError} src={icon} />
             ) : (
-                <h3>{name}</h3>
-              )}
+              <h3>{name}</h3>
+            )}
           </AppIcon>
           <AppDetails>
             <h3>{name}</h3>

@@ -6,7 +6,7 @@ const AppDetailsDL = props => (
     <small>{props.label}</small>
     <ul>
       {props.data.map(data => (
-        <li className='source' key={data} >
+        <li className='source' key={data}>
           <code>
             <a href={data} rel='noopener noreferrer'>
               {data}
