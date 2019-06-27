@@ -1,6 +1,5 @@
 import { clusterPatch } from '../../actions/clusterActions';
 import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
-import { withTheme } from 'emotion-theming';
 import Button from './button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
@@ -8,38 +7,34 @@ import React from 'react';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-const FormWrapper = withTheme(
-  styled.div(() => ({
+const FormWrapper = styled.div(() => ({
+  display: 'inline-block',
+  form: {
     display: 'inline-block',
-    form: {
-      display: 'inline-block',
-    },
-    'input[type="text"]': {
-      display: 'inline-block',
-      padding: '0px 5px',
-      width: 320,
-      marginRight: 5,
-      fontSize: '85%',
-    },
-    '.btn[type="submit"]': {
-      display: 'inline',
-    },
-    '.btn-group': {
-      float: 'none',
-      marginLeft: 4,
-      top: -2,
-    },
-  }))
-);
+  },
+  'input[type="text"]': {
+    display: 'inline-block',
+    padding: '0px 5px',
+    width: 320,
+    marginRight: 5,
+    fontSize: '85%',
+  },
+  '.btn[type="submit"]': {
+    display: 'inline',
+  },
+  '.btn-group': {
+    float: 'none',
+    marginLeft: 4,
+    top: -2,
+  },
+}));
 
-const LinkWrapper = withTheme(
-  styled.span(() => ({
-    'a:hover': {
-      textDecorationStyle: 'dotted',
-      color: '#fff',
-    },
-  }))
-);
+const LinkWrapper = styled.span(() => ({
+  'a:hover': {
+    textDecorationStyle: 'dotted',
+    color: '#fff',
+  },
+}));
 
 /**
  * ClusterName is a widget to display and edit a cluster name in the same
