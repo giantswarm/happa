@@ -14,7 +14,7 @@ import ClusterApps from './cluster_apps';
 import ClusterDetailTable from './cluster_detail_table';
 import ClusterIDLabel from '../../UI/cluster_id_label';
 import ClusterKeyPairs from './key_pairs';
-import ClusterName from '../../shared/cluster_name';
+import ClusterName from '../../UI/cluster_name';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import PageVisibilityTracker from '../../../lib/page_visibility_tracker';

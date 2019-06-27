@@ -1,10 +1,45 @@
 import { clusterPatch } from '../../actions/clusterActions';
 import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
-import Button from '../UI/button';
+import { withTheme } from 'emotion-theming';
+import Button from './button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+
+const FormWrapper = withTheme(
+  styled.div(() => ({
+    display: 'inline-block',
+    form: {
+      display: 'inline-block',
+    },
+    'input[type="text"]': {
+      display: 'inline-block',
+      padding: '0px 5px',
+      width: 320,
+      marginRight: 5,
+      fontSize: '85%',
+    },
+    '.btn[type="submit"]': {
+      display: 'inline',
+    },
+    '.btn-group': {
+      float: 'none',
+      marginLeft: 4,
+      top: -2,
+    },
+  }))
+);
+
+const LinkWrapper = withTheme(
+  styled.span(() => ({
+    'a:hover': {
+      textDecorationStyle: 'dotted',
+      color: '#fff',
+    },
+  }))
+);
 
 /**
  * ClusterName is a widget to display and edit a cluster name in the same
@@ -99,34 +134,38 @@ class ClusterName extends React.Component {
     if (this.state.editing) {
       // edit mode
       return (
-        <form className='form cluster-name' onSubmit={this.handleSubmit}>
-          <input
-            autoComplete='off'
-            autoFocus
-            name='cluster-name'
-            onChange={this.handleChange}
-            onKeyUp={this.handleKey}
-            type='text'
-            value={this.state.inputFieldValue}
-          />
-          <div className='btn-group'>
-            <Button type='submit'>OK</Button>
-            <Button onClick={this.deactivateEditMode}>Cancel</Button>
-          </div>
-        </form>
+        <FormWrapper>
+          <form className='form' onSubmit={this.handleSubmit}>
+            <input
+              autoComplete='off'
+              autoFocus
+              name='cluster-name'
+              onChange={this.handleChange}
+              onKeyUp={this.handleKey}
+              type='text'
+              value={this.state.inputFieldValue}
+            />
+            <div className='btn-group'>
+              <Button type='submit'>OK</Button>
+              <Button onClick={this.deactivateEditMode}>Cancel</Button>
+            </div>
+          </form>
+        </FormWrapper>
       );
     }
 
     // view mode
     return (
-      <OverlayTrigger
-        overlay={<Tooltip id='tooltip'>Click to edit cluster name</Tooltip>}
-        placement='top'
-      >
-        <a className='cluster-name' onClick={this.activateEditMode}>
-          {this.state.name}
-        </a>
-      </OverlayTrigger>
+      <LinkWrapper>
+        <OverlayTrigger
+          overlay={<Tooltip id='tooltip'>Click to edit cluster name</Tooltip>}
+          placement='top'
+        >
+          <a className='cluster-name' onClick={this.activateEditMode}>
+            {this.state.name}
+          </a>
+        </OverlayTrigger>
+      </LinkWrapper>
     );
   };
 }
