@@ -18,20 +18,16 @@ import React from 'react';
 class ScaleClusterModal extends React.Component {
   rollupAnimationDuration = 500;
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      modalVisible: false,
-      scaling: {
-        automatic: false,
-        min: props.cluster.scaling.min,
-        minValid: true,
-        max: props.cluster.scaling.max,
-        maxValid: true,
-      },
-    };
-  }
+  state = {
+    modalVisible: false,
+    scaling: {
+      automatic: false,
+      min: this.props.cluster.scaling.min,
+      minValid: true,
+      max: this.props.cluster.scaling.max,
+      maxValid: true,
+    },
+  };
 
   componentDidMount() {
     this.setState({});

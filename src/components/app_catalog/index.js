@@ -14,10 +14,6 @@ class CatalogIndex extends React.Component {
     loading: true,
   };
 
-  constructor() {
-    super();
-  }
-
   componentDidMount() {
     this.props
       .dispatch(catalogsLoad())
