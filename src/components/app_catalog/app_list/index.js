@@ -23,13 +23,13 @@ class AppList extends React.Component {
       appVersions => appVersions[0]
     );
 
-    this.index = lunr(function () {
+    this.index = lunr(function() {
       this.ref('name');
       this.field('name');
       this.field('description');
       this.field('keywords');
 
-      appsArray.forEach(function (app) {
+      appsArray.forEach(function(app) {
         this.add(app);
       }, this);
     });
@@ -142,8 +142,8 @@ class AppList extends React.Component {
                       <i className='fa fa-close' />
                     </a>
                   ) : (
-                      undefined
-                    )}
+                    undefined
+                  )}
                 </div>
               </form>
             </h1>
