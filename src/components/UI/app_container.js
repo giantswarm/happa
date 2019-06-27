@@ -123,11 +123,10 @@ class AppContainer extends React.Component {
     return (
       <Wrapper>
         <StyledLink to={to}>
-          {repoName === 'managed' && <Badge>MANAGED</Badge> // This is always false. Is this ok?
-          }
+          {repoName === 'managed' && <Badge>MANAGED</Badge>}
           <AppIcon>
             {icon && !iconErrors[icon] ? (
-              <img src={icon} onError={imgError} />
+              <img onError={imgError} src={icon} />
             ) : (
               <h3>{name}</h3>
             )}

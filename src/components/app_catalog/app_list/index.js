@@ -168,15 +168,15 @@ class AppList extends React.Component {
                           const key = `${appVersions[0].repoName}/${appVersions[0].name}`;
                           return (
                             <AppContainer
+                              appVersions={appVersions}
+                              catalog={this.props.catalog}
+                              iconErrors={this.state.iconErrors}
+                              imgError={this.imgError}
                               key={key}
                               ref={ref =>
                                 (this.appRefs[appVersions[0].name] = ref)
                               }
-                              appVersions={appVersions}
-                              catalog={this.props.catalog}
                               searchQuery={this.state.searchQuery}
-                              iconErrors={this.state.iconErrors}
-                              imgError={this.imgError}
                             />
                           );
                         })}
