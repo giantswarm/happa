@@ -349,7 +349,7 @@ class ConfigKubeCtl extends React.Component {
             <Link
               to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/`}
             >
-              <button>
+              <button type='button'>
                 <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>
@@ -357,7 +357,7 @@ class ConfigKubeCtl extends React.Component {
             <Link
               to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/example/`}
             >
-              <button className='primary'>
+              <button className='primary' type='button'>
                 Continue <i className='fa fa-chevron-right' />
               </button>
             </Link>

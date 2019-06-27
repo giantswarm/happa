@@ -18,6 +18,7 @@
     "no-underscore-dangle": 0,
     "quotes": [1, "single", {"allowTemplateLiterals": true}],
     "semi": [1, "always"],
+    "react/button-has-type": 2,
     "react/prefer-es6-class": [1, "always"],
     "react/no-find-dom-node": 0,
     "react/jsx-sort-props": 2,
