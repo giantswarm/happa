@@ -10,7 +10,7 @@ import ClusterIDLabel from '../UI/cluster_id_label';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import RefreshableLabel from '../shared/refreshable_label';
+import RefreshableLabel from '../UI/refreshable_label';
 
 class ClusterDashboardItem extends React.Component {
   state = {
