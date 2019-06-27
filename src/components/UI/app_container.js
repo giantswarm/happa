@@ -45,9 +45,8 @@ const StyledLink = styled(Link)({
     'div:nth-of-type(1)': {
       opacity: 1,
       boxShadow: '0px 0px 5px #549ac3',
-      border: '10px solid yellow',
-    }
-  }
+    },
+  },
 });
 
 const Badge = styled.div({
@@ -78,14 +77,14 @@ const AppIcon = styled.div({
   justifyContent: 'center',
   alignItems: 'center',
 
-  'h3': {
+  h3: {
     color: '#2e556a',
     textAlign: 'center',
     fontSize: '20px',
     fontWeight: '300',
   },
 
-  'img': {
+  img: {
     maxHeight: '75px',
     maxWidth: '60%',
     margin: 'auto',
@@ -96,7 +95,7 @@ const AppIcon = styled.div({
 const AppDetails = styled.div({
   padding: '10px',
 
-  'h3': {
+  h3: {
     margin: '0px',
     fontSize: '16px',
     lineHeight: '1em',
@@ -104,9 +103,9 @@ const AppDetails = styled.div({
     fontWeight: '700',
   },
 
-  'span': {
+  span: {
     fontSize: '14px',
-  }
+  },
 });
 
 const AppContainer = props => {

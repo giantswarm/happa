@@ -23,13 +23,13 @@ class AppList extends React.Component {
       appVersions => appVersions[0]
     );
 
-    this.index = lunr(function () {
+    this.index = lunr(function() {
       this.ref('name');
       this.field('name');
       this.field('description');
       this.field('keywords');
 
-      appsArray.forEach(function (app) {
+      appsArray.forEach(function(app) {
         this.add(app);
       }, this);
     });
@@ -142,8 +142,8 @@ class AppList extends React.Component {
                       <i className='fa fa-close' />
                     </a>
                   ) : (
-                      undefined
-                    )}
+                    undefined
+                  )}
                 </div>
               </form>
             </h1>
@@ -171,7 +171,9 @@ class AppList extends React.Component {
                       <React.Fragment>
                         {apps.map(appVersions => {
                           const key = `${appVersions[0].repoName}/${appVersions[0].name}`;
-                          {/* TODO find another way, we can't do forwardRefs in functional components */ }
+                          {
+                            /* TODO find another way, we can't do forwardRefs in functional components */
+                          }
                           return (
                             <AppContainer
                               key={key}
