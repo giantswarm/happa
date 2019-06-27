@@ -122,7 +122,7 @@ class AppList extends React.Component {
         <DocumentTitle title={'Apps | Giant Swarm '}>
           <React.Fragment>
             <Link to={'/apps/'}>
-              <i className='fa fa-chevron-left' aria-hidden='true' />
+              <i aria-hidden='true' className='fa fa-chevron-left' />
               Back to all catalogs
             </Link>
             <br />
@@ -133,8 +133,8 @@ class AppList extends React.Component {
                 <div className='input-with-icon'>
                   <i className='fa fa-search' />
                   <input
-                    type='text'
                     onChange={this.updateSearchQuery}
+                    type='text'
                     value={this.state.searchQuery}
                   />
                   {this.state.searchQuery !== '' ? (

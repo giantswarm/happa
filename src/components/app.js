@@ -42,15 +42,15 @@ render(
       <ConnectedRouter history={history}>
         <div>
           <Switch>
-            <Route path='/admin-login' component={AdminLogin} />
-            <Route path='/login' component={Login} />
-            <Route path='/logout' component={Logout} />
-            <Route path='/forgot_password/:token/' component={SetPassword} />
-            <Route path='/forgot_password' component={ForgotPassword} />
-            <Route path='/signup/:token' component={SignUp} />
-            <Route path='/oauth/callback' component={OAuthCallback} />
+            <Route component={AdminLogin} path='/admin-login' />
+            <Route component={Login} path='/login' />
+            <Route component={Logout} path='/logout' />
+            <Route component={SetPassword} path='/forgot_password/:token/' />
+            <Route component={ForgotPassword} path='/forgot_password' />
+            <Route component={SignUp} path='/signup/:token' />
+            <Route component={OAuthCallback} path='/oauth/callback' />
 
-            <Route path='/' component={Layout} />
+            <Route component={Layout} path='/' />
           </Switch>
         </div>
       </ConnectedRouter>

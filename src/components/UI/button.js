@@ -33,11 +33,11 @@ const Button = props => {
       )}
 
       <BsButton
-        type={props.type}
         bsSize={props.bsSize}
         bsStyle={props.bsStyle}
-        onClick={props.onClick}
         disabled={props.disabled || props.loading}
+        onClick={props.onClick}
+        type={props.type}
       >
         {props.children}
       </BsButton>

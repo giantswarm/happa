@@ -108,12 +108,12 @@ class AzureVMSizeSelector extends React.Component {
             }}
           >
             <InputField
-              type='text'
-              value={this.props.value}
-              onChange={this.updateVMSize}
-              validate={this.validateVMSize}
               autoFocus
+              onChange={this.updateVMSize}
               readOnly={this.props.readOnly}
+              type='text'
+              validate={this.validateVMSize}
+              value={this.props.value}
             />
 
             <div
@@ -128,9 +128,9 @@ class AzureVMSizeSelector extends React.Component {
           </form>
         </div>
         <BootstrapModal
-          show={this.state.modalVisible}
-          onHide={this.closeModal}
           className='new-cluster--instance-type-selector-modal aws'
+          onHide={this.closeModal}
+          show={this.state.modalVisible}
         >
           <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Select a VM Size</BootstrapModal.Title>
@@ -150,19 +150,19 @@ class AzureVMSizeSelector extends React.Component {
                 {this.state.vmSizes.map(vmSize => {
                   return (
                     <tr
-                      key={vmSize.name}
-                      onClick={this.preSelect.bind(this, vmSize.name)}
                       className={
                         vmSize.name === this.state.preSelectedVMSize
                           ? 'selected'
                           : ''
                       }
+                      key={vmSize.name}
+                      onClick={this.preSelect.bind(this, vmSize.name)}
                     >
                       <td>
                         <input
-                          type='radio'
-                          readOnly
                           checked={vmSize.name === this.state.preSelectedVMSize}
+                          readOnly
+                          type='radio'
                         />
                       </td>
                       <td>{vmSize.name}</td>
@@ -178,7 +178,7 @@ class AzureVMSizeSelector extends React.Component {
             </table>
           </BootstrapModal.Body>
           <BootstrapModal.Footer>
-            <Button type='submit' bsStyle='primary' onClick={this.selectVMSize}>
+            <Button bsStyle='primary' onClick={this.selectVMSize} type='submit'>
               Select VM Size
             </Button>
 

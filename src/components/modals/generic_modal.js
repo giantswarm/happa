@@ -7,8 +7,8 @@ const GenericModal = props => {
   return (
     <BootstrapModal
       className={'modal ' + props.className}
-      show={props.visible}
       onHide={props.onClose}
+      show={props.visible}
     >
       <BootstrapModal.Header closeButton>
         <BootstrapModal.Title>{props.title}</BootstrapModal.Title>

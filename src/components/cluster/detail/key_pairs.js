@@ -220,28 +220,28 @@ class ClusterKeyPairs extends React.Component {
                 return (
                   <div>
                     <BootstrapTable
-                      keyField='id'
-                      data={this.props.cluster.keyPairs}
-                      columns={this.getKeypairsTableColumnsConfig()}
                       bordered={false}
+                      columns={this.getKeypairsTableColumnsConfig()}
+                      data={this.props.cluster.keyPairs}
+                      defaultSortDirection='asc'
                       defaultSorted={[
                         { dataField: 'create_date', order: 'desc' },
                       ]}
-                      defaultSortDirection='asc'
+                      keyField='id'
                     />
                   </div>
                 );
               }
             })()}
             <KeypairCreateModal
-              user={this.props.user}
-              cluster={this.props.cluster}
               actions={this.props.actions}
+              cluster={this.props.cluster}
+              user={this.props.user}
             />
             <KeyPairDetailsModal
-              visible={this.state.keyPairDetailsModal.visible}
               keyPair={this.state.keyPairDetailsModal.keyPair}
               onClose={this.hideKeyPairModal}
+              visible={this.state.keyPairDetailsModal.visible}
             />
           </div>
         </div>

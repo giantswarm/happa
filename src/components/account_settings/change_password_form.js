@@ -172,13 +172,13 @@ class ChangePassword extends React.Component {
         <div className='col-9'>
           <p>Use this form to change your password.</p>
 
-          <form onSubmit={this.submit} className='change_password_form'>
+          <form className='change_password_form' onSubmit={this.submit}>
             <div className='textfield small'>
               <PasswordField
+                id='current_password'
                 label='Current Password'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
-                id='current_password'
                 ref={p => {
                   this.current_password = p;
                 }}
@@ -187,45 +187,45 @@ class ChangePassword extends React.Component {
 
             <div className='textfield small'>
               <PasswordField
+                id='new_password'
                 label='New Password'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
-                validationError={this.state.newPasswordValidationMessage}
-                id='new_password'
                 ref={p => {
                   this.new_password = p;
                 }}
+                validationError={this.state.newPasswordValidationMessage}
               />
             </div>
 
             <div className='textfield small'>
               <PasswordField
+                id='new_password_confirmation'
                 label='New Password (once more)'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
-                validationError={
-                  this.state.newPassworConfirmationValidationMessage
-                }
-                id='new_password_confirmation'
                 ref={p => {
                   this.new_password_confirmation = p;
                 }}
+                validationError={
+                  this.state.newPassworConfirmationValidationMessage
+                }
               />
             </div>
 
             <div className='button-area'>
               <ReactCSSTransitionGroup
-                transitionName='slide-right'
                 transitionEnterTimeout={200}
                 transitionLeaveTimeout={200}
+                transitionName='slide-right'
               >
                 {this.state.buttonVisible ? (
                   <Button
-                    type='submit'
                     bsStyle='primary'
                     disabled={!this.state.formValid}
                     loading={this.state.submitting}
                     loadingMessage='Saving...'
+                    type='submit'
                   >
                     Set New Password
                   </Button>
@@ -233,9 +233,9 @@ class ChangePassword extends React.Component {
               </ReactCSSTransitionGroup>
 
               <ReactCSSTransitionGroup
-                transitionName='slide-right'
                 transitionEnterTimeout={200}
                 transitionLeaveTimeout={200}
+                transitionName='slide-right'
               >
                 {this.state.success ? (
                   <div className='form-success'>
@@ -246,9 +246,9 @@ class ChangePassword extends React.Component {
               </ReactCSSTransitionGroup>
 
               <ReactCSSTransitionGroup
-                transitionName='slide-right'
                 transitionEnterTimeout={200}
                 transitionLeaveTimeout={200}
+                transitionName='slide-right'
               >
                 {this.state.error ? (
                   <div className='flash-messages--flash-message flash-messages--danger'>

@@ -411,8 +411,8 @@ class ClusterDetailTable extends React.Component {
                           </a>{' '}
                           {this.props.canClusterUpgrade ? (
                             <a
-                              onClick={this.props.showUpgradeModal}
                               className='upgrade-available'
+                              onClick={this.props.showUpgradeModal}
                             >
                               <i className='fa fa-info' /> Upgrade available
                             </a>

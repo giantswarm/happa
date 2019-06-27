@@ -232,8 +232,8 @@ class UpgradeClusterModal extends React.Component {
         <BootstrapModal.Footer>
           <Button
             bsStyle='primary'
-            onClick={this.submit}
             loading={this.state.loading}
+            onClick={this.submit}
           >
             Start Upgrade
           </Button>
@@ -299,7 +299,7 @@ class UpgradeClusterModal extends React.Component {
 
   render() {
     return (
-      <BootstrapModal show={this.state.modalVisible} onHide={this.close}>
+      <BootstrapModal onHide={this.close} show={this.state.modalVisible}>
         {this.currentPage()}
       </BootstrapModal>
     );

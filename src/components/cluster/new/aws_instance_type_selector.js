@@ -111,15 +111,15 @@ class AWSInstanceTypeSelector extends React.Component {
             }}
           >
             <InputField
+              autoFocus
+              onChange={this.updateInstanceType}
+              readOnly={this.props.readOnly}
               ref={i => {
                 this.instance_type = i;
               }}
               type='text'
-              value={this.props.value}
-              onChange={this.updateInstanceType}
               validate={this.validateInstanceType}
-              autoFocus
-              readOnly={this.props.readOnly}
+              value={this.props.value}
             />
 
             <div
@@ -134,9 +134,9 @@ class AWSInstanceTypeSelector extends React.Component {
           </form>
         </div>
         <BootstrapModal
-          show={this.state.modalVisible}
-          onHide={this.closeModal}
           className='new-cluster--instance-type-selector-modal aws'
+          onHide={this.closeModal}
+          show={this.state.modalVisible}
         >
           <BootstrapModal.Header closeButton>
             <BootstrapModal.Title>Select an Instance Type</BootstrapModal.Title>
@@ -156,22 +156,22 @@ class AWSInstanceTypeSelector extends React.Component {
                 {this.state.instanceTypes.map(instanceType => {
                   return (
                     <tr
-                      key={instanceType.name}
-                      onClick={this.preSelect.bind(this, instanceType.name)}
                       className={
                         instanceType.name === this.state.selectedInstanceType
                           ? 'selected'
                           : ''
                       }
+                      key={instanceType.name}
+                      onClick={this.preSelect.bind(this, instanceType.name)}
                     >
                       <td>
                         <input
-                          type='radio'
-                          readOnly
                           checked={
                             instanceType.name ===
                             this.state.selectedInstanceType
                           }
+                          readOnly
+                          type='radio'
                         />
                       </td>
                       <td>{instanceType.name}</td>
@@ -190,9 +190,9 @@ class AWSInstanceTypeSelector extends React.Component {
           </BootstrapModal.Body>
           <BootstrapModal.Footer>
             <Button
-              type='submit'
               bsStyle='primary'
               onClick={this.selectInstanceType}
+              type='submit'
             >
               Select Instance Type
             </Button>

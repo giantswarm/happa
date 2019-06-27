@@ -20,25 +20,25 @@ class Navigation extends React.Component {
         <div className='main-nav col-9'>
           <a
             href='https://giantswarm.io'
-            target='_blank'
             rel='noopener noreferrer'
+            target='_blank'
           >
             <img className='logo' src='/images/giantswarm_icon.svg' />
           </a>
           <div className='nav-responsive'>
-            <NavLink exact to='/' activeClassName='active'>
+            <NavLink activeClassName='active' exact to='/'>
               Clusters
             </NavLink>
-            <NavLink to='/organizations/' activeClassName='active'>
+            <NavLink activeClassName='active' to='/organizations/'>
               Organizations
             </NavLink>
             {this.props.showAppCatalog && (
-              <NavLink exact to='/apps/' activeClassName='active'>
+              <NavLink activeClassName='active' exact to='/apps/'>
                 Apps
               </NavLink>
             )}
             {this.props.user.isAdmin ? (
-              <NavLink to='/users/' activeClassName='active'>
+              <NavLink activeClassName='active' to='/users/'>
                 Users
               </NavLink>
             ) : (
@@ -46,8 +46,8 @@ class Navigation extends React.Component {
             )}
             <a
               href='https://docs.giantswarm.io'
-              target='_blank'
               rel='noopener noreferrer'
+              target='_blank'
             >
               Documentation <i className='fa fa-open-in-new' />
             </a>
@@ -58,14 +58,14 @@ class Navigation extends React.Component {
               {Object.entries(this.props.organizations.items).length === 0 &&
               !this.props.organizations.isFetching ? (
                 <DropdownButton
+                  id='org_dropdown'
+                  key='2'
                   title={
                     <span>
                       <span className='label label-default'>ORG</span>No
                       organizations
                     </span>
                   }
-                  key='2'
-                  id='org_dropdown'
                 >
                   <MenuItem
                     componentClass={NavLink}
@@ -77,14 +77,14 @@ class Navigation extends React.Component {
                 </DropdownButton>
               ) : (
                 <DropdownButton
+                  id='org_dropdown'
+                  key='2'
                   title={
                     <span>
                       <span className='label label-default'>ORG</span>{' '}
                       {this.props.selectedOrganization}
                     </span>
                   }
-                  key='2'
-                  id='org_dropdown'
                 >
                   <MenuItem
                     componentClass={NavLink}
@@ -106,9 +106,9 @@ class Navigation extends React.Component {
                   {_.sortBy(this.props.organizations.items, 'id').map(org => {
                     return (
                       <MenuItem
-                        onSelect={this.selectOrganization}
                         eventKey={org.id}
                         key={org.id}
+                        onSelect={this.selectOrganization}
                       >
                         {org.id}
                       </MenuItem>
@@ -120,22 +120,22 @@ class Navigation extends React.Component {
             &nbsp; &nbsp;
             <div className='user_dropdown'>
               <DropdownButton
+                id='user_dropdown'
+                key='1'
+                pullRight={true}
                 ref={d => {
                   this.user_dropdown = d;
                 }}
-                pullRight={true}
                 title={
                   <div className='user_dropdown--toggle'>
                     <Gravatar
+                      default='mm'
                       email={this.props.user.email}
                       size={100}
-                      default='mm'
                     />
                     <span>{this.props.user.email}</span>
                   </div>
                 }
-                key='1'
-                id='user_dropdown'
               >
                 {this.props.user.auth.scheme === 'giantswarm' ? (
                   <MenuItem

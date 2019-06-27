@@ -180,7 +180,7 @@ const InstallAppModal = props => {
 
   return (
     <React.Fragment>
-      <Button onClick={openModal} bsStyle='primary'>
+      <Button bsStyle='primary' onClick={openModal}>
         Configure &amp; Install
       </Button>
       {(() => {
@@ -189,9 +189,6 @@ const InstallAppModal = props => {
             return (
               <GenericModal
                 {...props}
-                visible={visible}
-                onClose={onClose}
-                title={`Install ${props.app.name}: Pick a cluster`}
                 footer={
                   <React.Fragment>
                     <Button bsStyle='primary' onClick={next}>
@@ -202,13 +199,16 @@ const InstallAppModal = props => {
                     </Button>
                   </React.Fragment>
                 }
+                onClose={onClose}
+                title={`Install ${props.app.name}: Pick a cluster`}
+                visible={visible}
               >
                 <ClusterPicker
-                  selectedClusterID={clusterID}
                   clusters={clusters}
                   onChangeQuery={setQuery}
                   onSelectCluster={onSelectCluster}
                   query={query}
+                  selectedClusterID={clusterID}
                 />
               </GenericModal>
             );
@@ -217,21 +217,13 @@ const InstallAppModal = props => {
             return (
               <GenericModal
                 {...props}
-                visible={visible}
-                onClose={onClose}
-                title={
-                  <React.Fragment>
-                    {`Install ${props.app.name} on`}{' '}
-                    <ClusterIDLabel clusterID={clusterID} />
-                  </React.Fragment>
-                }
                 footer={
                   <React.Fragment>
                     <Button
                       bsStyle='primary'
-                      onClick={createApp}
-                      loading={loading}
                       disabled={anyValidationErrors()}
+                      loading={loading}
+                      onClick={createApp}
                     >
                       Install App
                     </Button>
@@ -243,17 +235,25 @@ const InstallAppModal = props => {
                     </Button>
                   </React.Fragment>
                 }
+                onClose={onClose}
+                title={
+                  <React.Fragment>
+                    {`Install ${props.app.name} on`}{' '}
+                    <ClusterIDLabel clusterID={clusterID} />
+                  </React.Fragment>
+                }
+                visible={visible}
               >
                 <InstallAppForm
                   name={name}
                   nameError={nameError}
                   namespace={namespace}
                   namespaceError={namespaceError}
-                  valuesYAML={valuesYAML}
-                  valuesYAMLError={valuesYAMLError}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
                   onChangeValuesYAML={updateValuesYAML}
+                  valuesYAML={valuesYAML}
+                  valuesYAMLError={valuesYAMLError}
                 />
               </GenericModal>
             );

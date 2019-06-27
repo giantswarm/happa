@@ -20,6 +20,7 @@
     "semi": [1, "always"],
     "react/prefer-es6-class": [1, "always"],
     "react/no-find-dom-node": 0,
+    "react/jsx-sort-props": 2,
     "no-console": 0,
     "no-useless-escape": "off",
     "sort-imports-es6-autofix/sort-imports-es6": [2, {

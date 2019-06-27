@@ -88,21 +88,21 @@ class Layout extends React.Component {
         <DocumentTitle title='Giant Swarm'>
           <React.Fragment>
             <Navigation
-              user={this.props.user}
+              location={this.props.location}
               organizations={this.props.organizations}
               selectedOrganization={this.props.selectedOrganization}
               showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
-              location={this.props.location}
+              user={this.props.user}
             />
             <Modals />
             <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
               <div className='main col-9'>
                 <Switch>
-                  <Route exact path='/'                  component={Home} />
-                  <Route       path='/apps'       component={AppCatalog} />
-                  <Route exact path='/users'             component={Users} />
-                  <Route       path='/organizations'     component={Organizations} />
-                  <Route exact path='/account-settings'  component={AccountSettings} />
+                  <Route component={Home} exact                  path='/' />
+                  <Route       component={AppCatalog}       path='/apps' />
+                  <Route component={Users} exact             path='/users' />
+                  <Route       component={Organizations}     path='/organizations' />
+                  <Route component={AccountSettings} exact  path='/account-settings' />
                   <Redirect path='*' to='/' />
                 </Switch>
               </div>

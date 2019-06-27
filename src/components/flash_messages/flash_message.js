@@ -4,10 +4,8 @@
 // props on dismiss.
 //
 
-'use strict';
-
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class FlashMessage extends React.Component {
   constructor(props) {
@@ -40,8 +38,8 @@ class FlashMessage extends React.Component {
         >
           {this.props.message ? this.props.message : this.props.children}
           <i
-            className='fa fa-close flash-messages--dismiss'
             aria-hidden='true'
+            className='fa fa-close flash-messages--dismiss'
             onClick={this.dismissFlash}
           />
         </div>

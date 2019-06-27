@@ -101,13 +101,13 @@ class ClusterName extends React.Component {
       return (
         <form className='form cluster-name' onSubmit={this.handleSubmit}>
           <input
-            type='text'
-            name='cluster-name'
-            value={this.state.inputFieldValue}
+            autoComplete='off'
             autoFocus
+            name='cluster-name'
             onChange={this.handleChange}
             onKeyUp={this.handleKey}
-            autoComplete='off'
+            type='text'
+            value={this.state.inputFieldValue}
           />
           <div className='btn-group'>
             <Button type='submit'>OK</Button>
@@ -120,8 +120,8 @@ class ClusterName extends React.Component {
     // view mode
     return (
       <OverlayTrigger
-        placement='top'
         overlay={<Tooltip id='tooltip'>Click to edit cluster name</Tooltip>}
+        placement='top'
       >
         <a className='cluster-name' onClick={this.activateEditMode}>
           {this.state.name}
