@@ -89,17 +89,17 @@ class TermsOfService extends React.Component {
             2.5 Your Account has &quot;hard&quot; and &quot;soft&quot; usage
             limits, as further explained at{' '}
             <a
-              target='_blank'
-              rel='noopener noreferrer'
               href='https://giantswarm.io/limits/'
+              rel='noopener noreferrer'
+              target='_blank'
             >
               Quota &amp; Limits
             </a>{' '}
             available at{' '}
             <a
-              target='_blank'
-              rel='noopener noreferrer'
               href='https://giantswarm.io/limits/'
+              rel='noopener noreferrer'
+              target='_blank'
             >
               https://giantswarm.io/limits/
             </a>
@@ -119,16 +119,16 @@ class TermsOfService extends React.Component {
             3.2 You agree to comply with the{' '}
             <a
               href='https://giantswarm.io/acceptableuse/'
-              target='_blank'
               rel='noopener noreferrer'
+              target='_blank'
             >
               Giant Swarm Acceptable Use Policy
             </a>{' '}
             (hereinafter &quot;AUP&quot;) available at{' '}
             <a
-              target='_blank'
-              rel='noopener noreferrer'
               href='https://giantswarm.io/acceptableuse/'
+              rel='noopener noreferrer'
+              target='_blank'
             >
               https://giantswarm.io/acceptableuse/
             </a>{' '}
@@ -185,17 +185,17 @@ class TermsOfService extends React.Component {
           <p>
             3.7 The Giant Swarm Service shall be subject to the{' '}
             <a
-              target='_blank'
-              rel='noopener noreferrer'
               href='https://giantswarm.io/acceptableuse/'
+              rel='noopener noreferrer'
+              target='_blank'
             >
               Privacy Policy
             </a>{' '}
             of Giant Swarm available at{' '}
             <a
-              target='_blank'
-              rel='noopener noreferrer'
               href='https://giantswarm.io/privacypolicy/'
+              rel='noopener noreferrer'
+              target='_blank'
             >
               https://giantswarm.io/privacypolicy/
             </a>
@@ -245,9 +245,9 @@ class TermsOfService extends React.Component {
             5.2 The applicable fees for additional resources and services are
             set forth in Giant Swarm Fees at{' '}
             <a
-              target='_blank'
-              rel='noopener noreferrer'
               href='https://giantswarm.io/pricing/'
+              rel='noopener noreferrer'
+              target='_blank'
             >
               https://giantswarm.io/pricing/
             </a>
@@ -326,17 +326,17 @@ class TermsOfService extends React.Component {
             sub-license, to display the Giant Swarm trademarks and/or Giant
             Swarm logos as provided in and solely in accordance with the{' '}
             <a
-              target='_blank'
-              rel='noopener noreferrer'
               href='https://giantswarm.io/brandguidelines/'
+              rel='noopener noreferrer'
+              target='_blank'
             >
               Trademark Usage Guidelines
             </a>{' '}
             at{' '}
             <a
-              target='_blank'
-              rel='noopener noreferrer'
               href='https://giantswarm.io/brandguidelines/'
+              rel='noopener noreferrer'
+              target='_blank'
             >
               https://giantswarm.io/brandguidelines/
             </a>{' '}
@@ -426,17 +426,17 @@ class TermsOfService extends React.Component {
             10.2 Except for certain principles regarding the availability of the
             Giant Swarm Service which shall be exclusively governed by the{' '}
             <a
-              target='_blank'
-              rel='noopener noreferrer'
               href='https://giantswarm.io/sla/'
+              rel='noopener noreferrer'
+              target='_blank'
             >
               Giant Swarm Service Level Agreement
             </a>{' '}
             available at{' '}
             <a
-              target='_blank'
-              rel='noopener noreferrer'
               href='https://giantswarm.io/sla/'
+              rel='noopener noreferrer'
+              target='_blank'
             >
               https://giantswarm.io/sla/
             </a>
@@ -560,9 +560,9 @@ class TermsOfService extends React.Component {
 
         <div className='toslink'>
           <a
-            target='_blank'
-            rel='noopener noreferrer'
             href='https://giantswarm.io/terms/'
+            rel='noopener noreferrer'
+            target='_blank'
           >
             Giant Swarm Terms of Service
           </a>

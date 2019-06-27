@@ -369,11 +369,11 @@ export class SignUp extends React.Component {
         </h1>
 
         <form
+          className={'step-' + this.state.currentStep}
+          onSubmit={this.handleSubmit}
           ref={f => {
             this.signupForm = f;
           }}
-          onSubmit={this.handleSubmit}
-          className={'step-' + this.state.currentStep}
         >
           <div id='passwordGroup'>
             <p className='subtitle'>
@@ -382,23 +382,23 @@ export class SignUp extends React.Component {
             </p>
 
             <PasswordField
+              label='Set a password'
+              onChange={this.passwordEditingCompleted}
+              onStartTyping={this.passwordEditingStarted}
               ref={p => {
                 this.password = p;
               }}
-              label='Set a password'
-              onStartTyping={this.passwordEditingStarted}
-              onChange={this.passwordEditingCompleted}
             />
           </div>
 
           <div id='passwordConfirmationGroup'>
             <PasswordField
+              label='Password, once again'
+              onChange={this.passwordConfirmationEditingCompleted}
+              onStartTyping={this.passwordConfirmationEditingStarted}
               ref={f => {
                 this.passwordConfirmation = f;
               }}
-              label='Password, once again'
-              onStartTyping={this.passwordConfirmationEditingStarted}
-              onChange={this.passwordConfirmationEditingCompleted}
             />
           </div>
 
@@ -408,12 +408,12 @@ export class SignUp extends React.Component {
             <div className='checkbox'>
               <label htmlFor='tosAccept'>
                 <input
-                  type='checkbox'
+                  id='tosAccept'
+                  onChange={this.tosChanged}
                   ref={i => {
                     this.tosAccept = i;
                   }}
-                  id='tosAccept'
-                  onChange={this.tosChanged}
+                  type='checkbox'
                 />
                 I accept the terms of service
               </label>
@@ -423,12 +423,12 @@ export class SignUp extends React.Component {
           <StatusMessage status={this.state.statusMessage} />
           {this.state.buttonText[this.state.currentStep] != '' ? (
             <Button
-              type='submit'
-              bsStyle='primary'
               bsSize='large'
+              bsStyle='primary'
               disabled={!this.state.advancable || this.state.submitting}
               loading={this.state.submitting}
               onClick={this.logIn}
+              type='submit'
             >
               {this.state.buttonText[this.state.currentStep]}
             </Button>

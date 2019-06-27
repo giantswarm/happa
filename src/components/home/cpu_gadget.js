@@ -1,7 +1,5 @@
-'use strict';
-
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class CPUGadget extends React.Component {
   polarToCartesian(centerX, centerY, radius, angleInDegrees) {
@@ -64,17 +62,17 @@ class CPUGadget extends React.Component {
     return (
       <svg viewBox='-2 -2 4 4'>
         <g fill='none' fillRule='evenodd'>
-          <g transform='translate(0 0)' strokeWidth='0.2'>
+          <g strokeWidth='0.2' transform='translate(0 0)'>
             <circle
-              stroke={this.shadeColor(this.props.color, 0.01)}
-              strokeOpacity='.5'
               cx='0'
               cy='0'
               r='1.9'
+              stroke={this.shadeColor(this.props.color, 0.01)}
+              strokeOpacity='.5'
             />
             <path
-              stroke={this.props.color}
               d={this.describeArc(0, 0, 1.9, 0, degrees)}
+              stroke={this.props.color}
             />
           </g>
         </g>

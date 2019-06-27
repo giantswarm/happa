@@ -199,11 +199,11 @@ class ClusterApps extends React.Component {
                       >
                         {app.logoUrl && !this.state.iconErrors[app.logoUrl] && (
                           <img
-                            src={app.logoUrl}
                             alt={app.metadata.name + ' icon'}
-                            width='36'
                             height='36'
                             onError={this.imgError}
+                            src={app.logoUrl}
+                            width='36'
                           />
                         )}
                         {app.metadata.name}
@@ -240,7 +240,7 @@ class ClusterApps extends React.Component {
                   {this.preinstalledApps()[appCategory].map(app => {
                     return (
                       <div className='cluster-apps--app' key={app.name}>
-                        <img src={app.logoUrl} alt={app.title + ' icon'} />
+                        <img alt={app.title + ' icon'} src={app.logoUrl} />
                         {app.name}
                         <small>{app.version}&nbsp;</small>
                       </div>

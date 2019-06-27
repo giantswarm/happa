@@ -1,7 +1,7 @@
+import { mount } from 'enzyme';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Tab from 'react-bootstrap/lib/Tab';
-import { mount } from 'enzyme';
 
 import Tabs from './tabs';
 

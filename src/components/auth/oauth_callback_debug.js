@@ -1,13 +1,11 @@
-'use strict';
-
-import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { connect } from 'react-redux';
-import { clearQueues } from '../../lib/flash_message';
 import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
-import QueryString from 'query-string';
+import { clearQueues } from '../../lib/flash_message';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import QueryString from 'query-string';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class OauthCallback extends React.Component {
   componentWillUnmount() {
@@ -22,11 +20,11 @@ class OauthCallback extends React.Component {
         <div className='login_form--mask' />
 
         <ReactCSSTransitionGroup
-          transitionName={`login_form--transition`}
           transitionAppear={true}
           transitionAppearTimeout={200}
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
+          transitionName={`login_form--transition`}
         >
           <div className='login_form--container col-4'>
             <h1>OAuth Callback</h1>

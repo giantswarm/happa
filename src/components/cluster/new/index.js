@@ -8,7 +8,7 @@ class Cluster extends React.Component {
   render() {
     return (
       <Switch>
-        <Route exact path={`${this.props.match.path}`} component={View} />
+        <Route component={View} exact path={`${this.props.match.path}`} />
       </Switch>
     );
   }

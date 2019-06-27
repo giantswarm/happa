@@ -98,11 +98,11 @@ class Login extends React.Component {
         <div className='login_form--mask' />
 
         <ReactCSSTransitionGroup
-          transitionName={`login_form--transition`}
           transitionAppear={true}
           transitionAppearTimeout={200}
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
+          transitionName={`login_form--transition`}
         >
           <div className='login_form--container col-4'>
             <h1>Log in to Giant&nbsp;Swarm</h1>
@@ -110,37 +110,37 @@ class Login extends React.Component {
               <div className='textfield'>
                 <label>Email</label>
                 <input
-                  value={this.state.email}
-                  type='text'
-                  id='email'
                   autoComplete='username'
+                  autoFocus
+                  id='email'
+                  onChange={this.updateEmail}
                   ref={i => {
                     this.email = i;
                   }}
-                  onChange={this.updateEmail}
-                  autoFocus
+                  type='text'
+                  value={this.state.email}
                 />
               </div>
 
               <div className='textfield'>
                 <label>Password</label>
                 <input
-                  value={this.state.password}
-                  type='password'
-                  id='password'
                   autoComplete='current-password'
+                  id='password'
+                  onChange={this.updatePassword}
                   ref={i => {
                     this.password = i;
                   }}
-                  onChange={this.updatePassword}
+                  type='password'
+                  value={this.state.password}
                 />
               </div>
 
               <Button
-                type='submit'
                 bsStyle='primary'
                 loading={this.state.authenticating}
                 onClick={this.logIn}
+                type='submit'
               >
                 Log in
               </Button>

@@ -87,24 +87,24 @@ class NodeCountSelector extends React.Component {
               <label>Minimum</label>
               <NumberPicker
                 label=''
-                stepSize={1}
-                value={this.state.scaling.min}
-                min={1}
                 max={this.state.scaling.max}
+                min={1}
                 onChange={this.updateScalingMin}
                 readOnly={false}
+                stepSize={1}
+                value={this.state.scaling.min}
               />
             </div>
             <div className='col-6'>
               <label>Maximum</label>
               <NumberPicker
                 label=''
+                max={99}
+                min={this.state.scaling.min}
+                onChange={this.updateScalingMax}
+                readOnly={false} // TODO
                 stepSize={1}
                 value={this.state.scaling.max}
-                min={this.state.scaling.min}
-                max={99} // TODO
-                onChange={this.updateScalingMax}
-                readOnly={false}
               />
             </div>
           </div>
@@ -130,12 +130,12 @@ class NodeCountSelector extends React.Component {
             >
               <NumberPicker
                 label=''
+                max={99}
+                min={1}
+                onChange={this.updateNodeCount}
+                readOnly={false} // TODO
                 stepSize={1}
                 value={this.state.scaling.max}
-                min={1}
-                max={99} // TODO
-                onChange={this.updateNodeCount}
-                readOnly={false}
               />
             </form>
           </div>

@@ -1,8 +1,6 @@
-'use strict';
-
-import React from 'react';
 import NumberPicker from './number_picker.js';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class NewKVMWorker extends React.Component {
   updateWorkerCPU = numberPicker => {
@@ -40,41 +38,41 @@ class NewKVMWorker extends React.Component {
         </div>
 
         <NumberPicker
+          key={'worker-cpu-' + index + this.props.readOnly}
           label='CPU Cores'
-          stepSize={1}
-          value={worker.cpu}
-          min={1}
           max={999}
-          workerId={worker.id}
+          min={1}
           onChange={this.updateWorkerCPU}
           readOnly={this.props.readOnly}
-          key={'worker-cpu-' + index + this.props.readOnly}
+          stepSize={1}
+          value={worker.cpu}
+          workerId={worker.id}
         />
 
         <NumberPicker
+          key={'worker-memory-' + index + this.props.readOnly}
           label='Memory'
-          unit='GB'
-          stepSize={1}
-          value={worker.memory}
-          min={1}
           max={999}
-          workerId={worker.id}
+          min={1}
           onChange={this.updateWorkerMemory}
           readOnly={this.props.readOnly}
-          key={'worker-memory-' + index + this.props.readOnly}
+          stepSize={1}
+          unit='GB'
+          value={worker.memory}
+          workerId={worker.id}
         />
 
         <NumberPicker
+          key={'worker-storage-' + index + this.props.readOnly}
           label='Storage'
-          unit='GB'
-          stepSize={10}
-          value={worker.storage}
-          min={10}
           max={999}
-          workerId={worker.id}
+          min={10}
           onChange={this.updateWorkerStorage}
           readOnly={this.props.readOnly}
-          key={'worker-storage-' + index + this.props.readOnly}
+          stepSize={10}
+          unit='GB'
+          value={worker.storage}
+          workerId={worker.id}
         />
       </div>
     );

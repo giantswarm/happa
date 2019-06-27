@@ -65,10 +65,10 @@ const TextInput = props => {
       <InputWrapper>
         {props.icon ? <Icon className={'fa fa-' + props.icon} /> : undefined}
         <Input
-          type='text'
           id={props.label}
-          value={props.value}
           onChange={onChange}
+          type='text'
+          value={props.value}
         />
       </InputWrapper>
       {props.validationError ? (

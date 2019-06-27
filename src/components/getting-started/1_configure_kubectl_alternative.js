@@ -135,35 +135,35 @@ class ConfigKubeCtl extends React.Component {
             <div className='cert-downloads'>
               <a
                 className='button outline'
+                download='ca.crt'
                 href={window.URL.createObjectURL(
                   new Blob(
                     [this.state.keyPair.data.certificate_authority_data],
                     { type: 'application/plain;charset=utf-8' }
                   )
                 )}
-                download='ca.crt'
               >
                 CA CERTIFICATE
               </a>
               <a
                 className='button outline'
+                download='client.crt'
                 href={window.URL.createObjectURL(
                   new Blob([this.state.keyPair.data.client_certificate_data], {
                     type: 'application/plain;charset=utf-8',
                   })
                 )}
-                download='client.crt'
               >
                 CLIENT CERTIFICATE
               </a>
               <a
                 className='button outline'
+                download='client.key'
                 href={window.URL.createObjectURL(
                   new Blob([this.state.keyPair.data.client_key_data], {
                     type: 'application/plain;charset=utf-8',
                   })
                 )}
-                download='client.key'
               >
                 CLIENT KEY
               </a>

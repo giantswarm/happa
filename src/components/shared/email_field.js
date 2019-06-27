@@ -95,13 +95,13 @@ class EmailField extends React.Component {
       <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
         <input
-          type='email'
-          ref={i => {
-            this.input = i;
-          }}
           id={this.props.name}
           onBlur={this.onBlur}
           onChange={this.onChange}
+          ref={i => {
+            this.input = i;
+          }}
+          type='email'
         />
         <span className='message'>
           {this.state.validationError} {this.props.errorMessage}&nbsp;

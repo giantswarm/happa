@@ -357,14 +357,14 @@ class CreateCluster extends React.Component {
                     Give your cluster a name so you can recognize it in a crowd.
                   </p>
                   <input
+                    autoFocus
                     className='col-4'
+                    onChange={this.updateClusterName}
                     ref={i => {
                       this.cluster_name = i;
                     }}
                     type='text'
                     value={this.state.clusterName}
-                    onChange={this.updateClusterName}
-                    autoFocus
                   />
                 </form>
               </div>
@@ -399,12 +399,12 @@ class CreateCluster extends React.Component {
                       <div className='col-3'>
                         <NumberPicker
                           label=''
-                          stepSize={1}
-                          value={this.state.availabilityZonesPicker.value}
-                          min={this.props.minAvailabilityZones}
                           max={this.props.maxAvailabilityZones}
+                          min={this.props.minAvailabilityZones}
                           onChange={this.updateAvailabilityZonesPicker}
                           readOnly={false}
+                          stepSize={1}
+                          value={this.state.availabilityZonesPicker.value}
                         />
                       </div>
                     </div>
@@ -415,7 +415,7 @@ class CreateCluster extends React.Component {
                         release version 6.1.0 or greater.
                       </p>
                       <div className='col-3'>
-                        <NumberPicker value={1} readOnly={true} />
+                        <NumberPicker readOnly={true} value={1} />
                       </div>
                     </div>
                   )}
@@ -435,9 +435,9 @@ class CreateCluster extends React.Component {
                         <p>Select the instance type for your worker nodes.</p>
                         <AWSInstanceTypeSelector
                           allowedInstanceTypes={this.props.allowedInstanceTypes}
-                          value={this.state.aws.instanceType.value}
-                          readOnly={false}
                           onChange={this.updateAWSInstanceType}
+                          readOnly={false}
+                          value={this.state.aws.instanceType.value}
                         />
                       </div>
                     </div>
@@ -456,33 +456,33 @@ class CreateCluster extends React.Component {
 
                         <NumberPicker
                           label='CPU Cores'
+                          max={999}
+                          min={1}
+                          onChange={this.updateCPUCores}
                           stepSize={1}
                           value={this.state.kvm.cpuCores.value}
-                          min={1}
-                          max={999}
-                          onChange={this.updateCPUCores}
                         />
                         <br />
 
                         <NumberPicker
                           label='Memory (GB)'
-                          unit='GB'
-                          stepSize={1}
-                          value={this.state.kvm.memorySize.value}
-                          min={1}
                           max={999}
+                          min={1}
                           onChange={this.updateMemorySize}
+                          stepSize={1}
+                          unit='GB'
+                          value={this.state.kvm.memorySize.value}
                         />
                         <br />
 
                         <NumberPicker
                           label='Storage (GB)'
-                          unit='GB'
-                          stepSize={10}
-                          value={this.state.kvm.diskSize.value}
-                          min={10}
                           max={999}
+                          min={10}
                           onChange={this.updateDiskSize}
+                          stepSize={10}
+                          unit='GB'
+                          value={this.state.kvm.diskSize.value}
                         />
                       </div>
                     </div>
@@ -497,9 +497,9 @@ class CreateCluster extends React.Component {
                         <p>Select the vm size for your worker nodes.</p>
                         <AzureVMSizeSelector
                           allowedVMSizes={this.props.allowedVMSizes}
-                          value={this.state.azure.vmSize.value}
-                          readOnly={false}
                           onChange={this.updateVMSize}
+                          readOnly={false}
+                          value={this.state.azure.vmSize.value}
                         />
                       </div>
                     </div>
@@ -517,9 +517,9 @@ class CreateCluster extends React.Component {
                     this.props.provider,
                     this.state.releaseVersion
                   )}
-                  scaling={this.state.scaling}
-                  readOnly={false}
                   onChange={this.updateScaling}
+                  readOnly={false}
+                  scaling={this.state.scaling}
                 />
               </div>
             </div>
@@ -537,12 +537,12 @@ class CreateCluster extends React.Component {
 
                 {this.state.error ? this.errorState() : undefined}
                 <Button
-                  type='button'
                   bsSize='large'
                   bsStyle='primary'
-                  onClick={this.createCluster}
-                  loading={this.state.submitting}
                   disabled={!this.valid()}
+                  loading={this.state.submitting}
+                  onClick={this.createCluster}
+                  type='button'
                 >
                   Create Cluster
                 </Button>

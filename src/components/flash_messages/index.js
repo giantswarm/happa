@@ -4,22 +4,20 @@
 // And provides a way to dismiss them.
 //
 
-'use strict';
-
-import FlashMessage from './flash_message';
-import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import { flashRemove } from '../../actions/flashMessageActions';
+import FlashMessage from './flash_message';
 import PropTypes from 'prop-types';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class FlashMessages extends React.Component {
   makeFlashComponent = flashMessage => {
     return (
       <FlashMessage
-        message={flashMessage.message}
-        key={flashMessage.key}
         class={flashMessage.class}
+        key={flashMessage.key}
+        message={flashMessage.message}
         onDismiss={this.dismissFlash.bind(this, flashMessage)}
       />
     );
@@ -33,9 +31,9 @@ class FlashMessages extends React.Component {
     return (
       <div className='flash-messages--container'>
         <ReactCSSTransitionGroup
-          transitionName='flash-messages--transition'
           transitionEnterTimeout={200}
           transitionLeaveTimeout={200}
+          transitionName='flash-messages--transition'
         >
           {this.props.flashMessages.toArray().map(this.makeFlashComponent)}
         </ReactCSSTransitionGroup>

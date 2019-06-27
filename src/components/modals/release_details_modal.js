@@ -30,8 +30,8 @@ class ReleaseDetailsModal extends React.Component {
     return (
       <BootstrapModal
         className='release-selector-modal'
-        show={this.state.modalVisible}
         onHide={this.close}
+        show={this.state.modalVisible}
       >
         <BootstrapModal.Header closeButton>
           <BootstrapModal.Title>Release Details</BootstrapModal.Title>
