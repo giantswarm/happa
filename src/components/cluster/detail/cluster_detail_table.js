@@ -1,6 +1,6 @@
 import { relativeDate } from '../../../lib/helpers.js';
 import _ from 'underscore';
-import AWSAccountID from '../../shared/aws_account_id';
+import AWSAccountID from '../../UI/aws_account_id';
 import Button from '../../UI/button';
 import moment from 'moment';
 import PropTypes from 'prop-types';
