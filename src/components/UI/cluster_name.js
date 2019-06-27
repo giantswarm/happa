@@ -41,18 +41,14 @@ const LinkWrapper = styled.span({
  * place. It renders as inline-block.
  */
 class ClusterName extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      // editing is true while the widget is in edit mode.
-      editing: false,
-      // name is a copy of the actual cluster name
-      name: props.name,
-      // inputFieldValue is what the input field currently holds
-      inputFieldValue: props.name,
-    };
-  }
+  state = {
+    // editing is true while the widget is in edit mode.
+    editing: false,
+    // name is a copy of the actual cluster name
+    name: this.props.name,
+    // inputFieldValue is what the input field currently holds
+    inputFieldValue: this.props.name,
+  };
 
   activateEditMode = () => {
     this.setState({
