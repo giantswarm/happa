@@ -41,7 +41,6 @@ const StyledLink = styled(Link)({
   '&:hover': {
     zIndex: 10,
     boxShadow: '0px 0px 5px #549ac3',
-    // [`${AppIcon}`]: {
     'div:nth-of-type(1)': {
       opacity: 1,
       boxShadow: '0px 0px 5px #549ac3',
