@@ -18,6 +18,9 @@ const theme = {
     med: '825px',
     large: '1200px',
   },
+  fontFamilies: {
+    console: 'Inconsolata, monospace',
+  },
 };
 
 export default theme;

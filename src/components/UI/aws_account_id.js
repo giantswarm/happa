@@ -1,5 +1,13 @@
+import { withTheme } from 'emotion-theming';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
+
+const Wrapper = withTheme(
+  styled.span(props => ({
+    fontFamily: props.theme.fontFamilies.console,
+  }))
+);
 
 class AWSAccountID extends React.Component {
   render() {
@@ -8,7 +16,7 @@ class AWSAccountID extends React.Component {
     let accountID = parts[4];
 
     return (
-      <span className='AWSAccountID'>
+      <Wrapper>
         {accountID}{' '}
         <a
           href={'https://' + accountID + '.signin.aws.amazon.com/console'}
@@ -17,7 +25,7 @@ class AWSAccountID extends React.Component {
         >
           <i className='fa fa-open-in-new' />
         </a>
-      </span>
+      </Wrapper>
     );
   }
 }
