@@ -5,9 +5,9 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 const LoadingIndicator = props => (
   <div className='progress_button--status-indicator'>
     <ReactCSSTransitionGroup
-      transitionName={`slide-${props.loadingPosition}`}
       transitionEnterTimeout={200}
       transitionLeaveTimeout={200}
+      transitionName={`slide-${props.loadingPosition}`}
     >
       {props.loading ? (
         <img
