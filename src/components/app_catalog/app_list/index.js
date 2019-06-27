@@ -147,9 +147,13 @@ class AppList extends React.Component {
                 </div>
               </form>
             </h1>
+            {/* TODO make its own UI component? 
+                    remove one of the two next divs
+                    we probably need windowing here
+                    and other perfomance related tricks: lazy loading, use of intersection observer, ...
+              */}
             <div className='app-catalog-overview'>
-              {/* TODO make its own UI component? */}
-              <div className='apps' > {/*style={{ justifyContent: 'flex-start' }}*/}
+              <div className='apps' style={{ justifyContent: 'flex-start' }}>
                 {(() => {
                   var apps = this.filterApps(
                     this.props.catalog.apps,
@@ -167,6 +171,7 @@ class AppList extends React.Component {
                       <React.Fragment>
                         {apps.map(appVersions => {
                           const key = `${appVersions[0].repoName}/${appVersions[0].name}`;
+                          {/* TODO find another way, we can't do forwardRefs in functional components */ }
                           return (
                             <AppContainer
                               key={key}
