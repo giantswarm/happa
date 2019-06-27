@@ -41,13 +41,10 @@ const Wrapper = styled.span(() => ({
  * Note: props.setTimeout is added via ReactTimeout.
  */
 class RefreshableLabel extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      dataItems: props.dataItems,
-      changed: false,
-    };
-  }
+  state = {
+    dataItems: this.props.dataItems,
+    changed: false,
+  };
 
   static getDerivedStateFromProps = (nextProps, prevState) => {
     var d = _.difference(prevState.dataItems, nextProps.dataItems);
