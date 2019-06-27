@@ -108,31 +108,39 @@ const AppDetails = styled.div({
   },
 });
 
-const AppContainer = props => {
-  const { appVersions, catalog, searchQuery, iconErrors, imgError } = props;
-  const { icon, name, repoName, version } = appVersions[0];
-  const to = `/apps/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
+class AppContainer extends React.Component {
+  render() {
+    const {
+      appVersions,
+      catalog,
+      searchQuery,
+      iconErrors,
+      imgError,
+    } = this.props;
+    const { icon, name, repoName, version } = appVersions[0];
+    const to = `/apps/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
-  return (
-    <Wrapper>
-      <StyledLink to={to}>
-        {repoName === 'managed' && <Badge>MANAGED</Badge> // This is always false. Is this ok?
-        }
-        <AppIcon>
-          {icon && !iconErrors[icon] ? (
-            <img src={icon} onError={imgError} />
-          ) : (
+    return (
+      <Wrapper>
+        <StyledLink to={to}>
+          {repoName === 'managed' && <Badge>MANAGED</Badge> // This is always false. Is this ok?
+          }
+          <AppIcon>
+            {icon && !iconErrors[icon] ? (
+              <img src={icon} onError={imgError} />
+            ) : (
+              <h3>{name}</h3>
+            )}
+          </AppIcon>
+          <AppDetails>
             <h3>{name}</h3>
-          )}
-        </AppIcon>
-        <AppDetails>
-          <h3>{name}</h3>
-          <span>{version}</span>
-        </AppDetails>
-      </StyledLink>
-    </Wrapper>
-  );
-};
+            <span>{version}</span>
+          </AppDetails>
+        </StyledLink>
+      </Wrapper>
+    );
+  }
+}
 
 AppContainer.propTypes = {
   appVersions: PropTypes.array,
