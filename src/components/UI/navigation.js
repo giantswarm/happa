@@ -1,7 +1,5 @@
 import { Breadcrumbs } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { organizationSelect } from '../../actions/organizationActions';
 import _ from 'underscore';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import Gravatar from 'react-gravatar';
@@ -10,10 +8,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class Navigation extends React.Component {
-  selectOrganization = orgId => {
-    this.props.dispatch(organizationSelect(orgId));
-  };
-
   render() {
     return (
       <nav className='outer-nav'>
@@ -106,9 +100,9 @@ class Navigation extends React.Component {
                   {_.sortBy(this.props.organizations.items, 'id').map(org => {
                     return (
                       <MenuItem
+                        onSelect={this.props.onSelectOrganization}
                         eventKey={org.id}
                         key={org.id}
-                        onSelect={this.selectOrganization}
                       >
                         {org.id}
                       </MenuItem>
@@ -170,19 +164,8 @@ Navigation.propTypes = {
   user: PropTypes.object,
   showAppCatalog: PropTypes.bool,
   organizations: PropTypes.object,
+  onSelectOrganization: PropTypes.func,
   selectedOrganization: PropTypes.string,
-  dispatch: PropTypes.func,
 };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch: dispatch,
-  };
-}
-
-export default connect(
-  () => {
-    return {};
-  },
-  mapDispatchToProps
-)(Navigation);
+export default Navigation;
