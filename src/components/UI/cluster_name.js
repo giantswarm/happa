@@ -7,7 +7,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-const FormWrapper = styled.div(() => ({
+const FormWrapper = styled.div({
   display: 'inline-block',
   form: {
     display: 'inline-block',
@@ -27,14 +27,14 @@ const FormWrapper = styled.div(() => ({
     marginLeft: 4,
     top: -2,
   },
-}));
+});
 
-const LinkWrapper = styled.span(() => ({
+const LinkWrapper = styled.span({
   'a:hover': {
     textDecorationStyle: 'dotted',
     color: '#fff',
   },
-}));
+});
 
 /**
  * ClusterName is a widget to display and edit a cluster name in the same
