@@ -13,7 +13,7 @@ const Wrapper = styled.div(props => ({
 
   [`@media only screen and (max-width: ${props.theme.breakpoints.large})`]: {
     width: 'calc(33.333% - 13.333px)',
-    // we are unsetting the 4n + 0 rule one above
+    // We are unsetting the 4n + 0 rule one above.
     '&:nth-of-type(4n + 0)': {
       marginRight: '20px',
     },
