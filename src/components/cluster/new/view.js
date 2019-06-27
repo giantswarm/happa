@@ -16,54 +16,50 @@ import React from 'react';
 import ReleaseSelector from './release_selector.js';
 
 class CreateCluster extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      availabilityZonesPicker: {
-        value: 1,
+  state = {
+    availabilityZonesPicker: {
+      value: 1,
+      valid: true,
+    },
+    releaseVersion: '',
+    clusterName: 'My cluster',
+    scaling: {
+      automatic: false,
+      min: 3,
+      minValid: true,
+      max: 3,
+      maxValid: true,
+    },
+    submitting: false,
+    valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
+    error: false,
+    aws: {
+      instanceType: {
+        valid: true,
+        value: this.props.defaultInstanceType,
+      },
+    },
+    azure: {
+      vmSize: {
+        valid: true,
+        value: this.props.defaultVMSize,
+      },
+    },
+    kvm: {
+      cpuCores: {
+        value: this.props.defaultCPUCores,
         valid: true,
       },
-      releaseVersion: '',
-      clusterName: 'My cluster',
-      scaling: {
-        automatic: false,
-        min: 3,
-        minValid: true,
-        max: 3,
-        maxValid: true,
+      memorySize: {
+        value: this.props.defaultMemorySize,
+        valid: true,
       },
-      submitting: false,
-      valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
-      error: false,
-      aws: {
-        instanceType: {
-          valid: true,
-          value: props.defaultInstanceType,
-        },
+      diskSize: {
+        value: this.props.defaultDiskSize,
+        valid: true,
       },
-      azure: {
-        vmSize: {
-          valid: true,
-          value: props.defaultVMSize,
-        },
-      },
-      kvm: {
-        cpuCores: {
-          value: props.defaultCPUCores,
-          valid: true,
-        },
-        memorySize: {
-          value: props.defaultMemorySize,
-          valid: true,
-        },
-        diskSize: {
-          value: props.defaultDiskSize,
-          valid: true,
-        },
-      },
-    };
-  }
+    },
+  };
 
   updateAvailabilityZonesPicker = n => {
     this.setState({
