@@ -1,6 +1,6 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import AppDetails from '../../UI/app_details';
 import DocumentTitle from 'react-document-title';
 import InstallAppModal from './install_app_modal';
 import PropTypes from 'prop-types';
@@ -41,136 +41,23 @@ class AppDetail extends React.Component {
           <DocumentTitle
             title={`${this.props.appVersions[0].name} | Giant Swarm `}
           >
-            <div className='app-detail'>
-              <Link
-                to={
-                  '/apps/' +
-                  this.props.match.params.repo +
-                  '/?q=' +
-                  this.state.q +
-                  '#' +
-                  this.props.appVersions[0].name
-                }
-              >
-                <i aria-hidden='true' className='fa fa-chevron-left' />
-                Back to &quot;{this.props.repo.spec.title}&quot;
-              </Link>
-
-              <br />
-              <br />
-              <div className='app-detail--header clearfix'>
-                {this.props.appVersions[0].icon &&
-                  this.props.appVersions[0].icon !== '' &&
-                  !this.state.imgError && (
-                    <div className='app-detail--icon'>
-                      <img
-                        onError={this.imgError}
-                        src={this.props.appVersions[0].icon}
-                      />
-                    </div>
-                  )}
-
-                <div className='app-detail--title'>
-                  <h1>{this.props.appVersions[0].name}</h1>
-                  <div className='keywords'>
-                    {this.props.appVersions[0].keywords
-                      ? this.props.appVersions[0].keywords.map(x => (
-                          <span className='keyword' key={x}>
-                            {x}
-                          </span>
-                        ))
-                      : ''}
-                  </div>
-
-                  <div className='version'>
-                    <small>Chart&nbsp;Version</small>&nbsp;
-                    <code>{this.props.appVersions[0].version}</code>{' '}
-                    <small>App&nbsp;Version</small>&nbsp;
-                    <code>{this.props.appVersions[0].appVersion}</code>
-                  </div>
-                </div>
-
-                <div className='app-detail--install'>
-                  <InstallAppModal
-                    app={{
-                      catalog: this.props.repo.metadata.name,
-                      name: this.props.appVersions[0].name,
-                      version: this.props.appVersions[0].version,
-                    }}
-                    selectedClusterID={this.props.selectedClusterID}
-                  />
-                </div>
-              </div>
-
-              <div className='app-detail--body'>
-                {this.props.appVersions[0].description &&
-                this.props.appVersions[0].description != '' ? (
-                  <React.Fragment>
-                    <small>Description</small>
-                    <p>{this.props.appVersions[0].description}</p>
-                  </React.Fragment>
-                ) : (
-                  ''
-                )}
-
-                {this.props.appVersions[0].home &&
-                this.props.appVersions[0].home != '' ? (
-                  <React.Fragment>
-                    <small>Home</small>
-                    <p>
-                      <code>
-                        <a
-                          href={this.props.appVersions[0].home}
-                          rel='noopener noreferrer'
-                        >
-                          {this.props.appVersions[0].home}
-                        </a>
-                      </code>
-                    </p>
-                  </React.Fragment>
-                ) : (
-                  ''
-                )}
-
-                {this.props.appVersions[0].sources ? (
-                  <React.Fragment>
-                    <small>Sources</small>
-                    <ul>
-                      {this.props.appVersions[0].sources.map(source => (
-                        <li className='source' key={source}>
-                          <code>
-                            <a href={source} rel='noopener noreferrer'>
-                              {source}
-                            </a>
-                          </code>
-                        </li>
-                      ))}
-                    </ul>
-                  </React.Fragment>
-                ) : (
-                  ''
-                )}
-
-                {this.props.appVersions[0].urls ? (
-                  <React.Fragment>
-                    <small>URLS</small>
-                    <ul>
-                      {this.props.appVersions[0].urls.map(url => (
-                        <li className='source' key={url}>
-                          <code>
-                            <a href={url} rel='noopener noreferrer'>
-                              {url}
-                            </a>
-                          </code>
-                        </li>
-                      ))}
-                    </ul>
-                  </React.Fragment>
-                ) : (
-                  ''
-                )}
-              </div>
-            </div>
+            <AppDetails
+              appVersions={this.props.appVersions}
+              imgError={this.imgError}
+              imgErrorFlag={this.state.imgError}
+              params={this.props.match.params}
+              q={this.state.q}
+              repo={this.props.repo}
+            >
+              <InstallAppModal
+                app={{
+                  catalog: this.props.repo.metadata.name,
+                  name: this.props.appVersions[0].name,
+                  version: this.props.appVersions[0].version,
+                }}
+                selectedClusterID={this.props.selectedClusterID}
+              />
+            </AppDetails>
           </DocumentTitle>
         </Breadcrumb>
       </Breadcrumb>
