@@ -122,8 +122,8 @@ const AppContainer = props => {
           {icon && !iconErrors[icon] ? (
             <img src={icon} onError={imgError} />
           ) : (
-              <h3>{name}</h3>
-            )}
+            <h3>{name}</h3>
+          )}
         </AppIcon>
         <AppDetails>
           <h3>{name}</h3>
