@@ -1,33 +1,30 @@
-import { withTheme } from 'emotion-theming';
 import _ from 'underscore';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
 import styled from '@emotion/styled';
 
-const Wrapper = withTheme(
-  styled.span(() => ({
-    display: 'inline-block',
-    lineHeight: 1.7,
-    borderRadius: 2,
-    marginLeft: -5,
-    paddingLeft: 5,
-    paddingRight: 5,
-    '&.changed': {
-      animationName: 'yellowfade',
-      animationDuration: '2s',
-      animationTimingFunction: 'ease',
+const Wrapper = styled.span(() => ({
+  display: 'inline-block',
+  lineHeight: 1.7,
+  borderRadius: 2,
+  marginLeft: -5,
+  paddingLeft: 5,
+  paddingRight: 5,
+  '&.changed': {
+    animationName: 'yellowfade',
+    animationDuration: '2s',
+    animationTimingFunction: 'ease',
+  },
+  '@keyframes yellowfade': {
+    from: {
+      background: '#e8d986',
     },
-    '@keyframes yellowfade': {
-      from: {
-        background: '#e8d986',
-      },
-      to: {
-        background: 'transparent',
-      },
+    to: {
+      background: 'transparent',
     },
-  }))
-);
+  },
+}));
 
 /**
  * RefreshableLabel is an inline-block HTML container
