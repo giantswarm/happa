@@ -15,12 +15,16 @@ const AppDetailHeader = styled.div({
     marginBottom: 15,
   },
 
+  small: {
+    textTransform: 'uppercase',
+    fontSize: 12,
+    fontWeight: '400',
+  },
+
   '.version': {
     small: {
       display: 'inline',
-      fontSize: 12,
     },
-
     code: {
       marginRight: 15,
     },
@@ -36,9 +40,9 @@ const AppDetailHeader = styled.div({
   '.keyword': {
     fontSize: 12,
     marginRight: 5,
-    backgroundColor: 'lighten(#f17236, 40%)',
+    backgroundColor: '#fef8f5',
     color: '#333',
-    bordeRadius: 4,
+    borderRadius: 4,
     padding: 7,
   },
 });

@@ -5,11 +5,6 @@ import styled from '@emotion/styled';
 const DescriptionList = styled.dl({
   margin: 0,
 
-  small: {
-    textTransform: 'uppercase',
-    fontSize: 12,
-  },
-
   dd: {
     margin: 0,
     ul: {
