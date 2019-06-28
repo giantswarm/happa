@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import AppDetaislDL from './app_details_dl';
+import AppDetailsBody from './app_details_body';
+import AppDetailsItem from './app_details_item';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -62,24 +63,11 @@ const AppDetails = props => {
         <div className='app-detail--install'>{children}</div>
       </div>
 
-      <div className='app-detail--body'>
-        {description && description && (
-          <React.Fragment>
-            <small>Description</small>
-            <p>{description}</p>
-          </React.Fragment>
-        )}
-
-        {/* home is a string so we convert it to an array because AppDetails expects an array */}
-        {home && home !== '' && (
-          <AppDetaislDL
-            data={typeof home === 'string' ? [home] : home}
-            label='Home'
-          />
-        )}
-        {sources && <AppDetaislDL data={sources} label='Sources' />}
-        {urls && <AppDetaislDL data={urls} label='URLS' />}
-      </div>
+      <AppDetailsBody description={description}>
+        {home && home !== '' && <AppDetailsItem data={home} label='Home' />}
+        {sources && <AppDetailsItem data={sources} label='Sources' />}
+        {urls && <AppDetailsItem data={urls} label='URLS' />}
+      </AppDetailsBody>
     </div>
   );
 };
