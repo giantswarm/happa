@@ -27,7 +27,7 @@ const AppDetailsBody = props => {
   const { description, children } = props;
   return (
     <Wrapper>
-      {description && description && (
+      {description && description !== '' && (
         <React.Fragment>
           <dt>
             <small>Description</small>

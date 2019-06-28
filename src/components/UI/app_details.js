@@ -14,6 +14,7 @@ const AppDetails = props => {
     repo,
     children,
   } = props;
+
   const {
     name,
     icon,
@@ -25,6 +26,7 @@ const AppDetails = props => {
     sources,
     urls,
   } = appVersions[0];
+
   const to = `/apps/${params.repo}/?q=${q}#${name}`;
 
   return (
