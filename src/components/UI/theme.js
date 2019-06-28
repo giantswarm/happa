@@ -12,11 +12,11 @@ const theme = {
     yellow1: '#ddb03a',
     red: 'red',
   },
-  border_radius: '4px',
+  border_radius: 4,
   breakpoints: {
-    small: '540px',
-    med: '825px',
-    large: '1200px',
+    small: 540,
+    med: 825,
+    large: 1200,
   },
   fontFamilies: {
     console: 'Inconsolata, monospace',

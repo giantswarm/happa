@@ -7,18 +7,18 @@ const LoginWrapper = withTheme(
   styled.div({
     position: 'relative',
     margin: 'auto',
-    marginTop: -'40px',
+    marginTop: -40,
     width: '33%',
     zIndex: 1,
     button: {
       zIndex: 10,
     },
     form: {
-      marginTop: '20px',
-      marginBottom: '40px',
+      marginTop: 20,
+      marginBottom: 40,
     },
     a: {
-      fontSize: '14px',
+      fontSize: 14,
     },
   })
 );
