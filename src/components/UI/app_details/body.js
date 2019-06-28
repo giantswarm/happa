@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const Wrapper = styled.dl({
+const DescriptionList = styled.dl({
   margin: 0,
 
   small: {
@@ -26,7 +26,7 @@ const Wrapper = styled.dl({
 const AppDetailsBody = props => {
   const { description, children } = props;
   return (
-    <Wrapper>
+    <DescriptionList>
       {description && description !== '' && (
         <React.Fragment>
           <dt>
@@ -38,7 +38,7 @@ const AppDetailsBody = props => {
         </React.Fragment>
       )}
       {children}
-    </Wrapper>
+    </DescriptionList>
   );
 };
 
