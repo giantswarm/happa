@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const AppDetailHeader = styled.div({
+const Header = styled.div({
   borderBottom: '1px solid #2a5a74',
   paddingBottom: 15,
   marginBottom: 15,
@@ -47,6 +47,43 @@ const AppDetailHeader = styled.div({
   },
 });
 
+const Icon = styled.div({
+  height: 120,
+  width: 120,
+  backgroundColor: '#fff',
+  padding: 10,
+  textAlign: 'center',
+  borderRadius: 5,
+  marginRight: 15,
+  flex: '0 0 120px',
+
+  img: {
+    maxWidth: 100,
+    maxHeight: 75,
+    position: 'relative',
+    top: '50%',
+    transform: 'translateY(-50%)',
+  },
+});
+
+const Title = styled.div({
+  flex: '1 100%',
+});
+
+const Install = styled.div({
+  flex: '0 0 120px',
+  textAlign: 'center',
+
+  '.progress_button--container': {
+    marginTop: 0,
+    marginBottom: 5,
+    marginRight: 0,
+  },
+  small: {
+    fontSize: 12,
+  },
+});
+
 const AppDetails = props => {
   const {
     appVersions,
@@ -73,23 +110,21 @@ const AppDetails = props => {
   const to = `/apps/${params.repo}/?q=${q}#${name}`;
 
   return (
-    <div className='app-detail'>
-      {' '}
-      {/* sense cap estil */}
+    <div>
       <Link to={to}>
         <i aria-hidden='true' className='fa fa-chevron-left' />
         Back to &quot;{repo.spec.title}&quot;
       </Link>
       <br />
       <br />
-      <AppDetailHeader>
+      <Header>
         {icon && icon !== '' && !imgErrorFlag && (
-          <div className='app-detail--icon'>
+          <Icon>
             <img onError={imgError} src={icon} />
-          </div>
+          </Icon>
         )}
 
-        <div className='app-detail--title'>
+        <Title>
           <h1>{name}</h1>
           <div className='keywords'>
             {keywords &&
@@ -105,10 +140,10 @@ const AppDetails = props => {
             <code>{version}</code> <small>App&nbsp;Version</small>&nbsp;
             <code>{appVersion}</code>
           </div>
-        </div>
+        </Title>
 
-        <div className='app-detail--install'>{children}</div>
-      </AppDetailHeader>
+        <Install>{children}</Install>
+      </Header>
       <AppDetailsBody description={description}>
         {home && home !== '' && <AppDetailsItem data={home} label='Home' />}
         {sources && <AppDetailsItem data={sources} label='Sources' />}
