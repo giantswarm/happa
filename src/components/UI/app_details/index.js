@@ -1,8 +1,47 @@
 import { Link } from 'react-router-dom';
-import AppDetailsBody from './app_details_body';
-import AppDetailsItem from './app_details_item';
+import AppDetailsBody from './body';
+import AppDetailsItem from './item';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
+
+const AppDetailHeader = styled.div({
+  borderBottom: '1px solid #2a5a74',
+  paddingBottom: 15,
+  marginBottom: 15,
+  display: 'flex',
+
+  '.keywords': {
+    marginBottom: 15,
+  },
+
+  '.version': {
+    small: {
+      display: 'inline',
+      fontSize: 12,
+    },
+
+    code: {
+      marginRight: 15,
+    },
+  },
+
+  h1: {
+    marginTop: 0,
+    marginBottom: 0,
+    borderBottom: 0,
+    paddingBottom: 0,
+  },
+
+  '.keyword': {
+    fontSize: 12,
+    marginRight: 5,
+    backgroundColor: 'lighten(#f17236, 40%)',
+    color: '#333',
+    bordeRadius: 4,
+    padding: 7,
+  },
+});
 
 const AppDetails = props => {
   const {
@@ -31,13 +70,15 @@ const AppDetails = props => {
 
   return (
     <div className='app-detail'>
+      {' '}
+      {/* sense cap estil */}
       <Link to={to}>
         <i aria-hidden='true' className='fa fa-chevron-left' />
         Back to &quot;{repo.spec.title}&quot;
       </Link>
       <br />
       <br />
-      <div className='app-detail--header clearfix'>
+      <AppDetailHeader>
         {icon && icon !== '' && !imgErrorFlag && (
           <div className='app-detail--icon'>
             <img onError={imgError} src={icon} />
@@ -63,8 +104,7 @@ const AppDetails = props => {
         </div>
 
         <div className='app-detail--install'>{children}</div>
-      </div>
-
+      </AppDetailHeader>
       <AppDetailsBody description={description}>
         {home && home !== '' && <AppDetailsItem data={home} label='Home' />}
         {sources && <AppDetailsItem data={sources} label='Sources' />}

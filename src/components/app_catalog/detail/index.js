@@ -1,6 +1,6 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import AppDetails from '../../UI/app_details';
+import AppDetails from '../../UI/app_details/index';
 import DocumentTitle from 'react-document-title';
 import InstallAppModal from './install_app_modal';
 import PropTypes from 'prop-types';
