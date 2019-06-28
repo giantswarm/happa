@@ -5,84 +5,85 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const Header = styled.div({
-  borderBottom: '1px solid #2a5a74',
-  paddingBottom: 15,
-  marginBottom: 15,
-  display: 'flex',
+const Header = styled.div`
+  border-bottom: 1px solid #2a5a74;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  display: flex;
 
-  '.keywords': {
-    marginBottom: 15,
-  },
+  .keywords {
+    margin-bottom: 15px;
+  }
 
-  small: {
-    textTransform: 'uppercase',
-    fontSize: 12,
-    fontWeight: '400',
-  },
+  small {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 400;
+  }
 
-  '.version': {
-    small: {
-      display: 'inline',
-    },
+  .version {
+    small {
+      display: inline;
+    }
     code: {
-      marginRight: 15,
-    },
-  },
+      margin-right: 15px;
+    }
+  }
 
-  h1: {
-    marginTop: 0,
-    marginBottom: 0,
-    borderBottom: 0,
-    paddingBottom: 0,
-  },
+  h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
 
-  '.keyword': {
-    fontSize: 12,
-    marginRight: 5,
-    backgroundColor: '#fef8f5',
-    color: '#333',
-    borderRadius: 4,
-    padding: 7,
-  },
-});
+  .keyword {
+    font-size: 12px;
+    margin-right: 5px;
+    background-color: #fef8f5;
+    color: #333;
+    border-radius: 4px;
+    padding: 7px;
+  }
+`;
 
-const Icon = styled.div({
-  height: 120,
-  width: 120,
-  backgroundColor: '#fff',
-  padding: 10,
-  textAlign: 'center',
-  borderRadius: 5,
-  marginRight: 15,
-  flex: '0 0 120px',
+const Icon = styled.div`
+  height: 120px;
+  width: 120px;
+  background-color: #fff;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  margin-right: 15px;
+  flex: 0 0 120px;
 
-  img: {
-    maxWidth: 100,
-    maxHeight: 75,
-    position: 'relative',
-    top: '50%',
-    transform: 'translateY(-50%)',
-  },
-});
+  img {
+    max-width: 100px;
+    max-height: 75px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+`;
 
-const Title = styled.div({
-  flex: '1 100%',
-});
+const Title = styled.div`
+  flex: 1 100%;
+`;
 
-const Install = styled.div({
-  flex: '0 0 120px',
-  textAlign: 'center',
+const Install = styled.div`
+  flex: 0 0 120px;
+  text-align: center;
 
-  '.progress_button--container': {
-    marginTop: 0,
-    marginBottom: 5,
-    marginRight: 0,
-  },
-  small: {
-    fontSize: 12,
-  },
-});
+  .progress_button--container {
+    margin-top: 0px;
+    margin-bottom: 5px;
+    margin-right: 0px;
+  }
+
+  small {
+    font-size: 12px;
+  }
+`;
 
 const AppDetails = props => {
   const {

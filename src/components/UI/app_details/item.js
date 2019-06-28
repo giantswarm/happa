@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const Code = styled.code({
-  backgroundColor: 'transparent',
-  padding: 0,
-});
+const Code = styled.code`
+  background-color: transparent;
+  padding: 0;
+`;
 
 const AppDetailsItem = props => {
   const { label, data } = props;
