@@ -1,4 +1,7 @@
-import { mount } from 'enzyme';
+// import { mount } from 'enzyme';
+import '@testing-library/react/cleanup-after-each';
+import 'jest-dom/extend-expect';
+import { render } from '@testing-library/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Tab from 'react-bootstrap/lib/Tab';
@@ -11,7 +14,8 @@ it('renders without crashing', () => {
 });
 
 it('renders only the first tab', () => {
-  const tabs = mount(
+  const div = document.createElement('div');
+  ReactDOM.render(
     <Tabs>
       <Tab eventKey={1} title='first'>
         <h1>First Tab</h1>
@@ -22,12 +26,9 @@ it('renders only the first tab', () => {
       <Tab eventKey={3} title='third'>
         <h1>Third Tab</h1>
       </Tab>
-    </Tabs>
+    </Tabs>,
+    div
   );
 
-  expect(tabs.find('#tabs-pane-1').hasClass('active')).toEqual(true);
-
-  expect(tabs.find('#tabs-pane-2').hasClass('active')).toEqual(false);
-
-  expect(tabs.find('#tabs-pane-3').hasClass('active')).toEqual(false);
+  expect(div.querySelector('#tabs-pane-1')).toBeVisible();
 });
