@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import CertificateOrgsLabel from './certificate_orgs_label.js';
+import CertificateOrgsLabel from '../certificate_orgs_label.js';
 
 it('renders single label without crashing', () => {
   const div = document.createElement('div');

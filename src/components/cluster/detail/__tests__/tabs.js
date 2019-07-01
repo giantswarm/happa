@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Tab from 'react-bootstrap/lib/Tab';
 
-import Tabs from './tabs';
+import Tabs from '../tabs';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
