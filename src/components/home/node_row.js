@@ -1,9 +1,7 @@
-'use strict';
-
-import React from 'react';
-import BarChart from './bar_chart';
 import { humanFileSize, truncate } from '../../lib/helpers';
+import BarChart from './bar_chart';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class NodeRow extends React.Component {
   labelifyBytes(bytes) {
@@ -31,40 +29,40 @@ class NodeRow extends React.Component {
         <td className='node-table--barchart-container'>
           <span className='node-table--responsive-label'>RAM USED</span>
           <BarChart
-            percentage={
-              this.props.node.ram_used.value /
-              this.props.node.ram_available.value
-            }
-            label={this.labelifyBytes(this.props.node.ram_used.value)}
             animate={this.props.animate}
+            color='#003c78'
+            label={this.labelifyBytes(this.props.node.ram_used.value)}
             outdated={
               this.props.node.ram_used.outdated ||
               this.props.node.ram_available.outdated
             }
-            color='#003c78'
+            percentage={
+              this.props.node.ram_used.value /
+              this.props.node.ram_available.value
+            }
           />
         </td>
         <td className='node-table--barchart-container'>
           <span className='node-table--responsive-label'>CPU USED</span>
           <BarChart
-            percentage={this.props.node.cpu_used.value}
-            label={(this.props.node.cpu_used.value * 100).toFixed(0) + '%'}
             animate={this.props.animate}
-            outdated={this.props.node.cpu_used.outdated}
             color='#3ab6c7'
+            label={(this.props.node.cpu_used.value * 100).toFixed(0) + '%'}
+            outdated={this.props.node.cpu_used.outdated}
+            percentage={this.props.node.cpu_used.value}
           />
         </td>
         <td className='node-table--barchart-container node-table--barchart-storage'>
           <span className='node-table--responsive-label'>STORAGE USED</span>
           <BarChart
+            animate={this.props.animate}
+            color='#d68a10'
+            label={this.labelifyBytes(this.props.node.node_storage_used.value)}
+            outdated={this.props.node.node_storage_used.outdated}
             percentage={
               this.props.node.node_storage_used.value /
               this.props.node.node_storage_limit.value
             }
-            label={this.labelifyBytes(this.props.node.node_storage_used.value)}
-            animate={this.props.animate}
-            outdated={this.props.node.node_storage_used.outdated}
-            color='#d68a10'
           />
         </td>
         <td className='node-table--pod-count'>

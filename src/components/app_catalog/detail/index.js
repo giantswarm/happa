@@ -52,7 +52,7 @@ class AppDetail extends React.Component {
                   this.props.appVersions[0].name
                 }
               >
-                <i className='fa fa-chevron-left' aria-hidden='true' />
+                <i aria-hidden='true' className='fa fa-chevron-left' />
                 Back to &quot;{this.props.repo.spec.title}&quot;
               </Link>
 
@@ -75,7 +75,7 @@ class AppDetail extends React.Component {
                   <div className='keywords'>
                     {this.props.appVersions[0].keywords
                       ? this.props.appVersions[0].keywords.map(x => (
-                          <span key={x} className='keyword'>
+                          <span className='keyword' key={x}>
                             {x}
                           </span>
                         ))
@@ -137,7 +137,7 @@ class AppDetail extends React.Component {
                     <small>Sources</small>
                     <ul>
                       {this.props.appVersions[0].sources.map(source => (
-                        <li key={source} className='source'>
+                        <li className='source' key={source}>
                           <code>
                             <a href={source} rel='noopener noreferrer'>
                               {source}
@@ -156,7 +156,7 @@ class AppDetail extends React.Component {
                     <small>URLS</small>
                     <ul>
                       {this.props.appVersions[0].urls.map(url => (
-                        <li key={url} className='source'>
+                        <li className='source' key={url}>
                           <code>
                             <a href={url} rel='noopener noreferrer'>
                               {url}

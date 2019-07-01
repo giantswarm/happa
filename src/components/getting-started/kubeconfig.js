@@ -1,8 +1,7 @@
-'use strict';
-import React from 'react';
-import FileBlock from './fileblock';
 import { makeKubeConfigTextFile } from '../../lib/helpers';
+import FileBlock from './fileblock';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class KubeConfig extends React.Component {
   render() {

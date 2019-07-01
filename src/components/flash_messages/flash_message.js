@@ -4,32 +4,26 @@
 // props on dismiss.
 //
 
-'use strict';
-
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 class FlashMessage extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      visible: true,
-    };
-  }
+  state = {
+    isVisible: true,
+  };
 
   dismissFlash = () => {
     if (this.props.onDismiss) {
       this.props.onDismiss();
     } else {
       this.setState({
-        visible: false,
+        isVisible: false,
       });
     }
   };
 
   render() {
-    if (this.state.visible) {
+    if (this.state.isVisible) {
       return (
         <div
           className={
@@ -40,8 +34,8 @@ class FlashMessage extends React.Component {
         >
           {this.props.message ? this.props.message : this.props.children}
           <i
-            className='fa fa-close flash-messages--dismiss'
             aria-hidden='true'
+            className='fa fa-close flash-messages--dismiss'
             onClick={this.dismissFlash}
           />
         </div>

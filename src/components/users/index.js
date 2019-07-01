@@ -26,24 +26,20 @@ import React from 'react';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 class Users extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      selectedUser: null,
-      modal: {
-        visible: false,
-        loading: false,
-      },
-      invitationForm: {
-        email: '',
-        error: '',
-        organization: props.organizations,
-        sendEmail: true,
-        valid: true,
-      },
-    };
-  }
+  state = {
+    selectedUser: null,
+    modal: {
+      visible: false,
+      loading: false,
+    },
+    invitationForm: {
+      email: '',
+      error: '',
+      organization: this.props.organizations,
+      sendEmail: true,
+      valid: true,
+    },
+  };
 
   componentDidMount() {
     if (this.props.currentUser.isAdmin) {
@@ -357,9 +353,9 @@ class Users extends React.Component {
                 return (
                   <img
                     className='loader'
+                    height='20px'
                     src='/images/loader_oval_light.svg'
                     width='20px'
-                    height='20px'
                   />
                 );
               } else if (
@@ -375,12 +371,12 @@ class Users extends React.Component {
                 return (
                   <div className='users-table'>
                     <BootstrapTable
-                      keyField='email'
-                      data={Object.values(this.props.invitationsAndUsers)}
-                      columns={this.getTableColumnsConfig()}
                       bordered={false}
-                      defaultSorted={tableDefaultSorting}
+                      columns={this.getTableColumnsConfig()}
+                      data={Object.values(this.props.invitationsAndUsers)}
                       defaultSortDirection='asc'
+                      defaultSorted={tableDefaultSorting}
+                      keyField='email'
                     />
                   </div>
                 );
@@ -393,8 +389,8 @@ class Users extends React.Component {
                   return (
                     <BootstrapModal
                       className='create-key-pair-modal'
-                      show={this.state.modal.visible}
                       onHide={this.closeModal.bind(this)}
+                      show={this.state.modal.visible}
                     >
                       <BootstrapModal.Header closeButton>
                         <BootstrapModal.Title>
@@ -415,13 +411,13 @@ class Users extends React.Component {
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          type='submit'
                           bsStyle='primary'
                           loading={this.state.modal.loading}
                           onClick={this.confirmRemoveExpiration.bind(
                             this,
                             this.state.selectedUser
                           )}
+                          type='submit'
                         >
                           {this.state.modal.loading
                             ? 'Removing Expiration'
@@ -444,8 +440,8 @@ class Users extends React.Component {
                   return (
                     <BootstrapModal
                       className='create-key-pair-modal'
-                      show={this.state.modal.visible}
                       onHide={this.closeModal.bind(this)}
+                      show={this.state.modal.visible}
                     >
                       <BootstrapModal.Header closeButton>
                         <BootstrapModal.Title>
@@ -462,13 +458,13 @@ class Users extends React.Component {
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          type='submit'
                           bsStyle='danger'
                           loading={this.state.modal.loading}
                           onClick={this.confirmDeleteUser.bind(
                             this,
                             this.state.selectedUser
                           )}
+                          type='submit'
                         >
                           {this.state.modal.loading
                             ? 'Deleting User'
@@ -491,8 +487,8 @@ class Users extends React.Component {
                   return (
                     <BootstrapModal
                       className='create-key-pair-modal'
-                      show={this.state.modal.visible}
                       onHide={this.closeModal.bind(this)}
+                      show={this.state.modal.visible}
                     >
                       <BootstrapModal.Header closeButton>
                         <BootstrapModal.Title>
@@ -516,8 +512,8 @@ class Users extends React.Component {
                             <label>Email:</label>
                             <input
                               autoFocus
-                              type='text'
                               onChange={this.handleEmailChange.bind(this)}
+                              type='text'
                               value={this.state.invitationForm.email}
                             />
                           </div>
@@ -525,8 +521,8 @@ class Users extends React.Component {
                           <div className='textfield'>
                             <label>Organization:</label>
                             <DropdownButton
-                              id='organizationDropdown'
                               className='outline'
+                              id='organizationDropdown'
                               title={this.state.invitationForm.organization}
                             >
                               {_.sortBy(
@@ -551,12 +547,12 @@ class Users extends React.Component {
                             <div className='checkbox'>
                               <label htmlFor='sendEmail'>
                                 <input
-                                  type='checkbox'
+                                  checked={this.state.invitationForm.sendEmail}
+                                  id='sendEmail'
                                   onChange={this.handleSendEmailChange.bind(
                                     this
                                   )}
-                                  id='sendEmail'
-                                  checked={this.state.invitationForm.sendEmail}
+                                  type='checkbox'
                                 />
                                 Send the invitee an e-mail with the accept
                                 invitation link.
@@ -574,11 +570,11 @@ class Users extends React.Component {
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          type='submit'
                           bsStyle='primary'
-                          loading={this.state.modal.loading}
                           disabled={!this.state.invitationForm.valid}
+                          loading={this.state.modal.loading}
                           onClick={this.confirmInviteUser.bind(this)}
+                          type='submit'
                         >
                           {this.state.modal.loading
                             ? 'Inviting User'
@@ -601,8 +597,8 @@ class Users extends React.Component {
                   return (
                     <BootstrapModal
                       className='create-key-pair-modal'
-                      show={this.state.modal.visible}
                       onHide={this.closeModal.bind(this)}
+                      show={this.state.modal.visible}
                     >
                       <BootstrapModal.Header closeButton>
                         <BootstrapModal.Title>
@@ -634,22 +630,22 @@ class Users extends React.Component {
                         </code>
                         &nbsp;
                         {this.state.copied ? (
-                          <i className='fa fa-done' aria-hidden='true' />
+                          <i aria-hidden='true' className='fa fa-done' />
                         ) : (
                           <OverlayTrigger
-                            placement='top'
                             overlay={
                               <Tooltip id='tooltip'>Copy to clipboard.</Tooltip>
                             }
+                            placement='top'
                           >
                             <i
+                              aria-hidden='true'
                               className='copy-link fa fa-content-copy'
                               onClick={this.copyToClipboard.bind(
                                 this,
                                 this.state.modal.invitationResult
                                   .invitation_accept_link
                               )}
-                              aria-hidden='true'
                             />
                           </OverlayTrigger>
                         )}
@@ -700,8 +696,8 @@ function actionsCellFormatter(cell, row) {
     return (
       <Button
         bsStyle='default'
-        type='button'
         onClick={this.deleteUser.bind(this, row.email)}
+        type='button'
       >
         Delete
       </Button>
@@ -724,8 +720,8 @@ function expiryCellFormatter(cell, row) {
         {relativeDate(cell)} &nbsp;
         <i
           className='fa fa-close clickable'
-          title='Remove expiration'
           onClick={this.removeExpiration.bind(this, row.email)}
+          title='Remove expiration'
         />
       </span>
     );

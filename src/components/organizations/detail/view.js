@@ -13,10 +13,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class OrganizationDetail extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   addMember = () => {
     this.props.actions.organizationAddMember(this.props.organization.id);
   };
@@ -140,12 +136,12 @@ class OrganizationDetail extends React.Component {
                   <p>This organization doesn&apos;t have any clusters.</p>
                 ) : (
                   <BootstrapTable
-                    keyField='id'
-                    data={this.props.clusters}
-                    columns={this.getClusterTableColumnsConfig()}
                     bordered={false}
-                    defaultSorted={clusterTableDefaultSorting}
+                    columns={this.getClusterTableColumnsConfig()}
+                    data={this.props.clusters}
                     defaultSortDirection='asc'
+                    defaultSorted={clusterTableDefaultSorting}
+                    keyField='id'
                   />
                 )}
                 <Link
@@ -167,15 +163,15 @@ class OrganizationDetail extends React.Component {
                   <p>This organization has no members</p>
                 ) : (
                   <BootstrapTable
-                    keyField='email'
-                    data={this.props.membersForTable}
-                    columns={this.getMemberTableColumnsConfig()}
                     bordered={false}
-                    defaultSorted={memberTableDefaultSorting}
+                    columns={this.getMemberTableColumnsConfig()}
+                    data={this.props.membersForTable}
                     defaultSortDirection='asc'
+                    defaultSorted={memberTableDefaultSorting}
+                    keyField='email'
                   />
                 )}
-                <Button onClick={this.addMember} bsStyle='default'>
+                <Button bsStyle='default' onClick={this.addMember}>
                   <i className='fa fa-add-circle' /> Add Member
                 </Button>
               </div>
@@ -236,7 +232,7 @@ function clusterActionsCellFormatter(cell, row) {
 
 function memberActionsCellFormatter(cell, row) {
   return (
-    <Button type='button' onClick={this.removeMember.bind(this, row.email)}>
+    <Button onClick={this.removeMember.bind(this, row.email)} type='button'>
       Remove
     </Button>
   );

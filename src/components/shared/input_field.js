@@ -115,15 +115,15 @@ class InputField extends React.Component {
       <div className='textfield'>
         <label htmlFor={this.props.name}>{this.props.label}</label>
         <input
+          id={this.props.name}
+          onBlur={this.onBlur}
+          onChange={this.onChange}
+          readOnly={this.props.readOnly}
           ref={i => {
             this.input = i;
           }}
           type={this.props.type}
-          id={this.props.name}
           value={this.state.value}
-          onBlur={this.onBlur}
-          onChange={this.onChange}
-          readOnly={this.props.readOnly}
         />
         {// If it is readOnly, don't show validation errors
 

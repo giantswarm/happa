@@ -34,15 +34,15 @@ class AccountSettings extends React.Component {
                 </p>
 
                 <ChangeEmailForm
-                  user={this.props.user}
                   actions={this.props.actions}
+                  user={this.props.user}
                 />
               </div>
             </div>
 
             <ChangePasswordForm
-              user={this.props.user}
               actions={this.props.actions}
+              user={this.props.user}
             />
 
             <div className='row section'>

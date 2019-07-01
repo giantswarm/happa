@@ -25,29 +25,29 @@ const InstallAppForm = props => {
   return (
     <FormWrapper>
       <Input
-        label='Application Name:'
         description='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
+        hint={<React.Fragment>&nbsp;</React.Fragment>}
+        label='Application Name:'
         onChange={updateName}
         validationError={props.nameError}
-        hint={<React.Fragment>&nbsp;</React.Fragment>}
         value={props.name}
       />
 
       <Input
-        label='Namespace:'
         description='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
+        hint={<React.Fragment>&nbsp;</React.Fragment>}
+        label='Namespace:'
         onChange={updateNamespace}
         validationError={props.namespaceError}
-        hint={<React.Fragment>&nbsp;</React.Fragment>}
         value={props.namespace}
       />
 
       <FileInput
-        label='User Configuration ConfigMap:'
         description='Apps can be configured using a values.yaml file. If you have one, you can upload it here already.'
+        hint={<React.Fragment>&nbsp;</React.Fragment>}
+        label='User Configuration ConfigMap:'
         onChange={updateValuesYAML}
         validationError={props.valuesYAMLError}
-        hint={<React.Fragment>&nbsp;</React.Fragment>}
         value={props.valuesYAML}
       />
     </FormWrapper>

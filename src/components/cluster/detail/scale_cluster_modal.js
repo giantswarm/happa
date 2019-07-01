@@ -18,20 +18,16 @@ import React from 'react';
 class ScaleClusterModal extends React.Component {
   rollupAnimationDuration = 500;
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      modalVisible: false,
-      scaling: {
-        automatic: false,
-        min: props.cluster.scaling.min,
-        minValid: true,
-        max: props.cluster.scaling.max,
-        maxValid: true,
-      },
-    };
-  }
+  state = {
+    modalVisible: false,
+    scaling: {
+      automatic: false,
+      min: this.props.cluster.scaling.min,
+      minValid: true,
+      max: this.props.cluster.scaling.max,
+      maxValid: true,
+    },
+  };
 
   componentDidMount() {
     this.setState({});
@@ -272,10 +268,10 @@ class ScaleClusterModal extends React.Component {
       ) {
         warnings.push(
           <CSSTransition
-            key={1}
             classNames='rollup'
             enter={true}
             exit={true}
+            key={1}
             timeout={this.rollupAnimationDuration}
           >
             <p key='node-removal'>
@@ -290,8 +286,8 @@ class ScaleClusterModal extends React.Component {
       } else {
         warnings.push(
           <CSSTransition
-            key={2}
             classNames='rollup'
+            key={2}
             timeout={this.rollupAnimationDuration}
           >
             <p key='node-removal'>
@@ -308,8 +304,8 @@ class ScaleClusterModal extends React.Component {
     if (this.state.scaling.min < 3) {
       warnings.push(
         <CSSTransition
-          key={3}
           classNames='rollup'
+          key={3}
           timeout={this.rollupAnimationDuration}
         >
           <p key='unsupported'>
@@ -339,9 +335,9 @@ class ScaleClusterModal extends React.Component {
               this.props.provider,
               this.props.cluster.release_version
             )}
-            scaling={this.state.scaling}
-            readOnly={false}
             onChange={this.updateScaling}
+            readOnly={false}
+            scaling={this.state.scaling}
           />
         </div>
         <TransitionGroup>{warnings}</TransitionGroup>
@@ -353,12 +349,12 @@ class ScaleClusterModal extends React.Component {
           undefined
         ) : (
           <Button
-            type='submit'
             bsStyle={this.buttonProperties().style}
+            disabled={this.buttonProperties().disabled}
             loading={this.state.loading}
             loadingPosition='left'
             onClick={this.submit}
-            disabled={this.buttonProperties().disabled}
+            type='submit'
           >
             {this.buttonProperties().title}
           </Button>
@@ -405,7 +401,7 @@ class ScaleClusterModal extends React.Component {
     }
 
     return (
-      <BootstrapModal show={this.state.modalVisible} onHide={this.close}>
+      <BootstrapModal onHide={this.close} show={this.state.modalVisible}>
         <BootstrapModal.Header closeButton>
           <BootstrapModal.Title>
             Edit scaling settings for{' '}

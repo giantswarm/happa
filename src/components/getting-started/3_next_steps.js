@@ -37,8 +37,8 @@ class NextSteps extends React.Component {
             We recommend to{' '}
             <a
               href='https://blog.giantswarm.io/getting-started-with-a-local-kubernetes-environment/'
-              target='_blank'
               rel='noopener noreferrer'
+              target='_blank'
             >
               choose a local development environment
             </a>{' '}
@@ -50,8 +50,8 @@ class NextSteps extends React.Component {
             If you have not done so already, you should get acquainted with the{' '}
             <a
               href='https://blog.giantswarm.io/understanding-basic-kubernetes-concepts-i-introduction-to-pods-labels-replicas/'
-              target='_blank'
               rel='noopener noreferrer'
+              target='_blank'
             >
               basic concepts of Kubernetes
             </a>
@@ -62,24 +62,24 @@ class NextSteps extends React.Component {
             Last but not least, you should check out our{' '}
             <a
               href='https://docs.giantswarm.io/'
-              target='_blank'
               rel='noopener noreferrer'
+              target='_blank'
             >
               Documentation
             </a>
             , including an{' '}
             <a
               href='https://docs.giantswarm.io/basics/kubernetes-fundamentals/'
-              target='_blank'
               rel='noopener noreferrer'
+              target='_blank'
             >
               overview of Kubernetes Fundamentals
             </a>{' '}
             and a selection of{' '}
             <a
               href='https://docs.giantswarm.io/guides/'
-              target='_blank'
               rel='noopener noreferrer'
+              target='_blank'
             >
               User Guides
             </a>{' '}
@@ -90,7 +90,7 @@ class NextSteps extends React.Component {
             <Link
               to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/example/`}
             >
-              <button>
+              <button type='button'>
                 <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>

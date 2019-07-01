@@ -89,7 +89,7 @@ class SimpleExample extends React.Component {
     } else {
       var url = `http://helloworld.${this.clusterBaseDomain()}`;
       return (
-        <a href={url} target='_blank' rel='noopener noreferrer'>
+        <a href={url} rel='noopener noreferrer' target='_blank'>
           {url}
         </a>
       );
@@ -323,7 +323,7 @@ class SimpleExample extends React.Component {
             <Link
               to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/configure/`}
             >
-              <button>
+              <button type='button'>
                 <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>
@@ -331,7 +331,7 @@ class SimpleExample extends React.Component {
             <Link
               to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/next-steps/`}
             >
-              <button className='primary'>
+              <button className='primary' type='button'>
                 Finish <i className='fa fa-chevron-right' />
               </button>
             </Link>

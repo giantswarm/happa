@@ -49,20 +49,20 @@ class Credentials extends React.Component {
     if (this.props.organizations.showCredentialsForm) {
       return (
         <CredentialsForm
-          provider={this.props.app.info.general.provider}
-          organizationName={this.props.organizationName}
           credentials={this.props.credentials}
-          onSubmit={this.handleFormSubmit}
           formData={this.state.formData}
+          onSubmit={this.handleFormSubmit}
+          organizationName={this.props.organizationName}
+          provider={this.props.app.info.general.provider}
         />
       );
     } else {
       return (
         <CredentialsDisplay
-          provider={this.props.app.info.general.provider}
-          organizationName={this.props.organizationName}
           credentials={this.props.credentials}
           onShowForm={this.handleShowForm}
+          organizationName={this.props.organizationName}
+          provider={this.props.app.info.general.provider}
         />
       );
     }
@@ -97,9 +97,9 @@ class CredentialsDisplay extends React.Component {
         <span>
           <img
             className='loader'
+            height='20px'
             src='/images/loader_oval_light.svg'
             width='20px'
-            height='20px'
           />{' '}
           <span>Loading credentials</span>
         </span>
@@ -108,9 +108,9 @@ class CredentialsDisplay extends React.Component {
       if (this.props.credentials.items.length === 0) {
         let button = (
           <Button
-            onClick={this.props.onShowForm}
             bsStyle='default'
             className='small'
+            onClick={this.props.onShowForm}
           >
             Set Credentials
           </Button>
@@ -340,8 +340,8 @@ class CredentialsForm extends React.Component {
             to prepare an Azure subscription for running tenant cluster in our{' '}
             <a
               href='https://docs.giantswarm.io/guides/prepare-azure-subscription-for-tenant-clusters/'
-              target='_blank'
               rel='noopener noreferrer'
+              target='_blank'
             >
               documentation
             </a>
@@ -356,9 +356,9 @@ class CredentialsForm extends React.Component {
             <ControlLabel>Azure Subscription ID</ControlLabel>
             <FormControl
               name='azureSubscriptionID'
+              onChange={this.handleChange}
               type='text'
               value={this.state.azureSubscriptionID}
-              onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
@@ -367,9 +367,9 @@ class CredentialsForm extends React.Component {
             <ControlLabel>Azure Tenant ID</ControlLabel>
             <FormControl
               name='azureTenantID'
+              onChange={this.handleChange}
               type='text'
               value={this.state.azureTenantID}
-              onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
@@ -378,9 +378,9 @@ class CredentialsForm extends React.Component {
             <ControlLabel>Azure Client ID</ControlLabel>
             <FormControl
               name='azureClientID'
+              onChange={this.handleChange}
               type='text'
               value={this.state.azureClientID}
-              onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
@@ -389,9 +389,9 @@ class CredentialsForm extends React.Component {
             <ControlLabel>Azure Client Secret</ControlLabel>
             <FormControl
               name='azureClientSecret'
+              onChange={this.handleChange}
               type='password'
               value={this.state.azureClientSecret}
-              onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
@@ -400,17 +400,17 @@ class CredentialsForm extends React.Component {
             <ControlLabel>Azure Client Secret (again)</ControlLabel>
             <FormControl
               name='azureClientSecretAgain'
+              onChange={this.handleChange}
               type='password'
               value={this.state.azureClientSecretAgain}
-              onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
 
           <Button
-            onClick={this.handleSubmit}
             bsStyle='primary'
             disabled={!this.state.isValid}
+            onClick={this.handleSubmit}
           >
             Set Credentials
           </Button>
@@ -426,8 +426,8 @@ class CredentialsForm extends React.Component {
             to prepare an AWS for running tenant cluster in our{' '}
             <a
               href='https://docs.giantswarm.io/guides/prepare-aws-account-for-tenant-clusters/'
-              target='_blank'
               rel='noopener noreferrer'
+              target='_blank'
             >
               documentation
             </a>
@@ -443,11 +443,11 @@ class CredentialsForm extends React.Component {
             <ControlLabel>AWS admin role ARN (GiantSwarmAdmin)</ControlLabel>
             <FormControl
               name='awsAdminRoleARN'
+              onChange={this.handleChange}
               type='text'
               value={
                 this.state.awsAdminRoleARN ? this.state.awsAdminRoleARN : ''
               }
-              onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
@@ -458,21 +458,21 @@ class CredentialsForm extends React.Component {
             </ControlLabel>
             <FormControl
               name='awsOperatorRoleARN'
+              onChange={this.handleChange}
               type='text'
               value={
                 this.state.awsOperatorRoleARN
                   ? this.state.awsOperatorRoleARN
                   : ''
               }
-              onChange={this.handleChange}
             />
             <FormControl.Feedback />
           </FormGroup>
 
           <Button
-            onClick={this.handleSubmit}
             bsStyle='primary'
             disabled={!this.state.isValid}
+            onClick={this.handleSubmit}
           >
             Set Credentials
           </Button>
