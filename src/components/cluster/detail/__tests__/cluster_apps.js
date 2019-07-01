@@ -1,13 +1,14 @@
-import { mount } from 'enzyme';
+import '@testing-library/react/cleanup-after-each';
+import 'jest-dom/extend-expect';
+import { render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import ClusterApps from '../cluster_apps.js';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(
+  render(
     <Router>
       <ClusterApps />
     </Router>,
@@ -16,40 +17,41 @@ it('renders without crashing', () => {
 });
 
 it('doesnt show the installed apps section at all when showInstalledAppsBlock is false', () => {
-  const noApps = [];
-  const clusterApps = mount(
+  const { queryByTestId } = render(
     <Router>
       <ClusterApps showInstalledAppsBlock={false} />
     </Router>
   );
-  expect(clusterApps.find('#installed-apps-section').exists()).toEqual(false);
-  expect(clusterApps.find('#installed-apps').exists()).toEqual(false);
-  expect(clusterApps.find('#error-loading-apps').exists()).toEqual(false);
-  expect(clusterApps.find('#no-apps-found').exists()).toEqual(false);
+
+  expect(queryByTestId('installed-apps-section')).toBeNull();
+  expect(queryByTestId('installed-apps')).toBeNull();
+  expect(queryByTestId('error-loading-apps')).toBeNull();
+  expect(queryByTestId('no-apps-found')).toBeNull();
 });
 
 it('doesnt render a block for installed apps if there are none', () => {
   const noApps = [];
-  const clusterApps = mount(
+  const { queryByTestId } = render(
     <Router>
       <ClusterApps installedApps={noApps} showInstalledAppsBlock={true} />
     </Router>
   );
-  expect(clusterApps.find('#installed-apps').exists()).toEqual(false);
-  expect(clusterApps.find('#error-loading-apps').exists()).toEqual(false);
-  expect(clusterApps.find('#no-apps-found').exists()).toEqual(true);
+
+  expect(queryByTestId('installed-apps')).toBeNull();
+  expect(queryByTestId('error-loading-apps')).toBeNull();
+  expect(queryByTestId('no-apps-found')).toBeDefined();
 });
 
 it('renders an error message if there was an error loading apps', () => {
-  const noApps = [];
-  const clusterApps = mount(
+  const { queryByTestId } = render(
     <Router>
       <ClusterApps errorLoading={true} showInstalledAppsBlock={true} />
     </Router>
   );
-  expect(clusterApps.find('#error-loading-apps').exists()).toEqual(true);
-  expect(clusterApps.find('#installed-apps').exists()).toEqual(false);
-  expect(clusterApps.find('#no-apps-found').exists()).toEqual(false);
+
+  expect(queryByTestId('error-loading-apps')).toBeDefined();
+  expect(queryByTestId('installed-apps')).toBeNull();
+  expect(queryByTestId('no-apps-found')).toBeNull();
 });
 
 it('renders a block for installed apps if there are some', () => {
@@ -60,12 +62,13 @@ it('renders a block for installed apps if there are some', () => {
       },
     },
   ];
-  const clusterApps = mount(
+  const { queryByTestId } = render(
     <Router>
       <ClusterApps installedApps={someApps} showInstalledAppsBlock={true} />
     </Router>
   );
-  expect(clusterApps.find('#installed-apps').exists()).toEqual(true);
-  expect(clusterApps.find('#error-loading-apps').exists()).toEqual(false);
-  expect(clusterApps.find('#no-apps-found').exists()).toEqual(false);
+
+  expect(queryByTestId('installed-apps')).toBeDefined();
+  expect(queryByTestId('error-loading-apps')).toBeNull();
+  expect(queryByTestId('no-apps-found')).toBeNull();
 });
