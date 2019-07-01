@@ -1,112 +1,116 @@
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { NavLink } from 'react-router-dom';
-import { withTheme } from 'emotion-theming';
+
 import OrganizationDropdown from './organization_dropdown';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 import UserDropdown from './user_dropdown';
 
-const OuterNav = withTheme(
-  styled.nav(props => ({
-    height: '50px',
-    lineHeight: '50px',
-    fontSize: '14px',
-    position: 'fixed',
-    top: '0px',
-    left: '0px',
-    right: '0px',
-    zIndex: '1',
-    backgroundColor: '#1a384b',
+const OuterNav = styled.nav`
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 1;
+  background-color: #1a384b;
 
-    a: {
-      textDecoration: 'none',
-    },
+  a {
+    text-decoration: none;
+  }
 
-    '.currentuser': {
-      color: '#97a8b2',
-      marginRight: '18px',
-    },
+  .currentuser {
+    color: #97a8b2;
+    margin-right: 18px;
+  }
 
-    '.main-nav': {
-      margin: 'auto',
+  .main-nav {
+    margin: auto;
 
-      [`@media only screen and (max-width: ${props.theme.breakpoints.large}px) and (min-width: ${props.theme.breakpoints.med}px)`]: {
-        minWidth: 800,
-      },
+    @media only screen and (max-width: ${props =>
+        props.theme.breakpoints.large}px) and (min-width: ${props =>
+        props.theme.breakpoints.med}px) {
+      min-width: 800px;
+    }
 
-      '&> a': {
-        float: 'left',
-      },
+    & > a {
+      float: left;
+    }
 
-      '.nav-toggle': {
-        float: 'right',
-        display: 'none',
-        fontSize: '22px',
-        color: '#e8e8e8',
-        cursor: 'pointer',
-        [`@media only screen and (max-width: ${props.theme.breakpoints.large})px`]: {
-          display: 'block',
-        },
-      },
-    },
+    .nav-toggle {
+      float: right;
+      display: none;
+      font-size: 22px;
+      color: #e8e8e8;
+      cursor: pointer;
+      @media only screen and (max-width: ${props =>
+          props.theme.breakpoints.large}px) {
+        display: block;
+      }
+    }
+  }
 
-    '.nav-responsive': {
-      float: 'left',
-      paddingLeft: 20,
-      height: 40,
+  .nav-responsive {
+    float: left;
+    padding-left: 20px;
+    height: 40px;
 
-      '&> a': {
-        textDecoration: 'none',
-        color: '#eee',
-        marginRight: 18,
+    & > a {
+      text-decoration: none;
+      color: #eee;
+      margin-right: 18px;
 
-        '&:last-child': {
-          marginRight: 0,
-        },
+      &:last-child {
+        margin-right: 0;
+      }
 
-        '&:hover': {
-          color: props.theme.colors.white1,
-        },
-      },
+      &:hover {
+        color: ${props => props.theme.colors.white1};
+      }
+    }
 
-      [`@media only screen and (max-width: ${props.theme.breakpoints.large}px)`]: {
-        position: 'fixed',
-        top: 50,
-        backgroundColor: '#265068',
-        borderTop: '1px solid #29566f',
-        borderBottom: '1px solid #29566f',
-        width: '100%',
-        left: 0,
-        paddingLeft: 0,
-        height: 'auto',
-        textAlign: 'center',
-      },
-    },
+    @media only screen and (max-width: ${props =>
+        props.theme.breakpoints.large}px) {
+      position: fixed;
+      top: 50px;
+      background-color: #265068;
+      border-top: 1px solid #29566f;
+      border-bottom: 1px solid #29566f;
+      width: 100%;
+      left: 0px;
+      padding-left: 0px;
+      height: auto;
+      text-align: center;
+    }
+  }
 
-    '.subactions': {
-      float: 'right',
-      [`@media only screen and (max-width: ${props.theme.breakpoints.large}px)`]: {
-        marginRight: 10,
-      },
+  .subactions {
+    float: right;
+    @media only screen and (max-width: ${props =>
+        props.theme.breakpoints.large}px) {
+      margin-right: 10px;
+    }
 
-      'a:last-child': {
-        marginRight: 0,
-      },
-    },
+    a:last-child {
+      margin-right: 0px;
+    }
+  }
 
-    '.logo': {
-      width: '22px',
-      height: '22px',
-      verticalAlign: 'middle',
-      position: 'relative',
-      top: '-1px',
-      [`@media only screen and (max-width: ${props.theme.breakpoints.med}px)`]: {
-        marginLeft: 10,
-      },
-    },
-  }))
-);
+  .logo {
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    @media only screen and (max-width: ${props =>
+        props.theme.breakpoints.med}px) {
+      margin-left: 10px;
+    }
+  }
+`;
 
 class Navigation extends React.Component {
   render() {

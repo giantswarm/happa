@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import { withTheme } from 'emotion-theming';
 import _ from 'underscore';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
@@ -7,110 +6,108 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const Wrapper = withTheme(
-  styled.div(props => ({
-    display: 'inline',
+const Wrapper = styled.div`
+  display: inline;
 
-    'ul.dropdown-menu': {
-      backgroundColor: '#2a5874',
-      border: 'none',
-      borderRadius: 5,
+  ul.dropdown-menu {
+    background-color: #2a5874;
+    border: none;
+    border-radius: 5px;
 
-      '.dropdown-header': {
-        color: '#ccc',
-        marginTop: 10,
-        padding: '3px 15px',
-      },
+    .dropdown-header {
+      color: #ccc;
+      margin-top: 10px;
+      padding: 3px 15px;
+    }
 
-      '.divider': {
-        backgroundColor: 'transparent',
-        borderBottom: `1px solid ${props.theme.colors.shade5}`,
-        borderTop: `1px solid ${props.theme.colors.shade1}`,
-        margin: 0,
-      },
+    .divider {
+      background-color: transparent;
+      border-bottom: 1px solid ${props => props.theme.colors.shade5};
+      border-top: 1px solid ${props => props.theme.colors.shade1};
+      margin: 0px;
+    }
 
-      '>li>a': {
-        color: '#ddd',
-        padding: '10px 20px',
+    > li > a {
+      color: #ddd;
+      padding: 10px 20px;
 
-        '&:hover': {
-          backgroundColor: 'transparent',
-          color: props.theme.colors.white1,
-        },
-      },
-    },
+      &:hover {
+        background-color: transparent;
+        color: ${props => props.theme.colors.white1};
+      }
+    }
+  }
 
-    '.open .dropdown-toggle.btn-default': {
-      backgroundColor: 'transparent',
-      color: props.theme.colors.white1,
-      boxShadow: 'none',
-    },
+  .open .dropdown-toggle.btn-default {
+    background-color: transparent;
+    color: ${props => props.theme.colors.white1};
+    box-shadow: none;
+  }
 
-    '.dropdown-toggle.btn-default': {
-      backgroundColor: props.theme.colors.shade2,
-      borderRadius: 5,
-      borderTop: `1px solid ${props.theme.colors.shade4}`,
-      borderBottom: `1px solid ${props.theme.colors.shade1}`,
-      position: 'relative',
-      paddingLeft: 50,
-      border: 'none',
-      color: '#ccd',
+  .dropdown-toggle.btn-default {
+    background-color: ${props => props.theme.colors.shade2};
+    border-radius: 5px;
+    border-top: 1px solid ${props => props.theme.colors.shade4};
+    border-bottom: 1px solid ${props => props.theme.colors.shade1};
+    position: relative;
+    padding-left: 50px;
+    border: none;
+    color: #ccd;
 
-      '.label': {
-        marginRight: 10,
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        lineHeight: '29px',
-        borderRadius: 0,
-        borderTopLeftRadius: 5,
-        borderBottomLeftRadius: 5,
-        backgroundColor: props.theme.colors.shade4,
-        paddingLeft: 10,
-        paddingRight: 10,
-        fontWeight: 'normal',
-        letterSpacing: 0.5,
-      },
+    .label {
+      margin-right: 10px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      line-height: 29px;
+      border-radius: 0px;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      background-color: ${props => props.theme.colors.shade4};
+      padding-left: 10px;
+      padding-right: 10px;
+      font-weight: normal;
+      letter-spacing: 0.5px;
+    }
 
-      '&:active': {
-        color: '#ccd',
-        textDecoration: 'none',
-        boxShadow: 'none',
-        backgroundColor: props.theme.colors.shade2,
-      },
+    &:active {
+      color: #ccd;
+      text-decoration: none;
+      box-shadow: none;
+      background-color: ${props => props.theme.colors.shade2};
+    }
 
-      '&:focus': {
-        backgroundColor: props.theme.colors.shade2,
-        color: '#ccd',
-      },
+    &:focus {
+      background-color: ${props => props.theme.colors.shade2};
+      color: #ccd;
+    }
 
-      '&:hover': {
-        textDecoration: 'none',
-        backgroundColor: props.theme.colors.shade3,
-        color: props.theme.colors.white1,
-      },
+    &:hover {
+      text-decoration: none;
+      background-color: ${props => props.theme.colors.shade3};
+      color: ${props => props.theme.colors.white1};
+    }
 
-      '&:active:focus': {
-        backgroundColor: 'transparent',
-        color: props.theme.colors.white1,
-      },
+    &:active:focus {
+      background-color: transparent;
+      color: ${props => props.theme.colors.white1};
+    }
 
-      'ul.dropdown-menu': {
-        backgroundColor: props.theme.colors.shade1,
-        boxShadow: 'none',
-      },
-    },
+    ul.dropdown-menu {
+      background-color: ${props => props.theme.colors.shade1};
+      box-shadow: none;
+    }
+  }
 
-    '.open': {
-      '.dropdown-toggle.btn-default': {
-        backgroundColor: props.theme.colors.shade1,
-        borderBottom: `1px solid ${props.theme.colors.shade5}`,
-        borderTop: `1px solid ${props.theme.colors.shade1}`,
-      },
-    },
-  }))
-);
+  .open {
+    .dropdown-toggle.btn-default {
+      background-color: ${props => props.theme.colors.shade1};
+      border-bottom: 1px solid ${props => props.theme.colors.shade5};
+      border-top: 1px solid ${props => props.theme.colors.shade1};
+    }
+  }
+`;
 
 class OrganizationDropdown extends React.Component {
   render() {

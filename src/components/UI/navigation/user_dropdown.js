@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import { withTheme } from 'emotion-theming';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import Gravatar from 'react-gravatar';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
@@ -7,82 +6,81 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const Wrapper = withTheme(
-  styled.div(props => ({
-    marginLeft: 10,
+const Wrapper = styled.div`
+  margin-left: 10px;
 
-    '.user_dropdown--toggle': {
-      display: 'inline',
-      [`@media only screen and (max-width: ${props.theme.breakpoints.large}px)`]: {
-        span: {
-          display: 'none',
-        },
-      },
-    },
+  .user_dropdown--toggle {
+    display: inline;
+    @media only screen and (max-width: ${props =>
+        props.theme.breakpoints.large}px) {
+      span {
+        display: none;
+      }
+    }
+  }
 
-    '.react-gravatar': {
-      marginRight: 8,
-    },
+  .react-gravatar {
+    margin-right: 8px;
+  }
 
-    display: 'inline',
+  display: inline;
 
-    'ul.dropdown-menu': {
-      backgroundColor: '#2a5874',
-      border: 'none',
-      borderRadius: 5,
+  ul.dropdown-menu {
+    background-color: #2a5874;
+    border: none;
+    border-radius: 5px;
 
-      '>li>a': {
-        color: '#ddd',
-        padding: '10px 20px',
+    > li > a {
+      color: #ddd;
+      padding: 10px 20px;
 
-        '&:hover': {
-          backgroundColor: 'transparent',
-          color: props.theme.colors.white1,
-        },
-      },
-    },
+      &:hover {
+        background-color: transparent;
+        color: ${props => props.theme.colors.white1};
+      }
+    }
+  }
 
-    '.dropdown-toggle.btn-default': {
-      backgroundColor: 'transparent',
-      border: 'none',
-      color: '#ccd',
+  .dropdown-toggle.btn-default {
+    background-color: transparent;
+    border: none;
+    color: #ccd;
 
-      '&:active': {
-        backgroundColor: 'transparent',
-        color: '#ccd',
-        boxShadow: 'none',
-        textDecoration: 'underline',
-      },
+    &:active {
+      background-color: transparent;
+      color: #ccd;
+      box-shadow: none;
+      text-decoration: underline;
+    }
 
-      '&:hover': {
-        backgroundColor: 'transparent',
-        color: props.theme.colors.white1,
-        textDecoration: 'underline',
-      },
+    &:hover {
+      background-color: transparent;
+      color: ${props => props.theme.colors.white1};
+      text-decoration: underline;
+    }
 
-      '&:focus': {
-        backgroundColor: 'transparent',
-        color: '#ccd',
-      },
+    &:focus {
+      background-color: transparent;
+      color: #ccd;
+    }
 
-      '&:active:focus': {
-        backgroundCOlor: 'transparent',
-        color: props.theme.colors.white1,
-      },
+    &:active:focus {
+      background-color: transparent;
+      color: ${props => props.theme.colors.white1};
+    }
 
-      'ul.dropdown-menu': {
-        backgroundColor: props.theme.colors.shade1,
-        boxShadow: 'none',
-      },
-    },
+    ul.dropdown-menu {
+      background-color: ${props => props.theme.colors.shade1};
+      box-shadow: none;
+    }
+  }
 
-    '.open .dropdown-toggle.btn-default': {
-      backgroundColor: 'transparent',
-      color: props.theme.colors.white1,
-      boxShadow: 'none',
-    },
-  }))
-);
+  .open .dropdown-toggle.btn-default {
+    background-color: transparent;
+    color: ${props => props.theme.colors.white1};
+    box-shadow: none;
+  }
+`;
 
 class UserDropdown extends React.Component {
   render() {
