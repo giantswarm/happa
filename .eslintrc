@@ -14,6 +14,11 @@
     "es6": true
   },
   "rules": {
+    "emotion/import-from-emotion": "error",
+    "emotion/jsx-import": "error",
+    "emotion/no-vanilla": "error",
+    "emotion/styled-import": "error",
+    "emotion/syntax-preference": [1, "string"],
     "strict": 2,
     "no-underscore-dangle": 0,
     "quotes": [1, "single", {"allowTemplateLiterals": true}],
@@ -34,6 +39,7 @@
     "plugin:react/recommended"
   ],
   "plugins": [
+    "emotion",
     "react",
     "sort-imports-es6-autofix"
   ],
