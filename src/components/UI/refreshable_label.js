@@ -1,8 +1,18 @@
+import { keyframes } from '@emotion/core';
 import _ from 'underscore';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
 import styled from '@emotion/styled';
+
+const yellowfade = keyframes`
+  from {
+    background: #e8d986;
+  }
+  to {
+    background: transparent;
+  }
+`;
 
 const Wrapper = styled.div`
   display: inline-block;
@@ -12,17 +22,9 @@ const Wrapper = styled.div`
   padding-left: 5px;
   padding-right: 5px;
   &.changed {
-    animation-name: yellowfade;
-    animation-duration: 2s;
-    animation-timing-function: ease;
+    animation: ${yellowfade} 2s ease;
   }
   @keyframes yellowfade {
-    from {
-      background: #e8d986;
-    }
-    to {
-      background: transparent;
-    }
   }
 `;
 
