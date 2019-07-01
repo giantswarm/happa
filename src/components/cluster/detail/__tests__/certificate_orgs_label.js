@@ -21,27 +21,13 @@ it('renders empty label without crashing', () => {
 });
 
 it('renders multiple labels in alphabetic order', () => {
-  const { container } = render(
+  const { getByTestId } = render(
     <CertificateOrgsLabel value={'Exa,Mega,Atto,Zepto,Yokto'} />
   );
 
-  expect(
-    container.querySelectorAll('.certificate-orgs-label span')[0]
-  ).toHaveTextContent('Atto');
-
-  expect(
-    container.querySelectorAll('.certificate-orgs-label span')[1]
-  ).toHaveTextContent('Exa');
-
-  expect(
-    container.querySelectorAll('.certificate-orgs-label span')[2]
-  ).toHaveTextContent('Mega');
-
-  expect(
-    container.querySelectorAll('.certificate-orgs-label span')[3]
-  ).toHaveTextContent('Yokto');
-
-  expect(
-    container.querySelectorAll('.certificate-orgs-label span')[4]
-  ).toHaveTextContent('Zepto');
+  expect(getByTestId('orglabel-0')).toHaveTextContent('Atto');
+  expect(getByTestId('orglabel-1')).toHaveTextContent('Exa');
+  expect(getByTestId('orglabel-2')).toHaveTextContent('Mega');
+  expect(getByTestId('orglabel-3')).toHaveTextContent('Yokto');
+  expect(getByTestId('orglabel-4')).toHaveTextContent('Zepto');
 });

@@ -20,12 +20,12 @@ class CertificateOrgsLabel extends React.Component {
         {this.props.value
           .split(',')
           .sort()
-          .map(element => {
+          .map((element, index) => {
             if (element != '') {
               return (
                 <span
                   className={'orglabel'}
-                  data-testid='orglabel'
+                  data-testid={`orglabel-${index}`}
                   key={element}
                   style={{ backgroundColor: this.calculateColour(element) }}
                 >
