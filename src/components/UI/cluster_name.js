@@ -7,34 +7,34 @@ import React from 'react';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-const FormWrapper = styled.div({
-  display: 'inline-block',
-  form: {
-    display: 'inline-block',
-  },
-  'input[type="text"]': {
-    display: 'inline-block',
-    padding: '0px 5px',
-    width: 320,
-    marginRight: 5,
-    fontSize: '85%',
-  },
-  '.btn[type="submit"]': {
-    display: 'inline',
-  },
-  '.btn-group': {
-    float: 'none',
-    marginLeft: 4,
-    top: -2,
-  },
-});
+const FormWrapper = styled.div`
+  display: inline-block;
+  form {
+    display: inline-block;
+  }
+  input[type='text'] {
+    display: inline-block;
+    padding: 0px 5px;
+    width: 320px;
+    margin-right: 5px;
+    font-size: 85%;
+  }
+  .btn[type='submit'] {
+    display: inline;
+  }
+  .btn-group {
+    float: none;
+    margin-left: 4px;
+    top: -2px;
+  }
+`;
 
-const LinkWrapper = styled.span({
-  'a:hover': {
-    textDecorationStyle: 'dotted',
-    color: '#fff',
-  },
-});
+const LinkWrapper = styled.span`
+  a:hover {
+    text-decoration-style dotted;
+    color: #fff;
+  }
+`;
 
 /**
  * ClusterName is a widget to display and edit a cluster name in the same
