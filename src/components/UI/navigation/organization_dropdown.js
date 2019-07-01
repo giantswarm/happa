@@ -22,8 +22,8 @@ const Wrapper = styled.div`
 
     .divider {
       background-color: transparent;
-      border-bottom: 1px solid ${props => props.theme.colors.shade5};
-      border-top: 1px solid ${props => props.theme.colors.shade1};
+      border-bottom: 1px solid ${props => props.theme.colors.shade6};
+      border-top: 1px solid ${props => props.theme.colors.shade3};
       margin: 0px;
     }
 
@@ -47,11 +47,11 @@ const Wrapper = styled.div`
   .dropdown-toggle.btn-default {
     background-color: ${props => props.theme.colors.shade2};
     border-radius: 5px;
-    border-top: 1px solid ${props => props.theme.colors.shade4};
-    border-bottom: 1px solid ${props => props.theme.colors.shade1};
+    border: none;
+    border-top: 1px solid #2e617f;
+    border-bottom: 1px solid #183343;
     position: relative;
     padding-left: 50px;
-    border: none;
     color: #ccd;
 
     .label {
@@ -64,7 +64,7 @@ const Wrapper = styled.div`
       border-radius: 0px;
       border-top-left-radius: 5px;
       border-bottom-left-radius: 5px;
-      background-color: ${props => props.theme.colors.shade4};
+      background-color: #2e617f;
       padding-left: 10px;
       padding-right: 10px;
       font-weight: normal;
@@ -85,26 +85,26 @@ const Wrapper = styled.div`
 
     &:hover {
       text-decoration: none;
-      background-color: ${props => props.theme.colors.shade3};
+      background-color: ${props => props.theme.colors.shade5} !important;
       color: ${props => props.theme.colors.white1};
     }
 
     &:active:focus {
-      background-color: transparent;
+      background-color: ${props => props.theme.colors.shade5} !important;
       color: ${props => props.theme.colors.white1};
     }
 
     ul.dropdown-menu {
-      background-color: ${props => props.theme.colors.shade1};
+      background-color: ${props => props.theme.colors.shade2};
       box-shadow: none;
     }
   }
 
   .open {
     .dropdown-toggle.btn-default {
-      background-color: ${props => props.theme.colors.shade1};
-      border-bottom: 1px solid ${props => props.theme.colors.shade5};
-      border-top: 1px solid ${props => props.theme.colors.shade1};
+      background-color: ${props => props.theme.colors.shade2};
+      border-bottom: 1px solid #2e617f;
+      border-top: 1px solid #183343;
     }
   }
 `;

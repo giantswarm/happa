@@ -16,7 +16,7 @@ const OuterNav = styled.nav`
   left: 0px;
   right: 0px;
   z-index: 1;
-  background-color: #1a384b;
+  background-color: ${props => props.theme.colors.shade1};
 
   a {
     text-decoration: none;
