@@ -1,12 +1,11 @@
-import { withTheme } from 'emotion-theming';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const Wrapper = withTheme(
-  styled.span(props => ({
-    fontFamily: props.theme.fontFamilies.console,
-  }))
+const Wrapper = styled.span(
+  props => `
+  font-family: ${props.theme.fontFamilies.console};
+`
 );
 
 class AWSAccountID extends React.Component {
