@@ -1,4 +1,3 @@
-import { withTheme } from 'emotion-theming';
 import ColorHash from 'color-hash';
 import copy from 'copy-to-clipboard';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -9,35 +8,35 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 var colorHashCache = {};
 
-const Wrapper = withTheme(
-  styled.div(props => ({
-    display: 'inline-block',
-    '&:hover': {
-      i: {
-        opacity: 0.7,
-      },
-    },
-    i: {
-      cursor: 'pointer',
-      fontSize: '14px',
-      marginLeft: '5px',
-      marginRight: '5px',
-      opacity: 0,
-      '&:hover': {
-        opacity: 1,
-        textShadow: `0px 0px 15px ${props.theme.colors.shade1}`,
-      },
-    },
-  }))
+const Wrapper = styled.div(
+  props => `
+  display: inline-block;
+  &:hover {
+    i {
+      opacity: 0.7;
+    }
+  }
+  i {
+    cursor: pointer;
+    font-size: 14px;
+    margin-seft: 5px;
+    margin-right: 5px;
+    opacity: 0;
+    &:hover {
+      opacity: 1;
+      text-shadow: 0px 0px 15px ${props.theme.colors.shade1};
+    }
+  }
+`
 );
 
-const Label = withTheme(
-  styled.span(props => ({
-    backgroundColor: calculateColour(props.clusterID),
-    fontFamily: 'Inconsolata, monospace',
-    padding: '0.2em 0.4em',
-    borderRadius: '0.2em',
-  }))
+const Label = styled.span(
+  props => `
+  background-color: ${calculateColour(props.clusterID)};
+  font-family: ${props.theme.fontFamilies.console};
+  padding: 0.2em 0.4em;
+  border-radius: 0.2em;
+`
 );
 
 function calculateColour(str) {
