@@ -31,7 +31,7 @@ const FormWrapper = styled.div`
 
 const LinkWrapper = styled.span`
   a:hover {
-    text-decoration-style dotted;
+    text-decoration-style: dotted;
     color: #fff;
   }
 `;
