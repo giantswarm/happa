@@ -15,6 +15,6 @@ ADD scripts/start.sh /
 # Test certifiates will be overwritten in production by configmap
 ADD test/certs /etc/nginx/certs
 
-RUN chown -R nginx.nginx /www
+RUN chown -R nginx:nginx /www
 
 CMD ["/start.sh"]
