@@ -1,0 +1,5 @@
+name: happa
+namespace: giantswarm
+
+userID: 100
+groupID: 101
