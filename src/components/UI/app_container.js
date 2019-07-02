@@ -3,50 +3,52 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const Wrapper = styled.div(props => ({
-  width: 'calc(25% - 15px)',
-  flexShrink: '0',
-  margin: '0 20px 20px 0',
-  '&:nth-of-type(4n + 0)': {
-    marginRight: '0px',
-  },
+const Wrapper = styled.div`
+  width: calc(25% - 15px);
+  flex-shrink: 0;
+  margin: 0 20px 20px 0;
+  &:nth-of-type(4n + 0) {
+    margin-right: 0px;
+  }
 
-  [`@media only screen and (max-width: ${props.theme.breakpoints.large})`]: {
-    width: 'calc(33.333% - 13.333px)',
-    // We are unsetting the 4n + 0 rule one above.
-    '&:nth-of-type(4n + 0)': {
-      marginRight: '20px',
-    },
-    '&:nth-of-type(3n + 0)': {
-      marginRight: '0px',
-    },
-  },
+  @media only screen and (max-width: ${props =>
+      props.theme.breakpoints.large}) {
+    width: calc(33.333% - 13.333px);
+    /* We are unsetting the 4n + 0 rule one above.*/
+    &:nth-of-type(4n + 0) {
+      margin-right: 20px;
+    }
+    &:nth-of-type(3n + 0) {
+      margin-right: 0px;
+    }
+  }
 
-  [`@media only screen and (max-width: ${props.theme.breakpoints.small})`]: {
-    width: '100%',
-    marginRight: '0px',
-  },
-}));
+  @media only screen and (max-width: ${props =>
+      props.theme.breakpoints.small}) {
+    width: 100%;
+    margin-right: 0px;
+  }
+`;
 
-const StyledLink = styled(Link)({
-  display: 'block',
-  border: '1px solid #2a5974',
-  width: '100%',
-  borderRadius: '4px',
-  height: '158px',
-  backgroundColor: '#2f556a',
-  position: 'relative',
-  cursor: 'pointer',
-  overflow: 'hidden',
-  '&:hover': {
-    zIndex: 10,
-    boxShadow: '0px 0px 5px #549ac3',
-    'div:nth-of-type(1)': {
-      opacity: 1,
-      boxShadow: '0px 0px 5px #549ac3',
-    },
-  },
-});
+const StyledLink = styled(Link)`
+  display: block;
+  border: 1px solid #2a5974;
+  width: 100%;
+  border-radius: 4px;
+  height: 158px;
+  background-color: #2f556a;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  &:hover {
+    z-index: 10;
+    box-shadow: 0px 0px 5px #549ac3;
+    div:nth-of-type(1) {
+      opacity: 1;
+      box-sshadow: 0px 0px 5px #549ac3;
+    }
+  }
+`;
 
 const Badge = styled.div`
   background-color: #ef6d3b;
