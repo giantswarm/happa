@@ -12,7 +12,7 @@ it('renders without crashing', () => {
 
 it('renders only the first tab', () => {
   const div = document.createElement('div');
-  const { container, debug } = render(
+  const { container } = render(
     <Tabs>
       <Tab eventKey={1} title='first'>
         <h1>First Tab</h1>
