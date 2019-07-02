@@ -13,10 +13,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class OrganizationDetail extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   addMember = () => {
     this.props.actions.organizationAddMember(this.props.organization.id);
   };

@@ -15,10 +15,7 @@ import React from 'react';
 import ReactTimeout from 'react-timeout';
 
 class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.visibilityTracker = new PageVisibilityTracker(); // binding?
-  }
+  visibilityTracker = new PageVisibilityTracker();
 
   componentDidMount() {
     this.registerRefreshInterval();

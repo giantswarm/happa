@@ -26,24 +26,20 @@ import React from 'react';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 class Users extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      selectedUser: null,
-      modal: {
-        visible: false,
-        loading: false,
-      },
-      invitationForm: {
-        email: '',
-        error: '',
-        organization: props.organizations,
-        sendEmail: true,
-        valid: true,
-      },
-    };
-  }
+  state = {
+    selectedUser: null,
+    modal: {
+      visible: false,
+      loading: false,
+    },
+    invitationForm: {
+      email: '',
+      error: '',
+      organization: this.props.organizations,
+      sendEmail: true,
+      valid: true,
+    },
+  };
 
   componentDidMount() {
     if (this.props.currentUser.isAdmin) {

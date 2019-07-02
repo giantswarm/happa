@@ -6,21 +6,18 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import update from 'react-addons-update';
 
 class ChangeEmailForm extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      changeEmailFormValid: false,
-      changeEmailFormSubmitting: false,
-      changeEmailSuccess: false,
-      buttonVisible: false,
-      fields: {
-        email: {
-          value: props.user.email,
-        },
+  state = {
+    fields: {
+      email: {
+        value: this.props.user.email,
       },
-    };
-  }
+    },
+    error: false,
+    isValid: false,
+    isSubmitting: false,
+    isSuccess: false,
+    isButtonVisible: false,
+  };
 
   resetForm() {
     this.setState({});
@@ -28,17 +25,17 @@ class ChangeEmailForm extends React.Component {
 
   validateEmail = e => {
     var email = e.target.value;
-    var buttonVisible;
+    var isButtonVisible;
 
     if (email !== this.props.user.email) {
-      buttonVisible = true;
+      isButtonVisible = true;
     } else {
-      buttonVisible = false;
+      isButtonVisible = false;
     }
 
     var newState = update(this.state, {
-      changeEmailSuccess: { $set: false },
-      buttonVisible: { $set: buttonVisible },
+      isSuccess: { $set: false },
+      isButtonVisible: { $set: isButtonVisible },
 
       fields: {
         email: {
@@ -50,13 +47,13 @@ class ChangeEmailForm extends React.Component {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (re.test(email)) {
       newState = update(newState, {
-        changeEmailFormValid: { $set: true },
-        changeEmailFormError: { $set: false },
+        isValid: { $set: true },
+        error: { $set: false },
       });
     } else {
       newState = update(newState, {
-        changeEmailFormValid: { $set: false },
-        changeEmailFormError: { $set: false },
+        isValid: { $set: false },
+        error: { $set: false },
       });
     }
 
@@ -74,8 +71,8 @@ class ChangeEmailForm extends React.Component {
       var usersApi = new GiantSwarmV4.UsersApi();
 
       this.setState({
-        changeEmailFormSubmitting: true,
-        changeEmailFormError: false,
+        isSubmitting: true,
+        error: false,
       });
 
       usersApi
@@ -84,9 +81,9 @@ class ChangeEmailForm extends React.Component {
         })
         .then(() => {
           this.setState({
-            changeEmailFormSubmitting: false,
-            changeEmailSuccess: true,
-            buttonVisible: false,
+            isSubmitting: false,
+            isSuccess: true,
+            isButtonVisible: false,
           });
         })
         .then(() => {
@@ -118,9 +115,9 @@ class ChangeEmailForm extends React.Component {
           }
 
           this.setState({
-            changeEmailFormSubmitting: false,
-            changeEmailFormError: true,
-            buttonVisible: false,
+            isSubmitting: false,
+            error: true,
+            isButtonVisible: false,
             errorMessage: errorMessage,
           });
         });
@@ -146,11 +143,11 @@ class ChangeEmailForm extends React.Component {
               transitionLeaveTimeout={200}
               transitionName='slide-right'
             >
-              {this.state.buttonVisible ? (
+              {this.state.isButtonVisible ? (
                 <Button
                   bsStyle='primary'
-                  disabled={!this.state.changeEmailFormValid}
-                  loading={this.state.changeEmailFormSubmitting}
+                  disabled={!this.state.isValid}
+                  loading={this.state.isSubmitting}
                   loadingMessage='Saving...'
                   type='submit'
                 >
@@ -164,7 +161,7 @@ class ChangeEmailForm extends React.Component {
               transitionLeaveTimeout={200}
               transitionName='slide-right'
             >
-              {this.state.changeEmailSuccess ? (
+              {this.state.isSuccess ? (
                 <div className='form-success'>
                   <i className='fa fa-done' />
                   Saved Succesfully
@@ -177,7 +174,7 @@ class ChangeEmailForm extends React.Component {
               transitionLeaveTimeout={200}
               transitionName='slide-right'
             >
-              {this.state.changeEmailFormError ? (
+              {this.state.error ? (
                 <div className='flash-messages--flash-message flash-messages--danger'>
                   {this.state.errorMessage}
                 </div>

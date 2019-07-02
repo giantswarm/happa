@@ -90,7 +90,7 @@ class NextSteps extends React.Component {
             <Link
               to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/example/`}
             >
-              <button>
+              <button type='button'>
                 <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>
