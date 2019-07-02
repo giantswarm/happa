@@ -28,4 +28,10 @@ it('renders only the first tab', () => {
   );
 
   expect(container.querySelector('#tabs-pane-1')).toBeVisible();
+  expect(container.querySelector('#tabs-pane-2')).toHaveStyle(`
+    display: none;
+  `);
+  expect(container.querySelector('#tabs-pane-3')).toHaveStyle(`
+    display: none;
+  `);
 });
