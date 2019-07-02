@@ -5,12 +5,13 @@ import styled from '@emotion/styled';
 /**
  * This component displays availability zone labels
  * for the zones used by a cluster or node pool.
+ *
+ * Each zone gets a unique color for visual distinction.
  */
 
 const Wrapper = styled.abbr`
   border-radius: 2em;
-  background-color: #fff;
-  color: #000;
+  color: #333;
   padding: 2px;
   display: inline-block;
   width: 1.7em;
@@ -19,6 +20,27 @@ const Wrapper = styled.abbr`
   margin-right: 4px;
   line-height: 1.4em;
   text-decoration: none;
+  &.a {
+    background-color: #66c2a5;
+  }
+  &.b {
+    background-color: #fc8d62;
+  }
+  &.c {
+    background-color: #8da0cb;
+  }
+  &.d {
+    background-color: #e78ac3;
+  }
+  &.e {
+    background-color: #a6d854;
+  }
+  &.f {
+    background-color: #ffd92f;
+  }
+  &.g {
+    background-color: #e5c494;
+  }
 `;
 
 const AvailabilityZonesLabel = props => {
@@ -30,9 +52,10 @@ const AvailabilityZonesLabel = props => {
 
   let azs = zones.map(az => {
     // we use the letter that is the last character as the label
-    let label = az.slice(-1).toUpperCase();
+    let letter = az.slice(-1);
+    let label = letter.toUpperCase();
     return (
-      <Wrapper key={az} title={az}>
+      <Wrapper className={letter} key={az} title={az}>
         {label}
       </Wrapper>
     );
