@@ -1,10 +1,25 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
 
 /**
  * This component displays availability zone labels
  * for the zones used by a cluster or node pool.
  */
+
+const Wrapper = styled.abbr`
+  border-radius: 2em;
+  background-color: #fff;
+  color: #000;
+  padding: 2px;
+  display: inline-block;
+  width: 1.7em;
+  text-align: center;
+  margin-left: 4px;
+  margin-right: 4px;
+  line-height: 1.4em;
+  text-decoration-line: none;
+`;
 
 const AvailabilityZonesLabel = props => {
   const { zones } = props;
@@ -17,27 +32,9 @@ const AvailabilityZonesLabel = props => {
     // we use the letter that is the last character as the label
     let label = az.slice(-1).toUpperCase();
     return (
-      <abbr
-        key={az}
-        // TODO: change to emotion/styled once
-        // https://github.com/giantswarm/happa/pull/600 is merged
-        style={{
-          borderRadius: '2em',
-          backgroundColor: '#fff',
-          color: '#000',
-          padding: '2px',
-          display: 'inline-block',
-          width: '1.7em',
-          textAlign: 'center',
-          marginLeft: '4px',
-          marginRight: '4px',
-          lineHeight: '1.4em',
-          textDecorationLine: 'none',
-        }}
-        title={az}
-      >
+      <Wrapper key={az} title={az}>
         {label}
-      </abbr>
+      </Wrapper>
     );
   });
 
