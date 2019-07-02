@@ -1,3 +1,6 @@
+// I leave it here because it is used in other components
+// TODO In the future we will remove this file
+
 export const COLORS = {
   shade1: '#1E4156',
   shade2: '#224A61',

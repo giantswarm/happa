@@ -1,6 +1,6 @@
 import { push } from 'connected-react-router';
 import { selectCluster } from '../../../actions/appActions';
-import Button from '../../shared/button';
+import Button from '../../UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
 

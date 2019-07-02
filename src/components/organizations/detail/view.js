@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { relativeDate } from '../../../lib/helpers.js';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/lib/Button';
-import ClusterIDLabel from '../../shared/cluster_id_label';
+import ClusterIDLabel from '../../UI/cluster_id_label';
 import cmp from 'semver-compare';
 import Credentials from './credentials.js';
 import DocumentTitle from 'react-document-title';

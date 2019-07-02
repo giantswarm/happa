@@ -1,7 +1,7 @@
 import { relativeDate } from '../../lib/helpers.js';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../shared/button';
+import Button from '../UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
 

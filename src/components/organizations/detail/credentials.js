@@ -4,8 +4,8 @@ import {
   organizationCredentialsSet,
   organizationCredentialsSetConfirmed,
 } from '../../../actions/organizationActions';
-import AWSAccountID from '../../shared/aws_account_id';
-import Button from '../../shared/button';
+import AWSAccountID from '../../UI/aws_account_id';
+import Button from '../../UI/button';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import FormGroup from 'react-bootstrap/lib/FormGroup';

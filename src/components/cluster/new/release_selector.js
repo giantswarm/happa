@@ -6,7 +6,7 @@ import {
 } from '../../../lib/flash_message';
 import { loadReleases } from '../../../actions/releaseActions';
 import _ from 'underscore';
-import Button from '../../shared/button';
+import Button from '../../UI/button';
 import cmp from 'semver-compare';
 import PropTypes from 'prop-types';
 import React from 'react';

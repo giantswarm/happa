@@ -5,6 +5,7 @@ import { catalogsLoad } from '../actions/catalogActions';
 import { clustersLoad } from '../actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
+import { organizationSelect } from '../actions/organizationActions';
 import { organizationsLoad } from '../actions/organizationActions';
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -14,7 +15,7 @@ import DocumentTitle from 'react-document-title';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home';
 import Modals from './modals';
-import Navigation from './navigation';
+import Navigation from './UI/navigation';
 import Organizations from './organizations';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -71,6 +72,10 @@ class Layout extends React.Component {
     }
   }
 
+  selectOrganization = orgId => {
+    this.props.dispatch(organizationSelect(orgId));
+  };
+
   render() {
     if (!this.props.firstLoadComplete) {
       return (
@@ -87,14 +92,14 @@ class Layout extends React.Component {
       return (
         <DocumentTitle title='Giant Swarm'>
           <React.Fragment>
+            <Modals />
             <Navigation
-              location={this.props.location}
+              onSelectOrganization={this.selectOrganization}
               organizations={this.props.organizations}
               selectedOrganization={this.props.selectedOrganization}
               showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
               user={this.props.user}
             />
-            <Modals />
             <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
               <div className='main col-9'>
                 <Switch>

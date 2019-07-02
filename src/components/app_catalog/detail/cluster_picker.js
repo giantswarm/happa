@@ -1,5 +1,5 @@
 import * as theme from '../../../lib/theme';
-import ClusterIDLabel from '../../shared/cluster_id_label';
+import ClusterIDLabel from '../../UI/cluster_id_label';
 import Input from './input';
 import PropTypes from 'prop-types';
 import React from 'react';
