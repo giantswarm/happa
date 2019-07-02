@@ -3,9 +3,9 @@ import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import styled from '@emotion/styled';
 
-const ProgressButtonStatusIndicator = styled.div({
-  display: 'inline',
-});
+const ProgressButtonStatusIndicator = styled.div`
+  display: inline;
+`;
 
 const LoadingIndicator = props => (
   <ProgressButtonStatusIndicator>

@@ -48,64 +48,64 @@ const StyledLink = styled(Link)({
   },
 });
 
-const Badge = styled.div({
-  backgroundColor: '#ef6d3b',
-  whiteSpace: 'nowrap',
-  position: 'absolute',
-  padding: '5px 100px',
-  minWidth: '300px',
-  transform: 'rotate(-45deg) translate(-37%, 0)',
-  color: 'white',
-  textAlign: 'center',
-  textTransform: 'uppercase',
-  fontSize: '12px',
-  top: '-60px',
-  left: '-40px',
-  boxSizing: 'border-box',
-  zIndex: 20,
-});
+const Badge = styled.div`
+  background-color: #ef6d3b;
+  white-space: nowrap;
+  position: absolute;
+  padding: 5px 100px;
+  min-width: 300px;
+  transform: rotate(-45deg) translate(-37%, 0);
+  color: white;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  top: -60px;
+  left: -40px;
+  box-sizing: border-box;
+  z-index: 20;
+`;
 
-const AppIcon = styled.div({
-  borderRadius: '4px 4px 0 0',
-  height: '100px',
-  textAlign: 'center',
-  padding: '10px',
-  display: 'flex',
-  backgroundColor: '#fff',
-  opacity: '0.9',
-  justifyContent: 'center',
-  alignItems: 'center',
+const AppIcon = styled.div`
+  border-radius: 4px 4px 0 0;
+  height: 100px;
+  text-align: center;
+  padding: 10px;
+  display: flex;
+  background-color: #fff;
+  opacity: 0.9;
+  justify-content: center;
+  align-items: center;
 
-  h3: {
-    color: '#2e556a',
-    textAlign: 'center',
-    fontSize: '20px',
-    fontWeight: '300',
-  },
+  h3 {
+    color: #2e556a;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 300;
+  }
 
-  img: {
-    maxHeight: '75px',
-    maxWidth: '60%',
-    margin: 'auto',
-    verticalAlign: 'middle',
-  },
-});
+  img {
+    max-height: 75px;
+    max-width: 60%;
+    margin: auto;
+    vertical-align: middle;
+  }
+`;
 
-const AppDetails = styled.div({
-  padding: '10px',
+const AppDetails = styled.div`
+  padding: 10px;
 
-  h3: {
-    margin: '0px',
-    fontSize: '16px',
-    lineHeight: '1em',
-    top: '0px',
-    fontWeight: '700',
-  },
+  h3 {
+    margin: 0px;
+    font-size: 16px;
+    line-height: 1em;
+    top: 0px;
+    font-weight: 700;
+  }
 
-  span: {
-    fontSize: '14px',
-  },
-});
+  span {
+    font-size: 14px;
+  }
+`;
 
 class AppContainer extends React.Component {
   render() {

@@ -5,49 +5,49 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const ClusterPickerWrapper = styled.div({
-  display: 'flex',
-  flexDirection: 'column',
-  height: 400,
-});
+const ClusterPickerWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+`;
 
-const ClusterList = styled.div({
-  flexGrow: 1,
-  overflow: 'scroll',
-});
+const ClusterList = styled.div`
+  flex-grow: 1px;
+  overflow: scroll;
+`;
 
-const Cluster = styled.div({
-  alignItems: 'center',
-  borderRadius: theme.BORDER_RADIUS,
-  display: 'flex',
-  padding: '10px 15px',
-  ':hover': {
-    backgroundColor: theme.COLORS.shade4,
-    cursor: 'pointer',
+const Cluster = styled.div`
+  align-items: center;
+  border-radius: ${theme.BORDER_RADIUS};
+  display: flex;
+  padding: 10px 15px;
+  :hover {
+    background-color: ${theme.COLORS.shade4};
+    cursor: pointer;
+  }
+  &.selected {
+    background-color: ${theme.COLORS.shade4};
   },
-  '&.selected': {
-    backgroundColor: theme.COLORS.shade4,
-  },
-});
+`;
 
-const ClusterTitle = styled.div({
-  color: theme.COLORS.white2,
-  flexGrow: 1,
-  fontSize: 16,
-  fontWeight: 800,
-  margin: '0px 15px',
-});
+const ClusterTitle = styled.div`
+  color: ${theme.COLORS.white2};
+  flex-grow: 1;
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0px 15px;
+`;
 
-const Organisation = styled.div({
-  color: theme.COLORS.white2,
-  fontSize: 12,
-});
+const Organisation = styled.div`
+  color: ${theme.COLORS.white2};
+  font-size: 12px;
+`;
 
-const NoSearchResults = styled.div({
-  fontSize: 16,
-  textAlign: 'center',
-  marginTop: 50,
-});
+const NoSearchResults = styled.div`
+  font-size: 16px;
+  text-align: center;
+  margin-top: 50px;
+`;
 
 const ClusterPicker = props => {
   const onSelectCluster = e => {
