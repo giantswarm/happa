@@ -18,7 +18,7 @@ const Wrapper = styled.abbr`
   margin-left: 4px;
   margin-right: 4px;
   line-height: 1.4em;
-  text-decoration-line: none;
+  text-decoration: none;
 `;
 
 const AvailabilityZonesLabel = props => {
