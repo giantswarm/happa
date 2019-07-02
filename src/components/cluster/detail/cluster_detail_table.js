@@ -1,5 +1,6 @@
 import { relativeDate } from '../../../lib/helpers.js';
 import _ from 'underscore';
+import AvailabilityZonesLabel from '../../shared/availability_zones_label';
 import AWSAccountID from '../../shared/aws_account_id';
 import Button from '../../shared/button';
 import moment from 'moment';
@@ -191,13 +192,9 @@ class ClusterDetailTable extends React.Component {
 
     var availabilityZonesOrNothing = null;
     if (this.props.provider === 'aws') {
-      var azs = <span>n/a</span>;
-
-      if (this.props.cluster && this.props.cluster.availability_zones) {
-        azs = this.props.cluster.availability_zones.map(az => {
-          return <code key={az}>{az}</code>;
-        });
-      }
+      var azs = (
+        <AvailabilityZonesLabel zones={this.props.cluster.availability_zones} />
+      );
 
       availabilityZonesOrNothing = (
         <tr>
