@@ -12,7 +12,7 @@ it('renders without crashing', () => {
 
 it('renders only the first tab', () => {
   const div = document.createElement('div');
-  const { container } = render(
+  const { container, debug } = render(
     <Tabs>
       <Tab eventKey={1} title='first'>
         <h1>First Tab</h1>
@@ -27,11 +27,18 @@ it('renders only the first tab', () => {
     div
   );
 
-  expect(container.querySelector('#tabs-pane-1')).toBeVisible();
-  expect(container.querySelector('#tabs-pane-2')).toHaveStyle(`
-    display: none;
-  `);
-  expect(container.querySelector('#tabs-pane-3')).toHaveStyle(`
-    display: none;
-  `);
+  expect(container.querySelector('#tabs-pane-1')).toHaveAttribute(
+    'class',
+    'tab-pane active'
+  );
+
+  expect(container.querySelector('#tabs-pane-2')).toHaveAttribute(
+    'class',
+    'tab-pane'
+  );
+
+  expect(container.querySelector('#tabs-pane-3')).toHaveAttribute(
+    'class',
+    'tab-pane'
+  );
 });
