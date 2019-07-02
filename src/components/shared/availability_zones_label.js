@@ -41,6 +41,9 @@ const Wrapper = styled.abbr`
   &.g {
     background-color: #e5c494;
   }
+  &[title] {
+    text-decoration: none;
+  }
 `;
 
 const AvailabilityZonesLabel = props => {
