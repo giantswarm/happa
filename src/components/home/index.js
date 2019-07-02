@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import _ from 'underscore';
-import Button from '../shared/button';
+import Button from '../UI/button';
 import ClusterDashboardItem from './cluster_dashboard_item';
 import ClusterEmptyState from './cluster_empty_state';
 import DocumentTitle from 'react-document-title';
@@ -27,6 +27,7 @@ class Home extends React.Component {
     // load cluster details if cluster list has changed
     if (
       !_.isEqual(
+        // inmutability?
         this.props.clusters.map(x => x.id),
         prevProps.clusters.map(x => x.id)
       )

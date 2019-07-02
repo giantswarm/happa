@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { parseErrorMessages } from './_parse_error_messages';
 import { push } from 'connected-react-router';
-import Button from '../shared/button';
+import Button from '../UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';

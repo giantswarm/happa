@@ -32,6 +32,19 @@ jobs:
     steps:
     - checkout
 
+    - run:
+        name: Install node@10.16.0
+        command: |
+          set +e
+          export NVM_DIR="/opt/circleci/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install v10.16.0
+          nvm alias default v10.16.0
+
+          # Each step uses the same `$BASH_ENV`, so need to modify it
+          echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
+          echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> $BASH_ENV
+
     - restore_cache:
           keys:
             # Find a cache corresponding to this specific package.json checksum
@@ -104,38 +117,6 @@ jobs:
           sleep 2
           CURL_OUTPUT=$(curl -s http://localhost:8000)
           echo "${CURL_OUTPUT}" | grep Happa
-
-    - run:
-        name: Lighthouse audits
-        command: |
-          if [ "${CIRCLE_BRANCH}" != "master" ]; then
-            lighthouse-keeper audit \
-              --url http://happa-master:8000/ \
-              --name master \
-              --docker-link happa-master:happa-master
-          fi
-
-          lighthouse-keeper audit \
-            --url http://happa-branch:8000/ \
-            --name branch \
-            --docker-link happa-branch:happa-branch
-
-          echo "Lighthouse report for ${CIRCLE_BRANCH}:"
-          lighthouse-keeper view --input branch.json
-
-          if [[ "${CIRCLE_BRANCH}" != "master" && -n "${CIRCLE_PULL_REQUEST}" ]]; then
-            echo "Lighthouse report for master:"
-            lighthouse-keeper view --input master.json
-
-            echo "\nComparison:"
-            lighthouse-keeper compare \
-              --input master.json --inputlabel master \
-              --input branch.json --inputlabel "this branch" \
-              --github-token "${RELEASE_TOKEN}" \
-              --github-owner giantswarm \
-              --github-repo ${CIRCLE_PROJECT_REPONAME} \
-              --github-issue $(basename ${CIRCLE_PULL_REQUEST})
-          fi
 
     - save_cache:
         key: v1-npm-deps-{{ checksum "yarn.lock" }}

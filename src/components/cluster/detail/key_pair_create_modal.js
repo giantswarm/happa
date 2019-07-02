@@ -1,6 +1,6 @@
 import { dedent, makeKubeConfigTextFile } from '../../../lib/helpers';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../../shared/button';
+import Button from '../../UI/button';
 import copy from 'copy-to-clipboard';
 import ExpiryHoursPicker from './expiry_hours_picker';
 import PropTypes from 'prop-types';

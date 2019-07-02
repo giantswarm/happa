@@ -1,5 +1,5 @@
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../../shared/button';
+import Button from '../../UI/button';
 import InputField from '../../shared/input_field';
 import PropTypes from 'prop-types';
 import React from 'react';

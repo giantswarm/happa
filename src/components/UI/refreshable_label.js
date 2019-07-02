@@ -1,7 +1,32 @@
+import { keyframes } from '@emotion/core';
 import _ from 'underscore';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
+import styled from '@emotion/styled';
+
+const yellowfade = keyframes`
+  from {
+    background: #e8d986;
+  }
+  to {
+    background: transparent;
+  }
+`;
+
+const Wrapper = styled.div`
+  display: inline-block;
+  line-height: 1.7;
+  border-radius: 2px;
+  margin-left: -5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  &.changed {
+    animation: ${yellowfade} 2s ease;
+  }
+  @keyframes yellowfade {
+  }
+`;
 
 /**
  * RefreshableLabel is an inline-block HTML container
@@ -18,13 +43,10 @@ import ReactTimeout from 'react-timeout';
  * Note: props.setTimeout is added via ReactTimeout.
  */
 class RefreshableLabel extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      dataItems: props.dataItems,
-      changed: false,
-    };
-  }
+  state = {
+    dataItems: this.props.dataItems,
+    changed: false,
+  };
 
   static getDerivedStateFromProps = (nextProps, prevState) => {
     var d = _.difference(prevState.dataItems, nextProps.dataItems);
@@ -55,12 +77,11 @@ class RefreshableLabel extends React.Component {
   }
 
   render() {
-    var className = 'refreshable-label';
-    if (this.state.changed) {
-      className += ' changed';
-    }
-
-    return <span className={className}>{this.props.children}</span>;
+    return (
+      <Wrapper className={this.state.changed ? 'changed' : null}>
+        {this.props.children}
+      </Wrapper>
+    );
   }
 }
 

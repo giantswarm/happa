@@ -11,9 +11,15 @@
   "env": {
     "browser": true,
     "node": true,
-    "es6": true
+    "es6": true,
+    "jest": true
   },
   "rules": {
+    "emotion/import-from-emotion": "error",
+    "emotion/jsx-import": "error",
+    "emotion/no-vanilla": "error",
+    "emotion/styled-import": "error",
+    "emotion/syntax-preference": [1, "string"],
     "no-console": 0,
     "no-underscore-dangle": 0,
     "no-unused-vars": 1,
@@ -36,6 +42,7 @@
     "plugin:react/recommended"
   ],
   "plugins": [
+    "emotion",
     "react",
     "sort-imports-es6-autofix"
   ],
