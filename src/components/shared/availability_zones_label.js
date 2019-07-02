@@ -19,6 +19,8 @@ const AvailabilityZonesLabel = props => {
     return (
       <abbr
         key={az}
+        // TODO: change to emotion/styled once
+        // https://github.com/giantswarm/happa/pull/600 is merged
         style={{
           borderRadius: '2em',
           backgroundColor: '#fff',
@@ -27,8 +29,10 @@ const AvailabilityZonesLabel = props => {
           display: 'inline-block',
           width: '1.7em',
           textAlign: 'center',
-          marginRight: '2px',
+          marginLeft: '4px',
+          marginRight: '4px',
           lineHeight: '1.4em',
+          textDecorationLine: 'none',
         }}
         title={az}
       >
