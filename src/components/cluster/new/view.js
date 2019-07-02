@@ -2,18 +2,18 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from '../../../actions/clusterActions';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
-import AWSInstanceTypeSelector from './aws_instance_type_selector.js';
-import AzureVMSizeSelector from './azure_vm_size_selector.js';
+import AWSInstanceTypeSelector from './aws_instance_type_selector';
+import AzureVMSizeSelector from './azure_vm_size_selector';
 import Button from '../../UI/button';
 import ClusterCreationDuration from './cluster_creation_duration';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
-import NodeCountSelector from '../../shared/node_count_selector.js';
+import NodeCountSelector from '../../shared/node_count_selector';
 import NumberPicker from '../../UI/number_picker';
 import PropTypes from 'prop-types';
-import ProviderCredentials from './provider_credentials.js';
+import ProviderCredentials from './provider_credentials';
 import React from 'react';
-import ReleaseSelector from './release_selector.js';
+import ReleaseSelector from './release_selector';
 
 class CreateCluster extends React.Component {
   state = {
