@@ -168,12 +168,16 @@ class ClusterApps extends React.Component {
     return (
       <React.Fragment>
         {this.props.showInstalledAppsBlock && (
-          <div id='installed-apps-section'>
+          <div data-testid='installed-apps-section' id='installed-apps-section'>
             <h3 className='table-label'>Installed Apps</h3>
             <div className='row'>
               {this.props.installedApps &&
                 this.props.installedApps.length === 0 && (
-                  <p className='well' id='no-apps-found'>
+                  <p
+                    className='well'
+                    data-testid='no-apps-found'
+                    id='no-apps-found'
+                  >
                     <b>No apps installed on this cluster</b>
                     <br />
                     Browse the app catalog below and pick an app to install!
@@ -181,7 +185,11 @@ class ClusterApps extends React.Component {
                 )}
 
               {this.props.errorLoading && (
-                <p className='well' id='error-loading-apps'>
+                <p
+                  className='well'
+                  data-testid='error-loading-apps'
+                  id='error-loading-apps'
+                >
                   <b>Error Loading Apps:</b>
                   <br />
                   We had some trouble loading the list of apps you&apos;ve
@@ -190,7 +198,7 @@ class ClusterApps extends React.Component {
                 </p>
               )}
               {this.props.installedApps && this.props.installedApps.length > 0 && (
-                <div id='installed-apps'>
+                <div data-testid='installed-apps' id='installed-apps'>
                   {this.props.installedApps.map(app => {
                     return (
                       <div
