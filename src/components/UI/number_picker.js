@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
 
 // NumberPicker is a component that allows a user to pick a number by
 // incrementing / decrementing a value or typing it straight into the input
@@ -41,6 +42,90 @@ import React from 'react';
 //   value: 13,
 //   valid: true
 // }
+
+const Label = styled.div`
+  display: inline-block;
+  width: 150px;
+`;
+
+const ValueSpan = styled.span`
+  input {
+    display: inline-block
+    background-color: inherit
+    border: none
+    text-align: center
+    width: 100%
+    height: 100%;
+    outline: none;
+  }
+  input:focus {
+    outline: none;
+  }
+  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+`;
+
+const Wrapper = styled.div`
+  display: inline-block;
+  margin-top: 4px;
+  margin-bottom: 4px;
+
+  .number-picker--control {
+    width: 160px
+    display: inline-block
+    height: 35px
+    background-color: #32526a
+    line-height: 35px
+    text-align: center
+    border-radius: 5px
+    position: relative
+    margin-bottom: 5px
+  }
+
+  /* to hide the increment/decrement buttons when disabled */
+  input:disabled {
+    appearance: textfield;
+  }
+
+  .number-picker--validation-error {
+    color: #fcc;
+  }
+
+  .number-picker--control-increase, .number-picker--control-decrease {
+    position: absolute;
+    display: inline-block;
+    top: 0px;
+    width: 35px;
+    background-color: #3b5f7b;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  &:hover {
+    background-color: darken(#3b5f7b, 2%);
+  }
+
+  &:active {
+    background-color: darken(#3b5f7b, 6%)
+    color: #aaa
+  }
+
+  .number-picker--control-increase {
+    display: inline-block;
+    right: 0px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  .number-picker--control-decrease {
+    display: inline-block;
+    left: 0px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+`;
 
 class NumberPicker extends React.Component {
   state = {
@@ -140,16 +225,12 @@ class NumberPicker extends React.Component {
 
   render() {
     return (
-      <div
-        className={`number-picker ${this.props.theme ? this.props.theme : ''} ${
+      <Wrapper
+        className={`${this.props.theme ? this.props.theme : ''} ${
           this.props.readOnly ? 'readonly ' : ''
         }`}
       >
-        {this.props.label ? (
-          <div className='number-picker--label'>{this.props.label}</div>
-        ) : (
-          undefined
-        )}
+        {this.props.label ? <Label>{this.props.label}</Label> : undefined}
 
         <div className='number-picker--control'>
           {this.props.readOnly ? (
@@ -162,7 +243,7 @@ class NumberPicker extends React.Component {
               &ndash;
             </div>
           )}
-          <span className='number-picker--value'>
+          <ValueSpan>
             <input
               disabled={this.props.readOnly}
               max={this.props.max}
@@ -175,7 +256,7 @@ class NumberPicker extends React.Component {
                 this.props.readOnly ? this.props.value : this.state.inputValue
               }
             />
-          </span>
+          </ValueSpan>
           {this.props.readOnly ? (
             undefined
           ) : (
@@ -190,7 +271,7 @@ class NumberPicker extends React.Component {
         <small className='number-picker--validation-error'>
           {this.state.validationError}&nbsp;
         </small>
-      </div>
+      </Wrapper>
     );
   }
 }

@@ -1,4 +1,4 @@
-import NumberPicker from './number_picker.js';
+import NumberPicker from '../../../components/UI/number_picker';
 import PropTypes from 'prop-types';
 import React from 'react';
 
