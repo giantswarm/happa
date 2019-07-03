@@ -1,5 +1,6 @@
 import 'babel-polyfill';
 import { ConnectedRouter } from 'connected-react-router';
+import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 import { Route, Switch } from 'react-router-dom';
@@ -34,23 +35,26 @@ history.listen(() => {
   window.scrollTo(0, 0);
 });
 
-render(
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <div>
-        <Switch>
-          <Route component={AdminLogin} path='/admin-login' />
-          <Route component={Login} path='/login' />
-          <Route component={Logout} path='/logout' />
-          <Route component={SetPassword} path='/forgot_password/:token/' />
-          <Route component={ForgotPassword} path='/forgot_password' />
-          <Route component={SignUp} path='/signup/:token' />
-          <Route component={OAuthCallback} path='/oauth/callback' />
+const renderApp = () =>
+  render(
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <div>
+          <Switch>
+            <Route component={AdminLogin} path='/admin-login' />
+            <Route component={Login} path='/login' />
+            <Route component={Logout} path='/logout' />
+            <Route component={SetPassword} path='/forgot_password/:token/' />
+            <Route component={ForgotPassword} path='/forgot_password' />
+            <Route component={SignUp} path='/signup/:token' />
+            <Route component={OAuthCallback} path='/oauth/callback' />
 
-          <Route component={Layout} path='/' />
-        </Switch>
-      </div>
-    </ConnectedRouter>
-  </Provider>,
-  appContainer
-);
+            <Route component={Layout} path='/' />
+          </Switch>
+        </div>
+      </ConnectedRouter>
+    </Provider>,
+    appContainer
+  );
+
+export default hot(module)(renderApp());
