@@ -22,10 +22,6 @@
   font-weight: 400
   font-size: 14px
 
-  .number-picker--label
-    float: left
-    width: 100px
-
   .new-cluster--worker-title
     position: relative
     margin-bottom: 15px
@@ -73,57 +69,6 @@
         &:hover
           text-decoration: none
           color: #fff
-
-.new-cluster--worker-setting-row
-  margin-bottom: 15px
-
-  &.readonly
-    opacity: 0.5
-
-  &.inmodal
-    .number-picker--control
-      width: 25%
-
-    .number-picker--control-increase, .number-picker--control-decrease
-      background-color: lighten(#3b5f7b, 10%)
-
-.new-cluster--worker-setting-label
-  width: 40%
-  display: inline-block
-  line-height: 35px
-
-.new-cluster--add-worker-button
-  border-radius: 5px
-  border: 1px dashed #5f8096
-  height: 203px
-  margin-bottom: 25px
-  text-align: center
-  cursor: pointer
-  vertical-align: middle
-  -webkit-user-select: none
-  -moz-user-select: none
-  -ms-user-select: none
-  -o-user-select: none
-  padding-top: 90px
-  user-select: none
-
-  &.warning
-    padding-top: 70px
-
-  &:hover
-    border: 1px dashed lighten(#5f8096, 10%)
-
-  &:active
-    background-color: lighten($darkblue, 1%)
-    color: #fff
-
-  .new-cluster--add-worker-button-title
-
-
-  .new-cluster--low-worker-warning
-    font-size: 14px
-    padding: 0px 35px
-    color: lighten(#5f8096, 15%)
 
 .new-cluster--launch
   text-align: center
