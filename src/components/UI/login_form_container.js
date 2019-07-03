@@ -4,23 +4,23 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 const LoginWrapper = withTheme(
-  styled.div({
-    position: 'relative',
-    margin: 'auto',
-    marginTop: -40,
-    width: '33%',
-    zIndex: 1,
-    button: {
-      zIndex: 10,
-    },
-    form: {
-      marginTop: 20,
-      marginBottom: 40,
-    },
-    a: {
-      fontSize: 14,
-    },
-  })
+  styled.div`
+    position: relative;
+    margin: auto;
+    margin-top: -40px;
+    width: 33%;
+    z-index: 1;
+    button {
+      z-index: 10;
+    }
+    form {
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+    a {
+      font-size: 14px;
+    }
+  `
 );
 
 const LoginFormContainer = props => {

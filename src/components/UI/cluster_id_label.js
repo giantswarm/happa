@@ -8,8 +8,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 var colorHashCache = {};
 
-const Wrapper = styled.div(
-  props => `
+const Wrapper = styled.div`
   display: inline-block;
   &:hover {
     i {
@@ -19,25 +18,22 @@ const Wrapper = styled.div(
   i {
     cursor: pointer;
     font-size: 14px;
-    margin-seft: 5px;
+    margin-left: 5px;
     margin-right: 5px;
     opacity: 0;
     &:hover {
       opacity: 1;
-      text-shadow: 0px 0px 15px ${props.theme.colors.shade1};
+      text-shadow: 0px 0px 15px ${props => props.theme.colors.shade1};
     }
   }
-`
-);
+`;
 
-const Label = styled.span(
-  props => `
-  background-color: ${calculateColour(props.clusterID)};
-  font-family: ${props.theme.fontFamilies.console};
+const Label = styled.span`
+  background-color: ${props => calculateColour(props.clusterID)};
+  font-family: ${props => props.theme.fontFamilies.console};
   padding: 0.2em 0.4em;
   border-radius: 0.2em;
-`
-);
+`;
 
 function calculateColour(str) {
   if (!colorHashCache[str]) {
