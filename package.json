@@ -7,7 +7,7 @@
   "src": "src",
   "test": "test",
   "scripts": {
-    "start": "webpack-dev-server --progress --colors --config ./webpack.dev.js",
+    "start": "webpack-dev-server --open --progress --colors --config ./webpack.dev.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "prettier": "prettier --write \"src/**/*.js\"",
