@@ -3,47 +3,47 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const Wrapper = styled.div({
-  marginBottom: 15,
-  ':last-child': {
-    marginBottom: 0,
-  },
-});
+const Wrapper = styled.div`
+  margin-bottom: 15px;
+  :last-child: {
+    margin-bottom: 0;
+  }
+`;
 
-const Text = styled.div({
-  fontSize: 14,
-  color: theme.COLORS.white2,
-});
+const Text = styled.div`
+  font-size: 14px;
+  color: ${theme.COLORS.white2};
+`;
 
-const InputWrapper = styled.div({
-  alignItems: 'center',
-  display: 'flex',
-});
+const InputWrapper = styled.div`
+  align-items: center;
+  display: flex;
+`;
 
-const Input = styled.input({
-  backgroundColor: theme.COLORS.shade5,
-  border: '1px solid ' + theme.COLORS.shade6,
-  borderRadius: theme.BORDER_RADIUS,
-  fontSize: 14,
-  lineHeight: 'normal',
-  padding: '8px 10px',
-  width: '100%',
-});
+const Input = styled.input`
+  background-color: ${theme.COLORS.shade5};
+  border: 1px solid ${theme.COLORS.shade6};
+  border-radius: ${theme.BORDER_RADIUS};
+  font-size: 14px;
+  line-height: normal;
+  padding: 8px 10px;
+  width: 100%;
+`;
 
-const Icon = styled.i({
-  color: theme.COLORS.white3,
-  fontSize: 24,
-  marginRight: 5,
-});
+const Icon = styled.i`
+  color: ${theme.COLORS.white3};
+  font-size: 24px;
+  margin-right: 5px;
+`;
 
-const ValidationError = styled.span({
-  fontSize: 12,
-  color: theme.COLORS.yellow1,
-});
+const ValidationError = styled.span`
+  font-size: 12px;
+  color: ${theme.COLORS.yellow1};
+`;
 
-const Hint = styled.span({
-  fontSize: 12,
-});
+const Hint = styled.span`
+  font-size: 12px;
+`;
 
 const TextInput = props => {
   const onChange = e => {
