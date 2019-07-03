@@ -78,15 +78,6 @@ const Wrapper = styled.div`
   input:disabled {
     appearance: textfield;
   }
-
-  &:hover {
-    background-color: darken(#3b5f7b, 2%);
-  }
-
-  &:active {
-    background-color: darken(#3b5f7b, 6%);
-    color: #aaa;
-  }
 `;
 
 const Control = styled.div`
@@ -102,7 +93,9 @@ const Control = styled.div`
 `;
 
 const ValidationError = styled.span`
-  color: #fcc;
+  color: #e49090;
+  margin-left: 10px;
+  margin-right: 10px;
 `;
 
 const IncrementDecrementButtonCSS = css`
@@ -113,6 +106,13 @@ const IncrementDecrementButtonCSS = css`
   background-color: #3b5f7b;
   cursor: pointer;
   user-select: none;
+  &:hover {
+    background-color: #486d8a;
+  }
+  &:active {
+    background-color: #3b5f7b;
+    color: #aaa;
+  }
 `;
 
 const IncrementButton = styled.div`
