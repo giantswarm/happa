@@ -23,10 +23,6 @@ module.exports = {
         loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded',
       },
       {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader',
-      },
-      {
         test: /\.(png|jpg|svg)$/,
         loader: 'url-loader?limit=8192',
       },
@@ -66,9 +62,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),
-    new webpack.IgnorePlugin({
-      resourceRegExp: /^\.\/locale$/,
-      contextRegExp: /moment$/,
-    }),
+    // Ignore locale data from the moment package, which we don't use.
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
   ],
 };
