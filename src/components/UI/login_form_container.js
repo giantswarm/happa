@@ -1,8 +1,9 @@
+import { withTheme } from 'emotion-theming';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const LoginWrapper = styled.div`
+const LoginWrapper = withTheme(styled.div`
   position: relative;
   margin: auto;
   margin-top: -40px;
@@ -18,7 +19,7 @@ const LoginWrapper = styled.div`
   a {
     font-size: 14px;
   }
-`;
+`);
 
 const LoginFormContainer = props => {
   return <LoginWrapper>{props.children}</LoginWrapper>;
