@@ -57,7 +57,7 @@ module.exports = {
     extensions: ['*', '.js', '.jsx'],
   },
   output: {
-    publicPath: '/assets/',
+    publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
     filename: 'app.js',
   },
@@ -69,7 +69,7 @@ module.exports = {
   ],
   devServer: {
     contentBase: './src',
-    hot: true,
+    hotOnly: true,
     port: 7000,
     host: '0.0.0.0',
     historyApiFallback: true,
