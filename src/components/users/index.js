@@ -14,7 +14,7 @@ import {
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import BootstrapTable from 'react-bootstrap-table-next';
-import Button from '../shared/button';
+import Button from '../UI/button';
 import copy from 'copy-to-clipboard';
 import DocumentTitle from 'react-document-title';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';

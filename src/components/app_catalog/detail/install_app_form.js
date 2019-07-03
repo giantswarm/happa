@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const FormWrapper = styled.div({
-  display: 'flex',
-  flexDirection: 'column',
-});
+const FormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const InstallAppForm = props => {
   const updateName = name => {

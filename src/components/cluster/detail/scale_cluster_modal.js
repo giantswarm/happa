@@ -8,8 +8,8 @@ import {
   messageType,
 } from '../../../lib/flash_message';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../../shared/button';
-import ClusterIDLabel from '../../shared/cluster_id_label';
+import Button from '../../UI/button';
+import ClusterIDLabel from '../../UI/cluster_id_label';
 import cmp from 'semver-compare';
 import NodeCountSelector from '../../shared/node_count_selector';
 import PropTypes from 'prop-types';

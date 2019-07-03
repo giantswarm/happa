@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { relativeDate } from '../../../lib/helpers.js';
 import BootstrapTable from 'react-bootstrap-table-next';
-import Button from '../../shared/button';
+import Button from '../../UI/button';
 import CertificateOrgsLabel from './certificate_orgs_label';
 import Copyable from '../../shared/copyable';
 import KeypairCreateModal from './key_pair_create_modal';
