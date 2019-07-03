@@ -141,9 +141,9 @@ class NumberPicker extends React.Component {
     var currentValue = this.props.value;
     var desiredValue = currentValue + this.props.stepSize;
 
-    if (currentValue < this.props.max) {
+    if (desiredValue <= this.props.max) {
       this.updateInput({
-        target: { value: Math.min(this.props.max, desiredValue) },
+        target: { value: desiredValue },
       });
     }
   };
@@ -152,9 +152,9 @@ class NumberPicker extends React.Component {
     var currentValue = this.props.value;
     var desiredValue = currentValue - this.props.stepSize;
 
-    if (currentValue > this.props.min) {
+    if (desiredValue >= this.props.min) {
       this.updateInput({
-        target: { value: Math.max(this.props.min, desiredValue) },
+        target: { value: desiredValue },
       });
     }
   };
