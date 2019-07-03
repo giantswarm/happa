@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 const FormWrapper = styled.div`
   display: flex;
-  flexdirection: column;
+  flex-direction: column;
 `;
 
 const InstallAppForm = props => {
