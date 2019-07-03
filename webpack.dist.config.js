@@ -4,93 +4,30 @@
  * This file is set up for serving the distribution version. It will be compiled to dist/ by default
  */
 
-'use strict';
+const merge = require('webpack-merge');
+const common = require('./webpack.common.js');
+const TerserPlugin = require('terser-webpack-plugin');
 
-var webpack = require('webpack');
-var path = require('path');
-
-module.exports = {
-
-  entry: './src/components/app.js',
+module.exports = merge(common, {
   mode: 'production',
-
-  output: {
-    filename: 'app.js',
-    path: path.resolve(__dirname, 'dist/assets/'),
-    publicPath: '/assets/'
-  },
-
   devtool: false,
-
   stats: {
     colors: true,
-    reasons: true
+    reasons: true,
   },
-
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        loader: 'eslint-loader'
-      },
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      },
-      {
-        test: /\.sass/,
-        loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
-      },
-      {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader'
-      },
-      {
-        test: /\.(png|jpg|svg)$/,
-        loader: 'url-loader?limit=8192'
-      },
-      {
-        test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader?limit=10000&mimetype=application/font-woff'
-      },
-      {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
-      },
-      {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader'
-      },
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader?limit=10000&mimetype=image/svg+xml'
-      },
-      {
-        parser: {
-          amd: false // required so giantswarm-v4 sub-modules can be found
-        }
-      }
-    ]
-  },
-
   optimization: {
-    minimize: true
+    minimizer: [new TerserPlugin()],
   },
-
 
   plugins: [
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
+        NODE_ENV: JSON.stringify('production'),
+      },
     }),
 
     // Ignore locale data from the moment package, which we don't use.
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
-  ]
-
-};
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+  ],
+});

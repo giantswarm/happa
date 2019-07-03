@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
   entry: './src/components/app.js',
   module: {
     rules: [
@@ -64,7 +63,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),
@@ -73,11 +71,4 @@ module.exports = {
       contextRegExp: /moment$/,
     }),
   ],
-  devServer: {
-    contentBase: './src',
-    hotOnly: true,
-    port: 7000,
-    host: '0.0.0.0',
-    historyApiFallback: true,
-  },
 };
