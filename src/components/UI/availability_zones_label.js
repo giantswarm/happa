@@ -49,7 +49,7 @@ const Wrapper = styled.abbr`
 const AvailabilityZonesLabel = props => {
   const { zones } = props;
 
-  if (zones.length == 0) {
+  if (typeof zones === 'undefined' || zones.length == 0) {
     return <abbr title='No information available'>n/a</abbr>;
   }
 
