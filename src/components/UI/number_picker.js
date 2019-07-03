@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
@@ -50,18 +51,19 @@ const Label = styled.div`
 
 const ValueSpan = styled.span`
   input {
-    display: inline-block
-    background-color: inherit
-    border: none
-    text-align: center
-    width: 100%
+    display: inline-block;
+    background-color: inherit;
+    border: none;
+    text-align: center;
+    width: 100%;
     height: 100%;
     outline: none;
   }
   input:focus {
     outline: none;
   }
-  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
@@ -72,35 +74,9 @@ const Wrapper = styled.div`
   margin-top: 4px;
   margin-bottom: 4px;
 
-  .number-picker--control {
-    width: 160px
-    display: inline-block
-    height: 35px
-    background-color: #32526a
-    line-height: 35px
-    text-align: center
-    border-radius: 5px
-    position: relative
-    margin-bottom: 5px
-  }
-
   /* to hide the increment/decrement buttons when disabled */
   input:disabled {
     appearance: textfield;
-  }
-
-  .number-picker--validation-error {
-    color: #fcc;
-  }
-
-  .number-picker--control-increase, .number-picker--control-decrease {
-    position: absolute;
-    display: inline-block;
-    top: 0px;
-    width: 35px;
-    background-color: #3b5f7b;
-    cursor: pointer;
-    user-select: none;
   }
 
   &:hover {
@@ -108,23 +84,49 @@ const Wrapper = styled.div`
   }
 
   &:active {
-    background-color: darken(#3b5f7b, 6%)
-    color: #aaa
+    background-color: darken(#3b5f7b, 6%);
+    color: #aaa;
   }
+`;
 
-  .number-picker--control-increase {
-    display: inline-block;
-    right: 0px;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
+const Control = styled.div`
+  width: 160px;
+  display: inline-block;
+  height: 35px;
+  background-color: #32526a;
+  line-height: 35px;
+  text-align: center;
+  border-radius: 5px;
+  position: relative;
+  margin-bottom: 5px;
+`;
 
-  .number-picker--control-decrease {
-    display: inline-block;
-    left: 0px;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-  }
+const ValidationError = styled.span`
+  color: #fcc;
+`;
+
+const IncrementDecrementButtonCSS = css`
+  position: absolute;
+  display: inline-block;
+  top: 0px;
+  width: 35px;
+  background-color: #3b5f7b;
+  cursor: pointer;
+  user-select: none;
+`;
+
+const IncrementButton = styled.div`
+  ${IncrementDecrementButtonCSS};
+  right: 0px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+`;
+
+const DecrementButton = styled.div`
+  ${IncrementDecrementButtonCSS};
+  left: 0px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 `;
 
 class NumberPicker extends React.Component {
@@ -232,16 +234,11 @@ class NumberPicker extends React.Component {
       >
         {this.props.label ? <Label>{this.props.label}</Label> : undefined}
 
-        <div className='number-picker--control'>
+        <Control>
           {this.props.readOnly ? (
             undefined
           ) : (
-            <div
-              className='number-picker--control-decrease'
-              onClick={this.decrement}
-            >
-              &ndash;
-            </div>
+            <DecrementButton onClick={this.decrement}>&ndash;</DecrementButton>
           )}
           <ValueSpan>
             <input
@@ -260,17 +257,10 @@ class NumberPicker extends React.Component {
           {this.props.readOnly ? (
             undefined
           ) : (
-            <div
-              className='number-picker--control-increase'
-              onClick={this.increment}
-            >
-              +
-            </div>
+            <IncrementButton onClick={this.increment}>+</IncrementButton>
           )}
-        </div>
-        <small className='number-picker--validation-error'>
-          {this.state.validationError}&nbsp;
-        </small>
+        </Control>
+        <ValidationError>{this.state.validationError}</ValidationError>
       </Wrapper>
     );
   }
