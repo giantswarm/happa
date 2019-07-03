@@ -7,12 +7,11 @@
   "src": "src",
   "test": "test",
   "scripts": {
+    "start": "webpack-dev-server --progress --colors --config ./webpack.dev.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "prettier": "prettier --write \"src/**/*.js\"",
-    "validate-prettier": "prettier --version; prettier --no-color --check \"src/**/*.js\"",
-    "start": "webpack-dev-server --progress --colors --config ./webpack.dev.js",
-    "build": "webpack-dev-server --progress --colors --config ./webpack.prod.js"
+    "validate-prettier": "prettier --version; prettier --no-color --check \"src/**/*.js\""
   },
   "prettier": {
     "singleQuote": true,
