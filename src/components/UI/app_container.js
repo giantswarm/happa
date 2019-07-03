@@ -45,7 +45,7 @@ const StyledLink = styled(Link)`
     box-shadow: 0px 0px 5px #549ac3;
     div:nth-of-type(1) {
       opacity: 1;
-      box-sshadow: 0px 0px 5px #549ac3;
+      box-shadow: 0px 0px 5px #549ac3;
     }
   }
 `;
