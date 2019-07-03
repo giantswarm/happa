@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   i {
     cursor: pointer;
     font-size: 14px;
-    margin-seft: 5px;
+    margin-left: 5px;
     margin-right: 5px;
     opacity: 0;
     &:hover {

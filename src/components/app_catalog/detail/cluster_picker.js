@@ -27,7 +27,7 @@ const Cluster = styled.div`
   }
   &.selected {
     background-color: ${theme.COLORS.shade4};
-  },
+  }
 `;
 
 const ClusterTitle = styled.div`

@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   margin-bottom: 15px;
   :last-child: {
     margin-bottom: 0;
-  },
+  }
 `;
 
 const Text = styled.div`

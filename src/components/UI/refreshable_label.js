@@ -24,8 +24,6 @@ const Wrapper = styled.div`
   &.changed {
     animation: ${yellowfade} 2s ease;
   }
-  @keyframes yellowfade {
-  }
 `;
 
 /**
