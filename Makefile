@@ -42,7 +42,7 @@ dist:
 		-v ${PWD}/package.json:/usr/src/app/package.json:z \
 		-v ${PWD}/.babelrc:/usr/src/app/.babelrc:z \
 		-v ${PWD}/webpack.common.js:/usr/src/app/webpack.config.js:z \
-		-v ${PWD}/webpack.prod.config.js:/usr/src/app/webpack.prod.config.js:z \
+		-v ${PWD}/webpack.prod.js:/usr/src/app/webpack.prod.js:z \
 		-v ${PWD}/.eslintrc:/usr/src/app/.eslintrc:z \
 		quay.io/giantswarm/happa-build:b289d3ea7ef6e0f8da58368db2937735ff61dabf webpack --config ${PWD}/webpack.prod.js
 
