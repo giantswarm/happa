@@ -57,20 +57,6 @@ class UpgradeClusterModal extends React.Component {
 
     var changedComponents = diff.diff(components, targetComponents);
 
-    var changedComponentNames = changedComponents.map(diffEdit => {
-      let component = components[diffEdit.path[0]];
-
-      if (component) {
-        return component.name;
-      } else {
-        return undefined;
-      }
-    });
-
-    var unchangedComponents = _.filter(components, component => {
-      return changedComponentNames.indexOf(component.name) === -1;
-    });
-
     return (
       <div>
         {this.props.release === undefined ? (
@@ -145,28 +131,6 @@ class UpgradeClusterModal extends React.Component {
             }
           })}
         </div>
-        {unchangedComponents.length > 0 ? (
-          <p>
-            <b>Unchanged Components</b>
-          </p>
-        ) : (
-          undefined
-        )}
-        {_.sortBy(unchangedComponents, 'name').map(component => {
-          return (
-            <div
-              className='release-selector-modal--component'
-              key={component.name}
-            >
-              <span className='release-selector-modal--component--name'>
-                {component.name}
-              </span>
-              <span className='release-selector-modal--component--version'>
-                {component.version}
-              </span>
-            </div>
-          );
-        })}
 
         <p>
           <b>Changes</b>
