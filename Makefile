@@ -44,7 +44,7 @@ dist:
 		-v ${PWD}/webpack.common.js:/usr/src/app/webpack.common.js:z \
 		-v ${PWD}/webpack.prod.js:/usr/src/app/webpack.prod.js:z \
 		-v ${PWD}/.eslintrc:/usr/src/app/.eslintrc:z \
-		quay.io/giantswarm/happa-build:e90c26ef2ef7da941c5cf01e51b658c75c694b60 webpack --config /usr/src/app/webpack.prod.js
+		quay.io/giantswarm/happa-build:latest webpack --config /usr/src/app/webpack.prod.js
 
 
 check-updates:
