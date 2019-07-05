@@ -14,7 +14,7 @@ const Wrapper = styled.abbr`
   color: #333;
   padding: 2px;
   display: inline-block;
-  width: 1.7em;
+  width: 1.6em;
   text-align: center;
   margin-left: 4px;
   margin-right: 4px;
