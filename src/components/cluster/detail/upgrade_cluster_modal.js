@@ -46,12 +46,12 @@ class UpgradeClusterModal extends React.Component {
     }
 
     var components = {};
-    _.each(currentComponents, component => {
+    currentComponents.forEach(component => {
       components[component.name] = component;
     });
 
     var targetComponents = {};
-    _.each(this.props.targetRelease.components, component => {
+    this.props.targetRelease.components.forEach(component => {
       targetComponents[component.name] = component;
     });
 
