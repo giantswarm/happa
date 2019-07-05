@@ -8,11 +8,8 @@ class Catalogs extends React.Component {
     return (
       <DocumentTitle title={`Apps | Giant Swarm `}>
         <React.Fragment>
-          <h1>Apps</h1>
-          <p>
-            Browse and deploy apps from various sources, including managed apps
-            covered by SLAs from Giant Swarm.
-          </p>
+          <h1>App Catalogs</h1>
+          <p>Pick an App Catalog to browse all the Apps in it.</p>
           {Object.keys(this.props.catalogs.items).length === 0 ? (
             <p className='well'>
               <b>Could not find any appcatalogs:</b>
@@ -33,21 +30,23 @@ class Catalogs extends React.Component {
                       to={'/apps/' + catalogName + '/'}
                     >
                       <div className='app-catalog--card'>
-                        <h3>
-                          {this.props.catalogs.items[catalogName].spec.title}
-                        </h3>
                         <img
                           src={
                             this.props.catalogs.items[catalogName].spec.logoURL
                           }
                         />
                       </div>
+                      <div className='app-catalog--description'>
+                      <h3>
+                          {this.props.catalogs.items[catalogName].spec.title}
+                        </h3>
                       <p>
                         {
                           this.props.catalogs.items[catalogName].spec
                             .description
                         }
                       </p>
+                      </div>
                     </Link>
                   );
                 })}

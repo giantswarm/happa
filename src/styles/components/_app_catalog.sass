@@ -75,38 +75,41 @@
 
 .app-catalog--repos
   display: flex
-  flex-flow: row wrap
+  flex-flow: column
   margin-top: 10px
 
+.app-catalog--description
+  padding: 10px 20px
+  padding-left: 0px
+
+  h3
+    margin-bottom: 0px
+    margin-top: 10px
+
 .app-catalog--repo
-  flex: 0 0 260px
-  margin-right: 25px
-  margin-bottom: 30px
+  flex: 0 0
+  margin-bottom: 15px
   border-radius: 5px
   background-color: #2f556a
+  flex-flow: row
+  display: flex
 
   p
     margin-bottom: 0px
-    padding: 10px 20px
     border-bottom-left-radius: 5px
     border-bottom-right-radius: 5px
+    font-size: 14px
 
   &:hover
     text-decoration: none
     box-shadow: 0px 0px 8px lighten(#1e4156, 22%);
 
-    .app-catalog--card
-      box-shadow: 0px 0px 13px lighten(#1e4156, 32%);
-
-    .app-catalog--card
-      background-color: #fff
-
 .app-catalog--card
-  background-color: #eaeef0
-  padding: 12px 0px
+  padding: 18px 18px
   border-top-left-radius: 5px
-  border-top-right-radius: 5px
-  text-align: center
+  border-bottom-left-radius: 5px
+  text-align: left
+  flex-shrink: 0
 
   h3
     color: #1e4156
@@ -114,4 +117,7 @@
     font-weight: 700
 
   img
-    height: 80px
+    height: 100px
+    background-color: #eaeef0
+    padding: 13px
+    border-radius: 5px
