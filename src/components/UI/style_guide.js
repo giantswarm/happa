@@ -7,6 +7,9 @@ const Wrapper = styled.div`
     font-size: 22px;
     margin-bottom: 20px;
   }
+  p {
+    margin-bottom: 20px;
+  }
 `;
 
 const StyleGuide = () => {
@@ -14,9 +17,26 @@ const StyleGuide = () => {
     <Wrapper className='main col-9'>
       <h1>Style Guide</h1>
 
-      <h2>ReleaseComponentLabel</h2>
+      <hr />
 
-      <ReleaseComponentLabel version='1.2.3' />
+      <h2 id='ReleaseComponentLabel'>ReleaseComponentLabel</h2>
+
+      <p>
+        Displays a release component&apos;s version number or the change of a
+        version number in an upgrade.
+      </p>
+
+      <div>
+        <ReleaseComponentLabel version='3.1.5' />
+        <ReleaseComponentLabel name='calico' version='3.1.5' />
+        <ReleaseComponentLabel
+          name='kubernetes'
+          oldVersion='1.14.1'
+          version='1.13.3'
+        />
+        <ReleaseComponentLabel isRemoved={true} name='outphased' />
+        <ReleaseComponentLabel isAdded={true} name='newbie' version='0.0.1' />
+      </div>
     </Wrapper>
   );
 };
