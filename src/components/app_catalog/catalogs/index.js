@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class Catalogs extends React.Component {
+  z;
   render() {
     return (
       <DocumentTitle title={`Apps | Giant Swarm `}>
