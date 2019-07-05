@@ -9,6 +9,7 @@ import {
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../../UI/button';
+import ComponentChangelog from '../UI/component_changelog';
 import diff from 'deep-diff';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -58,6 +59,11 @@ class UpgradeClusterModal extends React.Component {
     });
 
     var changedComponents = diff.diff(components, targetComponents);
+
+    let changes = _.groupBy(this.props.targetRelease.changelog, item => {
+      return item.component;
+    });
+    let changedComponentNames = Object.keys(changes).sort();
 
     return (
       <div>
@@ -113,15 +119,19 @@ class UpgradeClusterModal extends React.Component {
         <p>
           <b>Changes</b>
         </p>
-        <ul>
-          {this.props.targetRelease.changelog.map((changelog, i) => {
+        <dl>
+          {changedComponentNames.map((componentName, index) => {
             return (
-              <li key={changelog.component + i}>
-                <b>{changelog.component}:</b> {changelog.description}
-              </li>
+              <ComponentChangelog
+                changes={changes[componentName].map(c => {
+                  return c.description;
+                })}
+                key={index}
+                name={componentName}
+              />
             );
           })}
-        </ul>
+        </dl>
       </div>
     );
   };
