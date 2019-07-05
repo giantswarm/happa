@@ -29,7 +29,7 @@ class AppDetail extends React.Component {
       <Breadcrumb
         data={{
           title: this.props.match.params.repo.toUpperCase(),
-          pathname: '/apps/' + this.props.match.params.repo + '/',
+          pathname: '/app-catalogs/' + this.props.match.params.repo + '/',
         }}
       >
         <Breadcrumb

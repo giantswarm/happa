@@ -6,7 +6,7 @@ import React from 'react';
 class Catalogs extends React.Component {
   render() {
     return (
-      <DocumentTitle title={`Apps | Giant Swarm `}>
+      <DocumentTitle title={`App Catalogs | Giant Swarm `}>
         <React.Fragment>
           <h1>App Catalogs</h1>
           <p>Pick an App Catalog to browse all the Apps in it.</p>
@@ -27,7 +27,7 @@ class Catalogs extends React.Component {
                     <Link
                       className='app-catalog--repo'
                       key={this.props.catalogs.items[catalogName].metadata.name}
-                      to={'/apps/' + catalogName + '/'}
+                      to={'/app-catalogs/' + catalogName + '/'}
                     >
                       <div className='app-catalog--card'>
                         <img
