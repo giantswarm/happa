@@ -89,7 +89,7 @@ class UpgradeClusterModal extends React.Component {
               let component = diffEdit.rhs;
               return (
                 <ReleaseComponentLabel
-                  isAdded={true}
+                  isAdded
                   name={component.name}
                   version={component.version}
                 />
@@ -100,7 +100,7 @@ class UpgradeClusterModal extends React.Component {
               let component = diffEdit.lhs;
               return (
                 <ReleaseComponentLabel
-                  isRemoved={true}
+                  isRemoved
                   name={component.name}
                   version={component.version}
                 />

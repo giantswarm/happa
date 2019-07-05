@@ -33,8 +33,8 @@ const StyleGuide = () => {
           oldVersion='1.14.1'
           version='1.13.3'
         />
-        <ReleaseComponentLabel isRemoved={true} name='outphased' />
-        <ReleaseComponentLabel isAdded={true} name='newbie' version='0.0.1' />
+        <ReleaseComponentLabel isRemoved name='outphased' />
+        <ReleaseComponentLabel isAdded name='newbie' version='0.0.1' />
       </div>
     </Wrapper>
   );
