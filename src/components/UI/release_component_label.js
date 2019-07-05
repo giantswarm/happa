@@ -80,7 +80,7 @@ const VersionLabel = props => {
 };
 
 VersionLabel.propTypes = {
-  newVersion: PropTypes.string.isRequired,
+  newVersion: PropTypes.string,
   oldVersion: PropTypes.string,
   isAdded: PropTypes.bool,
   isRemoved: PropTypes.bool,
