@@ -2,6 +2,7 @@ import * as clusterActions from '../../../actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { relativeDate } from '../../../lib/helpers.js';
+import { spinner } from '../../../images';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from '../../UI/button';
 import CertificateOrgsLabel from './certificate_orgs_label';
@@ -190,10 +191,7 @@ class ClusterKeyPairs extends React.Component {
               if (this.state.loading) {
                 return (
                   <p>
-                    <img
-                      className='loader'
-                      src='/images/loader_oval_light.svg'
-                    />
+                    <img className='loader' src={spinner} />
                   </p>
                 );
               } else if (this.state.error) {

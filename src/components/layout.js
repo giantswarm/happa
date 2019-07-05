@@ -9,6 +9,7 @@ import { organizationSelect } from '../actions/organizationActions';
 import { organizationsLoad } from '../actions/organizationActions';
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { spinner } from '../images';
 import AccountSettings from './account_settings';
 import AppCatalog from './app_catalog';
 import DocumentTitle from 'react-document-title';
@@ -82,7 +83,7 @@ class Layout extends React.Component {
         <DocumentTitle title='Loading | Giant Swarm '>
           <div className='app-loading'>
             <div className='app-loading-contents'>
-              <img className='loader' src='/images/loader_oval_light.svg' />
+              <img className='loader' src={spinner} />
             </div>
           </div>
         </DocumentTitle>

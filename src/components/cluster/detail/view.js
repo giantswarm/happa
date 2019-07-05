@@ -9,6 +9,7 @@ import {
 } from '../../../lib/flash_message';
 import { organizationCredentialsLoad } from '../../../actions/organizationActions';
 import { push } from 'connected-react-router';
+import { spinner } from '../../../images';
 import Button from '../../UI/button';
 import ClusterApps from './cluster_apps';
 import ClusterDetailTable from './cluster_detail_table';
@@ -261,7 +262,7 @@ class ClusterDetailView extends React.Component {
                       <img
                         className='loader'
                         height='25px'
-                        src='/images/loader_oval_light.svg'
+                        src={spinner}
                         width='25px'
                       />
                     ) : (
@@ -381,7 +382,7 @@ class ClusterDetailView extends React.Component {
         ) : (
           <div className='app-loading'>
             <div className='app-loading-contents'>
-              <img className='loader' src='/images/loader_oval_light.svg' />
+              <img className='loader' src={spinner} />
             </div>
           </div>
         )}

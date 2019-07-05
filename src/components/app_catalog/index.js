@@ -3,6 +3,7 @@ import { catalogLoadIndex, catalogsLoad } from '../../actions/catalogActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
 import { Route, Switch } from 'react-router-dom';
+import { spinner } from '../../images';
 import AppList from './app_list';
 import Catalogs from './catalogs';
 import Detail from './detail';
@@ -79,7 +80,7 @@ function Loading(props) {
     return (
       <div className='app-loading'>
         <div className='app-loading-contents'>
-          <img className='loader' src='/images/loader_oval_light.svg' />
+          <img className='loader' src={spinner} />
         </div>
       </div>
     );

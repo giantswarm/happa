@@ -1,3 +1,4 @@
+import { spinner } from '../../images';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -66,9 +67,7 @@ class StatusMessage extends React.Component {
         <div className='signup--status-text'>
           {this.statusMessage()[this.props.status] || <span>&nbsp;</span>}
         </div>
-        {this.showLoader() ? (
-          <img className='loader' src='/images/loader_oval_light.svg' />
-        ) : null}
+        {this.showLoader() ? <img className='loader' src={spinner} /> : null}
       </div>
     );
   }

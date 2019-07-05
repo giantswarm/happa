@@ -1,3 +1,4 @@
+import { spinner } from '../../images';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -15,10 +16,7 @@ const LoadingIndicator = props => (
       transitionName={`slide-${props.loadingPosition}`}
     >
       {props.loading && (
-        <img
-          className={'loader ' + props.loadingPosition}
-          src='/images/loader_oval_light.svg'
-        />
+        <img className={'loader ' + props.loadingPosition} src={spinner} />
       )}
     </ReactCSSTransitionGroup>
   </ProgressButtonStatusIndicator>

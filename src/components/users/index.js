@@ -6,6 +6,7 @@ import {
 } from '../../actions/invitationActions';
 import { push } from 'connected-react-router';
 import { relativeDate } from '../../lib/helpers.js';
+import { spinner } from '../../images';
 import {
   userDelete,
   userRemoveExpiration,
@@ -354,7 +355,7 @@ class Users extends React.Component {
                   <img
                     className='loader'
                     height='20px'
-                    src='/images/loader_oval_light.svg'
+                    src={spinner}
                     width='20px'
                   />
                 );
