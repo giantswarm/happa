@@ -63,11 +63,11 @@ const StyleGuide = () => {
           />
           <ComponentChangelog
             changes={[
-              `Here is a long component change description thatshows us how content breaking into several paragraphs works.
+              `Here is a long component change description that shows us how a changelog item consisting of several paragraphs would be rendered.
 
   Here is the second and last line of the markdown text.`,
             ]}
-            name='verylong-description'
+            name='multi-paragraph'
           />
           <ComponentChangelog
             changes={[
