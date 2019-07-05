@@ -113,13 +113,15 @@ class UpgradeClusterModal extends React.Component {
           <b>Changes</b>
         </p>
         <ul>
-          {this.props.targetRelease.changelog.map((changelog, i) => {
-            return (
-              <li key={changelog.component + i}>
-                <b>{changelog.component}:</b> {changelog.description}
-              </li>
-            );
-          })}
+          {_.sortBy(this.props.targetRelease.changelog, 'component').map(
+            (changelog, i) => {
+              return (
+                <li key={changelog.component + i}>
+                  <b>{changelog.component}:</b> {changelog.description}
+                </li>
+              );
+            }
+          )}
         </ul>
       </div>
     );
