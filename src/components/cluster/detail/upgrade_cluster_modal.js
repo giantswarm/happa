@@ -41,9 +41,10 @@ class UpgradeClusterModal extends React.Component {
   };
 
   changedComponents = () => {
+    const { release } = this.props;
     var currentComponents = {};
-    if (this.props.release && this.props.release.components) {
-      currentComponents = this.props.release.components;
+    if (release && release.components) {
+      currentComponents = release.components;
     }
 
     var components = {};
@@ -60,7 +61,7 @@ class UpgradeClusterModal extends React.Component {
 
     return (
       <div>
-        {this.props.release === undefined ? (
+        {release === undefined ? (
           <div className='flash-messages--flash-message flash-messages--info'>
             Could not get component information for release version{' '}
             {this.props.cluster.release_version}.<br />

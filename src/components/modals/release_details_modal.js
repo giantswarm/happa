@@ -2,9 +2,10 @@ import { relativeDate } from '../../lib/helpers.js';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../UI/button';
+import ComponentChangelog from '../UI/component_changelog';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReleaseComponentLabel from '../UI/release_component_label.js';
+import ReleaseComponentLabel from '../UI/release_component_label';
 
 class ReleaseDetailsModal extends React.Component {
   state = {
@@ -39,6 +40,13 @@ class ReleaseDetailsModal extends React.Component {
         </BootstrapModal.Header>
         <BootstrapModal.Body>
           {this.props.releases.map(release => {
+            // group changes by component
+            let changes = _.groupBy(release.changelog, item => {
+              return item.component;
+            });
+
+            let changedComponents = Object.keys(changes).sort();
+
             return (
               <div
                 className='release-selector-modal--release-details'
@@ -78,16 +86,22 @@ class ReleaseDetailsModal extends React.Component {
                     );
                   })}
                 </div>
+
                 <p>Changes</p>
-                <ul>
-                  {release.changelog.map((changelog, i) => {
+
+                <dl>
+                  {changedComponents.map((componentName, index) => {
                     return (
-                      <li key={changelog.component + i}>
-                        <b>{changelog.component}:</b> {changelog.description}
-                      </li>
+                      <ComponentChangelog
+                        changes={changes[componentName].map(c => {
+                          return c.description;
+                        })}
+                        key={index}
+                        name={componentName}
+                      />
                     );
                   })}
-                </ul>
+                </dl>
               </div>
             );
           })}

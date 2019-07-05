@@ -1,3 +1,5 @@
+import ComponentChangelog from './component_changelog';
+import PropTypes from 'prop-types';
 import React from 'react';
 import ReleaseComponentLabel from './release_component_label';
 import styled from '@emotion/styled';
@@ -12,6 +14,26 @@ const Wrapper = styled.div`
   }
 `;
 
+const ExampleBox = styled.div`
+  max-width: 500px;
+  padding: 30px;
+  margin: 20px 0;
+  border: 1px dashed #999;
+`;
+
+const Header = props => {
+  const { name } = props;
+  return (
+    <h2 id={name}>
+      {name} <a href={`#${name}`}>¶</a>
+    </h2>
+  );
+};
+
+Header.propTypes = {
+  name: PropTypes.string,
+};
+
 const StyleGuide = () => {
   return (
     <Wrapper className='main col-9'>
@@ -19,14 +41,53 @@ const StyleGuide = () => {
 
       <hr />
 
-      <h2 id='ReleaseComponentLabel'>ReleaseComponentLabel</h2>
+      <Header name='ComponentChangelog' />
+
+      <p>Displays changes on a component in a release context.</p>
+
+      <ExampleBox>
+        <dl>
+          <ComponentChangelog
+            changes={[
+              'Fix update process node termination in http://example.com/.',
+            ]}
+            name='mycomponent'
+          />
+          <ComponentChangelog
+            changes={[
+              'Mount `/var/log` directory in an EBS Volume.',
+              'Use proper hostname annotation for nodes.',
+              'Update to 1.13.4 ([CVE-2019-1002100](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-1002100)).',
+            ]}
+            name='kubernetes'
+          />
+          <ComponentChangelog
+            changes={[
+              `Here is a long component change description thatshows us how content breaking into several paragraphs works.
+
+  Here is the second and last line of the markdown text.`,
+            ]}
+            name='verylong-description'
+          />
+          <ComponentChangelog
+            changes={[
+              'This is a very long component change description that has only one purpose: to demonstrate how very long descriptions are handled in our user interfae. While being long, this description is only one paragraph.',
+            ]}
+            name='verylong-description'
+          />
+        </dl>
+      </ExampleBox>
+
+      <hr />
+
+      <Header name='ReleaseComponentLabel' />
 
       <p>
         Displays a release component&apos;s version number or the change of a
         version number in an upgrade.
       </p>
 
-      <div>
+      <ExampleBox>
         <ReleaseComponentLabel name='calico' version='3.1.5' />
         <ReleaseComponentLabel
           name='kubernetes'
@@ -35,7 +96,7 @@ const StyleGuide = () => {
         />
         <ReleaseComponentLabel isRemoved name='outphased' />
         <ReleaseComponentLabel isAdded name='newbie' version='0.0.1' />
-      </div>
+      </ExampleBox>
     </Wrapper>
   );
 };
