@@ -4,6 +4,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReleaseComponentLabel from '../UI/release_component_label.js';
 
 class ReleaseDetailsModal extends React.Component {
   state = {
@@ -69,17 +70,11 @@ class ReleaseDetailsModal extends React.Component {
                 <div className='release-selector-modal--components'>
                   {_.sortBy(release.components, 'name').map(component => {
                     return (
-                      <div
-                        className='release-selector-modal--component'
+                      <ReleaseComponentLabel
                         key={component.name}
-                      >
-                        <span className='release-selector-modal--component--name'>
-                          {component.name}
-                        </span>
-                        <span className='release-selector-modal--component--version'>
-                          {component.version}
-                        </span>
-                      </div>
+                        name={component.name}
+                        version={component.version}
+                      />
                     );
                   })}
                 </div>

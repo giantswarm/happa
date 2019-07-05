@@ -12,6 +12,7 @@ import Button from '../../UI/button';
 import diff from 'deep-diff';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReleaseComponentLabel from '../../UI/release_component_label';
 
 class UpgradeClusterModal extends React.Component {
   state = {
@@ -46,12 +47,12 @@ class UpgradeClusterModal extends React.Component {
     }
 
     var components = {};
-    _.each(currentComponents, component => {
+    currentComponents.forEach(component => {
       components[component.name] = component;
     });
 
     var targetComponents = {};
-    _.each(this.props.targetRelease.components, component => {
+    this.props.targetRelease.components.forEach(component => {
       targetComponents[component.name] = component;
     });
 
@@ -76,57 +77,33 @@ class UpgradeClusterModal extends React.Component {
             if (diffEdit.kind === 'E') {
               let component = components[diffEdit.path[0]];
               return (
-                <div
-                  className='release-selector-modal--component'
-                  key={component.name}
-                >
-                  <span className='release-selector-modal--component--name'>
-                    {component.name}
-                  </span>
-                  <span className='release-selector-modal--component--version'>
-                    <span className='lhs'>
-                      <span>{diffEdit.lhs}</span>
-                      <span />
-                    </span>{' '}
-                    <span className='rhs'>{diffEdit.rhs}</span>
-                  </span>
-                </div>
+                <ReleaseComponentLabel
+                  name={component.name}
+                  oldVersion={diffEdit.lhs}
+                  version={diffEdit.rhs}
+                />
               );
             }
 
             if (diffEdit.kind === 'N') {
               let component = diffEdit.rhs;
               return (
-                <div
-                  className='release-selector-modal--component'
-                  key={component.name}
-                >
-                  <span className='release-selector-modal--component--name'>
-                    {component.name}
-                  </span>
-                  <span className='release-selector-modal--component--version'>
-                    <span className='rhs'>{component.version} (added)</span>
-                  </span>
-                </div>
+                <ReleaseComponentLabel
+                  isAdded
+                  name={component.name}
+                  version={component.version}
+                />
               );
             }
 
             if (diffEdit.kind === 'D') {
               let component = diffEdit.lhs;
               return (
-                <div
-                  className='release-selector-modal--component'
-                  key={component.name}
-                >
-                  <span className='release-selector-modal--component--name'>
-                    {component.name}
-                  </span>
-                  <span className='release-selector-modal--component--version'>
-                    <span className='lhs'>
-                      <span>{component.version}</span> <span>(removed)</span>
-                    </span>
-                  </span>
-                </div>
+                <ReleaseComponentLabel
+                  isRemoved
+                  name={component.name}
+                  version={component.version}
+                />
               );
             }
           })}
