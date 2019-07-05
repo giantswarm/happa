@@ -9,7 +9,7 @@ import {
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../../UI/button';
-import ComponentChangelog from '../UI/component_changelog';
+import ComponentChangelog from '../../UI/component_changelog';
 import diff from 'deep-diff';
 import PropTypes from 'prop-types';
 import React from 'react';
