@@ -27,7 +27,6 @@ const StyleGuide = () => {
       </p>
 
       <div>
-        <ReleaseComponentLabel version='3.1.5' />
         <ReleaseComponentLabel name='calico' version='3.1.5' />
         <ReleaseComponentLabel
           name='kubernetes'
