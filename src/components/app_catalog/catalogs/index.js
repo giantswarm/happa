@@ -41,14 +41,12 @@ class Catalogs extends React.Component {
                         <h3>
                           {this.props.catalogs.items[catalogName].spec.title}
                         </h3>
-                        <p>
-                          <ReactMarkdown>
-                            {
-                              this.props.catalogs.items[catalogName].spec
-                                .description
-                            }
-                          </ReactMarkdown>
-                        </p>
+                        <ReactMarkdown>
+                          {
+                            this.props.catalogs.items[catalogName].spec
+                              .description
+                          }
+                        </ReactMarkdown>
                       </div>
                     </Link>
                   );
