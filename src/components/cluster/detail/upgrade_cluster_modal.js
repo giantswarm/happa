@@ -9,9 +9,11 @@ import {
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from '../../UI/button';
+import ComponentChangelog from '../../UI/component_changelog';
 import diff from 'deep-diff';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReleaseComponentLabel from '../../UI/release_component_label';
 
 class UpgradeClusterModal extends React.Component {
   state = {
@@ -40,40 +42,32 @@ class UpgradeClusterModal extends React.Component {
   };
 
   changedComponents = () => {
+    const { release } = this.props;
     var currentComponents = {};
-    if (this.props.release && this.props.release.components) {
-      currentComponents = this.props.release.components;
+    if (release && release.components) {
+      currentComponents = release.components;
     }
 
     var components = {};
-    _.each(currentComponents, component => {
+    currentComponents.forEach(component => {
       components[component.name] = component;
     });
 
     var targetComponents = {};
-    _.each(this.props.targetRelease.components, component => {
+    this.props.targetRelease.components.forEach(component => {
       targetComponents[component.name] = component;
     });
 
     var changedComponents = diff.diff(components, targetComponents);
 
-    var changedComponentNames = changedComponents.map(diffEdit => {
-      let component = components[diffEdit.path[0]];
-
-      if (component) {
-        return component.name;
-      } else {
-        return undefined;
-      }
+    let changes = _.groupBy(this.props.targetRelease.changelog, item => {
+      return item.component;
     });
-
-    var unchangedComponents = _.filter(components, component => {
-      return changedComponentNames.indexOf(component.name) === -1;
-    });
+    let changedComponentNames = Object.keys(changes).sort();
 
     return (
       <div>
-        {this.props.release === undefined ? (
+        {release === undefined ? (
           <div className='flash-messages--flash-message flash-messages--info'>
             Could not get component information for release version{' '}
             {this.props.cluster.release_version}.<br />
@@ -90,96 +84,54 @@ class UpgradeClusterModal extends React.Component {
             if (diffEdit.kind === 'E') {
               let component = components[diffEdit.path[0]];
               return (
-                <div
-                  className='release-selector-modal--component'
-                  key={component.name}
-                >
-                  <span className='release-selector-modal--component--name'>
-                    {component.name}
-                  </span>
-                  <span className='release-selector-modal--component--version'>
-                    <span className='lhs'>
-                      <span>{diffEdit.lhs}</span>
-                      <span />
-                    </span>{' '}
-                    <span className='rhs'>{diffEdit.rhs}</span>
-                  </span>
-                </div>
+                <ReleaseComponentLabel
+                  name={component.name}
+                  oldVersion={diffEdit.lhs}
+                  version={diffEdit.rhs}
+                />
               );
             }
 
             if (diffEdit.kind === 'N') {
               let component = diffEdit.rhs;
               return (
-                <div
-                  className='release-selector-modal--component'
-                  key={component.name}
-                >
-                  <span className='release-selector-modal--component--name'>
-                    {component.name}
-                  </span>
-                  <span className='release-selector-modal--component--version'>
-                    <span className='rhs'>{component.version} (added)</span>
-                  </span>
-                </div>
+                <ReleaseComponentLabel
+                  isAdded
+                  name={component.name}
+                  version={component.version}
+                />
               );
             }
 
             if (diffEdit.kind === 'D') {
               let component = diffEdit.lhs;
               return (
-                <div
-                  className='release-selector-modal--component'
-                  key={component.name}
-                >
-                  <span className='release-selector-modal--component--name'>
-                    {component.name}
-                  </span>
-                  <span className='release-selector-modal--component--version'>
-                    <span className='lhs'>
-                      <span>{component.version}</span> <span>(removed)</span>
-                    </span>
-                  </span>
-                </div>
+                <ReleaseComponentLabel
+                  isRemoved
+                  name={component.name}
+                  version={component.version}
+                />
               );
             }
           })}
         </div>
-        {unchangedComponents.length > 0 ? (
-          <p>
-            <b>Unchanged Components</b>
-          </p>
-        ) : (
-          undefined
-        )}
-        {_.sortBy(unchangedComponents, 'name').map(component => {
-          return (
-            <div
-              className='release-selector-modal--component'
-              key={component.name}
-            >
-              <span className='release-selector-modal--component--name'>
-                {component.name}
-              </span>
-              <span className='release-selector-modal--component--version'>
-                {component.version}
-              </span>
-            </div>
-          );
-        })}
 
         <p>
           <b>Changes</b>
         </p>
-        <ul>
-          {this.props.targetRelease.changelog.map((changelog, i) => {
+        <dl>
+          {changedComponentNames.map((componentName, index) => {
             return (
-              <li key={changelog.component + i}>
-                <b>{changelog.component}:</b> {changelog.description}
-              </li>
+              <ComponentChangelog
+                changes={changes[componentName].map(c => {
+                  return c.description;
+                })}
+                key={index}
+                name={componentName}
+              />
             );
           })}
-        </ul>
+        </dl>
       </div>
     );
   };
