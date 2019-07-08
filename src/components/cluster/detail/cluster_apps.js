@@ -161,7 +161,7 @@ class ClusterApps extends React.Component {
 
   openAppCatalog = () => {
     this.props.dispatch(selectCluster(this.props.clusterId));
-    this.props.dispatch(push('/apps/'));
+    this.props.dispatch(push('/app-catalogs/'));
   };
 
   render() {
