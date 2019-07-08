@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 class Catalogs extends React.Component {
   render() {
@@ -41,10 +42,12 @@ class Catalogs extends React.Component {
                           {this.props.catalogs.items[catalogName].spec.title}
                         </h3>
                         <p>
-                          {
-                            this.props.catalogs.items[catalogName].spec
-                              .description
-                          }
+                          <ReactMarkdown>
+                            {
+                              this.props.catalogs.items[catalogName].spec
+                                .description
+                            }
+                          </ReactMarkdown>
                         </p>
                       </div>
                     </Link>
