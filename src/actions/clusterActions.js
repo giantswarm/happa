@@ -113,13 +113,8 @@ export function clusterInstallApp(app, clusterID) {
             body: app.valuesYAML,
           })
           .then(() => {
-            // The call succeeded, resolve with a configmap
-            // object that the next call can use to associate
-            // the app with the configmap.
-            resolve({
-              name: app.name + '-user-values',
-              namespace: clusterID,
-            });
+            // The call succeeded, resolve the promise
+            resolve();
           })
           .catch(error => {
             if (error.status === 409) {
@@ -151,7 +146,7 @@ export function clusterInstallApp(app, clusterID) {
     });
 
     return optionalCreateAppConfiguration
-      .then(configmap => {
+      .then(() => {
         return appsApi
           .createClusterApp(scheme + ' ' + token, clusterID, app.name, {
             body: {
@@ -160,9 +155,6 @@ export function clusterInstallApp(app, clusterID) {
                 name: app.chartName,
                 namespace: app.namespace,
                 version: app.version,
-                user_config: {
-                  configmap: configmap,
-                },
               },
             },
           })
