@@ -121,7 +121,7 @@ class AppList extends React.Component {
       >
         <DocumentTitle title={'Apps | Giant Swarm '}>
           <React.Fragment>
-            <Link to={'/apps/'}>
+            <Link to={'/app-catalogs/'}>
               <i aria-hidden='true' className='fa fa-chevron-left' />
               Back to all catalogs
             </Link>
