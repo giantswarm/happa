@@ -2,17 +2,15 @@ import { Link } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 class Catalogs extends React.Component {
   render() {
     return (
-      <DocumentTitle title={`Apps | Giant Swarm `}>
+      <DocumentTitle title={`App Catalogs | Giant Swarm `}>
         <React.Fragment>
-          <h1>Apps</h1>
-          <p>
-            Browse and deploy apps from various sources, including managed apps
-            covered by SLAs from Giant Swarm.
-          </p>
+          <h1>App Catalogs</h1>
+          <p>Pick an App Catalog to browse all the Apps in it.</p>
           {Object.keys(this.props.catalogs.items).length === 0 ? (
             <p className='well'>
               <b>Could not find any appcatalogs:</b>
@@ -30,24 +28,26 @@ class Catalogs extends React.Component {
                     <Link
                       className='app-catalog--repo'
                       key={this.props.catalogs.items[catalogName].metadata.name}
-                      to={'/apps/' + catalogName + '/'}
+                      to={'/app-catalogs/' + catalogName + '/'}
                     >
                       <div className='app-catalog--card'>
-                        <h3>
-                          {this.props.catalogs.items[catalogName].spec.title}
-                        </h3>
                         <img
                           src={
                             this.props.catalogs.items[catalogName].spec.logoURL
                           }
                         />
                       </div>
-                      <p>
-                        {
-                          this.props.catalogs.items[catalogName].spec
-                            .description
-                        }
-                      </p>
+                      <div className='app-catalog--description'>
+                        <h3>
+                          {this.props.catalogs.items[catalogName].spec.title}
+                        </h3>
+                        <ReactMarkdown>
+                          {
+                            this.props.catalogs.items[catalogName].spec
+                              .description
+                          }
+                        </ReactMarkdown>
+                      </div>
                     </Link>
                   );
                 })}

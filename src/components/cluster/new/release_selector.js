@@ -11,6 +11,7 @@ import Button from '../../UI/button';
 import cmp from 'semver-compare';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReleaseComponentLabel from '../../UI/release_component_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ReleaseSelector extends React.Component {
@@ -149,14 +150,10 @@ class ReleaseSelector extends React.Component {
           {kubernetes ? (
             <div>
               <p>This release contains:</p>
-              <div className='release-selector-modal--component contrast'>
-                <span className='release-selector-modal--component--name'>
-                  kubernetes
-                </span>
-                <span className='release-selector-modal--component--version'>
-                  {kubernetes.version}
-                </span>
-              </div>
+              <ReleaseComponentLabel
+                name='kubernetes'
+                version={kubernetes.version}
+              />
             </div>
           ) : (
             undefined

@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
+import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
 
 // NumberPicker is a component that allows a user to pick a number by
 // incrementing / decrementing a value or typing it straight into the input
@@ -42,6 +44,91 @@ import React from 'react';
 //   valid: true
 // }
 
+const Label = styled.div`
+  display: inline-block;
+  width: 150px;
+`;
+
+const ValueSpan = styled.span`
+  input {
+    display: inline-block;
+    background-color: inherit;
+    border: none;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    outline: none;
+  }
+  input:focus {
+    outline: none;
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+`;
+
+const Wrapper = styled.div`
+  display: inline-block;
+  margin-top: 4px;
+  margin-bottom: 4px;
+
+  /* to hide the increment/decrement buttons when disabled */
+  input:disabled {
+    appearance: textfield;
+  }
+`;
+
+const Control = styled.div`
+  width: 160px;
+  display: inline-block;
+  height: 35px;
+  background-color: #32526a;
+  line-height: 35px;
+  text-align: center;
+  border-radius: 5px;
+  position: relative;
+  margin-bottom: 5px;
+`;
+
+const ValidationError = styled.span`
+  color: #e49090;
+  margin-left: 10px;
+  margin-right: 10px;
+`;
+
+const IncrementDecrementButtonCSS = css`
+  position: absolute;
+  display: inline-block;
+  top: 0px;
+  width: 35px;
+  background-color: #3b5f7b;
+  cursor: pointer;
+  user-select: none;
+  &:hover {
+    background-color: #486d8a;
+  }
+  &:active {
+    background-color: #3b5f7b;
+    color: #aaa;
+  }
+`;
+
+const IncrementButton = styled.div`
+  ${IncrementDecrementButtonCSS};
+  right: 0px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+`;
+
+const DecrementButton = styled.div`
+  ${IncrementDecrementButtonCSS};
+  left: 0px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+`;
+
 class NumberPicker extends React.Component {
   state = {
     inputValue: this.props.value,
@@ -54,9 +141,9 @@ class NumberPicker extends React.Component {
     var currentValue = this.props.value;
     var desiredValue = currentValue + this.props.stepSize;
 
-    if (currentValue < this.props.max) {
+    if (desiredValue <= this.props.max) {
       this.updateInput({
-        target: { value: Math.min(this.props.max, desiredValue) },
+        target: { value: desiredValue },
       });
     }
   };
@@ -65,9 +152,9 @@ class NumberPicker extends React.Component {
     var currentValue = this.props.value;
     var desiredValue = currentValue - this.props.stepSize;
 
-    if (currentValue > this.props.min) {
+    if (desiredValue >= this.props.min) {
       this.updateInput({
-        target: { value: Math.max(this.props.min, desiredValue) },
+        target: { value: desiredValue },
       });
     }
   };
@@ -140,29 +227,20 @@ class NumberPicker extends React.Component {
 
   render() {
     return (
-      <div
-        className={`number-picker ${this.props.theme ? this.props.theme : ''} ${
+      <Wrapper
+        className={`${this.props.theme ? this.props.theme : ''} ${
           this.props.readOnly ? 'readonly ' : ''
         }`}
       >
-        {this.props.label ? (
-          <div className='number-picker--label'>{this.props.label}</div>
-        ) : (
-          undefined
-        )}
+        {this.props.label ? <Label>{this.props.label}</Label> : undefined}
 
-        <div className='number-picker--control'>
+        <Control>
           {this.props.readOnly ? (
             undefined
           ) : (
-            <div
-              className='number-picker--control-decrease'
-              onClick={this.decrement}
-            >
-              &ndash;
-            </div>
+            <DecrementButton onClick={this.decrement}>&ndash;</DecrementButton>
           )}
-          <span className='number-picker--value'>
+          <ValueSpan>
             <input
               disabled={this.props.readOnly}
               max={this.props.max}
@@ -175,22 +253,15 @@ class NumberPicker extends React.Component {
                 this.props.readOnly ? this.props.value : this.state.inputValue
               }
             />
-          </span>
+          </ValueSpan>
           {this.props.readOnly ? (
             undefined
           ) : (
-            <div
-              className='number-picker--control-increase'
-              onClick={this.increment}
-            >
-              +
-            </div>
+            <IncrementButton onClick={this.increment}>+</IncrementButton>
           )}
-        </div>
-        <small className='number-picker--validation-error'>
-          {this.state.validationError}&nbsp;
-        </small>
-      </div>
+        </Control>
+        <ValidationError>{this.state.validationError}</ValidationError>
+      </Wrapper>
     );
   }
 }
