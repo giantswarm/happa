@@ -102,12 +102,13 @@ export function clusterInstallApp(app, clusterID) {
     });
 
     var appsApi = new GiantSwarmV4.AppsApi();
+    var appConfigsApi = new GiantSwarmV4.AppConfigsApi();
 
     var optionalCreateAppConfiguration = new Promise((resolve, reject) => {
       if (Object.keys(app.valuesYAML).length !== 0) {
         // If we have user config that we want to create, then
         // fire off the call to create it.
-        appsApi
+        appConfigsApi
           .createClusterAppConfig(scheme + ' ' + token, clusterID, app.name, {
             body: app.valuesYAML,
           })
