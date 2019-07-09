@@ -119,7 +119,7 @@ class AppContainer extends React.Component {
       imgError,
     } = this.props;
     const { icon, name, repoName, version } = appVersions[0];
-    const to = `/apps/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
+    const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
     return (
       <Wrapper>

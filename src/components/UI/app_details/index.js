@@ -108,7 +108,7 @@ const AppDetails = props => {
     urls,
   } = appVersions[0];
 
-  const to = `/apps/${params.repo}/?q=${q}#${name}`;
+  const to = `/app-catalogs/${params.repo}/?q=${q}#${name}`;
 
   return (
     <div>

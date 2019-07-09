@@ -132,7 +132,7 @@ class Navigation extends React.Component {
               Organizations
             </NavLink>
             {this.props.showAppCatalog && (
-              <NavLink activeClassName='active' exact to='/apps/'>
+              <NavLink activeClassName='active' to='/app-catalogs/'>
                 Apps
               </NavLink>
             )}
