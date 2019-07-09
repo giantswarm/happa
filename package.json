@@ -14,7 +14,7 @@
     "prettier": "prettier --write \"src/**/*.js\"",
     "validate-prettier": "prettier --version; prettier --no-color --check \"src/**/*.js\"",
     "snyk-protect": "snyk protect",
-    "prepublish": "npm config set scripts-prepend-node-path true && npm run snyk-protect"
+    "prepublish": "npm run snyk-protect"
   },
   "prettier": {
     "singleQuote": true,
