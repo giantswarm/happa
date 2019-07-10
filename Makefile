@@ -14,6 +14,7 @@ install-node-modules:
 		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
 		-v ${PWD}/package.json:/usr/src/app/package.json:z \
 		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock:z \
+		-v ${PWD}/.snyk:/usr/src/app/.snyk:z \
 		quay.io/giantswarm/happa-build:latest yarn install --no-progress
 
 run-prettier:
@@ -45,6 +46,7 @@ dist:
 		-v ${PWD}/webpack.config.js:/usr/src/app/webpack.config.js:z \
 		-v ${PWD}/webpack.dist.config.js:/usr/src/app/webpack.dist.config.js:z \
 		-v ${PWD}/.eslintrc:/usr/src/app/.eslintrc:z \
+		-v ${PWD}/.snyk:/usr/src/app/.snyk:z \
 		quay.io/giantswarm/happa-build:latest grunt build
 
 
