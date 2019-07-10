@@ -36,7 +36,7 @@ export function updateAppConfig(appName, clusterID, values) {
         new FlashMessage(
           `The configuration of <code>${appName}</code> on <code>${clusterID}</code> has successfully been updated.`,
           messageType.SUCCESS,
-          messageTTL.MEDIUM
+          messageTTL.LONG
         );
       })
       .catch(error => {
@@ -103,7 +103,7 @@ export function createAppConfig(appName, clusterID, values) {
         new FlashMessage(
           `A user configuration configmap for <code>${appName}</code> on <code>${clusterID}</code> has successfully been created.`,
           messageType.SUCCESS,
-          messageTTL.MEDIUM
+          messageTTL.LONG
         );
       })
       .catch(error => {
