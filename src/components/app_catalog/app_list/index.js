@@ -8,7 +8,48 @@ import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+function Loading(props) {
+  if (props.loading) {
+    return (
+      <div className='app-loading'>
+        <div className='app-loading-contents'>
+          <img className='loader' src='/images/loader_oval_light.svg' />
+        </div>
+      </div>
+    );
+  } else {
+    return props.children;
+  }
+}
+
 class AppList extends React.Component {
+  render() {
+    return (
+      <Breadcrumb
+        data={{
+          title: this.props.catalog.metadata.name.toUpperCase(),
+          pathname: this.props.match.url,
+        }}
+      >
+        <DocumentTitle title={'Apps | Giant Swarm '}>
+          <React.Fragment>
+            <Link to={'/app-catalogs/'}>
+              <i aria-hidden='true' className='fa fa-chevron-left' />
+              Back to all catalogs
+            </Link>
+            <br/>
+            <br/>
+            <Loading loading={this.props.catalog.isFetchingIndex}>
+              <AppListInner {...this.props} />
+            </Loading>
+          </React.Fragment>
+        </DocumentTitle>
+      </Breadcrumb>
+    )
+  }
+}
+
+class AppListInner extends React.Component {
   // Contains refs to all the app-container divs in dom so that we can
   // scroll to them if needed.
   appRefs = {};
@@ -113,20 +154,7 @@ class AppList extends React.Component {
 
   render() {
     return (
-      <Breadcrumb
-        data={{
-          title: this.props.catalog.metadata.name.toUpperCase(),
-          pathname: this.props.match.url,
-        }}
-      >
-        <DocumentTitle title={'Apps | Giant Swarm '}>
-          <React.Fragment>
-            <Link to={'/app-catalogs/'}>
-              <i aria-hidden='true' className='fa fa-chevron-left' />
-              Back to all catalogs
-            </Link>
-            <br />
-            <br />
+        <React.Fragment>
             <h1>
               {this.props.catalog.spec.title}
               <form>
@@ -187,13 +215,19 @@ class AppList extends React.Component {
               </div>
             </div>
           </React.Fragment>
-        </DocumentTitle>
-      </Breadcrumb>
     );
   }
 }
 
 AppList.propTypes = {
+  catalog: PropTypes.object,
+  dispatch: PropTypes.func,
+  location: PropTypes.object,
+  loading: PropTypes.bool,
+  match: PropTypes.object,
+};
+
+AppListInner.propTypes = {
   catalog: PropTypes.object,
   dispatch: PropTypes.func,
   location: PropTypes.object,
