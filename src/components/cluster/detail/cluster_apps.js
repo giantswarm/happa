@@ -230,7 +230,10 @@ class ClusterApps extends React.Component {
                       <a
                         className='installed-apps--app'
                         key={app.metadata.name}
-                        onClick={this.showAppDetail.bind(this, app.metadata.name)}
+                        onClick={this.showAppDetail.bind(
+                          this,
+                          app.metadata.name
+                        )}
                       >
                         {app.logoUrl && !this.state.iconErrors[app.logoUrl] && (
                           <img
@@ -289,7 +292,12 @@ class ClusterApps extends React.Component {
         <AppDetailsModal
           // Instead of just assigning the selected app to the state of this component,
           // this ensures any updates to the apps continue to flow down into the modal.
-          app={this.props.installedApps && this.props.installedApps.find(x => x.metadata.name === this.state.appDetailsModal.appName)}
+          app={
+            this.props.installedApps &&
+            this.props.installedApps.find(
+              x => x.metadata.name === this.state.appDetailsModal.appName
+            )
+          }
           clusterId={this.props.clusterId}
           dispatch={this.props.dispatch}
           onClose={this.hideAppModal}

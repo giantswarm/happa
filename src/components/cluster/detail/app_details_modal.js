@@ -1,6 +1,14 @@
 import { clusterLoadApps } from '../../../actions/clusterActions';
-import { createAppConfig, deleteAppConfig, updateAppConfig } from '../../../actions/appConfigActions';
-import { FlashMessage, messageTTL, messageType } from '../../../lib/flash_message';
+import {
+  createAppConfig,
+  deleteAppConfig,
+  updateAppConfig,
+} from '../../../actions/appConfigActions';
+import {
+  FlashMessage,
+  messageTTL,
+  messageType,
+} from '../../../lib/flash_message';
 import Button from '../../UI/button';
 import GenericModal from '../../modals/generic_modal';
 import PropTypes from 'prop-types';
@@ -9,32 +17,32 @@ import yaml from 'js-yaml';
 
 function _confirmDeleteAppConfig(app, clusterId, dispatch) {
   dispatch(deleteAppConfig(app.metadata.name, clusterId))
-  .then(() => {
-    return dispatch(clusterLoadApps(clusterId));
-  })
-  .catch((e) => {
-    console.error(e);
-  });
+    .then(() => {
+      return dispatch(clusterLoadApps(clusterId));
+    })
+    .catch(e => {
+      console.error(e);
+    });
 }
 
 function _createAppConfig(appName, clusterId, values, dispatch) {
   return dispatch(createAppConfig(appName, clusterId, values))
-  .then(() => {
-    return dispatch(clusterLoadApps(clusterId));
-  })
-  .catch((e) => {
-    console.error(e);
-  });
+    .then(() => {
+      return dispatch(clusterLoadApps(clusterId));
+    })
+    .catch(e => {
+      console.error(e);
+    });
 }
 
 function _updateAppConfig(appName, clusterId, values, dispatch) {
   return dispatch(updateAppConfig(appName, clusterId, values))
-  .then(() => {
-    return dispatch(clusterLoadApps(clusterId));
-  })
-  .catch((e) => {
-    console.error(e);
-  });
+    .then(() => {
+      return dispatch(clusterLoadApps(clusterId));
+    })
+    .catch(e => {
+      console.error(e);
+    });
 }
 
 const AppDetailsModal = props => {
@@ -78,8 +86,12 @@ const AppDetailsModal = props => {
           return;
         }
 
-        _createAppConfig(props.app.metadata.name, props.clusterId, parsedYAML, props.dispatch)
-        .then(() => {
+        _createAppConfig(
+          props.app.metadata.name,
+          props.clusterId,
+          parsedYAML,
+          props.dispatch
+        ).then(() => {
           setFileUploading(false);
           refreshFileInputs();
         });
@@ -110,8 +122,12 @@ const AppDetailsModal = props => {
           return;
         }
 
-        _updateAppConfig(props.app.metadata.name, props.clusterId, parsedYAML, props.dispatch)
-        .then(() => {
+        _updateAppConfig(
+          props.app.metadata.name,
+          props.clusterId,
+          parsedYAML,
+          props.dispatch
+        ).then(() => {
           setFileUploading(false);
           refreshFileInputs();
         });
@@ -157,54 +173,82 @@ const AppDetailsModal = props => {
         <div className='labelvaluepair'>
           <div className='labelvaluepair--label'>APP VERSION</div>
           <div className='labelvaluepair--value code'>
-            {
-              props.app.status.app_version === '' ?
+            {props.app.status.app_version === '' ? (
               <span>Information pending...</span>
-              :
+            ) : (
               <span>{props.app.status.app_version}</span>
-            }
+            )}
           </div>
         </div>
 
         <div className='labelvaluepair'>
           <div className='labelvaluepair--label'>
             USER CONFIGURATION
-
-            {
-            props.app.spec.user_config.configmap.name !== '' ?
-            <div className='labelvaluepair--labelactions'>
-              <a onClick={_confirmDeleteAppConfig.bind(this, props.app, props.clusterId, props.dispatch)}>Delete Configuration</a>
-            </div>
-            :
-            undefined
-            }
+            {props.app.spec.user_config.configmap.name !== '' ? (
+              <div className='labelvaluepair--labelactions'>
+                <a
+                  onClick={_confirmDeleteAppConfig.bind(
+                    this,
+                    props.app,
+                    props.clusterId,
+                    props.dispatch
+                  )}
+                >
+                  Delete Configuration
+                </a>
+              </div>
+            ) : (
+              undefined
+            )}
           </div>
 
           <div className='appdetails--userconfiguration'>
-          {
-            props.app.spec.user_config.configmap.name !== '' ?
-            <React.Fragment>
-              <span>Configuration has been set.</span>
-              <Button loading={fileUploading} loadingPosition='left' onClick={handleUploadClick}>Upload New Configuration</Button>
-              {
-                renderFileInputs ?
-                <input accept=".yaml" onChange={updateConfigInputOnChange} ref={i => fileInput = i} style={{display: 'none'}} type='file'  />
-                :
-                undefined
-              }
-            </React.Fragment>
-            :
-            <React.Fragment>
-              <span>No configuration set yet</span>
-              <Button loading={fileUploading} loadingPosition='left' onClick={handleUploadClick}> Upload Configuration</Button>
-              {
-                renderFileInputs ?
-                <input accept=".yaml" onChange={newConfigInputOnChange} ref={i => fileInput = i} style={{display: 'none'}} type='file'  />
-                :
-                undefined
-              }
-            </React.Fragment>
-          }
+            {props.app.spec.user_config.configmap.name !== '' ? (
+              <React.Fragment>
+                <span>Configuration has been set.</span>
+                <Button
+                  loading={fileUploading}
+                  loadingPosition='left'
+                  onClick={handleUploadClick}
+                >
+                  Upload New Configuration
+                </Button>
+                {renderFileInputs ? (
+                  <input
+                    accept='.yaml'
+                    onChange={updateConfigInputOnChange}
+                    ref={i => (fileInput = i)}
+                    style={{ display: 'none' }}
+                    type='file'
+                  />
+                ) : (
+                  undefined
+                )}
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <span>No configuration set yet</span>
+                <Button
+                  loading={fileUploading}
+                  loadingPosition='left'
+                  onClick={handleUploadClick}
+                >
+                  {' '}
+                  Upload Configuration
+                </Button>
+                {renderFileInputs ? (
+                  <input
+                    accept='.yaml'
+                    onChange={newConfigInputOnChange}
+                    ref={i => (fileInput = i)}
+                    style={{ display: 'none' }}
+                    type='file'
+                  />
+                ) : (
+                  undefined
+                )}
+              </React.Fragment>
+            )}
           </div>
         </div>
       </div>
