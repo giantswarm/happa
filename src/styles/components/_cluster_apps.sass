@@ -7,7 +7,7 @@
 
 .cluster-apps--app, .installed-apps--app
   background-color: #395c72
-  margin-bottom: 14px;
+  margin-bottom: 14px
   padding: 12px
   border-radius: 5px
 
@@ -23,6 +23,13 @@
 
   small
     font-size: 12px
+
+.installed-apps--app
+  display: block
+
+  &:hover
+    text-decoration: none
+    background-color: lighten(#395c72, 5%)
 
 #installed-apps
   margin-bottom: 25px
