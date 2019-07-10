@@ -173,9 +173,9 @@ const InstallAppModal = props => {
           )
         );
       })
-      .catch((error) => {
+      .catch(error => {
         setLoading(false);
-        throw(error);
+        throw error;
       });
   };
 
