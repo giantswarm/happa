@@ -8,7 +8,48 @@ import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+function Loading(props) {
+  if (props.loading) {
+    return (
+      <div className='app-loading'>
+        <div className='app-loading-contents'>
+          <img className='loader' src='/images/loader_oval_light.svg' />
+        </div>
+      </div>
+    );
+  } else {
+    return props.children;
+  }
+}
+
 class AppList extends React.Component {
+  render() {
+    return (
+      <Breadcrumb
+        data={{
+          title: this.props.catalog.metadata.name.toUpperCase(),
+          pathname: this.props.match.url,
+        }}
+      >
+        <DocumentTitle title={'Apps | Giant Swarm '}>
+          <React.Fragment>
+            <Link to={'/app-catalogs/'}>
+              <i aria-hidden='true' className='fa fa-chevron-left' />
+              Back to all catalogs
+            </Link>
+            <br />
+            <br />
+            <Loading loading={this.props.catalog.isFetchingIndex}>
+              <AppListInner {...this.props} />
+            </Loading>
+          </React.Fragment>
+        </DocumentTitle>
+      </Breadcrumb>
+    );
+  }
+}
+
+class AppListInner extends React.Component {
   // Contains refs to all the app-container divs in dom so that we can
   // scroll to them if needed.
   appRefs = {};
@@ -113,87 +154,78 @@ class AppList extends React.Component {
 
   render() {
     return (
-      <Breadcrumb
-        data={{
-          title: this.props.catalog.metadata.name.toUpperCase(),
-          pathname: this.props.match.url,
-        }}
-      >
-        <DocumentTitle title={'Apps | Giant Swarm '}>
-          <React.Fragment>
-            <Link to={'/app-catalogs/'}>
-              <i aria-hidden='true' className='fa fa-chevron-left' />
-              Back to all catalogs
-            </Link>
-            <br />
-            <br />
-            <h1>
-              {this.props.catalog.spec.title}
-              <form>
-                <div className='input-with-icon'>
-                  <i className='fa fa-search' />
-                  <input
-                    onChange={this.updateSearchQuery}
-                    type='text'
-                    value={this.state.searchQuery}
-                  />
-                  {this.state.searchQuery !== '' ? (
-                    <a className='clearQuery' onClick={this.resetFilters}>
-                      <i className='fa fa-close' />
-                    </a>
-                  ) : (
-                    undefined
-                  )}
-                </div>
-              </form>
-            </h1>
-            <div className='app-catalog-overview'>
-              <div className='apps' style={{ justifyContent: 'flex-start' }}>
-                {(() => {
-                  var apps = this.filterApps(
-                    this.props.catalog.apps,
-                    this.filter()
-                  );
-                  if (apps.length === 0) {
-                    return (
-                      <div className='emptystate'>
-                        No apps matched your search query: &quot;
-                        {this.state.searchQuery}&quot;
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <React.Fragment>
-                        {apps.map(appVersions => {
-                          const key = `${appVersions[0].repoName}/${appVersions[0].name}`;
-                          return (
-                            <AppContainer
-                              appVersions={appVersions}
-                              catalog={this.props.catalog}
-                              iconErrors={this.state.iconErrors}
-                              imgError={this.imgError}
-                              key={key}
-                              ref={ref =>
-                                (this.appRefs[appVersions[0].name] = ref)
-                              }
-                              searchQuery={this.state.searchQuery}
-                            />
-                          );
-                        })}
-                      </React.Fragment>
-                    );
-                  }
-                })()}
-              </div>
+      <React.Fragment>
+        <h1>
+          {this.props.catalog.spec.title}
+          <form>
+            <div className='input-with-icon'>
+              <i className='fa fa-search' />
+              <input
+                onChange={this.updateSearchQuery}
+                type='text'
+                value={this.state.searchQuery}
+              />
+              {this.state.searchQuery !== '' ? (
+                <a className='clearQuery' onClick={this.resetFilters}>
+                  <i className='fa fa-close' />
+                </a>
+              ) : (
+                undefined
+              )}
             </div>
-          </React.Fragment>
-        </DocumentTitle>
-      </Breadcrumb>
+          </form>
+        </h1>
+        <div className='app-catalog-overview'>
+          <div className='apps' style={{ justifyContent: 'flex-start' }}>
+            {(() => {
+              var apps = this.filterApps(
+                this.props.catalog.apps,
+                this.filter()
+              );
+              if (apps.length === 0) {
+                return (
+                  <div className='emptystate'>
+                    No apps matched your search query: &quot;
+                    {this.state.searchQuery}&quot;
+                  </div>
+                );
+              } else {
+                return (
+                  <React.Fragment>
+                    {apps.map(appVersions => {
+                      const key = `${appVersions[0].repoName}/${appVersions[0].name}`;
+                      return (
+                        <AppContainer
+                          appVersions={appVersions}
+                          catalog={this.props.catalog}
+                          iconErrors={this.state.iconErrors}
+                          imgError={this.imgError}
+                          key={key}
+                          ref={ref => (this.appRefs[appVersions[0].name] = ref)}
+                          searchQuery={this.state.searchQuery}
+                        />
+                      );
+                    })}
+                  </React.Fragment>
+                );
+              }
+            })()}
+          </div>
+        </div>
+      </React.Fragment>
     );
   }
 }
 
 AppList.propTypes = {
+  catalog: PropTypes.object,
+  dispatch: PropTypes.func,
+  location: PropTypes.object,
+  loading: PropTypes.bool,
+  match: PropTypes.object,
+};
+
+AppListInner.propTypes = {
   catalog: PropTypes.object,
   dispatch: PropTypes.func,
   location: PropTypes.object,

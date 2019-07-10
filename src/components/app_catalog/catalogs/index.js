@@ -40,6 +40,15 @@ class Catalogs extends React.Component {
                       <div className='app-catalog--description'>
                         <h3>
                           {this.props.catalogs.items[catalogName].spec.title}
+                          {this.props.catalogs.items[catalogName]
+                            .isFetchingIndex ? (
+                            <img
+                              className='loader'
+                              src='/images/loader_oval_light.svg'
+                            />
+                          ) : (
+                            undefined
+                          )}
                         </h3>
                         <ReactMarkdown>
                           {
