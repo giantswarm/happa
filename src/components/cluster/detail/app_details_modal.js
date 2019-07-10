@@ -353,10 +353,10 @@ const AppDetailsModal = props => {
         onClose={props.onClose}
         title={
           <React.Fragment>
-          {`Delete ${props.app.metadata.name} on`}
-          {` `}
-          <ClusterIDLabel clusterID={props.clusterId} />
-        </React.Fragment>
+            {`Delete ${props.app.metadata.name} on`}
+            {` `}
+            <ClusterIDLabel clusterID={props.clusterId} />
+          </React.Fragment>
         }
         visible={props.visible}
       >
