@@ -35,7 +35,7 @@ const StyledLink = styled(Link)`
   border: 1px solid #2a5974;
   width: 100%;
   border-radius: 4px;
-  height: 158px;
+  height: 180px;
   background-color: #2f556a;
   position: relative;
   cursor: pointer;
