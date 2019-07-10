@@ -208,6 +208,47 @@ export function clusterInstallApp(app, clusterID) {
 }
 
 /**
+ * Takes an app and a cluster id and tries to delete it. Dispatches CLUSTER_DELETE_APP_SUCCESS
+ * on success or CLUSTER_DELETE_APP_ERROR on error.
+ *
+ * @param {Object} appName The name of the app
+ * @param {Object} clusterID Where to delete the app.
+ */
+export function clusterDeleteApp(appName, clusterID) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.CLUSTER_DELETE_APP,
+      clusterID,
+      appName,
+    });
+
+    var appsApi = new GiantSwarmV4.AppsApi();
+
+    return appsApi
+      .deleteClusterApp(scheme + ' ' + token, clusterID, appName)
+      .then(() => {
+        new FlashMessage(
+          `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
+          messageType.SUCCESS,
+          messageTTL.LONG
+        );
+      })
+      .catch(error => {
+        new FlashMessage(
+          `Something went wrong while trying to delete your app. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+
+        throw error;
+      });
+  };
+}
+
+/**
  * Loads details for a cluster.
  *
  * @param {String} clusterId Cluster ID

@@ -43,7 +43,6 @@
     word-break: break-all
 
 .keypairdetails, .appdetails
-
   .modal-body
     overflow-x: auto
 
@@ -54,23 +53,23 @@
     font-size: 12px
     text-transform: uppercase
     color: #ccc
-    display: flex
-    justify-content: space-between
 
-  .labelvaluepair--labelactions
-    text-transform: none
+.appdetails--upperlabels
+  display: flex
+  flex-wrap: wrap
+  margin-bottom: 25px
 
-    a
-      margin-right: 10px
+  .labelvaluepair
+    width: 50%
 
 .appdetails--userconfiguration
   background-color: #395c72
   padding: 20px
   border-radius: 5px
   margin-top: 5px
-  display: flex
-  justify-content: space-between
-  align-items: center
+
+  .actions
+    margin-top: 10px
 
 .cluster_key_pairs, .keypairdetails
   .certificate-orgs-label

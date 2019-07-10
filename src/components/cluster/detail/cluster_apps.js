@@ -227,31 +227,40 @@ class ClusterApps extends React.Component {
                 <div data-testid='installed-apps' id='installed-apps'>
                   {this.props.installedApps.map(app => {
                     return (
-                      <a
+                      <div
                         className='installed-apps--app'
                         key={app.metadata.name}
-                        onClick={this.showAppDetail.bind(
-                          this,
-                          app.metadata.name
-                        )}
                       >
-                        {app.logoUrl && !this.state.iconErrors[app.logoUrl] && (
-                          <img
-                            alt={app.metadata.name + ' icon'}
-                            height='36'
-                            onError={this.imgError}
-                            src={app.logoUrl}
-                            width='36'
-                          />
-                        )}
-                        {app.metadata.name}
-                        <small>
-                          App Version:{' '}
-                          {app && app.spec && app.spec.version
-                            ? app.spec.version
-                            : 'n/a'}
-                        </small>
-                      </a>
+                        <div className='details'>
+                          {app.logoUrl &&
+                            !this.state.iconErrors[app.logoUrl] && (
+                              <img
+                                alt={app.metadata.name + ' icon'}
+                                height='36'
+                                onError={this.imgError}
+                                src={app.logoUrl}
+                                width='36'
+                              />
+                            )}
+                          {app.metadata.name}
+                          <small>
+                            App Version:{' '}
+                            {app && app.spec && app.spec.version
+                              ? app.spec.version
+                              : 'n/a'}
+                          </small>
+                        </div>
+                        <div className='actions'>
+                          <Button
+                            onClick={this.showAppDetail.bind(
+                              this,
+                              app.metadata.name
+                            )}
+                          >
+                            Details
+                          </Button>
+                        </div>
+                      </div>
                     );
                   })}
                 </div>
