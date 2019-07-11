@@ -4495,7 +4495,7 @@ getpass@^0.1.1:
 
 "giantswarm-v4@git+https://github.com/giantswarm/giantswarm-js-client.git#master":
   version "4.0.0"
-  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#375b4c1970d4fbf24986df7573ff44b9a19f55bf"
+  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#f66c6e804a53de31965fbec527a1f8eda0f8fbd7"
   dependencies:
     superagent "3.8.3"
 
