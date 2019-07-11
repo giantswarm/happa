@@ -335,7 +335,8 @@ class ClusterDetailView extends React.Component {
                         installedApps={this.props.cluster.apps}
                         release={this.props.release}
                         showInstalledAppsBlock={
-                          Object.keys(this.props.catalogs.items).length > 0
+                          Object.keys(this.props.catalogs.items).length > 0 &&
+                          this.props.cluster.capabilities.canInstallApps
                         }
                       />
                     ) : (
