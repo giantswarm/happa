@@ -235,7 +235,7 @@ const AppDetailsModal = props => {
                     </Button>
 
                     <Button bsStyle='danger' onClick={showDeleteAppConfigPane}>
-                      <i className="fa fa-delete"></i> Delete
+                      <i className='fa fa-delete'></i> Delete
                     </Button>
 
                     {renderFileInputs ? (
@@ -277,9 +277,11 @@ const AppDetailsModal = props => {
             </div>
           </div>
           <div className='labelvaluepair'>
-            <div className='labelvaluepair--label delete-app'>Delete This App</div>
+            <div className='labelvaluepair--label delete-app'>
+              Delete This App
+            </div>
             <Button bsStyle='danger' onClick={showDeleteAppPane}>
-            <i className="fa fa-delete"></i>Delete App
+              <i className='fa fa-delete'></i>Delete App
             </Button>
           </div>
         </div>
@@ -301,7 +303,7 @@ const AppDetailsModal = props => {
                 props.dispatch
               )}
             >
-              <i className="fa fa-delete"></i>Delete User Configuration
+              <i className='fa fa-delete'></i>Delete User Configuration
             </Button>
             <Button bsStyle='link' onClick={showInitialPane}>
               Cancel
@@ -343,7 +345,7 @@ const AppDetailsModal = props => {
                 props.dispatch
               )}
             >
-              <i className="fa fa-delete"></i>Delete App
+              <i className='fa fa-delete'></i>Delete App
             </Button>
             <Button bsStyle='link' onClick={showInitialPane}>
               Cancel

@@ -267,7 +267,9 @@ class ClusterApps extends React.Component {
               )}
 
               <div className='browse-apps'>
-                <Button onClick={this.openAppCatalog}><i className="fa fa-add-circle"></i>Install App</Button>
+                <Button onClick={this.openAppCatalog}>
+                  <i className='fa fa-add-circle'></i>Install App
+                </Button>
               </div>
             </div>
           </div>
