@@ -4,23 +4,10 @@ import { Link } from 'react-router-dom';
 import { replace } from 'connected-react-router';
 import AppContainer from '../../UI/app_container';
 import DocumentTitle from 'react-document-title';
+import LoadingOverlay from '../../UI/loading_overlay';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React from 'react';
-
-function Loading(props) {
-  if (props.loading) {
-    return (
-      <div className='app-loading'>
-        <div className='app-loading-contents'>
-          <img className='loader' src='/images/loader_oval_light.svg' />
-        </div>
-      </div>
-    );
-  } else {
-    return props.children;
-  }
-}
 
 class AppList extends React.Component {
   render() {
@@ -33,15 +20,15 @@ class AppList extends React.Component {
       >
         <DocumentTitle title={'Apps | Giant Swarm '}>
           <React.Fragment>
-            <Link to={'/app-catalogs/'}>
+            <Link className='back-link' to={'/app-catalogs/'}>
               <i aria-hidden='true' className='fa fa-chevron-left' />
               Back to all catalogs
             </Link>
             <br />
             <br />
-            <Loading loading={this.props.catalog.isFetchingIndex}>
+            <LoadingOverlay loading={this.props.catalog.isFetchingIndex}>
               <AppListInner {...this.props} />
-            </Loading>
+            </LoadingOverlay>
           </React.Fragment>
         </DocumentTitle>
       </Breadcrumb>
