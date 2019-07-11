@@ -289,18 +289,7 @@ class ClusterDetailView extends React.Component {
                 <div className='col-12'>
                   <Tabs>
                     <Tab eventKey={1} title='General'>
-                      <ClusterDetailTable
-                        canClusterUpgrade={this.canClusterUpgrade()}
-                        cluster={this.props.cluster}
-                        credentials={this.props.credentials}
-                        provider={this.props.provider}
-                        release={this.props.release}
-                        showScalingModal={this.showScalingModal}
-                        showUpgradeModal={this.showUpgradeModal}
-                        workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        workerNodesRunning={this.getNumberOfNodes()}
-                      />
-
+                      <ClusterDetailTable />
                       <div className='row section cluster_delete col-12'>
                         <div className='row'>
                           <h3 className='table-label'>Delete This Cluster</h3>
