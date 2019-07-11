@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarm from 'giantswarm';
 import yaml from 'js-yaml';
 
 // loadCatalog takes a catalog object and tries to load further data.
@@ -51,7 +51,7 @@ export function catalogsLoad() {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
-    var appsApi = new GiantSwarmV4.AppsApi();
+    var appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
       .getAppCatalogs(scheme + ' ' + token)

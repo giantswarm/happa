@@ -1,7 +1,7 @@
 import { Base64 } from 'js-base64';
 import { validatePassword } from '../../lib/password_validation';
 import Button from '../UI/button';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarm from 'giantswarm';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -111,7 +111,7 @@ class ChangePassword extends React.Component {
     var token = this.props.user.auth.token;
     var scheme = this.props.user.auth.scheme;
 
-    var usersApi = new GiantSwarmV4.UsersApi();
+    var usersApi = new GiantSwarm.UsersApi();
 
     usersApi
       .modifyPassword(scheme + ' ' + token, this.props.user.email, {

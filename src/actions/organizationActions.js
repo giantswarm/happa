@@ -2,7 +2,7 @@ import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
 import { modalHide } from './modalActions';
 import { push } from 'connected-react-router';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarm from 'giantswarm';
 import React from 'react';
 
 // organizationSelect sets the organization that the user is focusing on and
@@ -47,7 +47,7 @@ export function organizationsLoad() {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
-    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
+    var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     var alreadyFetching = getState().entities.organizations.isFetching;
 
@@ -122,7 +122,7 @@ export function organizationDeleteConfirmed(orgId) {
     var scheme = getState().app.loggedInUser.auth.scheme;
     dispatch({ type: types.ORGANIZATION_DELETE_CONFIRMED, orgId: orgId });
 
-    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
+    var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     return organizationsApi
       .deleteOrganization(scheme + ' ' + token, orgId)
@@ -180,7 +180,7 @@ export function organizationCreateConfirmed(orgId) {
 
     dispatch({ type: types.ORGANIZATION_CREATE_CONFIRMED });
 
-    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
+    var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     // When creating an org as a normal user, we must add ourselves to the org.
     // As an admin however, you can't add yourself to an org, because admins
@@ -277,7 +277,7 @@ export function organizationAddMemberConfirmed(orgId, email) {
 
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
-    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
+    var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     return organizationsApi
       .getOrganization(scheme + ' ' + token, orgId)
@@ -331,7 +331,7 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
       email: email,
     });
 
-    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
+    var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     organizationsApi
       .getOrganization(scheme + ' ' + token, orgId)
@@ -398,7 +398,7 @@ export function organizationCredentialsLoad(orgId) {
       type: types.ORGANIZATION_CREDENTIALS_LOAD,
     });
 
-    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
+    var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     organizationsApi
       .getCredentials(scheme + ' ' + token, orgId)
@@ -445,26 +445,26 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
       type: types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED,
     });
 
-    let requestBody = new GiantSwarmV4.V4AddCredentialsRequest();
+    let requestBody = new GiantSwarm.V4AddCredentialsRequest();
     requestBody.provider = provider;
 
     if (provider === 'azure') {
-      requestBody.azure = new GiantSwarmV4.V4AddCredentialsRequestAzure();
-      requestBody.azure.credential = new GiantSwarmV4.V4AddCredentialsRequestAzureCredential(
+      requestBody.azure = new GiantSwarm.V4AddCredentialsRequestAzure();
+      requestBody.azure.credential = new GiantSwarm.V4AddCredentialsRequestAzureCredential(
         data.azureClientID,
         data.azureClientSecret,
         data.azureSubscriptionID,
         data.azureTenantID
       );
     } else if (provider === 'aws') {
-      requestBody.aws = new GiantSwarmV4.V4AddCredentialsRequestAws();
-      requestBody.aws.roles = new GiantSwarmV4.V4AddCredentialsRequestAwsRoles(
+      requestBody.aws = new GiantSwarm.V4AddCredentialsRequestAws();
+      requestBody.aws.roles = new GiantSwarm.V4AddCredentialsRequestAwsRoles(
         data.awsAdminRoleARN,
         data.awsOperatorRoleARN
       );
     }
 
-    var organizationsApi = new GiantSwarmV4.OrganizationsApi();
+    var organizationsApi = new GiantSwarm.OrganizationsApi();
     organizationsApi
       .addCredentials(scheme + ' ' + token, orgId, requestBody)
       .then(response => {

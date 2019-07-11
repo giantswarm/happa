@@ -5,12 +5,12 @@ import { auth0Login } from '../actions/userActions';
 import { isJwtExpired } from '../lib/helpers';
 import Auth0 from '../lib/auth0';
 import configureStore from '../stores/configureStore';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarm from 'giantswarm';
 
 const auth0 = new Auth0();
 const store = configureStore({});
 
-var defaultClient = GiantSwarmV4.ApiClient.instance;
+var defaultClient = GiantSwarm.ApiClient.instance;
 
 // Patch the client's callApi function to check the JWT token before making a
 // call to the Giant Swarm API. If the token is expired, renew the token first.
@@ -83,4 +83,4 @@ defaultClient.callApi = function callApi(
   );
 };
 
-export default GiantSwarmV4;
+export default GiantSwarm;
