@@ -235,7 +235,7 @@ const AppDetailsModal = props => {
                     </Button>
 
                     <Button bsStyle='danger' onClick={showDeleteAppConfigPane}>
-                      Delete
+                      <i className="fa fa-delete"></i> Delete
                     </Button>
 
                     {renderFileInputs ? (
@@ -253,7 +253,7 @@ const AppDetailsModal = props => {
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  <span>No user configuration yet.</span>
+                  <span>No user configuration.</span>
 
                   <div className='actions'>
                     <Button loading={fileUploading} onClick={handleUploadClick}>
@@ -277,9 +277,9 @@ const AppDetailsModal = props => {
             </div>
           </div>
           <div className='labelvaluepair'>
-            <div className='labelvaluepair--label'>DANGER ZONE</div>
+            <div className='labelvaluepair--label delete-app'>Delete This App</div>
             <Button bsStyle='danger' onClick={showDeleteAppPane}>
-              Delete App
+            <i className="fa fa-delete"></i>Delete App
             </Button>
           </div>
         </div>
@@ -301,7 +301,7 @@ const AppDetailsModal = props => {
                 props.dispatch
               )}
             >
-              Delete App Config
+              <i className="fa fa-delete"></i>Delete User Configuration
             </Button>
             <Button bsStyle='link' onClick={showInitialPane}>
               Cancel
@@ -343,7 +343,7 @@ const AppDetailsModal = props => {
                 props.dispatch
               )}
             >
-              Delete App
+              <i className="fa fa-delete"></i>Delete App
             </Button>
             <Button bsStyle='link' onClick={showInitialPane}>
               Cancel
