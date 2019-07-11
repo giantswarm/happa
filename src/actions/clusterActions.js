@@ -9,7 +9,7 @@ import GiantSwarmV4 from 'giantswarm-v4';
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
 function enhanceWithCapabilities(clusters, provider) {
-  clusters = clusters.map((c) => {
+  clusters = clusters.map(c => {
     c.capabilities = computeCapabilities(c, provider);
     return c;
   });
@@ -27,8 +27,9 @@ function computeCapabilities(cluster, provider) {
   // Must be AWS or KVM and larger than 8.1.0
   // or any provider and larger than 8.2.0
   if (
-    (cmp(releaseVer, '8.0.99') === 1) && ((provider === 'aws' || provider === 'kvm')) ||
-    (cmp(releaseVer, '8.1.99') === 1)
+    (cmp(releaseVer, '8.0.99') === 1 &&
+      (provider === 'aws' || provider === 'kvm')) ||
+    cmp(releaseVer, '8.1.99') === 1
   ) {
     capabilities.canInstallApps = true;
   }
@@ -51,7 +52,10 @@ export function clustersLoad() {
     return clustersApi
       .getClusters(scheme + ' ' + token)
       .then(clusters => {
-        clusters = enhanceWithCapabilities(clusters, getState().app.info.general.provider);
+        clusters = enhanceWithCapabilities(
+          clusters,
+          getState().app.info.general.provider
+        );
         dispatch(clustersLoadSuccess(clusters));
         return clusters;
       })

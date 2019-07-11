@@ -62,8 +62,11 @@ const ClusterPicker = props => {
       <ClusterList>
         {props.clusters.length === 0 && (
           <NoSearchResults>
-            No clusters matched your search query: &quot;{props.query}&quot; <br/>
-            <small>Perhaps you have no clusters that support app installation.</small>
+            No clusters matched your search query: &quot;{props.query}&quot;{' '}
+            <br />
+            <small>
+              Perhaps you have no clusters that support app installation.
+            </small>
           </NoSearchResults>
         )}
 
