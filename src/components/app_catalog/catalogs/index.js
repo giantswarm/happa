@@ -39,9 +39,7 @@ class Catalogs extends React.Component {
                           width='100px'
                         />
                       </div>
-                      <div
-                        className='app-catalog--description'
-                      >
+                      <div className='app-catalog--description'>
                         <h3>
                           {this.props.catalogs.items[catalogName].spec.title}
                         </h3>
