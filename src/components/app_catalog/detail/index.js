@@ -34,16 +34,13 @@ class AppDetail extends React.Component {
         }}
       >
         <LoadingOverlay loading={this.props.repo.isFetchingIndex}>
-        <Breadcrumb
+          <Breadcrumb
             data={{
               title: this.props.app.name,
               pathname: this.props.match.url,
             }}
           >
-            <DocumentTitle
-              title={`${this.props.app.name} | Giant Swarm `}
-            >
-
+            <DocumentTitle title={`${this.props.app.name} | Giant Swarm `}>
               <AppDetails
                 app={this.props.app}
                 imgError={this.imgError}

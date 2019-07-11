@@ -86,15 +86,7 @@ const Install = styled.div`
 `;
 
 const AppDetails = props => {
-  const {
-    app,
-    params,
-    q,
-    imgErrorFlag,
-    imgError,
-    repo,
-    children,
-  } = props;
+  const { app, params, q, imgErrorFlag, imgError, repo, children } = props;
 
   const {
     name,
