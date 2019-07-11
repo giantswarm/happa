@@ -39,10 +39,14 @@ class Catalogs extends React.Component {
                           width='100px'
                         />
                       </div>
-                      <div className='app-catalog--description'>
+                      <div
+                        className='app-catalog--description'
+                        height='20px'
+                        width='20px'
+                      >
                         <h3>
                           {this.props.catalogs.items[catalogName].spec.title}
-                          {this.props.catalogs.items[catalogName]
+                          {!this.props.catalogs.items[catalogName]
                             .isFetchingIndex ? (
                             <img
                               className='loader'
