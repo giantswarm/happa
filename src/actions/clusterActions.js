@@ -9,9 +9,6 @@ import GiantSwarmV4 from 'giantswarm-v4';
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
 function enhanceWithCapabilities(clusters, provider) {
-  console.log(clusters);
-  console.log(provider);
-
   clusters = clusters.map((c) => {
     c.capabilities = computeCapabilities(c, provider);
     return c;
