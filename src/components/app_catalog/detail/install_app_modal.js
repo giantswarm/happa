@@ -205,7 +205,7 @@ const InstallAppModal = props => {
                 visible={visible}
               >
                 <ClusterPicker
-                  clusters={clusters}
+                  clusters={clusters.filter(c => c.capabilities.canInstallApps)}
                   onChangeQuery={setQuery}
                   onSelectCluster={onSelectCluster}
                   query={query}
@@ -277,6 +277,7 @@ function mapStateToProps(state) {
       id: clusterID,
       name: state.entities.clusters.items[clusterID].name,
       owner: state.entities.clusters.items[clusterID].owner,
+      capabilities: state.entities.clusters.items[clusterID].capabilities,
     };
   });
 

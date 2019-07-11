@@ -3,7 +3,39 @@ import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
 import { modalHide } from './modalActions';
 import { push } from 'connected-react-router';
 import APIClusterStatusClient from '../lib/api_status_client';
+import cmp from 'semver-compare';
 import GiantSwarmV4 from 'giantswarm-v4';
+
+// enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
+// their release version and provider.
+function enhanceWithCapabilities(clusters, provider) {
+  clusters = clusters.map(c => {
+    c.capabilities = computeCapabilities(c, provider);
+    return c;
+  });
+
+  return clusters;
+}
+
+// computeCapabilities takes a cluster object and provider and returns a
+// capabilities object with the features that this cluster supports.
+function computeCapabilities(cluster, provider) {
+  let capabilities = {};
+  let releaseVer = cluster.release_version;
+
+  // Installing Apps
+  // Must be AWS or KVM and larger than 8.1.0
+  // or any provider and larger than 8.2.0
+  if (
+    (cmp(releaseVer, '8.0.99') === 1 &&
+      (provider === 'aws' || provider === 'kvm')) ||
+    cmp(releaseVer, '8.1.99') === 1
+  ) {
+    capabilities.canInstallApps = true;
+  }
+
+  return capabilities;
+}
 
 /**
  * Performs the getClusters API call and dispatches the clustersLoadSuccess
@@ -19,9 +51,13 @@ export function clustersLoad() {
 
     return clustersApi
       .getClusters(scheme + ' ' + token)
-      .then(data => {
-        dispatch(clustersLoadSuccess(data));
-        return data;
+      .then(clusters => {
+        clusters = enhanceWithCapabilities(
+          clusters,
+          getState().app.info.general.provider
+        );
+        dispatch(clustersLoadSuccess(clusters));
+        return clusters;
       })
       .catch(error => {
         console.error(error);
