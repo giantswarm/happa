@@ -41,11 +41,10 @@ dist:
 		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
 		-v ${PWD}/package.json:/usr/src/app/package.json:z \
 		-v ${PWD}/.babelrc:/usr/src/app/.babelrc:z \
-		-v ${PWD}/Gruntfile.js:/usr/src/app/Gruntfile.js:z \
-		-v ${PWD}/webpack.config.js:/usr/src/app/webpack.config.js:z \
-		-v ${PWD}/webpack.dist.config.js:/usr/src/app/webpack.dist.config.js:z \
+		-v ${PWD}/webpack.common.js:/usr/src/app/webpack.common.js:z \
+		-v ${PWD}/webpack.prod.js:/usr/src/app/webpack.prod.js:z \
 		-v ${PWD}/.eslintrc:/usr/src/app/.eslintrc:z \
-		quay.io/giantswarm/happa-build:latest grunt build
+		quay.io/giantswarm/happa-build:latest webpack --config /usr/src/app/webpack.prod.js
 
 
 check-updates:

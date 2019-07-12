@@ -11,6 +11,7 @@ import { giantswarmLogin } from '../../actions/userActions';
 import { Link } from 'react-router-dom';
 import { parseErrorMessages } from '../auth/_parse_error_messages';
 import { push } from 'connected-react-router';
+import { spinner } from '../../images';
 import { validatePassword } from '../../lib/password_validation';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
@@ -278,7 +279,7 @@ class SetPassword extends React.Component {
               transitionName='slide-right'
             >
               {this.state.submitting ? (
-                <img className='loader' src='/images/loader_oval_light.svg' />
+                <img className='loader' src={spinner} />
               ) : null}
             </ReactCSSTransitionGroup>
           </div>
@@ -289,7 +290,7 @@ class SetPassword extends React.Component {
       if (this.state.verifyingToken) {
         return (
           <div className='forgot-password--token-validating'>
-            <img className='loader' src='/images/loader_oval_light.svg' />
+            <img className='loader' src={spinner} />
             <br />
             Validating your token...
           </div>
@@ -344,7 +345,7 @@ class SetPassword extends React.Component {
             transitionName='slide-right'
           >
             {this.state.submitting ? (
-              <img className='loader' src='/images/loader_oval_light.svg' />
+              <img className='loader' src={spinner} />
             ) : null}
           </ReactCSSTransitionGroup>
         </div>

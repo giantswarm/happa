@@ -1,5 +1,6 @@
 import 'babel-polyfill';
 import { ConnectedRouter } from 'connected-react-router';
+import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 import { Route, Switch } from 'react-router-dom';
@@ -15,7 +16,6 @@ import OAuthCallback from './auth/oauth_callback';
 import React from 'react';
 import SetPassword from './forgot_password/set_password';
 import SignUp from './signup/index';
-import StyleGuide from './UI/style_guide';
 import theme from './UI/theme';
 
 // CSS Imports
@@ -37,27 +37,28 @@ history.listen(() => {
   window.scrollTo(0, 0);
 });
 
-render(
-  <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <ConnectedRouter history={history}>
-        <div>
-          <Switch>
-            <Route component={AdminLogin} path='/admin-login' />
-            <Route component={Login} path='/login' />
-            <Route component={Logout} path='/logout' />
-            <Route component={SetPassword} path='/forgot_password/:token/' />
-            <Route component={ForgotPassword} path='/forgot_password' />
-            <Route component={SignUp} path='/signup/:token' />
-            <Route component={OAuthCallback} path='/oauth/callback' />
+const renderApp = () =>
+  render(
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <ConnectedRouter history={history}>
+          <div>
+            <Switch>
+              <Route component={AdminLogin} path='/admin-login' />
+              <Route component={Login} path='/login' />
+              <Route component={Logout} path='/logout' />
+              <Route component={SetPassword} path='/forgot_password/:token/' />
+              <Route component={ForgotPassword} path='/forgot_password' />
+              <Route component={SignUp} path='/signup/:token' />
+              <Route component={OAuthCallback} path='/oauth/callback' />
 
-            <Route component={StyleGuide} path='/styleguide' />
+              <Route component={Layout} path='/' />
+            </Switch>
+          </div>
+        </ConnectedRouter>
+      </ThemeProvider>
+    </Provider>,
+    appContainer
+  );
 
-            <Route component={Layout} path='/' />
-          </Switch>
-        </div>
-      </ConnectedRouter>
-    </ThemeProvider>
-  </Provider>,
-  appContainer
-);
+export default hot(module)(renderApp());

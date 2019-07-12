@@ -2,6 +2,7 @@ import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
+import { spinner } from '../../images';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -38,7 +39,7 @@ class Logout extends React.Component {
           <div className='logout--mask' />
         </ReactCSSTransitionGroup>
         <div className='logout--container'>
-          <img className='loader' src='/images/loader_oval_light.svg' />
+          <img className='loader' src={spinner} />
         </div>
       </div>
     );

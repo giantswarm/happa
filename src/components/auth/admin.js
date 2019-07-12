@@ -4,6 +4,7 @@ import { clearQueues } from '../../lib/flash_message';
 import { connect } from 'react-redux';
 import { isJwtExpired } from '../../lib/helpers';
 import { push } from 'connected-react-router';
+import { spinner } from '../../images';
 import Auth0 from '../../lib/auth0';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -55,7 +56,7 @@ class AdminLogin extends React.Component {
         <div className='login_form--mask' />
 
         <div className='login_form--container login_form--admin col-4'>
-          <img className='loader' src='/images/loader_oval_light.svg' />
+          <img className='loader' src={spinner} />
           <p>
             Verifying credentials, and redirecting to our authentication
             provider if necessary.

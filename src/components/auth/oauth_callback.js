@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
+import { spinner } from '../../images';
 import Auth from '../../lib/auth0';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -71,7 +72,7 @@ class OAuthCallback extends React.Component {
             {this.state.error ? (
               this.errorMessage()
             ) : (
-              <img className='loader' src='/images/loader_oval_light.svg' />
+              <img className='loader' src={spinner} />
             )}
           </div>
         </ReactCSSTransitionGroup>
