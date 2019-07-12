@@ -105,7 +105,10 @@ const AppDetails = styled.div`
   }
 
   span {
+    display: block;
     font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 `;
 
