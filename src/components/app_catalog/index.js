@@ -11,10 +11,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class CatalogIndex extends React.Component {
-  state = {
-    loading: true,
-  };
-
   componentDidMount() {
     this.props
       .dispatch(catalogsLoad())
@@ -24,11 +20,6 @@ class CatalogIndex extends React.Component {
         });
 
         return Promise.all(promises);
-      })
-      .then(() => {
-        this.setState({
-          loading: false,
-        });
       })
       .catch(error => {
         new FlashMessage(
@@ -50,25 +41,23 @@ class CatalogIndex extends React.Component {
         }}
       >
         <div className='app-catalog'>
-          <Loading loading={this.state.loading}>
-            <Switch>
-              <Route
-                exact
-                path={`${this.props.match.path}`}
-                render={() => <Catalogs {...this.props} />}
-              />
-              <Route
-                component={AppList}
-                exact
-                path={`${this.props.match.path}/:repo`}
-              />
-              <Route
-                component={Detail}
-                exact
-                path={`${this.props.match.path}/:repo/:app`}
-              />
-            </Switch>
-          </Loading>
+          <Switch>
+            <Route
+              exact
+              path={`${this.props.match.path}`}
+              render={() => <Catalogs {...this.props} />}
+            />
+            <Route
+              component={AppList}
+              exact
+              path={`${this.props.match.path}/:repo`}
+            />
+            <Route
+              component={Detail}
+              exact
+              path={`${this.props.match.path}/:repo/:app`}
+            />
+          </Switch>
         </div>
       </Breadcrumb>
     );

@@ -12,9 +12,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "prettier": "prettier --write \"src/**/*.js\"",
-    "validate-prettier": "prettier --version; prettier --no-color --check \"src/**/*.js\"",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "validate-prettier": "prettier --version; prettier --no-color --check \"src/**/*.js\""
   },
   "prettier": {
     "singleQuote": true,
@@ -75,8 +73,7 @@
     "superagent": "3.8.3",
     "superagent-bluebird-promise": "4.2.0",
     "underscore": "1.9.1",
-    "validate.js": "0.12.0",
-    "snyk": "^1.189.0"
+    "validate.js": "0.12.0"
   },
   "devDependencies": {
     "@babel/core": "7.4.3",

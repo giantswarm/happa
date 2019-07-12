@@ -134,7 +134,7 @@ class Navigation extends React.Component {
             </NavLink>
             {this.props.showAppCatalog && (
               <NavLink activeClassName='active' to='/app-catalogs/'>
-                Apps
+                App Catalogs
               </NavLink>
             )}
             {this.props.user.isAdmin ? (

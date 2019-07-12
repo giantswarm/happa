@@ -15,6 +15,7 @@ import AppCatalog from './app_catalog';
 import DocumentTitle from 'react-document-title';
 import GiantSwarmV4 from 'giantswarm-v4';
 import Home from './home';
+import LoadingOverlay from './UI/loading_overlay';
 import Modals from './modals';
 import Navigation from './UI/navigation';
 import Organizations from './organizations';
@@ -78,21 +79,10 @@ class Layout extends React.Component {
   };
 
   render() {
-    if (!this.props.firstLoadComplete) {
-      return (
-        <DocumentTitle title='Loading | Giant Swarm '>
-          <div className='app-loading'>
-            <div className='app-loading-contents'>
-              <img className='loader' src={spinner} />
-            </div>
-          </div>
-        </DocumentTitle>
-      );
-    } else {
-      // prettier-ignore
-      return (
+    // prettier-ignore
+    return (
         <DocumentTitle title='Giant Swarm'>
-          <React.Fragment>
+          <LoadingOverlay loading={!this.props.firstLoadComplete}>
             <Modals />
             <Navigation
               onSelectOrganization={this.selectOrganization}
@@ -113,10 +103,9 @@ class Layout extends React.Component {
                 </Switch>
               </div>
             </Breadcrumb>
-          </React.Fragment>
+          </LoadingOverlay>
         </DocumentTitle>
       );
-    }
   }
 }
 
