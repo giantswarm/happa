@@ -44,7 +44,7 @@ const InstallAppModal = props => {
     }
   };
 
-  const maxLength = 253;
+  const maxLength = 63;
   const validateCharacters = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
   const validateStartEnd = /^[a-z0-9](.*[a-z0-9])?$/;
 
