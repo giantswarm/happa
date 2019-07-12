@@ -4,10 +4,7 @@ import styled from '@emotion/styled';
 /* BASE STYLES */
 // All variables with css emotion are used for extends, so these styles are inherited
 // by a lot of styled variables here and in compoents and should be modified with caution
-export const FlexRowBase = css`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+export const Row = css`
   padding: 0 21px 0 14px;
   height: 56px;
   font-size: 16px;
@@ -16,9 +13,16 @@ export const FlexRowBase = css`
   margin-bottom: 16px;
 `;
 
+export const FlexRowBase = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 /* STYLED ELEMENTS */
 export const FlexRowWithTwoBlocksOnEdges = styled.div`
   ${FlexRowBase};
+  ${Row};
   background-color: ${props => props.theme.colors.shade7};
   > div > * {
     display: inline-block;

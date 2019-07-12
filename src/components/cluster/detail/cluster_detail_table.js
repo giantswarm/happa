@@ -1,4 +1,4 @@
-import { Code, Dot, FlexRowBase, FlexRowWithTwoBlocksOnEdges } from '../../../styles/';
+import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from '../../../styles/';
 import { css } from '@emotion/core';
 import Button from '../../UI/button';
 import React from 'react';
@@ -20,34 +20,27 @@ const NodePools = styled.div`
   }
 `;
 
-const FlexRowNodePoolsBase = css`
-  ${FlexRowBase};
-  /* Default for all spans */
-  span { 
-    flex-grow: 1;
-    text-align: center;
+const GridRowNodePoolsBase = css`
+  ${Row};
+  display: grid;
+  grid-gap: 0 10px;
+  grid-template-columns: 1fr 4fr 4fr 3fr repeat(4, 2fr) 1fr;
+  justify-content: space-between;
+  place-items: center center;
+  > *:nth-child(2) {
+    justify-self: left;
   }
-  /* Custom */
-  span:first-of-type { width: 20px }
-  span:nth-of-type(2) { 
-    flex-grow: 4;
-    text-align: left;
+  > *:nth-child(9) {
+    justify-self: right;
   }
-  span:nth-of-type(3) { flex-grow: 5 }
-  span:nth-of-type(4) { width: 87px}
-  span:nth-of-type(5) { min-width: 60px }
-  span:nth-of-type(6) { min-width: 60px }
-  span:nth-of-type(7) { min-width: 60px }
-  span:nth-of-type(8) { min-width: 60px }
-  span:nth-of-type(9) { width: 70px  }
 `;
 
-const FlexRowNodePoolsHeaders = styled.div`
-  ${FlexRowNodePoolsBase}
+const GridRowNodePoolsHeaders = styled.div`
+  ${GridRowNodePoolsBase}
 `;
 
-const FlexRowNodePoolsItem = styled.div`
-  ${FlexRowNodePoolsBase}
+const GridRowNodePoolsItem = styled.div`
+  ${GridRowNodePoolsBase}
   background-color: ${props => props.theme.colors.shade7};
 `;
 
@@ -83,18 +76,18 @@ const ClusterDetailTable = () => {
       </FlexRowWithTwoBlocksOnEdges>
       <FlexRowWithTwoBlocksOnEdges>
         <div>
-            <span>Kubernetes endpoint URI:</span>
+          <span>Kubernetes endpoint URI:</span>
           <Code>https://api.a1b2c.k8s.gollum.westeurope.azure.gigantic.io</Code>
         </div>
         <div style={{ transform: 'translateX(10px)' }}>
-        <Button>
-                      <i className='fa fa-start' /> GET STARTED
-                    </Button>
+          <Button>
+            <i className='fa fa-start' /> GET STARTED
+          </Button>
         </div>
       </FlexRowWithTwoBlocksOnEdges>
       <NodePools>
         <h2>Node Pools</h2>
-        <FlexRowNodePoolsHeaders>
+        <GridRowNodePoolsHeaders>
           <span>ID</span>
           <span>NAME</span>
           <span>INSTANCE TYPE</span>
@@ -103,10 +96,38 @@ const ClusterDetailTable = () => {
           <span>MAX</span>
           <span>DESIRED</span>
           <span>CURRENT</span>
-          <span>{' '}</span>
-        </FlexRowNodePoolsHeaders>
-        <FlexRowNodePoolsItem>ONE</FlexRowNodePoolsItem>
-        <FlexRowNodePoolsItem>TWO</FlexRowNodePoolsItem>
+          <span> </span>
+        </GridRowNodePoolsHeaders>
+        <GridRowNodePoolsItem>
+          <Code>6dh</Code>
+          <div>Database</div>
+          <Code>r3.4xlarge</Code>
+          <div>
+            <span>A</span>
+            <span>B</span>
+            <span>C</span>
+          </div>
+          <div>3</div>
+          <div>3</div>
+          <div>3</div>
+          <div>3</div>
+          <div>•••</div>
+        </GridRowNodePoolsItem>
+        <GridRowNodePoolsItem>
+          <Code>z66</Code>
+          <div>General purpose</div>
+          <Code>m5.xlarge</Code>
+          <div>
+            <span></span>
+            <span></span>
+            <span>C</span>
+          </div>
+          <div>5</div>
+          <div>20</div>
+          <div>11</div>
+          <div>12s</div>
+          <div>•••</div>
+        </GridRowNodePoolsItem>
       </NodePools>
     </React.Fragment>
   );
