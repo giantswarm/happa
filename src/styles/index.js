@@ -1,9 +1,11 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 
-/* BASE STYLES */
-// All variables with css emotion are used for extends, so these styles are inherited
-// by a lot of styled variables here and in compoents and should be modified with caution
+/* BASE STYLES
+ * All variables with css emotion are used for extends, so these styles are inherited
+ * by a lot of styled variables here and in components and should be modified with caution
+ */
+
 export const Row = css`
   padding: 0 21px 0 14px;
   height: 56px;
@@ -20,6 +22,7 @@ export const FlexRowBase = css`
 `;
 
 /* STYLED ELEMENTS */
+
 export const FlexRowWithTwoBlocksOnEdges = styled.div`
   ${FlexRowBase};
   ${Row};

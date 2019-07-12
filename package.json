@@ -69,7 +69,6 @@
     "redux": "4.0.1",
     "redux-thunk": "2.3.0",
     "semver-compare": "1.0.0",
-    "snyk": "^1.189.0",
     "superagent": "3.8.3",
     "superagent-bluebird-promise": "4.2.0",
     "underscore": "1.9.1",
