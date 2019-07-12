@@ -4,6 +4,7 @@ import {
   organizationCredentialsSet,
   organizationCredentialsSetConfirmed,
 } from '../../../actions/organizationActions';
+import { spinner } from '../../../images';
 import AWSAccountID from '../../UI/aws_account_id';
 import Button from '../../UI/button';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -95,12 +96,7 @@ class CredentialsDisplay extends React.Component {
     if (this.props.credentials.isFetching) {
       return (
         <span>
-          <img
-            className='loader'
-            height='20px'
-            src='/images/loader_oval_light.svg'
-            width='20px'
-          />{' '}
+          <img className='loader' height='20px' src={spinner} width='20px' />{' '}
           <span>Loading credentials</span>
         </span>
       );

@@ -86,15 +86,7 @@ const Install = styled.div`
 `;
 
 const AppDetails = props => {
-  const {
-    appVersions,
-    params,
-    q,
-    imgErrorFlag,
-    imgError,
-    repo,
-    children,
-  } = props;
+  const { app, params, q, imgErrorFlag, imgError, repo, children } = props;
 
   const {
     name,
@@ -106,7 +98,7 @@ const AppDetails = props => {
     home,
     sources,
     urls,
-  } = appVersions[0];
+  } = app;
 
   const to = `/app-catalogs/${params.repo}/?q=${q}#${name}`;
 
@@ -155,7 +147,7 @@ const AppDetails = props => {
 };
 
 AppDetails.propTypes = {
-  appVersions: PropTypes.array,
+  app: PropTypes.object,
   params: PropTypes.object,
   q: PropTypes.string,
   imgErrorFlag: PropTypes.bool,

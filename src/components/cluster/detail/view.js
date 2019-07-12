@@ -17,6 +17,7 @@ import ClusterKeyPairs from './key_pairs';
 import ClusterName from '../../UI/cluster_name';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
+import LoadingOverlay from '../../UI/loading_overlay';
 import PageVisibilityTracker from '../../../lib/page_visibility_tracker';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -239,153 +240,145 @@ class ClusterDetailView extends React.Component {
 
   render() {
     return (
-      <div>
-        {this.state.loading === false ? (
-          <DocumentTitle
-            title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
-          >
-            <div className='cluster-details'>
-              <div className='row' style={{ marginBottom: '30px' }}>
-                <div className='col-sm-12 col-md-7 col-9'>
-                  <h1 style={{ marginLeft: '-10px' }}>
-                    <ClusterIDLabel
-                      clusterID={this.props.cluster.id}
-                      copyEnabled
-                    />{' '}
-                    <ClusterName
-                      dispatchFunc={this.props.dispatch}
-                      id={this.props.cluster.id}
-                      name={this.props.cluster.name}
-                    />{' '}
-                    {this.state.loading ? (
-                      <img
-                        className='loader'
-                        height='25px'
-                        src='/images/loader_oval_light.svg'
-                        width='25px'
+      <LoadingOverlay loading={this.state.loading}>
+        <DocumentTitle
+          title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
+        >
+          <div className='cluster-details'>
+            <div className='row' style={{ marginBottom: '30px' }}>
+              <div className='col-sm-12 col-md-7 col-9'>
+                <h1 style={{ marginLeft: '-10px' }}>
+                  <ClusterIDLabel
+                    clusterID={this.props.cluster.id}
+                    copyEnabled
+                  />{' '}
+                  <ClusterName
+                    dispatchFunc={this.props.dispatch}
+                    id={this.props.cluster.id}
+                    name={this.props.cluster.name}
+                  />{' '}
+                  {this.state.loading ? (
+                    <img
+                      className='loader'
+                      height='25px'
+                      src='/images/loader_oval_light.svg'
+                      width='25px'
+                    />
+                  ) : (
+                    ''
+                  )}
+                </h1>
+              </div>
+              <div className='col-sm-12 col-md-5 col-3'>
+                <div
+                  className='btn-group visible-xs-block visible-sm-block visible-md-block'
+                  style={{ marginTop: 10 }}
+                >
+                  <Button onClick={this.accessCluster}>
+                    <i className='fa fa-start' /> GET STARTED
+                  </Button>
+                </div>
+                <div className='pull-right btn-group visible-lg-block'>
+                  <Button onClick={this.accessCluster}>
+                    <i className='fa fa-start' /> GET STARTED
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-12'>
+                <Tabs>
+                  <Tab eventKey={1} title='General'>
+                    <ClusterDetailTable
+                      canClusterUpgrade={this.canClusterUpgrade()}
+                      cluster={this.props.cluster}
+                      credentials={this.props.credentials}
+                      provider={this.props.provider}
+                      release={this.props.release}
+                      showScalingModal={this.showScalingModal}
+                      showUpgradeModal={this.showUpgradeModal}
+                      workerNodesDesired={this.getDesiredNumberOfNodes()}
+                      workerNodesRunning={this.getNumberOfNodes()}
+                    />
+
+                    <div className='row section cluster_delete col-12'>
+                      <div className='row'>
+                        <h3 className='table-label'>Delete This Cluster</h3>
+                      </div>
+                      <div className='row'>
+                        <p>
+                          All workloads on this cluster will be terminated. Data
+                          stored on the worker nodes will be lost. There is no
+                          way to undo this action.
+                        </p>
+                        <Button
+                          bsStyle='danger'
+                          onClick={this.showDeleteClusterModal.bind(
+                            this,
+                            this.props.cluster
+                          )}
+                        >
+                          <i className='fa fa-delete' /> Delete Cluster
+                        </Button>
+                      </div>
+                    </div>
+                  </Tab>
+                  <Tab eventKey={2} title='Key Pairs'>
+                    <ClusterKeyPairs cluster={this.props.cluster} />
+                  </Tab>
+                  <Tab eventKey={3} title='Apps'>
+                    {this.props.release ? (
+                      <ClusterApps
+                        clusterId={this.props.clusterId}
+                        dispatch={this.props.dispatch}
+                        errorLoading={this.state.errorLoadingApps}
+                        installedApps={this.props.cluster.apps}
+                        release={this.props.release}
+                        showInstalledAppsBlock={
+                          Object.keys(this.props.catalogs.items).length > 0 &&
+                          this.props.cluster.capabilities.canInstallApps
+                        }
                       />
                     ) : (
-                      ''
-                    )}
-                  </h1>
-                </div>
-                <div className='col-sm-12 col-md-5 col-3'>
-                  <div
-                    className='btn-group visible-xs-block visible-sm-block visible-md-block'
-                    style={{ marginTop: 10 }}
-                  >
-                    <Button onClick={this.accessCluster}>
-                      <i className='fa fa-start' /> GET STARTED
-                    </Button>
-                  </div>
-                  <div className='pull-right btn-group visible-lg-block'>
-                    <Button onClick={this.accessCluster}>
-                      <i className='fa fa-start' /> GET STARTED
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col-12'>
-                  <Tabs>
-                    <Tab eventKey={1} title='General'>
-                      <ClusterDetailTable
-                        canClusterUpgrade={this.canClusterUpgrade()}
-                        cluster={this.props.cluster}
-                        credentials={this.props.credentials}
-                        provider={this.props.provider}
-                        release={this.props.release}
-                        showScalingModal={this.showScalingModal}
-                        showUpgradeModal={this.showUpgradeModal}
-                        workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        workerNodesRunning={this.getNumberOfNodes()}
-                      />
-
-                      <div className='row section cluster_delete col-12'>
-                        <div className='row'>
-                          <h3 className='table-label'>Delete This Cluster</h3>
-                        </div>
-                        <div className='row'>
-                          <p>
-                            All workloads on this cluster will be terminated.
-                            Data stored on the worker nodes will be lost. There
-                            is no way to undo this action.
-                          </p>
-                          <Button
-                            bsStyle='danger'
-                            onClick={this.showDeleteClusterModal.bind(
-                              this,
-                              this.props.cluster
-                            )}
-                          >
-                            <i className='fa fa-delete' /> Delete Cluster
-                          </Button>
-                        </div>
+                      <div className='well'>
+                        We had some trouble loading this pane. Please come back
+                        later or contact support in your slack channel or at{' '}
+                        <a href='mailto:support@giantswarm.io'>
+                          support@giantswarm.io
+                        </a>
+                        .
                       </div>
-                    </Tab>
-                    <Tab eventKey={2} title='Key Pairs'>
-                      <ClusterKeyPairs cluster={this.props.cluster} />
-                    </Tab>
-                    <Tab eventKey={3} title='Apps'>
-                      {this.props.release ? (
-                        <ClusterApps
-                          clusterId={this.props.clusterId}
-                          dispatch={this.props.dispatch}
-                          errorLoading={this.state.errorLoadingApps}
-                          installedApps={this.props.cluster.apps}
-                          release={this.props.release}
-                          showInstalledAppsBlock={
-                            Object.keys(this.props.catalogs.items).length > 0
-                          }
-                        />
-                      ) : (
-                        <div className='well'>
-                          We had some trouble loading this pane. Please come
-                          back later or contact support in your slack channel or
-                          at{' '}
-                          <a href='mailto:support@giantswarm.io'>
-                            support@giantswarm.io
-                          </a>
-                          .
-                        </div>
-                      )}
-                    </Tab>
-                  </Tabs>
-                </div>
+                    )}
+                  </Tab>
+                </Tabs>
               </div>
+            </div>
 
-              <ScaleClusterModal
+            <ScaleClusterModal
+              cluster={this.props.cluster}
+              provider={this.props.provider}
+              ref={s => {
+                this.scaleClusterModal = s;
+              }}
+              workerNodesDesired={this.getDesiredNumberOfNodes()}
+              workerNodesRunning={this.getNumberOfNodes()}
+            />
+
+            {this.props.targetRelease ? (
+              <UpgradeClusterModal
                 cluster={this.props.cluster}
-                provider={this.props.provider}
                 ref={s => {
-                  this.scaleClusterModal = s;
+                  this.upgradeClusterModal = s;
                 }}
-                workerNodesDesired={this.getDesiredNumberOfNodes()}
-                workerNodesRunning={this.getNumberOfNodes()}
+                release={this.props.release}
+                targetRelease={this.props.targetRelease}
               />
-
-              {this.props.targetRelease ? (
-                <UpgradeClusterModal
-                  cluster={this.props.cluster}
-                  ref={s => {
-                    this.upgradeClusterModal = s;
-                  }}
-                  release={this.props.release}
-                  targetRelease={this.props.targetRelease}
-                />
-              ) : (
-                undefined
-              )}
-            </div>
-          </DocumentTitle>
-        ) : (
-          <div className='app-loading'>
-            <div className='app-loading-contents'>
-              <img className='loader' src='/images/loader_oval_light.svg' />
-            </div>
+            ) : (
+              undefined
+            )}
           </div>
-        )}
-      </div>
+        </DocumentTitle>
+      </LoadingOverlay>
     );
   }
 }

@@ -1,4 +1,5 @@
 import { Breadcrumbs } from 'react-breadcrumbs';
+import { logo } from '../../../images';
 import { NavLink } from 'react-router-dom';
 
 import OrganizationDropdown from './organization_dropdown';
@@ -122,7 +123,7 @@ class Navigation extends React.Component {
             rel='noopener noreferrer'
             target='_blank'
           >
-            <img className='logo' src='/images/giantswarm_icon.svg' />
+            <img className='logo' src={logo} />
           </a>
           <div className='nav-responsive'>
             <NavLink activeClassName='active' exact to='/'>
@@ -133,7 +134,7 @@ class Navigation extends React.Component {
             </NavLink>
             {this.props.showAppCatalog && (
               <NavLink activeClassName='active' to='/app-catalogs/'>
-                Apps
+                App Catalogs
               </NavLink>
             )}
             {this.props.user.isAdmin ? (
