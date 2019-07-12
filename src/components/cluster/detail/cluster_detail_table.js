@@ -11,30 +11,44 @@ const Upgrade = styled.div`
 
 const NodePools = styled.div`
   margin-top: 25px;
+  padding-top: 25px;
   border-top: 1px solid ${props => props.theme.colors.shade6};
-`;
-
-const FlexRowNodePools = styled.div`
-  ${FlexRowBase};
+  h2 {
+    font-weight: 400;
+    font-size: 22px;
+    margin: 0;
+  }
 `;
 
 const FlexRowNodePoolsBase = css`
   ${FlexRowBase};
   /* Default for all spans */
-  span { flex-grow: 1 }
+  span { 
+    flex-grow: 1;
+    text-align: center;
+  }
   /* Custom */
   span:first-of-type { width: 20px }
-  span:nth-of-type(2) { flex-grow: 5 }
+  span:nth-of-type(2) { 
+    flex-grow: 4;
+    text-align: left;
+  }
   span:nth-of-type(3) { flex-grow: 5 }
   span:nth-of-type(4) { width: 87px}
   span:nth-of-type(5) { min-width: 60px }
   span:nth-of-type(6) { min-width: 60px }
   span:nth-of-type(7) { min-width: 60px }
-  span:nth-of-type(8) { margin-right: 70px}
+  span:nth-of-type(8) { min-width: 60px }
+  span:nth-of-type(9) { width: 70px  }
 `;
 
-const FlexRowHeaders = styled.div`
+const FlexRowNodePoolsHeaders = styled.div`
   ${FlexRowNodePoolsBase}
+`;
+
+const FlexRowNodePoolsItem = styled.div`
+  ${FlexRowNodePoolsBase}
+  background-color: ${props => props.theme.colors.shade7};
 `;
 
 const ClusterDetailTable = () => {
@@ -79,8 +93,8 @@ const ClusterDetailTable = () => {
         </div>
       </FlexRowWithTwoBlocksOnEdges>
       <NodePools>
-        <h3>Node Pools</h3>
-        <FlexRowHeaders>
+        <h2>Node Pools</h2>
+        <FlexRowNodePoolsHeaders>
           <span>ID</span>
           <span>NAME</span>
           <span>INSTANCE TYPE</span>
@@ -89,9 +103,10 @@ const ClusterDetailTable = () => {
           <span>MAX</span>
           <span>DESIRED</span>
           <span>CURRENT</span>
-        </FlexRowHeaders>
-        <FlexRowNodePools >ONE</FlexRowNodePools >
-        <FlexRowNodePools >TWO</FlexRowNodePools >
+          <span>{' '}</span>
+        </FlexRowNodePoolsHeaders>
+        <FlexRowNodePoolsItem>ONE</FlexRowNodePoolsItem>
+        <FlexRowNodePoolsItem>TWO</FlexRowNodePoolsItem>
       </NodePools>
     </React.Fragment>
   );
