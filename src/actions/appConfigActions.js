@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarm from 'giantswarm';
 
 /**
  * updateAppConfig updates an appConfig
@@ -20,7 +20,7 @@ export function updateAppConfig(appName, clusterID, values) {
       appName,
     });
 
-    var appConfigsApi = new GiantSwarmV4.AppConfigsApi();
+    var appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
       .modifyClusterAppConfig(scheme + ' ' + token, clusterID, appName, {
@@ -87,7 +87,7 @@ export function createAppConfig(appName, clusterID, values) {
       appName,
     });
 
-    var appConfigsApi = new GiantSwarmV4.AppConfigsApi();
+    var appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
       .createClusterAppConfig(scheme + ' ' + token, clusterID, appName, {
@@ -153,7 +153,7 @@ export function deleteAppConfig(appName, clusterID) {
       appName,
     });
 
-    var appConfigsApi = new GiantSwarmV4.AppConfigsApi();
+    var appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
       .deleteClusterAppConfig(scheme + ' ' + token, clusterID, appName)

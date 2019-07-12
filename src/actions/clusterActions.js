@@ -3,6 +3,7 @@ import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
 import { modalHide } from './modalActions';
 import { push } from 'connected-react-router';
 import APIClusterStatusClient from '../lib/api_status_client';
+import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
@@ -137,6 +138,7 @@ export function clusterInstallApp(app, clusterID) {
     });
 
     var appsApi = new GiantSwarm.AppsApi();
+    var appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     var optionalCreateAppConfiguration = new Promise((resolve, reject) => {
       if (Object.keys(app.valuesYAML).length !== 0) {
@@ -259,7 +261,7 @@ export function clusterDeleteApp(appName, clusterID) {
       appName,
     });
 
-    var appsApi = new GiantSwarmV4.AppsApi();
+    var appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
       .deleteClusterApp(scheme + ' ' + token, clusterID, appName)
