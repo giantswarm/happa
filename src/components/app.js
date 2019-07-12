@@ -16,7 +16,6 @@ import OAuthCallback from './auth/oauth_callback';
 import React from 'react';
 import SetPassword from './forgot_password/set_password';
 import SignUp from './signup/index';
-import StyleGuide from './UI/style_guide';
 import theme from './UI/theme';
 
 // CSS Imports

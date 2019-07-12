@@ -9,7 +9,6 @@ import { organizationSelect } from '../actions/organizationActions';
 import { organizationsLoad } from '../actions/organizationActions';
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { spinner } from '../images';
 import AccountSettings from './account_settings';
 import AppCatalog from './app_catalog';
 import DocumentTitle from 'react-document-title';

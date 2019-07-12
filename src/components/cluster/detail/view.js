@@ -9,7 +9,6 @@ import {
 } from '../../../lib/flash_message';
 import { organizationCredentialsLoad } from '../../../actions/organizationActions';
 import { push } from 'connected-react-router';
-import { spinner } from '../../../images';
 import Button from '../../UI/button';
 import ClusterApps from './cluster_apps';
 import ClusterDetailTable from './cluster_detail_table';
