@@ -53,7 +53,6 @@
     "query-string": "6.5.0",
     "react": "16.8.6",
     "react-addons-css-transition-group": "15.6.2",
-    "react-addons-test-utils": "15.6.2",
     "react-addons-update": "15.6.2",
     "react-bootstrap": "0.32.4",
     "react-bootstrap-table-next": "2.2.0",
