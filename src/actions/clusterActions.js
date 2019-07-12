@@ -309,6 +309,7 @@ export function clusterLoadDetails(clusterId) {
         return dispatch(clusterLoadStatus(clusterId));
       })
       .then(() => {
+        cluster.capabilities = computeCapabilities(cluster);
         dispatch(clusterLoadDetailsSuccess(cluster));
         return cluster;
       })
