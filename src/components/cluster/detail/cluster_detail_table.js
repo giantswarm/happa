@@ -1,43 +1,8 @@
+import { Code, FlexRowWithTwoBlocksOnEdges } from '../../../styles/';
 import Button from '../../UI/button';
 import React from 'react';
 import styled from '@emotion/styled';
 // import PropTypes from 'prop-types';
-
-const ClusterRowOnEdges = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: ${props => props.theme.colors.shade7};
-  padding: 0 21px 0 14px;
-  height: 56px;
-  font-size: 16px;
-  font-weight: 300;
-  letter-spacing: 0.3px;
-  margin-bottom: 16px;
-  > div:first-child {
-    margin-right: auto;
-    > * {
-      margin-right: 18px;
-      display: inline-block;
-    }
-  }
-  > div:nth-child(2) {
-    margin-left: auto;
-  }
-  i {
-    padding: 0 2px;
-  }
-`;
-
-const Code = styled.code`
-  font-family: ${props => props.theme.fontFamilies.console};
-  background-color: ${props => props.theme.colors.background};
-  border-radius: 2px;
-  padding: 0 5px;
-  height: 30px;
-  line-height: 30px;
-  display: inline-block;
-`;
 
 const Dot = styled.span`
   padding: 0 5px;
@@ -58,7 +23,7 @@ const NodePools = styled.div`
 const ClusterDetailTable = () => {
   return (
     <React.Fragment>
-      <ClusterRowOnEdges>
+      <FlexRowWithTwoBlocksOnEdges>
         <div>
           <Code>europe-central-1</Code>
           <div>
@@ -76,14 +41,16 @@ const ClusterDetailTable = () => {
           </Upgrade>
         </div>
         <div>
+          <div>
             <span>14 nodes in 2 node pools</span>
             <Dot />
             <span>105 GB RAM</span>
             <Dot />
             <span>30 CPUs</span>
+          </div>
         </div>
-      </ClusterRowOnEdges>
-      <ClusterRowOnEdges>
+      </FlexRowWithTwoBlocksOnEdges>
+      <FlexRowWithTwoBlocksOnEdges>
         <div>
             <span>Kubernetes endpoint URI:</span>
           <Code>https://api.a1b2c.k8s.gollum.westeurope.azure.gigantic.io</Code>
@@ -93,11 +60,11 @@ const ClusterDetailTable = () => {
                       <i className='fa fa-start' /> GET STARTED
                     </Button>
         </div>
-      </ClusterRowOnEdges>
+      </FlexRowWithTwoBlocksOnEdges>
       <NodePools>
         <h3>Node Pools</h3>
-        <ClusterRowOnEdges>ONE</ClusterRowOnEdges>
-        <ClusterRowOnEdges>TWO</ClusterRowOnEdges>
+        <FlexRowWithTwoBlocksOnEdges>ONE</FlexRowWithTwoBlocksOnEdges>
+        <FlexRowWithTwoBlocksOnEdges>TWO</FlexRowWithTwoBlocksOnEdges>
       </NodePools>
     </React.Fragment>
   );
