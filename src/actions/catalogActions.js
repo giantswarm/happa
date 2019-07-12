@@ -63,6 +63,7 @@ export function catalogsLoad() {
         catalogs = Array.from(catalogs);
 
         catalogs.forEach(catalog => {
+          catalog.isFetchingIndex = true;
           catalogsDict[catalog.metadata.name] = catalog;
         });
 

@@ -5,6 +5,7 @@ import {
   messageType,
 } from '../../../lib/flash_message';
 import { loadReleases } from '../../../actions/releaseActions';
+import { spinner } from '../../../images';
 import _ from 'underscore';
 import Button from '../../UI/button';
 import cmp from 'semver-compare';
@@ -126,12 +127,7 @@ class ReleaseSelector extends React.Component {
     return (
       <div>
         <p>
-          <img
-            className='loader'
-            height='25px'
-            src='/images/loader_oval_light.svg'
-            width='25px'
-          />
+          <img className='loader' height='25px' src={spinner} width='25px' />
         </p>
       </div>
     );

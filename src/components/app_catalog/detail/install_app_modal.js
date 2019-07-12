@@ -44,7 +44,7 @@ const InstallAppModal = props => {
     }
   };
 
-  const maxLength = 253;
+  const maxLength = 63;
   const validateCharacters = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
   const validateStartEnd = /^[a-z0-9](.*[a-z0-9])?$/;
 
@@ -173,8 +173,9 @@ const InstallAppModal = props => {
           )
         );
       })
-      .catch(() => {
+      .catch(error => {
         setLoading(false);
+        throw error;
       });
   };
 
@@ -204,7 +205,7 @@ const InstallAppModal = props => {
                 visible={visible}
               >
                 <ClusterPicker
-                  clusters={clusters}
+                  clusters={clusters.filter(c => c.capabilities.canInstallApps)}
                   onChangeQuery={setQuery}
                   onSelectCluster={onSelectCluster}
                   query={query}
@@ -276,6 +277,7 @@ function mapStateToProps(state) {
       id: clusterID,
       name: state.entities.clusters.items[clusterID].name,
       owner: state.entities.clusters.items[clusterID].owner,
+      capabilities: state.entities.clusters.items[clusterID].capabilities,
     };
   });
 

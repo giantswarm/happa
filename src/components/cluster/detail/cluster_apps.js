@@ -1,5 +1,6 @@
 import { push } from 'connected-react-router';
 import { selectCluster } from '../../../actions/appActions';
+import AppDetailsModal from './app_details_modal';
 import Button from '../../UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,6 +15,13 @@ import React from 'react';
 // response before running the mapping.
 
 class ClusterApps extends React.Component {
+  state = {
+    appDetailsModal: {
+      visible: false,
+      app: null,
+    },
+  };
+
   appMetas = {
     calico: {
       name: 'calico',
@@ -164,6 +172,24 @@ class ClusterApps extends React.Component {
     this.props.dispatch(push('/app-catalogs/'));
   };
 
+  showAppDetail = appName => {
+    this.setState({
+      appDetailsModal: {
+        appName: appName,
+        visible: true,
+      },
+    });
+  };
+
+  hideAppModal = () => {
+    this.setState({
+      appDetailsModal: {
+        appName: null,
+        visible: false,
+      },
+    });
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -205,22 +231,35 @@ class ClusterApps extends React.Component {
                         className='installed-apps--app'
                         key={app.metadata.name}
                       >
-                        {app.logoUrl && !this.state.iconErrors[app.logoUrl] && (
-                          <img
-                            alt={app.metadata.name + ' icon'}
-                            height='36'
-                            onError={this.imgError}
-                            src={app.logoUrl}
-                            width='36'
-                          />
-                        )}
-                        {app.metadata.name}
-                        <small>
-                          App Version:{' '}
-                          {app && app.spec && app.spec.version
-                            ? app.spec.version
-                            : 'n/a'}
-                        </small>
+                        <div className='details'>
+                          {app.logoUrl &&
+                            !this.state.iconErrors[app.logoUrl] && (
+                              <img
+                                alt={app.metadata.name + ' icon'}
+                                height='36'
+                                onError={this.imgError}
+                                src={app.logoUrl}
+                                width='36'
+                              />
+                            )}
+                          {app.metadata.name}
+                          <small>
+                            App Version:{' '}
+                            {app && app.spec && app.spec.version
+                              ? app.spec.version
+                              : 'n/a'}
+                          </small>
+                        </div>
+                        <div className='actions'>
+                          <Button
+                            onClick={this.showAppDetail.bind(
+                              this,
+                              app.metadata.name
+                            )}
+                          >
+                            Details
+                          </Button>
+                        </div>
                       </div>
                     );
                   })}
@@ -228,7 +267,9 @@ class ClusterApps extends React.Component {
               )}
 
               <div className='browse-apps'>
-                <Button onClick={this.openAppCatalog}>Browse Apps</Button>
+                <Button onClick={this.openAppCatalog}>
+                  <i className='fa fa-add-circle'></i>Install App
+                </Button>
               </div>
             </div>
           </div>
@@ -259,6 +300,20 @@ class ClusterApps extends React.Component {
             })}
           </div>
         </div>
+        <AppDetailsModal
+          // Instead of just assigning the selected app to the state of this component,
+          // this ensures any updates to the apps continue to flow down into the modal.
+          app={
+            this.props.installedApps &&
+            this.props.installedApps.find(
+              x => x.metadata.name === this.state.appDetailsModal.appName
+            )
+          }
+          clusterId={this.props.clusterId}
+          dispatch={this.props.dispatch}
+          onClose={this.hideAppModal}
+          visible={this.state.appDetailsModal.visible}
+        />
       </React.Fragment>
     );
   }

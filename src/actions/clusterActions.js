@@ -5,6 +5,37 @@ import { push } from 'connected-react-router';
 import APIClusterStatusClient from '../lib/api_status_client';
 import GiantSwarm from 'giantswarm';
 
+// enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
+// their release version and provider.
+function enhanceWithCapabilities(clusters, provider) {
+  clusters = clusters.map(c => {
+    c.capabilities = computeCapabilities(c, provider);
+    return c;
+  });
+
+  return clusters;
+}
+
+// computeCapabilities takes a cluster object and provider and returns a
+// capabilities object with the features that this cluster supports.
+function computeCapabilities(cluster, provider) {
+  let capabilities = {};
+  let releaseVer = cluster.release_version;
+
+  // Installing Apps
+  // Must be AWS or KVM and larger than 8.1.0
+  // or any provider and larger than 8.2.0
+  if (
+    (cmp(releaseVer, '8.0.99') === 1 &&
+      (provider === 'aws' || provider === 'kvm')) ||
+    cmp(releaseVer, '8.1.99') === 1
+  ) {
+    capabilities.canInstallApps = true;
+  }
+
+  return capabilities;
+}
+
 /**
  * Performs the getClusters API call and dispatches the clustersLoadSuccess
  * action.
@@ -19,9 +50,13 @@ export function clustersLoad() {
 
     return clustersApi
       .getClusters(scheme + ' ' + token)
-      .then(data => {
-        dispatch(clustersLoadSuccess(data));
-        return data;
+      .then(clusters => {
+        clusters = enhanceWithCapabilities(
+          clusters,
+          getState().app.info.general.provider
+        );
+        dispatch(clustersLoadSuccess(clusters));
+        return clusters;
       })
       .catch(error => {
         console.error(error);
@@ -107,18 +142,13 @@ export function clusterInstallApp(app, clusterID) {
       if (Object.keys(app.valuesYAML).length !== 0) {
         // If we have user config that we want to create, then
         // fire off the call to create it.
-        appsApi
+        appConfigsApi
           .createClusterAppConfig(scheme + ' ' + token, clusterID, app.name, {
             body: app.valuesYAML,
           })
           .then(() => {
-            // The call succeeded, resolve with a configmap
-            // object that the next call can use to associate
-            // the app with the configmap.
-            resolve({
-              name: app.name + '-user-values',
-              namespace: clusterID,
-            });
+            // The call succeeded, resolve the promise
+            resolve();
           })
           .catch(error => {
             if (error.status === 409) {
@@ -150,7 +180,7 @@ export function clusterInstallApp(app, clusterID) {
     });
 
     return optionalCreateAppConfiguration
-      .then(configmap => {
+      .then(() => {
         return appsApi
           .createClusterApp(scheme + ' ' + token, clusterID, app.name, {
             body: {
@@ -159,9 +189,6 @@ export function clusterInstallApp(app, clusterID) {
                 name: app.chartName,
                 namespace: app.namespace,
                 version: app.version,
-                user_config: {
-                  configmap: configmap,
-                },
               },
             },
           })
@@ -215,6 +242,47 @@ export function clusterInstallApp(app, clusterID) {
 }
 
 /**
+ * Takes an app and a cluster id and tries to delete it. Dispatches CLUSTER_DELETE_APP_SUCCESS
+ * on success or CLUSTER_DELETE_APP_ERROR on error.
+ *
+ * @param {Object} appName The name of the app
+ * @param {Object} clusterID Where to delete the app.
+ */
+export function clusterDeleteApp(appName, clusterID) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    dispatch({
+      type: types.CLUSTER_DELETE_APP,
+      clusterID,
+      appName,
+    });
+
+    var appsApi = new GiantSwarmV4.AppsApi();
+
+    return appsApi
+      .deleteClusterApp(scheme + ' ' + token, clusterID, appName)
+      .then(() => {
+        new FlashMessage(
+          `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
+          messageType.SUCCESS,
+          messageTTL.LONG
+        );
+      })
+      .catch(error => {
+        new FlashMessage(
+          `Something went wrong while trying to delete your app. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+
+        throw error;
+      });
+  };
+}
+
+/**
  * Loads details for a cluster.
  *
  * @param {String} clusterId Cluster ID
@@ -249,6 +317,10 @@ export function clusterLoadDetails(clusterId) {
         return dispatch(clusterLoadStatus(clusterId));
       })
       .then(() => {
+        cluster.capabilities = computeCapabilities(
+          cluster,
+          getState().app.info.general.provider
+        );
         dispatch(clusterLoadDetailsSuccess(cluster));
         return cluster;
       })
