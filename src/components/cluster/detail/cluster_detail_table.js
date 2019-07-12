@@ -1,15 +1,9 @@
-import { Code, FlexRowWithTwoBlocksOnEdges } from '../../../styles/';
+import { Code, Dot, FlexRowBase, FlexRowWithTwoBlocksOnEdges } from '../../../styles/';
+import { css } from '@emotion/core';
 import Button from '../../UI/button';
 import React from 'react';
 import styled from '@emotion/styled';
 // import PropTypes from 'prop-types';
-
-const Dot = styled.span`
-  padding: 0 5px;
-  &:before {
-    content: '·';
-  }
-`;
 
 const Upgrade = styled.div`
   color: #ce990f;
@@ -18,6 +12,29 @@ const Upgrade = styled.div`
 const NodePools = styled.div`
   margin-top: 25px;
   border-top: 1px solid ${props => props.theme.colors.shade6};
+`;
+
+const FlexRowNodePools = styled.div`
+  ${FlexRowBase};
+`;
+
+const FlexRowNodePoolsBase = css`
+  ${FlexRowBase};
+  /* Default for all spans */
+  span { flex-grow: 1 }
+  /* Custom */
+  span:first-of-type { width: 20px }
+  span:nth-of-type(2) { flex-grow: 5 }
+  span:nth-of-type(3) { flex-grow: 5 }
+  span:nth-of-type(4) { width: 87px}
+  span:nth-of-type(5) { min-width: 60px }
+  span:nth-of-type(6) { min-width: 60px }
+  span:nth-of-type(7) { min-width: 60px }
+  span:nth-of-type(8) { margin-right: 70px}
+`;
+
+const FlexRowHeaders = styled.div`
+  ${FlexRowNodePoolsBase}
 `;
 
 const ClusterDetailTable = () => {
@@ -63,8 +80,18 @@ const ClusterDetailTable = () => {
       </FlexRowWithTwoBlocksOnEdges>
       <NodePools>
         <h3>Node Pools</h3>
-        <FlexRowWithTwoBlocksOnEdges>ONE</FlexRowWithTwoBlocksOnEdges>
-        <FlexRowWithTwoBlocksOnEdges>TWO</FlexRowWithTwoBlocksOnEdges>
+        <FlexRowHeaders>
+          <span>ID</span>
+          <span>NAME</span>
+          <span>INSTANCE TYPE</span>
+          <span>AV. ZONES</span>
+          <span>MIN</span>
+          <span>MAX</span>
+          <span>DESIRED</span>
+          <span>CURRENT</span>
+        </FlexRowHeaders>
+        <FlexRowNodePools >ONE</FlexRowNodePools >
+        <FlexRowNodePools >TWO</FlexRowNodePools >
       </NodePools>
     </React.Fragment>
   );
