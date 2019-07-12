@@ -309,7 +309,10 @@ export function clusterLoadDetails(clusterId) {
         return dispatch(clusterLoadStatus(clusterId));
       })
       .then(() => {
-        cluster.capabilities = computeCapabilities(cluster, getState().app.info.general.provider);
+        cluster.capabilities = computeCapabilities(
+          cluster,
+          getState().app.info.general.provider
+        );
         dispatch(clusterLoadDetailsSuccess(cluster));
         return cluster;
       })
