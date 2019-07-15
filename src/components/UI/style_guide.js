@@ -1,3 +1,4 @@
+import ClusterEmptyState from './cluster_empty_state';
 import ComponentChangelog from './component_changelog';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -15,7 +16,6 @@ const Wrapper = styled.div`
 `;
 
 const ExampleBox = styled.div`
-  max-width: 500px;
   padding: 30px;
   margin: 20px 0;
   border: 1px dashed #999;
@@ -96,6 +96,33 @@ const StyleGuide = () => {
         />
         <ReleaseComponentLabel isRemoved name='outphased' />
         <ReleaseComponentLabel isAdded name='newbie' version='0.0.1' />
+      </ExampleBox>
+
+      <Header name='ClusterEmptyState' />
+
+      <p>
+        Displays a message that there are no clusters yet in a list of clusters.
+      </p>
+
+      <small>When there are no organizations:</small>
+      <ExampleBox>
+        <ClusterEmptyState />
+      </ExampleBox>
+
+      <small>When there was an error loading clusters:</small>
+      <ExampleBox>
+        <ClusterEmptyState
+          errorLoadingClusters={true}
+          selectedOrganization='organization'
+        />
+      </ExampleBox>
+
+      <small>When there are no clusters:</small>
+      <ExampleBox>
+        <ClusterEmptyState
+          errorLoadingClusters={false}
+          selectedOrganization='organization'
+        />
       </ExampleBox>
     </Wrapper>
   );
