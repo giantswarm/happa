@@ -15,6 +15,7 @@ const Inner = styled.div`
   flex-direction: column;
   height: 100%;
   justify-content: center;
+  padding: 30px;
   text-align: center;
 
   & > :last-child {
