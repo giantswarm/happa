@@ -8733,11 +8733,6 @@ react-addons-css-transition-group@15.6.2:
   dependencies:
     react-transition-group "^1.2.0"
 
-react-addons-test-utils@15.6.2:
-  version "15.6.2"
-  resolved "https://registry.yarnpkg.com/react-addons-test-utils/-/react-addons-test-utils-15.6.2.tgz#c12b6efdc2247c10da7b8770d185080a7b047156"
-  integrity sha1-wStu/cIkfBDae4dw0YUICnsEcVY=
-
 react-addons-update@15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/react-addons-update/-/react-addons-update-15.6.2.tgz#e53753c5b34887974510c882d7fb075851d5e504"

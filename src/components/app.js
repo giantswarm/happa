@@ -16,6 +16,7 @@ import OAuthCallback from './auth/oauth_callback';
 import React from 'react';
 import SetPassword from './forgot_password/set_password';
 import SignUp from './signup/index';
+import StyleGuide from './UI/style_guide';
 import theme from './UI/theme';
 
 // CSS Imports
@@ -51,7 +52,7 @@ const renderApp = () =>
               <Route component={ForgotPassword} path='/forgot_password' />
               <Route component={SignUp} path='/signup/:token' />
               <Route component={OAuthCallback} path='/oauth/callback' />
-
+              <Route component={StyleGuide} path='/styleguide' />
               <Route component={Layout} path='/' />
             </Switch>
           </div>
