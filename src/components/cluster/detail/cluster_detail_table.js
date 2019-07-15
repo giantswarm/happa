@@ -1,7 +1,7 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from '../../../styles/';
 import { css } from '@emotion/core';
 import Button from '../../UI/button';
-import PopUpMenu from '../../UI/popUpMenu';
+import DropdownMenu from '../../UI/dropdown_menu';
 import React from 'react';
 import styled from '@emotion/styled';
 // import PropTypes from 'prop-types';
@@ -84,8 +84,8 @@ const GridRowNodePoolsItem = styled.div`
 `;
 
 class ClusterDetailTable extends React.Component {
-  popUpMenu = () => (
-    <PopUpMenu
+  DropdownMenu = () => (
+    <DropdownMenu
       render={({ isOpen, onClickHandler, onFocusHandler, onBlurHandler }) => (
         <React.Fragment>
           <button
@@ -190,7 +190,7 @@ class ClusterDetailTable extends React.Component {
             <div>3</div>
             <div>3</div>
             <div>3</div>
-            {this.popUpMenu()}
+            {this.DropdownMenu()}
           </GridRowNodePoolsItem>
           <GridRowNodePoolsItem>
             <Code>z66</Code>
@@ -205,7 +205,7 @@ class ClusterDetailTable extends React.Component {
             <div>20</div>
             <div>11</div>
             <div>12s</div>
-            {this.popUpMenu()}
+            {this.DropdownMenu()}
           </GridRowNodePoolsItem>
         </NodePools>
       </React.Fragment>

@@ -41,13 +41,13 @@ const MenuWrapper = styled.div`
   }
 `;
 
-function PopUpMenu(props) {
+function DropdownMenu(props) {
   const [isOpen, setIsOpen] = useState(false);
   let timeOutId = null;
 
   const onBlurHandler = () => {
     timeOutId = setTimeout(() => {
-      setIsOpen(!isOpen);
+      setIsOpen(false);
     });
   };
 
@@ -66,8 +66,8 @@ function PopUpMenu(props) {
   );
 }
 
-PopUpMenu.propTypes = {
+DropdownMenu.propTypes = {
   render: PropTypes.func,
 };
 
-export default PopUpMenu;
+export default DropdownMenu;
