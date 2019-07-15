@@ -100,9 +100,15 @@ class ClusterDetailTable extends React.Component {
           </button>
           {isOpen && (
             <ul>
-              <li>Rename</li>
-              <li>Edit scaling limits</li>
-              <li>Delete</li>
+              <li>
+                <a href='#'>Rename</a>
+              </li>
+              <li>
+                <a href='#'>Edit scaling limits</a>
+              </li>
+              <li>
+                <a href='#'>Delete</a>
+              </li>
             </ul>
           )}
         </React.Fragment>
