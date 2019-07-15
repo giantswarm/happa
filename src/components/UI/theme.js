@@ -1,6 +1,5 @@
 const theme = {
   colors: {
-    background: '#234a61',
     shade1: '#1E4156',
     shade2: '#224A61',
     shade3: '#234D65',
@@ -13,6 +12,7 @@ const theme = {
     white3: '#B9C1C8',
     yellow1: '#ddb03a',
     red: 'red',
+    gray: '#ccc',
   },
   border_radius: 4,
   breakpoints: {

@@ -7,9 +7,9 @@ import styled from '@emotion/styled';
  */
 
 export const Row = css`
-  padding: 0 21px 0 14px;
-  height: 56px;
-  font-size: 16px;
+  padding: 5px 21px 5px 14px;
+  min-height: 56px;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.3px;
   margin-bottom: 16px;
@@ -53,7 +53,7 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
 
 export const Code = styled.code`
   font-family: ${props => props.theme.fontFamilies.console};
-  background-color: ${props => props.theme.colors.background};
+  background-color: ${props => props.theme.colors.shade2};
   border-radius: 2px;
   padding: 0 5px;
   height: 30px;
