@@ -1,10 +1,10 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from '../../../styles/';
 import { css } from '@emotion/core';
 import Button from '../../UI/button';
-import DropdownMenu from '../../UI/dropdown_menu';
+// import NodePoolDropdownMenu from './node_pool_dropdown_menu';
+import NodePool from './node_pool';
 import React from 'react';
 import styled from '@emotion/styled';
-// import PropTypes from 'prop-types';
 
 const Upgrade = styled.div`
   color: #ce990f;
@@ -39,7 +39,7 @@ const GridRowNodePoolsBase = css`
 `;
 
 const GridRowNodePoolsNodes = styled.div`
-  ${GridRowNodePoolsBase}
+  ${GridRowNodePoolsBase};
   margin-bottom: 0;
   margin-top: -12px;
   min-height: 25px;
@@ -74,48 +74,38 @@ const GridRowNodePoolsNodes = styled.div`
 `;
 
 const GridRowNodePoolsHeaders = styled.div`
-  ${GridRowNodePoolsBase}
+  ${GridRowNodePoolsBase};
   margin-bottom: 0;
 `;
 
 const GridRowNodePoolsItem = styled.div`
-  ${GridRowNodePoolsBase}
+  ${GridRowNodePoolsBase};
   background-color: ${props => props.theme.colors.shade7};
 `;
 
-class ClusterDetailTable extends React.Component {
-  DropdownMenu = () => (
-    <DropdownMenu
-      render={({ isOpen, onClickHandler, onFocusHandler, onBlurHandler }) => (
-        <React.Fragment>
-          <button
-            aria-expanded={isOpen}
-            aria-haspopup='true'
-            onBlur={onBlurHandler}
-            onClick={onClickHandler}
-            onFocus={onFocusHandler}
-            type='button'
-          >
-            •••
-          </button>
-          {isOpen && (
-            <ul>
-              <li>
-                <a href='#'>Rename</a>
-              </li>
-              <li>
-                <a href='#'>Edit scaling limits</a>
-              </li>
-              <li>
-                <a href='#'>Delete</a>
-              </li>
-            </ul>
-          )}
-        </React.Fragment>
-      )}
-    />
-  );
+const nodePool1 = {
+  id: '6dh',
+  name: 'Database',
+  instanceType: 'r3.4xlarge',
+  avZones: { a: true, b: true, c: true },
+  min: 3,
+  max: 3,
+  desired: 3,
+  current: 3,
+};
 
+const nodePool2 = {
+  id: 'z66',
+  name: 'General Purpose',
+  instanceType: 'm5.xlarge',
+  avZones: { a: false, b: false, c: true },
+  min: 5,
+  max: 20,
+  desired: 11,
+  current: 12,
+};
+
+class ClusterDetailTable extends React.Component {
   render() {
     return (
       <React.Fragment>
@@ -178,34 +168,10 @@ class ClusterDetailTable extends React.Component {
             <span> </span>
           </GridRowNodePoolsHeaders>
           <GridRowNodePoolsItem>
-            <Code>6dh</Code>
-            <div>Database</div>
-            <Code>r3.4xlarge</Code>
-            <div>
-              <span>A</span>
-              <span>B</span>
-              <span>C</span>
-            </div>
-            <div>3</div>
-            <div>3</div>
-            <div>3</div>
-            <div>3</div>
-            {this.DropdownMenu()}
+            <NodePool nodePool={nodePool1} />
           </GridRowNodePoolsItem>
           <GridRowNodePoolsItem>
-            <Code>z66</Code>
-            <div>General purpose</div>
-            <Code>m5.xlarge</Code>
-            <div>
-              <span></span>
-              <span></span>
-              <span>C</span>
-            </div>
-            <div>5</div>
-            <div>20</div>
-            <div>11</div>
-            <div>12s</div>
-            {this.DropdownMenu()}
+            <NodePool nodePool={nodePool2} />
           </GridRowNodePoolsItem>
         </NodePools>
       </React.Fragment>

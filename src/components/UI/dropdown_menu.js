@@ -8,8 +8,8 @@ import styled from '@emotion/styled';
  * 1. Rendering a popover menu with some styles in it
  * 2. Provinding state and methods for handling the popover state in an accessible way
  *
- * For further customization - e.g. add custom positioning - please add props and use current
- * style as default props in order to avoid introducing breaking changes
+ * For further customization - e.g. add custom positioning - overwrite styles in the
+ * component where is it used
  */
 
 const MenuWrapper = styled.div`
@@ -36,8 +36,8 @@ const MenuWrapper = styled.div`
     border: 1px solid ${props => props.theme.colors.white3};
     z-index: 1;
   }
-  li {
-    cursor: pointer;
+  a {
+    text-decoration: none;
   }
 `;
 
