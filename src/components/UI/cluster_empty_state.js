@@ -11,17 +11,11 @@ const Wrapper = styled.div`
 `;
 
 const Inner = styled.div`
-  text-align: center;
-  opacity: 1;
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-  z-index: 100;
   display: flex;
   flex-direction: column;
+  height: 100%;
   justify-content: center;
+  text-align: center;
 
   & > :last-child {
     margin-bottom: 0px;
