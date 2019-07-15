@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import _ from 'underscore';
 import Button from '../UI/button';
 import ClusterDashboardItem from './cluster_dashboard_item';
-import ClusterEmptyState from './cluster_empty_state';
+import ClusterEmptyState from '../UI/cluster_empty_state';
 import DocumentTitle from 'react-document-title';
 import moment from 'moment';
 import PageVisibilityTracker from '../../lib/page_visibility_tracker';

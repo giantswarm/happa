@@ -56,9 +56,6 @@
   &.loading
     transition: opacity 0.1s cubic-bezier(0, -0.41, 0.19, 1.44)
 
-    .cluster-dashboard--inner
-      opacity: 0.1
-
     .loader
       margin-top: 100px
       position: absolute
@@ -67,12 +64,6 @@
       left: 50%
       margin-left: -25px
 
-
-  &.empty-slate
-    height: 380px
-    .loader
-      display: none
-
 .cluster-dashboard-item--label
   font-size: 1.2em
 
@@ -80,19 +71,3 @@
   font-size: 1.2em
   z-index: 120
   position: relative
-
-.cluster-dashboard--overlay
-  text-align: center
-  opacity: 1
-  position: absolute
-  top: 0px
-  bottom: 0px
-  left: 0px
-  right: 0px
-  z-index: 100
-
-  h1
-    margin-top: 140px
-
-    code
-      text-shadow: none
