@@ -12,7 +12,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import AccountSettings from './account_settings';
 import AppCatalog from './app_catalog';
 import DocumentTitle from 'react-document-title';
-import GiantSwarmV4 from 'giantswarm';
+import GiantSwarm from 'giantswarm';
 import Home from './home';
 import LoadingOverlay from './UI/loading_overlay';
 import Modals from './modals';
@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Users from './users';
 
-var defaultClient = GiantSwarmV4.ApiClient.instance;
+var defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 defaultClient.timeout = 10000;
 var defaultClientAuth =
