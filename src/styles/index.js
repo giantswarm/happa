@@ -1,8 +1,10 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 
-/* BASE STYLES
- * All variables with css emotion are used for extends, so these styles are inherited
+/***** BASE STYLES ****/
+
+/*
+ * All variables with css emotion are used for extends, so these styles may be inherited
  * by a lot of styled variables here and in components and should be modified with caution
  */
 
@@ -21,7 +23,9 @@ export const FlexRowBase = css`
   align-items: center;
 `;
 
-/* STYLED ELEMENTS */
+/***** STYLED ELEMENTS *****/
+
+// Layout
 
 export const FlexRowWithTwoBlocksOnEdges = styled.div`
   ${FlexRowBase};
@@ -50,6 +54,8 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
     padding: 0 2px;
   }
 `;
+
+/* Style Wrappers & Reusable elements */
 
 export const Code = styled.code`
   font-family: ${props => props.theme.fontFamilies.console};

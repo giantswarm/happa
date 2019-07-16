@@ -1,7 +1,6 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from '../../../styles/';
 import { css } from '@emotion/core';
 import Button from '../../UI/button';
-// import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import NodePool from './node_pool';
 import React from 'react';
 import styled from '@emotion/styled';
