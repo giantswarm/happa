@@ -7,6 +7,7 @@ import {
 import { push } from 'connected-react-router';
 import Button from 'react-bootstrap/lib/Button';
 import DocumentTitle from 'react-document-title';
+import EmptyStateDisplay from '../../UI/empty_state_display';
 import OrganizationList from '../../UI/organization_list';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -33,18 +34,21 @@ class List extends React.Component {
         <>
           <h1>Organizations</h1>
           <br />
-          {this.props.organizations.length === 0 ? (
-            <div>
-              <p>No organizations, create one using the button below:</p>
-            </div>
-          ) : (
+          <EmptyStateDisplay
+            displayEmptyState={this.props.organizations.length === 0}
+            emptyState={
+              <div>
+                <p>No organizations, create one using the button below:</p>
+              </div>
+            }
+          >
             <OrganizationList
               clusters={this.props.clusters}
               deleteOrganization={this.deleteOrganization}
               organizations={this.props.organizations}
               viewOrganization={this.viewOrganization}
             />
-          )}
+          </EmptyStateDisplay>
           <Button bsStyle='default' onClick={this.createOrganization}>
             <i className='fa fa-add-circle' /> Create New Organization
           </Button>
