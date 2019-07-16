@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarmV4 from 'giantswarm';
 
 /**
  * updateAppConfig updates an appConfig

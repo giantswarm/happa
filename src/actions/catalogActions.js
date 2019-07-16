@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarmV4 from 'giantswarm';
 import yaml from 'js-yaml';
 
 // loadCatalog takes a catalog object and tries to load further data.

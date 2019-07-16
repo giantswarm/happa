@@ -12,7 +12,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import AccountSettings from './account_settings';
 import AppCatalog from './app_catalog';
 import DocumentTitle from 'react-document-title';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarmV4 from 'giantswarm';
 import Home from './home';
 import LoadingOverlay from './UI/loading_overlay';
 import Modals from './modals';

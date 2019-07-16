@@ -2,7 +2,7 @@ import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
 import { modalHide } from './modalActions';
 import { push } from 'connected-react-router';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarmV4 from 'giantswarm';
 import React from 'react';
 
 // organizationSelect sets the organization that the user is focusing on and

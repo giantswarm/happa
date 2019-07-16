@@ -1,5 +1,5 @@
 import Button from '../UI/button';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarmV4 from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';

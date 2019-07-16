@@ -4,7 +4,7 @@ import { modalHide } from './modalActions';
 import { push } from 'connected-react-router';
 import APIClusterStatusClient from '../lib/api_status_client';
 import cmp from 'semver-compare';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarmV4 from 'giantswarm';
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
