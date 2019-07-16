@@ -15,6 +15,7 @@ const Row = props => {
         className='clickable'
         data-orgid={props.organization.id}
         onClick={props.onClick}
+        style={{ textAlign: 'center' }}
       >
         {props.clusters.length}
       </td>
@@ -22,6 +23,7 @@ const Row = props => {
         className='clickable'
         data-orgid={props.organization.id}
         onClick={props.onClick}
+        style={{ textAlign: 'center' }}
       >
         {props.organization.members.length}
       </td>

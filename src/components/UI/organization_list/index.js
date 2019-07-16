@@ -9,8 +9,8 @@ const OrganizationList = props => {
       <thead>
         <tr>
           <th>Name</th>
-          <th>Clusters</th>
-          <th>Members</th>
+          <th style={{ textAlign: 'center' }}>Clusters</th>
+          <th style={{ textAlign: 'center' }}>Members</th>
           <th />
         </tr>
       </thead>
