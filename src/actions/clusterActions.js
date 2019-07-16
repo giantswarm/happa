@@ -302,16 +302,6 @@ export function clusterLoadDetails(clusterId) {
     var cluster;
     var clustersApi = new GiantSwarm.ClustersApi();
 
-    clustersApi.getClusterV5(scheme + ' ' + token, 'm0ckd').then(
-      function(data) {
-        console.log('API called successfully. Returned data:');
-        console.log(data);
-      },
-      function(error) {
-        console.error(error);
-      }
-    );
-
     return clustersApi
       .getCluster(scheme + ' ' + token, clusterId)
       .then(c => {
