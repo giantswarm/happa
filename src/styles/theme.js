@@ -6,11 +6,13 @@ const theme = {
     shade4: '#2F556A',
     shade5: '#32526A',
     shade6: '#3A5F7B',
+    shade7: '#30556a',
     white1: '#FFFFFF',
     white2: '#D7D7D7',
     white3: '#B9C1C8',
     yellow1: '#ddb03a',
     red: 'red',
+    gray: '#ccc',
   },
   border_radius: 4,
   breakpoints: {

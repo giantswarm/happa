@@ -1,5 +1,5 @@
 import * as types from '../actions/actionTypes';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarm from 'giantswarm';
 
 var shutDown = function(state) {
   localStorage.removeItem('user');
@@ -94,7 +94,7 @@ export default function appReducer(
 
     case types.LOGIN_SUCCESS:
       localStorage.setItem('user', JSON.stringify(action.userData));
-      var defaultClient = GiantSwarmV4.ApiClient.instance;
+      var defaultClient = GiantSwarm.ApiClient.instance;
       var defaultClientAuth =
         defaultClient.authentications['AuthorizationHeaderToken'];
       defaultClientAuth.apiKey = action.userData.auth.token;

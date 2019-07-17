@@ -8,7 +8,7 @@ import {
 } from '../lib/flash_message';
 import { push } from 'connected-react-router';
 import _ from 'underscore';
-import GiantSwarmV4 from '../lib/giantswarm_v4_client_wrapper';
+import GiantSwarm from '../lib/giantswarm_client_wrapper';
 
 export function loginSuccess(userData) {
   return {
@@ -41,7 +41,7 @@ export function logoutError(errorMessage) {
 // about the user based on the response.
 export function refreshUserInfo() {
   return function(dispatch, getState) {
-    var usersApi = new GiantSwarmV4.UsersApi();
+    var usersApi = new GiantSwarm.UsersApi();
 
     if (!getState().app.loggedInUser) {
       dispatch({
@@ -116,8 +116,8 @@ export function auth0Login(authResult) {
 // the userReducer takes care of storing this in state.
 export function giantswarmLogin(email, password) {
   return function(dispatch, getState) {
-    var usersApi = new GiantSwarmV4.UsersApi();
-    var authTokensApi = new GiantSwarmV4.AuthTokensApi();
+    var usersApi = new GiantSwarm.UsersApi();
+    var authTokensApi = new GiantSwarm.AuthTokensApi();
     var authToken;
 
     dispatch({
@@ -175,7 +175,7 @@ export function giantswarmLogout() {
       authToken = undefined;
     }
 
-    var authTokensApi = new GiantSwarmV4.AuthTokensApi();
+    var authTokensApi = new GiantSwarm.AuthTokensApi();
 
     dispatch({
       type: types.LOGOUT,
@@ -235,7 +235,7 @@ export function getInfo() {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
-    var infoApi = new GiantSwarmV4.InfoApi();
+    var infoApi = new GiantSwarm.InfoApi();
 
     dispatch({
       type: types.INFO_LOAD,
@@ -271,7 +271,7 @@ export function usersLoad() {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
-    var usersApi = new GiantSwarmV4.UsersApi();
+    var usersApi = new GiantSwarm.UsersApi();
 
     var alreadyFetching = getState().entities.users.isFetching;
 
@@ -324,7 +324,7 @@ export function userRemoveExpiration(email) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
-    var usersApi = new GiantSwarmV4.UsersApi();
+    var usersApi = new GiantSwarm.UsersApi();
 
     dispatch({ type: types.USERS_REMOVE_EXPIRATION });
 
@@ -360,7 +360,7 @@ export function userDelete(email) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
-    var usersApi = new GiantSwarmV4.UsersApi();
+    var usersApi = new GiantSwarm.UsersApi();
 
     dispatch({ type: types.USERS_DELETE });
 

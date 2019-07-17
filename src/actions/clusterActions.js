@@ -4,7 +4,7 @@ import { modalHide } from './modalActions';
 import { push } from 'connected-react-router';
 import APIClusterStatusClient from '../lib/api_status_client';
 import cmp from 'semver-compare';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarm from 'giantswarm';
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
@@ -45,7 +45,7 @@ export function clustersLoad() {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
-    var clustersApi = new GiantSwarmV4.ClustersApi();
+    var clustersApi = new GiantSwarm.ClustersApi();
 
     dispatch({ type: types.CLUSTERS_LOAD });
 
@@ -81,7 +81,7 @@ export function clusterLoadApps(clusterId) {
       clusterId,
     });
 
-    var appsApi = new GiantSwarmV4.AppsApi();
+    var appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
       .getClusterApps(scheme + ' ' + token, clusterId)
@@ -137,8 +137,8 @@ export function clusterInstallApp(app, clusterID) {
       app,
     });
 
-    var appsApi = new GiantSwarmV4.AppsApi();
-    var appConfigsApi = new GiantSwarmV4.AppConfigsApi();
+    var appsApi = new GiantSwarm.AppsApi();
+    var appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     var optionalCreateAppConfiguration = new Promise((resolve, reject) => {
       if (Object.keys(app.valuesYAML).length !== 0) {
@@ -261,7 +261,7 @@ export function clusterDeleteApp(appName, clusterID) {
       appName,
     });
 
-    var appsApi = new GiantSwarmV4.AppsApi();
+    var appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
       .deleteClusterApp(scheme + ' ' + token, clusterID, appName)
@@ -300,7 +300,7 @@ export function clusterLoadDetails(clusterId) {
     });
 
     var cluster;
-    var clustersApi = new GiantSwarmV4.ClustersApi();
+    var clustersApi = new GiantSwarm.ClustersApi();
 
     return clustersApi
       .getCluster(scheme + ' ' + token, clusterId)
@@ -393,7 +393,7 @@ export function clusterCreate(cluster) {
       cluster,
     });
 
-    var clustersApi = new GiantSwarmV4.ClustersApi();
+    var clustersApi = new GiantSwarm.ClustersApi();
 
     return clustersApi
       .addClusterWithHttpInfo(scheme + ' ' + token, cluster)
@@ -444,7 +444,7 @@ export function clusterDeleteConfirmed(cluster) {
       cluster,
     });
 
-    var clustersApi = new GiantSwarmV4.ClustersApi();
+    var clustersApi = new GiantSwarm.ClustersApi();
 
     return clustersApi
       .deleteCluster(scheme + ' ' + token, cluster.id)
@@ -492,7 +492,7 @@ export function clusterLoadKeyPairs(clusterId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
-    var keypairsApi = new GiantSwarmV4.KeyPairsApi();
+    var keypairsApi = new GiantSwarm.KeyPairsApi();
 
     dispatch({
       type: types.CLUSTER_LOAD_KEY_PAIRS,
@@ -626,7 +626,7 @@ export function clusterPatch(cluster) {
     var clusterId = cluster.id;
     delete cluster.id;
 
-    var clustersApi = new GiantSwarmV4.ClustersApi();
+    var clustersApi = new GiantSwarm.ClustersApi();
     return clustersApi
       .modifyCluster(scheme + ' ' + token, cluster, clusterId)
       .then(cluster => {
@@ -667,7 +667,7 @@ export function clusterCreateKeyPair(clusterId, keypair) {
       keypair,
     });
 
-    var keypairsApi = new GiantSwarmV4.KeyPairsApi();
+    var keypairsApi = new GiantSwarm.KeyPairsApi();
     return keypairsApi
       .addKeyPair(scheme + ' ' + token, clusterId, keypair)
       .then(keypair => {
