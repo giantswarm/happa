@@ -6,9 +6,9 @@ import { render } from 'react-dom';
 import { Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'emotion-theming';
 import AdminLogin from './auth/admin';
-import configureStore from '../stores/configureStore';
+import configureStore from 'stores/configureStore';
 import ForgotPassword from './forgot_password/index';
-import history from '../stores/history';
+import history from 'stores/history';
 import Layout from './layout';
 import Login from './auth/login';
 import Logout from './auth/logout';
@@ -17,7 +17,7 @@ import React from 'react';
 import SetPassword from './forgot_password/set_password';
 import SignUp from './signup/index';
 import StyleGuide from './UI/style_guide';
-import theme from '../styles/theme';
+import theme from 'styles/theme';
 
 // CSS Imports
 // Keep the blank lines to allow for a certain ordering!
@@ -26,9 +26,9 @@ import 'normalize.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import '../styles/app.sass';
 import 'noty/lib/noty.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import 'styles/app.sass';
 
 var appContainer = document.getElementById('app');
 

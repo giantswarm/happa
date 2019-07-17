@@ -1,4 +1,4 @@
-import * as types from '../actions/actionTypes';
+import * as types from 'actions/actionTypes';
 
 /**
  * organizationReducer manipulates the appplication state based on organization actions.

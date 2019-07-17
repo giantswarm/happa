@@ -3,10 +3,10 @@ import {
   organizationCredentialsLoad,
   organizationCredentialsSet,
   organizationCredentialsSetConfirmed,
-} from '../../../actions/organizationActions';
-import { spinner } from '../../../images';
-import AWSAccountID from '../../UI/aws_account_id';
-import Button from '../../UI/button';
+} from 'actions/organizationActions';
+import { spinner } from 'images';
+import AWSAccountID from 'UI/aws_account_id';
+import Button from 'UI/button';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import FormGroup from 'react-bootstrap/lib/FormGroup';

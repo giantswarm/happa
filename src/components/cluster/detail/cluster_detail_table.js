@@ -1,13 +1,13 @@
-import { relativeDate } from '../../../lib/helpers.js';
+import { relativeDate } from 'lib/helpers.js';
 import _ from 'underscore';
-import AvailabilityZonesLabel from '../../UI/availability_zones_label';
-import AWSAccountID from '../../UI/aws_account_id';
-import Button from '../../UI/button';
+import AvailabilityZonesLabel from 'UI/availability_zones_label';
+import AWSAccountID from 'UI/aws_account_id';
+import Button from 'UI/button';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
-import RefreshableLabel from '../../UI/refreshable_label';
+import RefreshableLabel from 'UI/refreshable_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ClusterDetailTable extends React.Component {

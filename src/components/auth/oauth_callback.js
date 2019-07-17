@@ -1,10 +1,10 @@
-import * as userActions from '../../actions/userActions';
+import * as userActions from 'actions/userActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
-import { spinner } from '../../images';
-import Auth from '../../lib/auth0';
+import { spinner } from 'images';
+import Auth from 'lib/auth0';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';

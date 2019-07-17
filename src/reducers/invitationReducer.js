@@ -1,4 +1,4 @@
-import * as types from '../actions/actionTypes';
+import * as types from 'actions/actionTypes';
 
 export default function invitationReducer(
   state = { lastUpdated: 0, isFetching: false, items: {} },

@@ -5,7 +5,7 @@
 //
 
 import { connect } from 'react-redux';
-import { flashRemove } from '../../actions/flashMessageActions';
+import { flashRemove } from 'actions/flashMessageActions';
 import FlashMessage from './flash_message';
 import PropTypes from 'prop-types';
 import React from 'react';

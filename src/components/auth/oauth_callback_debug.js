@@ -1,6 +1,6 @@
-import * as userActions from '../../actions/userActions';
+import * as userActions from 'actions/userActions';
 import { bindActionCreators } from 'redux';
-import { clearQueues } from '../../lib/flash_message';
+import { clearQueues } from 'lib/flash_message';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import QueryString from 'query-string';

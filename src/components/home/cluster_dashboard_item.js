@@ -1,16 +1,16 @@
-import * as clusterActions from '../../actions/clusterActions';
+import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
-import { relativeDate } from '../../lib/helpers.js';
-import Button from '../UI/button';
+import { relativeDate } from 'lib/helpers.js';
+import Button from 'UI/button';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
-import ClusterIDLabel from '../UI/cluster_id_label';
+import ClusterIDLabel from 'UI/cluster_id_label';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import RefreshableLabel from '../UI/refreshable_label';
+import RefreshableLabel from 'UI/refreshable_label';
 
 class ClusterDashboardItem extends React.Component {
   state = {
