@@ -17,7 +17,7 @@ import React from 'react';
 import SetPassword from './forgot_password/set_password';
 import SignUp from './signup/index';
 import StyleGuide from './UI/style_guide';
-import theme from './UI/theme';
+import theme from '../styles/theme';
 
 // CSS Imports
 // Keep the blank lines to allow for a certain ordering!
