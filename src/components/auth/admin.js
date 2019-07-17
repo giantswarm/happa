@@ -1,11 +1,11 @@
-import * as userActions from '../../actions/userActions';
+import * as userActions from 'actions/userActions';
 import { bindActionCreators } from 'redux';
-import { clearQueues } from '../../lib/flash_message';
+import { clearQueues } from 'lib/flash_message';
 import { connect } from 'react-redux';
-import { isJwtExpired } from '../../lib/helpers';
+import { isJwtExpired } from 'lib/helpers';
 import { push } from 'connected-react-router';
-import { spinner } from '../../images';
-import Auth0 from '../../lib/auth0';
+import { spinner } from 'images';
+import Auth0 from 'lib/auth0';
 import PropTypes from 'prop-types';
 import React from 'react';
 

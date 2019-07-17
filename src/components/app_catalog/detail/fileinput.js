@@ -1,4 +1,4 @@
-import * as theme from '../../../lib/theme';
+import * as theme from 'lib/theme';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';

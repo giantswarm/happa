@@ -1,18 +1,18 @@
-import * as forgotPasswordActions from '../../actions/forgotPasswordActions';
+import * as forgotPasswordActions from 'actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
 import {
   clearQueues,
   FlashMessage,
   messageTTL,
   messageType,
-} from '../../lib/flash_message';
+} from 'lib/flash_message';
 import { connect } from 'react-redux';
-import { giantswarmLogin } from '../../actions/userActions';
+import { giantswarmLogin } from 'actions/userActions';
 import { Link } from 'react-router-dom';
 import { parseErrorMessages } from '../auth/_parse_error_messages';
 import { push } from 'connected-react-router';
-import { spinner } from '../../images';
-import { validatePassword } from '../../lib/password_validation';
+import { spinner } from 'images';
+import { validatePassword } from 'lib/password_validation';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
 import React from 'react';

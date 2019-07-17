@@ -1,4 +1,4 @@
-import * as UserActions from '../../actions/userActions';
+import * as UserActions from 'actions/userActions';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';

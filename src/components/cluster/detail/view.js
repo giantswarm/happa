@@ -1,24 +1,20 @@
-import * as clusterActions from '../../../actions/clusterActions';
-import * as releaseActions from '../../../actions/releaseActions';
+import * as clusterActions from 'actions/clusterActions';
+import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {
-  FlashMessage,
-  messageTTL,
-  messageType,
-} from '../../../lib/flash_message';
-import { organizationCredentialsLoad } from '../../../actions/organizationActions';
+import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { organizationCredentialsLoad } from 'actions/organizationActions';
 import { push } from 'connected-react-router';
-import Button from '../../UI/button';
+import Button from 'UI/button';
 import ClusterApps from './cluster_apps';
 import ClusterDetailTable from './cluster_detail_table';
-import ClusterIDLabel from '../../UI/cluster_id_label';
+import ClusterIDLabel from 'UI/cluster_id_label';
 import ClusterKeyPairs from './key_pairs';
-import ClusterName from '../../UI/cluster_name';
+import ClusterName from 'UI/cluster_name';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
-import LoadingOverlay from '../../UI/loading_overlay';
-import PageVisibilityTracker from '../../../lib/page_visibility_tracker';
+import LoadingOverlay from 'UI/loading_overlay';
+import PageVisibilityTracker from 'lib/page_visibility_tracker';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';

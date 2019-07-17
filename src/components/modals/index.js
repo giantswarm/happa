@@ -1,17 +1,17 @@
-import { clusterDeleteConfirmed } from '../../actions/clusterActions';
+import { clusterDeleteConfirmed } from 'actions/clusterActions';
 import { connect } from 'react-redux';
-import { modalHide } from '../../actions/modalActions';
+import { modalHide } from 'actions/modalActions';
 import {
   organizationAddMemberConfirmed,
   organizationAddMemberTyping,
   organizationCreateConfirmed,
   organizationDeleteConfirmed,
   organizationRemoveMemberConfirmed,
-} from '../../actions/organizationActions';
+} from 'actions/organizationActions';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../UI/button';
-import ClusterIDLabel from '../UI/cluster_id_label';
-import EmailField from '../shared/email_field';
+import Button from 'UI/button';
+import ClusterIDLabel from 'UI/cluster_id_label';
+import EmailField from 'shared/email_field';
 import PropTypes from 'prop-types';
 import React from 'react';
 

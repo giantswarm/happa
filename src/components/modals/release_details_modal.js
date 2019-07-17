@@ -1,11 +1,11 @@
-import { relativeDate } from '../../lib/helpers.js';
+import { relativeDate } from 'lib/helpers.js';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../UI/button';
-import ComponentChangelog from '../UI/component_changelog';
+import Button from 'UI/button';
+import ComponentChangelog from 'UI/component_changelog';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReleaseComponentLabel from '../UI/release_component_label';
+import ReleaseComponentLabel from 'UI/release_component_label';
 
 class ReleaseDetailsModal extends React.Component {
   state = {
