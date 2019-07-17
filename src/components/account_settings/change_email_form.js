@@ -1,5 +1,5 @@
 import Button from '../UI/button';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -68,7 +68,7 @@ class ChangeEmailForm extends React.Component {
       var token = this.props.user.auth.token;
       var scheme = this.props.user.auth.scheme;
 
-      var usersApi = new GiantSwarmV4.UsersApi();
+      var usersApi = new GiantSwarm.UsersApi();
 
       this.setState({
         isSubmitting: true,

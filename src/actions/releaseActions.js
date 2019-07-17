@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import GiantSwarmV4 from 'giantswarm-v4';
+import GiantSwarm from 'giantswarm';
 
 export function releasesLoad() {
   return {
@@ -28,7 +28,7 @@ export function loadReleases() {
 
     dispatch(releasesLoad());
 
-    var releasesApi = new GiantSwarmV4.ReleasesApi();
+    var releasesApi = new GiantSwarm.ReleasesApi();
 
     return releasesApi
       .getReleases(scheme + ' ' + token)
