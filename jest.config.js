@@ -1,6 +1,13 @@
+const path = require('path');
+
 module.exports = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
   setupFilesAfterEnv: ['@testing-library/react/cleanup-after-each'],
+  moduleDirectories: [
+    'node_modules',
+    path.resolve(__dirname + '/src'),
+    path.resolve(__dirname + '/src/components'),
+  ],
   moduleNameMapper: {
     '\\.css$': require.resolve('./test_utils/assets-mock.js'),
     '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': require.resolve(
