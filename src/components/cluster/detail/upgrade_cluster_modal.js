@@ -1,19 +1,15 @@
-import * as clusterActions from '../../../actions/clusterActions';
+import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {
-  FlashMessage,
-  messageTTL,
-  messageType,
-} from '../../../lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from '../../UI/button';
-import ComponentChangelog from '../../UI/component_changelog';
+import Button from 'UI/button';
+import ComponentChangelog from 'UI/component_changelog';
 import diff from 'deep-diff';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReleaseComponentLabel from '../../UI/release_component_label';
+import ReleaseComponentLabel from 'UI/release_component_label';
 
 class UpgradeClusterModal extends React.Component {
   state = {

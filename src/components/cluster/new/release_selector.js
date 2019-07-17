@@ -1,17 +1,13 @@
 import { connect } from 'react-redux';
-import {
-  FlashMessage,
-  messageTTL,
-  messageType,
-} from '../../../lib/flash_message';
-import { loadReleases } from '../../../actions/releaseActions';
-import { spinner } from '../../../images';
+import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { loadReleases } from 'actions/releaseActions';
+import { spinner } from 'images';
 import _ from 'underscore';
-import Button from '../../UI/button';
+import Button from 'UI/button';
 import cmp from 'semver-compare';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReleaseComponentLabel from '../../UI/release_component_label';
+import ReleaseComponentLabel from 'UI/release_component_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ReleaseSelector extends React.Component {

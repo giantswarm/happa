@@ -1,4 +1,4 @@
-import { spinner } from '../../images';
+import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
 

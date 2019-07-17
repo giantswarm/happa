@@ -1,4 +1,4 @@
-import { clustersForOrg } from '../../../lib/helpers';
+import { clustersForOrg } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Row from './row';

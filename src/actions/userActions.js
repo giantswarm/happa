@@ -5,10 +5,10 @@ import {
   FlashMessage,
   messageTTL,
   messageType,
-} from '../lib/flash_message';
+} from 'lib/flash_message';
 import { push } from 'connected-react-router';
 import _ from 'underscore';
-import GiantSwarm from '../lib/giantswarm_client_wrapper';
+import GiantSwarm from 'lib/giantswarm_client_wrapper';
 
 export function loginSuccess(userData) {
   return {

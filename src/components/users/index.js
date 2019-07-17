@@ -1,21 +1,18 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import {
-  invitationCreate,
-  invitationsLoad,
-} from '../../actions/invitationActions';
+import { invitationCreate, invitationsLoad } from 'actions/invitationActions';
 import { push } from 'connected-react-router';
-import { relativeDate } from '../../lib/helpers.js';
-import { spinner } from '../../images';
+import { relativeDate } from 'lib/helpers.js';
+import { spinner } from 'images';
 import {
   userDelete,
   userRemoveExpiration,
   usersLoad,
-} from '../../actions/userActions';
+} from 'actions/userActions';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import BootstrapTable from 'react-bootstrap-table-next';
-import Button from '../UI/button';
+import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import DocumentTitle from 'react-document-title';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';

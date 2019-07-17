@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from '../lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import GiantSwarm from 'giantswarm';
 
 /**

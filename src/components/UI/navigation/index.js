@@ -1,5 +1,5 @@
 import { Breadcrumbs } from 'react-breadcrumbs';
-import { logo } from '../../../images';
+import { logo } from 'images';
 import { NavLink } from 'react-router-dom';
 
 import OrganizationDropdown from './organization_dropdown';

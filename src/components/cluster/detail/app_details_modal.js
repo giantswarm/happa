@@ -1,19 +1,12 @@
-import {
-  clusterDeleteApp,
-  clusterLoadApps,
-} from '../../../actions/clusterActions';
+import { clusterDeleteApp, clusterLoadApps } from 'actions/clusterActions';
 import {
   createAppConfig,
   deleteAppConfig,
   updateAppConfig,
-} from '../../../actions/appConfigActions';
-import {
-  FlashMessage,
-  messageTTL,
-  messageType,
-} from '../../../lib/flash_message';
-import Button from '../../UI/button';
-import ClusterIDLabel from '../../UI/cluster_id_label';
+} from 'actions/appConfigActions';
+import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import Button from 'UI/button';
+import ClusterIDLabel from 'UI/cluster_id_label';
 import GenericModal from '../../modals/generic_modal';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';

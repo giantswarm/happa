@@ -1,11 +1,11 @@
-import * as clusterActions from '../../actions/clusterActions';
+import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { CodeBlock, Prompt } from './codeblock';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from '../../lib/flash_message';
-import Button from '../UI/button';
+import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import Button from 'UI/button';
 import FileBlock from './fileblock';
-import platform from '../../lib/platform';
+import platform from 'lib/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
 
