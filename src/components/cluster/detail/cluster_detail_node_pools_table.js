@@ -104,7 +104,7 @@ const nodePool2 = {
   current: 12,
 };
 
-class ClusterDetailTable extends React.Component {
+class ClusterDetailNodePoolsTable extends React.Component {
   render() {
     return (
       <React.Fragment>
@@ -178,4 +178,4 @@ class ClusterDetailTable extends React.Component {
   }
 }
 
-export default ClusterDetailTable;
+export default ClusterDetailNodePoolsTable;

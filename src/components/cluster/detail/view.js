@@ -11,6 +11,7 @@ import { organizationCredentialsLoad } from '../../../actions/organizationAction
 import { push } from 'connected-react-router';
 import Button from '../../UI/button';
 import ClusterApps from './cluster_apps';
+import ClusterDetailNodePoolsTable from './cluster_detail_node_pools_table';
 import ClusterDetailTable from './cluster_detail_table';
 import ClusterIDLabel from '../../UI/cluster_id_label';
 import ClusterKeyPairs from './key_pairs';
@@ -289,17 +290,21 @@ class ClusterDetailView extends React.Component {
               <div className='col-12'>
                 <Tabs>
                   <Tab eventKey={1} title='General'>
-                    <ClusterDetailTable
-                      canClusterUpgrade={this.canClusterUpgrade()}
-                      cluster={this.props.cluster}
-                      credentials={this.props.credentials}
-                      provider={this.props.provider}
-                      release={this.props.release}
-                      showScalingModal={this.showScalingModal}
-                      showUpgradeModal={this.showUpgradeModal}
-                      workerNodesDesired={this.getDesiredNumberOfNodes()}
-                      workerNodesRunning={this.getNumberOfNodes()}
-                    />
+                    {this.props.isNodePoolView ? (
+                      <ClusterDetailNodePoolsTable />
+                    ) : (
+                      <ClusterDetailTable
+                        canClusterUpgrade={this.canClusterUpgrade()}
+                        cluster={this.props.cluster}
+                        credentials={this.props.credentials}
+                        provider={this.props.provider}
+                        release={this.props.release}
+                        showScalingModal={this.showScalingModal}
+                        showUpgradeModal={this.showUpgradeModal}
+                        workerNodesDesired={this.getDesiredNumberOfNodes()}
+                        workerNodesRunning={this.getNumberOfNodes()}
+                      />
+                    )}
 
                     <div className='row section cluster_delete col-12'>
                       <div className='row'>
@@ -395,6 +400,7 @@ ClusterDetailView.propTypes = {
   clusterId: PropTypes.string,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
+  isNodePoolView: PropTypes.bool,
   organizationId: PropTypes.string,
   releaseActions: PropTypes.object,
   release: PropTypes.object,

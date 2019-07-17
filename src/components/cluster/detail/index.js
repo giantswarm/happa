@@ -25,6 +25,12 @@ class ClusterDetailIndex extends React.Component {
           />
 
           <Route
+            exact
+            path={`${this.props.match.path}/np`}
+            render={() => <ClusterDetailView {...this.props} isNodePoolView />}
+          />
+
+          <Route
             path={`${this.props.match.path}/getting-started/`}
             render={() => <GettingStarted {...this.props} />}
           />
