@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
  * This is a reusable component. It is responsible for:
  *
  * 1. Rendering a styled popover menu
- * 2. Provinding state and methods for handling the popover state in an accessible way
+ * 2. Providing state and methods for handling the popover state in an accessible way
  *
  * For further customization - e.g. adding custom positioning - overwrite styles in the
  * component where it is being used
