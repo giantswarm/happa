@@ -11,7 +11,6 @@ import styled from '@emotion/styled';
 export const Row = css`
   padding: 5px 21px 5px 14px;
   min-height: 56px;
-  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.3px;
   margin-bottom: 16px;
