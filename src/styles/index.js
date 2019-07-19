@@ -9,7 +9,7 @@ import styled from '@emotion/styled';
  */
 
 export const Row = css`
-  padding: 5px 21px 5px 14px;
+  padding: 14px 21px;
   min-height: 56px;
   font-weight: 300;
   letter-spacing: 0.3px;
@@ -30,8 +30,9 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
   ${FlexRowBase};
   ${Row};
   background-color: ${props => props.theme.colors.shade7};
-  > div > * {
-    display: inline-block;
+  > div {
+    display: flex;
+    align-items: center;
   }
   /* Left block */
   > div:first-of-type {
@@ -39,6 +40,7 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
     /* Separation for children */
     > * {
       margin-right: 18px;
+      display: inline-block;
     }
   }
   /* Right Block */
@@ -47,6 +49,7 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
     /* Separation for children */
     > * {
       margin-left: 18px;
+      display: inline-block;
     }
   }
   i {
