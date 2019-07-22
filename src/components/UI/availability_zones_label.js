@@ -46,9 +46,7 @@ const Wrapper = styled.abbr`
   }
 `;
 
-const AvailabilityZonesLabel = props => {
-  const { zones } = props;
-
+const AvailabilityZonesLabel = ({ zones, style }) => {
   if (typeof zones === 'undefined' || zones.length == 0) {
     return <abbr title='No information available'>n/a</abbr>;
   }
@@ -58,7 +56,7 @@ const AvailabilityZonesLabel = props => {
     let letter = az.slice(-1);
     let label = letter.toUpperCase();
     return (
-      <Wrapper className={letter} key={az} title={az}>
+      <Wrapper className={letter} key={az} style={style} title={az}>
         {label}
       </Wrapper>
     );
@@ -69,6 +67,7 @@ const AvailabilityZonesLabel = props => {
 
 AvailabilityZonesLabel.propTypes = {
   zones: PropTypes.arrayOf(PropTypes.string),
+  style: PropTypes.object,
 };
 
 export default AvailabilityZonesLabel;
