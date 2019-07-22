@@ -1,6 +1,6 @@
+import { availabilityZonesLabels } from 'lib/utils';
 import { relativeDate } from 'lib/helpers.js';
 import _ from 'underscore';
-import AvailabilityZonesLabel from 'UI/availability_zones_label';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';
 import moment from 'moment';
@@ -192,8 +192,8 @@ class ClusterDetailTable extends React.Component {
 
     var availabilityZonesOrNothing = null;
     if (this.props.provider === 'aws') {
-      var azs = (
-        <AvailabilityZonesLabel zones={this.props.cluster.availability_zones} />
+      const azs = availabilityZonesLabels(
+        this.props.cluster.availability_zones
       );
 
       availabilityZonesOrNothing = (
