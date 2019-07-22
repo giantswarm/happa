@@ -1,8 +1,17 @@
-import { Code } from '../../../styles/';
+import { Code } from 'styles/';
 import AvailabilityZonesLabel from 'UI/availability_zones_label';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
+import theme from 'styles/theme';
+
+const NodesWrapper = styled.div`
+  width: 36px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+`;
 
 const NodePool = ({ nodePool }) => {
   const {
@@ -24,10 +33,16 @@ const NodePool = ({ nodePool }) => {
       <div>
         <AvailabilityZonesLabel style={{ margin: '0.1vw' }} zones={avZones} />
       </div>
-      <div>{min}</div>
-      <div>{max}</div>
-      <div>{desired}</div>
-      <div>{current}</div>
+      <NodesWrapper>{min}</NodesWrapper>
+      <NodesWrapper>{max}</NodesWrapper>
+      <NodesWrapper>{desired}</NodesWrapper>
+      <NodesWrapper
+        style={{
+          background: current < desired ? '#d9534f' : theme.colors.shade2,
+        }}
+      >
+        {current}
+      </NodesWrapper>
       <NodePoolDropdownMenu />
     </>
   );

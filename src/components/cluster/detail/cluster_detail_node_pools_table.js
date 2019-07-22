@@ -101,8 +101,8 @@ const nodePool2 = {
   avZones: ['eu-central-1c', 'eu-central-1d'],
   min: 5,
   max: 20,
-  desired: 11,
-  current: 12,
+  desired: 12,
+  current: 11,
 };
 
 class ClusterDetailNodePoolsTable extends React.Component {
