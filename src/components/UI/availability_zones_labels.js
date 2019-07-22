@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 // Returns an array of AvailabilityZonesLabel components
-const AvailabilityZonesLabelParser = ({ zones }) => {
+const AvailabilityZonesLabels = ({ zones }) => {
   if (typeof zones === 'undefined' || zones.length == 0) {
     return <abbr title='No information available'>n/a</abbr>;
   }
@@ -24,7 +24,7 @@ const AvailabilityZonesLabelParser = ({ zones }) => {
   });
 };
 
-AvailabilityZonesLabelParser.propTypes = {
+AvailabilityZonesLabels.propTypes = {
   zones: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string,
@@ -35,4 +35,4 @@ AvailabilityZonesLabelParser.propTypes = {
   ),
 };
 
-export default AvailabilityZonesLabelParser;
+export default AvailabilityZonesLabels;
