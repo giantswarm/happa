@@ -21,23 +21,42 @@ const MenuWrapper = styled.div`
     border-radius: 0;
     padding: 0;
     background: unset;
+    transition: background 0.3s;
     &:focus {
       outline: 5px auto -webkit-focus-ring-color;
     }
+    &:hover,
+    &:focus,
+    &:focus-within {
+      background: ${props => props.theme.colors.shade8};
+    }
   }
   ul {
+    padding: 0;
     position: absolute;
     right: 7px;
     list-style-type: none;
-    padding: 12px 15px;
-    margin: 0;
+    margin: 2px 0 0;
     width: 180px;
     background: ${props => props.theme.colors.shade2};
-    border: 1px solid ${props => props.theme.colors.white3};
     z-index: 1;
+    background-color: #2a5874;
+    border: none;
+    border-radius: 5px;
+  }
+  li {
+    padding: 8px 15px;
+    border-top: 1px solid #3a5f7b;
+    border-bottom: 1px solid #234d65;
+  }
+  li:first-of-type {
+    border-top: unset;
   }
   a {
     text-decoration: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
   }
 `;
 
@@ -47,7 +66,7 @@ function DropdownMenu(props) {
 
   const onBlurHandler = () => {
     timeOutId = setTimeout(() => {
-      setIsOpen(false);
+      // setIsOpen(false);
     });
   };
 

@@ -1,5 +1,4 @@
 import { Code } from '../../../styles/';
-import { css } from '@emotion/core';
 import AvailabilityZonesLabel from 'UI/availability_zones_label';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
@@ -16,8 +15,9 @@ const NodePool = ({ nodePool }) => {
     desired,
     current,
   } = nodePool;
+
   return (
-    <React.Fragment>
+    <>
       <Code>{id}</Code>
       <div>{name}</div>
       <Code>{instanceType}</Code>
@@ -29,7 +29,7 @@ const NodePool = ({ nodePool }) => {
       <div>{desired}</div>
       <div>{current}</div>
       <NodePoolDropdownMenu />
-    </React.Fragment>
+    </>
   );
 };
 

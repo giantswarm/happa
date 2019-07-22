@@ -4,7 +4,7 @@ import React from 'react';
 const NodePoolDropdownMenu = () => (
   <DropdownMenu
     render={({ isOpen, onClickHandler, onFocusHandler, onBlurHandler }) => (
-      <React.Fragment>
+      <>
         <button
           aria-expanded={isOpen}
           aria-haspopup='true'
@@ -28,7 +28,7 @@ const NodePoolDropdownMenu = () => (
             </li>
           </ul>
         )}
-      </React.Fragment>
+      </>
     )}
   />
 );

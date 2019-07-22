@@ -7,6 +7,7 @@ const theme = {
     shade5: '#32526A',
     shade6: '#3A5F7B',
     shade7: '#30556a',
+    shade8: '#5c7f9a',
     white1: '#FFFFFF',
     white2: '#D7D7D7',
     white3: '#B9C1C8',

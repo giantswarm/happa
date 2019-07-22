@@ -26,6 +26,7 @@ const GridRowNodePoolsBase = css`
   display: grid;
   grid-gap: 0 10px;
   grid-template-columns: 1fr 4fr 4fr 3fr repeat(4, 2fr) 1fr;
+  grid-template-rows: 30px;
   justify-content: space-between;
   place-items: center center;
   padding-right: 7px;
@@ -86,13 +87,7 @@ const nodePool1 = {
   id: '6dh',
   name: 'Database',
   instanceType: 'r3.4xlarge',
-  avZones: [
-    'eu-central-1a',
-    'eu-central-1b',
-    'eu-central-1c',
-    'eu-central-1d',
-    'eu-central-1e',
-  ],
+  avZones: ['eu-central-1a', 'eu-central-1b', 'eu-central-1d'],
   min: 3,
   max: 3,
   desired: 3,
@@ -103,7 +98,7 @@ const nodePool2 = {
   id: 'z66',
   name: 'General Purpose',
   instanceType: 'm5.xlarge',
-  avZones: ['eu-central-1c'],
+  avZones: ['eu-central-1c', 'eu-central-1d'],
   min: 5,
   max: 20,
   desired: 11,
@@ -113,7 +108,7 @@ const nodePool2 = {
 class ClusterDetailNodePoolsTable extends React.Component {
   render() {
     return (
-      <React.Fragment>
+      <>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
             <Code>europe-central-1</Code>
@@ -179,7 +174,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <NodePool nodePool={nodePool2} />
           </GridRowNodePoolsItem>
         </NodePools>
-      </React.Fragment>
+      </>
     );
   }
 }
