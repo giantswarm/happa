@@ -1,8 +1,9 @@
 import AvailabilityZonesLabel from 'UI/availability_zones_label';
+import PropTypes from 'prop-types';
 import React from 'react';
 
-// Returns an array with the properties we need to build the view
-export const availabilityZonesLabels = zones => {
+// Returns an array of AvailabilityZonesLabel components
+const AvailabilityZonesLabelParser = ({ zones }) => {
   if (typeof zones === 'undefined' || zones.length == 0) {
     return <abbr title='No information available'>n/a</abbr>;
   }
@@ -22,3 +23,16 @@ export const availabilityZonesLabels = zones => {
     );
   });
 };
+
+AvailabilityZonesLabelParser.propTypes = {
+  zones: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string,
+      label: PropTypes.string,
+      letter: PropTypes.string,
+      title: PropTypes.string,
+    })
+  ),
+};
+
+export default AvailabilityZonesLabelParser;
