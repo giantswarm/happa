@@ -54,6 +54,8 @@ export function clustersLoad() {
       const regularClusters = await clustersApi.getClusters(
         scheme + ' ' + token
       );
+      // TODO This will have to be changed as getClusters will return node pools
+      // and regular clusters
       const nodePoolsClusters = await clustersApi.getClusterV5(
         scheme + ' ' + token,
         'm0ckd'
