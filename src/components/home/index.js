@@ -21,6 +21,7 @@ class Home extends React.Component {
     this.registerRefreshInterval();
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
     this.fetchClusterDetails(this.props.clusters);
+    console.log('props: ', this.props.clusters);
   }
 
   componentDidUpdate(prevProps) {
@@ -52,7 +53,7 @@ class Home extends React.Component {
   };
 
   refreshClustersList = () => {
-    this.props.actions.clustersLoad();
+    this.props.actions.clustersLoadV5();
   };
 
   handleVisibilityChange = () => {

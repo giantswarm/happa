@@ -66,6 +66,28 @@ export function clustersLoad() {
   };
 }
 
+/* ClustersLoad V5 */
+export function clustersLoadV5() {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+    var clustersApi = new GiantSwarm.ClustersApi();
+
+    dispatch({ type: types.CLUSTERS_LOAD });
+
+    return clustersApi
+      .getClusterV5(scheme + ' ' + token, 'm0ckd')
+      .then(cluster => {
+        dispatch(clustersLoadSuccess([cluster]));
+        return [cluster];
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(clustersLoadError(error));
+      });
+  };
+}
+
 /**
  * Loads apps for a cluster.
  *
@@ -294,6 +316,8 @@ export function clusterLoadDetails(clusterId) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
+    clusterId = 'm0ckd';
+
     dispatch({
       type: types.CLUSTER_LOAD_DETAILS,
       clusterId,
@@ -303,17 +327,17 @@ export function clusterLoadDetails(clusterId) {
     var clustersApi = new GiantSwarm.ClustersApi();
 
     return clustersApi
-      .getCluster(scheme + ' ' + token, clusterId)
+      .getClusterV5(scheme + ' ' + token, clusterId)
       .then(c => {
         cluster = c;
-        return dispatch(clusterLoadStatus(clusterId));
+        // return dispatch(clusterLoadStatus(clusterId));
       })
       .then(() => {
         cluster.capabilities = computeCapabilities(
           cluster,
           getState().app.info.general.provider
         );
-        dispatch(clusterLoadDetailsSuccess(cluster));
+        // dispatch(clusterLoadDetailsSuccess(cluster));
         return cluster;
       })
       .catch(error => {
@@ -355,6 +379,7 @@ export function clusterLoadStatus(clusterId) {
       .getClusterStatus(scheme + ' ' + token, clusterId)
       .then(status => {
         dispatch(clusterLoadStatusSuccess(clusterId, status));
+        console.log(status);
         return status;
       })
       .catch(error => {
