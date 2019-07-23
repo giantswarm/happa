@@ -60,6 +60,7 @@ class ClusterDetailView extends React.Component {
           });
         })
         .then(() => {
+          // TODO Remove it when node pools development is finished
           if (this.props.cluster.id !== 'm0ckd') {
             return props.clusterActions.clusterLoadApps(props.cluster.id);
           }
