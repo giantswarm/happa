@@ -75,7 +75,7 @@ export function clustersLoadV5() {
 
     dispatch({ type: types.CLUSTERS_LOAD });
 
-    // We don't have still getClustersV5, so  I am get one cluster and putting it inside a string
+    // We don't have still getClustersV5, so  I am using the one cluster getter and putting it inside an array
     return clustersApi
       .getClusterV5(scheme + ' ' + token, 'm0ckd')
       .then(cluster => {
