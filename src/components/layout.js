@@ -2,7 +2,7 @@ import * as UserActions from 'actions/userActions';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { catalogsLoad } from 'actions/catalogActions';
-import { clustersLoadV5 } from 'actions/clusterActions';
+import { clustersLoad } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { organizationSelect } from 'actions/organizationActions';
@@ -43,7 +43,7 @@ class Layout extends React.Component {
           return this.props.dispatch(organizationsLoad());
         })
         .then(() => {
-          this.props.dispatch(clustersLoadV5());
+          this.props.dispatch(clustersLoad());
         })
         .then(() => {
           this.props.dispatch(catalogsLoad());

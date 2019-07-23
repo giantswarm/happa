@@ -42,55 +42,26 @@ function computeCapabilities(cluster, provider) {
  * action.
  */
 export function clustersLoad() {
-  return function(dispatch, getState) {
+  return async function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
     var clustersApi = new GiantSwarm.ClustersApi();
 
     dispatch({ type: types.CLUSTERS_LOAD });
 
-    return clustersApi
-      .getClusters(scheme + ' ' + token)
-      .then(clusters => {
-        clusters = enhanceWithCapabilities(
-          clusters,
-          getState().app.info.general.provider
-        );
-        dispatch(clustersLoadSuccess(clusters));
-        return clusters;
-      })
-      .catch(error => {
-        console.error(error);
-        dispatch(clustersLoadError(error));
-      });
-  };
-}
+    try {
+      const clusters = await clustersApi.getClusters(scheme + ' ' + token);
+      const enhancedClusters = enhanceWithCapabilities(
+        clusters,
+        getState().app.info.general.provider
+      );
 
-/* ClustersLoad V5 */
-export function clustersLoadV5() {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-    var clustersApi = new GiantSwarm.ClustersApi();
-
-    dispatch({ type: types.CLUSTERS_LOAD });
-
-    // We don't have still getClustersV5, so  I am using the one cluster getter and putting
-    // returned data inside an array
-    return clustersApi
-      .getClusterV5(scheme + ' ' + token, 'm0ckd')
-      .then(cluster => {
-        const clusterArray = enhanceWithCapabilities(
-          [cluster],
-          getState().app.info.general.provider
-        );
-        dispatch(clustersLoadSuccess(clusterArray));
-        return clusterArray;
-      })
-      .catch(error => {
-        console.error(error);
-        dispatch(clustersLoadError(error));
-      });
+      dispatch(clustersLoadSuccess(enhancedClusters));
+      return enhancedClusters;
+    } catch (error) {
+      console.error(error);
+      dispatch(clustersLoadError(error));
+    }
   };
 }
 
@@ -331,17 +302,17 @@ export function clusterLoadDetails(clusterId) {
     var clustersApi = new GiantSwarm.ClustersApi();
 
     return clustersApi
-      .getClusterV5(scheme + ' ' + token, clusterId)
+      .getCluster(scheme + ' ' + token, clusterId)
       .then(c => {
         cluster = c;
-        // return dispatch(clusterLoadStatus(clusterId));
+        return dispatch(clusterLoadStatus(clusterId));
       })
       .then(() => {
         cluster.capabilities = computeCapabilities(
           cluster,
           getState().app.info.general.provider
         );
-        // dispatch(clusterLoadDetailsSuccess(cluster));
+        dispatch(clusterLoadDetailsSuccess(cluster));
         return cluster;
       })
       .catch(error => {
