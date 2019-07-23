@@ -48,7 +48,9 @@ class AppListInner extends React.Component {
     let q = query.get('q');
 
     var appsArray = Object.values(props.catalog.apps).map(
-      appVersions => appVersions[0]
+        appVersions => appVersions.sort(function(a, b) {
+          new Date(b.created) - new Date(a.created)
+        }.shift()
     );
 
     this.index = lunr(function() {
