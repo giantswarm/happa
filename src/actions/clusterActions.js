@@ -56,15 +56,20 @@ export function clustersLoad() {
       const regularClusters = await clustersApi.getClusters(
         scheme + ' ' + token
       );
-      // TODO This will be deleted as getClusters will return node pools
-      // and regular clusters
-      const nodePoolsClusters = await clustersApi.getClusterV5(
-        scheme + ' ' + token,
-        'm0ckd'
-      );
+      // TODO - Remove it. This is just for local development. It will be deleted as
+      // v4 getClusters() will return node pools and regular clusters
+      const nodePoolsClusters =
+        window.config.environment === 'development'
+          ? await clustersApi.getClusterV5(scheme + ' ' + token, 'm0ckd')
+          : null;
+
+      const clusters =
+        window.config.environment === 'development'
+          ? [...regularClusters, nodePoolsClusters]
+          : regularClusters;
 
       const enhancedClusters = await enhanceWithCapabilities(
-        [...regularClusters, nodePoolsClusters],
+        clusters,
         getState().app.info.general.provider
       );
 
@@ -72,7 +77,7 @@ export function clustersLoad() {
       return enhancedClusters;
     } catch (error) {
       console.error(error);
-      dispatch(clustersLoadError(error));
+      // dispatch(clustersLoadError(error));
     }
   };
 }
