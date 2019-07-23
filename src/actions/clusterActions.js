@@ -6,7 +6,6 @@ import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
 
-// Is there any reason why we reinstantiate it inside all functions?
 const clustersApi = new GiantSwarm.ClustersApi();
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
