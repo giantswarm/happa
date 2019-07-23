@@ -49,10 +49,18 @@ export function clustersLoad() {
 
     dispatch({ type: types.CLUSTERS_LOAD });
 
+    // Async await lets us write promise based code in a synchronous fashion
     try {
-      const clusters = await clustersApi.getClusters(scheme + ' ' + token);
-      const enhancedClusters = enhanceWithCapabilities(
-        clusters,
+      const regularClusters = await clustersApi.getClusters(
+        scheme + ' ' + token
+      );
+      const nodePoolsClusters = await clustersApi.getClusterV5(
+        scheme + ' ' + token,
+        'm0ckd'
+      );
+
+      const enhancedClusters = await enhanceWithCapabilities(
+        [...regularClusters, nodePoolsClusters],
         getState().app.info.general.provider
       );
 
@@ -283,13 +291,15 @@ export function clusterDeleteApp(appName, clusterID) {
   };
 }
 
+const clustersApi = new GiantSwarm.ClustersApi();
+
 /**
  * Loads details for a cluster.
  *
  * @param {String} clusterId Cluster ID
  */
 export function clusterLoadDetails(clusterId) {
-  return function(dispatch, getState) {
+  return async function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
@@ -298,36 +308,34 @@ export function clusterLoadDetails(clusterId) {
       clusterId,
     });
 
-    var cluster;
-    var clustersApi = new GiantSwarm.ClustersApi();
+    try {
+      // TODO use path for diferentiate node pools cluster from regular clusters
+      const cluster =
+        clusterId === 'm0ckd'
+          ? await clustersApi.getClusterV5(scheme + ' ' + token, clusterId)
+          : await clustersApi.getCluster(scheme + ' ' + token, clusterId);
+      dispatch(clusterLoadStatus(clusterId));
 
-    return clustersApi
-      .getCluster(scheme + ' ' + token, clusterId)
-      .then(c => {
-        cluster = c;
-        return dispatch(clusterLoadStatus(clusterId));
-      })
-      .then(() => {
-        cluster.capabilities = computeCapabilities(
-          cluster,
-          getState().app.info.general.provider
-        );
-        dispatch(clusterLoadDetailsSuccess(cluster));
-        return cluster;
-      })
-      .catch(error => {
-        console.error('Error loading cluster details:', error);
-        dispatch(clusterLoadDetailsError(clusterId, error));
+      cluster.capabilities = computeCapabilities(
+        cluster,
+        getState().app.info.general.provider
+      );
 
-        new FlashMessage(
-          'Something went wrong while trying to load cluster details.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
+      dispatch(clusterLoadDetailsSuccess(cluster));
+      return cluster;
+    } catch (error) {
+      console.error('Error loading cluster details:', error);
+      dispatch(clusterLoadDetailsError(clusterId, error));
 
-        throw error;
-      });
+      new FlashMessage(
+        'Something went wrong while trying to load cluster details.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      throw error;
+    }
   };
 }
 
@@ -359,6 +367,9 @@ export function clusterLoadStatus(clusterId) {
       .catch(error => {
         console.error(error);
         if (error.status === 404) {
+          dispatch(clusterLoadStatusNotFound(clusterId));
+        } else if (clusterId === 'm0ckd') {
+          // TODO delete when this doesn't trigger an error
           dispatch(clusterLoadStatusNotFound(clusterId));
         } else {
           dispatch(clusterLoadStatusError(clusterId, error));
