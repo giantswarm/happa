@@ -75,6 +75,7 @@ export function clustersLoadV5() {
 
     dispatch({ type: types.CLUSTERS_LOAD });
 
+    // We don't have still getClustersV5, so  I am get one cluster and putting it inside a string
     return clustersApi
       .getClusterV5(scheme + ' ' + token, 'm0ckd')
       .then(cluster => {
@@ -315,8 +316,6 @@ export function clusterLoadDetails(clusterId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
-
-    clusterId = 'm0ckd';
 
     dispatch({
       type: types.CLUSTER_LOAD_DETAILS,
