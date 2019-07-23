@@ -21,7 +21,6 @@ class Home extends React.Component {
     this.registerRefreshInterval();
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
     this.fetchClusterDetails(this.props.clusters);
-    console.log('props: ', this.props.clusters);
   }
 
   componentDidUpdate(prevProps) {

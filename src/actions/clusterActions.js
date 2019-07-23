@@ -6,6 +6,9 @@ import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
 
+// Is there any reason why we reinstantiate it inside all functions?
+const clustersApi = new GiantSwarm.ClustersApi();
+
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
 function enhanceWithCapabilities(clusters, provider) {
@@ -45,7 +48,6 @@ export function clustersLoad() {
   return async function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
-    var clustersApi = new GiantSwarm.ClustersApi();
 
     dispatch({ type: types.CLUSTERS_LOAD });
 
@@ -54,7 +56,7 @@ export function clustersLoad() {
       const regularClusters = await clustersApi.getClusters(
         scheme + ' ' + token
       );
-      // TODO This will have to be changed as getClusters will return node pools
+      // TODO This will be deleted as getClusters will return node pools
       // and regular clusters
       const nodePoolsClusters = await clustersApi.getClusterV5(
         scheme + ' ' + token,
@@ -293,8 +295,6 @@ export function clusterDeleteApp(appName, clusterID) {
   };
 }
 
-const clustersApi = new GiantSwarm.ClustersApi();
-
 /**
  * Loads details for a cluster.
  *
@@ -311,7 +311,7 @@ export function clusterLoadDetails(clusterId) {
     });
 
     try {
-      // TODO use path for diferentiate node pools cluster from regular clusters
+      // TODO when available, use path for diferentiate node pools cluster from regular clusters
       const cluster =
         clusterId === 'm0ckd'
           ? await clustersApi.getClusterV5(scheme + ' ' + token, clusterId)
