@@ -98,16 +98,17 @@ class ClusterDetailTable extends React.Component {
 
   render() {
     var instanceTypeOrVMSize = null;
-    const { workers } = this.props.cluster;
-
     if (this.props.provider === 'aws') {
       let details = <span />;
       if (
-        workers.length > 0 &&
-        typeof workers[0].aws.instance_type !== 'undefined' &&
-        this.awsInstanceTypes[workers[0].aws.instance_type]
+        this.props.cluster.workers.length > 0 &&
+        typeof this.props.cluster.workers[0].aws.instance_type !==
+          'undefined' &&
+        this.awsInstanceTypes[this.props.cluster.workers[0].aws.instance_type]
       ) {
-        let t = this.awsInstanceTypes[workers[0].aws.instance_type];
+        let t = this.awsInstanceTypes[
+          this.props.cluster.workers[0].aws.instance_type
+        ];
         details = (
           <span>
             &mdash; {t.cpu_cores} CPUs, {t.memory_size_gb.toFixed(0)} GB RAM
@@ -118,9 +119,10 @@ class ClusterDetailTable extends React.Component {
         <tr>
           <td>EC2 instance type</td>
           <td className='value'>
-            {workers.length > 0 ? (
+            {this.props.cluster.workers.length > 0 ? (
               <span>
-                <code>{workers[0].aws.instance_type}</code> {details}
+                <code>{this.props.cluster.workers[0].aws.instance_type}</code>{' '}
+                {details}
               </span>
             ) : null}
           </td>
@@ -129,11 +131,11 @@ class ClusterDetailTable extends React.Component {
     } else if (this.props.provider === 'azure') {
       let details = <span />;
       if (
-        workers &&
-        typeof workers[0].azure.vm_size !== 'undefined' &&
-        this.azureVMSizes[workers[0].azure.vm_size]
+        this.props.cluster.workers &&
+        typeof this.props.cluster.workers[0].azure.vm_size !== 'undefined' &&
+        this.azureVMSizes[this.props.cluster.workers[0].azure.vm_size]
       ) {
-        let t = this.azureVMSizes[workers[0].azure.vm_size];
+        let t = this.azureVMSizes[this.props.cluster.workers[0].azure.vm_size];
         details = (
           <span>
             &mdash; {t.numberOfCores} CPUs, {(t.memoryInMb / 1000.0).toFixed(1)}{' '}
@@ -146,9 +148,10 @@ class ClusterDetailTable extends React.Component {
         <tr>
           <td>VM size</td>
           <td className='value'>
-            {workers ? (
+            {this.props.cluster.workers ? (
               <span>
-                <code>{workers[0].azure.vm_size}</code> {details}
+                <code>{this.props.cluster.workers[0].azure.vm_size}</code>{' '}
+                {details}
               </span>
             ) : null}
           </td>
@@ -228,7 +231,11 @@ class ClusterDetailTable extends React.Component {
           <td>Total storage in worker nodes</td>
           <td className='value'>
             <RefreshableLabel
-              dataItems={[typeof workers === 'object' ? workers.length : null]}
+              dataItems={[
+                typeof this.props.cluster.workers === 'object'
+                  ? this.props.cluster.workers.length
+                  : null,
+              ]}
             >
               <span>
                 {this.getStorageTotal() === null ? '0' : this.getStorageTotal()}{' '}
@@ -245,7 +252,11 @@ class ClusterDetailTable extends React.Component {
         <td>Total CPU cores in worker nodes</td>
         <td className='value'>
           <RefreshableLabel
-            dataItems={[typeof workers === 'object' ? workers.length : null]}
+            dataItems={[
+              typeof this.props.cluster.workers === 'object'
+                ? this.props.cluster.workers.length
+                : null,
+            ]}
           >
             <span>
               {this.getCpusTotal() === null ? '0' : this.getCpusTotal()}
@@ -260,7 +271,11 @@ class ClusterDetailTable extends React.Component {
         <td>Total RAM in worker nodes</td>
         <td className='value'>
           <RefreshableLabel
-            dataItems={[typeof workers === 'object' ? workers.length : null]}
+            dataItems={[
+              typeof this.props.cluster.workers === 'object'
+                ? this.props.cluster.workers.length
+                : null,
+            ]}
           >
             <span>
               {this.getMemoryTotal() === null ? '0' : this.getMemoryTotal()} GB
@@ -275,7 +290,11 @@ class ClusterDetailTable extends React.Component {
         <td>Worker nodes running</td>
         <td className='value'>
           <RefreshableLabel
-            dataItems={[typeof workers === 'object' ? workers.length : null]}
+            dataItems={[
+              typeof this.props.cluster.workers === 'object'
+                ? this.props.cluster.workers.length
+                : null,
+            ]}
           >
             <span>
               {this.props.workerNodesRunning === null

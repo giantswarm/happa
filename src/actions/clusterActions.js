@@ -77,7 +77,7 @@ export function clustersLoad() {
       return enhancedClusters;
     } catch (error) {
       console.error(error);
-      // dispatch(clustersLoadError(error));
+      dispatch(clustersLoadError(error));
     }
   };
 }
@@ -376,7 +376,7 @@ export function clusterLoadStatus(clusterId) {
         if (error.status === 404) {
           dispatch(clusterLoadStatusNotFound(clusterId));
         } else if (clusterId === 'm0ckd') {
-          // TODO delete when this doesn't trigger an error
+          // TODO Delete it when this doesn't trigger an error
           dispatch(clusterLoadStatusNotFound(clusterId));
         } else {
           dispatch(clusterLoadStatusError(clusterId, error));
