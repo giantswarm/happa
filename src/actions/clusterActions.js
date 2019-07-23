@@ -79,8 +79,12 @@ export function clustersLoadV5() {
     return clustersApi
       .getClusterV5(scheme + ' ' + token, 'm0ckd')
       .then(cluster => {
-        dispatch(clustersLoadSuccess([cluster]));
-        return [cluster];
+        const clusterArray = enhanceWithCapabilities(
+          [cluster],
+          getState().app.info.general.provider
+        );
+        dispatch(clustersLoadSuccess(clusterArray));
+        return clusterArray;
       })
       .catch(error => {
         console.error(error);
@@ -378,7 +382,6 @@ export function clusterLoadStatus(clusterId) {
       .getClusterStatus(scheme + ' ' + token, clusterId)
       .then(status => {
         dispatch(clusterLoadStatusSuccess(clusterId, status));
-        console.log(status);
         return status;
       })
       .catch(error => {
