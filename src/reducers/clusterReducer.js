@@ -24,7 +24,7 @@ export default function clusterReducer(
   state = { lastUpdated: null, isFetching: false, items: {} },
   action = undefined
 ) {
-  var items;
+  let items = { ...state.items };
 
   switch (action.type) {
     case types.CLUSTERS_LOAD_SUCCESS:
@@ -32,7 +32,6 @@ export default function clusterReducer(
       var prevClusterIDs = Object.keys(state.items).sort();
 
       // use existing state's items and update it
-      items = Object.assign({}, state.items);
 
       var newClusterIDs = _.map(_.toArray(action.clusters), item => {
         return item.id;
@@ -71,8 +70,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
-      items = Object.assign({}, state.items);
-
       items[action.cluster.id] = Object.assign(
         {},
         items[action.cluster.id],
@@ -97,8 +94,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_DETAILS_ERROR:
-      items = Object.assign({}, state.items);
-
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         errorLoading: true,
       });
@@ -110,8 +105,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_STATUS_SUCCESS:
-      items = Object.assign({}, state.items);
-
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         status: action.status,
       });
@@ -125,8 +118,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
-      items = Object.assign({}, state.items);
-
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         status: null,
       });
@@ -138,8 +129,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_STATUS_ERROR:
-      items = Object.assign({}, state.items);
-
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         errorLoading: true,
       });
@@ -151,8 +140,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_APPS:
-      items = Object.assign({}, state.items);
-
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         isFetchingApps: true,
       });
@@ -164,8 +151,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_APPS_SUCCESS:
-      items = Object.assign({}, state.items);
-
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         isFetchingApps: false,
 
@@ -182,8 +167,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_APPS_ERROR:
-      items = Object.assign({}, state.items);
-
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         isFetchingApps: false,
       });
@@ -195,8 +178,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_KEY_PAIRS:
-      items = Object.assign({}, state.items);
-
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         isFetchingKeyPairs: true,
       });
@@ -208,8 +189,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
-      items = Object.assign({}, state.items);
-
       // Add expire_date to keyPairs based on ttl_hours
       var keyPairs = Object.entries(action.keyPairs).map(([, keyPair]) => {
         keyPair.expire_date = moment(keyPair.create_date)
@@ -230,8 +209,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_LOAD_KEY_PAIRS_ERROR:
-      items = Object.assign({}, state.items);
-
       items[action.clusterId] = Object.assign({}, items[action.clusterId], {
         isFetchingKeyPairs: false,
       });
@@ -243,8 +220,6 @@ export default function clusterReducer(
       };
 
     case types.CLUSTER_DELETE_SUCCESS:
-      items = Object.assign({}, state.items);
-
       delete items[action.clusterId];
 
       return {
