@@ -21,7 +21,12 @@ var ensureWorkersHaveAWSkey = function(clusterDetails) {
 };
 
 export default function clusterReducer(
-  state = { lastUpdated: null, isFetching: false, items: {} },
+  state = {
+    lastUpdated: null,
+    isFetching: false,
+    items: {},
+    nodePoolsClusters: [],
+  },
   action = undefined
 ) {
   var items;
@@ -30,6 +35,7 @@ export default function clusterReducer(
 
   // use existing state's items and update it
   items = Object.assign({}, state.items);
+  let nodePoolsClusters = [...state.nodePoolsClusters];
 
   var newClusterIDs = _.map(_.toArray(action.clusters), item => {
     return item.id;
@@ -59,6 +65,13 @@ export default function clusterReducer(
         lastUpdated: Date.now(),
         isFetching: false,
         items: items,
+        nodePoolsClusters,
+      };
+
+    case types.CLUSTERS_LOAD_SUCCESS_V5:
+      return {
+        ...state,
+        nodePoolsClusters: action.nodePoolsClusters,
       };
 
     case types.CLUSTERS_LOAD_ERROR:
@@ -67,6 +80,7 @@ export default function clusterReducer(
         isFetching: false,
         errorLoading: true,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
@@ -93,6 +107,7 @@ export default function clusterReducer(
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_DETAILS_ERROR:
@@ -106,6 +121,7 @@ export default function clusterReducer(
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_STATUS_SUCCESS:
@@ -121,6 +137,7 @@ export default function clusterReducer(
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
@@ -134,6 +151,7 @@ export default function clusterReducer(
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_STATUS_ERROR:
@@ -147,6 +165,7 @@ export default function clusterReducer(
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_APPS:
@@ -160,6 +179,7 @@ export default function clusterReducer(
         lastUpdated: Date.now(),
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_APPS_SUCCESS:
@@ -178,6 +198,7 @@ export default function clusterReducer(
         lastUpdated: Date.now(),
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_APPS_ERROR:
@@ -191,6 +212,7 @@ export default function clusterReducer(
         lastUpdated: Date.now(),
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_KEY_PAIRS:
@@ -204,6 +226,7 @@ export default function clusterReducer(
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
@@ -226,6 +249,7 @@ export default function clusterReducer(
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_LOAD_KEY_PAIRS_ERROR:
@@ -239,6 +263,7 @@ export default function clusterReducer(
         lastUpdated: state.lastUpdated,
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     case types.CLUSTER_DELETE_SUCCESS:
@@ -250,6 +275,7 @@ export default function clusterReducer(
         lastUpdated: Date.now(),
         isFetching: false,
         items: items,
+        nodePoolsClusters,
       };
 
     default:

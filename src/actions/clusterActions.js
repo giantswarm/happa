@@ -51,21 +51,24 @@ export function clustersLoad() {
 
     dispatch({ type: types.CLUSTERS_LOAD });
 
-    // TODO getClusters() will get all clusters, so we need some logic here that
-    // separates regular clusters from NP clusters and then pass them to their
+    // TODO getClusters() will get all clusters, so we will need some logic here
+    // that separates regular clusters from NP clusters and then pass them to their
     // respective methods
 
-    const regularClusters = clustersLoadV4(token, scheme, dispatch, getState);
+    const regularClusters = clustersLoadV4(token, scheme, dispatch);
     const nodePoolsClusters =
       window.config.environment === 'development'
-        ? clustersLoadV5(token, scheme, dispatch, getState)
+        ? clustersLoadV5(token, scheme, dispatch)
         : [];
 
     Promise.all([regularClusters, nodePoolsClusters])
       .then(([regularClusters, nodePoolClusters]) => {
-        const clusters = [...regularClusters, ...nodePoolClusters];
-        dispatch(clustersLoadSuccess(clusters));
+        const clusters = enhanceWithCapabilities(
+          [...regularClusters, ...nodePoolClusters],
+          getState().app.info.general.provider
+        );
 
+        dispatch(clustersLoadSuccess(clusters));
         return clusters;
       })
       .catch(error => {
@@ -75,28 +78,21 @@ export function clustersLoad() {
   };
 }
 
-export function clustersLoadV4(token, scheme, dispatch, getState) {
+export function clustersLoadV4(token, scheme, dispatch) {
   dispatch({ type: types.CLUSTERS_LOAD_V4 });
 
   // TODO this will be in getClusters() here in this function we just want to
   // dispatch specific actions for v4 clusters
   return clustersApi
     .getClusters(scheme + ' ' + token)
-    .then(clusters => {
-      clusters = enhanceWithCapabilities(
-        clusters,
-        getState().app.info.general.provider
-      );
-
-      return clusters;
-    })
+    .then(clusters => clusters)
     .catch(error => {
       console.error(error);
       dispatch(clustersLoadErrorV4(error));
     });
 }
 
-export function clustersLoadV5(token, scheme, dispatch, getState) {
+export function clustersLoadV5(token, scheme, dispatch) {
   dispatch({ type: types.CLUSTERS_LOAD_V5 });
 
   // TODO this will be in getClusters() here in this function we just want to
@@ -104,12 +100,10 @@ export function clustersLoadV5(token, scheme, dispatch, getState) {
   return clustersApi
     .getClusterV5(scheme + ' ' + token, 'm0ckd')
     .then(clusters => {
-      clusters = enhanceWithCapabilities(
-        [clusters],
-        getState().app.info.general.provider
-      );
+      const clusterIds = [clusters].map(cluster => cluster.id);
 
-      return clusters;
+      dispatch(clustersLoadSuccessV5(clusterIds));
+      return [clusters];
     })
     .catch(error => {
       console.error(error);
@@ -344,25 +338,25 @@ export function clusterLoadDetails(clusterId) {
   return async function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
 
     dispatch({
       type: types.CLUSTER_LOAD_DETAILS,
       clusterId,
     });
 
+    const isNodePoolCluster = nodePoolsClusters.include(clusterId);
+
     try {
-      // TODO when available, use path for diferentiate node pools cluster from regular clusters
-      const cluster =
-        clusterId === 'm0ckd'
-          ? await clustersApi.getClusterV5(scheme + ' ' + token, clusterId)
-          : await clustersApi.getCluster(scheme + ' ' + token, clusterId);
+      const cluster = isNodePoolCluster
+        ? await clustersApi.getClusterV5(scheme + ' ' + token, clusterId)
+        : await clustersApi.getCluster(scheme + ' ' + token, clusterId);
       dispatch(clusterLoadStatus(clusterId));
 
       cluster.capabilities = computeCapabilities(
         cluster,
         getState().app.info.general.provider
       );
-      console.log(cluster);
 
       dispatch(clusterLoadDetailsSuccess(cluster));
       return cluster;
@@ -412,7 +406,8 @@ export function clusterLoadStatus(clusterId) {
         if (error.status === 404) {
           dispatch(clusterLoadStatusNotFound(clusterId));
         } else if (clusterId === 'm0ckd') {
-          // TODO Delete it when this doesn't trigger an error
+          // TODO Delete it when this doesn't trigger an error. This is just for
+          // avoiding annoying flash messages
           dispatch(clusterLoadStatusNotFound(clusterId));
         } else {
           dispatch(clusterLoadStatusError(clusterId, error));
@@ -649,6 +644,13 @@ export function clustersLoadSuccess(clusters) {
   return {
     type: types.CLUSTERS_LOAD_SUCCESS,
     clusters: clusters,
+  };
+}
+
+export function clustersLoadSuccessV5(nodePoolsClusters) {
+  return {
+    type: types.CLUSTERS_LOAD_SUCCESS_V5,
+    nodePoolsClusters,
   };
 }
 
