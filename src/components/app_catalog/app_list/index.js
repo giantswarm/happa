@@ -47,12 +47,11 @@ class AppListInner extends React.Component {
     let query = new URLSearchParams(props.location.search);
     let q = query.get('q');
 
-    var appsArray = Object.values(props.catalog.apps).map(appVersions =>
-      appVersions
-        .sort(function(a, b) {
+    var appsArray = Object.values(props.catalog.apps).map(
+      appVersions =>
+        appVersions.sort(function(a, b) {
           return new Date(b.created) - new Date(a.created);
-        })
-        .pop()
+        })[0]
     );
 
     this.index = lunr(function() {
