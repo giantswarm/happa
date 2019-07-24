@@ -56,7 +56,10 @@ export function clustersLoad() {
     // respective methods
 
     const regularClusters = clustersLoadV4(token, scheme, dispatch, getState);
-    const nodePoolsClusters = clustersLoadV5(token, scheme, dispatch, getState);
+    const nodePoolsClusters =
+      window.config.environment === 'development'
+        ? clustersLoadV5(token, scheme, dispatch, getState)
+        : [];
 
     Promise.all([regularClusters, nodePoolsClusters])
       .then(([regularClusters, nodePoolClusters]) => {
@@ -91,8 +94,6 @@ export function clustersLoadV4(token, scheme, dispatch, getState) {
 }
 
 export function clustersLoadV5(token, scheme, dispatch, getState) {
-  if (window.config.environment !== 'development') return [];
-
   dispatch({ type: types.CLUSTERS_LOAD_V5 });
 
   // TODO this will be in getClusters() here in this function we just want to
