@@ -53,7 +53,7 @@ export function clustersLoad() {
 
     // TODO getClusters() will get all clusters, so we will need some logic here
     // that separates regular clusters from NP clusters and then pass them to their
-    // respective methods
+    // respective methods.
 
     const regularClusters = clustersLoadV4(token, scheme, dispatch);
     const nodePoolsClusters =
@@ -82,7 +82,8 @@ export function clustersLoadV4(token, scheme, dispatch) {
   dispatch({ type: types.CLUSTERS_LOAD_V4 });
 
   // TODO this will be in getClusters() here in this function we just want to
-  // dispatch specific actions for v4 clusters
+  // dispatch specific actions for v4 clusters.
+  // Or maybe we won't need this method at all.
   return clustersApi
     .getClusters(scheme + ' ' + token)
     .then(clusters => clusters)
@@ -96,7 +97,8 @@ export function clustersLoadV5(token, scheme, dispatch) {
   dispatch({ type: types.CLUSTERS_LOAD_V5 });
 
   // TODO this will be in getClusters() here in this function we just want to
-  // dispatch specific actions for v5 clusters
+  // dispatch specific actions for v5 clusters.
+  // Or maybe we won't need this method at all.
   return clustersApi
     .getClusterV5(scheme + ' ' + token, 'm0ckd')
     .then(clusters => {
