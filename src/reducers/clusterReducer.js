@@ -27,7 +27,7 @@ export default function clusterReducer(
   var items;
 
   switch (action.type) {
-    case types.CLUSTERS_LOAD_SUCCESS:
+    case types.CLUSTERS_LOAD_SUCCESS_V4:
       // if state was populated previously, let new data overwrite old data partially
       var prevClusterIDs = Object.keys(state.items).sort();
 

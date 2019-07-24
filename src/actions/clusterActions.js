@@ -6,6 +6,7 @@ import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
 
+// API instantiations
 const clustersApi = new GiantSwarm.ClustersApi();
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
@@ -44,41 +45,71 @@ function computeCapabilities(cluster, provider) {
  * action.
  */
 export function clustersLoad() {
-  return async function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
+  return function(dispatch, getState) {
+    const token = getState().app.loggedInUser.auth.token;
+    const scheme = getState().app.loggedInUser.auth.scheme;
 
     dispatch({ type: types.CLUSTERS_LOAD });
 
-    // Async await lets us write promise based code in a synchronous fashion
-    try {
-      const regularClusters = await clustersApi.getClusters(
-        scheme + ' ' + token
-      );
-      // TODO - Remove it. This is just for local development. It will be deleted as
-      // v4 getClusters() will return node pools and regular clusters
-      const nodePoolsClusters =
-        window.config.environment === 'development'
-          ? await clustersApi.getClusterV5(scheme + ' ' + token, 'm0ckd')
-          : null;
+    // TODO getClusters() will get all clusters, so we need some logic here that
+    // separates regular clusters from NP clusters and then pass them to their
+    // respective methods
 
-      const clusters =
-        window.config.environment === 'development'
-          ? [...regularClusters, nodePoolsClusters]
-          : regularClusters;
+    const regularClusters = clustersLoadV4(token, scheme, dispatch, getState);
+    const nodePoolsClusters = clustersLoadV5(token, scheme, dispatch, getState);
 
-      const enhancedClusters = await enhanceWithCapabilities(
+    Promise.all([regularClusters, nodePoolsClusters])
+      .then(([regularClusters, nodePoolClusters]) => {
+        return [...regularClusters, ...nodePoolClusters];
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(clustersLoadError(error));
+      });
+  };
+}
+
+export function clustersLoadV4(token, scheme, dispatch, getState) {
+  dispatch({ type: types.CLUSTERS_LOAD_V4 });
+
+  // TODO this will be in getClusters() here in this function we just want to
+  // dispatch specific actions for v4 clusters
+  return clustersApi
+    .getClusters(scheme + ' ' + token)
+    .then(clusters => {
+      clusters = enhanceWithCapabilities(
         clusters,
         getState().app.info.general.provider
       );
-
-      dispatch(clustersLoadSuccess(enhancedClusters));
-      return enhancedClusters;
-    } catch (error) {
+      dispatch(clustersLoadSuccessV4(clusters));
+      return clusters;
+    })
+    .catch(error => {
       console.error(error);
-      dispatch(clustersLoadError(error));
-    }
-  };
+      dispatch(clustersLoadErrorV4(error));
+    });
+}
+
+export function clustersLoadV5(token, scheme, dispatch, getState) {
+  dispatch({ type: types.CLUSTERS_LOAD_V5 });
+
+  // TODO this will be in getClusters() here in this function we just want to
+  // dispatch specific actions for v5 clusters
+  return clustersApi
+    .getClusterV5(scheme + ' ' + token, 'm0ckd')
+    .then(clusters => {
+      clusters = enhanceWithCapabilities(
+        [clusters],
+        getState().app.info.general.provider
+      );
+
+      dispatch(clustersLoadSuccessV5(clusters));
+      return clusters;
+    })
+    .catch(error => {
+      console.error(error);
+      dispatch(clustersLoadErrorV5(error));
+    });
 }
 
 /**
@@ -615,9 +646,37 @@ export function clustersLoadSuccess(clusters) {
   };
 }
 
+export function clustersLoadSuccessV4(clusters) {
+  return {
+    type: types.CLUSTERS_LOAD_SUCCESS_V4,
+    clusters: clusters,
+  };
+}
+
+export function clustersLoadSuccessV5(clusters) {
+  return {
+    type: types.CLUSTERS_LOAD_SUCCESS_V5,
+    clusters: clusters,
+  };
+}
+
 export function clustersLoadError(error) {
   return {
     type: types.CLUSTERS_LOAD_ERROR,
+    error: error,
+  };
+}
+
+export function clustersLoadErrorV4(error) {
+  return {
+    type: types.CLUSTERS_LOAD_ERROR_V4,
+    error: error,
+  };
+}
+
+export function clustersLoadErrorV5(error) {
+  return {
+    type: types.CLUSTERS_LOAD_ERROR_V5,
     error: error,
   };
 }
