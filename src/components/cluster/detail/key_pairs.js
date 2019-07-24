@@ -49,7 +49,7 @@ class ClusterKeyPairs extends React.Component {
       error: false,
     });
 
-    // TODO Remove it when node pools development is finished
+    // TODO Remove it when node pools development is finished.
     if (this.props.cluster.id === 'm0ckd') return;
 
     return this.props.actions

@@ -409,7 +409,7 @@ export function clusterLoadStatus(clusterId) {
           dispatch(clusterLoadStatusNotFound(clusterId));
         } else if (clusterId === 'm0ckd') {
           // TODO Delete it when this doesn't trigger an error. This is just for
-          // avoiding annoying flash messages
+          // avoiding annoying flash messages.
           dispatch(clusterLoadStatusNotFound(clusterId));
         } else {
           dispatch(clusterLoadStatusError(clusterId, error));
