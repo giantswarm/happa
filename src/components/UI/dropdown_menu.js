@@ -66,7 +66,7 @@ function DropdownMenu(props) {
 
   const onBlurHandler = () => {
     timeOutId = setTimeout(() => {
-      // setIsOpen(false);
+      setIsOpen(false);
     });
   };
 

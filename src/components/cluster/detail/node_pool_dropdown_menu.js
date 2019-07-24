@@ -1,4 +1,4 @@
-import DropdownMenu from '../../UI/dropdown_menu';
+import DropdownMenu from 'UI/dropdown_menu';
 import React from 'react';
 
 const NodePoolDropdownMenu = () => (
