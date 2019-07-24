@@ -25,25 +25,24 @@ export default function clusterReducer(
   action = undefined
 ) {
   var items;
+  // if state was populated previously, let new data overwrite old data partially
+  var prevClusterIDs = Object.keys(state.items).sort();
+
+  // use existing state's items and update it
+  items = Object.assign({}, state.items);
+
+  var newClusterIDs = _.map(_.toArray(action.clusters), item => {
+    return item.id;
+  }).sort();
+
+  // account for deleted clusters
+  var deleted = _.difference(prevClusterIDs, newClusterIDs);
+  deleted.forEach(deletedClusterID => {
+    delete items[deletedClusterID];
+  });
 
   switch (action.type) {
-    case types.CLUSTERS_LOAD_SUCCESS_V4:
-      // if state was populated previously, let new data overwrite old data partially
-      var prevClusterIDs = Object.keys(state.items).sort();
-
-      // use existing state's items and update it
-      items = Object.assign({}, state.items);
-
-      var newClusterIDs = _.map(_.toArray(action.clusters), item => {
-        return item.id;
-      }).sort();
-
-      // account for deleted clusters
-      var deleted = _.difference(prevClusterIDs, newClusterIDs);
-      deleted.forEach(deletedClusterID => {
-        delete items[deletedClusterID];
-      });
-
+    case types.CLUSTERS_LOAD_SUCCESS:
       _.each(action.clusters, cluster => {
         items[cluster.id] = Object.assign({}, items[cluster.id], cluster);
 

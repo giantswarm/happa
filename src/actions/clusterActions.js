@@ -63,7 +63,10 @@ export function clustersLoad() {
 
     Promise.all([regularClusters, nodePoolsClusters])
       .then(([regularClusters, nodePoolClusters]) => {
-        return [...regularClusters, ...nodePoolClusters];
+        const clusters = [...regularClusters, ...nodePoolClusters];
+        dispatch(clustersLoadSuccess(clusters));
+
+        return clusters;
       })
       .catch(error => {
         console.error(error);
@@ -84,7 +87,7 @@ export function clustersLoadV4(token, scheme, dispatch, getState) {
         clusters,
         getState().app.info.general.provider
       );
-      dispatch(clustersLoadSuccessV4(clusters));
+
       return clusters;
     })
     .catch(error => {
@@ -106,7 +109,6 @@ export function clustersLoadV5(token, scheme, dispatch, getState) {
         getState().app.info.general.provider
       );
 
-      dispatch(clustersLoadSuccessV5(clusters));
       return clusters;
     })
     .catch(error => {
@@ -360,6 +362,7 @@ export function clusterLoadDetails(clusterId) {
         cluster,
         getState().app.info.general.provider
       );
+      console.log(cluster);
 
       dispatch(clusterLoadDetailsSuccess(cluster));
       return cluster;
@@ -645,20 +648,6 @@ export function clusterDeleteError(clusterId, error) {
 export function clustersLoadSuccess(clusters) {
   return {
     type: types.CLUSTERS_LOAD_SUCCESS,
-    clusters: clusters,
-  };
-}
-
-export function clustersLoadSuccessV4(clusters) {
-  return {
-    type: types.CLUSTERS_LOAD_SUCCESS_V4,
-    clusters: clusters,
-  };
-}
-
-export function clustersLoadSuccessV5(clusters) {
-  return {
-    type: types.CLUSTERS_LOAD_SUCCESS_V5,
     clusters: clusters,
   };
 }
