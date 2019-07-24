@@ -345,7 +345,7 @@ export function clusterLoadDetails(clusterId) {
       clusterId,
     });
 
-    const isNodePoolCluster = nodePoolsClusters.include(clusterId);
+    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
 
     try {
       const cluster = isNodePoolCluster
