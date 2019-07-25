@@ -387,44 +387,48 @@ export function clusterLoadStatus(clusterId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
 
-    dispatch({
-      type: types.CLUSTER_LOAD_STATUS,
-      clusterId,
-    });
-
-    var apiClusterStatus = new APIClusterStatusClient({
-      endpoint: window.config.apiEndpoint,
-    });
-
-    return apiClusterStatus
-      .getClusterStatus(scheme + ' ' + token, clusterId)
-      .then(status => {
-        dispatch(clusterLoadStatusSuccess(clusterId, status));
-        return status;
-      })
-      .catch(error => {
-        console.error(error);
-        if (error.status === 404) {
-          dispatch(clusterLoadStatusNotFound(clusterId));
-        } else if (clusterId === 'm0ckd') {
-          // TODO Delete it when this doesn't trigger an error. This is just for
-          // avoiding annoying flash messages.
-          dispatch(clusterLoadStatusNotFound(clusterId));
-        } else {
-          dispatch(clusterLoadStatusError(clusterId, error));
-
-          new FlashMessage(
-            'Something went wrong while trying to load the cluster status.',
-            messageType.ERROR,
-            messageTTL.LONG,
-            'Please try again later or contact support: support@giantswarm.io'
-          );
-
-          throw error;
-        }
-      });
+    if (!isNodePoolCluster) {
+      clusterLoadStatusV4(dispatch, clusterId, token, scheme);
+    }
   };
+}
+
+export function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
+  dispatch({
+    type: types.CLUSTER_LOAD_STATUS,
+    clusterId,
+  });
+
+  var apiClusterStatus = new APIClusterStatusClient({
+    endpoint: window.config.apiEndpoint,
+  });
+
+  return apiClusterStatus
+    .getClusterStatus(scheme + ' ' + token, clusterId)
+    .then(status => {
+      dispatch(clusterLoadStatusSuccess(clusterId, status));
+      return status;
+    })
+    .catch(error => {
+      console.error(error);
+      if (error.status === 404) {
+        dispatch(clusterLoadStatusNotFound(clusterId));
+      } else {
+        dispatch(clusterLoadStatusError(clusterId, error));
+
+        new FlashMessage(
+          'Something went wrong while trying to load the cluster status.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        throw error;
+      }
+    });
 }
 
 /**
@@ -442,8 +446,6 @@ export function clusterCreate(cluster) {
       type: types.CLUSTER_CREATE,
       cluster,
     });
-
-    var clustersApi = new GiantSwarm.ClustersApi();
 
     return clustersApi
       .addClusterWithHttpInfo(scheme + ' ' + token, cluster)
@@ -493,8 +495,6 @@ export function clusterDeleteConfirmed(cluster) {
       type: types.CLUSTER_DELETE_CONFIRMED,
       cluster,
     });
-
-    var clustersApi = new GiantSwarm.ClustersApi();
 
     return clustersApi
       .deleteCluster(scheme + ' ' + token, cluster.id)
@@ -697,7 +697,6 @@ export function clusterPatch(cluster) {
     var clusterId = cluster.id;
     delete cluster.id;
 
-    var clustersApi = new GiantSwarm.ClustersApi();
     return clustersApi
       .modifyCluster(scheme + ' ' + token, cluster, clusterId)
       .then(cluster => {
