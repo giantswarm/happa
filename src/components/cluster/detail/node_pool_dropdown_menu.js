@@ -3,7 +3,13 @@ import React from 'react';
 
 const NodePoolDropdownMenu = () => (
   <DropdownMenu
-    render={({ isOpen, onClickHandler, onFocusHandler, onBlurHandler }) => (
+    render={({
+      isOpen,
+      onClickHandler,
+      onFocusHandler,
+      onBlurHandler,
+      onKeyDownHandler,
+    }) => (
       <>
         <button
           aria-expanded={isOpen}
@@ -11,6 +17,7 @@ const NodePoolDropdownMenu = () => (
           onBlur={onBlurHandler}
           onClick={onClickHandler}
           onFocus={onFocusHandler}
+          onKeyDown={onKeyDownHandler}
           type='button'
         >
           •••
