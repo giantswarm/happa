@@ -347,13 +347,12 @@ export function clusterLoadDetails(clusterId) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
 
     dispatch({
       type: types.CLUSTER_LOAD_DETAILS,
       clusterId,
     });
-
-    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
 
     try {
       const cluster = isNodePoolCluster
@@ -397,7 +396,7 @@ export function clusterLoadStatus(clusterId) {
     const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
 
     if (isNodePoolCluster) {
-      // Here we will have: clusterLoadStatusV5(dispatch, clusterId, token, scheme);
+      // Here we will have something like clusterLoadStatusV5(...);
       return;
     }
     clusterLoadStatusV4(dispatch, clusterId, token, scheme);
