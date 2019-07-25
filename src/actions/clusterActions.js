@@ -120,6 +120,12 @@ function clustersLoadV5(token, scheme, dispatch) {
  */
 export function clusterLoadApps(clusterId) {
   return function(dispatch, getState) {
+    // This method is going to work for NP clusters, now in local dev it is not
+    // working, so early return if the cluster is a NP one.
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
+    if (isNodePoolCluster) return Promise.resolve([]);
+
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
@@ -391,7 +397,7 @@ export function clusterLoadStatus(clusterId) {
     const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
 
     if (isNodePoolCluster) {
-      clusterLoadStatusV5(dispatch, clusterId, token, scheme);
+      // Here we will have: clusterLoadStatusV5(dispatch, clusterId, token, scheme);
       return;
     }
     clusterLoadStatusV4(dispatch, clusterId, token, scheme);
@@ -431,10 +437,6 @@ function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
         throw error;
       }
     });
-}
-
-function clusterLoadStatusV5(dispatch, clusterId, token, scheme) {
-  // We don't have this method, yet.
 }
 
 /**
@@ -546,6 +548,12 @@ export function clusterDeleteConfirmed(cluster) {
  */
 export function clusterLoadKeyPairs(clusterId) {
   return function(dispatch, getState) {
+    // This method is going to work for NP clusters, now in local dev it is not
+    // working, so early return if the cluster is a NP one.
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
+    if (isNodePoolCluster) return Promise.resolve([]);
+
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
     var keypairsApi = new GiantSwarm.KeyPairsApi();
