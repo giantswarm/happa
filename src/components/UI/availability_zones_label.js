@@ -46,28 +46,17 @@ const Wrapper = styled.abbr`
   }
 `;
 
-const AvailabilityZonesLabel = ({ zones, style }) => {
-  if (typeof zones === 'undefined' || zones.length == 0) {
-    return <abbr title='No information available'>n/a</abbr>;
-  }
-
-  let azs = zones.map(az => {
-    // we use the letter that is the last character as the label
-    let letter = az.slice(-1);
-    let label = letter.toUpperCase();
-    return (
-      <Wrapper className={letter} key={az} style={style} title={az}>
-        {label}
-      </Wrapper>
-    );
-  });
-
-  return <div>{azs}</div>;
-};
+const AvailabilityZonesLabel = ({ key, label, letter, title }) => (
+  <Wrapper className={letter} key={key} title={title}>
+    {label}
+  </Wrapper>
+);
 
 AvailabilityZonesLabel.propTypes = {
-  zones: PropTypes.arrayOf(PropTypes.string),
-  style: PropTypes.object,
+  key: PropTypes.string,
+  label: PropTypes.string,
+  letter: PropTypes.string,
+  title: PropTypes.string,
 };
 
 export default AvailabilityZonesLabel;
