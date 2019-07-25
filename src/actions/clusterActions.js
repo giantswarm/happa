@@ -78,7 +78,7 @@ export function clustersLoad() {
   };
 }
 
-export function clustersLoadV4(token, scheme, dispatch) {
+function clustersLoadV4(token, scheme, dispatch) {
   dispatch({ type: types.CLUSTERS_LOAD_V4 });
 
   // TODO this will be in getClusters() here in this function we just want to
@@ -93,7 +93,7 @@ export function clustersLoadV4(token, scheme, dispatch) {
     });
 }
 
-export function clustersLoadV5(token, scheme, dispatch) {
+function clustersLoadV5(token, scheme, dispatch) {
   dispatch({ type: types.CLUSTERS_LOAD_V5 });
 
   // TODO this will be in getClusters() here in this function we just want to
@@ -390,13 +390,15 @@ export function clusterLoadStatus(clusterId) {
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
 
-    if (!isNodePoolCluster) {
-      clusterLoadStatusV4(dispatch, clusterId, token, scheme);
+    if (isNodePoolCluster) {
+      clusterLoadStatusV5(dispatch, clusterId, token, scheme);
+      return;
     }
+    clusterLoadStatusV4(dispatch, clusterId, token, scheme);
   };
 }
 
-export function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
+function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
   dispatch({
     type: types.CLUSTER_LOAD_STATUS,
     clusterId,
@@ -429,6 +431,10 @@ export function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
         throw error;
       }
     });
+}
+
+function clusterLoadStatusV5(dispatch, clusterId, token, scheme) {
+  // We don't have this method, yet.
 }
 
 /**
