@@ -32,11 +32,11 @@ const MenuWrapper = styled.div`
     }
   }
   ul {
-    padding: 0;
     position: absolute;
     right: 7px;
     list-style-type: none;
     margin: 2px 0 0;
+    padding: 5px 0;
     width: 180px;
     background: ${props => props.theme.colors.shade2};
     z-index: 1;
@@ -44,19 +44,17 @@ const MenuWrapper = styled.div`
     border: none;
     border-radius: 5px;
   }
-  li {
-    padding: 8px 15px;
-    border-top: 1px solid #3a5f7b;
-    border-bottom: 1px solid #234d65;
-  }
-  li:first-of-type {
-    border-top: unset;
-  }
   a {
+    display: inline-block;
     text-decoration: none;
     color: #fff;
     font-size: 14px;
     font-weight: 400;
+    padding: 7px 15px;
+    width: 100%;
+    &:hover {
+      background: ${props => props.theme.colors.shade9};
+    }
   }
 `;
 

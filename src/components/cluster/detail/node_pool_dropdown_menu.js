@@ -23,7 +23,7 @@ const NodePoolDropdownMenu = () => (
           •••
         </button>
         {isOpen && (
-          <ul>
+          <ul aria-labelledby='node_pools_dropdown' role='menu'>
             <li>
               <a href='#'>Rename</a>
             </li>
