@@ -9,8 +9,9 @@ import theme from 'styles/theme';
 const NodesWrapper = styled.div`
   width: 36px;
   height: 30px;
-  line-height: 30px;
+  line-height: 31px;
   text-align: center;
+  border-radius: 3px;
 `;
 
 const NodePool = ({ nodePool }) => {
@@ -38,7 +39,7 @@ const NodePool = ({ nodePool }) => {
       <NodesWrapper>{desired}</NodesWrapper>
       <NodesWrapper
         style={{
-          background: current < desired ? '#d9534f' : theme.colors.shade2,
+          background: current < desired ? theme.colors.goldBackground : null,
         }}
       >
         {current}

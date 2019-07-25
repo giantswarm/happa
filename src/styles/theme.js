@@ -13,6 +13,8 @@ const theme = {
     white2: '#D7D7D7',
     white3: '#B9C1C8',
     yellow1: '#ddb03a',
+    gold: '#ce990f',
+    goldBackground: '#a97904',
     red: 'red',
     gray: '#ccc',
   },

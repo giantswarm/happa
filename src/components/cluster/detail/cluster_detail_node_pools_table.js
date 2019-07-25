@@ -7,6 +7,9 @@ import styled from '@emotion/styled';
 
 const Upgrade = styled.div`
   color: #ce990f;
+  span {
+    white-space: normal !important;
+  }
 `;
 
 // Wrapper
@@ -25,7 +28,7 @@ const GridRowNodePoolsBase = css`
   ${Row};
   display: grid;
   grid-gap: 0 10px;
-  grid-template-columns: 1fr 4fr 4fr 3fr repeat(4, 2fr) 1fr;
+  grid-template-columns: minmax(47px, 1fr) 4fr 4fr 3fr repeat(4, 2fr) 1fr;
   grid-template-rows: 30px;
   justify-content: space-between;
   place-items: center center;
@@ -76,6 +79,9 @@ const GridRowNodePoolsNodes = styled.div`
 const GridRowNodePoolsHeaders = styled.div`
   ${GridRowNodePoolsBase};
   margin-bottom: 0;
+  span {
+    text-align: center;
+  }
 `;
 
 const GridRowNodePoolsItem = styled.div`
@@ -114,25 +120,35 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <Code>europe-central-1</Code>
             <div>
               <span>Created 1 month ago</span>
-              <Dot />
-              <i className='fa fa-version-tag' />
-              <span>6.3.2</span>
-              <Dot />
-              <i className='fa fa-kubernetes' />
-              <span>1.13.3</span>
+              <span>
+                <Dot />
+                <i className='fa fa-version-tag' />
+                6.3.2
+              </span>
+              <span>
+                <Dot />
+                <i className='fa fa-kubernetes' />
+                1.13.3
+              </span>
             </div>
             <Upgrade>
-              <i className='fa fa-warning' />
-              <span>Upgrade available</span>
+              <span>
+                <i className='fa fa-warning' />
+                Upgrade available
+              </span>
             </Upgrade>
           </div>
           <div>
             <div>
               <span>14 nodes in 2 node pools</span>
-              <Dot />
-              <span>105 GB RAM</span>
-              <Dot />
-              <span>30 CPUs</span>
+              <span>
+                <Dot />
+                105 GB RAM
+              </span>
+              <span>
+                <Dot />
+                30 CPUs
+              </span>
             </div>
           </div>
         </FlexRowWithTwoBlocksOnEdges>
@@ -160,7 +176,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <span>ID</span>
             <span>NAME</span>
             <span>INSTANCE TYPE</span>
-            <span>AV. ZONES</span>
+            <span>AVAILABILITY ZONES</span>
             <span>MIN</span>
             <span>MAX</span>
             <span>DESIRED</span>
