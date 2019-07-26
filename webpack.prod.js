@@ -29,7 +29,10 @@ module.exports = merge(common, {
       chunkFilename: '[id].css',
     }),
     // Momentary solution until we do code splitting
-    new CopyPlugin([{ from: 'src/images', to: 'images' }]),
+    new CopyPlugin([
+      { from: 'src/images', to: 'images' },
+      { from: 'src/vendor/modernizr.js', to: 'vendor/modernizr.js' },
+    ]),
   ],
   module: {
     rules: [
