@@ -21,7 +21,12 @@ var ensureWorkersHaveAWSkey = function(clusterDetails) {
 };
 
 export default function clusterReducer(
-  state = { lastUpdated: null, isFetching: false, items: {} },
+  state = {
+    lastUpdated: null,
+    isFetching: false,
+    items: {},
+    nodePoolsClusters: [],
+  },
   action = undefined
 ) {
   let items = { ...state.items };
@@ -59,6 +64,12 @@ export default function clusterReducer(
         ...state,
         lastUpdated: Date.now(),
         items,
+      };
+
+    case types.CLUSTERS_LOAD_SUCCESS_V5:
+      return {
+        ...state,
+        nodePoolsClusters: action.nodePoolsClusters,
       };
 
     case types.CLUSTERS_LOAD_ERROR:

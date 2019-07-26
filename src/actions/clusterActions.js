@@ -6,6 +6,9 @@ import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
 
+// API instantiations
+const clustersApi = new GiantSwarm.ClustersApi();
+
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
 function enhanceWithCapabilities(clusters, provider) {
@@ -43,19 +46,28 @@ function computeCapabilities(cluster, provider) {
  */
 export function clustersLoad() {
   return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-    var clustersApi = new GiantSwarm.ClustersApi();
+    const token = getState().app.loggedInUser.auth.token;
+    const scheme = getState().app.loggedInUser.auth.scheme;
 
     dispatch({ type: types.CLUSTERS_LOAD });
 
-    return clustersApi
-      .getClusters(scheme + ' ' + token)
-      .then(clusters => {
-        clusters = enhanceWithCapabilities(
-          clusters,
+    // TODO getClusters() will get all clusters, so we will need some logic here
+    // that separates regular clusters from NP clusters and then pass them to their
+    // respective methods.
+
+    const regularClusters = clustersLoadV4(token, scheme, dispatch);
+    const nodePoolsClusters =
+      window.config.environment === 'development'
+        ? clustersLoadV5(token, scheme, dispatch)
+        : [];
+
+    Promise.all([regularClusters, nodePoolsClusters])
+      .then(([regularClusters, nodePoolClusters]) => {
+        const clusters = enhanceWithCapabilities(
+          [...regularClusters, ...nodePoolClusters],
           getState().app.info.general.provider
         );
+
         dispatch(clustersLoadSuccess(clusters));
         return clusters;
       })
@@ -66,6 +78,41 @@ export function clustersLoad() {
   };
 }
 
+function clustersLoadV4(token, scheme, dispatch) {
+  dispatch({ type: types.CLUSTERS_LOAD_V4 });
+
+  // TODO this will be in getClusters() here in this function we just want to
+  // dispatch specific actions for v4 clusters.
+  // Or maybe we won't need this method at all.
+  return clustersApi
+    .getClusters(scheme + ' ' + token)
+    .then(clusters => clusters)
+    .catch(error => {
+      console.error(error);
+      dispatch(clustersLoadErrorV4(error));
+    });
+}
+
+function clustersLoadV5(token, scheme, dispatch) {
+  dispatch({ type: types.CLUSTERS_LOAD_V5 });
+
+  // TODO this will be in getClusters() here in this function we just want to
+  // dispatch specific actions for v5 clusters.
+  // Or maybe we won't need this method at all.
+  return clustersApi
+    .getClusterV5(scheme + ' ' + token, 'm0ckd')
+    .then(clusters => {
+      const clusterIds = [clusters].map(cluster => cluster.id);
+
+      dispatch(clustersLoadSuccessV5(clusterIds));
+      return [clusters];
+    })
+    .catch(error => {
+      console.error(error);
+      dispatch(clustersLoadErrorV5(error));
+    });
+}
+
 /**
  * Loads apps for a cluster.
  *
@@ -73,6 +120,12 @@ export function clustersLoad() {
  */
 export function clusterLoadApps(clusterId) {
   return function(dispatch, getState) {
+    // This method is going to work for NP clusters, now in local dev it is not
+    // working, so early return if the cluster is a NP one.
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
+    if (isNodePoolCluster) return Promise.resolve([]);
+
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
 
@@ -290,45 +343,43 @@ export function clusterDeleteApp(appName, clusterID) {
  * @param {String} clusterId Cluster ID
  */
 export function clusterLoadDetails(clusterId) {
-  return function(dispatch, getState) {
+  return async function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
 
     dispatch({
       type: types.CLUSTER_LOAD_DETAILS,
       clusterId,
     });
 
-    var cluster;
-    var clustersApi = new GiantSwarm.ClustersApi();
+    try {
+      const cluster = isNodePoolCluster
+        ? await clustersApi.getClusterV5(scheme + ' ' + token, clusterId)
+        : await clustersApi.getCluster(scheme + ' ' + token, clusterId);
+      dispatch(clusterLoadStatus(clusterId));
 
-    return clustersApi
-      .getCluster(scheme + ' ' + token, clusterId)
-      .then(c => {
-        cluster = c;
-        return dispatch(clusterLoadStatus(clusterId));
-      })
-      .then(() => {
-        cluster.capabilities = computeCapabilities(
-          cluster,
-          getState().app.info.general.provider
-        );
-        dispatch(clusterLoadDetailsSuccess(cluster));
-        return cluster;
-      })
-      .catch(error => {
-        console.error('Error loading cluster details:', error);
-        dispatch(clusterLoadDetailsError(clusterId, error));
+      cluster.capabilities = computeCapabilities(
+        cluster,
+        getState().app.info.general.provider
+      );
 
-        new FlashMessage(
-          'Something went wrong while trying to load cluster details.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
+      dispatch(clusterLoadDetailsSuccess(cluster));
+      return cluster;
+    } catch (error) {
+      console.error('Error loading cluster details:', error);
+      dispatch(clusterLoadDetailsError(clusterId, error));
 
-        throw error;
-      });
+      new FlashMessage(
+        'Something went wrong while trying to load cluster details.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      throw error;
+    }
   };
 }
 
@@ -341,40 +392,50 @@ export function clusterLoadStatus(clusterId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
 
-    dispatch({
-      type: types.CLUSTER_LOAD_STATUS,
-      clusterId,
-    });
-
-    var apiClusterStatus = new APIClusterStatusClient({
-      endpoint: window.config.apiEndpoint,
-    });
-
-    return apiClusterStatus
-      .getClusterStatus(scheme + ' ' + token, clusterId)
-      .then(status => {
-        dispatch(clusterLoadStatusSuccess(clusterId, status));
-        return status;
-      })
-      .catch(error => {
-        console.error(error);
-        if (error.status === 404) {
-          dispatch(clusterLoadStatusNotFound(clusterId));
-        } else {
-          dispatch(clusterLoadStatusError(clusterId, error));
-
-          new FlashMessage(
-            'Something went wrong while trying to load the cluster status.',
-            messageType.ERROR,
-            messageTTL.LONG,
-            'Please try again later or contact support: support@giantswarm.io'
-          );
-
-          throw error;
-        }
-      });
+    if (isNodePoolCluster) {
+      // Here we will have something like clusterLoadStatusV5(...);
+      return;
+    }
+    clusterLoadStatusV4(dispatch, clusterId, token, scheme);
   };
+}
+
+function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
+  dispatch({
+    type: types.CLUSTER_LOAD_STATUS,
+    clusterId,
+  });
+
+  var apiClusterStatus = new APIClusterStatusClient({
+    endpoint: window.config.apiEndpoint,
+  });
+
+  return apiClusterStatus
+    .getClusterStatus(scheme + ' ' + token, clusterId)
+    .then(status => {
+      dispatch(clusterLoadStatusSuccess(clusterId, status));
+      return status;
+    })
+    .catch(error => {
+      console.error(error);
+      if (error.status === 404) {
+        dispatch(clusterLoadStatusNotFound(clusterId));
+      } else {
+        dispatch(clusterLoadStatusError(clusterId, error));
+
+        new FlashMessage(
+          'Something went wrong while trying to load the cluster status.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        throw error;
+      }
+    });
 }
 
 /**
@@ -392,8 +453,6 @@ export function clusterCreate(cluster) {
       type: types.CLUSTER_CREATE,
       cluster,
     });
-
-    var clustersApi = new GiantSwarm.ClustersApi();
 
     return clustersApi
       .addClusterWithHttpInfo(scheme + ' ' + token, cluster)
@@ -444,8 +503,6 @@ export function clusterDeleteConfirmed(cluster) {
       cluster,
     });
 
-    var clustersApi = new GiantSwarm.ClustersApi();
-
     return clustersApi
       .deleteCluster(scheme + ' ' + token, cluster.id)
       .then(() => {
@@ -490,6 +547,12 @@ export function clusterDeleteConfirmed(cluster) {
  */
 export function clusterLoadKeyPairs(clusterId) {
   return function(dispatch, getState) {
+    // This method is going to work for NP clusters, now in local dev it is not
+    // working, so early return if the cluster is a NP one.
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
+    if (isNodePoolCluster) return Promise.resolve([]);
+
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
     var keypairsApi = new GiantSwarm.KeyPairsApi();
@@ -599,9 +662,30 @@ export function clustersLoadSuccess(clusters) {
   };
 }
 
+export function clustersLoadSuccessV5(nodePoolsClusters) {
+  return {
+    type: types.CLUSTERS_LOAD_SUCCESS_V5,
+    nodePoolsClusters,
+  };
+}
+
 export function clustersLoadError(error) {
   return {
     type: types.CLUSTERS_LOAD_ERROR,
+    error: error,
+  };
+}
+
+export function clustersLoadErrorV4(error) {
+  return {
+    type: types.CLUSTERS_LOAD_ERROR_V4,
+    error: error,
+  };
+}
+
+export function clustersLoadErrorV5(error) {
+  return {
+    type: types.CLUSTERS_LOAD_ERROR_V5,
     error: error,
   };
 }
@@ -626,7 +710,6 @@ export function clusterPatch(cluster) {
     var clusterId = cluster.id;
     delete cluster.id;
 
-    var clustersApi = new GiantSwarm.ClustersApi();
     return clustersApi
       .modifyCluster(scheme + ' ' + token, cluster, clusterId)
       .then(cluster => {
