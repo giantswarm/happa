@@ -32,7 +32,7 @@ const NodePool = ({ nodePool }) => {
       <div>{name}</div>
       <Code>{instanceType}</Code>
       <div>
-        <AvailabilityZonesLabels style={{ margin: '0.1vw' }} zones={avZones} />
+        <AvailabilityZonesLabels zones={avZones} />
       </div>
       <NodesWrapper>{min}</NodesWrapper>
       <NodesWrapper>{max}</NodesWrapper>
