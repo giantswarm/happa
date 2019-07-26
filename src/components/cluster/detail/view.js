@@ -271,9 +271,11 @@ class ClusterDetailView extends React.Component {
                   className='btn-group visible-xs-block visible-sm-block visible-md-block'
                   style={{ marginTop: 10 }}
                 >
-                  <Button onClick={this.accessCluster}>
-                    <i className='fa fa-start' /> GET STARTED
-                  </Button>
+                  {!this.props.isNodePoolView && (
+                    <Button onClick={this.accessCluster}>
+                      <i className='fa fa-start' /> GET STARTED
+                    </Button>
+                  )}
                 </div>
                 <div className='pull-right btn-group visible-lg-block'>
                   <Button onClick={this.accessCluster}>
