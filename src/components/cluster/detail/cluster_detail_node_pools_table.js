@@ -12,8 +12,7 @@ const Upgrade = styled.div`
   }
 `;
 
-// Wrapper
-const NodePools = styled.div`
+const NodePoolsWrapper = styled.div`
   margin: 25px 0 23px;
   padding-top: 25px;
   border-top: 1px solid ${props => props.theme.colors.shade6};
@@ -190,7 +189,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
             </Button>
           </div>
         </FlexRowWithTwoBlocksOnEdges>
-        <NodePools>
+        <NodePoolsWrapper>
           <h2>Node Pools</h2>
           <GridRowNodePoolsNodes>
             <div>
@@ -220,7 +219,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
               nodePool={nodePool2}
             />
           </GridRowNodePoolsItem>
-        </NodePools>
+        </NodePoolsWrapper>
         <Button>
           <i className='fa fa-add-circle' /> ADD NODE POOL
         </Button>
