@@ -25,14 +25,7 @@ const AvailabilityZonesLabels = ({ zones }) => {
 };
 
 AvailabilityZonesLabels.propTypes = {
-  zones: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.string,
-      label: PropTypes.string,
-      letter: PropTypes.string,
-      title: PropTypes.string,
-    })
-  ),
+  zones: PropTypes.PropTypes.arrayOf(PropTypes.string),
 };
 
 export default AvailabilityZonesLabels;
