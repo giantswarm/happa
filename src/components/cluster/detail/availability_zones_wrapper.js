@@ -32,33 +32,23 @@ const Wrapper = styled.div`
   }
 `;
 
-// Returns an array of AvailabilityZonesLabel components
-const AvailabilityZonesWrapper = ({ zones, gridTemplateAreas }) => {
-  const widthLabel = '30px;';
+// It returns a wrapper with grid template areas to position labels properly.
+const AvailabilityZonesWrapper = ({
+  zones,
+  availableZonesGridTemplateAreas: gridTemplateAreas, // Renaming prop here.
+}) => {
+  const widthLabel = '30px';
   const gridTemplateColumns = gridTemplateAreas.map(() => widthLabel).join(' ');
 
   return (
     <Wrapper style={{ gridTemplateAreas, gridTemplateColumns }}>
-      {zones.map(az => {
-        // we use the letter that is the last character as the label
-        const letter = az.slice(-1);
-        const label = letter.toUpperCase();
-
-        return (
-          <AvailabilityZonesLabels
-            key={az}
-            label={label}
-            letter={letter}
-            title={az}
-          />
-        );
-      })}
+      <AvailabilityZonesLabels zones={zones} />
     </Wrapper>
   );
 };
 
 AvailabilityZonesWrapper.propTypes = {
-  gridTemplateAreas: PropTypes.string,
+  availableZonesGridTemplateAreas: PropTypes.arrayOf(PropTypes.string),
   zones: PropTypes.PropTypes.arrayOf(PropTypes.string),
 };
 

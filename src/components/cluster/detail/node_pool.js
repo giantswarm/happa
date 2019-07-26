@@ -1,5 +1,5 @@
 import { Code } from 'styles/';
-import AvailabilityZonesLabels from 'UI/availability_zones_labels';
+import AvailabilityZonesWrapper from './availability_zones_wrapper';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,7 +14,7 @@ const NodesWrapper = styled.div`
   border-radius: 3px;
 `;
 
-const NodePool = ({ nodePool }) => {
+const NodePool = ({ availableZonesGridTemplateAreas, nodePool }) => {
   const {
     id,
     name,
@@ -32,7 +32,10 @@ const NodePool = ({ nodePool }) => {
       <div>{name}</div>
       <Code>{instanceType}</Code>
       <div>
-        <AvailabilityZonesLabels zones={avZones} />
+        <AvailabilityZonesWrapper
+          availableZonesGridTemplateAreas={availableZonesGridTemplateAreas}
+          zones={avZones}
+        />
       </div>
       <NodesWrapper>{min}</NodesWrapper>
       <NodesWrapper>{max}</NodesWrapper>
@@ -50,6 +53,7 @@ const NodePool = ({ nodePool }) => {
 };
 
 NodePool.propTypes = {
+  availableZonesGridTemplateAreas: PropTypes.arrayOf(PropTypes.string),
   nodePool: PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,

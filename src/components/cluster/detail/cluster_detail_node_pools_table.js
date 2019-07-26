@@ -89,30 +89,51 @@ const GridRowNodePoolsItem = styled.div`
   background-color: ${props => props.theme.colors.shade7};
 `;
 
-const nodePool1 = {
-  id: '6dh',
-  name: 'Database',
-  instanceType: 'r3.4xlarge',
-  avZones: ['eu-central-1a', 'eu-central-1b', 'eu-central-1d'],
-  min: 3,
-  max: 3,
-  desired: 3,
-  current: 3,
-};
-
-const nodePool2 = {
-  id: 'z66',
-  name: 'General Purpose',
-  instanceType: 'm5.xlarge',
-  avZones: ['eu-central-1c', 'eu-central-1d'],
-  min: 5,
-  max: 20,
-  desired: 12,
-  current: 11,
-};
-
 class ClusterDetailNodePoolsTable extends React.Component {
+  state = {
+    nodePool1: {
+      id: '6dh',
+      name: 'Database',
+      instanceType: 'r3.4xlarge',
+      avZones: ['eu-central-1d', 'eu-central-1b', 'eu-central-1a'],
+      min: 3,
+      max: 3,
+      desired: 3,
+      current: 3,
+    },
+    nodePool2: {
+      id: 'z66',
+      name: 'General Purpose',
+      instanceType: 'm5.xlarge',
+      avZones: ['eu-central-1c', 'eu-central-1d'],
+      min: 5,
+      max: 20,
+      desired: 12,
+      current: 11,
+    },
+    availableZonesGridTemplateAreas: [],
+  };
+
+  componentDidMount() {
+    const allZones = [
+      ...this.state.nodePool1.avZones,
+      ...this.state.nodePool2.avZones,
+    ].map(zone => zone.slice(-1));
+
+    // This array stores available zones that are in at least one node pool.
+    // We only want unique values because this is used fot building the grid.
+    const availableZonesGridTemplateAreas = [...new Set(allZones)].sort();
+    this.setState({ availableZonesGridTemplateAreas });
+  }
+  // Put all last letters in an array of letters.
+
   render() {
+    const {
+      nodePool1,
+      nodePool2,
+      availableZonesGridTemplateAreas,
+    } = this.state;
+
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
@@ -184,10 +205,16 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <span> </span>
           </GridRowNodePoolsHeaders>
           <GridRowNodePoolsItem>
-            <NodePool nodePool={nodePool1} />
+            <NodePool
+              availableZonesGridTemplateAreas={availableZonesGridTemplateAreas}
+              nodePool={nodePool1}
+            />
           </GridRowNodePoolsItem>
           <GridRowNodePoolsItem>
-            <NodePool nodePool={nodePool2} />
+            <NodePool
+              availableZonesGridTemplateAreas={availableZonesGridTemplateAreas}
+              nodePool={nodePool2}
+            />
           </GridRowNodePoolsItem>
         </NodePools>
         <Button>
