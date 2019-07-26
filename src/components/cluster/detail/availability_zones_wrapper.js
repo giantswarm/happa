@@ -6,9 +6,8 @@ import styled from '@emotion/styled';
 const Wrapper = styled.div`
   display: grid;
   /* grid-gap: 5px; */
-  grid-template-columns: 30px 30px 30px 30px;
   grid-template-rows: 26px;
-  grid-template-areas: 'a b c d';
+  /* grid-template-areas: 'a b c d'; */
   .a {
     grid-area: a;
   }
@@ -37,8 +36,11 @@ const AvailabilityZonesWrapper = ({
   zones,
   availableZonesGridTemplateAreas: gridTemplateAreas, // Renaming prop here.
 }) => {
-  const widthLabel = '30px';
-  const gridTemplateColumns = gridTemplateAreas.map(() => widthLabel).join(' ');
+  const labelWidth = '30px';
+  const gridTemplateColumns = gridTemplateAreas
+    .split(' ')
+    .map(() => labelWidth)
+    .join(' ');
 
   return (
     <Wrapper style={{ gridTemplateAreas, gridTemplateColumns }}>
@@ -48,7 +50,7 @@ const AvailabilityZonesWrapper = ({
 };
 
 AvailabilityZonesWrapper.propTypes = {
-  availableZonesGridTemplateAreas: PropTypes.arrayOf(PropTypes.string),
+  availableZonesGridTemplateAreas: PropTypes.string,
   zones: PropTypes.PropTypes.arrayOf(PropTypes.string),
 };
 

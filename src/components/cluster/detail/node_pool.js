@@ -53,7 +53,7 @@ const NodePool = ({ availableZonesGridTemplateAreas, nodePool }) => {
 };
 
 NodePool.propTypes = {
-  availableZonesGridTemplateAreas: PropTypes.arrayOf(PropTypes.string),
+  availableZonesGridTemplateAreas: PropTypes.string,
   nodePool: PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
