@@ -1,5 +1,5 @@
 import { Code } from 'styles/';
-import AvailabilityZonesLabel from 'UI/availability_zones_label';
+import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -32,7 +32,7 @@ const NodePool = ({ nodePool }) => {
       <div>{name}</div>
       <Code>{instanceType}</Code>
       <div>
-        <AvailabilityZonesLabel style={{ margin: '0.1vw' }} zones={avZones} />
+        <AvailabilityZonesLabels style={{ margin: '0.1vw' }} zones={avZones} />
       </div>
       <NodesWrapper>{min}</NodesWrapper>
       <NodesWrapper>{max}</NodesWrapper>
