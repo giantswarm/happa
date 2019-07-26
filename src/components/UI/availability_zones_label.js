@@ -46,14 +46,13 @@ const Wrapper = styled.abbr`
   }
 `;
 
-const AvailabilityZonesLabel = ({ key, label, letter, title }) => (
-  <Wrapper className={letter} key={key} title={title}>
+const AvailabilityZonesLabel = ({ label, letter, title }) => (
+  <Wrapper className={letter} title={title}>
     {label}
   </Wrapper>
 );
 
 AvailabilityZonesLabel.propTypes = {
-  key: PropTypes.string,
   label: PropTypes.string,
   letter: PropTypes.string,
   title: PropTypes.string,
