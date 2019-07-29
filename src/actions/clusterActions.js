@@ -68,7 +68,6 @@ export function clustersLoad() {
           getState().app.info.general.provider
         );
 
-        dispatch(clustersLoadSuccess(clusters));
         return clusters;
       })
       .catch(error => {
@@ -86,7 +85,10 @@ function clustersLoadV4(token, scheme, dispatch) {
   // Or maybe we won't need this method at all.
   return clustersApi
     .getClusters(scheme + ' ' + token)
-    .then(clusters => clusters)
+    .then(clusters => {
+      dispatch(clustersLoadSuccessV4(clusters));
+      return clusters;
+    })
     .catch(error => {
       console.error(error);
       dispatch(clustersLoadErrorV4(error));
@@ -102,9 +104,29 @@ function clustersLoadV5(token, scheme, dispatch) {
   return clustersApi
     .getClusterV5(scheme + ' ' + token, 'm0ckd')
     .then(clusters => {
-      const clusterIds = [clusters].map(cluster => cluster.id);
+      // nodePoolsClusters is an array of NP clusters ids and will be stored in items
+      const nodePoolsClusters = [clusters].map(cluster => cluster.id);
+      const lastUpdated = Date.now();
 
-      dispatch(clustersLoadSuccessV5(clusterIds));
+      // I think we should refactor items to be an array instead of an object
+      const clustersObject = [clusters]
+        .map(cluster => {
+          return {
+            ...cluster,
+            lastUpdated: Date.now(),
+            nodes: cluster.nodes || [],
+            keyPairs: cluster.keyPairs || [],
+            scaling: cluster.scaling || {},
+          };
+        })
+        .sort()
+        .reduce((accumulator, current) => {
+          return { ...accumulator, [current.id]: current };
+        }, {});
+
+      dispatch(
+        clustersLoadSuccessV5(clustersObject, nodePoolsClusters, lastUpdated)
+      );
       return [clusters];
     })
     .catch(error => {
@@ -655,16 +677,17 @@ export function clusterDeleteError(clusterId, error) {
   };
 }
 
-export function clustersLoadSuccess(clusters) {
+export function clustersLoadSuccessV4(clusters) {
   return {
-    type: types.CLUSTERS_LOAD_SUCCESS,
+    type: types.CLUSTERS_LOAD_SUCCESS_V4,
     clusters: clusters,
   };
 }
 
-export function clustersLoadSuccessV5(nodePoolsClusters) {
+export function clustersLoadSuccessV5(clusters, nodePoolsClusters) {
   return {
     type: types.CLUSTERS_LOAD_SUCCESS_V5,
+    clusters,
     nodePoolsClusters,
   };
 }

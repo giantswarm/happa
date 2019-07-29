@@ -32,7 +32,7 @@ export default function clusterReducer(
   let items = { ...state.items };
 
   switch (action.type) {
-    case types.CLUSTERS_LOAD_SUCCESS:
+    case types.CLUSTERS_LOAD_SUCCESS_V4:
       // if state was populated previously, let new data overwrite old data partially
       var prevClusterIDs = Object.keys(state.items).sort();
 
@@ -63,14 +63,19 @@ export default function clusterReducer(
       return {
         ...state,
         lastUpdated: Date.now(),
-        items,
+        items: { ...state.items, ...items },
       };
 
-    case types.CLUSTERS_LOAD_SUCCESS_V5:
+    case types.CLUSTERS_LOAD_SUCCESS_V5: {
+      const { nodePoolsClusters, lastUpdated, clusters } = action;
+
       return {
         ...state,
-        nodePoolsClusters: action.nodePoolsClusters,
+        nodePoolsClusters,
+        lastUpdated,
+        items: { ...state.items, ...clusters },
       };
+    }
 
     case types.CLUSTERS_LOAD_ERROR:
       return {

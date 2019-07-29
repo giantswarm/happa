@@ -143,7 +143,7 @@ export default function appReducer(
         loggedInUser,
       });
 
-    case types.CLUSTERS_LOAD_SUCCESS:
+    case types.CLUSTERS_LOAD_SUCCESS_V4:
       return Object.assign({}, state, {
         firstLoadComplete: true,
       });
