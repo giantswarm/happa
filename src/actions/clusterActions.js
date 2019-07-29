@@ -86,7 +86,25 @@ function clustersLoadV4(token, scheme, dispatch) {
   return clustersApi
     .getClusters(scheme + ' ' + token)
     .then(clusters => {
-      dispatch(clustersLoadSuccessV4(clusters));
+      const lastUpdated = Date.now();
+
+      // Clusters array to object.
+      const clustersObject = clusters
+        .map(cluster => {
+          return {
+            ...cluster,
+            lastUpdated: Date.now(),
+            nodes: cluster.nodes || [],
+            keyPairs: cluster.keyPairs || [],
+            scaling: cluster.scaling || {},
+          };
+        })
+        .sort()
+        .reduce((accumulator, current) => {
+          return { ...accumulator, [current.id]: current };
+        }, {});
+
+      dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
       return clusters;
     })
     .catch(error => {
@@ -104,11 +122,11 @@ function clustersLoadV5(token, scheme, dispatch) {
   return clustersApi
     .getClusterV5(scheme + ' ' + token, 'm0ckd')
     .then(clusters => {
-      // nodePoolsClusters is an array of NP clusters ids and will be stored in items
+      // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
       const nodePoolsClusters = [clusters].map(cluster => cluster.id);
       const lastUpdated = Date.now();
 
-      // I think we should refactor items to be an array instead of an object
+      // Clusters array to object.
       const clustersObject = [clusters]
         .map(cluster => {
           return {
@@ -677,10 +695,11 @@ export function clusterDeleteError(clusterId, error) {
   };
 }
 
-export function clustersLoadSuccessV4(clusters) {
+export function clustersLoadSuccessV4(clusters, lastUpdated) {
   return {
     type: types.CLUSTERS_LOAD_SUCCESS_V4,
-    clusters: clusters,
+    clusters,
+    lastUpdated,
   };
 }
 

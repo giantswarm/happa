@@ -1,5 +1,4 @@
 import * as types from 'actions/actionTypes';
-import _ from 'underscore';
 import moment from 'moment';
 
 /**
@@ -32,42 +31,18 @@ export default function clusterReducer(
   let items = { ...state.items };
 
   switch (action.type) {
-    case types.CLUSTERS_LOAD_SUCCESS_V4:
-      // if state was populated previously, let new data overwrite old data partially
-      var prevClusterIDs = Object.keys(state.items).sort();
-
-      // use existing state's items and update it
-
-      var newClusterIDs = _.map(_.toArray(action.clusters), item => {
-        return item.id;
-      }).sort();
-
-      // account for deleted clusters
-      var deleted = _.difference(prevClusterIDs, newClusterIDs);
-      deleted.forEach(deletedClusterID => {
-        delete items[deletedClusterID];
-      });
-
-      _.each(action.clusters, cluster => {
-        items[cluster.id] = Object.assign({}, items[cluster.id], cluster);
-
-        items[cluster.id].lastUpdated = Date.now();
-
-        // Guard against API that returns null for certain values when they are
-        // empty.
-        items[cluster.id].nodes = items[cluster.id].nodes || [];
-        items[cluster.id].keyPairs = items[cluster.id].keyPairs || [];
-        items[cluster.id].scaling = items[cluster.id].scaling || {};
-      });
+    case types.CLUSTERS_LOAD_SUCCESS_V4: {
+      const { clusters, lastUpdated } = action;
 
       return {
         ...state,
-        lastUpdated: Date.now(),
-        items: { ...state.items, ...items },
+        lastUpdated,
+        items: { ...state.items, ...clusters },
       };
+    }
 
     case types.CLUSTERS_LOAD_SUCCESS_V5: {
-      const { nodePoolsClusters, lastUpdated, clusters } = action;
+      const { clusters, nodePoolsClusters, lastUpdated } = action;
 
       return {
         ...state,
