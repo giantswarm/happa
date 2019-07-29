@@ -40,6 +40,24 @@ function computeCapabilities(cluster, provider) {
   return capabilities;
 }
 
+// Helper function, not an action creator
+function clustersLoadArrayToObject(clusters) {
+  return clusters
+    .map(cluster => {
+      return {
+        ...cluster,
+        lastUpdated: Date.now(),
+        nodes: cluster.nodes || [],
+        keyPairs: cluster.keyPairs || [],
+        scaling: cluster.scaling || {},
+      };
+    })
+    .sort()
+    .reduce((accumulator, current) => {
+      return { ...accumulator, [current.id]: current };
+    }, {});
+}
+
 /**
  * Performs the getClusters API call and dispatches the clustersLoadSuccess
  * action.
@@ -87,22 +105,8 @@ function clustersLoadV4(token, scheme, dispatch) {
     .getClusters(scheme + ' ' + token)
     .then(clusters => {
       const lastUpdated = Date.now();
-
       // Clusters array to object.
-      const clustersObject = clusters
-        .map(cluster => {
-          return {
-            ...cluster,
-            lastUpdated: Date.now(),
-            nodes: cluster.nodes || [],
-            keyPairs: cluster.keyPairs || [],
-            scaling: cluster.scaling || {},
-          };
-        })
-        .sort()
-        .reduce((accumulator, current) => {
-          return { ...accumulator, [current.id]: current };
-        }, {});
+      const clustersObject = clustersLoadArrayToObject(clusters);
 
       dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
       return clusters;
@@ -125,22 +129,8 @@ function clustersLoadV5(token, scheme, dispatch) {
       // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
       const nodePoolsClusters = [clusters].map(cluster => cluster.id);
       const lastUpdated = Date.now();
-
       // Clusters array to object.
-      const clustersObject = [clusters]
-        .map(cluster => {
-          return {
-            ...cluster,
-            lastUpdated: Date.now(),
-            nodes: cluster.nodes || [],
-            keyPairs: cluster.keyPairs || [],
-            scaling: cluster.scaling || {},
-          };
-        })
-        .sort()
-        .reduce((accumulator, current) => {
-          return { ...accumulator, [current.id]: current };
-        }, {});
+      const clustersObject = clustersLoadArrayToObject([clusters]);
 
       dispatch(
         clustersLoadSuccessV5(clustersObject, nodePoolsClusters, lastUpdated)
