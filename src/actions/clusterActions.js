@@ -74,20 +74,10 @@ export function clustersLoad() {
     // that separates regular clusters from NP clusters and then pass them to their
     // respective methods.
 
-    const regularClusters = clustersLoadV4(token, scheme, dispatch, getState);
-    const nodePoolsClusters =
-      window.config.environment === 'development'
-        ? clustersLoadV5(token, scheme, dispatch, getState)
-        : [];
-
-    Promise.all([regularClusters, nodePoolsClusters])
-      .then(([regularClusters, nodePoolClusters]) => {
-        return [...regularClusters, ...nodePoolClusters];
-      })
-      .catch(error => {
-        console.error(error);
-        dispatch(clustersLoadError(error));
-      });
+    clustersLoadV4(token, scheme, dispatch, getState);
+    if (window.config.environment === 'development') {
+      clustersLoadV5(token, scheme, dispatch, getState);
+    }
   };
 }
 
