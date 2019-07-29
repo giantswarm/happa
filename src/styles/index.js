@@ -9,9 +9,8 @@ import styled from '@emotion/styled';
  */
 
 export const Row = css`
-  padding: 5px 21px 5px 14px;
+  padding: 14px 20px;
   min-height: 56px;
-  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.3px;
   margin-bottom: 16px;
@@ -31,8 +30,9 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
   ${FlexRowBase};
   ${Row};
   background-color: ${props => props.theme.colors.shade7};
-  > div > * {
-    display: inline-block;
+  > div {
+    display: flex;
+    align-items: center;
   }
   /* Left block */
   > div:first-of-type {
@@ -40,6 +40,7 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
     /* Separation for children */
     > * {
       margin-right: 18px;
+      display: inline-block;
     }
   }
   /* Right Block */
@@ -48,10 +49,17 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
     /* Separation for children */
     > * {
       margin-left: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
   }
   i {
     padding: 0 2px;
+  }
+  span {
+    white-space: nowrap;
+    display: inline-block;
   }
 `;
 
@@ -61,10 +69,12 @@ export const Code = styled.code`
   font-family: ${props => props.theme.fontFamilies.console};
   background-color: ${props => props.theme.colors.shade2};
   border-radius: 2px;
-  padding: 0 5px;
+  padding: 0 12px;
   height: 30px;
   line-height: 30px;
   display: inline-block;
+  margin: 0;
+  white-space: nowrap;
 `;
 
 export const Dot = styled.span`
