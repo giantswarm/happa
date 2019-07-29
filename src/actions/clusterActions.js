@@ -74,20 +74,15 @@ export function clustersLoad() {
     // that separates regular clusters from NP clusters and then pass them to their
     // respective methods.
 
-    const regularClusters = clustersLoadV4(token, scheme, dispatch);
+    const regularClusters = clustersLoadV4(token, scheme, dispatch, getState);
     const nodePoolsClusters =
       window.config.environment === 'development'
-        ? clustersLoadV5(token, scheme, dispatch)
+        ? clustersLoadV5(token, scheme, dispatch, getState)
         : [];
 
     Promise.all([regularClusters, nodePoolsClusters])
       .then(([regularClusters, nodePoolClusters]) => {
-        const clusters = enhanceWithCapabilities(
-          [...regularClusters, ...nodePoolClusters],
-          getState().app.info.general.provider
-        );
-
-        return clusters;
+        return [...regularClusters, ...nodePoolClusters];
       })
       .catch(error => {
         console.error(error);
@@ -96,7 +91,7 @@ export function clustersLoad() {
   };
 }
 
-function clustersLoadV4(token, scheme, dispatch) {
+function clustersLoadV4(token, scheme, dispatch, getState) {
   dispatch({ type: types.CLUSTERS_LOAD_V4 });
 
   // TODO this will be in getClusters() here in this function we just want to
@@ -106,12 +101,17 @@ function clustersLoadV4(token, scheme, dispatch) {
     .getClusters(scheme + ' ' + token)
     .then(clusters => {
       const lastUpdated = Date.now();
+      const enhancedClusters = enhanceWithCapabilities(
+        clusters,
+        getState().app.info.general.provider
+      );
       // Clusters array to object, because we are storing an object in the store
-      const clustersObject = clustersLoadArrayToObject(clusters);
+      const clustersObject = clustersLoadArrayToObject(enhancedClusters);
 
       dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
+
       // But returning an Array.
-      return clusters;
+      return enhancedClusters;
     })
     .catch(error => {
       console.error(error);
@@ -119,7 +119,7 @@ function clustersLoadV4(token, scheme, dispatch) {
     });
 }
 
-async function clustersLoadV5(token, scheme, dispatch) {
+async function clustersLoadV5(token, scheme, dispatch, getState) {
   dispatch({ type: types.CLUSTERS_LOAD_V5 });
 
   clustersLoadNodePools(['m0ckd'], token, scheme, dispatch);
@@ -133,14 +133,18 @@ async function clustersLoadV5(token, scheme, dispatch) {
       // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
       const nodePoolsClusters = [clusters].map(cluster => cluster.id);
       const lastUpdated = Date.now();
+      const enhancedClusters = enhanceWithCapabilities(
+        [clusters],
+        getState().app.info.general.provider
+      );
       // Clusters array to object, because we are storing an object in the store
-      const clustersObject = clustersLoadArrayToObject([clusters]);
+      const clustersObject = clustersLoadArrayToObject(enhancedClusters);
 
       dispatch(
         clustersLoadSuccessV5(clustersObject, nodePoolsClusters, lastUpdated)
       );
       // But returning an Array.
-      return [clusters];
+      return enhancedClusters;
     })
     .catch(error => {
       console.error(error);
