@@ -8,6 +8,7 @@ import GiantSwarm from 'giantswarm';
 
 // API instantiations
 const clustersApi = new GiantSwarm.ClustersApi();
+const nodePoolsApi = new GiantSwarm.NodepoolsApi();
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
@@ -105,10 +106,11 @@ function clustersLoadV4(token, scheme, dispatch) {
     .getClusters(scheme + ' ' + token)
     .then(clusters => {
       const lastUpdated = Date.now();
-      // Clusters array to object.
+      // Clusters array to object, because we are storing an object in the store
       const clustersObject = clustersLoadArrayToObject(clusters);
 
       dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
+      // But returning an Array.
       return clusters;
     })
     .catch(error => {
@@ -117,8 +119,10 @@ function clustersLoadV4(token, scheme, dispatch) {
     });
 }
 
-function clustersLoadV5(token, scheme, dispatch) {
+async function clustersLoadV5(token, scheme, dispatch) {
   dispatch({ type: types.CLUSTERS_LOAD_V5 });
+
+  clustersLoadNodePools(['m0ckd'], token, scheme, dispatch);
 
   // TODO this will be in getClusters() here in this function we just want to
   // dispatch specific actions for v5 clusters.
@@ -129,18 +133,71 @@ function clustersLoadV5(token, scheme, dispatch) {
       // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
       const nodePoolsClusters = [clusters].map(cluster => cluster.id);
       const lastUpdated = Date.now();
-      // Clusters array to object.
+      // Clusters array to object, because we are storing an object in the store
       const clustersObject = clustersLoadArrayToObject([clusters]);
 
       dispatch(
         clustersLoadSuccessV5(clustersObject, nodePoolsClusters, lastUpdated)
       );
+      // But returning an Array.
       return [clusters];
     })
     .catch(error => {
       console.error(error);
       dispatch(clustersLoadErrorV5(error));
     });
+}
+
+/**
+ * Loads all node pools for all nodepools clusters.
+ *
+ * @param {String} clusterId Cluster ID
+ */
+export function clustersLoadNodePools(
+  nodePoolsClusters,
+  token,
+  scheme,
+  dispatch
+) {
+  dispatch({
+    type: types.CLUSTERS_LOAD_NODEPOOLS,
+    nodePoolsClusters,
+  });
+
+  Promise.all(
+    nodePoolsClusters.map(clusterId => {
+      return nodePoolsApi
+        .getNodePools(scheme + ' ' + token, clusterId)
+
+        .then(nodePools => {
+          dispatch({
+            type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
+            nodePoolsClusters,
+            nodePools,
+          });
+
+          console.log(nodePools);
+          return nodePools;
+        })
+        .catch(error => {
+          console.error('Error loading cluster node pools:', error);
+          dispatch({
+            type: types.CLUSTERS_LOAD_NODEPOOLS_ERROR,
+            nodePoolsClusters,
+            error,
+          });
+
+          new FlashMessage(
+            'Something went wrong while trying to load node pools on this cluster.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
+          );
+
+          throw error;
+        });
+    })
+  );
 }
 
 /**
