@@ -21,23 +21,40 @@ const MenuWrapper = styled.div`
     border-radius: 0;
     padding: 0;
     background: unset;
+    transition: background 0.3s;
     &:focus {
       outline: 5px auto -webkit-focus-ring-color;
+    }
+    &:hover,
+    &:focus,
+    &:focus-within {
+      background: ${props => props.theme.colors.shade8};
     }
   }
   ul {
     position: absolute;
     right: 7px;
     list-style-type: none;
-    padding: 12px 15px;
-    margin: 0;
+    margin: 2px 0 0;
+    padding: 5px 0;
     width: 180px;
     background: ${props => props.theme.colors.shade2};
-    border: 1px solid ${props => props.theme.colors.white3};
     z-index: 1;
+    background-color: #2a5874;
+    border: none;
+    border-radius: 5px;
   }
   a {
+    display: inline-block;
     text-decoration: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 7px 15px;
+    width: 100%;
+    &:hover {
+      background: ${props => props.theme.colors.shade9};
+    }
   }
 `;
 
@@ -54,6 +71,10 @@ function DropdownMenu(props) {
   // If a child receives focus, do not close the popover.
   const onFocusHandler = () => clearTimeout(timeOutId);
 
+  const onKeyDownHandler = event => {
+    if (event.key === 'Escape') setIsOpen(false);
+  };
+
   return (
     <MenuWrapper>
       {props.render({
@@ -61,6 +82,7 @@ function DropdownMenu(props) {
         onClickHandler: () => setIsOpen(!isOpen),
         onBlurHandler,
         onFocusHandler,
+        onKeyDownHandler,
       })}
     </MenuWrapper>
   );
