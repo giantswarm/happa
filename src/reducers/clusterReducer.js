@@ -24,7 +24,7 @@ export default function clusterReducer(
     lastUpdated: null,
     isFetching: false,
     items: {},
-    nodePoolsClusters: [],
+    nodePools: [],
   },
   action = undefined
 ) {
@@ -42,11 +42,11 @@ export default function clusterReducer(
     }
 
     case types.CLUSTERS_LOAD_SUCCESS_V5: {
-      const { clusters, nodePoolsClusters, lastUpdated } = action;
+      const { clusters, nodePools, lastUpdated } = action;
 
       return {
         ...state,
-        nodePoolsClusters,
+        nodePools,
         lastUpdated,
         items: { ...state.items, ...clusters },
       };
@@ -59,6 +59,19 @@ export default function clusterReducer(
         errorLoading: true,
         items,
       };
+
+    case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS: {
+      return {
+        ...state,
+        items: {
+          ...items,
+          [action.clusterId]: {
+            ...items[action.clusterId],
+            nodePools: action.nodePools,
+          },
+        },
+      };
+    }
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
       items[action.cluster.id] = Object.assign(

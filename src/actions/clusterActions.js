@@ -74,6 +74,7 @@ export function clustersLoad() {
     clustersLoadV4(token, scheme, dispatch, getState);
     if (window.config.environment === 'development') {
       clustersLoadV5(token, scheme, dispatch, getState);
+      clustersLoadNodePools(['m0ckd'], token, scheme, dispatch);
     }
   };
 }
@@ -94,9 +95,6 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
       const clustersObject = clustersLoadArrayToObject(enhancedClusters);
 
       dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
-
-      // But returning an Array.
-      return enhancedClusters;
     })
     .catch(error => {
       console.error(error);
@@ -105,33 +103,30 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
 }
 
 async function clustersLoadV5(token, scheme, dispatch, getState) {
-  clustersLoadNodePools(['m0ckd'], token, scheme, dispatch);
-
   // TODO this will be in getClusters() here in this function we just want to
   // dispatch specific actions for v5 clusters.
   // Or maybe we won't need this method at all.
   return clustersApi
     .getClusterV5(scheme + ' ' + token, 'm0ckd')
     .then(clusters => {
-      // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
-      const nodePoolsClusters = [clusters].map(cluster => cluster.id);
+      // nodePools is an array of NP clusters ids and will be stored in items.
+      const nodePools = [clusters].map(cluster => cluster.id);
       const lastUpdated = Date.now();
       const enhancedClusters = enhanceWithCapabilities(
         [clusters],
         getState().app.info.general.provider
       );
-      // Clusters array to object, because we are storing an object in the store
+      // Clusters array to object, because we are storing an object in the store.
       const clustersObject = clustersLoadArrayToObject(enhancedClusters);
 
-      dispatch(
-        clustersLoadSuccessV5(clustersObject, nodePoolsClusters, lastUpdated)
-      );
-      // But returning an Array.
-      return enhancedClusters;
+      dispatch(clustersLoadSuccessV5(clustersObject, nodePools, lastUpdated));
     })
     .catch(error => {
       console.error(error);
-      dispatch(clustersLoadErrorV5(error));
+      dispatch({
+        type: types.CLUSTERS_LOAD_ERROR_V5,
+        error: error,
+      });
     });
 }
 
@@ -140,26 +135,16 @@ async function clustersLoadV5(token, scheme, dispatch, getState) {
  *
  * @param {String} clusterId Cluster ID
  */
-export function clustersLoadNodePools(
-  nodePoolsClusters,
-  token,
-  scheme,
-  dispatch
-) {
-  dispatch({
-    type: types.CLUSTERS_LOAD_NODEPOOLS,
-    nodePoolsClusters,
-  });
-
+function clustersLoadNodePools(nodePools, token, scheme, dispatch) {
   return Promise.all(
-    nodePoolsClusters.map(clusterId => {
+    nodePools.map(clusterId => {
       return nodePoolsApi
         .getNodePools(scheme + ' ' + token, clusterId)
 
         .then(nodePools => {
           dispatch({
             type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
-            nodePoolsClusters,
+            clusterId,
             nodePools,
           });
 
@@ -170,7 +155,7 @@ export function clustersLoadNodePools(
           console.error('Error loading cluster node pools:', error);
           dispatch({
             type: types.CLUSTERS_LOAD_NODEPOOLS_ERROR,
-            nodePoolsClusters,
+            nodePools,
             error,
           });
 
@@ -196,8 +181,8 @@ export function clusterLoadApps(clusterId) {
   return function(dispatch, getState) {
     // This method is going to work for NP clusters, now in local dev it is not
     // working, so early return if the cluster is a NP one.
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
+    const nodePools = getState().entities.clusters.nodePools;
+    const isNodePoolCluster = nodePools.includes(clusterId);
     if (isNodePoolCluster) return Promise.resolve([]);
 
     var token = getState().app.loggedInUser.auth.token;
@@ -420,8 +405,8 @@ export function clusterLoadDetails(clusterId) {
   return async function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
+    const nodePools = getState().entities.clusters.nodePools;
+    const isNodePoolCluster = nodePools.includes(clusterId);
 
     dispatch({
       type: types.CLUSTER_LOAD_DETAILS,
@@ -466,8 +451,8 @@ export function clusterLoadStatus(clusterId) {
   return function(dispatch, getState) {
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
+    const nodePools = getState().entities.clusters.nodePools;
+    const isNodePoolCluster = nodePools.includes(clusterId);
 
     if (isNodePoolCluster) {
       // Here we will have something like clusterLoadStatusV5(...);
@@ -623,8 +608,8 @@ export function clusterLoadKeyPairs(clusterId) {
   return function(dispatch, getState) {
     // This method is going to work for NP clusters, now in local dev it is not
     // working, so early return if the cluster is a NP one.
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolCluster = nodePoolsClusters.includes(clusterId);
+    const nodePools = getState().entities.clusters.nodePools;
+    const isNodePoolCluster = nodePools.includes(clusterId);
     if (isNodePoolCluster) return Promise.resolve([]);
 
     var token = getState().app.loggedInUser.auth.token;
@@ -737,11 +722,11 @@ export function clustersLoadSuccessV4(clusters, lastUpdated) {
   };
 }
 
-export function clustersLoadSuccessV5(clusters, nodePoolsClusters) {
+export function clustersLoadSuccessV5(clusters, nodePools) {
   return {
     type: types.CLUSTERS_LOAD_SUCCESS_V5,
     clusters,
-    nodePoolsClusters,
+    nodePools,
   };
 }
 
