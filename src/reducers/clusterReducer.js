@@ -42,11 +42,11 @@ export default function clusterReducer(
     }
 
     case types.CLUSTERS_LOAD_SUCCESS_V5: {
-      const { clusters, nodePools, lastUpdated } = action;
+      const { clusters, nodePoolsClusters, lastUpdated } = action;
 
       return {
         ...state,
-        nodePools,
+        nodePoolsClusters,
         lastUpdated,
         items: { ...state.items, ...clusters },
       };
