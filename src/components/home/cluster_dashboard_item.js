@@ -97,6 +97,10 @@ class ClusterDashboardItem extends React.Component {
     return 0;
   }
 
+  getNumberOfNodePools() {
+    // this.props.cl
+  }
+
   /**
    * Returns true if the cluster is younger than 30 days
    */
@@ -123,10 +127,12 @@ class ClusterDashboardItem extends React.Component {
   };
 
   render() {
+    const { cluster } = this.props;
     var memory = this.getMemoryTotal();
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
     var numNodes = this.getNumberOfNodes();
+    var numNodePools = cluster.nodePools ? cluster.nodePools.length : null;
 
     return (
       <div className='cluster-dashboard-item well'>
@@ -136,10 +142,10 @@ class ClusterDashboardItem extends React.Component {
               '/organizations/' +
               this.props.selectedOrganization +
               '/clusters/' +
-              this.props.cluster.id
+              cluster.id
             }
           >
-            <ClusterIDLabel clusterID={this.props.cluster.id} copyEnabled />
+            <ClusterIDLabel clusterID={cluster.id} copyEnabled />
           </Link>
         </div>
 
@@ -150,31 +156,34 @@ class ClusterDashboardItem extends React.Component {
                 '/organizations/' +
                 this.props.selectedOrganization +
                 '/clusters/' +
-                this.props.cluster.id
+                cluster.id
               }
             >
-              <RefreshableLabel dataItems={[this.props.cluster.name]}>
+              <RefreshableLabel dataItems={[cluster.name]}>
                 <span
                   className='cluster-dashboard-item--name'
                   style={{ fontWeight: 'bold' }}
                 >
-                  {this.props.cluster.name}
+                  {cluster.name}
                 </span>
               </RefreshableLabel>
             </Link>
           </div>
 
           <div>
-            <RefreshableLabel dataItems={[this.props.cluster.release_version]}>
+            <RefreshableLabel dataItems={[cluster.release_version]}>
               <span>
                 <i className='fa fa-version-tag' title='Release version' />{' '}
-                {this.props.cluster.release_version}
+                {cluster.release_version}
               </span>
             </RefreshableLabel>
             {' · Created '}
-            {relativeDate(this.props.cluster.create_date)}
+            {relativeDate(cluster.create_date)}
           </div>
           <div>
+            <RefreshableLabel dataItems={[numNodes]}>
+              <span>{numNodePools} node pools, </span>
+            </RefreshableLabel>
             <RefreshableLabel dataItems={[numNodes]}>
               <span>{numNodes} nodes</span>
             </RefreshableLabel>
@@ -186,7 +195,7 @@ class ClusterDashboardItem extends React.Component {
             <RefreshableLabel dataItems={[memory]}>
               <span>{memory ? memory : '0'} GB RAM</span>
             </RefreshableLabel>
-            {this.props.cluster.kvm ? (
+            {cluster.kvm ? (
               <span>
                 {' · '}
                 <RefreshableLabel dataItems={[storage]}>
