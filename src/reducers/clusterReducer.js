@@ -52,7 +52,8 @@ export default function clusterReducer(
       };
     }
 
-    case types.CLUSTERS_LOAD_ERROR:
+    case types.CLUSTERS_LOAD_ERROR_V4:
+    case types.CLUSTERS_LOAD_ERROR_V5:
       return {
         ...state,
         errorLoading: true,

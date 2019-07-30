@@ -752,13 +752,6 @@ export function clustersLoadSuccessV5(clusters, nodePoolsClusters) {
   };
 }
 
-export function clustersLoadError(error) {
-  return {
-    type: types.CLUSTERS_LOAD_ERROR,
-    error: error,
-  };
-}
-
 export function clustersLoadErrorV4(error) {
   return {
     type: types.CLUSTERS_LOAD_ERROR_V4,
