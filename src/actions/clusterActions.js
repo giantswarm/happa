@@ -67,9 +67,6 @@ export function clustersLoad() {
   return function(dispatch, getState) {
     const token = getState().app.loggedInUser.auth.token;
     const scheme = getState().app.loggedInUser.auth.scheme;
-
-    dispatch({ type: types.CLUSTERS_LOAD });
-
     // TODO getClusters() will get all clusters, so we will need some logic here
     // that separates regular clusters from NP clusters and then pass them to their
     // respective methods.
@@ -82,8 +79,6 @@ export function clustersLoad() {
 }
 
 function clustersLoadV4(token, scheme, dispatch, getState) {
-  dispatch({ type: types.CLUSTERS_LOAD_V4 });
-
   // TODO this will be in getClusters() here in this function we just want to
   // dispatch specific actions for v4 clusters.
   // Or maybe we won't need this method at all.
@@ -110,8 +105,6 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
 }
 
 async function clustersLoadV5(token, scheme, dispatch, getState) {
-  dispatch({ type: types.CLUSTERS_LOAD_V5 });
-
   clustersLoadNodePools(['m0ckd'], token, scheme, dispatch);
 
   // TODO this will be in getClusters() here in this function we just want to
