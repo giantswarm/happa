@@ -14,6 +14,7 @@ export const Row = css`
   font-weight: 300;
   letter-spacing: 0.3px;
   margin-bottom: 16px;
+  border-radius: 5px;
 `;
 
 export const FlexRowBase = css`
