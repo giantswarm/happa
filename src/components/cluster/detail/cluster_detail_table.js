@@ -101,7 +101,7 @@ class ClusterDetailTable extends React.Component {
     if (this.props.provider === 'aws') {
       let details = <span />;
       if (
-        this.props.cluster.workers &&
+        this.props.cluster.workers.length > 0 &&
         typeof this.props.cluster.workers[0].aws.instance_type !==
           'undefined' &&
         this.awsInstanceTypes[this.props.cluster.workers[0].aws.instance_type]
@@ -119,7 +119,7 @@ class ClusterDetailTable extends React.Component {
         <tr>
           <td>EC2 instance type</td>
           <td className='value'>
-            {this.props.cluster.workers ? (
+            {this.props.cluster.workers.length > 0 ? (
               <span>
                 <code>{this.props.cluster.workers[0].aws.instance_type}</code>{' '}
                 {details}
