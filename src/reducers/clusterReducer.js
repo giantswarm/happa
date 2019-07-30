@@ -24,7 +24,7 @@ export default function clusterReducer(
     lastUpdated: null,
     isFetching: false,
     items: {},
-    nodePools: [],
+    nodePoolsClusters: [],
   },
   action = undefined
 ) {
