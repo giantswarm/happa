@@ -8,7 +8,6 @@ import GiantSwarm from 'giantswarm';
 
 // API instantiations
 const clustersApi = new GiantSwarm.ClustersApi();
-const nodePoolsApi = new GiantSwarm.NodepoolsApi();
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
@@ -147,6 +146,8 @@ async function clustersLoadV5(token, scheme, dispatch, getState) {
  * @param {String} clusterId Cluster ID
  */
 function clustersLoadNodePools(nodePoolsClustersIds, token, scheme, dispatch) {
+  const nodePoolsApi = new GiantSwarm.NodepoolsApi();
+
   return Promise.all(
     nodePoolsClustersIds.map(clusterId => {
       return nodePoolsApi
