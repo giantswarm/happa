@@ -53,7 +53,6 @@ function clustersLoadArrayToObject(clusters) {
         scaling: cluster.scaling || {},
       };
     })
-    .sort()
     .reduce((accumulator, current) => {
       return { ...accumulator, [current.id]: current };
     }, {});
@@ -91,6 +90,7 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
         clusters,
         getState().app.info.general.provider
       );
+
       // Clusters array to object, because we are storing an object in the store
       const clustersObject = clustersLoadArrayToObject(enhancedClusters);
 
@@ -116,6 +116,7 @@ async function clustersLoadV5(token, scheme, dispatch, getState) {
         [clusters],
         getState().app.info.general.provider
       );
+
       // Clusters array to object, because we are storing an object in the store.
       const clustersObject = clustersLoadArrayToObject(enhancedClusters);
 
@@ -131,7 +132,7 @@ async function clustersLoadV5(token, scheme, dispatch, getState) {
 }
 
 /**
- * Loads all node pools for all nodepools clusters.
+ * Loads all node pools for all node pools clusters.
  *
  * @param {String} clusterId Cluster ID
  */
@@ -140,16 +141,12 @@ function clustersLoadNodePools(nodePools, token, scheme, dispatch) {
     nodePools.map(clusterId => {
       return nodePoolsApi
         .getNodePools(scheme + ' ' + token, clusterId)
-
         .then(nodePools => {
           dispatch({
             type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
             clusterId,
             nodePools,
           });
-
-          console.log(nodePools);
-          return nodePools;
         })
         .catch(error => {
           console.error('Error loading cluster node pools:', error);
