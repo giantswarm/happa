@@ -108,7 +108,7 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
     });
 }
 
-async function clustersLoadV5(token, scheme, dispatch, getState) {
+function clustersLoadV5(token, scheme, dispatch, getState) {
   // TODO this will be in getClusters() here in this function we just want to
   // dispatch specific actions for v5 clusters.
   // Or maybe we won't need this method at all.
