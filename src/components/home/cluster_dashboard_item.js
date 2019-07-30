@@ -127,7 +127,7 @@ class ClusterDashboardItem extends React.Component {
   };
 
   render() {
-    const { cluster } = this.props;
+    const { cluster, selectedOrganization } = this.props;
     var memory = this.getMemoryTotal();
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
@@ -140,7 +140,7 @@ class ClusterDashboardItem extends React.Component {
           <Link
             to={
               '/organizations/' +
-              this.props.selectedOrganization +
+              selectedOrganization +
               '/clusters/' +
               cluster.id
             }
@@ -154,7 +154,7 @@ class ClusterDashboardItem extends React.Component {
             <Link
               to={
                 '/organizations/' +
-                this.props.selectedOrganization +
+                selectedOrganization +
                 '/clusters/' +
                 cluster.id
               }
