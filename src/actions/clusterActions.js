@@ -158,7 +158,7 @@ export function clustersLoadNodePools(
     nodePoolsClusters,
   });
 
-  Promise.all(
+  return Promise.all(
     nodePoolsClusters.map(clusterId => {
       return nodePoolsApi
         .getNodePools(scheme + ' ' + token, clusterId)
