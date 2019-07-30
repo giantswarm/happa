@@ -155,7 +155,6 @@ function clustersLoadNodePools(nodePools, token, scheme, dispatch) {
           console.error('Error loading cluster node pools:', error);
           dispatch({
             type: types.CLUSTERS_LOAD_NODEPOOLS_ERROR,
-            nodePools,
             error,
           });
 

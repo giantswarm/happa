@@ -64,14 +64,20 @@ export default function clusterReducer(
       return {
         ...state,
         items: {
-          ...items,
+          ...state.items,
           [action.clusterId]: {
-            ...items[action.clusterId],
+            ...state.items[action.clusterId],
             nodePools: action.nodePools,
           },
         },
       };
     }
+
+    case types.CLUSTERS_LOAD_NODEPOOLS_ERROR:
+      return {
+        ...state,
+        errorLoading: true,
+      };
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
       items[action.cluster.id] = Object.assign(
