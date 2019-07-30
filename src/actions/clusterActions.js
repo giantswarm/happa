@@ -156,7 +156,9 @@ function clustersLoadNodePools(nodePoolsClustersIds, token, scheme, dispatch) {
           dispatch({
             type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
             clusterId,
-            nodePools,
+            // Receiving an array-like with weird prototype from API call,
+            // so converting it to an array.
+            nodePools: Array.from(nodePools),
           });
         })
         .catch(error => {
