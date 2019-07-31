@@ -185,13 +185,6 @@ class ClusterDetailNodePoolsTable extends React.Component {
                     }}
                   </>
                 )}
-                {/* {if(!release &&
-                  cluster.kubernetes_version &&
-                  cluster.kubernetes_version !== '') ?
-                    <i className='fa fa-kubernetes' />
-                    {cluster.kubernetes_version}
-                    : 'n/a'
-                  } */}
                 {!release &&
                   cluster.kubernetes_version !== '' &&
                   cluster.kubernetes_version !== undefined &&
