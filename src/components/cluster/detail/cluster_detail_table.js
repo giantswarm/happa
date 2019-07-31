@@ -120,12 +120,13 @@ class ClusterDetailTable extends React.Component {
         <tr>
           <td>EC2 instance type</td>
           <td className='value'>
-            {this.props.cluster.workers.length > 0 ? (
-              <span>
-                <code>{this.props.cluster.workers[0].aws.instance_type}</code>{' '}
-                {details}
-              </span>
-            ) : null}
+            {this.props.cluster.workers.length &&
+              this.props.cluster.workers.length > 0 && (
+                <span>
+                  <code>{this.props.cluster.workers[0].aws.instance_type}</code>{' '}
+                  {details}
+                </span>
+              )}
           </td>
         </tr>
       );
