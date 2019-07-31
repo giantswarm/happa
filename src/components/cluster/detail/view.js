@@ -289,7 +289,17 @@ class ClusterDetailView extends React.Component {
                 <Tabs>
                   <Tab eventKey={1} title='General'>
                     {this.props.isNodePoolView ? (
-                      <ClusterDetailNodePoolsTable />
+                      <ClusterDetailNodePoolsTable
+                        canClusterUpgrade={this.canClusterUpgrade()}
+                        cluster={this.props.cluster}
+                        credentials={this.props.credentials}
+                        provider={this.props.provider}
+                        release={this.props.release}
+                        showScalingModal={this.showScalingModal}
+                        showUpgradeModal={this.showUpgradeModal}
+                        workerNodesDesired={this.getDesiredNumberOfNodes()}
+                        workerNodesRunning={this.getNumberOfNodes()}
+                      />
                     ) : (
                       <ClusterDetailTable
                         canClusterUpgrade={this.canClusterUpgrade()}
