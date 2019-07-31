@@ -97,10 +97,6 @@ class ClusterDashboardItem extends React.Component {
     return 0;
   }
 
-  getNumberOfNodePools() {
-    // this.props.cl
-  }
-
   /**
    * Returns true if the cluster is younger than 30 days
    */
