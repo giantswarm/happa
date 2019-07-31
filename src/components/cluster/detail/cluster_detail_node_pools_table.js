@@ -7,6 +7,7 @@ import NodePool from './node_pool';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
+import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
 
 // import AvailabilityZonesLabels from 'UI/availability_zones_labels';
@@ -164,9 +165,11 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 Created {create_date ? relativeDate(create_date) : 'n/a'}
               </span>
               <span>
-                <Dot />
-                <i className='fa fa-version-tag' />
-                {release_version ? release_version : 'n/a'}
+                <RefreshableLabel dataItems={[release_version]}>
+                  <Dot style={{ paddingRight: 0 }} />
+                  <i className='fa fa-version-tag' />
+                  {release_version ? release_version : 'n/a'}
+                </RefreshableLabel>
               </span>
               <span>
                 {release && (
@@ -178,12 +181,19 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 )}
               </span>
             </div>
-            <Upgrade>
-              <span>
-                <i className='fa fa-warning' />
-                Upgrade available
-              </span>
-            </Upgrade>
+            {this.props.canClusterUpgrade && (
+              <a
+                className='upgrade-available'
+                onClick={this.props.showUpgradeModal}
+              >
+                <Upgrade>
+                  <span>
+                    <i className='fa fa-warning' />
+                    Upgrade available
+                  </span>
+                </Upgrade>
+              </a>
+            )}
           </div>
           <div>
             <div>

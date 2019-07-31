@@ -2,7 +2,6 @@ import { relativeDate } from 'lib/helpers.js';
 import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';
-import KubernetesVersion from './kubernetes_version';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -362,9 +361,19 @@ class ClusterDetailTable extends React.Component {
                           <a onClick={this.showReleaseDetails}>
                             <i className='fa fa-version-tag' />{' '}
                             {cluster.release_version}{' '}
-                            <KubernetesVersion
-                              components={release.components}
-                            />
+                            {(() => {
+                              var kubernetes = release.components.find(
+                                component => component.name === 'kubernetes'
+                              );
+                              if (kubernetes) {
+                                return (
+                                  <span>
+                                    &mdash; includes Kubernetes{' '}
+                                    {kubernetes.version}
+                                  </span>
+                                );
+                              }
+                            })()}
                           </a>{' '}
                           {this.props.canClusterUpgrade ? (
                             <a
