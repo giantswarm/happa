@@ -48,7 +48,6 @@ class ClusterDetailView extends React.Component {
       props.releaseActions
         .loadReleases()
         .then(() => {
-          console.log('clusterLoadDetails');
           return props.clusterActions.clusterLoadDetails(props.cluster.id);
         })
         .then(() => {
@@ -62,7 +61,6 @@ class ClusterDetailView extends React.Component {
           });
         })
         .then(() => {
-          console.log('clusterLoadApps');
           return props.clusterActions.clusterLoadApps(props.cluster.id);
         })
         .then(() => {

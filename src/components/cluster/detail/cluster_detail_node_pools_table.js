@@ -2,6 +2,7 @@ import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { css } from '@emotion/core';
 import { relativeDate } from 'lib/helpers.js';
 import Button from 'UI/button';
+import KubernetesVersion from './kubernetes_version';
 import NodePool from './node_pool';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -146,7 +147,12 @@ class ClusterDetailNodePoolsTable extends React.Component {
       availableZonesGridTemplateAreas,
     } = this.state;
 
-    const { create_date, master } = this.props.cluster;
+    const {
+      create_date,
+      master,
+      release_version,
+      release,
+    } = this.props.cluster;
 
     return (
       <>
@@ -160,12 +166,16 @@ class ClusterDetailNodePoolsTable extends React.Component {
               <span>
                 <Dot />
                 <i className='fa fa-version-tag' />
-                6.3.2
+                {release_version ? release_version : 'n/a'}
               </span>
               <span>
-                <Dot />
-                <i className='fa fa-kubernetes' />
-                1.13.3
+                {release && (
+                  <>
+                    <Dot />
+                    <i className='fa fa-kubernetes' />
+                    <KubernetesVersion components={release.components} />
+                  </>
+                )}
               </span>
             </div>
             <Upgrade>
