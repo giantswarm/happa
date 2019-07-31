@@ -1,5 +1,4 @@
 import * as types from 'actions/actionTypes';
-import _ from 'underscore';
 import moment from 'moment';
 
 /**
@@ -26,57 +25,59 @@ export default function clusterReducer(
     isFetching: false,
     items: {},
     nodePoolsClusters: [],
+    whatever: [],
   },
   action = undefined
 ) {
   let items = { ...state.items };
 
   switch (action.type) {
-    case types.CLUSTERS_LOAD_SUCCESS:
-      // if state was populated previously, let new data overwrite old data partially
-      var prevClusterIDs = Object.keys(state.items).sort();
-
-      // use existing state's items and update it
-
-      var newClusterIDs = _.map(_.toArray(action.clusters), item => {
-        return item.id;
-      }).sort();
-
-      // account for deleted clusters
-      var deleted = _.difference(prevClusterIDs, newClusterIDs);
-      deleted.forEach(deletedClusterID => {
-        delete items[deletedClusterID];
-      });
-
-      _.each(action.clusters, cluster => {
-        items[cluster.id] = Object.assign({}, items[cluster.id], cluster);
-
-        items[cluster.id].lastUpdated = Date.now();
-
-        // Guard against API that returns null for certain values when they are
-        // empty.
-        items[cluster.id].nodes = items[cluster.id].nodes || [];
-        items[cluster.id].keyPairs = items[cluster.id].keyPairs || [];
-        items[cluster.id].scaling = items[cluster.id].scaling || {};
-      });
+    case types.CLUSTERS_LOAD_SUCCESS_V4: {
+      const { clusters, lastUpdated } = action;
 
       return {
         ...state,
-        lastUpdated: Date.now(),
-        items,
+        lastUpdated,
+        items: { ...state.items, ...clusters },
       };
+    }
 
-    case types.CLUSTERS_LOAD_SUCCESS_V5:
+    case types.CLUSTERS_LOAD_SUCCESS_V5: {
+      const { clusters, nodePoolsClusters, lastUpdated } = action;
+
       return {
         ...state,
-        nodePoolsClusters: action.nodePoolsClusters,
+        nodePoolsClusters,
+        lastUpdated,
+        items: { ...state.items, ...clusters },
       };
+    }
 
-    case types.CLUSTERS_LOAD_ERROR:
+    case types.CLUSTERS_LOAD_ERROR_V4:
+    case types.CLUSTERS_LOAD_ERROR_V5:
       return {
         ...state,
         errorLoading: true,
         items,
+      };
+
+    case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS: {
+      return {
+        ...state,
+        items: {
+          ...state.items,
+          [action.clusterId]: {
+            ...state.items[action.clusterId],
+            nodePools: action.nodePools,
+          },
+        },
+      };
+    }
+
+    case types.CLUSTERS_LOAD_NODEPOOLS_ERROR:
+      return {
+        ...state,
+        errorLoading: true,
       };
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
