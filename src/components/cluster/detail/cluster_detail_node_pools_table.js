@@ -141,13 +141,13 @@ class ClusterDetailNodePoolsTable extends React.Component {
 
     const { create_date, master } = this.props.cluster;
 
-    console.log(this.props.release ? this.props.release : null);
+    // console.log(this.props.release ? this.props.release : null);
 
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            <Code>{master.availability_zone}</Code>
+            <Code>{master ? master.availability_zone : null}</Code>
             <div>
               <span>
                 Created {create_date ? relativeDate(create_date) : 'n/a'}

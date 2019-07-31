@@ -1,5 +1,4 @@
 import { relativeDate } from 'lib/helpers.js';
-import _ from 'underscore';
 import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';
@@ -97,19 +96,25 @@ class ClusterDetailTable extends React.Component {
   }
 
   render() {
+    const {
+      cluster,
+      credentials,
+      provider,
+      release,
+      workerNodesDesired,
+    } = this.props;
+    const { workers, credential_id } = cluster;
+
     var instanceTypeOrVMSize = null;
-    if (this.props.provider === 'aws') {
+    if (provider === 'aws') {
       let details = <span />;
       if (
-        this.props.cluster.workers &&
-        this.props.cluster.workers.length > 0 &&
-        typeof this.props.cluster.workers[0].aws.instance_type !==
-          'undefined' &&
-        this.awsInstanceTypes[this.props.cluster.workers[0].aws.instance_type]
+        workers &&
+        workers.length > 0 &&
+        typeof workers[0].aws.instance_type !== 'undefined' &&
+        this.awsInstanceTypes[workers[0].aws.instance_type]
       ) {
-        let t = this.awsInstanceTypes[
-          this.props.cluster.workers[0].aws.instance_type
-        ];
+        let t = this.awsInstanceTypes[workers[0].aws.instance_type];
         details = (
           <span>
             &mdash; {t.cpu_cores} CPUs, {t.memory_size_gb.toFixed(0)} GB RAM
@@ -120,24 +125,22 @@ class ClusterDetailTable extends React.Component {
         <tr>
           <td>EC2 instance type</td>
           <td className='value'>
-            {this.props.cluster.workers.length &&
-              this.props.cluster.workers.length > 0 && (
-                <span>
-                  <code>{this.props.cluster.workers[0].aws.instance_type}</code>{' '}
-                  {details}
-                </span>
-              )}
+            {workers && workers.length > 0 && (
+              <span>
+                <code>{workers[0].aws.instance_type}</code> {details}
+              </span>
+            )}
           </td>
         </tr>
       );
-    } else if (this.props.provider === 'azure') {
+    } else if (provider === 'azure') {
       let details = <span />;
       if (
-        this.props.cluster.workers &&
-        typeof this.props.cluster.workers[0].azure.vm_size !== 'undefined' &&
-        this.azureVMSizes[this.props.cluster.workers[0].azure.vm_size]
+        workers &&
+        typeof workers[0].azure.vm_size !== 'undefined' &&
+        this.azureVMSizes[workers[0].azure.vm_size]
       ) {
-        let t = this.azureVMSizes[this.props.cluster.workers[0].azure.vm_size];
+        let t = this.azureVMSizes[workers[0].azure.vm_size];
         details = (
           <span>
             &mdash; {t.numberOfCores} CPUs, {(t.memoryInMb / 1000.0).toFixed(1)}{' '}
@@ -150,10 +153,9 @@ class ClusterDetailTable extends React.Component {
         <tr>
           <td>VM size</td>
           <td className='value'>
-            {this.props.cluster.workers ? (
+            {workers ? (
               <span>
-                <code>{this.props.cluster.workers[0].azure.vm_size}</code>{' '}
-                {details}
+                <code>{workers[0].azure.vm_size}</code> {details}
               </span>
             ) : null}
           </td>
@@ -162,25 +164,18 @@ class ClusterDetailTable extends React.Component {
     }
 
     var scalingLimitsOrNothing = null;
-    if (
-      Object.keys(this.props.cluster).includes('scaling') &&
-      this.props.cluster.scaling.min > 0
-    ) {
+    if (Object.keys(cluster).includes('scaling') && cluster.scaling.min > 0) {
       scalingLimitsOrNothing = (
         <tr>
           <td>Worker node scaling</td>
           <td className='value'>
             <RefreshableLabel
-              dataItems={[
-                this.props.cluster.scaling.min,
-                this.props.cluster.scaling.max,
-              ]}
+              dataItems={[cluster.scaling.min, cluster.scaling.max]}
             >
               <span>
-                {this.props.cluster.scaling.min ===
-                this.props.cluster.scaling.max
-                  ? `Pinned at ${this.props.cluster.scaling.min}`
-                  : `Autoscaling between ${this.props.cluster.scaling.min} and ${this.props.cluster.scaling.max}`}
+                {cluster.scaling.min === cluster.scaling.max
+                  ? `Pinned at ${cluster.scaling.min}`
+                  : `Autoscaling between ${cluster.scaling.min} and ${cluster.scaling.max}`}
               </span>
             </RefreshableLabel>
 
@@ -193,11 +188,9 @@ class ClusterDetailTable extends React.Component {
     }
 
     var availabilityZonesOrNothing = null;
-    if (this.props.provider === 'aws') {
+    if (provider === 'aws') {
       const azs = (
-        <AvailabilityZonesLabels
-          zones={this.props.cluster.availability_zones}
-        />
+        <AvailabilityZonesLabels zones={cluster.availability_zones} />
       );
 
       availabilityZonesOrNothing = (
@@ -209,17 +202,15 @@ class ClusterDetailTable extends React.Component {
     }
 
     var numberOfDesiredNodesOrNothing = null;
-    if (this.props.workerNodesDesired != null) {
+    if (workerNodesDesired != null) {
       numberOfDesiredNodesOrNothing = (
         <tr>
           <td>Desired worker node count</td>
           <td className='value'>
             <RefreshableLabel
-              dataItems={[
-                this.props.cluster.status.cluster.scaling.desiredCapacity,
-              ]}
+              dataItems={[cluster.status.cluster.scaling.desiredCapacity]}
             >
-              <span>{this.props.workerNodesDesired}</span>
+              <span>{workerNodesDesired}</span>
             </RefreshableLabel>
           </td>
         </tr>
@@ -227,17 +218,13 @@ class ClusterDetailTable extends React.Component {
     }
 
     var workerNodeStorageOrNothing = null;
-    if (this.props.provider === 'kvm') {
+    if (provider === 'kvm') {
       workerNodeStorageOrNothing = (
         <tr>
           <td>Total storage in worker nodes</td>
           <td className='value'>
             <RefreshableLabel
-              dataItems={[
-                typeof this.props.cluster.workers === 'object'
-                  ? this.props.cluster.workers.length
-                  : null,
-              ]}
+              dataItems={[typeof workers === 'object' ? workers.length : null]}
             >
               <span>
                 {this.getStorageTotal() === null ? '0' : this.getStorageTotal()}{' '}
@@ -254,11 +241,7 @@ class ClusterDetailTable extends React.Component {
         <td>Total CPU cores in worker nodes</td>
         <td className='value'>
           <RefreshableLabel
-            dataItems={[
-              typeof this.props.cluster.workers === 'object'
-                ? this.props.cluster.workers.length
-                : null,
-            ]}
+            dataItems={[typeof workers === 'object' ? workers.length : null]}
           >
             <span>
               {this.getCpusTotal() === null ? '0' : this.getCpusTotal()}
@@ -273,11 +256,7 @@ class ClusterDetailTable extends React.Component {
         <td>Total RAM in worker nodes</td>
         <td className='value'>
           <RefreshableLabel
-            dataItems={[
-              typeof this.props.cluster.workers === 'object'
-                ? this.props.cluster.workers.length
-                : null,
-            ]}
+            dataItems={[typeof workers === 'object' ? workers.length : null]}
           >
             <span>
               {this.getMemoryTotal() === null ? '0' : this.getMemoryTotal()} GB
@@ -292,11 +271,7 @@ class ClusterDetailTable extends React.Component {
         <td>Worker nodes running</td>
         <td className='value'>
           <RefreshableLabel
-            dataItems={[
-              typeof this.props.cluster.workers === 'object'
-                ? this.props.cluster.workers.length
-                : null,
-            ]}
+            dataItems={[typeof workers === 'object' ? workers.length : null]}
           >
             <span>
               {this.props.workerNodesRunning === null
@@ -311,15 +286,13 @@ class ClusterDetailTable extends React.Component {
     // BYOC provider credential info
     var credentialInfoRows = [];
     if (
-      this.props.cluster &&
-      this.props.cluster.credential_id &&
-      this.props.cluster.credential_id != '' &&
-      this.props.credentials.items.length === 1
+      cluster &&
+      credential_id &&
+      credential_id != '' &&
+      credentials.items.length === 1
     ) {
       // check if we have the right credential info
-      if (
-        this.props.credentials.items[0].id !== this.props.cluster.credential_id
-      ) {
+      if (credentials.items[0].id !== credential_id) {
         credentialInfoRows.push(
           <tr key='providerCredentialsInvalid'>
             <td>Provider credentials</td>
@@ -330,28 +303,23 @@ class ClusterDetailTable extends React.Component {
           </tr>
         );
       } else {
-        if (this.props.provider === 'aws') {
+        if (provider === 'aws') {
           credentialInfoRows.push(
             <tr key='awsAccountID'>
               <td>AWS account</td>
               <td className='value code'>
                 <AWSAccountID
-                  roleARN={
-                    this.props.credentials.items[0].aws.roles.awsoperator
-                  }
+                  roleARN={credentials.items[0].aws.roles.awsoperator}
                 />
               </td>
             </tr>
           );
-        } else if (this.props.provider === 'azure') {
+        } else if (provider === 'azure') {
           credentialInfoRows.push(
             <tr key='azureSubscriptionID'>
               <td>Azure subscription</td>
               <td className='value code'>
-                {
-                  this.props.credentials.items[0].azure.credential
-                    .subscription_id
-                }
+                {credentials.items[0].azure.credential.subscription_id}
               </td>
             </tr>
           );
@@ -359,7 +327,7 @@ class ClusterDetailTable extends React.Component {
             <tr key='azureTenantID'>
               <td>Azure tenant</td>
               <td className='value code'>
-                {this.props.credentials.items[0].azure.credential.tenant_id}
+                {credentials.items[0].azure.credential.tenant_id}
               </td>
             </tr>
           );
@@ -376,28 +344,25 @@ class ClusterDetailTable extends React.Component {
                 <tr>
                   <td>Created</td>
                   <td className='value'>
-                    {this.props.cluster.create_date
-                      ? relativeDate(this.props.cluster.create_date)
+                    {cluster.create_date
+                      ? relativeDate(cluster.create_date)
                       : 'n/a'}
                   </td>
                 </tr>
 
                 {credentialInfoRows === [] ? undefined : credentialInfoRows}
 
-                {this.props.release ? (
+                {release ? (
                   <tr>
                     <td>Release version</td>
                     <td className='value'>
-                      <RefreshableLabel
-                        dataItems={[this.props.cluster.release_version]}
-                      >
+                      <RefreshableLabel dataItems={[cluster.release_version]}>
                         <span>
                           <a onClick={this.showReleaseDetails}>
                             <i className='fa fa-version-tag' />{' '}
-                            {this.props.cluster.release_version}{' '}
+                            {cluster.release_version}{' '}
                             {(() => {
-                              var kubernetes = _.find(
-                                this.props.release.components,
+                              var kubernetes = release.components.find(
                                 component => component.name === 'kubernetes'
                               );
                               if (kubernetes) {
@@ -428,9 +393,9 @@ class ClusterDetailTable extends React.Component {
                   <tr>
                     <td>Kubernetes version</td>
                     <td className='value code'>
-                      {this.props.cluster.kubernetes_version !== '' &&
-                      this.props.cluster.kubernetes_version !== undefined
-                        ? this.props.cluster.kubernetes_version
+                      {cluster.kubernetes_version !== '' &&
+                      cluster.kubernetes_version !== undefined
+                        ? cluster.kubernetes_version
                         : 'n/a'}
                     </td>
                   </tr>
@@ -439,31 +404,25 @@ class ClusterDetailTable extends React.Component {
                 <tr>
                   <td>Kubernetes API endpoint</td>
                   <td className='value code'>
-                    {this.props.cluster.api_endpoint
-                      ? this.props.cluster.api_endpoint
-                      : 'n/a'}
+                    {cluster.api_endpoint ? cluster.api_endpoint : 'n/a'}
                   </td>
                 </tr>
 
                 {availabilityZonesOrNothing}
 
-                {this.props.cluster.kvm &&
-                this.props.cluster.kvm.port_mappings ? (
+                {cluster.kvm && cluster.kvm.port_mappings ? (
                   <tr>
                     <td>Ingress Ports</td>
                     <td>
                       <dl className='ingress-port-table'>
-                        {this.props.cluster.kvm.port_mappings.reduce(
-                          (acc, item, idx) => {
-                            return acc.concat([
-                              <dt key={`def-${idx}`}>
-                                <code>{item.protocol}</code>
-                              </dt>,
-                              <dd key={`term-${idx}`}>{item.port}</dd>,
-                            ]);
-                          },
-                          []
-                        )}
+                        {cluster.kvm.port_mappings.reduce((acc, item, idx) => {
+                          return acc.concat([
+                            <dt key={`def-${idx}`}>
+                              <code>{item.protocol}</code>
+                            </dt>,
+                            <dd key={`term-${idx}`}>{item.port}</dd>,
+                          ]);
+                        }, [])}
                       </dl>
                     </td>
                   </tr>
@@ -496,12 +455,12 @@ class ClusterDetailTable extends React.Component {
               </small>
             </p>
           </div>
-          {this.props.release ? (
+          {release ? (
             <ReleaseDetailsModal
               ref={r => {
                 this.releaseDetailsModal = r;
               }}
-              releases={[this.props.release]}
+              releases={[release]}
             />
           ) : (
             undefined
