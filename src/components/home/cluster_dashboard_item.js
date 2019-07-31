@@ -1,6 +1,7 @@
 import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Dot } from 'styles';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
@@ -171,24 +172,24 @@ class ClusterDashboardItem extends React.Component {
                 {this.props.cluster.release_version}
               </span>
             </RefreshableLabel>
-            {' · Created '}
-            {relativeDate(this.props.cluster.create_date)}
+            <Dot style={{ paddingLeft: 0 }} />
+            Created {relativeDate(this.props.cluster.create_date)}
           </div>
           <div>
             <RefreshableLabel dataItems={[numNodes]}>
               <span>{numNodes} nodes</span>
             </RefreshableLabel>
-            {' · '}
+            <Dot style={{ paddingLeft: 0 }} />
             <RefreshableLabel dataItems={[cpus]}>
               <span>{cpus ? cpus : '0'} CPU cores</span>
             </RefreshableLabel>
-            {' · '}
+            <Dot style={{ paddingLeft: 0 }} />
             <RefreshableLabel dataItems={[memory]}>
               <span>{memory ? memory : '0'} GB RAM</span>
             </RefreshableLabel>
             {this.props.cluster.kvm ? (
               <span>
-                {' · '}
+                <Dot style={{ paddingLeft: 0 }} />
                 <RefreshableLabel dataItems={[storage]}>
                   <span>{storage ? storage : '0'} GB storage</span>
                 </RefreshableLabel>
