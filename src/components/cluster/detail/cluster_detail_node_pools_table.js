@@ -141,8 +141,6 @@ class ClusterDetailNodePoolsTable extends React.Component {
 
     const { create_date, master } = this.props.cluster;
 
-    // console.log(this.props.release ? this.props.release : null);
-
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
