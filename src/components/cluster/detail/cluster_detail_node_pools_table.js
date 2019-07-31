@@ -2,7 +2,6 @@ import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { css } from '@emotion/core';
 import { relativeDate } from 'lib/helpers.js';
 import Button from 'UI/button';
-import KubernetesVersion from './kubernetes_version';
 import NodePool from './node_pool';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -148,6 +147,8 @@ class ClusterDetailNodePoolsTable extends React.Component {
       availableZonesGridTemplateAreas,
     } = this.state;
 
+    const { cluster } = this.props;
+
     const {
       create_date,
       master,
@@ -176,9 +177,26 @@ class ClusterDetailNodePoolsTable extends React.Component {
                   <>
                     <Dot />
                     <i className='fa fa-kubernetes' />
-                    <KubernetesVersion components={release.components} />
+                    {() => {
+                      var kubernetes = release.components.find(
+                        component => component.name === 'kubernetes'
+                      );
+                      if (kubernetes) return kubernetes.version;
+                    }}
                   </>
                 )}
+                {/* {if(!release &&
+                  cluster.kubernetes_version &&
+                  cluster.kubernetes_version !== '') ?
+                    <i className='fa fa-kubernetes' />
+                    {cluster.kubernetes_version}
+                    : 'n/a'
+                  } */}
+                {!release &&
+                  cluster.kubernetes_version !== '' &&
+                  cluster.kubernetes_version !== undefined &&
+                  <i className='fa fa-kubernetes' /> +
+                    cluster.kubernetes_version}
               </span>
             </div>
             {this.props.canClusterUpgrade && (
