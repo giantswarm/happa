@@ -43,6 +43,7 @@ const MenuWrapper = styled.div`
     background-color: #2a5874;
     border: none;
     border-radius: 5px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   }
   a {
     display: inline-block;
