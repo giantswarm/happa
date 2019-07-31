@@ -132,7 +132,6 @@ class ClusterDashboardItem extends React.Component {
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
     var numNodes = this.getNumberOfNodes();
-    var numNodePools = cluster.nodePools ? cluster.nodePools.length : null;
 
     return (
       <div className='cluster-dashboard-item well'>
@@ -181,9 +180,11 @@ class ClusterDashboardItem extends React.Component {
             {relativeDate(cluster.create_date)}
           </div>
           <div>
-            <RefreshableLabel dataItems={[numNodes]}>
-              <span>{numNodePools} node pools, </span>
-            </RefreshableLabel>
+            {cluster.nodePools && (
+              <RefreshableLabel dataItems={[numNodes]}>
+                <span>{cluster.nodePools.length} node pools, </span>
+              </RefreshableLabel>
+            )}
             <RefreshableLabel dataItems={[numNodes]}>
               <span>{numNodes} nodes</span>
             </RefreshableLabel>
