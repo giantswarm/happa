@@ -7,6 +7,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
+// import AvailabilityZonesLabels from 'UI/availability_zones_labels';
+// import AWSAccountID from 'UI/aws_account_id';
+// import moment from 'moment';
+// import ReactTimeout from 'react-timeout';
+// import RefreshableLabel from 'UI/refreshable_label';
+// import ReleaseDetailsModal from '../../modals/release_details_modal';
+
 const Upgrade = styled.div`
   color: #ce990f;
   span {

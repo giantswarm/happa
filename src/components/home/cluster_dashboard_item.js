@@ -130,31 +130,25 @@ class ClusterDashboardItem extends React.Component {
     var cpus = this.getCpusTotal();
     var numNodes = this.getNumberOfNodes();
 
+    const np =
+      window.config.environment === 'development' &&
+      this.props.cluster.id === 'm0ckd'
+        ? '/np'
+        : '';
+
+    const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}${np}`;
+
     return (
       <div className='cluster-dashboard-item well'>
         <div className='cluster-dashboard-item--label'>
-          <Link
-            to={
-              '/organizations/' +
-              selectedOrganization +
-              '/clusters/' +
-              cluster.id
-            }
-          >
+          <Link to={linkToCluster}>
             <ClusterIDLabel clusterID={cluster.id} copyEnabled />
           </Link>
         </div>
 
         <div className='cluster-dashboard-item--content'>
           <div className='cluster-dashboard-item--title'>
-            <Link
-              to={
-                '/organizations/' +
-                selectedOrganization +
-                '/clusters/' +
-                cluster.id
-              }
-            >
+            <Link to={linkToCluster}>
               <RefreshableLabel dataItems={[cluster.name]}>
                 <span
                   className='cluster-dashboard-item--name'
