@@ -101,6 +101,7 @@ class ClusterDetailTable extends React.Component {
     if (this.props.provider === 'aws') {
       let details = <span />;
       if (
+        this.props.cluster.workers &&
         this.props.cluster.workers.length > 0 &&
         typeof this.props.cluster.workers[0].aws.instance_type !==
           'undefined' &&
