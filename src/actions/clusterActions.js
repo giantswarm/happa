@@ -432,6 +432,7 @@ export function clusterLoadDetails(clusterId) {
       );
 
       dispatch(clusterLoadDetailsSuccess(cluster));
+      console.log(cluster);
       return cluster;
     } catch (error) {
       console.error('Error loading cluster details:', error);

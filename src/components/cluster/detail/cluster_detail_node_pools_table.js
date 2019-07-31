@@ -1,7 +1,9 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { css } from '@emotion/core';
+import { relativeDate } from 'lib/helpers.js';
 import Button from 'UI/button';
 import NodePool from './node_pool';
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
@@ -137,13 +139,19 @@ class ClusterDetailNodePoolsTable extends React.Component {
       availableZonesGridTemplateAreas,
     } = this.state;
 
+    const { create_date, master } = this.props.cluster;
+
+    console.log(this.props.release ? this.props.release : null);
+
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            <Code>europe-central-1</Code>
+            <Code>{master.availability_zone}</Code>
             <div>
-              <span>Created 1 month ago</span>
+              <span>
+                Created {create_date ? relativeDate(create_date) : 'n/a'}
+              </span>
               <span>
                 <Dot />
                 <i className='fa fa-version-tag' />
@@ -227,5 +235,19 @@ class ClusterDetailNodePoolsTable extends React.Component {
     );
   }
 }
+
+ClusterDetailNodePoolsTable.propTypes = {
+  canClusterUpgrade: PropTypes.bool,
+  cluster: PropTypes.object,
+  credentials: PropTypes.object,
+  lastUpdated: PropTypes.number,
+  provider: PropTypes.string,
+  release: PropTypes.object,
+  setInterval: PropTypes.func,
+  showScalingModal: PropTypes.func,
+  showUpgradeModal: PropTypes.func,
+  workerNodesRunning: PropTypes.number,
+  workerNodesDesired: PropTypes.number,
+};
 
 export default ClusterDetailNodePoolsTable;
