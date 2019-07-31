@@ -156,7 +156,7 @@ function clustersLoadNodePools(nodePoolsClustersIds, token, scheme, dispatch) {
           dispatch({
             type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
             clusterId,
-            nodePools,
+            nodePools: nodePools || [],
           });
         })
         .catch(error => {
