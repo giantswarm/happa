@@ -1,6 +1,7 @@
 import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Dot } from 'styles';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
@@ -123,72 +124,72 @@ class ClusterDashboardItem extends React.Component {
   };
 
   render() {
+    const { cluster, selectedOrganization } = this.props;
     var memory = this.getMemoryTotal();
     var storage = this.getStorageTotal();
     var cpus = this.getCpusTotal();
     var numNodes = this.getNumberOfNodes();
 
+    const np =
+      window.config.environment === 'development' &&
+      this.props.cluster.id === 'm0ckd'
+        ? '/np'
+        : '';
+
+    const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}${np}`;
+
     return (
       <div className='cluster-dashboard-item well'>
         <div className='cluster-dashboard-item--label'>
-          <Link
-            to={
-              '/organizations/' +
-              this.props.selectedOrganization +
-              '/clusters/' +
-              this.props.cluster.id
-            }
-          >
-            <ClusterIDLabel clusterID={this.props.cluster.id} copyEnabled />
+          <Link to={linkToCluster}>
+            <ClusterIDLabel clusterID={cluster.id} copyEnabled />
           </Link>
         </div>
 
         <div className='cluster-dashboard-item--content'>
           <div className='cluster-dashboard-item--title'>
-            <Link
-              to={
-                '/organizations/' +
-                this.props.selectedOrganization +
-                '/clusters/' +
-                this.props.cluster.id
-              }
-            >
-              <RefreshableLabel dataItems={[this.props.cluster.name]}>
+            <Link to={linkToCluster}>
+              <RefreshableLabel dataItems={[cluster.name]}>
                 <span
                   className='cluster-dashboard-item--name'
                   style={{ fontWeight: 'bold' }}
                 >
-                  {this.props.cluster.name}
+                  {cluster.name}
                 </span>
               </RefreshableLabel>
             </Link>
           </div>
 
           <div>
-            <RefreshableLabel dataItems={[this.props.cluster.release_version]}>
+            <RefreshableLabel dataItems={[cluster.release_version]}>
               <span>
                 <i className='fa fa-version-tag' title='Release version' />{' '}
-                {this.props.cluster.release_version}
+                {cluster.release_version}
               </span>
             </RefreshableLabel>
-            {' · Created '}
-            {relativeDate(this.props.cluster.create_date)}
+            <Dot style={{ paddingLeft: 0 }} />
+            Created {relativeDate(cluster.create_date)}
           </div>
           <div>
+            {cluster.nodePools && (
+              <RefreshableLabel dataItems={[numNodes]}>
+                <span>{cluster.nodePools.length} node pools, </span>
+              </RefreshableLabel>
+            )}
             <RefreshableLabel dataItems={[numNodes]}>
               <span>{numNodes} nodes</span>
             </RefreshableLabel>
-            {' · '}
+            <Dot style={{ paddingLeft: 0 }} />
             <RefreshableLabel dataItems={[cpus]}>
               <span>{cpus ? cpus : '0'} CPU cores</span>
             </RefreshableLabel>
-            {' · '}
+            <Dot style={{ paddingLeft: 0 }} />
             <RefreshableLabel dataItems={[memory]}>
               <span>{memory ? memory : '0'} GB RAM</span>
             </RefreshableLabel>
-            {this.props.cluster.kvm ? (
+            {cluster.kvm ? (
               <span>
-                {' · '}
+                <Dot style={{ paddingLeft: 0 }} />
                 <RefreshableLabel dataItems={[storage]}>
                   <span>{storage ? storage : '0'} GB storage</span>
                 </RefreshableLabel>
