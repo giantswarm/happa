@@ -17,7 +17,7 @@ const NodesWrapper = styled.div`
 const NodePool = ({ availableZonesGridTemplateAreas, nodePool }) => {
   const { id, name, scaling, availability_zones, status, node_spec } = nodePool;
 
-  const { nodes_ready: desired, nodes: current } = status;
+  const { nodes_ready: current, nodes: desired } = status;
 
   return (
     <>
