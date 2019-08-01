@@ -203,7 +203,7 @@ class ClusterDetailView extends React.Component {
     return null;
   }
 
-  getNumberOfNodePoolsNodes() {
+  getNumberOfNodePoolsNodes = () => {
     const { nodePools } = this.props.cluster;
 
     if (nodePools.length === 0) return 0;
@@ -211,7 +211,7 @@ class ClusterDetailView extends React.Component {
     return nodePools.reduce((accumulator, current) => {
       return accumulator + current.status.nodes;
     }, 0);
-  }
+  };
 
   getDesiredNumberOfNodes() {
     // Desired number of nodes only makes sense with auto-scaling and that is
@@ -298,7 +298,7 @@ class ClusterDetailView extends React.Component {
               <div className='col-12'>
                 <Tabs>
                   <Tab eventKey={1} title='General'>
-                    {this.props.isNodePoolView ? (
+                    {this.props.isNodePoolView && this.props.cluster ? (
                       <ClusterDetailNodePoolsTable
                         canClusterUpgrade={this.canClusterUpgrade()}
                         cluster={this.props.cluster}

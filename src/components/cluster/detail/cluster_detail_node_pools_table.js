@@ -149,6 +149,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       release_version,
       release,
       nodePools,
+      api_endpoint,
     } = this.props.cluster;
 
     return (
@@ -209,12 +210,10 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 {workerNodesRunning} nodes in {nodePools.length} node pools
               </span>
               <span>
-                <Dot />
-                105 GB RAM
+                <Dot />0 GB RAM
               </span>
               <span>
-                <Dot />
-                30 CPUs
+                <Dot />0 CPUs
               </span>
             </div>
           </div>
@@ -222,9 +221,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
         <FlexRowWithTwoBlocksOnEdges>
           <div>
             <span>Kubernetes endpoint URI:</span>
-            <Code>
-              https://api.a1b2c.k8s.gollum.westeurope.azure.gigantic.io
-            </Code>
+            <Code>{api_endpoint}</Code>
           </div>
           <div style={{ transform: 'translateX(10px)' }}>
             <Button>
