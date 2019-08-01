@@ -78,19 +78,6 @@
   flex-flow: column
   margin-top: 10px
 
-.app-catalog--description
-  padding: 10px 20px
-  padding-left: 0px
-
-  h3
-    margin-bottom: 0px
-    margin-top: 10px
-
-  img.loader
-    height: 20px
-    margin: 0px 10px
-    display: inline
-
 .app-catalog--repo
   flex: 0 0
   margin-bottom: 15px
@@ -98,35 +85,28 @@
   background-color: #2f556a
   flex-flow: row
   display: flex
+  padding: 18px
 
-  p
-    margin-bottom: 0px
-    border-bottom-left-radius: 5px
-    border-bottom-right-radius: 5px
-    font-size: 14px
-    max-width: 500px
+  .app-catalog--description
+    flex: 1
+    padding-left: 14px
 
-  &:hover
-    text-decoration: none
-    box-shadow: 0px 0px 8px lighten(#1e4156, 22%)
+    h3
+      margin-bottom: 0px
+      margin-top: 0px
 
-.app-catalog--card
-  padding: 18px 18px
-  border-top-left-radius: 5px
-  border-bottom-left-radius: 5px
-  text-align: left
-  flex-shrink: 0
-
-  h3
-    color: #1e4156
-    margin: 0px
-    font-weight: 700
+    p
+      max-width: 600px
 
   img
+    flex-shrink: 0
     width: 100px
     height: 100px
     background-color: #fff
     border-radius: 5px
+
+  .progress_button--container
+    margin: 0px
 
 .back-link
   z-index: 1
