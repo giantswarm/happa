@@ -15,30 +15,23 @@ const NodesWrapper = styled.div`
 `;
 
 const NodePool = ({ availableZonesGridTemplateAreas, nodePool }) => {
-  const {
-    id,
-    name,
-    instanceType,
-    min,
-    max,
-    avZones,
-    desired,
-    current,
-  } = nodePool;
+  const { id, name, scaling, availability_zones, status, node_spec } = nodePool;
+
+  const { nodes_ready: desired, nodes: current } = status;
 
   return (
     <>
       <Code>{id}</Code>
-      <div>{name}</div>
-      <Code>{instanceType}</Code>
+      <div style={{ paddingLeft: '8px' }}>{name}</div>
+      <Code>{node_spec.aws.instance_type}</Code>
       <div>
         <AvailabilityZonesWrapper
           availableZonesGridTemplateAreas={availableZonesGridTemplateAreas}
-          zones={avZones}
+          zones={availability_zones}
         />
       </div>
-      <NodesWrapper>{min}</NodesWrapper>
-      <NodesWrapper>{max}</NodesWrapper>
+      <NodesWrapper>{scaling.Min}</NodesWrapper>
+      <NodesWrapper>{scaling.Max}</NodesWrapper>
       <NodesWrapper>{desired}</NodesWrapper>
       <NodesWrapper
         style={{
@@ -55,14 +48,18 @@ const NodePool = ({ availableZonesGridTemplateAreas, nodePool }) => {
 NodePool.propTypes = {
   availableZonesGridTemplateAreas: PropTypes.string,
   nodePool: PropTypes.shape({
+    availability_zones: PropTypes.array,
     id: PropTypes.string,
     name: PropTypes.string,
-    instanceType: PropTypes.string,
-    avZones: PropTypes.array,
-    min: PropTypes.number,
-    max: PropTypes.number,
-    desired: PropTypes.number,
-    current: PropTypes.number,
+    node_spec: PropTypes.object,
+    scaling: PropTypes.shape({
+      Min: PropTypes.number,
+      Max: PropTypes.number,
+    }),
+    status: PropTypes.shape({
+      nodes: PropTypes.number,
+      nodes_ready: PropTypes.number,
+    }),
   }),
 };
 
