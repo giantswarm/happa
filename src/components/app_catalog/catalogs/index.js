@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Button from 'UI/button';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -25,20 +26,18 @@ class Catalogs extends React.Component {
               <div className='app-catalog--repos'>
                 {Object.keys(this.props.catalogs.items).map(catalogName => {
                   return (
-                    <Link
+                    <div
                       className='app-catalog--repo'
                       key={this.props.catalogs.items[catalogName].metadata.name}
-                      to={'/app-catalogs/' + catalogName + '/'}
                     >
-                      <div className='app-catalog--card'>
-                        <img
-                          height='100px'
-                          src={
-                            this.props.catalogs.items[catalogName].spec.logoURL
-                          }
-                          width='100px'
-                        />
-                      </div>
+                      <img
+                        height='100px'
+                        src={
+                          this.props.catalogs.items[catalogName].spec.logoURL
+                        }
+                        width='100px'
+                      />
+
                       <div className='app-catalog--description'>
                         <h3>
                           {this.props.catalogs.items[catalogName].spec.title}
@@ -49,8 +48,14 @@ class Catalogs extends React.Component {
                               .description
                           }
                         </ReactMarkdown>
+                        <Link
+                          className='app-catalog--open-catalog'
+                          to={'/app-catalogs/' + catalogName + '/'}
+                        >
+                          <Button>Browse Apps</Button>
+                        </Link>
                       </div>
-                    </Link>
+                    </div>
                   );
                 })}
               </div>
