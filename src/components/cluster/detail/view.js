@@ -206,7 +206,7 @@ class ClusterDetailView extends React.Component {
   getNumberOfNodePoolsNodes = () => {
     const { nodePools } = this.props.cluster;
 
-    if (nodePools.length === 0) return 0;
+    if (!nodePools || nodePools.length === 0) return 0;
 
     return nodePools.reduce((accumulator, current) => {
       return accumulator + current.status.nodes;
@@ -298,7 +298,7 @@ class ClusterDetailView extends React.Component {
               <div className='col-12'>
                 <Tabs>
                   <Tab eventKey={1} title='General'>
-                    {this.props.isNodePoolView && this.props.cluster ? (
+                    {this.props.isNodePoolView ? (
                       <ClusterDetailNodePoolsTable
                         canClusterUpgrade={this.canClusterUpgrade()}
                         cluster={this.props.cluster}
