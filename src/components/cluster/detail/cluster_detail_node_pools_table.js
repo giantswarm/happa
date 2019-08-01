@@ -1,9 +1,19 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { css } from '@emotion/core';
+import { relativeDate } from 'lib/helpers.js';
 import Button from 'UI/button';
 import NodePool from './node_pool';
+import PropTypes from 'prop-types';
 import React from 'react';
+import ReactTimeout from 'react-timeout';
+import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
+
+// import AvailabilityZonesLabels from 'UI/availability_zones_labels';
+// import AWSAccountID from 'UI/aws_account_id';
+// import moment from 'moment';
+// import RefreshableLabel from 'UI/refreshable_label';
+// import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 const Upgrade = styled.div`
   color: #ce990f;
@@ -137,30 +147,64 @@ class ClusterDetailNodePoolsTable extends React.Component {
       availableZonesGridTemplateAreas,
     } = this.state;
 
+    const { cluster } = this.props;
+
+    const {
+      create_date,
+      master,
+      release_version,
+      release,
+    } = this.props.cluster;
+
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            <Code>europe-central-1</Code>
+            <Code>{master ? master.availability_zone : null}</Code>
             <div>
-              <span>Created 1 month ago</span>
               <span>
-                <Dot />
-                <i className='fa fa-version-tag' />
-                6.3.2
+                Created {create_date ? relativeDate(create_date) : 'n/a'}
               </span>
               <span>
-                <Dot />
-                <i className='fa fa-kubernetes' />
-                1.13.3
+                <RefreshableLabel dataItems={[release_version]}>
+                  <Dot style={{ paddingRight: 0 }} />
+                  <i className='fa fa-version-tag' />
+                  {release_version ? release_version : 'n/a'}
+                </RefreshableLabel>
+              </span>
+              <span>
+                {release && (
+                  <>
+                    <Dot />
+                    <i className='fa fa-kubernetes' />
+                    {() => {
+                      var kubernetes = release.components.find(
+                        component => component.name === 'kubernetes'
+                      );
+                      if (kubernetes) return kubernetes.version;
+                    }}
+                  </>
+                )}
+                {!release &&
+                  cluster.kubernetes_version !== '' &&
+                  cluster.kubernetes_version !== undefined &&
+                  <i className='fa fa-kubernetes' /> +
+                    cluster.kubernetes_version}
               </span>
             </div>
-            <Upgrade>
-              <span>
-                <i className='fa fa-warning' />
-                Upgrade available
-              </span>
-            </Upgrade>
+            {this.props.canClusterUpgrade && (
+              <a
+                className='upgrade-available'
+                onClick={this.props.showUpgradeModal}
+              >
+                <Upgrade>
+                  <span>
+                    <i className='fa fa-warning' />
+                    Upgrade available
+                  </span>
+                </Upgrade>
+              </a>
+            )}
           </div>
           <div>
             <div>
@@ -228,4 +272,18 @@ class ClusterDetailNodePoolsTable extends React.Component {
   }
 }
 
-export default ClusterDetailNodePoolsTable;
+ClusterDetailNodePoolsTable.propTypes = {
+  canClusterUpgrade: PropTypes.bool,
+  cluster: PropTypes.object,
+  credentials: PropTypes.object,
+  lastUpdated: PropTypes.number,
+  provider: PropTypes.string,
+  release: PropTypes.object,
+  setInterval: PropTypes.func,
+  showScalingModal: PropTypes.func,
+  showUpgradeModal: PropTypes.func,
+  workerNodesRunning: PropTypes.number,
+  workerNodesDesired: PropTypes.number,
+};
+
+export default ReactTimeout(ClusterDetailNodePoolsTable);
