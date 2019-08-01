@@ -9,12 +9,6 @@ import ReactTimeout from 'react-timeout';
 import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
 
-// import AvailabilityZonesLabels from 'UI/availability_zones_labels';
-// import AWSAccountID from 'UI/aws_account_id';
-// import moment from 'moment';
-// import RefreshableLabel from 'UI/refreshable_label';
-// import ReleaseDetailsModal from '../../modals/release_details_modal';
-
 const Upgrade = styled.div`
   color: #ce990f;
   span {
@@ -147,13 +141,14 @@ class ClusterDetailNodePoolsTable extends React.Component {
       availableZonesGridTemplateAreas,
     } = this.state;
 
-    const { cluster } = this.props;
+    const { cluster, workerNodesRunning } = this.props;
 
     const {
       create_date,
       master,
       release_version,
       release,
+      nodePools,
     } = this.props.cluster;
 
     return (
@@ -167,9 +162,11 @@ class ClusterDetailNodePoolsTable extends React.Component {
               </span>
               <span>
                 <RefreshableLabel dataItems={[release_version]}>
-                  <Dot style={{ paddingRight: 0 }} />
-                  <i className='fa fa-version-tag' />
-                  {release_version ? release_version : 'n/a'}
+                  <>
+                    <Dot style={{ paddingRight: 0 }} />
+                    <i className='fa fa-version-tag' />
+                    {release_version ? release_version : 'n/a'}
+                  </>
                 </RefreshableLabel>
               </span>
               <span>
@@ -208,7 +205,9 @@ class ClusterDetailNodePoolsTable extends React.Component {
           </div>
           <div>
             <div>
-              <span>14 nodes in 2 node pools</span>
+              <span>
+                {workerNodesRunning} nodes in {nodePools.length} node pools
+              </span>
               <span>
                 <Dot />
                 105 GB RAM

@@ -158,7 +158,7 @@ function clustersLoadNodePools(nodePoolsClustersIds, token, scheme, dispatch) {
             clusterId,
             // Receiving an array-like with weird prototype from API call,
             // so converting it to an array.
-            nodePools: Array.from(nodePools),
+            nodePools: Array.from(nodePools) || [],
           });
         })
         .catch(error => {

@@ -203,6 +203,16 @@ class ClusterDetailView extends React.Component {
     return null;
   }
 
+  getNumberOfNodePoolsNodes() {
+    const { nodePools } = this.props.cluster;
+
+    if (nodePools.length === 0) return 0;
+
+    return nodePools.reduce((accumulator, current) => {
+      return accumulator + current.status.nodes;
+    }, 0);
+  }
+
   getDesiredNumberOfNodes() {
     // Desired number of nodes only makes sense with auto-scaling and that is
     // only available on AWS starting from release 6.3.0 onwards.
@@ -298,7 +308,7 @@ class ClusterDetailView extends React.Component {
                         showScalingModal={this.showScalingModal}
                         showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        workerNodesRunning={this.getNumberOfNodes()}
+                        workerNodesRunning={this.getNumberOfNodePoolsNodes()}
                       />
                     ) : (
                       <ClusterDetailTable
