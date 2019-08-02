@@ -203,6 +203,16 @@ class ClusterDetailView extends React.Component {
     return null;
   }
 
+  getNumberOfNodePoolsNodes = () => {
+    const { nodePools } = this.props.cluster;
+
+    if (!nodePools || nodePools.length === 0) return 0;
+
+    return nodePools.reduce((accumulator, current) => {
+      return accumulator + current.status.nodes;
+    }, 0);
+  };
+
   getDesiredNumberOfNodes() {
     // Desired number of nodes only makes sense with auto-scaling and that is
     // only available on AWS starting from release 6.3.0 onwards.
@@ -289,7 +299,17 @@ class ClusterDetailView extends React.Component {
                 <Tabs>
                   <Tab eventKey={1} title='General'>
                     {this.props.isNodePoolView ? (
-                      <ClusterDetailNodePoolsTable />
+                      <ClusterDetailNodePoolsTable
+                        canClusterUpgrade={this.canClusterUpgrade()}
+                        cluster={this.props.cluster}
+                        credentials={this.props.credentials}
+                        provider={this.props.provider}
+                        release={this.props.release}
+                        showScalingModal={this.showScalingModal}
+                        showUpgradeModal={this.showUpgradeModal}
+                        workerNodesDesired={this.getDesiredNumberOfNodes()}
+                        workerNodesRunning={this.getNumberOfNodePoolsNodes()}
+                      />
                     ) : (
                       <ClusterDetailTable
                         canClusterUpgrade={this.canClusterUpgrade()}

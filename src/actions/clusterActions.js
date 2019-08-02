@@ -158,7 +158,7 @@ function clustersLoadNodePools(nodePoolsClustersIds, token, scheme, dispatch) {
             clusterId,
             // Receiving an array-like with weird prototype from API call,
             // so converting it to an array.
-            nodePools: Array.from(nodePools),
+            nodePools: Array.from(nodePools) || [],
           });
         })
         .catch(error => {
@@ -192,7 +192,14 @@ export function clusterLoadApps(clusterId) {
     // working, so early return if the cluster is a NP one.
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
-    if (isNodePoolsCluster) return Promise.resolve([]);
+    if (isNodePoolsCluster) {
+      dispatch({
+        type: types.CLUSTER_LOAD_APPS_SUCCESS,
+        clusterId,
+        apps: [],
+      });
+      return;
+    }
 
     var token = getState().app.loggedInUser.auth.token;
     var scheme = getState().app.loggedInUser.auth.scheme;
