@@ -118,7 +118,6 @@ class ClusterDetailNodePoolsTable extends React.Component {
 
   render() {
     const { availableZonesGridTemplateAreas } = this.state;
-
     const { cluster, workerNodesRunning } = this.props;
 
     const {
@@ -128,18 +127,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       release,
       nodePools,
       api_endpoint,
-    } = this.props.cluster;
-
-    const { cluster, workerNodesRunning } = this.props;
-
-    const {
-      create_date,
-      master,
-      release_version,
-      release,
-      nodePools,
-      api_endpoint,
-    } = this.props.cluster;
+    } = cluster;
 
     return (
       <>
