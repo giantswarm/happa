@@ -130,6 +130,17 @@ class ClusterDetailNodePoolsTable extends React.Component {
       api_endpoint,
     } = this.props.cluster;
 
+    const { cluster, workerNodesRunning } = this.props;
+
+    const {
+      create_date,
+      master,
+      release_version,
+      release,
+      nodePools,
+      api_endpoint,
+    } = this.props.cluster;
+
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
