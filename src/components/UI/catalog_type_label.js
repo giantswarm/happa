@@ -27,8 +27,15 @@ const Wrapper = styled.div`
  * CatalogTypeLabel shows some information about a catalog depending on its type.
  */
 const CatalogTypeLabel = props => {
-  var icon;
-  var message;
+  let icon;
+  let message;
+
+  let validCatalogTypes = ['community', 'incubator', 'test'];
+
+  // Early return if we're dealing with a unknown catalog type.
+  if (!validCatalogTypes.includes(props.catalogType)) {
+    return null;
+  }
 
   switch (props.catalogType) {
     case 'community':
