@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Button from 'UI/button';
+import CatalogTypeLabel from 'UI/catalog_type_label';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -42,6 +43,12 @@ class Catalogs extends React.Component {
                         <h3>
                           {this.props.catalogs.items[catalogName].spec.title}
                         </h3>
+                        <CatalogTypeLabel
+                          catalogType={
+                            this.props.catalogs.items[catalogName].metadata
+                              .labels['application.giantswarm.io/catalog-type']
+                          }
+                        />
                         <ReactMarkdown>
                           {
                             this.props.catalogs.items[catalogName].spec
