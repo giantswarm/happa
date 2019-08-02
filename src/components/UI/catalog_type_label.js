@@ -7,7 +7,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 const Wrapper = styled.div`
   font-size: 12px;
   display: inline-block;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 
   span {
     background-color: #1e4156;
