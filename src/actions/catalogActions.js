@@ -63,8 +63,15 @@ export function catalogsLoad() {
         catalogs = Array.from(catalogs);
 
         catalogs.forEach(catalog => {
-          catalog.isFetchingIndex = true;
-          catalogsDict[catalog.metadata.name] = catalog;
+          // Exclude internal catalogs from the store.
+          if (
+            catalog.metadata.labels[
+              'application.giantswarm.io/catalog-type'
+            ] !== 'internal'
+          ) {
+            catalog.isFetchingIndex = true;
+            catalogsDict[catalog.metadata.name] = catalog;
+          }
         });
 
         dispatch({
