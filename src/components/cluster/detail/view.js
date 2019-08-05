@@ -237,10 +237,10 @@ class ClusterDetailView extends React.Component {
     this.props.dispatch(
       push(
         '/organizations/' +
-          this.props.cluster.owner +
-          '/clusters/' +
-          this.props.cluster.id +
-          '/getting-started/'
+        this.props.cluster.owner +
+        '/clusters/' +
+        this.props.cluster.id +
+        '/getting-started/'
       )
     );
   };
@@ -272,26 +272,28 @@ class ClusterDetailView extends React.Component {
                       width='25px'
                     />
                   ) : (
-                    ''
-                  )}
+                      ''
+                    )}
                 </h1>
               </div>
               <div className='col-sm-12 col-md-5 col-3'>
-                <div
-                  className='btn-group visible-xs-block visible-sm-block visible-md-block'
-                  style={{ marginTop: 10 }}
-                >
-                  {!this.props.isNodePoolView && (
-                    <Button onClick={this.accessCluster}>
-                      <i className='fa fa-start' /> GET STARTED
+                {!this.props.isNodePoolView && (
+                  <>
+                    <div
+                      className='btn-group visible-xs-block visible-sm-block visible-md-block'
+                      style={{ marginTop: 10 }}
+                    >
+                      <Button onClick={this.accessCluster}>
+                        <i className='fa fa-start' /> GET STARTED
                     </Button>
-                  )}
-                </div>
-                <div className='pull-right btn-group visible-lg-block'>
-                  <Button onClick={this.accessCluster}>
-                    <i className='fa fa-start' /> GET STARTED
+                    </div>
+                    <div className='pull-right btn-group visible-lg-block'>
+                      <Button onClick={this.accessCluster}>
+                        <i className='fa fa-start' /> GET STARTED
                   </Button>
-                </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className='row'>
@@ -311,18 +313,18 @@ class ClusterDetailView extends React.Component {
                         workerNodesRunning={this.getNumberOfNodePoolsNodes()}
                       />
                     ) : (
-                      <ClusterDetailTable
-                        canClusterUpgrade={this.canClusterUpgrade()}
-                        cluster={this.props.cluster}
-                        credentials={this.props.credentials}
-                        provider={this.props.provider}
-                        release={this.props.release}
-                        showScalingModal={this.showScalingModal}
-                        showUpgradeModal={this.showUpgradeModal}
-                        workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        workerNodesRunning={this.getNumberOfNodes()}
-                      />
-                    )}
+                        <ClusterDetailTable
+                          canClusterUpgrade={this.canClusterUpgrade()}
+                          cluster={this.props.cluster}
+                          credentials={this.props.credentials}
+                          provider={this.props.provider}
+                          release={this.props.release}
+                          showScalingModal={this.showScalingModal}
+                          showUpgradeModal={this.showUpgradeModal}
+                          workerNodesDesired={this.getDesiredNumberOfNodes()}
+                          workerNodesRunning={this.getNumberOfNodes()}
+                        />
+                      )}
 
                     <div className='row section cluster_delete col-12'>
                       <div className='row'>
@@ -363,15 +365,15 @@ class ClusterDetailView extends React.Component {
                         }
                       />
                     ) : (
-                      <div className='well'>
-                        We had some trouble loading this pane. Please come back
+                        <div className='well'>
+                          We had some trouble loading this pane. Please come back
                         later or contact support in your slack channel or at{' '}
-                        <a href='mailto:support@giantswarm.io'>
-                          support@giantswarm.io
+                          <a href='mailto:support@giantswarm.io'>
+                            support@giantswarm.io
                         </a>
-                        .
+                          .
                       </div>
-                    )}
+                      )}
                   </Tab>
                 </Tabs>
               </div>
@@ -397,8 +399,8 @@ class ClusterDetailView extends React.Component {
                 targetRelease={this.props.targetRelease}
               />
             ) : (
-              undefined
-            )}
+                undefined
+              )}
           </div>
         </DocumentTitle>
       </LoadingOverlay>
