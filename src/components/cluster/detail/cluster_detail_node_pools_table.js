@@ -164,7 +164,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                   cluster.kubernetes_version !== '' &&
                   cluster.kubernetes_version !== undefined &&
                   <i className='fa fa-kubernetes' /> +
-                  cluster.kubernetes_version}
+                    cluster.kubernetes_version}
               </span>
             </div>
             {this.props.canClusterUpgrade && (
