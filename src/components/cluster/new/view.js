@@ -447,9 +447,9 @@ class CreateCluster extends React.Component {
                       <div className='col-9'>
                         <p>
                           Configure the amount of CPU, RAM and Storage for your
-                          workers. The storage size specified will apply to
-                          both the kubelet and the Docker volume of the node,
-                          so please make sure to have twice the specified size
+                          workers. The storage size specified will apply to both
+                          the kubelet and the Docker volume of the node, so
+                          please make sure to have twice the specified size
                           available as disk space.
                         </p>
 
