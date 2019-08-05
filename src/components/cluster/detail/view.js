@@ -234,15 +234,9 @@ class ClusterDetailView extends React.Component {
   }
 
   accessCluster = () => {
-    console.log('triggered');
+    const { owner, id } = this.props.cluster;
     this.props.dispatch(
-      push(
-        '/organizations/' +
-        this.props.cluster.owner +
-        '/clusters/' +
-        this.props.cluster.id +
-        '/getting-started/'
-      )
+      push(`/organizations/${owner}/clusters/${id}/getting-started/`)
     );
   };
 
