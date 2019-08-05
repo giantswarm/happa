@@ -97,7 +97,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
     availableZonesGridTemplateAreas: '',
     awsInstanceTypes: {},
     RAM: 0,
-    CPU: 0,
+    CPUs: 0,
   };
 
   componentDidMount() {
@@ -119,23 +119,17 @@ class ClusterDetailNodePoolsTable extends React.Component {
     });
 
     // CPU and RAM values.
-    if (window.config.awsCapabilitiesJSON != '') {
-      this.setState({
-        awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
-      });
+    if (window.config.awsCapabilitiesJSON) {
+      const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
 
-      // Add callback setState
       // Compute RAM & CPU:
+      const RAM = awsInstanceTypes[
+        nodePools[0].node_spec.aws.instance_type
+      ].memory_size_gb.toFixed(0);
+      const CPUs =
+        awsInstanceTypes[nodePools[0].node_spec.aws.instance_type].cpu_cores;
 
-      // {this.state.awsInstanceTypes[
-      //   nodePools[0].node_spec.aws.instance_type
-      // ].memory_size_gb.toFixed(0)}{' '}
-
-      // {
-      //   this.state.awsInstanceTypes[
-      //     nodePools[0].node_spec.aws.instance_type
-      //   ].cpu_cores
-      // }{' '}
+      this.setState({ RAM, CPUs });
     }
   }
 
@@ -216,8 +210,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
               </span>
               <span>
                 <Dot />
-                {this.state.CPUs}
-                CPUs
+                {this.state.CPUs} CPUs
               </span>
             </div>
           </div>
