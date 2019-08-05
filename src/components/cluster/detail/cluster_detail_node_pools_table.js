@@ -94,26 +94,6 @@ const GridRowNodePoolsItem = styled.div`
 
 class ClusterDetailNodePoolsTable extends React.Component {
   state = {
-    nodePool1: {
-      id: '6dh',
-      name: 'Database',
-      instanceType: 'r3.4xlarge',
-      avZones: ['eu-central-1f', 'eu-central-1b', 'eu-central-1a'],
-      min: 3,
-      max: 3,
-      desired: 3,
-      current: 3,
-    },
-    nodePool2: {
-      id: 'z66',
-      name: 'General Purpose',
-      instanceType: 'm5.xlarge',
-      avZones: ['eu-central-1a', 'eu-central-1c'],
-      min: 5,
-      max: 20,
-      desired: 12,
-      current: 11,
-    },
     availableZonesGridTemplateAreas: '',
     awsInstanceTypes: {},
     RAM: 0,
@@ -121,10 +101,13 @@ class ClusterDetailNodePoolsTable extends React.Component {
   };
 
   componentDidMount() {
-    const allZones = [
-      ...this.state.nodePool1.avZones,
-      ...this.state.nodePool2.avZones,
-    ].map(zone => zone.slice(-1));
+    const { nodePools } = this.props.cluster;
+
+    const allZones = nodePools
+      .reduce((accumulator, current) => {
+        return [...accumulator, ...current.availability_zones];
+      }, [])
+      .map(zone => zone.slice(-1));
 
     // This array stores available zones that are in at least one node pool.
     // We only want unique values because this is used fot building the grid.
@@ -155,15 +138,9 @@ class ClusterDetailNodePoolsTable extends React.Component {
       // }{' '}
     }
   }
-  // Put all last letters in an array of letters.
 
   render() {
-    const {
-      nodePool1,
-      nodePool2,
-      availableZonesGridTemplateAreas,
-    } = this.state;
-
+    const { availableZonesGridTemplateAreas } = this.state;
     const { cluster, workerNodesRunning } = this.props;
 
     const {
@@ -173,7 +150,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       release,
       nodePools,
       api_endpoint,
-    } = this.props.cluster;
+    } = cluster;
 
     return (
       <>
@@ -265,7 +242,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
           </GridRowNodePoolsNodes>
           <GridRowNodePoolsHeaders>
             <span>ID</span>
-            <span>NAME</span>
+            <span style={{ paddingLeft: '8px' }}>NAME</span>
             <span>INSTANCE TYPE</span>
             <span>AVAILABILITY ZONES</span>
             <span>MIN</span>
@@ -274,18 +251,17 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <span>CURRENT</span>
             <span> </span>
           </GridRowNodePoolsHeaders>
-          <GridRowNodePoolsItem>
-            <NodePool
-              availableZonesGridTemplateAreas={availableZonesGridTemplateAreas}
-              nodePool={nodePool1}
-            />
-          </GridRowNodePoolsItem>
-          <GridRowNodePoolsItem>
-            <NodePool
-              availableZonesGridTemplateAreas={availableZonesGridTemplateAreas}
-              nodePool={nodePool2}
-            />
-          </GridRowNodePoolsItem>
+          {nodePools &&
+            nodePools.map(nodePool => (
+              <GridRowNodePoolsItem key={nodePool.id}>
+                <NodePool
+                  availableZonesGridTemplateAreas={
+                    availableZonesGridTemplateAreas
+                  }
+                  nodePool={nodePool}
+                />
+              </GridRowNodePoolsItem>
+            ))}
         </NodePoolsWrapper>
         <Button>
           <i className='fa fa-add-circle' /> ADD NODE POOL
