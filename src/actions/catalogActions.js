@@ -65,6 +65,7 @@ export function catalogsLoad() {
         catalogs.forEach(catalog => {
           // Exclude internal catalogs from the store.
           if (
+            catalog.metadata.labels &&
             catalog.metadata.labels[
               'application.giantswarm.io/catalog-type'
             ] !== 'internal'
