@@ -50,8 +50,7 @@ const CatalogTypeLabel = props => {
       break;
     case 'test':
       icon = 'info';
-      message =
-        "We're still getting these apps ready. They might not work at all.";
+      message = `We're still getting these apps ready. They might not work at all.`;
       break;
     default:
       icon = '';
