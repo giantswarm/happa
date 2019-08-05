@@ -118,7 +118,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
 
   render() {
     const { availableZonesGridTemplateAreas } = this.state;
-    const { cluster, workerNodesRunning } = this.props;
+    const { accessCluster, cluster, workerNodesRunning } = this.props;
 
     const {
       create_date,
@@ -164,7 +164,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                   cluster.kubernetes_version !== '' &&
                   cluster.kubernetes_version !== undefined &&
                   <i className='fa fa-kubernetes' /> +
-                    cluster.kubernetes_version}
+                  cluster.kubernetes_version}
               </span>
             </div>
             {this.props.canClusterUpgrade && (
@@ -202,7 +202,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <Code>{api_endpoint}</Code>
           </div>
           <div style={{ transform: 'translateX(10px)' }}>
-            <Button>
+            <Button onClick={accessCluster}>
               <i className='fa fa-start' /> GET STARTED
             </Button>
           </div>
@@ -246,6 +246,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
 }
 
 ClusterDetailNodePoolsTable.propTypes = {
+  accessCluster: PropTypes.func,
   canClusterUpgrade: PropTypes.bool,
   cluster: PropTypes.object,
   credentials: PropTypes.object,

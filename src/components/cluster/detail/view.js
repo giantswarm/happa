@@ -234,6 +234,7 @@ class ClusterDetailView extends React.Component {
   }
 
   accessCluster = () => {
+    console.log('triggered');
     this.props.dispatch(
       push(
         '/organizations/' +
@@ -302,6 +303,7 @@ class ClusterDetailView extends React.Component {
                   <Tab eventKey={1} title='General'>
                     {this.props.isNodePoolView ? (
                       <ClusterDetailNodePoolsTable
+                        accessCluster={this.accessCluster}
                         canClusterUpgrade={this.canClusterUpgrade()}
                         cluster={this.props.cluster}
                         credentials={this.props.credentials}
