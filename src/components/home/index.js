@@ -143,6 +143,9 @@ class Home extends React.Component {
                       <ClusterDashboardItem
                         animate={true}
                         cluster={cluster}
+                        isNodePool={this.props.nodePoolsClusters.includes(
+                          cluster.id
+                        )}
                         key={cluster.id}
                         selectedOrganization={this.props.selectedOrganization}
                       />
@@ -178,6 +181,7 @@ Home.propTypes = {
   selectedOrganization: PropTypes.string,
   organizations: PropTypes.object,
   errorLoadingClusters: PropTypes.bool,
+  nodePoolsClusters: PropTypes.array,
 };
 
 function mapStateToProps(state) {
@@ -185,6 +189,7 @@ function mapStateToProps(state) {
   var organizations = state.entities.organizations.items;
   var allClusters = state.entities.clusters.items;
   var errorLoadingClusters = state.entities.clusters.errorLoading;
+  const nodePoolsClusters = state.entities.clusters.nodePoolsClusters;
 
   var clusters = [];
   if (selectedOrganization) {
@@ -198,6 +203,7 @@ function mapStateToProps(state) {
     organizations: organizations,
     errorLoadingClusters: errorLoadingClusters,
     selectedOrganization: selectedOrganization,
+    nodePoolsClusters,
   };
 }
 
