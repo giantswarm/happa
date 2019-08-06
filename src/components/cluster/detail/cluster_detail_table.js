@@ -15,19 +15,20 @@ import RefreshableLabel from 'UI/refreshable_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ClusterDetailTable extends React.Component {
-  state = {
-    awsInstanceTypes: {},
-    azureVMSizes: {},
-  };
+  awsInstanceTypes = {};
+  azureVMSizes = {};
 
   componentDidMount() {
     this.registerRefreshInterval();
 
-    if (window.config.azureCapabilitiesJSON) {
-      const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
-      const azureVMSizes = JSON.parse(window.config.azureCapabilitiesJSON);
-      this.setState({ awsInstanceTypes, azureVMSizes });
-    }
+    // TODO Store it in Redux store?
+    this.awsInstanceTypes = window.config.awsCapabilitiesJSON
+      ? JSON.parse(window.config.awsCapabilitiesJSON)
+      : {};
+
+    this.azureVMSizes = window.config.azureCapabilitiesJSON
+      ? JSON.parse(window.config.azureCapabilitiesJSON)
+      : {};
   }
 
   registerRefreshInterval = () => {
@@ -75,9 +76,9 @@ class ClusterDetailTable extends React.Component {
         workers &&
         workers.length > 0 &&
         typeof workers[0].aws.instance_type !== 'undefined' &&
-        this.state.awsInstanceTypes[workers[0].aws.instance_type]
+        this.awsInstanceTypes[workers[0].aws.instance_type]
       ) {
-        let t = this.state.awsInstanceTypes[workers[0].aws.instance_type];
+        let t = this.awsInstanceTypes[workers[0].aws.instance_type];
         details = (
           <span>
             &mdash; {t.cpu_cores} CPUs, {t.memory_size_gb.toFixed(0)} GB RAM
@@ -101,9 +102,9 @@ class ClusterDetailTable extends React.Component {
       if (
         workers &&
         typeof workers[0].azure.vm_size !== 'undefined' &&
-        this.state.azureVMSizes[workers[0].azure.vm_size]
+        this.azureVMSizes[workers[0].azure.vm_size]
       ) {
-        let t = this.state.azureVMSizes[workers[0].azure.vm_size];
+        let t = this.azureVMSizes[workers[0].azure.vm_size];
         details = (
           <span>
             &mdash; {t.numberOfCores} CPUs, {(t.memoryInMb / 1000.0).toFixed(1)}{' '}

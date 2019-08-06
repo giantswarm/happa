@@ -3,33 +3,34 @@
 
 // Regular clusters functions
 export function getNumberOfNodes(cluster) {
-  if (Object.keys(cluster).includes('status') && cluster.status != null) {
-    var nodes = cluster.status.cluster.nodes;
-    if (nodes.length == 0) {
-      return 0;
-    }
-
-    var workers = 0;
-    nodes.forEach(node => {
-      if (Object.keys(node).includes('labels')) {
-        if (
-          node.labels['role'] != 'master' &&
-          node.labels['kubernetes.io/role'] != 'master'
-        ) {
-          workers++;
-        }
-      }
-    });
-
-    if (workers === 0) {
-      // No node labels available? Fallback to assumption that one of the
-      // nodes is master and rest are workers.
-      workers = nodes.length - 1;
-    }
-
-    return workers;
+  if (
+    !cluster.status ||
+    !cluster.status.nodes ||
+    cluster.status.cluster.nodes.length === 0
+  ) {
+    return 0;
   }
-  return null;
+
+  const nodes = cluster.status.cluster.nodes;
+
+  let workers = nodes.reduce((accumulator, node) => {
+    if (
+      node.labels &&
+      node.labels['role'] !== 'master' &&
+      node.labels['kubernetes.io/role'] !== 'master'
+    ) {
+      accumulator++;
+    }
+    return accumulator;
+  }, 0);
+
+  if (workers === 0) {
+    // No node labels available? Fallback to assumption that one of the
+    // nodes is master and rest are workers.
+    workers = nodes.length - 1;
+  }
+
+  return workers;
 }
 
 export function getMemoryTotal(cluster) {
