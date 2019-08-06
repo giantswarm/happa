@@ -1,3 +1,8 @@
+import {
+  getCpusTotal,
+  getMemoryTotal,
+  getStorageTotal,
+} from 'utils/cluster_utils';
 import { relativeDate } from 'lib/helpers.js';
 import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import AWSAccountID from 'UI/aws_account_id';
@@ -10,20 +15,19 @@ import RefreshableLabel from 'UI/refreshable_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 
 class ClusterDetailTable extends React.Component {
-  constructor(props) {
-    super(props);
-
-    if (window.config.awsCapabilitiesJSON != '') {
-      this.awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
-    }
-
-    if (window.config.azureCapabilitiesJSON != '') {
-      this.azureVMSizes = JSON.parse(window.config.azureCapabilitiesJSON);
-    }
-  }
+  state = {
+    awsInstanceTypes: {},
+    azureVMSizes: {},
+  };
 
   componentDidMount() {
     this.registerRefreshInterval();
+
+    if (window.config.azureCapabilitiesJSON) {
+      const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
+      const azureVMSizes = JSON.parse(window.config.azureCapabilitiesJSON);
+      this.setState({ awsInstanceTypes, azureVMSizes });
+    }
   }
 
   registerRefreshInterval = () => {
@@ -38,47 +42,6 @@ class ClusterDetailTable extends React.Component {
   showReleaseDetails = () => {
     this.releaseDetailsModal.show();
   };
-
-  getMemoryTotal() {
-    if (
-      this.props.workerNodesRunning === null ||
-      this.props.workerNodesRunning === 0 ||
-      !this.props.cluster.workers
-    ) {
-      return null;
-    }
-    var m =
-      this.props.workerNodesRunning *
-      this.props.cluster.workers[0].memory.size_gb;
-    return m.toFixed(2);
-  }
-
-  getStorageTotal() {
-    if (
-      this.props.workerNodesRunning === null ||
-      this.props.workerNodesRunning === 0 ||
-      !this.props.cluster.workers
-    ) {
-      return null;
-    }
-    var s =
-      this.props.workerNodesRunning *
-      this.props.cluster.workers[0].storage.size_gb;
-    return s.toFixed(2);
-  }
-
-  getCpusTotal() {
-    if (
-      this.props.workerNodesRunning === null ||
-      this.props.workerNodesRunning === 0 ||
-      !this.props.cluster.workers
-    ) {
-      return null;
-    }
-    return (
-      this.props.workerNodesRunning * this.props.cluster.workers[0].cpu.cores
-    );
-  }
 
   /**
    * Returns the proper last updated info string based on available
@@ -112,9 +75,9 @@ class ClusterDetailTable extends React.Component {
         workers &&
         workers.length > 0 &&
         typeof workers[0].aws.instance_type !== 'undefined' &&
-        this.awsInstanceTypes[workers[0].aws.instance_type]
+        this.state.awsInstanceTypes[workers[0].aws.instance_type]
       ) {
-        let t = this.awsInstanceTypes[workers[0].aws.instance_type];
+        let t = this.state.awsInstanceTypes[workers[0].aws.instance_type];
         details = (
           <span>
             &mdash; {t.cpu_cores} CPUs, {t.memory_size_gb.toFixed(0)} GB RAM
@@ -138,9 +101,9 @@ class ClusterDetailTable extends React.Component {
       if (
         workers &&
         typeof workers[0].azure.vm_size !== 'undefined' &&
-        this.azureVMSizes[workers[0].azure.vm_size]
+        this.state.azureVMSizes[workers[0].azure.vm_size]
       ) {
-        let t = this.azureVMSizes[workers[0].azure.vm_size];
+        let t = this.state.azureVMSizes[workers[0].azure.vm_size];
         details = (
           <span>
             &mdash; {t.numberOfCores} CPUs, {(t.memoryInMb / 1000.0).toFixed(1)}{' '}
@@ -227,8 +190,7 @@ class ClusterDetailTable extends React.Component {
               dataItems={[typeof workers === 'object' ? workers.length : null]}
             >
               <span>
-                {this.getStorageTotal() === null ? '0' : this.getStorageTotal()}{' '}
-                GB
+                {!getStorageTotal(cluster) ? '0' : getStorageTotal(cluster)} GB
               </span>
             </RefreshableLabel>
           </td>
@@ -243,9 +205,7 @@ class ClusterDetailTable extends React.Component {
           <RefreshableLabel
             dataItems={[typeof workers === 'object' ? workers.length : null]}
           >
-            <span>
-              {this.getCpusTotal() === null ? '0' : this.getCpusTotal()}
-            </span>
+            <span>{!getCpusTotal(cluster) ? '0' : getCpusTotal(cluster)}</span>
           </RefreshableLabel>
         </td>
       </tr>
@@ -259,7 +219,7 @@ class ClusterDetailTable extends React.Component {
             dataItems={[typeof workers === 'object' ? workers.length : null]}
           >
             <span>
-              {this.getMemoryTotal() === null ? '0' : this.getMemoryTotal()} GB
+              {!getMemoryTotal(cluster) ? '0' : getMemoryTotal(cluster)} GB
             </span>
           </RefreshableLabel>
         </td>
