@@ -2,7 +2,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import _ from 'underscore';
-import ClusterDetailView from './view';
+import ClusterDetailView from './cluster_detail_view';
 import cmp from 'semver-compare';
 import GettingStarted from '../../getting-started';
 import PropTypes from 'prop-types';
