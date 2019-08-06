@@ -234,14 +234,9 @@ class ClusterDetailView extends React.Component {
   }
 
   accessCluster = () => {
+    const { owner, id } = this.props.cluster;
     this.props.dispatch(
-      push(
-        '/organizations/' +
-          this.props.cluster.owner +
-          '/clusters/' +
-          this.props.cluster.id +
-          '/getting-started/'
-      )
+      push(`/organizations/${owner}/clusters/${id}/getting-started/`)
     );
   };
 
@@ -277,21 +272,23 @@ class ClusterDetailView extends React.Component {
                 </h1>
               </div>
               <div className='col-sm-12 col-md-5 col-3'>
-                <div
-                  className='btn-group visible-xs-block visible-sm-block visible-md-block'
-                  style={{ marginTop: 10 }}
-                >
-                  {!this.props.isNodePoolView && (
-                    <Button onClick={this.accessCluster}>
-                      <i className='fa fa-start' /> GET STARTED
-                    </Button>
-                  )}
-                </div>
-                <div className='pull-right btn-group visible-lg-block'>
-                  <Button onClick={this.accessCluster}>
-                    <i className='fa fa-start' /> GET STARTED
-                  </Button>
-                </div>
+                {!this.props.isNodePoolView && (
+                  <>
+                    <div
+                      className='btn-group visible-xs-block visible-sm-block visible-md-block'
+                      style={{ marginTop: 10 }}
+                    >
+                      <Button onClick={this.accessCluster}>
+                        <i className='fa fa-start' /> GET STARTED
+                      </Button>
+                    </div>
+                    <div className='pull-right btn-group visible-lg-block'>
+                      <Button onClick={this.accessCluster}>
+                        <i className='fa fa-start' /> GET STARTED
+                      </Button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className='row'>
@@ -300,6 +297,7 @@ class ClusterDetailView extends React.Component {
                   <Tab eventKey={1} title='General'>
                     {this.props.isNodePoolView ? (
                       <ClusterDetailNodePoolsTable
+                        accessCluster={this.accessCluster}
                         canClusterUpgrade={this.canClusterUpgrade()}
                         cluster={this.props.cluster}
                         credentials={this.props.credentials}
