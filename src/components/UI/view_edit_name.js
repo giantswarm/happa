@@ -54,6 +54,11 @@ class ViewAndEditName extends React.Component {
       editing: true,
       inputFieldValue: this.state.name,
     });
+
+    // Notify parent
+    if (this.props.toggleEditingState) {
+      this.props.toggleEditingState(true);
+    }
   };
 
   deactivateEditMode = () => {
@@ -62,6 +67,11 @@ class ViewAndEditName extends React.Component {
       // revert input
       inputFieldValue: this.state.name,
     });
+
+    // Notify parent
+    if (this.props.toggleEditingState) {
+      this.props.toggleEditingState(false);
+    }
   };
 
   handleChange = evt => {
@@ -170,6 +180,7 @@ ViewAndEditName.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
   thunk: PropTypes.func,
+  toggleEditingState: PropTypes.func,
 };
 
 export default ViewAndEditName;
