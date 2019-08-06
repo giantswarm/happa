@@ -12,7 +12,6 @@ import ClusterDetailNodePoolsTable from './cluster_detail_node_pools_table';
 import ClusterDetailTable from './cluster_detail_table';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import ClusterKeyPairs from './key_pairs';
-import ClusterName from 'UI/cluster_name';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import LoadingOverlay from 'UI/loading_overlay';
@@ -24,6 +23,7 @@ import ScaleClusterModal from './scale_cluster_modal';
 import Tab from 'react-bootstrap/lib/Tab';
 import Tabs from './tabs';
 import UpgradeClusterModal from './upgrade_cluster_modal';
+import ViewAndEditName from 'UI/view_edit_name';
 
 class ClusterDetailView extends React.Component {
   state = {
@@ -255,7 +255,7 @@ class ClusterDetailView extends React.Component {
                     clusterID={this.props.cluster.id}
                     copyEnabled
                   />{' '}
-                  <ClusterName
+                  <ViewAndEditName
                     dispatchFunc={this.props.dispatch}
                     id={this.props.cluster.id}
                     name={this.props.cluster.name}
