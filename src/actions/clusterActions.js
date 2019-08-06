@@ -658,107 +658,79 @@ export function clusterLoadKeyPairs(clusterId) {
   };
 }
 
-export function clusterLoadDetailsSuccess(cluster) {
-  return {
-    type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
-    cluster,
-  };
-}
+export const clusterLoadDetailsSuccess = cluster => ({
+  type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
+  cluster,
+});
 
-export function clusterLoadDetailsError(error) {
-  return {
-    type: types.CLUSTER_LOAD_DETAILS_ERROR,
-    error,
-  };
-}
+export const clusterLoadDetailsError = error => ({
+  type: types.CLUSTER_LOAD_DETAILS_ERROR,
+  error,
+});
 
-export function clusterLoadStatusSuccess(clusterId, status) {
-  return {
-    type: types.CLUSTER_LOAD_STATUS_SUCCESS,
-    clusterId,
-    status,
-  };
-}
+export const clusterLoadStatusSuccess = (clusterId, status) => ({
+  type: types.CLUSTER_LOAD_STATUS_SUCCESS,
+  clusterId,
+  status,
+});
 
-export function clusterLoadStatusNotFound(clusterId) {
-  return {
-    type: types.CLUSTER_LOAD_STATUS_NOT_FOUND,
-    clusterId,
-  };
-}
+export const clusterLoadStatusNotFound = clusterId => ({
+  type: types.CLUSTER_LOAD_STATUS_NOT_FOUND,
+  clusterId,
+});
 
-export function clusterLoadStatusError(error) {
-  return {
-    type: types.CLUSTER_LOAD_STATUS_ERROR,
-    error,
-  };
-}
+export const clusterLoadStatusError = error => ({
+  type: types.CLUSTER_LOAD_STATUS_ERROR,
+  error,
+});
 
-export function clusterCreateSuccess(cluster) {
-  return {
-    type: types.CLUSTER_CREATE_SUCCESS,
-    cluster,
-  };
-}
+export const clusterCreateSuccess = cluster => ({
+  type: types.CLUSTER_CREATE_SUCCESS,
+  cluster,
+});
 
-export function clusterCreateError(cluster) {
-  return {
-    type: types.CLUSTER_CREATE_ERROR,
-    cluster,
-  };
-}
+export const clusterCreateError = cluster => ({
+  type: types.CLUSTER_CREATE_ERROR,
+  cluster,
+});
 
-export function clusterDelete(cluster) {
-  return {
-    type: types.CLUSTER_DELETE,
-    cluster,
-  };
-}
+export const clusterDelete = cluster => ({
+  type: types.CLUSTER_DELETE,
+  cluster,
+});
 
-export function clusterDeleteSuccess(clusterId) {
-  return {
-    type: types.CLUSTER_DELETE_SUCCESS,
-    clusterId,
-  };
-}
+export const clusterDeleteSuccess = clusterId => ({
+  type: types.CLUSTER_DELETE_SUCCESS,
+  clusterId,
+});
 
-export function clusterDeleteError(clusterId, error) {
-  return {
-    type: types.CLUSTER_DELETE_ERROR,
-    clusterId,
-    error,
-  };
-}
+export const clusterDeleteError = (clusterId, error) => ({
+  type: types.CLUSTER_DELETE_ERROR,
+  clusterId,
+  error,
+});
 
-export function clustersLoadSuccessV4(clusters, lastUpdated) {
-  return {
-    type: types.CLUSTERS_LOAD_SUCCESS_V4,
-    clusters,
-    lastUpdated,
-  };
-}
+export const clustersLoadSuccessV4 = (clusters, lastUpdated) => ({
+  type: types.CLUSTERS_LOAD_SUCCESS_V4,
+  clusters,
+  lastUpdated,
+});
 
-export function clustersLoadSuccessV5(clusters, nodePoolsClusters) {
-  return {
-    type: types.CLUSTERS_LOAD_SUCCESS_V5,
-    clusters,
-    nodePoolsClusters,
-  };
-}
+export const clustersLoadSuccessV5 = (clusters, nodePoolsClusters) => ({
+  type: types.CLUSTERS_LOAD_SUCCESS_V5,
+  clusters,
+  nodePoolsClusters,
+});
 
-export function clustersLoadErrorV4(error) {
-  return {
-    type: types.CLUSTERS_LOAD_ERROR_V4,
-    error: error,
-  };
-}
+export const clustersLoadErrorV4 = error => ({
+  type: types.CLUSTERS_LOAD_ERROR_V4,
+  error: error,
+});
 
-export function clustersLoadErrorV5(error) {
-  return {
-    type: types.CLUSTERS_LOAD_ERROR_V5,
-    error: error,
-  };
-}
+export const clustersLoadErrorV5 = error => ({
+  type: types.CLUSTERS_LOAD_ERROR_V5,
+  error: error,
+});
 
 /**
  * Takes a cluster object and tries to patch it.
