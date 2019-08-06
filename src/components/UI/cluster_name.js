@@ -1,4 +1,3 @@
-import { clusterPatch } from 'actions/clusterActions';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import Button from './button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -84,7 +83,7 @@ class ClusterName extends React.Component {
 
     this.props
       .dispatchFunc(
-        clusterPatch({
+        this.props.thunk({
           id: this.props.id,
           name: this.state.inputFieldValue,
         })
@@ -165,6 +164,7 @@ ClusterName.propTypes = {
   dispatchFunc: PropTypes.func,
   id: PropTypes.string,
   name: PropTypes.string,
+  thunk: PropTypes.func,
 };
 
 export default ClusterName;

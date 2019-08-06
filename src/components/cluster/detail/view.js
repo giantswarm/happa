@@ -1,6 +1,7 @@
 import * as clusterActions from 'actions/clusterActions';
 import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
+import { clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
@@ -258,6 +259,7 @@ class ClusterDetailView extends React.Component {
                     dispatchFunc={this.props.dispatch}
                     id={this.props.cluster.id}
                     name={this.props.cluster.name}
+                    thunk={clusterPatch}
                   />{' '}
                   {this.state.loading ? (
                     <img
