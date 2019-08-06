@@ -257,6 +257,7 @@ class ClusterDetailView extends React.Component {
                   />{' '}
                   <ViewAndEditName
                     dispatchFunc={this.props.dispatch}
+                    entity='cluster'
                     id={this.props.cluster.id}
                     name={this.props.cluster.name}
                     thunk={clusterPatch}
