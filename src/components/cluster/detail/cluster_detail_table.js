@@ -21,7 +21,6 @@ class ClusterDetailTable extends React.Component {
   componentDidMount() {
     this.registerRefreshInterval();
 
-    // TODO Store it in Redux store?
     this.awsInstanceTypes = window.config.awsCapabilitiesJSON
       ? JSON.parse(window.config.awsCapabilitiesJSON)
       : {};
