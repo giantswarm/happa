@@ -1,5 +1,6 @@
 import { Code } from 'styles/';
 import { connect } from 'react-redux';
+import { nodePoolPatch } from 'actions/clusterActions';
 import AvailabilityZonesWrapper from './availability_zones_wrapper';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
@@ -55,8 +56,8 @@ class NodePool extends Component {
             entity='node pool'
             id={id}
             name={name}
+            thunk={nodePoolPatch}
             toggleEditingState={this.toggleEditingState}
-            // thunk={clusterPatch}
           />
         </div>
         {/* Hide the rest of field when editing name */}

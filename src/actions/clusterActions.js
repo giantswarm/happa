@@ -8,6 +8,7 @@ import GiantSwarm from 'giantswarm';
 
 // API instantiations
 const clustersApi = new GiantSwarm.ClustersApi();
+const nodePoolsApi = new GiantSwarm.NodepoolsApi();
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
@@ -146,8 +147,6 @@ function clustersLoadV5(token, scheme, dispatch, getState) {
  * @param {String} clusterId Cluster ID
  */
 function clustersLoadNodePools(nodePoolsClustersIds, token, scheme, dispatch) {
-  const nodePoolsApi = new GiantSwarm.NodepoolsApi();
-
   return Promise.all(
     nodePoolsClustersIds.map(clusterId => {
       return nodePoolsApi
@@ -836,6 +835,49 @@ export function clusterCreateKeyPair(clusterId, keypair) {
           type: types.CLUSTER_CREATE_KEY_PAIR_ERROR,
           error,
         });
+
+        console.error(error);
+        throw error;
+      });
+  };
+}
+
+/**
+ * Takes a nodePool object and tries to patch it.
+ * Dispatches NODEPOOL_PATCH_SUCCESS on success or NODEPOOL_PATCH_ERROR
+ * on error.
+ *
+ * @param {Object} cluster Cluster modification object
+ */
+export function nodePoolPatch(nodePool) {
+  return function(dispatch, getState) {
+    var token = getState().app.loggedInUser.auth.token;
+    var scheme = getState().app.loggedInUser.auth.scheme;
+
+    // dispatch({
+    //   type: types.NODEPOOLS_PATCH,
+    //   nodePool,
+    // });
+
+    const nodePoolId = nodePool.id;
+    delete nodePool.id;
+
+    return nodePoolsApi
+      .modifyNodePool(scheme + ' ' + token, 'm0ckd', nodePoolId, nodePool) // This triggers an 405 error
+      .then(nodePool => {
+        console.log(nodePool);
+        // dispatch({
+        //   type: types.NODEPOOLS_PATCH_SUCCESS,
+        //   nodePool,
+        // });
+
+        return nodePool;
+      })
+      .catch(error => {
+        // dispatch({
+        //   type: types.NODEPOOLS_PATCH_ERROR,
+        //   error,
+        // });
 
         console.error(error);
         throw error;
