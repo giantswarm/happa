@@ -20,6 +20,8 @@ class ClusterDashboardItem extends React.Component {
 
   componentDidMount() {
     this.registerReRenderInterval();
+
+    if (this.props.isNodePool) this.getCpusTotalNodePools();
   }
 
   componentWillUnmount() {
@@ -47,6 +49,24 @@ class ClusterDashboardItem extends React.Component {
     return m.toFixed(2);
   }
 
+  getMemoryTotalNodePools() {
+    if (!window.config.awsCapabilitiesJSON || !this.props.cluster.nodePools) {
+      return;
+    }
+
+    const { nodePools } = this.props.cluster;
+    const nodes = this.getNumberOfNodePoolsNodes();
+    const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
+
+    const TotalRAM = nodePools.reduce((accumulator, nodePool) => {
+      const nodePoolRAM =
+        awsInstanceTypes[nodePool.node_spec.aws.instance_type].memory_size_gb;
+      return accumulator + nodePoolRAM;
+    }, 0);
+
+    return TotalRAM * nodes;
+  }
+
   getStorageTotal() {
     var workers = this.getNumberOfNodes();
     if (workers === null || workers === 0 || !this.props.cluster.workers) {
@@ -62,6 +82,24 @@ class ClusterDashboardItem extends React.Component {
       return null;
     }
     return workers * this.props.cluster.workers[0].cpu.cores;
+  }
+
+  getCpusTotalNodePools() {
+    if (!window.config.awsCapabilitiesJSON || !this.props.cluster.nodePools) {
+      return;
+    }
+
+    const { nodePools } = this.props.cluster;
+    const nodes = this.getNumberOfNodePoolsNodes();
+    const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
+
+    const TotalCPUs = nodePools.reduce((accumulator, nodePool) => {
+      const nodePoolCPUs =
+        awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
+      return accumulator + nodePoolCPUs;
+    }, 0);
+
+    return TotalCPUs * nodes;
   }
 
   getNumberOfNodes() {
@@ -98,6 +136,16 @@ class ClusterDashboardItem extends React.Component {
     return 0;
   }
 
+  getNumberOfNodePoolsNodes = () => {
+    const { nodePools } = this.props.cluster;
+
+    if (!nodePools || nodePools.length === 0) return 0;
+
+    return nodePools.reduce((accumulator, current) => {
+      return accumulator + current.status.nodes;
+    }, 0);
+  };
+
   /**
    * Returns true if the cluster is younger than 30 days
    */
@@ -124,18 +172,17 @@ class ClusterDashboardItem extends React.Component {
   };
 
   render() {
-    const { cluster, selectedOrganization } = this.props;
-    var memory = this.getMemoryTotal();
+    const { cluster, isNodePool, selectedOrganization } = this.props;
+    var memory = isNodePool
+      ? this.getMemoryTotalNodePools()
+      : this.getMemoryTotal();
     var storage = this.getStorageTotal();
-    var cpus = this.getCpusTotal();
-    var numNodes = this.getNumberOfNodes();
+    var cpus = isNodePool ? this.getCpusTotalNodePools() : this.getCpusTotal();
+    var numNodes = isNodePool
+      ? this.getNumberOfNodePoolsNodes()
+      : this.getNumberOfNodes();
 
-    const np =
-      window.config.environment === 'development' &&
-      this.props.cluster.id === 'm0ckd'
-        ? '/np'
-        : '';
-
+    const np = isNodePool ? '/np' : '';
     const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}${np}`;
 
     return (
@@ -225,6 +272,7 @@ ClusterDashboardItem.propTypes = {
   selectedOrganization: PropTypes.string,
   animate: PropTypes.bool,
   dispatch: PropTypes.func,
+  isNodePool: PropTypes.bool,
 };
 
 function mapDispatchToProps(dispatch) {
