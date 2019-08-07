@@ -2,6 +2,15 @@ import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Dot } from 'styles';
+import {
+  getCpusTotal,
+  getCpusTotalNodePools,
+  getMemoryTotal,
+  getMemoryTotalNodePools,
+  getNumberOfNodePoolsNodes,
+  getNumberOfNodes,
+  getStorageTotal,
+} from 'utils/cluster_utils';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
@@ -21,7 +30,7 @@ class ClusterDashboardItem extends React.Component {
   componentDidMount() {
     this.registerReRenderInterval();
 
-    if (this.props.isNodePool) this.getCpusTotalNodePools();
+    if (this.props.isNodePool) getCpusTotalNodePools(this.props.cluster);
   }
 
   componentWillUnmount() {
@@ -40,112 +49,6 @@ class ClusterDashboardItem extends React.Component {
     }, refreshInterval);
   };
 
-  getMemoryTotal() {
-    var workers = this.getNumberOfNodes();
-    if (workers === null || workers === 0 || !this.props.cluster.workers) {
-      return null;
-    }
-    var m = workers * this.props.cluster.workers[0].memory.size_gb;
-    return m.toFixed(2);
-  }
-
-  getMemoryTotalNodePools() {
-    if (!window.config.awsCapabilitiesJSON || !this.props.cluster.nodePools) {
-      return;
-    }
-
-    const { nodePools } = this.props.cluster;
-    const nodes = this.getNumberOfNodePoolsNodes();
-    const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
-
-    const TotalRAM = nodePools.reduce((accumulator, nodePool) => {
-      const nodePoolRAM =
-        awsInstanceTypes[nodePool.node_spec.aws.instance_type].memory_size_gb;
-      return accumulator + nodePoolRAM;
-    }, 0);
-
-    return TotalRAM * nodes;
-  }
-
-  getStorageTotal() {
-    var workers = this.getNumberOfNodes();
-    if (workers === null || workers === 0 || !this.props.cluster.workers) {
-      return null;
-    }
-    var s = workers * this.props.cluster.workers[0].storage.size_gb;
-    return s.toFixed(2);
-  }
-
-  getCpusTotal() {
-    var workers = this.getNumberOfNodes();
-    if (workers === null || workers === 0 || !this.props.cluster.workers) {
-      return null;
-    }
-    return workers * this.props.cluster.workers[0].cpu.cores;
-  }
-
-  getCpusTotalNodePools() {
-    if (!window.config.awsCapabilitiesJSON || !this.props.cluster.nodePools) {
-      return;
-    }
-
-    const { nodePools } = this.props.cluster;
-    const nodes = this.getNumberOfNodePoolsNodes();
-    const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
-
-    const TotalCPUs = nodePools.reduce((accumulator, nodePool) => {
-      const nodePoolCPUs =
-        awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
-      return accumulator + nodePoolCPUs;
-    }, 0);
-
-    return TotalCPUs * nodes;
-  }
-
-  getNumberOfNodes() {
-    if (
-      Object.keys(this.props.cluster).includes('status') &&
-      this.props.cluster.status != null
-    ) {
-      var nodes = this.props.cluster.status.cluster.nodes;
-      if (nodes.length == 0) {
-        return 0;
-      }
-
-      var workers = 0;
-      nodes.forEach(node => {
-        if (Object.keys(node).includes('labels')) {
-          if (
-            node.labels['role'] != 'master' &&
-            node.labels['kubernetes.io/role'] != 'master'
-          ) {
-            workers++;
-          }
-        }
-      });
-
-      if (workers === 0) {
-        // No node labels available? Fallback to assumption that one of the
-        // nodes is master and rest are workers.
-        workers = nodes.length - 1;
-      }
-
-      return workers;
-    }
-
-    return 0;
-  }
-
-  getNumberOfNodePoolsNodes = () => {
-    const { nodePools } = this.props.cluster;
-
-    if (!nodePools || nodePools.length === 0) return 0;
-
-    return nodePools.reduce((accumulator, current) => {
-      return accumulator + current.status.nodes;
-    }, 0);
-  };
-
   /**
    * Returns true if the cluster is younger than 30 days
    */
@@ -160,27 +63,29 @@ class ClusterDashboardItem extends React.Component {
   }
 
   accessCluster = () => {
+    const { id, owner } = this.props.cluster;
+
     this.props.dispatch(
-      push(
-        '/organizations/' +
-          this.props.cluster.owner +
-          '/clusters/' +
-          this.props.cluster.id +
-          '/getting-started/'
-      )
+      push(`/organizations/${owner}/clusters/${id}/getting-started/`)
     );
   };
 
   render() {
     const { cluster, isNodePool, selectedOrganization } = this.props;
+
     var memory = isNodePool
-      ? this.getMemoryTotalNodePools()
-      : this.getMemoryTotal();
-    var storage = this.getStorageTotal();
-    var cpus = isNodePool ? this.getCpusTotalNodePools() : this.getCpusTotal();
+      ? getMemoryTotalNodePools(cluster)
+      : getMemoryTotal(cluster);
+
+    var storage = getStorageTotal(cluster);
+
+    var cpus = isNodePool
+      ? getCpusTotalNodePools(cluster)
+      : getCpusTotal(cluster);
+
     var numNodes = isNodePool
-      ? this.getNumberOfNodePoolsNodes()
-      : this.getNumberOfNodes();
+      ? getNumberOfNodePoolsNodes(cluster)
+      : getNumberOfNodes(cluster);
 
     const np = isNodePool ? '/np' : '';
     const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}${np}`;

@@ -4,6 +4,10 @@ import { bindActionCreators } from 'redux';
 import { clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import {
+  getNumberOfNodePoolsNodes,
+  getNumberOfNodes,
+} from 'utils/cluster_utils';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
 import { push } from 'connected-react-router';
 import Button from 'UI/button';
@@ -171,49 +175,6 @@ class ClusterDetailView extends React.Component {
     }
   }
 
-  getNumberOfNodes() {
-    if (
-      Object.keys(this.props.cluster).includes('status') &&
-      this.props.cluster.status != null
-    ) {
-      var nodes = this.props.cluster.status.cluster.nodes;
-      if (nodes.length == 0) {
-        return 0;
-      }
-
-      var workers = 0;
-      nodes.forEach(node => {
-        if (Object.keys(node).includes('labels')) {
-          if (
-            node.labels['role'] != 'master' &&
-            node.labels['kubernetes.io/role'] != 'master'
-          ) {
-            workers++;
-          }
-        }
-      });
-
-      if (workers === 0) {
-        // No node labels available? Fallback to assumption that one of the
-        // nodes is master and rest are workers.
-        workers = nodes.length - 1;
-      }
-
-      return workers;
-    }
-    return null;
-  }
-
-  getNumberOfNodePoolsNodes = () => {
-    const { nodePools } = this.props.cluster;
-
-    if (!nodePools || nodePools.length === 0) return 0;
-
-    return nodePools.reduce((accumulator, current) => {
-      return accumulator + current.status.nodes;
-    }, 0);
-  };
-
   getDesiredNumberOfNodes() {
     // Desired number of nodes only makes sense with auto-scaling and that is
     // only available on AWS starting from release 6.3.0 onwards.
@@ -242,8 +203,20 @@ class ClusterDetailView extends React.Component {
   };
 
   render() {
+    const {
+      cluster,
+      credentials,
+      dispatch,
+      isNodePoolView,
+      provider,
+      release,
+      targetRelease,
+    } = this.props;
+
+    const { loading } = this.state;
+
     return (
-      <LoadingOverlay loading={this.state.loading}>
+      <LoadingOverlay loading={loading}>
         <DocumentTitle
           title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
         >
@@ -256,13 +229,12 @@ class ClusterDetailView extends React.Component {
                     copyEnabled
                   />{' '}
                   <ViewAndEditName
-                    dispatchFunc={this.props.dispatch}
                     entity='cluster'
-                    id={this.props.cluster.id}
-                    name={this.props.cluster.name}
-                    thunk={clusterPatch}
+                    id={cluster.id}
+                    name={cluster.name}
+                    onSubmit={clusterPatch}
                   />{' '}
-                  {this.state.loading ? (
+                  {loading ? (
                     <img
                       className='loader'
                       height='25px'
@@ -275,7 +247,7 @@ class ClusterDetailView extends React.Component {
                 </h1>
               </div>
               <div className='col-sm-12 col-md-5 col-3'>
-                {!this.props.isNodePoolView && (
+                {!isNodePoolView && (
                   <>
                     <div
                       className='btn-group visible-xs-block visible-sm-block visible-md-block'
@@ -298,30 +270,30 @@ class ClusterDetailView extends React.Component {
               <div className='col-12'>
                 <Tabs>
                   <Tab eventKey={1} title='General'>
-                    {this.props.isNodePoolView ? (
+                    {isNodePoolView ? (
                       <ClusterDetailNodePoolsTable
                         accessCluster={this.accessCluster}
                         canClusterUpgrade={this.canClusterUpgrade()}
-                        cluster={this.props.cluster}
-                        credentials={this.props.credentials}
-                        provider={this.props.provider}
-                        release={this.props.release}
+                        cluster={cluster}
+                        credentials={credentials}
+                        provider={provider}
+                        release={release}
                         showScalingModal={this.showScalingModal}
                         showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        workerNodesRunning={this.getNumberOfNodePoolsNodes()}
+                        workerNodesRunning={getNumberOfNodePoolsNodes(cluster)}
                       />
                     ) : (
                       <ClusterDetailTable
                         canClusterUpgrade={this.canClusterUpgrade()}
-                        cluster={this.props.cluster}
-                        credentials={this.props.credentials}
-                        provider={this.props.provider}
-                        release={this.props.release}
+                        cluster={cluster}
+                        credentials={credentials}
+                        provider={provider}
+                        release={release}
                         showScalingModal={this.showScalingModal}
                         showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        workerNodesRunning={this.getNumberOfNodes()}
+                        workerNodesRunning={getNumberOfNodes(cluster)}
                       />
                     )}
 
@@ -339,7 +311,7 @@ class ClusterDetailView extends React.Component {
                           bsStyle='danger'
                           onClick={this.showDeleteClusterModal.bind(
                             this,
-                            this.props.cluster
+                            cluster
                           )}
                         >
                           <i className='fa fa-delete' /> Delete Cluster
@@ -348,19 +320,19 @@ class ClusterDetailView extends React.Component {
                     </div>
                   </Tab>
                   <Tab eventKey={2} title='Key Pairs'>
-                    <ClusterKeyPairs cluster={this.props.cluster} />
+                    <ClusterKeyPairs cluster={cluster} />
                   </Tab>
                   <Tab eventKey={3} title='Apps'>
-                    {this.props.release ? (
+                    {release ? (
                       <ClusterApps
                         clusterId={this.props.clusterId}
-                        dispatch={this.props.dispatch}
+                        dispatch={dispatch}
                         errorLoading={this.state.errorLoadingApps}
-                        installedApps={this.props.cluster.apps}
-                        release={this.props.release}
+                        installedApps={cluster.apps}
+                        release={release}
                         showInstalledAppsBlock={
                           Object.keys(this.props.catalogs.items).length > 0 &&
-                          this.props.cluster.capabilities.canInstallApps
+                          cluster.capabilities.canInstallApps
                         }
                       />
                     ) : (
@@ -379,23 +351,23 @@ class ClusterDetailView extends React.Component {
             </div>
 
             <ScaleClusterModal
-              cluster={this.props.cluster}
-              provider={this.props.provider}
+              cluster={cluster}
+              provider={provider}
               ref={s => {
                 this.scaleClusterModal = s;
               }}
               workerNodesDesired={this.getDesiredNumberOfNodes()}
-              workerNodesRunning={this.getNumberOfNodes()}
+              workerNodesRunning={getNumberOfNodes(cluster)}
             />
 
-            {this.props.targetRelease ? (
+            {targetRelease ? (
               <UpgradeClusterModal
-                cluster={this.props.cluster}
+                cluster={cluster}
                 ref={s => {
                   this.upgradeClusterModal = s;
                 }}
-                release={this.props.release}
-                targetRelease={this.props.targetRelease}
+                release={release}
+                targetRelease={targetRelease}
               />
             ) : (
               undefined
