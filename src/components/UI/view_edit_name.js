@@ -4,7 +4,6 @@ import Button from './button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactTimeout from 'react-timeout';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
@@ -183,4 +182,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   undefined,
   mapDispatchToProps
-)(ReactTimeout(ViewAndEditName));
+)(ViewAndEditName);
