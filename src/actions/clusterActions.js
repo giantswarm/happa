@@ -827,8 +827,24 @@ export function nodePoolPatch(nodePool, payload) {
       payload,
     });
 
+    // TODO I think we should normalize our store to avoid this
+    // hard-to-write-and-to-read queries
+    const clusters = getState().entities.clusters.items;
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+
+    const cluster = nodePoolsClusters
+      .map(nodePoolCluster => {
+        return {
+          id: nodePoolCluster,
+          nodePools: clusters[nodePoolCluster].nodePools.map(np => np.id),
+        };
+      })
+      .filter(cluster => cluster.nodePools.some(np => np === nodePool.id));
+
+    const clusterId = cluster[0].id;
+
     return nodePoolsApi
-      .modifyNodePool(scheme + ' ' + token, 'm0ckd', nodePool.id, payload)
+      .modifyNodePool(scheme + ' ' + token, clusterId, nodePool.id, payload)
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch({
