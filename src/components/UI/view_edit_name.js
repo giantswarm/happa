@@ -55,11 +55,6 @@ class ViewAndEditName extends React.Component {
       editing: true,
       inputFieldValue: this.state.name,
     });
-
-    // Notify parent
-    if (this.props.toggleEditingState) {
-      this.props.toggleEditingState(true);
-    }
   };
 
   deactivateEditMode = () => {
@@ -68,11 +63,6 @@ class ViewAndEditName extends React.Component {
       // revert input
       inputFieldValue: this.state.name,
     });
-
-    // Notify parent
-    if (this.props.toggleEditingState) {
-      this.props.toggleEditingState(false);
-    }
   };
 
   handleChange = evt => {
@@ -82,11 +72,7 @@ class ViewAndEditName extends React.Component {
   handleSubmit = evt => {
     evt.preventDefault();
 
-<<<<<<< HEAD
-    const { entity, onSubmit, id, dispatch } = this.props;
-=======
     const { entity, entityType, onSubmit, dispatch } = this.props;
->>>>>>> reusable-cluster-name
     const { inputFieldValue } = this.state;
 
     var validate = this.validate();
