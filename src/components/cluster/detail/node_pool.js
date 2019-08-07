@@ -43,10 +43,9 @@ class NodePool extends Component {
           }}
         >
           <ViewAndEditName
-            dispatchFunc={this.props.dispatch}
             entity={nodePool}
             entityType='node pool'
-            thunk={nodePoolPatch}
+            onSubmit={nodePoolPatch}
             toggleEditingState={this.toggleEditingState}
           />
         </div>

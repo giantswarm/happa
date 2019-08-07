@@ -55,6 +55,8 @@ class ViewAndEditName extends React.Component {
       editing: true,
       inputFieldValue: this.state.name,
     });
+
+    this.props.toggleEditingState(true);
   };
 
   deactivateEditMode = () => {
@@ -63,6 +65,8 @@ class ViewAndEditName extends React.Component {
       // revert input
       inputFieldValue: this.state.name,
     });
+
+    this.props.toggleEditingState(false);
   };
 
   handleChange = evt => {
@@ -94,6 +98,8 @@ class ViewAndEditName extends React.Component {
         editing: false,
         name: inputFieldValue,
       });
+
+      this.props.toggleEditingState(false);
 
       new FlashMessage(
         // Capitalize first letter.
@@ -170,6 +176,7 @@ ViewAndEditName.propTypes = {
   // Used by flash message and tooltip.
   entityType: PropTypes.string,
   onSubmit: PropTypes.func,
+  toggleEditingState: PropTypes.func,
 };
 
 function mapDispatchToProps(dispatch) {

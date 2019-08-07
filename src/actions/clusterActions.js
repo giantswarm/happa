@@ -827,8 +827,6 @@ export function nodePoolPatch(nodePool, payload) {
       payload,
     });
 
-    console.dir(nodePoolsApi.modifyNodePool);
-
     return nodePoolsApi
       .modifyNodePool(scheme + ' ' + token, 'm0ckd', nodePool.id, payload)
       .catch(error => {
