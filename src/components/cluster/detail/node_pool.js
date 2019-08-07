@@ -1,11 +1,9 @@
 import { Code } from 'styles/';
-import { connect } from 'react-redux';
 import { nodePoolPatch } from 'actions/clusterActions';
 import AvailabilityZonesWrapper from './availability_zones_wrapper';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import ReactTimeout from 'react-timeout';
 import styled from '@emotion/styled';
 import theme from 'styles/theme';
 import ViewAndEditName from 'UI/view_edit_name';
@@ -110,13 +108,4 @@ NodePool.propTypes = {
   dispatch: PropTypes.func,
 };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch: dispatch,
-  };
-}
-
-export default connect(
-  undefined,
-  mapDispatchToProps
-)(ReactTimeout(NodePool));
+export default NodePool;
