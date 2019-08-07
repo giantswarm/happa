@@ -733,10 +733,11 @@ export const clustersLoadErrorV5 = error => ({
 
 /**
  * Takes a cluster object and tries to patch it.
- * Dispatches CLUSTER_PATCH_SUCCESS on success or CLUSTER_PATCH_ERROR
+ * Dispatches CLUSTER_PATCH on patch and CLUSTER_PATCH_ERROR
  * on error.
  *
- * @param {Object} cluster Cluster modification object
+ * @param {Object} cluster Cluster object
+ * @param {Object} payload object with just the data we want to modify
  */
 export function clusterPatch(cluster, payload) {
   return function(dispatch, getState) {
