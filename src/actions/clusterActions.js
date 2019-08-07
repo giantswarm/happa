@@ -814,38 +814,32 @@ export function clusterCreateKeyPair(clusterId, keypair) {
  *
  * @param {Object} cluster Cluster modification object
  */
-export function nodePoolPatch(nodePool) {
+export function nodePoolPatch(nodePool, payload) {
   return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
+    const token = getState().app.loggedInUser.auth.token;
+    const scheme = getState().app.loggedInUser.auth.scheme;
 
-    // dispatch({
-    //   type: types.NODEPOOLS_PATCH,
-    //   nodePool,
-    // });
+    // Optimistic update.
+    dispatch({
+      type: types.NODEPOOL_PATCH,
+      nodePool,
+      payload,
+    });
 
-    const nodePoolId = nodePool.id;
-    delete nodePool.id;
+    console.dir(nodePoolsApi.modifyNodePool);
 
-    return nodePoolsApi
-      .modifyNodePool(scheme + ' ' + token, 'm0ckd', nodePoolId, nodePool) // This triggers an 405 error
-      .then(nodePool => {
-        console.log(nodePool);
-        // dispatch({
-        //   type: types.NODEPOOLS_PATCH_SUCCESS,
-        //   nodePool,
-        // });
+    // return nodePoolsApi
+    //   .modifyNodePool(scheme + ' ' + token, 'm0ckd', nodePool.id, payload)
+    //   .catch(error => {
+    //     // Undo update to store if the API call fails.
+    //     dispatch({
+    //       type: types.NODEPOOL_PATCH_ERROR,
+    //       error,
+    //       nodePool,
+    //     });
 
-        return nodePool;
-      })
-      .catch(error => {
-        // dispatch({
-        //   type: types.NODEPOOLS_PATCH_ERROR,
-        //   error,
-        // });
-
-        console.error(error);
-        throw error;
-      });
+    //     console.error(error);
+    //     throw error;
+    //   });
   };
 }

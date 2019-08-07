@@ -100,16 +100,9 @@ class ViewAndEditName extends React.Component {
     }
 
     dispatch(
-<<<<<<< HEAD
-      onSubmit({
-        id,
-        name: inputFieldValue,
-      })
-=======
       // We need the object and the change we want to make to it in order to be able
       // to do optimistic updates
       onSubmit(entity, { name: inputFieldValue })
->>>>>>> reusable-cluster-name
     ).then(() => {
       this.setState({
         editing: false,
