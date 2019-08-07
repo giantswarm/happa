@@ -166,8 +166,8 @@ class ViewAndEditName extends React.Component {
 
 ViewAndEditName.propTypes = {
   dispatch: PropTypes.func,
-  // Used by flash message and tooltip.
   entity: PropTypes.object,
+  // Used by flash message and tooltip.
   entityType: PropTypes.string,
   onSubmit: PropTypes.func,
 };
