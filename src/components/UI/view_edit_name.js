@@ -45,9 +45,9 @@ class ViewAndEditName extends React.Component {
     // editing is true while the widget is in edit mode.
     editing: false,
     // name is a copy of the actual entity name
-    name: this.props.name,
+    name: this.props.entity.name,
     // inputFieldValue is what the input field currently holds
-    inputFieldValue: this.props.name,
+    inputFieldValue: this.props.entity.name,
   };
 
   activateEditMode = () => {
@@ -72,7 +72,7 @@ class ViewAndEditName extends React.Component {
   handleSubmit = evt => {
     evt.preventDefault();
 
-    const { entity, onSubmit, id, dispatch } = this.props;
+    const { entity, entityType, onSubmit, dispatch } = this.props;
     const { inputFieldValue } = this.state;
 
     var validate = this.validate();
@@ -86,10 +86,9 @@ class ViewAndEditName extends React.Component {
     }
 
     dispatch(
-      onSubmit({
-        id,
-        name: inputFieldValue,
-      })
+      // We need the object and the change we want to make to it in order to be able
+      // to do optimistic updates
+      onSubmit(entity, { name: inputFieldValue })
     ).then(() => {
       this.setState({
         editing: false,
@@ -98,7 +97,8 @@ class ViewAndEditName extends React.Component {
 
       new FlashMessage(
         // Capitalize first letter.
-        `${entity.charAt(0).toUpperCase() + entity.slice(1)} name changed`,
+        `${entityType.charAt(0).toUpperCase() +
+          entityType.slice(1)} name changed`,
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -152,7 +152,7 @@ class ViewAndEditName extends React.Component {
         <OverlayTrigger
           overlay={
             <Tooltip id='tooltip'>
-              Click to edit {this.props.entity} name
+              Click to edit {this.props.entityType} name
             </Tooltip>
           }
           placement='top'
@@ -167,9 +167,8 @@ class ViewAndEditName extends React.Component {
 ViewAndEditName.propTypes = {
   dispatch: PropTypes.func,
   // Used by flash message and tooltip.
-  entity: PropTypes.string,
-  id: PropTypes.string,
-  name: PropTypes.string,
+  entity: PropTypes.object,
+  entityType: PropTypes.string,
   onSubmit: PropTypes.func,
 };
 
