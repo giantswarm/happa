@@ -1,4 +1,4 @@
-import { clusterPatch } from 'actions/clusterActions';
+import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import Button from './button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -37,14 +37,14 @@ const LinkWrapper = styled.span`
 `;
 
 /**
- * ClusterName is a widget to display and edit a cluster name in the same
- * place. It renders as inline-block.
+ * ViewAndEditName is a widget to display and edit an entity (cluster or node pool)
+ *  name in the same place. It renders as inline-block.
  */
-class ClusterName extends React.Component {
+class ViewAndEditName extends React.Component {
   state = {
     // editing is true while the widget is in edit mode.
     editing: false,
-    // name is a copy of the actual cluster name
+    // name is a copy of the actual entity name
     name: this.props.name,
     // inputFieldValue is what the input field currently holds
     inputFieldValue: this.props.name,
@@ -72,6 +72,9 @@ class ClusterName extends React.Component {
   handleSubmit = evt => {
     evt.preventDefault();
 
+    const { entity, onSubmit, id, dispatch } = this.props;
+    const { inputFieldValue } = this.state;
+
     var validate = this.validate();
     if (typeof validate === 'object') {
       new FlashMessage(
@@ -82,25 +85,24 @@ class ClusterName extends React.Component {
       return;
     }
 
-    this.props
-      .dispatchFunc(
-        clusterPatch({
-          id: this.props.id,
-          name: this.state.inputFieldValue,
-        })
-      )
-      .then(() => {
-        this.setState({
-          editing: false,
-          name: this.state.inputFieldValue,
-        });
-
-        new FlashMessage(
-          'Cluster name changed',
-          messageType.SUCCESS,
-          messageTTL.SHORT
-        );
+    dispatch(
+      onSubmit({
+        id,
+        name: inputFieldValue,
+      })
+    ).then(() => {
+      this.setState({
+        editing: false,
+        name: inputFieldValue,
       });
+
+      new FlashMessage(
+        // Capitalize first letter.
+        `${entity.charAt(0).toUpperCase() + entity.slice(1)} name changed`,
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
+    });
   };
 
   handleKey = evt => {
@@ -130,7 +132,6 @@ class ClusterName extends React.Component {
             <input
               autoComplete='off'
               autoFocus
-              name='cluster-name'
               onChange={this.handleChange}
               onKeyUp={this.handleKey}
               type='text'
@@ -149,22 +150,36 @@ class ClusterName extends React.Component {
     return (
       <LinkWrapper>
         <OverlayTrigger
-          overlay={<Tooltip id='tooltip'>Click to edit cluster name</Tooltip>}
+          overlay={
+            <Tooltip id='tooltip'>
+              Click to edit {this.props.entity} name
+            </Tooltip>
+          }
           placement='top'
         >
-          <a className='cluster-name' onClick={this.activateEditMode}>
-            {this.state.name}
-          </a>
+          <a onClick={this.activateEditMode}>{this.state.name}</a>
         </OverlayTrigger>
       </LinkWrapper>
     );
   };
 }
 
-ClusterName.propTypes = {
-  dispatchFunc: PropTypes.func,
+ViewAndEditName.propTypes = {
+  dispatch: PropTypes.func,
+  // Used by flash message and tooltip.
+  entity: PropTypes.string,
   id: PropTypes.string,
   name: PropTypes.string,
+  onSubmit: PropTypes.func,
 };
 
-export default ClusterName;
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch: dispatch,
+  };
+}
+
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(ViewAndEditName);

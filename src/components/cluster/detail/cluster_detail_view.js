@@ -1,6 +1,7 @@
 import * as clusterActions from 'actions/clusterActions';
 import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
+import { clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import {
@@ -15,7 +16,6 @@ import ClusterDetailNodePoolsTable from './cluster_detail_node_pools_table';
 import ClusterDetailTable from './cluster_detail_table';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import ClusterKeyPairs from './key_pairs';
-import ClusterName from 'UI/cluster_name';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import LoadingOverlay from 'UI/loading_overlay';
@@ -27,6 +27,7 @@ import ScaleClusterModal from './scale_cluster_modal';
 import Tab from 'react-bootstrap/lib/Tab';
 import Tabs from './tabs';
 import UpgradeClusterModal from './upgrade_cluster_modal';
+import ViewAndEditName from 'UI/view_edit_name';
 
 class ClusterDetailView extends React.Component {
   state = {
@@ -223,11 +224,15 @@ class ClusterDetailView extends React.Component {
             <div className='row' style={{ marginBottom: '30px' }}>
               <div className='col-sm-12 col-md-7 col-9'>
                 <h1 style={{ marginLeft: '-10px' }}>
-                  <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
-                  <ClusterName
-                    dispatchFunc={dispatch}
+                  <ClusterIDLabel
+                    clusterID={this.props.cluster.id}
+                    copyEnabled
+                  />{' '}
+                  <ViewAndEditName
+                    entity='cluster'
                     id={cluster.id}
                     name={cluster.name}
+                    onSubmit={clusterPatch}
                   />{' '}
                   {loading ? (
                     <img
