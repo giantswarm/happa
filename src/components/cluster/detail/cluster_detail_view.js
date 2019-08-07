@@ -229,11 +229,10 @@ class ClusterDetailView extends React.Component {
                     copyEnabled
                   />{' '}
                   <ViewAndEditName
-                    dispatchFunc={dispatch}
                     entity='cluster'
                     id={cluster.id}
                     name={cluster.name}
-                    thunk={clusterPatch}
+                    onSubmit={clusterPatch}
                   />{' '}
                   {loading ? (
                     <img

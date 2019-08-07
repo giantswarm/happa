@@ -1,8 +1,10 @@
+import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import Button from './button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactTimeout from 'react-timeout';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
@@ -71,7 +73,7 @@ class ViewAndEditName extends React.Component {
   handleSubmit = evt => {
     evt.preventDefault();
 
-    const { entity, dispatchFunc, thunk, id } = this.props;
+    const { entity, onSubmit, id, dispatch } = this.props;
     const { inputFieldValue } = this.state;
 
     var validate = this.validate();
@@ -84,8 +86,8 @@ class ViewAndEditName extends React.Component {
       return;
     }
 
-    dispatchFunc(
-      thunk({
+    dispatch(
+      onSubmit({
         id,
         name: inputFieldValue,
       })
@@ -164,12 +166,21 @@ class ViewAndEditName extends React.Component {
 }
 
 ViewAndEditName.propTypes = {
-  dispatchFunc: PropTypes.func,
+  dispatch: PropTypes.func,
   // Used by flash message and tooltip.
   entity: PropTypes.string,
   id: PropTypes.string,
   name: PropTypes.string,
-  thunk: PropTypes.func,
+  onSubmit: PropTypes.func,
 };
 
-export default ViewAndEditName;
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch: dispatch,
+  };
+}
+
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(ReactTimeout(ViewAndEditName));
