@@ -744,7 +744,7 @@ export function clusterPatch(cluster, payload) {
     const token = getState().app.loggedInUser.auth.token;
     const scheme = getState().app.loggedInUser.auth.scheme;
 
-    // Optimistic update
+    // Optimistic update.
     dispatch({
       type: types.CLUSTER_PATCH,
       cluster,
@@ -754,7 +754,7 @@ export function clusterPatch(cluster, payload) {
     return clustersApi
       .modifyCluster(scheme + ' ' + token, payload, cluster.id)
       .catch(error => {
-        // Undo update to store if the API call fails
+        // Undo update to store if the API call fails.
         dispatch({
           type: types.CLUSTER_PATCH_ERROR,
           error,
