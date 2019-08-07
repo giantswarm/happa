@@ -39,7 +39,7 @@
     "copy-to-clipboard": "3.2.0",
     "deep-diff": "1.0.2",
     "emotion-theming": "^10.0.10",
-    "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git#master",
+    "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git#openapi-v3",
     "history": "^4.7.2",
     "immutable": "3.8.2",
     "js-base64": "2.5.1",
@@ -69,7 +69,6 @@
     "redux": "4.0.1",
     "redux-thunk": "2.3.0",
     "semver-compare": "1.0.0",
-    "superagent": "3.8.3",
     "superagent-bluebird-promise": "4.2.0",
     "underscore": "1.9.1",
     "validate.js": "0.12.0"
