@@ -229,9 +229,8 @@ class ClusterDetailView extends React.Component {
                     copyEnabled
                   />{' '}
                   <ViewAndEditName
-                    entity='cluster'
-                    id={cluster.id}
-                    name={cluster.name}
+                    entity={cluster}
+                    entityType='cluster'
                     onSubmit={clusterPatch}
                   />{' '}
                   {loading ? (
