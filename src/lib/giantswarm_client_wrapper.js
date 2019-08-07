@@ -18,9 +18,19 @@ var defaultClient = GiantSwarm.ApiClient.instance;
 var origCallApi = defaultClient.callApi.bind(defaultClient);
 
 defaultClient.callApi = function callApi(
-  path, httpMethod, pathParams,
-  queryParams, collectionQueryParams, headerParams, formParams, bodyParam, authNames, contentTypes, accepts,
-  returnType, apiBasePath
+  path,
+  httpMethod,
+  pathParams,
+  queryParams,
+  collectionQueryParams,
+  headerParams,
+  formParams,
+  bodyParam,
+  authNames,
+  contentTypes,
+  accepts,
+  returnType,
+  apiBasePath
 ) {
   var defaultClientAuth = this.authentications['AuthorizationHeaderToken'];
 
@@ -38,9 +48,19 @@ defaultClient.callApi = function callApi(
           headerParams['Authorization'] = 'Bearer ' + result.accessToken;
 
           return origCallApi(
-            path, httpMethod, pathParams,
-            queryParams, collectionQueryParams, headerParams, formParams, bodyParam, authNames, contentTypes, accepts,
-            returnType, apiBasePath
+            path,
+            httpMethod,
+            pathParams,
+            queryParams,
+            collectionQueryParams,
+            headerParams,
+            formParams,
+            bodyParam,
+            authNames,
+            contentTypes,
+            accepts,
+            returnType,
+            apiBasePath
           );
         })
         .catch(err => {
@@ -54,9 +74,19 @@ defaultClient.callApi = function callApi(
 
   // JWT token is not expired, or we're not using a JWT token, so just do the call.
   return origCallApi(
-    path, httpMethod, pathParams,
-    queryParams, collectionQueryParams, headerParams, formParams, bodyParam, authNames, contentTypes, accepts,
-    returnType, apiBasePath
+    path,
+    httpMethod,
+    pathParams,
+    queryParams,
+    collectionQueryParams,
+    headerParams,
+    formParams,
+    bodyParam,
+    authNames,
+    contentTypes,
+    accepts,
+    returnType,
+    apiBasePath
   );
 };
 
