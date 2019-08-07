@@ -810,7 +810,7 @@ export function clusterCreateKeyPair(clusterId, keypair) {
 
 /**
  * Takes a nodePool object and tries to patch it.
- * Dispatches NODEPOOL_PATCH_SUCCESS on success or NODEPOOL_PATCH_ERROR
+ * Dispatches NODEPOOL_PATCH on patch and NODEPOOL_PATCH_ERROR
  * on error.
  *
  * @param {Object} cluster Cluster modification object
@@ -829,18 +829,18 @@ export function nodePoolPatch(nodePool, payload) {
 
     console.dir(nodePoolsApi.modifyNodePool);
 
-    // return nodePoolsApi
-    //   .modifyNodePool(scheme + ' ' + token, 'm0ckd', nodePool.id, payload)
-    //   .catch(error => {
-    //     // Undo update to store if the API call fails.
-    //     dispatch({
-    //       type: types.NODEPOOL_PATCH_ERROR,
-    //       error,
-    //       nodePool,
-    //     });
+    return nodePoolsApi
+      .modifyNodePool(scheme + ' ' + token, 'm0ckd', nodePool.id, payload)
+      .catch(error => {
+        // Undo update to store if the API call fails.
+        dispatch({
+          type: types.NODEPOOL_PATCH_ERROR,
+          error,
+          nodePool,
+        });
 
-    //     console.error(error);
-    //     throw error;
-    //   });
+        console.error(error);
+        throw error;
+      });
   };
 }

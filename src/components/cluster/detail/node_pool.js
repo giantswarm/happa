@@ -27,14 +27,7 @@ class NodePool extends Component {
   render() {
     const { availableZonesGridTemplateAreas, nodePool } = this.props;
 
-    const {
-      id,
-      name,
-      scaling,
-      availability_zones,
-      status,
-      node_spec,
-    } = nodePool;
+    const { id, scaling, availability_zones, status, node_spec } = nodePool;
 
     const { nodes_ready: current, nodes: desired } = status;
 
@@ -51,9 +44,8 @@ class NodePool extends Component {
         >
           <ViewAndEditName
             dispatchFunc={this.props.dispatch}
-            entity='node pool'
-            id={id}
-            name={name}
+            entity={nodePool}
+            entityType='node pool'
             thunk={nodePoolPatch}
             toggleEditingState={this.toggleEditingState}
           />
