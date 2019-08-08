@@ -820,13 +820,7 @@ export function nodePoolPatch(nodePool, payload) {
     const token = getState().app.loggedInUser.auth.token;
     const scheme = getState().app.loggedInUser.auth.scheme;
 
-    // Optimistic update.
-    dispatch({
-      type: types.NODEPOOL_PATCH,
-      nodePool,
-      payload,
-    });
-
+    // This is to get the cluster id.
     // TODO I think we should normalize our store to avoid this
     // hard-to-write-and-to-read queries
     const clusters = getState().entities.clusters.items;
@@ -843,8 +837,17 @@ export function nodePoolPatch(nodePool, payload) {
 
     const clusterId = cluster[0].id;
 
+    // Optimistic update.
+    dispatch({
+      type: types.NODEPOOL_PATCH,
+      nodePool,
+      clusterId,
+      payload,
+    });
+
     return nodePoolsApi
       .modifyNodePool(scheme + ' ' + token, clusterId, nodePool.id, payload)
+      .then(n => console.log(n))
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch({
