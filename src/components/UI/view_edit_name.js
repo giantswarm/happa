@@ -75,7 +75,8 @@ class ViewAndEditName extends React.Component {
     const { entity, onSubmit, id, dispatch } = this.props;
     const { inputFieldValue } = this.state;
 
-    var validate = this.validate();
+    const value = evt.target.querySelector('input').value;
+    var validate = this.validate(value);
     if (typeof validate === 'object') {
       new FlashMessage(
         'Error: ' + validate.error,
@@ -112,8 +113,8 @@ class ViewAndEditName extends React.Component {
     }
   };
 
-  validate = () => {
-    if (this.state.name.length < 3) {
+  validate = value => {
+    if (value.length < 3) {
       return {
         valid: false,
         error: 'Please use a name with at least 3 characters',
