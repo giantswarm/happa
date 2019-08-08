@@ -847,7 +847,6 @@ export function nodePoolPatch(nodePool, payload) {
 
     return nodePoolsApi
       .modifyNodePool(scheme + ' ' + token, clusterId, nodePool.id, payload)
-      .then(n => console.log(n))
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch({
