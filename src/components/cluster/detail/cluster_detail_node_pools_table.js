@@ -245,16 +245,18 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <span> </span>
           </GridRowNodePoolsHeaders>
           {nodePools &&
-            nodePools.map(nodePool => (
-              <GridRowNodePoolsItem key={nodePool.id}>
-                <NodePool
-                  availableZonesGridTemplateAreas={
-                    availableZonesGridTemplateAreas
-                  }
-                  nodePool={nodePool}
-                />
-              </GridRowNodePoolsItem>
-            ))}
+            nodePools
+              .sort((a, b) => (a.name > b.name ? 1 : -1))
+              .map(nodePool => (
+                <GridRowNodePoolsItem key={nodePool.id}>
+                  <NodePool
+                    availableZonesGridTemplateAreas={
+                      availableZonesGridTemplateAreas
+                    }
+                    nodePool={nodePool}
+                  />
+                </GridRowNodePoolsItem>
+              ))}
         </NodePoolsWrapper>
         <Button>
           <i className='fa fa-add-circle' /> ADD NODE POOL
