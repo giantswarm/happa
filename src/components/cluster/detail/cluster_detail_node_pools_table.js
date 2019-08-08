@@ -1,5 +1,6 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { css } from '@emotion/core';
+import { getCpusTotalNodePools } from 'utils/cluster_utils';
 import { relativeDate } from 'lib/helpers.js';
 import Button from 'UI/button';
 import NodePool from './node_pool';
@@ -126,8 +127,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       const RAM = awsInstanceTypes[
         nodePools[0].node_spec.aws.instance_type
       ].memory_size_gb.toFixed(0);
-      const CPUs =
-        awsInstanceTypes[nodePools[0].node_spec.aws.instance_type].cpu_cores;
+      const CPUs = getCpusTotalNodePools(this.props.cluster);
 
       this.setState({ RAM, CPUs });
     }
