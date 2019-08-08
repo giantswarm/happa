@@ -94,14 +94,18 @@ export function getCpusTotalNodePools(cluster) {
     return;
   }
 
-  const nodes = getNumberOfNodePoolsNodes(cluster);
   const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
 
+  // Here we are returning (and accumulating) for each node pool the number
+  // of CPUs each instance has multiplied by the number of nodes the node pool has.
+
+  // TODO When working with Spot Instances a node pool could have different types
+  // of instances, and this method will have to be modified
   const TotalCPUs = cluster.nodePools.reduce((accumulator, nodePool) => {
-    const nodePoolCPUs =
+    const instance_type_CPUs =
       awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
-    return accumulator + nodePoolCPUs;
+    return accumulator + instance_type_CPUs * nodePool.status.nodes_ready;
   }, 0);
 
-  return TotalCPUs * nodes;
+  return TotalCPUs;
 }
