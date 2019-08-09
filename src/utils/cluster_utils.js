@@ -76,17 +76,20 @@ export function getMemoryTotalNodePools(cluster) {
     return;
   }
 
-  const { nodePools } = cluster;
-  const nodes = getNumberOfNodePoolsNodes(cluster);
   const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
 
-  const TotalRAM = nodePools.reduce((accumulator, nodePool) => {
-    const nodePoolRAM =
+  // Here we are returning (and accumulating) for each node pool the number
+  // of RAM each instance has multiplied by the number of nodes the node pool has.
+
+  // TODO When working with Spot Instances a node pool could have different types
+  // of instances, and this method will have to be modified
+  const TotalRAM = cluster.nodePools.reduce((accumulator, nodePool) => {
+    const instanceTypeRAM =
       awsInstanceTypes[nodePool.node_spec.aws.instance_type].memory_size_gb;
-    return accumulator + nodePoolRAM;
+    return accumulator + instanceTypeRAM * nodePool.status.nodes_ready;
   }, 0);
 
-  return TotalRAM * nodes;
+  return TotalRAM;
 }
 
 export function getCpusTotalNodePools(cluster) {
@@ -94,14 +97,18 @@ export function getCpusTotalNodePools(cluster) {
     return;
   }
 
-  const nodes = getNumberOfNodePoolsNodes(cluster);
   const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
 
+  // Here we are returning (and accumulating) for each node pool the number
+  // of CPUs each instance has multiplied by the number of nodes the node pool has.
+
+  // TODO When working with Spot Instances a node pool could have different types
+  // of instances, and this method will have to be modified
   const TotalCPUs = cluster.nodePools.reduce((accumulator, nodePool) => {
-    const nodePoolCPUs =
+    const instanceTypeCPUs =
       awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
-    return accumulator + nodePoolCPUs;
+    return accumulator + instanceTypeCPUs * nodePool.status.nodes_ready;
   }, 0);
 
-  return TotalCPUs * nodes;
+  return TotalCPUs;
 }

@@ -230,6 +230,31 @@ export default function clusterReducer(
         items,
       };
 
+    case types.CLUSTER_PATCH:
+      return {
+        ...state,
+        lastUpdated: Date.now(),
+        items: {
+          ...state.items,
+          [action.cluster.id]: {
+            ...state.items[action.cluster.id],
+            ...action.payload,
+          },
+        },
+      };
+
+    case types.CLUSTER_PATCH_ERROR:
+      return {
+        ...state,
+        lastUpdated: Date.now(),
+        items: {
+          ...state.items,
+          [action.cluster.id]: {
+            ...action.cluster,
+          },
+        },
+      };
+
     default:
       return state;
   }

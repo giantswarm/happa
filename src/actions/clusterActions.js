@@ -734,38 +734,32 @@ export const clustersLoadErrorV5 = error => ({
 
 /**
  * Takes a cluster object and tries to patch it.
- * Dispatches CLUSTER_PATCH_SUCCESS on success or CLUSTER_PATCH_ERROR
+ * Dispatches CLUSTER_PATCH on patch and CLUSTER_PATCH_ERROR
  * on error.
  *
- * @param {Object} cluster Cluster modification object
+ * @param {Object} cluster Cluster object
+ * @param {Object} payload object with just the data we want to modify
  */
-export function clusterPatch(cluster) {
+export function clusterPatch(cluster, payload) {
   return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
+    const token = getState().app.loggedInUser.auth.token;
+    const scheme = getState().app.loggedInUser.auth.scheme;
 
+    // Optimistic update.
     dispatch({
       type: types.CLUSTER_PATCH,
       cluster,
+      payload,
     });
 
-    var clusterId = cluster.id;
-    delete cluster.id;
-
     return clustersApi
-      .modifyCluster(scheme + ' ' + token, cluster, clusterId)
-      .then(cluster => {
-        dispatch({
-          type: types.CLUSTER_PATCH_SUCCESS,
-          cluster,
-        });
-
-        return cluster;
-      })
+      .modifyCluster(scheme + ' ' + token, payload, cluster.id)
       .catch(error => {
+        // Undo update to store if the API call fails.
         dispatch({
           type: types.CLUSTER_PATCH_ERROR,
           error,
+          cluster,
         });
 
         console.error(error);
