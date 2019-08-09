@@ -753,6 +753,13 @@ export function clusterPatch(cluster, payload) {
 
     return clustersApi
       .modifyCluster(scheme + ' ' + token, payload, cluster.id)
+      .then(() => {
+        new FlashMessage(
+          'Cluster name changed',
+          messageType.SUCCESS,
+          messageTTL.SHORT
+        );
+      })
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch({
@@ -760,6 +767,13 @@ export function clusterPatch(cluster, payload) {
           error,
           cluster,
         });
+
+        new FlashMessage(
+          'Something went wrong while trying to update the cluster name',
+          messageType.ERROR,
+          messageTTL.MEDIUM,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
 
         console.error(error);
         throw error;
@@ -846,8 +860,14 @@ export function nodePoolPatch(nodePool, payload) {
     });
 
     return nodePoolsApi
-      .modifyNodePool(scheme + ' ' + token, clusterId, nodePool.id, payload)
-      .then(n => console.log(n))
+      .modifyNodePool(scheme + ' ' + token, clusterId, nodePool, payload)
+      .then(() => {
+        new FlashMessage(
+          'Node pool name changed',
+          messageType.SUCCESS,
+          messageTTL.SHORT
+        );
+      })
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch({
@@ -855,6 +875,13 @@ export function nodePoolPatch(nodePool, payload) {
           error,
           nodePool,
         });
+
+        new FlashMessage(
+          'Something went wrong while trying to update the node pool name',
+          messageType.ERROR,
+          messageTTL.MEDIUM,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
 
         console.error(error);
         throw error;

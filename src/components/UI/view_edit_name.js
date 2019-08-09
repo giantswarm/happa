@@ -76,7 +76,7 @@ class ViewAndEditName extends React.Component {
   handleSubmit = evt => {
     evt.preventDefault();
 
-    const { entity, entityType, onSubmit, dispatch } = this.props;
+    const { entity, onSubmit, dispatch } = this.props;
     const { inputFieldValue } = this.state;
 
     var validate = this.validate();
@@ -100,14 +100,6 @@ class ViewAndEditName extends React.Component {
       });
 
       this.props.toggleEditingState(false);
-
-      new FlashMessage(
-        // Capitalize first letter.
-        `${entityType.charAt(0).toUpperCase() +
-          entityType.slice(1)} name changed`,
-        messageType.SUCCESS,
-        messageTTL.SHORT
-      );
     });
   };
 
