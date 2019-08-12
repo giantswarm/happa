@@ -6,8 +6,9 @@ import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
 
-// API instantiations
+// API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
+const nodePoolsApi = new GiantSwarm.NodepoolsApi();
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
@@ -146,8 +147,6 @@ function clustersLoadV5(token, scheme, dispatch, getState) {
  * @param {String} clusterId Cluster ID
  */
 function clustersLoadNodePools(nodePoolsClustersIds, token, scheme, dispatch) {
-  const nodePoolsApi = new GiantSwarm.NodepoolsApi();
-
   return Promise.all(
     nodePoolsClustersIds.map(clusterId => {
       return nodePoolsApi
@@ -754,6 +753,13 @@ export function clusterPatch(cluster, payload) {
 
     return clustersApi
       .modifyCluster(scheme + ' ' + token, payload, cluster.id)
+      .then(() => {
+        new FlashMessage(
+          'Cluster name changed',
+          messageType.SUCCESS,
+          messageTTL.SHORT
+        );
+      })
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch({
@@ -761,6 +767,13 @@ export function clusterPatch(cluster, payload) {
           error,
           cluster,
         });
+
+        new FlashMessage(
+          'Something went wrong while trying to update the cluster name',
+          messageType.ERROR,
+          messageTTL.MEDIUM,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
 
         console.error(error);
         throw error;
@@ -802,6 +815,73 @@ export function clusterCreateKeyPair(clusterId, keypair) {
           type: types.CLUSTER_CREATE_KEY_PAIR_ERROR,
           error,
         });
+
+        console.error(error);
+        throw error;
+      });
+  };
+}
+
+/**
+ * Takes a nodePool object and tries to patch it.
+ * Dispatches NODEPOOL_PATCH on patch and NODEPOOL_PATCH_ERROR
+ * on error.
+ *
+ * @param {Object} cluster Cluster modification object
+ */
+export function nodePoolPatch(nodePool, payload) {
+  return function(dispatch, getState) {
+    const token = getState().app.loggedInUser.auth.token;
+    const scheme = getState().app.loggedInUser.auth.scheme;
+
+    // This is to get the cluster id.
+    // TODO I think we should normalize our store to avoid this
+    // hard-to-write-and-to-read queries
+    const clusters = getState().entities.clusters.items;
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+
+    const cluster = nodePoolsClusters
+      .map(nodePoolCluster => {
+        return {
+          id: nodePoolCluster,
+          nodePools: clusters[nodePoolCluster].nodePools.map(np => np.id),
+        };
+      })
+      .filter(cluster => cluster.nodePools.some(np => np === nodePool.id));
+
+    const clusterId = cluster[0].id;
+
+    // Optimistic update.
+    dispatch({
+      type: types.NODEPOOL_PATCH,
+      nodePool,
+      clusterId,
+      payload,
+    });
+
+    return nodePoolsApi
+      .modifyNodePool(scheme + ' ' + token, clusterId, nodePool, payload)
+      .then(() => {
+        new FlashMessage(
+          'Node pool name changed',
+          messageType.SUCCESS,
+          messageTTL.SHORT
+        );
+      })
+      .catch(error => {
+        // Undo update to store if the API call fails.
+        dispatch({
+          type: types.NODEPOOL_PATCH_ERROR,
+          error,
+          nodePool,
+        });
+
+        new FlashMessage(
+          'Something went wrong while trying to update the node pool name',
+          messageType.ERROR,
+          messageTTL.MEDIUM,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
 
         console.error(error);
         throw error;
