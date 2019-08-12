@@ -73,62 +73,62 @@ export function nodePoolsLoad() {
  *
  * @param {Object} cluster Cluster modification object
  */
-export const nodePoolPatch = (nodePool, payload) => (dispatch, getState) => {
-  const token = getState().app.loggedInUser.auth.token;
-  const scheme = getState().app.loggedInUser.auth.scheme;
+export function nodePoolPatch(nodePool, payload) {
+  return function(dispatch, getState) {
+    const token = getState().app.loggedInUser.auth.token;
+    const scheme = getState().app.loggedInUser.auth.scheme;
 
-  // This is to get the cluster id.
-  // TODO I think we should normalize our store to avoid this
-  // hard-to-write-and-to-read queries
-  const clusters = getState().entities.clusters.items;
-  const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    // This is to get the cluster id.
+    const clusters = getState().entities.clusters.items;
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
 
-  const cluster = nodePoolsClusters
-    .map(nodePoolCluster => {
-      return {
-        id: nodePoolCluster,
-        nodePools: clusters[nodePoolCluster].nodePools.map(np => np.id),
-      };
-    })
-    .filter(cluster => cluster.nodePools.some(np => np === nodePool.id));
+    const cluster = nodePoolsClusters
+      .map(nodePoolCluster => {
+        return {
+          id: nodePoolCluster,
+          nodePools: clusters[nodePoolCluster].nodePools,
+        };
+      })
+      .filter(cluster => cluster.nodePools.some(np => np === nodePool.id));
 
-  const clusterId = cluster[0].id;
+    const clusterId = cluster[0].id;
 
-  // Optimistic update.
-  dispatch({
-    type: types.NODEPOOL_PATCH,
-    nodePool,
-    payload,
-  });
-
-  return nodePoolsApi
-    .modifyNodePool(scheme + ' ' + token, clusterId, nodePool, payload)
-    .then(() => {
-      new FlashMessage(
-        'Node pool name changed',
-        messageType.SUCCESS,
-        messageTTL.SHORT
-      );
-    })
-    .catch(error => {
-      // Undo update to store if the API call fails.
-      dispatch({
-        type: types.NODEPOOL_PATCH_ERROR,
-        error,
-        nodePool,
-      });
-
-      new FlashMessage(
-        'Something went wrong while trying to update the node pool name',
-        messageType.ERROR,
-        messageTTL.MEDIUM,
-        'Please try again later or contact support: support@giantswarm.io'
-      );
-
-      console.error(error);
-      throw error;
+    // Optimistic update.
+    dispatch({
+      type: types.NODEPOOL_PATCH,
+      nodePool,
+      payload,
     });
-};
+
+    return nodePoolsApi
+      .modifyNodePool(scheme + ' ' + token, clusterId, nodePool, payload)
+      .then(() => {
+        new FlashMessage(
+          'Node pool name changed',
+          messageType.SUCCESS,
+          messageTTL.SHORT
+        );
+      })
+      .catch(error => {
+        // Undo update to store if the API call fails.
+        dispatch({
+          type: types.NODEPOOL_PATCH_ERROR,
+          error,
+          nodePool,
+        });
+
+        new FlashMessage(
+          'Something went wrong while trying to update the node pool name',
+          messageType.ERROR,
+          messageTTL.MEDIUM,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        console.error(error);
+        throw error;
+      });
+  };
+}
 
 // Actions
 export const clusterNodePoolsLoadSucces = (clusterId, nodePools) => ({
