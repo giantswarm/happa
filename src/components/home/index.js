@@ -1,4 +1,5 @@
 import * as clusterActions from 'actions/clusterActions';
+import * as nodePoolsActions from 'actions/nodePoolsActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -53,6 +54,7 @@ class Home extends React.Component {
 
   refreshClustersList = () => {
     this.props.actions.clustersLoad();
+    // this.props.actions.nodePoolsLoad();
   };
 
   handleVisibilityChange = () => {
@@ -210,6 +212,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
+    nodePoolsActions: bindActionCreators(nodePoolsActions, dispatch),
     dispatch: dispatch,
   };
 }

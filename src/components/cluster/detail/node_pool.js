@@ -1,5 +1,5 @@
 import { Code } from 'styles/';
-import { nodePoolPatch } from 'actions/clusterActions';
+import { nodePoolPatch } from 'actions/nodePoolsActions';
 import AvailabilityZonesWrapper from './availability_zones_wrapper';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';

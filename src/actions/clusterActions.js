@@ -1,6 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
+import { nodePoolsLoad } from './nodePoolsActions';
 import { push } from 'connected-react-router';
 import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
@@ -8,7 +9,6 @@ import GiantSwarm from 'giantswarm';
 
 // API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
-const nodePoolsApi = new GiantSwarm.NodepoolsApi();
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
@@ -64,7 +64,7 @@ function clustersLoadArrayToObject(clusters) {
  * action.
  */
 export function clustersLoad() {
-  return async function(dispatch, getState) {
+  return function(dispatch, getState) {
     const token = getState().app.loggedInUser.auth.token;
     const scheme = getState().app.loggedInUser.auth.scheme;
     // TODO getClusters() will get all clusters, so we will need some logic here
@@ -73,14 +73,7 @@ export function clustersLoad() {
 
     clustersLoadV4(token, scheme, dispatch, getState);
     if (window.config.environment === 'development') {
-      const nodePoolsClustersIds = await clustersLoadV5(
-        token,
-        scheme,
-        dispatch,
-        getState
-      );
-
-      clustersLoadNodePools(nodePoolsClustersIds, token, scheme, dispatch);
+      clustersLoadV5(token, scheme, dispatch, getState);
     }
   };
 }
@@ -130,7 +123,9 @@ function clustersLoadV5(token, scheme, dispatch, getState) {
       dispatch(
         clustersLoadSuccessV5(clustersObject, nodePoolsClusters, lastUpdated)
       );
-      return nodePoolsClusters; // clustersLoadNodePools() is using this array.
+
+      // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
+      dispatch(nodePoolsLoad());
     })
     .catch(error => {
       console.error(error);
@@ -139,45 +134,6 @@ function clustersLoadV5(token, scheme, dispatch, getState) {
         error: error,
       });
     });
-}
-
-/**
- * Loads all node pools for all node pools clusters.
- *
- * @param {String} clusterId Cluster ID
- */
-function clustersLoadNodePools(nodePoolsClustersIds, token, scheme, dispatch) {
-  return Promise.all(
-    nodePoolsClustersIds.map(clusterId => {
-      return nodePoolsApi
-        .getNodePools(scheme + ' ' + token, clusterId)
-        .then(nodePools => {
-          dispatch({
-            type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
-            clusterId,
-            // Receiving an array-like with weird prototype from API call,
-            // so converting it to an array.
-            nodePools: Array.from(nodePools) || [],
-          });
-        })
-        .catch(error => {
-          console.error('Error loading cluster node pools:', error);
-          dispatch({
-            type: types.CLUSTERS_LOAD_NODEPOOLS_ERROR,
-            error,
-          });
-
-          new FlashMessage(
-            'Something went wrong while trying to load node pools on this cluster.',
-            messageType.ERROR,
-            messageTTL.LONG,
-            'Please try again later or contact support: support@giantswarm.io'
-          );
-
-          throw error;
-        });
-    })
-  );
 }
 
 /**
@@ -815,73 +771,6 @@ export function clusterCreateKeyPair(clusterId, keypair) {
           type: types.CLUSTER_CREATE_KEY_PAIR_ERROR,
           error,
         });
-
-        console.error(error);
-        throw error;
-      });
-  };
-}
-
-/**
- * Takes a nodePool object and tries to patch it.
- * Dispatches NODEPOOL_PATCH on patch and NODEPOOL_PATCH_ERROR
- * on error.
- *
- * @param {Object} cluster Cluster modification object
- */
-export function nodePoolPatch(nodePool, payload) {
-  return function(dispatch, getState) {
-    const token = getState().app.loggedInUser.auth.token;
-    const scheme = getState().app.loggedInUser.auth.scheme;
-
-    // This is to get the cluster id.
-    // TODO I think we should normalize our store to avoid this
-    // hard-to-write-and-to-read queries
-    const clusters = getState().entities.clusters.items;
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-
-    const cluster = nodePoolsClusters
-      .map(nodePoolCluster => {
-        return {
-          id: nodePoolCluster,
-          nodePools: clusters[nodePoolCluster].nodePools.map(np => np.id),
-        };
-      })
-      .filter(cluster => cluster.nodePools.some(np => np === nodePool.id));
-
-    const clusterId = cluster[0].id;
-
-    // Optimistic update.
-    dispatch({
-      type: types.NODEPOOL_PATCH,
-      nodePool,
-      clusterId,
-      payload,
-    });
-
-    return nodePoolsApi
-      .modifyNodePool(scheme + ' ' + token, clusterId, nodePool, payload)
-      .then(() => {
-        new FlashMessage(
-          'Node pool name changed',
-          messageType.SUCCESS,
-          messageTTL.SHORT
-        );
-      })
-      .catch(error => {
-        // Undo update to store if the API call fails.
-        dispatch({
-          type: types.NODEPOOL_PATCH_ERROR,
-          error,
-          nodePool,
-        });
-
-        new FlashMessage(
-          'Something went wrong while trying to update the node pool name',
-          messageType.ERROR,
-          messageTTL.MEDIUM,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
 
         console.error(error);
         throw error;

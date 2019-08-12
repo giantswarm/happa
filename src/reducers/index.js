@@ -6,6 +6,7 @@ import clusters from './clusterReducer';
 import credentials from './credentialReducer';
 import invitations from './invitationReducer';
 import modal from './modalReducer';
+import nodePools from './nodePoolsReducer';
 import organizations from './organizationReducer';
 import releases from './releaseReducer';
 import users from './userReducer';
@@ -18,6 +19,7 @@ const entities = combineReducers({
   organizations,
   releases,
   users,
+  nodePools,
 });
 
 const rootReducer = history =>

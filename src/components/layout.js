@@ -5,6 +5,7 @@ import { catalogsLoad } from 'actions/catalogActions';
 import { clustersLoad } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { nodePoolsLoad } from 'actions/nodePoolsActions';
 import { organizationSelect } from 'actions/organizationActions';
 import { organizationsLoad } from 'actions/organizationActions';
 import { push } from 'connected-react-router';
@@ -39,15 +40,9 @@ class Layout extends React.Component {
       // first calls happa makes to the API.
       this.props.actions
         .refreshUserInfo()
-        .then(() => {
-          return this.props.dispatch(organizationsLoad());
-        })
-        .then(() => {
-          this.props.dispatch(clustersLoad());
-        })
-        .then(() => {
-          this.props.dispatch(catalogsLoad());
-        })
+        .then(() => this.props.dispatch(organizationsLoad()))
+        .then(() => this.props.dispatch(clustersLoad()))
+        .then(() => this.props.dispatch(catalogsLoad()))
         .catch(error => {
           console.error('Error refreshing user info', error);
 
