@@ -40,19 +40,11 @@ export function nodePoolsLoad() {
             return { ...accumulator, [np.id]: np };
           }, {});
 
-        dispatch({
-          type: types.NODEPOOLS_LOAD_SUCCESS,
-          // Receiving an array-like with weird prototype from API call,
-          // so converting it to an array.
-          nodePools: allNodePools || {},
-        });
+        dispatch(nodePoolsLoadSucces(allNodePools));
       })
       .catch(error => {
         console.error('Error loading cluster node pools:', error);
-        dispatch({
-          type: types.NODEPOOLS_LOAD_ERROR,
-          error,
-        });
+        dispatch(nodePoolsLoadError(error));
 
         new FlashMessage(
           'Something went wrong while trying to load node pools on this cluster.',
@@ -94,11 +86,7 @@ export function nodePoolPatch(nodePool, payload) {
     const clusterId = cluster[0].id;
 
     // Optimistic update.
-    dispatch({
-      type: types.NODEPOOL_PATCH,
-      nodePool,
-      payload,
-    });
+    dispatch(nodePoolPatchAction(nodePool, payload));
 
     return nodePoolsApi
       .modifyNodePool(scheme + ' ' + token, clusterId, nodePool, payload)
@@ -111,11 +99,7 @@ export function nodePoolPatch(nodePool, payload) {
       })
       .catch(error => {
         // Undo update to store if the API call fails.
-        dispatch({
-          type: types.NODEPOOL_PATCH_ERROR,
-          error,
-          nodePool,
-        });
+        dispatch(nodePoolPatchError(error, nodePool));
 
         new FlashMessage(
           'Something went wrong while trying to update the node pool name',
@@ -131,8 +115,30 @@ export function nodePoolPatch(nodePool, payload) {
 }
 
 // Actions
-export const clusterNodePoolsLoadSucces = (clusterId, nodePools) => ({
+const clusterNodePoolsLoadSucces = (clusterId, nodePools) => ({
   type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
   clusterId,
   nodePools: nodePools,
+});
+
+const nodePoolsLoadSucces = (nodePools = {}) => ({
+  type: types.NODEPOOLS_LOAD_SUCCESS,
+  nodePools,
+});
+
+const nodePoolsLoadError = error => ({
+  type: types.NODEPOOLS_LOAD_ERROR,
+  error,
+});
+
+const nodePoolPatchAction = (nodePool, payload) => ({
+  type: types.NODEPOOL_PATCH,
+  nodePool,
+  payload,
+});
+
+const nodePoolPatchError = (error, nodePool) => ({
+  type: types.NODEPOOL_PATCH_ERROR,
+  error,
+  nodePool,
 });
