@@ -1,8 +1,7 @@
 import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Dot } from 'styles';
 import {
+  clusterNodePools,
   getCpusTotal,
   getCpusTotalNodePools,
   getMemoryTotal,
@@ -11,6 +10,8 @@ import {
   getNumberOfNodes,
   getStorageTotal,
 } from 'utils/cluster_utils';
+import { connect } from 'react-redux';
+import { Dot } from 'styles';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
@@ -25,12 +26,18 @@ import RefreshableLabel from 'UI/refreshable_label';
 class ClusterDashboardItem extends React.Component {
   state = {
     enforceReRender: null,
+    nodePools: [],
   };
 
   componentDidMount() {
     this.registerReRenderInterval();
 
-    if (this.props.isNodePool) getCpusTotalNodePools(this.props.cluster);
+    const { cluster, nodePools } = this.props;
+
+    if (this.props.isNodePool) {
+      const nodePoolsData = clusterNodePools(nodePools, cluster);
+      this.setState({ nodePools: nodePoolsData });
+    }
   }
 
   componentWillUnmount() {
@@ -72,19 +79,20 @@ class ClusterDashboardItem extends React.Component {
 
   render() {
     const { cluster, isNodePool, selectedOrganization } = this.props;
+    const { nodePools } = this.state;
 
     var memory = isNodePool
-      ? getMemoryTotalNodePools(cluster)
+      ? getMemoryTotalNodePools(nodePools)
       : getMemoryTotal(cluster);
 
     var storage = getStorageTotal(cluster);
 
     var cpus = isNodePool
-      ? getCpusTotalNodePools(cluster)
+      ? getCpusTotalNodePools(nodePools)
       : getCpusTotal(cluster);
 
     var numNodes = isNodePool
-      ? getNumberOfNodePoolsNodes(cluster)
+      ? getNumberOfNodePoolsNodes(nodePools)
       : getNumberOfNodes(cluster);
 
     const np = isNodePool ? '/np' : '';
@@ -178,6 +186,7 @@ ClusterDashboardItem.propTypes = {
   animate: PropTypes.bool,
   dispatch: PropTypes.func,
   isNodePool: PropTypes.bool,
+  nodePools: PropTypes.object,
 };
 
 function mapDispatchToProps(dispatch) {

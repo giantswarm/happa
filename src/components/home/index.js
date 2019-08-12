@@ -54,7 +54,6 @@ class Home extends React.Component {
 
   refreshClustersList = () => {
     this.props.actions.clustersLoad();
-    // this.props.actions.nodePoolsLoad();
   };
 
   handleVisibilityChange = () => {
@@ -149,6 +148,7 @@ class Home extends React.Component {
                           cluster.id
                         )}
                         key={cluster.id}
+                        nodePools={this.props.nodePools}
                         selectedOrganization={this.props.selectedOrganization}
                       />
                     </CSSTransition>
@@ -184,6 +184,7 @@ Home.propTypes = {
   organizations: PropTypes.object,
   errorLoadingClusters: PropTypes.bool,
   nodePoolsClusters: PropTypes.array,
+  nodePools: PropTypes.object,
 };
 
 function mapStateToProps(state) {
@@ -192,6 +193,7 @@ function mapStateToProps(state) {
   var allClusters = state.entities.clusters.items;
   var errorLoadingClusters = state.entities.clusters.errorLoading;
   const nodePoolsClusters = state.entities.clusters.nodePoolsClusters;
+  const nodePools = state.entities.nodePools;
 
   var clusters = [];
   if (selectedOrganization) {
@@ -206,6 +208,7 @@ function mapStateToProps(state) {
     errorLoadingClusters: errorLoadingClusters,
     selectedOrganization: selectedOrganization,
     nodePoolsClusters,
+    nodePools,
   };
 }
 

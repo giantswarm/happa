@@ -208,6 +208,7 @@ class ClusterDetailView extends React.Component {
       credentials,
       dispatch,
       isNodePoolView,
+      nodePools,
       provider,
       release,
       targetRelease,
@@ -275,12 +276,12 @@ class ClusterDetailView extends React.Component {
                         canClusterUpgrade={this.canClusterUpgrade()}
                         cluster={cluster}
                         credentials={credentials}
+                        nodePools={nodePools}
                         provider={provider}
                         release={release}
                         showScalingModal={this.showScalingModal}
                         showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        workerNodesRunning={getNumberOfNodePoolsNodes(cluster)}
                       />
                     ) : (
                       <ClusterDetailTable
@@ -391,6 +392,7 @@ ClusterDetailView.propTypes = {
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
   isNodePoolView: PropTypes.bool,
+  nodePools: PropTypes.object,
   organizationId: PropTypes.string,
   releaseActions: PropTypes.object,
   release: PropTypes.object,
