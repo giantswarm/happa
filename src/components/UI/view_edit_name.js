@@ -50,6 +50,8 @@ class ViewAndEditName extends React.Component {
     inputFieldValue: this.props.entity.name,
   };
 
+  nameInputRef = React.createRef();
+
   activateEditMode = () => {
     this.setState({
       editing: true,
@@ -69,15 +71,15 @@ class ViewAndEditName extends React.Component {
     this.props.toggleEditingState(false);
   };
 
-  handleChange = evt => {
-    this.setState({ inputFieldValue: evt.target.value });
+  handleChange = () => {
+    this.setState({ inputFieldValue: this.nameInputRef.current.value });
   };
 
   handleSubmit = evt => {
     evt.preventDefault();
 
-    const { entity, onSubmit, dispatch } = this.props;
-    const { inputFieldValue } = this.state;
+    const { entity, entityType, onSubmit, dispatch } = this.props;
+    const inputFieldValue = this.nameInputRef.current.value;
 
     var validate = this.validate();
     if (typeof validate === 'object') {
@@ -111,7 +113,7 @@ class ViewAndEditName extends React.Component {
   };
 
   validate = () => {
-    if (this.state.name.length < 3) {
+    if (this.nameInputRef.current.value.length < 3) {
       return {
         valid: false,
         error: 'Please use a name with at least 3 characters',
@@ -132,6 +134,7 @@ class ViewAndEditName extends React.Component {
               autoFocus
               onChange={this.handleChange}
               onKeyUp={this.handleKey}
+              ref={this.nameInputRef}
               type='text'
               value={this.state.inputFieldValue}
             />
