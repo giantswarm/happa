@@ -6,7 +6,7 @@ import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
 
-// API instantiations
+// API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
 const nodePoolsApi = new GiantSwarm.NodepoolsApi();
 
