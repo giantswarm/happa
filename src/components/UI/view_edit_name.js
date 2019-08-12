@@ -115,7 +115,7 @@ class ViewAndEditName extends React.Component {
   };
 
   validate = () => {
-    if (this.nameInputRef.current.value < 3) {
+    if (this.nameInputRef.current.value.length < 3) {
       return {
         valid: false,
         error: 'Please use a name with at least 3 characters',
@@ -136,6 +136,7 @@ class ViewAndEditName extends React.Component {
               autoFocus
               onChange={this.handleChange}
               onKeyUp={this.handleKey}
+              ref={this.nameInputRef}
               type='text'
               value={this.state.inputFieldValue}
             />
