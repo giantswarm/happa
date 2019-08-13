@@ -33,7 +33,12 @@ export function loadReleases() {
     return releasesApi
       .getReleases(scheme + ' ' + token)
       .then(releases => {
-        dispatch(releasesLoadSuccess(releases));
+        const versionKeyedReleases = releases.reduce((accumulator, release) => {
+          return { ...accumulator, [release.version]: release };
+        }, {});
+
+        console.log(versionKeyedReleases);
+        dispatch(releasesLoadSuccess(versionKeyedReleases));
       })
       .catch(error => {
         dispatch(releasesLoadError(error));
