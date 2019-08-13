@@ -111,7 +111,6 @@ const clusterReducer = produce((draft, action) => {
 
     case types.CLUSTER_LOAD_KEY_PAIRS:
       draft.items[action.clusterId].isFetchingKeyPairs = true;
-
       return;
 
     case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
@@ -125,7 +124,7 @@ const clusterReducer = produce((draft, action) => {
 
     case types.CLUSTER_DELETE_SUCCESS:
       delete draft.items[action.clusterId];
-      draft.items[action.clusterId].lastUpdated = Date.now();
+      draft.lastUpdated = Date.now();
       return;
 
     case types.CLUSTER_PATCH:
