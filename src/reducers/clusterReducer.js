@@ -50,25 +50,22 @@ const clusterReducer = produce((draft, action) => {
       draft.errorLoading = true;
       return;
 
-    case types.CLUSTER_LOAD_DETAILS_SUCCESS:
-      draft.items[action.cluster.id] = Object.assign(
-        {},
-        draft.items[action.cluster.id],
-        ensureWorkersHaveAWSkey(action.cluster)
-      );
+    case types.CLUSTER_LOAD_DETAILS_SUCCESS: {
+      draft.items[action.cluster.id] = {
+        ...draft.items[action.cluster.id],
+        ...ensureWorkersHaveAWSkey(action.cluster),
+      };
 
       // Fill in scaling values when they aren't supplied.
-      if (
-        draft.items[action.cluster.id].scaling.min === undefined &&
-        draft.items[action.cluster.id].scaling.max === undefined
-      ) {
-        draft.items[action.cluster.id].scaling.min =
-          draft.items[action.cluster.id].workers.length;
-        draft.items[action.cluster.id].scaling.max =
-          draft.items[action.cluster.id].workers.length;
+      const { scaling, workers } = draft.items[action.cluster.id];
+
+      if (!scaling.min && !scaling.max) {
+        scaling.min = workers.length;
+        scaling.max = workers.length;
       }
 
       return;
+    }
 
     case types.CLUSTER_LOAD_DETAILS_ERROR:
       draft.items[action.cluster.id].errorLoading = true;
