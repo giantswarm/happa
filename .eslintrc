@@ -35,7 +35,7 @@
       "ignoreCase": true,
       "ignoreMemberSort": false,
       "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
-    }],
+    }]
   },
   "extends": [
     "eslint:recommended",
