@@ -1,8 +1,6 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
 
-// const spread = produce(Object.assign);
-
 /**
  * Since the API omits the 'aws' key from workers on kvm installations, I will
  * add it back here with dummy values if it is not present.
