@@ -11,8 +11,8 @@ import produce from 'immer';
 export const nodePools = produce((draft, action) => {
   switch (action.type) {
     case types.NODEPOOLS_LOAD_SUCCESS:
-      draft = action.nodePools;
-    
+      return action.nodePools;
+
     case types.NODEPOOLS_LOAD_ERROR:
       draft.errorLoading = true;
 
@@ -22,7 +22,7 @@ export const nodePools = produce((draft, action) => {
       });
 
     case types.NODEPOOL_PATCH_ERROR:
-        draft[action.nodePool.id] = action.nodePool;
+      draft[action.nodePool.id] = action.nodePool;
   
   }
   // This empty obeject is the default state.
