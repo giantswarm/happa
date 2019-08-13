@@ -31,7 +31,6 @@ export function loadReleases() {
           return { ...accumulator, [release.version]: release };
         }, {});
 
-        console.log(versionKeyedReleases);
         dispatch(releasesLoadSuccess(versionKeyedReleases));
       })
       .catch(error => {
