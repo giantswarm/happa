@@ -6,7 +6,8 @@ const initialState = { items: {} };
 const releaseReducer = produce((draft, action) => {
   switch (action.type) {
     case types.RELEASES_LOAD_SUCCESS:
-      return action.releases;
+      draft.items = action.releases;
+      return;
   }
 }, initialState);
 

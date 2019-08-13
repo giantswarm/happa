@@ -1,25 +1,19 @@
 import * as types from './actionTypes';
 import GiantSwarm from 'giantswarm';
 
-export function releasesLoad() {
-  return {
-    type: types.RELEASES_LOAD,
-  };
-}
+const releasesLoad = () => ({
+  type: types.RELEASES_LOAD,
+});
 
-export function releasesLoadSuccess(releases) {
-  return {
-    type: types.RELEASES_LOAD_SUCCESS,
-    releases,
-  };
-}
+const releasesLoadSuccess = releases => ({
+  type: types.RELEASES_LOAD_SUCCESS,
+  releases,
+});
 
-export function releasesLoadError(error) {
-  return {
-    type: types.RELEASES_LOAD_ERROR,
-    error,
-  };
-}
+const releasesLoadError = error => ({
+  type: types.RELEASES_LOAD_ERROR,
+  error,
+});
 
 export function loadReleases() {
   return function(dispatch, getState) {
