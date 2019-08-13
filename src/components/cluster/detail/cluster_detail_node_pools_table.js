@@ -1,9 +1,11 @@
-import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
-import { css } from '@emotion/core';
 import {
+  clusterNodePools,
   getCpusTotalNodePools,
   getMemoryTotalNodePools,
+  getNumberOfNodePoolsNodes,
 } from 'utils/cluster_utils';
+import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
+import { css } from '@emotion/core';
 import { relativeDate } from 'lib/helpers.js';
 import Button from 'UI/button';
 import NodePool from './node_pool';
@@ -102,43 +104,56 @@ class ClusterDetailNodePoolsTable extends React.Component {
     awsInstanceTypes: {},
     RAM: 0,
     CPUs: 0,
+    workerNodesRunning: 0,
+    nodePools: [],
   };
 
   componentDidMount() {
-    const { nodePools } = this.props.cluster;
+    const nodePoolsArray = clusterNodePools(
+      this.props.nodePools,
+      this.props.cluster
+    );
 
-    const allZones = nodePools
-      .reduce((accumulator, current) => {
-        return [...accumulator, ...current.availability_zones];
-      }, [])
-      .map(zone => zone.slice(-1));
+    this.setState({ nodePools: nodePoolsArray }, () => {
+      const { nodePools } = this.state;
 
-    // This array stores available zones that are in at least one node pool.
-    // We only want unique values because this is used fot building the grid.
-    const availableZonesGridTemplateAreas = [...new Set(allZones)]
-      .sort()
-      .join(' ');
-    this.setState({
-      availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
+      const allZones = nodePools
+        .reduce((accumulator, current) => {
+          return [...accumulator, ...current.availability_zones];
+        }, [])
+        .map(zone => zone.slice(-1));
+
+      // This array stores available zones that are in at least one node pool.
+      // We only want unique values because this is used fot building the grid.
+      const availableZonesGridTemplateAreas = [...new Set(allZones)]
+        .sort()
+        .join(' ');
+      this.setState({
+        availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
+      });
+
+      // Compute RAM & CPU:
+      const RAM = getMemoryTotalNodePools(nodePools);
+      const CPUs = getCpusTotalNodePools(nodePools);
+      const workerNodesRunning = getNumberOfNodePoolsNodes(nodePools);
+
+      this.setState({ RAM, CPUs, workerNodesRunning });
     });
-
-    // Compute RAM & CPU:
-    const RAM = getMemoryTotalNodePools(this.props.cluster);
-    const CPUs = getCpusTotalNodePools(this.props.cluster);
-
-    this.setState({ RAM, CPUs });
   }
 
   render() {
-    const { availableZonesGridTemplateAreas } = this.state;
-    const { accessCluster, cluster, workerNodesRunning } = this.props;
+    const {
+      availableZonesGridTemplateAreas,
+      nodePools,
+      workerNodesRunning,
+    } = this.state;
+    const { accessCluster, cluster } = this.props;
 
     const {
       create_date,
       master,
       release_version,
       release,
-      nodePools,
       api_endpoint,
     } = cluster;
 
@@ -268,6 +283,7 @@ ClusterDetailNodePoolsTable.propTypes = {
   cluster: PropTypes.object,
   credentials: PropTypes.object,
   lastUpdated: PropTypes.number,
+  nodePools: PropTypes.object,
   provider: PropTypes.string,
   release: PropTypes.object,
   setInterval: PropTypes.func,

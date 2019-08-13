@@ -61,18 +61,16 @@ export function getCpusTotal(cluster) {
 }
 
 // Node pools clusters functions.
-export function getNumberOfNodePoolsNodes(cluster) {
-  const { nodePools } = cluster;
-
-  if (!nodePools || nodePools.length === 0) return 0;
+export function getNumberOfNodePoolsNodes(nodePools = []) {
+  if (nodePools.length === 0) return 0;
 
   return nodePools.reduce((accumulator, current) => {
     return accumulator + current.status.nodes;
   }, 0);
 }
 
-export function getMemoryTotalNodePools(cluster) {
-  if (!window.config.awsCapabilitiesJSON || !cluster.nodePools) {
+export function getMemoryTotalNodePools(nodePools = []) {
+  if (!window.config.awsCapabilitiesJSON || nodePools.length === 0) {
     return;
   }
 
@@ -83,7 +81,7 @@ export function getMemoryTotalNodePools(cluster) {
 
   // TODO When working with Spot Instances a node pool could have different types
   // of instances, and this method will have to be modified
-  const TotalRAM = cluster.nodePools.reduce((accumulator, nodePool) => {
+  const TotalRAM = nodePools.reduce((accumulator, nodePool) => {
     const instanceTypeRAM =
       awsInstanceTypes[nodePool.node_spec.aws.instance_type].memory_size_gb;
     return accumulator + instanceTypeRAM * nodePool.status.nodes_ready;
@@ -92,8 +90,8 @@ export function getMemoryTotalNodePools(cluster) {
   return TotalRAM;
 }
 
-export function getCpusTotalNodePools(cluster) {
-  if (!window.config.awsCapabilitiesJSON || !cluster.nodePools) {
+export function getCpusTotalNodePools(nodePools = []) {
+  if (!window.config.awsCapabilitiesJSON || nodePools.length === 0) {
     return;
   }
 
@@ -104,7 +102,7 @@ export function getCpusTotalNodePools(cluster) {
 
   // TODO When working with Spot Instances a node pool could have different types
   // of instances, and this method will have to be modified
-  const TotalCPUs = cluster.nodePools.reduce((accumulator, nodePool) => {
+  const TotalCPUs = nodePools.reduce((accumulator, nodePool) => {
     const instanceTypeCPUs =
       awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
     return accumulator + instanceTypeCPUs * nodePool.status.nodes_ready;
@@ -112,3 +110,10 @@ export function getCpusTotalNodePools(cluster) {
 
   return TotalCPUs;
 }
+
+// Finds node pools for a cluster and returns an array of node pools objects
+export const clusterNodePools = (nodePools, cluster) => {
+  return cluster.nodePools.map(np => {
+    return nodePools[np];
+  });
+};

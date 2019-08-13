@@ -1,4 +1,5 @@
 import * as clusterActions from 'actions/clusterActions';
+import * as nodePoolsActions from 'actions/nodePoolsActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -147,6 +148,7 @@ class Home extends React.Component {
                           cluster.id
                         )}
                         key={cluster.id}
+                        nodePools={this.props.nodePools}
                         selectedOrganization={this.props.selectedOrganization}
                       />
                     </CSSTransition>
@@ -182,6 +184,7 @@ Home.propTypes = {
   organizations: PropTypes.object,
   errorLoadingClusters: PropTypes.bool,
   nodePoolsClusters: PropTypes.array,
+  nodePools: PropTypes.object,
 };
 
 function mapStateToProps(state) {
@@ -190,6 +193,7 @@ function mapStateToProps(state) {
   var allClusters = state.entities.clusters.items;
   var errorLoadingClusters = state.entities.clusters.errorLoading;
   const nodePoolsClusters = state.entities.clusters.nodePoolsClusters;
+  const nodePools = state.entities.nodePools;
 
   var clusters = [];
   if (selectedOrganization) {
@@ -204,12 +208,14 @@ function mapStateToProps(state) {
     errorLoadingClusters: errorLoadingClusters,
     selectedOrganization: selectedOrganization,
     nodePoolsClusters,
+    nodePools,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
+    nodePoolsActions: bindActionCreators(nodePoolsActions, dispatch),
     dispatch: dispatch,
   };
 }

@@ -4,10 +4,7 @@ import { bindActionCreators } from 'redux';
 import { clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
-import {
-  getNumberOfNodePoolsNodes,
-  getNumberOfNodes,
-} from 'utils/cluster_utils';
+import { getNumberOfNodes } from 'utils/cluster_utils';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
 import { push } from 'connected-react-router';
 import Button from 'UI/button';
@@ -208,6 +205,7 @@ class ClusterDetailView extends React.Component {
       credentials,
       dispatch,
       isNodePoolView,
+      nodePools,
       provider,
       release,
       targetRelease,
@@ -275,12 +273,12 @@ class ClusterDetailView extends React.Component {
                         canClusterUpgrade={this.canClusterUpgrade()}
                         cluster={cluster}
                         credentials={credentials}
+                        nodePools={nodePools}
                         provider={provider}
                         release={release}
                         showScalingModal={this.showScalingModal}
                         showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        workerNodesRunning={getNumberOfNodePoolsNodes(cluster)}
                       />
                     ) : (
                       <ClusterDetailTable
@@ -391,6 +389,7 @@ ClusterDetailView.propTypes = {
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
   isNodePoolView: PropTypes.bool,
+  nodePools: PropTypes.object,
   organizationId: PropTypes.string,
   releaseActions: PropTypes.object,
   release: PropTypes.object,
