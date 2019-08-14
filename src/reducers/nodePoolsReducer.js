@@ -8,21 +8,24 @@ import produce from 'immer';
 // From the docs: "Notice that it is not needed to handle the default case, a producer
 // that doesn't do anything will simply return the original state."
 
-export const nodePools = produce((draft, action) => {
+const nodePools = produce((draft, action) => {
   switch (action.type) {
     case types.NODEPOOLS_LOAD_SUCCESS:
       return action.nodePools;
 
     case types.NODEPOOLS_LOAD_ERROR:
       draft.errorLoading = true;
+      return;
 
     case types.NODEPOOL_PATCH:
       Object.keys(action.payload).forEach(key => {
         draft[action.nodePool.id][key] = action.payload[key];
       });
+      return;
 
     case types.NODEPOOL_PATCH_ERROR:
       draft[action.nodePool.id] = action.nodePool;
+      return;
   }
   // This empty obeject is the default state.
 }, {});
