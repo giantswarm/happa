@@ -21,36 +21,34 @@ Happa is a single page JavaScript application using React+Redux and runs in mode
 
 ## Getting started with development / demoing
 
-Happa has to be configured for an API endpoint. There are two alternative methods
-when running happa locally:
+Happa has to talk to an API endpoint. It used to be possible to change a locally
+running happa's configuration to talk to any API server. This has since been
+restricted with CORS accept headers.
 
-- (A) Bring up the API suite locally. See [giantswarm/api/](https://github.com/giantswarm/api/tree/master/testing) for details.
-- (B) Modify the base config in [index.html](https://github.com/giantswarm/happa/blob/master/src/index.html) to point to a test installation.
+The only option now is to bring up the API suite locally, or demo happa running
+on one of our installations.
 
-### For (A) – Bring up the API suite locally
+### Bring up the API suite locally
 
-This requires Docker and `docker-compose`.
+This requires Docker and `docker-compose`, and access to our private `api` repo.
+Currently only Giant Swarm employees are able to see that repo. We're considering
+open sourcing it.
 
 Start the `api` and dependencies first by going to the `api` [repo](https://github.com/giantswarm/api) and running
-the dockercompose file there:
+the dockercompose file in the testing folder there:
 
 ```nohighlight
 cd $GOPATH/src/github.com/giantswarm/api/testing
+make aws
 make up
 ```
 
+> Notice the `make aws` command in that example? There is also `make azure` and `make kvm`
+to create a docker-compose file that sets up the API and other microservices as if
+they were on these types of installations.
+
 As part of `make up`, `./fixtures.sh` will run and create the initial user and
 organization you can log in with.
-
-### For (B)
-
-Find the `apiEndpoint` setting in `src/index.html` and set it to the API endpoint of the test
-installation you want to use.
-
-If you want to test password resetting and other user account transactions,
-also adapt `passageEndpoint` value.
-
-### For (A) and (B)
 
 You should now be able to start happa's development server from within this
 (giantswarm/happa) repo like so:
@@ -81,7 +79,7 @@ Use `docker-compose stop` to stop containers or `docker-compose down` to remove 
 Running tests
 -------------
 
-There are no automated tests for Happa at the moment.
+We have a few tests, and are adding more. Run them with `yarn test`
 
 Deploying
 ---------
