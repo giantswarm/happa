@@ -26,10 +26,8 @@ RUN yarn add node-sass@4.9.4
 COPY package.json /usr/src/app/
 COPY .babelrc /usr/src/app/
 COPY .eslintrc /usr/src/app/
-COPY ./Gruntfile.js /usr/src/app/
 COPY ./package.json /usr/src/app/
-COPY ./webpack.config.js /usr/src/app/
-COPY ./webpack.dist.config.js /usr/src/app/
+COPY ./webpack* /usr/src/app/
 
 COPY ./scripts/dev.sh /usr/src/app/
 
