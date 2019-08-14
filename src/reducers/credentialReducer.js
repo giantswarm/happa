@@ -1,36 +1,28 @@
 import * as types from 'actions/actionTypes';
+import produce from 'immer';
 
-export default function credentialReducer(
-  state = {
-    lastUpdated: 0,
-    isFetching: false,
-    items: [],
-  },
-  action = undefined
-) {
+const initialState = {
+  lastUpdated: 0,
+  isFetching: false,
+  items: [],
+};
+
+const credentialReducer = produce((draft, action) => {
   switch (action.type) {
     case types.ORGANIZATION_CREDENTIALS_LOAD:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: true,
-        items: [],
-      };
+      draft.isFetching = true;
+      return;
 
     case types.ORGANIZATION_CREDENTIALS_LOAD_SUCCESS:
-      return {
-        lastUpdated: Date.now(),
-        isFetching: false,
-        items: action.credentials,
-      };
+      draft.lastUpdated = Date.now();
+      draft.isFetching = false;
+      draft.items = action.credentials;
+      return;
 
     case types.ORGANIZATION_CREDENTIALS_LOAD_ERROR:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: state.items,
-      };
-
-    default:
-      return state;
+      draft.isFetching = false;
+      return;
   }
-}
+}, initialState);
+
+export default credentialReducer;
