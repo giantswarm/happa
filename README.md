@@ -35,7 +35,7 @@ Currently only Giant Swarm employees are able to see that repo. We're considerin
 open sourcing it.
 
 Start the `api` and dependencies first by going to the `api` [repo](https://github.com/giantswarm/api) and running
-the dockercompose file there:
+the dockercompose file in the testing folder there:
 
 ```nohighlight
 cd $GOPATH/src/github.com/giantswarm/api/testing
