@@ -36,6 +36,8 @@ export function getNumberOfNodes(cluster) {
 export function getMemoryTotal(cluster) {
   var workers = getNumberOfNodes(cluster);
 
+  console.log(cluster.workers);
+
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null;
   }

@@ -53,7 +53,7 @@ class Home extends React.Component {
   };
 
   refreshClustersList = () => {
-    this.props.actions.clustersLoad();
+    // this.props.actions.clustersLoad();
   };
 
   handleVisibilityChange = () => {

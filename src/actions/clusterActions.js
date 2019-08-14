@@ -6,6 +6,7 @@ import { push } from 'connected-react-router';
 import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
+import mockedStatus from 'mockedStatus';
 import moment from 'moment';
 
 // API instantiations.
@@ -96,6 +97,12 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
       const clustersObject = clustersLoadArrayToObject(enhancedClusters);
 
       dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
+
+      // This is a quick fix, it has to be rewritten
+      Object.keys(clustersObject).forEach(cluster => {
+        dispatch(clusterLoadDetailsSuccess(clustersObject[cluster]));
+        dispatch(clusterLoadStatusSuccess(cluster, mockedStatus));
+      });
     })
     .catch(error => {
       console.error(error);
@@ -451,20 +458,25 @@ function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
       return status;
     })
     .catch(error => {
-      console.error(error);
-      if (error.status === 404) {
-        dispatch(clusterLoadStatusNotFound(clusterId));
+      // Hardcoded status in localhost
+      if (window.config.environment === 'development') {
+        dispatch(clusterLoadStatusSuccess(clusterId, mockedStatus));
       } else {
-        dispatch(clusterLoadStatusError(clusterId, error));
+        console.error(error);
+        if (error.status === 404) {
+          dispatch(clusterLoadStatusNotFound(clusterId));
+        } else {
+          dispatch(clusterLoadStatusError(clusterId, error));
 
-        new FlashMessage(
-          'Something went wrong while trying to load the cluster status.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
+          new FlashMessage(
+            'Something went wrong while trying to load the cluster status.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
+          );
 
-        throw error;
+          throw error;
+        }
       }
     });
 }
