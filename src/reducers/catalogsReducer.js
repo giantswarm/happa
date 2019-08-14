@@ -1,64 +1,39 @@
 import * as types from 'actions/actionTypes';
+import produce from 'immer';
 
-export default function catalogsReducer(
-  state = {
-    lastUpdated: 0,
-    isFetching: false,
-    items: [],
-  },
-  action = undefined
-) {
+const initialState = {
+  lastUpdated: 0,
+  isFetching: false,
+  items: [],
+};
+
+const catalogReducer = produce((draft, action) => {
   switch (action.type) {
     case types.CATALOGS_LOAD:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: true,
-        items: state.items,
-      };
+      draft.isFetching = true;
+      return;
 
     case types.CATALOGS_LOAD_SUCCESS:
-      return {
-        lastUpdated: Date.now(),
-        isFetching: false,
-        items: action.catalogs,
-      };
+      draft.items = action.catalogs;
+      draft.isFetching = false;
+      draft.lastUpdated = Date.now();
+      return;
 
     case types.CATALOGS_LOAD_ERROR:
-      return {
-        lastUpdated: Date.now(),
-        isFetching: false,
-        items: state.items,
-      };
+      draft.isFetching = false;
+      return;
 
-    case types.CATALOG_LOAD_INDEX: {
-      let items = Object.assign({}, state.items);
+    case types.CATALOG_LOAD_INDEX:
+      draft.items[action.catalogName].isFetchingIndex = true;
+      return;
 
-      items[action.catalogName] = Object.assign({}, items[action.catalogName], {
-        isFetchingIndex: true,
-      });
-
-      return {
-        lastUpdated: Date.now(),
-        isFetching: false,
-        items: items,
-      };
-    }
-
-    case types.CATALOG_LOAD_INDEX_SUCCESS: {
-      let items = Object.assign({}, state.items);
-
-      items[action.catalog.metadata.name] = Object.assign({}, action.catalog, {
-        isFetchingIndex: false,
-      });
-
-      return {
-        lastUpdated: Date.now(),
-        isFetching: false,
-        items: items,
-      };
-    }
-
-    default:
-      return state;
+    case types.CATALOG_LOAD_INDEX_SUCCESS:
+      draft.items[action.catalog.metadata.name] = action.catalog;
+      draft.items[action.catalog.metadata.name].isFetchingIndex = false;
+      draft.lastUpdated = Date.now();
+      draft.isFetching = false;
+      return;
   }
-}
+}, initialState);
+
+export default catalogReducer;

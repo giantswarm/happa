@@ -1,4 +1,7 @@
 import * as types from 'actions/actionTypes';
+import produce from 'immer';
+
+const initialState = { lastUpdated: 0, isFetching: false, items: {} };
 
 /**
  * organizationReducer manipulates the appplication state based on organization actions.
@@ -8,71 +11,40 @@ import * as types from 'actions/actionTypes';
  * @param {*} state
  * @param {*} action
  */
-export default function organizationReducer(
-  state = { lastUpdated: 0, isFetching: false, items: {} },
-  action = undefined
-) {
+const organizationReducer = produce((draft, action) => {
   switch (action.type) {
     case types.ORGANIZATIONS_LOAD:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: true,
-        items: state.items,
-      };
+      draft.isFetching = true;
+      return;
 
     case types.ORGANIZATIONS_LOAD_SUCCESS:
-      return {
-        lastUpdated: Date.now(),
-        isFetching: false,
-        items: action.organizations,
-      };
+      draft.lastUpdated = Date.now();
+      draft.isFetching = false;
+      draft.items = action.organizations;
+      return;
 
     case types.ORGANIZATIONS_LOAD_ERROR:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: state.items,
-      };
+      draft.isFetching = false;
+      return;
 
-    case types.ORGANIZATION_DELETE_CONFIRMED:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: state.isFetching,
-        items: state.items,
-      };
+    case types.ORGANIZATION_DELETE_SUCCESS:
+      delete draft.items[action.orgId];
+      return;
 
     case types.ORGANIZATION_DELETE_ERROR:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: state.items,
-      };
+      draft.isFetching = false;
+      return;
 
     case types.ORGANIZATION_CREDENTIALS_SET:
-      return {
-        showCredentialsForm: true,
-        items: state.items,
-      };
-
     case types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED:
-      return {
-        showCredentialsForm: true,
-        items: state.items,
-      };
-
     case types.ORGANIZATION_CREDENTIALS_SET_ERROR:
-      return {
-        showCredentialsForm: true,
-        items: state.items,
-      };
+      draft.showCredentialsForm = true;
+      return;
 
     case types.ORGANIZATION_CREDENTIALS_SET_SUCCESS:
-      return {
-        showCredentialsForm: false,
-        items: state.items,
-      };
-
-    default:
-      return state;
+      draft.showCredentialsForm = false;
+      return;
   }
-}
+}, initialState);
+
+export default organizationReducer;
