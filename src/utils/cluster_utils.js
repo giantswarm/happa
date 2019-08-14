@@ -5,7 +5,7 @@
 export function getNumberOfNodes(cluster) {
   if (
     !cluster.status ||
-    !cluster.status.nodes ||
+    !cluster.status.cluster.nodes ||
     cluster.status.cluster.nodes.length === 0
   ) {
     return 0;
