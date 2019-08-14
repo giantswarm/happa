@@ -1,32 +1,24 @@
 import * as types from 'actions/actionTypes';
+import produce from 'immer';
 
-export default function invitationReducer(
-  state = { lastUpdated: 0, isFetching: false, items: {} },
-  action = undefined
-) {
+const initialState = { lastUpdated: 0, isFetching: false, items: {} };
+
+const invitationReducer = produce((draft, action) => {
   switch (action.type) {
     case types.INVITATIONS_LOAD:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: true,
-        items: state.items,
-      };
+      draft.isFetching = true;
+      return;
 
     case types.INVITATIONS_LOAD_SUCCESS:
-      return {
-        lastUpdated: Date.now(),
-        isFetching: false,
-        items: action.invites,
-      };
+      draft.lastUpdated = Date.now();
+      draft.isFetching = false;
+      draft.items = action.invites;
+      return;
 
     case types.INVITATIONS_LOAD_ERROR:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: state.items,
-      };
-
-    default:
-      return state;
+      draft.isFetching = false;
+      return;
   }
-}
+}, initialState);
+
+export default invitationReducer;

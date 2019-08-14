@@ -6,6 +6,7 @@ import { push } from 'connected-react-router';
 import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
+import moment from 'moment';
 
 // API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
@@ -595,10 +596,20 @@ export function clusterLoadKeyPairs(clusterId) {
     return keypairsApi
       .getKeyPairs(scheme + ' ' + token, clusterId)
       .then(keyPairs => {
+        // Add expire_date to keyPairs based on ttl_hours
+        const keyPairsWithDates = Object.entries(keyPairs).map(
+          ([, keyPair]) => {
+            keyPair.expire_date = moment(keyPair.create_date)
+              .utc()
+              .add(keyPair.ttl_hours, 'hours');
+            return keyPair;
+          }
+        );
+
         dispatch({
           type: types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS,
           clusterId,
-          keyPairs: keyPairs,
+          keyPairs: keyPairsWithDates,
         });
       })
       .catch(error => {
