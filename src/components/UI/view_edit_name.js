@@ -58,7 +58,8 @@ class ViewAndEditName extends React.Component {
       inputFieldValue: this.state.name,
     });
 
-    this.props.toggleEditingState(true);
+    const { toggleEditingState } = this.props;
+    if (toggleEditingState) toggleEditingState(true);
   };
 
   deactivateEditMode = () => {
@@ -68,7 +69,8 @@ class ViewAndEditName extends React.Component {
       inputFieldValue: this.state.name,
     });
 
-    this.props.toggleEditingState(false);
+    const { toggleEditingState } = this.props;
+    if (toggleEditingState) toggleEditingState(false);
   };
 
   handleChange = () => {
