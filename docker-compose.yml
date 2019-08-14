@@ -13,38 +13,6 @@ services:
       # to persist info on used dependencies to the repo
       - $PWD/yarn.lock:/usr/src/app/yarn.lock:z
 
-  passage:
-    image: quay.io/giantswarm/passage:latest
-    ports:
-      - "5001:8000"
-    environment:
-      DEBUGGING: 1
-      HAPPA_BASE_URI: http://localhost:7000
-      GIANTSWARM_API_URI: http://api:8000
-      GIANTSWARM_USERD_URI: http://userd:8000
-      GIANTSWARM_COMPANYD_URI: http://companyd:8000
-      #NUM_PROXIES: "0"
-      RATELIMIT_GLOBAL: 1000 per day, 100 per hour, 30 per minute
-      RATELIMIT_STORAGE_URL: redis://redis:6379
-    links:
-      - redis:redis
-      - mailcatcher:mailcatcher
-
-  redis:
-    image: redis:3.2
-    ports:
-      - "6379:6379"
-    volumes:
-      - $PWD/docker-volumes/redis-data:/data:z
-
-  mailcatcher:
-    image: quay.io/giantswarm/mailcatcher:latest
-    ports:
-      - "1080:1080"
-      - "1025:1025"
-    depends_on:
-      - redis
-
 networks:
   default:
     external:
