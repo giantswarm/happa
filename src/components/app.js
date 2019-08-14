@@ -30,7 +30,10 @@ import 'noty/lib/noty.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/app.sass';
 
-var appContainer = document.getElementById('app');
+const appContainer = document.getElementById('app');
+const body = document.getElementsByTagName('body')[0];
+
+body.classList.remove('loading');
 
 const store = configureStore({});
 
