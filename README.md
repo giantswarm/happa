@@ -39,8 +39,13 @@ the dockercompose file there:
 
 ```nohighlight
 cd $GOPATH/src/github.com/giantswarm/api/testing
+make aws
 make up
 ```
+
+> Notice the `make aws` command in that example? There is also `make azure` and `make kvm`
+to create a docker-compose file that sets up the API and other microservices as if
+they were on these types of installations.
 
 As part of `make up`, `./fixtures.sh` will run and create the initial user and
 organization you can log in with.
