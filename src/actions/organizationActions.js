@@ -119,6 +119,8 @@ export function organizationsLoad() {
         // Organizations have been loaded.
         const organizationsArray = Object.keys(organizations);
 
+        console.log(organizationsArray);
+
         // Deterimine what organization should be selected.
         const selectedOrganization = determineSelectedOrganization(
           organizationsArray,
@@ -126,7 +128,9 @@ export function organizationsLoad() {
         );
 
         localStorage.setItem('app.selectedOrganization', selectedOrganization);
-        return dispatch(organizationsLoadSuccess(selectedOrganization));
+        return dispatch(
+          organizationsLoadSuccess(organizations, selectedOrganization)
+        );
       })
       .catch(error => {
         console.error('Error loading organizations:', error);
