@@ -14,6 +14,8 @@ export function organizationSelect(orgId) {
   return function(dispatch) {
     dispatch(push('/'));
 
+    localStorage.setItem('app.selectedOrganization', orgId);
+
     return dispatch({
       type: types.ORGANIZATION_SELECT,
       orgId,
@@ -35,6 +37,26 @@ export function organizationsLoadSuccess(organizations, selectedOrganization) {
     selectedOrganization,
   };
 }
+
+// determineSelectedOrganization takes a current list of organizations and the
+// users selectedOrganization (which could be stale, i.e. deleted by someone
+// else)
+//
+// Using this information, it ensures we always have a valid organization selected.
+const determineSelectedOrganization = (organizations, selectedOrganization) => {
+  const organizationStillExists =
+    organizations.indexOf(selectedOrganization) > -1;
+
+  if (selectedOrganization && organizationStillExists) {
+    // The user had an organization selected, and it still exists.
+    // So we stay on it.
+    return selectedOrganization;
+  }
+  // The user didn't have an organization selected yet, or the one
+  // they selected is gone. Switch to the first organization in the list.
+  const firstOrganization = organizations[0];
+  return firstOrganization;
+};
 
 // organizationsLoad
 // -----------------
@@ -94,7 +116,17 @@ export function organizationsLoad() {
           return previous;
         }, {});
 
-        return dispatch(organizationsLoadSuccess(organizations));
+        // Organizations have been loaded.
+        const organizationsArray = Object.keys(organizations);
+
+        // Deterimine what organization should be selected.
+        const selectedOrganization = determineSelectedOrganization(
+          organizationsArray,
+          getState().app.selectedOrganization
+        );
+
+        localStorage.setItem('app.selectedOrganization', selectedOrganization);
+        return dispatch(organizationsLoadSuccess(selectedOrganization));
       })
       .catch(error => {
         console.error('Error loading organizations:', error);
