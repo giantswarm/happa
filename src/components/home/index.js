@@ -39,6 +39,7 @@ class Home extends React.Component {
 
   componentWillUnmount() {
     this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
+    this.props.clearInterval(this.refreshInterval);
   }
 
   /**
@@ -53,7 +54,7 @@ class Home extends React.Component {
   };
 
   refreshClustersList = () => {
-    // this.props.actions.clustersLoad();
+    this.props.actions.clustersLoad();
   };
 
   handleVisibilityChange = () => {
