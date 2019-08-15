@@ -97,12 +97,6 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
       const clustersObject = clustersLoadArrayToObject(enhancedClusters);
 
       dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
-
-      // This is a quick fix, it has to be rewritten
-      Object.keys(clustersObject).forEach(cluster => {
-        dispatch(clusterLoadDetailsSuccess(clustersObject[cluster]));
-        dispatch(clusterLoadStatusSuccess(cluster, mockedStatus));
-      });
     })
     .catch(error => {
       console.error(error);
@@ -458,7 +452,8 @@ function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
       return status;
     })
     .catch(error => {
-      // Hardcoded status in localhost
+      // TODO: Find a better way to deal with status endpoint errors in dev:
+      // https://github.com/giantswarm/giantswarm/issues/6757
       if (window.config.environment === 'development') {
         dispatch(clusterLoadStatusSuccess(clusterId, mockedStatus));
       } else {
