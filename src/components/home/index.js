@@ -39,6 +39,7 @@ class Home extends React.Component {
 
   componentWillUnmount() {
     this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
+    this.props.clearInterval(this.refreshInterval);
   }
 
   /**
