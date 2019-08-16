@@ -34,6 +34,8 @@ const appReducer = produce((draft, action) => {
       return;
 
     case types.LOGIN_SUCCESS:
+      // TODO This is a Side effect.
+      // Is there a better place for setUser()?
       setUser(action.userData);
       draft.loggedInUser = action.userData;
       return;
@@ -42,7 +44,8 @@ const appReducer = produce((draft, action) => {
     case types.LOGOUT_SUCCESS:
     case types.LOGOUT_ERROR:
     case types.UNAUTHORIZED:
-      // TODO Is there a better place for removeUser()?
+      // TODO This is a Side effect.
+      // Is there a better place for removeUser()?
       removeUser();
       draft.loggedInUser = {};
       draft.firstLoadComplete = false;
