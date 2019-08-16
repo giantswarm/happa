@@ -35,9 +35,7 @@ const appReducer = produce((draft, action) => {
 
     case types.LOGIN_SUCCESS:
       setUser(action.userData);
-      Object.keys(action.userData).forEach(key => {
-        draft.loggedInUser[key] = action.userData[key];
-      });
+      draft.loggedInUser = action.userData;
       return;
 
     case types.LOGIN_ERROR:

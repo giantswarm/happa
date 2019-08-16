@@ -119,8 +119,6 @@ export function organizationsLoad() {
         // Organizations have been loaded.
         const organizationsArray = Object.keys(organizations);
 
-        console.log(organizationsArray);
-
         // Deterimine what organization should be selected.
         const selectedOrganization = determineSelectedOrganization(
           organizationsArray,
