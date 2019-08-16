@@ -203,8 +203,6 @@ class ClusterDetailView extends React.Component {
     return new Promise((resolve, reject) => {
       this.props
         .dispatch(
-          // We need the object and the change we want to make to it in order to be able
-          // to do optimistic updates
           clusterPatch(this.props.cluster, { name: value })
         )
         .then(() => {

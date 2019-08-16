@@ -105,9 +105,6 @@ class ViewAndEditName extends React.Component {
       })
       .catch(error => {
         console.error(error);
-        // this.setState({
-        //   errorMessage: error.message
-        // });
       });
   };
 
