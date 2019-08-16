@@ -29,9 +29,7 @@ class NodePool extends Component {
   editNodePoolName = value => {
     return new Promise((resolve, reject) => {
       this.props
-        .dispatch(
-          nodePoolPatch(this.props.nodePool, { name: value })
-        )
+        .dispatch(nodePoolPatch(this.props.nodePool, { name: value }))
         .then(() => {
           new FlashMessage(
             'Succesfully edited node pool name.',
