@@ -80,28 +80,84 @@ export function clustersLoad() {
   };
 }
 
-function clustersLoadV4(token, scheme, dispatch, getState) {
+async function clustersLoadV4(token, scheme, dispatch, getState) {
   // TODO this will be in getClusters() here in this function we just want to
   // dispatch specific actions for v4 clusters.
   // Or maybe we won't need this method at all.
-  return clustersApi
+  const clustersObject = await clustersApi
     .getClusters(scheme + ' ' + token)
     .then(clusters => {
-      const lastUpdated = Date.now();
       const enhancedClusters = enhanceWithCapabilities(
         clusters,
         getState().app.info.general.provider
       );
 
       // Clusters array to object, because we are storing an object in the store
-      const clustersObject = clustersLoadArrayToObject(enhancedClusters);
-
-      dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
+      let clustersObject = clustersLoadArrayToObject(enhancedClusters);
+      return clustersObject;
     })
     .catch(error => {
       console.error(error);
       dispatch(clustersLoadErrorV4(error));
     });
+
+  // We fetch all details for each cluster.
+  const details = await Promise.all(
+    Object.keys(clustersObject).map(clusterId => {
+      return clustersApi
+        .getCluster(scheme + ' ' + token, clusterId)
+        .then(clusterDetails => {
+          clusterDetails.capabilities = computeCapabilities(
+            clusterDetails,
+            getState().app.info.general.provider
+          );
+
+          return clusterDetails;
+        })
+        .catch(error => {
+          console.error('Error loading cluster details:', error);
+          dispatch(clusterLoadDetailsError(clusterId, error));
+        });
+    })
+  );
+
+  // And merge them in the clustersObject
+  details.forEach(clusterDetail => {
+    clustersObject[clusterDetail.id] = {
+      ...clustersObject[clusterDetail.id],
+      ...clusterDetail,
+    };
+  });
+
+  // We fetch status for each cluster.
+  const status = await Promise.all(
+    Object.keys(clustersObject).map(clusterId => {
+      if (window.config.environment === 'development') {
+        return { id: clusterId, ...mockedStatus };
+      } else {
+        return clustersApi
+          .getClusterStatus(scheme + ' ' + token, clusterId)
+          .then(clusterStatus => {
+            return { id: clusterId, ...clusterStatus };
+          })
+          .catch(error => {
+            console.error(error);
+            dispatch(clusterLoadStatusError(clusterId, error));
+          });
+      }
+    })
+  );
+
+  // And merge it in each cluster
+  status.forEach(clusterStatus => {
+    clustersObject[clusterStatus.id] = {
+      ...clustersObject[clusterStatus.id],
+      ...{ status: clusterStatus },
+    };
+  });
+
+  const lastUpdated = Date.now();
+  dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
 }
 
 function clustersLoadV5(token, scheme, dispatch, getState) {
