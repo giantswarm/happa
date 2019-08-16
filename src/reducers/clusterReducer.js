@@ -36,10 +36,15 @@ const clusterReducer = produce((draft, action) => {
           ? draft.items[clusterId].status
           : undefined;
 
+        let workers = draft.items[clusterId]
+          ? draft.items[clusterId].workers
+          : undefined;
+
         draft.items[clusterId] = action.clusters[clusterId];
         draft.items[clusterId].workers = withAwsKeys.workers;
 
         draft.items[clusterId].status = status;
+        draft.items[clusterId].workers = workers;
       });
 
       draft.lastUpdated = action.lastUpdated;
