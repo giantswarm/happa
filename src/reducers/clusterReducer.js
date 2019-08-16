@@ -32,19 +32,8 @@ const clusterReducer = produce((draft, action) => {
       Object.keys(action.clusters).forEach(clusterId => {
         const withAwsKeys = ensureWorkersHaveAWSkey(action.clusters[clusterId]);
 
-        let status = draft.items[clusterId]
-          ? draft.items[clusterId].status
-          : undefined;
-
-        let workers = draft.items[clusterId]
-          ? draft.items[clusterId].workers
-          : undefined;
-
         draft.items[clusterId] = action.clusters[clusterId];
         draft.items[clusterId].workers = withAwsKeys.workers;
-
-        draft.items[clusterId].status = status;
-        draft.items[clusterId].workers = workers;
       });
 
       draft.lastUpdated = action.lastUpdated;
