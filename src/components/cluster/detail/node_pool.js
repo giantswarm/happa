@@ -1,4 +1,6 @@
 import { Code } from 'styles/';
+import { connect } from 'react-redux';
+import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { nodePoolPatch } from 'actions/nodePoolsActions';
 import AvailabilityZonesWrapper from './availability_zones_wrapper';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
@@ -24,6 +26,27 @@ class NodePool extends Component {
   toggleEditingState = isNameBeingEdited =>
     this.setState({ isNameBeingEdited });
 
+  editNodePoolName = value => {
+    return new Promise((resolve, reject) => {
+      this.props
+        .dispatch(
+          nodePoolPatch(this.props.nodePool, { name: value })
+        )
+        .then(() => {
+          new FlashMessage(
+            'Succesfully edited node pool name.',
+            messageType.SUCCESS,
+            messageTTL.MEDIUM
+          );
+          resolve();
+        })
+        .catch(error => {
+          console.error(error);
+          reject(error);
+        });
+    });
+  };
+
   render() {
     const { availableZonesGridTemplateAreas, nodePool } = this.props;
 
@@ -45,7 +68,7 @@ class NodePool extends Component {
           <ViewAndEditName
             entity={nodePool}
             entityType='node pool'
-            onSubmit={nodePoolPatch}
+            onSubmit={this.editNodePoolName}
             toggleEditingState={this.toggleEditingState}
           />
         </div>
@@ -99,4 +122,13 @@ NodePool.propTypes = {
   dispatch: PropTypes.func,
 };
 
-export default NodePool;
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch: dispatch,
+  };
+}
+
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(NodePool);

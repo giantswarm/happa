@@ -90,13 +90,6 @@ export function nodePoolPatch(nodePool, payload) {
 
     return nodePoolsApi
       .modifyNodePool(scheme + ' ' + token, clusterId, nodePool, payload)
-      .then(() => {
-        new FlashMessage(
-          'Node pool name changed',
-          messageType.SUCCESS,
-          messageTTL.SHORT
-        );
-      })
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch(nodePoolPatchError(error, nodePool));

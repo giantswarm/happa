@@ -199,6 +199,28 @@ class ClusterDetailView extends React.Component {
     );
   };
 
+  editClusterName = value => {
+    return new Promise((resolve, reject) => {
+      this.props
+        .dispatch(
+          // We need the object and the change we want to make to it in order to be able
+          // to do optimistic updates
+          clusterPatch(this.props.cluster, { name: value })
+        )
+        .then(() => {
+          new FlashMessage(
+            'Succesfully edited cluster name.',
+            messageType.SUCCESS,
+            messageTTL.MEDIUM
+          );
+          resolve();
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  };
+
   render() {
     const {
       cluster,
@@ -229,7 +251,7 @@ class ClusterDetailView extends React.Component {
                   <ViewAndEditName
                     entity={cluster}
                     entityType='cluster'
-                    onSubmit={clusterPatch}
+                    onSubmit={this.editClusterName}
                   />{' '}
                   {loading ? (
                     <img
