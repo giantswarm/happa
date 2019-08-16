@@ -726,14 +726,7 @@ export function clusterPatch(cluster, payload) {
     });
 
     return clustersApi
-      .modifyCluster(scheme + ' ' + token, payload, cluster.id)
-      .then(() => {
-        new FlashMessage(
-          'Cluster name changed',
-          messageType.SUCCESS,
-          messageTTL.SHORT
-        );
-      })
+      .modifyCluster(scheme + ' ' + token, cluster.id, payload)
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch({
@@ -743,7 +736,7 @@ export function clusterPatch(cluster, payload) {
         });
 
         new FlashMessage(
-          'Something went wrong while trying to update the cluster name',
+          'Something went wrong while trying to update the cluster',
           messageType.ERROR,
           messageTTL.MEDIUM,
           'Please try again later or contact support: support@giantswarm.io'

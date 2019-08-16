@@ -103,7 +103,8 @@ class ViewAndEditName extends React.Component {
         name: inputFieldValue,
       });
 
-      this.props.toggleEditingState(false);
+      const { toggleEditingState } = this.props;
+      if (toggleEditingState) toggleEditingState(false);
     });
   };
 
