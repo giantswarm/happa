@@ -35,19 +35,19 @@ const modalReducer = produce((draft, action) => {
 
     case types.ORGANIZATION_CREATE:
       draft.visible = true;
-      draft.templateValues.loading = false;
+      draft.templateValues = { loading: false };
       draft.template = 'organizationCreate';
       return;
 
     case types.ORGANIZATION_CREATE_CONFIRMED:
       draft.visible = true;
-      draft.templateValues.loading = true;
+      draft.templateValues = { loading: true };
       draft.template = 'organizationCreate';
       return;
 
     case types.ORGANIZATION_ADD_MEMBER:
       draft.visible = true;
-      draft.templateValues.orgId = action.orgId;
+      draft.templateValues = { orgId: action.orgId };
       draft.template = 'organizationAddMember';
       return;
 
