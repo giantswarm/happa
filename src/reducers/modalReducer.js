@@ -1,124 +1,96 @@
 import * as types from 'actions/actionTypes';
+import produce from 'immer';
 
-export default function modalReducer(
-  state = { visible: false },
-  action = undefined
-) {
+const initialState = { visible: false };
+
+const modalReducer = produce((draft, action) => {
   switch (action.type) {
     case types.MODAL_HIDE:
-      return Object.assign({}, state, {
-        visible: false,
-      });
+      draft.visible = false;
+      return;
 
     case types.CLUSTER_DELETE:
-      return {
-        visible: true,
-        templateValues: {
-          cluster: action.cluster,
-          loading: false,
-        },
-        template: 'clusterDelete',
-      };
+      draft.visible = true;
+      draft.templateValues = { cluster: action.cluster, loading: false };
+      draft.template = 'clusterDelete';
+      return;
 
     case types.CLUSTER_DELETE_CONFIRMED:
-      return {
-        visible: true,
-        templateValues: {
-          cluster: action.cluster,
-          loading: true,
-        },
-        template: 'clusterDelete',
-      };
+      draft.visible = true;
+      draft.templateValues = { cluster: action.cluster, loading: true };
+      draft.template = 'clusterDelete';
+      return;
 
     case types.ORGANIZATION_DELETE:
-      return {
-        visible: true,
-        templateValues: {
-          orgId: action.orgId,
-          loading: false,
-        },
-        template: 'organizationDelete',
-      };
+      draft.visible = true;
+      (draft.templateValues = { orgId: action.orgId, loading: false }),
+        (draft.template = 'organizationDelete');
+      return;
 
     case types.ORGANIZATION_DELETE_CONFIRMED:
-      return {
-        visible: true,
-        templateValues: {
-          orgId: action.orgId,
-          loading: true,
-        },
-        template: 'organizationDelete',
+      draft.visible = true;
+      draft.templateValues = {
+        orgId: action.orgId,
+        loading: true,
       };
+      draft.template = 'organizationDelete';
+      return;
 
     case types.ORGANIZATION_CREATE:
-      return {
-        visible: true,
-        templateValues: {
-          loading: false,
-        },
-        template: 'organizationCreate',
-      };
+      (draft.visible = true), (draft.templateValues.loading = false);
+      draft.template = 'organizationCreate';
+      return;
 
     case types.ORGANIZATION_CREATE_CONFIRMED:
-      return {
-        visible: true,
-        templateValues: {
-          loading: true,
-        },
-        template: 'organizationCreate',
-      };
+      draft.visible = true;
+      draft.templateValues.loading = true;
+      draft.template = 'organizationCreate';
+      return;
 
     case types.ORGANIZATION_ADD_MEMBER:
-      return {
-        visible: true,
-        templateValues: { orgId: action.orgId },
-        template: 'organizationAddMember',
-      };
+      draft.visible = true;
+      draft.templateValues.orgId = action.orgId;
+      draft.template = 'organizationAddMember';
+      return;
 
     case types.ORGANIZATION_ADD_MEMBER_TYPING:
-      return {
-        visible: true,
-        templateValues: { orgId: action.orgId, loading: false },
-        template: 'organizationAddMember',
-      };
+      draft.visible = true;
+      draft.templateValues = { orgId: action.orgId, loading: false };
+      draft.template = 'organizationAddMember';
+      return;
 
     case types.ORGANIZATION_ADD_MEMBER_CONFIRMED:
-      return {
-        visible: true,
-        templateValues: { orgId: action.orgId, loading: true },
-        template: 'organizationAddMember',
-      };
+      draft.visible = true;
+      draft.templateValues = { orgId: action.orgId, loading: true };
+      draft.template = 'organizationAddMember';
+      return;
 
     case types.ORGANIZATION_ADD_MEMBER_ERROR:
-      return {
-        visible: true,
-        templateValues: {
-          orgId: action.orgId,
-          loading: false,
-          errorMessage: action.errorMessage,
-        },
-        template: 'organizationAddMember',
+      draft.visible = true;
+      draft.templateValues = {
+        orgId: action.orgId,
+        loading: false,
+        errorMessage: action.errorMessage,
       };
+      draft.template = 'organizationAddMember';
+      return;
 
     case types.ORGANIZATION_REMOVE_MEMBER:
-      return {
-        visible: true,
-        templateValues: { orgId: action.orgId, email: action.email },
-        template: 'organizationRemoveMember',
-      };
+      draft.visible = true;
+      draft.templateValues = { orgId: action.orgId, email: action.email };
+      draft.template = 'organizationRemoveMember';
+      return;
 
     case types.ORGANIZATION_REMOVE_MEMBER_CONFIRMED:
-      return {
-        visible: true,
-        templateValues: {
-          orgId: action.orgId,
-          email: action.email,
-          loading: true,
-        },
-        template: 'organizationRemoveMember',
+      draft.visible = true;
+      draft.templateValues = {
+        orgId: action.orgId,
+        email: action.email,
+        loading: true,
       };
-
-    default:
-      return state;
+      draft.template = 'organizationRemoveMember';
+      return;
   }
-}
+}, initialState);
+
+export default modalReducer;
