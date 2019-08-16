@@ -6,6 +6,7 @@ import { push } from 'connected-react-router';
 import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
+import mockedStatus from 'mockedStatus';
 import moment from 'moment';
 
 // API instantiations.
@@ -451,20 +452,26 @@ function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
       return status;
     })
     .catch(error => {
-      console.error(error);
-      if (error.status === 404) {
-        dispatch(clusterLoadStatusNotFound(clusterId));
+      // TODO: Find a better way to deal with status endpoint errors in dev:
+      // https://github.com/giantswarm/giantswarm/issues/6757
+      if (window.config.environment === 'development') {
+        dispatch(clusterLoadStatusSuccess(clusterId, mockedStatus));
       } else {
-        dispatch(clusterLoadStatusError(clusterId, error));
+        console.error(error);
+        if (error.status === 404) {
+          dispatch(clusterLoadStatusNotFound(clusterId));
+        } else {
+          dispatch(clusterLoadStatusError(clusterId, error));
 
-        new FlashMessage(
-          'Something went wrong while trying to load the cluster status.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
+          new FlashMessage(
+            'Something went wrong while trying to load the cluster status.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
+          );
 
-        throw error;
+          throw error;
+        }
       }
     });
 }
