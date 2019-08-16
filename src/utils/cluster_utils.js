@@ -5,7 +5,7 @@
 export function getNumberOfNodes(cluster) {
   if (
     !cluster.status ||
-    !cluster.status.nodes ||
+    !cluster.status.cluster.nodes ||
     cluster.status.cluster.nodes.length === 0
   ) {
     return 0;
@@ -36,7 +36,7 @@ export function getNumberOfNodes(cluster) {
 export function getMemoryTotal(cluster) {
   var workers = getNumberOfNodes(cluster);
 
-  if (workers === null || workers === 0 || !cluster.workers) {
+  if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null;
   }
   var m = workers * cluster.workers[0].memory.size_gb;
@@ -45,7 +45,7 @@ export function getMemoryTotal(cluster) {
 
 export function getStorageTotal(cluster) {
   var workers = getNumberOfNodes(cluster);
-  if (workers === null || workers === 0 || !cluster.workers) {
+  if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null;
   }
   var s = workers * cluster.workers[0].storage.size_gb;
@@ -54,7 +54,7 @@ export function getStorageTotal(cluster) {
 
 export function getCpusTotal(cluster) {
   var workers = getNumberOfNodes(cluster);
-  if (workers === null || workers === 0 || !cluster.workers) {
+  if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null;
   }
   return workers * cluster.workers[0].cpu.cores;
