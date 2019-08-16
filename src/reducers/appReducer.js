@@ -2,6 +2,7 @@ import * as types from 'actions/actionTypes';
 import {
   fetchSelectedOrganizationFromStorage,
   fetchUserFromStorage,
+  removeUser,
 } from 'utils/localStorageUtils';
 import produce from 'immer';
 
@@ -41,6 +42,8 @@ const appReducer = produce((draft, action) => {
     case types.LOGOUT_SUCCESS:
     case types.LOGOUT_ERROR:
     case types.UNAUTHORIZED:
+      // TODO Is there a better place for removeUser()?
+      removeUser();
       draft.loggedInUser = {};
       draft.firstLoadComplete = false;
       return;
