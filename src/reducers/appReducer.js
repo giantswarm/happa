@@ -3,6 +3,7 @@ import {
   fetchSelectedOrganizationFromStorage,
   fetchUserFromStorage,
   removeUser,
+  setUser,
 } from 'utils/localStorageUtils';
 import produce from 'immer';
 
@@ -33,6 +34,7 @@ const appReducer = produce((draft, action) => {
       return;
 
     case types.LOGIN_SUCCESS:
+      setUser(action.userData);
       Object.keys(action.userData).forEach(key => {
         draft.loggedInUser[key] = action.userData[key];
       });

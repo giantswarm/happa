@@ -1,3 +1,5 @@
+import GiantSwarm from 'giantswarm';
+
 export const removeUser = () => localStorage.removeItem('user');
 
 export const fetchSelectedOrganizationFromStorage = () => {
@@ -25,4 +27,13 @@ export const fetchUserFromStorage = () => {
   }
 
   return user;
+};
+
+export const setUser = userData => {
+  localStorage.setItem('user', JSON.stringify(userData));
+  var defaultClient = GiantSwarm.ApiClient.instance;
+  var defaultClientAuth =
+    defaultClient.authentications['AuthorizationHeaderToken'];
+  defaultClientAuth.apiKey = userData.auth.token;
+  defaultClientAuth.apiKeyPrefix = userData.auth.scheme;
 };
