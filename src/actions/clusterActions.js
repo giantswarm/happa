@@ -127,6 +127,7 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
           if (window.config.environment === 'development') {
             return { id: clusterId, ...mockedStatus };
           } else {
+            // TODO: Find out why we are getting an empty object back from this call. Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
             return clustersApi
               .getClusterStatusWithHttpInfo(scheme + ' ' + token, clusterId)
               .then(data => {
