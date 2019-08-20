@@ -153,7 +153,6 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
       });
     })
     .then(clustersObject => {
-      console.log(clustersObject);
       const lastUpdated = Date.now();
       dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
     })
