@@ -80,7 +80,7 @@ class ViewAndEditName extends React.Component {
   handleSubmit = evt => {
     evt.preventDefault();
 
-    const { entity, onSubmit, dispatch } = this.props;
+    const { onSubmit } = this.props;
     const inputFieldValue = this.nameInputRef.current.value;
 
     var validate = this.validate();
