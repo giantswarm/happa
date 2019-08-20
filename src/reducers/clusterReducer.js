@@ -31,6 +31,7 @@ const clusterReducer = produce((draft, action) => {
     case types.CLUSTERS_LOAD_SUCCESS_V4:
       Object.keys(action.clusters).forEach(clusterId => {
         const withAwsKeys = ensureWorkersHaveAWSkey(action.clusters[clusterId]);
+
         draft.items[clusterId] = action.clusters[clusterId];
         draft.items[clusterId].workers = withAwsKeys.workers;
       });

@@ -87,15 +87,67 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
   return clustersApi
     .getClusters(scheme + ' ' + token)
     .then(clusters => {
-      const lastUpdated = Date.now();
       const enhancedClusters = enhanceWithCapabilities(
         clusters,
         getState().app.info.general.provider
       );
 
       // Clusters array to object, because we are storing an object in the store
-      const clustersObject = clustersLoadArrayToObject(enhancedClusters);
+      let clustersObject = clustersLoadArrayToObject(enhancedClusters);
+      return clustersObject;
+    })
+    .then(clustersObject => {
+      return Promise.all(
+        Object.keys(clustersObject).map(clusterId => {
+          return clustersApi
+            .getCluster(scheme + ' ' + token, clusterId)
+            .then(clusterDetails => {
+              clusterDetails.capabilities = computeCapabilities(
+                clusterDetails,
+                getState().app.info.general.provider
+              );
 
+              return clusterDetails;
+            });
+        })
+      ).then(clusterDetailsArray => {
+        clusterDetailsArray.forEach(clusterDetail => {
+          clustersObject[clusterDetail.id] = {
+            ...clustersObject[clusterDetail.id],
+            ...clusterDetail,
+          };
+        });
+
+        return clustersObject;
+      });
+    })
+    .then(clustersObject => {
+      return Promise.all(
+        Object.keys(clustersObject).map(clusterId => {
+          if (window.config.environment === 'development') {
+            return { id: clusterId, ...mockedStatus };
+          } else {
+            return clustersApi
+              .getClusterStatus(scheme + ' ' + token, clusterId)
+              .then(clusterStatus => {
+                return { id: clusterId, ...clusterStatus };
+              });
+          }
+        })
+      ).then(clusterStatusArray => {
+        clusterStatusArray.forEach(clusterStatus => {
+          clustersObject[clusterStatus.id] = {
+            ...clustersObject[clusterStatus.id],
+            ...{ status: clusterStatus },
+          };
+        });
+
+        return clustersObject;
+      });
+    })
+    .then(clustersObject => {
+      console.log(clustersObject);
+      const lastUpdated = Date.now();
       dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
     })
     .catch(error => {
@@ -726,14 +778,7 @@ export function clusterPatch(cluster, payload) {
     });
 
     return clustersApi
-      .modifyCluster(scheme + ' ' + token, payload, cluster.id)
-      .then(() => {
-        new FlashMessage(
-          'Cluster name changed',
-          messageType.SUCCESS,
-          messageTTL.SHORT
-        );
-      })
+      .modifyCluster(scheme + ' ' + token, cluster.id, payload)
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch({
@@ -743,7 +788,7 @@ export function clusterPatch(cluster, payload) {
         });
 
         new FlashMessage(
-          'Something went wrong while trying to update the cluster name',
+          'Something went wrong while trying to update the cluster',
           messageType.ERROR,
           messageTTL.MEDIUM,
           'Please try again later or contact support: support@giantswarm.io'
