@@ -152,6 +152,12 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
     })
     .catch(error => {
       console.error(error);
+      new FlashMessage(
+        'Something went wrong while trying to load clusters.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
       dispatch(clustersLoadErrorV4(error));
     });
 }
