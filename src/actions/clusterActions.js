@@ -128,9 +128,16 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
             return { id: clusterId, ...mockedStatus };
           } else {
             return clustersApi
-              .getClusterStatus(scheme + ' ' + token, clusterId)
-              .then(clusterStatus => {
-                return { id: clusterId, ...clusterStatus };
+              .getClusterStatusWithHttpInfo(scheme + ' ' + token, clusterId)
+              .then(data => {
+                // For some reason we're getting an empty object back.
+                // The Giantswarm JS client is not parsing the returned JSON
+                // and giving us a object in the normal way anymore.
+                // Very stumped, since nothing has changed.
+                // So we need to access the raw response and parse the json
+                // ourselves.
+                let status = JSON.parse(data.response.text);
+                return { id: clusterId, ...status };
               });
           }
         })
