@@ -102,7 +102,7 @@ class ScaleClusterModal extends React.Component {
         };
 
         this.props.clusterActions
-          .clusterPatch(this.props.cluster, {scaling: scaling })
+          .clusterPatch(this.props.cluster, { scaling: scaling })
           .then(patchedCluster => {
             this.close();
 
