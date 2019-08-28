@@ -65,9 +65,6 @@ class ChangeEmailForm extends React.Component {
 
     // Don't submit the form if nothing changed.
     if (this.props.user.email != this.state.fields.email.value) {
-      var token = this.props.user.auth.token;
-      var scheme = this.props.user.auth.scheme;
-
       var usersApi = new GiantSwarm.UsersApi();
 
       this.setState({
@@ -76,7 +73,7 @@ class ChangeEmailForm extends React.Component {
       });
 
       usersApi
-        .modifyUser(scheme + ' ' + token, this.props.user.email, {
+        .modifyUser(this.props.user.email, {
           email: this.state.fields.email.value,
         })
         .then(() => {

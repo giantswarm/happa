@@ -45,16 +45,13 @@ function loadCatalogIndex(catalog) {
 // with catalogs and apps in the right places.
 //
 export function catalogsLoad() {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch({ type: types.CATALOGS_LOAD });
-
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
 
     var appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
-      .getAppCatalogs(scheme + ' ' + token)
+      .getAppCatalogs()
       .then(catalogs => {
         let catalogsDict = {};
 
