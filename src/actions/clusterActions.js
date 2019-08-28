@@ -137,8 +137,15 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
                 // Very stumped, since nothing has changed.
                 // So we need to access the raw response and parse the json
                 // ourselves.
-                let status = JSON.parse(data.response.text);
-                return { id: clusterId, ...status };
+                let statusResponse = JSON.parse(data.response.text);
+                return { id: clusterId, statusResponse: statusResponse };
+              })
+              .catch(error => {
+                if (error.status === 404) {
+                  return { id: clusterId, statusResponse: null };
+                } else {
+                  throw error;
+                }
               });
           }
         })
@@ -146,7 +153,7 @@ function clustersLoadV4(token, scheme, dispatch, getState) {
         clusterStatusArray.forEach(clusterStatus => {
           clustersObject[clusterStatus.id] = {
             ...clustersObject[clusterStatus.id],
-            ...{ status: clusterStatus },
+            ...{ status: clusterStatus.statusResponse },
           };
         });
 
