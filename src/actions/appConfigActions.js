@@ -10,10 +10,7 @@ import GiantSwarm from 'giantswarm';
  * @param {Object} values The values which will be set for the uservalues configmap.
  */
 export function updateAppConfig(appName, clusterID, values) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_UPDATE_APP_CONFIG,
       clusterID,
@@ -23,7 +20,7 @@ export function updateAppConfig(appName, clusterID, values) {
     var appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
-      .modifyClusterAppConfig(scheme + ' ' + token, clusterID, appName, {
+      .modifyClusterAppConfig(clusterID, appName, {
         body: values,
       })
       .then(() => {
@@ -77,10 +74,7 @@ export function updateAppConfig(appName, clusterID, values) {
  * @param {Object} values The values which will be set for the uservalues configmap.
  */
 export function createAppConfig(appName, clusterID, values) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_CREATE_APP_CONFIG,
       clusterID,
@@ -90,7 +84,7 @@ export function createAppConfig(appName, clusterID, values) {
     var appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
-      .createClusterAppConfig(scheme + ' ' + token, clusterID, appName, {
+      .createClusterAppConfig(clusterID, appName, {
         body: values,
       })
       .then(() => {
@@ -143,10 +137,7 @@ export function createAppConfig(appName, clusterID, values) {
  * @param {Object} clusterID What cluster it is on.
  */
 export function deleteAppConfig(appName, clusterID) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_DELETE_APP_CONFIG,
       clusterID,
@@ -156,7 +147,7 @@ export function deleteAppConfig(appName, clusterID) {
     var appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
-      .deleteClusterAppConfig(scheme + ' ' + token, clusterID, appName)
+      .deleteClusterAppConfig(clusterID, appName)
       .then(() => {
         dispatch({
           type: types.CLUSTER_DELETE_APP_CONFIG_SUCCESS,
