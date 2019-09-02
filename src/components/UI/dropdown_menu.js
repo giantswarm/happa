@@ -64,13 +64,17 @@ function DropdownMenu(props) {
   let timeOutId = null;
 
   const onBlurHandler = () => {
+    console.log('blur');
     timeOutId = setTimeout(() => {
       setIsOpen(false);
     });
   };
 
   // If a child receives focus, do not close the popover.
-  const onFocusHandler = () => clearTimeout(timeOutId);
+  const onFocusHandler = () => {
+    console.log('focus');
+    clearTimeout(timeOutId);
+  };
 
   const onKeyDownHandler = event => {
     if (event.key === 'Escape') setIsOpen(false);

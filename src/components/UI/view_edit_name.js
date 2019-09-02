@@ -192,5 +192,7 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
   undefined,
-  mapDispatchToProps
+  mapDispatchToProps,
+  undefined,
+  { forwardRef: true }
 )(ViewAndEditName);
