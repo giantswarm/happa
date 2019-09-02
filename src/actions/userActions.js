@@ -50,11 +50,9 @@ export function refreshUserInfo() {
       });
       throw 'No logged in user to refresh.';
     }
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
 
     return usersApi
-      .getCurrentUser(scheme + ' ' + token)
+      .getCurrentUser()
       .then(data => {
         var userData = {
           email: data.email,
@@ -118,10 +116,8 @@ export function auth0Login(authResult) {
 // It then dispatches loginSuccess with the users token and email
 // the userReducer takes care of storing this in state.
 export function giantswarmLogin(email, password) {
-  return function(dispatch, getState) {
-    var usersApi = new GiantSwarm.UsersApi();
-    var authTokensApi = new GiantSwarm.AuthTokensApi();
-    var authToken;
+  return function(dispatch) {
+    let authTokensApi = new GiantSwarm.AuthTokensApi();
 
     dispatch({
       type: types.LOGIN,
@@ -134,17 +130,11 @@ export function giantswarmLogin(email, password) {
         password_base64: Base64.encode(password),
       })
       .then(response => {
-        authToken = response.auth_token;
-        return usersApi.getCurrentUser(
-          'giantswarm' + ' ' + response.auth_token
-        );
-      })
-      .then(data => {
-        var userData = {
-          email: data.email,
+        let userData = {
+          email: email,
           auth: {
             scheme: 'giantswarm',
-            token: authToken,
+            token: response.auth_token,
           },
         };
 
@@ -155,7 +145,6 @@ export function giantswarmLogin(email, password) {
         dispatch(loginSuccess(userData));
         return userData;
       })
-      .then(getInfo().bind(this, dispatch, getState))
       .catch(error => {
         console.error('Error trying to log in:', error);
 
@@ -236,9 +225,7 @@ export function unauthorized() {
 // getInfo calls the /v4/info/ endpoint and dispatches accordingly to store
 // the resulting info into the state.
 export function getInfo() {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
+  return function(dispatch) {
     var infoApi = new GiantSwarm.InfoApi();
 
     dispatch({
@@ -246,7 +233,7 @@ export function getInfo() {
     });
 
     return infoApi
-      .getInfo(scheme + ' ' + token)
+      .getInfo()
       .then(info => {
         dispatch({
           type: types.INFO_LOAD_SUCCESS,
@@ -272,9 +259,6 @@ export function getInfo() {
 // /v4/users/
 export function usersLoad() {
   return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
     var usersApi = new GiantSwarm.UsersApi();
 
     var alreadyFetching = getState().entities.users.isFetching;
@@ -288,7 +272,7 @@ export function usersLoad() {
     dispatch({ type: types.USERS_LOAD });
 
     return usersApi
-      .getUsers(scheme + ' ' + token)
+      .getUsers()
       .then(usersArray => {
         var users = {};
 
@@ -323,17 +307,15 @@ export function usersLoad() {
 // ----------------
 // Removes the expiration date from a given user.
 export function userRemoveExpiration(email) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
 
     var usersApi = new GiantSwarm.UsersApi();
 
     dispatch({ type: types.USERS_REMOVE_EXPIRATION });
 
     return usersApi
-      .modifyUser(scheme + ' ' + token, email, { expiry: NEVER_EXPIRES })
+      .modifyUser(email, { expiry: NEVER_EXPIRES })
       .then(user => {
         dispatch({
           type: types.USERS_REMOVE_EXPIRATION_SUCCESS,
@@ -360,16 +342,13 @@ export function userRemoveExpiration(email) {
 // ----------------
 // Deletes the given user.
 export function userDelete(email) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     var usersApi = new GiantSwarm.UsersApi();
 
     dispatch({ type: types.USERS_DELETE });
 
     return usersApi
-      .deleteUser(scheme + ' ' + token, email)
+      .deleteUser(email)
       .then(() => {
         dispatch({
           type: types.USERS_DELETE_SUCCESS,

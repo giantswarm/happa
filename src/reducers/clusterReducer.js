@@ -30,8 +30,12 @@ const clusterReducer = produce((draft, action) => {
   switch (action.type) {
     case types.CLUSTERS_LOAD_SUCCESS_V4:
       Object.keys(action.clusters).forEach(clusterId => {
+        const withAwsKeys = ensureWorkersHaveAWSkey(action.clusters[clusterId]);
+
         draft.items[clusterId] = action.clusters[clusterId];
+        draft.items[clusterId].workers = withAwsKeys.workers;
       });
+
       draft.lastUpdated = action.lastUpdated;
       return;
 
@@ -49,9 +53,11 @@ const clusterReducer = produce((draft, action) => {
       return;
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS: {
+      const withAwsKeys = ensureWorkersHaveAWSkey(action.cluster);
       draft.items[action.cluster.id] = {
         ...draft.items[action.cluster.id],
-        ...ensureWorkersHaveAWSkey(action.cluster),
+        ...action.cluster,
+        workers: withAwsKeys.workers,
       };
 
       // Fill in scaling values when they aren't supplied.

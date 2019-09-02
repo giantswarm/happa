@@ -66,9 +66,6 @@ const determineSelectedOrganization = (organizations, selectedOrganization) => {
 //
 export function organizationsLoad() {
   return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
     var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     var alreadyFetching = getState().entities.organizations.isFetching;
@@ -82,7 +79,7 @@ export function organizationsLoad() {
     dispatch({ type: types.ORGANIZATIONS_LOAD });
 
     return organizationsApi
-      .getOrganizations(scheme + ' ' + token)
+      .getOrganizations()
       .then(organizations => {
         var organizationsArray = organizations.map(organization => {
           return organization.id;
@@ -91,7 +88,7 @@ export function organizationsLoad() {
         var orgDetails = Promise.all(
           organizationsArray.map(organizationName => {
             return organizationsApi
-              .getOrganization(scheme + ' ' + token, organizationName)
+              .getOrganization(organizationName)
               .then(organization => {
                 return organization;
               });
@@ -151,15 +148,13 @@ export function organizationsLoad() {
 // and organization. It performs the API call to actually delete the organization
 // and dispatches actions accordingly.
 export function organizationDeleteConfirmed(orgId) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
+  return function(dispatch) {
     dispatch({ type: types.ORGANIZATION_DELETE_CONFIRMED, orgId: orgId });
 
     var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     return organizationsApi
-      .deleteOrganization(scheme + ' ' + token, orgId)
+      .deleteOrganization(orgId)
       .then(() => {
         new FlashMessage(
           'Organization  <code>' + orgId + '</code> deleted',
@@ -209,9 +204,6 @@ export function organizationCreate() {
 // and dispatches actions accordingly.
 export function organizationCreateConfirmed(orgId) {
   return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
     dispatch({ type: types.ORGANIZATION_CREATE_CONFIRMED });
 
     var organizationsApi = new GiantSwarm.OrganizationsApi();
@@ -226,7 +218,7 @@ export function organizationCreateConfirmed(orgId) {
     }
 
     return organizationsApi
-      .addOrganization(scheme + ' ' + token, orgId, {
+      .addOrganization(orgId, {
         members: members,
       })
       .then(() => {
@@ -309,19 +301,13 @@ export function organizationAddMemberConfirmed(orgId, email) {
       }
     }
 
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
     var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     return organizationsApi
-      .getOrganization(scheme + ' ' + token, orgId)
+      .getOrganization(orgId)
       .then(organization => {
         var members = organization.members.concat([{ email: email }]);
-        return organizationsApi.modifyOrganization(
-          scheme + ' ' + token,
-          orgId,
-          { members }
-        );
+        return organizationsApi.modifyOrganization(orgId, { members });
       })
       .then(() => {
         new FlashMessage(
@@ -355,10 +341,7 @@ export function organizationAddMemberConfirmed(orgId, email) {
 // a member from an organization. It performs the API call to actually do the job,
 // and dispatches actions accordingly.
 export function organizationRemoveMemberConfirmed(orgId, email) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.ORGANIZATION_REMOVE_MEMBER_CONFIRMED,
       orgId: orgId,
@@ -368,16 +351,12 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
     var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     organizationsApi
-      .getOrganization(scheme + ' ' + token, orgId)
+      .getOrganization(orgId)
       .then(organization => {
         var members = organization.members.filter(member => {
           return member.email !== email;
         });
-        return organizationsApi.modifyOrganization(
-          scheme + ' ' + token,
-          orgId,
-          { members }
-        );
+        return organizationsApi.modifyOrganization(orgId, { members });
       })
       .then(() => {
         new FlashMessage(
@@ -424,10 +403,7 @@ export function organizationRemoveMember(orgId, email) {
 
 // organizationCredentialsLoad is called to load credentials for an organization.
 export function organizationCredentialsLoad(orgId) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.ORGANIZATION_CREDENTIALS_LOAD,
     });
@@ -435,7 +411,7 @@ export function organizationCredentialsLoad(orgId) {
     var organizationsApi = new GiantSwarm.OrganizationsApi();
 
     organizationsApi
-      .getCredentials(scheme + ' ' + token, orgId)
+      .getCredentials(orgId)
       .then(credentials => {
         dispatch({
           type: types.ORGANIZATION_CREDENTIALS_LOAD_SUCCESS,
@@ -471,10 +447,7 @@ export function organizationCredentialsSet() {
 // organizationCredentialsSetConfirmed performs the API request to set the credentials
 // for an organization and handles the result.
 export function organizationCredentialsSetConfirmed(provider, orgId, data) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED,
     });
@@ -500,7 +473,7 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
 
     var organizationsApi = new GiantSwarm.OrganizationsApi();
     organizationsApi
-      .addCredentials(scheme + ' ' + token, orgId, requestBody)
+      .addCredentials(orgId, requestBody)
       .then(response => {
         new FlashMessage(
           'Credentials have been stored successfully',

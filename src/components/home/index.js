@@ -21,24 +21,11 @@ class Home extends React.Component {
   componentDidMount() {
     this.registerRefreshInterval();
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
-    this.fetchClusterDetails(this.props.clusters);
-  }
-
-  componentDidUpdate(prevProps) {
-    // load cluster details if cluster list has changed
-    if (
-      !_.isEqual(
-        // inmutability?
-        this.props.clusters.map(x => x.id),
-        prevProps.clusters.map(x => x.id)
-      )
-    ) {
-      this.fetchClusterDetails(this.props.clusters);
-    }
   }
 
   componentWillUnmount() {
     this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
+    this.props.clearInterval(this.refreshInterval);
   }
 
   /**
@@ -64,16 +51,6 @@ class Home extends React.Component {
       this.registerRefreshInterval();
     }
   };
-
-  fetchClusterDetails(clusters) {
-    return Promise.all(
-      _.flatten(
-        clusters.map(cluster => {
-          return [this.props.actions.clusterLoadDetails(cluster.id)];
-        })
-      )
-    );
-  }
 
   /**
    * Returns the string to use as the document.title

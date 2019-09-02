@@ -27,6 +27,7 @@ class UpgradeClusterModal extends React.Component {
 
   close = () => {
     this.setState({
+      loading: false,
       modalVisible: false,
     });
   };
@@ -81,6 +82,7 @@ class UpgradeClusterModal extends React.Component {
               let component = components[diffEdit.path[0]];
               return (
                 <ReleaseComponentLabel
+                  key={component.name}
                   name={component.name}
                   oldVersion={diffEdit.lhs}
                   version={diffEdit.rhs}
@@ -202,30 +204,20 @@ class UpgradeClusterModal extends React.Component {
         var targetReleaseVersion = this.props.targetRelease.version;
 
         this.props.clusterActions
-          .clusterPatch({
-            id: this.props.cluster.id,
+          .clusterPatch(this.props.cluster, {
             release_version: targetReleaseVersion,
           })
           .then(patchedCluster => {
-            this.setState(
-              {
-                loading: false,
-              },
-              () => {
-                this.props.clusterActions.clusterLoadDetailsSuccess(
-                  patchedCluster
-                );
+            this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
 
-                new FlashMessage(
-                  'Cluster upgrade initiated.',
-                  messageType.INFO,
-                  messageTTL.MEDIUM,
-                  'Keep an eye on <code>kubectl get nodes</code> to follow the upgrade progress.'
-                );
-
-                this.close();
-              }
+            new FlashMessage(
+              'Cluster upgrade initiated.',
+              messageType.INFO,
+              messageTTL.MEDIUM,
+              'Keep an eye on <code>kubectl get nodes</code> to follow the upgrade progress.'
             );
+
+            this.close();
           })
           .catch(error => {
             this.setState({

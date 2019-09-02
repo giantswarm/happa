@@ -80,7 +80,7 @@ class ViewAndEditName extends React.Component {
   handleSubmit = evt => {
     evt.preventDefault();
 
-    const { entity, onSubmit, dispatch } = this.props;
+    const { onSubmit } = this.props;
     const inputFieldValue = this.nameInputRef.current.value;
 
     var validate = this.validate();
@@ -93,18 +93,19 @@ class ViewAndEditName extends React.Component {
       return;
     }
 
-    dispatch(
-      // We need the object and the change we want to make to it in order to be able
-      // to do optimistic updates
-      onSubmit(entity, { name: inputFieldValue })
-    ).then(() => {
-      this.setState({
-        editing: false,
-        name: inputFieldValue,
-      });
+    onSubmit(inputFieldValue)
+      .then(() => {
+        this.setState({
+          editing: false,
+          name: inputFieldValue,
+        });
 
-      this.props.toggleEditingState(false);
-    });
+        const { toggleEditingState } = this.props;
+        if (toggleEditingState) toggleEditingState(false);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   handleKey = evt => {

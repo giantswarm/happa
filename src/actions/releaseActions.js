@@ -16,16 +16,13 @@ const releasesLoadError = error => ({
 });
 
 export function loadReleases() {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch(releasesLoad());
 
     var releasesApi = new GiantSwarm.ReleasesApi();
 
     return releasesApi
-      .getReleases(scheme + ' ' + token)
+      .getReleases()
       .then(releases => {
         const versionKeyedReleases = releases.reduce((accumulator, release) => {
           return { ...accumulator, [release.version]: release };

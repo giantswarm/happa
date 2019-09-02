@@ -6,6 +6,7 @@ import { push } from 'connected-react-router';
 import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
+import mockedStatus from 'mockedStatus';
 import moment from 'moment';
 
 // API instantiations.
@@ -66,49 +67,117 @@ function clustersLoadArrayToObject(clusters) {
  */
 export function clustersLoad() {
   return function(dispatch, getState) {
-    const token = getState().app.loggedInUser.auth.token;
-    const scheme = getState().app.loggedInUser.auth.scheme;
     // TODO getClusters() will get all clusters, so we will need some logic here
     // that separates regular clusters from NP clusters and then pass them to their
     // respective methods.
 
-    clustersLoadV4(token, scheme, dispatch, getState);
+    clustersLoadV4(dispatch, getState);
     if (window.config.environment === 'development') {
-      clustersLoadV5(token, scheme, dispatch, getState);
+      clustersLoadV5(dispatch, getState);
     }
   };
 }
 
-function clustersLoadV4(token, scheme, dispatch, getState) {
+function clustersLoadV4(dispatch, getState) {
   // TODO this will be in getClusters() here in this function we just want to
   // dispatch specific actions for v4 clusters.
   // Or maybe we won't need this method at all.
   return clustersApi
-    .getClusters(scheme + ' ' + token)
+    .getClusters()
     .then(clusters => {
-      const lastUpdated = Date.now();
       const enhancedClusters = enhanceWithCapabilities(
         clusters,
         getState().app.info.general.provider
       );
 
       // Clusters array to object, because we are storing an object in the store
-      const clustersObject = clustersLoadArrayToObject(enhancedClusters);
+      let clustersObject = clustersLoadArrayToObject(enhancedClusters);
+      return clustersObject;
+    })
+    .then(clustersObject => {
+      return Promise.all(
+        Object.keys(clustersObject).map(clusterId => {
+          return clustersApi.getCluster(clusterId).then(clusterDetails => {
+            clusterDetails.capabilities = computeCapabilities(
+              clusterDetails,
+              getState().app.info.general.provider
+            );
 
+            return clusterDetails;
+          });
+        })
+      ).then(clusterDetailsArray => {
+        clusterDetailsArray.forEach(clusterDetail => {
+          clustersObject[clusterDetail.id] = {
+            ...clustersObject[clusterDetail.id],
+            ...clusterDetail,
+          };
+        });
+
+        return clustersObject;
+      });
+    })
+    .then(clustersObject => {
+      return Promise.all(
+        Object.keys(clustersObject).map(clusterId => {
+          if (window.config.environment === 'development') {
+            return { id: clusterId, ...mockedStatus };
+          } else {
+            // TODO: Find out why we are getting an empty object back from this call. Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
+            return clustersApi
+              .getClusterStatusWithHttpInfo(clusterId)
+              .then(data => {
+                // For some reason we're getting an empty object back.
+                // The Giantswarm JS client is not parsing the returned JSON
+                // and giving us a object in the normal way anymore.
+                // Very stumped, since nothing has changed.
+                // So we need to access the raw response and parse the json
+                // ourselves.
+                let statusResponse = JSON.parse(data.response.text);
+                return { id: clusterId, statusResponse: statusResponse };
+              })
+              .catch(error => {
+                if (error.status === 404) {
+                  return { id: clusterId, statusResponse: null };
+                } else {
+                  throw error;
+                }
+              });
+          }
+        })
+      ).then(clusterStatusArray => {
+        clusterStatusArray.forEach(clusterStatus => {
+          clustersObject[clusterStatus.id] = {
+            ...clustersObject[clusterStatus.id],
+            ...{ status: clusterStatus.statusResponse },
+          };
+        });
+
+        return clustersObject;
+      });
+    })
+    .then(clustersObject => {
+      const lastUpdated = Date.now();
       dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
     })
     .catch(error => {
       console.error(error);
+      new FlashMessage(
+        'Something went wrong while trying to load clusters.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
       dispatch(clustersLoadErrorV4(error));
     });
 }
 
-function clustersLoadV5(token, scheme, dispatch, getState) {
+function clustersLoadV5(dispatch, getState) {
   // TODO this will be in getClusters() here in this function we just want to
   // dispatch specific actions for v5 clusters.
   // Or maybe we won't need this method at all.
   return clustersApi
-    .getClusterV5(scheme + ' ' + token, 'm0ckd')
+    .getClusterV5('m0ckd')
     .then(clusters => {
       // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
       const nodePoolsClusters = [clusters].map(cluster => cluster.id);
@@ -157,9 +226,6 @@ export function clusterLoadApps(clusterId) {
       return;
     }
 
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
     dispatch({
       type: types.CLUSTER_LOAD_APPS,
       clusterId,
@@ -168,7 +234,7 @@ export function clusterLoadApps(clusterId) {
     var appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
-      .getClusterApps(scheme + ' ' + token, clusterId)
+      .getClusterApps(clusterId)
       .then(apps => {
         dispatch({
           type: types.CLUSTER_LOAD_APPS_SUCCESS,
@@ -211,10 +277,7 @@ export function clusterLoadApps(clusterId) {
  * @param {Object} clusterID Where to install the app.
  */
 export function clusterInstallApp(app, clusterID) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_INSTALL_APP,
       clusterID,
@@ -229,7 +292,7 @@ export function clusterInstallApp(app, clusterID) {
         // If we have user config that we want to create, then
         // fire off the call to create it.
         appConfigsApi
-          .createClusterAppConfig(scheme + ' ' + token, clusterID, app.name, {
+          .createClusterAppConfig(clusterID, app.name, {
             body: app.valuesYAML,
           })
           .then(() => {
@@ -268,7 +331,7 @@ export function clusterInstallApp(app, clusterID) {
     return optionalCreateAppConfiguration
       .then(() => {
         return appsApi
-          .createClusterApp(scheme + ' ' + token, clusterID, app.name, {
+          .createClusterApp(clusterID, app.name, {
             body: {
               spec: {
                 catalog: app.catalog,
@@ -335,10 +398,7 @@ export function clusterInstallApp(app, clusterID) {
  * @param {Object} clusterID Where to delete the app.
  */
 export function clusterDeleteApp(appName, clusterID) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_DELETE_APP,
       clusterID,
@@ -348,7 +408,7 @@ export function clusterDeleteApp(appName, clusterID) {
     var appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
-      .deleteClusterApp(scheme + ' ' + token, clusterID, appName)
+      .deleteClusterApp(clusterID, appName)
       .then(() => {
         new FlashMessage(
           `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
@@ -375,8 +435,6 @@ export function clusterDeleteApp(appName, clusterID) {
  */
 export function clusterLoadDetails(clusterId) {
   return async function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
 
@@ -387,8 +445,8 @@ export function clusterLoadDetails(clusterId) {
 
     try {
       const cluster = isNodePoolsCluster
-        ? await clustersApi.getClusterV5(scheme + ' ' + token, clusterId)
-        : await clustersApi.getCluster(scheme + ' ' + token, clusterId);
+        ? await clustersApi.getClusterV5(clusterId)
+        : await clustersApi.getCluster(clusterId);
       dispatch(clusterLoadStatus(clusterId));
 
       cluster.capabilities = computeCapabilities(
@@ -421,8 +479,6 @@ export function clusterLoadDetails(clusterId) {
  */
 export function clusterLoadStatus(clusterId) {
   return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
 
@@ -430,11 +486,11 @@ export function clusterLoadStatus(clusterId) {
       // Here we will have something like clusterLoadStatusV5(...);
       return;
     }
-    clusterLoadStatusV4(dispatch, clusterId, token, scheme);
+    clusterLoadStatusV4(dispatch, clusterId);
   };
 }
 
-function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
+function clusterLoadStatusV4(dispatch, clusterId) {
   dispatch({
     type: types.CLUSTER_LOAD_STATUS,
     clusterId,
@@ -445,26 +501,32 @@ function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
   });
 
   return apiClusterStatus
-    .getClusterStatus(scheme + ' ' + token, clusterId)
+    .getClusterStatus(clusterId)
     .then(status => {
       dispatch(clusterLoadStatusSuccess(clusterId, status));
       return status;
     })
     .catch(error => {
-      console.error(error);
-      if (error.status === 404) {
-        dispatch(clusterLoadStatusNotFound(clusterId));
+      // TODO: Find a better way to deal with status endpoint errors in dev:
+      // https://github.com/giantswarm/giantswarm/issues/6757
+      if (window.config.environment === 'development') {
+        dispatch(clusterLoadStatusSuccess(clusterId, mockedStatus));
       } else {
-        dispatch(clusterLoadStatusError(clusterId, error));
+        console.error(error);
+        if (error.status === 404) {
+          dispatch(clusterLoadStatusNotFound(clusterId));
+        } else {
+          dispatch(clusterLoadStatusError(clusterId, error));
 
-        new FlashMessage(
-          'Something went wrong while trying to load the cluster status.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
+          new FlashMessage(
+            'Something went wrong while trying to load the cluster status.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
+          );
 
-        throw error;
+          throw error;
+        }
       }
     });
 }
@@ -476,17 +538,14 @@ function clusterLoadStatusV4(dispatch, clusterId, token, scheme) {
  * @param {Object} cluster Cluster definition object
  */
 export function clusterCreate(cluster) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_CREATE,
       cluster,
     });
 
     return clustersApi
-      .addClusterWithHttpInfo(scheme + ' ' + token, cluster)
+      .addClusterWithHttpInfo(cluster)
       .then(data => {
         var location = data.response.headers.location;
         if (location === undefined) {
@@ -525,17 +584,14 @@ export function clusterCreate(cluster) {
  * @param {Object} cluster Cluster definition object, containing ID and owner
  */
 export function clusterDeleteConfirmed(cluster) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_DELETE_CONFIRMED,
       cluster,
     });
 
     return clustersApi
-      .deleteCluster(scheme + ' ' + token, cluster.id)
+      .deleteCluster(cluster.id)
       .then(() => {
         dispatch(push('/organizations/' + cluster.owner));
         dispatch(clusterDeleteSuccess(cluster.id));
@@ -584,8 +640,6 @@ export function clusterLoadKeyPairs(clusterId) {
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
     if (isNodePoolsCluster) return Promise.resolve([]);
 
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
     var keypairsApi = new GiantSwarm.KeyPairsApi();
 
     dispatch({
@@ -594,7 +648,7 @@ export function clusterLoadKeyPairs(clusterId) {
     });
 
     return keypairsApi
-      .getKeyPairs(scheme + ' ' + token, clusterId)
+      .getKeyPairs(clusterId)
       .then(keyPairs => {
         // Add expire_date to keyPairs based on ttl_hours
         const keyPairsWithDates = Object.entries(keyPairs).map(
@@ -707,10 +761,7 @@ export const clustersLoadErrorV5 = error => ({
  * @param {Object} payload object with just the data we want to modify
  */
 export function clusterPatch(cluster, payload) {
-  return function(dispatch, getState) {
-    const token = getState().app.loggedInUser.auth.token;
-    const scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     // Optimistic update.
     dispatch({
       type: types.CLUSTER_PATCH,
@@ -718,33 +769,24 @@ export function clusterPatch(cluster, payload) {
       payload,
     });
 
-    return clustersApi
-      .modifyCluster(scheme + ' ' + token, payload, cluster.id)
-      .then(() => {
-        new FlashMessage(
-          'Cluster name changed',
-          messageType.SUCCESS,
-          messageTTL.SHORT
-        );
-      })
-      .catch(error => {
-        // Undo update to store if the API call fails.
-        dispatch({
-          type: types.CLUSTER_PATCH_ERROR,
-          error,
-          cluster,
-        });
-
-        new FlashMessage(
-          'Something went wrong while trying to update the cluster name',
-          messageType.ERROR,
-          messageTTL.MEDIUM,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        console.error(error);
-        throw error;
+    return clustersApi.modifyCluster(cluster.id, payload).catch(error => {
+      // Undo update to store if the API call fails.
+      dispatch({
+        type: types.CLUSTER_PATCH_ERROR,
+        error,
+        cluster,
       });
+
+      new FlashMessage(
+        'Something went wrong while trying to update the cluster',
+        messageType.ERROR,
+        messageTTL.MEDIUM,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      console.error(error);
+      throw error;
+    });
   };
 }
 
@@ -757,10 +799,7 @@ export function clusterPatch(cluster, payload) {
  * @param {Object} keypair   Key pair object
  */
 export function clusterCreateKeyPair(clusterId, keypair) {
-  return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
-    var scheme = getState().app.loggedInUser.auth.scheme;
-
+  return function(dispatch) {
     dispatch({
       type: types.CLUSTER_CREATE_KEY_PAIR,
       keypair,
@@ -768,7 +807,7 @@ export function clusterCreateKeyPair(clusterId, keypair) {
 
     var keypairsApi = new GiantSwarm.KeyPairsApi();
     return keypairsApi
-      .addKeyPair(scheme + ' ' + token, clusterId, keypair)
+      .addKeyPair(clusterId, keypair)
       .then(keypair => {
         dispatch({
           type: types.CLUSTER_CREATE_KEY_PAIR_SUCCESS,
