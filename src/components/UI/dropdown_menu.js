@@ -64,7 +64,6 @@ function DropdownMenu(props) {
   let timeOutId = null;
 
   const onBlurHandler = () => {
-    console.log('blur');
     timeOutId = setTimeout(() => {
       setIsOpen(false);
     });
@@ -72,7 +71,6 @@ function DropdownMenu(props) {
 
   // If a child receives focus, do not close the popover.
   const onFocusHandler = () => {
-    console.log('focus');
     clearTimeout(timeOutId);
   };
 
