@@ -70,9 +70,7 @@ function DropdownMenu(props) {
   };
 
   // If a child receives focus, do not close the popover.
-  const onFocusHandler = () => {
-    clearTimeout(timeOutId);
-  };
+  const onFocusHandler = () => clearTimeout(timeOutId);
 
   const onKeyDownHandler = event => {
     if (event.key === 'Escape') setIsOpen(false);
