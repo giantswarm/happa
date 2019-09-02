@@ -113,10 +113,8 @@ export function auth0Login(authResult) {
 // It then dispatches loginSuccess with the users token and email
 // the userReducer takes care of storing this in state.
 export function giantswarmLogin(email, password) {
-  return function(dispatch, getState) {
-    var usersApi = new GiantSwarm.UsersApi();
-    var authTokensApi = new GiantSwarm.AuthTokensApi();
-    var authToken;
+  return function(dispatch) {
+    let authTokensApi = new GiantSwarm.AuthTokensApi();
 
     dispatch({
       type: types.LOGIN,
@@ -129,17 +127,11 @@ export function giantswarmLogin(email, password) {
         password_base64: Base64.encode(password),
       })
       .then(response => {
-        authToken = response.auth_token;
-        return usersApi.getCurrentUser(
-          'giantswarm' + ' ' + response.auth_token
-        );
-      })
-      .then(data => {
-        var userData = {
-          email: data.email,
+        let userData = {
+          email: email,
           auth: {
             scheme: 'giantswarm',
-            token: authToken,
+            token: response.auth_token,
           },
         };
 
@@ -149,7 +141,6 @@ export function giantswarmLogin(email, password) {
         dispatch(loginSuccess(userData));
         return userData;
       })
-      .then(getInfo().bind(this, dispatch, getState))
       .catch(error => {
         console.error('Error trying to log in:', error);
 
