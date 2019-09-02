@@ -12,16 +12,11 @@ const nodePoolsApi = new GiantSwarm.NodepoolsApi();
  */
 export function nodePoolsLoad() {
   return async function(dispatch, getState) {
-    const token = getState().app.loggedInUser.auth.token;
-    const scheme = getState().app.loggedInUser.auth.scheme;
     const clusters = getState().entities.clusters.nodePoolsClusters || [];
 
     return Promise.all(
       clusters.map(async clusterId => {
-        const nodePools = await nodePoolsApi.getNodePools(
-          scheme + ' ' + token,
-          clusterId
-        );
+        const nodePools = await nodePoolsApi.getNodePools(clusterId);
 
         // Receiving an array-like with weird prototype from API call,
         // so converting it to an array.
@@ -67,9 +62,6 @@ export function nodePoolsLoad() {
  */
 export function nodePoolPatch(nodePool, payload) {
   return function(dispatch, getState) {
-    const token = getState().app.loggedInUser.auth.token;
-    const scheme = getState().app.loggedInUser.auth.scheme;
-
     // This is to get the cluster id.
     const clusters = getState().entities.clusters.items;
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
@@ -89,14 +81,7 @@ export function nodePoolPatch(nodePool, payload) {
     dispatch(nodePoolPatchAction(nodePool, payload));
 
     return nodePoolsApi
-      .modifyNodePool(scheme + ' ' + token, clusterId, nodePool, payload)
-      .then(() => {
-        new FlashMessage(
-          'Node pool name changed',
-          messageType.SUCCESS,
-          messageTTL.SHORT
-        );
-      })
+      .modifyNodePool(clusterId, nodePool, payload)
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch(nodePoolPatchError(error, nodePool));

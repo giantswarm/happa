@@ -108,13 +108,10 @@ class ChangePassword extends React.Component {
       error: false,
     });
 
-    var token = this.props.user.auth.token;
-    var scheme = this.props.user.auth.scheme;
-
     var usersApi = new GiantSwarm.UsersApi();
 
     usersApi
-      .modifyPassword(scheme + ' ' + token, this.props.user.email, {
+      .modifyPassword(this.props.user.email, {
         current_password_base64: Base64.encode(this.current_password.value()),
         new_password_base64: Base64.encode(this.new_password.value()),
       })
