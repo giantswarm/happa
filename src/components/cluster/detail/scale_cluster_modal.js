@@ -23,6 +23,7 @@ class ScaleClusterModal extends React.Component {
       max: this.props.cluster.scaling.max,
       maxValid: true,
     },
+    nodePool: null,
   };
 
   componentDidMount() {
@@ -50,9 +51,12 @@ class ScaleClusterModal extends React.Component {
     });
   };
 
-  show = () => {
+  show = nodePool => {
+    console.log('hey ', nodePool);
+
     this.setState({
       modalVisible: true,
+      nodePool,
     });
   };
 

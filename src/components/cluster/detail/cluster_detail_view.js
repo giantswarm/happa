@@ -115,9 +115,9 @@ class ClusterDetailView extends React.Component {
     this.props.clusterActions.clusterDelete(cluster);
   }
 
-  showScalingModal = () => {
+  showScalingModal = nodePool => {
     this.scaleClusterModal.reset();
-    this.scaleClusterModal.show();
+    this.scaleClusterModal.show(nodePool);
   };
 
   showUpgradeModal = () => {
