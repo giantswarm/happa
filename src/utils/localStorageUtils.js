@@ -29,11 +29,15 @@ export const fetchUserFromStorage = () => {
   return user;
 };
 
-export const setUser = userData => {
+export const setUserToStorage = userData => {
   localStorage.setItem('user', JSON.stringify(userData));
   var defaultClient = GiantSwarm.ApiClient.instance;
   var defaultClientAuth =
     defaultClient.authentications['AuthorizationHeaderToken'];
   defaultClientAuth.apiKey = userData.auth.token;
   defaultClientAuth.apiKeyPrefix = userData.auth.scheme;
+};
+
+export const setOrganizationToStorage = organizationId => {
+  localStorage.setItem('app.selectedOrganization', organizationId);
 };

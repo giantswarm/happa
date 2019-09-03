@@ -3,7 +3,7 @@ import {
   fetchSelectedOrganizationFromStorage,
   fetchUserFromStorage,
   removeUser,
-  setUser,
+  setUserToStorage,
 } from 'utils/localStorageUtils';
 import produce from 'immer';
 
@@ -36,7 +36,7 @@ const appReducer = produce((draft, action) => {
     case types.LOGIN_SUCCESS:
       // TODO This is a Side effect.
       // Is there a better place for setUser()?
-      setUser(action.userData);
+      setUserToStorage(action.userData);
       draft.loggedInUser = action.userData;
       return;
 

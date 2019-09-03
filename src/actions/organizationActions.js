@@ -2,6 +2,7 @@ import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
 import { push } from 'connected-react-router';
+import { setOrganizationToStorage } from 'utils/localStorageUtils';
 import GiantSwarm from 'giantswarm';
 import React from 'react';
 
@@ -14,7 +15,7 @@ export function organizationSelect(orgId) {
   return function(dispatch) {
     dispatch(push('/'));
 
-    localStorage.setItem('app.selectedOrganization', orgId);
+    setOrganizationToStorage(orgId);
 
     return dispatch({
       type: types.ORGANIZATION_SELECT,
@@ -122,7 +123,7 @@ export function organizationsLoad() {
           getState().app.selectedOrganization
         );
 
-        localStorage.setItem('app.selectedOrganization', selectedOrganization);
+        setOrganizationToStorage(selectedOrganization);
         return dispatch(
           organizationsLoadSuccess(organizations, selectedOrganization)
         );
