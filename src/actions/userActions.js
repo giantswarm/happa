@@ -63,6 +63,8 @@ export function refreshUserInfo() {
           isAdmin: getState().app.loggedInUser.isAdmin,
         };
 
+        localStorage.setItem('user', JSON.stringify(userData));
+
         dispatch({
           type: types.REFRESH_USER_INFO_SUCCESS,
           userData: userData,
@@ -102,6 +104,7 @@ export function auth0Login(authResult) {
         isAdmin: isAdmin,
       };
 
+      localStorage.setItem('user', JSON.stringify(userData));
       resolve(dispatch(loginSuccess(userData)));
     });
   };
@@ -138,6 +141,7 @@ export function giantswarmLogin(email, password) {
         return userData;
       })
       .then(userData => {
+        localStorage.setItem('user', JSON.stringify(userData));
         dispatch(loginSuccess(userData));
         return userData;
       })
