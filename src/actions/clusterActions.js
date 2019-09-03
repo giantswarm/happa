@@ -3,7 +3,6 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
 import { nodePoolsLoad } from './nodePoolsActions';
 import { push } from 'connected-react-router';
-import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
 import mockedStatus from 'mockedStatus';
@@ -496,12 +495,10 @@ function clusterLoadStatusV4(dispatch, clusterId) {
     clusterId,
   });
 
-  var apiClusterStatus = new APIClusterStatusClient({
-    endpoint: window.config.apiEndpoint,
-  });
-
-  return apiClusterStatus
-    .getClusterStatus(clusterId)
+  // TODO: getClusterStatusWithHttpInfo usage copied from line 125. When it is fixed, also fix here
+  return clustersApi
+    .getClusterStatusWithHttpInfo(clusterId)
+    .then(data => JSON.parse(data.response.text))
     .then(status => {
       dispatch(clusterLoadStatusSuccess(clusterId, status));
       return status;
