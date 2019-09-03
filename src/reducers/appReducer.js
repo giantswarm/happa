@@ -2,7 +2,7 @@ import * as types from 'actions/actionTypes';
 import {
   fetchSelectedOrganizationFromStorage,
   fetchUserFromStorage,
-  removeUser,
+  removeUserFromStorage,
   setUserToStorage,
 } from 'utils/localStorageUtils';
 import produce from 'immer';
@@ -35,7 +35,7 @@ const appReducer = produce((draft, action) => {
 
     case types.LOGIN_SUCCESS:
       // TODO This is a Side effect.
-      // Is there a better place for setUser()?
+      // Is there a better place for setUserToStorage()?
       setUserToStorage(action.userData);
       draft.loggedInUser = action.userData;
       return;
@@ -45,8 +45,8 @@ const appReducer = produce((draft, action) => {
     case types.LOGOUT_ERROR:
     case types.UNAUTHORIZED:
       // TODO This is a Side effect.
-      // Is there a better place for removeUser()?
-      removeUser();
+      // Is there a better place for removeUserFromStorage()?
+      removeUserFromStorage();
       draft.loggedInUser = {};
       draft.firstLoadComplete = false;
       return;

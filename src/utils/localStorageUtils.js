@@ -1,6 +1,6 @@
 import GiantSwarm from 'giantswarm';
 
-export const removeUser = () => localStorage.removeItem('user');
+export const removeUserFromStorage = () => localStorage.removeItem('user');
 
 export const fetchSelectedOrganizationFromStorage = () => {
   return localStorage.getItem('app.selectedOrganization');
