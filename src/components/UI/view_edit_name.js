@@ -193,15 +193,9 @@ ViewAndEditName.propTypes = {
   toggleEditingState: PropTypes.func,
 };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch: dispatch,
-  };
-}
-
 export default connect(
   undefined,
-  mapDispatchToProps,
+  undefined,
   undefined,
   { forwardRef: true }
 )(ViewAndEditName);
