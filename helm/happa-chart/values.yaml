@@ -3,3 +3,5 @@ namespace: giantswarm
 
 userID: 100
 groupID: 101
+
+port: 8000

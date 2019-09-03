@@ -1,13 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: happa
-  namespace: giantswarm
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
   labels:
-    app: happa
+    app: {{ .Values.name }}
 spec:
-  type: NodePort
   ports:
-  - port: 8000
+  - name: {{ .Values.name }}
+    port: {{ .Values.port }}
+    targetPort: {{ .Values.port }}
   selector:
-    app: happa
+    app: {{ .Values.name }}
