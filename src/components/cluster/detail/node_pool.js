@@ -66,6 +66,7 @@ class NodePool extends Component {
           }}
         >
           <ViewAndEditName
+            cssClass='np'
             entity={nodePool}
             entityType='node pool'
             onSubmit={this.editNodePoolName}

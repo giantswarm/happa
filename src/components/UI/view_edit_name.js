@@ -17,10 +17,7 @@ const FormWrapper = styled.div`
     padding: 0px 5px;
     width: 320px;
     margin-right: 5px;
-    font-size: ${props => (props.entityType === 'node pool' ? '15px' : '85%')};
-    line-height: ${props =>
-      props.entityType === 'node pool' ? '1.8em' : null};
-    margin-bottom: ${props => (props.entityType === 'node pool' ? 0 : null)};
+    font-size: 85%;
   }
   .btn[type='submit'] {
     display: inline;
@@ -28,11 +25,22 @@ const FormWrapper = styled.div`
   .btn-group {
     float: none;
     margin-left: 4px;
-    top: ${props => (props.entityType === 'node pool' ? 0 : '-2px')};
+    top: -2px;
   }
-  button {
-    font-size: ${props => (props.entityType === 'node pool' ? '13px' : null)};
-    padding: ${props => (props.entityType === 'node pool' ? '4px 10px' : null)};
+  /* Node Pools specific styles */
+  &.np {
+    input[type='text'] {
+      font-size: 15px;
+      line-height: 1.8em;
+      margin-bottom: 0;
+    }
+    .btn-group {
+      top: 0;
+    }
+    button {
+      font-size: 13px;
+      padding: 4px 10px;
+    }
   }
 `;
 
@@ -137,7 +145,7 @@ class ViewAndEditName extends React.Component {
     if (this.state.editing) {
       // edit mode
       return (
-        <FormWrapper entityType={this.props.entityType}>
+        <FormWrapper className={this.props.cssClass}>
           <form className='form' onSubmit={this.handleSubmit}>
             <input
               autoComplete='off'
@@ -176,6 +184,7 @@ class ViewAndEditName extends React.Component {
 }
 
 ViewAndEditName.propTypes = {
+  cssClass: PropTypes.string,
   dispatch: PropTypes.func,
   entity: PropTypes.object,
   // Used by flash message and tooltip.
