@@ -31,7 +31,7 @@ const NodePoolDropdownMenu = props => (
             <li>
               <a
                 href='#'
-                onClick={() => props.showScalingModal(props.nodePoolId)}
+                onClick={() => props.showScalingModal(props.nodePool)}
               >
                 Edit scaling limits
               </a>
@@ -47,7 +47,7 @@ const NodePoolDropdownMenu = props => (
 );
 
 NodePoolDropdownMenu.propTypes = {
-  nodePoolId: PropTypes.string,
+  nodePool: PropTypes.object,
   showScalingModal: PropTypes.func,
   triggerEditName: PropTypes.func,
 };

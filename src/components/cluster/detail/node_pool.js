@@ -98,7 +98,7 @@ class NodePool extends Component {
               {current}
             </NodesWrapper>
             <NodePoolDropdownMenu
-              nodePoolId={this.props.nodePool.id}
+              nodePool={this.props.nodePool}
               showScalingModal={this.props.showScalingModal}
               triggerEditName={this.triggerEditName}
             />

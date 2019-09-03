@@ -23,26 +23,27 @@ class ScaleClusterModal extends React.Component {
       max: this.props.cluster.scaling.max,
       maxValid: true,
     },
-    nodePool: null,
   };
 
-  componentDidMount() {
-    this.setState({});
-  }
-
-  reset = () => {
+  reset = () =>
     this.setState({
       scaling: {
-        automatic: false,
+        ...this.state.scaling,
         min: this.props.cluster.scaling.min,
-        minValid: true,
         max: this.props.cluster.scaling.max,
-        maxValid: true,
       },
       loading: false,
       error: null,
     });
-  };
+
+  setNodePool = nodePool =>
+    this.setState({
+      scaling: {
+        ...this.state.scaling,
+        min: nodePool.scaling.Min,
+        max: nodePool.scaling.Max,
+      },
+    });
 
   back = () => {
     this.setState({
@@ -51,12 +52,9 @@ class ScaleClusterModal extends React.Component {
     });
   };
 
-  show = nodePool => {
-    console.log('hey ', nodePool);
-
+  show = () => {
     this.setState({
       modalVisible: true,
-      nodePool,
     });
   };
 
