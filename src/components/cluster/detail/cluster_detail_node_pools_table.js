@@ -147,7 +147,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       nodePools,
       workerNodesRunning,
     } = this.state;
-    const { accessCluster, cluster } = this.props;
+    const { accessCluster, cluster, showScalingModal } = this.props;
 
     const {
       create_date,
@@ -265,6 +265,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                       availableZonesGridTemplateAreas
                     }
                     nodePool={nodePool}
+                    showScalingModal={showScalingModal}
                   />
                 </GridRowNodePoolsItem>
               ))}

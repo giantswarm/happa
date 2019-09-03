@@ -97,7 +97,10 @@ class NodePool extends Component {
             >
               {current}
             </NodesWrapper>
-            <NodePoolDropdownMenu triggerEditName={this.triggerEditName} />
+            <NodePoolDropdownMenu
+              showScalingModal={this.props.showScalingModal}
+              triggerEditName={this.triggerEditName}
+            />
           </>
         )}
       </>
@@ -122,6 +125,7 @@ NodePool.propTypes = {
     }),
   }),
   dispatch: PropTypes.func,
+  showScalingModal: PropTypes.func,
 };
 
 function mapDispatchToProps(dispatch) {
