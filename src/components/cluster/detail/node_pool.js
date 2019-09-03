@@ -74,7 +74,7 @@ class NodePool extends Component {
             toggleEditingState={this.toggleEditingState}
           />
         </div>
-        {/* Hide the rest of field when editing name */}
+        {/* Hide the rest of fields when editing name */}
         {!isNameBeingEdited && (
           <>
             <Code>{node_spec.aws.instance_type}</Code>
