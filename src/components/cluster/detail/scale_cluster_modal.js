@@ -1,4 +1,5 @@
 import * as clusterActions from 'actions/clusterActions';
+import * as nodePoolsActions from 'actions/nodePoolsActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -23,6 +24,7 @@ class ScaleClusterModal extends React.Component {
       max: this.props.cluster.scaling.max,
       maxValid: true,
     },
+    nodePool: null,
   };
 
   reset = () =>
@@ -43,6 +45,7 @@ class ScaleClusterModal extends React.Component {
         min: nodePool.scaling.Min,
         max: nodePool.scaling.Max,
       },
+      nodePool,
     });
 
   back = () => {
@@ -81,7 +84,7 @@ class ScaleClusterModal extends React.Component {
     return cmp(releaseVer, '6.2.99') === 1;
   }
 
-  updateScaling = nodeCountSelector => {
+  updateScaling = nodeCountSelector =>
     this.setState({
       scaling: {
         min: nodeCountSelector.scaling.min,
@@ -90,7 +93,6 @@ class ScaleClusterModal extends React.Component {
         maxValid: nodeCountSelector.scaling.maxValid,
       },
     });
-  };
 
   submit = () => {
     this.setState(
@@ -103,25 +105,53 @@ class ScaleClusterModal extends React.Component {
           max: this.state.scaling.max,
         };
 
-        this.props.clusterActions
-          .clusterPatch(this.props.cluster, { scaling: scaling })
-          .then(patchedCluster => {
-            this.close();
+        if (!this.state.nodePool) {
+          this.props.clusterActions
+            .clusterPatch(this.props.cluster, { scaling: scaling })
+            .then(patchedCluster => {
+              this.close();
 
-            new FlashMessage(
-              'The cluster will be scaled within the next couple of minutes.',
-              messageType.SUCCESS,
-              messageTTL.SHORT
-            );
+              new FlashMessage(
+                'The cluster will be scaled within the next couple of minutes.',
+                messageType.SUCCESS,
+                messageTTL.SHORT
+              );
 
-            this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
-          })
-          .catch(error => {
-            this.setState({
-              loading: false,
-              error: error,
+              this.props.clusterActions.clusterLoadDetailsSuccess(
+                patchedCluster
+              );
+            })
+            .catch(error => {
+              this.setState({
+                loading: false,
+                error: error,
+              });
             });
-          });
+        } else {
+          this.props.nodePoolsActions
+            .nodePoolPatchFromId(this.props.cluster.id, this.state.nodePool, {
+              scaling: scaling,
+            })
+            .then(patchedNodePool => {
+              this.close();
+
+              new FlashMessage(
+                'The cluster will be scaled within the next couple of minutes.',
+                messageType.SUCCESS,
+                messageTTL.SHORT
+              );
+
+              // this.props.clusterActions.clusterLoadDetailsSuccess(
+              //   patchedNodePool
+              // );
+            })
+            .catch(error => {
+              this.setState({
+                loading: false,
+                error: error,
+              });
+            });
+        }
       }
     );
   };
@@ -416,6 +446,7 @@ class ScaleClusterModal extends React.Component {
 ScaleClusterModal.propTypes = {
   cluster: PropTypes.object,
   clusterActions: PropTypes.object,
+  nodePoolsActions: PropTypes.object,
   provider: PropTypes.string,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
@@ -424,6 +455,7 @@ ScaleClusterModal.propTypes = {
 function mapDispatchToProps(dispatch) {
   return {
     clusterActions: bindActionCreators(clusterActions, dispatch),
+    nodePoolsActions: bindActionCreators(nodePoolsActions, dispatch),
   };
 }
 
