@@ -5,7 +5,3 @@ userID: 100
 groupID: 101
 
 port: 8000
-
-globals:
-  migration:
-    enabled: true
