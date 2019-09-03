@@ -1,3 +1,0 @@
-description: A Helm chart for migrating Happa's service from nodePort to clusterIP
-name: happa-service-type-migration
-version: 0.1.0
