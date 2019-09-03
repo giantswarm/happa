@@ -1,5 +1,3 @@
-import * as clusterActions from 'actions/clusterActions';
-import { bindActionCreators } from 'redux';
 import {
   clusterNodePools,
   getCpusTotal,
@@ -10,10 +8,8 @@ import {
   getNumberOfNodes,
   getStorageTotal,
 } from 'utils/cluster_utils';
-import { connect } from 'react-redux';
 import { Dot } from 'styles';
 import { Link } from 'react-router-dom';
-import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
 import Button from 'UI/button';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
@@ -77,14 +73,6 @@ class ClusterDashboardItem extends React.Component {
 
     return age < 30 * 24 * 60 * 60;
   }
-
-  accessCluster = () => {
-    const { id, owner } = this.props.cluster;
-
-    this.props.dispatch(
-      push(`/organizations/${owner}/clusters/${id}/getting-started/`)
-    );
-  };
 
   render() {
     const { cluster, isNodePool, selectedOrganization } = this.props;
@@ -172,7 +160,7 @@ class ClusterDashboardItem extends React.Component {
         <div className='cluster-dashboard-item--buttons'>
           {this.clusterYoungerThan30Days() ? (
             <ButtonGroup>
-              <Button onClick={this.accessCluster}>
+              <Button href={`/organizations/${cluster.owner}/clusters/${cluster.id}/getting-started/`} onClick={this.accessCluster}>
                 <i className='fa fa-start' />
                 Get Started
               </Button>
@@ -198,14 +186,4 @@ ClusterDashboardItem.propTypes = {
   nodePools: PropTypes.object,
 };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(clusterActions, dispatch),
-    dispatch: dispatch,
-  };
-}
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(ClusterDashboardItem);
+export default ClusterDashboardItem;
