@@ -26,6 +26,8 @@ class NodePool extends Component {
   toggleEditingState = isNameBeingEdited =>
     this.setState({ isNameBeingEdited });
 
+  triggerEditName = () => this.viewEditNameRef.activateEditMode();
+
   editNodePoolName = value => {
     return new Promise((resolve, reject) => {
       this.props
@@ -64,9 +66,11 @@ class NodePool extends Component {
           }}
         >
           <ViewAndEditName
+            cssClass='np'
             entity={nodePool}
             entityType='node pool'
             onSubmit={this.editNodePoolName}
+            ref={viewEditName => (this.viewEditNameRef = viewEditName)}
             toggleEditingState={this.toggleEditingState}
           />
         </div>
@@ -93,7 +97,7 @@ class NodePool extends Component {
             >
               {current}
             </NodesWrapper>
-            <NodePoolDropdownMenu />
+            <NodePoolDropdownMenu triggerEditName={this.triggerEditName} />
           </>
         )}
       </>

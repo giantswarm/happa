@@ -27,6 +27,21 @@ const FormWrapper = styled.div`
     margin-left: 4px;
     top: -2px;
   }
+  /* Node Pools specific styles */
+  &.np {
+    input[type='text'] {
+      font-size: 15px;
+      line-height: 1.8em;
+      margin-bottom: 0;
+    }
+    .btn-group {
+      top: 0;
+    }
+    button {
+      font-size: 13px;
+      padding: 4px 10px;
+    }
+  }
 `;
 
 const LinkWrapper = styled.span`
@@ -130,7 +145,7 @@ class ViewAndEditName extends React.Component {
     if (this.state.editing) {
       // edit mode
       return (
-        <FormWrapper>
+        <FormWrapper className={this.props.cssClass}>
           <form className='form' onSubmit={this.handleSubmit}>
             <input
               autoComplete='off'
@@ -169,6 +184,7 @@ class ViewAndEditName extends React.Component {
 }
 
 ViewAndEditName.propTypes = {
+  cssClass: PropTypes.string,
   dispatch: PropTypes.func,
   entity: PropTypes.object,
   // Used by flash message and tooltip.
@@ -177,13 +193,9 @@ ViewAndEditName.propTypes = {
   toggleEditingState: PropTypes.func,
 };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch: dispatch,
-  };
-}
-
 export default connect(
   undefined,
-  mapDispatchToProps
+  undefined,
+  undefined,
+  { forwardRef: true }
 )(ViewAndEditName);

@@ -1,7 +1,8 @@
 import DropdownMenu from 'UI/dropdown_menu';
+import PropTypes from 'prop-types';
 import React from 'react';
 
-const NodePoolDropdownMenu = () => (
+const NodePoolDropdownMenu = props => (
   <DropdownMenu
     render={({
       isOpen,
@@ -10,13 +11,11 @@ const NodePoolDropdownMenu = () => (
       onBlurHandler,
       onKeyDownHandler,
     }) => (
-      <>
+      <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
         <button
           aria-expanded={isOpen}
           aria-haspopup='true'
-          onBlur={onBlurHandler}
           onClick={onClickHandler}
-          onFocus={onFocusHandler}
           onKeyDown={onKeyDownHandler}
           type='button'
         >
@@ -25,7 +24,9 @@ const NodePoolDropdownMenu = () => (
         {isOpen && (
           <ul aria-labelledby='node_pools_dropdown' role='menu'>
             <li>
-              <a href='#'>Rename</a>
+              <a href='#' onClick={props.triggerEditName}>
+                Rename
+              </a>
             </li>
             <li>
               <a href='#'>Edit scaling limits</a>
@@ -35,9 +36,13 @@ const NodePoolDropdownMenu = () => (
             </li>
           </ul>
         )}
-      </>
+      </div>
     )}
   />
 );
+
+NodePoolDropdownMenu.propTypes = {
+  triggerEditName: PropTypes.func,
+};
 
 export default NodePoolDropdownMenu;
