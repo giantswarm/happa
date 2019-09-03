@@ -1,0 +1,51 @@
+{{- if .Values.global.migration.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: {{ .Values.name }}
+  annotations:
+    "helm.sh/hook": "pre-upgrade"
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
+  labels:
+    app: {{ .Values.name }}
+    giantswarm.io/service-type: "managed"
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - services
+  verbs:
+  - "get"
+  - "delete"
+- apiGroups:
+  - extensions
+  resources:
+  - podsecuritypolicies
+  resourceNames:
+  - {{ .Values.name }}
+  verbs:
+  - "use"
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Values.name }}
+  annotations:
+    "helm.sh/hook": "pre-upgrade"
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": "hook-succeeded"
+  labels:
+    app: {{ .Values.name }}
+    giantswarm.io/service-type: "managed"
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.name }}
+    namespace: {{ .Values.namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ .Values.name }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

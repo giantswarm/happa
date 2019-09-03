@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: {{ .Values.name }}
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": "hook-succeeded"
+  labels:
+    app: {{ .Values.name }}
+    giantswarm.io/service-type: "managed"
+spec:
+  privileged: false
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1
+        max: 65535
+  runAsUser:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1
+        max: 65535
+  runAsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1
+        max: 65535
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+  - 'secret'
+  - 'configMap'
+  hostPID: false
+  hostIPC: false
+  hostNetwork: false
+  readOnlyRootFilesystem: false
+

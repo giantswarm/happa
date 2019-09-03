@@ -1,0 +1,40 @@
+{{- if .Values.global.migration.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    "helm.sh/hook": "pre-upgrade"
+    "helm.sh/hook-weight": "-2"
+    "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
+  labels:
+    app: {{ .Values.name }}
+    giantswarm.io/service-type: "managed"
+data:
+  config.yaml: |
+    service:
+      delete:
+        resources:
+          resourceFile: "/var/run/{{ .Values.name }}/configmap/resources.json"
+      kubernetes:
+        address: ''
+        inCluster: true
+        tls:
+          caFile: ''
+          crtFile: ''
+          keyFile: ''
+  resources.json: |
+    [
+        {
+            "kind": "Service",
+            "name": "happa",
+            "namespace": "giantswarm",
+            "matchLabels": {
+                "app": "happa"
+            },
+            "excludeLabels": {
+            }
+        }
+    ]
+{{- end }}
