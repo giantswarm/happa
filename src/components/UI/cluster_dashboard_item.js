@@ -160,7 +160,10 @@ class ClusterDashboardItem extends React.Component {
         <div className='cluster-dashboard-item--buttons'>
           {this.clusterYoungerThan30Days() ? (
             <ButtonGroup>
-              <Button href={`/organizations/${cluster.owner}/clusters/${cluster.id}/getting-started/`} onClick={this.accessCluster}>
+              <Button
+                href={`/organizations/${cluster.owner}/clusters/${cluster.id}/getting-started/`}
+                onClick={this.accessCluster}
+              >
                 <i className='fa fa-start' />
                 Get Started
               </Button>
