@@ -9,6 +9,7 @@ import Button from 'UI/button';
 import ClusterDashboardItem from 'UI/cluster_dashboard_item';
 import ClusterEmptyState from 'UI/cluster_empty_state';
 import DocumentTitle from 'react-document-title';
+import EmptyStateDisplay from 'UI/empty_state_display';
 import moment from 'moment';
 import PageVisibilityTracker from 'lib/page_visibility_tracker';
 import PropTypes from 'prop-types';
@@ -97,40 +98,41 @@ class Home extends React.Component {
                   ? 'Ready to launch your first cluster? Click the green button!'
                   : ''}
               </div>
-            ) : (
-              null
-            )}
-
-            {this.props.clusters.length === 0 ? (
-              <ClusterEmptyState
-                errorLoadingClusters={this.props.errorLoadingClusters}
-                organizations={this.props.organizations}
-                selectedOrganization={this.props.selectedOrganization}
-              />
             ) : null}
 
-            <TransitionGroup className='cluster-list'>
-              {_.sortBy(this.props.clusters, cluster => cluster.name).map(
-                cluster => {
-                  return (
-                    <CSSTransition
-                      classNames='cluster-list-item'
-                      key={cluster.id}
-                      timeout={500}
-                    >
-                      <ClusterDashboardItem
-                        cluster={cluster}
-                        isNodePool={this.props.nodePoolsClusters.includes(
-                          cluster.id
-                        )}
+            <EmptyStateDisplay
+              displayEmptyState={this.props.clusters.length === 0}
+              emptyState={
+                <ClusterEmptyState
+                  errorLoadingClusters={this.props.errorLoadingClusters}
+                  organizations={this.props.organizations}
+                  selectedOrganization={this.props.selectedOrganization}
+                />
+              }
+            >
+              <TransitionGroup className='cluster-list'>
+                {_.sortBy(this.props.clusters, cluster => cluster.name).map(
+                  cluster => {
+                    return (
+                      <CSSTransition
+                        classNames='cluster-list-item'
                         key={cluster.id}
-                        nodePools={this.props.nodePools}
-                      />
-                    </CSSTransition>
-                  );
-                }
-              )}
-            </TransitionGroup>
+                        timeout={500}
+                      >
+                        <ClusterDashboardItem
+                          cluster={cluster}
+                          isNodePool={this.props.nodePoolsClusters.includes(
+                            cluster.id
+                          )}
+                          key={cluster.id}
+                          nodePools={this.props.nodePools}
+                        />
+                      </CSSTransition>
+                    );
+                  }
+                )}
+              </TransitionGroup>
+            </EmptyStateDisplay>
 
             {this.props.clusters.length > 0 ? (
               <p className='last-updated'>
