@@ -98,7 +98,7 @@ class Home extends React.Component {
                   : ''}
               </div>
             ) : (
-              undefined
+              null
             )}
 
             {this.props.clusters.length === 0 ? (
@@ -128,8 +128,7 @@ class Home extends React.Component {
                       />
                     </CSSTransition>
                   );
-                },
-                cluster => cluster.id
+                }
               )}
             </TransitionGroup>
 
