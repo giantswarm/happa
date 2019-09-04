@@ -117,6 +117,7 @@ export function clustersLoad() {
       })
     );
 
+<<<<<<< HEAD
     // And merge them with each cluster
     details.forEach(clusterDetail => {
       v4ClustersObject[clusterDetail.id] = {
@@ -124,6 +125,46 @@ export function clustersLoad() {
         ...clusterDetail,
       };
     });
+=======
+        return clustersObject;
+      });
+    })
+    .then(clustersObject => {
+      return Promise.all(
+        Object.keys(clustersObject).map(clusterId => {
+          if (window.config.environment === 'development') {
+            return { id: clusterId, statusResponse: mockedStatus };
+          } else {
+            // TODO: Find out why we are getting an empty object back from this call. Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
+            return clustersApi
+              .getClusterStatusWithHttpInfo(clusterId)
+              .then(data => {
+                // For some reason we're getting an empty object back.
+                // The Giantswarm JS client is not parsing the returned JSON
+                // and giving us a object in the normal way anymore.
+                // Very stumped, since nothing has changed.
+                // So we need to access the raw response and parse the json
+                // ourselves.
+                let statusResponse = JSON.parse(data.response.text);
+                return { id: clusterId, statusResponse: statusResponse };
+              })
+              .catch(error => {
+                if (error.status === 404) {
+                  return { id: clusterId, statusResponse: null };
+                } else {
+                  throw error;
+                }
+              });
+          }
+        })
+      ).then(clusterStatusArray => {
+        clusterStatusArray.forEach(clusterStatus => {
+          clustersObject[clusterStatus.id] = {
+            ...clustersObject[clusterStatus.id],
+            ...{ status: clusterStatus.statusResponse },
+          };
+        });
+>>>>>>> Boyscout: Fix mocked status response in clustersLoadV4.
 
     // Fetch status for each cluster.
     const status = await Promise.all(
