@@ -85,7 +85,10 @@ class Home extends React.Component {
       <DocumentTitle title={this.title()}>
         {
           <div>
-            {this.props.selectedOrganization ? (
+            <EmptyStateDisplay
+              displayEmptyState={!this.props.selectedOrganization}
+              emptyState={null}
+            >
               <div className='well launch-new-cluster'>
                 <Link
                   to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
@@ -98,7 +101,7 @@ class Home extends React.Component {
                   ? 'Ready to launch your first cluster? Click the green button!'
                   : ''}
               </div>
-            ) : null}
+            </EmptyStateDisplay>
 
             <EmptyStateDisplay
               displayEmptyState={this.props.clusters.length === 0}
@@ -132,9 +135,6 @@ class Home extends React.Component {
                   }
                 )}
               </TransitionGroup>
-            </EmptyStateDisplay>
-
-            {this.props.clusters.length > 0 ? (
               <p className='last-updated'>
                 <small>
                   This table is auto-refreshing. Details last fetched{' '}
@@ -144,7 +144,7 @@ class Home extends React.Component {
                   . <span className='beta-tag'>BETA</span>
                 </small>
               </p>
-            ) : null}
+            </EmptyStateDisplay>
           </div>
         }
       </DocumentTitle>
