@@ -100,7 +100,34 @@ class ScaleClusterModal extends React.Component {
         loading: true,
       },
       () => {
-        if (!this.state.nodePool) {
+        if (this.state.nodePool) {
+          // Node Pools
+          const scaling = {
+            Min: this.state.scaling.min,
+            Max: this.state.scaling.max,
+          };
+
+          this.props.nodePoolsActions
+            .nodePoolPatch(this.props.cluster.id, this.state.nodePool, {
+              scaling,
+            })
+            .then(() => {
+              this.close();
+
+              new FlashMessage(
+                'The node pool will be scaled within the next couple of minutes.',
+                messageType.SUCCESS,
+                messageTTL.SHORT
+              );
+            })
+            .catch(error => {
+              this.setState({
+                loading: false,
+                error: error,
+              });
+            });
+        } else {
+          // Cluster
           const scaling = {
             min: this.state.scaling.min,
             max: this.state.scaling.max,
@@ -119,31 +146,6 @@ class ScaleClusterModal extends React.Component {
 
               this.props.clusterActions.clusterLoadDetailsSuccess(
                 patchedCluster
-              );
-            })
-            .catch(error => {
-              this.setState({
-                loading: false,
-                error: error,
-              });
-            });
-        } else {
-          const scaling = {
-            Min: this.state.scaling.min,
-            Max: this.state.scaling.max,
-          };
-
-          this.props.nodePoolsActions
-            .nodePoolPatch(this.props.cluster.id, this.state.nodePool, {
-              scaling,
-            })
-            .then(() => {
-              this.close();
-
-              new FlashMessage(
-                'The cluster will be scaled within the next couple of minutes.',
-                messageType.SUCCESS,
-                messageTTL.SHORT
               );
             })
             .catch(error => {
