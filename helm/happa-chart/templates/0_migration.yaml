@@ -79,7 +79,7 @@ spec:
           requests:
             cpu: 50m
             memory: 50Mi
-        restartPolicy: Never
+      restartPolicy: Never
   backoffLimit: 4
 ---
 apiVersion: v1
