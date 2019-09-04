@@ -29,9 +29,11 @@ class NodePool extends Component {
   triggerEditName = () => this.viewEditNameRef.activateEditMode();
 
   editNodePoolName = value => {
+    const { clusterId, nodePool } = this.props;
+
     return new Promise((resolve, reject) => {
       this.props
-        .dispatch(nodePoolPatch(this.props.nodePool, { name: value }))
+        .dispatch(nodePoolPatch(clusterId, nodePool, { name: value }))
         .then(() => {
           new FlashMessage(
             'Succesfully edited node pool name.',
@@ -86,7 +88,7 @@ class NodePool extends Component {
                 zones={availability_zones}
               />
             </div>
-            <NodesWrapper>{scaling.Min}</NodesWrapper>
+            <NodesWrapper>{this.props.nodePool.scaling.Min}</NodesWrapper>
             <NodesWrapper>{scaling.Max}</NodesWrapper>
             <NodesWrapper>{desired}</NodesWrapper>
             <NodesWrapper
@@ -111,6 +113,7 @@ class NodePool extends Component {
 
 NodePool.propTypes = {
   availableZonesGridTemplateAreas: PropTypes.string,
+  clusterId: PropTypes.string,
   nodePool: PropTypes.shape({
     availability_zones: PropTypes.array,
     id: PropTypes.string,
@@ -129,6 +132,12 @@ NodePool.propTypes = {
   showScalingModal: PropTypes.func,
 };
 
+function mapStateToProps(state, ownProps) {
+  return {
+    nodePool: state.entities.nodePools[ownProps.nodePool.id],
+  };
+}
+
 function mapDispatchToProps(dispatch) {
   return {
     dispatch: dispatch,
@@ -136,6 +145,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(NodePool);

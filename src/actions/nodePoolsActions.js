@@ -50,72 +50,35 @@ export function nodePoolsLoad() {
 }
 
 /**
- * Takes a nodePool object without having the cluster id and tries to patch it.
- * Dispatches NODEPOOL_PATCH on patch and NODEPOOL_PATCH_ERROR
- * on error.
- *
- * @param {Object} nodePool Node Pool object
- * @param {Object} payload Modification object
- */
-export function nodePoolPatch(nodePool, payload) {
-  return function(dispatch, getState) {
-    // This is to get the cluster id.
-    const clusters = getState().entities.clusters.items;
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-
-    const cluster = nodePoolsClusters
-      .map(nodePoolCluster => {
-        return {
-          id: nodePoolCluster,
-          nodePools: clusters[nodePoolCluster].nodePools,
-        };
-      })
-      .filter(cluster => cluster.nodePools.some(np => np === nodePool.id));
-
-    const clusterId = cluster[0].id;
-
-    return modifyNodePool(dispatch, clusterId, nodePool, payload);
-  };
-}
-
-/**
  * Takes a nodePool object with its cluster id and tries to patch it.
  * Dispatches NODEPOOL_PATCH on patch and NODEPOOL_PATCH_ERROR
  * on error.
  *
+ * @param {String} clusterId
  * @param {Object} nodePool Node Pool object
  * @param {Object} payload Modification object
  */
-export function nodePoolPatchFromId(clusterId, nodePoolId, payload) {
-  console.log(arguments);
+export function nodePoolPatch(clusterId, nodePool, payload) {
+  return function(dispatch) {
+    dispatch(nodePoolPatchAction(nodePool, payload));
 
-  // return function(dispatch, getState) {
-  //   // Get the actual nodePool object
-  //   const nodePool = getState().entities.clusters.nodePoolsClusters;
-  //   return modifyNodePool(dispatch, clusterId, nodePool, payload);
-  // };
-}
+    return nodePoolsApi
+      .modifyNodePool(clusterId, nodePool, payload)
+      .catch(error => {
+        // Undo update to store if the API call fails.
+        dispatch(nodePoolPatchError(error, nodePool));
 
-function modifyNodePool(dispatch, clusterId, nodePool, payload) {
-  // Optimistic update.
-  dispatch(nodePoolPatchAction(nodePool, payload));
+        new FlashMessage(
+          'Something went wrong while trying to update the node pool name',
+          messageType.ERROR,
+          messageTTL.MEDIUM,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
 
-  return nodePoolsApi
-    .modifyNodePool(clusterId, nodePool, payload)
-    .catch(error => {
-      // Undo update to store if the API call fails.
-      dispatch(nodePoolPatchError(error, nodePool));
-
-      new FlashMessage(
-        'Something went wrong while trying to update the node pool name',
-        messageType.ERROR,
-        messageTTL.MEDIUM,
-        'Please try again later or contact support: support@giantswarm.io'
-      );
-
-      console.error(error);
-      throw error;
-    });
+        console.error(error);
+        throw error;
+      });
+  };
 }
 
 // Actions

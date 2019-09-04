@@ -100,12 +100,12 @@ class ScaleClusterModal extends React.Component {
         loading: true,
       },
       () => {
-        var scaling = {
-          min: this.state.scaling.min,
-          max: this.state.scaling.max,
-        };
-
         if (!this.state.nodePool) {
+          const scaling = {
+            min: this.state.scaling.min,
+            max: this.state.scaling.max,
+          };
+
           this.props.clusterActions
             .clusterPatch(this.props.cluster, { scaling: scaling })
             .then(patchedCluster => {
@@ -128,11 +128,16 @@ class ScaleClusterModal extends React.Component {
               });
             });
         } else {
+          const scaling = {
+            Min: this.state.scaling.min,
+            Max: this.state.scaling.max,
+          };
+
           this.props.nodePoolsActions
-            .nodePoolPatchFromId(this.props.cluster.id, this.state.nodePool, {
-              scaling: scaling,
+            .nodePoolPatch(this.props.cluster.id, this.state.nodePool, {
+              scaling,
             })
-            .then(patchedNodePool => {
+            .then(() => {
               this.close();
 
               new FlashMessage(
@@ -140,10 +145,6 @@ class ScaleClusterModal extends React.Component {
                 messageType.SUCCESS,
                 messageTTL.SHORT
               );
-
-              // this.props.clusterActions.clusterLoadDetailsSuccess(
-              //   patchedNodePool
-              // );
             })
             .catch(error => {
               this.setState({

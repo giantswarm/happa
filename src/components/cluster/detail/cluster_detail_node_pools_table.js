@@ -264,6 +264,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                     availableZonesGridTemplateAreas={
                       availableZonesGridTemplateAreas
                     }
+                    clusterId={cluster.id}
                     nodePool={nodePool}
                     showScalingModal={showScalingModal}
                   />
