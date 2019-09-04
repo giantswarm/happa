@@ -1,6 +1,4 @@
-import * as clusterActions from 'actions/clusterActions';
-import * as nodePoolActions from 'actions/nodePoolActions';
-import { bindActionCreators } from 'redux';
+import {clustersLoad } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
@@ -41,7 +39,7 @@ class Home extends React.Component {
   };
 
   refreshClustersList = () => {
-    this.props.actions.clustersLoad();
+    this.props.dispatch(clustersLoad());
   };
 
   handleVisibilityChange = () => {
@@ -155,7 +153,7 @@ class Home extends React.Component {
 Home.propTypes = {
   clearInterval: PropTypes.func,
   clusters: PropTypes.array,
-  actions: PropTypes.object,
+  dispatch: PropTypes.func,
   selectedOrganization: PropTypes.string,
   organizations: PropTypes.object,
   errorLoadingClusters: PropTypes.bool,
@@ -190,8 +188,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(clusterActions, dispatch),
-    nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
     dispatch: dispatch,
   };
 }
