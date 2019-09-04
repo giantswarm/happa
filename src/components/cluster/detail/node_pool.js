@@ -50,7 +50,11 @@ class NodePool extends Component {
   };
 
   render() {
-    const { availableZonesGridTemplateAreas, nodePool } = this.props;
+    const {
+      availableZonesGridTemplateAreas,
+      nodePool,
+      showScalingModal,
+    } = this.props;
 
     const { id, scaling, availability_zones, status, node_spec } = nodePool;
 
@@ -88,7 +92,7 @@ class NodePool extends Component {
                 zones={availability_zones}
               />
             </div>
-            <NodesWrapper>{this.props.nodePool.scaling.Min}</NodesWrapper>
+            <NodesWrapper>{scaling.Min}</NodesWrapper>
             <NodesWrapper>{scaling.Max}</NodesWrapper>
             <NodesWrapper>{desired}</NodesWrapper>
             <NodesWrapper
@@ -100,8 +104,8 @@ class NodePool extends Component {
               {current}
             </NodesWrapper>
             <NodePoolDropdownMenu
-              nodePool={this.props.nodePool}
-              showScalingModal={this.props.showScalingModal}
+              nodePool={nodePool}
+              showScalingModal={showScalingModal}
               triggerEditName={this.triggerEditName}
             />
           </>
