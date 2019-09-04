@@ -75,7 +75,7 @@ class ClusterDashboardItem extends React.Component {
   }
 
   render() {
-    const { cluster, isNodePool, selectedOrganization } = this.props;
+    const { cluster, isNodePool } = this.props;
     const { nodePools } = this.state;
 
     var memory = isNodePool
@@ -93,7 +93,7 @@ class ClusterDashboardItem extends React.Component {
       : getNumberOfNodes(cluster);
 
     const np = isNodePool ? '/np' : '';
-    const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}${np}`;
+    const linkToCluster = `/organizations/${cluster.owner}/clusters/${cluster.id}${np}`;
 
     return (
       <div className='cluster-dashboard-item well'>
@@ -176,12 +176,6 @@ class ClusterDashboardItem extends React.Component {
 
 ClusterDashboardItem.propTypes = {
   cluster: PropTypes.object,
-  actions: PropTypes.object,
-  className: PropTypes.string,
-  children: PropTypes.array,
-  selectedOrganization: PropTypes.string,
-  animate: PropTypes.bool,
-  dispatch: PropTypes.func,
   isNodePool: PropTypes.bool,
   nodePools: PropTypes.object,
 };

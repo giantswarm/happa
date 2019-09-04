@@ -119,14 +119,12 @@ class Home extends React.Component {
                       timeout={500}
                     >
                       <ClusterDashboardItem
-                        animate={true}
                         cluster={cluster}
                         isNodePool={this.props.nodePoolsClusters.includes(
                           cluster.id
                         )}
                         key={cluster.id}
                         nodePools={this.props.nodePools}
-                        selectedOrganization={this.props.selectedOrganization}
                       />
                     </CSSTransition>
                   );
