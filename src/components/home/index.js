@@ -112,37 +112,37 @@ class Home extends React.Component {
               }
             >
               <>
-              <TransitionGroup className='cluster-list'>
-                {_.sortBy(this.props.clusters, cluster => cluster.name).map(
-                  cluster => {
-                    return (
-                      <CSSTransition
-                        classNames='cluster-list-item'
-                        key={cluster.id}
-                        timeout={500}
-                      >
-                        <ClusterDashboardItem
-                          cluster={cluster}
-                          isNodePool={this.props.nodePoolsClusters.includes(
-                            cluster.id
-                          )}
+                <TransitionGroup className='cluster-list'>
+                  {_.sortBy(this.props.clusters, cluster => cluster.name).map(
+                    cluster => {
+                      return (
+                        <CSSTransition
+                          classNames='cluster-list-item'
                           key={cluster.id}
-                          nodePools={this.props.nodePools}
-                        />
-                      </CSSTransition>
-                    );
-                  }
-                )}
-              </TransitionGroup>
-              <p className='last-updated'>
-                <small>
-                  This table is auto-refreshing. Details last fetched{' '}
-                  <span className='last-updated-datestring'>
-                    {this.lastUpdatedLabel()}
-                  </span>
-                  . <span className='beta-tag'>BETA</span>
-                </small>
-              </p>
+                          timeout={500}
+                        >
+                          <ClusterDashboardItem
+                            cluster={cluster}
+                            isNodePool={this.props.nodePoolsClusters.includes(
+                              cluster.id
+                            )}
+                            key={cluster.id}
+                            nodePools={this.props.nodePools}
+                          />
+                        </CSSTransition>
+                      );
+                    }
+                  )}
+                </TransitionGroup>
+                <p className='last-updated'>
+                  <small>
+                    This table is auto-refreshing. Details last fetched{' '}
+                    <span className='last-updated-datestring'>
+                      {this.lastUpdatedLabel()}
+                    </span>
+                    . <span className='beta-tag'>BETA</span>
+                  </small>
+                </p>
               </>
             </EmptyStateDisplay>
           </div>
