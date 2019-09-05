@@ -14,6 +14,7 @@ import Layout from 'layout';
 import NodePool from '../node_pool';
 import NodePoolDropdownMenu from '../node_pool_dropdown_menu';
 
+// TODO Extract this in utils.
 const mockedNodePool = {
   id: 'a0sdi',
   name: 'awesome-nodepool-0',
@@ -94,18 +95,6 @@ it.skip('shows the modal when the button is clicked', async () => {
   expect(modal).toBeInTheDocument();
 });
 
-// debug(window.config);
-
 // It shows all node pools passed as props
 
 // It patched np name correctly
-
-/*************************************/
-// Mocked calls
-// jest.mock('giantswarm', () => {
-//   return {
-//     OrganizationsApi: {
-//       getCredentials: jest.fn(() => Promise.resolve([])),
-//     },
-//   };
-// });
