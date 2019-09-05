@@ -12,9 +12,7 @@ spec:
     - port: {{ .Values.port }}
       protocol: {{ .Values.protocol }}
   egress:
-  - to:
-    - ipBlock:
-        cidr: 0.0.0.0/0
+  - {}
   policyTypes:
   - Egress
   - Ingress
