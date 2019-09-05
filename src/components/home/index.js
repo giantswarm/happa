@@ -111,6 +111,7 @@ class Home extends React.Component {
                 />
               }
             >
+              <>
               <TransitionGroup className='cluster-list'>
                 {_.sortBy(this.props.clusters, cluster => cluster.name).map(
                   cluster => {
@@ -142,6 +143,7 @@ class Home extends React.Component {
                   . <span className='beta-tag'>BETA</span>
                 </small>
               </p>
+              </>
             </EmptyStateDisplay>
           </div>
         }
