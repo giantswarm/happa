@@ -18,6 +18,44 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import RefreshableLabel from 'UI/refreshable_label';
+import styled from '@emotion/styled';
+
+const Wrapper = styled.div`
+  display: flex;
+
+  b {
+    font-weight: 400;
+  }
+`;
+
+const Label = styled.div`
+  flex: 0 0 90px;
+  font-size: 1.2em;
+`;
+
+const Content = styled.div`
+  flex: 1;
+  padding-right: 15px;
+`;
+
+const Title = styled.div`
+  font-size: 1.2em;
+  z-index: 120;
+  position: relative;
+
+  span {
+    font-weight: bold;
+  }
+`;
+
+const Buttons = styled.div`
+  text-align: right;
+  flex: 0 0 210px;
+
+  .progress_button--container:last-child {
+    margin-right: 0px;
+  }
+`;
 
 class ClusterDashboardItem extends React.Component {
   state = {
@@ -96,26 +134,23 @@ class ClusterDashboardItem extends React.Component {
     const linkToCluster = `/organizations/${cluster.owner}/clusters/${cluster.id}${np}`;
 
     return (
-      <div className='cluster-dashboard-item well'>
-        <div className='cluster-dashboard-item--label'>
+      <Wrapper className='well'>
+        <Label>
           <Link to={linkToCluster}>
             <ClusterIDLabel clusterID={cluster.id} copyEnabled />
           </Link>
-        </div>
+        </Label>
 
-        <div className='cluster-dashboard-item--content'>
-          <div className='cluster-dashboard-item--title'>
+        <Content>
+          <Title>
             <Link to={linkToCluster}>
               <RefreshableLabel dataItems={[cluster.name]}>
-                <span
-                  className='cluster-dashboard-item--name'
-                  style={{ fontWeight: 'bold' }}
-                >
+                <span>
                   {cluster.name}
                 </span>
               </RefreshableLabel>
             </Link>
-          </div>
+          </Title>
 
           <div>
             <RefreshableLabel dataItems={[cluster.release_version]}>
@@ -155,9 +190,9 @@ class ClusterDashboardItem extends React.Component {
               undefined
             )}
           </div>
-        </div>
+        </Content>
 
-        <div className='cluster-dashboard-item--buttons'>
+        <Buttons>
           {this.clusterYoungerThan30Days() ? (
             <ButtonGroup>
               <Button
@@ -171,8 +206,8 @@ class ClusterDashboardItem extends React.Component {
           ) : (
             ''
           )}
-        </div>
-      </div>
+        </Buttons>
+      </Wrapper>
     );
   }
 }
