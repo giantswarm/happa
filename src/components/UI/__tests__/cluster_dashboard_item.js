@@ -1,7 +1,10 @@
 import 'jest-dom/extend-expect';
+import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
-import React from 'react';
+import { ThemeProvider } from 'emotion-theming';
 import ClusterDashboardItem from 'UI/cluster_dashboard_item';
+import React from 'react';
+import theme from 'styles/theme';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -9,7 +12,19 @@ it('renders without crashing', () => {
 });
 
 it('has links to the cluster detail page', () => {
-  //
+  const href = '/organizations/acme/clusters/1234';
+  const { container, debug } = render(
+    <ThemeProvider theme={theme}>
+      <MemoryRouter initialEntries={['/']}>
+        <ClusterDashboardItem cluster={{ owner: 'acme', id: '1234' }} />
+      </MemoryRouter>
+    </ThemeProvider>
+  );
+
+  const links = container.querySelectorAll('a');
+
+  expect(links[0]).toHaveAttribute('href', href);
+  expect(links[1]).toHaveAttribute('href', href);
 });
 
 it('shows the clusters name', () => {
