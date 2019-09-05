@@ -14,6 +14,7 @@ import { relativeDate } from 'lib/helpers.js';
 import Button from 'UI/button';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import ClusterIDLabel from 'UI/cluster_id_label';
+import EmptyStateDisplay from 'UI/empty_state_display';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -112,100 +113,150 @@ class ClusterDashboardItem extends React.Component {
     return age < 30 * 24 * 60 * 60;
   }
 
-  render() {
+  /**
+   * Returns the amount of memory in this cluster.
+   */
+  memory() {
     const { cluster, isNodePool } = this.props;
     const { nodePools } = this.state;
 
-    var memory = isNodePool
+    let memory = isNodePool
       ? getMemoryTotalNodePools(nodePools)
       : getMemoryTotal(cluster);
 
-    var storage = getStorageTotal(cluster);
+    return memory;
+  }
 
-    var cpus = isNodePool
+  /**
+   * Returns the amount of storage in this cluster.
+   */
+  storage() {
+    const { cluster } = this.props;
+    return getStorageTotal(cluster);
+  }
+
+  /**
+   * Returns the amount of cpus in this cluster.
+   */
+  cpus() {
+    const { cluster, isNodePool } = this.props;
+    const { nodePools } = this.state;
+
+    let cpus = isNodePool
       ? getCpusTotalNodePools(nodePools)
       : getCpusTotal(cluster);
 
-    var numNodes = isNodePool
+    return cpus;
+  }
+
+  /**
+   * Returns the amount of nodes in this cluster.
+   */
+  numNodes() {
+    const { cluster, isNodePool } = this.props;
+    const { nodePools } = this.state;
+
+    let numNodes = isNodePool
       ? getNumberOfNodePoolsNodes(nodePools)
       : getNumberOfNodes(cluster);
+
+    return numNodes;
+  }
+
+  /**
+   * Returns a path to this cluster.
+   */
+  linkToCluster() {
+    const { cluster, isNodePool } = this.props;
 
     const np = isNodePool ? '/np' : '';
     const linkToCluster = `/organizations/${cluster.owner}/clusters/${cluster.id}${np}`;
 
+    return linkToCluster;
+  }
+
+  render() {
+    const { cluster } = this.props;
+
     return (
       <Wrapper className='well'>
-        <Label>
-          <Link to={linkToCluster}>
-            <ClusterIDLabel clusterID={cluster.id} copyEnabled />
-          </Link>
-        </Label>
-
-        <Content>
-          <Title>
-            <Link to={linkToCluster}>
-              <RefreshableLabel dataItems={[cluster.name]}>
-                <span>{cluster.name}</span>
-              </RefreshableLabel>
-            </Link>
-          </Title>
-
-          <div>
-            <RefreshableLabel dataItems={[cluster.release_version]}>
-              <span>
-                <i className='fa fa-version-tag' title='Release version' />{' '}
-                {cluster.release_version}
-              </span>
-            </RefreshableLabel>
-            <Dot style={{ paddingLeft: 0 }} />
-            Created {relativeDate(cluster.create_date)}
-          </div>
-          <div>
-            {cluster.nodePools && (
-              <RefreshableLabel dataItems={[numNodes]}>
-                <span>{cluster.nodePools.length} node pools, </span>
-              </RefreshableLabel>
-            )}
-            <RefreshableLabel dataItems={[numNodes]}>
-              <span>{numNodes} nodes</span>
-            </RefreshableLabel>
-            <Dot style={{ paddingLeft: 0 }} />
-            <RefreshableLabel dataItems={[cpus]}>
-              <span>{cpus ? cpus : '0'} CPU cores</span>
-            </RefreshableLabel>
-            <Dot style={{ paddingLeft: 0 }} />
-            <RefreshableLabel dataItems={[memory]}>
-              <span>{memory ? memory : '0'} GB RAM</span>
-            </RefreshableLabel>
-            {cluster.kvm ? (
-              <span>
-                <Dot style={{ paddingLeft: 0 }} />
-                <RefreshableLabel dataItems={[storage]}>
-                  <span>{storage ? storage : '0'} GB storage</span>
-                </RefreshableLabel>
-              </span>
-            ) : (
-              undefined
-            )}
-          </div>
-        </Content>
-
-        <Buttons>
-          {this.clusterYoungerThan30Days() ? (
-            <ButtonGroup>
-              <Link
-                to={`/organizations/${cluster.owner}/clusters/${cluster.id}/getting-started/`}
-              >
-                <Button>
-                  <i className='fa fa-start' />
-                  Get Started
-                </Button>
+        {cluster &&
+          <>
+            <Label>
+              <Link to={this.linkToCluster()}>
+                <ClusterIDLabel clusterID={cluster.id} copyEnabled />
               </Link>
-            </ButtonGroup>
-          ) : (
-            ''
-          )}
-        </Buttons>
+            </Label>
+
+            <Content>
+              <Title>
+                <Link to={this.linkToCluster()}>
+                  <RefreshableLabel dataItems={[cluster.name]}>
+                    <span>{cluster.name}</span>
+                  </RefreshableLabel>
+                </Link>
+              </Title>
+
+              <div>
+                <RefreshableLabel dataItems={[cluster.release_version]}>
+                  <span>
+                    <i className='fa fa-version-tag' title='Release version' />{' '}
+                    {cluster.release_version}
+                  </span>
+                </RefreshableLabel>
+                <Dot style={{ paddingLeft: 0 }} />
+                Created {relativeDate(cluster.create_date)}
+              </div>
+              <div>
+                {cluster.nodePools && (
+                  <RefreshableLabel dataItems={[this.numNodes()]}>
+                    <span>{cluster.nodePools.length} node pools, </span>
+                  </RefreshableLabel>
+                )}
+                <RefreshableLabel dataItems={[this.numNodes()]}>
+                  <span>{this.numNodes()} nodes</span>
+                </RefreshableLabel>
+                <Dot style={{ paddingLeft: 0 }} />
+                <RefreshableLabel dataItems={[this.cpus()]}>
+                  <span>{this.cpus() ? this.cpus() : '0'} CPU cores</span>
+                </RefreshableLabel>
+                <Dot style={{ paddingLeft: 0 }} />
+                <RefreshableLabel dataItems={[this.memory()]}>
+                  <span>{this.memory() ? this.memory() : '0'} GB RAM</span>
+                </RefreshableLabel>
+                {cluster.kvm ? (
+                  <span>
+                    <Dot style={{ paddingLeft: 0 }} />
+                    <RefreshableLabel dataItems={[this.storage()]}>
+                      <span>
+                        {this.storage() ? this.storage() : '0'} GB storage
+                      </span>
+                    </RefreshableLabel>
+                  </span>
+                ) : (
+                  undefined
+                )}
+              </div>
+            </Content>
+
+            <Buttons>
+              {this.clusterYoungerThan30Days() ? (
+                <ButtonGroup>
+                  <Link
+                    to={`/organizations/${cluster.owner}/clusters/${cluster.id}/getting-started/`}
+                  >
+                    <Button>
+                      <i className='fa fa-start' />
+                      Get Started
+                    </Button>
+                  </Link>
+                </ButtonGroup>
+              ) : (
+                ''
+              )}
+            </Buttons>
+          </>
+        }
       </Wrapper>
     );
   }
