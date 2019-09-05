@@ -1,4 +1,5 @@
 import 'jest-dom/extend-expect';
+import * as localStorageUtils from 'utils/localStorageUtils';
 import { fireEvent, render, wait } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -14,6 +15,9 @@ import ClusterDetailView from '../cluster_detail_view';
 import Layout from 'layout';
 import NodePool from '../node_pool';
 import NodePoolDropdownMenu from '../node_pool_dropdown_menu';
+
+// Mocks
+jest.mock('utils/localStorageUtils');
 
 it('shows the dropdown when the three dots button is clicked', () => {
   const div = document.createElement('div');
@@ -44,12 +48,15 @@ it('patches node pool name correctly', () => {
  * Alternative approach: use Cypress for these kind of testing where different
  * components are involved.
  */
-it.skip('shows the modal when the button is clicked', async () => {
+it('shows the modal when the button is clicked', async () => {
   const div = document.createElement('div');
   const store = configureStore({
-    app: { firstLoadComplete: true },
+    app: { selectedOrganization: 'acme' },
     entities: { nodePools: { [mockedNodePool.id]: mockedNodePool } },
   });
+  localStorageUtils.fetchSelectedOrganizationFromStorage = jest.fn(
+    () => 'acme'
+  );
 
   const { getByText, getByRole, debug } = render(
     <Provider store={store}>
@@ -76,14 +83,14 @@ it.skip('shows the modal when the button is clicked', async () => {
     div
   );
 
-  await wait(() => getByText('•••'));
-  debug();
+  await wait(() => debug(store.getState()));
+  debug(getByText('•••'));
 
-  fireEvent.click(getByText('•••'));
-  const menu = getByRole('menu');
-  expect(menu).toBeInTheDocument();
+  // fireEvent.click(getByText('•••'));
+  // const menu = getByRole('menu');
+  // expect(menu).toBeInTheDocument();
 
-  fireEvent.click(getByText(/edit scaling limits/i));
-  const modal = getByRole('dialog');
-  expect(modal).toBeInTheDocument();
+  // fireEvent.click(getByText(/edit scaling limits/i));
+  // const modal = getByRole('dialog');
+  // expect(modal).toBeInTheDocument();
 });

@@ -34,6 +34,7 @@ const appReducer = produce((draft, action) => {
       return;
 
     case types.LOGIN_SUCCESS:
+      console.log(action.userData);
       // TODO This is a Side effect.
       // Is there a better place for setUserToStorage()?
       setUserToStorage(action.userData);
