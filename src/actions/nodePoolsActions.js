@@ -5,11 +5,7 @@ import GiantSwarm from 'giantswarm';
 // API instantiations.
 const nodePoolsApi = new GiantSwarm.NodepoolsApi();
 
-/**
- * Loads all node pools for all node pools clusters.
- *
- * @param {String} clusterId Cluster ID
- */
+//Loads all node pools for all node pools clusters.
 export function nodePoolsLoad() {
   return async function(dispatch, getState) {
     const clusters = getState().entities.clusters.nodePoolsClusters || [];
@@ -54,30 +50,16 @@ export function nodePoolsLoad() {
 }
 
 /**
- * Takes a nodePool object and tries to patch it.
+ * Takes a nodePool object with its cluster id and tries to patch it.
  * Dispatches NODEPOOL_PATCH on patch and NODEPOOL_PATCH_ERROR
  * on error.
  *
- * @param {Object} cluster Cluster modification object
+ * @param {String} clusterId
+ * @param {Object} nodePool Node Pool object
+ * @param {Object} payload Modification object
  */
-export function nodePoolPatch(nodePool, payload) {
-  return function(dispatch, getState) {
-    // This is to get the cluster id.
-    const clusters = getState().entities.clusters.items;
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-
-    const cluster = nodePoolsClusters
-      .map(nodePoolCluster => {
-        return {
-          id: nodePoolCluster,
-          nodePools: clusters[nodePoolCluster].nodePools,
-        };
-      })
-      .filter(cluster => cluster.nodePools.some(np => np === nodePool.id));
-
-    const clusterId = cluster[0].id;
-
-    // Optimistic update.
+export function nodePoolPatch(clusterId, nodePool, payload) {
+  return function(dispatch) {
     dispatch(nodePoolPatchAction(nodePool, payload));
 
     return nodePoolsApi

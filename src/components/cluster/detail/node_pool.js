@@ -29,9 +29,11 @@ class NodePool extends Component {
   triggerEditName = () => this.viewEditNameRef.activateEditMode();
 
   editNodePoolName = value => {
+    const { clusterId, nodePool } = this.props;
+
     return new Promise((resolve, reject) => {
       this.props
-        .dispatch(nodePoolPatch(this.props.nodePool, { name: value }))
+        .dispatch(nodePoolPatch(clusterId, nodePool, { name: value }))
         .then(() => {
           new FlashMessage(
             'Succesfully edited node pool name.',
@@ -48,7 +50,11 @@ class NodePool extends Component {
   };
 
   render() {
-    const { availableZonesGridTemplateAreas, nodePool } = this.props;
+    const {
+      availableZonesGridTemplateAreas,
+      nodePool,
+      showNodePoolScalingModal,
+    } = this.props;
 
     const { id, scaling, availability_zones, status, node_spec } = nodePool;
 
@@ -74,7 +80,7 @@ class NodePool extends Component {
             toggleEditingState={this.toggleEditingState}
           />
         </div>
-        {/* Hide the rest of field when editing name */}
+        {/* Hide the rest of fields when editing name */}
         {!isNameBeingEdited && (
           <>
             <Code>{node_spec.aws.instance_type}</Code>
@@ -97,7 +103,11 @@ class NodePool extends Component {
             >
               {current}
             </NodesWrapper>
-            <NodePoolDropdownMenu triggerEditName={this.triggerEditName} />
+            <NodePoolDropdownMenu
+              nodePool={nodePool}
+              showNodePoolScalingModal={showNodePoolScalingModal}
+              triggerEditName={this.triggerEditName}
+            />
           </>
         )}
       </>
@@ -107,6 +117,7 @@ class NodePool extends Component {
 
 NodePool.propTypes = {
   availableZonesGridTemplateAreas: PropTypes.string,
+  clusterId: PropTypes.string,
   nodePool: PropTypes.shape({
     availability_zones: PropTypes.array,
     id: PropTypes.string,
@@ -122,7 +133,14 @@ NodePool.propTypes = {
     }),
   }),
   dispatch: PropTypes.func,
+  showNodePoolScalingModal: PropTypes.func,
 };
+
+function mapStateToProps(state, ownProps) {
+  return {
+    nodePool: state.entities.nodePools[ownProps.nodePool.id],
+  };
+}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -131,6 +149,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(NodePool);
