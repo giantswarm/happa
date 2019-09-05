@@ -1,4 +1,3 @@
-import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolsActions from 'actions/nodePoolsActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -275,7 +274,7 @@ class ScaleClusterModal extends React.Component {
             timeout={this.rollupAnimationDuration}
           >
             <p key='node-removal'>
-              <i className='fa fa-warning' /> The cluster currently has{' '}
+              <i className='fa fa-warning' /> The node pool currently has{' '}
               {this.props.workerNodesRunning} worker nodes running. By setting
               the maximum lower than that, you enforce the removal of{' '}
               {diff === 1 ? 'one node' : diff + ' nodes'}. This could result in
@@ -293,7 +292,7 @@ class ScaleClusterModal extends React.Component {
             <p key='node-removal'>
               <i className='fa fa-warning' /> You are about to enforce the
               removal of {diff === 1 ? 'one node' : diff + ' nodes'}. Please
-              make sure the cluster has enough capacity to schedule all
+              make sure the node pool has enough capacity to schedule all
               workloads.
             </p>
           </CSSTransition>
@@ -327,7 +326,7 @@ class ScaleClusterModal extends React.Component {
             this.props.cluster.release_version
           )
             ? 'Set the scaling range and let the autoscaler set the effective number of worker nodes based on the usage.'
-            : 'How many workers would you like your cluster to have?'}
+            : 'How many workers would you like your node pool to have?'}
         </p>
         <div className='row section'>
           <NodeCountSelector
@@ -372,7 +371,7 @@ class ScaleClusterModal extends React.Component {
     if (this.state.error) {
       body = (
         <BootstrapModal.Body>
-          <p>Something went wrong while trying to scale your cluster:</p>
+          <p>Something went wrong while trying to scale your node pool:</p>
           <div className='flash-messages--flash-message flash-messages--danger'>
             {this.state.error.body && this.state.error.body.message
               ? this.state.error.body.message
@@ -417,7 +416,6 @@ class ScaleClusterModal extends React.Component {
 
 ScaleClusterModal.propTypes = {
   cluster: PropTypes.object,
-  clusterActions: PropTypes.object,
   nodePoolsActions: PropTypes.object,
   provider: PropTypes.string,
   workerNodesRunning: PropTypes.number,
@@ -426,7 +424,6 @@ ScaleClusterModal.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    clusterActions: bindActionCreators(clusterActions, dispatch),
     nodePoolsActions: bindActionCreators(nodePoolsActions, dispatch),
   };
 }
