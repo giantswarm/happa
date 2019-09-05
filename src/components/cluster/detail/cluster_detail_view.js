@@ -21,6 +21,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
 import ScaleClusterModal from './scale_cluster_modal';
+import ScaleNodePoolModal from './scale_node_pool_modal';
 import Tab from 'react-bootstrap/lib/Tab';
 import Tabs from './tabs';
 import UpgradeClusterModal from './upgrade_cluster_modal';
@@ -115,11 +116,15 @@ class ClusterDetailView extends React.Component {
     this.props.clusterActions.clusterDelete(cluster);
   }
 
-  showScalingModal = nodePool => {
+  showScalingModal = () => {
     this.scaleClusterModal.reset();
     this.scaleClusterModal.show();
+  };
 
-    if (nodePool) this.scaleClusterModal.setNodePool(nodePool);
+  showNodePoolScalingModal = nodePool => {
+    this.scaleNodePoolModal.reset();
+    this.scaleNodePoolModal.show();
+    this.scaleNodePoolModal.setNodePool(nodePool);
   };
 
   showUpgradeModal = () => {
@@ -296,7 +301,7 @@ class ClusterDetailView extends React.Component {
                         nodePools={nodePools}
                         provider={provider}
                         release={release}
-                        showScalingModal={this.showScalingModal}
+                        showNodePoolScalingModal={this.showNodePoolScalingModal}
                         showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
                       />
@@ -372,6 +377,16 @@ class ClusterDetailView extends React.Component {
               provider={provider}
               ref={s => {
                 this.scaleClusterModal = s;
+              }}
+              workerNodesDesired={this.getDesiredNumberOfNodes()}
+              workerNodesRunning={getNumberOfNodes(cluster)}
+            />
+
+            <ScaleNodePoolModal
+              cluster={cluster}
+              provider={provider}
+              ref={s => {
+                this.scaleNodePoolModal = s;
               }}
               workerNodesDesired={this.getDesiredNumberOfNodes()}
               workerNodesRunning={getNumberOfNodes(cluster)}

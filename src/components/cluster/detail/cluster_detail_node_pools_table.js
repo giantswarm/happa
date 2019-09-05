@@ -147,7 +147,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       nodePools,
       workerNodesRunning,
     } = this.state;
-    const { accessCluster, cluster, showScalingModal } = this.props;
+    const { accessCluster, cluster, showNodePoolScalingModal } = this.props;
 
     const {
       create_date,
@@ -266,7 +266,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                     }
                     clusterId={cluster.id}
                     nodePool={nodePool}
-                    showScalingModal={showScalingModal}
+                    showNodePoolScalingModal={showNodePoolScalingModal}
                   />
                 </GridRowNodePoolsItem>
               ))}
@@ -289,7 +289,7 @@ ClusterDetailNodePoolsTable.propTypes = {
   provider: PropTypes.string,
   release: PropTypes.object,
   setInterval: PropTypes.func,
-  showScalingModal: PropTypes.func,
+  showNodePoolScalingModal: PropTypes.func,
   showUpgradeModal: PropTypes.func,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,

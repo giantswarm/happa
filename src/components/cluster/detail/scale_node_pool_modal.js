@@ -1,4 +1,4 @@
-import * as clusterActions from 'actions/clusterActions';
+import * as nodePoolsActions from 'actions/nodePoolsActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -23,25 +23,29 @@ class ScaleClusterModal extends React.Component {
       max: this.props.cluster.scaling.max,
       maxValid: true,
     },
+    nodePool: null,
   };
 
-  componentDidMount() {
-    this.setState({});
-  }
-
-  reset = () => {
+  reset = () =>
     this.setState({
       scaling: {
-        automatic: false,
+        ...this.state.scaling,
         min: this.props.cluster.scaling.min,
-        minValid: true,
         max: this.props.cluster.scaling.max,
-        maxValid: true,
       },
       loading: false,
       error: null,
     });
-  };
+
+  setNodePool = nodePool =>
+    this.setState({
+      scaling: {
+        ...this.state.scaling,
+        min: nodePool.scaling.Min,
+        max: nodePool.scaling.Max,
+      },
+      nodePool,
+    });
 
   back = () => {
     this.setState({
@@ -79,7 +83,7 @@ class ScaleClusterModal extends React.Component {
     return cmp(releaseVer, '6.2.99') === 1;
   }
 
-  updateScaling = nodeCountSelector => {
+  updateScaling = nodeCountSelector =>
     this.setState({
       scaling: {
         min: nodeCountSelector.scaling.min,
@@ -88,7 +92,6 @@ class ScaleClusterModal extends React.Component {
         maxValid: nodeCountSelector.scaling.maxValid,
       },
     });
-  };
 
   submit = () => {
     this.setState(
@@ -96,23 +99,23 @@ class ScaleClusterModal extends React.Component {
         loading: true,
       },
       () => {
-        var scaling = {
-          min: this.state.scaling.min,
-          max: this.state.scaling.max,
+        const scaling = {
+          Min: this.state.scaling.min,
+          Max: this.state.scaling.max,
         };
 
-        this.props.clusterActions
-          .clusterPatch(this.props.cluster, { scaling: scaling })
-          .then(patchedCluster => {
+        this.props.nodePoolsActions
+          .nodePoolPatch(this.props.cluster.id, this.state.nodePool, {
+            scaling,
+          })
+          .then(() => {
             this.close();
 
             new FlashMessage(
-              'The cluster will be scaled within the next couple of minutes.',
+              'The node pool will be scaled within the next couple of minutes.',
               messageType.SUCCESS,
               messageTTL.SHORT
             );
-
-            this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
           })
           .catch(error => {
             this.setState({
@@ -271,7 +274,7 @@ class ScaleClusterModal extends React.Component {
             timeout={this.rollupAnimationDuration}
           >
             <p key='node-removal'>
-              <i className='fa fa-warning' /> The cluster currently has{' '}
+              <i className='fa fa-warning' /> The node pool currently has{' '}
               {this.props.workerNodesRunning} worker nodes running. By setting
               the maximum lower than that, you enforce the removal of{' '}
               {diff === 1 ? 'one node' : diff + ' nodes'}. This could result in
@@ -289,7 +292,7 @@ class ScaleClusterModal extends React.Component {
             <p key='node-removal'>
               <i className='fa fa-warning' /> You are about to enforce the
               removal of {diff === 1 ? 'one node' : diff + ' nodes'}. Please
-              make sure the cluster has enough capacity to schedule all
+              make sure the node pool has enough capacity to schedule all
               workloads.
             </p>
           </CSSTransition>
@@ -323,7 +326,7 @@ class ScaleClusterModal extends React.Component {
             this.props.cluster.release_version
           )
             ? 'Set the scaling range and let the autoscaler set the effective number of worker nodes based on the usage.'
-            : 'How many workers would you like your cluster to have?'}
+            : 'How many workers would you like your node pool to have?'}
         </p>
         <div className='row section'>
           <NodeCountSelector
@@ -368,7 +371,7 @@ class ScaleClusterModal extends React.Component {
     if (this.state.error) {
       body = (
         <BootstrapModal.Body>
-          <p>Something went wrong while trying to scale your cluster:</p>
+          <p>Something went wrong while trying to scale your node pool:</p>
           <div className='flash-messages--flash-message flash-messages--danger'>
             {this.state.error.body && this.state.error.body.message
               ? this.state.error.body.message
@@ -413,7 +416,7 @@ class ScaleClusterModal extends React.Component {
 
 ScaleClusterModal.propTypes = {
   cluster: PropTypes.object,
-  clusterActions: PropTypes.object,
+  nodePoolsActions: PropTypes.object,
   provider: PropTypes.string,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
@@ -421,7 +424,7 @@ ScaleClusterModal.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    clusterActions: bindActionCreators(clusterActions, dispatch),
+    nodePoolsActions: bindActionCreators(nodePoolsActions, dispatch),
   };
 }
 

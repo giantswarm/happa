@@ -53,7 +53,7 @@ class NodePool extends Component {
     const {
       availableZonesGridTemplateAreas,
       nodePool,
-      showScalingModal,
+      showNodePoolScalingModal,
     } = this.props;
 
     const { id, scaling, availability_zones, status, node_spec } = nodePool;
@@ -105,7 +105,7 @@ class NodePool extends Component {
             </NodesWrapper>
             <NodePoolDropdownMenu
               nodePool={nodePool}
-              showScalingModal={showScalingModal}
+              showNodePoolScalingModal={showNodePoolScalingModal}
               triggerEditName={this.triggerEditName}
             />
           </>
@@ -133,7 +133,7 @@ NodePool.propTypes = {
     }),
   }),
   dispatch: PropTypes.func,
-  showScalingModal: PropTypes.func,
+  showNodePoolScalingModal: PropTypes.func,
 };
 
 function mapStateToProps(state, ownProps) {
