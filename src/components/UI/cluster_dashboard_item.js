@@ -124,7 +124,7 @@ class ClusterDashboardItem extends React.Component {
       ? getMemoryTotalNodePools(nodePools)
       : getMemoryTotal(cluster);
 
-    return memory;
+    return memory || 0;
   }
 
   /**
@@ -132,7 +132,7 @@ class ClusterDashboardItem extends React.Component {
    */
   storage() {
     const { cluster } = this.props;
-    return getStorageTotal(cluster);
+    return getStorageTotal(cluster) || 0;
   }
 
   /**
@@ -146,7 +146,7 @@ class ClusterDashboardItem extends React.Component {
       ? getCpusTotalNodePools(nodePools)
       : getCpusTotal(cluster);
 
-    return cpus;
+    return cpus || 0;
   }
 
   /**
@@ -160,7 +160,7 @@ class ClusterDashboardItem extends React.Component {
       ? getNumberOfNodePoolsNodes(nodePools)
       : getNumberOfNodes(cluster);
 
-    return numNodes;
+    return numNodes || 0;
   }
 
   /**
@@ -180,7 +180,7 @@ class ClusterDashboardItem extends React.Component {
 
     return (
       <Wrapper className='well'>
-        {cluster &&
+        {cluster && (
           <>
             <Label>
               <Link to={this.linkToCluster()}>
@@ -218,19 +218,17 @@ class ClusterDashboardItem extends React.Component {
                 </RefreshableLabel>
                 <Dot style={{ paddingLeft: 0 }} />
                 <RefreshableLabel dataItems={[this.cpus()]}>
-                  <span>{this.cpus() ? this.cpus() : '0'} CPU cores</span>
+                  <span>{this.cpus()} CPU cores</span>
                 </RefreshableLabel>
                 <Dot style={{ paddingLeft: 0 }} />
                 <RefreshableLabel dataItems={[this.memory()]}>
-                  <span>{this.memory() ? this.memory() : '0'} GB RAM</span>
+                  <span>{this.memory()} GB RAM</span>
                 </RefreshableLabel>
                 {cluster.kvm ? (
                   <span>
                     <Dot style={{ paddingLeft: 0 }} />
                     <RefreshableLabel dataItems={[this.storage()]}>
-                      <span>
-                        {this.storage() ? this.storage() : '0'} GB storage
-                      </span>
+                      <span>{this.storage()} GB storage</span>
                     </RefreshableLabel>
                   </span>
                 ) : (
@@ -256,7 +254,7 @@ class ClusterDashboardItem extends React.Component {
               )}
             </Buttons>
           </>
-        }
+        )}
       </Wrapper>
     );
   }
