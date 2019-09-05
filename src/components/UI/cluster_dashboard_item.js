@@ -145,9 +145,7 @@ class ClusterDashboardItem extends React.Component {
           <Title>
             <Link to={linkToCluster}>
               <RefreshableLabel dataItems={[cluster.name]}>
-                <span>
-                  {cluster.name}
-                </span>
+                <span>{cluster.name}</span>
               </RefreshableLabel>
             </Link>
           </Title>
@@ -195,13 +193,14 @@ class ClusterDashboardItem extends React.Component {
         <Buttons>
           {this.clusterYoungerThan30Days() ? (
             <ButtonGroup>
-              <Button
-                href={`/organizations/${cluster.owner}/clusters/${cluster.id}/getting-started/`}
-                onClick={this.accessCluster}
+              <Link
+                to={`/organizations/${cluster.owner}/clusters/${cluster.id}/getting-started/`}
               >
-                <i className='fa fa-start' />
-                Get Started
-              </Button>
+                <Button>
+                  <i className='fa fa-start' />
+                  Get Started
+                </Button>
+              </Link>
             </ButtonGroup>
           ) : (
             ''

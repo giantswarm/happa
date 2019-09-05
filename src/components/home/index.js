@@ -1,4 +1,4 @@
-import {clustersLoad } from 'actions/clusterActions';
+import { clustersLoad } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
