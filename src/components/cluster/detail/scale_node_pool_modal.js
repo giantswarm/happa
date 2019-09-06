@@ -41,8 +41,8 @@ class ScaleClusterModal extends React.Component {
     this.setState({
       scaling: {
         ...this.state.scaling,
-        min: nodePool.scaling.Min,
-        max: nodePool.scaling.Max,
+        min: nodePool.scaling.min,
+        max: nodePool.scaling.max,
       },
       nodePool,
     });
@@ -100,8 +100,8 @@ class ScaleClusterModal extends React.Component {
       },
       () => {
         const scaling = {
-          Min: this.state.scaling.min,
-          Max: this.state.scaling.max,
+          min: this.state.scaling.min,
+          max: this.state.scaling.max,
         };
 
         this.props.nodePoolsActions

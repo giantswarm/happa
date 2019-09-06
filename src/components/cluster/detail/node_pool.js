@@ -92,8 +92,8 @@ class NodePool extends Component {
                 zones={availability_zones}
               />
             </div>
-            <NodesWrapper>{scaling.Min}</NodesWrapper>
-            <NodesWrapper>{scaling.Max}</NodesWrapper>
+            <NodesWrapper>{scaling.min}</NodesWrapper>
+            <NodesWrapper>{scaling.max}</NodesWrapper>
             <NodesWrapper>{desired}</NodesWrapper>
             <NodesWrapper
               style={{
@@ -124,8 +124,8 @@ NodePool.propTypes = {
     name: PropTypes.string,
     node_spec: PropTypes.object,
     scaling: PropTypes.shape({
-      Min: PropTypes.number,
-      Max: PropTypes.number,
+      min: PropTypes.number,
+      max: PropTypes.number,
     }),
     status: PropTypes.shape({
       nodes: PropTypes.number,
