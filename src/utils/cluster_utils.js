@@ -113,7 +113,7 @@ export function getCpusTotalNodePools(nodePools = []) {
 
 // Finds node pools for a cluster and returns an array of node pools objects
 export const clusterNodePools = (nodePools, cluster) => {
-  return cluster.nodePools.map(np => {
-    return nodePools[np];
-  });
+  // return cluster.nodePools.map(np => {
+  //   return nodePools[np];
+  // });
 };
