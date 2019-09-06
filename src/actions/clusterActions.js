@@ -171,44 +171,45 @@ export function clustersLoad() {
     /********************** V5 CLUSTER DETAILS FETCHING **********************/
 
     // Extract v5 clusters from the clusters fetched.
-    const v5Clusters = clusters.filter(cluster =>
+    const v5Clusters = Array.from(clusters).filter(cluster =>
       cluster.path.startsWith('/v5')
     );
+    // // Again some weirdness with Arrays that this js client is returning...
+    // const v5ClustersArray = Array.from(v5Clusters);
+    // console.log(Object.values(['sdf', 8]));
 
     // Get the details for v5 clusters.
     if (window.config.environment === 'development') {
-      clustersLoadV5(dispatch, getState, v5Clusters);
+      const clusters = await Promise.all(
+        v5Clusters.map(cluster => clusterDetailsV5(dispatch, cluster))
+      );
+
+      // Clusters array to object, because we are storing an object in the store
+      let v5ClustersObject = clustersLoadArrayToObject(clusters);
+
+      // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
+      const nodePoolsClusters = clusters.map(cluster => cluster.id);
+      const lastUpdated = Date.now();
+      dispatch(
+        clustersLoadSuccessV5(v5ClustersObject, nodePoolsClusters, lastUpdated)
+      );
+
+      // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
+      dispatch(nodePoolsLoad(nodePoolsClusters));
     }
   };
 }
 
-async function clustersLoadV5(dispatch, v5Clusters) {
-  const clusters = await Promise.all(
-    v5Clusters.map(cluster => {
-      return clustersApi
-        .getClusterV5(cluster.id)
-        .then(clusterDetails => clusterDetails)
-        .catch(error => {
-          console.error('Error loading cluster details:', error);
-          dispatch(clusterLoadDetailsError(cluster.id, error));
-        });
+function clusterDetailsV5(dispatch, cluster) {
+  return clustersApi
+    .getClusterV5(cluster.id)
+    .then(clusterDetails => {
+      return clusterDetails;
     })
-  );
-
-  console.log(clusters);
-
-  // Clusters array to object, because we are storing an object in the store
-  let v5ClustersObject = clustersLoadArrayToObject(clusters);
-
-  // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
-  const nodePoolsClusters = clusters.map(cluster => cluster.id);
-  const lastUpdated = Date.now();
-  dispatch(
-    clustersLoadSuccessV5(v5ClustersObject, nodePoolsClusters, lastUpdated)
-  );
-
-  // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
-  dispatch(nodePoolsLoad(nodePoolsClusters));
+    .catch(error => {
+      console.error('Error loading cluster details:', error);
+      dispatch(clusterLoadDetailsError(cluster.id, error));
+    });
 }
 
 /**
