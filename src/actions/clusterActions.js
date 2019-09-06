@@ -761,7 +761,7 @@ export const clustersLoadErrorV5 = error => ({
  * @param {Object} cluster Cluster object
  * @param {Object} payload object with just the data we want to modify
  */
-export function clusterPatch(cluster, payload) {
+export function clusterPatch(cluster, payload, isNodePoolCluster) {
   return function(dispatch) {
     // Optimistic update.
     dispatch({
@@ -770,7 +770,11 @@ export function clusterPatch(cluster, payload) {
       payload,
     });
 
-    return clustersApi.modifyCluster(cluster.id, payload).catch(error => {
+    const modifyCluster = isNodePoolCluster
+      ? clustersApi.modifyClusterV5(cluster.id, payload)
+      : clustersApi.modifyCluster(cluster.id, payload);
+
+    return modifyCluster.catch(error => {
       // Undo update to store if the API call fails.
       dispatch({
         type: types.CLUSTER_PATCH_ERROR,
