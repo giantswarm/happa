@@ -143,7 +143,9 @@ class ClusterDetailTable extends React.Component {
             </RefreshableLabel>
 
             <span className='resource-details-button'>
-              <Button onClick={this.props.showScalingModal}>Edit</Button>
+              <Button onClick={() => this.props.showScalingModal()}>
+                Edit
+              </Button>
             </span>
           </td>
         </tr>
