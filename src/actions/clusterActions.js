@@ -171,7 +171,7 @@ export function clustersLoad() {
     /********************** V5 CLUSTER DETAILS FETCHING **********************/
 
     // Extract v5 clusters from the clusters fetched.
-    const v5Clusters = Array.from(clusters).filter(cluster =>
+    const v5Clusters = clusters.filter(cluster =>
       cluster.path.startsWith('/v5')
     );
 
