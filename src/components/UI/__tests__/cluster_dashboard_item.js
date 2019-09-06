@@ -1,6 +1,7 @@
 import 'jest-dom/extend-expect';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
+import { MemoryRouter, Router } from 'react-router-dom';
+import { fireEvent, render } from '@testing-library/react';
 import { ThemeProvider } from 'emotion-theming';
 import ClusterDashboardItem from 'UI/cluster_dashboard_item';
 import React from 'react';
@@ -12,19 +13,31 @@ it('renders without crashing', () => {
 });
 
 it('has links to the cluster detail page', () => {
-  const href = '/organizations/acme/clusters/12345';
+  const history = createMemoryHistory({ initialEntries: ['/'] });
+
+  const expectedHref = '/organizations/acme/clusters/12345';
   const { container, debug } = render(
     <ThemeProvider theme={theme}>
-      <MemoryRouter initialEntries={['/']}>
+      <Router history={history}>
         <ClusterDashboardItem cluster={{ owner: 'acme', id: '12345' }} />
-      </MemoryRouter>
+      </Router>
+      )
     </ThemeProvider>
   );
 
+  // Check if the links are going to the right place.
   const links = container.querySelectorAll('a');
+  expect(links[0]).toHaveAttribute('href', expectedHref);
+  expect(links[1]).toHaveAttribute('href', expectedHref);
 
-  expect(links[0]).toHaveAttribute('href', href);
-  expect(links[1]).toHaveAttribute('href', href);
+  // Now click on one of them.
+  fireEvent(
+    links[1],
+    new MouseEvent('click', { bubbles: true, cancelable: true })
+  );
+
+  // And see if the router has changed location.
+  expect(history.location.pathname).toEqual(expectedHref);
 });
 
 it('shows the clusters name', () => {
