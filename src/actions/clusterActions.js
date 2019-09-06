@@ -88,9 +88,9 @@ export function clustersLoad() {
     );
 
     // TODO at some point we will probably have just one flow for all clusters.
-    // Now we are not computing capabilities and not getting status either for
-    // v5 clusters, so we fetch v5 clusters details in a separate method at the
-    // end of this one.
+    // Now we can't as we are not computing capabilities and not getting status
+    // either for v5 clusters, so we fetch v5 clusters details in a separate method
+    // at the end of this one.
 
     /********************** V4 CLUSTER DETAILS FETCHING **********************/
 
