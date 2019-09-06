@@ -77,11 +77,11 @@ export function clustersLoad() {
   };
 }
 
-function clustersLoadV4(dispatch, getState) {
+async function clustersLoadV4(dispatch, getState) {
   // TODO this will be in getClusters() here in this function we just want to
   // dispatch specific actions for v4 clusters.
   // Or maybe we won't need this method at all.
-  return clustersApi
+  const clustersObject = await clustersApi
     .getClusters()
     .then(clusters => {
       const enhancedClusters = enhanceWithCapabilities(
@@ -93,82 +93,81 @@ function clustersLoadV4(dispatch, getState) {
       let clustersObject = clustersLoadArrayToObject(enhancedClusters);
       return clustersObject;
     })
-    .then(clustersObject => {
-      return Promise.all(
-        Object.keys(clustersObject).map(clusterId => {
-          return clustersApi.getCluster(clusterId).then(clusterDetails => {
-            clusterDetails.capabilities = computeCapabilities(
-              clusterDetails,
-              getState().app.info.general.provider
-            );
-
-            return clusterDetails;
-          });
-        })
-      ).then(clusterDetailsArray => {
-        clusterDetailsArray.forEach(clusterDetail => {
-          clustersObject[clusterDetail.id] = {
-            ...clustersObject[clusterDetail.id],
-            ...clusterDetail,
-          };
-        });
-
-        return clustersObject;
-      });
-    })
-    .then(clustersObject => {
-      return Promise.all(
-        Object.keys(clustersObject).map(clusterId => {
-          if (window.config.environment === 'development') {
-            return { id: clusterId, ...mockedStatus };
-          } else {
-            // TODO: Find out why we are getting an empty object back from this call. Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
-            return clustersApi
-              .getClusterStatusWithHttpInfo(clusterId)
-              .then(data => {
-                // For some reason we're getting an empty object back.
-                // The Giantswarm JS client is not parsing the returned JSON
-                // and giving us a object in the normal way anymore.
-                // Very stumped, since nothing has changed.
-                // So we need to access the raw response and parse the json
-                // ourselves.
-                let statusResponse = JSON.parse(data.response.text);
-                return { id: clusterId, statusResponse: statusResponse };
-              })
-              .catch(error => {
-                if (error.status === 404) {
-                  return { id: clusterId, statusResponse: null };
-                } else {
-                  throw error;
-                }
-              });
-          }
-        })
-      ).then(clusterStatusArray => {
-        clusterStatusArray.forEach(clusterStatus => {
-          clustersObject[clusterStatus.id] = {
-            ...clustersObject[clusterStatus.id],
-            ...{ status: clusterStatus.statusResponse },
-          };
-        });
-
-        return clustersObject;
-      });
-    })
-    .then(clustersObject => {
-      const lastUpdated = Date.now();
-      dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
-    })
     .catch(error => {
       console.error(error);
-      new FlashMessage(
-        'Something went wrong while trying to load clusters.',
-        messageType.ERROR,
-        messageTTL.LONG,
-        'Please try again later or contact support: support@giantswarm.io'
-      );
       dispatch(clustersLoadErrorV4(error));
     });
+
+  // We fetch all details for each cluster.
+  const details = await Promise.all(
+    Object.keys(clustersObject).map(clusterId => {
+      return clustersApi
+        .getCluster(clusterId)
+        .then(clusterDetails => {
+          clusterDetails.capabilities = computeCapabilities(
+            clusterDetails,
+            getState().app.info.general.provider
+          );
+          return clusterDetails;
+        })
+        .catch(error => {
+          console.error('Error loading cluster details:', error);
+          dispatch(clusterLoadDetailsError(clusterId, error));
+        });
+    })
+  );
+
+  // And merge them in the clustersObject
+  details.forEach(clusterDetail => {
+    clustersObject[clusterDetail.id] = {
+      ...clustersObject[clusterDetail.id],
+      ...clusterDetail,
+    };
+  });
+
+  // We fetch status for each cluster.
+  const status = await Promise.all(
+    Object.keys(clustersObject).map(clusterId => {
+      if (window.config.environment === 'development') {
+        return { id: clusterId, ...mockedStatus };
+      } else {
+        // TODO: Find out why we are getting an empty object back from this call.
+        //Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
+        return clustersApi
+          .getClusterStatusWithHttpInfo(clusterId)
+          .then(clusterStatus => {
+            // For some reason we're getting an empty object back.
+            // The Giantswarm JS client is not parsing the returned JSON
+            // and giving us a object in the normal way anymore.
+            // Very stumped, since nothing has changed.
+            // So we need to access the raw response and parse the json
+            // ourselves.
+            let statusResponse = JSON.parse(clusterStatus.response.text);
+            return { id: clusterId, statusResponse: statusResponse };
+          })
+          .catch(error => {
+            if (error.status === 404) {
+              return { id: clusterId, statusResponse: null };
+            } else {
+              console.error(error);
+              dispatch(clusterLoadStatusError(clusterId, error));
+              throw error;
+            }
+          });
+      }
+    })
+  );
+
+  // And merge it in each cluster
+  status.forEach(clusterStatus => {
+    clustersObject[clusterStatus.id] = {
+      ...clustersObject[clusterStatus.id],
+      ...{ status: clusterStatus.statusResponse },
+    };
+  });
+
+  const lastUpdated = Date.now();
+  dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
 }
 
 function clustersLoadV5(dispatch, getState) {
