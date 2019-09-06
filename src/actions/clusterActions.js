@@ -174,9 +174,6 @@ export function clustersLoad() {
     const v5Clusters = Array.from(clusters).filter(cluster =>
       cluster.path.startsWith('/v5')
     );
-    // // Again some weirdness with Arrays that this js client is returning...
-    // const v5ClustersArray = Array.from(v5Clusters);
-    // console.log(Object.values(['sdf', 8]));
 
     // Get the details for v5 clusters.
     if (window.config.environment === 'development') {
