@@ -23,6 +23,10 @@ const AppDetailsModal = props => {
     setPane('deleteAppConfig');
   }
 
+  function showDeleteAppSecretPane() {
+    setPane('deleteAppSecret');
+  }
+
   function showDeleteAppPane() {
     setPane('deleteApp');
   }
@@ -269,6 +273,63 @@ const AppDetailsModal = props => {
               )}
             </div>
           </div>
+
+          <div className='labelvaluepair'>
+            <div className='labelvaluepair--label'>SECRET</div>
+
+            <div className='appdetails--userconfiguration'>
+              {props.app.spec.user_config.secret.name !== '' ? (
+                <React.Fragment>
+                  <span>Secret has been set.</span>
+
+                  <div className='actions'>
+                    <Button loading={fileUploading} onClick={handleUploadClick}>
+                      Overwrite Secret
+                    </Button>
+
+                    <Button bsStyle='danger' onClick={showDeleteAppSecretPane}>
+                      <i className='fa fa-delete'></i> Delete
+                    </Button>
+
+                    {renderFileInputs ? (
+                      <input
+                        accept='.yaml'
+                        onChange={updateConfigInputOnChange}
+                        ref={i => (fileInput = i)}
+                        style={{ display: 'none' }}
+                        type='file'
+                      />
+                    ) : (
+                      undefined
+                    )}
+                  </div>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <span>No Secret present.</span>
+
+                  <div className='actions'>
+                    <Button loading={fileUploading} onClick={handleUploadClick}>
+                      {' '}
+                      Upload a Secret
+                    </Button>
+                    {renderFileInputs ? (
+                      <input
+                        accept='.yaml'
+                        onChange={newConfigInputOnChange}
+                        ref={i => (fileInput = i)}
+                        style={{ display: 'none' }}
+                        type='file'
+                      />
+                    ) : (
+                      undefined
+                    )}
+                  </div>
+                </React.Fragment>
+              )}
+            </div>
+          </div>
+
           <div className='labelvaluepair'>
             <div className='labelvaluepair--label delete-app'>
               Delete This App
