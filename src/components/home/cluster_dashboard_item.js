@@ -32,17 +32,26 @@ class ClusterDashboardItem extends React.Component {
   componentDidMount() {
     this.registerReRenderInterval();
 
-    const { cluster, nodePools } = this.props;
-
     if (this.props.isNodePool) {
-      const nodePoolsData = clusterNodePools(nodePools, cluster);
-      this.setState({ nodePools: nodePoolsData });
+      this.setClusterNodePools();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.isNodePool && prevProps.nodePools !== this.props.nodePools) {
+      this.setClusterNodePools();
     }
   }
 
   componentWillUnmount() {
     window.clearInterval(this.reRenderInterval);
   }
+
+  setClusterNodePools = () => {
+    const { cluster, nodePools } = this.props;
+    const nodePoolsData = clusterNodePools(nodePools, cluster);
+    this.setState({ nodePools: nodePoolsData });
+  };
 
   /**
    * Activates periodic re-rendering to keep displayed info, like relative
