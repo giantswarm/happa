@@ -1,6 +1,7 @@
 import { clusterDeleteConfirmed } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { modalHide } from 'actions/modalActions';
+import { nodePoolDeleteConfirmed } from 'actions/nodePoolsActions';
 import {
   organizationAddMemberConfirmed,
   organizationAddMemberTyping,
@@ -306,10 +307,12 @@ class Modals extends React.Component {
           </BootstrapModal>
         );
 
-      case 'nodePoolDelete':
+      case 'nodePoolDelete': {
         var nodePool = this.props.modal.templateValues.nodePool;
         var nodePoolId = this.props.modal.templateValues.nodePool.id;
         var nodePoolName = this.props.modal.templateValues.nodePool.name;
+        const clusterId = this.props.modal.templateValues.clusterId;
+
         return (
           <BootstrapModal
             onHide={this.close.bind(this)}
@@ -331,7 +334,11 @@ class Modals extends React.Component {
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
-                onClick={this.deleteNodePoolConfirmed.bind(this, nodePool)}
+                onClick={() =>
+                  this.props.dispatch(
+                    nodePoolDeleteConfirmed(clusterId, nodePool)
+                  )
+                }
                 type='submit'
               >
                 {this.props.modal.templateValues.loading
@@ -347,6 +354,7 @@ class Modals extends React.Component {
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
+      }
 
       default:
         return null;

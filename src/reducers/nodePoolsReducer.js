@@ -27,7 +27,7 @@ const nodePools = produce((draft, action) => {
       draft[action.nodePool.id] = action.nodePool;
       return;
 
-    case types.NODEPOOLS_DELETE_SUCCESS:
+    case types.NODEPOOL_DELETE_SUCCESS:
       delete draft[action.nodePoolId];
       draft.lastUpdated = Date.now();
       return;

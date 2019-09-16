@@ -93,11 +93,12 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
   return function(dispatch) {
     dispatch({
       type: types.NODEPOOL_DELETE_CONFIRMED,
+      clusterId,
       nodePool,
     });
 
     return nodePoolsApi
-      .deleteNodePool(nodePool.id)
+      .deleteNodePool(clusterId, nodePool.id)
       .then(() => {
         dispatch(nodePoolDeleteSuccess(clusterId, nodePool.id));
 
@@ -159,18 +160,19 @@ const nodePoolPatchError = (error, nodePool) => ({
   nodePool,
 });
 
-export const nodePoolDelete = cluster => ({
-  type: types.NODEPOOLS_DELETE,
-  cluster,
+export const nodePoolDelete = (clusterId, nodePool) => ({
+  type: types.NODEPOOL_DELETE,
+  clusterId,
+  nodePool,
 });
 
-const nodePoolDeleteSuccess = clusterId => ({
-  type: types.NODEPOOLS_DELETE_SUCCESS,
-  clusterId,
+const nodePoolDeleteSuccess = nodePoolId => ({
+  type: types.NODEPOOL_DELETE_SUCCESS,
+  nodePoolId,
 });
 
-const nodePoolDeleteError = (clusterId, error) => ({
-  type: types.NODEPOOLS_DELETE_ERROR,
-  clusterId,
+const nodePoolDeleteError = (nodePoolId, error) => ({
+  type: types.NODEPOOL_DELETE_ERROR,
+  nodePoolId,
   error,
 });

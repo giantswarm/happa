@@ -109,6 +109,7 @@ class NodePool extends Component {
             <NodePoolDropdownMenu
               clusterId={clusterId}
               nodePool={nodePool}
+              nodePoolDelete={this.props.nodePoolsActions.nodePoolDelete}
               showNodePoolScalingModal={showNodePoolScalingModal}
               triggerEditName={this.triggerEditName}
             />
@@ -136,6 +137,7 @@ NodePool.propTypes = {
       nodes_ready: PropTypes.number,
     }),
   }),
+  nodePoolsActions: PropTypes.object,
   dispatch: PropTypes.func,
   showNodePoolScalingModal: PropTypes.func,
 };

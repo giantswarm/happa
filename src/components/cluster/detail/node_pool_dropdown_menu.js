@@ -40,10 +40,7 @@ const NodePoolDropdownMenu = props => (
               <a
                 href='#'
                 onClick={() =>
-                  this.props.nodePoolsActions.nodePoolDelete(
-                    props.clusterId,
-                    props.nodePool
-                  )
+                  props.nodePoolDelete(props.clusterId, props.nodePool)
                 }
               >
                 Delete
@@ -59,6 +56,7 @@ const NodePoolDropdownMenu = props => (
 NodePoolDropdownMenu.propTypes = {
   clusterId: PropTypes.string,
   nodePool: PropTypes.object,
+  nodePoolDelete: PropTypes.func,
   showNodePoolScalingModal: PropTypes.func,
   triggerEditName: PropTypes.func,
 };
