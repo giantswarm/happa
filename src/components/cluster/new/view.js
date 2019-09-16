@@ -456,7 +456,7 @@ class CreateCluster extends React.Component {
                         <NumberPicker
                           label='CPU Cores'
                           max={999}
-                          min={1}
+                          min={2}
                           onChange={this.updateCPUCores}
                           stepSize={1}
                           value={this.state.kvm.cpuCores.value}
@@ -466,7 +466,7 @@ class CreateCluster extends React.Component {
                         <NumberPicker
                           label='Memory (GB)'
                           max={999}
-                          min={1}
+                          min={3}
                           onChange={this.updateMemorySize}
                           stepSize={1}
                           unit='GB'
@@ -598,8 +598,8 @@ function mapStateToProps(state) {
     defaultVMSize = 'Standard_D2s_v3';
   }
 
-  var defaultCPUCores = 1; // TODO
-  var defaultMemorySize = 1; // TODO
+  var defaultCPUCores = 4; // TODO
+  var defaultMemorySize = 4; // TODO
   var defaultDiskSize = 20; // TODO
 
   var allowedInstanceTypes = [];
