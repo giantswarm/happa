@@ -6,6 +6,7 @@ import {
 } from 'utils/cluster_utils';
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { css } from '@emotion/core';
+import { Link } from 'react-router-dom';
 import { relativeDate } from 'lib/helpers.js';
 import Button from 'UI/button';
 import NodePool from './node_pool';
@@ -96,6 +97,19 @@ const GridRowNodePoolsHeaders = styled.div`
 const GridRowNodePoolsItem = styled.div`
   ${GridRowNodePoolsBase};
   background-color: ${props => props.theme.colors.shade7};
+`;
+
+const FlexWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  p {
+    font-size: 15px;
+    line-height: 1.3;
+    margin: 2px 0 0;
+    max-width: 550px;
+    padding-left: 20px;
+  }
 `;
 
 class ClusterDetailNodePoolsTable extends React.Component {
@@ -271,9 +285,16 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 </GridRowNodePoolsItem>
               ))}
         </NodePoolsWrapper>
-        <Button>
-          <i className='fa fa-add-circle' /> ADD NODE POOL
-        </Button>
+        <FlexWrapper>
+          <Button>
+            <i className='fa fa-add-circle' /> ADD NODE POOL
+          </Button>
+          <p>
+            With additional node pools, you can add different types of worker
+            nodes to your cluster. Node pools also scale independently.{' '}
+            <Link to='/'> Read more</Link>
+          </p>
+        </FlexWrapper>
       </>
     );
   }
