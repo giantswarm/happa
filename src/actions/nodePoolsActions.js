@@ -8,10 +8,11 @@ const nodePoolsApi = new GiantSwarm.NodepoolsApi();
 //Loads all node pools for all node pools clusters.
 export function nodePoolsLoad() {
   return async function(dispatch, getState) {
-    const clusters = getState().entities.clusters.nodePoolsClusters || [];
+    const nodePoolsClustersId =
+      getState().entities.clusters.nodePoolsClusters || [];
 
     return Promise.all(
-      clusters.map(async clusterId => {
+      nodePoolsClustersId.map(async clusterId => {
         const nodePools = await nodePoolsApi.getNodePools(clusterId);
 
         // Receiving an array-like with weird prototype from API call,
