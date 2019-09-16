@@ -289,11 +289,13 @@ class ClusterDetailNodePoolsTable extends React.Component {
           <Button>
             <i className='fa fa-add-circle' /> ADD NODE POOL
           </Button>
-          <p>
-            With additional node pools, you can add different types of worker
-            nodes to your cluster. Node pools also scale independently.{' '}
-            <Link to='/'> Read more</Link>
-          </p>
+          {nodePools.length < 2 && (
+            <p>
+              With additional node pools, you can add different types of worker
+              nodes to your cluster. Node pools also scale independently.{' '}
+              <Link to='/'> Read more</Link>
+            </p>
+          )}
         </FlexWrapper>
       </>
     );
