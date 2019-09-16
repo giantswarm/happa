@@ -67,6 +67,7 @@ function clustersLoadArrayToObject(clusters) {
 export function clustersLoad() {
   return async function(dispatch, getState) {
     // Fetch all clusters.
+
     const clusters = await clustersApi
       .getClusters()
       .then(clusters => {
@@ -79,7 +80,7 @@ export function clustersLoad() {
       })
       .catch(error => {
         console.error(error);
-        dispatch(clustersLoadErrorV4(error));
+        dispatch(clustersLoadError(error));
       });
 
     // Extract v4 clusters from the clusters fetched array.
@@ -166,7 +167,7 @@ export function clustersLoad() {
     });
 
     const lastUpdated = Date.now();
-    dispatch(clustersLoadSuccessV4(v4ClustersObject, lastUpdated));
+    // dispatch(clustersLoadSuccessV4(v4ClustersObject, lastUpdated));
 
     /********************** V5 CLUSTER DETAILS FETCHING **********************/
 
@@ -176,7 +177,7 @@ export function clustersLoad() {
     );
 
     // Get the details for v5 clusters.
-    if (window.config.environment === 'development') {
+    if (window.config.environment !== 'development') {
       const clusters = await Promise.all(
         v5Clusters.map(cluster => clusterDetailsV5(dispatch, cluster))
       );
@@ -186,13 +187,21 @@ export function clustersLoad() {
 
       // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
       const nodePoolsClusters = clusters.map(cluster => cluster.id);
-      const lastUpdated = Date.now();
+
       dispatch(
-        clustersLoadSuccessV5(v5ClustersObject, nodePoolsClusters, lastUpdated)
+        clustersLoadSuccess(
+          v4ClustersObject,
+          v5ClustersObject,
+          nodePoolsClusters,
+          lastUpdated
+        )
       );
 
       // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
       dispatch(nodePoolsLoad(nodePoolsClusters));
+    } else {
+      // Dispatch with an empty object for v5Clusters and an empty array for node pools clusters.
+      dispatch(clustersLoadSuccess(v4ClustersObject, {}, [], lastUpdated));
     }
   };
 }
@@ -731,25 +740,22 @@ export const clusterDeleteError = (clusterId, error) => ({
   error,
 });
 
-export const clustersLoadSuccessV4 = (clusters, lastUpdated) => ({
-  type: types.CLUSTERS_LOAD_SUCCESS_V4,
-  clusters,
+// nodePoolsClusters is an array of clusters id
+const clustersLoadSuccess = (
+  v4ClustersObject,
+  v5ClustersObject,
+  nodePoolsClusters,
+  lastUpdated
+) => ({
+  type: types.CLUSTERS_LOAD_SUCCESS,
+  v4Clusters: v4ClustersObject,
+  v5Clusters: v5ClustersObject,
+  nodePoolsClusters,
   lastUpdated,
 });
 
-export const clustersLoadSuccessV5 = (clusters, nodePoolsClusters) => ({
-  type: types.CLUSTERS_LOAD_SUCCESS_V5,
-  clusters,
-  nodePoolsClusters,
-});
-
-export const clustersLoadErrorV4 = error => ({
-  type: types.CLUSTERS_LOAD_ERROR_V4,
-  error: error,
-});
-
-export const clustersLoadErrorV5 = error => ({
-  type: types.CLUSTERS_LOAD_ERROR_V5,
+export const clustersLoadError = error => ({
+  type: types.CLUSTERS_LOAD_ERROR,
   error: error,
 });
 
