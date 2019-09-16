@@ -26,6 +26,11 @@ const nodePools = produce((draft, action) => {
     case types.NODEPOOL_PATCH_ERROR:
       draft[action.nodePool.id] = action.nodePool;
       return;
+
+    case types.NODEPOOLS_DELETE_SUCCESS:
+      delete draft[action.nodePoolId];
+      draft.lastUpdated = Date.now();
+      return;
   }
   // This empty obeject is the default state.
 }, {});

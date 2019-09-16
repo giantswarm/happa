@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { modalHide } from './modalActions';
 import GiantSwarm from 'giantswarm';
 
 // API instantiations.
@@ -81,6 +82,53 @@ export function nodePoolPatch(clusterId, nodePool, payload) {
   };
 }
 
+/**
+ * Takes a node pool object and deletes that node pool. Dispatches NODEPOOL_DELETE_SUCCESS
+ * on success or NODEPOOL_DELETE_ERROR on error.
+ *
+ * @param {Object} nodePool Node Pool object
+ */
+export function nodePoolDeleteConfirmed(clusterId, nodePool) {
+  return function(dispatch) {
+    dispatch({
+      type: types.NODEPOOL_DELETE_CONFIRMED,
+      nodePool,
+    });
+
+    return nodePoolsApi
+      .deleteNodePool(nodePool.id)
+      .then(() => {
+        dispatch(nodePoolDeleteSuccess(clusterId, nodePool.id));
+
+        dispatch(modalHide());
+
+        new FlashMessage(
+          'Node Pool <code>' + nodePool.id + '</code> will be deleted',
+          messageType.INFO,
+          messageTTL.SHORT
+        );
+
+        // ensure refreshing of the node pools list. Needed?
+        // dispatch(clustersLoad());
+      })
+      .catch(error => {
+        dispatch(modalHide());
+
+        new FlashMessage(
+          'An error occurred when trying to delete node pool <code>' +
+            nodePool.id +
+            '</code>.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        console.error(error);
+        return dispatch(nodePoolDeleteError(nodePool.id, error));
+      });
+  };
+}
+
 // Actions
 const clusterNodePoolsLoadSucces = (clusterId, nodePools) => ({
   type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
@@ -108,4 +156,20 @@ const nodePoolPatchError = (error, nodePool) => ({
   type: types.NODEPOOL_PATCH_ERROR,
   error,
   nodePool,
+});
+
+export const nodePoolDelete = cluster => ({
+  type: types.NODEPOOLS_DELETE,
+  cluster,
+});
+
+const nodePoolDeleteSuccess = clusterId => ({
+  type: types.NODEPOOLS_DELETE_SUCCESS,
+  clusterId,
+});
+
+const nodePoolDeleteError = (clusterId, error) => ({
+  type: types.NODEPOOLS_DELETE_ERROR,
+  clusterId,
+  error,
 });

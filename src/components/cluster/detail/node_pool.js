@@ -1,3 +1,5 @@
+import * as nodePoolsActions from 'actions/nodePoolsActions';
+import { bindActionCreators } from 'redux';
 import { Code } from 'styles/';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
@@ -52,6 +54,7 @@ class NodePool extends Component {
   render() {
     const {
       availableZonesGridTemplateAreas,
+      clusterId,
       nodePool,
       showNodePoolScalingModal,
     } = this.props;
@@ -104,6 +107,7 @@ class NodePool extends Component {
               {current}
             </NodesWrapper>
             <NodePoolDropdownMenu
+              clusterId={clusterId}
               nodePool={nodePool}
               showNodePoolScalingModal={showNodePoolScalingModal}
               triggerEditName={this.triggerEditName}
@@ -144,7 +148,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch: dispatch,
+    nodePoolsActions: bindActionCreators(nodePoolsActions, dispatch),
+    dispatch,
   };
 }
 
