@@ -177,7 +177,7 @@ export function clustersLoad() {
     );
 
     // Get the details for v5 clusters.
-    if (window.config.environment !== 'development') {
+    if (window.config.environment === 'development') {
       const clusters = await Promise.all(
         v5Clusters.map(cluster => clusterDetailsV5(dispatch, cluster))
       );

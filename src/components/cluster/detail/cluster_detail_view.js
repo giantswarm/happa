@@ -35,75 +35,61 @@ class ClusterDetailView extends React.Component {
 
   constructor(props) {
     super(props);
+
+    if (props.cluster === undefined) {
+      props.dispatch(push('/organizations/' + props.organizationId));
+
+      new FlashMessage(
+        'Cluster <code>' + props.clusterId + '</code> not found',
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.'
+      );
+    } else {
+      props.dispatch(organizationCredentialsLoad(props.organizationId));
+
+      props.releaseActions
+        .loadReleases()
+        .then(() => {
+          return props.clusterActions.clusterLoadDetails(props.cluster.id);
+        })
+        .then(() => {
+          this.setState({
+            loading: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            loading: 'failed',
+          });
+        })
+        .then(() => {
+          return props.clusterActions.clusterLoadApps(props.cluster.id);
+        })
+        .then(() => {
+          this.setState({
+            errorLoadingApps: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            errorLoadingApps: true,
+          });
+        });
+    }
+
     this.visibilityTracker = new PageVisibilityTracker();
   }
 
   componentDidMount() {
     this.registerRefreshInterval();
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
-
-    this.loadDetails();
   }
 
   componentWillUnmount() {
     this.props.clearInterval(this.loadDataInterval);
     this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
   }
-
-  loadDetails = () => {
-    const {
-      cluster,
-      clusterId,
-      clusterActions,
-      organizationId,
-      dispatch,
-      releaseActions,
-    } = this.props;
-
-    if (cluster === undefined) {
-      dispatch(push('/organizations/' + organizationId));
-
-      new FlashMessage(
-        'Cluster <code>' + clusterId + '</code> not found',
-        messageType.ERROR,
-        messageTTL.FOREVER,
-        'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.'
-      );
-
-      return;
-    }
-
-    dispatch(organizationCredentialsLoad(organizationId));
-
-    releaseActions
-      .loadReleases()
-      .then(() => {
-        return clusterActions.clusterLoadDetails(cluster.id);
-      })
-      .then(() => {
-        this.setState({
-          loading: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          loading: 'failed',
-        });
-      })
-      .then(() => {
-        return clusterActions.clusterLoadApps(cluster.id);
-      })
-      .then(() => {
-        this.setState({
-          errorLoadingApps: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          errorLoadingApps: true,
-        });
-      });
-  };
 
   registerRefreshInterval = () => {
     var refreshInterval = 30 * 1000; // 30 seconds
