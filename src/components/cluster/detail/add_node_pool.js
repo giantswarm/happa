@@ -202,10 +202,6 @@ class AddNodePool extends Component {
               Cancel
             </Button>
           </FlexWrapperDiv>
-          <p style={{ fontSize: '16px' }}>
-            Note that it takes around 15 minutes on average until a new node
-            pool is fully available.
-          </p>
         </FlexColumnForm>
       </WrapperDiv>
     );
