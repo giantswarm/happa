@@ -39,7 +39,7 @@
     "copy-to-clipboard": "3.2.0",
     "deep-diff": "1.0.2",
     "emotion-theming": "^10.0.10",
-    "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git#app-secrets",
+    "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
     "history": "^4.7.2",
     "immer": "^3.2.0",
     "immutable": "3.8.2",
