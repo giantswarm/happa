@@ -4,27 +4,18 @@ import {
   deleteAppConfig,
   updateAppConfig,
 } from 'actions/appConfigActions';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import GenericModal from '../../modals/generic_modal';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import yaml from 'js-yaml';
+import YAMLFileUpload from './yaml_file_upload';
 
 const AppDetailsModal = props => {
-  const [fileUploading, setFileUploading] = useState(false);
-  const [renderFileInputs, setRenderFileInputs] = useState(true);
   const [pane, setPane] = useState('initial');
-
-  let fileInput = null;
 
   function showDeleteAppConfigPane() {
     setPane('deleteAppConfig');
-  }
-
-  function showDeleteAppSecretPane() {
-    setPane('deleteAppSecret');
   }
 
   function showDeleteAppPane() {
@@ -33,94 +24,6 @@ const AppDetailsModal = props => {
 
   function showInitialPane() {
     setPane('initial');
-  }
-
-  function handleUploadClick() {
-    fileInput.click();
-  }
-
-  // resetFileInput is a hack to clear the file input. Since the only event
-  // we really get from file inputs is when something has changed, there is a
-  // state we can be in where the user tries to upload the same file twice,
-  // but gets no more feedback. In order to fix this I have to unload the file
-  // inputs in some cases.
-  function refreshFileInputs() {
-    setRenderFileInputs(false);
-    setRenderFileInputs(true);
-  }
-
-  function newConfigInputOnChange(e) {
-    setFileUploading(true);
-
-    var reader = new FileReader();
-
-    reader.onload = (function() {
-      let parsedYAML;
-      return function(e) {
-        try {
-          parsedYAML = yaml.safeLoad(e.target.result);
-        } catch (err) {
-          new FlashMessage(
-            'Unable to parse valid YAML from this file. Please validate that it is a valid YAML file and try again.',
-            messageType.ERROR,
-            messageTTL.MEDIUM
-          );
-          setFileUploading(false);
-          refreshFileInputs();
-          return;
-        }
-
-        _createAppConfig(
-          props.app.metadata.name,
-          props.clusterId,
-          parsedYAML,
-          props.dispatch
-        ).then(() => {
-          setFileUploading(false);
-          refreshFileInputs();
-          props.onClose();
-        });
-      };
-    })(e.target.files[0]);
-
-    reader.readAsText(e.target.files[0]);
-  }
-
-  function updateConfigInputOnChange(e) {
-    setFileUploading(true);
-
-    var reader = new FileReader();
-
-    reader.onload = (function() {
-      let parsedYAML;
-      return function(e) {
-        try {
-          parsedYAML = yaml.safeLoad(e.target.result);
-        } catch (err) {
-          new FlashMessage(
-            'Unable to parse valid YAML from this file. Please validate that it is a valid YAML file and try again.',
-            messageType.ERROR,
-            messageTTL.LONG
-          );
-          setFileUploading(false);
-          refreshFileInputs();
-          return;
-        }
-
-        _updateAppConfig(
-          props.app.metadata.name,
-          props.clusterId,
-          parsedYAML,
-          props.dispatch
-        ).then(() => {
-          setFileUploading(false);
-          refreshFileInputs();
-          props.onClose();
-        });
-      };
-    })(e.target.files[0]);
-
-    reader.readAsText(e.target.files[0]);
   }
 
   function _deleteAppConfig(app, clusterId, dispatch) {
@@ -151,9 +54,10 @@ const AppDetailsModal = props => {
       });
   }
 
-  function _createAppConfig(appName, clusterId, values, dispatch) {
+  function _createAppConfig(appName, clusterId, dispatch, closeModal, values) {
     return dispatch(createAppConfig(appName, clusterId, values))
       .then(() => {
+        closeModal();
         return dispatch(clusterLoadApps(clusterId));
       })
       .catch(e => {
@@ -161,9 +65,10 @@ const AppDetailsModal = props => {
       });
   }
 
-  function _updateAppConfig(appName, clusterId, values, dispatch) {
+  function _updateAppConfig(appName, clusterId, dispatch, closeModal, values) {
     return dispatch(updateAppConfig(appName, clusterId, values))
       .then(() => {
+        closeModal();
         return dispatch(clusterLoadApps(clusterId));
       })
       .catch(e => {
@@ -223,109 +128,31 @@ const AppDetailsModal = props => {
 
             <div className='appdetails--userconfiguration'>
               {props.app.spec.user_config.configmap.name !== '' ? (
-                <React.Fragment>
+                <>
                   <span>User configuration has been set.</span>
 
                   <div className='actions'>
-                    <Button loading={fileUploading} onClick={handleUploadClick}>
-                      Overwrite Configuration
-                    </Button>
+                    <YAMLFileUpload buttonText="Overwrite Configuration" />
 
                     <Button bsStyle='danger' onClick={showDeleteAppConfigPane}>
                       <i className='fa fa-delete'></i> Delete
                     </Button>
-
-                    {renderFileInputs ? (
-                      <input
-                        accept='.yaml'
-                        onChange={updateConfigInputOnChange}
-                        ref={i => (fileInput = i)}
-                        style={{ display: 'none' }}
-                        type='file'
-                      />
-                    ) : (
-                      undefined
-                    )}
                   </div>
-                </React.Fragment>
+                </>
               ) : (
-                <React.Fragment>
+                <>
                   <span>No user configuration.</span>
 
                   <div className='actions'>
-                    <Button loading={fileUploading} onClick={handleUploadClick}>
-                      {' '}
-                      Upload Configuration
-                    </Button>
-                    {renderFileInputs ? (
-                      <input
-                        accept='.yaml'
-                        onChange={newConfigInputOnChange}
-                        ref={i => (fileInput = i)}
-                        style={{ display: 'none' }}
-                        type='file'
-                      />
-                    ) : (
-                      undefined
-                    )}
+                    <YAMLFileUpload
+                      buttonText="Upload Configuration"
+                      onInputChange={(values) => {return new Promise(resolve => {
+                        console.log(values);
+                        resolve();
+                      })}}
+                    />
                   </div>
-                </React.Fragment>
-              )}
-            </div>
-          </div>
-
-          <div className='labelvaluepair'>
-            <div className='labelvaluepair--label'>SECRET</div>
-
-            <div className='appdetails--userconfiguration'>
-              {props.app.spec.user_config.secret.name !== '' ? (
-                <React.Fragment>
-                  <span>Secret has been set.</span>
-
-                  <div className='actions'>
-                    <Button loading={fileUploading} onClick={handleUploadClick}>
-                      Overwrite Secret
-                    </Button>
-
-                    <Button bsStyle='danger' onClick={showDeleteAppSecretPane}>
-                      <i className='fa fa-delete'></i> Delete
-                    </Button>
-
-                    {renderFileInputs ? (
-                      <input
-                        accept='.yaml'
-                        onChange={updateConfigInputOnChange}
-                        ref={i => (fileInput = i)}
-                        style={{ display: 'none' }}
-                        type='file'
-                      />
-                    ) : (
-                      undefined
-                    )}
-                  </div>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  <span>No Secret present.</span>
-
-                  <div className='actions'>
-                    <Button loading={fileUploading} onClick={handleUploadClick}>
-                      {' '}
-                      Upload a Secret
-                    </Button>
-                    {renderFileInputs ? (
-                      <input
-                        accept='.yaml'
-                        onChange={newConfigInputOnChange}
-                        ref={i => (fileInput = i)}
-                        style={{ display: 'none' }}
-                        type='file'
-                      />
-                    ) : (
-                      undefined
-                    )}
-                  </div>
-                </React.Fragment>
+                </>
               )}
             </div>
           </div>
