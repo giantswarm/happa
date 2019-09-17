@@ -59,7 +59,7 @@ const appReducer = produce((draft, action) => {
       draft.selectedOrganization = action.selectedOrganization;
       return;
 
-    case types.CLUSTERS_LOAD_SUCCESS_V4:
+    case types.CLUSTERS_LOAD_SUCCESS:
       draft.firstLoadComplete = true;
       return;
 
