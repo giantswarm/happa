@@ -1,6 +1,7 @@
 import { clusterDeleteConfirmed } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { modalHide } from 'actions/modalActions';
+import { nodePoolDeleteConfirmed } from 'actions/nodePoolActions';
 import {
   organizationAddMemberConfirmed,
   organizationAddMemberTyping,
@@ -305,6 +306,55 @@ class Modals extends React.Component {
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
+
+      case 'nodePoolDelete': {
+        var nodePool = this.props.modal.templateValues.nodePool;
+        var nodePoolId = this.props.modal.templateValues.nodePool.id;
+        var nodePoolName = this.props.modal.templateValues.nodePool.name;
+        const clusterId = this.props.modal.templateValues.clusterId;
+
+        return (
+          <BootstrapModal
+            onHide={this.close.bind(this)}
+            show={this.props.modal.visible}
+          >
+            <BootstrapModal.Header closeButton>
+              <BootstrapModal.Title>
+                Are you sure you want to delete node pool{' '}
+                <strong>{nodePoolName}</strong>{' '}
+                <ClusterIDLabel clusterID={nodePoolId} />?
+              </BootstrapModal.Title>
+            </BootstrapModal.Header>
+            <BootstrapModal.Body>
+              <p>All workloads on this nodePool will be terminated.</p>
+              <p>There is no way to undo this action.</p>
+            </BootstrapModal.Body>
+            <BootstrapModal.Footer>
+              <Button
+                bsStyle='danger'
+                loading={this.props.modal.templateValues.loading}
+                loadingPosition='left'
+                onClick={() =>
+                  this.props.dispatch(
+                    nodePoolDeleteConfirmed(clusterId, nodePool)
+                  )
+                }
+                type='submit'
+              >
+                {this.props.modal.templateValues.loading
+                  ? 'Deleting Node Pool'
+                  : 'Delete Node Pool'}
+              </Button>
+
+              {this.props.modal.templateValues.loading ? null : (
+                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                  Cancel
+                </Button>
+              )}
+            </BootstrapModal.Footer>
+          </BootstrapModal>
+        );
+      }
 
       default:
         return null;

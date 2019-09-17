@@ -88,6 +88,26 @@ const modalReducer = produce((draft, action) => {
       };
       draft.template = 'organizationRemoveMember';
       return;
+
+    case types.NODEPOOL_DELETE:
+      draft.visible = true;
+      draft.templateValues = {
+        clusterId: action.clusterId,
+        nodePool: action.nodePool,
+        loading: false,
+      };
+      draft.template = 'nodePoolDelete';
+      return;
+
+    case types.NODEPOOL_DELETE_CONFIRMED:
+      draft.visible = true;
+      draft.templateValues = {
+        clusterId: action.clusterId,
+        nodePool: action.nodePool,
+        loading: true,
+      };
+      draft.template = 'nodePoolDelete';
+      return;
   }
 }, initialState);
 
