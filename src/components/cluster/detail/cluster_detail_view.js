@@ -33,10 +33,6 @@ class ClusterDetailView extends React.Component {
     errorLoadingApps: false,
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.registerRefreshInterval();
     this.visibilityTracker = new PageVisibilityTracker();
