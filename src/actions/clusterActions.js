@@ -167,7 +167,6 @@ export function clustersLoad() {
     });
 
     const lastUpdated = Date.now();
-    // dispatch(clustersLoadSuccessV4(v4ClustersObject, lastUpdated));
 
     /********************** V5 CLUSTER DETAILS FETCHING **********************/
 
@@ -182,10 +181,10 @@ export function clustersLoad() {
         v5Clusters.map(cluster => clusterDetailsV5(dispatch, cluster))
       );
 
-      // Clusters array to object, because we are storing an object in the store
+      // Clusters array to object, because we are storing an object in the store.
       let v5ClustersObject = clustersLoadArrayToObject(clusters);
 
-      // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
+      // nodePoolsClusters is an array of NP clusters ids and is stored in items.
       const nodePoolsClusters = clusters.map(cluster => cluster.id);
 
       dispatch(
