@@ -83,7 +83,7 @@ const YAMLFileUpload = props => {
 
 YAMLFileUpload.propTypes = {
   buttonText: PropTypes.string,
-  onInputChange: PropTypes.function,
+  onInputChange: PropTypes.func,
 };
 
 export default YAMLFileUpload;

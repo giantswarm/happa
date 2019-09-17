@@ -54,6 +54,9 @@ const AppDetailsModal = props => {
       });
   }
 
+  //  _createAppConfig creates an app configmap.
+  // YAMLFileUpload takes a curried version of this function
+  // since it wants a callback with one argument for the parsed YAML result.
   function _createAppConfig(appName, clusterId, dispatch, closeModal, values) {
     return dispatch(createAppConfig(appName, clusterId, values))
       .then(() => {
@@ -65,6 +68,9 @@ const AppDetailsModal = props => {
       });
   }
 
+  //  _updateAppConfig updates an app configmap.
+  // YAMLFileUpload takes a curried version of this function
+  // since it wants a callback with one argument for the parsed YAML result.
   function _updateAppConfig(appName, clusterId, dispatch, closeModal, values) {
     return dispatch(updateAppConfig(appName, clusterId, values))
       .then(() => {
@@ -132,7 +138,15 @@ const AppDetailsModal = props => {
                   <span>User configuration has been set.</span>
 
                   <div className='actions'>
-                    <YAMLFileUpload buttonText="Overwrite Configuration" />
+                    <YAMLFileUpload
+                      buttonText="Overwrite Configuration"
+                      onInputChange={_updateAppConfig.bind(undefined,
+                        props.app.metadata.name,
+                        props.clusterId,
+                        props.dispatch,
+                        props.onClose,
+                      )}
+                    />
 
                     <Button bsStyle='danger' onClick={showDeleteAppConfigPane}>
                       <i className='fa fa-delete'></i> Delete
@@ -146,10 +160,12 @@ const AppDetailsModal = props => {
                   <div className='actions'>
                     <YAMLFileUpload
                       buttonText="Upload Configuration"
-                      onInputChange={(values) => {return new Promise(resolve => {
-                        console.log(values);
-                        resolve();
-                      })}}
+                      onInputChange={_createAppConfig.bind(undefined,
+                        props.app.metadata.name,
+                        props.clusterId,
+                        props.dispatch,
+                        props.onClose,
+                      )}
                     />
                   </div>
                 </>
