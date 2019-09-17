@@ -49,7 +49,7 @@ const YAMLFileUpload = props => {
           return;
         }
 
-        props.onInputChange(parsedYAML).then(() => {
+        props.onInputChange(parsedYAML, () => {
           setFileUploading(false);
           refreshFileInputs();
         });

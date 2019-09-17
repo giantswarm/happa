@@ -60,13 +60,17 @@ const AppDetailsModal = props => {
   //  _createAppConfig creates an app configmap.
   // YAMLFileUpload takes a curried version of this function
   // since it wants a callback with one argument for the parsed YAML result.
-  function _createAppConfig(appName, clusterId, dispatch, closeModal, values) {
+  function _createAppConfig(appName, clusterId, dispatch, closeModal, values, done) {
     return dispatch(createAppConfig(appName, clusterId, values))
       .then(() => {
-        closeModal();
         return dispatch(clusterLoadApps(clusterId));
       })
+      .then(() => {
+        done();
+        closeModal();
+      })
       .catch(e => {
+        done();
         console.error(e);
       });
   }
@@ -74,13 +78,17 @@ const AppDetailsModal = props => {
   //  _updateAppConfig updates an app configmap.
   // YAMLFileUpload takes a curried version of this function
   // since it wants a callback with one argument for the parsed YAML result.
-  function _updateAppConfig(appName, clusterId, dispatch, closeModal, values) {
+  function _updateAppConfig(appName, clusterId, dispatch, closeModal, values, done) {
     return dispatch(updateAppConfig(appName, clusterId, values))
       .then(() => {
-        closeModal();
         return dispatch(clusterLoadApps(clusterId));
       })
+      .then(() => {
+        done();
+        closeModal();
+      })
       .catch(e => {
+        done();
         console.error(e);
       });
   }
