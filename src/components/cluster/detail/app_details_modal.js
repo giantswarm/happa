@@ -139,12 +139,13 @@ const AppDetailsModal = props => {
 
                   <div className='actions'>
                     <YAMLFileUpload
-                      buttonText="Overwrite Configuration"
-                      onInputChange={_updateAppConfig.bind(undefined,
+                      buttonText='Overwrite Configuration'
+                      onInputChange={_updateAppConfig.bind(
+                        undefined,
                         props.app.metadata.name,
                         props.clusterId,
                         props.dispatch,
-                        props.onClose,
+                        props.onClose
                       )}
                     />
 
@@ -159,12 +160,13 @@ const AppDetailsModal = props => {
 
                   <div className='actions'>
                     <YAMLFileUpload
-                      buttonText="Upload Configuration"
-                      onInputChange={_createAppConfig.bind(undefined,
+                      buttonText='Upload Configuration'
+                      onInputChange={_createAppConfig.bind(
+                        undefined,
                         props.app.metadata.name,
                         props.clusterId,
                         props.dispatch,
-                        props.onClose,
+                        props.onClose
                       )}
                     />
                   </div>
@@ -209,11 +211,11 @@ const AppDetailsModal = props => {
         }
         onClose={props.onClose}
         title={
-          <React.Fragment>
+          <>
             {`Delete User Configuration for ${props.app.metadata.name} on`}
             {` `}
             <ClusterIDLabel clusterID={props.clusterId} />
-          </React.Fragment>
+          </>
         }
         visible={props.visible}
       >
@@ -251,11 +253,11 @@ const AppDetailsModal = props => {
         }
         onClose={props.onClose}
         title={
-          <React.Fragment>
+          <>
             {`Delete ${props.app.metadata.name} on`}
             {` `}
             <ClusterIDLabel clusterID={props.clusterId} />
-          </React.Fragment>
+          </>
         }
         visible={props.visible}
       >

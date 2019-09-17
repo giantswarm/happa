@@ -65,7 +65,6 @@ const YAMLFileUpload = props => {
         {props.buttonText}
       </Button>
 
-
       {renderFileInputs ? (
         <input
           accept='.yaml'
