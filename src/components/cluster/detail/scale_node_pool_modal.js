@@ -1,4 +1,4 @@
-import * as nodePoolsActions from 'actions/nodePoolsActions';
+import * as nodePoolActions from 'actions/nodePoolActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -104,7 +104,7 @@ class ScaleClusterModal extends React.Component {
           max: this.state.scaling.max,
         };
 
-        this.props.nodePoolsActions
+        this.props.nodePoolActions
           .nodePoolPatch(this.props.cluster.id, this.state.nodePool, {
             scaling,
           })
@@ -416,7 +416,7 @@ class ScaleClusterModal extends React.Component {
 
 ScaleClusterModal.propTypes = {
   cluster: PropTypes.object,
-  nodePoolsActions: PropTypes.object,
+  nodePoolActions: PropTypes.object,
   provider: PropTypes.string,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
@@ -424,7 +424,7 @@ ScaleClusterModal.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    nodePoolsActions: bindActionCreators(nodePoolsActions, dispatch),
+    nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
   };
 }
 

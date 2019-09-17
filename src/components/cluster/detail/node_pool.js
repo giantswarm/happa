@@ -1,9 +1,9 @@
-import * as nodePoolsActions from 'actions/nodePoolsActions';
+import * as nodePoolActions from 'actions/nodePoolActions';
 import { bindActionCreators } from 'redux';
 import { Code } from 'styles/';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
-import { nodePoolPatch } from 'actions/nodePoolsActions';
+import { nodePoolPatch } from 'actions/nodePoolActions';
 import AvailabilityZonesWrapper from './availability_zones_wrapper';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
@@ -109,7 +109,7 @@ class NodePool extends Component {
             <NodePoolDropdownMenu
               clusterId={clusterId}
               nodePool={nodePool}
-              nodePoolDelete={this.props.nodePoolsActions.nodePoolDelete}
+              nodePoolDelete={this.props.nodePoolActions.nodePoolDelete}
               showNodePoolScalingModal={showNodePoolScalingModal}
               triggerEditName={this.triggerEditName}
             />
@@ -137,7 +137,7 @@ NodePool.propTypes = {
       nodes_ready: PropTypes.number,
     }),
   }),
-  nodePoolsActions: PropTypes.object,
+  nodePoolActions: PropTypes.object,
   dispatch: PropTypes.func,
   showNodePoolScalingModal: PropTypes.func,
 };
@@ -150,7 +150,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    nodePoolsActions: bindActionCreators(nodePoolsActions, dispatch),
+    nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
     dispatch,
   };
 }
