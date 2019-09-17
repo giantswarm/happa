@@ -11,6 +11,7 @@ const WrapperDiv = styled.div`
   background-color: ${props => props.theme.colors.shade7};
   padding: 20px;
   border-radius: 5px;
+  margin-bottom: 40px;
   h3 {
     margin-bottom: 20px;
   }
