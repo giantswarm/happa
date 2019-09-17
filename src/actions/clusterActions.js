@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
-import { nodePoolsLoad } from './nodePoolsActions';
+import { nodePoolsLoad } from './nodePoolActions';
 import { push } from 'connected-react-router';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
