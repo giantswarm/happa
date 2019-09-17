@@ -26,14 +26,18 @@ const AppDetailsModal = props => {
     setPane('initial');
   }
 
+  function onClose() {
+    showInitialPane();
+    props.onClose();
+  }
+
   function _deleteAppConfig(app, clusterId, dispatch) {
     dispatch(deleteAppConfig(app.metadata.name, clusterId))
       .then(() => {
         return dispatch(clusterLoadApps(clusterId));
       })
       .then(() => {
-        showInitialPane();
-        props.onClose();
+        onClose();
       })
       .catch(e => {
         console.error(e);
@@ -46,8 +50,7 @@ const AppDetailsModal = props => {
         return dispatch(clusterLoadApps(clusterId));
       })
       .then(() => {
-        showInitialPane();
-        props.onClose();
+        onClose();
       })
       .catch(e => {
         console.error(e);
@@ -90,7 +93,7 @@ const AppDetailsModal = props => {
     return (
       <GenericModal
         className='appdetails'
-        onClose={props.onClose}
+        onClose={onClose}
         title={props.app.metadata.name}
         visible={props.visible}
       >
@@ -145,7 +148,7 @@ const AppDetailsModal = props => {
                         props.app.metadata.name,
                         props.clusterId,
                         props.dispatch,
-                        props.onClose
+                        onClose
                       )}
                     />
 
@@ -166,7 +169,7 @@ const AppDetailsModal = props => {
                         props.app.metadata.name,
                         props.clusterId,
                         props.dispatch,
-                        props.onClose
+                        onClose
                       )}
                     />
                   </div>
@@ -209,7 +212,7 @@ const AppDetailsModal = props => {
             </Button>
           </div>
         }
-        onClose={props.onClose}
+        onClose={onClose}
         title={
           <>
             Delete User Configuration for {props.app.metadata.name} on
@@ -249,10 +252,10 @@ const AppDetailsModal = props => {
             </Button>
           </div>
         }
-        onClose={props.onClose}
+        onClose={onClose}
         title={
           <>
-            Delete ${props.app.metadata.name} on
+            Delete {props.app.metadata.name} on
             {` `}
             <ClusterIDLabel clusterID={props.clusterId} />
           </>
