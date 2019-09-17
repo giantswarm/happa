@@ -1,7 +1,9 @@
+import * as nodePoolActions from 'actions/nodePoolActions';
+import { bindActionCreators } from 'redux';
 import { Code } from 'styles/';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
-import { nodePoolPatch } from 'actions/nodePoolsActions';
+import { nodePoolPatch } from 'actions/nodePoolActions';
 import AvailabilityZonesWrapper from './availability_zones_wrapper';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
@@ -52,6 +54,7 @@ class NodePool extends Component {
   render() {
     const {
       availableZonesGridTemplateAreas,
+      clusterId,
       nodePool,
       showNodePoolScalingModal,
     } = this.props;
@@ -92,8 +95,8 @@ class NodePool extends Component {
                 zones={availability_zones}
               />
             </div>
-            <NodesWrapper>{scaling.Min}</NodesWrapper>
-            <NodesWrapper>{scaling.Max}</NodesWrapper>
+            <NodesWrapper>{scaling.min}</NodesWrapper>
+            <NodesWrapper>{scaling.max}</NodesWrapper>
             <NodesWrapper>{desired}</NodesWrapper>
             <NodesWrapper
               style={{
@@ -104,7 +107,9 @@ class NodePool extends Component {
               {current}
             </NodesWrapper>
             <NodePoolDropdownMenu
+              clusterId={clusterId}
               nodePool={nodePool}
+              nodePoolDelete={this.props.nodePoolActions.nodePoolDelete}
               showNodePoolScalingModal={showNodePoolScalingModal}
               triggerEditName={this.triggerEditName}
             />
@@ -124,14 +129,15 @@ NodePool.propTypes = {
     name: PropTypes.string,
     node_spec: PropTypes.object,
     scaling: PropTypes.shape({
-      Min: PropTypes.number,
-      Max: PropTypes.number,
+      min: PropTypes.number,
+      max: PropTypes.number,
     }),
     status: PropTypes.shape({
       nodes: PropTypes.number,
       nodes_ready: PropTypes.number,
     }),
   }),
+  nodePoolActions: PropTypes.object,
   dispatch: PropTypes.func,
   showNodePoolScalingModal: PropTypes.func,
 };
@@ -144,7 +150,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch: dispatch,
+    nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
+    dispatch,
   };
 }
 

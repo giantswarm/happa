@@ -1,9 +1,8 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
-import { nodePoolsLoad } from './nodePoolsActions';
+import { nodePoolsLoad } from './nodePoolActions';
 import { push } from 'connected-react-router';
-import APIClusterStatusClient from 'lib/api_status_client';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
 import mockedStatus from 'mockedStatus';
@@ -66,143 +65,155 @@ function clustersLoadArrayToObject(clusters) {
  * action.
  */
 export function clustersLoad() {
-  return function(dispatch, getState) {
-    // TODO getClusters() will get all clusters, so we will need some logic here
-    // that separates regular clusters from NP clusters and then pass them to their
-    // respective methods.
+  return async function(dispatch, getState) {
+    // Fetch all clusters.
 
-    clustersLoadV4(dispatch, getState);
-    if (window.config.environment === 'development') {
-      clustersLoadV5(dispatch, getState);
-    }
-  };
-}
+    const clusters = await clustersApi
+      .getClusters()
+      .then(clusters => {
+        const enhancedClusters = enhanceWithCapabilities(
+          clusters,
+          getState().app.info.general.provider
+        );
 
-function clustersLoadV4(dispatch, getState) {
-  // TODO this will be in getClusters() here in this function we just want to
-  // dispatch specific actions for v4 clusters.
-  // Or maybe we won't need this method at all.
-  return clustersApi
-    .getClusters()
-    .then(clusters => {
-      const enhancedClusters = enhanceWithCapabilities(
-        clusters,
-        getState().app.info.general.provider
-      );
+        return enhancedClusters;
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(clustersLoadError(error));
+      });
 
-      // Clusters array to object, because we are storing an object in the store
-      let clustersObject = clustersLoadArrayToObject(enhancedClusters);
-      return clustersObject;
-    })
-    .then(clustersObject => {
-      return Promise.all(
-        Object.keys(clustersObject).map(clusterId => {
-          return clustersApi.getCluster(clusterId).then(clusterDetails => {
+    // Extract v4 clusters from the clusters fetched array.
+    const v4Clusters = clusters.filter(cluster =>
+      cluster.path.startsWith('/v4')
+    );
+
+    // TODO at some point we will probably have just one flow for all clusters.
+    // Now we can't as we are not computing capabilities and not getting status
+    // either for v5 clusters, so we fetch v5 clusters details in a separate method
+    // at the end of this one.
+
+    /********************** V4 CLUSTER DETAILS FETCHING **********************/
+
+    // Clusters array to object, because we are storing an object in the store
+    let v4ClustersObject = clustersLoadArrayToObject(v4Clusters);
+
+    // Fetch all details for each cluster.
+    const details = await Promise.all(
+      Object.keys(v4ClustersObject).map(clusterId => {
+        return clustersApi
+          .getCluster(clusterId)
+          .then(clusterDetails => {
             clusterDetails.capabilities = computeCapabilities(
               clusterDetails,
               getState().app.info.general.provider
             );
-
             return clusterDetails;
+          })
+          .catch(error => {
+            console.error('Error loading cluster details:', error);
+            dispatch(clusterLoadDetailsError(clusterId, error));
           });
-        })
-      ).then(clusterDetailsArray => {
-        clusterDetailsArray.forEach(clusterDetail => {
-          clustersObject[clusterDetail.id] = {
-            ...clustersObject[clusterDetail.id],
-            ...clusterDetail,
-          };
-        });
+      })
+    );
 
-        return clustersObject;
-      });
-    })
-    .then(clustersObject => {
-      return Promise.all(
-        Object.keys(clustersObject).map(clusterId => {
-          if (window.config.environment === 'development') {
-            return { id: clusterId, ...mockedStatus };
-          } else {
-            // TODO: Find out why we are getting an empty object back from this call. Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
-            return clustersApi
-              .getClusterStatusWithHttpInfo(clusterId)
-              .then(data => {
-                // For some reason we're getting an empty object back.
-                // The Giantswarm JS client is not parsing the returned JSON
-                // and giving us a object in the normal way anymore.
-                // Very stumped, since nothing has changed.
-                // So we need to access the raw response and parse the json
-                // ourselves.
-                let statusResponse = JSON.parse(data.response.text);
-                return { id: clusterId, statusResponse: statusResponse };
-              })
-              .catch(error => {
-                if (error.status === 404) {
-                  return { id: clusterId, statusResponse: null };
-                } else {
-                  throw error;
-                }
-              });
-          }
-        })
-      ).then(clusterStatusArray => {
-        clusterStatusArray.forEach(clusterStatus => {
-          clustersObject[clusterStatus.id] = {
-            ...clustersObject[clusterStatus.id],
-            ...{ status: clusterStatus.statusResponse },
-          };
-        });
-
-        return clustersObject;
-      });
-    })
-    .then(clustersObject => {
-      const lastUpdated = Date.now();
-      dispatch(clustersLoadSuccessV4(clustersObject, lastUpdated));
-    })
-    .catch(error => {
-      console.error(error);
-      new FlashMessage(
-        'Something went wrong while trying to load clusters.',
-        messageType.ERROR,
-        messageTTL.LONG,
-        'Please try again later or contact support: support@giantswarm.io'
-      );
-      dispatch(clustersLoadErrorV4(error));
+    // And merge them with each cluster
+    details.forEach(clusterDetail => {
+      v4ClustersObject[clusterDetail.id] = {
+        ...v4ClustersObject[clusterDetail.id],
+        ...clusterDetail,
+      };
     });
-}
 
-function clustersLoadV5(dispatch, getState) {
-  // TODO this will be in getClusters() here in this function we just want to
-  // dispatch specific actions for v5 clusters.
-  // Or maybe we won't need this method at all.
-  return clustersApi
-    .getClusterV5('m0ckd')
-    .then(clusters => {
-      // nodePoolsClusters is an array of NP clusters ids and will be stored in items.
-      const nodePoolsClusters = [clusters].map(cluster => cluster.id);
-      const lastUpdated = Date.now();
-      const enhancedClusters = enhanceWithCapabilities(
-        [clusters],
-        getState().app.info.general.provider
+    // Fetch status for each cluster.
+    const status = await Promise.all(
+      Object.keys(v4ClustersObject).map(clusterId => {
+        if (window.config.environment === 'development') {
+          return { id: clusterId, ...mockedStatus };
+        } else {
+          // TODO: Find out why we are getting an empty object back from this call.
+          //Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
+          return clustersApi
+            .getClusterStatusWithHttpInfo(clusterId)
+            .then(clusterStatus => {
+              // For some reason we're getting an empty object back.
+              // The Giantswarm JS client is not parsing the returned JSON
+              // and giving us a object in the normal way anymore.
+              // Very stumped, since nothing has changed.
+              // So we need to access the raw response and parse the json
+              // ourselves.
+              let statusResponse = JSON.parse(clusterStatus.response.text);
+              return { id: clusterId, statusResponse: statusResponse };
+            })
+            .catch(error => {
+              if (error.status === 404) {
+                return { id: clusterId, statusResponse: null };
+              } else {
+                console.error(error);
+                dispatch(clusterLoadStatusError(clusterId, error));
+                throw error;
+              }
+            });
+        }
+      })
+    );
+
+    // And merge status with each cluster.
+    status.forEach(clusterStatus => {
+      v4ClustersObject[clusterStatus.id] = {
+        ...v4ClustersObject[clusterStatus.id],
+        ...{ status: clusterStatus.statusResponse },
+      };
+    });
+
+    const lastUpdated = Date.now();
+
+    /********************** V5 CLUSTER DETAILS FETCHING **********************/
+
+    // Extract v5 clusters from the clusters fetched.
+    const v5Clusters = clusters.filter(cluster =>
+      cluster.path.startsWith('/v5')
+    );
+
+    // Get the details for v5 clusters.
+    if (window.config.environment === 'development') {
+      const clusters = await Promise.all(
+        v5Clusters.map(cluster => clusterDetailsV5(dispatch, cluster))
       );
 
       // Clusters array to object, because we are storing an object in the store.
-      const clustersObject = clustersLoadArrayToObject(enhancedClusters);
+      let v5ClustersObject = clustersLoadArrayToObject(clusters);
+
+      // nodePoolsClusters is an array of NP clusters ids and is stored in items.
+      const nodePoolsClusters = clusters.map(cluster => cluster.id);
 
       dispatch(
-        clustersLoadSuccessV5(clustersObject, nodePoolsClusters, lastUpdated)
+        clustersLoadSuccess(
+          v4ClustersObject,
+          v5ClustersObject,
+          nodePoolsClusters,
+          lastUpdated
+        )
       );
 
       // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
-      dispatch(nodePoolsLoad());
+      dispatch(nodePoolsLoad(nodePoolsClusters));
+    } else {
+      // Dispatch with an empty object for v5Clusters and an empty array for node pools clusters.
+      dispatch(clustersLoadSuccess(v4ClustersObject, {}, [], lastUpdated));
+    }
+  };
+}
+
+function clusterDetailsV5(dispatch, cluster) {
+  return clustersApi
+    .getClusterV5(cluster.id)
+    .then(clusterDetails => {
+      return clusterDetails;
     })
     .catch(error => {
-      console.error(error);
-      dispatch({
-        type: types.CLUSTERS_LOAD_ERROR_V5,
-        error: error,
-      });
+      console.error('Error loading cluster details:', error);
+      dispatch(clusterLoadDetailsError(cluster.id, error));
     });
 }
 
@@ -496,12 +507,10 @@ function clusterLoadStatusV4(dispatch, clusterId) {
     clusterId,
   });
 
-  var apiClusterStatus = new APIClusterStatusClient({
-    endpoint: window.config.apiEndpoint,
-  });
-
-  return apiClusterStatus
-    .getClusterStatus(clusterId)
+  // TODO: getClusterStatusWithHttpInfo usage copied from line 125. When it is fixed, also fix here
+  return clustersApi
+    .getClusterStatusWithHttpInfo(clusterId)
+    .then(data => JSON.parse(data.response.text))
     .then(status => {
       dispatch(clusterLoadStatusSuccess(clusterId, status));
       return status;
@@ -730,25 +739,22 @@ export const clusterDeleteError = (clusterId, error) => ({
   error,
 });
 
-export const clustersLoadSuccessV4 = (clusters, lastUpdated) => ({
-  type: types.CLUSTERS_LOAD_SUCCESS_V4,
-  clusters,
+// nodePoolsClusters is an array of clusters id
+const clustersLoadSuccess = (
+  v4ClustersObject,
+  v5ClustersObject,
+  nodePoolsClusters,
+  lastUpdated
+) => ({
+  type: types.CLUSTERS_LOAD_SUCCESS,
+  v4Clusters: v4ClustersObject,
+  v5Clusters: v5ClustersObject,
+  nodePoolsClusters,
   lastUpdated,
 });
 
-export const clustersLoadSuccessV5 = (clusters, nodePoolsClusters) => ({
-  type: types.CLUSTERS_LOAD_SUCCESS_V5,
-  clusters,
-  nodePoolsClusters,
-});
-
-export const clustersLoadErrorV4 = error => ({
-  type: types.CLUSTERS_LOAD_ERROR_V4,
-  error: error,
-});
-
-export const clustersLoadErrorV5 = error => ({
-  type: types.CLUSTERS_LOAD_ERROR_V5,
+export const clustersLoadError = error => ({
+  type: types.CLUSTERS_LOAD_ERROR,
   error: error,
 });
 
@@ -760,7 +766,7 @@ export const clustersLoadErrorV5 = error => ({
  * @param {Object} cluster Cluster object
  * @param {Object} payload object with just the data we want to modify
  */
-export function clusterPatch(cluster, payload) {
+export function clusterPatch(cluster, payload, isNodePoolCluster) {
   return function(dispatch) {
     // Optimistic update.
     dispatch({
@@ -769,7 +775,11 @@ export function clusterPatch(cluster, payload) {
       payload,
     });
 
-    return clustersApi.modifyCluster(cluster.id, payload).catch(error => {
+    const modifyCluster = isNodePoolCluster
+      ? clustersApi.modifyClusterV5(cluster.id, payload)
+      : clustersApi.modifyCluster(cluster.id, payload);
+
+    return modifyCluster.catch(error => {
       // Undo update to store if the API call fails.
       dispatch({
         type: types.CLUSTER_PATCH_ERROR,
