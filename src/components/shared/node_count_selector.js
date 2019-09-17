@@ -75,6 +75,8 @@ class NodeCountSelector extends React.Component {
   };
 
   render() {
+    const { label } = this.props;
+
     if (this.props.autoscalingEnabled === true) {
       return (
         <form
@@ -84,7 +86,7 @@ class NodeCountSelector extends React.Component {
         >
           <div className='row'>
             <div className='col-6'>
-              <label>Minimum</label>
+              <label>{label.min ? label.min : 'Minimum'}</label>
               <NumberPicker
                 label=''
                 max={this.state.scaling.max}
@@ -96,7 +98,7 @@ class NodeCountSelector extends React.Component {
               />
             </div>
             <div className='col-6'>
-              <label>Maximum</label>
+              <label>{label.max ? label.max : 'Maximum'}</label>
               <NumberPicker
                 label=''
                 max={99}
@@ -147,6 +149,10 @@ class NodeCountSelector extends React.Component {
 
 NodeCountSelector.propTypes = {
   autoscalingEnabled: PropTypes.bool,
+  label: PropTypes.shape({
+    min: PropTypes.string,
+    max: PropTypes.string,
+  }),
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
   scaling: PropTypes.object,
