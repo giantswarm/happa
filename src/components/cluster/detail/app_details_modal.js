@@ -60,7 +60,14 @@ const AppDetailsModal = props => {
   //  _createAppConfig creates an app configmap.
   // YAMLFileUpload takes a curried version of this function
   // since it wants a callback with one argument for the parsed YAML result.
-  function _createAppConfig(appName, clusterId, dispatch, closeModal, values, done) {
+  function _createAppConfig(
+    appName,
+    clusterId,
+    dispatch,
+    closeModal,
+    values,
+    done
+  ) {
     return dispatch(createAppConfig(appName, clusterId, values))
       .then(() => {
         return dispatch(clusterLoadApps(clusterId));
@@ -78,7 +85,14 @@ const AppDetailsModal = props => {
   //  _updateAppConfig updates an app configmap.
   // YAMLFileUpload takes a curried version of this function
   // since it wants a callback with one argument for the parsed YAML result.
-  function _updateAppConfig(appName, clusterId, dispatch, closeModal, values, done) {
+  function _updateAppConfig(
+    appName,
+    clusterId,
+    dispatch,
+    closeModal,
+    values,
+    done
+  ) {
     return dispatch(updateAppConfig(appName, clusterId, values))
       .then(() => {
         return dispatch(clusterLoadApps(clusterId));
@@ -230,10 +244,12 @@ const AppDetailsModal = props => {
         }
         visible={props.visible}
       >
-        Are you sure you want to delete the user configuration for {props.app.metadata.name} on
+        Are you sure you want to delete the user configuration for{' '}
+        {props.app.metadata.name} on
         {` `}
         <ClusterIDLabel clusterID={props.clusterId} />?
-        <br/><br/>
+        <br />
+        <br />
         There is no undo.
       </GenericModal>
     );
@@ -273,7 +289,8 @@ const AppDetailsModal = props => {
         Are you sure you want to delete {props.app.metadata.name} on
         {` `}
         <ClusterIDLabel clusterID={props.clusterId} />?
-        <br/><br/>
+        <br />
+        <br />
         There is no undo.
       </GenericModal>
     );
