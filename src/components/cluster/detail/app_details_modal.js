@@ -212,20 +212,18 @@ const AppDetailsModal = props => {
         onClose={props.onClose}
         title={
           <>
-            {`Delete User Configuration for ${props.app.metadata.name} on`}
+            Delete User Configuration for {props.app.metadata.name} on
             {` `}
             <ClusterIDLabel clusterID={props.clusterId} />
           </>
         }
         visible={props.visible}
       >
-        <p>
-          {`Are you sure you want to delete the user configuration for ${props.app.metadata.name} on`}
-          {` `}
-          <ClusterIDLabel clusterID={props.clusterId} />? <br />
-          <br />
-          There is no undo.
-        </p>
+        Are you sure you want to delete the user configuration for {props.app.metadata.name} on
+        {` `}
+        <ClusterIDLabel clusterID={props.clusterId} />?
+        <br/><br/>
+        There is no undo.
       </GenericModal>
     );
   }
@@ -254,20 +252,18 @@ const AppDetailsModal = props => {
         onClose={props.onClose}
         title={
           <>
-            {`Delete ${props.app.metadata.name} on`}
+            Delete ${props.app.metadata.name} on
             {` `}
             <ClusterIDLabel clusterID={props.clusterId} />
           </>
         }
         visible={props.visible}
       >
-        <p>
-          {`Are you sure you want to delete ${props.app.metadata.name} on`}
-          {` `}
-          <ClusterIDLabel clusterID={props.clusterId} />? <br />
-          <br />
-          There is no undo.
-        </p>
+        Are you sure you want to delete {props.app.metadata.name} on
+        {` `}
+        <ClusterIDLabel clusterID={props.clusterId} />?
+        <br/><br/>
+        There is no undo.
       </GenericModal>
     );
   }
