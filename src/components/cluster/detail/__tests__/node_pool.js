@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'emotion-theming';
 import configureStore from 'stores/configureStore';
+import initialState from 'test_utils/initialState';
 import mockedNodePool from 'test_utils/mocked_node_pool';
 import React from 'react';
 import theme from 'styles/theme';
@@ -18,6 +19,24 @@ import NodePoolDropdownMenu from '../node_pool_dropdown_menu';
 
 // Mocks
 jest.mock('utils/localStorageUtils');
+
+jest.mock('actions/userActions', () => {
+  return {
+    refreshUserInfo: jest.fn(() => () => Promise.resolve()),
+  };
+});
+
+jest.mock('actions/organizationActions', () => {
+  return {
+    organizationsLoad: jest.fn(() => () => Promise.resolve()),
+  };
+});
+
+jest.mock('actions/clusterActions', () => {
+  return {
+    clustersLoad: jest.fn(() => () => Promise.resolve()),
+  };
+});
 
 it('shows the dropdown when the three dots button is clicked', () => {
   const div = document.createElement('div');
@@ -50,19 +69,17 @@ it('patches node pool name correctly', () => {
  */
 it('shows the modal when the button is clicked', async () => {
   const div = document.createElement('div');
-  const store = configureStore({
-    app: { selectedOrganization: 'acme' },
-    entities: { nodePools: { [mockedNodePool.id]: mockedNodePool } },
-  });
-  localStorageUtils.fetchSelectedOrganizationFromStorage = jest.fn(
-    () => 'acme'
-  );
+  const store = configureStore(initialState);
+
+  // localStorageUtils.fetchSelectedOrganizationFromStorage = jest.fn(
+  //   () => 'acme'
+  // );
 
   const { getByText, getByRole, debug } = render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <MemoryRouter initialEntries={['/']}>
-          <Layout firstLoadComplete={true}>
+          <Layout>
             <ClusterDetailIndex>
               <ClusterDetailView
                 cluster={{ id: 'm0ckd' }}

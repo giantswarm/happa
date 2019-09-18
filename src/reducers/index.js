@@ -28,6 +28,7 @@ const rootReducer = history =>
     app,
     entities,
     modal,
+    nodePools,
   });
 
 export default rootReducer;
