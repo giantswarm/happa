@@ -9,6 +9,7 @@ import {
   deleteAppSecret,
   updateAppSecret,
 } from 'actions/appSecretActions';
+import { truncate } from 'lib/helpers';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import GenericModal from '../../modals/generic_modal';
@@ -40,7 +41,7 @@ const AppDetailsModal = props => {
     props.onClose();
   }
 
-  function _deleteAppConfig(app, clusterId, dispatch) {
+  function dispatchDeleteAppConfig(app, clusterId, dispatch) {
     dispatch(deleteAppConfig(app.metadata.name, clusterId))
       .then(() => {
         return dispatch(clusterLoadApps(clusterId));
@@ -53,7 +54,7 @@ const AppDetailsModal = props => {
       });
   }
 
-  function _deleteAppSecret(app, clusterId, dispatch) {
+  function dispatchDeleteAppSecret(app, clusterId, dispatch) {
     dispatch(deleteAppSecret(app.metadata.name, clusterId))
       .then(() => {
         return dispatch(clusterLoadApps(clusterId));
@@ -66,7 +67,7 @@ const AppDetailsModal = props => {
       });
   }
 
-  function _deleteApp(app, clusterId, dispatch) {
+  function dispatchDeleteApp(app, clusterId, dispatch) {
     dispatch(clusterDeleteApp(app.metadata.name, clusterId))
       .then(() => {
         return dispatch(clusterLoadApps(clusterId));
@@ -79,10 +80,10 @@ const AppDetailsModal = props => {
       });
   }
 
-  //  _createAppConfig creates an app configmap.
+  // dispatchCreateAppConfig creates an app configmap.
   // YAMLFileUpload takes a curried version of this function
   // since it wants a callback with one argument for the parsed YAML result.
-  function _createAppConfig(
+  function dispatchCreateAppConfig(
     appName,
     clusterId,
     dispatch,
@@ -104,10 +105,10 @@ const AppDetailsModal = props => {
       });
   }
 
-  //  _updateAppConfig updates an app configmap.
+  // dispatchUpdateAppConfig updates an app configmap.
   // YAMLFileUpload takes a curried version of this function
   // since it wants a callback with one argument for the parsed YAML result.
-  function _updateAppConfig(
+  function dispatchUpdateAppConfig(
     appName,
     clusterId,
     dispatch,
@@ -129,10 +130,10 @@ const AppDetailsModal = props => {
       });
   }
 
-  //  _createAppSecret creates an app secret.
+  // dispatchCreateAppSecret creates an app secret.
   // YAMLFileUpload takes a curried version of this function
   // since it wants a callback with one argument for the parsed YAML result.
-  function _createAppSecret(
+  function dispatchCreateAppSecret(
     appName,
     clusterId,
     dispatch,
@@ -154,10 +155,10 @@ const AppDetailsModal = props => {
       });
   }
 
-  //  _updateAppSecret updates an app secret.
+  // dispatchUpdateAppSecret updates an app secret.
   // YAMLFileUpload takes a curried version of this function
   // since it wants a callback with one argument for the parsed YAML result.
-  function _updateAppSecret(
+  function dispatchUpdateAppSecret(
     appName,
     clusterId,
     dispatch,
@@ -210,7 +211,7 @@ const AppDetailsModal = props => {
             <div className='labelvaluepair'>
               <div className='labelvaluepair--label'>CHART VERSION</div>
               <div className='labelvaluepair--value code'>
-                <span>{props.app.spec.version}</span>
+                <span>{truncate(props.app.spec.version, 20)}</span>
               </div>
             </div>
 
@@ -232,12 +233,12 @@ const AppDetailsModal = props => {
             <div className='appdetails--userconfiguration'>
               {props.app.spec.user_config.configmap.name !== '' ? (
                 <>
-                  <span>ConfigMap has been set.</span>
+                  <span>ConfigMap has been set</span>
 
                   <div className='actions'>
                     <YAMLFileUpload
-                      buttonText='Overwrite ConfigMap'
-                      onInputChange={_updateAppConfig.bind(
+                      buttonText='Replace ConfigMap'
+                      onInputChange={dispatchUpdateAppConfig.bind(
                         undefined,
                         props.app.metadata.name,
                         props.clusterId,
@@ -258,7 +259,7 @@ const AppDetailsModal = props => {
                   <div className='actions'>
                     <YAMLFileUpload
                       buttonText='Upload ConfigMap'
-                      onInputChange={_createAppConfig.bind(
+                      onInputChange={dispatchCreateAppConfig.bind(
                         undefined,
                         props.app.metadata.name,
                         props.clusterId,
@@ -278,12 +279,12 @@ const AppDetailsModal = props => {
             <div className='appdetails--userconfiguration'>
               {props.app.spec.user_config.secret.name !== '' ? (
                 <>
-                  <span>Secret has been set.</span>
+                  <span>Secret has been set</span>
 
                   <div className='actions'>
                     <YAMLFileUpload
-                      buttonText='Overwrite Secret'
-                      onInputChange={_updateAppSecret.bind(
+                      buttonText='Replace Secret'
+                      onInputChange={dispatchUpdateAppSecret.bind(
                         undefined,
                         props.app.metadata.name,
                         props.clusterId,
@@ -304,7 +305,7 @@ const AppDetailsModal = props => {
                   <div className='actions'>
                     <YAMLFileUpload
                       buttonText='Upload Secret'
-                      onInputChange={_createAppSecret.bind(
+                      onInputChange={dispatchCreateAppSecret.bind(
                         undefined,
                         props.app.metadata.name,
                         props.clusterId,
@@ -338,7 +339,7 @@ const AppDetailsModal = props => {
           <div>
             <Button
               bsStyle='danger'
-              onClick={_deleteAppConfig.bind(
+              onClick={dispatchDeleteAppConfig.bind(
                 this,
                 props.app,
                 props.clusterId,
@@ -380,7 +381,7 @@ const AppDetailsModal = props => {
           <div>
             <Button
               bsStyle='danger'
-              onClick={_deleteAppSecret.bind(
+              onClick={dispatchDeleteAppSecret.bind(
                 this,
                 props.app,
                 props.clusterId,
@@ -422,7 +423,7 @@ const AppDetailsModal = props => {
           <div>
             <Button
               bsStyle='danger'
-              onClick={_deleteApp.bind(
+              onClick={dispatchDeleteApp.bind(
                 this,
                 props.app,
                 props.clusterId,
