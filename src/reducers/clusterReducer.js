@@ -28,27 +28,24 @@ const initialState = {
 
 const clusterReducer = produce((draft, action) => {
   switch (action.type) {
-    case types.CLUSTERS_LOAD_SUCCESS_V4:
-      Object.keys(action.clusters).forEach(clusterId => {
-        const withAwsKeys = ensureWorkersHaveAWSkey(action.clusters[clusterId]);
+    case types.CLUSTERS_LOAD_SUCCESS:
+      Object.keys(action.v4Clusters).forEach(clusterId => {
+        const withAwsKeys = ensureWorkersHaveAWSkey(
+          action.v4Clusters[clusterId]
+        );
 
-        draft.items[clusterId] = action.clusters[clusterId];
+        draft.items[clusterId] = action.v4Clusters[clusterId];
         draft.items[clusterId].workers = withAwsKeys.workers;
       });
 
-      draft.lastUpdated = action.lastUpdated;
-      return;
-
-    case types.CLUSTERS_LOAD_SUCCESS_V5:
-      Object.keys(action.clusters).forEach(clusterId => {
-        draft.items[clusterId] = action.clusters[clusterId];
+      Object.keys(action.v5Clusters).forEach(clusterId => {
+        draft.items[clusterId] = action.v5Clusters[clusterId];
       });
       draft.lastUpdated = action.lastUpdated;
       draft.nodePoolsClusters = action.nodePoolsClusters;
       return;
 
-    case types.CLUSTERS_LOAD_ERROR_V4:
-    case types.CLUSTERS_LOAD_ERROR_V5:
+    case types.CLUSTERS_LOAD_ERROR:
       draft.errorLoading = true;
       return;
 
