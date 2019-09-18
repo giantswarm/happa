@@ -45,8 +45,7 @@ const clusterReducer = produce((draft, action) => {
       draft.nodePoolsClusters = action.nodePoolsClusters;
       return;
 
-    case types.CLUSTERS_LOAD_ERROR_V4:
-    case types.CLUSTERS_LOAD_ERROR_V5:
+    case types.CLUSTERS_LOAD_ERROR:
       draft.errorLoading = true;
       return;
 
