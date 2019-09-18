@@ -2,6 +2,7 @@ import 'jest-dom/extend-expect';
 import { fireEvent, render, wait } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { renderRouteWithStore } from 'test_utils/renderRoute';
 import { ThemeProvider } from 'emotion-theming';
 import configureStore from 'stores/configureStore';
 import initialState from 'test_utils/initialState';
@@ -18,7 +19,7 @@ import NodePool from '../node_pool';
 import NodePoolDropdownMenu from '../node_pool_dropdown_menu';
 
 // Mocks
-jest.mock('utils/localStorageUtils');
+// jest.mock('utils/localStorageUtils');
 
 jest.mock('actions/userActions', () => {
   return {
@@ -68,24 +69,18 @@ it('patches node pool name correctly', () => {
   // To be implemented
 });
 
+// The modal is opened calling a function that lives in the parent component of
+// <NodePoolDropdownMenu>, so we can't test it in isolation, we need to render
+// the full tree.
 it('shows the modal when the button is clicked', async () => {
   const div = document.createElement('div');
   const store = configureStore(initialState);
 
-  const { getAllByText, getByText } = render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <MemoryRouter
-          initialEntries={['/organizations/acme/clusters/m0ckd/np']}
-        >
-          <Layout />
-        </MemoryRouter>
-      </ThemeProvider>
-    </Provider>,
+  const { getAllByText, getByText } = renderRouteWithStore(
+    '/organizations/acme/clusters/m0ckd/np',
     div
   );
 
-  // await wait(() => debug(store.getState()));
   await wait(() => fireEvent.click(getAllByText('•••')[0]));
   fireEvent.click(getByText(/edit scaling limits/i));
   const modalTitle = getByText(/edit scaling settings for/i);
