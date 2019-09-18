@@ -232,7 +232,7 @@ const AppDetailsModal = props => {
             <div className='appdetails--userconfiguration'>
               {props.app.spec.user_config.configmap.name !== '' ? (
                 <>
-                  <span>Config Map has been set.</span>
+                  <span>ConfigMap has been set.</span>
 
                   <div className='actions'>
                     <YAMLFileUpload
