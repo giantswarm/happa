@@ -1,5 +1,4 @@
 import 'jest-dom/extend-expect';
-import * as localStorageUtils from 'utils/localStorageUtils';
 import { fireEvent, render, wait } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -12,6 +11,7 @@ import theme from 'styles/theme';
 
 // Components
 import ClusterDetailIndex from '../index';
+import ClusterDetailNodePoolsTable from '../cluster_detail_node_pools_table';
 import ClusterDetailView from '../cluster_detail_view';
 import Layout from 'layout';
 import NodePool from '../node_pool';
@@ -29,12 +29,21 @@ jest.mock('actions/userActions', () => {
 jest.mock('actions/organizationActions', () => {
   return {
     organizationsLoad: jest.fn(() => () => Promise.resolve()),
+    organizationCredentialsLoad: jest.fn(() => () => Promise.resolve()),
   };
 });
 
 jest.mock('actions/clusterActions', () => {
   return {
     clustersLoad: jest.fn(() => () => Promise.resolve()),
+    clusterLoadDetails: jest.fn(() => () => Promise.resolve()),
+    clusterLoadKeyPairs: jest.fn(() => () => Promise.resolve()),
+  };
+});
+
+jest.mock('actions/releaseActions', () => {
+  return {
+    loadReleases: jest.fn(() => () => Promise.resolve()),
   };
 });
 
@@ -75,22 +84,23 @@ it('shows the modal when the button is clicked', async () => {
   //   () => 'acme'
   // );
 
-  const { getByText, getByRole, debug } = render(
+  const { getAllByText, getByText, getByRole, getAllByRole, debug } = render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <MemoryRouter initialEntries={['/']}>
+        <MemoryRouter
+          initialEntries={['/organizations/acme/clusters/m0ckd/np']}
+        >
           <Layout>
-            <ClusterDetailIndex>
-              <ClusterDetailView
-                cluster={{ id: 'm0ckd' }}
-                organizationId='acme'
-              >
-                <NodePool
-                  availableZonesGridTemplateAreas={'ab'}
+            <ClusterDetailIndex
+            // cluster={initialState.entities.clusters.items['m0ckd']}
+            // clusterId='m0ckd'
+            // nodePools={initialState.entities.nodePools}
+            // organizationId='acme'
+            >
+              <ClusterDetailView>
+                {/* <ClusterDetailNodePoolsTable
                   nodePool={mockedNodePool}
-                >
-                  <NodePoolDropdownMenu render={{ isOpen: true }} />
-                </NodePool>
+                ></ClusterDetailNodePoolsTable> */}
               </ClusterDetailView>
             </ClusterDetailIndex>
           </Layout>
@@ -100,14 +110,9 @@ it('shows the modal when the button is clicked', async () => {
     div
   );
 
-  await wait(() => debug(store.getState()));
-  debug(getByText('•••'));
-
-  // fireEvent.click(getByText('•••'));
-  // const menu = getByRole('menu');
-  // expect(menu).toBeInTheDocument();
-
-  // fireEvent.click(getByText(/edit scaling limits/i));
-  // const modal = getByRole('dialog');
-  // expect(modal).toBeInTheDocument();
+  // await wait(() => debug(store.getState()));
+  await wait(() => fireEvent.click(getAllByText('•••')[0]));
+  fireEvent.click(getByText(/edit scaling limits/i));
+  const modalTitle = getByText(/edit scaling settings for/i);
+  expect(modalTitle).toBeInTheDocument();
 });

@@ -14,9 +14,15 @@ const initialState = {
       },
       isAdmin: true,
     },
+    info: {
+      general: {
+        installation_name: 'local',
+        provider: 'aws',
+      },
+    },
   },
   entities: {
-    credentials: { isFetching: false },
+    credentials: { isFetching: false, lastUpdated: Date.now(), items: [] },
     clusters: {
       items: {
         '63xja': {
@@ -198,79 +204,79 @@ const initialState = {
         },
       },
     },
-  },
-  nodePools: {
-    a0sdi: {
-      id: 'a0sdi',
-      name: 'awesome-nodepool-0',
-      availability_zones: ['europe-west-1a', 'europe-west-1b'],
-      scaling: {
-        min: 3,
-        max: 5,
-      },
-      node_spec: {
-        aws: {
-          instance_type: 'm3.xlarge',
+    nodePools: {
+      a0sdi: {
+        id: 'a0sdi',
+        name: 'awesome-nodepool-0',
+        availability_zones: ['europe-west-1a', 'europe-west-1b'],
+        scaling: {
+          min: 3,
+          max: 5,
         },
-        labels: ['beta-app'],
-        volume_sizes: {
-          docker: 100,
-          kubelet: 100,
+        node_spec: {
+          aws: {
+            instance_type: 'm3.xlarge',
+          },
+          labels: ['beta-app'],
+          volume_sizes: {
+            docker: 100,
+            kubelet: 100,
+          },
         },
-      },
-      status: {
-        nodes: 4,
-        nodes_ready: 4,
-      },
-      subnet: '10.0.0.0/24',
-    },
-    a1sdi: {
-      id: 'a1sdi',
-      name: 'awesome-nodepool-1',
-      availability_zones: ['europe-west-1a', 'europe-west-1b'],
-      scaling: {
-        min: 3,
-        max: 5,
-      },
-      node_spec: {
-        aws: {
-          instance_type: 'm3.xlarge',
+        status: {
+          nodes: 4,
+          nodes_ready: 4,
         },
-        labels: ['beta-app'],
-        volume_sizes: {
-          docker: 100,
-          kubelet: 100,
+        subnet: '10.0.0.0/24',
+      },
+      a1sdi: {
+        id: 'a1sdi',
+        name: 'awesome-nodepool-1',
+        availability_zones: ['europe-west-1a', 'europe-west-1b'],
+        scaling: {
+          min: 3,
+          max: 5,
         },
-      },
-      status: {
-        nodes: 4,
-        nodes_ready: 4,
-      },
-      subnet: '10.1.0.0/24',
-    },
-    a2sdi: {
-      id: 'a2sdi',
-      name: 'awesome-nodepool-2',
-      availability_zones: ['europe-west-1a', 'europe-west-1b'],
-      scaling: {
-        min: 3,
-        max: 5,
-      },
-      node_spec: {
-        aws: {
-          instance_type: 'm3.xlarge',
+        node_spec: {
+          aws: {
+            instance_type: 'm3.xlarge',
+          },
+          labels: ['beta-app'],
+          volume_sizes: {
+            docker: 100,
+            kubelet: 100,
+          },
         },
-        labels: ['beta-app'],
-        volume_sizes: {
-          docker: 100,
-          kubelet: 100,
+        status: {
+          nodes: 4,
+          nodes_ready: 4,
         },
+        subnet: '10.1.0.0/24',
       },
-      status: {
-        nodes: 4,
-        nodes_ready: 4,
+      a2sdi: {
+        id: 'a2sdi',
+        name: 'awesome-nodepool-2',
+        availability_zones: ['europe-west-1a', 'europe-west-1b'],
+        scaling: {
+          min: 3,
+          max: 5,
+        },
+        node_spec: {
+          aws: {
+            instance_type: 'm3.xlarge',
+          },
+          labels: ['beta-app'],
+          volume_sizes: {
+            docker: 100,
+            kubelet: 100,
+          },
+        },
+        status: {
+          nodes: 4,
+          nodes_ready: 4,
+        },
+        subnet: '10.2.0.0/24',
       },
-      subnet: '10.2.0.0/24',
     },
   },
 };

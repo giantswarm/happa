@@ -22,7 +22,11 @@ const NodePoolDropdownMenu = props => (
           •••
         </button>
         {isOpen && (
-          <ul aria-labelledby='node_pools_dropdown' role='menu'>
+          <ul
+            aria-labelledby='node_pools_dropdown'
+            data-testid='node-pool-dropdown'
+            role='menu'
+          >
             <li>
               <a href='#' onClick={props.triggerEditName}>
                 Rename
