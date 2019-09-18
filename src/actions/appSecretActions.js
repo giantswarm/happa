@@ -3,49 +3,49 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import GiantSwarm from 'giantswarm';
 
 /**
- * updateAppConfig updates an appConfig
+ * updateAppSecret updates an appSecret
  *
  * @param {Object} appName The name of the app.
  * @param {Object} clusterID What cluster it is on.
- * @param {Object} values The values which will be set for the uservalues configmap.
+ * @param {Object} values The values which will be set for the secret.
  */
-export function updateAppConfig(appName, clusterID, values) {
+export function updateAppSecret(appName, clusterID, values) {
   return function(dispatch) {
     dispatch({
-      type: types.CLUSTER_UPDATE_APP_CONFIG,
+      type: types.CLUSTER_UPDATE_APP_SECRET,
       clusterID,
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    var appSecretsApi = new GiantSwarm.AppSecretsApi();
 
-    return appConfigsApi
-      .modifyClusterAppConfig(clusterID, appName, {
+    return appSecretsApi
+      .modifyClusterAppSecret(clusterID, appName, {
         body: values,
       })
       .then(() => {
         dispatch({
-          type: types.CLUSTER_UPDATE_APP_CONFIG_SUCCESS,
+          type: types.CLUSTER_UPDATE_APP_SECRET_SUCCESS,
           clusterID,
           appName,
         });
 
         new FlashMessage(
-          `The configuration of <code>${appName}</code> on <code>${clusterID}</code> has successfully been updated.`,
+          `The Secret of <code>${appName}</code> on <code>${clusterID}</code> has successfully been updated.`,
           messageType.SUCCESS,
           messageTTL.LONG
         );
       })
       .catch(error => {
         dispatch({
-          type: types.CLUSTER_UPDATE_APP_CONFIG_ERROR,
+          type: types.CLUSTER_UPDATE_APP_SECRET_ERROR,
           clusterID,
           appName,
         });
 
         if (error.status === 404) {
           new FlashMessage(
-            `Could not find an app or app config to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+            `Could not find an app or app secret to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -57,7 +57,7 @@ export function updateAppConfig(appName, clusterID, values) {
           );
         } else {
           new FlashMessage(
-            `Something went wrong while trying to update the ConfigMap. Please try again later or contact support: support@giantswarm.io`,
+            `Something went wrong while trying to update the Secret. Please try again later or contact support: support@giantswarm.io`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -67,49 +67,49 @@ export function updateAppConfig(appName, clusterID, values) {
 }
 
 /**
- * createAppConfig creates an appConfig
+ * createAppSecret creates a Secret for an app.
  *
  * @param {Object} appName The name of the app.
  * @param {Object} clusterID What cluster it is on.
- * @param {Object} values The values which will be set for the uservalues configmap.
+ * @param {Object} values The values which will be set for the secret
  */
-export function createAppConfig(appName, clusterID, values) {
+export function createAppSecret(appName, clusterID, values) {
   return function(dispatch) {
     dispatch({
-      type: types.CLUSTER_CREATE_APP_CONFIG,
+      type: types.CLUSTER_CREATE_APP_SECRET,
       clusterID,
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    var appSecretsApi = new GiantSwarm.AppSecretsApi();
 
-    return appConfigsApi
-      .createClusterAppConfig(clusterID, appName, {
+    return appSecretsApi
+      .createClusterAppSecret(clusterID, appName, {
         body: values,
       })
       .then(() => {
         dispatch({
-          type: types.CLUSTER_CREATE_APP_CONFIG_SUCCESS,
+          type: types.CLUSTER_CREATE_APP_SECRET_SUCCESS,
           clusterID,
           appName,
         });
 
         new FlashMessage(
-          `The ConfigMap for <code>${appName}</code> on <code>${clusterID}</code> has successfully been created.`,
+          `A Secret for <code>${appName}</code> on <code>${clusterID}</code> has successfully been created.`,
           messageType.SUCCESS,
           messageTTL.LONG
         );
       })
       .catch(error => {
         dispatch({
-          type: types.CLUSTER_CREATE_APP_CONFIG_ERROR,
+          type: types.CLUSTER_CREATE_APP_SECRET_ERROR,
           clusterID,
           appName,
         });
 
         if (error.status === 404) {
           new FlashMessage(
-            `Could not find an app to create a ConfigMap for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+            `Could not find <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -121,7 +121,7 @@ export function createAppConfig(appName, clusterID, values) {
           );
         } else {
           new FlashMessage(
-            `Something went wrong while trying to create the ConfigMap. Please try again later or contact support: support@giantswarm.io`,
+            `Something went wrong while trying to create the Secret. Please try again later or contact support: support@giantswarm.io`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -131,46 +131,46 @@ export function createAppConfig(appName, clusterID, values) {
 }
 
 /**
- * deleteAppConfig deletes an appConfig
+ * deleteAppSecret deletes an appSecret
  *
  * @param {Object} appName The name of the app.
  * @param {Object} clusterID What cluster it is on.
  */
-export function deleteAppConfig(appName, clusterID) {
+export function deleteAppSecret(appName, clusterID) {
   return function(dispatch) {
     dispatch({
-      type: types.CLUSTER_DELETE_APP_CONFIG,
+      type: types.CLUSTER_DELETE_APP_SECRET,
       clusterID,
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    var appSecretsApi = new GiantSwarm.AppSecretsApi();
 
-    return appConfigsApi
-      .deleteClusterAppConfig(clusterID, appName)
+    return appSecretsApi
+      .deleteClusterAppSecret(clusterID, appName)
       .then(() => {
         dispatch({
-          type: types.CLUSTER_DELETE_APP_CONFIG_SUCCESS,
+          type: types.CLUSTER_DELETE_APP_SECRET_SUCCESS,
           clusterID,
           appName,
         });
 
         new FlashMessage(
-          `The ConfigMap for <code>${appName}</code> on <code>${clusterID}</code> has been deleted.`,
+          `The Secret for <code>${appName}</code> on <code>${clusterID}</code> has been deleted.`,
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );
       })
       .catch(error => {
         dispatch({
-          type: types.CLUSTER_DELETE_APP_CONFIG_ERROR,
+          type: types.CLUSTER_DELETE_APP_SECRET_ERROR,
           clusterID,
           appName,
         });
 
         if (error.status === 404) {
           new FlashMessage(
-            `Could not find ConfigMap for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+            `Could not find the Secret for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -182,7 +182,7 @@ export function deleteAppConfig(appName, clusterID) {
           );
         } else {
           new FlashMessage(
-            `Something went wrong while trying to delete the ConfigMap. Please try again later or contact support: support@giantswarm.io`,
+            `Something went wrong while trying to delete the Secret. Please try again later or contact support: support@giantswarm.io`,
             messageType.ERROR,
             messageTTL.LONG
           );

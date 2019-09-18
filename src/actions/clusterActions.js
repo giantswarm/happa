@@ -313,19 +313,19 @@ export function clusterInstallApp(app, clusterID) {
           .catch(error => {
             if (error.status === 409) {
               new FlashMessage(
-                `The user configuration ConfigMap for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
+                `The ConfigMap for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
                 messageType.ERROR,
                 messageTTL.LONG
               );
             } else if (error.status === 400) {
               new FlashMessage(
-                `Your user configuration ConfigMap appears to be invalid. Please make sure all fields are filled in correctly.`,
+                `Your ConfigMap appears to be invalid. Please make sure all fields are filled in correctly.`,
                 messageType.ERROR,
                 messageTTL.LONG
               );
             } else {
               new FlashMessage(
-                `Something went wrong while trying to create the user configuration ConfigMap. Please try again later or contact support: support@giantswarm.io`,
+                `Something went wrong while trying to create the ConfigMap. Please try again later or contact support: support@giantswarm.io`,
                 messageType.ERROR,
                 messageTTL.LONG
               );
