@@ -405,8 +405,8 @@ const AppDetailsModal = props => {
         }
         visible={props.visible}
       >
-        Are you sure you want to delete the Secret for{' '}
-        {props.app.metadata.name} on
+        Are you sure you want to delete the Secret for {props.app.metadata.name}{' '}
+        on
         {` `}
         <ClusterIDLabel clusterID={props.clusterId} />?
         <br />
