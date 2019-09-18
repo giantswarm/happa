@@ -156,7 +156,7 @@ export function deleteAppSecret(appName, clusterID) {
         });
 
         new FlashMessage(
-          `The secret for <code>${appName}</code> on <code>${clusterID}</code> has been deleted.`,
+          `The Secret for <code>${appName}</code> on <code>${clusterID}</code> has been deleted.`,
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );
