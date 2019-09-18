@@ -1,6 +1,3 @@
-// import configureStore from 'stores/configureStore';
-// import mockedNodePool from './mocked_node_pool';
-
 const initialState = {
   app: {
     firstLoadComplete: true,

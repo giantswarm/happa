@@ -1,6 +1,6 @@
 import 'jest-dom/extend-expect';
 import { fireEvent, render, wait } from '@testing-library/react';
-import { renderRouteWithStore } from 'test_utils/renderRoute';
+import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
 import React from 'react';
 import theme from 'styles/theme';
@@ -8,8 +8,8 @@ import theme from 'styles/theme';
 // Components
 import NodePoolDropdownMenu from '../node_pool_dropdown_menu';
 
-// Mock actions to return nothing, we don't want them and we don't want them to
-// perform API calls cause we are using a mocked store.
+// Mock actions to return nothing, we don't want them perform API calls and we don't
+// want them to return any values either cause we are using a mocked store.
 jest.mock('actions/userActions');
 jest.mock('actions/organizationActions');
 jest.mock('actions/clusterActions');
