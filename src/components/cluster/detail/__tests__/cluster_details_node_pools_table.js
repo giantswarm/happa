@@ -16,6 +16,7 @@ jest.mock('actions/userActions');
 jest.mock('actions/organizationActions');
 jest.mock('actions/clusterActions');
 jest.mock('actions/releaseActions');
+jest.mock('actions/catalogActions');
 jest.mock('actions/nodePoolActions', () => {
   return {
     nodePoolPatch: jest.fn(() => () => Promise.resolve()),
