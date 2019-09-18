@@ -68,42 +68,17 @@ it('patches node pool name correctly', () => {
   // To be implemented
 });
 
-/** TODO This test is failing because ClusterDetailView is not loading.
- * Steps I think we should folow to solve this:
- *  1. Learn how to mock the redux store because I think that this is the problem here
- *  2. Extract providers and mocked data into reusable wrapping functions
- * *
- * Alternative approach: use Cypress for these kind of testing where different
- * components are involved.
- */
 it('shows the modal when the button is clicked', async () => {
   const div = document.createElement('div');
   const store = configureStore(initialState);
 
-  // localStorageUtils.fetchSelectedOrganizationFromStorage = jest.fn(
-  //   () => 'acme'
-  // );
-
-  const { getAllByText, getByText, getByRole, getAllByRole, debug } = render(
+  const { getAllByText, getByText } = render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <MemoryRouter
           initialEntries={['/organizations/acme/clusters/m0ckd/np']}
         >
-          <Layout>
-            <ClusterDetailIndex
-            // cluster={initialState.entities.clusters.items['m0ckd']}
-            // clusterId='m0ckd'
-            // nodePools={initialState.entities.nodePools}
-            // organizationId='acme'
-            >
-              <ClusterDetailView>
-                {/* <ClusterDetailNodePoolsTable
-                  nodePool={mockedNodePool}
-                ></ClusterDetailNodePoolsTable> */}
-              </ClusterDetailView>
-            </ClusterDetailIndex>
-          </Layout>
+          <Layout />
         </MemoryRouter>
       </ThemeProvider>
     </Provider>,
