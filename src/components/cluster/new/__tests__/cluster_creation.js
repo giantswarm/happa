@@ -1,18 +1,8 @@
 import 'jest-dom/extend-expect';
-import { fireEvent, render, wait } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { fireEvent, wait } from '@testing-library/react';
 import { clusterCreate as mockedClusterCreate } from 'actions/clusterActions';
-// import { nodePoolPatch as mockedNodePoolPatch } from 'actions/nodePoolActions';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
-// import { ThemeProvider } from 'emotion-theming';
 import initialState from 'test_utils/initialState';
-import React from 'react';
-
-// import theme from 'styles/theme';
-import Layout from 'layout';
-
-// Components
-import CreateCluster from '../view';
 
 // Mock actions to return nothing, we don't want them perform API calls and we don't
 // want them to return any values either cause we are using a mocked store.
@@ -43,7 +33,7 @@ it.skip('drives us to the cluster creation form when launch new cluster button i
 
 it('renders form when in new cluster route with default values and sends data in inputs to the action creator', async () => {
   const div = document.createElement('div');
-  const { container, getByAltText, debug } = renderRouteWithStore(
+  const { container } = renderRouteWithStore(
     '/organizations/acme/clusters/new/',
     div
   );
@@ -76,8 +66,6 @@ it('renders form when in new cluster route with default values and sends data in
   expect(inputs[2]).toHaveValue('m3.large');
   expect(inputs[3]).toHaveValue(3);
   expect(inputs[4]).toHaveValue(3);
-
-  debug(inputs);
 
   const submitButton = container.querySelector('button[type="submit"]');
   fireEvent.click(submitButton);
