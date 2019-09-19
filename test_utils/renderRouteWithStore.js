@@ -14,8 +14,12 @@ import theme from 'styles/theme';
  * @param {String} route.
  * @param {Object} container An HTMLElement.
  */
-export function renderRouteWithStore(route = '/', container) {
-  const store = configureStore(initialState);
+export function renderRouteWithStore(
+  route = '/',
+  container,
+  state = initialState
+) {
+  const store = configureStore(state);
 
   return render(
     <Provider store={store}>
