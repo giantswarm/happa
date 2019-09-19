@@ -1,6 +1,7 @@
 import { ConnectedRouter } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
+import { push } from 'connected-react-router';
 import { render } from '@testing-library/react';
 import { ThemeProvider } from 'emotion-theming';
 import Routes from 'routes';
@@ -17,6 +18,7 @@ import theme from 'styles/theme';
  * @param {Object} container An HTMLElement.
  */
 export function renderRouteWithStore(
+  initialRoute = '/',
   container,
   state = initialState(),
   history = createMemoryHistory(),
@@ -24,7 +26,7 @@ export function renderRouteWithStore(
 
   const store = configureStore(state, history);
 
-  return { store, ...render(
+  const app = render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
@@ -33,5 +35,9 @@ export function renderRouteWithStore(
       </ThemeProvider>
     </Provider>,
     container
-  )}
+  );
+
+  store.dispatch(push(initialRoute));
+
+  return app;
 }
