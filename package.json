@@ -11,6 +11,8 @@
     "start": "webpack-dev-server --open --progress --colors --config ./webpack.dev.js",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:clean-cache": "jest --clearCache && ./node_modules/.bin/jest --clearCache",
+    "test:coverage": "jest --collect-coverage",
     "prettier": "prettier --write \"src/**/*.js\"",
     "validate-prettier": "prettier --version; prettier --no-color --check \"src/**/*.js\""
   },
