@@ -1,6 +1,9 @@
 import 'jest-dom/extend-expect';
 import { fireEvent, wait } from '@testing-library/react';
-import { clusterCreate as mockedClusterCreate } from 'actions/clusterActions';
+import {
+  clusterCreate as mockClusterCreate,
+  clusterDelete as mockClusterDelete,
+} from 'actions/clusterActions';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import initialState from 'test_utils/initialState';
 
@@ -14,6 +17,7 @@ jest.mock('actions/clusterActions', () => {
     clusterLoadDetails: jest.fn(() => () => Promise.resolve()),
     clusterLoadKeyPairs: jest.fn(() => () => Promise.resolve()),
     clusterCreate: jest.fn(() => () => Promise.resolve()),
+    clusterDelete: jest.fn(() => () => Promise.resolve()),
   };
 });
 jest.mock('actions/releaseActions');
@@ -31,14 +35,15 @@ it.skip('drives us to the cluster creation form when launch new cluster button i
   });
 });
 
-it('renders form when in new cluster route with default values and sends data in inputs to the action creator', async () => {
+it(`renders the form when in new cluster route with default values and calls
+    the action creator with the correct arguments`, async () => {
   const div = document.createElement('div');
   const { container } = renderRouteWithStore(
     '/organizations/acme/clusters/new/',
     div
   );
 
-  await wait(() => {});
+  await wait(() => container.querySelector('input'));
 
   // TODO we need labels in the component instead h3s or alt attr on inputs,
   // something more semantic than this. If
@@ -79,6 +84,23 @@ it('renders form when in new cluster route with default values and sends data in
     workers,
   };
 
-  expect(mockedClusterCreate).toHaveBeenCalledTimes(1);
-  expect(mockedClusterCreate).toHaveBeenCalledWith(payload);
+  expect(mockClusterCreate).toHaveBeenCalledTimes(1);
+  expect(mockClusterCreate).toHaveBeenCalledWith(payload);
+});
+
+it('deletes a cluster using the button in cluster details view', async () => {
+  const div = document.createElement('div');
+  const clusterId = 'zu6w0';
+  const { getByText } = renderRouteWithStore(
+    `/organizations/acme/clusters/${clusterId}`,
+    div
+  );
+
+  await wait(() => getByText(/delete cluster/i));
+  fireEvent.click(getByText(/delete cluster/i));
+
+  expect(mockClusterDelete).toHaveBeenCalledTimes(1);
+  expect(mockClusterDelete).toHaveBeenCalledWith(
+    initialState.entities.clusters.items[clusterId]
+  );
 });
