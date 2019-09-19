@@ -99,4 +99,6 @@ it('shows the modal when the button is clicked', async () => {
   fireEvent.click(getByText(/edit scaling limits/i));
   const modalTitle = getByText(/edit scaling settings for/i);
   expect(modalTitle).toBeInTheDocument();
+
+  // TODO Call the action creator with the right args
 });

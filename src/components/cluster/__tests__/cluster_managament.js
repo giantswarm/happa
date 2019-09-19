@@ -88,7 +88,7 @@ it(`renders the form when in new cluster route with default values and calls
   expect(mockClusterCreate).toHaveBeenCalledWith(payload);
 });
 
-it('deletes a cluster using the button in cluster details view', async () => {
+it('deletes a v4 cluster using the button in cluster details view', async () => {
   const div = document.createElement('div');
   const clusterId = 'zu6w0';
   const { getByText } = renderRouteWithStore(
@@ -103,4 +103,21 @@ it('deletes a cluster using the button in cluster details view', async () => {
   expect(mockClusterDelete).toHaveBeenCalledWith(
     initialState.entities.clusters.items[clusterId]
   );
+});
+
+// The modal is opened calling a function that lives in the parent component of
+// <NodePoolDropdownMenu>, so we can't test it in isolation, we need to render
+// the full tree.
+it('shows the scaling settings modal when the button is clicked', async () => {
+  const div = document.createElement('div');
+  const clusterId = 'zu6w0';
+  const { getByText } = renderRouteWithStore(
+    `/organizations/acme/clusters/${clusterId}`,
+    div
+  );
+
+  await wait(() => getByText(/edit/i));
+  fireEvent.click(getByText(/edit/i));
+  const modalTitle = getByText(/edit scaling settings for/i);
+  expect(modalTitle).toBeInTheDocument();
 });
