@@ -542,7 +542,7 @@ class CreateCluster extends React.Component {
                   disabled={!this.valid()}
                   loading={this.state.submitting}
                   onClick={this.createCluster}
-                  type='button'
+                  type='submit'
                 >
                   Create Cluster
                 </Button>
