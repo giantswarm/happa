@@ -345,7 +345,6 @@ class CreateCluster extends React.Component {
               </div>
               <div className='col-9'>
                 <form
-                  data-testid='cluster-name'
                   onSubmit={e => {
                     e.preventDefault();
                   }}
