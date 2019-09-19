@@ -1,6 +1,7 @@
 import 'jest-dom/extend-expect';
 import { fireEvent, render, wait } from '@testing-library/react';
 import { nodePoolPatch as mockedNodePoolPatch } from 'actions/nodePoolActions';
+import { push } from 'connected-react-router';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
 import initialState from 'test_utils/initialState';
@@ -25,12 +26,10 @@ jest.mock('actions/nodePoolActions', () => {
 
 it('renders all node pools in store', async () => {
   const div = document.createElement('div');
-  const { getByText } = renderRouteWithStore(
-    '/organizations/acme/clusters/m0ckd/np',
-    div
-  );
+  const { store, getByText } = renderRouteWithStore(div);
 
-  const nodePools = Object.keys(initialState.entities.nodePools);
+  const nodePools = Object.keys(initialState().entities.nodePools);
+  store.dispatch(push('/organizations/acme/clusters/m0ckd/np'));
 
   await wait(() =>
     nodePools.forEach(nodePool => {
@@ -57,15 +56,13 @@ it('shows the dropdown when the three dots button is clicked', () => {
 // calling the right method with the right arguments when clicking the submit button
 it('patches node pool name correctly', async () => {
   const div = document.createElement('div');
-  const { getByText, container } = renderRouteWithStore(
-    '/organizations/acme/clusters/m0ckd/np',
-    div
-  );
+  const { store, getByText, container } = renderRouteWithStore(div);
+  store.dispatch(push('/organizations/acme/clusters/m0ckd/np'));
 
-  const nodePools = Object.keys(initialState.entities.nodePools);
+  const nodePools = Object.keys(initialState().entities.nodePools);
   const clusterId = 'm0ckd';
-  const nodePool = initialState.entities.nodePools[nodePools[0]];
-  const nodePoolName = initialState.entities.nodePools[nodePools[0]].name;
+  const nodePool = initialState().entities.nodePools[nodePools[0]];
+  const nodePoolName = initialState().entities.nodePools[nodePools[0]].name;
   const newNodePoolName = 'New NP name';
 
   await wait(() => {
@@ -90,10 +87,8 @@ it('patches node pool name correctly', async () => {
 // the full tree.
 it('shows the modal when the button is clicked', async () => {
   const div = document.createElement('div');
-  const { getAllByText, getByText } = renderRouteWithStore(
-    '/organizations/acme/clusters/m0ckd/np',
-    div
-  );
+  const { store, getAllByText, getByText } = renderRouteWithStore(div);
+  store.dispatch(push('/organizations/acme/clusters/m0ckd/np'));
 
   await wait(() => fireEvent.click(getAllByText('•••')[0]));
   fireEvent.click(getByText(/edit scaling limits/i));

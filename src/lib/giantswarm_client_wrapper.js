@@ -3,12 +3,11 @@
 
 import { auth0Login } from 'actions/userActions';
 import { isJwtExpired } from 'lib/helpers';
+import { store } from '../components/app';
 import Auth0 from 'lib/auth0';
-import configureStore from '../stores/configureStore';
 import GiantSwarm from 'giantswarm';
 
 const auth0 = new Auth0();
-const store = configureStore({});
 
 var defaultClient = GiantSwarm.ApiClient.instance;
 
