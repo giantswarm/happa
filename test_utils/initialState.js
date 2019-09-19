@@ -1,4 +1,5 @@
-const initialState = {
+const initialState = function() {
+  return {
   app: {
     firstLoadComplete: true,
     selectedOrganization: 'acme',
@@ -353,6 +354,6 @@ const initialState = {
       },
     },
   },
-};
+}};
 
 export default initialState;

@@ -30,13 +30,13 @@ it('renders all node pools in store', async () => {
     div
   );
 
-  const nodePools = Object.keys(initialState.entities.nodePools);
+  const nodePools = Object.keys(initialState().entities.nodePools);
 
-  await wait(() =>
+  await wait(() => {
     nodePools.forEach(nodePool => {
       expect(getByText(nodePool)).toBeInTheDocument();
-    })
-  );
+    });
+  });
 });
 
 it('shows the dropdown when the three dots button is clicked', () => {
@@ -62,10 +62,10 @@ it('patches node pool name correctly', async () => {
     div
   );
 
-  const nodePools = Object.keys(initialState.entities.nodePools);
+  const nodePools = Object.keys(initialState().entities.nodePools);
   const clusterId = 'm0ckd';
-  const nodePool = initialState.entities.nodePools[nodePools[0]];
-  const nodePoolName = initialState.entities.nodePools[nodePools[0]].name;
+  const nodePool = initialState().entities.nodePools[nodePools[0]];
+  const nodePoolName = initialState().entities.nodePools[nodePools[0]].name;
   const newNodePoolName = 'New NP name';
 
   await wait(() => {

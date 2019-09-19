@@ -26,7 +26,7 @@ const body = document.getElementsByTagName('body')[0];
 
 body.classList.remove('loading');
 
-const store = configureStore({});
+export const store = configureStore({}, history);
 
 history.listen(() => {
   window.scrollTo(0, 0);
