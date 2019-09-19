@@ -48,12 +48,13 @@ it(`renders the form when in new cluster route with default values and calls
   // TODO we need labels in the component instead h3s or alt attr on inputs,
   // something more semantic than this. If
   const inputs = container.querySelectorAll('input');
+
   const name = inputs[0].value;
   const availability_zones = +inputs[1].value;
   const scaling = { min: +inputs[3].value, max: +inputs[4].value };
-  const owner = initialState.app.selectedOrganization;
+  const owner = initialState().app.selectedOrganization;
 
-  const releases = initialState.entities.releases.items;
+  const releases = initialState().entities.releases.items;
   const releases_active = Object.keys(releases).filter(release => {
     return releases[release].active === true;
   });
@@ -101,17 +102,18 @@ it('deletes a v4 cluster using the button in cluster details view', async () => 
 
   expect(mockClusterDelete).toHaveBeenCalledTimes(1);
   expect(mockClusterDelete).toHaveBeenCalledWith(
-    initialState.entities.clusters.items[clusterId]
+    initialState().entities.clusters.items[clusterId]
   );
 });
 
 // The modal is opened calling a function that lives in the parent component of
 // <NodePoolDropdownMenu>, so we can't test it in isolation, we need to render
 // the full tree.
-it('shows the scaling settings modal when the button is clicked', async () => {
+it(`shows the scaling settings modal when the button is clicked with default values and calls
+  the action creator with the correct arguments`, async () => {
   const div = document.createElement('div');
   const clusterId = 'zu6w0';
-  const { getByText } = renderRouteWithStore(
+  const { getByText, findByText, debug, getByLabelText } = renderRouteWithStore(
     `/organizations/acme/clusters/${clusterId}`,
     div
   );
@@ -119,5 +121,27 @@ it('shows the scaling settings modal when the button is clicked', async () => {
   await wait(() => getByText(/edit/i));
   fireEvent.click(getByText(/edit/i));
   const modalTitle = getByText(/edit scaling settings for/i);
+
+  // Is the modal in the document?
   expect(modalTitle).toBeInTheDocument();
+
+  const clusterScaling = initialState().entities.clusters.items[clusterId]
+    .scaling;
+  const min = clusterScaling.min.toString();
+  const max = clusterScaling.max.toString();
+
+  await wait(() => getByLabelText(/minimum/i));
+  const inputMin = getByLabelText(/minimum/i);
+  const inputMax = getByLabelText(/maximum/i);
+
+  // Are the correct values in the correct fields?
+  expect(inputMin.value).toBe(min);
+  expect(inputMax.value).toBe(max);
+
+  // Change the values and modify the scaling settings
+  inputMin.value = '4';
+  inputMax.value = '6';
+
+  // await wait(() => getByText(/increase minimum number of nodes by 1/i));
+  // fireEvent.click(getByText(/increase minimum number of nodes by 1/i));
 });
