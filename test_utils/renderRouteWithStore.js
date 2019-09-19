@@ -2,9 +2,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
 import { ThemeProvider } from 'emotion-theming';
+import Routes from 'routes';
 import configureStore from 'stores/configureStore';
 import initialState from 'test_utils/initialState';
-import Layout from 'layout';
 import React from 'react';
 import theme from 'styles/theme';
 
@@ -25,7 +25,7 @@ export function renderRouteWithStore(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <MemoryRouter initialEntries={[route]}>
-          <Layout />
+          <Routes />
         </MemoryRouter>
       </ThemeProvider>
     </Provider>,
