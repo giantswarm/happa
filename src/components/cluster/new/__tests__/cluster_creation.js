@@ -54,8 +54,8 @@ it('renders form when in new cluster route with default values and sends data in
   // something more semantic than this. If
   const inputs = container.querySelectorAll('input');
   const name = inputs[0].value;
-  const availability_zones = inputs[1].value;
-  const scaling = { min: inputs[3].value, max: inputs[4].value };
+  const availability_zones = +inputs[1].value;
+  const scaling = { min: +inputs[3].value, max: +inputs[4].value };
   const owner = initialState.app.selectedOrganization;
 
   const releases = initialState.entities.releases.items;
@@ -63,6 +63,13 @@ it('renders form when in new cluster route with default values and sends data in
     return releases[release].active === true;
   });
   const release_version = releases_active[releases_active.length - 1];
+  const workers = [
+    {
+      aws: {
+        instance_type: `${inputs[2].value}`,
+      },
+    },
+  ];
 
   expect(inputs[0]).toHaveValue('My cluster');
   expect(inputs[1]).toHaveValue(1);
@@ -81,19 +88,9 @@ it('renders form when in new cluster route with default values and sends data in
     name,
     owner,
     release_version,
+    workers,
   };
 
   expect(mockedClusterCreate).toHaveBeenCalledTimes(1);
   expect(mockedClusterCreate).toHaveBeenCalledWith(payload);
 });
-
-// it('sends the data in the forms to the action creator', async () => {
-//   const div = document.createElement('div');
-//   const { getByDisplayValue, debug, container } = renderRouteWithStore(
-//     '/organizations/acme/clusters/new/',
-//     div
-//   );
-
-//   await wait(() => {});
-
-// });
