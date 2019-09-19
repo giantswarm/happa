@@ -35,7 +35,7 @@ it('renders all node pools in store', async () => {
   await wait(() => {
     nodePools.forEach(nodePool => {
       expect(getByText(nodePool)).toBeInTheDocument();
-    })
+    });
   });
 });
 
