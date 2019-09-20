@@ -1,4 +1,4 @@
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render, wait } from '@testing-library/react';
 import { nodePoolPatch as mockNodePoolPatch } from 'actions/nodePoolActions';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
