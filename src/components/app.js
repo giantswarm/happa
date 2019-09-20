@@ -6,6 +6,7 @@ import { render } from 'react-dom';
 import { ThemeProvider } from 'emotion-theming';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
+import monkeyPatchGiantSwarmClient from 'lib/giantswarm_client_patcher';
 import React from 'react';
 import Routes from './routes';
 import theme from 'styles/theme';
@@ -27,6 +28,8 @@ const body = document.getElementsByTagName('body')[0];
 body.classList.remove('loading');
 
 export const store = configureStore({}, history);
+
+monkeyPatchGiantSwarmClient(store);
 
 history.listen(() => {
   window.scrollTo(0, 0);
