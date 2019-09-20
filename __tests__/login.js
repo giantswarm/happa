@@ -20,7 +20,7 @@ it('renders the login page at /login', async () => {
 });
 
 it('redirects to / and shows the layout after a succesful login', async () => {
-  // GIVEN I have a Giant Swarm API with no clusters, organizations, appcatalogs
+  // Given I have a Giant Swarm API with no clusters, organizations, appcatalogs
   // that I can log in to.
 
   // The response to the login call
@@ -45,7 +45,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
     state
   );
 
-  // WHEN I type in my email and password
+  // When I type in my email and password
   const emailInput = getByLabelText('Email');
   const passwordInput = getByLabelText('Password');
 
@@ -54,11 +54,11 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   });
   fireEvent.change(passwordInput, { target: { value: 'password' } });
 
-  // AND click submit
+  // And click submit
   const button = getByText('Log in');
   fireEvent.click(button);
 
-  // THEN I should be logged in and see the home page with no orgs or clusters.
+  // Then I should be logged in and see the home page with no orgs or clusters.
   await wait(() => {
     // Verify we are now on the layout page and I can see my username
     expect(getByText(/developer@giantswarm.io/i)).toBeInTheDocument();
@@ -78,14 +78,72 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   appcatalogsRequest.done();
 });
 
-it.skip('tells the user to give a password if they leave it blank', async () => {
-  // To be implemented
+it('tells the user to give a password if they leave it blank', async () => {
+  // Given I arrive at the login page with nothing in the state.
+  const state = {};
+  const div = document.createElement('div');
+  const { getByText, getByLabelText } = renderRouteWithStore('/login', div, state);
+
+  // When I type in my email but not my password.
+  const emailInput = getByLabelText('Email');
+  fireEvent.change(emailInput, { target: { value: 'developer@giantswarm.io' } })
+
+  // And click submit
+  const button = getByText('Log in');
+  fireEvent.click(button);
+
+  // Then I should see a message reminding me not to leave my password blank.
+  await wait(() => {
+    expect(getByText(/Please enter your password./i)).toBeInTheDocument();
+  });
 });
 
-it.skip('tells the user to give a email if they leave it blank', async () => {
-  // To be implemented
+it('tells the user to give a email if they leave it blank', async () => {
+  // Given I arrive at the login page with nothing in the state.
+  const state = {};
+  const div = document.createElement('div');
+  const { getByText, getByLabelText } = renderRouteWithStore('/login', div, state);
+
+  // When I type in my password but not my email.
+  const passwordInput = getByLabelText('Password');
+  fireEvent.change(passwordInput, { target: { value: 'password' } })
+
+  // And click submit
+  const button = getByText('Log in');
+  fireEvent.click(button);
+
+  // Then I should see a message reminding me not to leave my password blank.
+  await wait(() => {
+    expect(getByText(/Please provide the email/i)).toBeInTheDocument();
+  });
 });
 
-it.skip('shows an error if the user logs in with invalid credentials', async () => {
-  // To be implemented
+it('shows an error if the user logs in with invalid credentials', async () => {
+  // Given I have a Giant Swarm API that does not accept my login attempt
+
+  // The failed 401 response to the login call
+  const authTokensRequest = nock('http://localhost:8000')
+  .post('/v4/auth-tokens/')
+  .reply(401);
+
+  // And I arrive at the login page with nothing in the state.
+  const state = {};
+  const div = document.createElement('div');
+  const { getByText, getByLabelText } = renderRouteWithStore('/login', div, state);
+
+  // When I type in my email and password
+  const emailInput = getByLabelText('Email');
+  const passwordInput = getByLabelText('Password');
+
+  fireEvent.change(emailInput, { target: { value: 'developer@giantswarm.io' } })
+  fireEvent.change(passwordInput, { target: { value: 'password' } })
+
+  // And click submit
+  const button = getByText('Log in');
+  fireEvent.click(button);
+
+  // Then I should see a message reminding me not to leave my password blank.
+  await wait(() => {
+    expect(getByText(/Could not log in/i)).toBeInTheDocument();
+  });
 });
