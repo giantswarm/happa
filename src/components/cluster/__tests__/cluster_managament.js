@@ -120,16 +120,9 @@ it(`shows the scaling settings modal when the button is clicked with default val
 
   const state = initialState();
   const cluster = state.entities.clusters.items[clusterId];
-  const isNodePoolCluster = false;
   cluster.status = statusState();
 
-  const {
-    getByText,
-    debug,
-    getByTestId,
-    getByLabelText,
-    rerender,
-  } = renderRouteWithStore(
+  const { getByText, getByLabelText } = renderRouteWithStore(
     `/organizations/acme/clusters/${clusterId}`,
     div,
     state
@@ -177,6 +170,6 @@ it(`shows the scaling settings modal when the button is clicked with default val
   fireEvent.click(submitButton);
   expect(mockClusterPatch).toHaveBeenCalledTimes(1);
   expect(mockClusterPatch).toHaveBeenCalledWith(cluster, {
-    scaling: { min: 4, max: 4 },
+    scaling: { min: newScaling.min, max: newScaling.max },
   });
 });
