@@ -40,6 +40,7 @@ export function logoutError(errorMessage) {
 // refreshUserInfo performs the /v4/user/ call and updates what Happa knows
 // about the user based on the response.
 export function refreshUserInfo() {
+  console.log('refreshing!')
   return function(dispatch, getState) {
     var usersApi = new GiantSwarm.UsersApi();
 
