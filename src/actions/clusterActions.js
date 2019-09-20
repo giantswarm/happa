@@ -767,6 +767,7 @@ export const clustersLoadError = error => ({
  * @param {Object} payload object with just the data we want to modify
  */
 export function clusterPatch(cluster, payload, isNodePoolCluster) {
+  console.log(cluster, payload, isNodePoolCluster);
   return function(dispatch) {
     // Optimistic update.
     dispatch({

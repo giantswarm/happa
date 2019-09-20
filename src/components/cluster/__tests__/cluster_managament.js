@@ -1,11 +1,13 @@
 import 'jest-dom/extend-expect';
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, wait, waitForElement } from '@testing-library/react';
 import {
   clusterCreate as mockClusterCreate,
   clusterDelete as mockClusterDelete,
+  clusterPatch as mockClusterPatch,
 } from 'actions/clusterActions';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import initialState from 'test_utils/initialState';
+import statusState from 'test_utils/statusState';
 
 // Mock actions to return nothing, we don't want them perform API calls and we don't
 // want them to return any values either cause we are using a mocked store.
@@ -18,6 +20,8 @@ jest.mock('actions/clusterActions', () => {
     clusterLoadKeyPairs: jest.fn(() => () => Promise.resolve()),
     clusterCreate: jest.fn(() => () => Promise.resolve()),
     clusterDelete: jest.fn(() => () => Promise.resolve()),
+    clusterPatch: jest.fn(() => () => Promise.resolve()),
+    clusterLoadDetailsSuccess: jest.fn(() => () => Promise.resolve()),
   };
 });
 jest.mock('actions/releaseActions');
@@ -113,9 +117,22 @@ it(`shows the scaling settings modal when the button is clicked with default val
   the action creator with the correct arguments`, async () => {
   const div = document.createElement('div');
   const clusterId = 'zu6w0';
-  const { getByText, findByText, debug, getByLabelText } = renderRouteWithStore(
+
+  const state = initialState();
+  const cluster = state.entities.clusters.items[clusterId];
+  const isNodePoolCluster = false;
+  cluster.status = statusState();
+
+  const {
+    getByText,
+    debug,
+    getByTestId,
+    getByLabelText,
+    rerender,
+  } = renderRouteWithStore(
     `/organizations/acme/clusters/${clusterId}`,
-    div
+    div,
+    state
   );
 
   await wait(() => getByText(/edit/i));
@@ -138,10 +155,28 @@ it(`shows the scaling settings modal when the button is clicked with default val
   expect(inputMin.value).toBe(min);
   expect(inputMax.value).toBe(max);
 
-  // Change the values and modify the scaling settings
-  inputMin.value = '4';
-  inputMax.value = '6';
+  const increaseValue = 1;
+  const newScaling = {
+    min: +inputMin.value + increaseValue,
+    max: +inputMax.value + increaseValue,
+  };
 
-  // await wait(() => getByText(/increase minimum number of nodes by 1/i));
-  // fireEvent.click(getByText(/increase minimum number of nodes by 1/i));
+  // // Change the values and modify the scaling settings
+  fireEvent.change(inputMax, { target: { value: newScaling.max } });
+  fireEvent.change(inputMin, { target: { value: newScaling.min } });
+
+  await wait(() =>
+    getByText(`Increase minimum number of nodes by ${increaseValue}`)
+  );
+
+  // TODO change it and look for rendered changes once we have API methods mocked
+  // instead of action creators mocked
+  const submitButton = getByText(
+    `Increase minimum number of nodes by ${increaseValue}`
+  );
+  fireEvent.click(submitButton);
+  expect(mockClusterPatch).toHaveBeenCalledTimes(1);
+  expect(mockClusterPatch).toHaveBeenCalledWith(cluster, {
+    scaling: { min: 4, max: 4 },
+  });
 });

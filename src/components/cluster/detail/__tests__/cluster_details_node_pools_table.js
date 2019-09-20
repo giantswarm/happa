@@ -77,6 +77,8 @@ it('patches node pool name correctly', async () => {
     `input[value="${nodePoolName}"]`
   ).value = newNodePoolName;
 
+  // TODO change it and look for rendered changes once we have API methods mocked
+  // instead of action creators mocked
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
   expect(mockedNodePoolPatch).toHaveBeenCalledTimes(1);
