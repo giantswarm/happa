@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
+import 'jest-dom/extend-expect';
 import { fireEvent, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import initialState from 'test_utils/initialState';
