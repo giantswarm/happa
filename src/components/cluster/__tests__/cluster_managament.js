@@ -40,6 +40,8 @@ it('drives us to the cluster creation form when launch new cluster button is cli
   expect(getByTestId('cluster-creation-view')).toBeInTheDocument();
 });
 
+// TODO change it and look for rendered changes once we have API methods mocked
+// instead of action creators mocked
 it(`renders the form when in new cluster route with default values and calls
     the action creator with the correct arguments`, async () => {
   const div = document.createElement('div');
