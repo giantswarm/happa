@@ -1,5 +1,5 @@
 import 'jest-dom/extend-expect';
-import { fireEvent, wait, waitForElement } from '@testing-library/react';
+import { fireEvent, wait } from '@testing-library/react';
 import {
   clusterCreate as mockClusterCreate,
   clusterDelete as mockClusterDelete,
@@ -9,8 +9,9 @@ import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import initialState from 'test_utils/initialState';
 import statusState from 'test_utils/statusState';
 
-// Mock actions to return nothing, we don't want them perform API calls and we don't
-// want them to return any values either cause we are using a mocked store.
+// Mock actions to return nothing, we don't want them perform API calls for now,
+// and we don't want them to return any values either.
+// TODO To be changed when mocked http calls ready.
 jest.mock('actions/userActions');
 jest.mock('actions/organizationActions');
 jest.mock('actions/clusterActions', () => {
@@ -27,7 +28,6 @@ jest.mock('actions/clusterActions', () => {
 jest.mock('actions/releaseActions');
 jest.mock('actions/catalogActions');
 
-// TODO find a way tot test router links
 it('drives us to the cluster creation form when launch new cluster button is clicked', async () => {
   const div = document.createElement('div');
   const { getByText, getByTestId } = renderRouteWithStore('/', div);
@@ -51,7 +51,7 @@ it(`renders the form when in new cluster route with default values and calls
   await wait(() => container.querySelector('input'));
 
   // TODO we need labels in the component instead h3s or alt attr on inputs,
-  // something more semantic than this. If
+  // something more semantic than this.
   const inputs = container.querySelectorAll('input');
 
   const name = inputs[0].value;
