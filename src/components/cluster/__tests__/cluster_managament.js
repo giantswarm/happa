@@ -54,7 +54,7 @@ it(`renders the form when in new cluster route with default values and calls
   // something more semantic than this.
   const inputs = container.querySelectorAll('input');
 
-  const name = inputs[0].value;
+  const name = 'New cluster name';
   const availability_zones = +inputs[1].value;
   const scaling = { min: +inputs[3].value, max: +inputs[4].value };
   const owner = initialState().app.selectedOrganization;
@@ -72,12 +72,8 @@ it(`renders the form when in new cluster route with default values and calls
     },
   ];
 
-  expect(inputs[0]).toHaveValue('My cluster');
-  expect(inputs[1]).toHaveValue(1);
-  expect(inputs[2]).toHaveValue('m3.large');
-  expect(inputs[3]).toHaveValue(3);
-  expect(inputs[4]).toHaveValue(3);
-
+  // Change the name and submit the form.
+  fireEvent.change(inputs[0], { target: { value: name } });
   const submitButton = container.querySelector('button[type="submit"]');
   fireEvent.click(submitButton);
 
