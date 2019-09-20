@@ -39,10 +39,7 @@ class Layout extends React.Component {
       // first calls happa makes to the API.
       this.props.actions
         .refreshUserInfo()
-        .then(x => {
-          console.log(x);
-          this.props.dispatch(organizationsLoad());
-        })
+        .then(() => this.props.dispatch(organizationsLoad()))
         .then(() => this.props.dispatch(clustersLoad()))
         .then(() => this.props.dispatch(catalogsLoad()))
         .catch(error => {
