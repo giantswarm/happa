@@ -8,7 +8,7 @@ import {
 } from 'lib/flash_message';
 import { push } from 'connected-react-router';
 import _ from 'underscore';
-import GiantSwarm from 'lib/giantswarm_client_wrapper';
+import GiantSwarm from 'giantswarm';
 
 export function loginSuccess(userData) {
   return {
