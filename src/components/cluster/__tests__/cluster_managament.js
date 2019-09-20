@@ -28,15 +28,16 @@ jest.mock('actions/releaseActions');
 jest.mock('actions/catalogActions');
 
 // TODO find a way tot test router links
-it.skip('drives us to the cluster creation form when launch new cluster button is clicked', async () => {
+it('drives us to the cluster creation form when launch new cluster button is clicked', async () => {
   const div = document.createElement('div');
-  const { getByText } = renderRouteWithStore('/', div);
+  const { getByText, getByTestId } = renderRouteWithStore('/', div);
 
   await wait(() => {
     const button = getByText(/launch new cluster/i);
     fireEvent.click(button);
-    expect(getByText(/create cluster/i)).toBeInTheDocument();
   });
+
+  expect(getByTestId('cluster-creation-view')).toBeInTheDocument();
 });
 
 it(`renders the form when in new cluster route with default values and calls

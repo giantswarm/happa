@@ -332,7 +332,7 @@ class CreateCluster extends React.Component {
             ' | Giant Swarm'
           }
         >
-          <div className='new-cluster'>
+          <div className='new-cluster' data-testid='cluster-creation-view'>
             <div className='row'>
               <div className='col-12'>
                 <h1>Create a Cluster</h1>
