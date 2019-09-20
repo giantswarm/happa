@@ -7,7 +7,6 @@ import GiantSwarm from 'giantswarm';
 // the JWT token before making a call to the Giant Swarm API. If the token is
 // expired, renew the token first.
 function monkeyPatchGiantSwarmClient(store) {
-
   const auth0 = new Auth0();
 
   var defaultClient = GiantSwarm.ApiClient.instance;
@@ -31,7 +30,10 @@ function monkeyPatchGiantSwarmClient(store) {
 
     // If we're using a JWT token, and it's expired, refresh the token before making
     // any call.
-    if (defaultClientAuth.apiKeyPrefix === 'Bearer' && defaultClientAuth.apiKey) {
+    if (
+      defaultClientAuth.apiKeyPrefix === 'Bearer' &&
+      defaultClientAuth.apiKey
+    ) {
       if (isJwtExpired(defaultClientAuth.apiKey)) {
         return auth0
           .renewToken()
@@ -80,8 +82,6 @@ function monkeyPatchGiantSwarmClient(store) {
       returnType
     );
   };
-
-
 }
 
 export default monkeyPatchGiantSwarmClient;

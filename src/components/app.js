@@ -11,7 +11,6 @@ import React from 'react';
 import Routes from './routes';
 import theme from 'styles/theme';
 
-
 // CSS Imports
 // Keep the blank lines to allow for a certain ordering!
 
