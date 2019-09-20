@@ -62,11 +62,7 @@ it('logging out redirects to the login page', async () => {
     state
   );
 
-  // debug();
+  debug();
 
   // When I click logout in the user dropdown.
-
-  // userInfoRequest.done();
-  // infoRequest.done();
-  // orgRequest.done();
 });
