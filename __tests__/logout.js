@@ -4,38 +4,6 @@ import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import initialState from 'test_utils/initialState';
 import nock from 'nock';
 
-// class LocalStorageMock {
-//   constructor() {
-//     this.store = {};
-//   }
-
-//   clear() {
-//     this.store = {};
-//   }
-
-//   getItem(key) {
-//     return this.store[key] || null;
-//   }
-
-//   setItem(key, value) {
-//     this.store[key] = value.toString();
-//   }
-
-//   removeItem(key) {
-//     delete this.store[key];
-//   }
-// }
-
-// let storage;
-// beforeEach(() => {
-//   storage = global.localStorage;
-//   global.localStorage = new LocalStorageMock();
-// });
-
-// afterEach(() => {
-//   global.localStorage = storage;
-// });
-
 it('logging out redirects to the login page', async () => {
   // Given I have a Giant Swarm API with no clusters, organizations, appcatalogs
   // that I am already logged in on.
