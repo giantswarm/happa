@@ -124,7 +124,7 @@ class ForgotPassword extends React.Component {
         </p>
         <form noValidate='novalidate' onSubmit={this.submit}>
           <div className='textfield'>
-            <label>Email</label>
+            <label htmlFor='email'>Email</label>
             <input
               autoFocus
               id='email'
