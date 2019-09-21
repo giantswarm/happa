@@ -70,14 +70,20 @@ it('logging out redirects to the login page', async () => {
     initialState()
   );
 
+  // Wait till the app is ready and we're on the home page.
   await wait(() => {
-    // Verify we are now on the layout page and I can see my username
-    expect(getByText(/developer@giantswarm.io/i)).toBeInTheDocument();
     expect(getByText(/Welcome to Giant Swarm!/i)).toBeInTheDocument();
-    expect(getByText(/There are no organizations yet in your installation./i)).toBeInTheDocument();
   });
 
   // When I click logout in the user dropdown.
+  const userDropdown = getByText('developer@giantswarm.io');
+  fireEvent.click(userDropdown);
+
+  const logoutButton = getByText('Logout');
+  fireEvent.click(logoutButton);
+
+  // Then I should get redirected to the login page.
+  expect(getByText('Log in')).toBeInTheDocument();
 
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
