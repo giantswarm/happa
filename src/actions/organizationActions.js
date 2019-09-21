@@ -238,7 +238,7 @@ export function organizationCreateConfirmed(orgId) {
       })
       .then(dispatch.bind(this, modalHide()))
       .catch(error => {
-        console.log('Error creating organization:', error);
+        console.error('Error creating organization:', error);
         dispatch(modalHide());
 
         new FlashMessage(
@@ -374,7 +374,7 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
       })
       .then(dispatch.bind(this, modalHide()))
       .catch(error => {
-        console.log('Error removing member from org:', error);
+        console.error('Error removing member from org:', error);
         dispatch(modalHide());
 
         new FlashMessage(

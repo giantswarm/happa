@@ -6,7 +6,7 @@ import yaml from 'js-yaml';
 function loadCatalogIndex(catalog) {
   return fetch(catalog.spec.storage.URL + 'index.yaml', { mode: 'cors' })
     .catch(() => {
-      console.log(
+      console.error(
         `Fetch error for ${catalog.spec.storage.URL}, attempting with cors anywhere.`
       );
       return fetch(

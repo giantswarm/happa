@@ -6,7 +6,7 @@ var localStorageMock = (function() {
       return store[key] || null;
     },
     setItem: function(key, value) {
-      store[key] = value.toString();
+      store[key] = value;
     },
     clear: function() {
       store = {};

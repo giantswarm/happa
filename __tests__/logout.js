@@ -1,4 +1,4 @@
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import initialState from 'test_utils/initialState';
@@ -53,16 +53,37 @@ it('logging out redirects to the login page', async () => {
     .get('/v4/organizations/')
     .reply(200, []);
 
+  // The response to the clusters call (no clusters)
+  const clustersRequest = nock('http://localhost:8000')
+    .get('/v4/clusters/')
+    .reply(200, []);
+
+    const appcatalogsRequest = nock('http://localhost:8000')
+    .get('/v4/appcatalogs/')
+    .reply(200, []);
+
   // Given I am logged in and on the home page.
-  const state = initialState();
   const div = document.createElement('div');
   const { getByText, debug, getByLabelText } = renderRouteWithStore(
     '/',
     div,
-    state
+    initialState()
   );
 
-  debug();
+  await wait(() => {
+    // Verify we are now on the layout page and I can see my username
+    expect(getByText(/developer@giantswarm.io/i)).toBeInTheDocument();
+    expect(getByText(/Welcome to Giant Swarm!/i)).toBeInTheDocument();
+    expect(getByText(/There are no organizations yet in your installation./i)).toBeInTheDocument();
+  });
 
   // When I click logout in the user dropdown.
+
+  // Assert that the mocked responses got called, tell them to stop waiting for
+  // a request.
+  userInfoRequest.done();
+  infoRequest.done();
+  orgRequest.done();
+  clustersRequest.done();
+  appcatalogsRequest.done();
 });

@@ -72,7 +72,7 @@ const KeyPairCreateModal = props => {
         return props.actions.clusterLoadKeyPairs(props.cluster.id);
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
         setTimeout(() => {
           setModal({
             visible: true,
