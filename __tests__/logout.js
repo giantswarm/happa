@@ -83,7 +83,9 @@ it('logging out redirects to the login page', async () => {
   fireEvent.click(logoutButton);
 
   // Then I should get redirected to the login page.
-  expect(getByText('Log in')).toBeInTheDocument();
+  await wait(() => {
+    expect(getByText('Log in')).toBeInTheDocument();
+  });
 
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
