@@ -8,6 +8,7 @@ import {
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
+import nock from 'nock';
 
 it('renders the login page at /login', async () => {
   const state = {};
