@@ -31,7 +31,7 @@ const FlexWrapperDiv = styled.div`
   }
 `;
 
-const FlexColumnForm = styled.form`
+const FlexColumnDiv = styled.div`
   display: flex;
   justify-content: space-between;
   /* align-items: flex-start; */
@@ -56,6 +56,18 @@ const FlexColumnForm = styled.form`
     font-size: 16px;
     margin-bottom: 13px;
     font-weight: 400;
+  }
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: ${props => props.theme.colors.shade5};
+    padding: 11px 10px;
+    outline: 0;
+    color: ${props => props.theme.colors.whiteInput};
+    border-radius: 4px;
+    border: 1px solid ${props => props.theme.colors.shade6};
+    padding-left: 15px;
+    line-height: normal;
   }
   & > input {
     margin-bottom: 13px !important;
@@ -111,7 +123,7 @@ class AddNodePool extends Component {
     return (
       <WrapperDiv>
         <h3 className='table-label'>Add Node Pool</h3>
-        <FlexColumnForm>
+        <FlexColumnDiv>
           <label htmlFor='name'>
             <span className='label-span'>Name</span>
             <input id='name' type='text'></input>
@@ -202,7 +214,7 @@ class AddNodePool extends Component {
               Cancel
             </Button>
           </FlexWrapperDiv>
-        </FlexColumnForm>
+        </FlexColumnDiv>
       </WrapperDiv>
     );
   }

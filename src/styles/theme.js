@@ -12,6 +12,7 @@ const theme = {
     white1: '#FFFFFF',
     white2: '#D7D7D7',
     white3: '#B9C1C8',
+    whiteInput: '#f0f0f0',
     yellow1: '#ddb03a',
     gold: '#ce990f',
     goldBackground: '#a97904',

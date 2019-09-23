@@ -17,6 +17,11 @@ import styled from '@emotion/styled';
 // scaling - The current value of the input field[s].
 //
 
+const SpanWrapper = styled.span`
+  display: block;
+  margin-bottom: 10px;
+`;
+
 class NodeCountSelector extends React.Component {
   state = {
     autoscalingEnabled: this.props.autoscalingEnabled,
@@ -87,28 +92,36 @@ class NodeCountSelector extends React.Component {
         >
           <div className='row'>
             <div className='col-6'>
-              <label>{label.min ? label.min : 'Minimum'}</label>
-              <NumberPicker
-                label=''
-                max={this.state.scaling.max}
-                min={1}
-                onChange={this.updateScalingMin}
-                readOnly={false}
-                stepSize={1}
-                value={this.state.scaling.min}
-              />
+              <label>
+                <SpanWrapper>
+                  {label && label.min ? label.min : 'Minimum'}
+                </SpanWrapper>
+                <NumberPicker
+                  label=''
+                  max={this.state.scaling.max}
+                  min={1}
+                  onChange={this.updateScalingMin}
+                  readOnly={false}
+                  stepSize={1}
+                  value={this.state.scaling.min}
+                />
+              </label>
             </div>
             <div className='col-6'>
-              <label>{label.max ? label.max : 'Maximum'}</label>
-              <NumberPicker
-                label=''
-                max={99}
-                min={this.state.scaling.min}
-                onChange={this.updateScalingMax}
-                readOnly={false} // TODO
-                stepSize={1}
-                value={this.state.scaling.max}
-              />
+              <label>
+                <SpanWrapper>
+                  {label && label.max ? label.max : 'Maximum'}
+                </SpanWrapper>
+                <NumberPicker
+                  label=''
+                  max={99}
+                  min={this.state.scaling.min}
+                  onChange={this.updateScalingMax}
+                  readOnly={false} // TODO
+                  stepSize={1}
+                  value={this.state.scaling.max}
+                />
+              </label>
             </div>
           </div>
           <div className='row'>
