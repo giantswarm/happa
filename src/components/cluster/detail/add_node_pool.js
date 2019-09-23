@@ -84,7 +84,7 @@ const FlexColumnDiv = styled.div`
   /* Overrides for AWSInstanceTypeSelector */
   .textfield label,
   .message {
-    display: none;
+    /* display: none; */
     margin: 0;
   }
   .textfield,
@@ -165,7 +165,12 @@ class AddNodePool extends Component {
 
   componentDidMount() {
     const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
-    this.setState({ awsInstanceTypes });
+    // this.setState({ awsInstanceTypes });
+    this.setState(
+      produce(draft => {
+        draft.awsInstanceTypes = awsInstanceTypes;
+      })
+    );
   }
 
   updateName = event => {
@@ -190,118 +195,128 @@ class AddNodePool extends Component {
     // });
   };
 
-  render() {
+  produceRAMAndCores = () => {
     const instanceType = this.state.aws.instanceType.value;
-    const RAM = this.state.awsInstanceTypes[instanceType].memory_size_gb;
-    const CPUCores = this.state.awsInstanceTypes[instanceType].cpu_cores;
+    // Check whether this.state.instanceTypes is populated and that instance name
+    // in input matches an instance in the array
+    const instanceTypesKeys = Object.keys(this.state.awsInstanceTypes);
+    const hasInstances =
+      instanceTypesKeys.length > 0 &&
+      instanceTypesKeys.find(type => type === instanceType);
 
-    if (
-      this.state.awsInstanceTypes.length > 0 &&
-      this.state.aws.instanceType.value
-    ) {
-      return (
-        <WrapperDiv>
-          <h3 className='table-label'>Add Node Pool</h3>
-          <FlexColumnDiv>
-            <label htmlFor='name'>
-              <span className='label-span'>Name</span>
-              <input
-                value={this.state.value}
-                onChange={this.updateName}
-                id='name'
-                type='text'
-              ></input>
-              <p>
-                Pick a name that helps team mates to understand what these nodes
-                are here for. You can change this later. Each pool also gets a
-                unique identifier.
-              </p>
-            </label>
-            <label htmlFor='instance-type'>
-              <span className='label-span'>Instance type</span>
-              <FlexWrapperDiv>
-                <AWSInstanceTypeSelector
-                  allowedInstanceTypes={this.props.allowedInstanceTypes}
-                  onChange={this.updateAWSInstanceType}
-                  readOnly={false}
-                  value={this.state.aws.instanceType.value}
-                />
-                <p>
-                  {CPUCores} CPU cores, {RAM}GB RAM each
-                </p>
-              </FlexWrapperDiv>
-            </label>
-            <label className='availability-zones' htmlFor='availability-zones'>
-              <span className='label-span'>Availability Zones</span>
-              <FlexWrapperDiv>
-                <NumberPicker
-                  // label=''
-                  max={this.props.maxAvailabilityZones}
-                  min={this.props.minAvailabilityZones}
-                  // onChange={this.updateAvailabilityZonesPicker}
-                  readOnly={false}
-                  stepSize={1}
-                  // value={this.state.availabilityZonesPicker.value}
-                  value={3}
-                />
-                <p>
-                  or <a href='#'>Select distinct availability zones</a>
-                </p>
-              </FlexWrapperDiv>
-              <p>
-                Covering one availability zone, the worker nodes of this node
-                pool will be placed in the same availability zones as the
-                cluster&apos;s master node.
-              </p>
-            </label>
-            <label className='scaling-range' htmlFor='scaling-range'>
-              <span className='label-span'>Scaling range</span>
-              <NodeCountSelector
-                // autoscalingEnabled={this.isScalingAutomatic(
-                //   this.props.provider,
-                //   this.state.releaseVersion
-                // )}
-                autoscalingEnabled={true}
-                label={{ max: 'MAX', min: 'MIN' }}
-                // onChange={this.updateScaling}
-                readOnly={false}
-                // scaling={this.state.scaling}
-                scaling={{
-                  automatic: false,
-                  min: 3,
-                  minValid: true,
-                  max: 3,
-                  maxValid: true,
-                }}
-              />
-            </label>
+    const RAM = hasInstances
+      ? this.state.awsInstanceTypes[instanceType].memory_size_gb
+      : '0';
+    const CPUCores = hasInstances
+      ? this.state.awsInstanceTypes[instanceType].cpu_cores
+      : '0';
+
+    return [RAM, CPUCores];
+  };
+
+  render() {
+    const [RAM, CPUCores] = this.produceRAMAndCores();
+
+    return (
+      <WrapperDiv>
+        <h3 className='table-label'>Add Node Pool</h3>
+        <FlexColumnDiv>
+          <label htmlFor='name'>
+            <span className='label-span'>Name</span>
+            <input
+              value={this.state.value}
+              onChange={this.updateName}
+              id='name'
+              type='text'
+            ></input>
+            <p>
+              Pick a name that helps team mates to understand what these nodes
+              are here for. You can change this later. Each pool also gets a
+              unique identifier.
+            </p>
+          </label>
+          <label htmlFor='instance-type'>
+            <span className='label-span'>Instance type</span>
             <FlexWrapperDiv>
-              <Button
-                bsSize='large'
-                bsStyle='primary'
-                // disabled={!this.valid()}
-                // loading={this.state.submitting}
-                // onClick={this.createCluster}
-                type='button'
-              >
-                Create Node Pool
-              </Button>
-              <Button
-                bsSize='large'
-                bsStyle='default'
-                // disabled={!this.valid()}
-                // loading={this.state.submitting}
-                // onClick={this.createCluster}
-                style={{ background: 'red' }}
-                type='button'
-              >
-                Cancel
-              </Button>
+              <AWSInstanceTypeSelector
+                allowedInstanceTypes={this.props.allowedInstanceTypes}
+                onChange={this.updateAWSInstanceType}
+                readOnly={false}
+                value={this.state.aws.instanceType.value}
+              />
+              <p>{`${RAM} CPU cores, ${CPUCores} GB RAM each`}</p>
             </FlexWrapperDiv>
-          </FlexColumnDiv>
-        </WrapperDiv>
-      );
-    }
+          </label>
+          <label className='availability-zones' htmlFor='availability-zones'>
+            <span className='label-span'>Availability Zones</span>
+            <FlexWrapperDiv>
+              <NumberPicker
+                // label=''
+                max={this.props.maxAvailabilityZones}
+                min={this.props.minAvailabilityZones}
+                // onChange={this.updateAvailabilityZonesPicker}
+                readOnly={false}
+                stepSize={1}
+                // value={this.state.availabilityZonesPicker.value}
+                value={3}
+              />
+              <p>
+                or <a href='#'>Select distinct availability zones</a>
+              </p>
+            </FlexWrapperDiv>
+            <p>
+              Covering one availability zone, the worker nodes of this node pool
+              will be placed in the same availability zones as the
+              cluster&apos;s master node.
+            </p>
+          </label>
+          <label className='scaling-range' htmlFor='scaling-range'>
+            <span className='label-span'>Scaling range</span>
+            <NodeCountSelector
+              // autoscalingEnabled={this.isScalingAutomatic(
+              //   this.props.provider,
+              //   this.state.releaseVersion
+              // )}
+              autoscalingEnabled={true}
+              label={{ max: 'MAX', min: 'MIN' }}
+              // onChange={this.updateScaling}
+              readOnly={false}
+              // scaling={this.state.scaling}
+              scaling={{
+                automatic: false,
+                min: 3,
+                minValid: true,
+                max: 3,
+                maxValid: true,
+              }}
+            />
+          </label>
+          <FlexWrapperDiv>
+            <Button
+              bsSize='large'
+              bsStyle='primary'
+              // disabled={!this.valid()}
+              // loading={this.state.submitting}
+              // onClick={this.createCluster}
+              type='button'
+            >
+              Create Node Pool
+            </Button>
+            <Button
+              bsSize='large'
+              bsStyle='default'
+              // disabled={!this.valid()}
+              // loading={this.state.submitting}
+              // onClick={this.createCluster}
+              style={{ background: 'red' }}
+              type='button'
+            >
+              Cancel
+            </Button>
+          </FlexWrapperDiv>
+        </FlexColumnDiv>
+      </WrapperDiv>
+    );
   }
 }
 
