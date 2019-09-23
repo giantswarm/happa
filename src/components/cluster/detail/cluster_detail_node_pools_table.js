@@ -104,9 +104,9 @@ const FlexWrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   p {
-    font-size: 15px;
-    line-height: 1.3;
-    margin: 2px 0 0;
+    font-size: 14px;
+    line-height: 1.2;
+    margin: 0;
     max-width: 550px;
     padding-left: 20px;
   }
@@ -293,7 +293,15 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <p>
               With additional node pools, you can add different types of worker
               nodes to your cluster. Node pools also scale independently.{' '}
-              <Link to='/'> Read more</Link>
+              <a
+                href='https://docs.giantswarm.io/basics/nodepools/'
+                alt='Read more about node pools'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                {' '}
+                Read more
+              </a>
             </p>
           )}
         </FlexWrapper>
