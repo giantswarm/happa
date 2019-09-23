@@ -92,7 +92,6 @@ class NodeCountSelector extends React.Component {
         >
           <div className='row'>
             <div className='col-6'>
-<<<<<<< HEAD
               <label>{label.min ? label.min : 'Minimum'}</label>
               <NumberPicker
                 label=''
@@ -115,34 +114,6 @@ class NodeCountSelector extends React.Component {
                 stepSize={1}
                 value={this.state.scaling.max}
               />
-=======
-              <label>
-                <SpanWrapper>Minimum</SpanWrapper>
-                <NumberPicker
-                  label=''
-                  max={this.state.scaling.max}
-                  min={1}
-                  onChange={this.updateScalingMin}
-                  readOnly={false}
-                  stepSize={1}
-                  value={this.state.scaling.min}
-                />
-              </label>
-            </div>
-            <div className='col-6'>
-              <label>
-                <SpanWrapper>Maximum</SpanWrapper>
-                <NumberPicker
-                  label=''
-                  max={99}
-                  min={this.state.scaling.min}
-                  onChange={this.updateScalingMax}
-                  readOnly={false} // TODO
-                  stepSize={1}
-                  value={this.state.scaling.max}
-                />
-              </label>
->>>>>>> master
             </div>
           </div>
           <div className='row'>
