@@ -129,7 +129,7 @@ export function clustersLoad() {
     const status = await Promise.all(
       Object.keys(v4ClustersObject).map(clusterId => {
         if (window.config.environment === 'development') {
-          return { id: clusterId, ...mockedStatus };
+          return { id: clusterId, statusResponse: mockedStatus };
         } else {
           // TODO: Find out why we are getting an empty object back from this call.
           //Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
