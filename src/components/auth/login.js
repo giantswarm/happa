@@ -108,7 +108,7 @@ class Login extends React.Component {
             <h1>Log in to Giant&nbsp;Swarm</h1>
             <form onSubmit={this.logIn}>
               <div className='textfield'>
-                <label>Email</label>
+                <label htmlFor='email'>Email</label>
                 <input
                   autoComplete='username'
                   autoFocus
@@ -123,7 +123,7 @@ class Login extends React.Component {
               </div>
 
               <div className='textfield'>
-                <label>Password</label>
+                <label htmlFor='password'>Password</label>
                 <input
                   autoComplete='current-password'
                   id='password'

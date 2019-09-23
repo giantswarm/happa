@@ -33,13 +33,13 @@ jobs:
     - checkout
 
     - run:
-        name: Install node@10.16.0
+        name: Install node@12.10.0
         command: |
           set +e
           export NVM_DIR="/opt/circleci/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install v10.16.0
-          nvm alias default v10.16.0
+          nvm install v12.10.0
+          nvm alias default v12.10.0
 
           # Each step uses the same `$BASH_ENV`, so need to modify it
           echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
