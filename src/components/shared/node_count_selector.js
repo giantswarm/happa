@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import NumberPicker from 'UI/number_picker';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
 
 // NodeCountSelector is a component that allows a user to pick a number of
 // nodes by incrementing / decrementing a node count value or adjusting min and
@@ -15,6 +16,11 @@ import React from 'react';
 //
 // scaling - The current value of the input field[s].
 //
+
+const SpanWrapper = styled.span`
+  display: block;
+  margin-bottom: 10px;
+`;
 
 class NodeCountSelector extends React.Component {
   state = {
@@ -84,28 +90,32 @@ class NodeCountSelector extends React.Component {
         >
           <div className='row'>
             <div className='col-6'>
-              <label>Minimum</label>
-              <NumberPicker
-                label=''
-                max={this.state.scaling.max}
-                min={1}
-                onChange={this.updateScalingMin}
-                readOnly={false}
-                stepSize={1}
-                value={this.state.scaling.min}
-              />
+              <label>
+                <SpanWrapper>Minimum</SpanWrapper>
+                <NumberPicker
+                  label=''
+                  max={this.state.scaling.max}
+                  min={1}
+                  onChange={this.updateScalingMin}
+                  readOnly={false}
+                  stepSize={1}
+                  value={this.state.scaling.min}
+                />
+              </label>
             </div>
             <div className='col-6'>
-              <label>Maximum</label>
-              <NumberPicker
-                label=''
-                max={999}
-                min={this.state.scaling.min}
-                onChange={this.updateScalingMax}
-                readOnly={false} // TODO
-                stepSize={1}
-                value={this.state.scaling.max}
-              />
+              <label>
+                <SpanWrapper>Maximum</SpanWrapper>
+                <NumberPicker
+                  label=''
+                  max={99}
+                  min={this.state.scaling.min}
+                  onChange={this.updateScalingMax}
+                  readOnly={false} // TODO
+                  stepSize={1}
+                  value={this.state.scaling.max}
+                />
+              </label>
             </div>
           </div>
           <div className='row'>

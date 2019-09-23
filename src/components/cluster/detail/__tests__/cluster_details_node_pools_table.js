@@ -1,10 +1,11 @@
 import 'jest-dom/extend-expect';
 import { fireEvent, render, wait } from '@testing-library/react';
-import { nodePoolPatch as mockedNodePoolPatch } from 'actions/nodePoolActions';
+import { nodePoolPatch as mockNodePoolPatch } from 'actions/nodePoolActions';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
 import initialState from 'test_utils/initialState';
 import React from 'react';
+import statusState from 'test_utils/statusState';
 import theme from 'styles/theme';
 
 // Components
@@ -23,12 +24,13 @@ jest.mock('actions/nodePoolActions', () => {
   };
 });
 
+// Cluster and route we are testing with.
+const clusterId = 'm0ckd';
+const route = `/organizations/acme/clusters/${clusterId}/np`;
+
 it('renders all node pools in store', async () => {
   const div = document.createElement('div');
-  const { getByText } = renderRouteWithStore(
-    '/organizations/acme/clusters/m0ckd/np',
-    div
-  );
+  const { getByText } = renderRouteWithStore(route, div);
 
   const nodePools = Object.keys(initialState().entities.nodePools);
 
@@ -57,13 +59,9 @@ it('shows the dropdown when the three dots button is clicked', () => {
 // calling the right method with the right arguments when clicking the submit button
 it('patches node pool name correctly', async () => {
   const div = document.createElement('div');
-  const { getByText, container } = renderRouteWithStore(
-    '/organizations/acme/clusters/m0ckd/np',
-    div
-  );
+  const { getByText, container } = renderRouteWithStore(route, div);
 
   const nodePools = Object.keys(initialState().entities.nodePools);
-  const clusterId = 'm0ckd';
   const nodePool = initialState().entities.nodePools[nodePools[0]];
   const nodePoolName = initialState().entities.nodePools[nodePools[0]].name;
   const newNodePoolName = 'New NP name';
@@ -77,10 +75,12 @@ it('patches node pool name correctly', async () => {
     `input[value="${nodePoolName}"]`
   ).value = newNodePoolName;
 
+  // TODO change it and look for rendered changes once we have API calls mocked
+  // instead of mocked action creators
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
-  expect(mockedNodePoolPatch).toHaveBeenCalledTimes(1);
-  expect(mockedNodePoolPatch).toHaveBeenCalledWith(clusterId, nodePool, {
+  expect(mockNodePoolPatch).toHaveBeenCalledTimes(1);
+  expect(mockNodePoolPatch).toHaveBeenCalledWith(clusterId, nodePool, {
     name: newNodePoolName,
   });
 });
@@ -88,15 +88,31 @@ it('patches node pool name correctly', async () => {
 // The modal is opened calling a function that lives in the parent component of
 // <NodePoolDropdownMenu>, so we can't test it in isolation, we need to render
 // the full tree.
-it('shows the modal when the button is clicked', async () => {
+it(`shows the modal when the button is clicked with default values and calls
+  the action creator with the correct arguments`, async () => {
   const div = document.createElement('div');
-  const { getAllByText, getByText } = renderRouteWithStore(
-    '/organizations/acme/clusters/m0ckd/np',
-    div
+  const state = initialState();
+
+  const { getByText, getAllByText, getAllByTestId } = renderRouteWithStore(
+    route,
+    div,
+    state
   );
 
-  await wait(() => fireEvent.click(getAllByText('•••')[0]));
+  await wait(() => {
+    getAllByTestId('node-pool-id')[0];
+  });
+
+  const nodePoolId = getAllByTestId('node-pool-id')[0].textContent;
+  const nodePool = state.entities.nodePools[nodePoolId];
+  fireEvent.click(getAllByText('•••')[0]);
+
   fireEvent.click(getByText(/edit scaling limits/i));
   const modalTitle = getByText(/edit scaling settings for/i);
+
+  // Is the modal in the document?
   expect(modalTitle).toBeInTheDocument();
+
+  // TODO expect correct values and call to action creator.
+  // Continue when scaling modal development for NPs is finished.
 });

@@ -67,7 +67,7 @@ class NodePool extends Component {
 
     return (
       <>
-        <Code>{id}</Code>
+        <Code data-testid='node-pool-id'>{id}</Code>
         <div
           style={{
             paddingLeft: '8px',
