@@ -1,5 +1,5 @@
 import * as clusterActions from 'actions/clusterActions';
-import * as nodePoolsActions from 'actions/nodePoolsActions';
+import * as nodePoolActions from 'actions/nodePoolActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -192,7 +192,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(clusterActions, dispatch),
-    nodePoolsActions: bindActionCreators(nodePoolsActions, dispatch),
+    nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
     dispatch: dispatch,
   };
 }

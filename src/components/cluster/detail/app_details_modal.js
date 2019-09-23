@@ -4,23 +4,28 @@ import {
   deleteAppConfig,
   updateAppConfig,
 } from 'actions/appConfigActions';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import {
+  createAppSecret,
+  deleteAppSecret,
+  updateAppSecret,
+} from 'actions/appSecretActions';
+import { truncate } from 'lib/helpers';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import GenericModal from '../../modals/generic_modal';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import yaml from 'js-yaml';
+import YAMLFileUpload from './yaml_file_upload';
 
 const AppDetailsModal = props => {
-  const [fileUploading, setFileUploading] = useState(false);
-  const [renderFileInputs, setRenderFileInputs] = useState(true);
   const [pane, setPane] = useState('initial');
-
-  let fileInput = null;
 
   function showDeleteAppConfigPane() {
     setPane('deleteAppConfig');
+  }
+
+  function showDeleteAppSecretPane() {
+    setPane('deleteAppSecret');
   }
 
   function showDeleteAppPane() {
@@ -31,138 +36,146 @@ const AppDetailsModal = props => {
     setPane('initial');
   }
 
-  function handleUploadClick() {
-    fileInput.click();
+  function onClose() {
+    showInitialPane();
+    props.onClose();
   }
 
-  // resetFileInput is a hack to clear the file input. Since the only event
-  // we really get from file inputs is when something has changed, there is a
-  // state we can be in where the user tries to upload the same file twice,
-  // but gets no more feedback. In order to fix this I have to unload the file
-  // inputs in some cases.
-  function refreshFileInputs() {
-    setRenderFileInputs(false);
-    setRenderFileInputs(true);
-  }
-
-  function newConfigInputOnChange(e) {
-    setFileUploading(true);
-
-    var reader = new FileReader();
-
-    reader.onload = (function() {
-      let parsedYAML;
-      return function(e) {
-        try {
-          parsedYAML = yaml.safeLoad(e.target.result);
-        } catch (err) {
-          new FlashMessage(
-            'Unable to parse valid YAML from this file. Please validate that it is a valid YAML file and try again.',
-            messageType.ERROR,
-            messageTTL.MEDIUM
-          );
-          setFileUploading(false);
-          refreshFileInputs();
-          return;
-        }
-
-        _createAppConfig(
-          props.app.metadata.name,
-          props.clusterId,
-          parsedYAML,
-          props.dispatch
-        ).then(() => {
-          setFileUploading(false);
-          refreshFileInputs();
-          props.onClose();
-        });
-      };
-    })(e.target.files[0]);
-
-    reader.readAsText(e.target.files[0]);
-  }
-
-  function updateConfigInputOnChange(e) {
-    setFileUploading(true);
-
-    var reader = new FileReader();
-
-    reader.onload = (function() {
-      let parsedYAML;
-      return function(e) {
-        try {
-          parsedYAML = yaml.safeLoad(e.target.result);
-        } catch (err) {
-          new FlashMessage(
-            'Unable to parse valid YAML from this file. Please validate that it is a valid YAML file and try again.',
-            messageType.ERROR,
-            messageTTL.LONG
-          );
-          setFileUploading(false);
-          refreshFileInputs();
-          return;
-        }
-
-        _updateAppConfig(
-          props.app.metadata.name,
-          props.clusterId,
-          parsedYAML,
-          props.dispatch
-        ).then(() => {
-          setFileUploading(false);
-          refreshFileInputs();
-          props.onClose();
-        });
-      };
-    })(e.target.files[0]);
-
-    reader.readAsText(e.target.files[0]);
-  }
-
-  function _deleteAppConfig(app, clusterId, dispatch) {
+  function dispatchDeleteAppConfig(app, clusterId, dispatch) {
     dispatch(deleteAppConfig(app.metadata.name, clusterId))
       .then(() => {
         return dispatch(clusterLoadApps(clusterId));
       })
       .then(() => {
-        showInitialPane();
-        props.onClose();
+        onClose();
       })
       .catch(e => {
         console.error(e);
       });
   }
 
-  function _deleteApp(app, clusterId, dispatch) {
+  function dispatchDeleteAppSecret(app, clusterId, dispatch) {
+    dispatch(deleteAppSecret(app.metadata.name, clusterId))
+      .then(() => {
+        return dispatch(clusterLoadApps(clusterId));
+      })
+      .then(() => {
+        onClose();
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }
+
+  function dispatchDeleteApp(app, clusterId, dispatch) {
     dispatch(clusterDeleteApp(app.metadata.name, clusterId))
       .then(() => {
         return dispatch(clusterLoadApps(clusterId));
       })
       .then(() => {
-        showInitialPane();
-        props.onClose();
+        onClose();
       })
       .catch(e => {
         console.error(e);
       });
   }
 
-  function _createAppConfig(appName, clusterId, values, dispatch) {
+  // dispatchCreateAppConfig creates an app configmap.
+  // YAMLFileUpload takes a curried version of this function
+  // since it wants a callback with one argument for the parsed YAML result.
+  function dispatchCreateAppConfig(
+    appName,
+    clusterId,
+    dispatch,
+    closeModal,
+    values,
+    done
+  ) {
     return dispatch(createAppConfig(appName, clusterId, values))
       .then(() => {
         return dispatch(clusterLoadApps(clusterId));
       })
+      .then(() => {
+        done();
+        closeModal();
+      })
       .catch(e => {
+        done();
         console.error(e);
       });
   }
 
-  function _updateAppConfig(appName, clusterId, values, dispatch) {
+  // dispatchUpdateAppConfig updates an app configmap.
+  // YAMLFileUpload takes a curried version of this function
+  // since it wants a callback with one argument for the parsed YAML result.
+  function dispatchUpdateAppConfig(
+    appName,
+    clusterId,
+    dispatch,
+    closeModal,
+    values,
+    done
+  ) {
     return dispatch(updateAppConfig(appName, clusterId, values))
       .then(() => {
         return dispatch(clusterLoadApps(clusterId));
       })
+      .then(() => {
+        done();
+        closeModal();
+      })
       .catch(e => {
+        done();
+        console.error(e);
+      });
+  }
+
+  // dispatchCreateAppSecret creates an app secret.
+  // YAMLFileUpload takes a curried version of this function
+  // since it wants a callback with one argument for the parsed YAML result.
+  function dispatchCreateAppSecret(
+    appName,
+    clusterId,
+    dispatch,
+    closeModal,
+    values,
+    done
+  ) {
+    return dispatch(createAppSecret(appName, clusterId, values))
+      .then(() => {
+        return dispatch(clusterLoadApps(clusterId));
+      })
+      .then(() => {
+        done();
+        closeModal();
+      })
+      .catch(e => {
+        done();
+        console.error(e);
+      });
+  }
+
+  // dispatchUpdateAppSecret updates an app secret.
+  // YAMLFileUpload takes a curried version of this function
+  // since it wants a callback with one argument for the parsed YAML result.
+  function dispatchUpdateAppSecret(
+    appName,
+    clusterId,
+    dispatch,
+    closeModal,
+    values,
+    done
+  ) {
+    return dispatch(updateAppSecret(appName, clusterId, values))
+      .then(() => {
+        return dispatch(clusterLoadApps(clusterId));
+      })
+      .then(() => {
+        done();
+        closeModal();
+      })
+      .catch(e => {
+        done();
         console.error(e);
       });
   }
@@ -175,7 +188,7 @@ const AppDetailsModal = props => {
     return (
       <GenericModal
         className='appdetails'
-        onClose={props.onClose}
+        onClose={onClose}
         title={props.app.metadata.name}
         visible={props.visible}
       >
@@ -198,7 +211,7 @@ const AppDetailsModal = props => {
             <div className='labelvaluepair'>
               <div className='labelvaluepair--label'>CHART VERSION</div>
               <div className='labelvaluepair--value code'>
-                <span>{props.app.spec.version}</span>
+                <span>{truncate(props.app.spec.version, 20)}</span>
               </div>
             </div>
 
@@ -215,60 +228,97 @@ const AppDetailsModal = props => {
           </div>
 
           <div className='labelvaluepair'>
-            <div className='labelvaluepair--label'>USER CONFIGURATION</div>
+            <div className='labelvaluepair--label'>CONFIGMAP</div>
 
             <div className='appdetails--userconfiguration'>
               {props.app.spec.user_config.configmap.name !== '' ? (
-                <React.Fragment>
-                  <span>User configuration has been set.</span>
+                <>
+                  <span>ConfigMap has been set</span>
 
                   <div className='actions'>
-                    <Button loading={fileUploading} onClick={handleUploadClick}>
-                      Overwrite Configuration
-                    </Button>
+                    <YAMLFileUpload
+                      buttonText='Replace ConfigMap'
+                      onInputChange={dispatchUpdateAppConfig.bind(
+                        undefined,
+                        props.app.metadata.name,
+                        props.clusterId,
+                        props.dispatch,
+                        onClose
+                      )}
+                    />
 
                     <Button bsStyle='danger' onClick={showDeleteAppConfigPane}>
                       <i className='fa fa-delete'></i> Delete
                     </Button>
-
-                    {renderFileInputs ? (
-                      <input
-                        accept='.yaml'
-                        onChange={updateConfigInputOnChange}
-                        ref={i => (fileInput = i)}
-                        style={{ display: 'none' }}
-                        type='file'
-                      />
-                    ) : (
-                      undefined
-                    )}
                   </div>
-                </React.Fragment>
+                </>
               ) : (
-                <React.Fragment>
-                  <span>No user configuration.</span>
+                <>
+                  <span>No ConfigMap</span>
 
                   <div className='actions'>
-                    <Button loading={fileUploading} onClick={handleUploadClick}>
-                      {' '}
-                      Upload Configuration
-                    </Button>
-                    {renderFileInputs ? (
-                      <input
-                        accept='.yaml'
-                        onChange={newConfigInputOnChange}
-                        ref={i => (fileInput = i)}
-                        style={{ display: 'none' }}
-                        type='file'
-                      />
-                    ) : (
-                      undefined
-                    )}
+                    <YAMLFileUpload
+                      buttonText='Upload ConfigMap'
+                      onInputChange={dispatchCreateAppConfig.bind(
+                        undefined,
+                        props.app.metadata.name,
+                        props.clusterId,
+                        props.dispatch,
+                        onClose
+                      )}
+                    />
                   </div>
-                </React.Fragment>
+                </>
               )}
             </div>
           </div>
+
+          <div className='labelvaluepair'>
+            <div className='labelvaluepair--label'>SECRET</div>
+
+            <div className='appdetails--userconfiguration'>
+              {props.app.spec.user_config.secret.name !== '' ? (
+                <>
+                  <span>Secret has been set</span>
+
+                  <div className='actions'>
+                    <YAMLFileUpload
+                      buttonText='Replace Secret'
+                      onInputChange={dispatchUpdateAppSecret.bind(
+                        undefined,
+                        props.app.metadata.name,
+                        props.clusterId,
+                        props.dispatch,
+                        onClose
+                      )}
+                    />
+
+                    <Button bsStyle='danger' onClick={showDeleteAppSecretPane}>
+                      <i className='fa fa-delete'></i> Delete
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span>No Secret.</span>
+
+                  <div className='actions'>
+                    <YAMLFileUpload
+                      buttonText='Upload Secret'
+                      onInputChange={dispatchCreateAppSecret.bind(
+                        undefined,
+                        props.app.metadata.name,
+                        props.clusterId,
+                        props.dispatch,
+                        onClose
+                      )}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
           <div className='labelvaluepair'>
             <div className='labelvaluepair--label delete-app'>
               Delete This App
@@ -289,37 +339,79 @@ const AppDetailsModal = props => {
           <div>
             <Button
               bsStyle='danger'
-              onClick={_deleteAppConfig.bind(
+              onClick={dispatchDeleteAppConfig.bind(
                 this,
                 props.app,
                 props.clusterId,
                 props.dispatch
               )}
             >
-              <i className='fa fa-delete'></i>Delete User Configuration
+              <i className='fa fa-delete'></i>Delete ConfigMap
             </Button>
             <Button bsStyle='link' onClick={showInitialPane}>
               Cancel
             </Button>
           </div>
         }
-        onClose={props.onClose}
+        onClose={onClose}
         title={
-          <React.Fragment>
-            {`Delete User Configuration for ${props.app.metadata.name} on`}
+          <>
+            Delete ConfigMap for {props.app.metadata.name} on
             {` `}
             <ClusterIDLabel clusterID={props.clusterId} />
-          </React.Fragment>
+          </>
         }
         visible={props.visible}
       >
-        <p>
-          {`Are you sure you want to delete the user configuration for ${props.app.metadata.name} on`}
-          {` `}
-          <ClusterIDLabel clusterID={props.clusterId} />? <br />
-          <br />
-          There is no undo.
-        </p>
+        Are you sure you want to delete the ConfigMap for{' '}
+        {props.app.metadata.name} on
+        {` `}
+        <ClusterIDLabel clusterID={props.clusterId} />?
+        <br />
+        <br />
+        There is no undo.
+      </GenericModal>
+    );
+  }
+
+  if (pane === 'deleteAppSecret') {
+    return (
+      <GenericModal
+        footer={
+          <div>
+            <Button
+              bsStyle='danger'
+              onClick={dispatchDeleteAppSecret.bind(
+                this,
+                props.app,
+                props.clusterId,
+                props.dispatch
+              )}
+            >
+              <i className='fa fa-delete'></i>Delete Secret
+            </Button>
+            <Button bsStyle='link' onClick={showInitialPane}>
+              Cancel
+            </Button>
+          </div>
+        }
+        onClose={onClose}
+        title={
+          <>
+            Delete Secret for {props.app.metadata.name} on
+            {` `}
+            <ClusterIDLabel clusterID={props.clusterId} />
+          </>
+        }
+        visible={props.visible}
+      >
+        Are you sure you want to delete the Secret for {props.app.metadata.name}{' '}
+        on
+        {` `}
+        <ClusterIDLabel clusterID={props.clusterId} />?
+        <br />
+        <br />
+        There is no undo.
       </GenericModal>
     );
   }
@@ -331,7 +423,7 @@ const AppDetailsModal = props => {
           <div>
             <Button
               bsStyle='danger'
-              onClick={_deleteApp.bind(
+              onClick={dispatchDeleteApp.bind(
                 this,
                 props.app,
                 props.clusterId,
@@ -345,23 +437,22 @@ const AppDetailsModal = props => {
             </Button>
           </div>
         }
-        onClose={props.onClose}
+        onClose={onClose}
         title={
-          <React.Fragment>
-            {`Delete ${props.app.metadata.name} on`}
+          <>
+            Delete {props.app.metadata.name} on
             {` `}
             <ClusterIDLabel clusterID={props.clusterId} />
-          </React.Fragment>
+          </>
         }
         visible={props.visible}
       >
-        <p>
-          {`Are you sure you want to delete ${props.app.metadata.name} on`}
-          {` `}
-          <ClusterIDLabel clusterID={props.clusterId} />? <br />
-          <br />
-          There is no undo.
-        </p>
+        Are you sure you want to delete {props.app.metadata.name} on
+        {` `}
+        <ClusterIDLabel clusterID={props.clusterId} />?
+        <br />
+        <br />
+        There is no undo.
       </GenericModal>
     );
   }

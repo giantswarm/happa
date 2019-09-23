@@ -99,7 +99,7 @@ class NodeCountSelector extends React.Component {
               <label>Maximum</label>
               <NumberPicker
                 label=''
-                max={99}
+                max={999}
                 min={this.state.scaling.min}
                 onChange={this.updateScalingMax}
                 readOnly={false} // TODO
@@ -130,7 +130,7 @@ class NodeCountSelector extends React.Component {
             >
               <NumberPicker
                 label=''
-                max={99}
+                max={999}
                 min={1}
                 onChange={this.updateNodeCount}
                 readOnly={false} // TODO
