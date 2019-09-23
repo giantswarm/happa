@@ -1,8 +1,9 @@
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
 import Button from 'UI/button';
 import NodeCountSelector from 'shared/node_count_selector';
 import NumberPicker from 'UI/number_picker';
+import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
@@ -117,112 +118,274 @@ const FlexColumnDiv = styled.div`
 class AddNodePool extends Component {
   state = {
     isNameBeingEdited: false,
+    name: '',
+    availabilityZonesPicker: {
+      value: 1,
+      valid: true,
+    },
+    releaseVersion: '',
+    scaling: {
+      automatic: false,
+      min: 3,
+      minValid: true,
+      max: 3,
+      maxValid: true,
+    },
+    submitting: false,
+    valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
+    error: false,
+    aws: {
+      instanceType: {
+        valid: true,
+        value: this.props.defaultInstanceType,
+      },
+    },
+    awsInstanceTypes: {},
+    // azure: {
+    //   vmSize: {
+    //     valid: true,
+    //     value: this.props.defaultVMSize,
+    //   },
+    // },
+    // kvm: {
+    //   cpuCores: {
+    //     value: this.props.defaultCPUCores,
+    //     valid: true,
+    //   },
+    //   memorySize: {
+    //     value: this.props.defaultMemorySize,
+    //     valid: true,
+    //   },
+    //   diskSize: {
+    //     value: this.props.defaultDiskSize,
+    //     valid: true,
+    //   },
+    // },
+  };
+
+  componentDidMount() {
+    const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
+    this.setState({ awsInstanceTypes });
+  }
+
+  updateName = event => {
+    this.setState({
+      name: event.target.value,
+    });
+  };
+
+  updateAWSInstanceType = event => {
+    this.setState(
+      produce(draft => {
+        draft.aws.instanceType.value = event.value;
+      })
+    );
+    // this.setState({
+    //   aws: {
+    //     instanceType: {
+    //       value: value.value,
+    //       valid: value.valid,
+    //     },
+    //   },
+    // });
   };
 
   render() {
-    return (
-      <WrapperDiv>
-        <h3 className='table-label'>Add Node Pool</h3>
-        <FlexColumnDiv>
-          <label htmlFor='name'>
-            <span className='label-span'>Name</span>
-            <input id='name' type='text'></input>
-            <p>
-              Pick a name that helps team mates to understand what these nodes
-              are here for. You can change this later. Each pool also gets a
-              unique identifier.
-            </p>
-          </label>
-          <label htmlFor='instance-type'>
-            <span className='label-span'>Instance type</span>
-            <FlexWrapperDiv>
-              <AWSInstanceTypeSelector
-                // allowedInstanceTypes={this.props.allowedInstanceTypes}
-                allowedInstanceTypes={['m3.large', 'm5.large']}
-                // onChange={this.updateAWSInstanceType}
-                readOnly={false}
-                // value={this.state.aws.instanceType.value}
-                value='m3.large'
-              />
-              <p>2 CPU cores, 8GB RAM each</p>
-            </FlexWrapperDiv>
-          </label>
-          <label className='availability-zones' htmlFor='availability-zones'>
-            <span className='label-span'>Availability Zones</span>
-            <FlexWrapperDiv>
-              <NumberPicker
-                // label=''
-                max={this.props.maxAvailabilityZones}
-                min={this.props.minAvailabilityZones}
-                // onChange={this.updateAvailabilityZonesPicker}
-                readOnly={false}
-                stepSize={1}
-                // value={this.state.availabilityZonesPicker.value}
-                value={3}
-              />
+    const instanceType = this.state.aws.instanceType.value;
+    const RAM = this.state.awsInstanceTypes[instanceType].memory_size_gb;
+    const CPUCores = this.state.awsInstanceTypes[instanceType].cpu_cores;
+
+    if (
+      this.state.awsInstanceTypes.length > 0 &&
+      this.state.aws.instanceType.value
+    ) {
+      return (
+        <WrapperDiv>
+          <h3 className='table-label'>Add Node Pool</h3>
+          <FlexColumnDiv>
+            <label htmlFor='name'>
+              <span className='label-span'>Name</span>
+              <input
+                value={this.state.value}
+                onChange={this.updateName}
+                id='name'
+                type='text'
+              ></input>
               <p>
-                or <a href='#'>Select distinct availability zones</a>
+                Pick a name that helps team mates to understand what these nodes
+                are here for. You can change this later. Each pool also gets a
+                unique identifier.
               </p>
+            </label>
+            <label htmlFor='instance-type'>
+              <span className='label-span'>Instance type</span>
+              <FlexWrapperDiv>
+                <AWSInstanceTypeSelector
+                  allowedInstanceTypes={this.props.allowedInstanceTypes}
+                  onChange={this.updateAWSInstanceType}
+                  readOnly={false}
+                  value={this.state.aws.instanceType.value}
+                />
+                <p>
+                  {CPUCores} CPU cores, {RAM}GB RAM each
+                </p>
+              </FlexWrapperDiv>
+            </label>
+            <label className='availability-zones' htmlFor='availability-zones'>
+              <span className='label-span'>Availability Zones</span>
+              <FlexWrapperDiv>
+                <NumberPicker
+                  // label=''
+                  max={this.props.maxAvailabilityZones}
+                  min={this.props.minAvailabilityZones}
+                  // onChange={this.updateAvailabilityZonesPicker}
+                  readOnly={false}
+                  stepSize={1}
+                  // value={this.state.availabilityZonesPicker.value}
+                  value={3}
+                />
+                <p>
+                  or <a href='#'>Select distinct availability zones</a>
+                </p>
+              </FlexWrapperDiv>
+              <p>
+                Covering one availability zone, the worker nodes of this node
+                pool will be placed in the same availability zones as the
+                cluster&apos;s master node.
+              </p>
+            </label>
+            <label className='scaling-range' htmlFor='scaling-range'>
+              <span className='label-span'>Scaling range</span>
+              <NodeCountSelector
+                // autoscalingEnabled={this.isScalingAutomatic(
+                //   this.props.provider,
+                //   this.state.releaseVersion
+                // )}
+                autoscalingEnabled={true}
+                label={{ max: 'MAX', min: 'MIN' }}
+                // onChange={this.updateScaling}
+                readOnly={false}
+                // scaling={this.state.scaling}
+                scaling={{
+                  automatic: false,
+                  min: 3,
+                  minValid: true,
+                  max: 3,
+                  maxValid: true,
+                }}
+              />
+            </label>
+            <FlexWrapperDiv>
+              <Button
+                bsSize='large'
+                bsStyle='primary'
+                // disabled={!this.valid()}
+                // loading={this.state.submitting}
+                // onClick={this.createCluster}
+                type='button'
+              >
+                Create Node Pool
+              </Button>
+              <Button
+                bsSize='large'
+                bsStyle='default'
+                // disabled={!this.valid()}
+                // loading={this.state.submitting}
+                // onClick={this.createCluster}
+                style={{ background: 'red' }}
+                type='button'
+              >
+                Cancel
+              </Button>
             </FlexWrapperDiv>
-            <p>
-              Covering one availability zone, the worker nodes of this node pool
-              will be placed in the same availability zones as the
-              cluster&apos;s master node.
-            </p>
-          </label>
-          <label className='scaling-range' htmlFor='scaling-range'>
-            <span className='label-span'>Scaling range</span>
-            <NodeCountSelector
-              // autoscalingEnabled={this.isScalingAutomatic(
-              //   this.props.provider,
-              //   this.state.releaseVersion
-              // )}
-              autoscalingEnabled={true}
-              label={{ max: 'MAX', min: 'MIN' }}
-              // onChange={this.updateScaling}
-              readOnly={false}
-              // scaling={this.state.scaling}
-              scaling={{
-                automatic: false,
-                min: 3,
-                minValid: true,
-                max: 3,
-                maxValid: true,
-              }}
-            />
-          </label>
-          <FlexWrapperDiv>
-            <Button
-              bsSize='large'
-              bsStyle='primary'
-              // disabled={!this.valid()}
-              // loading={this.state.submitting}
-              // onClick={this.createCluster}
-              type='button'
-            >
-              Create Node Pool
-            </Button>
-            <Button
-              bsSize='large'
-              bsStyle='default'
-              // disabled={!this.valid()}
-              // loading={this.state.submitting}
-              // onClick={this.createCluster}
-              style={{ background: 'red' }}
-              type='button'
-            >
-              Cancel
-            </Button>
-          </FlexWrapperDiv>
-        </FlexColumnDiv>
-      </WrapperDiv>
-    );
+          </FlexColumnDiv>
+        </WrapperDiv>
+      );
+    }
   }
 }
 
 AddNodePool.propTypes = {
   maxAvailabilityZones: PropTypes.number,
   minAvailabilityZones: PropTypes.number,
+  allowedInstanceTypes: PropTypes.array,
+  allowedVMSizes: PropTypes.array,
+  selectedOrganization: PropTypes.string,
+  dispatch: PropTypes.func,
+  provider: PropTypes.string,
+  defaultInstanceType: PropTypes.string,
+  defaultVMSize: PropTypes.string,
+  defaultCPUCores: PropTypes.number,
+  defaultMemorySize: PropTypes.number,
+  defaultDiskSize: PropTypes.number,
+  match: PropTypes.object,
+  clusterCreationStats: PropTypes.object,
 };
 
-export default AddNodePool;
+function mapStateToProps(state) {
+  var minAvailabilityZones = state.app.info.general.availability_zones.default;
+  var maxAvailabilityZones = state.app.info.general.availability_zones.max;
+  var selectedOrganization = state.app.selectedOrganization;
+  var provider = state.app.info.general.provider;
+  var clusterCreationStats = state.app.info.stats.cluster_creation_duration;
+
+  var defaultInstanceType;
+  if (
+    state.app.info.workers.instance_type &&
+    state.app.info.workers.instance_type.default
+  ) {
+    defaultInstanceType = state.app.info.workers.instance_type.default;
+  } else {
+    defaultInstanceType = 'm3.large';
+  }
+
+  var defaultVMSize;
+  if (
+    state.app.info.workers.vm_size &&
+    state.app.info.workers.vm_size.default
+  ) {
+    defaultVMSize = state.app.info.workers.vm_size.default;
+  } else {
+    defaultVMSize = 'Standard_D2s_v3';
+  }
+
+  var defaultCPUCores = 4; // TODO
+  var defaultMemorySize = 4; // TODO
+  var defaultDiskSize = 20; // TODO
+
+  var allowedInstanceTypes = [];
+  if (provider === 'aws') {
+    allowedInstanceTypes = state.app.info.workers.instance_type.options;
+  }
+
+  var allowedVMSizes = [];
+  if (provider === 'azure') {
+    allowedVMSizes = state.app.info.workers.vm_size.options;
+  }
+
+  return {
+    minAvailabilityZones,
+    maxAvailabilityZones,
+    allowedInstanceTypes,
+    allowedVMSizes,
+    provider,
+    defaultInstanceType,
+    defaultVMSize,
+    defaultCPUCores,
+    defaultMemorySize,
+    defaultDiskSize,
+    selectedOrganization,
+    clusterCreationStats,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddNodePool);
