@@ -45,7 +45,7 @@ const InstallAppForm = props => {
       <FileInput
         description='Apps can be configured using a values.yaml file. If you have one, you can upload it here already.'
         hint={<React.Fragment>&nbsp;</React.Fragment>}
-        label='User Configuration ConfigMap:'
+        label='ConfigMap:'
         onChange={updateValuesYAML}
         validationError={props.valuesYAMLError}
         value={props.valuesYAML}

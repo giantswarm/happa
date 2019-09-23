@@ -29,7 +29,6 @@
     "react/button-has-type": 2,
     "react/prefer-es6-class": [1, "always"],
     "react/no-find-dom-node": 0,
-    "react/jsx-sort-props": 2,
     "strict": 2,
     "sort-imports-es6-autofix/sort-imports-es6": [2, {
       "ignoreCase": true,
