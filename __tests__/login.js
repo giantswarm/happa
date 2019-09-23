@@ -46,7 +46,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
     state
   );
 
-  // WHEN I type in my email and password
+  // When I type in my email and password
   const emailInput = getByLabelText('Email');
   const passwordInput = getByLabelText('Password');
 
@@ -55,11 +55,11 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   });
   fireEvent.change(passwordInput, { target: { value: 'password' } });
 
-  // AND click submit
+  // And click submit
   const button = getByText('Log in');
   fireEvent.click(button);
 
-  // THEN I should be logged in and see the home page with no orgs or clusters.
+  // Then I should be logged in and see the home page with no orgs or clusters.
   await wait(() => {
     // Verify we are now on the layout page and I can see my username
     expect(getByText(/developer@giantswarm.io/i)).toBeInTheDocument();
