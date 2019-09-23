@@ -179,21 +179,8 @@ class AddNodePool extends Component {
     });
   };
 
-  updateAWSInstanceType = event => {
-    this.setState(
-      produce(draft => {
-        draft.aws.instanceType.value = event.value;
-      })
-    );
-    // this.setState({
-    //   aws: {
-    //     instanceType: {
-    //       value: value.value,
-    //       valid: value.valid,
-    //     },
-    //   },
-    // });
-  };
+  updateAWSInstanceType = event =>
+    this.setState({ aws: { instanceType: event } });
 
   produceRAMAndCores = () => {
     const instanceType = this.state.aws.instanceType.value;
