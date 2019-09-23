@@ -17,11 +17,6 @@ import styled from '@emotion/styled';
 // scaling - The current value of the input field[s].
 //
 
-const SpanWrapper = styled.span`
-  display: block;
-  margin-bottom: 10px;
-`;
-
 class NodeCountSelector extends React.Component {
   state = {
     autoscalingEnabled: this.props.autoscalingEnabled,
