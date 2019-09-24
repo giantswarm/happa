@@ -90,7 +90,7 @@ const FlexColumnDiv = styled.div`
     margin: 0;
   }
   label[for='instance-type'] p {
-    margin-top: 13px;
+    margin-top: 14px;
   }
   /* Overrides for NumberPicker */
   .availability-zones {
@@ -256,10 +256,10 @@ class AddNodePool extends Component {
                 stepSize={1}
                 value={this.state.availabilityZonesPicker.value}
               />
+              <p style={{ fontSize: '16px', marginBottom: '15px' }}>
+                or <a href='#'>Select distinct availability zones</a>
+              </p>
             </FlexWrapperDiv>
-            <p style={{ fontSize: '16px', marginBottom: '15px' }}>
-              or <a href='#'>Select distinct availability zones</a>
-            </p>
             <p>
               Covering one availability zone, the worker nodes of this node pool
               will be placed in the same availability zones as the
