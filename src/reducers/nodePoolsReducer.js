@@ -32,10 +32,15 @@ const nodePools = produce((draft, action) => {
       draft.lastUpdated = Date.now();
       return;
 
-    // case types.NODEPOOL_CREATE_SUCCESS:
-    //   draft.
+    case types.NODEPOOL_CREATE_SUCCESS:
+      draft[action.nodePool.id] = action.nodePool;
+      return;
+
+    case types.NODEPOOL_CREATE_ERROR:
+      draft.errorCreating = true;
+      return;
   }
-  // This empty obeject is the default state.
+  // This empty object is the default state.
 }, {});
 
 export default nodePools;

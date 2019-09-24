@@ -134,6 +134,10 @@ const clusterReducer = produce((draft, action) => {
     case types.CLUSTER_PATCH_ERROR:
       draft.items[action.cluster.id] = action.cluster;
       return;
+
+    case types.NODEPOOL_CREATE_SUCCESS:
+      draft.items[action.clusterId].push(action.nodePool.id);
+      return;
   }
 }, initialState);
 

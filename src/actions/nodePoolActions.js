@@ -143,16 +143,20 @@ export function nodePoolCreate(clusterId, nodePool) {
     return nodePoolsApi
       .addNodePool(clusterId, nodePool)
       .then(nodePool => {
-        // do something
-        console.log('Success! ', nodePool);
-        dispatch(nodePoolCreateSuccess(clusterId));
+        console.log('Success', nodePool);
+        dispatch({
+          type: types.NODEPOOL_CREATE_SUCCESS,
+          nodePool,
+        });
       })
       .catch(error => {
-        // Undo update to store if the API call fails.
-        dispatch(nodePoolCreateError(error, nodePool));
+        dispatch({
+          type: types.NODEPOOL_CREATE_ERROR,
+          error,
+        });
 
         new FlashMessage(
-          'Something went wrong while trying to update the node pool name',
+          'Something went wrong while trying to create the node pool',
           messageType.ERROR,
           messageTTL.MEDIUM,
           'Please try again later or contact support: support@giantswarm.io'
@@ -207,16 +211,5 @@ const nodePoolDeleteSuccess = nodePoolId => ({
 const nodePoolDeleteError = (nodePoolId, error) => ({
   type: types.NODEPOOL_DELETE_ERROR,
   nodePoolId,
-  error,
-});
-
-const nodePoolCreateSuccess = nodePool => ({
-  type: types.NODEPOOL_CREATE_SUCCESS,
-  nodePool,
-});
-
-const nodePoolCreateError = (nodePool, error) => ({
-  type: types.NODEPOOL_CREATE_ERROR,
-  nodePool,
   error,
 });
