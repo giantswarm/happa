@@ -7,7 +7,7 @@ import {
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { css } from '@emotion/core';
 import { relativeDate } from 'lib/helpers.js';
-import AddNodePool from './add_node_pool';
+import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import NodePool from './node_pool';
 import PropTypes from 'prop-types';
@@ -272,7 +272,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 </GridRowNodePoolsItem>
               ))}
         </NodePoolsWrapper>
-        <AddNodePool />
+        <AddNodePool clusterId={cluster.id} releaseVersion={release_version} />
         <Button>
           <i className='fa fa-add-circle' /> ADD NODE POOL
         </Button>

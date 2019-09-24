@@ -31,6 +31,9 @@ const nodePools = produce((draft, action) => {
       delete draft[action.nodePoolId];
       draft.lastUpdated = Date.now();
       return;
+
+    // case types.NODEPOOL_CREATE_SUCCESS:
+    //   draft.
   }
   // This empty obeject is the default state.
 }, {});

@@ -103,7 +103,7 @@ class AWSInstanceTypeSelector extends React.Component {
 
   render() {
     return (
-      <div className='col-4'>
+      <div style={{ maxWidth: '200px' }}>
         <div className='new-cluster--instance-type-selector'>
           <form
             onSubmit={e => {
