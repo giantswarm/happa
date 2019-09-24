@@ -30,6 +30,9 @@ const FlexWrapperDiv = styled.div`
   button {
     margin-right: 16px;
   }
+  .availability-zones & {
+    margin-bottom: 20px;
+  }
 `;
 
 const FlexColumnDiv = styled.div`
@@ -71,7 +74,7 @@ const FlexColumnDiv = styled.div`
     line-height: normal;
   }
   & > input {
-    margin-bottom: 13px !important;
+    /* margin-bottom: 13px !important; */
   }
   p {
     margin: 0;
@@ -83,8 +86,8 @@ const FlexColumnDiv = styled.div`
   }
   /* Overrides for AWSInstanceTypeSelector */
   .textfield label,
-  .message {
-    /* display: none; */
+  .new-cluster--instance-type-selector .message {
+    display: none;
     margin: 0;
   }
   .textfield,
@@ -182,6 +185,15 @@ class AddNodePool extends Component {
   updateAWSInstanceType = event =>
     this.setState({ aws: { instanceType: event } });
 
+  updateAvailabilityZonesPicker = n => {
+    this.setState({
+      availabilityZonesPicker: {
+        value: n.value,
+        valid: n.valid,
+      },
+    });
+  };
+
   produceRAMAndCores = () => {
     const instanceType = this.state.aws.instanceType.value;
     // Check whether this.state.instanceTypes is populated and that instance name
@@ -218,8 +230,8 @@ class AddNodePool extends Component {
             ></input>
             <p>
               Pick a name that helps team mates to understand what these nodes
-              are here for. You can change this later. Each pool also gets a
-              unique identifier.
+              are here for. You can change this later. Each node pool also gets
+              a unique identifier.
             </p>
           </label>
           <label htmlFor='instance-type'>
@@ -238,14 +250,13 @@ class AddNodePool extends Component {
             <span className='label-span'>Availability Zones</span>
             <FlexWrapperDiv>
               <NumberPicker
-                // label=''
+                label=''
                 max={this.props.maxAvailabilityZones}
                 min={this.props.minAvailabilityZones}
-                // onChange={this.updateAvailabilityZonesPicker}
+                onChange={this.updateAvailabilityZonesPicker}
                 readOnly={false}
                 stepSize={1}
-                // value={this.state.availabilityZonesPicker.value}
-                value={3}
+                value={this.state.availabilityZonesPicker.value}
               />
               <p>
                 or <a href='#'>Select distinct availability zones</a>
