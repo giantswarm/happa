@@ -114,6 +114,7 @@ class AWSInstanceTypeSelector extends React.Component {
               autoFocus
               onChange={this.updateInstanceType}
               readOnly={this.props.readOnly}
+              disabled={true}
               ref={i => {
                 this.instance_type = i;
               }}
