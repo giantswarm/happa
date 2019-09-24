@@ -432,7 +432,7 @@ class CreateCluster extends React.Component {
                         <AWSInstanceTypeSelector
                           allowedInstanceTypes={this.props.allowedInstanceTypes}
                           onChange={this.updateAWSInstanceType}
-                          readOnly={false}
+                          readOnly={true}
                           value={this.state.aws.instanceType.value}
                         />
                       </div>
