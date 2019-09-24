@@ -141,29 +141,29 @@ class NumberPicker extends React.Component {
     var currentValue = this.props.value;
     var desiredValue = currentValue + this.props.stepSize;
 
-    if (desiredValue <= this.props.max) {
-      this.updateInput({
-        target: { value: desiredValue },
-      });
-    }
+    this.updateInput({
+      target: { value: desiredValue },
+    });
   };
 
   decrement = () => {
-    var currentValue = this.props.value;
-    var desiredValue = currentValue - this.props.stepSize;
+    const currentValue = this.props.value;
+    const desiredValue = currentValue - this.props.stepSize;
 
-    if (desiredValue >= this.props.min) {
-      this.updateInput({
-        target: { value: desiredValue },
-      });
-    }
+    this.updateInput({
+      target: { value: desiredValue },
+    });
   };
 
   updateInput = e => {
-    var desiredValue = e.target.value;
+    const desiredValue = e.target.value;
 
     // Validate.
-    var { value, valid, validationError } = this.validateInput(desiredValue);
+    const { value, valid, validationError } = this.validateInput(desiredValue);
+    if (!valid) {
+      this.setState({ validationError });
+      return;
+    }
 
     // Update state.
     this.setState(
