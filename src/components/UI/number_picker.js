@@ -73,7 +73,7 @@ const ValueSpan = styled.span`
 const Wrapper = styled.div`
   display: inline-block;
   margin-top: 4px;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
 
   /* to hide the increment/decrement buttons when disabled */
   input:disabled {
