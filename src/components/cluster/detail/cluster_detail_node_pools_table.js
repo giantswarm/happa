@@ -12,6 +12,7 @@ import Button from 'UI/button';
 import NodePool from './node_pool';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactTimeout from 'react-timeout';
 import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
@@ -107,6 +108,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
     CPUs: 0,
     workerNodesRunning: 0,
     nodePools: [],
+    isNodePoolBeingAdded: false,
   };
 
   componentDidMount() {
@@ -141,6 +143,11 @@ class ClusterDetailNodePoolsTable extends React.Component {
       this.setState({ RAM, CPUs, workerNodesRunning });
     });
   }
+
+  toggleAddNodePoolForm = () =>
+    this.setState(prevState => ({
+      isNodePoolBeingAdded: !prevState.isNodePoolBeingAdded,
+    }));
 
   render() {
     const {
@@ -272,10 +279,25 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 </GridRowNodePoolsItem>
               ))}
         </NodePoolsWrapper>
-        <AddNodePool clusterId={cluster.id} releaseVersion={release_version} />
-        <Button>
-          <i className='fa fa-add-circle' /> ADD NODE POOL
-        </Button>
+        {this.state.isNodePoolBeingAdded ? (
+          <ReactCSSTransitionGroup
+            transitionAppear={true}
+            transitionAppearTimeout={200}
+            transitionEnterTimeout={200}
+            transitionLeaveTimeout={200}
+            transitionName={`login_form--transition`}
+          >
+            <AddNodePool
+              clusterId={cluster.id}
+              releaseVersion={release_version}
+              closeForm={this.toggleAddNodePoolForm}
+            />
+          </ReactCSSTransitionGroup>
+        ) : (
+          <Button onClick={this.toggleAddNodePoolForm}>
+            <i className='fa fa-add-circle' /> ADD NODE POOL
+          </Button>
+        )}
       </>
     );
   }

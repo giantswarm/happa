@@ -386,9 +386,8 @@ class AddNodePool extends Component {
             <Button
               bsSize='large'
               bsStyle='default'
-              // disabled={!this.valid()}
-              // loading={this.state.submitting}
-              // onClick={this.createCluster}
+              loading={this.state.submitting}
+              onClick={this.props.closeForm}
               style={{ background: 'red' }}
               type='button'
             >
@@ -417,6 +416,7 @@ AddNodePool.propTypes = {
   match: PropTypes.object,
   clusterCreationStats: PropTypes.object,
   clusterId: PropTypes.string,
+  closeForm: PropTypes.func,
 };
 
 function mapStateToProps(state) {
