@@ -3,6 +3,7 @@ import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
+import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
 // NumberPicker is a component that allows a user to pick a number by
 // incrementing / decrementing a value or typing it straight into the input
@@ -90,12 +91,6 @@ const Control = styled.div`
   border-radius: 5px;
   position: relative;
   margin-bottom: 5px;
-`;
-
-const ValidationError = styled.span`
-  color: #e49090;
-  margin-left: 10px;
-  margin-right: 10px;
 `;
 
 const IncrementDecrementButtonCSS = css`
@@ -260,7 +255,7 @@ class NumberPicker extends React.Component {
             <IncrementButton onClick={this.increment}>+</IncrementButton>
           )}
         </Control>
-        <ValidationError>{this.state.validationError}</ValidationError>
+        <ValidationErrorMessage message={this.state.validationError} />
       </Wrapper>
     );
   }
