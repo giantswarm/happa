@@ -117,6 +117,7 @@ class InputField extends React.Component {
         <label htmlFor={this.props.name}>{this.props.label}</label>
         <input
           id={this.props.name}
+          disabled={this.props.disabled}
           onBlur={this.onBlur}
           onChange={this.onChange}
           readOnly={this.props.readOnly}
@@ -145,6 +146,7 @@ InputField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   readOnly: PropTypes.bool,
+  disabled: PropTypes.bool,
   type: PropTypes.string,
 };
 
