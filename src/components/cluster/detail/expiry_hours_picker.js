@@ -166,6 +166,7 @@ class ExpiryHoursPicker extends React.Component {
             value='relative'
           />
           <label htmlFor='relativeCheck'>Relatively:</label>
+          <div>
           <input
             autoComplete='off'
             max='10'
@@ -222,6 +223,7 @@ class ExpiryHoursPicker extends React.Component {
             value={this.state.hoursValue}
           />{' '}
           hours from now
+          </div>
         </li>
         <li>
           <input
