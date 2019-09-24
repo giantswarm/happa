@@ -3,6 +3,7 @@ import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
+import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
 // NumberPicker is a component that allows a user to pick a number by
 // incrementing / decrementing a value or typing it straight into the input
@@ -92,12 +93,6 @@ const Control = styled.div`
   margin-bottom: 5px;
 `;
 
-const ValidationError = styled.span`
-  color: #e49090;
-  margin-left: 10px;
-  margin-right: 10px;
-`;
-
 const IncrementDecrementButtonCSS = css`
   position: absolute;
   display: inline-block;
@@ -141,29 +136,29 @@ class NumberPicker extends React.Component {
     var currentValue = this.props.value;
     var desiredValue = currentValue + this.props.stepSize;
 
-    if (desiredValue <= this.props.max) {
-      this.updateInput({
-        target: { value: desiredValue },
-      });
-    }
+    this.updateInput({
+      target: { value: desiredValue },
+    });
   };
 
   decrement = () => {
-    var currentValue = this.props.value;
-    var desiredValue = currentValue - this.props.stepSize;
+    const currentValue = this.props.value;
+    const desiredValue = currentValue - this.props.stepSize;
 
-    if (desiredValue >= this.props.min) {
-      this.updateInput({
-        target: { value: desiredValue },
-      });
-    }
+    this.updateInput({
+      target: { value: desiredValue },
+    });
   };
 
   updateInput = e => {
-    var desiredValue = e.target.value;
+    const desiredValue = e.target.value;
 
     // Validate.
-    var { value, valid, validationError } = this.validateInput(desiredValue);
+    const { value, valid, validationError } = this.validateInput(desiredValue);
+    if (!valid) {
+      this.setState({ validationError });
+      return;
+    }
 
     // Update state.
     this.setState(
@@ -260,7 +255,7 @@ class NumberPicker extends React.Component {
             <IncrementButton onClick={this.increment}>+</IncrementButton>
           )}
         </Control>
-        <ValidationError>{this.state.validationError}</ValidationError>
+        <ValidationErrorMessage message={this.state.validationError} />
       </Wrapper>
     );
   }

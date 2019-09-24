@@ -18,6 +18,7 @@ const theme = {
     goldBackground: '#a97904',
     red: 'red',
     gray: '#ccc',
+    error: '#e49090',
   },
   border_radius: 4,
   breakpoints: {
