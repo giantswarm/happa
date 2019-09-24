@@ -21,7 +21,7 @@ const WrapperDiv = styled.div`
 const FlexWrapperDiv = styled.div`
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 13px;
   & > div:nth-of-type(2) > button {
     padding-top: 9px;
@@ -38,7 +38,6 @@ const FlexWrapperDiv = styled.div`
 const FlexColumnDiv = styled.div`
   display: flex;
   justify-content: space-between;
-  /* align-items: flex-start; */
   flex-direction: column;
   margin: 0 auto;
   max-width: 650px;
@@ -86,13 +85,12 @@ const FlexColumnDiv = styled.div`
   }
   /* Overrides for AWSInstanceTypeSelector */
   .textfield label,
-  .new-cluster--instance-type-selector .message {
-    /* display: none; */
-    margin: 0;
-  }
   .textfield,
   .textfield input {
     margin: 0;
+  }
+  label[for='instance-type'] p {
+    margin-top: 13px;
   }
   /* Overrides for NumberPicker */
   .availability-zones {
