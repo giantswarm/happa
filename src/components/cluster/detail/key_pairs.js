@@ -234,6 +234,7 @@ class ClusterKeyPairs extends React.Component {
             <KeypairCreateModal
               actions={this.props.actions}
               cluster={this.props.cluster}
+              provider={this.props.provider}
               user={this.props.user}
             />
             <KeyPairDetailsModal
@@ -251,12 +252,14 @@ class ClusterKeyPairs extends React.Component {
 ClusterKeyPairs.propTypes = {
   user: PropTypes.object,
   actions: PropTypes.object,
+  provider: PropTypes.string,
   cluster: PropTypes.object,
 };
 
 function mapStateToProps(state) {
   return {
     clusters: state.entities.clusters,
+    provider: state.app.info.general.provider,
     user: state.app.loggedInUser,
   };
 }
