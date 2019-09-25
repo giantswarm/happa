@@ -309,7 +309,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
           </ReactCSSTransitionGroup>
         ) : (
           <FlexWrapper>
-            <Button>
+            <Button onClick={this.toggleAddNodePoolForm}>
               <i className='fa fa-add-circle' /> ADD NODE POOL
             </Button>
             {nodePools.length < 2 && (

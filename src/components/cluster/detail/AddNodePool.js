@@ -79,9 +79,6 @@ const FlexColumnDiv = styled.div`
     padding-left: 15px;
     line-height: normal;
   }
-  & > input {
-    /* margin-bottom: 13px !important; */
-  }
   p {
     margin: 0;
     font-size: 14px;
@@ -179,61 +176,38 @@ class AddNodePool extends Component {
     });
   };
 
-  updateAWSInstanceType = payload =>
-    this.setState({ aws: { instanceType: payload } });
+  updateAWSInstanceType = payload => {
+    this.setState(
+      produce(draft => {
+        draft.aws.instanceType = payload;
+      })
+    );
+  };
 
-  //   this.setState(
-  // produce(draft => {
-  //   draft.aws.instanceTypes = event;
-  // })
-  // );
-
-  updateAvailabilityZonesPicker = n => {
-    this.setState({
-      availabilityZonesPicker: {
-        value: n.value,
-        valid: n.valid,
-      },
-    });
-    //   this.setState(
-    // produce(draft => {
-    //   draft.aws.instanceTypes = event;
-    // })
-    // );
+  updateAvailabilityZonesPicker = payload => {
+    this.setState({ availabilityZonesPicker: payload });
   };
 
   updateScaling = nodeCountSelector => {
-    this.setState({
-      scaling: {
-        min: nodeCountSelector.scaling.min,
-        minValid: nodeCountSelector.scaling.minValid,
-        max: nodeCountSelector.scaling.max,
-        maxValid: nodeCountSelector.scaling.maxValid,
-      },
-    });
+    this.setState({ scaling: nodeCountSelector.scaling });
   };
 
   // Always true?
   isScalingAutomatic = () => true;
 
   valid() {
-    // If any of the releaseVersion hasn't been set yet, return false
-    // if (this.state.releaseVersion === '') return false;
+    // Not checking release version as we would be checking it when accessing this form
 
     // If the availabilityZonesPicker is invalid, return false
     if (!this.state.availabilityZonesPicker.valid) return false;
-
     // If the min scaling numberpicker is invalid, return false
     if (!this.state.scaling.minValid) return false;
-
     // If the max scaling numberpickers is invalid, return false
     if (!this.state.scaling.maxValid) return false;
-
     // If the aws instance type is invalid, return false
     if (!this.state.aws.instanceType.valid) return false;
-
+    // If the Azure instance size is invalid, return false
     if (!this.state.azure.vmSize.valid) return false;
-
     // If the kvm worker is invalid, return false
     if (
       !(
@@ -244,7 +218,6 @@ class AddNodePool extends Component {
     ) {
       return false;
     }
-
     return true;
   }
 
@@ -293,6 +266,7 @@ class AddNodePool extends Component {
     // Check whether this.state.instanceTypes is populated and that instance name
     // in input matches an instance in the array
     const instanceTypesKeys = Object.keys(this.state.awsInstanceTypes);
+
     const hasInstances =
       instanceTypesKeys.length > 0 &&
       instanceTypesKeys.find(type => type === instanceType);
@@ -300,6 +274,7 @@ class AddNodePool extends Component {
     const RAM = hasInstances
       ? this.state.awsInstanceTypes[instanceType].memory_size_gb
       : '0';
+
     const CPUCores = hasInstances
       ? this.state.awsInstanceTypes[instanceType].cpu_cores
       : '0';
