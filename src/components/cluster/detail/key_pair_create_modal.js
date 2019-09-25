@@ -182,7 +182,7 @@ const KeyPairCreateModal = props => {
   return (
     <React.Fragment>
       <Button bsStyle='default' className='small' onClick={show}>
-        <i className='fa fa-add-circle' /> Create Key Pair
+        <i className='fa fa-add-circle' /> Create Key Pair and Kubeconfig
       </Button>
       {(() => {
         switch (modal.template) {
@@ -195,7 +195,7 @@ const KeyPairCreateModal = props => {
               >
                 <BootstrapModal.Header closeButton>
                   <BootstrapModal.Title>
-                    Create New Key Pair
+                    Create New Key Pair and Kubeconfig
                   </BootstrapModal.Title>
                 </BootstrapModal.Header>
                 <form onSubmit={confirmAddKeyPair}>
@@ -263,10 +263,11 @@ const KeyPairCreateModal = props => {
                         <>
                           <br/>
 
-                          <label>Kubernetes API Hostname:</label>
+                          <label>Kubernetes API Endpoint:</label>
                           <input id='internalApi' type='checkbox' checked={useInternalAPI} onChange={handleUseInternalAPIChange} />
-                          <label htmlFor='internalApi' className='checkbox-label'>Use the Internal Kubernetes API hostname</label>
-                          <small>This is required in some restricted environments where the Kubernetes API is not reachable otherwise.</small>
+                          <label htmlFor='internalApi' className='checkbox-label'>Use alternative internal api endpoint.</label>
+                          <small>When this is selected, the server entry of the created kubeconfig will be https://internal-api.{window.config.ingressBaseDomain}</small>
+                          <small>This is preferred in some restricted environments.</small>
 
                           <br/>
                         </>
@@ -305,7 +306,7 @@ const KeyPairCreateModal = props => {
               >
                 <BootstrapModal.Header closeButton>
                   <BootstrapModal.Title>
-                    Your key pair has been created.
+                    Your key pair and kubeconfig has been created.
                   </BootstrapModal.Title>
                 </BootstrapModal.Header>
                 <BootstrapModal.Body>
