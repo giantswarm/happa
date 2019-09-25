@@ -143,7 +143,12 @@ export function nodePoolCreate(clusterId, nodePool) {
     return nodePoolsApi
       .addNodePool(clusterId, nodePool)
       .then(nodePool => {
-        console.log('Success', nodePool);
+        new FlashMessage(
+          `Your new node pool with ID <code>${nodePool.id}</code> is being created.`,
+          messageType.SUCCESS,
+          messageTTL.MEDIUM
+        );
+
         dispatch({
           type: types.NODEPOOL_CREATE_SUCCESS,
           nodePool,
