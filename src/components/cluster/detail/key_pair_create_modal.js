@@ -260,7 +260,7 @@ const KeyPairCreateModal = props => {
                       onChange={handleTTLChange}
                     />
 
-                    {props.provider === 'aws' ? (
+                    {props.provider === 'aws' && (
                       <>
                         <br />
 
@@ -285,8 +285,6 @@ const KeyPairCreateModal = props => {
 
                         <br />
                       </>
-                    ) : (
-                      undefined
                     )}
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
