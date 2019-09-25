@@ -240,9 +240,8 @@ class AddNodePool extends Component {
           },
         })
       )
-      .then(nodePool => {
-        console.log('Success! : ', nodePool);
-        // TODO after successful creation, close form and show node pool row
+      .then(() => {
+        this.props.closeForm();
       })
       .catch(error => {
         var errorMessage = '';
