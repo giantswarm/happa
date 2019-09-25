@@ -167,62 +167,62 @@ class ExpiryHoursPicker extends React.Component {
           />
           <label htmlFor='relativeCheck'>Relatively:</label>
           <div>
-          <input
-            autoComplete='off'
-            max='10'
-            maxLength={2}
-            min='0'
-            name='years'
-            onChange={this.handleYearChange.bind(this)}
-            ref={i => {
-              this.years = i;
-            }}
-            type='text'
-            value={this.state.yearsValue}
-          />{' '}
-          years
-          <input
-            autoComplete='off'
-            max='999'
-            maxLength={2}
-            min='0'
-            name='months'
-            onChange={this.handleMonthChange.bind(this)}
-            ref={i => {
-              this.months = i;
-            }}
-            type='text'
-            value={this.state.monthsValue}
-          />{' '}
-          months
-          <input
-            autoComplete='off'
-            max='999'
-            maxLength={2}
-            min='0'
-            name='days'
-            onChange={this.handleDayChange.bind(this)}
-            ref={i => {
-              this.days = i;
-            }}
-            type='text'
-            value={this.state.daysValue}
-          />{' '}
-          days
-          <input
-            autoComplete='off'
-            max='999'
-            maxLength={2}
-            min='0'
-            name='hours'
-            onChange={this.handleHourChange.bind(this)}
-            ref={i => {
-              this.hours = i;
-            }}
-            type='text'
-            value={this.state.hoursValue}
-          />{' '}
-          hours from now
+            <input
+              autoComplete='off'
+              max='10'
+              maxLength={2}
+              min='0'
+              name='years'
+              onChange={this.handleYearChange.bind(this)}
+              ref={i => {
+                this.years = i;
+              }}
+              type='text'
+              value={this.state.yearsValue}
+            />{' '}
+            years
+            <input
+              autoComplete='off'
+              max='999'
+              maxLength={2}
+              min='0'
+              name='months'
+              onChange={this.handleMonthChange.bind(this)}
+              ref={i => {
+                this.months = i;
+              }}
+              type='text'
+              value={this.state.monthsValue}
+            />{' '}
+            months
+            <input
+              autoComplete='off'
+              max='999'
+              maxLength={2}
+              min='0'
+              name='days'
+              onChange={this.handleDayChange.bind(this)}
+              ref={i => {
+                this.days = i;
+              }}
+              type='text'
+              value={this.state.daysValue}
+            />{' '}
+            days
+            <input
+              autoComplete='off'
+              max='999'
+              maxLength={2}
+              min='0'
+              name='hours'
+              onChange={this.handleHourChange.bind(this)}
+              ref={i => {
+                this.hours = i;
+              }}
+              type='text'
+              value={this.state.hoursValue}
+            />{' '}
+            hours from now
           </div>
         </li>
         <li>

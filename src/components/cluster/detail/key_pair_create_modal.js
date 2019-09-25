@@ -63,7 +63,9 @@ const KeyPairCreateModal = props => {
         ttl_hours: expireTTL,
       })
       .then(keypair => {
-        setKubeconfig(dedent(makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI)));
+        setKubeconfig(
+          dedent(makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI))
+        );
         setModal({
           visible: true,
           loading: false,
@@ -258,23 +260,34 @@ const KeyPairCreateModal = props => {
                       onChange={handleTTLChange}
                     />
 
-                    {
-                      props.provider === 'aws' ?
-                        <>
-                          <br/>
+                    {props.provider === 'aws' ? (
+                      <>
+                        <br />
 
-                          <label>Kubernetes API Endpoint:</label>
-                          <input id='internalApi' type='checkbox' checked={useInternalAPI} onChange={handleUseInternalAPIChange} />
-                          <label htmlFor='internalApi' className='checkbox-label'>Use alternative internal api endpoint.</label>
-                          <small>When this is selected, the server entry of the created kubeconfig will be https://internal-api.{window.config.ingressBaseDomain}</small>
-                          <small>This is preferred in some restricted environments.</small>
+                        <label>Kubernetes API Endpoint:</label>
+                        <input
+                          id='internalApi'
+                          type='checkbox'
+                          checked={useInternalAPI}
+                          onChange={handleUseInternalAPIChange}
+                        />
+                        <label htmlFor='internalApi' className='checkbox-label'>
+                          Use alternative internal api endpoint.
+                        </label>
+                        <small>
+                          When this is selected, the server entry of the created
+                          kubeconfig will be https://internal-api.
+                          {window.config.ingressBaseDomain}
+                        </small>
+                        <small>
+                          This is preferred in some restricted environments.
+                        </small>
 
-                          <br/>
-                        </>
-                      :
-                        undefined
-
-                    }
+                        <br />
+                      </>
+                    ) : (
+                      undefined
+                    )}
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
                     <Button
