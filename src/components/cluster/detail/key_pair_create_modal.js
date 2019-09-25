@@ -16,6 +16,7 @@ const KeyPairCreateModal = props => {
   const [description, setDescription] = useState(
     defaultDescription(props.user.email)
   );
+  const [useInternalAPI, setUseInternalAPI] = useState(false);
   const [copied, setCopied] = useState(false);
   const [kubeconfig, setKubeconfig] = useState(false);
   const [cnPrefix, setCNPrefix] = useState('');
@@ -62,7 +63,7 @@ const KeyPairCreateModal = props => {
         ttl_hours: expireTTL,
       })
       .then(keypair => {
-        setKubeconfig(dedent(makeKubeConfigTextFile(props.cluster, keypair)));
+        setKubeconfig(dedent(makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI)));
         setModal({
           visible: true,
           loading: false,
@@ -162,6 +163,10 @@ const KeyPairCreateModal = props => {
     setExpireTTL(ttl);
   };
 
+  const handleUseInternalAPIChange = event => {
+    setUseInternalAPI(event.target.checked);
+  };
+
   const handleDescriptionChange = e => {
     setDescription(e.target.value);
   };
@@ -252,6 +257,15 @@ const KeyPairCreateModal = props => {
                       initialValue={expireTTL}
                       onChange={handleTTLChange}
                     />
+
+                    <br/>
+
+                    <label>Kubernetes API Hostname:</label>
+                    <input id='internalApi' type='checkbox' checked={useInternalAPI} onChange={handleUseInternalAPIChange} />
+                    <label htmlFor='internalApi' className='checkbox-label'>Use the Internal Kubernetes API hostname</label>
+                    <small>This is required in some restricted environments where the Kubernetes API is not reachable otherwise.</small>
+
+                    <br/>
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
                     <Button
