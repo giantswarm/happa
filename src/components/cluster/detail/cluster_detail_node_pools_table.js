@@ -6,7 +6,6 @@ import {
 } from 'utils/cluster_utils';
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { css } from '@emotion/core';
-import { Link } from 'react-router-dom';
 import { relativeDate } from 'lib/helpers.js';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
