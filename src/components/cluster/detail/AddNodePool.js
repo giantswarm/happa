@@ -8,6 +8,7 @@ import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
+import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
 const WrapperDiv = styled.div`
   background-color: ${props => props.theme.colors.shade7};
@@ -87,6 +88,14 @@ const FlexColumnDiv = styled.div`
   a {
     text-decoration: underline;
   }
+  /* Name input */
+  .name-container {
+    position: relative;
+    margin-bottom: 23px;
+  }
+  input[id='name'] {
+    margin-bottom: 0;
+  }
   /* Overrides for AWSInstanceTypeSelector */
   .textfield label,
   .textfield,
@@ -95,6 +104,9 @@ const FlexColumnDiv = styled.div`
   }
   /* Overrides for NumberPicker */
   .availability-zones {
+    & > div {
+      margin-bottom: 23px;
+    }
     & > div > div,
     & > div > div > div {
       margin: 0;
@@ -120,7 +132,11 @@ const FlexColumnDiv = styled.div`
 class AddNodePool extends Component {
   state = {
     isNameBeingEdited: false,
-    name: '',
+    name: {
+      value: 'My node pool',
+      valid: true,
+      validationError: '',
+    },
     availabilityZonesPicker: {
       value: 1,
       valid: true,
@@ -143,26 +159,6 @@ class AddNodePool extends Component {
       },
     },
     awsInstanceTypes: {},
-    azure: {
-      vmSize: {
-        valid: true,
-        value: this.props.defaultVMSize,
-      },
-    },
-    kvm: {
-      cpuCores: {
-        value: this.props.defaultCPUCores,
-        valid: true,
-      },
-      memorySize: {
-        value: this.props.defaultMemorySize,
-        valid: true,
-      },
-      diskSize: {
-        value: this.props.defaultDiskSize,
-        valid: true,
-      },
-    },
   };
 
   componentDidMount() {
@@ -171,9 +167,19 @@ class AddNodePool extends Component {
   }
 
   updateName = event => {
-    this.setState({
-      name: event.target.value,
-    });
+    const name = event.target.value;
+    const isValid = name.length > 20 ? false : true;
+    const message = isValid
+      ? ''
+      : 'Name must not contain more than 20 characters';
+
+    this.setState(
+      produce(draft => {
+        draft.name.valid = isValid;
+        draft.name.value = name;
+        draft.name.validationError = message;
+      })
+    );
   };
 
   updateAWSInstanceType = payload => {
@@ -195,29 +201,21 @@ class AddNodePool extends Component {
   // Always true?
   isScalingAutomatic = () => true;
 
-  valid() {
-    // Not checking release version as we would be checking it when accessing this form
+  isValid() {
+    // Not checking release version as we would be checking it before accessing this form
+    // and sending user too the v4 form if NPs aren't supported
+    const { availabilityZonesPicker, scaling, aws, name } = this.state;
 
-    // If the availabilityZonesPicker is invalid, return false
-    if (!this.state.availabilityZonesPicker.valid) return false;
-    // If the min scaling numberpicker is invalid, return false
-    if (!this.state.scaling.minValid) return false;
-    // If the max scaling numberpickers is invalid, return false
-    if (!this.state.scaling.maxValid) return false;
-    // If the aws instance type is invalid, return false
-    if (!this.state.aws.instanceType.valid) return false;
-    // If the Azure instance size is invalid, return false
-    if (!this.state.azure.vmSize.valid) return false;
-    // If the kvm worker is invalid, return false
     if (
-      !(
-        this.state.kvm.cpuCores.valid &&
-        this.state.kvm.memorySize.valid &&
-        this.state.kvm.diskSize.valid
-      )
+      !availabilityZonesPicker.valid ||
+      !scaling.minValid ||
+      !scaling.maxValid ||
+      !aws.instanceType.valid ||
+      !name.valid
     ) {
       return false;
     }
+
     return true;
   }
 
@@ -291,12 +289,17 @@ class AddNodePool extends Component {
         <FlexColumnDiv>
           <label htmlFor='name'>
             <span className='label-span'>Name</span>
-            <input
-              value={this.state.value}
-              onChange={this.updateName}
-              id='name'
-              type='text'
-            ></input>
+            <div className='name-container'>
+              <input
+                value={this.state.name.value}
+                onChange={this.updateName}
+                id='name'
+                type='text'
+              ></input>
+              <ValidationErrorMessage
+                message={this.state.name.validationError}
+              />
+            </div>
             <p>
               Pick a name that helps team mates to understand what these nodes
               are here for. You can change this later. Each node pool also gets
@@ -351,7 +354,7 @@ class AddNodePool extends Component {
             <Button
               bsSize='large'
               bsStyle='primary'
-              disabled={!this.valid()}
+              disabled={!this.isValid()}
               loading={this.state.submitting}
               onClick={this.createNodePool}
               type='button'
@@ -379,12 +382,10 @@ AddNodePool.propTypes = {
   maxAvailabilityZones: PropTypes.number,
   minAvailabilityZones: PropTypes.number,
   allowedInstanceTypes: PropTypes.array,
-  allowedVMSizes: PropTypes.array,
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
-  defaultVMSize: PropTypes.string,
   defaultCPUCores: PropTypes.number,
   defaultMemorySize: PropTypes.number,
   defaultDiskSize: PropTypes.number,
@@ -395,11 +396,11 @@ AddNodePool.propTypes = {
 };
 
 function mapStateToProps(state) {
-  var minAvailabilityZones = state.app.info.general.availability_zones.default;
-  var maxAvailabilityZones = state.app.info.general.availability_zones.max;
-  var selectedOrganization = state.app.selectedOrganization;
-  var provider = state.app.info.general.provider;
-  var clusterCreationStats = state.app.info.stats.cluster_creation_duration;
+  let minAvailabilityZones = state.app.info.general.availability_zones.default;
+  let maxAvailabilityZones = state.app.info.general.availability_zones.max;
+  let selectedOrganization = state.app.selectedOrganization;
+  const provider = state.app.info.general.provider;
+  let clusterCreationStats = state.app.info.stats.cluster_creation_duration;
 
   var defaultInstanceType;
   if (
@@ -411,38 +412,19 @@ function mapStateToProps(state) {
     defaultInstanceType = 'm3.large';
   }
 
-  var defaultVMSize;
-  if (
-    state.app.info.workers.vm_size &&
-    state.app.info.workers.vm_size.default
-  ) {
-    defaultVMSize = state.app.info.workers.vm_size.default;
-  } else {
-    defaultVMSize = 'Standard_D2s_v3';
-  }
+  const defaultCPUCores = 4; // TODO
+  const defaultMemorySize = 4; // TODO
+  const defaultDiskSize = 20; // TODO
 
-  var defaultCPUCores = 4; // TODO
-  var defaultMemorySize = 4; // TODO
-  var defaultDiskSize = 20; // TODO
-
-  var allowedInstanceTypes = [];
-  if (provider === 'aws') {
-    allowedInstanceTypes = state.app.info.workers.instance_type.options;
-  }
-
-  var allowedVMSizes = [];
-  if (provider === 'azure') {
-    allowedVMSizes = state.app.info.workers.vm_size.options;
-  }
+  const allowedInstanceTypes =
+    provider === 'aws' ? state.app.info.workers.instance_type.options : [];
 
   return {
     minAvailabilityZones,
     maxAvailabilityZones,
     allowedInstanceTypes,
-    allowedVMSizes,
     provider,
     defaultInstanceType,
-    defaultVMSize,
     defaultCPUCores,
     defaultMemorySize,
     defaultDiskSize,
