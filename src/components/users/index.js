@@ -521,9 +521,14 @@ class Users extends React.Component {
                               options={_.sortBy(
                                 this.props.organizations.items,
                                 'id'
-                              ).map(organization => ({label: organization.id, value: organization.id}))}
+                              ).map(organization => ({
+                                label: organization.id,
+                                value: organization.id,
+                              }))}
                               selected={this.state.invitationForm.organizations}
-                              onSelectedChanged={this.handleOrganizationChange.bind(this)}
+                              onSelectedChanged={this.handleOrganizationChange.bind(
+                                this
+                              )}
                             />
                           </div>
 
