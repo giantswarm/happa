@@ -6,6 +6,7 @@ import {
 } from 'utils/cluster_utils';
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { css } from '@emotion/core';
+import { Link } from 'react-router-dom';
 import { relativeDate } from 'lib/helpers.js';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
@@ -98,6 +99,19 @@ const GridRowNodePoolsHeaders = styled.div`
 const GridRowNodePoolsItem = styled.div`
   ${GridRowNodePoolsBase};
   background-color: ${props => props.theme.colors.shade7};
+`;
+
+const FlexWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  p {
+    font-size: 14px;
+    line-height: 1.2;
+    margin: 0;
+    max-width: 550px;
+    padding-left: 20px;
+  }
 `;
 
 class ClusterDetailNodePoolsTable extends React.Component {
@@ -294,9 +308,27 @@ class ClusterDetailNodePoolsTable extends React.Component {
             />
           </ReactCSSTransitionGroup>
         ) : (
-          <Button onClick={this.toggleAddNodePoolForm}>
-            <i className='fa fa-add-circle' /> ADD NODE POOL
-          </Button>
+          <FlexWrapper>
+            <Button>
+              <i className='fa fa-add-circle' /> ADD NODE POOL
+            </Button>
+            {nodePools.length < 2 && (
+              <p>
+                With additional node pools, you can add different types of
+                worker nodes to your cluster. Node pools also scale
+                independently.{' '}
+                <a
+                  href='https://docs.giantswarm.io/basics/nodepools/'
+                  alt='Read more about node pools'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {' '}
+                  Read more
+                </a>
+              </p>
+            )}
+          </FlexWrapper>
         )}
       </>
     );
