@@ -258,14 +258,22 @@ const KeyPairCreateModal = props => {
                       onChange={handleTTLChange}
                     />
 
-                    <br/>
+                    {
+                      props.provider === 'aws' ?
+                        <>
+                          <br/>
 
-                    <label>Kubernetes API Hostname:</label>
-                    <input id='internalApi' type='checkbox' checked={useInternalAPI} onChange={handleUseInternalAPIChange} />
-                    <label htmlFor='internalApi' className='checkbox-label'>Use the Internal Kubernetes API hostname</label>
-                    <small>This is required in some restricted environments where the Kubernetes API is not reachable otherwise.</small>
+                          <label>Kubernetes API Hostname:</label>
+                          <input id='internalApi' type='checkbox' checked={useInternalAPI} onChange={handleUseInternalAPIChange} />
+                          <label htmlFor='internalApi' className='checkbox-label'>Use the Internal Kubernetes API hostname</label>
+                          <small>This is required in some restricted environments where the Kubernetes API is not reachable otherwise.</small>
 
-                    <br/>
+                          <br/>
+                        </>
+                      :
+                        undefined
+
+                    }
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
                     <Button
@@ -376,6 +384,7 @@ KeyPairCreateModal.propTypes = {
   user: PropTypes.object,
   actions: PropTypes.object,
   cluster: PropTypes.object,
+  provider: PropTypes.string,
   show: PropTypes.func,
 };
 
