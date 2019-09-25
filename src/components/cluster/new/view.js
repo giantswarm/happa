@@ -332,7 +332,7 @@ class CreateCluster extends React.Component {
             ' | Giant Swarm'
           }
         >
-          <div className='new-cluster'>
+          <div className='new-cluster' data-testid='cluster-creation-view'>
             <div className='row'>
               <div className='col-12'>
                 <h1>Create a Cluster</h1>
@@ -392,7 +392,7 @@ class CreateCluster extends React.Component {
                       <p>
                         Select the number of availability zones for your nodes.
                       </p>
-                      <div className='col-3'>
+                      <div>
                         <NumberPicker
                           label=''
                           max={this.props.maxAvailabilityZones}
@@ -541,7 +541,7 @@ class CreateCluster extends React.Component {
                   disabled={!this.valid()}
                   loading={this.state.submitting}
                   onClick={this.createCluster}
-                  type='button'
+                  type='submit'
                 >
                   Create Cluster
                 </Button>

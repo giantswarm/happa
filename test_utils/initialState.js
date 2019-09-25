@@ -16,6 +16,37 @@ const initialState = function() {
       general: {
         installation_name: 'local',
         provider: 'aws',
+        availability_zones: {
+          max: 3,
+          default: 1,
+        },
+      },
+      stats: {
+        cluster_creation_duration: {
+          median: 805,
+          p25: 657,
+          p75: 1031,
+        },
+      },
+      workers: {
+        count_per_cluster: {
+          max: null,
+          default: 3,
+        },
+        instance_type: {
+          options: [
+            'm5.large',
+            'm3.large',
+            'm3.xlarge',
+            'm3.2xlarge',
+            'r3.large',
+            'r3.xlarge',
+            'r3.2xlarge',
+            'r3.4xlarge',
+            'r3.8xlarge',
+          ],
+          default: 'm3.large',
+        },
       },
     },
   },
@@ -274,6 +305,52 @@ const initialState = function() {
           nodes_ready: 4,
         },
         subnet: '10.2.0.0/24',
+      },
+    },
+    releases: {
+      items: {
+        '7.3.0': {
+          version: '7.3.0',
+          timestamp: '2019-04-17T08:00:00Z',
+          changelog: [],
+          components: [],
+          active: false,
+        },
+        '7.3.1': {
+          version: '7.3.1',
+          timestamp: '2019-04-25T18:00:00Z',
+          changelog: [],
+          components: [],
+          active: true,
+        },
+        '8.0.0': {
+          version: '8.0.0',
+          timestamp: '2019-04-17T08:00:00Z',
+          changelog: [],
+          components: [],
+          active: false,
+        },
+        '8.1.0': {
+          version: '8.1.0',
+          timestamp: '2019-06-04T16:00:00Z',
+          changelog: [],
+          components: [],
+          active: false,
+        },
+        '8.2.0': {
+          version: '8.2.0',
+          timestamp: '2019-06-03T10:00:00Z',
+          changelog: [],
+          components: [],
+          active: true,
+        },
+        '8.3.0': {
+          version: '8.3.0',
+          timestamp: '2019-07-09T10:00:00Z',
+          changelog: [],
+          components: [],
+          active: false,
+        },
       },
     },
   },
