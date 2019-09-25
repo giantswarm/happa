@@ -160,8 +160,6 @@ class NumberPicker extends React.Component {
     const { max, min } = this.props;
     value = value < min ? min - 1 : value > max ? max + 1 : value;
 
-    console.log(max, min, value);
-
     // Update state.
     this.setState(
       {
