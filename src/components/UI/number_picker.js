@@ -162,7 +162,7 @@ class NumberPicker extends React.Component {
     // Validate.
     let { value, valid, validationError } = this.validateInput(desiredValue);
 
-    // Ensure values are never above max or below min.
+    // Ensure values are never above max or below min. They can be null.
     const { max, min } = this.props;
     value = value === null ? '' : value < min ? min : value > max ? max : value;
 
@@ -187,7 +187,6 @@ class NumberPicker extends React.Component {
   };
 
   validateInput = desiredValue => {
-    console.log('aqui: ', parseInt(desiredValue));
     if (desiredValue === '') {
       return {
         value: null,
