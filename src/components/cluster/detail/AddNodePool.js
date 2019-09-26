@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
 import { nodePoolCreate } from 'actions/nodePoolActions';
+import AddNodePoolsAvailabilityZones from './AddNodePoolsAvailabilityZones';
+import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
 import Button from 'UI/button';
 import NodeCountSelector from 'shared/node_count_selector';
@@ -113,6 +115,10 @@ const FlexColumnDiv = styled.div`
     }
     & div > p {
       font-size: 16px;
+      span {
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
   }
   .scaling-range {
@@ -141,6 +147,7 @@ class AddNodePool extends Component {
       value: 1,
       valid: true,
     },
+    AZToggle: true,
     releaseVersion: '',
     scaling: {
       automatic: false,
@@ -290,6 +297,8 @@ class AddNodePool extends Component {
     return [RAM, CPUCores];
   };
 
+  toggleAZ = () => this.setState(state => ({ AZToggle: !state.AZToggle }));
+
   render() {
     const [RAM, CPUCores] = this.produceRAMAndCores();
 
@@ -331,23 +340,19 @@ class AddNodePool extends Component {
           <label className='availability-zones' htmlFor='availability-zones'>
             <span className='label-span'>Availability Zones</span>
             <FlexWrapperDiv>
-              <NumberPicker
-                label=''
+              <AddNodePoolsAvailabilityZones
                 max={this.props.maxAvailabilityZones}
                 min={this.props.minAvailabilityZones}
                 onChange={this.updateAvailabilityZonesPicker}
-                readOnly={false}
-                stepSize={1}
                 value={this.state.availabilityZonesPicker.value}
               />
-              <p>
-                or <a href='#'>Select distinct availability zones</a>
-              </p>
             </FlexWrapperDiv>
             <p>
-              Covering one availability zone, the worker nodes of this node pool
+              {this.state.availabilityZonesPicker.value < 2
+                ? `Covering one availability zone, the worker nodes of this node pool
               will be placed in the same availability zones as the
-              cluster&apos;s master node.
+              cluster's master node.`
+                : `Availability zones will be selected randomly.`}
             </p>
           </label>
           <label className='scaling-range' htmlFor='scaling-range'>

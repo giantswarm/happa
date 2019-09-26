@@ -20,6 +20,7 @@ const Wrapper = styled.abbr`
   margin-right: 4px;
   line-height: 1.4em;
   text-decoration: none;
+  font-size: 400;
   &.a {
     background-color: #66c2a5;
   }
