@@ -137,7 +137,19 @@ export function truncate(string, maxLength = 20) {
   }
 }
 
-export function makeKubeConfigTextFile(cluster, keyPairResult) {
+export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
+  let apiEndpoint = cluster.api_endpoint;
+
+  // Change something like: https://api.j7j4c.g8s.fra-1.giantswarm.io
+  // into: https://internal-api.j7j4c.g8s.fra-1.giantswarm.io
+  // if useInternalAPI is true.
+  if (useInternalAPI) {
+    let apiEndpointParts = apiEndpoint.split('api');
+    apiEndpointParts.splice(1, 0, 'internal-api');
+
+    apiEndpoint = apiEndpointParts.join('');
+  }
+
   return `
     apiVersion: v1
     kind: Config
@@ -146,7 +158,7 @@ export function makeKubeConfigTextFile(cluster, keyPairResult) {
         certificate-authority-data: ${btoa(
           keyPairResult.certificate_authority_data
         )}
-        server: ${cluster.api_endpoint}
+        server: ${apiEndpoint}
       name: ${cluster.name}
     contexts:
     - context:

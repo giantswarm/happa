@@ -16,6 +16,7 @@ const KeyPairCreateModal = props => {
   const [description, setDescription] = useState(
     defaultDescription(props.user.email)
   );
+  const [useInternalAPI, setUseInternalAPI] = useState(false);
   const [copied, setCopied] = useState(false);
   const [kubeconfig, setKubeconfig] = useState(false);
   const [cnPrefix, setCNPrefix] = useState('');
@@ -62,7 +63,9 @@ const KeyPairCreateModal = props => {
         ttl_hours: expireTTL,
       })
       .then(keypair => {
-        setKubeconfig(dedent(makeKubeConfigTextFile(props.cluster, keypair)));
+        setKubeconfig(
+          dedent(makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI))
+        );
         setModal({
           visible: true,
           loading: false,
@@ -72,7 +75,7 @@ const KeyPairCreateModal = props => {
         return props.actions.clusterLoadKeyPairs(props.cluster.id);
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
         setTimeout(() => {
           setModal({
             visible: true,
@@ -162,6 +165,10 @@ const KeyPairCreateModal = props => {
     setExpireTTL(ttl);
   };
 
+  const handleUseInternalAPIChange = event => {
+    setUseInternalAPI(event.target.checked);
+  };
+
   const handleDescriptionChange = e => {
     setDescription(e.target.value);
   };
@@ -177,7 +184,7 @@ const KeyPairCreateModal = props => {
   return (
     <React.Fragment>
       <Button bsStyle='default' className='small' onClick={show}>
-        <i className='fa fa-add-circle' /> Create Key Pair
+        <i className='fa fa-add-circle' /> Create Key Pair and Kubeconfig
       </Button>
       {(() => {
         switch (modal.template) {
@@ -190,7 +197,7 @@ const KeyPairCreateModal = props => {
               >
                 <BootstrapModal.Header closeButton>
                   <BootstrapModal.Title>
-                    Create New Key Pair
+                    Create New Key Pair and Kubeconfig
                   </BootstrapModal.Title>
                 </BootstrapModal.Header>
                 <form onSubmit={confirmAddKeyPair}>
@@ -252,6 +259,33 @@ const KeyPairCreateModal = props => {
                       initialValue={expireTTL}
                       onChange={handleTTLChange}
                     />
+
+                    {props.provider === 'aws' && (
+                      <>
+                        <br />
+
+                        <label>Kubernetes API Endpoint:</label>
+                        <input
+                          id='internalApi'
+                          type='checkbox'
+                          checked={useInternalAPI}
+                          onChange={handleUseInternalAPIChange}
+                        />
+                        <label htmlFor='internalApi' className='checkbox-label'>
+                          Use alternative internal api endpoint.
+                        </label>
+                        <small>
+                          When this is selected, the server entry of the created
+                          kubeconfig will be https://internal-api.
+                          {window.config.ingressBaseDomain}
+                        </small>
+                        <small>
+                          This is preferred in some restricted environments.
+                        </small>
+
+                        <br />
+                      </>
+                    )}
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
                     <Button
@@ -283,7 +317,7 @@ const KeyPairCreateModal = props => {
               >
                 <BootstrapModal.Header closeButton>
                   <BootstrapModal.Title>
-                    Your key pair has been created.
+                    Your key pair and kubeconfig has been created.
                   </BootstrapModal.Title>
                 </BootstrapModal.Header>
                 <BootstrapModal.Body>
@@ -362,6 +396,7 @@ KeyPairCreateModal.propTypes = {
   user: PropTypes.object,
   actions: PropTypes.object,
   cluster: PropTypes.object,
+  provider: PropTypes.string,
   show: PropTypes.func,
 };
 
