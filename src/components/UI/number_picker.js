@@ -165,16 +165,25 @@ class NumberPicker extends React.Component {
     // Ensure values are never above max or below min. They can be null.
     const { max, min } = this.props;
     value = value === null ? '' : value < min ? min : value > max ? max : value;
+    // const stateValue =
+    //   value === null
+    //     ? ''
+    //     : value < min
+    //     ? min - 1
+    //     : value > max
+    //     ? max + 1
+    //     : value;
 
     // Update state.
     this.setState(
       {
         inputValue: value,
         value: value,
-        valid: valid,
-        validationError: validationError,
+        valid: value ? true : false,
+        validationError,
       },
       () => {
+        console.table(this.state);
         // Notify Parent.
         if (this.props.onChange) {
           this.props.onChange({
@@ -190,31 +199,26 @@ class NumberPicker extends React.Component {
     if (desiredValue === '') {
       return {
         value: null,
-        valid: false,
         validationError: 'Field must not be empty',
       };
     } else if (desiredValue > this.props.max) {
       return {
         value: parseInt(desiredValue),
-        valid: false,
         validationError: 'Value must not be larger than ' + this.props.max,
       };
     } else if (desiredValue < this.props.min) {
       return {
         value: parseInt(desiredValue),
-        valid: false,
         validationError: 'Value must not be smaller than ' + this.props.min,
       };
     } else if (!isWholeNumber(parseFloat(desiredValue))) {
       return {
         value: parseInt(desiredValue),
-        valid: false,
         validationError: 'Value must be a whole number',
       };
     } else {
       return {
         value: parseInt(desiredValue),
-        valid: true,
         validationError: '',
       };
     }
@@ -238,7 +242,7 @@ class NumberPicker extends React.Component {
             undefined
           ) : (
             <DecrementButton
-              className={this.props.value === this.props.min && 'disabled'}
+              className={this.state.inputValue === this.props.min && 'disabled'}
               onClick={this.decrement}
             >
               &ndash;
