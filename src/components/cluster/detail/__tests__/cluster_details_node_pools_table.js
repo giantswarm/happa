@@ -3,7 +3,7 @@ import { fireEvent, render, wait } from '@testing-library/react';
 import { nodePoolPatch as mockNodePoolPatch } from 'actions/nodePoolActions';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
-import { trimStringBy } from 'utils/utils';
+import { truncate } from 'lib/helpers';
 import initialState from 'test_utils/initialState';
 import React from 'react';
 import statusState from 'test_utils/statusState';
@@ -72,7 +72,7 @@ it('patches node pool name correctly', async () => {
 
   await wait(() => {
     // All mock node pools have the same first 14 characters.
-    const nodePoolNameEls = getAllByText(trimStringBy(14, nodePoolName));
+    const nodePoolNameEls = getAllByText(truncate(nodePoolName, 14));
     fireEvent.click(nodePoolNameEls[0]);
   });
 

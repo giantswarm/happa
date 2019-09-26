@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
-import { trimStringBy } from 'utils/utils';
+import { truncate } from 'lib/helpers';
 import Button from './button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
@@ -70,7 +70,7 @@ class ViewAndEditName extends React.Component {
 
   componentDidMount() {
     if (this.props.entityType === 'node pool') {
-      const name = trimStringBy(14, this.props.entity.name);
+      const name = truncate(this.props.entity.name, 14);
       this.setState({ name });
     }
   }
@@ -119,7 +119,7 @@ class ViewAndEditName extends React.Component {
           editing: false,
           name:
             this.props.entityType === 'node pool'
-              ? trimStringBy(14, inputFieldValue)
+              ? truncate(inputFieldValue, 14)
               : inputFieldValue,
         });
 
