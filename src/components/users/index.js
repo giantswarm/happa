@@ -15,9 +15,8 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import DocumentTitle from 'react-document-title';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
 import moment from 'moment';
+import MultiSelect from '@khanacademy/react-multi-select';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -33,7 +32,7 @@ class Users extends React.Component {
     invitationForm: {
       email: '',
       error: '',
-      organization: this.props.organizations,
+      organizations: this.props.initialSelectedOrganizations,
       sendEmail: true,
       valid: true,
     },
@@ -118,7 +117,7 @@ class Users extends React.Component {
       invitationForm: {
         email: '',
         error: '',
-        organization: this.props.selectedOrganization,
+        organizations: this.state.invitationForm.organizations,
         sendEmail: true,
         valid: true,
       },
@@ -193,10 +192,10 @@ class Users extends React.Component {
     });
   }
 
-  handleOrganizationChange(orgId) {
+  handleOrganizationChange(orgIds) {
     var invitationForm = Object.assign({}, this.state.invitationForm);
 
-    invitationForm.organization = orgId;
+    invitationForm.organizations = orgIds;
 
     invitationForm = this.validateInvitationForm(invitationForm);
 
@@ -517,27 +516,20 @@ class Users extends React.Component {
                           </div>
 
                           <div className='textfield'>
-                            <label>Organization:</label>
-                            <DropdownButton
-                              className='outline'
-                              id='organizationDropdown'
-                              title={this.state.invitationForm.organization}
-                            >
-                              {_.sortBy(
+                            <label>Organizations:</label>
+                            <MultiSelect
+                              options={_.sortBy(
                                 this.props.organizations.items,
                                 'id'
-                              ).map(organization => (
-                                <MenuItem
-                                  key={organization.id}
-                                  onClick={this.handleOrganizationChange.bind(
-                                    this,
-                                    organization.id
-                                  )}
-                                >
-                                  {organization.id}
-                                </MenuItem>
-                              ))}
-                            </DropdownButton>
+                              ).map(organization => ({
+                                label: organization.id,
+                                value: organization.id,
+                              }))}
+                              selected={this.state.invitationForm.organizations}
+                              onSelectedChanged={this.handleOrganizationChange.bind(
+                                this
+                              )}
+                            />
                           </div>
 
                           <div className='textfield'>
@@ -673,7 +665,7 @@ Users.propTypes = {
   users: PropTypes.object,
   organizations: PropTypes.object,
   invitationsAndUsers: PropTypes.array,
-  selectedOrganization: PropTypes.string,
+  initialSelectedOrganizations: PropTypes.array,
   invitations: PropTypes.object,
   installation_name: PropTypes.string,
 };
@@ -827,7 +819,7 @@ function mapStateToProps(state) {
     invitations: state.entities.invitations,
     invitationsAndUsers: invitationsAndUsers,
     organizations: state.entities.organizations,
-    selectedOrganization: state.app.selectedOrganization,
+    initialSelectedOrganizations: [state.app.selectedOrganization],
     installation_name: state.app.info.general.installation_name,
   };
 }

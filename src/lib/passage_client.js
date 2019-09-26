@@ -250,13 +250,13 @@ var Passage = function(config) {
 
       var constraints = {
         email: { presence: true, email: true },
-        organization: { presence: { allowEmpty: false } },
+        organizations: { presence: { allowEmpty: false } },
         sendEmail: { presence: true },
       };
 
       var payload = {
         email: invitation.email,
-        organizations: [invitation.organization],
+        organizations: invitation.organizations,
         send_email: invitation.sendEmail,
       };
 
