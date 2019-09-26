@@ -3,6 +3,7 @@ import { fireEvent, render, wait } from '@testing-library/react';
 import { nodePoolPatch as mockNodePoolPatch } from 'actions/nodePoolActions';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
+import { trimStringBy } from 'utils/utils';
 import initialState from 'test_utils/initialState';
 import React from 'react';
 import statusState from 'test_utils/statusState';
@@ -59,7 +60,10 @@ it('shows the dropdown when the three dots button is clicked', () => {
 // calling the right method with the right arguments when clicking the submit button
 it('patches node pool name correctly', async () => {
   const div = document.createElement('div');
-  const { getByText, container } = renderRouteWithStore(route, div);
+  const { getAllByText, getByText, container, debug } = renderRouteWithStore(
+    route,
+    div
+  );
 
   const nodePools = Object.keys(initialState().entities.nodePools);
   const nodePool = initialState().entities.nodePools[nodePools[0]];
@@ -67,8 +71,9 @@ it('patches node pool name correctly', async () => {
   const newNodePoolName = 'New NP name';
 
   await wait(() => {
-    const nodePoolNameEl = getByText(nodePoolName);
-    fireEvent.click(nodePoolNameEl);
+    debug();
+    const nodePoolNameEls = getAllByText(trimStringBy(14, nodePoolName));
+    fireEvent.click(nodePoolNameEls[0]);
   });
 
   container.querySelector(
