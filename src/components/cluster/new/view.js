@@ -392,7 +392,7 @@ class CreateCluster extends React.Component {
                       <p>
                         Select the number of availability zones for your nodes.
                       </p>
-                      <div className='col-3'>
+                      <div>
                         <NumberPicker
                           label=''
                           max={this.props.maxAvailabilityZones}

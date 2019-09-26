@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
 var typingTimer;
 var doneTypingInterval = 250; // ms
@@ -116,6 +117,7 @@ class InputField extends React.Component {
         <label htmlFor={this.props.name}>{this.props.label}</label>
         <input
           id={this.props.name}
+          disabled={this.props.disabled}
           onBlur={this.onBlur}
           onChange={this.onChange}
           readOnly={this.props.readOnly}
@@ -128,7 +130,7 @@ class InputField extends React.Component {
         {// If it is readOnly, don't show validation errors
 
         this.props.readOnly ? null : (
-          <span className='message'>{this.state.validationError}&nbsp;</span>
+          <ValidationErrorMessage message={this.state.validationError} />
         )}
       </div>
     );
@@ -144,6 +146,7 @@ InputField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   readOnly: PropTypes.bool,
+  disabled: PropTypes.bool,
   type: PropTypes.string,
 };
 
