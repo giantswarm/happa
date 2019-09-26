@@ -2,7 +2,8 @@ const path = require('path');
 
 module.exports = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
-  setupFilesAfterEnv: ['@testing-library/react/cleanup-after-each'],
+  testURL: 'http://localhost',
+  setupFiles: [path.resolve(__dirname + '/test_utils/browserMocks.js')],
   moduleDirectories: [
     'node_modules',
     path.resolve(__dirname + '/src'),

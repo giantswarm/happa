@@ -25,7 +25,7 @@ class PageVisibilityTracker {
       typeof document.addEventListener === 'undefined' ||
       this.hidden === undefined
     ) {
-      console.log(
+      console.error(
         'This piece of code requires a browser that supports the Page Visibility API.'
       );
     } else {

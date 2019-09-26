@@ -1,4 +1,4 @@
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, wait } from '@testing-library/react';
 import {
   clusterCreate as mockClusterCreate,
