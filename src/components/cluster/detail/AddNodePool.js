@@ -168,10 +168,10 @@ class AddNodePool extends Component {
 
   updateName = event => {
     const name = event.target.value;
-    const isValid = name.length > 20 ? false : true;
+    const isValid = name.length > 100 ? false : true;
     const message = isValid
       ? ''
-      : 'Name must not contain more than 20 characters';
+      : 'Name must not contain more than 100 characters';
 
     this.setState(
       produce(draft => {
