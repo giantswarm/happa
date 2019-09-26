@@ -136,7 +136,7 @@ const clusterReducer = produce((draft, action) => {
       return;
 
     case types.NODEPOOL_CREATE_SUCCESS:
-      draft.items[action.clusterId].push(action.nodePool.id);
+      draft.items[action.clusterId].nodePools.push(action.nodePool.id);
       return;
   }
 }, initialState);
