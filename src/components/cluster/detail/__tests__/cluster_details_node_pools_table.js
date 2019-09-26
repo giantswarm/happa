@@ -60,7 +60,7 @@ it('shows the dropdown when the three dots button is clicked', () => {
 // calling the right method with the right arguments when clicking the submit button
 it('patches node pool name correctly', async () => {
   const div = document.createElement('div');
-  const { getAllByText, getByText, container, debug } = renderRouteWithStore(
+  const { getAllByText, getByText, container } = renderRouteWithStore(
     route,
     div
   );
@@ -71,7 +71,7 @@ it('patches node pool name correctly', async () => {
   const newNodePoolName = 'New NP name';
 
   await wait(() => {
-    debug();
+    // All mock node pools have the same first 14 characters.
     const nodePoolNameEls = getAllByText(trimStringBy(14, nodePoolName));
     fireEvent.click(nodePoolNameEls[0]);
   });
