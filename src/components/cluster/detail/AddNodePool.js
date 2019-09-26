@@ -168,10 +168,21 @@ class AddNodePool extends Component {
 
   updateName = event => {
     const name = event.target.value;
-    const isValid = name.length > 100 ? false : true;
+    const exceededMaximumCharacters = name.length > 100;
+    const isValid = exceededMaximumCharacters ? false : true;
     const message = isValid
       ? ''
       : 'Name must not contain more than 100 characters';
+
+    // We don't let the user write more characters if the name exceeds the max number allowed
+    if (exceededMaximumCharacters) {
+      this.setState(
+        produce(draft => {
+          draft.name.validationError = message;
+        })
+      );
+      return;
+    }
 
     this.setState(
       produce(draft => {
