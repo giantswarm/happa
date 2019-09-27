@@ -104,9 +104,6 @@ const FlexColumnDiv = styled.div`
   }
   /* Overrides for NumberPicker */
   .availability-zones {
-    & > div {
-      margin-bottom: 23px;
-    }
     & > div > div,
     & > div > div > div {
       margin: 0;

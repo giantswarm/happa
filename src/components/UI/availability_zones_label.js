@@ -45,13 +45,20 @@ const Wrapper = styled.abbr`
   &[title] {
     text-decoration: none;
   }
+  /* This is just for node pool cration form */
+  &.not-checked {
+    background-color: #567;
+    color: #eee;
+  }
 `;
 
+// onToggleChecked and all the logic around hooks is jsy for node pool creation form.
 function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
   const [checked, setChecked] = useState(false);
   const firstUpdate = useRef(true);
 
   const toggleChecked = () => {
+    console.log('it ran');
     setChecked(state => !state);
   };
 
@@ -69,7 +76,11 @@ function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
   }, [checked]);
 
   return (
-    <Wrapper className={letter} title={title} onClick={toggleChecked}>
+    <Wrapper
+      className={onToggleChecked && !checked ? `not-checked ${letter}` : letter}
+      title={title}
+      onClick={onToggleChecked ? toggleChecked : null}
+    >
       {label}
     </Wrapper>
   );

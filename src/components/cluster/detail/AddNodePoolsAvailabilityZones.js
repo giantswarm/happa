@@ -12,15 +12,14 @@ export const Emphasized = css`
       text-decoration: underline;
       cursor: pointer;
     }
-    p:nth-of-type(2) {
-      margin-left: 18px;
-    }
+  }
+  .no-margin {
+    margin-left: 18px;
   }
 `;
 
 const FlexWrapperDiv = styled.div`
   display: flex;
-  /* flex-flow: row wrap; */
   justify-content: flex-start;
   align-items: center;
   ${Emphasized};
@@ -35,10 +34,26 @@ const FlexColumnDiv = styled.div`
   justify-content: space-between;
   p {
     font-size: 14px;
-    margin: 0 0 11px 0;
+    margin: 0 0 14px 0;
+    &:nth-of-type(2) {
+      margin: 12px 0 25px;
+    }
+  }
+  div {
+    margin-bottom: 20px;
   }
   ${Emphasized};
 `;
+
+/* .availability-zones {
+    & > div {
+      margin-bottom: 23px;
+    }
+    & > div > div,
+    & > div > div > div {
+      margin: 0;
+    }
+  } */
 
 export default function AddNodePoolsAvailabilityZones({
   max,
@@ -122,7 +137,7 @@ export default function AddNodePoolsAvailabilityZones({
           stepSize={1}
           value={AZPicker.value}
         />
-        <p className='emphasized'>
+        <p className='emphasized no-margin'>
           or{' '}
           <span onClick={toggle} alt='Select distinct availability zones'>
             Select distinct availability zones
