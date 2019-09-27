@@ -45,20 +45,19 @@ const Wrapper = styled.abbr`
   &[title] {
     text-decoration: none;
   }
-  /* This is just for node pool cration form */
+  /* This is just for node pool creation form */
   &.not-checked {
     background-color: #567;
     color: #eee;
   }
 `;
 
-// onToggleChecked and all the logic around hooks is jsy for node pool creation form.
+// onToggleChecked and *everything* before the return is just for node pool creation form.
 function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
   const [checked, setChecked] = useState(false);
   const firstUpdate = useRef(true);
 
   const toggleChecked = () => {
-    console.log('it ran');
     setChecked(state => !state);
   };
 
@@ -70,7 +69,6 @@ function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
     }
 
     if (onToggleChecked) {
-      console.log('toggle checked!', checked);
       onToggleChecked(checked, { title, letter, label });
     }
   }, [checked]);

@@ -67,7 +67,7 @@ export default function AddNodePoolsAvailabilityZones({
     valid: true,
   });
   const [AZLabels, setAZLabels] = useState({
-    _number: 0,
+    number: 0,
     zonesString: '', // TODO (check if) the endpoint will be expecting a string of letters separated by a blank space
     zonesArray: [],
     valid: false,
@@ -81,13 +81,21 @@ export default function AddNodePoolsAvailabilityZones({
   };
 
   const updateAZLabels = (checked, payload) => {
-    if (checked) {
-      // add data to state
-      console.log('checked');
-    }
-    console.log(checked, payload);
-    // remove data from state
-    // setAZLabels({ ...payload });
+    // If checked, we will add the new AZ to state else we will remove it.
+    const zonesArray = checked
+      ? [...AZLabels.zonesArray, payload.title]
+      : AZLabels.zonesArray.filter(az => az !== payload.title);
+
+    const zonesString = zonesArray.map(zone => zone.slice(-1)).join(' ');
+    const number = zonesArray.length;
+    const valid = number > 0 ? true : false;
+
+    setAZLabels({
+      number,
+      zonesString,
+      zonesArray,
+      valid,
+    });
   };
 
   // Side effects.

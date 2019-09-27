@@ -132,7 +132,7 @@ class AddNodePool extends Component {
       validationError: '',
     },
     availabilityZonesLabels: {
-      _number: 0,
+      number: 0,
       zones: '',
       valid: false,
     },
