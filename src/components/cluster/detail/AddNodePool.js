@@ -1,11 +1,9 @@
 import { connect } from 'react-redux';
 import { nodePoolCreate } from 'actions/nodePoolActions';
 import AddNodePoolsAvailabilityZones from './AddNodePoolsAvailabilityZones';
-import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
 import Button from 'UI/button';
 import NodeCountSelector from 'shared/node_count_selector';
-import NumberPicker from 'UI/number_picker';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -114,10 +112,15 @@ const FlexColumnDiv = styled.div`
       margin: 0;
     }
     & div > p {
-      font-size: 16px;
-      span {
-        text-decoration: underline;
-        cursor: pointer;
+      &:first-of-type {
+        font-size: 16px;
+        span {
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+      &:nth-of-type(2) {
+        margin: 19px 0 0;
       }
     }
   }
@@ -143,11 +146,16 @@ class AddNodePool extends Component {
       valid: true,
       validationError: '',
     },
+    availabilityZonesLabels: {
+      _number: 0,
+      zones: '',
+      valid: false,
+    },
+    availabilityZonesIsLabels: false,
     availabilityZonesPicker: {
       value: 1,
       valid: true,
     },
-    AZToggle: true,
     releaseVersion: '',
     scaling: {
       automatic: false,
@@ -209,6 +217,7 @@ class AddNodePool extends Component {
   };
 
   updateAvailabilityZonesPicker = payload => {
+    console.log(payload);
     this.setState({ availabilityZonesPicker: payload });
   };
 
@@ -343,17 +352,10 @@ class AddNodePool extends Component {
               <AddNodePoolsAvailabilityZones
                 max={this.props.maxAvailabilityZones}
                 min={this.props.minAvailabilityZones}
-                onChange={this.updateAvailabilityZonesPicker}
-                value={this.state.availabilityZonesPicker.value}
+                updateAZValuesInParent={this.updateAvailabilityZonesPicker}
+                // value={this.state.availabilityZonesPicker.value}
               />
             </FlexWrapperDiv>
-            <p>
-              {this.state.availabilityZonesPicker.value < 2
-                ? `Covering one availability zone, the worker nodes of this node pool
-              will be placed in the same availability zones as the
-              cluster's master node.`
-                : `Availability zones will be selected randomly.`}
-            </p>
           </label>
           <label className='scaling-range' htmlFor='scaling-range'>
             <span className='label-span'>Scaling range</span>

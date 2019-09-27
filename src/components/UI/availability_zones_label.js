@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 
 /**
@@ -47,16 +47,40 @@ const Wrapper = styled.abbr`
   }
 `;
 
-const AvailabilityZonesLabel = ({ label, letter, title }) => (
-  <Wrapper className={letter} title={title}>
-    {label}
-  </Wrapper>
-);
+function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
+  const [checked, setChecked] = useState(false);
+  const firstUpdate = useRef(true);
+
+  const toggleChecked = () => {
+    console.log('why?');
+    setChecked(state => !state);
+  };
+
+  useEffect(() => {
+    // We dont want this to run on first render
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    if (onToggleChecked) {
+      console.log('toggle checked!', checked);
+      onToggleChecked(checked, { title, letter, label });
+    }
+  }, [checked]);
+
+  return (
+    <Wrapper className={letter} title={title} onClick={toggleChecked}>
+      {label}
+    </Wrapper>
+  );
+}
 
 AvailabilityZonesLabel.propTypes = {
   label: PropTypes.string,
   letter: PropTypes.string,
   title: PropTypes.string,
+  onToggleChecked: PropTypes.func,
 };
 
 export default AvailabilityZonesLabel;
