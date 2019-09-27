@@ -131,16 +131,16 @@ class AddNodePool extends Component {
       valid: true,
       validationError: '',
     },
+    availabilityZonesPicker: {
+      value: 1,
+      valid: true,
+    },
     availabilityZonesLabels: {
       number: 0,
       zones: '',
       valid: false,
     },
     availabilityZonesIsLabels: false,
-    availabilityZonesPicker: {
-      value: 1,
-      valid: true,
-    },
     releaseVersion: '',
     scaling: {
       automatic: false,
@@ -201,9 +201,16 @@ class AddNodePool extends Component {
     );
   };
 
-  updateAvailabilityZonesPicker = payload => {
+  updateAvailabilityZonesIsLabels = availabilityZonesIsLabels =>
+    this.setState({ availabilityZonesIsLabels });
+
+  updateAvailabilityZones = payload => {
     console.log(payload);
-    this.setState({ availabilityZonesPicker: payload });
+    if (this.state.availabilityZonesIsLabels) {
+      this.setState({ availabilityZonesLabels: payload });
+    } else {
+      this.setState({ availabilityZonesPicker: payload });
+    }
   };
 
   updateScaling = nodeCountSelector => {
@@ -219,7 +226,7 @@ class AddNodePool extends Component {
     const { availabilityZonesPicker, scaling, aws, name } = this.state;
 
     if (
-      !availabilityZonesPicker.valid ||
+      // !availabilityZonesPicker.valid ||
       !scaling.minValid ||
       !scaling.maxValid ||
       !aws.instanceType.valid ||
@@ -336,8 +343,8 @@ class AddNodePool extends Component {
             <AddNodePoolsAvailabilityZones
               max={this.props.maxAvailabilityZones}
               min={this.props.minAvailabilityZones}
-              updateAZValuesInParent={this.updateAvailabilityZonesPicker}
-              // value={this.state.availabilityZonesPicker.value}
+              updateAZValuesInParent={this.updateAvailabilityZones}
+              updateIsLabelsInParent={this.updateAvailabilityZonesIsLabels}
             />
           </label>
           <label className='scaling-range' htmlFor='scaling-range'>

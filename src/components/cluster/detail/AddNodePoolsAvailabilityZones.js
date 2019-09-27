@@ -45,20 +45,11 @@ const FlexColumnDiv = styled.div`
   ${Emphasized};
 `;
 
-/* .availability-zones {
-    & > div {
-      margin-bottom: 23px;
-    }
-    & > div > div,
-    & > div > div > div {
-      margin: 0;
-    }
-  } */
-
 export default function AddNodePoolsAvailabilityZones({
   max,
   min,
   updateAZValuesInParent,
+  updateIsLabelsInParent,
 }) {
   // Input or buttons?
   const [isLabels, setIsLabels] = useState(false);
@@ -77,7 +68,7 @@ export default function AddNodePoolsAvailabilityZones({
   const toggle = () => setIsLabels(isLabels => !isLabels);
 
   const updateAZPicker = payload => {
-    setAZPicker({ ...payload });
+    setAZPicker(payload);
   };
 
   const updateAZLabels = (checked, payload) => {
@@ -99,6 +90,10 @@ export default function AddNodePoolsAvailabilityZones({
   };
 
   // Side effects.
+  useEffect(() => {
+    updateIsLabelsInParent(isLabels);
+  }, [isLabels]);
+
   useEffect(() => {
     updateAZValuesInParent(AZPicker);
   }, [AZPicker]);
@@ -170,4 +165,5 @@ AddNodePoolsAvailabilityZones.propTypes = {
   min: PropTypes.number,
   value: PropTypes.number,
   updateAZValuesInParent: PropTypes.func,
+  updateIsLabelsInParent: PropTypes.func,
 };
