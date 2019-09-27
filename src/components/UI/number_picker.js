@@ -160,7 +160,7 @@ class NumberPicker extends React.Component {
     const desiredValue = e.target.value;
 
     // Validate.
-    let { value, valid, validationError } = this.validateInput(desiredValue);
+    let { value, validationError } = this.validateInput(desiredValue);
 
     // Ensure values are never above max or below min. They can be null.
     const { max, min } = this.props;
@@ -170,7 +170,7 @@ class NumberPicker extends React.Component {
     this.setState(
       {
         inputValue: value,
-        value: value,
+        value,
         valid: value ? true : false,
         validationError,
       },
