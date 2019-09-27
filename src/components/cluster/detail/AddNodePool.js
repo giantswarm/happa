@@ -111,18 +111,6 @@ const FlexColumnDiv = styled.div`
     & > div > div > div {
       margin: 0;
     }
-    & div > p {
-      &:first-of-type {
-        font-size: 16px;
-        span {
-          text-decoration: underline;
-          cursor: pointer;
-        }
-      }
-      &:nth-of-type(2) {
-        margin: 19px 0 0;
-      }
-    }
   }
   .scaling-range {
     form {
@@ -348,14 +336,12 @@ class AddNodePool extends Component {
           </label>
           <label className='availability-zones' htmlFor='availability-zones'>
             <span className='label-span'>Availability Zones</span>
-            <FlexWrapperDiv>
-              <AddNodePoolsAvailabilityZones
-                max={this.props.maxAvailabilityZones}
-                min={this.props.minAvailabilityZones}
-                updateAZValuesInParent={this.updateAvailabilityZonesPicker}
-                // value={this.state.availabilityZonesPicker.value}
-              />
-            </FlexWrapperDiv>
+            <AddNodePoolsAvailabilityZones
+              max={this.props.maxAvailabilityZones}
+              min={this.props.minAvailabilityZones}
+              updateAZValuesInParent={this.updateAvailabilityZonesPicker}
+              // value={this.state.availabilityZonesPicker.value}
+            />
           </label>
           <label className='scaling-range' htmlFor='scaling-range'>
             <span className='label-span'>Scaling range</span>

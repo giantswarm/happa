@@ -1,20 +1,43 @@
+import { css } from '@emotion/core';
 import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import NumberPicker from 'UI/number_picker';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
+export const Emphasized = css`
+  .emphasized {
+    font-size: 16px;
+    span {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    p:nth-of-type(2) {
+      margin-left: 18px;
+    }
+  }
+`;
+
 const FlexWrapperDiv = styled.div`
   display: flex;
-  flex-flow: row wrap;
+  /* flex-flow: row wrap; */
   justify-content: flex-start;
   align-items: center;
+  ${Emphasized};
+  p:first-child {
+    margin: 19px 0 0;
+  }
 `;
 
 const FlexColumnDiv = styled.div`
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
+  p {
+    font-size: 14px;
+    margin: 0 0 11px 0;
+  }
+  ${Emphasized};
 `;
 
 export default function AddNodePoolsAvailabilityZones({
@@ -42,12 +65,12 @@ export default function AddNodePoolsAvailabilityZones({
     setAZPicker({ ...payload });
   };
 
-  const updateAZLabels = ({ checked, payload }) => {
+  const updateAZLabels = (checked, payload) => {
     if (checked) {
       // add data to state
       console.log('checked');
     }
-    console.log('unchecked');
+    console.log(checked, payload);
     // remove data from state
     // setAZLabels({ ...payload });
   };
@@ -76,38 +99,46 @@ export default function AddNodePoolsAvailabilityZones({
             onToggleChecked={updateAZLabels}
           />
         </FlexWrapperDiv>
+        <p>Please select at least one.</p>
+        <p className='emphasized'>
+          <span onClick={toggle} alt='Switch to random selection'>
+            Switch to random selection
+          </span>
+        </p>
         {/* {true && <p>Please select at least one.</p>} */}
       </FlexColumnDiv>
     );
   }
 
   return (
-    <FlexWrapperDiv>
-      <NumberPicker
-        label=''
-        max={max}
-        min={min}
-        onChange={updateAZPicker}
-        readOnly={false}
-        stepSize={1}
-        value={AZPicker.value}
-      />
-      <p>
-        or{' '}
-        <span onClick={toggle} alt='Select distinct availability zones'>
-          Select distinct availability zones
-        </span>
-      </p>
-      {!isLabels && (
+    <>
+      <FlexWrapperDiv>
+        <NumberPicker
+          label=''
+          max={max}
+          min={min}
+          onChange={updateAZPicker}
+          readOnly={false}
+          stepSize={1}
+          value={AZPicker.value}
+        />
+        <p className='emphasized'>
+          or{' '}
+          <span onClick={toggle} alt='Select distinct availability zones'>
+            Select distinct availability zones
+          </span>
+        </p>
+      </FlexWrapperDiv>
+      <FlexWrapperDiv>
         <p>
           {AZPicker.value < 2
             ? `Covering one availability zone, the worker nodes of this node pool
-              will be placed in the same availability zones as the
-              cluster's master node.`
+               will be placed in the same availability zones as the
+               cluster's master node.`
             : `Availability zones will be selected randomly.`}
         </p>
-      )}
-    </FlexWrapperDiv>
+      </FlexWrapperDiv>
+    </>
   );
 }
 

@@ -20,7 +20,7 @@ const Wrapper = styled.abbr`
   margin-right: 4px;
   line-height: 1.4em;
   text-decoration: none;
-  font-size: 400;
+  font-weight: 400;
   &.a {
     background-color: #66c2a5;
   }
@@ -52,7 +52,6 @@ function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
   const firstUpdate = useRef(true);
 
   const toggleChecked = () => {
-    console.log('why?');
     setChecked(state => !state);
   };
 
