@@ -111,7 +111,7 @@ const IncrementDecrementButtonCSS = css`
   &.disabled,
   &.disabled:hover,
   &.disabled:active {
-    background-color: #888;
+    background-color: #567;
     color: #eee;
   }
 `;
@@ -165,14 +165,6 @@ class NumberPicker extends React.Component {
     // Ensure values are never above max or below min. They can be null.
     const { max, min } = this.props;
     value = value === null ? '' : value < min ? min : value > max ? max : value;
-    // const stateValue =
-    //   value === null
-    //     ? ''
-    //     : value < min
-    //     ? min - 1
-    //     : value > max
-    //     ? max + 1
-    //     : value;
 
     // Update state.
     this.setState(
@@ -183,7 +175,6 @@ class NumberPicker extends React.Component {
         validationError,
       },
       () => {
-        console.table(this.state);
         // Notify Parent.
         if (this.props.onChange) {
           this.props.onChange({
