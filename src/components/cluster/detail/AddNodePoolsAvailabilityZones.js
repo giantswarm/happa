@@ -77,15 +77,11 @@ export default function AddNodePoolsAvailabilityZones({
       ? [...AZLabels.zonesArray, payload.title]
       : AZLabels.zonesArray.filter(az => az !== payload.title);
 
-    const zonesString = zonesArray.map(zone => zone.slice(-1)).join(' ');
-    const number = zonesArray.length;
-    const valid = number > 0 ? true : false;
-
     setAZLabels({
-      number,
-      zonesString,
+      number: zonesArray.length,
+      zonesString: zonesArray.map(zone => zone.slice(-1)).join(' '),
       zonesArray,
-      valid,
+      valid: zonesArray.length > 0 ? true : false,
     });
   };
 

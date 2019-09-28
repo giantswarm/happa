@@ -226,6 +226,10 @@ class AddNodePool extends Component {
     const { availabilityZonesPicker, scaling, aws, name } = this.state;
 
     if (
+      // TODO HERE
+      //  1. check labels of pickes is valid
+      //  2. send labels or piocker data depending of value in isLabels
+
       // !availabilityZonesPicker.valid ||
       !scaling.minValid ||
       !scaling.maxValid ||
