@@ -53,26 +53,39 @@ export default function AddNodePoolsAvailabilityZones({
 }) {
   // Input or buttons?
   const [isLabels, setIsLabels] = useState(false);
+  useEffect(() => {
+    updateIsLabelsInParent(isLabels);
+  }, [isLabels]);
+
   const [AZPicker, setAZPicker] = useState({
     value: 1,
     valid: true,
   });
+  useEffect(() => {
+    updateAZValuesInParent(AZPicker);
+  }, [AZPicker]);
+
   const [AZLabels, setAZLabels] = useState({
     number: 0,
     zonesString: '', // TODO (check if) the endpoint will be expecting a string of letters separated by a blank space
     zonesArray: [],
     valid: false,
   });
+  useEffect(() => {
+    updateAZValuesInParent(AZLabels);
+  }, [AZLabels]);
 
   // Custom functions.
   const toggle = () => setIsLabels(isLabels => !isLabels);
 
+  // Function passed to child Number Picker component to allow it to update state here
   const updateAZPicker = payload => {
     setAZPicker(payload);
   };
 
+  // Function passed to child AZLabels component to allow it to update state here
   const updateAZLabels = (checked, payload) => {
-    // If checked, we will add the new AZ to state else we will remove it.
+    // If checked, we will add the new AZ to state, else we will remove it.
     const zonesArray = checked
       ? [...AZLabels.zonesArray, payload.title]
       : AZLabels.zonesArray.filter(az => az !== payload.title);
@@ -84,19 +97,6 @@ export default function AddNodePoolsAvailabilityZones({
       valid: zonesArray.length > 0 ? true : false,
     });
   };
-
-  // Side effects.
-  useEffect(() => {
-    updateIsLabelsInParent(isLabels);
-  }, [isLabels]);
-
-  useEffect(() => {
-    updateAZValuesInParent(AZPicker);
-  }, [AZPicker]);
-
-  useEffect(() => {
-    updateAZValuesInParent(AZLabels);
-  }, [AZLabels]);
 
   if (isLabels) {
     return (
