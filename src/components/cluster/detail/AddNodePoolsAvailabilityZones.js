@@ -42,6 +42,18 @@ const FlexColumnDiv = styled.div`
   ${Emphasized};
 `;
 
+const initialStatePicker = {
+  value: 1,
+  valid: true,
+};
+
+const initialStateLabels = {
+  number: 0,
+  zonesString: '',
+  zonesArray: [],
+  valid: false,
+};
+
 export default function AddNodePoolsAvailabilityZones({
   max,
   min,
@@ -56,26 +68,23 @@ export default function AddNodePoolsAvailabilityZones({
   }, [isLabels]);
 
   // Picker
-  const [AZPicker, setAZPicker] = useState({
-    value: 1,
-    valid: true,
-  });
+  const [AZPicker, setAZPicker] = useState(initialStatePicker);
   useEffect(() => {
     if (isLabels) return;
 
+    // Reset Labels
+    // TODO We could save state instead.
+    setAZLabels(initialStateLabels);
     updateAZValuesInParent(AZPicker);
   }, [AZPicker]);
 
   // AZ labels
-  const [AZLabels, setAZLabels] = useState({
-    number: 0,
-    zonesString: '', // TODO (check if) the endpoint will be expecting a string of letters separated by a blank space
-    zonesArray: [],
-    valid: false,
-  });
+  const [AZLabels, setAZLabels] = useState();
   useEffect(() => {
     if (!isLabels) return;
 
+    // Reset picker
+    setAZPicker(initialStatePicker);
     updateAZValuesInParent(AZLabels);
   }, [AZLabels]);
 
@@ -112,13 +121,12 @@ export default function AddNodePoolsAvailabilityZones({
             onToggleChecked={updateAZLabels}
           />
         </FlexWrapperDiv>
-        <p>Please select at least one.</p>
+        {AZLabels.zonesArray.length < 1 && <p>Please select at least one.</p>}
         <p className='emphasized'>
           <span onClick={toggle} alt='Switch to random selection'>
             Switch to random selection
           </span>
         </p>
-        {/* {true && <p>Please select at least one.</p>} */}
       </FlexColumnDiv>
     );
   }
