@@ -68,9 +68,11 @@ class NodePool extends Component {
     return (
       <>
         <Code data-testid='node-pool-id'>{id}</Code>
+        {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
         <div
           style={{
             paddingLeft: '8px',
+            justifyContent: 'left',
             gridColumn: isNameBeingEdited ? '2 / 9' : null,
           }}
         >
@@ -106,7 +108,9 @@ class NodePool extends Component {
             >
               {current}
             </NodesWrapper>
+            {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
             <NodePoolDropdownMenu
+              style={{ justifySelf: 'right' }}
               clusterId={clusterId}
               nodePool={nodePool}
               nodePoolDelete={this.props.nodePoolActions.nodePoolDelete}

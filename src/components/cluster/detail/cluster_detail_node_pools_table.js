@@ -44,12 +44,6 @@ const GridRowNodePoolsBase = css`
   justify-content: space-between;
   place-items: center center;
   padding-right: 7px;
-  > *:nth-child(2) {
-    justify-self: left;
-  }
-  > *:nth-child(9) {
-    justify-self: right;
-  }
 `;
 
 const GridRowNodePoolsNodes = styled.div`

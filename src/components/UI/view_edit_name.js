@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { truncate } from 'lib/helpers';
 import Button from './button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
@@ -59,7 +60,7 @@ class ViewAndEditName extends React.Component {
   state = {
     // editing is true while the widget is in edit mode.
     editing: false,
-    // name is a copy of the actual entity name
+    // name is a copy of the actual entity name and the value rendered
     name: this.props.entity.name,
     // inputFieldValue is what the input field currently holds
     inputFieldValue: this.props.entity.name,
@@ -67,10 +68,16 @@ class ViewAndEditName extends React.Component {
 
   nameInputRef = React.createRef();
 
+  componentDidMount() {
+    if (this.props.entityType === 'node pool') {
+      const name = truncate(this.props.entity.name, 14);
+      this.setState({ name });
+    }
+  }
+
   activateEditMode = () => {
     this.setState({
       editing: true,
-      inputFieldValue: this.state.name,
     });
 
     const { toggleEditingState } = this.props;
@@ -80,8 +87,6 @@ class ViewAndEditName extends React.Component {
   deactivateEditMode = () => {
     this.setState({
       editing: false,
-      // revert input
-      inputFieldValue: this.state.name,
     });
 
     const { toggleEditingState } = this.props;
@@ -112,7 +117,10 @@ class ViewAndEditName extends React.Component {
       .then(() => {
         this.setState({
           editing: false,
-          name: inputFieldValue,
+          name:
+            this.props.entityType === 'node pool'
+              ? truncate(inputFieldValue, 14)
+              : inputFieldValue,
         });
 
         const { toggleEditingState } = this.props;

@@ -108,6 +108,12 @@ const IncrementDecrementButtonCSS = css`
     background-color: #3b5f7b;
     color: #aaa;
   }
+  &.disabled,
+  &.disabled:hover,
+  &.disabled:active {
+    background-color: #567;
+    color: #eee;
+  }
 `;
 
 const IncrementButton = styled.div`
@@ -154,19 +160,19 @@ class NumberPicker extends React.Component {
     const desiredValue = e.target.value;
 
     // Validate.
-    let { value, valid, validationError } = this.validateInput(desiredValue);
+    let { value, validationError } = this.validateInput(desiredValue);
 
-    // Ensure values are never above max or below min.
+    // Ensure values are never above max or below min. They can be null.
     const { max, min } = this.props;
-    value = value < min ? min - 1 : value > max ? max + 1 : value;
+    value = value === null ? '' : value < min ? min : value > max ? max : value;
 
     // Update state.
     this.setState(
       {
         inputValue: value,
-        value: value,
-        valid: valid,
-        validationError: validationError,
+        value,
+        valid: value ? true : false,
+        validationError,
       },
       () => {
         // Notify Parent.
@@ -183,32 +189,27 @@ class NumberPicker extends React.Component {
   validateInput = desiredValue => {
     if (desiredValue === '') {
       return {
-        value: 0,
-        valid: false,
+        value: null,
         validationError: 'Field must not be empty',
       };
     } else if (desiredValue > this.props.max) {
       return {
         value: parseInt(desiredValue),
-        valid: false,
         validationError: 'Value must not be larger than ' + this.props.max,
       };
     } else if (desiredValue < this.props.min) {
       return {
         value: parseInt(desiredValue),
-        valid: false,
         validationError: 'Value must not be smaller than ' + this.props.min,
       };
     } else if (!isWholeNumber(parseFloat(desiredValue))) {
       return {
         value: parseInt(desiredValue),
-        valid: false,
         validationError: 'Value must be a whole number',
       };
     } else {
       return {
         value: parseInt(desiredValue),
-        valid: true,
         validationError: '',
       };
     }
@@ -231,7 +232,12 @@ class NumberPicker extends React.Component {
           {this.props.readOnly ? (
             undefined
           ) : (
-            <DecrementButton onClick={this.decrement}>&ndash;</DecrementButton>
+            <DecrementButton
+              className={this.state.inputValue === this.props.min && 'disabled'}
+              onClick={this.decrement}
+            >
+              &ndash;
+            </DecrementButton>
           )}
           <ValueSpan>
             <input
@@ -250,7 +256,12 @@ class NumberPicker extends React.Component {
           {this.props.readOnly ? (
             undefined
           ) : (
-            <IncrementButton onClick={this.increment}>+</IncrementButton>
+            <IncrementButton
+              className={this.props.value === this.props.max && 'disabled'}
+              onClick={this.increment}
+            >
+              +
+            </IncrementButton>
           )}
         </Control>
         <ValidationErrorMessage message={this.state.validationError} />
@@ -262,10 +273,10 @@ class NumberPicker extends React.Component {
 NumberPicker.propTypes = {
   unit: PropTypes.string,
   label: PropTypes.string,
-  value: PropTypes.number,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   stepSize: PropTypes.number,
-  min: PropTypes.number,
-  max: PropTypes.number,
+  min: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  max: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
   theme: PropTypes.string,
