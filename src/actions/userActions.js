@@ -235,6 +235,7 @@ export function getInfo() {
     return infoApi
       .getInfo()
       .then(info => {
+        console.log(info);
         dispatch({
           type: types.INFO_LOAD_SUCCESS,
           info: info,

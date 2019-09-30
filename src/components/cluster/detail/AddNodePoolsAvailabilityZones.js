@@ -23,9 +23,6 @@ const FlexWrapperDiv = styled.div`
   justify-content: flex-start;
   align-items: center;
   ${Emphasized};
-  p:first-child {
-    margin: 19px 0 0;
-  }
 `;
 
 const FlexColumnDiv = styled.div`
@@ -144,7 +141,7 @@ export default function AddNodePoolsAvailabilityZones({
         </p>
       </FlexWrapperDiv>
       <FlexWrapperDiv>
-        <p>
+        <p style={{ margin: '19px 0 0' }}>
           {AZPicker.value < 2
             ? `Covering one availability zone, the worker nodes of this node pool
                will be placed in the same availability zones as the

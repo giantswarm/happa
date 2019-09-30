@@ -50,12 +50,20 @@ const Wrapper = styled.abbr`
     background-color: #567;
     color: #eee;
   }
+  &.pointer {
+    cursor: pointer !important; /* It is a pain to override bootstrap styles. */
+  }
 `;
 
 // onToggleChecked and *everything* before the return is just for node pool creation form.
 function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
   const [checked, setChecked] = useState(false);
   const firstUpdate = useRef(true);
+
+  const classNames = `${
+    onToggleChecked && !checked ? `not-checked ${letter}` : letter
+    /* If this has onToggleChecked prop it means that it is clickable and hence we don't want a "?" as cursor */
+  } ${onToggleChecked && 'pointer'}`;
 
   const toggleChecked = () => {
     setChecked(state => !state);
@@ -75,7 +83,7 @@ function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
 
   return (
     <Wrapper
-      className={onToggleChecked && !checked ? `not-checked ${letter}` : letter}
+      className={classNames}
       title={title}
       onClick={onToggleChecked ? toggleChecked : null}
     >
