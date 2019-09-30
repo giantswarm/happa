@@ -254,7 +254,9 @@ class ClusterDetailNodePoolsTable extends React.Component {
           </GridRowNodePoolsNodes>
           <GridRowNodePoolsHeaders>
             <span>ID</span>
-            <span style={{ paddingLeft: '8px' }}>NAME</span>
+            <span style={{ paddingLeft: '12px', justifySelf: 'left' }}>
+              NAME
+            </span>
             <span>INSTANCE TYPE</span>
             <span>AVAILABILITY ZONES</span>
             <span>MIN</span>
