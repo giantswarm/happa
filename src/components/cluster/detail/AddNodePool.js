@@ -151,7 +151,7 @@ class AddNodePool extends Component {
       maxValid: true,
     },
     submitting: false,
-    valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
+    valid: false,
     error: false,
     aws: {
       instanceType: {
@@ -232,6 +232,7 @@ class AddNodePool extends Component {
       name,
     } = this.state;
 
+    // Should we check the validity of the release somewhere?
     if (
       scaling.minValid &&
       scaling.maxValid &&
