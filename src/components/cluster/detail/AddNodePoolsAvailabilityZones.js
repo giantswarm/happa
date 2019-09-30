@@ -67,7 +67,7 @@ export default function AddNodePoolsAvailabilityZones({
     updateIsLabelsInParent(isLabels);
   }, [isLabels]);
 
-  // Picker
+  // Picker.
   const [AZPicker, setAZPicker] = useState(initialStatePicker);
   useEffect(() => {
     if (isLabels) return;
@@ -78,7 +78,7 @@ export default function AddNodePoolsAvailabilityZones({
     updateAZValuesInParent(AZPicker);
   }, [AZPicker]);
 
-  // AZ labels
+  // Labels.
   const [AZLabels, setAZLabels] = useState();
   useEffect(() => {
     if (!isLabels) return;
