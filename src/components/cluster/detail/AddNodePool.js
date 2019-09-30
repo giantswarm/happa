@@ -137,7 +137,8 @@ class AddNodePool extends Component {
     },
     availabilityZonesLabels: {
       number: 0,
-      zones: '',
+      zonesString: '',
+      zonesArray: [],
       valid: false,
     },
     availabilityZonesIsLabels: false,
@@ -205,7 +206,6 @@ class AddNodePool extends Component {
     this.setState({ availabilityZonesIsLabels });
 
   updateAvailabilityZones = payload => {
-    console.log(payload);
     if (this.state.availabilityZonesIsLabels) {
       this.setState({ availabilityZonesLabels: payload });
     } else {
@@ -223,34 +223,39 @@ class AddNodePool extends Component {
   isValid() {
     // Not checking release version as we would be checking it before accessing this form
     // and sending user too the v4 form if NPs aren't supported
-    const { availabilityZonesPicker, scaling, aws, name } = this.state;
+    const {
+      availabilityZonesPicker,
+      availabilityZonesLabels,
+      availabilityZonesIsLabels,
+      scaling,
+      aws,
+      name,
+    } = this.state;
 
     if (
-      // TODO HERE
-      //  1. check labels of pickes is valid
-      //  2. send labels or piocker data depending of value in isLabels
-
-      // !availabilityZonesPicker.valid ||
-      !scaling.minValid ||
-      !scaling.maxValid ||
-      !aws.instanceType.valid ||
-      !name.valid
+      scaling.minValid &&
+      scaling.maxValid &&
+      aws.instanceType.valid &&
+      name.valid &&
+      ((availabilityZonesIsLabels && availabilityZonesLabels.valid) ||
+        (!availabilityZonesIsLabels && availabilityZonesPicker.valid))
     ) {
-      return false;
+      return true;
     }
 
-    return true;
+    return false;
   }
 
   createNodePool = () => {
-    this.setState({
-      submitting: true,
-    });
+    this.setState({ submitting: true });
 
     this.props
       .dispatch(
         nodePoolCreate(this.props.clusterId, {
-          availabilityZones: this.state.availabilityZonesPicker.value,
+          // TODO Is the endpoint expecting to receive either a string or a number??
+          availabilityZones: this.state.availabilityZonesIsLabels
+            ? this.state.availabilityZonesLabels.zonesString
+            : this.state.availabilityZonesPicker.value,
           scaling: {
             min: this.state.scaling.min,
             max: this.state.scaling.max,
@@ -347,6 +352,7 @@ class AddNodePool extends Component {
             <AddNodePoolsAvailabilityZones
               max={this.props.maxAvailabilityZones}
               min={this.props.minAvailabilityZones}
+              zones={this.props.availabilityZones}
               updateAZValuesInParent={this.updateAvailabilityZones}
               updateIsLabelsInParent={this.updateAvailabilityZonesIsLabels}
             />
@@ -392,6 +398,7 @@ class AddNodePool extends Component {
 AddNodePool.propTypes = {
   maxAvailabilityZones: PropTypes.number,
   minAvailabilityZones: PropTypes.number,
+  availabilityZones: PropTypes.array,
   allowedInstanceTypes: PropTypes.array,
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,
@@ -409,6 +416,7 @@ AddNodePool.propTypes = {
 function mapStateToProps(state) {
   let minAvailabilityZones = state.app.info.general.availability_zones.default;
   let maxAvailabilityZones = state.app.info.general.availability_zones.max;
+  let availabilityZones = state.app.info.general.availability_zones.zones;
   let selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
   let clusterCreationStats = state.app.info.stats.cluster_creation_duration;
@@ -433,6 +441,7 @@ function mapStateToProps(state) {
   return {
     minAvailabilityZones,
     maxAvailabilityZones,
+    availabilityZones,
     allowedInstanceTypes,
     provider,
     defaultInstanceType,

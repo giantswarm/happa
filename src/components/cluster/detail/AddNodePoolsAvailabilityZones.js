@@ -47,6 +47,7 @@ export default function AddNodePoolsAvailabilityZones({
   min,
   updateAZValuesInParent,
   updateIsLabelsInParent,
+  zones,
 }) {
   // Input or buttons?
   const [isLabels, setIsLabels] = useState(false);
@@ -54,14 +55,18 @@ export default function AddNodePoolsAvailabilityZones({
     updateIsLabelsInParent(isLabels);
   }, [isLabels]);
 
+  // Picker
   const [AZPicker, setAZPicker] = useState({
     value: 1,
     valid: true,
   });
   useEffect(() => {
+    if (isLabels) return;
+
     updateAZValuesInParent(AZPicker);
   }, [AZPicker]);
 
+  // AZ labels
   const [AZLabels, setAZLabels] = useState({
     number: 0,
     zonesString: '', // TODO (check if) the endpoint will be expecting a string of letters separated by a blank space
@@ -69,6 +74,8 @@ export default function AddNodePoolsAvailabilityZones({
     valid: false,
   });
   useEffect(() => {
+    if (!isLabels) return;
+
     updateAZValuesInParent(AZLabels);
   }, [AZLabels]);
 
@@ -101,12 +108,7 @@ export default function AddNodePoolsAvailabilityZones({
         <p>You can select up to {max} availability zones to make use of.</p>
         <FlexWrapperDiv>
           <AvailabilityZonesLabels
-            zones={[
-              'europe-west-1a',
-              'europe-west-1b',
-              'europe-west-1c',
-              'europe-west-1d',
-            ]}
+            zones={zones}
             onToggleChecked={updateAZLabels}
           />
         </FlexWrapperDiv>
@@ -156,6 +158,7 @@ export default function AddNodePoolsAvailabilityZones({
 AddNodePoolsAvailabilityZones.propTypes = {
   max: PropTypes.number,
   min: PropTypes.number,
+  zones: PropTypes.array,
   value: PropTypes.number,
   updateAZValuesInParent: PropTypes.func,
   updateIsLabelsInParent: PropTypes.func,

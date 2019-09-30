@@ -58,6 +58,9 @@ const Wrapper = styled.abbr`
 // onToggleChecked and *everything* before the return is just for node pool creation form.
 function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
   const [checked, setChecked] = useState(false);
+
+  // Hack for not triggering useEffect on first updates.
+  // TODO find a less hacky way of doing this.
   const firstUpdate = useRef(true);
 
   const classNames = `${
