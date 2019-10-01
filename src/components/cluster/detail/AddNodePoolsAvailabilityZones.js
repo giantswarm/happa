@@ -23,6 +23,10 @@ const FlexWrapperDiv = styled.div`
   justify-content: flex-start;
   align-items: center;
   ${Emphasized};
+  .danger {
+    margin: 0 0 0 15px;
+    color: ${props => props.theme.colors.error};
+  }
 `;
 
 const FlexColumnDiv = styled.div`
@@ -114,7 +118,7 @@ export default function AddNodePoolsAvailabilityZones({
       number: zonesArray.length,
       zonesString: zonesArray.map(zone => zone.slice(-1)).join(' '),
       zonesArray,
-      valid: zonesArray.length > 0 ? true : false,
+      valid: zonesArray.length > 0 && zonesArray.length <= max ? true : false,
     });
   };
 
@@ -127,8 +131,17 @@ export default function AddNodePoolsAvailabilityZones({
             zones={zones}
             onToggleChecked={updateAZLabels}
           />
+          {AZLabels.zonesArray.length < 1 && (
+            <p className='danger'>Please select at least one.</p>
+          )}
+          {AZLabels.zonesArray.length > max && (
+            <p className='danger'>
+              You can select up to {max} availability zones. Please uncheck{' '}
+              {AZLabels.zonesArray.length - max} label
+              {AZLabels.zonesArray.length - max > 1 && 's'}
+            </p>
+          )}
         </FlexWrapperDiv>
-        {AZLabels.zonesArray.length < 1 && <p>Please select at least one.</p>}
         <p className='emphasized'>
           <span onClick={toggle} alt='Switch to random selection'>
             Switch to random selection

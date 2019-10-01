@@ -123,6 +123,12 @@ const FlexColumnDiv = styled.div`
   }
 `;
 
+// TODO Put this in a config file after moving it from index.html
+const availabilityZonesLimits = {
+  min: 1,
+  max: 4,
+};
+
 class AddNodePool extends Component {
   state = {
     isNameBeingEdited: false,
@@ -147,7 +153,7 @@ class AddNodePool extends Component {
       automatic: false,
       min: 3,
       minValid: true,
-      max: 3,
+      max: 10,
       maxValid: true,
     },
     submitting: false,
@@ -351,8 +357,8 @@ class AddNodePool extends Component {
           <label className='availability-zones' htmlFor='availability-zones'>
             <span className='label-span'>Availability Zones</span>
             <AddNodePoolsAvailabilityZones
-              max={this.props.maxAvailabilityZones}
-              min={this.props.minAvailabilityZones}
+              min={availabilityZonesLimits.min}
+              max={availabilityZonesLimits.max}
               zones={this.props.availabilityZones}
               updateAZValuesInParent={this.updateAvailabilityZones}
               updateIsLabelsInParent={this.updateAvailabilityZonesIsLabels}
@@ -397,8 +403,6 @@ class AddNodePool extends Component {
 }
 
 AddNodePool.propTypes = {
-  maxAvailabilityZones: PropTypes.number,
-  minAvailabilityZones: PropTypes.number,
   availabilityZones: PropTypes.array,
   allowedInstanceTypes: PropTypes.array,
   selectedOrganization: PropTypes.string,
@@ -415,8 +419,6 @@ AddNodePool.propTypes = {
 };
 
 function mapStateToProps(state) {
-  let minAvailabilityZones = state.app.info.general.availability_zones.default;
-  let maxAvailabilityZones = state.app.info.general.availability_zones.max;
   let availabilityZones = state.app.info.general.availability_zones.zones;
   let selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
@@ -440,8 +442,6 @@ function mapStateToProps(state) {
     provider === 'aws' ? state.app.info.workers.instance_type.options : [];
 
   return {
-    minAvailabilityZones,
-    maxAvailabilityZones,
     availabilityZones,
     allowedInstanceTypes,
     provider,
