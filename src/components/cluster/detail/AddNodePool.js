@@ -123,12 +123,6 @@ const FlexColumnDiv = styled.div`
   }
 `;
 
-// TODO Put this in a config file after moving it from index.html
-const availabilityZonesLimits = {
-  min: 1,
-  max: 4,
-};
-
 class AddNodePool extends Component {
   state = {
     isNameBeingEdited: false,
@@ -357,8 +351,8 @@ class AddNodePool extends Component {
           <label className='availability-zones' htmlFor='availability-zones'>
             <span className='label-span'>Availability Zones</span>
             <AddNodePoolsAvailabilityZones
-              min={availabilityZonesLimits.min}
-              max={availabilityZonesLimits.max}
+              min={window.config.availabilityZonesLimits.min}
+              max={window.config.availabilityZonesLimits.max}
               zones={this.props.availabilityZones}
               updateAZValuesInParent={this.updateAvailabilityZones}
               updateIsLabelsInParent={this.updateAvailabilityZonesIsLabels}
