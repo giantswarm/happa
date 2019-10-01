@@ -71,7 +71,7 @@ class NodePool extends Component {
         {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
         <div
           style={{
-            paddingLeft: '5px',
+            paddingLeft: '8px',
             justifySelf: 'left',
             gridColumn: isNameBeingEdited ? '2 / 9' : null,
           }}
