@@ -136,9 +136,8 @@ export default function AddNodePoolsAvailabilityZones({
           )}
           {AZLabels.zonesArray.length > max && (
             <p className='danger'>
-              You can select up to {max} availability zones. Please uncheck{' '}
-              {AZLabels.zonesArray.length - max} label
-              {AZLabels.zonesArray.length - max > 1 && 's'}
+              {max} is the maximum you can have. Please uncheck at least{' '}
+              {AZLabels.zonesArray.length - max} of them.
             </p>
           )}
         </FlexWrapperDiv>
