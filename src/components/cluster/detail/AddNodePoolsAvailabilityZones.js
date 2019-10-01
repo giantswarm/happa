@@ -24,6 +24,7 @@ const FlexWrapperDiv = styled.div`
   align-items: center;
   ${Emphasized};
   .danger {
+    font-weight: 400;
     margin: 0 0 0 15px;
     color: ${props => props.theme.colors.error};
   }
