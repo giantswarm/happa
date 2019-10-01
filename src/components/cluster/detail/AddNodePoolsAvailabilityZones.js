@@ -54,6 +54,13 @@ const initialStateLabels = {
   valid: false,
 };
 
+/**
+ * This component takes values from AvailabilityZonesLabel via AvailabilityZonesLabel
+ * and acts as a buffer so to speak. This is, it takes data from individual labels and
+ * aggregates this data to a state object to be passed to the AddNodePool component.
+ *
+ */
+
 export default function AddNodePoolsAvailabilityZones({
   max,
   min,
