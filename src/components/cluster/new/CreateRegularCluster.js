@@ -15,7 +15,7 @@ import ProviderCredentials from './provider_credentials';
 import React from 'react';
 import ReleaseSelector from './release_selector';
 
-class CreateCluster extends React.Component {
+class CreateRegularCluster extends React.Component {
   state = {
     availabilityZonesPicker: {
       value: 1,
@@ -196,6 +196,7 @@ class CreateCluster extends React.Component {
     this.setState({
       releaseVersion,
     });
+    this.props.informParent(releaseVersion);
   };
 
   errorState() {
@@ -371,7 +372,7 @@ class CreateCluster extends React.Component {
                 <h3 className='table-label'>Release Version</h3>
               </div>
               <div className='col-9'>
-                <ReleaseSelector releaseSelected={this.selectRelease} />
+                <ReleaseSelector selectRelease={this.selectRelease} />
               </div>
             </div>
 
@@ -554,7 +555,7 @@ class CreateCluster extends React.Component {
   }
 }
 
-CreateCluster.propTypes = {
+CreateRegularCluster.propTypes = {
   minAvailabilityZones: PropTypes.number,
   maxAvailabilityZones: PropTypes.number,
   allowedInstanceTypes: PropTypes.array,
@@ -569,6 +570,7 @@ CreateCluster.propTypes = {
   defaultDiskSize: PropTypes.number,
   match: PropTypes.object,
   clusterCreationStats: PropTypes.object,
+  informParent: PropTypes.func,
 };
 
 function mapStateToProps(state) {
@@ -637,4 +639,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreateCluster);
+)(CreateRegularCluster);
