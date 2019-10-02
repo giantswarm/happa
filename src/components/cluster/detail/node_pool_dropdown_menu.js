@@ -24,14 +24,23 @@ const NodePoolDropdownMenu = props => (
         {isOpen && (
           <ul aria-labelledby='node_pools_dropdown' role='menu'>
             <li>
-              <a href='#' onClick={props.triggerEditName}>
+              <a
+                href='#'
+                onClick={e => {
+                  e.preventDefault();
+                  props.triggerEditName;
+                }}
+              >
                 Rename
               </a>
             </li>
             <li>
               <a
                 href='#'
-                onClick={() => props.showNodePoolScalingModal(props.nodePool)}
+                onClick={e => {
+                  e.preventDefault();
+                  props.showNodePoolScalingModal(props.nodePool);
+                }}
               >
                 Edit scaling limits
               </a>
@@ -39,9 +48,10 @@ const NodePoolDropdownMenu = props => (
             <li>
               <a
                 href='#'
-                onClick={() =>
-                  props.nodePoolDelete(props.clusterId, props.nodePool)
-                }
+                onClick={e => {
+                  e.preventDefault();
+                  props.nodePoolDelete(props.clusterId, props.nodePool);
+                }}
               >
                 Delete
               </a>

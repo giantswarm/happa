@@ -13,7 +13,7 @@ import NumberPicker from 'UI/number_picker';
 import PropTypes from 'prop-types';
 import ProviderCredentials from './provider_credentials';
 import React from 'react';
-import ReleaseSelector from './release_selector';
+import ReleaseSelector from './ReleaseSelector';
 
 class CreateRegularCluster extends React.Component {
   state = {

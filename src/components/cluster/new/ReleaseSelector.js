@@ -9,6 +9,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReleaseComponentLabel from 'UI/release_component_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
+import styled from '@emotion/styled';
+
+const FlexRowDiv = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  div:nth-of-type(2) {
+    padding-left: 15px;
+  }
+`;
 
 class ReleaseSelector extends React.Component {
   state = {
@@ -137,7 +146,7 @@ class ReleaseSelector extends React.Component {
       );
 
       return (
-        <div>
+        <FlexRowDiv>
           <p>{this.state.selectedRelease}</p>
           <Button onClick={this.openModal}>{this.buttonText()}</Button>
           <br />
@@ -154,7 +163,7 @@ class ReleaseSelector extends React.Component {
           ) : (
             undefined
           )}
-        </div>
+        </FlexRowDiv>
       );
     } else {
       return (
