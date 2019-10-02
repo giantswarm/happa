@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { hasAppropriateLength } from 'lib/helpers';
 import { nodePoolCreate } from 'actions/nodePoolActions';
 import AddNodePoolsAvailabilityZones from './AddNodePoolsAvailabilityZones';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
@@ -169,20 +170,15 @@ class AddNodePool extends Component {
 
   updateName = event => {
     const name = event.target.value;
-    const exceededMaximumCharacters = name.length > 100;
-    const isValid = exceededMaximumCharacters ? false : true;
-    const message = isValid
-      ? ''
-      : 'Name must not contain more than 100 characters';
+    const [isValid, message] = hasAppropriateLength(name, 4, 100);
 
     // We don't let the user write more characters if the name exceeds the max number allowed
-    if (exceededMaximumCharacters) {
+    if (!isValid) {
       this.setState(
         produce(draft => {
           draft.name.validationError = message;
         })
       );
-      return;
     }
 
     this.setState(

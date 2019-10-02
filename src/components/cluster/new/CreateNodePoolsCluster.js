@@ -1,11 +1,9 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { hasAppropriateLength } from 'lib/helpers';
 import { nodePoolCreate } from 'actions/nodePoolActions';
-// import AddNodePoolsAvailabilityZones from '../detail/AddNodePoolsAvailabilityZones';
-// import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
 import Button from 'UI/button';
 import DocumentTitle from 'react-document-title';
-// import NodeCountSelector from 'shared/node_count_selector';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -18,26 +16,6 @@ const WrapperDiv = styled.div`
     padding-bottom: 45px;
     border-bottom: 1px solid #3a5f7b;
     margin-bottom: 25px;
-  }
-`;
-
-const FlexWrapperDiv = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 13px;
-  & > div:nth-of-type(2) > button {
-    padding-top: 9px;
-    padding-bottom: 9px;
-  }
-  button {
-    margin-right: 16px;
-  }
-  .availability-zones & {
-    margin-bottom: 22px;
-  }
-  p {
-    margin-left: 15px;
   }
 `;
 
@@ -86,104 +64,53 @@ const FlexColumnDiv = styled.div`
     font-size: 14px;
     color: ${props => props.theme.colors.white1};
   }
-  a {
-    text-decoration: underline;
-  }
-  /* Name input */
+  /* Make room for name validating message */
   .name-container {
-    position: relative;
-    margin-bottom: 23px;
+    margin-bottom: 21px;
   }
   input[id='name'] {
     margin-bottom: 0;
   }
-  /* Overrides for AWSInstanceTypeSelector */
-  .textfield label,
-  .textfield,
-  .textfield input {
-    margin: 0;
-  }
-  /* Overrides for NumberPicker */
-  .availability-zones {
-    & > div > div,
-    & > div > div > div {
-      margin: 0;
-    }
-  }
-  .scaling-range {
-    form {
-      label {
-        margin-bottom: 7px;
-        color: ${props => props.theme.colors.white1};
-        font-weight: 400;
-      }
-      & > div:nth-of-type(2) {
-        display: none;
-      }
+`;
+
+const FlexRowDiv = styled.div`
+  display: flex;
+`;
+
+const RadioGroupDiv = styled.div`
+  div {
+    display: flex;
+    justify-content: flex-start;
+    input {
+      max-width: 30px;
     }
   }
 `;
 
 class CreateNodePoolsCluster extends Component {
   state = {
-    isNameBeingEdited: false,
     name: {
       value: 'Unnamed Cluster',
       valid: true,
       validationError: '',
     },
-    availabilityZonesPicker: {
-      value: 1,
-      valid: true,
-    },
-    availabilityZonesLabels: {
-      number: 0,
-      zonesString: '',
-      zonesArray: [],
-      valid: false,
-    },
-    availabilityZonesIsLabels: false,
     releaseVersion: '',
-    scaling: {
-      automatic: false,
-      min: 3,
-      minValid: true,
-      max: 10,
-      maxValid: true,
-    },
     submitting: false,
     valid: false,
     error: false,
-    aws: {
-      instanceType: {
-        valid: true,
-        value: this.props.defaultInstanceType,
-      },
-    },
-    awsInstanceTypes: {},
   };
-
-  componentDidMount() {
-    const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
-    this.setState({ awsInstanceTypes });
-  }
 
   updateName = event => {
     const name = event.target.value;
-    const exceededMaximumCharacters = name.length > 100;
-    const isValid = exceededMaximumCharacters ? false : true;
-    const message = isValid
-      ? ''
-      : 'Name must not contain more than 100 characters';
+    const [isValid, message] = hasAppropriateLength(name, 4, 100);
 
     // We don't let the user write more characters if the name exceeds the max number allowed
-    if (exceededMaximumCharacters) {
+    if (!isValid) {
       this.setState(
         produce(draft => {
           draft.name.validationError = message;
         })
       );
-      return;
     }
 
     this.setState(
@@ -195,100 +122,41 @@ class CreateNodePoolsCluster extends Component {
     );
   };
 
-  updateAWSInstanceType = payload => {
-    this.setState(
-      produce(draft => {
-        draft.aws.instanceType = payload;
-      })
-    );
-  };
-
-  updateAvailabilityZonesIsLabels = availabilityZonesIsLabels =>
-    this.setState({ availabilityZonesIsLabels });
-
-  updateAvailabilityZones = payload => {
-    if (this.state.availabilityZonesIsLabels) {
-      this.setState({ availabilityZonesLabels: payload });
-    } else {
-      this.setState({ availabilityZonesPicker: payload });
-    }
-  };
-
-  updateScaling = nodeCountSelector => {
-    this.setState({ scaling: nodeCountSelector.scaling });
-  };
-
-  // Always true?
-  isScalingAutomatic = () => true;
-
   isValid() {
     // Not checking release version as we would be checking it before accessing this form
     // and sending user too the v4 form if NPs aren't supported
-    const {
-      availabilityZonesPicker,
-      availabilityZonesLabels,
-      availabilityZonesIsLabels,
-      scaling,
-      aws,
-      name,
-    } = this.state;
+    const { name } = this.state;
 
-    // Should we check the validity of the release somewhere?
-    if (
-      scaling.minValid &&
-      scaling.maxValid &&
-      aws.instanceType.valid &&
-      name.valid &&
-      ((availabilityZonesIsLabels && availabilityZonesLabels.valid) ||
-        (!availabilityZonesIsLabels && availabilityZonesPicker.valid))
-    ) {
-      return true;
-    }
-
+    if (name.valid) return true;
     return false;
   }
 
-  createNodePool = () => {
+  createCluster = () => {
     this.setState({ submitting: true });
 
-    this.props
-      .dispatch(
-        nodePoolCreate(this.props.clusterId, {
-          // TODO Is the endpoint expecting to receive either a string or a number??
-          availabilityZones: this.state.availabilityZonesIsLabels
-            ? this.state.availabilityZonesLabels.zonesString
-            : this.state.availabilityZonesPicker.value,
-          scaling: {
-            min: this.state.scaling.min,
-            max: this.state.scaling.max,
-          },
-          name: this.state.name,
-          nodeSpec: {
-            aws: {
-              instance_type: this.state.aws.instanceType.value,
-            },
-          },
-        })
-      )
-      .then(() => {
-        this.props.closeForm();
-      })
-      .catch(error => {
-        var errorMessage = '';
+    // this.props
+    //   .dispatch(
+    //     nodePoolCreate(this.props.clusterId, {
+    //       name: this.state.name,
+    //     })
+    //   )
+    //   .then(() => {
+    //     this.props.closeForm();
+    //   })
+    //   .catch(error => {
+    //     var errorMessage = '';
 
-        if (error.body && error.body.message) {
-          errorMessage = error.body.message;
-        }
+    //     if (error.body && error.body.message) {
+    //       errorMessage = error.body.message;
+    //     }
 
-        this.setState({
-          submitting: false,
-          error: error,
-          errorMessage: errorMessage,
-        });
-      });
+    //     this.setState({
+    //       submitting: false,
+    //       error: error,
+    //       errorMessage: errorMessage,
+    //     });
+    //   });
   };
-
-  toggleAZ = () => this.setState(state => ({ AZToggle: !state.AZToggle }));
 
   selectRelease = releaseVersion => {
     this.setState({
@@ -309,10 +177,7 @@ class CreateNodePoolsCluster extends Component {
             ' | Giant Swarm'
           }
         >
-          <WrapperDiv
-            // className='new-cluster'
-            data-testid='nodepool-cluster-creation-view'
-          >
+          <WrapperDiv data-testid='nodepool-cluster-creation-view'>
             <div className='row'>
               <div className='col-12'>
                 <h1>Create a Cluster</h1>
@@ -321,6 +186,7 @@ class CreateNodePoolsCluster extends Component {
 
             <WrapperDiv>
               <FlexColumnDiv>
+                {/* Name */}
                 <label htmlFor='name'>
                   <span className='label-span'>Name</span>
                   <div className='name-container'>
@@ -336,12 +202,63 @@ class CreateNodePoolsCluster extends Component {
                   </div>
                   <p>Give your cluster a name to recognize it among others.</p>
                 </label>
-                <label className='instance-type' htmlFor='release-version'>
+                {/* Release */}
+                <label className='release-version' htmlFor='release-version'>
                   <span className='label-span'>Release version</span>
-                  <FlexWrapperDiv>
+                  <div>
                     <ReleaseSelector selectRelease={this.selectRelease} />
-                  </FlexWrapperDiv>
+                  </div>
                 </label>
+                {/* Master Node AZ */}
+
+                <span className='label-span'>
+                  Master node availability zone
+                </span>
+                <RadioGroupDiv>
+                  <div>
+                    <input
+                      type='radio'
+                      id='automatically'
+                      name='master-az'
+                      value='automatically'
+                    />
+                    <label htmlFor='automatically'>Select automatically</label>
+                  </div>
+                  <div>
+                    <input
+                      type='radio'
+                      id='distinct'
+                      name='master-az'
+                      value='distinct'
+                    />
+                    <label htmlFor='distinct'>
+                      Use distinct availability zone
+                    </label>
+                  </div>
+                </RadioGroupDiv>
+
+                <FlexRowDiv>
+                  <Button
+                    bsSize='large'
+                    bsStyle='primary'
+                    disabled={!this.isValid()}
+                    loading={this.state.submitting}
+                    onClick={this.createCluster}
+                    type='button'
+                  >
+                    Create Cluster
+                  </Button>
+                  <Button
+                    bsSize='large'
+                    bsStyle='default'
+                    loading={this.state.submitting}
+                    onClick={this.props.closeForm}
+                    style={{ background: 'red' }}
+                    type='button'
+                  >
+                    Cancel
+                  </Button>
+                </FlexRowDiv>
               </FlexColumnDiv>
             </WrapperDiv>
           </WrapperDiv>
@@ -352,7 +269,6 @@ class CreateNodePoolsCluster extends Component {
 }
 
 CreateNodePoolsCluster.propTypes = {
-  availabilityZones: PropTypes.array,
   allowedInstanceTypes: PropTypes.array,
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,
@@ -369,7 +285,6 @@ CreateNodePoolsCluster.propTypes = {
 };
 
 function mapStateToProps(state) {
-  let availabilityZones = state.app.info.general.availability_zones.zones;
   let selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
   let clusterCreationStats = state.app.info.stats.cluster_creation_duration;
@@ -392,7 +307,6 @@ function mapStateToProps(state) {
     provider === 'aws' ? state.app.info.workers.instance_type.options : [];
 
   return {
-    availabilityZones,
     allowedInstanceTypes,
     provider,
     defaultInstanceType,
