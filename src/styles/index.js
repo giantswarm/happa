@@ -32,7 +32,7 @@ export const Input = props => css`
     outline: 0;
     color: ${props.theme.colors.whiteInput};
     border-radius: 4px;
-    border: 1px solid ${props.theme.colors.shade6};
+    border: ${props.theme.border};
     padding-left: 15px;
     line-height: normal;
   }

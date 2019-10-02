@@ -71,16 +71,52 @@ const RadioGroupDiv = styled.div`
   div {
     display: flex;
     justify-content: flex-start;
+    position: relative;
     label {
       font-size: 14px;
       font-weight: 300;
       margin-bottom: 0;
     }
     input {
-      max-width: 30px;
+      max-width: 28px;
+    }
+  }
+  input[type='radio'] {
+    opacity: 0;
+  }
+  .fake-radio {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    top: 4px;
+    border: ${props => props.theme.border};
+    background: ${props => props.theme.colors.white1};
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    &-checked {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: ${props => props.theme.colors.white1};
+      transition: background-color 0.2s;
+      &.visible {
+        background-color: ${props => props.theme.colors.shade2};
+      }
     }
   }
 `;
+
+// const FakeRadioContainerDiv = styled.div`
+// display: flex;
+
+// `;
+
+const masterAZValues = {
+  automatically: 'automatically',
+  distinct: 'distinct',
+};
 
 class CreateNodePoolsCluster extends Component {
   state = {
@@ -93,6 +129,7 @@ class CreateNodePoolsCluster extends Component {
     submitting: false,
     valid: false,
     error: false,
+    masterAvailabilityZone: masterAZValues.automatically, // or 'distinct'
   };
 
   updateName = event => {
@@ -160,7 +197,13 @@ class CreateNodePoolsCluster extends Component {
     this.props.informParent(releaseVersion);
   };
 
+  updateMasterAvailabilityZones = masterAvailabilityZone => {
+    this.setState({ masterAvailabilityZone });
+  };
+
   render() {
+    const { masterAvailabilityZone } = this.state;
+
     return (
       <Breadcrumb
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
@@ -205,28 +248,71 @@ class CreateNodePoolsCluster extends Component {
                   </div>
                 </label>
                 {/* Master Node AZ */}
-
                 <span className='label-span'>
                   Master node availability zone
                 </span>
-                <RadioGroupDiv>
+                <RadioGroupDiv ref={this.radioGroupRef}>
+                  {/* Automatically */}
                   <div>
+                    <div className='fake-radio'>
+                      <div
+                        className={`fake-radio-checked ${masterAvailabilityZone ===
+                          masterAZValues.automatically && 'visible'}`}
+                      />
+                    </div>
                     <input
                       type='radio'
-                      id='automatically'
-                      name='master-az'
-                      value='automatically'
+                      value={masterAZValues.automatically}
+                      checked={
+                        masterAvailabilityZone === masterAZValues.automatically
+                      }
+                      onChange={() =>
+                        this.updateMasterAvailabilityZones(
+                          masterAZValues.automatically
+                        )
+                      }
+                      tabIndex='0'
                     />
-                    <label htmlFor='automatically'>Select automatically</label>
+                    <label
+                      htmlFor={masterAZValues.automatically}
+                      onClick={() =>
+                        this.updateMasterAvailabilityZones(
+                          masterAZValues.automatically
+                        )
+                      }
+                    >
+                      Select automatically
+                    </label>
                   </div>
+                  {/* Distinct AZ */}
                   <div>
+                    <div className='fake-radio'>
+                      <div
+                        className={`fake-radio-checked ${masterAvailabilityZone ===
+                          masterAZValues.distinct && 'visible'}`}
+                      />
+                    </div>
                     <input
                       type='radio'
-                      id='distinct'
-                      name='master-az'
-                      value='distinct'
+                      value={masterAZValues.distinct}
+                      checked={
+                        masterAvailabilityZone === masterAZValues.distinct
+                      }
+                      tabIndex='0'
+                      onChange={() =>
+                        this.updateMasterAvailabilityZones(
+                          masterAZValues.distinct
+                        )
+                      }
                     />
-                    <label htmlFor='distinct'>
+                    <label
+                      htmlFor={masterAZValues.distinct}
+                      onClick={() =>
+                        this.updateMasterAvailabilityZones(
+                          masterAZValues.distinct
+                        )
+                      }
+                    >
                       Use distinct availability zone
                     </label>
                   </div>
