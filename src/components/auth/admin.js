@@ -30,7 +30,8 @@ class AdminLogin extends React.Component {
             // Redirect to dashboard.
             this.props.dispatch(push('/'));
           })
-          .catch(() => {
+          .catch(e => {
+            console.error(e);
             // Unable to refresh token silently, so send the down the auth0
             // flow.
             auth0.login();
