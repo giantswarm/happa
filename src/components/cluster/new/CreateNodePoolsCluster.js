@@ -339,12 +339,6 @@ class CreateNodePoolsCluster extends Component {
                 <label className='instance-type' htmlFor='release-version'>
                   <span className='label-span'>Release version</span>
                   <FlexWrapperDiv>
-                    {/* <AWSInstanceTypeSelector
-                      allowedInstanceTypes={this.props.allowedInstanceTypes}
-                      onChange={this.updateAWSInstanceType}
-                      readOnly={false}
-                      value={this.state.aws.instanceType.value}
-                    /> */}
                     <ReleaseSelector selectRelease={this.selectRelease} />
                   </FlexWrapperDiv>
                 </label>
