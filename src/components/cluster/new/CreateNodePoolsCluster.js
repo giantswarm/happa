@@ -1,6 +1,7 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { hasAppropriateLength } from 'lib/helpers';
+import { Input } from 'styles/index';
 import { nodePoolCreate } from 'actions/nodePoolActions';
 import Button from 'UI/button';
 import DocumentTitle from 'react-document-title';
@@ -47,18 +48,7 @@ const FlexColumnDiv = styled.div`
     margin-bottom: 13px;
     font-weight: 400;
   }
-  input {
-    box-sizing: border-box;
-    width: 100%;
-    background-color: ${props => props.theme.colors.shade5};
-    padding: 11px 10px;
-    outline: 0;
-    color: ${props => props.theme.colors.whiteInput};
-    border-radius: 4px;
-    border: 1px solid ${props => props.theme.colors.shade6};
-    padding-left: 15px;
-    line-height: normal;
-  }
+  ${Input};
   p {
     margin: 0;
     font-size: 14px;
@@ -81,6 +71,11 @@ const RadioGroupDiv = styled.div`
   div {
     display: flex;
     justify-content: flex-start;
+    label {
+      font-size: 14px;
+      font-weight: 300;
+      margin-bottom: 0;
+    }
     input {
       max-width: 30px;
     }

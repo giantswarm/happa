@@ -23,6 +23,21 @@ export const FlexRowBase = css`
   align-items: center;
 `;
 
+export const Input = props => css`
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: ${props.theme.colors.shade5};
+    padding: 11px 10px;
+    outline: 0;
+    color: ${props.theme.colors.whiteInput};
+    border-radius: 4px;
+    border: 1px solid ${props.theme.colors.shade6};
+    padding-left: 15px;
+    line-height: normal;
+  }
+`;
+
 /***** STYLED ELEMENTS *****/
 
 // Layout
