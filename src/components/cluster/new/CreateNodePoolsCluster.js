@@ -2,7 +2,9 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
-import { nodePoolCreate } from 'actions/nodePoolActions';
+// import { nodePoolCreate } from 'actions/nodePoolActions';
+import AddNodePoolsAvailabilityZones from '../detail/AddNodePoolsAvailabilityZones';
+import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import Button from 'UI/button';
 import DocumentTitle from 'react-document-title';
 import produce from 'immer';
@@ -108,15 +110,30 @@ const RadioGroupDiv = styled.div`
   }
 `;
 
-// const FakeRadioContainerDiv = styled.div`
-// display: flex;
-
-// `;
-
-const masterAZValues = {
-  automatically: 'automatically',
-  distinct: 'distinct',
-};
+// Duplicated styles, also in AddNodePoolsAvailabillityZones.
+const AZWrapperDiv = styled.div`
+  margin-left: 24px;
+  height: 26px;
+  /* duplicated code below */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  .emphasized {
+    font-size: 16px;
+    span {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+  .no-margin {
+    margin-left: 18px;
+  }
+  .danger {
+    font-weight: 400;
+    margin: 0 0 0 15px;
+    color: ${props => props.theme.colors.error};
+  }
+`;
 
 class CreateNodePoolsCluster extends Component {
   state = {
@@ -129,7 +146,19 @@ class CreateNodePoolsCluster extends Component {
     submitting: false,
     valid: false,
     error: false,
-    masterAvailabilityZone: masterAZValues.automatically, // or 'distinct'
+    availabilityZonesIsLabels: false, // false = 'automatically', true = 'distinct'
+    // QUESTION Which value are we going to pass here??
+    // no input field in the wireframes
+    availabilityZonesAutmatically: {
+      value: 1,
+      valid: true,
+    },
+    availabilityZonesLabels: {
+      number: 0,
+      zonesString: '',
+      zonesArray: [],
+      valid: false,
+    },
   };
 
   updateName = event => {
@@ -197,12 +226,24 @@ class CreateNodePoolsCluster extends Component {
     this.props.informParent(releaseVersion);
   };
 
-  updateMasterAvailabilityZones = masterAvailabilityZone => {
-    this.setState({ masterAvailabilityZone });
+  updateAvailabilityZonesIsLabels = availabilityZonesIsLabels => {
+    this.setState({ availabilityZonesIsLabels }, () =>
+      console.log(this.state.availabilityZonesIsLabels)
+    );
+    console.log('hey');
+  };
+
+  updateAvailabilityZones = payload => {
+    if (this.state.availabilityZonesIsLabels) {
+      this.setState({ availabilityZonesLabels: payload });
+    }
+    // else {
+    //   this.setState({ availabilityZonesPicker: payload });
+    // }
   };
 
   render() {
-    const { masterAvailabilityZone } = this.state;
+    const { availabilityZonesIsLabels } = this.state;
 
     return (
       <Breadcrumb
@@ -256,29 +297,24 @@ class CreateNodePoolsCluster extends Component {
                   <div>
                     <div className='fake-radio'>
                       <div
-                        className={`fake-radio-checked ${masterAvailabilityZone ===
-                          masterAZValues.automatically && 'visible'}`}
+                        className={`fake-radio-checked ${availabilityZonesIsLabels ===
+                          false && 'visible'}`}
                       />
                     </div>
                     <input
                       type='radio'
-                      value={masterAZValues.automatically}
-                      checked={
-                        masterAvailabilityZone === masterAZValues.automatically
-                      }
+                      id='automatically'
+                      value={false}
+                      checked={availabilityZonesIsLabels === false}
                       onChange={() =>
-                        this.updateMasterAvailabilityZones(
-                          masterAZValues.automatically
-                        )
+                        this.updateAvailabilityZonesIsLabels(false)
                       }
                       tabIndex='0'
                     />
                     <label
-                      htmlFor={masterAZValues.automatically}
+                      htmlFor='automatically'
                       onClick={() =>
-                        this.updateMasterAvailabilityZones(
-                          masterAZValues.automatically
-                        )
+                        this.updateAvailabilityZonesIsLabels(false)
                       }
                     >
                       Select automatically
@@ -288,35 +324,43 @@ class CreateNodePoolsCluster extends Component {
                   <div>
                     <div className='fake-radio'>
                       <div
-                        className={`fake-radio-checked ${masterAvailabilityZone ===
-                          masterAZValues.distinct && 'visible'}`}
+                        className={`fake-radio-checked ${availabilityZonesIsLabels ===
+                          true && 'visible'}`}
                       />
                     </div>
                     <input
                       type='radio'
-                      value={masterAZValues.distinct}
-                      checked={
-                        masterAvailabilityZone === masterAZValues.distinct
-                      }
+                      id='distinct'
+                      value={true}
+                      checked={availabilityZonesIsLabels === true}
                       tabIndex='0'
                       onChange={() =>
-                        this.updateMasterAvailabilityZones(
-                          masterAZValues.distinct
-                        )
+                        this.updateAvailabilityZonesIsLabels(true)
                       }
                     />
                     <label
-                      htmlFor={masterAZValues.distinct}
-                      onClick={() =>
-                        this.updateMasterAvailabilityZones(
-                          masterAZValues.distinct
-                        )
-                      }
+                      htmlFor='distinct'
+                      onClick={() => this.updateAvailabilityZonesIsLabels(true)}
                     >
                       Use distinct availability zone
                     </label>
                   </div>
                 </RadioGroupDiv>
+                {/* <AZWrapperDiv> */}
+                {availabilityZonesIsLabels === true && (
+                  <AddNodePoolsAvailabilityZones
+                    min={window.config.availabilityZonesLimits.min}
+                    max={window.config.availabilityZonesLimits.max}
+                    zones={this.props.availabilityZones}
+                    updateAZValuesInParent={this.updateAvailabilityZones}
+                    updateIsLabelsInParent={() => {}}
+                  />
+                  // <AvailabilityZonesLabels
+                  //   zones={this.props.availabilityZones}
+                  //   onToggleChecked={() => {}}
+                  // />
+                )}
+                {/* </AZWrapperDiv> */}
 
                 <FlexRowDiv>
                   <Button
@@ -350,6 +394,7 @@ class CreateNodePoolsCluster extends Component {
 }
 
 CreateNodePoolsCluster.propTypes = {
+  availabilityZones: PropTypes.array,
   allowedInstanceTypes: PropTypes.array,
   selectedOrganization: PropTypes.string,
   dispatch: PropTypes.func,
@@ -366,6 +411,7 @@ CreateNodePoolsCluster.propTypes = {
 };
 
 function mapStateToProps(state) {
+  let availabilityZones = state.app.info.general.availability_zones.zones;
   let selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
   let clusterCreationStats = state.app.info.stats.cluster_creation_duration;
@@ -388,6 +434,7 @@ function mapStateToProps(state) {
     provider === 'aws' ? state.app.info.workers.instance_type.options : [];
 
   return {
+    availabilityZones,
     allowedInstanceTypes,
     provider,
     defaultInstanceType,
