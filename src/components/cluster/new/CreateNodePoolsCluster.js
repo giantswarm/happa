@@ -8,7 +8,7 @@ import DocumentTitle from 'react-document-title';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import ReleaseSelector from './release_selector';
+import ReleaseSelector from './ReleaseSelector';
 import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
