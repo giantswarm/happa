@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { css } from '@emotion/core';
 import { nodePoolCreate } from 'actions/nodePoolActions';
 import AddNodePoolsAvailabilityZones from './AddNodePoolsAvailabilityZones';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
@@ -104,6 +105,7 @@ const FlexColumnDiv = styled.div`
   }
   /* Overrides for NumberPicker */
   .availability-zones {
+    margin-bottom: 12px;
     & > div > div,
     & > div > div > div {
       margin: 0;
@@ -123,6 +125,51 @@ const FlexColumnDiv = styled.div`
   }
 `;
 
+// Availability Zones styles
+
+const Emphasized = css`
+  .emphasized {
+    font-size: 16px;
+    span {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+  .no-margin {
+    margin-left: 18px;
+  }
+`;
+
+const FlexWrapperAZDiv = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 2px;
+  ${Emphasized};
+  .danger {
+    font-weight: 400;
+    margin: 0 0 0 15px;
+    color: ${props => props.theme.colors.error};
+  }
+`;
+
+const FlexColumnAZDiv = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  p {
+    font-size: 14px;
+    margin: 0 0 14px 0;
+    &:nth-of-type(2) {
+      margin: 12px 0 25px;
+    }
+  }
+  div {
+    margin-bottom: 20px;
+  }
+  ${Emphasized};
+`;
+
 // TODO Put this in a config file after moving it from index.html
 const availabilityZonesLimits = {
   min: 1,
@@ -131,7 +178,6 @@ const availabilityZonesLimits = {
 
 class AddNodePool extends Component {
   state = {
-    isNameBeingEdited: false,
     name: {
       value: 'My node pool',
       valid: true,
@@ -147,7 +193,8 @@ class AddNodePool extends Component {
       zonesArray: [],
       valid: false,
     },
-    availabilityZonesIsLabels: false,
+    // Labels or Input? Initially set to false, so the input is shown
+    hasAZLabels: false,
     releaseVersion: '',
     scaling: {
       automatic: false,
@@ -169,8 +216,9 @@ class AddNodePool extends Component {
   };
 
   componentDidMount() {
-    const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
-    this.setState({ awsInstanceTypes });
+    this.setState({
+      awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
+    });
   }
 
   updateName = event => {
@@ -208,11 +256,15 @@ class AddNodePool extends Component {
     );
   };
 
-  updateAvailabilityZonesIsLabels = availabilityZonesIsLabels =>
-    this.setState({ availabilityZonesIsLabels });
+  toggleAZSelector = () => {
+    this.setState(state => ({
+      hasAZLabels: !state.hasAZLabels,
+    }));
+  };
 
-  updateAvailabilityZones = payload => {
-    if (this.state.availabilityZonesIsLabels) {
+  updateAZ = payload => {
+    console.log(payload);
+    if (this.state.hasAZLabels) {
       this.setState({ availabilityZonesLabels: payload });
     } else {
       this.setState({ availabilityZonesPicker: payload });
@@ -232,7 +284,7 @@ class AddNodePool extends Component {
     const {
       availabilityZonesPicker,
       availabilityZonesLabels,
-      availabilityZonesIsLabels,
+      hasAZLabels,
       scaling,
       aws,
       name,
@@ -244,8 +296,8 @@ class AddNodePool extends Component {
       scaling.maxValid &&
       aws.instanceType.valid &&
       name.valid &&
-      ((availabilityZonesIsLabels && availabilityZonesLabels.valid) ||
-        (!availabilityZonesIsLabels && availabilityZonesPicker.valid))
+      ((hasAZLabels && availabilityZonesLabels.valid) ||
+        (!hasAZLabels && availabilityZonesPicker.valid))
     ) {
       return true;
     }
@@ -260,14 +312,14 @@ class AddNodePool extends Component {
       .dispatch(
         nodePoolCreate(this.props.clusterId, {
           // TODO Is the endpoint expecting to receive either a string or a number??
-          availabilityZones: this.state.availabilityZonesIsLabels
+          availabilityZones: this.state.hasAZLabels
             ? this.state.availabilityZonesLabels.zonesString
             : this.state.availabilityZonesPicker.value,
           scaling: {
             min: this.state.scaling.min,
             max: this.state.scaling.max,
           },
-          name: this.state.name,
+          name: this.state.name.value,
           nodeSpec: {
             aws: {
               instance_type: this.state.aws.instanceType.value,
@@ -314,10 +366,10 @@ class AddNodePool extends Component {
     return [RAM, CPUCores];
   };
 
-  toggleAZ = () => this.setState(state => ({ AZToggle: !state.AZToggle }));
-
   render() {
     const [RAM, CPUCores] = this.produceRAMAndCores();
+    const { min, max } = availabilityZonesLimits;
+    const { zonesArray } = this.state.availabilityZonesLabels;
 
     return (
       <WrapperDiv>
@@ -356,13 +408,72 @@ class AddNodePool extends Component {
           </label>
           <label className='availability-zones' htmlFor='availability-zones'>
             <span className='label-span'>Availability Zones</span>
-            <AddNodePoolsAvailabilityZones
-              min={availabilityZonesLimits.min}
-              max={availabilityZonesLimits.max}
-              zones={this.props.availabilityZones}
-              updateAZValuesInParent={this.updateAvailabilityZones}
-              updateIsLabelsInParent={this.updateAvailabilityZonesIsLabels}
-            />
+            {this.state.hasAZLabels && (
+              <FlexColumnAZDiv>
+                <p>
+                  You can select up to {max} availability zones to make use of.
+                </p>
+                <FlexWrapperAZDiv>
+                  <AddNodePoolsAvailabilityZones
+                    min={min}
+                    max={max}
+                    zones={this.props.availabilityZones}
+                    updateAZValuesInParent={this.updateAZ}
+                    isLabels={this.state.hasAZLabels}
+                  />
+                  {zonesArray.length < 1 && (
+                    <p className='danger'>Please select at least one.</p>
+                  )}
+                  {zonesArray.length > max && (
+                    <p className='danger'>
+                      {max} is the maximum you can have. Please uncheck at least{' '}
+                      {zonesArray.length - max} of them.
+                    </p>
+                  )}
+                </FlexWrapperAZDiv>
+                <p className='emphasized'>
+                  <span
+                    onClick={this.toggleAZSelector}
+                    alt='Switch to random selection'
+                  >
+                    Switch to random selection
+                  </span>
+                </p>
+              </FlexColumnAZDiv>
+            )}
+            {!this.state.hasAZLabels && (
+              <>
+                <FlexWrapperAZDiv>
+                  <AddNodePoolsAvailabilityZones
+                    min={min}
+                    max={max}
+                    zones={this.props.availabilityZones}
+                    updateAZValuesInParent={this.updateAZ}
+                    isLabels={this.state.hasAZLabels}
+                  />
+                  <p className='emphasized no-margin'>
+                    or{' '}
+                    <span
+                      onClick={this.toggleAZSelector}
+                      alt='Select distinct availability zones'
+                    >
+                      Select distinct availability zones
+                    </span>
+                  </p>
+                </FlexWrapperAZDiv>
+                <FlexWrapperAZDiv>
+                  {/* This is a hack for fixing height for this element and at the same time
+                  control the height of the wrapper so it matches labels wrapper */}
+                  <p style={{ margin: '19px 0 22px', height: '38px' }}>
+                    {this.state.availabilityZonesPicker.value < 2
+                      ? `Covering one availability zone, the worker nodes of this node pool
+               will be placed in the same availability zones as the
+               cluster's master node.`
+                      : `Availability zones will be selected randomly.`}
+                  </p>
+                </FlexWrapperAZDiv>
+              </>
+            )}
           </label>
           <label className='scaling-range' htmlFor='scaling-range'>
             <span className='label-span'>Scaling range</span>

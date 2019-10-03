@@ -1,51 +1,7 @@
-import { css } from '@emotion/core';
 import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import NumberPicker from 'UI/number_picker';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import styled from '@emotion/styled';
-
-export const Emphasized = css`
-  .emphasized {
-    font-size: 16px;
-    span {
-      text-decoration: underline;
-      cursor: pointer;
-    }
-  }
-  .no-margin {
-    margin-left: 18px;
-  }
-`;
-
-const FlexWrapperDiv = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  ${Emphasized};
-  .danger {
-    font-weight: 400;
-    margin: 0 0 0 15px;
-    color: ${props => props.theme.colors.error};
-  }
-`;
-
-const FlexColumnDiv = styled.div`
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-  p {
-    font-size: 14px;
-    margin: 0 0 14px 0;
-    &:nth-of-type(2) {
-      margin: 12px 0 25px;
-    }
-  }
-  div {
-    margin-bottom: 20px;
-  }
-  ${Emphasized};
-`;
 
 const initialStatePicker = {
   value: 1,
@@ -60,7 +16,7 @@ const initialStateLabels = {
 };
 
 /**
- * This component takes values from AvailabilityZonesLabel via AvailabilityZonesLabel
+ * This component takes values from AvailabilityZonesLabel via AvailabilityZonesLabels
  * and acts as a buffer so to speak. This is, it takes data from individual labels and
  * aggregates this data to a state object to be passed to the AddNodePool component.
  *
@@ -70,28 +26,22 @@ export default function AddNodePoolsAvailabilityZones({
   max,
   min,
   updateAZValuesInParent,
-  updateIsLabelsInParent,
   zones,
+  isLabels,
 }) {
-  // Input or buttons?
-  const [isLabels, setIsLabels] = useState(false);
-  useEffect(() => {
-    updateIsLabelsInParent(isLabels);
-  }, [isLabels]);
-
   // Picker.
   const [AZPicker, setAZPicker] = useState(initialStatePicker);
   useEffect(() => {
     if (isLabels) return;
 
     // Reset Labels
-    // TODO We could save state instead.
+    // We could save state instead. I'm just doing this because it's easier.
     setAZLabels(initialStateLabels);
     updateAZValuesInParent(AZPicker);
   }, [AZPicker]);
 
   // Labels.
-  const [AZLabels, setAZLabels] = useState();
+  const [AZLabels, setAZLabels] = useState(initialStateLabels);
   useEffect(() => {
     if (!isLabels) return;
 
@@ -99,9 +49,6 @@ export default function AddNodePoolsAvailabilityZones({
     setAZPicker(initialStatePicker);
     updateAZValuesInParent(AZLabels);
   }, [AZLabels]);
-
-  // Custom functions.
-  const toggle = () => setIsLabels(isLabels => !isLabels);
 
   // Function passed to child Number Picker component to allow it to update state here
   const updateAZPicker = payload => {
@@ -125,61 +72,20 @@ export default function AddNodePoolsAvailabilityZones({
 
   if (isLabels) {
     return (
-      <FlexColumnDiv>
-        <p>You can select up to {max} availability zones to make use of.</p>
-        <FlexWrapperDiv>
-          <AvailabilityZonesLabels
-            zones={zones}
-            onToggleChecked={updateAZLabels}
-          />
-          {AZLabels.zonesArray.length < 1 && (
-            <p className='danger'>Please select at least one.</p>
-          )}
-          {AZLabels.zonesArray.length > max && (
-            <p className='danger'>
-              {max} is the maximum you can have. Please uncheck at least{' '}
-              {AZLabels.zonesArray.length - max} of them.
-            </p>
-          )}
-        </FlexWrapperDiv>
-        <p className='emphasized'>
-          <span onClick={toggle} alt='Switch to random selection'>
-            Switch to random selection
-          </span>
-        </p>
-      </FlexColumnDiv>
+      <AvailabilityZonesLabels zones={zones} onToggleChecked={updateAZLabels} />
     );
   }
 
   return (
-    <>
-      <FlexWrapperDiv>
-        <NumberPicker
-          label=''
-          max={max}
-          min={min}
-          onChange={updateAZPicker}
-          readOnly={false}
-          stepSize={1}
-          value={AZPicker.value}
-        />
-        <p className='emphasized no-margin'>
-          or{' '}
-          <span onClick={toggle} alt='Select distinct availability zones'>
-            Select distinct availability zones
-          </span>
-        </p>
-      </FlexWrapperDiv>
-      <FlexWrapperDiv>
-        <p style={{ margin: '19px 0 0' }}>
-          {AZPicker.value < 2
-            ? `Covering one availability zone, the worker nodes of this node pool
-               will be placed in the same availability zones as the
-               cluster's master node.`
-            : `Availability zones will be selected randomly.`}
-        </p>
-      </FlexWrapperDiv>
-    </>
+    <NumberPicker
+      label=''
+      max={max}
+      min={min}
+      onChange={updateAZPicker}
+      readOnly={false}
+      stepSize={1}
+      value={AZPicker.value}
+    />
   );
 }
 
@@ -189,5 +95,5 @@ AddNodePoolsAvailabilityZones.propTypes = {
   zones: PropTypes.array,
   value: PropTypes.number,
   updateAZValuesInParent: PropTypes.func,
-  updateIsLabelsInParent: PropTypes.func,
+  isLabels: PropTypes.bool,
 };
