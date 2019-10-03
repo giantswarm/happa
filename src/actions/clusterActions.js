@@ -546,15 +546,18 @@ function clusterLoadStatusV4(dispatch, clusterId) {
  *
  * @param {Object} cluster Cluster definition object
  */
-export function clusterCreate(cluster) {
+export function clusterCreate(cluster, isV5Cluster) {
   return function(dispatch) {
     dispatch({
       type: types.CLUSTER_CREATE,
       cluster,
     });
 
-    return clustersApi
-      .addClusterWithHttpInfo(cluster)
+    const method = isV5Cluster
+      ? 'addClusterV5WithHttpInfo'
+      : 'addClusterWithHttpInfo';
+
+    return clustersApi[method](cluster)
       .then(data => {
         var location = data.response.headers.location;
         if (location === undefined) {

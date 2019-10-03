@@ -1,10 +1,10 @@
 import { Breadcrumb } from 'react-breadcrumbs';
+import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
-// import { nodePoolCreate } from 'actions/nodePoolActions';
+import { push } from 'connected-react-router';
 import AddNodePoolsAvailabilityZones from '../detail/AddNodePoolsAvailabilityZones';
-import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import Button from 'UI/button';
 import DocumentTitle from 'react-document-title';
 import produce from 'immer';
@@ -146,19 +146,21 @@ class CreateNodePoolsCluster extends Component {
     submitting: false,
     valid: false,
     error: false,
-    availabilityZonesIsLabels: false, // false = 'automatically', true = 'distinct'
-    // QUESTION Which value are we going to pass here??
-    // no input field in the wireframes
-    availabilityZonesAutmatically: {
+    availabilityZonesRandom: {
+      // Select automatically
       value: 1,
       valid: true,
     },
     availabilityZonesLabels: {
+      // Use distinct availability zone
       number: 0,
       zonesString: '',
       zonesArray: [],
       valid: false,
     },
+    hasAZLabels: false, // false = 'automatically', true = 'distinct'
+    // Not sure hich value are we going to pass here... there is no
+    // input field in the wireframes
   };
 
   updateName = event => {
@@ -186,64 +188,93 @@ class CreateNodePoolsCluster extends Component {
   isValid() {
     // Not checking release version as we would be checking it before accessing this form
     // and sending user too the v4 form if NPs aren't supported
-    const { name } = this.state;
+    const {
+      name,
+      hasAZLabels,
+      availabilityZonesLabels,
+      availabilityZonesRandom,
+    } = this.state;
 
-    if (name.valid) return true;
+    if (
+      name.valid &&
+      ((hasAZLabels && availabilityZonesLabels.valid) ||
+        (!hasAZLabels && availabilityZonesRandom.valid))
+    ) {
+      return true;
+    }
+
     return false;
   }
 
   createCluster = () => {
     this.setState({ submitting: true });
 
-    // this.props
-    //   .dispatch(
-    //     nodePoolCreate(this.props.clusterId, {
-    //       name: this.state.name,
-    //     })
-    //   )
-    //   .then(() => {
-    //     this.props.closeForm();
-    //   })
-    //   .catch(error => {
-    //     var errorMessage = '';
-
-    //     if (error.body && error.body.message) {
-    //       errorMessage = error.body.message;
-    //     }
-
-    //     this.setState({
-    //       submitting: false,
-    //       error: error,
-    //       errorMessage: errorMessage,
-    //     });
-    //   });
+    this.props
+      .dispatch(
+        clusterCreate(
+          {
+            availabilityZones: this.state.hasAZLabels
+              ? this.state.availabilityZonesLabels.zonesString
+              : this.state.availabilityZonesRandom.value,
+            name: this.state.name.value,
+            release_version: this.state.releaseVersion,
+          },
+          true // is v5
+        )
+      )
+      .then(cluster => {
+        console.log('here?');
+        // after successful creation, redirect to cluster details
+        this.props.dispatch(
+          push(
+            `/organizations/${this.props.selectedOrganization}/clusters/${cluster.id}`
+          )
+        );
+      })
+      .catch(error => {
+        this.setState({
+          submitting: false,
+          error: error,
+        });
+      });
   };
 
+  errorState() {
+    return (
+      <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
+        <b>Something went wrong while trying to create your cluster.</b>
+        <br />
+        Perhaps our servers are down, please try again later or contact support:
+        support@giantswarm.io
+      </div>
+    );
+  }
+
   selectRelease = releaseVersion => {
-    this.setState({
-      releaseVersion,
-    });
+    this.setState(
+      {
+        releaseVersion,
+      },
+      () => () => console.log(this.state.releaseVersion)
+    );
     this.props.informParent(releaseVersion);
   };
 
-  updateAvailabilityZonesIsLabels = availabilityZonesIsLabels => {
-    this.setState({ availabilityZonesIsLabels }, () =>
-      console.log(this.state.availabilityZonesIsLabels)
-    );
-    console.log('hey');
+  toggleAZSelector = () => {
+    this.setState(state => ({
+      hasAZLabels: !state.hasAZLabels,
+    }));
   };
 
-  updateAvailabilityZones = payload => {
-    if (this.state.availabilityZonesIsLabels) {
-      this.setState({ availabilityZonesLabels: payload });
-    }
-    // else {
-    //   this.setState({ availabilityZonesPicker: payload });
-    // }
+  updateAZ = payload => {
+    console.log(payload);
+    this.setState({ availabilityZonesLabels: payload });
   };
 
   render() {
-    const { availabilityZonesIsLabels } = this.state;
+    const { hasAZLabels } = this.state;
+    const { zonesArray } = this.state.availabilityZonesLabels;
+    const { min, max } = window.config.availabilityZonesLimits;
 
     return (
       <Breadcrumb
@@ -297,7 +328,7 @@ class CreateNodePoolsCluster extends Component {
                   <div>
                     <div className='fake-radio'>
                       <div
-                        className={`fake-radio-checked ${availabilityZonesIsLabels ===
+                        className={`fake-radio-checked ${hasAZLabels ===
                           false && 'visible'}`}
                       />
                     </div>
@@ -305,17 +336,13 @@ class CreateNodePoolsCluster extends Component {
                       type='radio'
                       id='automatically'
                       value={false}
-                      checked={availabilityZonesIsLabels === false}
-                      onChange={() =>
-                        this.updateAvailabilityZonesIsLabels(false)
-                      }
+                      checked={hasAZLabels === false}
+                      onChange={() => this.toggleAZSelector(false)}
                       tabIndex='0'
                     />
                     <label
                       htmlFor='automatically'
-                      onClick={() =>
-                        this.updateAvailabilityZonesIsLabels(false)
-                      }
+                      onClick={() => this.toggleAZSelector(false)}
                     >
                       Select automatically
                     </label>
@@ -324,43 +351,48 @@ class CreateNodePoolsCluster extends Component {
                   <div>
                     <div className='fake-radio'>
                       <div
-                        className={`fake-radio-checked ${availabilityZonesIsLabels ===
-                          true && 'visible'}`}
+                        className={`fake-radio-checked ${hasAZLabels === true &&
+                          'visible'}`}
                       />
                     </div>
                     <input
                       type='radio'
                       id='distinct'
                       value={true}
-                      checked={availabilityZonesIsLabels === true}
+                      checked={hasAZLabels === true}
                       tabIndex='0'
-                      onChange={() =>
-                        this.updateAvailabilityZonesIsLabels(true)
-                      }
+                      onChange={() => this.toggleAZSelector(true)}
                     />
                     <label
                       htmlFor='distinct'
-                      onClick={() => this.updateAvailabilityZonesIsLabels(true)}
+                      onClick={() => this.toggleAZSelector(true)}
                     >
                       Use distinct availability zone
                     </label>
                   </div>
                 </RadioGroupDiv>
-                {/* <AZWrapperDiv> */}
-                {availabilityZonesIsLabels === true && (
-                  <AddNodePoolsAvailabilityZones
-                    min={window.config.availabilityZonesLimits.min}
-                    max={window.config.availabilityZonesLimits.max}
-                    zones={this.props.availabilityZones}
-                    updateAZValuesInParent={this.updateAvailabilityZones}
-                    updateIsLabelsInParent={() => {}}
-                  />
-                  // <AvailabilityZonesLabels
-                  //   zones={this.props.availabilityZones}
-                  //   onToggleChecked={() => {}}
-                  // />
-                )}
-                {/* </AZWrapperDiv> */}
+                <AZWrapperDiv>
+                  {hasAZLabels && (
+                    <AddNodePoolsAvailabilityZones
+                      min={min}
+                      max={max}
+                      zones={this.props.availabilityZones}
+                      updateAZValuesInParent={this.updateAZ}
+                      isLabels={true}
+                    />
+                  )}
+                  {hasAZLabels && zonesArray.length < 1 && (
+                    <p className='danger'>Please select at least one.</p>
+                  )}
+                  {hasAZLabels && zonesArray.length > max && (
+                    <p className='danger'>
+                      {max} is the maximum you can have. Please uncheck at least{' '}
+                      {zonesArray.length - max} of them.
+                    </p>
+                  )}
+                </AZWrapperDiv>
+
+                {this.state.error && this.errorState()}
 
                 <FlexRowDiv>
                   <Button

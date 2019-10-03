@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
+import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
-import { css } from '@emotion/core';
 import { nodePoolCreate } from 'actions/nodePoolActions';
 import AddNodePoolsAvailabilityZones from './AddNodePoolsAvailabilityZones';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
@@ -317,16 +317,9 @@ class AddNodePool extends Component {
         this.props.closeForm();
       })
       .catch(error => {
-        var errorMessage = '';
-
-        if (error.body && error.body.message) {
-          errorMessage = error.body.message;
-        }
-
         this.setState({
           submitting: false,
           error: error,
-          errorMessage: errorMessage,
         });
       });
   };

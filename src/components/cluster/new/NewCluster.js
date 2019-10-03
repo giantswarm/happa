@@ -8,7 +8,7 @@ import React from 'react';
 
 class NewCluster extends React.Component {
   state = {
-    releaseSelected: '8.3.0', //window.config.firstNodePoolsRelease,
+    releaseSelected: window.config.firstNodePoolsRelease,
   };
 
   setReleaseVersion = releaseSelected => {
@@ -16,12 +16,6 @@ class NewCluster extends React.Component {
   };
 
   renderComponent = props => {
-    console.log(
-      window.config.firstNodePoolsRelease,
-      this.state.releaseSelected,
-      cmp(this.state.releaseSelected, window.config.firstNodePoolsRelease) < 0
-    );
-
     const Component =
       cmp(this.state.releaseSelected, window.config.firstNodePoolsRelease) < 0
         ? CreateRegularCluster
@@ -31,6 +25,17 @@ class NewCluster extends React.Component {
   };
 
   render() {
+    if (window.config.environment !== 'development') {
+      return (
+        <Switch>
+          <Route
+            component={CreateRegularCluster}
+            exact
+            path={`${this.props.match.path}`}
+          />
+        </Switch>
+      );
+    }
     if (this.state.releaseSelected) {
       return (
         <Switch>
