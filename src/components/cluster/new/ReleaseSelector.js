@@ -14,8 +14,16 @@ import styled from '@emotion/styled';
 const FlexRowDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
-  div:nth-of-type(2) {
-    padding-left: 15px;
+  align-items: center;
+  line-height: 1;
+  p {
+    display: inline;
+    margin: 0 10px 0 0;
+  }
+  .progress_button--container {
+    position: relative;
+    display: inline-block;
+    margin-right: 25px;
   }
 `;
 
@@ -138,7 +146,7 @@ class ReleaseSelector extends React.Component {
     );
   }
 
-  loadedContent() {
+  hasActiveReleases() {
     if (this.state.selectedRelease) {
       var kubernetes = _.find(
         this.props.releases[this.state.selectedRelease].components,
@@ -152,38 +160,36 @@ class ReleaseSelector extends React.Component {
           <br />
           <br />
 
-          {kubernetes ? (
-            <div>
+          {kubernetes && (
+            <>
               <p>This release contains:</p>
-              <ReleaseComponentLabel
-                name='kubernetes'
-                version={kubernetes.version}
-              />
-            </div>
-          ) : (
-            undefined
+              <div style={{ transform: 'translateY(6px)' }}>
+                <ReleaseComponentLabel
+                  name='kubernetes'
+                  version={kubernetes.version}
+                />
+              </div>
+            </>
           )}
         </FlexRowDiv>
       );
-    } else {
-      return (
-        <div>
-          <p>
-            There is no active release currently availabe for this platform.
-          </p>
-        </div>
-      );
     }
+
+    return (
+      <div>
+        <p>There is no active release currently availabe for this platform.</p>
+      </div>
+    );
   }
 
   render() {
     return (
-      <div className='new-cluster--release-selector'>
+      <>
         {this.state.loading
           ? this.loadingContent()
           : this.state.error
           ? undefined
-          : this.loadedContent()}
+          : this.hasActiveReleases()}
 
         <ReleaseDetailsModal
           ref={r => {
@@ -195,7 +201,7 @@ class ReleaseSelector extends React.Component {
           })}
           selectedRelease={this.state.selectedRelease}
         />
-      </div>
+      </>
     );
   }
 }

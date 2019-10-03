@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   display: inline-block;
   margin-bottom: 15px;
   margin-right: 5px;
-  word-wrap: nowrap;
+  white-space: nowrap;
 `;
 
 const CommonCSS = css`
