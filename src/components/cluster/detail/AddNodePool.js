@@ -1,9 +1,7 @@
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
-import { nodePoolCreate } from 'actions/nodePoolActions';
 import AddNodePoolsAvailabilityZones from './AddNodePoolsAvailabilityZones';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
-import Button from 'UI/button';
 import NodeCountSelector from 'shared/node_count_selector';
 import produce from 'immer';
 import PropTypes from 'prop-types';
@@ -22,13 +20,6 @@ const FlexWrapperDiv = styled.div`
     max-width: 550px;
     padding-left: 20px;
   }
-  /* & > div:nth-of-type(2) > button {
-    padding-top: 9px;
-    padding-bottom: 9px;
-  }
-  button {
-    margin-right: 16px;
-  } */
 `;
 
 // Availability Zones styles
@@ -126,6 +117,10 @@ class AddNodePool extends Component {
     });
   }
 
+  componentDidUpdate() {
+    this.isValid();
+  }
+
   updateName = event => {
     const name = event.target.value;
     const exceededMaximumCharacters = name.length > 100;
@@ -203,18 +198,9 @@ class AddNodePool extends Component {
       ((hasAZLabels && availabilityZonesLabels.valid) ||
         (!hasAZLabels && availabilityZonesPicker.valid))
     ) {
-      return true;
-    }
-
-    return false;
-  }
-
-  createNodePool = () => {
-    this.setState({ submitting: true });
-
-    this.props
-      .dispatch(
-        nodePoolCreate(this.props.clusterId, {
+      this.props.informParent({
+        isValid: true,
+        data: {
           // TODO Is the endpoint expecting to receive either a string or a number??
           availabilityZones: this.state.hasAZLabels
             ? this.state.availabilityZonesLabels.zonesString
@@ -229,25 +215,13 @@ class AddNodePool extends Component {
               instance_type: this.state.aws.instanceType.value,
             },
           },
-        })
-      )
-      .then(() => {
-        this.props.closeForm();
-      })
-      .catch(error => {
-        var errorMessage = '';
-
-        if (error.body && error.body.message) {
-          errorMessage = error.body.message;
-        }
-
-        this.setState({
-          submitting: false,
-          error: error,
-          errorMessage: errorMessage,
-        });
+        },
       });
-  };
+      return;
+    }
+
+    this.props.informParent({ isValid: false });
+  }
 
   produceRAMAndCores = () => {
     const instanceType = this.state.aws.instanceType.value;
@@ -394,7 +368,6 @@ AddNodePool.propTypes = {
   availabilityZones: PropTypes.array,
   allowedInstanceTypes: PropTypes.array,
   selectedOrganization: PropTypes.string,
-  dispatch: PropTypes.func,
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
   defaultCPUCores: PropTypes.number,
@@ -404,6 +377,7 @@ AddNodePool.propTypes = {
   clusterCreationStats: PropTypes.object,
   clusterId: PropTypes.string,
   closeForm: PropTypes.func,
+  informParent: PropTypes.func,
 };
 
 function mapStateToProps(state) {
@@ -442,13 +416,4 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddNodePool);
+export default connect(mapStateToProps)(AddNodePool);

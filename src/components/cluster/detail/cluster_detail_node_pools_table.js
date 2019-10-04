@@ -5,11 +5,14 @@ import {
   getNumberOfNodePoolsNodes,
 } from 'utils/cluster_utils';
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
+import { connect } from 'react-redux';
 import { css } from '@emotion/core';
+import { nodePoolCreate } from 'actions/nodePoolActions';
 import { relativeDate } from 'lib/helpers.js';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import NodePool from './node_pool';
+import produce from 'immer';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -96,9 +99,9 @@ const GridRowNodePoolsItem = styled.div`
 
 const WrapperDiv = styled.div`
   background-color: ${props => props.theme.colors.shade7};
-  padding: 20px;
+  padding: 20px 20px 40px;
   border-radius: 5px;
-  margin-bottom: 40px;
+  margin-bottom: 0px;
   h3 {
     margin-bottom: 20px;
   }
@@ -217,6 +220,11 @@ class ClusterDetailNodePoolsTable extends React.Component {
     workerNodesRunning: 0,
     nodePools: [],
     isNodePoolBeingAdded: false,
+    nodePoolForm: {
+      isValid: false,
+      isSubmitting: false,
+      data: {},
+    },
   };
 
   componentDidMount() {
@@ -258,6 +266,40 @@ class ClusterDetailNodePoolsTable extends React.Component {
     this.setState(prevState => ({
       isNodePoolBeingAdded: !prevState.isNodePoolBeingAdded,
     }));
+
+  updateNodePoolForm = data => {
+    this.setState(
+      produce(this.state, draft => {
+        draft.nodePoolForm = { ...this.state.nodePoolForm, ...data };
+      })
+    );
+  };
+
+  createNodePool = () => {
+    this.setState({ submitting: true });
+
+    this.props
+      .dispatch(
+        nodePoolCreate(this.props.cluster.id, this.state.nodePoolForm.data)
+      )
+      .then(() => {
+        // Reset form data and close the form
+        this.setState(
+          produce(draft => {
+            draft.nodePoolForm.data = {};
+          })
+        );
+        this.closeForm();
+      })
+      .catch(error => {
+        // TODO Show error in view?
+
+        this.setState({
+          submitting: false,
+          error: error,
+        });
+      });
+  };
 
   render() {
     const {
@@ -411,14 +453,15 @@ class ClusterDetailNodePoolsTable extends React.Component {
                   clusterId={cluster.id}
                   releaseVersion={release_version}
                   closeForm={this.toggleAddNodePoolForm}
+                  informParent={this.updateNodePoolForm}
                 />
                 <FlexWrapperDiv>
                   <Button
                     bsSize='large'
                     bsStyle='primary'
-                    // disabled={!this.isValid()}
-                    // loading={this.state.submitting}
-                    // onClick={this.createNodePool}
+                    disabled={!this.state.nodePoolForm.isValid}
+                    loading={this.state.nodePoolForm.isSubmitting}
+                    onClick={this.createNodePool}
                     type='button'
                   >
                     Create Node Pool
@@ -426,8 +469,8 @@ class ClusterDetailNodePoolsTable extends React.Component {
                   <Button
                     bsSize='large'
                     bsStyle='default'
-                    // loading={this.state.submitting}
-                    // onClick={this.props.closeForm}
+                    loading={this.state.nodePoolForm.isSubmitting}
+                    onClick={this.toggleAddNodePoolForm}
                     style={{ background: 'red' }}
                     type='button'
                   >
@@ -470,6 +513,7 @@ ClusterDetailNodePoolsTable.propTypes = {
   canClusterUpgrade: PropTypes.bool,
   cluster: PropTypes.object,
   credentials: PropTypes.object,
+  dispatch: PropTypes.func,
   lastUpdated: PropTypes.number,
   nodePools: PropTypes.object,
   provider: PropTypes.string,
@@ -481,4 +525,13 @@ ClusterDetailNodePoolsTable.propTypes = {
   workerNodesDesired: PropTypes.number,
 };
 
-export default ReactTimeout(ClusterDetailNodePoolsTable);
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
+}
+
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(ReactTimeout(ClusterDetailNodePoolsTable));
