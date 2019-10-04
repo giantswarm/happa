@@ -94,7 +94,101 @@ const GridRowNodePoolsItem = styled.div`
   background-color: ${props => props.theme.colors.shade7};
 `;
 
-const FlexWrapper = styled.div`
+const WrapperDiv = styled.div`
+  background-color: ${props => props.theme.colors.shade7};
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 40px;
+  h3 {
+    margin-bottom: 20px;
+  }
+`;
+
+const FlexColumnDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 650px;
+  label {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    margin: 0 0 31px;
+    &.instance-type {
+      margin-bottom: 21px;
+    }
+    p {
+      line-height: 1.4;
+    }
+  }
+  .label-span {
+    color: ${props => props.theme.colors.white1};
+  }
+  .label-span,
+  input,
+  select {
+    font-size: 16px;
+    margin-bottom: 13px;
+    font-weight: 400;
+  }
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: ${props => props.theme.colors.shade5};
+    padding: 11px 10px;
+    outline: 0;
+    color: ${props => props.theme.colors.whiteInput};
+    border-radius: 4px;
+    border: 1px solid ${props => props.theme.colors.shade6};
+    padding-left: 15px;
+    line-height: normal;
+  }
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: ${props => props.theme.colors.white1};
+  }
+  a {
+    text-decoration: underline;
+  }
+  /* Name input */
+  .name-container {
+    position: relative;
+    margin-bottom: 23px;
+  }
+  input[id='name'] {
+    margin-bottom: 0;
+  }
+  /* Overrides for AWSInstanceTypeSelector */
+  .textfield label,
+  .textfield,
+  .textfield input {
+    margin: 0;
+  }
+  /* Overrides for NumberPicker */
+  .availability-zones {
+    margin-bottom: 12px;
+    & > div > div,
+    & > div > div > div {
+      margin: 0;
+    }
+  }
+  .scaling-range {
+    form {
+      label {
+        margin-bottom: 7px;
+        color: ${props => props.theme.colors.white1};
+        font-weight: 400;
+      }
+      & > div:nth-of-type(2) {
+        display: none;
+      }
+    }
+  }
+`;
+
+const FlexWrapperDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -104,6 +198,13 @@ const FlexWrapper = styled.div`
     margin: 0;
     max-width: 550px;
     padding-left: 20px;
+  }
+  & > div:nth-of-type(2) > button {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+  button {
+    margin-right: 16px;
   }
 `;
 
@@ -302,14 +403,42 @@ class ClusterDetailNodePoolsTable extends React.Component {
             transitionLeaveTimeout={200}
             transitionName={`login_form--transition`}
           >
-            <AddNodePool
-              clusterId={cluster.id}
-              releaseVersion={release_version}
-              closeForm={this.toggleAddNodePoolForm}
-            />
+            {/* Add Node Pool */}
+            <WrapperDiv>
+              <h3 className='table-label'>Add Node Pool</h3>
+              <FlexColumnDiv>
+                <AddNodePool
+                  clusterId={cluster.id}
+                  releaseVersion={release_version}
+                  closeForm={this.toggleAddNodePoolForm}
+                />
+                <FlexWrapperDiv>
+                  <Button
+                    bsSize='large'
+                    bsStyle='primary'
+                    // disabled={!this.isValid()}
+                    // loading={this.state.submitting}
+                    // onClick={this.createNodePool}
+                    type='button'
+                  >
+                    Create Node Pool
+                  </Button>
+                  <Button
+                    bsSize='large'
+                    bsStyle='default'
+                    // loading={this.state.submitting}
+                    // onClick={this.props.closeForm}
+                    style={{ background: 'red' }}
+                    type='button'
+                  >
+                    Cancel
+                  </Button>
+                </FlexWrapperDiv>
+              </FlexColumnDiv>
+            </WrapperDiv>
           </ReactCSSTransitionGroup>
         ) : (
-          <FlexWrapper>
+          <FlexWrapperDiv>
             <Button onClick={this.toggleAddNodePoolForm}>
               <i className='fa fa-add-circle' /> ADD NODE POOL
             </Button>
@@ -329,7 +458,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 </a>
               </p>
             )}
-          </FlexWrapper>
+          </FlexWrapperDiv>
         )}
       </>
     );
