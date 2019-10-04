@@ -1,3 +1,7 @@
+import {
+  AddNodePoolFlexColumnDiv,
+  AddNodePoolWrapperDiv,
+} from '../detail/cluster_detail_node_pools_table';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
@@ -391,13 +395,16 @@ class CreateNodePoolsCluster extends Component {
                 {this.state.error && this.errorState()}
               </FlexColumnDiv>
               <hr />
-              <AddNodePool
-                clusterId='m0ckd'
-                releaseVersion={'8.2.0'}
-                closeForm={this.toggleAddNodePoolForm}
-              />
-              {/*{release_version}*/}
-              {/*{cluster.id}*/}
+              <AddNodePoolWrapperDiv>
+                <AddNodePoolFlexColumnDiv>
+                  <AddNodePool
+                    clusterId={'m0ckd'}
+                    releaseVersion={'8.2.0'}
+                    closeForm={() => 'this.toggleAddNodePoolForm'}
+                    informParent={() => 'this.updateNodePoolForm'}
+                  />
+                </AddNodePoolFlexColumnDiv>
+              </AddNodePoolWrapperDiv>
               <Button onClick={this.toggleAddNodePoolForm}>
                 <i className='fa fa-add-circle' /> ADD NODE POOL
               </Button>

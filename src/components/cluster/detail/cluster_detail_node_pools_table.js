@@ -97,7 +97,7 @@ const GridRowNodePoolsItem = styled.div`
   background-color: ${props => props.theme.colors.shade7};
 `;
 
-const WrapperDiv = styled.div`
+export const AddNodePoolWrapperDiv = styled.div`
   background-color: ${props => props.theme.colors.shade7};
   padding: 20px 20px 40px;
   border-radius: 5px;
@@ -107,7 +107,7 @@ const WrapperDiv = styled.div`
   }
 `;
 
-const FlexColumnDiv = styled.div`
+export const AddNodePoolFlexColumnDiv = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -446,9 +446,9 @@ class ClusterDetailNodePoolsTable extends React.Component {
             transitionName={`login_form--transition`}
           >
             {/* Add Node Pool */}
-            <WrapperDiv>
+            <AddNodePoolWrapperDiv>
               <h3 className='table-label'>Add Node Pool</h3>
-              <FlexColumnDiv>
+              <AddNodePoolFlexColumnDiv>
                 <AddNodePool
                   clusterId={cluster.id}
                   releaseVersion={release_version}
@@ -477,8 +477,8 @@ class ClusterDetailNodePoolsTable extends React.Component {
                     Cancel
                   </Button>
                 </FlexWrapperDiv>
-              </FlexColumnDiv>
-            </WrapperDiv>
+              </AddNodePoolFlexColumnDiv>
+            </AddNodePoolWrapperDiv>
           </ReactCSSTransitionGroup>
         ) : (
           <FlexWrapperDiv>
