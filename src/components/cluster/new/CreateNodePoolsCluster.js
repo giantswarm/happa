@@ -224,7 +224,6 @@ class CreateNodePoolsCluster extends Component {
         )
       )
       .then(cluster => {
-        console.log('here?');
         // after successful creation, redirect to cluster details
         this.props.dispatch(
           push(
@@ -252,12 +251,9 @@ class CreateNodePoolsCluster extends Component {
   }
 
   selectRelease = releaseVersion => {
-    this.setState(
-      {
-        releaseVersion,
-      },
-      () => () => console.log(this.state.releaseVersion)
-    );
+    this.setState({
+      releaseVersion,
+    });
     this.props.informParent(releaseVersion);
   };
 
@@ -268,7 +264,6 @@ class CreateNodePoolsCluster extends Component {
   };
 
   updateAZ = payload => {
-    console.log(payload);
     this.setState({ availabilityZonesLabels: payload });
   };
 

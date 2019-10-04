@@ -143,7 +143,6 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  * @param {Object} nodepool Node Pool definition object
  */
 export function nodePoolCreate(clusterId, nodePool) {
-  console.log(clusterId, nodePool);
   return function(dispatch) {
     // This is failing now because this enpoint is not ready yet.
     return nodePoolsApi

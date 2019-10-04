@@ -193,12 +193,9 @@ class CreateRegularCluster extends React.Component {
   }
 
   selectRelease = releaseVersion => {
-    this.setState(
-      {
-        releaseVersion,
-      },
-      () => console.log(this.state.releaseVersion)
-    );
+    this.setState({
+      releaseVersion,
+    });
     this.props.informParent(releaseVersion);
   };
 

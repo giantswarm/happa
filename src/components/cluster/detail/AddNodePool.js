@@ -5,7 +5,6 @@ import { Input } from 'styles/index';
 import { nodePoolCreate } from 'actions/nodePoolActions';
 import AddNodePoolsAvailabilityZones from './AddNodePoolsAvailabilityZones';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
-import Button from 'UI/button';
 import NodeCountSelector from 'shared/node_count_selector';
 import produce from 'immer';
 import PropTypes from 'prop-types';
@@ -13,31 +12,10 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
-const WrapperDiv = styled.div`
-  background-color: ${props => props.theme.colors.shade7};
-  padding: 20px;
-  border-radius: 5px;
-  margin-bottom: 40px;
-  h3 {
-    margin-bottom: 20px;
-  }
-`;
-
 const FlexWrapperDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 13px;
-  & > div:nth-of-type(2) > button {
-    padding-top: 9px;
-    padding-bottom: 9px;
-  }
-  button {
-    margin-right: 16px;
-  }
-  .availability-zones & {
-    margin-bottom: 22px;
-  }
   p {
     margin-left: 15px;
   }
@@ -75,49 +53,14 @@ const FlexColumnDiv = styled.div`
   p {
     margin: 0;
     font-size: 14px;
-    color: ${props => props.theme.colors.white1};
-  }
-  a {
-    text-decoration: underline;
-  }
-  /* Name input */
-  .name-container {
-    position: relative;
-    margin-bottom: 23px;
-  }
-  input[id='name'] {
-    margin-bottom: 0;
-  }
-  /* Overrides for AWSInstanceTypeSelector */
-  .textfield label,
-  .textfield,
-  .textfield input {
+    line-height: 1.2;
     margin: 0;
-  }
-  /* Overrides for NumberPicker */
-  .availability-zones {
-    margin-bottom: 12px;
-    & > div > div,
-    & > div > div > div {
-      margin: 0;
-    }
-  }
-  .scaling-range {
-    form {
-      label {
-        margin-bottom: 7px;
-        color: ${props => props.theme.colors.white1};
-        font-weight: 400;
-      }
-      & > div:nth-of-type(2) {
-        display: none;
-      }
-    }
+    max-width: 550px;
+    padding-left: 20px;
   }
 `;
 
 // Availability Zones styles
-
 const Emphasized = css`
   .emphasized {
     font-size: 16px;
@@ -212,6 +155,10 @@ class AddNodePool extends Component {
     });
   }
 
+  componentDidUpdate() {
+    this.isValid();
+  }
+
   updateName = event => {
     const name = event.target.value;
     const [isValid, message] = hasAppropriateLength(name, 4, 100);
@@ -249,7 +196,6 @@ class AddNodePool extends Component {
   };
 
   updateAZ = payload => {
-    console.log(payload);
     if (this.state.hasAZLabels) {
       this.setState({ availabilityZonesLabels: payload });
     } else {
@@ -285,18 +231,9 @@ class AddNodePool extends Component {
       ((hasAZLabels && availabilityZonesLabels.valid) ||
         (!hasAZLabels && availabilityZonesPicker.valid))
     ) {
-      return true;
-    }
-
-    return false;
-  }
-
-  createNodePool = () => {
-    this.setState({ submitting: true });
-
-    this.props
-      .dispatch(
-        nodePoolCreate(this.props.clusterId, {
+      this.props.informParent({
+        isValid: true,
+        data: {
           // TODO Is the endpoint expecting to receive either a string or a number??
           availabilityZones: this.state.hasAZLabels
             ? this.state.availabilityZonesLabels.zonesString
@@ -311,18 +248,13 @@ class AddNodePool extends Component {
               instance_type: this.state.aws.instanceType.value,
             },
           },
-        })
-      )
-      .then(() => {
-        this.props.closeForm();
-      })
-      .catch(error => {
-        this.setState({
-          submitting: false,
-          error: error,
-        });
+        },
       });
-  };
+      return;
+    }
+
+    this.props.informParent({ isValid: false });
+  }
 
   produceRAMAndCores = () => {
     const instanceType = this.state.aws.instanceType.value;
@@ -351,143 +283,116 @@ class AddNodePool extends Component {
     const { zonesArray } = this.state.availabilityZonesLabels;
 
     return (
-      <WrapperDiv>
-        <h3 className='table-label'>Add Node Pool</h3>
-        <FlexColumnDiv>
-          <label htmlFor='name'>
-            <span className='label-span'>Name</span>
-            <div className='name-container'>
-              <input
-                value={this.state.name.value}
-                onChange={this.updateName}
-                id='name'
-                type='text'
-              ></input>
-              <ValidationErrorMessage
-                message={this.state.name.validationError}
-              />
-            </div>
-            <p>
-              Pick a name that helps team mates to understand what these nodes
-              are here for. You can change this later. Each node pool also gets
-              a unique identifier.
-            </p>
-          </label>
-          <label className='instance-type' htmlFor='instance-type'>
-            <span className='label-span'>Instance type</span>
-            <FlexWrapperDiv>
-              <AWSInstanceTypeSelector
-                allowedInstanceTypes={this.props.allowedInstanceTypes}
-                onChange={this.updateAWSInstanceType}
-                readOnly={false}
-                value={this.state.aws.instanceType.value}
-              />
-              <p>{`${RAM} CPU cores, ${CPUCores} GB RAM each`}</p>
-            </FlexWrapperDiv>
-          </label>
-          <label className='availability-zones' htmlFor='availability-zones'>
-            <span className='label-span'>Availability Zones</span>
-            {this.state.hasAZLabels && (
-              <FlexColumnAZDiv>
-                <p>
-                  You can select up to {max} availability zones to make use of.
-                </p>
-                <FlexWrapperAZDiv>
-                  <AddNodePoolsAvailabilityZones
-                    min={min}
-                    max={max}
-                    zones={this.props.availabilityZones}
-                    updateAZValuesInParent={this.updateAZ}
-                    isLabels={this.state.hasAZLabels}
-                  />
-                  {zonesArray.length < 1 && (
-                    <p className='danger'>Please select at least one.</p>
-                  )}
-                  {zonesArray.length > max && (
-                    <p className='danger'>
-                      {max} is the maximum you can have. Please uncheck at least{' '}
-                      {zonesArray.length - max} of them.
-                    </p>
-                  )}
-                </FlexWrapperAZDiv>
-                <p className='emphasized'>
+      <>
+        <label htmlFor='name'>
+          <span className='label-span'>Name</span>
+          <div className='name-container'>
+            <input
+              value={this.state.name.value}
+              onChange={this.updateName}
+              id='name'
+              type='text'
+            ></input>
+            <ValidationErrorMessage message={this.state.name.validationError} />
+          </div>
+          <p>
+            Pick a name that helps team mates to understand what these nodes are
+            here for. You can change this later. Each node pool also gets a
+            unique identifier.
+          </p>
+        </label>
+        <label className='instance-type' htmlFor='instance-type'>
+          <span className='label-span'>Instance type</span>
+          <FlexWrapperDiv>
+            <AWSInstanceTypeSelector
+              allowedInstanceTypes={this.props.allowedInstanceTypes}
+              onChange={this.updateAWSInstanceType}
+              readOnly={false}
+              value={this.state.aws.instanceType.value}
+            />
+            <p>{`${RAM} CPU cores, ${CPUCores} GB RAM each`}</p>
+          </FlexWrapperDiv>
+        </label>
+        <label className='availability-zones' htmlFor='availability-zones'>
+          <span className='label-span'>Availability Zones</span>
+          {this.state.hasAZLabels && (
+            <FlexColumnAZDiv>
+              <p>
+                You can select up to {max} availability zones to make use of.
+              </p>
+              <FlexWrapperAZDiv>
+                <AddNodePoolsAvailabilityZones
+                  min={min}
+                  max={max}
+                  zones={this.props.availabilityZones}
+                  updateAZValuesInParent={this.updateAZ}
+                  isLabels={this.state.hasAZLabels}
+                />
+                {zonesArray.length < 1 && (
+                  <p className='danger'>Please select at least one.</p>
+                )}
+                {zonesArray.length > max && (
+                  <p className='danger'>
+                    {max} is the maximum you can have. Please uncheck at least{' '}
+                    {zonesArray.length - max} of them.
+                  </p>
+                )}
+              </FlexWrapperAZDiv>
+              <p className='emphasized'>
+                <span
+                  onClick={this.toggleAZSelector}
+                  alt='Switch to random selection'
+                >
+                  Switch to random selection
+                </span>
+              </p>
+            </FlexColumnAZDiv>
+          )}
+          {!this.state.hasAZLabels && (
+            <>
+              <FlexWrapperAZDiv>
+                <AddNodePoolsAvailabilityZones
+                  min={min}
+                  max={max}
+                  zones={this.props.availabilityZones}
+                  updateAZValuesInParent={this.updateAZ}
+                  isLabels={this.state.hasAZLabels}
+                />
+                <p className='emphasized no-margin'>
+                  or{' '}
                   <span
                     onClick={this.toggleAZSelector}
-                    alt='Switch to random selection'
+                    alt='Select distinct availability zones'
                   >
-                    Switch to random selection
+                    Select distinct availability zones
                   </span>
                 </p>
-              </FlexColumnAZDiv>
-            )}
-            {!this.state.hasAZLabels && (
-              <>
-                <FlexWrapperAZDiv>
-                  <AddNodePoolsAvailabilityZones
-                    min={min}
-                    max={max}
-                    zones={this.props.availabilityZones}
-                    updateAZValuesInParent={this.updateAZ}
-                    isLabels={this.state.hasAZLabels}
-                  />
-                  <p className='emphasized no-margin'>
-                    or{' '}
-                    <span
-                      onClick={this.toggleAZSelector}
-                      alt='Select distinct availability zones'
-                    >
-                      Select distinct availability zones
-                    </span>
-                  </p>
-                </FlexWrapperAZDiv>
-                <FlexWrapperAZDiv>
-                  {/* This is a hack for fixing height for this element and at the same time
+              </FlexWrapperAZDiv>
+              <FlexWrapperAZDiv>
+                {/* This is a hack for fixing height for this element and at the same time
                   control the height of the wrapper so it matches labels wrapper */}
-                  <p style={{ margin: '19px 0 22px', height: '38px' }}>
-                    {this.state.availabilityZonesPicker.value < 2
-                      ? `Covering one availability zone, the worker nodes of this node pool
+                <p style={{ margin: '19px 0 22px', height: '38px' }}>
+                  {this.state.availabilityZonesPicker.value < 2
+                    ? `Covering one availability zone, the worker nodes of this node pool
                will be placed in the same availability zones as the
                cluster's master node.`
-                      : `Availability zones will be selected randomly.`}
-                  </p>
-                </FlexWrapperAZDiv>
-              </>
-            )}
-          </label>
-          <label className='scaling-range' htmlFor='scaling-range'>
-            <span className='label-span'>Scaling range</span>
-            <NodeCountSelector
-              autoscalingEnabled={true}
-              label={{ max: 'MAX', min: 'MIN' }}
-              onChange={this.updateScaling}
-              readOnly={false}
-              scaling={this.state.scaling}
-            />
-          </label>
-          <FlexWrapperDiv>
-            <Button
-              bsSize='large'
-              bsStyle='primary'
-              disabled={!this.isValid()}
-              loading={this.state.submitting}
-              onClick={this.createNodePool}
-              type='button'
-            >
-              Create Node Pool
-            </Button>
-            <Button
-              bsSize='large'
-              bsStyle='default'
-              loading={this.state.submitting}
-              onClick={this.props.closeForm}
-              style={{ background: 'red' }}
-              type='button'
-            >
-              Cancel
-            </Button>
-          </FlexWrapperDiv>
-        </FlexColumnDiv>
-      </WrapperDiv>
+                    : `Availability zones will be selected randomly.`}
+                </p>
+              </FlexWrapperAZDiv>
+            </>
+          )}
+        </label>
+        <label className='scaling-range' htmlFor='scaling-range'>
+          <span className='label-span'>Scaling range</span>
+          <NodeCountSelector
+            autoscalingEnabled={true}
+            label={{ max: 'MAX', min: 'MIN' }}
+            onChange={this.updateScaling}
+            readOnly={false}
+            scaling={this.state.scaling}
+          />
+        </label>
+      </>
     );
   }
 }
@@ -496,7 +401,6 @@ AddNodePool.propTypes = {
   availabilityZones: PropTypes.array,
   allowedInstanceTypes: PropTypes.array,
   selectedOrganization: PropTypes.string,
-  dispatch: PropTypes.func,
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
   defaultCPUCores: PropTypes.number,
@@ -506,6 +410,7 @@ AddNodePool.propTypes = {
   clusterCreationStats: PropTypes.object,
   clusterId: PropTypes.string,
   closeForm: PropTypes.func,
+  informParent: PropTypes.func,
 };
 
 function mapStateToProps(state) {
@@ -544,13 +449,4 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddNodePool);
+export default connect(mapStateToProps)(AddNodePool);
