@@ -36,6 +36,11 @@ export function nodePoolsLoad() {
         dispatch(nodePoolsLoadSucces(allNodePools));
       })
       .catch(error => {
+        if (error.status === 404) {
+          dispatch(nodePoolsLoadSucces({}));
+          return;
+        }
+
         console.error('Error loading cluster node pools:', error);
         dispatch(nodePoolsLoadError(error));
 

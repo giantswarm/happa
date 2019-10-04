@@ -128,10 +128,12 @@ class ClusterDetailNodePoolsTable extends React.Component {
       const { nodePools } = this.state;
 
       const allZones = nodePools
-        .reduce((accumulator, current) => {
-          return [...accumulator, ...current.availability_zones];
-        }, [])
-        .map(zone => zone.slice(-1));
+        ? nodePools
+            .reduce((accumulator, current) => {
+              return [...accumulator, ...current.availability_zones];
+            }, [])
+            .map(zone => zone.slice(-1))
+        : [];
 
       // This array stores available zones that are in at least one node pool.
       // We only want unique values because this is used fot building the grid.
@@ -254,39 +256,43 @@ class ClusterDetailNodePoolsTable extends React.Component {
         </FlexRowWithTwoBlocksOnEdges>
         <NodePoolsWrapper>
           <h2>Node Pools</h2>
-          <GridRowNodePoolsNodes>
-            <div>
-              <span>NODES</span>
-            </div>
-          </GridRowNodePoolsNodes>
-          <GridRowNodePoolsHeaders>
-            <span>ID</span>
-            <span style={{ paddingLeft: '8px', justifySelf: 'left' }}>
-              NAME
-            </span>
-            <span>INSTANCE TYPE</span>
-            <span>AVAILABILITY ZONES</span>
-            <span>MIN</span>
-            <span>MAX</span>
-            <span>DESIRED</span>
-            <span>CURRENT</span>
-            <span> </span>
-          </GridRowNodePoolsHeaders>
-          {nodePools &&
-            nodePools
-              .sort((a, b) => (a.name > b.name ? 1 : -1))
-              .map(nodePool => (
-                <GridRowNodePoolsItem key={nodePool.id}>
-                  <NodePool
-                    availableZonesGridTemplateAreas={
-                      availableZonesGridTemplateAreas
-                    }
-                    clusterId={cluster.id}
-                    nodePool={nodePool}
-                    showNodePoolScalingModal={showNodePoolScalingModal}
-                  />
-                </GridRowNodePoolsItem>
-              ))}
+          {nodePools ? (
+            <>
+              <GridRowNodePoolsNodes>
+                <div>
+                  <span>NODES</span>
+                </div>
+              </GridRowNodePoolsNodes>
+              <GridRowNodePoolsHeaders>
+                <span>ID</span>
+                <span style={{ paddingLeft: '8px', justifySelf: 'left' }}>
+                  NAME
+                </span>
+                <span>INSTANCE TYPE</span>
+                <span>AVAILABILITY ZONES</span>
+                <span>MIN</span>
+                <span>MAX</span>
+                <span>DESIRED</span>
+                <span>CURRENT</span>
+                <span> </span>
+              </GridRowNodePoolsHeaders>
+              {nodePools &&
+                nodePools
+                  .sort((a, b) => (a.name > b.name ? 1 : -1))
+                  .map(nodePool => (
+                    <GridRowNodePoolsItem key={nodePool.id}>
+                      <NodePool
+                        availableZonesGridTemplateAreas={
+                          availableZonesGridTemplateAreas
+                        }
+                        clusterId={cluster.id}
+                        nodePool={nodePool}
+                        showNodePoolScalingModal={showNodePoolScalingModal}
+                      />
+                    </GridRowNodePoolsItem>
+                  ))}
+            </>
+          ) : null}
         </NodePoolsWrapper>
         {this.state.isNodePoolBeingAdded ? (
           <ReactCSSTransitionGroup
@@ -307,7 +313,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <Button onClick={this.toggleAddNodePoolForm}>
               <i className='fa fa-add-circle' /> ADD NODE POOL
             </Button>
-            {nodePools.length < 2 && (
+            {nodePools && nodePools.length < 2 && (
               <p>
                 With additional node pools, you can add different types of
                 worker nodes to your cluster. Node pools also scale
