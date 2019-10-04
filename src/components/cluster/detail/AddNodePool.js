@@ -263,7 +263,6 @@ class AddNodePool extends Component {
   };
 
   updateAZ = payload => {
-    console.log(payload);
     if (this.state.hasAZLabels) {
       this.setState({ availabilityZonesLabels: payload });
     } else {
