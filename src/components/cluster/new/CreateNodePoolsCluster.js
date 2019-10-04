@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
 import { push } from 'connected-react-router';
+import AddNodePool from '../detail/AddNodePool';
 import AddNodePoolsAvailabilityZones from '../detail/AddNodePoolsAvailabilityZones';
 import Button from 'UI/button';
 import DocumentTitle from 'react-document-title';
@@ -112,7 +113,7 @@ const RadioGroupDiv = styled.div`
 
 // Duplicated styles, also in AddNodePoolsAvailabillityZones.
 const AZWrapperDiv = styled.div`
-  margin-left: 24px;
+  margin: 0 0 8px 24px;
   height: 26px;
   /* duplicated code below */
   display: flex;
@@ -287,14 +288,14 @@ class CreateNodePoolsCluster extends Component {
             ' | Giant Swarm'
           }
         >
-          <WrapperDiv data-testid='nodepool-cluster-creation-view'>
-            <div className='row'>
-              <div className='col-12'>
-                <h1>Create a Cluster</h1>
+          <>
+            <WrapperDiv data-testid='nodepool-cluster-creation-view'>
+              <div className='row'>
+                <div className='col-12'>
+                  <h1>Create a Cluster</h1>
+                </div>
               </div>
-            </div>
 
-            <WrapperDiv>
               <FlexColumnDiv>
                 {/* Name */}
                 <label htmlFor='name'>
@@ -393,32 +394,43 @@ class CreateNodePoolsCluster extends Component {
                 </AZWrapperDiv>
 
                 {this.state.error && this.errorState()}
-
-                <FlexRowDiv>
-                  <Button
-                    bsSize='large'
-                    bsStyle='primary'
-                    disabled={!this.isValid()}
-                    loading={this.state.submitting}
-                    onClick={this.createCluster}
-                    type='button'
-                  >
-                    Create Cluster
-                  </Button>
-                  <Button
-                    bsSize='large'
-                    bsStyle='default'
-                    loading={this.state.submitting}
-                    onClick={this.props.closeForm}
-                    style={{ background: 'red' }}
-                    type='button'
-                  >
-                    Cancel
-                  </Button>
-                </FlexRowDiv>
               </FlexColumnDiv>
+              <hr />
+              <AddNodePool
+                clusterId='m0ckd'
+                releaseVersion={'8.2.0'}
+                closeForm={this.toggleAddNodePoolForm}
+              />
+              {/*{release_version}*/}
+              {/*{cluster.id}*/}
+              <Button onClick={this.toggleAddNodePoolForm}>
+                <i className='fa fa-add-circle' /> ADD NODE POOL
+              </Button>
+              <hr />
             </WrapperDiv>
-          </WrapperDiv>
+            <FlexRowDiv>
+              <Button
+                bsSize='large'
+                bsStyle='primary'
+                disabled={!this.isValid()}
+                loading={this.state.submitting}
+                onClick={this.createCluster}
+                type='button'
+              >
+                Create Cluster
+              </Button>
+              <Button
+                bsSize='large'
+                bsStyle='default'
+                loading={this.state.submitting}
+                onClick={this.props.closeForm}
+                style={{ background: 'red' }}
+                type='button'
+              >
+                Cancel
+              </Button>
+            </FlexRowDiv>
+          </>
         </DocumentTitle>
       </Breadcrumb>
     );
