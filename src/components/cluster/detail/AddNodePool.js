@@ -161,7 +161,7 @@ class AddNodePool extends Component {
 
   updateName = event => {
     const name = event.target.value;
-    const [isValid, message] = hasAppropriateLength(name, 4, 100);
+    const [isValid, message] = hasAppropriateLength(name, 0, 100);
 
     // We don't let the user write more characters if the name exceeds the max number allowed
     if (!isValid) {
@@ -243,7 +243,10 @@ class AddNodePool extends Component {
             min: this.state.scaling.min,
             max: this.state.scaling.max,
           },
-          name: this.state.name.value,
+          name:
+            this.state.name.value === ''
+              ? 'Unnamed cluster'
+              : this.state.name.value,
           nodeSpec: {
             aws: {
               instance_type: this.state.aws.instanceType.value,
