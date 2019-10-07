@@ -103,9 +103,8 @@ const GridRowNodePoolsItem = styled.div`
   background-color: ${props => props.theme.colors.shade7};
 `;
 
-export const AddNodePoolWrapperDiv = styled.div`
-  background-color: ${props => props.theme.colors.shade10};
-  padding: 20px 20px 40px;
+export const AddNodePoolWrapper = props => css`
+  background-color: ${props.theme.colors.shade10};
   border-radius: 5px;
   margin-bottom: 0px;
   h3 {
@@ -113,12 +112,17 @@ export const AddNodePoolWrapperDiv = styled.div`
   }
 `;
 
+const AddNodePoolWrapperDiv = styled.div`
+  ${AddNodePoolWrapper}
+  padding: 20px 20px 40px;
+`;
+
 export const AddNodePoolFlexColumnDiv = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  margin: 0 auto;
   max-width: 650px;
+  margin: 0 auto;
   label {
     display: flex;
     justify-content: space-between;

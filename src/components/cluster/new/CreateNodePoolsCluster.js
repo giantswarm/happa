@@ -1,6 +1,6 @@
 import {
   AddNodePoolFlexColumnDiv,
-  AddNodePoolWrapperDiv,
+  AddNodePoolWrapper,
 } from '../detail/cluster_detail_node_pools_table';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
@@ -24,6 +24,10 @@ const WrapperDiv = styled.div`
     padding-bottom: 45px;
     border-bottom: 1px solid #3a5f7b;
     margin-bottom: 25px;
+  }
+  /* Last node pool wrapper */
+  & > div:nth-last-of-type(2) {
+    margin-bottom: 33px;
   }
 `;
 
@@ -72,6 +76,8 @@ const FlexColumnDiv = styled.div`
 
 const FlexRowDiv = styled.div`
   display: flex;
+  margin: 0 auto 23px;
+  max-width: 650px;
 `;
 
 const RadioGroupDiv = styled.div`
@@ -140,6 +146,12 @@ const AZWrapperDiv = styled.div`
   }
 `;
 
+const AddNodePoolWrapperDiv = styled.div`
+  ${AddNodePoolWrapper};
+  padding: 20px 20px 0;
+  margin-bottom: 20px;
+`;
+
 class CreateNodePoolsCluster extends Component {
   state = {
     name: {
@@ -170,17 +182,18 @@ class CreateNodePoolsCluster extends Component {
       isValid: false,
       isSubmitting: false,
       // one object for each np form inside this array
-      data: {
-        // nodePool1: {},
-        // nodePool2: {},
+      nodePools: 1,
+      data: [
+        //  {name: nodePool1, ...},
+        //  {name: nodePool2, ...},
         // ...
-      },
+      ],
     },
   };
 
   updateName = event => {
     const name = event.target.value;
-    const [isValid, message] = hasAppropriateLength(name, 4, 100);
+    const [isValid, message] = hasAppropriateLength(name, 0, 100);
 
     // We don't let the user write more characters if the name exceeds the max number allowed
     if (!isValid) {
@@ -279,6 +292,15 @@ class CreateNodePoolsCluster extends Component {
 
   updateAZ = payload => {
     this.setState({ availabilityZonesLabels: payload });
+  };
+
+  updateNumberOfodePoolForms = value => {
+    this.setState(
+      produce(draft => {
+        draft.nodePoolForms.nodePools =
+          this.state.nodePoolForms.nodePools + value;
+      })
+    );
   };
 
   render() {
@@ -405,20 +427,25 @@ class CreateNodePoolsCluster extends Component {
                 {this.state.error && this.errorState()}
               </FlexColumnDiv>
               <hr />
-              <AddNodePoolWrapperDiv>
-                <AddNodePoolFlexColumnDiv>
-                  <AddNodePool
-                    clusterId={'m0ckd'}
-                    releaseVersion={'8.2.0'}
-                    closeForm={() => 'this.toggleAddNodePoolForm'}
-                    informParent={() => 'this.updateNodePoolForm'}
-                  />
-                </AddNodePoolFlexColumnDiv>
-              </AddNodePoolWrapperDiv>
-              <Button onClick={this.toggleAddNodePoolForm}>
+              {Array.from(Array(this.state.nodePoolForms.nodePools)).map(
+                (np, index) => (
+                  <AddNodePoolWrapperDiv key={index}>
+                    <AddNodePoolFlexColumnDiv>
+                      <AddNodePool
+                        clusterId={'m0ckd'}
+                        releaseVersion={'8.2.0'}
+                        closeForm={() => 'this.toggleAddNodePoolForm'}
+                        informParent={() => 'this.updateNodePoolForm'}
+                        name={`Node Pool #${index + 1}`}
+                      />
+                    </AddNodePoolFlexColumnDiv>
+                  </AddNodePoolWrapperDiv>
+                )
+              )}
+              <Button onClick={() => this.updateNumberOfodePoolForms(1)}>
                 <i className='fa fa-add-circle' /> ADD NODE POOL
               </Button>
-              <hr />
+              <hr style={{ margin: '30px 0' }} />
             </WrapperDiv>
             <FlexRowDiv>
               <Button
@@ -442,6 +469,10 @@ class CreateNodePoolsCluster extends Component {
                 Cancel
               </Button>
             </FlexRowDiv>
+            <p>
+              Note that it takes around 20 minutes on average until a new
+              cluster is fully available.
+            </p>
           </>
         </DocumentTitle>
       </Breadcrumb>

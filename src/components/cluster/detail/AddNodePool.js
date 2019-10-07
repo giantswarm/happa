@@ -21,45 +21,6 @@ const FlexWrapperDiv = styled.div`
   }
 `;
 
-const FlexColumnDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  margin: 0 auto;
-  max-width: 650px;
-  label {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    margin: 0 0 31px;
-    &.instance-type {
-      margin-bottom: 21px;
-    }
-    p {
-      line-height: 1.4;
-    }
-  }
-  .label-span {
-    color: ${props => props.theme.colors.white1};
-  }
-  .label-span,
-  input,
-  select {
-    font-size: 16px;
-    margin-bottom: 13px;
-    font-weight: 400;
-  }
-  ${Input};
-  p {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.2;
-    margin: 0;
-    max-width: 550px;
-    padding-left: 20px;
-  }
-`;
-
 // Availability Zones styles
 const Emphasized = css`
   .emphasized {
@@ -113,7 +74,7 @@ const availabilityZonesLimits = {
 class AddNodePool extends Component {
   state = {
     name: {
-      value: 'My node pool',
+      value: this.props.name,
       valid: true,
       validationError: '',
     },
@@ -418,6 +379,11 @@ AddNodePool.propTypes = {
   clusterId: PropTypes.string,
   closeForm: PropTypes.func,
   informParent: PropTypes.func,
+  name: PropTypes.string,
+};
+
+AddNodePool.defaultProps = {
+  name: 'My node pool',
 };
 
 function mapStateToProps(state) {
