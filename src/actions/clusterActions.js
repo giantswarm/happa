@@ -545,6 +545,7 @@ function clusterLoadStatusV4(dispatch, clusterId) {
  * on success or CLUSTER_CREATE_ERROR on error.
  *
  * @param {Object} cluster Cluster definition object
+ * @param {Boolean} isV5Cluster
  */
 export function clusterCreate(cluster, isV5Cluster) {
   return function(dispatch) {

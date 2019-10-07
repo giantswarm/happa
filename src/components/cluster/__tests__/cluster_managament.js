@@ -29,7 +29,7 @@ jest.mock('actions/releaseActions');
 jest.mock('actions/catalogActions');
 
 // TODO rewrite it as the form is renered dinammically depending if the user is
-// creating a NPs Cluster o a regular one.
+// creating a NPs Cluster or a regular one.
 it.skip('drives us to the cluster creation form when launch new cluster button is clicked', async () => {
   const div = document.createElement('div');
   const { getByText, getByTestId } = renderRouteWithStore('/', div);
@@ -45,7 +45,7 @@ it.skip('drives us to the cluster creation form when launch new cluster button i
 // TODO change it and look for rendered changes once we have API methods mocked
 // instead of action creators mocked
 // TODO rewrite it as the form is renered dinammically depending if the user is
-// creating a NPs Cluster o a regular one.
+// creating a NPs Cluster or a regular one.
 it.skip(`renders the form when in new cluster route with default values and calls
     the action creator with the correct arguments`, async () => {
   const div = document.createElement('div');
