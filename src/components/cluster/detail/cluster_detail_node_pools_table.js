@@ -103,7 +103,7 @@ const GridRowNodePoolsItem = styled.div`
   background-color: ${props => props.theme.colors.shade7};
 `;
 
-const AddNodePoolWrapperDiv = styled.div`
+export const AddNodePoolWrapperDiv = styled.div`
   background-color: ${props => props.theme.colors.shade10};
   padding: 20px 20px 40px;
   border-radius: 5px;
