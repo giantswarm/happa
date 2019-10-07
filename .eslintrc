@@ -30,11 +30,8 @@
     "react/prefer-es6-class": [1, "always"],
     "react/no-find-dom-node": 0,
     "strict": 2,
-    "sort-imports-es6-autofix/sort-imports-es6": [2, {
-      "ignoreCase": true,
-      "ignoreMemberSort": false,
-      "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
-    }]
+    "sort-imports-es6-autofix/sort-imports-es6": 0,
+    "no-unreachable": 1
   },
   "extends": [
     "eslint:recommended",
