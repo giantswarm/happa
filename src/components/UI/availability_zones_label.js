@@ -85,8 +85,6 @@ function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
     }
   }, [checked]);
 
-  return 'hey';
-
   return (
     <Wrapper
       className={classNames}
