@@ -151,6 +151,8 @@ class CreateNodePoolsCluster extends Component {
     submitting: false,
     valid: false,
     error: false,
+    // Not sure which value are we going to pass here... there is no
+    // input field in the wireframes
     availabilityZonesRandom: {
       // Select automatically
       value: 1,
@@ -164,8 +166,16 @@ class CreateNodePoolsCluster extends Component {
       valid: false,
     },
     hasAZLabels: false, // false = 'automatically', true = 'distinct'
-    // Not sure hich value are we going to pass here... there is no
-    // input field in the wireframes
+    nodePoolForms: {
+      isValid: false,
+      isSubmitting: false,
+      // one object for each np form inside this array
+      data: {
+        // nodePool1: {},
+        // nodePool2: {},
+        // ...
+      },
+    },
   };
 
   updateName = event => {
