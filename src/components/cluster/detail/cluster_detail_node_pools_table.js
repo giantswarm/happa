@@ -27,6 +27,9 @@ const Upgrade = styled.div`
   color: #ce990f;
   span {
     white-space: normal !important;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -101,7 +104,7 @@ const GridRowNodePoolsItem = styled.div`
 `;
 
 const WrapperDiv = styled.div`
-  background-color: ${props => props.theme.colors.shade7};
+  background-color: ${props => props.theme.colors.shade10};
   padding: 20px 20px 40px;
   border-radius: 5px;
   margin-bottom: 0px;
@@ -127,6 +130,9 @@ const FlexColumnDiv = styled.div`
     p {
       line-height: 1.4;
     }
+  }
+  label:last-of-type {
+    margin-bottom: 0;
   }
   .label-span {
     color: ${props => props.theme.colors.white1};
