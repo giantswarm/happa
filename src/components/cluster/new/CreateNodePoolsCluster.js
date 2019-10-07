@@ -152,6 +152,11 @@ const AddNodePoolWrapperDiv = styled.div`
   margin-bottom: 20px;
 `;
 
+const NodePoolHeading = styled.div`
+  position: absolute;
+  font-weight: 700;
+`;
+
 class CreateNodePoolsCluster extends Component {
   state = {
     name: {
@@ -430,6 +435,9 @@ class CreateNodePoolsCluster extends Component {
               {Array.from(Array(this.state.nodePoolForms.nodePools)).map(
                 (np, index) => (
                   <AddNodePoolWrapperDiv key={index}>
+                    <NodePoolHeading>
+                      {`Node Pool #${index + 1}`}
+                    </NodePoolHeading>
                     <AddNodePoolFlexColumnDiv>
                       <AddNodePool
                         clusterId={'m0ckd'}
