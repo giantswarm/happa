@@ -469,7 +469,7 @@ class CreateNodePoolsCluster extends Component {
                 Cancel
               </Button>
             </FlexRowDiv>
-            <p>
+            <p style={{ maxWidth: '650px', margin: '0 auto' }}>
               Note that it takes around 20 minutes on average until a new
               cluster is fully available.
             </p>
