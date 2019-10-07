@@ -371,18 +371,23 @@ class ClusterDetailNodePoolsTable extends React.Component {
           </div>
           <div>
             <div>
-              <span>
-                {workerNodesRunning} nodes in {nodePools ? nodePools.length : 0}{' '}
-                node pools
-              </span>
-              <span>
-                <Dot />
-                {this.state.RAM} GB RAM
-              </span>
-              <span>
-                <Dot />
-                {this.state.CPUs} CPUs
-              </span>
+              {!nodePools ? (
+                <span>0 nodes</span>
+              ) : (
+                <>
+                  <span>
+                    {workerNodesRunning} nodes in {nodePools.length} node pools
+                  </span>
+                  <span>
+                    <Dot />
+                    {this.state.RAM} GB RAM
+                  </span>
+                  <span>
+                    <Dot />
+                    {this.state.CPUs} CPUs
+                  </span>
+                </>
+              )}
             </div>
           </div>
         </FlexRowWithTwoBlocksOnEdges>
