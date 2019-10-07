@@ -11,7 +11,9 @@ import { nodePoolCreate } from 'actions/nodePoolActions';
 import { relativeDate } from 'lib/helpers.js';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
+import copy from 'copy-to-clipboard';
 import NodePool from './node_pool';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -19,6 +21,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactTimeout from 'react-timeout';
 import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 const Upgrade = styled.div`
   color: #ce990f;
@@ -211,6 +214,27 @@ const FlexWrapperDiv = styled.div`
   }
 `;
 
+const CopyToClipboardDiv = styled.div`
+  display: inline-block;
+  &:hover {
+    i {
+      opacity: 0.7;
+    }
+  }
+  i {
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 5px;
+    margin-right: 5px;
+    opacity: 0;
+    transform: translateX(-15px);
+    &:hover {
+      opacity: 1;
+      text-shadow: 0px 0px 15px ${props => props.theme.colors.shade1};
+    }
+  }
+`;
+
 class ClusterDetailNodePoolsTable extends React.Component {
   state = {
     availableZonesGridTemplateAreas: '',
@@ -225,6 +249,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       isSubmitting: false,
       data: {},
     },
+    enpointCopied: false,
   };
 
   componentDidMount() {
@@ -301,6 +326,22 @@ class ClusterDetailNodePoolsTable extends React.Component {
       });
   };
 
+  copyToClipboard = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    copy(this.props.cluster.api_endpoint);
+
+    this.setState({
+      endpointCopied: true,
+    });
+  };
+
+  mouseLeave = () => {
+    this.setState({
+      endpointCopied: false,
+    });
+  };
+
   render() {
     const {
       availableZonesGridTemplateAreas,
@@ -321,7 +362,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       <>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            <Code>{master ? master.availability_zone : null}</Code>
+            Region:&nbsp;<Code>{master ? master.availability_zone : null}</Code>
             <div>
               <span>
                 Created {create_date ? relativeDate(create_date) : 'n/a'}
@@ -392,10 +433,30 @@ class ClusterDetailNodePoolsTable extends React.Component {
           </div>
         </FlexRowWithTwoBlocksOnEdges>
         <FlexRowWithTwoBlocksOnEdges>
-          <div>
+          <CopyToClipboardDiv onMouseLeave={this.mouseLeave}>
             <span>Kubernetes endpoint URI:</span>
             <Code>{api_endpoint}</Code>
-          </div>
+            {/* Copy to clipboard. 
+            TODO make a render prop component or a hooks function with it */}
+            {this.state.endpointCopied ? (
+              <i aria-hidden='true' className='fa fa-done' />
+            ) : (
+              <OverlayTrigger
+                overlay={
+                  <Tooltip id='tooltip'>
+                    Copy {api_endpoint} to clipboard.
+                  </Tooltip>
+                }
+                placement='top'
+              >
+                <i
+                  aria-hidden='true'
+                  className='fa fa-content-copy'
+                  onClick={this.copyToClipboard}
+                />
+              </OverlayTrigger>
+            )}
+          </CopyToClipboardDiv>
           <div style={{ transform: 'translateX(10px)' }}>
             <Button onClick={accessCluster}>
               <i className='fa fa-start' /> GET STARTED
