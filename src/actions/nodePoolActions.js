@@ -136,6 +136,48 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
   };
 }
 
+/**
+ * Takes a node pool object and tries to create it. Dispatches NODEPOOL_CREATE_SUCCESS
+ * on success or NODEPOOL_CREATE_ERROR on error.
+ *
+ * @param {Object} nodepool Node Pool definition object
+ */
+export function nodePoolCreate(clusterId, nodePool) {
+  return function(dispatch) {
+    // This is failing now because this enpoint is not ready yet.
+    return nodePoolsApi
+      .addNodePool(clusterId, nodePool)
+      .then(nodePool => {
+        new FlashMessage(
+          `Your new node pool with ID <code>${nodePool.id}</code> is being created.`,
+          messageType.SUCCESS,
+          messageTTL.MEDIUM
+        );
+
+        dispatch({
+          type: types.NODEPOOL_CREATE_SUCCESS,
+          nodePool,
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: types.NODEPOOL_CREATE_ERROR,
+          error,
+        });
+
+        new FlashMessage(
+          'Something went wrong while trying to create the node pool',
+          messageType.ERROR,
+          messageTTL.MEDIUM,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        console.error(error);
+        throw error;
+      });
+  };
+}
+
 // Actions
 const clusterNodePoolsLoadSucces = (clusterId, nodePools) => ({
   type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
