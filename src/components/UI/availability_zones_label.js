@@ -21,6 +21,7 @@ const Wrapper = styled.abbr`
   line-height: 1.4em;
   text-decoration: none;
   font-weight: 400;
+  user-select: none;
   &.a {
     background-color: #66c2a5;
   }

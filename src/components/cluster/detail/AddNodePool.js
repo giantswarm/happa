@@ -170,6 +170,7 @@ class AddNodePool extends Component {
           draft.name.validationError = message;
         })
       );
+      return;
     }
 
     this.setState(
@@ -392,6 +393,9 @@ class AddNodePool extends Component {
             scaling={this.state.scaling}
           />
         </label>
+        <p style={{ marginBottom: '31px' }}>
+          To enable autoscaling, set minimum and maximum to different values.
+        </p>
       </>
     );
   }
