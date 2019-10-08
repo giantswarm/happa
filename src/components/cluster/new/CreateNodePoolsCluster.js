@@ -166,7 +166,7 @@ const NodePoolHeading = styled.div`
   font-weight: 700;
 `;
 
-const defaultNodePool = id => ({ id, name: `nodePool#${id}` });
+const defaultNodePool = id => ({ id, name: `Node Pool #${id}` });
 
 class CreateNodePoolsCluster extends Component {
   state = {
