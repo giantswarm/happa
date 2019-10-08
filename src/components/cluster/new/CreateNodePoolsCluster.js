@@ -5,6 +5,7 @@ import {
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
+import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
 import { push } from 'connected-react-router';
@@ -157,6 +158,8 @@ const NodePoolHeading = styled.div`
   font-weight: 700;
 `;
 
+const defaultNodePool = id => ({ id, name: `nodePool#${id}` });
+
 class CreateNodePoolsCluster extends Component {
   state = {
     name: {
@@ -183,16 +186,13 @@ class CreateNodePoolsCluster extends Component {
       valid: false,
     },
     hasAZLabels: false, // false = 'automatically', true = 'distinct'
-    nodePoolForms: {
+    nodePoolsForms: {
       isValid: false,
       isSubmitting: false,
       // one object for each np form inside this array
-      nodePools: 1,
-      data: [
-        //  {name: nodePool1, ...},
-        //  {name: nodePool2, ...},
-        // ...
-      ],
+      nodePools: [
+        defaultNodePool(1),
+      ]
     },
   };
 
@@ -299,14 +299,26 @@ class CreateNodePoolsCluster extends Component {
     this.setState({ availabilityZonesLabels: payload });
   };
 
-  updateNumberOfodePoolForms = value => {
+  addNodePoolForm = () => {
+    const lastId = this.state.nodePoolsForms.nodePools.length === 0 ? 1 : this.state.nodePoolsForms.nodePools
+      .map(np => np.id)
+      .sort()
+      .reverse()[0] + 1;
+
     this.setState(
       produce(draft => {
-        draft.nodePoolForms.nodePools =
-          this.state.nodePoolForms.nodePools + value;
+        draft.nodePoolsForms.nodePools.push(defaultNodePool(lastId));
       })
     );
   };
+
+  removeNodePoolForm = id => {
+    this.setState(
+      produce(draft => {
+        draft.nodePoolsForms.nodePools = this.state.nodePoolsForms.nodePools.filter(np => np.id !== id);
+      })
+    );
+  }
 
   render() {
     const { hasAZLabels } = this.state;
@@ -432,11 +444,11 @@ class CreateNodePoolsCluster extends Component {
                 {this.state.error && this.errorState()}
               </FlexColumnDiv>
               <hr />
-              {Array.from(Array(this.state.nodePoolForms.nodePools)).map(
-                (np, index) => (
-                  <AddNodePoolWrapperDiv key={index}>
+              {this.state.nodePoolsForms.nodePools.map(
+                np => (
+                  <AddNodePoolWrapperDiv key={np.id}>
                     <NodePoolHeading>
-                      {`Node Pool #${index + 1}`}
+                      {np.name}
                     </NodePoolHeading>
                     <AddNodePoolFlexColumnDiv>
                       <AddNodePool
@@ -444,13 +456,14 @@ class CreateNodePoolsCluster extends Component {
                         releaseVersion={'8.2.0'}
                         closeForm={() => 'this.toggleAddNodePoolForm'}
                         informParent={() => 'this.updateNodePoolForm'}
-                        name={`Node Pool #${index + 1}`}
+                        name={np.name}
                       />
+                      <div onClick={() => this.removeNodePoolForm(np.id)}>remove it</div>
                     </AddNodePoolFlexColumnDiv>
                   </AddNodePoolWrapperDiv>
                 )
               )}
-              <Button onClick={() => this.updateNumberOfodePoolForms(1)}>
+              <Button onClick={this.addNodePoolForm}>
                 <i className='fa fa-add-circle' /> ADD NODE POOL
               </Button>
               <hr style={{ margin: '30px 0' }} />
