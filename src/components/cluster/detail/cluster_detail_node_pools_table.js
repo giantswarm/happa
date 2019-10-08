@@ -5,21 +5,31 @@ import {
   getNumberOfNodePoolsNodes,
 } from 'utils/cluster_utils';
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
+import { connect } from 'react-redux';
 import { css } from '@emotion/core';
-import { Link } from 'react-router-dom';
+import { nodePoolCreate } from 'actions/nodePoolActions';
 import { relativeDate } from 'lib/helpers.js';
+import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
+import copy from 'copy-to-clipboard';
 import NodePool from './node_pool';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import produce from 'immer';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactTimeout from 'react-timeout';
 import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 const Upgrade = styled.div`
   color: #ce990f;
   span {
     white-space: normal !important;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -93,7 +103,104 @@ const GridRowNodePoolsItem = styled.div`
   background-color: ${props => props.theme.colors.shade7};
 `;
 
-const FlexWrapper = styled.div`
+const WrapperDiv = styled.div`
+  background-color: ${props => props.theme.colors.shade10};
+  padding: 20px 20px 40px;
+  border-radius: 5px;
+  margin-bottom: 0px;
+  h3 {
+    margin-bottom: 20px;
+  }
+`;
+
+const FlexColumnDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 650px;
+  label {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    margin: 0 0 31px;
+    &.instance-type {
+      margin-bottom: 21px;
+    }
+    p {
+      line-height: 1.4;
+    }
+  }
+  label:last-of-type {
+    margin-bottom: 0;
+  }
+  .label-span {
+    color: ${props => props.theme.colors.white1};
+  }
+  .label-span,
+  input,
+  select {
+    font-size: 16px;
+    margin-bottom: 13px;
+    font-weight: 400;
+  }
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: ${props => props.theme.colors.shade5};
+    padding: 11px 10px;
+    outline: 0;
+    color: ${props => props.theme.colors.whiteInput};
+    border-radius: 4px;
+    border: 1px solid ${props => props.theme.colors.shade6};
+    padding-left: 15px;
+    line-height: normal;
+  }
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: ${props => props.theme.colors.white1};
+  }
+  a {
+    text-decoration: underline;
+  }
+  /* Name input */
+  .name-container {
+    position: relative;
+    margin-bottom: 23px;
+  }
+  input[id='name'] {
+    margin-bottom: 0;
+  }
+  /* Overrides for AWSInstanceTypeSelector */
+  .textfield label,
+  .textfield,
+  .textfield input {
+    margin: 0;
+  }
+  /* Overrides for NumberPicker */
+  .availability-zones {
+    margin-bottom: 12px;
+    & > div > div,
+    & > div > div > div {
+      margin: 0;
+    }
+  }
+  .scaling-range {
+    form {
+      label {
+        margin-bottom: 7px;
+        color: ${props => props.theme.colors.white1};
+        font-weight: 400;
+      }
+      & > div:nth-of-type(2) {
+        display: none;
+      }
+    }
+  }
+`;
+
+const FlexWrapperDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -103,6 +210,34 @@ const FlexWrapper = styled.div`
     margin: 0;
     max-width: 550px;
     padding-left: 20px;
+  }
+  & > div:nth-of-type(2) > button {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+  button {
+    margin-right: 16px;
+  }
+`;
+
+const CopyToClipboardDiv = styled.div`
+  display: inline-block;
+  &:hover {
+    i {
+      opacity: 0.7;
+    }
+  }
+  i {
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 5px;
+    margin-right: 5px;
+    opacity: 0;
+    transform: translateX(-15px);
+    &:hover {
+      opacity: 1;
+      text-shadow: 0px 0px 15px ${props => props.theme.colors.shade1};
+    }
   }
 `;
 
@@ -114,6 +249,13 @@ class ClusterDetailNodePoolsTable extends React.Component {
     CPUs: 0,
     workerNodesRunning: 0,
     nodePools: [],
+    isNodePoolBeingAdded: false,
+    nodePoolForm: {
+      isValid: false,
+      isSubmitting: false,
+      data: {},
+    },
+    enpointCopied: false,
   };
 
   componentDidMount() {
@@ -126,10 +268,12 @@ class ClusterDetailNodePoolsTable extends React.Component {
       const { nodePools } = this.state;
 
       const allZones = nodePools
-        .reduce((accumulator, current) => {
-          return [...accumulator, ...current.availability_zones];
-        }, [])
-        .map(zone => zone.slice(-1));
+        ? nodePools
+            .reduce((accumulator, current) => {
+              return [...accumulator, ...current.availability_zones];
+            }, [])
+            .map(zone => zone.slice(-1))
+        : [];
 
       // This array stores available zones that are in at least one node pool.
       // We only want unique values because this is used fot building the grid.
@@ -148,6 +292,61 @@ class ClusterDetailNodePoolsTable extends React.Component {
       this.setState({ RAM, CPUs, workerNodesRunning });
     });
   }
+
+  toggleAddNodePoolForm = () =>
+    this.setState(prevState => ({
+      isNodePoolBeingAdded: !prevState.isNodePoolBeingAdded,
+    }));
+
+  updateNodePoolForm = data => {
+    this.setState(
+      produce(this.state, draft => {
+        draft.nodePoolForm = { ...this.state.nodePoolForm, ...data };
+      })
+    );
+  };
+
+  createNodePool = () => {
+    this.setState({ submitting: true });
+
+    this.props
+      .dispatch(
+        nodePoolCreate(this.props.cluster.id, this.state.nodePoolForm.data)
+      )
+      .then(() => {
+        // Reset form data and close the form
+        this.setState(
+          produce(draft => {
+            draft.nodePoolForm.data = {};
+          })
+        );
+        this.closeForm();
+      })
+      .catch(error => {
+        // TODO Show error in view?
+
+        this.setState({
+          submitting: false,
+          error: error,
+        });
+      });
+  };
+
+  copyToClipboard = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    copy(this.props.cluster.api_endpoint);
+
+    this.setState({
+      endpointCopied: true,
+    });
+  };
+
+  mouseLeave = () => {
+    this.setState({
+      endpointCopied: false,
+    });
+  };
 
   render() {
     const {
@@ -169,7 +368,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       <>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            <Code>{master ? master.availability_zone : null}</Code>
+            Region:&nbsp;<Code>{master ? master.availability_zone : null}</Code>
             <div>
               <span>
                 Created {create_date ? relativeDate(create_date) : 'n/a'}
@@ -219,26 +418,51 @@ class ClusterDetailNodePoolsTable extends React.Component {
           </div>
           <div>
             <div>
-              <span>
-                {workerNodesRunning} nodes in {nodePools ? nodePools.length : 0}{' '}
-                node pools
-              </span>
-              <span>
-                <Dot />
-                {this.state.RAM} GB RAM
-              </span>
-              <span>
-                <Dot />
-                {this.state.CPUs} CPUs
-              </span>
+              {!nodePools ? (
+                <span>0 nodes</span>
+              ) : (
+                <>
+                  <span>
+                    {workerNodesRunning} nodes in {nodePools.length} node pools
+                  </span>
+                  <span>
+                    <Dot />
+                    {this.state.RAM} GB RAM
+                  </span>
+                  <span>
+                    <Dot />
+                    {this.state.CPUs} CPUs
+                  </span>
+                </>
+              )}
             </div>
           </div>
         </FlexRowWithTwoBlocksOnEdges>
         <FlexRowWithTwoBlocksOnEdges>
-          <div>
+          <CopyToClipboardDiv onMouseLeave={this.mouseLeave}>
             <span>Kubernetes endpoint URI:</span>
             <Code>{api_endpoint}</Code>
-          </div>
+            {/* Copy to clipboard. 
+            TODO make a render prop component or a hooks function with it */}
+            {this.state.endpointCopied ? (
+              <i aria-hidden='true' className='fa fa-done' />
+            ) : (
+              <OverlayTrigger
+                overlay={
+                  <Tooltip id='tooltip'>
+                    Copy {api_endpoint} to clipboard.
+                  </Tooltip>
+                }
+                placement='top'
+              >
+                <i
+                  aria-hidden='true'
+                  className='fa fa-content-copy'
+                  onClick={this.copyToClipboard}
+                />
+              </OverlayTrigger>
+            )}
+          </CopyToClipboardDiv>
           <div style={{ transform: 'translateX(10px)' }}>
             <Button onClick={accessCluster}>
               <i className='fa fa-start' /> GET STARTED
@@ -247,60 +471,110 @@ class ClusterDetailNodePoolsTable extends React.Component {
         </FlexRowWithTwoBlocksOnEdges>
         <NodePoolsWrapper>
           <h2>Node Pools</h2>
-          <GridRowNodePoolsNodes>
-            <div>
-              <span>NODES</span>
-            </div>
-          </GridRowNodePoolsNodes>
-          <GridRowNodePoolsHeaders>
-            <span>ID</span>
-            <span style={{ paddingLeft: '11px', justifySelf: 'left' }}>
-              NAME
-            </span>
-            <span>INSTANCE TYPE</span>
-            <span>AVAILABILITY ZONES</span>
-            <span>MIN</span>
-            <span>MAX</span>
-            <span>DESIRED</span>
-            <span>CURRENT</span>
-            <span> </span>
-          </GridRowNodePoolsHeaders>
-          {nodePools &&
-            nodePools
-              .sort((a, b) => (a.name > b.name ? 1 : -1))
-              .map(nodePool => (
-                <GridRowNodePoolsItem key={nodePool.id}>
-                  <NodePool
-                    availableZonesGridTemplateAreas={
-                      availableZonesGridTemplateAreas
-                    }
-                    clusterId={cluster.id}
-                    nodePool={nodePool}
-                    showNodePoolScalingModal={showNodePoolScalingModal}
-                  />
-                </GridRowNodePoolsItem>
-              ))}
+          {nodePools ? (
+            <>
+              <GridRowNodePoolsNodes>
+                <div>
+                  <span>NODES</span>
+                </div>
+              </GridRowNodePoolsNodes>
+              <GridRowNodePoolsHeaders>
+                <span>ID</span>
+                <span style={{ paddingLeft: '8px', justifySelf: 'left' }}>
+                  NAME
+                </span>
+                <span>INSTANCE TYPE</span>
+                <span>AVAILABILITY ZONES</span>
+                <span>MIN</span>
+                <span>MAX</span>
+                <span>DESIRED</span>
+                <span>CURRENT</span>
+                <span> </span>
+              </GridRowNodePoolsHeaders>
+              {nodePools &&
+                nodePools
+                  .sort((a, b) => (a.name > b.name ? 1 : -1))
+                  .map(nodePool => (
+                    <GridRowNodePoolsItem key={nodePool.id}>
+                      <NodePool
+                        availableZonesGridTemplateAreas={
+                          availableZonesGridTemplateAreas
+                        }
+                        clusterId={cluster.id}
+                        nodePool={nodePool}
+                        showNodePoolScalingModal={showNodePoolScalingModal}
+                      />
+                    </GridRowNodePoolsItem>
+                  ))}
+            </>
+          ) : null}
         </NodePoolsWrapper>
-        <FlexWrapper>
-          <Button>
-            <i className='fa fa-add-circle' /> ADD NODE POOL
-          </Button>
-          {nodePools.length < 2 && (
-            <p>
-              With additional node pools, you can add different types of worker
-              nodes to your cluster. Node pools also scale independently.{' '}
-              <a
-                href='https://docs.giantswarm.io/basics/nodepools/'
-                alt='Read more about node pools'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                {' '}
-                Read more
-              </a>
-            </p>
-          )}
-        </FlexWrapper>
+        {this.state.isNodePoolBeingAdded ? (
+          <ReactCSSTransitionGroup
+            transitionAppear={true}
+            transitionAppearTimeout={200}
+            transitionEnterTimeout={200}
+            transitionLeaveTimeout={200}
+            transitionName={`login_form--transition`}
+          >
+            {/* Add Node Pool */}
+            <WrapperDiv>
+              <h3 className='table-label'>Add Node Pool</h3>
+              <FlexColumnDiv>
+                <AddNodePool
+                  clusterId={cluster.id}
+                  releaseVersion={release_version}
+                  closeForm={this.toggleAddNodePoolForm}
+                  informParent={this.updateNodePoolForm}
+                />
+                <FlexWrapperDiv>
+                  <Button
+                    bsSize='large'
+                    bsStyle='primary'
+                    disabled={!this.state.nodePoolForm.isValid}
+                    loading={this.state.nodePoolForm.isSubmitting}
+                    onClick={this.createNodePool}
+                    type='button'
+                  >
+                    Create Node Pool
+                  </Button>
+                  <Button
+                    bsSize='large'
+                    bsStyle='default'
+                    loading={this.state.nodePoolForm.isSubmitting}
+                    onClick={this.toggleAddNodePoolForm}
+                    style={{ background: 'red' }}
+                    type='button'
+                  >
+                    Cancel
+                  </Button>
+                </FlexWrapperDiv>
+              </FlexColumnDiv>
+            </WrapperDiv>
+          </ReactCSSTransitionGroup>
+        ) : (
+          <FlexWrapperDiv>
+            <Button onClick={this.toggleAddNodePoolForm}>
+              <i className='fa fa-add-circle' /> ADD NODE POOL
+            </Button>
+            {nodePools && nodePools.length < 2 && (
+              <p>
+                With additional node pools, you can add different types of
+                worker nodes to your cluster. Node pools also scale
+                independently.{' '}
+                <a
+                  href='https://docs.giantswarm.io/basics/nodepools/'
+                  alt='Read more about node pools'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {' '}
+                  Read more
+                </a>
+              </p>
+            )}
+          </FlexWrapperDiv>
+        )}
       </>
     );
   }
@@ -311,6 +585,7 @@ ClusterDetailNodePoolsTable.propTypes = {
   canClusterUpgrade: PropTypes.bool,
   cluster: PropTypes.object,
   credentials: PropTypes.object,
+  dispatch: PropTypes.func,
   lastUpdated: PropTypes.number,
   nodePools: PropTypes.object,
   provider: PropTypes.string,
@@ -322,4 +597,13 @@ ClusterDetailNodePoolsTable.propTypes = {
   workerNodesDesired: PropTypes.number,
 };
 
-export default ReactTimeout(ClusterDetailNodePoolsTable);
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
+}
+
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(ReactTimeout(ClusterDetailNodePoolsTable));

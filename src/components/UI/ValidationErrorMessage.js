@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 const MessageSpan = styled.span`
   color: ${props => props.theme.colors.error};
-  margin-right: 10px;
+  margin-top: 2px;
   display: block;
   font-size: 14px;
   font-weight: 400;

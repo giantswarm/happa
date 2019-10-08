@@ -3,6 +3,11 @@ import Button from 'UI/button';
 import InputField from 'shared/input_field';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
+
+const WrapperDiv = styled.div`
+  max-width: 200px;
+`;
 
 class AWSInstanceTypeSelector extends React.Component {
   constructor(props) {
@@ -103,7 +108,7 @@ class AWSInstanceTypeSelector extends React.Component {
 
   render() {
     return (
-      <div className='col-4'>
+      <WrapperDiv>
         <div className='new-cluster--instance-type-selector'>
           <form
             onSubmit={e => {
@@ -203,7 +208,7 @@ class AWSInstanceTypeSelector extends React.Component {
             </Button>
           </BootstrapModal.Footer>
         </BootstrapModal>
-      </div>
+      </WrapperDiv>
     );
   }
 }
