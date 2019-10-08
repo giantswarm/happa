@@ -30,6 +30,11 @@
     "react/prefer-es6-class": [1, "always"],
     "react/no-find-dom-node": 0,
     "strict": 2,
+    "sort-imports-es6-autofix/sort-imports-es6": [1, {
+      "ignoreCase": true,
+      "ignoreMemberSort": false,
+      "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
+    }],
     "no-unreachable": 1
   },
   "extends": [
