@@ -16,6 +16,7 @@ import DocumentTitle from 'react-document-title';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReleaseSelector from './ReleaseSelector';
 import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
@@ -151,6 +152,13 @@ const AddNodePoolWrapperDiv = styled.div`
   ${AddNodePoolWrapper};
   padding: 20px 20px 0;
   margin-bottom: 20px;
+  position: relative;
+  i {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    font-size: 1.3em;
+  }
 `;
 
 const NodePoolHeading = styled.div`
@@ -190,9 +198,7 @@ class CreateNodePoolsCluster extends Component {
       isValid: false,
       isSubmitting: false,
       // one object for each np form inside this array
-      nodePools: [
-        defaultNodePool(1),
-      ]
+      nodePools: [defaultNodePool(1)],
     },
   };
 
@@ -300,10 +306,13 @@ class CreateNodePoolsCluster extends Component {
   };
 
   addNodePoolForm = () => {
-    const lastId = this.state.nodePoolsForms.nodePools.length === 0 ? 1 : this.state.nodePoolsForms.nodePools
-      .map(np => np.id)
-      .sort()
-      .reverse()[0] + 1;
+    const lastId =
+      this.state.nodePoolsForms.nodePools.length === 0
+        ? 1
+        : this.state.nodePoolsForms.nodePools
+            .map(np => np.id)
+            .sort()
+            .reverse()[0] + 1;
 
     this.setState(
       produce(draft => {
@@ -315,10 +324,12 @@ class CreateNodePoolsCluster extends Component {
   removeNodePoolForm = id => {
     this.setState(
       produce(draft => {
-        draft.nodePoolsForms.nodePools = this.state.nodePoolsForms.nodePools.filter(np => np.id !== id);
+        draft.nodePoolsForms.nodePools = this.state.nodePoolsForms.nodePools.filter(
+          np => np.id !== id
+        );
       })
     );
-  }
+  };
 
   render() {
     const { hasAZLabels } = this.state;
@@ -444,12 +455,16 @@ class CreateNodePoolsCluster extends Component {
                 {this.state.error && this.errorState()}
               </FlexColumnDiv>
               <hr />
-              {this.state.nodePoolsForms.nodePools.map(
-                np => (
+              <ReactCSSTransitionGroup
+                transitionAppear={true}
+                transitionAppearTimeout={200}
+                transitionEnterTimeout={200}
+                transitionLeaveTimeout={200}
+                transitionName={`login_form--transition`}
+              >
+                {this.state.nodePoolsForms.nodePools.map(np => (
                   <AddNodePoolWrapperDiv key={np.id}>
-                    <NodePoolHeading>
-                      {np.name}
-                    </NodePoolHeading>
+                    <NodePoolHeading>{np.name}</NodePoolHeading>
                     <AddNodePoolFlexColumnDiv>
                       <AddNodePool
                         clusterId={'m0ckd'}
@@ -458,11 +473,16 @@ class CreateNodePoolsCluster extends Component {
                         informParent={() => 'this.updateNodePoolForm'}
                         name={np.name}
                       />
-                      <div onClick={() => this.removeNodePoolForm(np.id)}>remove it</div>
+                      <i
+                        className='fa fa-close clickable'
+                        title='Remove node pool'
+                        aria-hidden='true'
+                        onClick={() => this.removeNodePoolForm(np.id)}
+                      ></i>
                     </AddNodePoolFlexColumnDiv>
                   </AddNodePoolWrapperDiv>
-                )
-              )}
+                ))}
+              </ReactCSSTransitionGroup>
               <Button onClick={this.addNodePoolForm}>
                 <i className='fa fa-add-circle' /> ADD NODE POOL
               </Button>
