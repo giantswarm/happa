@@ -11,7 +11,7 @@ metadata:
     kubernetes.io/tls-acme: "true"
     {{- end }}
     {{- if and (eq .Values.Installation.V1.Provider.Kind "aws") (.Values.Installation.V1.Security.RestrictAccess.GSAPI) }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: "{{ .Values.Installation.V1.Security.Subnet.VPN }},{{ .Values.Installation.V1.Security.Subnet.Customer }}"
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ template "whitelistCIDR" . }}
     {{- end }}
     nginx.ingress.kubernetes.io/configuration-snippet: |
       add_header X-Frame-Options deny always;
