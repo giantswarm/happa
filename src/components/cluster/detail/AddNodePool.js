@@ -63,12 +63,6 @@ const FlexColumnAZDiv = styled.div`
   ${Emphasized};
 `;
 
-// TODO Put this in a config file after moving it from index.html
-const availabilityZonesLimits = {
-  min: 1,
-  max: 4,
-};
-
 class AddNodePool extends Component {
   state = {
     name: {
@@ -242,7 +236,7 @@ class AddNodePool extends Component {
 
   render() {
     const [RAM, CPUCores] = this.produceRAMAndCores();
-    const { min, max } = availabilityZonesLimits;
+    const { min, max } = window.config.nodePoolAZLimits;
     const { zonesArray } = this.state.availabilityZonesLabels;
 
     return (

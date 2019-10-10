@@ -334,7 +334,7 @@ class CreateNodePoolsCluster extends Component {
   render() {
     const { hasAZLabels } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
-    const { min, max } = window.config.availabilityZonesLimits;
+    const { min, max } = window.config.v5ClusterAZLimits;
 
     return (
       <Breadcrumb
@@ -446,7 +446,7 @@ class CreateNodePoolsCluster extends Component {
                   )}
                   {hasAZLabels && zonesArray.length > max && (
                     <p className='danger'>
-                      {max} is the maximum you can have. Please uncheck at least{' '}
+                      {max} is the maximum you can have. Please uncheck{' '}
                       {zonesArray.length - max} of them.
                     </p>
                   )}
