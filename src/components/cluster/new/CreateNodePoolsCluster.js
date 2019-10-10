@@ -442,7 +442,9 @@ class CreateNodePoolsCluster extends Component {
                     />
                   )}
                   {hasAZLabels && zonesArray.length < 1 && (
-                    <p className='danger'>Please select at least one.</p>
+                    <p className='danger'>
+                      Please select one availability zone.
+                    </p>
                   )}
                   {hasAZLabels && zonesArray.length > max && (
                     <p className='danger'>
