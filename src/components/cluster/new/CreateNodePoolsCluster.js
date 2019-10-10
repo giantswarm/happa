@@ -166,7 +166,7 @@ const NodePoolHeading = styled.div`
   font-weight: 700;
 `;
 
-const defaultNodePool = id => ({ id, name: `Node Pool #${id}` });
+const defaultNodePool = id => ({ name: `Node Pool #${id}` });
 
 class CreateNodePoolsCluster extends Component {
   state = {
@@ -198,7 +198,7 @@ class CreateNodePoolsCluster extends Component {
       isValid: false,
       isSubmitting: false,
       // one object for each np form inside this array
-      nodePools: [defaultNodePool(1)],
+      nodePools: { 1: defaultNodePool(1) },
     },
   };
 
@@ -306,17 +306,12 @@ class CreateNodePoolsCluster extends Component {
   };
 
   addNodePoolForm = () => {
-    const lastId =
-      this.state.nodePoolsForms.nodePools.length === 0
-        ? 1
-        : this.state.nodePoolsForms.nodePools
-            .map(np => np.id)
-            .sort()
-            .reverse()[0] + 1;
+    const ids = Object.keys(this.state.nodePoolsForms.nodePools);
+    const nextId = ids.length === 0 ? 1 : parseInt(ids.sort().reverse()[0]) + 1;
 
     this.setState(
       produce(draft => {
-        draft.nodePoolsForms.nodePools.push(defaultNodePool(lastId));
+        draft.nodePoolsForms.nodePools[nextId] = defaultNodePool(nextId);
       })
     );
   };
@@ -324,17 +319,25 @@ class CreateNodePoolsCluster extends Component {
   removeNodePoolForm = id => {
     this.setState(
       produce(draft => {
-        draft.nodePoolsForms.nodePools = this.state.nodePoolsForms.nodePools.filter(
-          np => np.id !== id
-        );
+        delete draft.nodePoolsForms.nodePools[id];
       })
     );
   };
 
+  updateNodePoolForm = data => {
+    // this.setState(
+    //   produce(this.state, draft => {
+    //     draft.nodePoolForms.nodePools[] = { ...this.state.nodePoolForm, ...data };
+    //   })
+    // );
+  };
+
   render() {
+    console.log(this.state.nodePoolsForms.nodePools);
     const { hasAZLabels } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { min, max } = window.config.v5ClusterAZLimits;
+    const { nodePools } = this.state.nodePoolsForms;
 
     return (
       <Breadcrumb
@@ -464,22 +467,21 @@ class CreateNodePoolsCluster extends Component {
                 transitionLeaveTimeout={200}
                 transitionName={`login_form--transition`}
               >
-                {this.state.nodePoolsForms.nodePools.map(np => (
-                  <AddNodePoolWrapperDiv key={np.id}>
-                    <NodePoolHeading>{np.name}</NodePoolHeading>
+                {Object.keys(nodePools).map(npId => (
+                  <AddNodePoolWrapperDiv key={npId}>
+                    <NodePoolHeading>{nodePools[npId].name}</NodePoolHeading>
                     <AddNodePoolFlexColumnDiv>
                       <AddNodePool
                         clusterId={'m0ckd'}
                         releaseVersion={'8.2.0'}
-                        closeForm={() => 'this.toggleAddNodePoolForm'}
-                        informParent={() => 'this.updateNodePoolForm'}
-                        name={np.name}
+                        informParent={this.updateNodePoolForm}
+                        name={nodePools[npId].name}
                       />
                       <i
                         className='fa fa-close clickable'
                         title='Remove node pool'
                         aria-hidden='true'
-                        onClick={() => this.removeNodePoolForm(np.id)}
+                        onClick={() => this.removeNodePoolForm(npId)}
                       ></i>
                     </AddNodePoolFlexColumnDiv>
                   </AddNodePoolWrapperDiv>
