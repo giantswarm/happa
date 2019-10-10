@@ -5,7 +5,6 @@ import {
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
-import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
 import { push } from 'connected-react-router';
@@ -166,7 +165,7 @@ const NodePoolHeading = styled.div`
   font-weight: 700;
 `;
 
-const defaultNodePool = id => ({ name: `Node Pool #${id}` });
+const defaultNodePool = id => ({ data: { name: `Node Pool #${id}` } });
 
 class CreateNodePoolsCluster extends Component {
   state = {
@@ -324,16 +323,17 @@ class CreateNodePoolsCluster extends Component {
     );
   };
 
-  updateNodePoolForm = data => {
-    // this.setState(
-    //   produce(this.state, draft => {
-    //     draft.nodePoolForms.nodePools[] = { ...this.state.nodePoolForm, ...data };
-    //   })
-    // );
+  updateNodePoolForm = (data, id) => {
+    console.log(data, id);
+    this.setState(
+      produce(draft => {
+        draft.nodePoolsForms.nodePools[id] = data;
+      })
+    );
   };
 
   render() {
-    console.log(this.state.nodePoolsForms.nodePools);
+    // console.log(this.state.nodePoolsForms.nodePools);
     const { hasAZLabels } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { min, max } = window.config.v5ClusterAZLimits;
@@ -469,13 +469,16 @@ class CreateNodePoolsCluster extends Component {
               >
                 {Object.keys(nodePools).map(npId => (
                   <AddNodePoolWrapperDiv key={npId}>
-                    <NodePoolHeading>{nodePools[npId].name}</NodePoolHeading>
+                    <NodePoolHeading>
+                      {nodePools[npId].data.name}
+                    </NodePoolHeading>
                     <AddNodePoolFlexColumnDiv>
                       <AddNodePool
                         clusterId={'m0ckd'}
                         releaseVersion={'8.2.0'}
                         informParent={this.updateNodePoolForm}
-                        name={nodePools[npId].name}
+                        name={nodePools[npId].data.name}
+                        id={npId}
                       />
                       <i
                         className='fa fa-close clickable'

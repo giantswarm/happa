@@ -177,16 +177,19 @@ class AddNodePool extends Component {
     } = this.state;
 
     // Should we check the validity of the release somewhere?
-    if (
+    const isValid =
       scaling.minValid &&
       scaling.maxValid &&
       aws.instanceType.valid &&
       name.valid &&
       ((hasAZLabels && availabilityZonesLabels.valid) ||
         (!hasAZLabels && availabilityZonesPicker.valid))
-    ) {
-      this.props.informParent({
-        isValid: true,
+        ? true
+        : false;
+
+    this.props.informParent(
+      {
+        isValid,
         data: {
           // TODO Is the endpoint expecting to receive either a string or a number??
           availabilityZones: this.state.hasAZLabels
@@ -198,7 +201,7 @@ class AddNodePool extends Component {
           },
           name:
             this.state.name.value === ''
-              ? 'Unnamed cluster'
+              ? 'Unnamed node pool'
               : this.state.name.value,
           nodeSpec: {
             aws: {
@@ -206,11 +209,10 @@ class AddNodePool extends Component {
             },
           },
         },
-      });
-      return;
-    }
-
-    this.props.informParent({ isValid: false });
+      },
+      // We need to know wich node pool it is in the v5 cluster creation form
+      this.props.id ? this.props.id : null
+    );
   }
 
   produceRAMAndCores = () => {
@@ -372,6 +374,7 @@ AddNodePool.propTypes = {
   closeForm: PropTypes.func,
   informParent: PropTypes.func,
   name: PropTypes.string,
+  id: PropTypes.string,
 };
 
 AddNodePool.defaultProps = {
