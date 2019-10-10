@@ -148,7 +148,7 @@ NodePool.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
-    nodePool: state.entities.nodePools[ownProps.nodePool.id],
+    nodePool: state.entities.nodePools.items[ownProps.nodePool.id],
   };
 }
 

@@ -107,7 +107,7 @@ function mapStateToProps(state, ownProps) {
     catalogs: state.entities.catalogs,
     cluster: cluster,
     clusterId: ownProps.match.params.clusterId,
-    nodePools: state.entities.nodePools,
+    nodePools: state.entities.nodePools.items,
     provider: state.app.info.general.provider,
     release: release,
     targetRelease: state.entities.releases.items[targetReleaseVersion],

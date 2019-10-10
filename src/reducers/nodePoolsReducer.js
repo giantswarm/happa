@@ -2,6 +2,10 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
 
+const initialState = {
+  items: {},
+};
+
 // With immer the idea is you put your state inside the draft and immer will take
 // care of everything else. Draft is mutable, so we can use push(), splice(), etc.
 
@@ -11,7 +15,7 @@ import produce from 'immer';
 const nodePools = produce((draft, action) => {
   switch (action.type) {
     case types.NODEPOOLS_LOAD_SUCCESS:
-      return action.nodePools;
+      return action.nodePools.items;
 
     case types.NODEPOOLS_LOAD_ERROR:
       draft.errorLoading = true;
@@ -19,21 +23,21 @@ const nodePools = produce((draft, action) => {
 
     case types.NODEPOOL_PATCH:
       Object.keys(action.payload).forEach(key => {
-        draft[action.nodePool.id][key] = action.payload[key];
+        draft.items[action.nodePool.id][key] = action.payload[key];
       });
       return;
 
     case types.NODEPOOL_PATCH_ERROR:
-      draft[action.nodePool.id] = action.nodePool;
+      draft.items[action.nodePool.id] = action.nodePool;
       return;
 
     case types.NODEPOOL_DELETE_SUCCESS:
-      delete draft[action.nodePoolId];
+      delete draft.items[action.nodePoolId];
       draft.lastUpdated = Date.now();
       return;
 
     case types.NODEPOOL_CREATE_SUCCESS:
-      draft[action.nodePool.id] = action.nodePool;
+      draft.items[action.nodePool.id] = action.nodePool;
       return;
 
     case types.NODEPOOL_CREATE_ERROR:
@@ -41,6 +45,6 @@ const nodePools = produce((draft, action) => {
       return;
   }
   // This empty object is the default state.
-}, {});
+}, initialState);
 
 export default nodePools;

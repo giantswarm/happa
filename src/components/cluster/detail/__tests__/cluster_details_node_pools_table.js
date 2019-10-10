@@ -33,7 +33,7 @@ it('renders all node pools in store', async () => {
   const div = document.createElement('div');
   const { getByText } = renderRouteWithStore(route, div);
 
-  const nodePools = Object.keys(initialState().entities.nodePools);
+  const nodePools = Object.keys(initialState().entities.nodePools.items);
 
   await wait(() => {
     nodePools.forEach(nodePool => {
@@ -65,9 +65,10 @@ it('patches node pool name correctly', async () => {
     div
   );
 
-  const nodePools = Object.keys(initialState().entities.nodePools);
-  const nodePool = initialState().entities.nodePools[nodePools[0]];
-  const nodePoolName = initialState().entities.nodePools[nodePools[0]].name;
+  const nodePools = Object.keys(initialState().entities.nodePools.items);
+  const nodePool = initialState().entities.nodePools.items[nodePools[0]];
+  const nodePoolName = initialState().entities.nodePools.items[nodePools[0]]
+    .name;
   const newNodePoolName = 'New NP name';
 
   await wait(() => {
@@ -109,7 +110,7 @@ it(`shows the modal when the button is clicked with default values and calls
   });
 
   const nodePoolId = getAllByTestId('node-pool-id')[0].textContent;
-  const nodePool = state.entities.nodePools[nodePoolId];
+  const nodePool = state.entities.nodePools.items[nodePoolId];
   fireEvent.click(getAllByText('•••')[0]);
 
   fireEvent.click(getByText(/edit scaling limits/i));

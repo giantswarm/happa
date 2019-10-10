@@ -7,9 +7,9 @@ export default {
       pathname: '/login',
       search: '',
       hash: '',
-      key: '0fgz24'
+      key: '0fgz24',
     },
-    action: 'POP'
+    action: 'POP',
   },
   app: {
     selectedOrganization: null,
@@ -18,51 +18,53 @@ export default {
     info: {
       general: {
         availability_zones: {
-          'default': 0,
-          max: 0
+          default: 0,
+          max: 0,
         },
-        provider: ''
-      }
-    }
+        provider: '',
+      },
+    },
   },
   entities: {
     catalogs: {
       lastUpdated: 0,
       isFetching: false,
-      items: []
+      items: [],
     },
     clusters: {
       lastUpdated: null,
       isFetching: false,
       items: {},
-      nodePoolsClusters: []
+      nodePoolsClusters: [],
     },
     credentials: {
       lastUpdated: 0,
       isFetching: false,
-      items: []
+      items: [],
     },
     invitations: {
       lastUpdated: 0,
       isFetching: false,
-      items: {}
+      items: {},
     },
     organizations: {
       lastUpdated: 0,
       isFetching: false,
-      items: {}
+      items: {},
     },
     releases: {
-      items: {}
+      items: {},
     },
     users: {
       lastUpdated: 0,
       isFetching: false,
-      items: {}
+      items: {},
     },
-    nodePools: {}
+    nodePools: {
+      items: {},
+    },
   },
   modal: {
-    visible: false
-  }
+    visible: false,
+  },
 };
