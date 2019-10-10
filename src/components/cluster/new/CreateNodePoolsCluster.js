@@ -152,7 +152,7 @@ const AddNodePoolWrapperDiv = styled.div`
   padding: 20px 20px 0;
   margin-bottom: 20px;
   position: relative;
-  i {
+  i.fa-close {
     position: absolute;
     top: 22px;
     right: 22px;
