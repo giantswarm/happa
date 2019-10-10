@@ -170,7 +170,7 @@ function mapStateToProps(state) {
   var allClusters = state.entities.clusters.items;
   var errorLoadingClusters = state.entities.clusters.errorLoading;
   const nodePoolsClusters = state.entities.clusters.nodePoolsClusters;
-  const nodePools = state.entities.nodePools;
+  const nodePools = state.entities.nodePools.items;
 
   var clusters = [];
   if (selectedOrganization) {
