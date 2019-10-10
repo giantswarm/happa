@@ -176,7 +176,6 @@ class CreateNodePoolsCluster extends Component {
     },
     releaseVersion: '',
     submitting: false,
-    valid: false,
     error: false,
     // Not sure which value are we going to pass here... there is no
     // input field in the wireframes
@@ -201,6 +200,10 @@ class CreateNodePoolsCluster extends Component {
     },
   };
 
+  componentDidMount() {
+    this.isValid();
+  }
+
   updateName = event => {
     const name = event.target.value;
     const [isValid, message] = hasAppropriateLength(name, 0, 100);
@@ -223,7 +226,7 @@ class CreateNodePoolsCluster extends Component {
     );
   };
 
-  isValid() {
+  isValid = () => {
     // Not checking release version as we would be checking it before accessing this form
     // and sending user too the v4 form if NPs aren't supported
     const {
@@ -231,18 +234,27 @@ class CreateNodePoolsCluster extends Component {
       hasAZLabels,
       availabilityZonesLabels,
       availabilityZonesRandom,
+      nodePoolsForms,
     } = this.state;
 
-    if (
+    const areNodePoolsValid = Object.keys(nodePoolsForms.nodePools)
+      .map(np =>
+        nodePoolsForms.nodePools[np].isValid
+          ? nodePoolsForms.nodePools[np].isValid
+          : false
+      )
+      .every(np => np);
+
+    const isValid =
       name.valid &&
+      areNodePoolsValid &&
       ((hasAZLabels && availabilityZonesLabels.valid) ||
         (!hasAZLabels && availabilityZonesRandom.valid))
-    ) {
-      return true;
-    }
+        ? true
+        : false;
 
-    return false;
-  }
+    return isValid;
+  };
 
   createCluster = () => {
     this.setState({ submitting: true });
@@ -324,7 +336,6 @@ class CreateNodePoolsCluster extends Component {
   };
 
   updateNodePoolForm = (data, id) => {
-    console.log(data, id);
     this.setState(
       produce(draft => {
         draft.nodePoolsForms.nodePools[id] = data;
@@ -333,7 +344,6 @@ class CreateNodePoolsCluster extends Component {
   };
 
   render() {
-    // console.log(this.state.nodePoolsForms.nodePools);
     const { hasAZLabels } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { min, max } = window.config.v5ClusterAZLimits;

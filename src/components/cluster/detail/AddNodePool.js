@@ -164,7 +164,7 @@ class AddNodePool extends Component {
   // Always true?
   isScalingAutomatic = () => true;
 
-  isValid() {
+  isValid = () => {
     // Not checking release version as we would be checking it before accessing this form
     // and sending user too the v4 form if NPs aren't supported
     const {
@@ -213,7 +213,7 @@ class AddNodePool extends Component {
       // We need to know wich node pool it is in the v5 cluster creation form
       this.props.id ? this.props.id : null
     );
-  }
+  };
 
   produceRAMAndCores = () => {
     const instanceType = this.state.aws.instanceType.value;
