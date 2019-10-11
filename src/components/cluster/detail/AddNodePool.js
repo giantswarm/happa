@@ -287,6 +287,7 @@ class AddNodePool extends Component {
                   updateAZValuesInParent={this.updateAZ}
                   isLabels={this.state.hasAZLabels}
                 />
+                {/* Validation messages */}
                 {zonesArray.length < 1 && (
                   <p className='danger'>Please select at least one.</p>
                 )}

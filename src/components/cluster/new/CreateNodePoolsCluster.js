@@ -163,6 +163,8 @@ const AddNodePoolWrapperDiv = styled.div`
 const NodePoolHeading = styled.div`
   position: absolute;
   font-weight: 700;
+  width: calc((74vw - 650px) / 2.4);
+  word-break: break-all;
 `;
 
 const defaultNodePool = id => ({ data: { name: `Node Pool #${id}` } });
@@ -477,28 +479,34 @@ class CreateNodePoolsCluster extends Component {
                 transitionLeaveTimeout={200}
                 transitionName={`login_form--transition`}
               >
-                {Object.keys(nodePools).map(npId => (
-                  <AddNodePoolWrapperDiv key={npId}>
-                    <NodePoolHeading>
-                      {nodePools[npId].data.name}
-                    </NodePoolHeading>
-                    <AddNodePoolFlexColumnDiv>
-                      <AddNodePool
-                        clusterId={'m0ckd'}
-                        releaseVersion={'8.2.0'}
-                        informParent={this.updateNodePoolForm}
-                        name={nodePools[npId].data.name}
-                        id={npId}
-                      />
-                      <i
-                        className='fa fa-close clickable'
-                        title='Remove node pool'
-                        aria-hidden='true'
-                        onClick={() => this.removeNodePoolForm(npId)}
-                      ></i>
-                    </AddNodePoolFlexColumnDiv>
-                  </AddNodePoolWrapperDiv>
-                ))}
+                {Object.keys(nodePools).map(npId => {
+                  const name = nodePools[npId].data.name;
+                  return (
+                    <AddNodePoolWrapperDiv key={npId}>
+                      <NodePoolHeading>
+                        {name}
+                        {/* {name.length > 15 
+                          // ? `${name.substring(0, 15)} ...`
+                          // : name*/}
+                      </NodePoolHeading>
+                      <AddNodePoolFlexColumnDiv>
+                        <AddNodePool
+                          clusterId={'m0ckd'}
+                          releaseVersion={'8.2.0'}
+                          informParent={this.updateNodePoolForm}
+                          name={name}
+                          id={npId}
+                        />
+                        <i
+                          className='fa fa-close clickable'
+                          title='Remove node pool'
+                          aria-hidden='true'
+                          onClick={() => this.removeNodePoolForm(npId)}
+                        ></i>
+                      </AddNodePoolFlexColumnDiv>
+                    </AddNodePoolWrapperDiv>
+                  );
+                })}
               </ReactCSSTransitionGroup>
               <Button onClick={this.addNodePoolForm}>
                 <i className='fa fa-add-circle' /> ADD NODE POOL
