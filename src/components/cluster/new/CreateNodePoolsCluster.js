@@ -90,9 +90,11 @@ const RadioGroupDiv = styled.div`
       font-size: 14px;
       font-weight: 300;
       margin-bottom: 0;
+      cursor: pointer;
     }
     input {
       max-width: 28px;
+      cursor: pointer;
     }
   }
   input[type='radio'] {
@@ -395,7 +397,7 @@ class CreateNodePoolsCluster extends Component {
                 </label>
                 {/* Master Node AZ */}
                 <span className='label-span'>
-                  Master node availability zone
+                  Master node availability zone selection
                 </span>
                 <RadioGroupDiv ref={this.radioGroupRef}>
                   {/* Automatically */}
@@ -418,7 +420,7 @@ class CreateNodePoolsCluster extends Component {
                       htmlFor='automatically'
                       onClick={() => this.toggleAZSelector(false)}
                     >
-                      Select automatically
+                      Automatic
                     </label>
                   </div>
                   {/* Distinct AZ */}
@@ -441,7 +443,7 @@ class CreateNodePoolsCluster extends Component {
                       htmlFor='distinct'
                       onClick={() => this.toggleAZSelector(true)}
                     >
-                      Use distinct availability zone
+                      Manual
                     </label>
                   </div>
                 </RadioGroupDiv>
@@ -453,6 +455,7 @@ class CreateNodePoolsCluster extends Component {
                       zones={this.props.availabilityZones}
                       updateAZValuesInParent={this.updateAZ}
                       isLabels={true}
+                      isV5Cluster
                     />
                   )}
                   {hasAZLabels && zonesArray.length < 1 && (
@@ -470,7 +473,7 @@ class CreateNodePoolsCluster extends Component {
 
                 {this.state.error && this.errorState()}
               </FlexColumnDiv>
-              <hr />
+              {Object.keys(nodePools).length === 0 && <hr />}
               <ReactCSSTransitionGroup
                 transitionAppear={true}
                 transitionAppearTimeout={200}

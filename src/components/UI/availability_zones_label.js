@@ -9,7 +9,7 @@ import styled from '@emotion/styled';
  * Each zone gets a unique color for visual distinction.
  */
 
-const Wrapper = styled.abbr`
+export const Wrapper = styled.abbr`
   border-radius: 2em;
   color: #333;
   padding: 2px;

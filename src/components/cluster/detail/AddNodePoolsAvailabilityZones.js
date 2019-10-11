@@ -28,6 +28,7 @@ export default function AddNodePoolsAvailabilityZones({
   updateAZValuesInParent,
   zones,
   isLabels,
+  isV5Cluster,
 }) {
   // Picker.
   const [AZPicker, setAZPicker] = useState(initialStatePicker);
@@ -57,9 +58,12 @@ export default function AddNodePoolsAvailabilityZones({
 
   // Function passed to child AZLabels component to allow it to update state here
   const updateAZLabels = (checked, payload) => {
+    // If it is a v5 cluster, as we just want one AZ we will reset the array on each update
+    const oldZonesArray = isV5Cluster ? [] : AZLabels.zonesArray;
+
     // If checked, we will add the new AZ to state, else we will remove it.
     const zonesArray = checked
-      ? [...AZLabels.zonesArray, payload.title]
+      ? [...oldZonesArray, payload.title]
       : AZLabels.zonesArray.filter(az => az !== payload.title);
 
     setAZLabels({
@@ -72,7 +76,12 @@ export default function AddNodePoolsAvailabilityZones({
 
   if (isLabels) {
     return (
-      <AvailabilityZonesLabels zones={zones} onToggleChecked={updateAZLabels} />
+      <AvailabilityZonesLabels
+        zones={zones}
+        onToggleChecked={updateAZLabels}
+        isV5Cluster={isV5Cluster}
+        labelsChecked={AZLabels.zonesArray}
+      />
     );
   }
 
@@ -96,4 +105,5 @@ AddNodePoolsAvailabilityZones.propTypes = {
   value: PropTypes.number,
   updateAZValuesInParent: PropTypes.func,
   isLabels: PropTypes.bool,
+  isV5Cluster: PropTypes.bool,
 };
