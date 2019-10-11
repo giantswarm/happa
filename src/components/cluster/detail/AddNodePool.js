@@ -240,6 +240,7 @@ class AddNodePool extends Component {
     const [RAM, CPUCores] = this.produceRAMAndCores();
     const { min, max } = window.config.nodePoolAZLimits;
     const { zonesArray } = this.state.availabilityZonesLabels;
+    const { hasAZLabels, name } = this.state;
 
     return (
       <>
@@ -247,12 +248,13 @@ class AddNodePool extends Component {
           <span className='label-span'>Name</span>
           <div className='name-container'>
             <input
-              value={this.state.name.value}
+              value={name.value}
               onChange={this.updateName}
               id='name'
               type='text'
+              placeholder={name.value === '' ? 'Unnamed node pool' : null}
             ></input>
-            <ValidationErrorMessage message={this.state.name.validationError} />
+            <ValidationErrorMessage message={name.validationError} />
           </div>
           <p>
             Pick a name that helps team mates to understand what these nodes are
@@ -274,7 +276,7 @@ class AddNodePool extends Component {
         </label>
         <label className='availability-zones' htmlFor='availability-zones'>
           <span className='label-span'>Availability Zones</span>
-          {this.state.hasAZLabels && (
+          {hasAZLabels && (
             <FlexColumnAZDiv>
               <p>
                 You can select up to {max} availability zones to make use of.
@@ -285,7 +287,7 @@ class AddNodePool extends Component {
                   max={max}
                   zones={this.props.availabilityZones}
                   updateAZValuesInParent={this.updateAZ}
-                  isLabels={this.state.hasAZLabels}
+                  isLabels={hasAZLabels}
                 />
                 {/* Validation messages */}
                 {zonesArray.length < 1 && (
@@ -308,7 +310,7 @@ class AddNodePool extends Component {
               </p>
             </FlexColumnAZDiv>
           )}
-          {!this.state.hasAZLabels && (
+          {!hasAZLabels && (
             <>
               <FlexWrapperAZDiv>
                 <AddNodePoolsAvailabilityZones
@@ -316,7 +318,7 @@ class AddNodePool extends Component {
                   max={max}
                   zones={this.props.availabilityZones}
                   updateAZValuesInParent={this.updateAZ}
-                  isLabels={this.state.hasAZLabels}
+                  isLabels={hasAZLabels}
                 />
                 <p className='emphasized no-margin'>
                   or{' '}
