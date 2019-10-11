@@ -346,7 +346,7 @@ class CreateNodePoolsCluster extends Component {
   };
 
   render() {
-    const { hasAZLabels } = this.state;
+    const { hasAZLabels, name, submitting } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { min, max } = window.config.v5ClusterAZLimits;
     const { nodePools } = this.state.nodePoolsForms;
@@ -376,14 +376,13 @@ class CreateNodePoolsCluster extends Component {
                   <span className='label-span'>Name</span>
                   <div className='name-container'>
                     <input
-                      value={this.state.name.value}
+                      value={name.value}
                       onChange={this.updateName}
                       id='name'
                       type='text'
+                      placeholder={name.value === '' ? 'Unnamed cluster' : null}
                     ></input>
-                    <ValidationErrorMessage
-                      message={this.state.name.validationError}
-                    />
+                    <ValidationErrorMessage message={name.validationError} />
                   </div>
                   <p>Give your cluster a name to recognize it among others.</p>
                 </label>
@@ -518,7 +517,7 @@ class CreateNodePoolsCluster extends Component {
                 bsSize='large'
                 bsStyle='primary'
                 disabled={!this.isValid()}
-                loading={this.state.submitting}
+                loading={submitting}
                 onClick={this.createCluster}
                 type='button'
               >
@@ -527,7 +526,7 @@ class CreateNodePoolsCluster extends Component {
               <Button
                 bsSize='large'
                 bsStyle='default'
-                loading={this.state.submitting}
+                loading={submitting}
                 onClick={this.props.closeForm}
                 style={{ background: 'red' }}
                 type='button'
