@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
+import { RadioWrapper } from '../new/CreateNodePoolsCluster';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
 import NodeCountSelector from 'shared/node_count_selector';
@@ -23,13 +24,8 @@ const FlexWrapperDiv = styled.div`
 const Emphasized = css`
   .emphasized {
     font-size: 16px;
-    span {
-      text-decoration: underline;
-      cursor: pointer;
-    }
-  }
-  .no-margin {
-    margin-left: 18px;
+    margin: 0 18px 0 28px;
+    transform: translateY(-4px);
   }
 `;
 
@@ -61,6 +57,23 @@ const FlexColumnAZDiv = styled.div`
     margin-bottom: 20px;
   }
   ${Emphasized};
+`;
+
+const RadioWrapperDiv = styled.div`
+  div {
+    ${RadioWrapper};
+  }
+`;
+
+const AZLabel = styled.label`
+  height: 238px;
+  font-size: 16px;
+  justify-content: flex-start !important;
+  div label {
+    font-size: 16px !important;
+    margin-bottom: 12px !important;
+    justify-content: flex-start;
+  }
 `;
 
 class AddNodePool extends Component {
@@ -274,45 +287,39 @@ class AddNodePool extends Component {
             <p>{`${RAM} CPU cores, ${CPUCores} GB RAM each`}</p>
           </FlexWrapperDiv>
         </label>
-        <label className='availability-zones' htmlFor='availability-zones'>
+        <AZLabel htmlFor='availability-zones'>
           <span className='label-span'>Availability Zones</span>
-          {hasAZLabels && (
-            <FlexColumnAZDiv>
-              <p>
-                You can select up to {max} availability zones to make use of.
-              </p>
-              <FlexWrapperAZDiv>
-                <AvailabilityZonesParser
-                  min={min}
-                  max={max}
-                  zones={this.props.availabilityZones}
-                  updateAZValuesInParent={this.updateAZ}
-                  isLabels={hasAZLabels}
+          <RadioWrapperDiv>
+            {/* Automatically */}
+            <div>
+              <div className='fake-radio'>
+                <div
+                  className={`fake-radio-checked ${hasAZLabels === false &&
+                    'visible'}`}
                 />
-                {/* Validation messages */}
-                {zonesArray.length < 1 && (
-                  <p className='danger'>Please select at least one.</p>
-                )}
-                {zonesArray.length > max && (
-                  <p className='danger'>
-                    {max} is the maximum you can have. Please uncheck at least{' '}
-                    {zonesArray.length - max} of them.
-                  </p>
-                )}
-              </FlexWrapperAZDiv>
-              <p className='emphasized'>
-                <span
-                  onClick={this.toggleAZSelector}
-                  alt='Switch to random selection'
-                >
-                  Switch to random selection
-                </span>
-              </p>
-            </FlexColumnAZDiv>
-          )}
+              </div>
+              <input
+                type='radio'
+                id='automatically'
+                value={false}
+                checked={hasAZLabels === false}
+                onChange={() => this.toggleAZSelector(false)}
+                tabIndex='0'
+              />
+              <label
+                htmlFor='automatically'
+                onClick={() => this.toggleAZSelector(false)}
+              >
+                Automatically select availability zones
+              </label>
+            </div>
+          </RadioWrapperDiv>
           {!hasAZLabels && (
             <>
               <FlexWrapperAZDiv>
+                <p className='emphasized no-margin'>
+                  Number of availability zones to use:
+                </p>
                 <AvailabilityZonesParser
                   min={min}
                   max={max}
@@ -320,20 +327,11 @@ class AddNodePool extends Component {
                   updateAZValuesInParent={this.updateAZ}
                   isLabels={hasAZLabels}
                 />
-                <p className='emphasized no-margin'>
-                  or{' '}
-                  <span
-                    onClick={this.toggleAZSelector}
-                    alt='Select distinct availability zones'
-                  >
-                    Select distinct availability zones
-                  </span>
-                </p>
               </FlexWrapperAZDiv>
               <FlexWrapperAZDiv>
                 {/* This is a hack for fixing height for this element and at the same time
                   control the height of the wrapper so it matches labels wrapper */}
-                <p style={{ margin: '19px 0 22px', height: '38px' }}>
+                <p style={{ margin: '11px 0 17px', height: '38px' }}>
                   {this.state.availabilityZonesPicker.value < 2
                     ? `Covering one availability zone, the worker nodes of this node pool
                will be placed in the same availability zones as the
@@ -343,7 +341,61 @@ class AddNodePool extends Component {
               </FlexWrapperAZDiv>
             </>
           )}
-        </label>
+          {/* Manual */}
+          <RadioWrapperDiv>
+            <div>
+              <div className='fake-radio'>
+                <div
+                  className={`fake-radio-checked ${hasAZLabels === true &&
+                    'visible'}`}
+                />
+              </div>
+              <input
+                type='radio'
+                id='manually'
+                value={true}
+                checked={hasAZLabels === true}
+                tabIndex='0'
+                onChange={() => this.toggleAZSelector(true)}
+              />
+              <label
+                htmlFor='manually'
+                onClick={() => this.toggleAZSelector(true)}
+              >
+                Manually select availability zones
+              </label>
+            </div>
+            {hasAZLabels && (
+              <>
+                <FlexColumnAZDiv>
+                  <p>
+                    You can select up to {max} availability zones to make use
+                    of.
+                  </p>
+                  <FlexWrapperAZDiv>
+                    <AvailabilityZonesParser
+                      min={min}
+                      max={max}
+                      zones={this.props.availabilityZones}
+                      updateAZValuesInParent={this.updateAZ}
+                      isLabels={hasAZLabels}
+                    />
+                    {/* Validation messages */}
+                    {zonesArray.length < 1 && (
+                      <p className='danger'>Please select at least one.</p>
+                    )}
+                    {zonesArray.length > max && (
+                      <p className='danger'>
+                        {max} is the maximum you can have. Please uncheck at
+                        least {zonesArray.length - max} of them.
+                      </p>
+                    )}
+                  </FlexWrapperAZDiv>
+                </FlexColumnAZDiv>
+              </>
+            )}
+          </RadioWrapperDiv>
+        </AZLabel>
         <label className='scaling-range' htmlFor='scaling-range'>
           <span className='label-span'>Scaling range</span>
           <NodeCountSelector

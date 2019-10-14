@@ -5,6 +5,7 @@ import {
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
+import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
 import { push } from 'connected-react-router';
@@ -81,21 +82,19 @@ const FlexRowDiv = styled.div`
   max-width: 650px;
 `;
 
-const RadioGroupDiv = styled.div`
-  div {
-    display: flex;
-    justify-content: flex-start;
-    position: relative;
-    label {
-      font-size: 14px;
-      font-weight: 300;
-      margin-bottom: 0;
-      cursor: pointer;
-    }
-    input {
-      max-width: 28px;
-      cursor: pointer;
-    }
+export const RadioWrapper = props => css`
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  label {
+    font-size: 14px;
+    font-weight: 300;
+    margin-bottom: 0;
+    cursor: pointer;
+  }
+  input {
+    max-width: 28px;
+    cursor: pointer;
   }
   input[type='radio'] {
     opacity: 0;
@@ -106,8 +105,8 @@ const RadioGroupDiv = styled.div`
     height: 16px;
     border-radius: 50%;
     top: 4px;
-    border: ${props => props.theme.border};
-    background: ${props => props.theme.colors.white1};
+    border: ${props.theme.border};
+    background: ${props.theme.colors.white1};
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -115,12 +114,18 @@ const RadioGroupDiv = styled.div`
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background-color: ${props => props.theme.colors.white1};
+      background-color: ${props.theme.colors.white1};
       transition: background-color 0.2s;
       &.visible {
-        background-color: ${props => props.theme.colors.shade2};
+        background-color: ${props.theme.colors.shade2};
       }
     }
+  }
+`;
+
+const RadioWrapperDiv = styled.div`
+  div {
+    ${RadioWrapper};
   }
 `;
 
@@ -189,13 +194,13 @@ class CreateNodePoolsCluster extends Component {
       valid: true,
     },
     availabilityZonesLabels: {
-      // Use distinct availability zone
+      // Manually select AZs
       number: 0,
       zonesString: '',
       zonesArray: [],
       valid: false,
     },
-    hasAZLabels: false, // false = 'automatically', true = 'distinct'
+    hasAZLabels: false, // false = 'automatically', true = 'manual'
     nodePoolsForms: {
       isValid: false,
       isSubmitting: false,
@@ -396,10 +401,8 @@ class CreateNodePoolsCluster extends Component {
                   </div>
                 </label>
                 {/* Master Node AZ */}
-                <span className='label-span'>
-                  Master node availability zone selection
-                </span>
-                <RadioGroupDiv ref={this.radioGroupRef}>
+                <span className='label-span'>Availability zones</span>
+                <RadioWrapperDiv>
                   {/* Automatically */}
                   <div>
                     <div className='fake-radio'>
@@ -420,7 +423,7 @@ class CreateNodePoolsCluster extends Component {
                       htmlFor='automatically'
                       onClick={() => this.toggleAZSelector(false)}
                     >
-                      Automatic
+                      Automatically select availability zones
                     </label>
                   </div>
                   {/* Manual */}
@@ -433,20 +436,21 @@ class CreateNodePoolsCluster extends Component {
                     </div>
                     <input
                       type='radio'
-                      id='distinct'
+                      id='manually'
                       value={true}
                       checked={hasAZLabels === true}
                       tabIndex='0'
                       onChange={() => this.toggleAZSelector(true)}
                     />
                     <label
-                      htmlFor='distinct'
+                      htmlFor='manually'
                       onClick={() => this.toggleAZSelector(true)}
                     >
-                      Manual
+                      Manually select availability zones
                     </label>
                   </div>
-                </RadioGroupDiv>
+                </RadioWrapperDiv>
+
                 <AZWrapperDiv>
                   {hasAZLabels && (
                     <AvailabilityZonesParser
@@ -485,12 +489,7 @@ class CreateNodePoolsCluster extends Component {
                   const name = nodePools[npId].data.name;
                   return (
                     <AddNodePoolWrapperDiv key={npId}>
-                      <NodePoolHeading>
-                        {name}
-                        {/* {name.length > 15 
-                          // ? `${name.substring(0, 15)} ...`
-                          // : name*/}
-                      </NodePoolHeading>
+                      <NodePoolHeading>{name}</NodePoolHeading>
                       <AddNodePoolFlexColumnDiv>
                         <AddNodePool
                           clusterId={'m0ckd'}
