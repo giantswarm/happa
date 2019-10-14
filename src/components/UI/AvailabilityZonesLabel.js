@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 
 /**
@@ -9,7 +9,7 @@ import styled from '@emotion/styled';
  * Each zone gets a unique color for visual distinction.
  */
 
-export const Wrapper = styled.abbr`
+const Wrapper = styled.abbr`
   border-radius: 2em;
   color: #333;
   padding: 2px;
@@ -56,40 +56,23 @@ export const Wrapper = styled.abbr`
   }
 `;
 
-// onToggleChecked and *everything* before the return is just for node pool creation form.
-function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
-  const [checked, setChecked] = useState(false);
-
-  // Hack for not triggering useEffect on first updates.
-  // TODO find a less hacky way of doing this.
-  const firstUpdate = useRef(true);
-
+function AvailabilityZonesLabel({
+  label,
+  letter,
+  title,
+  onToggleChecked,
+  isChecked,
+}) {
   const classNames = `${
-    onToggleChecked && !checked ? `not-checked ${letter}` : letter
+    onToggleChecked && !isChecked ? `not-checked ${letter}` : letter
     /* If this has onToggleChecked prop it means that it is clickable and hence we don't want a "?" as cursor */
   } ${onToggleChecked && 'pointer'}`;
-
-  const toggleChecked = () => {
-    setChecked(state => !state);
-  };
-
-  useEffect(() => {
-    // We dont want this to run on first render
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-
-    if (onToggleChecked) {
-      onToggleChecked(checked, { title, letter, label });
-    }
-  }, [checked]);
 
   return (
     <Wrapper
       className={classNames}
       title={title}
-      onClick={onToggleChecked ? toggleChecked : null}
+      onClick={() => onToggleChecked(!isChecked, { title, letter, label })}
     >
       {label}
     </Wrapper>
@@ -101,6 +84,7 @@ AvailabilityZonesLabel.propTypes = {
   letter: PropTypes.string,
   title: PropTypes.string,
   onToggleChecked: PropTypes.func,
+  isChecked: PropTypes.bool,
 };
 
 export default AvailabilityZonesLabel;

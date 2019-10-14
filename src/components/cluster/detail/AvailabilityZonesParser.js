@@ -18,17 +18,17 @@ const initialStateLabels = {
 /**
  * This component takes values from AvailabilityZonesLabel via AvailabilityZonesLabels
  * and acts as a buffer so to speak. This is, it takes data from individual labels and
- * aggregates this data to a state object to be passed to the AddNodePool component.
+ * aggregates this data to a state object to be passed to the its parent component.
  *
  */
 
-export default function AddNodePoolsAvailabilityZones({
+export default function AvailabilityZonesParser({
   max,
   min,
   updateAZValuesInParent,
   zones,
   isLabels,
-  isV5Cluster,
+  isRadioButtons, // Just one label can be selected.
 }) {
   // Picker.
   const [AZPicker, setAZPicker] = useState(initialStatePicker);
@@ -58,8 +58,8 @@ export default function AddNodePoolsAvailabilityZones({
 
   // Function passed to child AZLabels component to allow it to update state here
   const updateAZLabels = (checked, payload) => {
-    // If it is a v5 cluster, as we just want one AZ we will reset the array on each update
-    const oldZonesArray = isV5Cluster ? [] : AZLabels.zonesArray;
+    // If we want a radio button type behavior, we reset it on every click, else we add/remove it.
+    const oldZonesArray = isRadioButtons ? [] : AZLabels.zonesArray;
 
     // If checked, we will add the new AZ to state, else we will remove it.
     const zonesArray = checked
@@ -79,7 +79,7 @@ export default function AddNodePoolsAvailabilityZones({
       <AvailabilityZonesLabels
         zones={zones}
         onToggleChecked={updateAZLabels}
-        isV5Cluster={isV5Cluster}
+        isRadioButtons={isRadioButtons}
         labelsChecked={AZLabels.zonesArray}
       />
     );
@@ -98,12 +98,12 @@ export default function AddNodePoolsAvailabilityZones({
   );
 }
 
-AddNodePoolsAvailabilityZones.propTypes = {
+AvailabilityZonesParser.propTypes = {
   max: PropTypes.number,
   min: PropTypes.number,
   zones: PropTypes.array,
   value: PropTypes.number,
   updateAZValuesInParent: PropTypes.func,
   isLabels: PropTypes.bool,
-  isV5Cluster: PropTypes.bool,
+  isRadioButtons: PropTypes.bool,
 };

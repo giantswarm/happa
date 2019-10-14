@@ -372,7 +372,12 @@ class ClusterDetailNodePoolsTable extends React.Component {
       <>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            Region:&nbsp;<Code>{master ? master.availability_zone : null}</Code>
+            <OverlayTrigger
+              overlay={<Tooltip id='tooltip'>Region</Tooltip>}
+              placement='top'
+            >
+              <Code>{master ? master.availability_zone : null}</Code>
+            </OverlayTrigger>
             <div>
               <span>
                 Created {create_date ? relativeDate(create_date) : 'n/a'}

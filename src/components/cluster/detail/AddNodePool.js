@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
-import AddNodePoolsAvailabilityZones from './AddNodePoolsAvailabilityZones';
+import AvailabilityZonesParser from './AvailabilityZonesParser';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
 import NodeCountSelector from 'shared/node_count_selector';
 import produce from 'immer';
@@ -282,7 +282,7 @@ class AddNodePool extends Component {
                 You can select up to {max} availability zones to make use of.
               </p>
               <FlexWrapperAZDiv>
-                <AddNodePoolsAvailabilityZones
+                <AvailabilityZonesParser
                   min={min}
                   max={max}
                   zones={this.props.availabilityZones}
@@ -313,7 +313,7 @@ class AddNodePool extends Component {
           {!hasAZLabels && (
             <>
               <FlexWrapperAZDiv>
-                <AddNodePoolsAvailabilityZones
+                <AvailabilityZonesParser
                   min={min}
                   max={max}
                   zones={this.props.availabilityZones}

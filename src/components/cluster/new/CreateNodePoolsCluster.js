@@ -9,7 +9,7 @@ import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
 import { push } from 'connected-react-router';
 import AddNodePool from '../detail/AddNodePool';
-import AddNodePoolsAvailabilityZones from '../detail/AddNodePoolsAvailabilityZones';
+import AvailabilityZonesParser from '../detail/AvailabilityZonesParser';
 import Button from 'UI/button';
 import DocumentTitle from 'react-document-title';
 import produce from 'immer';
@@ -423,7 +423,7 @@ class CreateNodePoolsCluster extends Component {
                       Automatic
                     </label>
                   </div>
-                  {/* Distinct AZ */}
+                  {/* Manual */}
                   <div>
                     <div className='fake-radio'>
                       <div
@@ -449,13 +449,13 @@ class CreateNodePoolsCluster extends Component {
                 </RadioGroupDiv>
                 <AZWrapperDiv>
                   {hasAZLabels && (
-                    <AddNodePoolsAvailabilityZones
+                    <AvailabilityZonesParser
                       min={min}
                       max={max}
                       zones={this.props.availabilityZones}
                       updateAZValuesInParent={this.updateAZ}
                       isLabels={true}
-                      isV5Cluster
+                      isRadioButtons
                     />
                   )}
                   {hasAZLabels && zonesArray.length < 1 && (

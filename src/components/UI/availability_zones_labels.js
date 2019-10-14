@@ -1,15 +1,9 @@
-import AvailabilityZonesLabel from 'UI/availability_zones_label';
-import AvailabilityZonesLabelRadio from 'UI/AvailabilityZonesLabelRadio';
+import AvailabilityZonesLabel from 'UI/AvailabilityZonesLabel';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 // Returns an array of AvailabilityZonesLabel components
-const AvailabilityZonesLabels = ({
-  zones,
-  onToggleChecked,
-  labelsChecked,
-  isV5Cluster,
-}) => {
+const AvailabilityZonesLabels = ({ zones, onToggleChecked, labelsChecked }) => {
   if (typeof zones === 'undefined' || zones.length == 0) {
     return <abbr title='No information available'>n/a</abbr>;
   }
@@ -19,18 +13,6 @@ const AvailabilityZonesLabels = ({
     const letter = az.slice(-1);
     const label = letter.toUpperCase();
 
-    if (isV5Cluster) {
-      return (
-        <AvailabilityZonesLabelRadio
-          key={az}
-          label={label}
-          letter={letter}
-          title={az}
-          onToggleChecked={onToggleChecked}
-          isChecked={labelsChecked.includes(az) ? true : false}
-        />
-      );
-    }
     return (
       <AvailabilityZonesLabel
         key={az}
@@ -38,6 +20,7 @@ const AvailabilityZonesLabels = ({
         letter={letter}
         title={az}
         onToggleChecked={onToggleChecked}
+        isChecked={labelsChecked && labelsChecked.includes(az) ? true : false}
       />
     );
   });
@@ -46,7 +29,6 @@ const AvailabilityZonesLabels = ({
 AvailabilityZonesLabels.propTypes = {
   zones: PropTypes.PropTypes.arrayOf(PropTypes.string),
   onToggleChecked: PropTypes.func,
-  isV5Cluster: PropTypes.bool,
   labelsChecked: PropTypes.array,
 };
 

@@ -1,6 +1,6 @@
 const path = require('path');
 
-process.env.DEBUG_PRINT_LIMIT = 10000;
+process.env.DEBUG_PRINT_LIMIT = 20000;
 
 module.exports = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
