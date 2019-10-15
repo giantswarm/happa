@@ -4,12 +4,12 @@ import styled from '@emotion/styled';
 
 const MessageSpan = styled.span`
   color: ${props => props.theme.colors.error};
-  margin-top: 2px;
   display: block;
   font-size: 14px;
   font-weight: 400;
   white-space: nowrap;
   position: absolute;
+  margin-top: -2px;
 `;
 
 const ValidationErrorMessage = ({ message }) => (

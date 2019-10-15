@@ -18,16 +18,17 @@ const initialStateLabels = {
 /**
  * This component takes values from AvailabilityZonesLabel via AvailabilityZonesLabels
  * and acts as a buffer so to speak. This is, it takes data from individual labels and
- * aggregates this data to a state object to be passed to the AddNodePool component.
+ * aggregates this data to a state object to be passed to the its parent component.
  *
  */
 
-export default function AddNodePoolsAvailabilityZones({
+export default function AvailabilityZonesParser({
   max,
   min,
   updateAZValuesInParent,
   zones,
   isLabels,
+  isRadioButtons, // Just one label can be selected.
 }) {
   // Picker.
   const [AZPicker, setAZPicker] = useState(initialStatePicker);
@@ -57,22 +58,31 @@ export default function AddNodePoolsAvailabilityZones({
 
   // Function passed to child AZLabels component to allow it to update state here
   const updateAZLabels = (checked, payload) => {
+    // If we want a radio button type behavior, we reset it on every click, else we add/remove it.
+    const oldZonesArray = isRadioButtons ? [] : AZLabels.zonesArray;
+
     // If checked, we will add the new AZ to state, else we will remove it.
     const zonesArray = checked
-      ? [...AZLabels.zonesArray, payload.title]
+      ? [...oldZonesArray, payload.title]
       : AZLabels.zonesArray.filter(az => az !== payload.title);
 
     setAZLabels({
       number: zonesArray.length,
       zonesString: zonesArray.map(zone => zone.slice(-1)).join(' '),
       zonesArray,
-      valid: zonesArray.length > 0 && zonesArray.length <= max ? true : false,
+      valid: zonesArray.length > 0 && zonesArray.length <= max ? true : false, // Is this needed?
     });
   };
 
   if (isLabels) {
     return (
-      <AvailabilityZonesLabels zones={zones} onToggleChecked={updateAZLabels} />
+      <AvailabilityZonesLabels
+        zones={zones}
+        onToggleChecked={updateAZLabels}
+        isRadioButtons={isRadioButtons}
+        labelsChecked={AZLabels.zonesArray}
+        isMaxReached={AZLabels.zonesArray.length === max}
+      />
     );
   }
 
@@ -89,11 +99,12 @@ export default function AddNodePoolsAvailabilityZones({
   );
 }
 
-AddNodePoolsAvailabilityZones.propTypes = {
+AvailabilityZonesParser.propTypes = {
   max: PropTypes.number,
   min: PropTypes.number,
   zones: PropTypes.array,
   value: PropTypes.number,
   updateAZValuesInParent: PropTypes.func,
   isLabels: PropTypes.bool,
+  isRadioButtons: PropTypes.bool,
 };

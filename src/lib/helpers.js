@@ -197,3 +197,20 @@ export function isJwtExpired(token) {
 
   return now > expire;
 }
+
+export function hasAppropriateLength(string, min, max) {
+  const belowMin = string.trim().length < min;
+  const aboveMax = string.length > max;
+  const isValid = !belowMin && !aboveMax;
+
+  const message =
+    belowMin && min === 0
+      ? 'Name must not be empty'
+      : belowMin && min !== 0
+      ? `Name must not contain less than ${min} characters`
+      : aboveMax
+      ? `Name must not contain more than ${max} characters`
+      : '';
+
+  return [isValid, message, belowMin, aboveMax];
+}

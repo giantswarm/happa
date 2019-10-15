@@ -30,6 +30,7 @@ const theme = {
   fontFamilies: {
     console: 'Inconsolata, monospace',
   },
+  border: '1px solid #3A5F7B',
 };
 
 export default theme;

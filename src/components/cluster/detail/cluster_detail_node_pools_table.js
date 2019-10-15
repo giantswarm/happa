@@ -103,9 +103,8 @@ const GridRowNodePoolsItem = styled.div`
   background-color: ${props => props.theme.colors.shade7};
 `;
 
-const WrapperDiv = styled.div`
-  background-color: ${props => props.theme.colors.shade10};
-  padding: 20px 20px 40px;
+export const AddNodePoolWrapper = props => css`
+  background-color: ${props.theme.colors.shade10};
   border-radius: 5px;
   margin-bottom: 0px;
   h3 {
@@ -113,12 +112,17 @@ const WrapperDiv = styled.div`
   }
 `;
 
-const FlexColumnDiv = styled.div`
+const AddNodePoolWrapperDiv = styled.div`
+  ${AddNodePoolWrapper}
+  padding: 20px 20px 40px;
+`;
+
+export const AddNodePoolFlexColumnDiv = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  margin: 0 auto;
   max-width: 650px;
+  margin: 0 auto;
   label {
     display: flex;
     justify-content: space-between;
@@ -354,21 +358,25 @@ class ClusterDetailNodePoolsTable extends React.Component {
       nodePools,
       workerNodesRunning,
     } = this.state;
-    const { accessCluster, cluster, showNodePoolScalingModal } = this.props;
-
     const {
-      create_date,
-      master,
-      release_version,
-      release,
-      api_endpoint,
-    } = cluster;
+      accessCluster,
+      cluster,
+      showNodePoolScalingModal,
+      region,
+    } = this.props;
+
+    const { create_date, release_version, release, api_endpoint } = cluster;
 
     return (
       <>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            Region:&nbsp;<Code>{master ? master.availability_zone : null}</Code>
+            <OverlayTrigger
+              overlay={<Tooltip id='tooltip'>Region</Tooltip>}
+              placement='top'
+            >
+              <Code>{region ? region : null}</Code>
+            </OverlayTrigger>
             <div>
               <span>
                 Created {create_date ? relativeDate(create_date) : 'n/a'}
@@ -518,9 +526,9 @@ class ClusterDetailNodePoolsTable extends React.Component {
             transitionName={`login_form--transition`}
           >
             {/* Add Node Pool */}
-            <WrapperDiv>
+            <AddNodePoolWrapperDiv>
               <h3 className='table-label'>Add Node Pool</h3>
-              <FlexColumnDiv>
+              <AddNodePoolFlexColumnDiv>
                 <AddNodePool
                   clusterId={cluster.id}
                   releaseVersion={release_version}
@@ -549,8 +557,8 @@ class ClusterDetailNodePoolsTable extends React.Component {
                     Cancel
                   </Button>
                 </FlexWrapperDiv>
-              </FlexColumnDiv>
-            </WrapperDiv>
+              </AddNodePoolFlexColumnDiv>
+            </AddNodePoolWrapperDiv>
           </ReactCSSTransitionGroup>
         ) : (
           <FlexWrapperDiv>
@@ -589,6 +597,7 @@ ClusterDetailNodePoolsTable.propTypes = {
   lastUpdated: PropTypes.number,
   nodePools: PropTypes.object,
   provider: PropTypes.string,
+  region: PropTypes.string,
   release: PropTypes.object,
   setInterval: PropTypes.func,
   showNodePoolScalingModal: PropTypes.func,

@@ -3,6 +3,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
+/**
+ * This component is a wrapper for positioning AZ labels in cluster views, in the node pool row.
+ * It will create a grid with the length = number of AZs and it will reserve a column for each
+ * one of the AZs.
+ */
+
 const Wrapper = styled.div`
   display: grid;
   /* grid-gap: 5px; */

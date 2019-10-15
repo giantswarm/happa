@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 
 /**
@@ -50,46 +50,51 @@ const Wrapper = styled.abbr`
   &.not-checked {
     background-color: #567;
     color: #eee;
+    transition: all 0.3s;
+    &.is-max-reached {
+      background-color: #25495d;
+      color: #aaa;
+    }
   }
   &.pointer {
     cursor: pointer !important; /* It is a pain to override bootstrap styles. */
   }
+  &.pointer-disabled {
+    cursor: default !important;
+  }
 `;
 
-// onToggleChecked and *everything* before the return is just for node pool creation form.
-function AvailabilityZonesLabel({ label, letter, title, onToggleChecked }) {
-  const [checked, setChecked] = useState(false);
+function AvailabilityZonesLabel({
+  label,
+  letter,
+  title,
+  onToggleChecked,
+  isChecked,
+  isMaxReached,
+  isRadioButtons,
+}) {
+  const notCheckedClass = onToggleChecked && !isChecked ? `not-checked` : '';
+  /* If this has onToggleChecked prop it means that it is clickable and hence we don't want a "?" as cursor */
+  const pointerClass =
+    onToggleChecked && isMaxReached && !isChecked && !isRadioButtons
+      ? 'pointer-disabled'
+      : onToggleChecked
+      ? 'pointer'
+      : '';
 
-  // Hack for not triggering useEffect on first updates.
-  // TODO find a less hacky way of doing this.
-  const firstUpdate = useRef(true);
-
-  const classNames = `${
-    onToggleChecked && !checked ? `not-checked ${letter}` : letter
-    /* If this has onToggleChecked prop it means that it is clickable and hence we don't want a "?" as cursor */
-  } ${onToggleChecked && 'pointer'}`;
-
-  const toggleChecked = () => {
-    setChecked(state => !state);
-  };
-
-  useEffect(() => {
-    // We dont want this to run on first render
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-
-    if (onToggleChecked) {
-      onToggleChecked(checked, { title, letter, label });
-    }
-  }, [checked]);
+  const isMaxReachedClass =
+    isMaxReached && !isRadioButtons ? 'is-max-reached' : '';
+  const classNames = `${letter} ${notCheckedClass} ${pointerClass} ${isMaxReachedClass}`;
 
   return (
     <Wrapper
       className={classNames}
       title={title}
-      onClick={onToggleChecked ? toggleChecked : null}
+      onClick={
+        isMaxReached && !isChecked && !isRadioButtons
+          ? null
+          : () => onToggleChecked(!isChecked, { title, letter, label })
+      }
     >
       {label}
     </Wrapper>
@@ -101,6 +106,9 @@ AvailabilityZonesLabel.propTypes = {
   letter: PropTypes.string,
   title: PropTypes.string,
   onToggleChecked: PropTypes.func,
+  isChecked: PropTypes.bool,
+  isMaxReached: PropTypes.bool,
+  isRadioButtons: PropTypes.bool,
 };
 
 export default AvailabilityZonesLabel;

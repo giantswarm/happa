@@ -65,12 +65,14 @@ class ReleaseSelector extends React.Component {
           this.informWIP();
         }
 
-        this.selectRelease(selectableReleases[0]);
+        // Sets the currently selected release
+        const release = selectableReleases[0];
+        this.setRelease(release);
 
         this.setState({
           loading: false,
           error: false,
-          selectableReleases: selectableReleases,
+          selectableReleases,
         });
       })
       .catch(error => {
@@ -117,12 +119,10 @@ class ReleaseSelector extends React.Component {
   /**
    * Sets the currently selected release
    */
-  selectRelease(release) {
-    this.setState({
-      selectedRelease: release,
-    });
-    this.props.releaseSelected(release);
-  }
+  setRelease = selectedRelease => {
+    this.setState({ selectedRelease });
+    this.props.selectRelease(selectedRelease);
+  };
 
   openModal = () => {
     this.releaseDetailsModal.show();
@@ -195,7 +195,7 @@ class ReleaseSelector extends React.Component {
           ref={r => {
             this.releaseDetailsModal = r;
           }}
-          releaseSelected={this.selectRelease.bind(this)}
+          releaseSelected={this.setRelease}
           releases={this.state.selectableReleases.map(version => {
             return this.props.releases[version];
           })}
@@ -209,7 +209,7 @@ class ReleaseSelector extends React.Component {
 ReleaseSelector.propTypes = {
   dispatch: PropTypes.func,
   provider: PropTypes.string,
-  releaseSelected: PropTypes.func,
+  selectRelease: PropTypes.func,
   releases: PropTypes.object, // Version string to a release object i.e.: {"0.1.0": {...}, "0.2.0", {...}}
   activeSortedReleases: PropTypes.array, // Array of strings i.e: ["0.1.0", "0.2.0"]
   user: PropTypes.object,
