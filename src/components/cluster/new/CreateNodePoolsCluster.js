@@ -404,7 +404,7 @@ class CreateNodePoolsCluster extends Component {
                 </label>
                 {/* Master Node AZ */}
                 <span className='label-span'>
-                  Master node availability zones selector
+                  Master node availability zones selection
                 </span>
                 <RadioWrapperDiv>
                   {/* Automatically */}

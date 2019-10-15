@@ -341,7 +341,7 @@ class AddNodePool extends Component {
           </FlexWrapperDiv>
         </label>
         <AZLabel htmlFor='availability-zones'>
-          <span className='label-span'>Availability Zones</span>
+          <span className='label-span'>Availability Zones selection</span>
           <RadioWrapperDiv>
             {/* Automatically */}
             <div>
@@ -363,7 +363,7 @@ class AddNodePool extends Component {
                 htmlFor='automatically'
                 onClick={() => this.toggleAZSelector(false)}
               >
-                Automatically select availability zones
+                Automatic
               </label>
             </div>
           </RadioWrapperDiv>
@@ -423,7 +423,7 @@ class AddNodePool extends Component {
                 htmlFor='manually'
                 onClick={() => this.toggleAZSelector(true)}
               >
-                Manually select availability zones
+                Manual
               </label>
             </div>
             <ReactCSSTransitionGroup
