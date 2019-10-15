@@ -8,6 +8,7 @@ const AvailabilityZonesLabels = ({
   onToggleChecked,
   labelsChecked,
   isMaxReached,
+  isRadioButtons,
 }) => {
   if (typeof zones === 'undefined' || zones.length == 0) {
     return <abbr title='No information available'>n/a</abbr>;
@@ -27,6 +28,7 @@ const AvailabilityZonesLabels = ({
         onToggleChecked={onToggleChecked}
         isChecked={labelsChecked && labelsChecked.includes(az) ? true : false}
         isMaxReached={isMaxReached}
+        isRadioButtons={isRadioButtons}
       />
     );
   });

@@ -71,15 +71,19 @@ function AvailabilityZonesLabel({
   onToggleChecked,
   isChecked,
   isMaxReached,
+  isRadioButtons,
 }) {
-  const notCheckedClass = onToggleChecked && !isChecked ? `not-checked` : null;
+  const notCheckedClass = onToggleChecked && !isChecked ? `not-checked` : '';
   /* If this has onToggleChecked prop it means that it is clickable and hence we don't want a "?" as cursor */
   const pointerClass =
-    onToggleChecked && isMaxReached && !isChecked
+    onToggleChecked && isMaxReached && !isChecked && !isRadioButtons
       ? 'pointer-disabled'
-      : 'pointer';
-  const isMaxReachedClass = isMaxReached ? 'is-max-reached' : null;
+      : onToggleChecked
+      ? 'pointer'
+      : '';
 
+  const isMaxReachedClass =
+    isMaxReached && !isRadioButtons ? 'is-max-reached' : '';
   const classNames = `${letter} ${notCheckedClass} ${pointerClass} ${isMaxReachedClass}`;
 
   return (
@@ -87,7 +91,7 @@ function AvailabilityZonesLabel({
       className={classNames}
       title={title}
       onClick={
-        isMaxReached && !isChecked
+        isMaxReached && !isChecked && !isRadioButtons
           ? null
           : () => onToggleChecked(!isChecked, { title, letter, label })
       }
@@ -104,6 +108,7 @@ AvailabilityZonesLabel.propTypes = {
   onToggleChecked: PropTypes.func,
   isChecked: PropTypes.bool,
   isMaxReached: PropTypes.bool,
+  isRadioButtons: PropTypes.bool,
 };
 
 export default AvailabilityZonesLabel;
