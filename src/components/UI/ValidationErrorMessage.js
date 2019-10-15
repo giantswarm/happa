@@ -9,6 +9,7 @@ const MessageSpan = styled.span`
   font-weight: 400;
   white-space: nowrap;
   position: absolute;
+  margin-top: -2px;
 `;
 
 const ValidationErrorMessage = ({ message }) => (

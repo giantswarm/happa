@@ -156,6 +156,7 @@ const AZWrapperDiv = styled.div`
 
 const AddNodePoolWrapperDiv = styled.div`
   ${AddNodePoolWrapper};
+  background-color: ${props => props.theme.colors.shade10};
   padding: 20px 20px 0;
   margin-bottom: 20px;
   position: relative;
@@ -315,7 +316,7 @@ class CreateNodePoolsCluster extends Component {
     this.props.informParent(releaseVersion);
   };
 
-  toggleAZSelector = () => {
+  toggleMasterAZSelector = () => {
     this.setState(state => ({
       hasAZLabels: !state.hasAZLabels,
     }));
@@ -413,15 +414,15 @@ class CreateNodePoolsCluster extends Component {
                     </div>
                     <input
                       type='radio'
-                      id='automatically'
+                      id='automatic'
                       value={false}
                       checked={hasAZLabels === false}
-                      onChange={() => this.toggleAZSelector(false)}
+                      onChange={() => this.toggleMasterAZSelector(false)}
                       tabIndex='0'
                     />
                     <label
-                      htmlFor='automatically'
-                      onClick={() => this.toggleAZSelector(false)}
+                      htmlFor='automatic'
+                      onClick={() => this.toggleMasterAZSelector(false)}
                     >
                       Automatically select availability zones
                     </label>
@@ -436,15 +437,15 @@ class CreateNodePoolsCluster extends Component {
                     </div>
                     <input
                       type='radio'
-                      id='manually'
+                      id='manual'
                       value={true}
                       checked={hasAZLabels === true}
                       tabIndex='0'
-                      onChange={() => this.toggleAZSelector(true)}
+                      onChange={() => this.toggleMasterAZSelector(true)}
                     />
                     <label
-                      htmlFor='manually'
-                      onClick={() => this.toggleAZSelector(true)}
+                      htmlFor='manual'
+                      onClick={() => this.toggleMasterAZSelector(true)}
                     >
                       Manually select availability zones
                     </label>

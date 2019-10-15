@@ -8,6 +8,7 @@ import NodeCountSelector from 'shared/node_count_selector';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
@@ -23,7 +24,6 @@ const FlexWrapperDiv = styled.div`
 // Availability Zones styles
 const Emphasized = css`
   .emphasized {
-    font-size: 16px;
     margin: 0 18px 0 28px;
     transform: translateY(-4px);
   }
@@ -67,12 +67,65 @@ const RadioWrapperDiv = styled.div`
 
 const AZLabel = styled.label`
   height: 238px;
-  font-size: 16px;
   justify-content: flex-start !important;
+  position: relative;
   div label {
-    font-size: 16px !important;
-    margin-bottom: 12px !important;
     justify-content: flex-start;
+  }
+
+  .az-automatic-enter {
+    opacity: 0.01;
+    transform: translateY(-8px);
+  }
+  .az-automatic-enter.az-automatic-enter-active {
+    opacity: 1;
+    transform: translateY(0px);
+    transition: all 300ms;
+  }
+  .az-automatic-leave {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  .az-automatic-leave.az-automatic-leave-active {
+    opacity: 0.01;
+    transform: translateY(0px);
+    transition: all 300ms;
+  }
+
+  .az-manual-enter,
+  .az-manual-appear {
+    opacity: 0.01;
+    transform: translateY(20px);
+  }
+  .az-manual-enter.az-manual-enter-active,
+  .az-manual-appear.az-manual-appear-active {
+    opacity: 1;
+    transform: translateY(0px);
+    transition: opacity 200ms, transform 300ms;
+    transition-delay: 300ms, 300ms;
+  }
+  .az-manual-leave {
+    opacity: 1;
+  }
+  .az-manual-leave.az-manual-leave-active {
+    opacity: 0.01;
+    transform: translateY(0px);
+    transition: all 100ms ease-in;
+    transition-delay: 0ms;
+  }
+
+  /* Manual */
+  .manual-radio-input {
+    position: absolute;
+    top: 75px;
+    width: 100%;
+    transition: transform 300ms;
+    transition-delay: 200ms;
+    &.down {
+      transform: translateY(125px);
+      transition: transform 200ms;
+      transition-delay: 0ms;
+    }
   }
 `;
 
@@ -156,10 +209,10 @@ class AddNodePool extends Component {
     );
   };
 
-  toggleAZSelector = () => {
-    this.setState(state => ({
-      hasAZLabels: !state.hasAZLabels,
-    }));
+  toggleAZSelector = isLabels => {
+    this.setState({
+      hasAZLabels: isLabels,
+    });
   };
 
   updateAZ = payload => {
@@ -314,35 +367,43 @@ class AddNodePool extends Component {
               </label>
             </div>
           </RadioWrapperDiv>
-          {!hasAZLabels && (
-            <>
-              <FlexWrapperAZDiv>
-                <p className='emphasized no-margin'>
-                  Number of availability zones to use:
-                </p>
-                <AvailabilityZonesParser
-                  min={min}
-                  max={max}
-                  zones={this.props.availabilityZones}
-                  updateAZValuesInParent={this.updateAZ}
-                  isLabels={hasAZLabels}
-                />
-              </FlexWrapperAZDiv>
-              <FlexWrapperAZDiv>
-                {/* This is a hack for fixing height for this element and at the same time
+          <ReactCSSTransitionGroup
+            transitionName='az-automatic'
+            transitionEnterTimeout={300}
+            transitionLeaveTimeout={300}
+          >
+            {!hasAZLabels && (
+              <div key='az-automatic'>
+                <FlexWrapperAZDiv>
+                  <p className='emphasized no-margin'>
+                    Number of availability zones to use:
+                  </p>
+                  <AvailabilityZonesParser
+                    min={min}
+                    max={max}
+                    zones={this.props.availabilityZones}
+                    updateAZValuesInParent={this.updateAZ}
+                    isLabels={hasAZLabels}
+                  />
+                </FlexWrapperAZDiv>
+                <FlexWrapperAZDiv>
+                  {/* This is a hack for fixing height for this element and at the same time
                   control the height of the wrapper so it matches labels wrapper */}
-                <p style={{ margin: '11px 0 17px', height: '38px' }}>
-                  {this.state.availabilityZonesPicker.value < 2
-                    ? `Covering one availability zone, the worker nodes of this node pool
-               will be placed in the same availability zones as the
-               cluster's master node.`
-                    : `Availability zones will be selected randomly.`}
-                </p>
-              </FlexWrapperAZDiv>
-            </>
-          )}
+                  <p style={{ margin: '5px 0 24px 28px', height: '38px' }}>
+                    {this.state.availabilityZonesPicker.value < 2
+                      ? `Covering one availability zone, the worker nodes of this node pool
+                      will be placed in the same availability zones as the
+                      cluster's master node.`
+                      : `Availability zones will be selected randomly.`}
+                  </p>
+                </FlexWrapperAZDiv>
+              </div>
+            )}
+          </ReactCSSTransitionGroup>
           {/* Manual */}
-          <RadioWrapperDiv>
+          <RadioWrapperDiv
+            className={`manual-radio-input ${!hasAZLabels ? 'down' : null}`}
+          >
             <div>
               <div className='fake-radio'>
                 <div
@@ -365,35 +426,43 @@ class AddNodePool extends Component {
                 Manually select availability zones
               </label>
             </div>
-            {hasAZLabels && (
-              <>
-                <FlexColumnAZDiv>
-                  <p>
-                    You can select up to {max} availability zones to make use
-                    of.
-                  </p>
-                  <FlexWrapperAZDiv>
-                    <AvailabilityZonesParser
-                      min={min}
-                      max={max}
-                      zones={this.props.availabilityZones}
-                      updateAZValuesInParent={this.updateAZ}
-                      isLabels={hasAZLabels}
-                    />
-                    {/* Validation messages */}
-                    {zonesArray.length < 1 && (
-                      <p className='danger'>Please select at least one.</p>
-                    )}
-                    {zonesArray.length > max && (
-                      <p className='danger'>
-                        {max} is the maximum you can have. Please uncheck at
-                        least {zonesArray.length - max} of them.
-                      </p>
-                    )}
-                  </FlexWrapperAZDiv>
-                </FlexColumnAZDiv>
-              </>
-            )}
+            <ReactCSSTransitionGroup
+              transitionName='az-manual'
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={100}
+              transitionAppearTimeout={500}
+              transitionAppear={true}
+            >
+              {hasAZLabels && (
+                <div key='az-manual'>
+                  <FlexColumnAZDiv>
+                    <p>
+                      You can select up to {max} availability zones to make use
+                      of.
+                    </p>
+                    <FlexWrapperAZDiv>
+                      <AvailabilityZonesParser
+                        min={min}
+                        max={max}
+                        zones={this.props.availabilityZones}
+                        updateAZValuesInParent={this.updateAZ}
+                        isLabels={hasAZLabels}
+                      />
+                      {/* Validation messages */}
+                      {zonesArray.length < 1 && (
+                        <p className='danger'>Please select at least one.</p>
+                      )}
+                      {zonesArray.length > max && (
+                        <p className='danger'>
+                          {max} is the maximum you can have. Please uncheck at
+                          least {zonesArray.length - max} of them.
+                        </p>
+                      )}
+                    </FlexWrapperAZDiv>
+                  </FlexColumnAZDiv>
+                </div>
+              )}
+            </ReactCSSTransitionGroup>
           </RadioWrapperDiv>
         </AZLabel>
         <label className='scaling-range' htmlFor='scaling-range'>
