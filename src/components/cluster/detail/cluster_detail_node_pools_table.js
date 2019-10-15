@@ -358,15 +358,14 @@ class ClusterDetailNodePoolsTable extends React.Component {
       nodePools,
       workerNodesRunning,
     } = this.state;
-    const { accessCluster, cluster, showNodePoolScalingModal } = this.props;
-
     const {
-      create_date,
-      master,
-      release_version,
-      release,
-      api_endpoint,
-    } = cluster;
+      accessCluster,
+      cluster,
+      showNodePoolScalingModal,
+      region,
+    } = this.props;
+
+    const { create_date, release_version, release, api_endpoint } = cluster;
 
     return (
       <>
@@ -376,7 +375,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
               overlay={<Tooltip id='tooltip'>Region</Tooltip>}
               placement='top'
             >
-              <Code>{master ? master.availability_zone : null}</Code>
+              <Code>{region ? region : null}</Code>
             </OverlayTrigger>
             <div>
               <span>
@@ -598,6 +597,7 @@ ClusterDetailNodePoolsTable.propTypes = {
   lastUpdated: PropTypes.number,
   nodePools: PropTypes.object,
   provider: PropTypes.string,
+  region: PropTypes.string,
   release: PropTypes.object,
   setInterval: PropTypes.func,
   showNodePoolScalingModal: PropTypes.func,

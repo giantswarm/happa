@@ -112,6 +112,7 @@ function mapStateToProps(state, ownProps) {
     release: release,
     targetRelease: state.entities.releases.items[targetReleaseVersion],
     user: state.app.loggedInUser,
+    region: state.app.info.general.datacenter,
   };
 }
 

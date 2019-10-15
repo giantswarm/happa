@@ -249,6 +249,7 @@ class ClusterDetailView extends React.Component {
       provider,
       release,
       targetRelease,
+      region,
     } = this.props;
 
     const { loading } = this.state;
@@ -262,10 +263,7 @@ class ClusterDetailView extends React.Component {
             <div className='row' style={{ marginBottom: '30px' }}>
               <div className='col-sm-12 col-md-7 col-9'>
                 <h1 style={{ marginLeft: '-10px' }}>
-                  <ClusterIDLabel
-                    clusterID={this.props.cluster.id}
-                    copyEnabled
-                  />{' '}
+                  <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
                   <ViewAndEditName
                     entity={cluster}
                     entityType='cluster'
@@ -316,6 +314,7 @@ class ClusterDetailView extends React.Component {
                         nodePools={nodePools}
                         provider={provider}
                         release={release}
+                        region={region}
                         showNodePoolScalingModal={this.showNodePoolScalingModal}
                         showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
@@ -444,6 +443,7 @@ ClusterDetailView.propTypes = {
   releaseActions: PropTypes.object,
   release: PropTypes.object,
   provider: PropTypes.string,
+  region: PropTypes.string,
   setInterval: PropTypes.func,
   targetRelease: PropTypes.object,
   user: PropTypes.object,
