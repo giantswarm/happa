@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 // Returns an array of AvailabilityZonesLabel components
-const AvailabilityZonesLabels = ({ zones, onToggleChecked, labelsChecked }) => {
+const AvailabilityZonesLabels = ({
+  zones,
+  onToggleChecked,
+  labelsChecked,
+  isMaxReached,
+}) => {
   if (typeof zones === 'undefined' || zones.length == 0) {
     return <abbr title='No information available'>n/a</abbr>;
   }
@@ -21,6 +26,7 @@ const AvailabilityZonesLabels = ({ zones, onToggleChecked, labelsChecked }) => {
         title={az}
         onToggleChecked={onToggleChecked}
         isChecked={labelsChecked && labelsChecked.includes(az) ? true : false}
+        isMaxReached={isMaxReached}
       />
     );
   });
@@ -30,6 +36,7 @@ AvailabilityZonesLabels.propTypes = {
   zones: PropTypes.PropTypes.arrayOf(PropTypes.string),
   onToggleChecked: PropTypes.func,
   labelsChecked: PropTypes.array,
+  isMaxReached: PropTypes.bool,
 };
 
 export default AvailabilityZonesLabels;

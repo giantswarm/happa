@@ -50,9 +50,17 @@ const Wrapper = styled.abbr`
   &.not-checked {
     background-color: #567;
     color: #eee;
+    transition: all 0.3s;
+    &.is-max-reached {
+      background-color: #25495d;
+      color: #aaa;
+    }
   }
   &.pointer {
     cursor: pointer !important; /* It is a pain to override bootstrap styles. */
+  }
+  &.pointer-disabled {
+    cursor: default !important;
   }
 `;
 
@@ -62,17 +70,27 @@ function AvailabilityZonesLabel({
   title,
   onToggleChecked,
   isChecked,
+  isMaxReached,
 }) {
-  const classNames = `${
-    onToggleChecked && !isChecked ? `not-checked ${letter}` : letter
-    /* If this has onToggleChecked prop it means that it is clickable and hence we don't want a "?" as cursor */
-  } ${onToggleChecked && 'pointer'}`;
+  const notCheckedClass = onToggleChecked && !isChecked ? `not-checked` : null;
+  /* If this has onToggleChecked prop it means that it is clickable and hence we don't want a "?" as cursor */
+  const pointerClass =
+    onToggleChecked && isMaxReached && !isChecked
+      ? 'pointer-disabled'
+      : 'pointer';
+  const isMaxReachedClass = isMaxReached ? 'is-max-reached' : null;
+
+  const classNames = `${letter} ${notCheckedClass} ${pointerClass} ${isMaxReachedClass}`;
 
   return (
     <Wrapper
       className={classNames}
       title={title}
-      onClick={() => onToggleChecked(!isChecked, { title, letter, label })}
+      onClick={
+        isMaxReached && !isChecked
+          ? null
+          : () => onToggleChecked(!isChecked, { title, letter, label })
+      }
     >
       {label}
     </Wrapper>
@@ -85,6 +103,7 @@ AvailabilityZonesLabel.propTypes = {
   title: PropTypes.string,
   onToggleChecked: PropTypes.func,
   isChecked: PropTypes.bool,
+  isMaxReached: PropTypes.bool,
 };
 
 export default AvailabilityZonesLabel;

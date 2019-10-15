@@ -70,7 +70,7 @@ export default function AvailabilityZonesParser({
       number: zonesArray.length,
       zonesString: zonesArray.map(zone => zone.slice(-1)).join(' '),
       zonesArray,
-      valid: zonesArray.length > 0 && zonesArray.length <= max ? true : false,
+      valid: zonesArray.length > 0 && zonesArray.length <= max ? true : false, // Is this needed?
     });
   };
 
@@ -81,6 +81,7 @@ export default function AvailabilityZonesParser({
         onToggleChecked={updateAZLabels}
         isRadioButtons={isRadioButtons}
         labelsChecked={AZLabels.zonesArray}
+        isMaxReached={AZLabels.zonesArray.length === max}
       />
     );
   }

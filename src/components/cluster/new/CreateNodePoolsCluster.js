@@ -157,6 +157,7 @@ const AZWrapperDiv = styled.div`
 const AddNodePoolWrapperDiv = styled.div`
   ${AddNodePoolWrapper};
   background-color: ${props => props.theme.colors.shade10};
+  border-radius: 5px;
   padding: 20px 20px 0;
   margin-bottom: 20px;
   position: relative;
@@ -402,7 +403,9 @@ class CreateNodePoolsCluster extends Component {
                   </div>
                 </label>
                 {/* Master Node AZ */}
-                <span className='label-span'>Availability zones</span>
+                <span className='label-span'>
+                  Master node availability zones selector
+                </span>
                 <RadioWrapperDiv>
                   {/* Automatically */}
                   <div>
@@ -424,7 +427,7 @@ class CreateNodePoolsCluster extends Component {
                       htmlFor='automatic'
                       onClick={() => this.toggleMasterAZSelector(false)}
                     >
-                      Automatically select availability zones
+                      Automatic
                     </label>
                   </div>
                   {/* Manual */}
@@ -447,7 +450,7 @@ class CreateNodePoolsCluster extends Component {
                       htmlFor='manual'
                       onClick={() => this.toggleMasterAZSelector(true)}
                     >
-                      Manually select availability zones
+                      Manual
                     </label>
                   </div>
                 </RadioWrapperDiv>
