@@ -13,6 +13,7 @@ const clustersApi = new GiantSwarm.ClustersApi();
 
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
+// ? Do we reaaly need this function?
 function enhanceWithCapabilities(clusters, provider) {
   clusters = clusters.map(c => {
     c.capabilities = computeCapabilities(c, provider);
@@ -71,6 +72,7 @@ export function clustersLoad() {
     const clusters = await clustersApi
       .getClusters()
       .then(clusters => {
+        // ? Do we really need to do this here? We are doing it after when fetching details.
         const enhancedClusters = enhanceWithCapabilities(
           clusters,
           getState().app.info.general.provider
@@ -178,7 +180,7 @@ export function clustersLoad() {
     // Get the details for v5 clusters.
     if (window.config.environment === 'development') {
       const clusters = await Promise.all(
-        v5Clusters.map(cluster => clusterDetailsV5(dispatch, cluster))
+        v5Clusters.map(cluster => clusterDetailsV5(dispatch, getState, cluster))
       );
 
       // Clusters array to object, because we are storing an object in the store.
@@ -205,10 +207,15 @@ export function clustersLoad() {
   };
 }
 
-function clusterDetailsV5(dispatch, cluster) {
+function clusterDetailsV5(dispatch, getState, cluster) {
   return clustersApi
     .getClusterV5(cluster.id)
     .then(clusterDetails => {
+      clusterDetails.capabilities = computeCapabilities(
+        clusterDetails,
+        getState().app.info.general.provider
+      );
+
       return clusterDetails;
     })
     .catch(error => {
