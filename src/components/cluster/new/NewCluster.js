@@ -17,7 +17,8 @@ class NewCluster extends React.Component {
 
   renderComponent = props => {
     const Component =
-      cmp(this.state.releaseSelected, window.config.firstNodePoolsRelease) < 0
+      cmp(this.state.releaseSelected, window.config.firstNodePoolsRelease) <
+        0 || window.config.environment !== 'development'
         ? CreateRegularCluster
         : CreateNodePoolsCluster;
 
@@ -25,17 +26,6 @@ class NewCluster extends React.Component {
   };
 
   render() {
-    if (window.config.environment !== 'development') {
-      return (
-        <Switch>
-          <Route
-            component={CreateRegularCluster}
-            exact
-            path={`${this.props.match.path}`}
-          />
-        </Switch>
-      );
-    }
     if (this.state.releaseSelected) {
       return (
         <Switch>
