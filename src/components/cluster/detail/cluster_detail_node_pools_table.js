@@ -577,7 +577,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
           <FlexWrapperDiv className={noNodePools && 'no-nodepools'}>
             {noNodePools && (
               <p>
-                Add at least one node pools to this cluster so that you can
+                Add at least one node pool to this cluster so that you can
                 actually run workloads.
               </p>
             )}
