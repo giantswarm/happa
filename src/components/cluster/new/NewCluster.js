@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { Route, Switch } from 'react-router-dom';
 import cmp from 'semver-compare';
+import CreateClusterOld from './CreateClusterOld';
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';
 import LoadingOverlay from 'UI/loading_overlay';
@@ -29,11 +30,14 @@ class NewCluster extends React.Component {
   };
 
   renderComponent = props => {
+    // TODO Remove CreateClusterOld when we release NPs
     const Component =
-      cmp(this.state.releaseSelected, window.config.firstNodePoolsRelease) <
-        0 || window.config.environment !== 'development'
-        ? CreateRegularCluster
-        : CreateNodePoolsCluster;
+      window.config.environment !== 'development'
+        ? CreateClusterOld // Old form
+        : cmp(this.state.releaseSelected, window.config.firstNodePoolsRelease) <
+          0
+        ? CreateRegularCluster // new v4 form
+        : CreateNodePoolsCluster; // new v5 form
 
     return <Component {...props} informParent={this.setReleaseVersion} />;
   };
