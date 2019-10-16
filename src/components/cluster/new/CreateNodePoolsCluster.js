@@ -399,7 +399,13 @@ class CreateNodePoolsCluster extends Component {
                 <label className='release-version' htmlFor='release-version'>
                   <span className='label-span'>Release version</span>
                   <div>
-                    <ReleaseSelector selectRelease={this.selectRelease} />
+                    <ReleaseSelector
+                      selectRelease={this.selectRelease}
+                      selectedRelease={this.props.selectedRelease}
+                      selectableReleases={this.props.selectableReleases}
+                      releases={this.props.releases}
+                      activeSortedReleases={this.props.activeSortedReleases}
+                    />
                   </div>
                 </label>
                 {/* Master Node AZ */}
@@ -555,6 +561,7 @@ CreateNodePoolsCluster.propTypes = {
   availabilityZones: PropTypes.array,
   allowedInstanceTypes: PropTypes.array,
   selectedOrganization: PropTypes.string,
+  selectedRelease: PropTypes.string,
   dispatch: PropTypes.func,
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
@@ -566,6 +573,9 @@ CreateNodePoolsCluster.propTypes = {
   clusterId: PropTypes.string,
   closeForm: PropTypes.func,
   informParent: PropTypes.func,
+  selectableReleases: PropTypes.array,
+  releases: PropTypes.object,
+  activeSortedReleases: PropTypes.array,
 };
 
 function mapStateToProps(state) {
