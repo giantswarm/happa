@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import cmp from 'semver-compare';
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';
+import LoadingOverlay from 'UI/loading_overlay';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -26,8 +27,8 @@ class NewCluster extends React.Component {
   };
 
   render() {
-    if (this.state.releaseSelected) {
-      return (
+    return (
+      <LoadingOverlay loading={!this.state.releaseSelected}>
         <Switch>
           <Route
             exact
@@ -35,8 +36,8 @@ class NewCluster extends React.Component {
             render={props => this.renderComponent(props)}
           />
         </Switch>
-      );
-    }
+      </LoadingOverlay>
+    );
   }
 }
 
