@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { Route, Switch } from 'react-router-dom';
 import cmp from 'semver-compare';
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
@@ -11,6 +12,17 @@ class NewCluster extends React.Component {
   state = {
     releaseSelected: window.config.firstNodePoolsRelease,
   };
+
+  componentDidMount() {
+    if (!this.state.releaseSelected) {
+      new FlashMessage(
+        'Something went wrong while trying to fetch active releases',
+        messageType.ERROR,
+        messageTTL.MEDIUM,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+    }
+  }
 
   setReleaseVersion = releaseSelected => {
     this.setState({ releaseSelected });
