@@ -21,7 +21,7 @@ class CreateRegularCluster extends React.Component {
       value: 1,
       valid: true,
     },
-    releaseVersion: '',
+    releaseVersion: this.props.selectedRelease,
     clusterName: 'My cluster',
     scaling: {
       automatic: false,
