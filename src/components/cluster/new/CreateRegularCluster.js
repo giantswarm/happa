@@ -1,6 +1,7 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
+import { FlexColumnDiv, Wrapper } from './CreateNodePoolsCluster';
 import { push } from 'connected-react-router';
 import AWSInstanceTypeSelector from './aws_instance_type_selector';
 import AzureVMSizeSelector from './azure_vm_size_selector';
@@ -14,6 +15,35 @@ import PropTypes from 'prop-types';
 import ProviderCredentials from './provider_credentials';
 import React from 'react';
 import ReleaseSelector from './ReleaseSelector';
+import styled from '@emotion/styled';
+
+const WrapperDiv = styled.div`
+  ${Wrapper}
+  .worker-nodes {
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+`;
+
+const FlexWrapperDiv = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  p {
+    margin-left: 15px;
+  }
+`;
+
+const FlexWrapperAZDiv = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  p {
+    margin-right: 18px;
+    transform: translateY(-4px);
+  }
+`;
 
 class CreateRegularCluster extends React.Component {
   state = {
@@ -182,7 +212,7 @@ class CreateRegularCluster extends React.Component {
   };
 
   componentDidMount() {
-    this.cluster_name.select();
+    this.clusterNameInput.select();
   }
 
   isScalingAutomatic(provider, releaseVer) {
@@ -336,45 +366,30 @@ class CreateRegularCluster extends React.Component {
             ' | Giant Swarm'
           }
         >
-          <div className='new-cluster' data-testid='cluster-creation-view'>
-            <div className='row'>
-              <div className='col-12'>
-                <h1>Create a Cluster</h1>
-              </div>
-            </div>
+          {/* <div className='new-cluster' data-testid='cluster-creation-view'> */}
+          <WrapperDiv data-testid='cluster-creation-view'>
+            <h1>Create a Cluster</h1>
 
-            <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Cluster Name</h3>
-              </div>
-              <div className='col-9'>
-                <form
-                  onSubmit={e => {
-                    e.preventDefault();
-                  }}
-                >
-                  <p>
-                    Give your cluster a name so you can recognize it in a crowd.
-                  </p>
+            <FlexColumnDiv>
+              <label htmlFor='name'>
+                <span className='label-span'>Name</span>
+                <div className='name-container'>
                   <input
                     autoFocus
-                    className='col-4'
                     onChange={this.updateClusterName}
                     ref={i => {
-                      this.cluster_name = i;
+                      this.clusterNameInput = i;
                     }}
                     type='text'
+                    id='name'
                     value={this.state.clusterName}
                   />
-                </form>
-              </div>
-            </div>
+                </div>
+                <p>Give your cluster a name to recognize it among others.</p>
+              </label>
 
-            <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Release Version</h3>
-              </div>
-              <div className='col-9'>
+              <label htmlFor='name'>
+                <span className='label-span'>Release version</span>
                 <ReleaseSelector
                   selectRelease={this.selectRelease}
                   selectedRelease={this.props.selectedRelease}
@@ -382,15 +397,16 @@ class CreateRegularCluster extends React.Component {
                   releases={this.props.releases}
                   activeSortedReleases={this.props.activeSortedReleases}
                 />
-              </div>
-            </div>
+              </label>
+            </FlexColumnDiv>
 
-            {this.props.provider === 'aws' ? (
-              <div className='row section'>
-                <div className='col-3'>
-                  <h3 className='table-label'>Availability Zones</h3>
-                </div>
-                <div className='col-9'>
+            <hr style={{ margin: '0 0 35px' }} />
+
+            <FlexColumnDiv>
+              <div className='worker-nodes'>Worker nodes</div>
+              {this.props.provider === 'aws' && (
+                <label htmlFor='availability-zones'>
+                  <span className='label-span'>Availability Zones</span>
                   {// For now we want to handle cases where older clusters do
                   // still not support AZ selection. The special handling here
                   // can be removed once all clusters run at least on 6.1.0.
@@ -398,10 +414,8 @@ class CreateRegularCluster extends React.Component {
                   //     https://github.com/giantswarm/giantswarm/pull/2202
                   //
                   cmp(this.props.selectedRelease, '6.0.0') === 1 ? (
-                    <div>
-                      <p>
-                        Select the number of availability zones for your nodes.
-                      </p>
+                    <FlexWrapperAZDiv>
+                      <p>Number of availability zones to use:</p>
                       <div>
                         <NumberPicker
                           label=''
@@ -413,9 +427,9 @@ class CreateRegularCluster extends React.Component {
                           value={this.state.availabilityZonesPicker.value}
                         />
                       </div>
-                    </div>
+                    </FlexWrapperAZDiv>
                   ) : (
-                    <div>
+                    <>
                       <p>
                         Selection of availability zones is only possible for
                         release version 6.1.0 or greater.
@@ -423,104 +437,99 @@ class CreateRegularCluster extends React.Component {
                       <div className='col-3'>
                         <NumberPicker readOnly={true} value={1} />
                       </div>
-                    </div>
+                    </>
                   )}
-                </div>
-              </div>
-            ) : null}
+                </label>
+              )}
 
-            {(() => {
-              switch (this.props.provider) {
-                case 'aws':
-                  return (
-                    <div className='row section'>
-                      <div className='col-3'>
-                        <h3 className='table-label'>Instance Type</h3>
-                      </div>
-                      <div className='col-9'>
-                        <p>Select the instance type for your worker nodes.</p>
-                        <AWSInstanceTypeSelector
-                          allowedInstanceTypes={this.props.allowedInstanceTypes}
-                          onChange={this.updateAWSInstanceType}
-                          readOnly={false}
-                          value={this.state.aws.instanceType.value}
-                        />
-                      </div>
-                    </div>
-                  );
-                case 'kvm':
-                  return (
-                    <div className='row section'>
-                      <div className='col-3'>
-                        <h3 className='table-label'>Worker Configuration</h3>
-                      </div>
-                      <div className='col-9'>
-                        <p>
-                          Configure the amount of CPU, RAM and Storage for your
-                          workers. The storage size specified will apply to both
-                          the kubelet and the Docker volume of the node, so
-                          please make sure to have twice the specified size
-                          available as disk space.
-                        </p>
+              <label htmlFor='instance-type'>
+                {(() => {
+                  switch (this.props.provider) {
+                    case 'aws':
+                      return (
+                        <>
+                          <span className='label-span'>Instance Type</span>
+                          <FlexWrapperDiv>
+                            <AWSInstanceTypeSelector
+                              allowedInstanceTypes={
+                                this.props.allowedInstanceTypes
+                              }
+                              onChange={this.updateAWSInstanceType}
+                              readOnly={false}
+                              value={this.state.aws.instanceType.value}
+                            />
+                          </FlexWrapperDiv>
+                        </>
+                      );
+                    case 'kvm':
+                      return (
+                        <>
+                          <span className='label-span'>
+                            Worker Configuration
+                          </span>
+                          <p>
+                            Configure the amount of CPU, RAM and Storage for
+                            your workers. The storage size specified will apply
+                            to both the kubelet and the Docker volume of the
+                            node, so please make sure to have twice the
+                            specified size available as disk space.
+                          </p>
 
-                        <NumberPicker
-                          label='CPU Cores'
-                          max={999}
-                          min={2}
-                          onChange={this.updateCPUCores}
-                          stepSize={1}
-                          value={this.state.kvm.cpuCores.value}
-                        />
-                        <br />
+                          <NumberPicker
+                            label='CPU Cores'
+                            max={999}
+                            min={2}
+                            onChange={this.updateCPUCores}
+                            stepSize={1}
+                            value={this.state.kvm.cpuCores.value}
+                          />
+                          <br />
 
-                        <NumberPicker
-                          label='Memory (GB)'
-                          max={999}
-                          min={3}
-                          onChange={this.updateMemorySize}
-                          stepSize={1}
-                          unit='GB'
-                          value={this.state.kvm.memorySize.value}
-                        />
-                        <br />
+                          <NumberPicker
+                            label='Memory (GB)'
+                            max={999}
+                            min={3}
+                            onChange={this.updateMemorySize}
+                            stepSize={1}
+                            unit='GB'
+                            value={this.state.kvm.memorySize.value}
+                          />
+                          <br />
 
-                        <NumberPicker
-                          label='Storage (GB)'
-                          max={999}
-                          min={10}
-                          onChange={this.updateDiskSize}
-                          stepSize={10}
-                          unit='GB'
-                          value={this.state.kvm.diskSize.value}
-                        />
-                      </div>
-                    </div>
-                  );
-                case 'azure':
-                  return (
-                    <div className='row section'>
-                      <div className='col-3'>
-                        <h3 className='table-label'>VM Size</h3>
-                      </div>
-                      <div className='col-9'>
-                        <p>Select the vm size for your worker nodes.</p>
-                        <AzureVMSizeSelector
-                          allowedVMSizes={this.props.allowedVMSizes}
-                          onChange={this.updateVMSize}
-                          readOnly={false}
-                          value={this.state.azure.vmSize.value}
-                        />
-                      </div>
-                    </div>
-                  );
-              }
-            })()}
+                          <NumberPicker
+                            label='Storage (GB)'
+                            max={999}
+                            min={10}
+                            onChange={this.updateDiskSize}
+                            stepSize={10}
+                            unit='GB'
+                            value={this.state.kvm.diskSize.value}
+                          />
+                        </>
+                      );
+                    case 'azure':
+                      return (
+                        <div className='row section'>
+                          <div className='col-3'>
+                            <h3 className='table-label'>VM Size</h3>
+                          </div>
+                          <div className='col-9'>
+                            <p>Select the vm size for your worker nodes.</p>
+                            <AzureVMSizeSelector
+                              allowedVMSizes={this.props.allowedVMSizes}
+                              onChange={this.updateVMSize}
+                              readOnly={false}
+                              value={this.state.azure.vmSize.value}
+                            />
+                          </div>
+                        </div>
+                      );
+                  }
+                })()}
+              </label>
 
-            <div className='row section'>
-              <div className='col-3'>
-                <h3 className='table-label'>Node Count</h3>
-              </div>
-              <div className='col-9'>
+              <label htmlFor='worker-nodes'>
+                <span className='label-span'>Number of worker nodes</span>
                 <NodeCountSelector
                   autoscalingEnabled={this.isScalingAutomatic(
                     this.props.provider,
@@ -530,21 +539,14 @@ class CreateRegularCluster extends React.Component {
                   readOnly={false}
                   scaling={this.state.scaling}
                 />
-              </div>
-            </div>
-
-            <ProviderCredentials
-              organizationName={this.props.selectedOrganization}
-              provider={this.props.provider}
-            />
-
-            <div className='row section new-cluster--launch'>
-              <div className='col-12'>
+                <ProviderCredentials
+                  organizationName={this.props.selectedOrganization}
+                  provider={this.props.provider}
+                />
                 <ClusterCreationDuration
                   stats={this.props.clusterCreationStats}
                 />
-
-                {this.state.error ? this.errorState() : undefined}
+                {this.state.error && this.errorState()}
                 <Button
                   bsSize='large'
                   bsStyle='primary'
@@ -555,9 +557,9 @@ class CreateRegularCluster extends React.Component {
                 >
                   Create Cluster
                 </Button>
-              </div>
-            </div>
-          </div>
+              </label>
+            </FlexColumnDiv>
+          </WrapperDiv>
         </DocumentTitle>
       </Breadcrumb>
     );

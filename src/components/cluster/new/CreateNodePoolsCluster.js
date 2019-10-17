@@ -21,11 +21,11 @@ import ReleaseSelector from './ReleaseSelector';
 import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
-const WrapperDiv = styled.div`
+export const Wrapper = css`
   h1 {
-    padding-bottom: 45px;
+    padding-bottom: 25px;
     border-bottom: 1px solid #3a5f7b;
-    margin-bottom: 25px;
+    margin-bottom: 35px;
   }
   /* Last node pool wrapper */
   & > div:nth-last-of-type(2) {
@@ -33,7 +33,11 @@ const WrapperDiv = styled.div`
   }
 `;
 
-const FlexColumnDiv = styled.div`
+const WrapperDiv = styled.div`
+  ${Wrapper}
+`;
+
+export const FlexColumnDiv = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -129,7 +133,6 @@ const RadioWrapperDiv = styled.div`
   }
 `;
 
-// Duplicated styles, also in AddNodePoolsAvailabillityZones.
 const AZWrapperDiv = styled.div`
   margin: 0 0 8px 24px;
   height: 26px;
@@ -373,11 +376,7 @@ class CreateNodePoolsCluster extends Component {
         >
           <>
             <WrapperDiv data-testid='nodepool-cluster-creation-view'>
-              <div className='row'>
-                <div className='col-12'>
-                  <h1>Create a Cluster</h1>
-                </div>
-              </div>
+              <h1>Create a Cluster</h1>
 
               <FlexColumnDiv>
                 {/* Name */}
