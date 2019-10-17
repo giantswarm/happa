@@ -372,7 +372,13 @@ class CreateRegularCluster extends React.Component {
                 <h3 className='table-label'>Release Version</h3>
               </div>
               <div className='col-9'>
-                <ReleaseSelector selectRelease={this.selectRelease} />
+                <ReleaseSelector
+                  selectRelease={this.selectRelease}
+                  selectedRelease={this.props.selectedRelease}
+                  selectableReleases={this.props.selectableReleases}
+                  releases={this.props.releases}
+                  activeSortedReleases={this.props.activeSortedReleases}
+                />
               </div>
             </div>
 
@@ -561,6 +567,7 @@ CreateRegularCluster.propTypes = {
   allowedInstanceTypes: PropTypes.array,
   allowedVMSizes: PropTypes.array,
   selectedOrganization: PropTypes.string,
+  selectedRelease: PropTypes.string,
   dispatch: PropTypes.func,
   provider: PropTypes.string,
   defaultInstanceType: PropTypes.string,
@@ -571,6 +578,9 @@ CreateRegularCluster.propTypes = {
   match: PropTypes.object,
   clusterCreationStats: PropTypes.object,
   informParent: PropTypes.func,
+  selectableReleases: PropTypes.array,
+  releases: PropTypes.object,
+  activeSortedReleases: PropTypes.array,
 };
 
 function mapStateToProps(state) {

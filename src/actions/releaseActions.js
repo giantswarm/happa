@@ -1,37 +1,40 @@
 import * as types from './actionTypes';
+import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
-
-const releasesLoad = () => ({
-  type: types.RELEASES_LOAD,
-});
-
-const releasesLoadSuccess = releases => ({
-  type: types.RELEASES_LOAD_SUCCESS,
-  releases,
-});
-
-const releasesLoadError = error => ({
-  type: types.RELEASES_LOAD_ERROR,
-  error,
-});
 
 export function loadReleases() {
   return function(dispatch) {
-    dispatch(releasesLoad());
-
-    var releasesApi = new GiantSwarm.ReleasesApi();
+    const releasesApi = new GiantSwarm.ReleasesApi();
 
     return releasesApi
       .getReleases()
-      .then(releases => {
-        const versionKeyedReleases = releases.reduce((accumulator, release) => {
+      .then(allReleases => {
+        const releases = allReleases.reduce((accumulator, release) => {
           return { ...accumulator, [release.version]: release };
         }, {});
 
-        dispatch(releasesLoadSuccess(versionKeyedReleases));
+        const activeSortedReleases = Object.keys(releases)
+          .filter(release => releases[release].active)
+          .sort(cmp)
+          .reverse();
+
+        dispatch({
+          type: types.RELEASES_LOAD_SUCCESS,
+          releases,
+          activeSortedReleases,
+        });
       })
       .catch(error => {
-        dispatch(releasesLoadError(error));
+        dispatch({ type: types.RELEASES_LOAD_ERROR });
+
+        new FlashMessage(
+          'Something went wrong while trying to fetch the list of releases.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'please try again later or contact support: support@giantswarm.io'
+        );
+
         throw error;
       });
   };
