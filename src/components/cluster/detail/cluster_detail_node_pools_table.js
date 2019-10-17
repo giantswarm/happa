@@ -222,6 +222,18 @@ const FlexWrapperDiv = styled.div`
   button {
     margin-right: 16px;
   }
+  &.no-nodepools {
+    flex-direction: column;
+    justify-content: space-between;
+    height: 147px;
+    padding: 30px 10px;
+    background-color: ${props => props.theme.colors.shade10};
+    border-radius: 5px;
+    p {
+      font-size: 16px;
+      max-width: 90%;
+    }
+  }
 `;
 
 const CopyToClipboardDiv = styled.div`
@@ -366,6 +378,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
     } = this.props;
 
     const { create_date, release_version, release, api_endpoint } = cluster;
+    const noNodePools = !nodePools || nodePools.length === 0;
 
     return (
       <>
@@ -561,7 +574,13 @@ class ClusterDetailNodePoolsTable extends React.Component {
             </AddNodePoolWrapperDiv>
           </ReactCSSTransitionGroup>
         ) : (
-          <FlexWrapperDiv>
+          <FlexWrapperDiv className={noNodePools && 'no-nodepools'}>
+            {noNodePools && (
+              <p>
+                Add at least one node pool to this cluster so that you can
+                actually run workloads.
+              </p>
+            )}
             <Button onClick={this.toggleAddNodePoolForm}>
               <i className='fa fa-add-circle' /> ADD NODE POOL
             </Button>
