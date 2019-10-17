@@ -1,8 +1,5 @@
-import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
-import { spinner } from 'images';
-import _ from 'underscore';
 import Button from 'UI/button';
+import LoadingOverlay from 'UI/loading_overlay';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReleaseComponentLabel from 'UI/release_component_label';
@@ -27,66 +24,55 @@ const FlexRowDiv = styled.div`
 
 class ReleaseSelector extends React.Component {
   state = {
-    loading: false,
+    kubernetesVersion: '',
+    loading: true,
   };
 
-  loadingContent() {
-    return (
-      <div>
-        <p>
-          <img className='loader' height='25px' src={spinner} width='25px' />
-        </p>
-      </div>
-    );
-  }
+  componentDidMount() {
+    const kubernetesVersion = this.props.selectedRelease
+      ? this.props.releases[this.props.selectedRelease].components.find(
+          component => component.name === 'kubernetes'
+        ).version
+      : undefined;
 
-  hasActiveReleases() {
-    const { selectedRelease } = this.props;
-
-    if (selectedRelease) {
-      var kubernetes = _.find(
-        this.props.releases[selectedRelease].components,
-        component => component.name === 'kubernetes'
-      );
-
-      return (
-        <FlexRowDiv>
-          <p>{selectedRelease}</p>
-          <Button onClick={() => this.releaseDetailsModal.show()}>
-            {this.props.activeSortedReleases.length === 1
-              ? 'Show Details'
-              : 'Details and Alternatives'}
-          </Button>
-          <br />
-          <br />
-
-          {kubernetes && (
-            <>
-              <p>This release contains:</p>
-              <div style={{ transform: 'translateY(6px)' }}>
-                <ReleaseComponentLabel
-                  name='kubernetes'
-                  version={kubernetes.version}
-                />
-              </div>
-            </>
-          )}
-        </FlexRowDiv>
-      );
-    }
-
-    return (
-      <div>
-        <p>There is no active release currently availabe for this platform.</p>
-      </div>
-    );
+    this.setState({ kubernetesVersion, loading: false });
   }
 
   render() {
-    return (
-      <>
-        {this.state.loading ? this.loadingContent() : this.hasActiveReleases()}
+    const { kubernetesVersion } = this.state;
 
+    return (
+      <LoadingOverlay loading={this.state.loading}>
+        {kubernetesVersion ? (
+          <FlexRowDiv>
+            <p>{this.props.selectedRelease}</p>
+            <Button onClick={() => this.releaseDetailsModal.show()}>
+              {this.props.activeSortedReleases.length === 1
+                ? 'Show Details'
+                : 'Details and Alternatives'}
+            </Button>
+            <br />
+            <br />
+
+            {kubernetesVersion && (
+              <>
+                <p>This release contains:</p>
+                <div style={{ transform: 'translateY(6px)' }}>
+                  <ReleaseComponentLabel
+                    name='kubernetes'
+                    version={kubernetesVersion}
+                  />
+                </div>
+              </>
+            )}
+          </FlexRowDiv>
+        ) : (
+          <div>
+            <p>
+              There is no active release currently availabe for this platform.
+            </p>
+          </div>
+        )}
         <ReleaseDetailsModal
           ref={r => {
             this.releaseDetailsModal = r;
@@ -95,7 +81,7 @@ class ReleaseSelector extends React.Component {
           releases={this.props.selectableReleases}
           selectedRelease={this.props.selectedRelease}
         />
-      </>
+      </LoadingOverlay>
     );
   }
 }
