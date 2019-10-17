@@ -129,7 +129,10 @@ class CreateRegularCluster extends React.Component {
     // Adjust final workers array when cluster uses auto scaling. This is currently
     // only in AWS and from release 6.1.0 onwards.
     if (
-      this.isScalingAutomatic(this.props.provider, this.state.releaseVersion) &&
+      this.isScalingAutomatic(
+        this.props.provider,
+        this.props.selectedRelease
+      ) &&
       workers.length > 1
     ) {
       // Only one worker is allowed to be present when auto scaling is enabled.
@@ -148,7 +151,7 @@ class CreateRegularCluster extends React.Component {
           },
           name: this.state.clusterName,
           owner: this.props.selectedOrganization,
-          release_version: this.state.releaseVersion,
+          release_version: this.props.selectedRelease,
           workers: workers,
         })
       )
@@ -279,7 +282,7 @@ class CreateRegularCluster extends React.Component {
 
   valid() {
     // If any of the releaseVersion hasn't been set yet, return false
-    if (this.state.releaseVersion === '') {
+    if (this.props.selectedRelease === '') {
       return false;
     }
 
@@ -394,7 +397,7 @@ class CreateRegularCluster extends React.Component {
                   //
                   //     https://github.com/giantswarm/giantswarm/pull/2202
                   //
-                  cmp(this.state.releaseVersion, '6.0.0') === 1 ? (
+                  cmp(this.props.selectedRelease, '6.0.0') === 1 ? (
                     <div>
                       <p>
                         Select the number of availability zones for your nodes.
@@ -521,7 +524,7 @@ class CreateRegularCluster extends React.Component {
                 <NodeCountSelector
                   autoscalingEnabled={this.isScalingAutomatic(
                     this.props.provider,
-                    this.state.releaseVersion
+                    this.props.selectedRelease
                   )}
                   onChange={this.updateScaling}
                   readOnly={false}
