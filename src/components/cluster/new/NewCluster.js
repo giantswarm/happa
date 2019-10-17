@@ -88,7 +88,7 @@ class NewCluster extends React.Component {
     const Component =
       window.config.environment !== 'development'
         ? CreateClusterOld // Old form
-        : cmp(this.state.releaseSelected, window.config.firstNodePoolsRelease) <
+        : cmp(this.state.selectedRelease, window.config.firstNodePoolsRelease) <
           0
         ? CreateRegularCluster // new v4 form
         : CreateNodePoolsCluster; // new v5 form
