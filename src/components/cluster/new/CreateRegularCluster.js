@@ -533,20 +533,17 @@ class CreateRegularCluster extends React.Component {
                       );
                     case 'azure':
                       return (
-                        <div className='row section'>
-                          <div className='col-3'>
-                            <h3 className='table-label'>VM Size</h3>
-                          </div>
-                          <div className='col-9'>
-                            <p>Select the vm size for your worker nodes.</p>
+                        <>
+                          <span className='label-span'>VM Size</span>
+                          <FlexWrapperDiv>
                             <AzureVMSizeSelector
                               allowedVMSizes={this.props.allowedVMSizes}
                               onChange={this.updateVMSize}
                               readOnly={false}
                               value={this.state.azure.vmSize.value}
                             />
-                          </div>
-                        </div>
+                          </FlexWrapperDiv>
+                        </>
                       );
                   }
                 })()}

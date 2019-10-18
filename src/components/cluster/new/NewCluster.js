@@ -82,11 +82,20 @@ class NewCluster extends React.Component {
     }
   }
 
+  semVerCompare = () => {
+    if (this.state.selectedRelease && window.config.firstNodePoolsRelease) {
+      return cmp(
+        this.state.selectedRelease,
+        window.config.firstNodePoolsRelease
+      );
+    }
+    return -1;
+  };
+
   renderComponent = props => {
     // TODO Remove environment conditional when we release NPs
     const Component =
-      cmp(this.state.selectedRelease, window.config.firstNodePoolsRelease) <
-        0 || window.config.environment !== 'development'
+      this.semVerCompare() < 0 || window.config.environment !== 'development'
         ? CreateRegularCluster // new v4 form
         : CreateNodePoolsCluster; // new v5 form
 

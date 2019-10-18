@@ -3,6 +3,7 @@ import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/button';
 import ComponentChangelog from 'UI/component_changelog';
+import LoadingOverlay from 'UI/loading_overlay';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReleaseComponentLabel from 'UI/release_component_label';
@@ -25,8 +26,10 @@ class ReleaseDetailsModal extends React.Component {
   };
 
   render() {
-    if (this.props.releases && this.props.releases.length > 0) {
-      return (
+    return (
+      <LoadingOverlay
+        loading={this.props.releases && this.props.releases.length > 0}
+      >
         <BootstrapModal
           className='release-selector-modal'
           onHide={this.close}
@@ -109,8 +112,8 @@ class ReleaseDetailsModal extends React.Component {
             <Button onClick={this.close}>Close</Button>
           </BootstrapModal.Footer>
         </BootstrapModal>
-      );
-    }
+      </LoadingOverlay>
+    );
   }
 }
 

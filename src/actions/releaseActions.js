@@ -10,6 +10,8 @@ export function loadReleases() {
     return releasesApi
       .getReleases()
       .then(allReleases => {
+        if (allReleases.length === 0) throw new Error(' No releases found.');
+
         const releases = allReleases.reduce((accumulator, release) => {
           return { ...accumulator, [release.version]: release };
         }, {});
@@ -29,7 +31,7 @@ export function loadReleases() {
         dispatch({ type: types.RELEASES_LOAD_ERROR });
 
         new FlashMessage(
-          'Something went wrong while trying to fetch the list of releases.',
+          `Something went wrong while trying to fetch the list of releases.${error.message}`,
           messageType.ERROR,
           messageTTL.LONG,
           'please try again later or contact support: support@giantswarm.io'
