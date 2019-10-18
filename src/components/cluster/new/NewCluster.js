@@ -3,7 +3,6 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { loadReleases } from 'actions/releaseActions';
 import { Route, Switch } from 'react-router-dom';
 import cmp from 'semver-compare';
-import CreateClusterOld from './CreateClusterOld';
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';
 import LoadingOverlay from 'UI/loading_overlay';
@@ -84,12 +83,10 @@ class NewCluster extends React.Component {
   }
 
   renderComponent = props => {
-    // TODO Remove CreateClusterOld when we release NPs
+    // TODO Remove environment conditional when we release NPs
     const Component =
-      window.config.environment !== 'development'
-        ? CreateClusterOld // Old form
-        : cmp(this.state.selectedRelease, window.config.firstNodePoolsRelease) <
-          0
+      cmp(this.state.selectedRelease, window.config.firstNodePoolsRelease) <
+        0 || window.config.environment !== 'development'
         ? CreateRegularCluster // new v4 form
         : CreateNodePoolsCluster; // new v5 form
 
