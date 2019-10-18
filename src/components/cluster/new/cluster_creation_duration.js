@@ -11,14 +11,18 @@ class ClusterCreationDuration extends React.Component {
 
     if (minutes > 0) {
       return (
-        <p>
+        <p style={{ marginTop: '23px' }}>
           Most clusters are up within {minutes} minutes once this form has been
           submitted.
         </p>
       );
     }
 
-    return <p>Clusters usually take between 10 and 30 minutes to come up.</p>;
+    return (
+      <p style={{ marginTop: '23px' }}>
+        Clusters usually take between 10 and 30 minutes to come up.
+      </p>
+    );
   }
 }
 

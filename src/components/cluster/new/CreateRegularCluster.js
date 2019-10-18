@@ -24,6 +24,27 @@ const WrapperDiv = styled.div`
     left: 0;
     font-weight: 700;
   }
+  .textfield label,
+  .textfield,
+  .textfield input {
+    margin: 0;
+  }
+  .availability-zones {
+    margin-bottom: 8px;
+    .label-span {
+      margin-bottom: 7px;
+    }
+  }
+  .scaling-range {
+    margin-bottom: 0;
+    form {
+      label {
+        margin-bottom: 7px;
+        color: ${props => props.theme.colors.white1};
+        font-weight: 400;
+      }
+    }
+  }
 `;
 
 const FlexWrapperDiv = styled.div`
@@ -405,7 +426,10 @@ class CreateRegularCluster extends React.Component {
             <FlexColumnDiv>
               <div className='worker-nodes'>Worker nodes</div>
               {this.props.provider === 'aws' && (
-                <label htmlFor='availability-zones'>
+                <label
+                  className='availability-zones'
+                  htmlFor='availability-zones'
+                >
                   <span className='label-span'>Availability Zones</span>
                   {// For now we want to handle cases where older clusters do
                   // still not support AZ selection. The special handling here
@@ -527,8 +551,7 @@ class CreateRegularCluster extends React.Component {
                   }
                 })()}
               </label>
-
-              <label htmlFor='worker-nodes'>
+              <label className='scaling-range' htmlFor='scaling-range'>
                 <span className='label-span'>Number of worker nodes</span>
                 <NodeCountSelector
                   autoscalingEnabled={this.isScalingAutomatic(
@@ -543,21 +566,27 @@ class CreateRegularCluster extends React.Component {
                   organizationName={this.props.selectedOrganization}
                   provider={this.props.provider}
                 />
-                <ClusterCreationDuration
-                  stats={this.props.clusterCreationStats}
-                />
                 {this.state.error && this.errorState()}
-                <Button
-                  bsSize='large'
-                  bsStyle='primary'
-                  disabled={!this.valid()}
-                  loading={this.state.submitting}
-                  onClick={this.createCluster}
-                  type='submit'
-                >
-                  Create Cluster
-                </Button>
               </label>
+            </FlexColumnDiv>
+
+            <hr style={{ margin: '37px 0 31px' }} />
+
+            <FlexColumnDiv>
+              <Button
+                bsSize='large'
+                bsStyle='primary'
+                disabled={!this.valid()}
+                loading={this.state.submitting}
+                onClick={this.createCluster}
+                type='submit'
+                style={{ marginBottom: '23px' }}
+              >
+                Create Cluster
+              </Button>
+              <ClusterCreationDuration
+                stats={this.props.clusterCreationStats}
+              />
             </FlexColumnDiv>
           </WrapperDiv>
         </DocumentTitle>

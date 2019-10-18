@@ -136,7 +136,6 @@ const RadioWrapperDiv = styled.div`
 const AZWrapperDiv = styled.div`
   margin: 0 0 8px 24px;
   height: 26px;
-  /* duplicated code below */
   display: flex;
   justify-content: flex-start;
   align-items: center;
