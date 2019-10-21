@@ -337,7 +337,7 @@ class AddNodePool extends Component {
               readOnly={false}
               value={this.state.aws.instanceType.value}
             />
-            <p>{`${RAM} CPU cores, ${CPUCores} GB RAM each`}</p>
+            <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
           </FlexWrapperDiv>
         </label>
         <AZLabel htmlFor='availability-zones'>

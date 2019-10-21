@@ -110,7 +110,17 @@ class CreateRegularCluster extends React.Component {
         valid: true,
       },
     },
+    awsInstanceTypes: {},
+    azureInstanceTypes: {},
   };
+
+  componentDidMount() {
+    this.clusterNameInput.select();
+    this.setState({
+      awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
+      azureInstanceTypes: JSON.parse(window.config.azureCapabilitiesJSON),
+    });
+  }
 
   updateAvailabilityZonesPicker = n => {
     this.setState({
@@ -235,10 +245,6 @@ class CreateRegularCluster extends React.Component {
       });
   };
 
-  componentDidMount() {
-    this.clusterNameInput.select();
-  }
-
   isScalingAutomatic(provider, releaseVer) {
     if (provider != 'aws') {
       return false;
@@ -332,6 +338,48 @@ class CreateRegularCluster extends React.Component {
         },
       },
     });
+  };
+
+  produceRAMAndCoresAWS = () => {
+    const { awsInstanceTypes } = this.state;
+    const instanceType = this.state.aws.instanceType.value;
+
+    // Check whether this.state.instanceTypes is populated and that instance name
+    // in input matches an instance in the array
+    const instanceTypesKeys = Object.keys(awsInstanceTypes);
+
+    const hasInstances =
+      instanceTypesKeys.length > 0 &&
+      instanceTypesKeys.find(type => type === instanceType);
+
+    const RAM = hasInstances
+      ? awsInstanceTypes[instanceType].memory_size_gb
+      : '0';
+    const CPUCores = hasInstances
+      ? awsInstanceTypes[instanceType].cpu_cores
+      : '0';
+    return [RAM, CPUCores];
+  };
+
+  produceRAMAndCoresAzure = () => {
+    const { azureInstanceTypes } = this.state;
+    const instanceType = this.state.azure.vmSize.value;
+
+    // Check whether this.state.instanceTypes is populated and that instance name
+    // in input matches an instance in the array
+    const instanceTypesKeys = Object.keys(azureInstanceTypes);
+
+    const hasInstances =
+      instanceTypesKeys.length > 0 &&
+      instanceTypesKeys.find(type => type === instanceType);
+
+    const RAM = hasInstances
+      ? (azureInstanceTypes[instanceType].memoryInMb / 1000).toFixed(2)
+      : '0';
+    const CPUCores = hasInstances
+      ? azureInstanceTypes[instanceType].numberOfCores
+      : '0';
+    return [RAM, CPUCores];
   };
 
   valid() {
@@ -475,7 +523,9 @@ class CreateRegularCluster extends React.Component {
               <label htmlFor='instance-type'>
                 {(() => {
                   switch (this.props.provider) {
-                    case 'aws':
+                    case 'aws': {
+                      const [RAM, CPUCores] = this.produceRAMAndCoresAWS();
+
                       return (
                         <>
                           <span className='label-span'>Instance Type</span>
@@ -488,9 +538,11 @@ class CreateRegularCluster extends React.Component {
                               readOnly={false}
                               value={this.state.aws.instanceType.value}
                             />
+                            <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
                           </FlexWrapperDiv>
                         </>
                       );
+                    }
                     case 'kvm':
                       return (
                         <>
@@ -537,7 +589,9 @@ class CreateRegularCluster extends React.Component {
                           />
                         </>
                       );
-                    case 'azure':
+                    case 'azure': {
+                      const [RAM, CPUCores] = this.produceRAMAndCoresAzure();
+
                       return (
                         <>
                           <span className='label-span'>VM Size</span>
@@ -548,9 +602,11 @@ class CreateRegularCluster extends React.Component {
                               readOnly={false}
                               value={this.state.azure.vmSize.value}
                             />
+                            <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
                           </FlexWrapperDiv>
                         </>
                       );
+                    }
                   }
                 })()}
               </label>
