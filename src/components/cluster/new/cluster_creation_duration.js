@@ -9,7 +9,7 @@ class ClusterCreationDuration extends React.Component {
 
     const message =
       minutes > 0
-        ? `Most clusters are up within {minutes} minutes once this form has been
+        ? `Most clusters are up within ${minutes} minutes once this form has been
     submitted.`
         : `Clusters usually take between 10 and 30 minutes to come up.`;
 
