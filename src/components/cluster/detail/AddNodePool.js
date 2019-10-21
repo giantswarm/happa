@@ -29,7 +29,7 @@ const Emphasized = css`
   }
 `;
 
-const FlexWrapperAZDiv = styled.div`
+export const FlexWrapperAZDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;

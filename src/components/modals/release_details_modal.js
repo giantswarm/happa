@@ -6,6 +6,7 @@ import ComponentChangelog from 'UI/component_changelog';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReleaseComponentLabel from 'UI/release_component_label';
+import theme from 'styles/theme';
 
 class ReleaseDetailsModal extends React.Component {
   state = {
@@ -109,6 +110,12 @@ class ReleaseDetailsModal extends React.Component {
             <Button onClick={this.close}>Close</Button>
           </BootstrapModal.Footer>
         </BootstrapModal>
+      );
+    } else {
+      return (
+        <p style={{ color: theme.colors.error, fontWeight: 400 }}>
+          No releases found.
+        </p>
       );
     }
   }
