@@ -349,8 +349,7 @@ class CreateRegularCluster extends React.Component {
     const instanceTypesKeys = Object.keys(awsInstanceTypes);
 
     const hasInstances =
-      instanceTypesKeys.length > 0 &&
-      instanceTypesKeys.find(type => type === instanceType);
+      instanceTypesKeys && instanceTypesKeys.includes(instanceType);
 
     const RAM = hasInstances
       ? awsInstanceTypes[instanceType].memory_size_gb
@@ -370,8 +369,7 @@ class CreateRegularCluster extends React.Component {
     const instanceTypesKeys = Object.keys(azureInstanceTypes);
 
     const hasInstances =
-      instanceTypesKeys.length > 0 &&
-      instanceTypesKeys.find(type => type === instanceType);
+      instanceTypesKeys && instanceTypesKeys.includes(instanceType);
 
     const RAM = hasInstances
       ? (azureInstanceTypes[instanceType].memoryInMb / 1000).toFixed(2)

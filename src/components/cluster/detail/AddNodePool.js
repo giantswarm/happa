@@ -288,8 +288,7 @@ class AddNodePool extends Component {
     const instanceTypesKeys = Object.keys(this.state.awsInstanceTypes);
 
     const hasInstances =
-      instanceTypesKeys.length > 0 &&
-      instanceTypesKeys.find(type => type === instanceType);
+      instanceTypesKeys && instanceTypesKeys.includes(instanceType);
 
     const RAM = hasInstances
       ? this.state.awsInstanceTypes[instanceType].memory_size_gb
