@@ -73,7 +73,7 @@ class CreateRegularCluster extends React.Component {
       valid: true,
     },
     releaseVersion: this.props.selectedRelease,
-    clusterName: 'My cluster',
+    clusterName: 'Unnamed cluster',
     scaling: {
       automatic: false,
       min: 3,
@@ -200,7 +200,10 @@ class CreateRegularCluster extends React.Component {
             min: this.state.scaling.min,
             max: this.state.scaling.max,
           },
-          name: this.state.clusterName,
+          name:
+            this.state.clusterName === ''
+              ? 'Unnamed cluster'
+              : this.state.clusterName,
           owner: this.props.selectedOrganization,
           release_version: this.props.selectedRelease,
           workers: workers,
@@ -404,6 +407,9 @@ class CreateRegularCluster extends React.Component {
                     type='text'
                     id='name'
                     value={this.state.clusterName}
+                    placeholder={
+                      this.state.clusterName === '' ? 'Unnamed cluster' : null
+                    }
                   />
                 </div>
                 <p>Give your cluster a name to recognize it among others.</p>
