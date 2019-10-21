@@ -21,10 +21,13 @@ import ReactTimeout from 'react-timeout';
 import RefreshableLabel from 'UI/refreshable_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import WorkerNodes from './WorkerNodes';
 
 class ClusterDetailTable extends React.Component {
   state = {
     enpointCopied: false,
+    RAM: 0,
+    CPUs: 0,
   };
 
   awsInstanceTypes = {};
@@ -40,6 +43,15 @@ class ClusterDetailTable extends React.Component {
     this.azureVMSizes = window.config.azureCapabilitiesJSON
       ? JSON.parse(window.config.azureCapabilitiesJSON)
       : {};
+
+    const { cluster } = this.props;
+    const memory = getMemoryTotal(cluster);
+    const RAM = !memory ? 0 : memory;
+
+    const cores = getCpusTotal(cluster);
+    const CPUs = !cores ? 0 : cores;
+
+    this.setState({ RAM, CPUs });
   }
 
   registerRefreshInterval = () => {
@@ -77,186 +89,15 @@ class ClusterDetailTable extends React.Component {
       provider,
       release,
       region,
-      workerNodesDesired,
+      workerNodesRunning,
     } = this.props;
-    const { workers, credential_id } = cluster;
 
-    var instanceTypeOrVMSize = null;
-    if (provider === 'aws') {
-      let details = <span />;
-      if (
-        workers &&
-        workers.length > 0 &&
-        typeof workers[0].aws.instance_type !== 'undefined' &&
-        this.awsInstanceTypes[workers[0].aws.instance_type]
-      ) {
-        let t = this.awsInstanceTypes[workers[0].aws.instance_type];
-        details = (
-          <span>
-            &mdash; {t.cpu_cores} CPUs, {t.memory_size_gb.toFixed(0)} GB RAM
-          </span>
-        );
-      }
-      instanceTypeOrVMSize = (
-        <tr>
-          <td>EC2 instance type</td>
-          <td className='value'>
-            {workers && workers.length > 0 && (
-              <span>
-                <code>{workers[0].aws.instance_type}</code> {details}
-              </span>
-            )}
-          </td>
-        </tr>
-      );
-    } else if (provider === 'azure') {
-      let details = <span />;
-      if (
-        workers &&
-        typeof workers[0].azure.vm_size !== 'undefined' &&
-        this.azureVMSizes[workers[0].azure.vm_size]
-      ) {
-        let t = this.azureVMSizes[workers[0].azure.vm_size];
-        details = (
-          <span>
-            &mdash; {t.numberOfCores} CPUs, {(t.memoryInMb / 1000.0).toFixed(1)}{' '}
-            GB RAM
-          </span>
-        );
-      }
-
-      instanceTypeOrVMSize = (
-        <tr>
-          <td>VM size</td>
-          <td className='value'>
-            {workers ? (
-              <span>
-                <code>{workers[0].azure.vm_size}</code> {details}
-              </span>
-            ) : null}
-          </td>
-        </tr>
-      );
-    }
-
-    var scalingLimitsOrNothing = null;
-    if (Object.keys(cluster).includes('scaling') && cluster.scaling.min > 0) {
-      scalingLimitsOrNothing = (
-        <tr>
-          <td>Worker node scaling</td>
-          <td className='value'>
-            <RefreshableLabel
-              dataItems={[cluster.scaling.min, cluster.scaling.max]}
-            >
-              <span>
-                {cluster.scaling.min === cluster.scaling.max
-                  ? `Pinned at ${cluster.scaling.min}`
-                  : `Autoscaling between ${cluster.scaling.min} and ${cluster.scaling.max}`}
-              </span>
-            </RefreshableLabel>
-
-            <span className='resource-details-button'>
-              <Button onClick={() => this.props.showScalingModal()}>
-                Edit
-              </Button>
-            </span>
-          </td>
-        </tr>
-      );
-    }
-
-    var availabilityZonesOrNothing = null;
-    if (provider === 'aws') {
-      const azs = (
-        <AvailabilityZonesLabels zones={cluster.availability_zones} />
-      );
-
-      availabilityZonesOrNothing = (
-        <tr>
-          <td>Availablility zones</td>
-          <td className='value'>{azs}</td>
-        </tr>
-      );
-    }
-
-    var numberOfDesiredNodesOrNothing = null;
-    if (workerNodesDesired != null) {
-      numberOfDesiredNodesOrNothing = (
-        <tr>
-          <td>Desired worker node count</td>
-          <td className='value'>
-            <RefreshableLabel
-              dataItems={[cluster.status.cluster.scaling.desiredCapacity]}
-            >
-              <span>{workerNodesDesired}</span>
-            </RefreshableLabel>
-          </td>
-        </tr>
-      );
-    }
-
-    var workerNodeStorageOrNothing = null;
-    if (provider === 'kvm') {
-      workerNodeStorageOrNothing = (
-        <tr>
-          <td>Total storage in worker nodes</td>
-          <td className='value'>
-            <RefreshableLabel
-              dataItems={[typeof workers === 'object' ? workers.length : null]}
-            >
-              <span>
-                {!getStorageTotal(cluster) ? '0' : getStorageTotal(cluster)} GB
-              </span>
-            </RefreshableLabel>
-          </td>
-        </tr>
-      );
-    }
-
-    var workerNodeCPU = (
-      <tr>
-        <td>Total CPU cores in worker nodes</td>
-        <td className='value'>
-          <RefreshableLabel
-            dataItems={[typeof workers === 'object' ? workers.length : null]}
-          >
-            <span>{!getCpusTotal(cluster) ? '0' : getCpusTotal(cluster)}</span>
-          </RefreshableLabel>
-        </td>
-      </tr>
-    );
-
-    var workerNodeMemory = (
-      <tr>
-        <td>Total RAM in worker nodes</td>
-        <td className='value'>
-          <RefreshableLabel
-            dataItems={[typeof workers === 'object' ? workers.length : null]}
-          >
-            <span>
-              {!getMemoryTotal(cluster) ? '0' : getMemoryTotal(cluster)} GB
-            </span>
-          </RefreshableLabel>
-        </td>
-      </tr>
-    );
-
-    var workerNodesRunning = (
-      <tr>
-        <td>Worker nodes running</td>
-        <td className='value'>
-          <RefreshableLabel
-            dataItems={[typeof workers === 'object' ? workers.length : null]}
-          >
-            <span>
-              {this.props.workerNodesRunning === null
-                ? '0'
-                : this.props.workerNodesRunning}
-            </span>
-          </RefreshableLabel>
-        </td>
-      </tr>
-    );
+    const {
+      credential_id,
+      create_date,
+      release_version,
+      api_endpoint,
+    } = cluster;
 
     // BYOC provider credential info
     var credentialInfoRows = [];
@@ -309,9 +150,6 @@ class ClusterDetailTable extends React.Component {
         }
       }
     }
-
-    const nodePools = [];
-    const { create_date, release_version } = cluster;
 
     return (
       <>
@@ -372,21 +210,18 @@ class ClusterDetailTable extends React.Component {
           </div>
           <div>
             <div>
-              {!nodePools ? (
+              {!workerNodesRunning ? (
                 <span>0 nodes</span>
               ) : (
                 <>
+                  <span>{workerNodesRunning} nodes</span>
                   <span>
-                    {workerNodesRunning} nodes in {/*nodePools.length*/} node
-                    pools
+                    <Dot />
+                    {this.state.RAM} GB RAM
                   </span>
                   <span>
                     <Dot />
-                    {/*this.state.RAM*/} GB RAM
-                  </span>
-                  <span>
-                    <Dot />
-                    {/*this.state.CPUs*/} CPUs
+                    {this.state.CPUs} CPUs
                   </span>
                 </>
               )}
@@ -396,7 +231,7 @@ class ClusterDetailTable extends React.Component {
         <FlexRowWithTwoBlocksOnEdges>
           <CopyToClipboardDiv onMouseLeave={this.mouseLeave}>
             <span>Kubernetes endpoint URI:</span>
-            <Code>{/*api_endpoint*/}</Code>
+            <Code>{api_endpoint}</Code>
             {/* Copy to clipboard. 
             TODO make a render prop component or a hooks function with it */}
             {this.state.endpointCopied ? (
@@ -405,7 +240,7 @@ class ClusterDetailTable extends React.Component {
               <OverlayTrigger
                 overlay={
                   <Tooltip id='tooltip'>
-                    Copy {/*api_endpoint*/} to clipboard.
+                    Copy {api_endpoint} to clipboard.
                   </Tooltip>
                 }
                 placement='top'
@@ -419,151 +254,22 @@ class ClusterDetailTable extends React.Component {
             )}
           </CopyToClipboardDiv>
           <div style={{ transform: 'translateX(10px)' }}>
-            <Button onClick={() => {} /*accessCluster*/}>
+            <Button onClick={this.props.accessCluster}>
               <i className='fa fa-start' /> GET STARTED
             </Button>
           </div>
         </FlexRowWithTwoBlocksOnEdges>
-        <div className='cluster-details'>
-          <div className='row'>
-            <div className='col-12'>
-              <table className='table resource-details'>
-                <tbody>
-                  <tr>
-                    <td>Created</td>
-                    <td className='value'>
-                      {cluster.create_date
-                        ? relativeDate(cluster.create_date)
-                        : 'n/a'}
-                    </td>
-                  </tr>
-
-                  {credentialInfoRows === [] ? undefined : credentialInfoRows}
-
-                  {release ? (
-                    <tr>
-                      <td>Release version</td>
-                      <td className='value'>
-                        <RefreshableLabel dataItems={[cluster.release_version]}>
-                          <span>
-                            <a onClick={this.showReleaseDetails}>
-                              <i className='fa fa-version-tag' />{' '}
-                              {cluster.release_version}{' '}
-                              {(() => {
-                                var kubernetes = release.components.find(
-                                  component => component.name === 'kubernetes'
-                                );
-                                if (kubernetes) {
-                                  return (
-                                    <span>
-                                      &mdash; includes Kubernetes{' '}
-                                      {kubernetes.version}
-                                    </span>
-                                  );
-                                }
-                              })()}
-                            </a>{' '}
-                            {this.props.canClusterUpgrade ? (
-                              <a
-                                className='upgrade-available'
-                                onClick={this.props.showUpgradeModal}
-                              >
-                                <i className='fa fa-info' /> Upgrade available
-                              </a>
-                            ) : (
-                              undefined
-                            )}
-                          </span>
-                        </RefreshableLabel>
-                      </td>
-                    </tr>
-                  ) : (
-                    <tr>
-                      <td>Kubernetes version</td>
-                      <td className='value code'>
-                        {cluster.kubernetes_version !== '' &&
-                        cluster.kubernetes_version !== undefined
-                          ? cluster.kubernetes_version
-                          : 'n/a'}
-                      </td>
-                    </tr>
-                  )}
-
-                  <tr>
-                    <td>Kubernetes API endpoint</td>
-                    <td className='value code'>
-                      {cluster.api_endpoint ? cluster.api_endpoint : 'n/a'}
-                    </td>
-                  </tr>
-
-                  {availabilityZonesOrNothing}
-
-                  {cluster.kvm && cluster.kvm.port_mappings ? (
-                    <tr>
-                      <td>Ingress Ports</td>
-                      <td>
-                        <dl className='ingress-port-table'>
-                          {cluster.kvm.port_mappings.reduce(
-                            (acc, item, idx) => {
-                              return acc.concat([
-                                <dt key={`def-${idx}`}>
-                                  <code>{item.protocol}</code>
-                                </dt>,
-                                <dd key={`term-${idx}`}>{item.port}</dd>,
-                              ]);
-                            },
-                            []
-                          )}
-                        </dl>
-                      </td>
-                    </tr>
-                  ) : (
-                    undefined
-                  )}
-
-                  {instanceTypeOrVMSize}
-
-                  {scalingLimitsOrNothing}
-
-                  {numberOfDesiredNodesOrNothing}
-
-                  {workerNodesRunning}
-
-                  {workerNodeCPU}
-
-                  {workerNodeMemory}
-
-                  {workerNodeStorageOrNothing}
-                </tbody>
-              </table>
-              <p className='last-updated'>
-                <small>
-                  The information above is auto-refreshing. Details last fetched{' '}
-                  <span className='last-updated-datestring'>
-                    {this.lastUpdatedLabel()}
-                  </span>
-                  . <span className='beta-tag'>BETA</span>
-                </small>
-              </p>
-            </div>
-            {release ? (
-              <ReleaseDetailsModal
-                ref={r => {
-                  this.releaseDetailsModal = r;
-                }}
-                releases={[release]}
-              />
-            ) : (
-              undefined
-            )}
-          </div>
-        </div>
+        <FlexRowWithTwoBlocksOnEdges>
+          {credentialInfoRows === [] ? undefined : credentialInfoRows}
+        </FlexRowWithTwoBlocksOnEdges>
+        <WorkerNodes />
       </>
     );
   }
 }
 
 ClusterDetailTable.propTypes = {
+  accessCluster: PropTypes.func,
   canClusterUpgrade: PropTypes.bool,
   cluster: PropTypes.object,
   credentials: PropTypes.object,

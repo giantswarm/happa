@@ -321,6 +321,7 @@ class ClusterDetailView extends React.Component {
                       />
                     ) : (
                       <ClusterDetailTable
+                        accessCluster={this.accessCluster}
                         canClusterUpgrade={this.canClusterUpgrade()}
                         cluster={cluster}
                         credentials={credentials}
