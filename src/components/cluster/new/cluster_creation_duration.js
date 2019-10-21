@@ -3,26 +3,17 @@ import React from 'react';
 
 class ClusterCreationDuration extends React.Component {
   render() {
-    let minutes = 0;
+    const minutes = this.props.stats.p75
+      ? Math.round(this.props.stats.p75 / 60.0)
+      : 0;
 
-    if (this.props.stats.p75) {
-      minutes = Math.round(this.props.stats.p75 / 60.0);
-    }
+    const message =
+      minutes > 0
+        ? `Most clusters are up within {minutes} minutes once this form has been
+    submitted.`
+        : `Clusters usually take between 10 and 30 minutes to come up.`;
 
-    if (minutes > 0) {
-      return (
-        <p style={{ marginTop: '23px' }}>
-          Most clusters are up within {minutes} minutes once this form has been
-          submitted.
-        </p>
-      );
-    }
-
-    return (
-      <p style={{ marginTop: '23px' }}>
-        Clusters usually take between 10 and 30 minutes to come up.
-      </p>
-    );
+    return <p style={{ marginTop: '23px' }}>{message}</p>;
   }
 }
 
