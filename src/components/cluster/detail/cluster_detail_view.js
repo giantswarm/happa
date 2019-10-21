@@ -326,6 +326,7 @@ class ClusterDetailView extends React.Component {
                         credentials={credentials}
                         provider={provider}
                         release={release}
+                        region={region}
                         showScalingModal={this.showScalingModal}
                         showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}

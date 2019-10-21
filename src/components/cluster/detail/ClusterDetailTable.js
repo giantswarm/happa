@@ -76,6 +76,7 @@ class ClusterDetailTable extends React.Component {
       credentials,
       provider,
       release,
+      region,
       workerNodesDesired,
     } = this.props;
     const { workers, credential_id } = cluster;
@@ -310,6 +311,7 @@ class ClusterDetailTable extends React.Component {
     }
 
     const nodePools = [];
+    const { create_date, release_version } = cluster;
 
     return (
       <>
@@ -319,18 +321,18 @@ class ClusterDetailTable extends React.Component {
               overlay={<Tooltip id='tooltip'>Region</Tooltip>}
               placement='top'
             >
-              <Code>{/*region ? region : null*/}</Code>
+              <Code>{region ? region : null}</Code>
             </OverlayTrigger>
             <div>
               <span>
-                Created {/*create_date ? relativeDate(create_date) : 'n/a'*/}
+                Created {create_date ? relativeDate(create_date) : 'n/a'}
               </span>
               <span>
-                <RefreshableLabel dataItems={true /*[release_version]*/}>
+                <RefreshableLabel dataItems={[release_version]}>
                   <>
                     <Dot style={{ paddingRight: 0 }} />
                     <i className='fa fa-version-tag' />
-                    {/*release_version ? release_version : 'n/a'*/}
+                    {release_version ? release_version : 'n/a'}
                   </>
                 </RefreshableLabel>
               </span>
@@ -568,6 +570,7 @@ ClusterDetailTable.propTypes = {
   lastUpdated: PropTypes.number,
   provider: PropTypes.string,
   release: PropTypes.object,
+  region: PropTypes.string,
   setInterval: PropTypes.func,
   showScalingModal: PropTypes.func,
   showUpgradeModal: PropTypes.func,
