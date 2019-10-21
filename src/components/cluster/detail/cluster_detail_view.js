@@ -10,7 +10,7 @@ import { push } from 'connected-react-router';
 import Button from 'UI/button';
 import ClusterApps from './cluster_apps';
 import ClusterDetailNodePoolsTable from './cluster_detail_node_pools_table';
-import ClusterDetailTable from './cluster_detail_table';
+import ClusterDetailTable from './ClusterDetailTable';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import ClusterKeyPairs from './key_pairs';
 import cmp from 'semver-compare';

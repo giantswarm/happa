@@ -23,7 +23,7 @@ import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-const Upgrade = styled.div`
+export const Upgrade = styled.div`
   color: #ce990f;
   span {
     white-space: normal !important;
@@ -204,7 +204,7 @@ export const AddNodePoolFlexColumnDiv = styled.div`
   }
 `;
 
-const FlexWrapperDiv = styled.div`
+export const FlexWrapperDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -236,7 +236,7 @@ const FlexWrapperDiv = styled.div`
   }
 `;
 
-const CopyToClipboardDiv = styled.div`
+export const CopyToClipboardDiv = styled.div`
   display: inline-block;
   &:hover {
     i {
