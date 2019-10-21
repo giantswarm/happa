@@ -336,7 +336,7 @@ class CreateRegularCluster extends React.Component {
 
   valid() {
     // If any of the releaseVersion hasn't been set yet, return false
-    if (this.props.selectedRelease === '') {
+    if (!this.props.selectedRelease) {
       return false;
     }
 
