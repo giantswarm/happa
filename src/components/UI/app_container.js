@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   }
 
   @media only screen and (max-width: ${props =>
-      props.theme.breakpoints.large}) {
+    props.theme.breakpoints.large}) {
     width: calc(33.333% - 13.333px);
     /* We are unsetting the 4n + 0 rule one above.*/
     &:nth-of-type(4n + 0) {
@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   }
 
   @media only screen and (max-width: ${props =>
-      props.theme.breakpoints.small}) {
+    props.theme.breakpoints.small}) {
     width: 100%;
     margin-right: 0px;
   }
@@ -113,6 +113,21 @@ const AppDetails = styled.div`
 `;
 
 class AppContainer extends React.Component {
+  iconRef = React.createRef();
+
+  componentDidMount() {
+    this.lazyLoadIcon();
+  }
+
+  lazyLoadIcon() {
+    const { current } = this.iconRef;
+    const { appVersions, iconErrors } = this.props;
+    const { icon } = appVersions[0];
+
+    if (current && icon && !iconErrors[icon])
+      current.src = icon;
+  }
+
   render() {
     const {
       appVersions,
@@ -130,10 +145,13 @@ class AppContainer extends React.Component {
           {repoName === 'managed' && <Badge>MANAGED</Badge>}
           <AppIcon>
             {icon && !iconErrors[icon] ? (
-              <img onError={imgError} src={icon} />
+              <img
+                ref={this.iconRef}
+                onError={imgError}
+              />
             ) : (
-              <h3>{name}</h3>
-            )}
+                <h3>{name}</h3>
+              )}
           </AppIcon>
           <AppDetails>
             <h3>{name}</h3>
