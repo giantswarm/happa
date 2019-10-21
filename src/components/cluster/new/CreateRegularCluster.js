@@ -344,7 +344,7 @@ class CreateRegularCluster extends React.Component {
     const { awsInstanceTypes } = this.state;
     const instanceType = this.state.aws.instanceType.value;
 
-    // Check whether this.state.instanceTypes is populated and that instance name
+    // Check whether this.state.awsInstanceTypes is populated and that instance name
     // in input matches an instance in the array
     const instanceTypesKeys = Object.keys(awsInstanceTypes);
 
@@ -365,7 +365,7 @@ class CreateRegularCluster extends React.Component {
     const { azureInstanceTypes } = this.state;
     const instanceType = this.state.azure.vmSize.value;
 
-    // Check whether this.state.instanceTypes is populated and that instance name
+    // Check whether this.state.azureInstanceTypes is populated and that instance name
     // in input matches an instance in the array
     const instanceTypesKeys = Object.keys(azureInstanceTypes);
 
