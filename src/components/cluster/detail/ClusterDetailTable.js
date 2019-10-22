@@ -20,27 +20,35 @@ import React from 'react';
 import ReactTimeout from 'react-timeout';
 import RefreshableLabel from 'UI/refreshable_label';
 import ReleaseDetailsModal from '../../modals/release_details_modal';
+import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import WorkerNodes from './WorkerNodes';
+import WorkerNodesAzure from './WorkerNodesAzure';
+
+const WrapperDiv = styled.div`
+  h2 {
+    font-weight: 400;
+    font-size: 22px;
+    margin: 0 0 25px;
+  }
+`;
 
 class ClusterDetailTable extends React.Component {
   state = {
     enpointCopied: false,
     RAM: 0,
     CPUs: 0,
+    awsInstanceTypes: {},
+    azureVMSizes: {},
   };
-
-  awsInstanceTypes = {};
-  azureVMSizes = {};
 
   componentDidMount() {
     this.registerRefreshInterval();
 
-    this.awsInstanceTypes = window.config.awsCapabilitiesJSON
+    const awsInstanceTypes = window.config.awsCapabilitiesJSON
       ? JSON.parse(window.config.awsCapabilitiesJSON)
       : {};
 
-    this.azureVMSizes = window.config.azureCapabilitiesJSON
+    const azureVMSizes = window.config.azureCapabilitiesJSON
       ? JSON.parse(window.config.azureCapabilitiesJSON)
       : {};
 
@@ -51,7 +59,7 @@ class ClusterDetailTable extends React.Component {
     const cores = getCpusTotal(cluster);
     const CPUs = !cores ? 0 : cores;
 
-    this.setState({ RAM, CPUs });
+    this.setState({ awsInstanceTypes, azureVMSizes, RAM, CPUs });
   }
 
   registerRefreshInterval = () => {
@@ -110,56 +118,56 @@ class ClusterDetailTable extends React.Component {
       // check if we have the right credential info
       if (credentials.items[0].id !== credential_id) {
         credentialInfoRows.push(
-          <tr key='providerCredentialsInvalid'>
-            <td>Provider credentials</td>
-            <td className='value'>
+          <div key='providerCredentialsInvalid'>
+            <div>Provider credentials</div>
+            <div className='value'>
               Error: cluster credentials do not match organization credentials.
               Please contact support for details.
-            </td>
-          </tr>
+            </div>
+          </div>
         );
       } else {
         if (provider === 'aws') {
           credentialInfoRows.push(
-            <tr key='awsAccountID'>
-              <td>AWS account</td>
-              <td className='value code'>
+            <div key='awsAccountID'>
+              <div>AWS account</div>
+              <div className='value code'>
                 <AWSAccountID
                   roleARN={credentials.items[0].aws.roles.awsoperator}
                 />
-              </td>
-            </tr>
+              </div>
+            </div>
           );
         } else if (provider === 'azure') {
           credentialInfoRows.push(
-            <tr key='azureSubscriptionID'>
-              <td>Azure subscription</td>
-              <td className='value code'>
+            <div key='azureSubscriptionID'>
+              <div>Azure subscription</div>
+              <div className='value code'>
                 {credentials.items[0].azure.credential.subscription_id}
-              </td>
-            </tr>
+              </div>
+            </div>
           );
           credentialInfoRows.push(
-            <tr key='azureTenantID'>
-              <td>Azure tenant</td>
-              <td className='value code'>
+            <div key='azureTenantID'>
+              <div>Azure tenant</div>
+              <div className='value code'>
                 {credentials.items[0].azure.credential.tenant_id}
-              </td>
-            </tr>
+              </div>
+            </div>
           );
         }
       }
     }
 
     return (
-      <>
+      <WrapperDiv>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
             <OverlayTrigger
               overlay={<Tooltip id='tooltip'>Region</Tooltip>}
               placement='top'
             >
-              <Code>{region ? region : null}</Code>
+              <Code>{region && region}</Code>
             </OverlayTrigger>
             <div>
               <span>
@@ -179,12 +187,12 @@ class ClusterDetailTable extends React.Component {
                   <>
                     <Dot />
                     <i className='fa fa-kubernetes' />
-                    {() => {
+                    {(() => {
                       var kubernetes = release.components.find(
                         component => component.name === 'kubernetes'
                       );
                       if (kubernetes) return kubernetes.version;
-                    }}
+                    })()}
                   </>
                 )}
                 {!release &&
@@ -262,8 +270,16 @@ class ClusterDetailTable extends React.Component {
         <FlexRowWithTwoBlocksOnEdges>
           {credentialInfoRows === [] ? undefined : credentialInfoRows}
         </FlexRowWithTwoBlocksOnEdges>
-        <WorkerNodes />
-      </>
+        <hr style={{ margin: '25px 0' }} />
+        <h2>Worker nodes</h2>
+        <WorkerNodesAzure
+          instanceType={
+            this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
+          }
+          nodes={workerNodesRunning}
+          showScalingModal={this.props.showScalingModal}
+        />
+      </WrapperDiv>
     );
   }
 }
