@@ -9,11 +9,7 @@ class AppListSearch extends React.Component {
       <form>
         <div className='input-with-icon'>
           <i className='fa fa-search' />
-          <input
-            onChange={this.props.onChange}
-            type='text'
-            value={value}
-          />
+          <input onChange={this.props.onChange} type='text' value={value} />
           {value && (
             <a className='clearQuery' onClick={this.props.onReset}>
               <i className='fa fa-close' />
