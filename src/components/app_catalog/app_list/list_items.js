@@ -2,14 +2,14 @@ import AppContainer from 'UI/app_container';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const AppListItems = (props) => {
+const AppListItems = props => {
   const { apps, searchQuery } = props;
 
   if (apps.length === 0) {
     return (
       <div className='emptystate'>
         No apps matched your search query: &quot;{searchQuery}&quot;
-        </div>
+      </div>
     );
   }
 

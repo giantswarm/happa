@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const AppListSearch = (props) => {
+const AppListSearch = props => {
   const { value } = props;
 
   return (
