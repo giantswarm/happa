@@ -124,7 +124,9 @@ class AppContainer extends React.Component {
     const { appVersions, iconErrors } = this.props;
     const { icon } = appVersions[0];
 
-    if (current && icon && !iconErrors[icon]) current.src = icon;
+    if (current && icon && !iconErrors[icon]) {
+      current.src = icon;
+    }
   }
 
   render() {

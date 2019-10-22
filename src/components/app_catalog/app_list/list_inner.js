@@ -53,8 +53,9 @@ class AppListInner extends React.Component {
     // to indicate what app we should scroll to.
     var scrollToApp = this.props.location.hash.substring(1);
 
-    if (scrollToApp)
+    if (scrollToApp) {
       window.scrollTo(0, this.appRefs[scrollToApp].offsetTop - 150);
+    }
   }
 
   // filter returns a filter object based on the current state
@@ -72,13 +73,16 @@ class AppListInner extends React.Component {
     const searchQuery = filter.searchQuery.trim();
 
     // Lunr search
-    var lunrResults = this.index
+    const lunrResults = this.index
       .search(`${searchQuery} ${searchQuery}*`)
       .map(x => x.ref);
 
     // Search query filter.
-    if (filter.searchQuery === '') filteredApps = Object.values(allApps);
-    else filteredApps = lunrResults.map(appName => allApps[appName]);
+    if (filter.searchQuery === '') {
+      filteredApps = Object.values(allApps);
+    } else {
+      filteredApps = lunrResults.map(appName => allApps[appName]);
+    }
 
     return filteredApps;
   }
