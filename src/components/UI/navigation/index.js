@@ -118,11 +118,7 @@ class Navigation extends React.Component {
     return (
       <OuterNav>
         <div className='main-nav col-9'>
-          <a
-            href='https://giantswarm.io'
-            rel='noopener noreferrer'
-            target='_blank'
-          >
+          <a href='/'>
             <img className='logo' src={logo} />
           </a>
           <div className='nav-responsive'>
