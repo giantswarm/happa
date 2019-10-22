@@ -19,7 +19,7 @@ class AppListInner extends React.Component {
   constructor(props) {
     super(props);
 
-    this.index = lunr(function () {
+    this.index = lunr(function() {
       this.ref('name');
       this.field('name');
       this.field('description');
@@ -31,8 +31,7 @@ class AppListInner extends React.Component {
         })[0];
       });
 
-      for (const app of apps)
-        this.add(app);
+      for (const app of apps) this.add(app);
     });
   }
 
@@ -42,7 +41,7 @@ class AppListInner extends React.Component {
 
     if (prevState.searchQuery === null) {
       return {
-        searchQuery: currentSearchQuery
+        searchQuery: currentSearchQuery,
       };
     }
 
@@ -78,10 +77,8 @@ class AppListInner extends React.Component {
       .map(x => x.ref);
 
     // Search query filter.
-    if (filter.searchQuery === '')
-      filteredApps = Object.values(allApps);
-    else
-      filteredApps = lunrResults.map(appName => allApps[appName]);
+    if (filter.searchQuery === '') filteredApps = Object.values(allApps);
+    else filteredApps = lunrResults.map(appName => allApps[appName]);
 
     return filteredApps;
   }
@@ -90,7 +87,8 @@ class AppListInner extends React.Component {
     this.setState(
       {
         searchQuery: e.target.value,
-      }, () => {
+      },
+      () => {
         const urlParams = new URLSearchParams({
           q: this.state.searchQuery,
         });
@@ -128,16 +126,13 @@ class AppListInner extends React.Component {
 
   registerRef = (name, ref) => {
     this.appRefs[name] = ref;
-  }
+  };
 
   render() {
     const { searchQuery } = this.state;
     const { catalog } = this.props;
 
-    const apps = this.filterApps(
-      catalog.apps,
-      this.getFilter(),
-    );
+    const apps = this.filterApps(catalog.apps, this.getFilter());
 
     return (
       <>
