@@ -21,7 +21,7 @@ class AppListInner extends React.Component {
   constructor(props) {
     super(props);
 
-    this.index = lunr(function () {
+    this.index = lunr(function() {
       this.ref('name');
       this.field('name');
       this.field('description');

@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   }
 
   @media only screen and (max-width: ${props =>
-    props.theme.breakpoints.large}) {
+      props.theme.breakpoints.large}) {
     width: calc(33.333% - 13.333px);
     /* We are unsetting the 4n + 0 rule one above.*/
     &:nth-of-type(4n + 0) {
@@ -25,7 +25,7 @@ const Wrapper = styled.div`
   }
 
   @media only screen and (max-width: ${props =>
-    props.theme.breakpoints.small}) {
+      props.theme.breakpoints.small}) {
     width: 100%;
     margin-right: 0px;
   }
@@ -133,8 +133,8 @@ class AppContainer extends React.Component {
             {icon && !iconErrors[icon] ? (
               <LazyLoadedImage src={icon} onError={imgError} />
             ) : (
-                <h3>{name}</h3>
-              )}
+              <h3>{name}</h3>
+            )}
           </AppIcon>
           <AppDetails>
             <h3>{name}</h3>

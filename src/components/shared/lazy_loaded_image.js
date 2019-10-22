@@ -14,13 +14,7 @@ class LazyLoadedImage extends React.PureComponent {
   }
 
   render() {
-    return (
-      <img
-        {...this.props}
-        src={null}
-        ref={this.imageRef}
-      />
-    );
+    return <img {...this.props} src={null} ref={this.imageRef} />;
   }
 }
 
