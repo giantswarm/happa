@@ -5,12 +5,12 @@ import React from 'react';
 import styled from '@emotion/styled';
 import theme from 'styles/theme';
 
-const WrapperDiv = styled.div`
+export const WrapperDiv = styled.div`
   font-size: 16px;
   font-weight: 400;
 `;
 
-const LineDiv = styled.div`
+export const LineDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -44,7 +44,7 @@ function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
 
 WorkerNodesAzure.propTypes = {
   instanceType: PropTypes.object,
-  nodes: PropTypes.string,
+  nodes: PropTypes.number,
   showScalingModal: PropTypes.func,
 };
 

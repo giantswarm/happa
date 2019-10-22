@@ -1,16 +1,6 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
-import {
-  getCpusTotal,
-  getMemoryTotal,
-  getStorageTotal,
-} from 'utils/cluster_utils';
-import { relativeDate } from 'lib/helpers.js';
-import {
-  Upgrade,
-  FlexWrapperDiv,
-  CopyToClipboardDiv,
-} from './cluster_detail_node_pools_table';
-import AvailabilityZonesLabels from 'UI/availability_zones_labels';
+import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
+import { CopyToClipboardDiv } from './cluster_detail_node_pools_table';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';
 import moment from 'moment';
@@ -19,16 +9,24 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
 import RefreshableLabel from 'UI/refreshable_label';
-import ReleaseDetailsModal from '../../modals/release_details_modal';
+import ReleaseDetailsModal from 'modals/release_details_modal';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import Versions from './Versions';
 import WorkerNodesAzure from './WorkerNodesAzure';
+import WorkerNodesKVM from './WorkerNodesKVM';
 
 const WrapperDiv = styled.div`
   h2 {
     font-weight: 400;
     font-size: 22px;
     margin: 0 0 25px;
+  }
+  .pointer {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -169,52 +167,14 @@ class ClusterDetailTable extends React.Component {
             >
               <Code>{region && region}</Code>
             </OverlayTrigger>
-            <div>
-              <span>
-                Created {create_date ? relativeDate(create_date) : 'n/a'}
-              </span>
-              <span>
-                <RefreshableLabel dataItems={[release_version]}>
-                  <>
-                    <Dot style={{ paddingRight: 0 }} />
-                    <i className='fa fa-version-tag' />
-                    {release_version ? release_version : 'n/a'}
-                  </>
-                </RefreshableLabel>
-              </span>
-              <span>
-                {release && (
-                  <>
-                    <Dot />
-                    <i className='fa fa-kubernetes' />
-                    {(() => {
-                      var kubernetes = release.components.find(
-                        component => component.name === 'kubernetes'
-                      );
-                      if (kubernetes) return kubernetes.version;
-                    })()}
-                  </>
-                )}
-                {!release &&
-                  cluster.kubernetes_version !== '' &&
-                  cluster.kubernetes_version !== undefined &&
-                  <i className='fa fa-kubernetes' /> +
-                    cluster.kubernetes_version}
-              </span>
-            </div>
-            {this.props.canClusterUpgrade && (
-              <a
-                className='upgrade-available'
-                onClick={this.props.showUpgradeModal}
-              >
-                <Upgrade>
-                  <span>
-                    <i className='fa fa-warning' />
-                    Upgrade available
-                  </span>
-                </Upgrade>
-              </a>
-            )}
+            <Versions
+              createDate={create_date}
+              releaseVersion={release_version}
+              release={release}
+              k8sVersion={cluster.kubernetes_version}
+              canUpgrade={this.props.canClusterUpgrade}
+              showUpgradeModal={this.props.showUpgradeModal}
+            />
           </div>
           <div>
             <div>
@@ -272,13 +232,22 @@ class ClusterDetailTable extends React.Component {
         </FlexRowWithTwoBlocksOnEdges>
         <hr style={{ margin: '25px 0' }} />
         <h2>Worker nodes</h2>
-        <WorkerNodesAzure
-          instanceType={
-            this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
-          }
-          nodes={workerNodesRunning}
-          showScalingModal={this.props.showScalingModal}
-        />
+        {provider === 'azure' && (
+          <WorkerNodesAzure
+            instanceType={
+              this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
+            }
+            nodes={workerNodesRunning}
+            showScalingModal={this.props.showScalingModal}
+          />
+        )}
+        {provider === 'kvm' && (
+          <WorkerNodesKVM
+            worker={cluster.workers[0]}
+            nodes={workerNodesRunning}
+            showScalingModal={this.props.showScalingModal}
+          />
+        )}
       </WrapperDiv>
     );
   }

@@ -22,6 +22,7 @@ import ReactTimeout from 'react-timeout';
 import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import Versions from './Versions';
 
 export const Upgrade = styled.div`
   color: #ce990f;
@@ -390,52 +391,14 @@ class ClusterDetailNodePoolsTable extends React.Component {
             >
               <Code>{region ? region : null}</Code>
             </OverlayTrigger>
-            <div>
-              <span>
-                Created {create_date ? relativeDate(create_date) : 'n/a'}
-              </span>
-              <span>
-                <RefreshableLabel dataItems={[release_version]}>
-                  <>
-                    <Dot style={{ paddingRight: 0 }} />
-                    <i className='fa fa-version-tag' />
-                    {release_version ? release_version : 'n/a'}
-                  </>
-                </RefreshableLabel>
-              </span>
-              <span>
-                {release && (
-                  <>
-                    <Dot />
-                    <i className='fa fa-kubernetes' />
-                    {() => {
-                      var kubernetes = release.components.find(
-                        component => component.name === 'kubernetes'
-                      );
-                      if (kubernetes) return kubernetes.version;
-                    }}
-                  </>
-                )}
-                {!release &&
-                  cluster.kubernetes_version !== '' &&
-                  cluster.kubernetes_version !== undefined &&
-                  <i className='fa fa-kubernetes' /> +
-                    cluster.kubernetes_version}
-              </span>
-            </div>
-            {this.props.canClusterUpgrade && (
-              <a
-                className='upgrade-available'
-                onClick={this.props.showUpgradeModal}
-              >
-                <Upgrade>
-                  <span>
-                    <i className='fa fa-warning' />
-                    Upgrade available
-                  </span>
-                </Upgrade>
-              </a>
-            )}
+            <Versions
+              createDate={create_date}
+              releaseVersion={release_version}
+              release={release}
+              k8sVersion={cluster.kubernetes_version}
+              canUpgrade={this.props.canClusterUpgrade}
+              showUpgradeModal={this.props.showUpgradeModal}
+            />
           </div>
           <div>
             <div>
