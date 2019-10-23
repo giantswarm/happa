@@ -13,6 +13,7 @@ import ReleaseDetailsModal from 'modals/release_details_modal';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Versions from './Versions';
+import WorkerNodesAWS from './WorkerNodesAWS';
 import WorkerNodesAzure from './WorkerNodesAzure';
 import WorkerNodesKVM from './WorkerNodesKVM';
 
@@ -106,7 +107,7 @@ class ClusterDetailTable extends React.Component {
     } = cluster;
 
     // BYOC provider credential info
-    var credentialInfoRows = [];
+    let credentialInfoRows = [];
     if (
       cluster &&
       credential_id &&
@@ -248,6 +249,19 @@ class ClusterDetailTable extends React.Component {
             showScalingModal={this.props.showScalingModal}
           />
         )}
+        {provider === 'aws' && (
+          <WorkerNodesAWS
+            az={cluster.availability_zones}
+            instanceName={cluster.workers[0].aws.instance_type}
+            instanceType={
+              this.state.awsInstanceTypes[cluster.workers[0].aws.instance_type]
+            }
+            scaling={cluster.scaling}
+            showScalingModal={this.props.showScalingModal}
+            workerNodesDesired={this.props.workerNodesDesired}
+            workerNodesRunning={workerNodesRunning}
+          />
+        )}
       </WrapperDiv>
     );
   }
@@ -265,8 +279,8 @@ ClusterDetailTable.propTypes = {
   setInterval: PropTypes.func,
   showScalingModal: PropTypes.func,
   showUpgradeModal: PropTypes.func,
-  workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
+  workerNodesRunning: PropTypes.number,
 };
 
 export default ReactTimeout(ClusterDetailTable);
