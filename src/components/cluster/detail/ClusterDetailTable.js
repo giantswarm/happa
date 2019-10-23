@@ -1,15 +1,14 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
-import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
 import { CopyToClipboardDiv } from './cluster_detail_node_pools_table';
+import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';
+import copy from 'copy-to-clipboard';
 import moment from 'moment';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
-import RefreshableLabel from 'UI/refreshable_label';
-import ReleaseDetailsModal from 'modals/release_details_modal';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Versions from './Versions';
@@ -41,8 +40,6 @@ class ClusterDetailTable extends React.Component {
   };
 
   componentDidMount() {
-    this.registerRefreshInterval();
-
     const awsInstanceTypes = window.config.awsCapabilitiesJSON
       ? JSON.parse(window.config.awsCapabilitiesJSON)
       : {};
@@ -61,33 +58,22 @@ class ClusterDetailTable extends React.Component {
     this.setState({ awsInstanceTypes, azureVMSizes, RAM, CPUs });
   }
 
-  registerRefreshInterval = () => {
-    // set re-rendering to update relative date/time values
-    var refreshInterval = 10 * 1000; // 10 seconds
-    this.props.setInterval(() => {
-      // enforce re-rendering
-      this.setState({ enforceReRender: Date.now() });
-    }, refreshInterval);
+  // TODO We are repeating this in several places, refactor this to a reusable HOC / hooks.
+  copyToClipboard = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    copy(this.props.cluster.api_endpoint);
+
+    this.setState({
+      endpointCopied: true,
+    });
   };
 
-  showReleaseDetails = () => {
-    this.releaseDetailsModal.show();
+  mouseLeave = () => {
+    this.setState({
+      endpointCopied: false,
+    });
   };
-
-  /**
-   * Returns the proper last updated info string based on available
-   * cluster and/or status information.
-   */
-  lastUpdatedLabel() {
-    if (
-      this.props.cluster &&
-      this.props.cluster.status &&
-      this.props.cluster.status.lastUpdated
-    ) {
-      return moment(this.props.cluster.status.lastUpdated).fromNow();
-    }
-    return 'n/a';
-  }
 
   render() {
     const {
@@ -106,6 +92,7 @@ class ClusterDetailTable extends React.Component {
       api_endpoint,
     } = cluster;
 
+    // TODO Refactor credentials: markup in render, data in variables or functions outside render
     // BYOC provider credential info
     let credentialInfoRows = [];
     if (
@@ -201,8 +188,7 @@ class ClusterDetailTable extends React.Component {
           <CopyToClipboardDiv onMouseLeave={this.mouseLeave}>
             <span>Kubernetes endpoint URI:</span>
             <Code>{api_endpoint}</Code>
-            {/* Copy to clipboard. 
-            TODO make a render prop component or a hooks function with it */}
+            {/* Copy to clipboard. */}
             {this.state.endpointCopied ? (
               <i aria-hidden='true' className='fa fa-done' />
             ) : (

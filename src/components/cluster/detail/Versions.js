@@ -6,14 +6,15 @@ import React, { useRef } from 'react';
 import RefreshableLabel from 'UI/refreshable_label';
 import ReleaseDetailsModal from 'modals/release_details_modal';
 
-const Versions = ({
+// Versions data and icons at the top of cluster details view.
+function Versions({
   createDate,
   releaseVersion,
   release,
   k8sVersion,
   canUpgrade,
   showUpgradeModal,
-}) => {
+}) {
   const releaseDetailsModal = useRef(null);
 
   return (
@@ -71,7 +72,7 @@ const Versions = ({
       )}
     </>
   );
-};
+}
 
 Versions.propTypes = {
   createDate: PropTypes.string,

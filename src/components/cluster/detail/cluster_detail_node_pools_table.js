@@ -8,7 +8,6 @@ import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { nodePoolCreate } from 'actions/nodePoolActions';
-import { relativeDate } from 'lib/helpers.js';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
@@ -19,7 +18,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactTimeout from 'react-timeout';
-import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Versions from './Versions';
@@ -349,6 +347,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       });
   };
 
+  // TODO We are repeating this in several places, refactor this to a reusable HOC / hooks.
   copyToClipboard = e => {
     e.preventDefault();
     e.stopPropagation();
