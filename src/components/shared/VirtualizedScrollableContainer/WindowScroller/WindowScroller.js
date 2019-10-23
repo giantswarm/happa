@@ -212,7 +212,7 @@ class WindowScroller extends React.PureComponent {
 }
 
 WindowScroller.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.func,
   onResize: PropTypes.func,
   onScroll: PropTypes.func,
   scrollElement: PropTypes.object,

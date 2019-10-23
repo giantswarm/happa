@@ -1,6 +1,7 @@
 import AppContainer from 'UI/app_container';
 import PropTypes from 'prop-types';
 import React from 'react';
+import VirtualizedScrollableContainer from '../../shared/VirtualizedScrollableContainer';
 
 class AppListItems extends React.Component {
   render() {
@@ -14,21 +15,29 @@ class AppListItems extends React.Component {
       );
     }
 
-    return apps.map(appVersions => {
-      const key = `${appVersions[0].repoName}/${appVersions[0].name}`;
-
-      return (
-        <AppContainer
-          key={key}
-          appVersions={appVersions}
-          catalog={this.props.catalog}
-          iconErrors={this.props.iconErrors}
-          imgError={this.props.onImgError}
-          ref={ref => this.props.registerRef(appVersions[0].name, ref)}
-          searchQuery={searchQuery}
-        />
-      );
-    });
+    return (
+      <div className='apps'>
+        <VirtualizedScrollableContainer
+          columnCount={4}
+          rowHeight={180}
+          width={1054}
+          data={apps}
+          className='apps__scroll-container'
+        >
+          {(style, content) => (
+            <AppContainer
+              ref={ref => this.props.registerRef(content[0].name, ref)}
+              style={style}
+              appVersions={content}
+              catalog={this.props.catalog}
+              iconErrors={this.props.iconErrors}
+              imgError={this.props.onImgError}
+              searchQuery={searchQuery}
+            />
+          )}
+        </VirtualizedScrollableContainer>
+      </div>
+    );
   }
 }
 

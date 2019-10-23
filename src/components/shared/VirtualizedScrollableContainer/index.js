@@ -1,9 +1,9 @@
-import { FixedSizeList as List } from 'react-window';
-import { WindowScroller } from 'react-virtualized';
+import { FixedSizeGrid as List } from 'react-window';
 import PropTypes from 'prop-types';
 import React from 'react';
+import WindowScrollerAdapter from './WindowScroller/WindowScrollerAdapter';
 
-class VirtualizedScrollableContainer {
+class VirtualizedScrollableContainer extends React.Component {
   container = React.createRef();
 
   static defaultProps = {
@@ -11,26 +11,45 @@ class VirtualizedScrollableContainer {
     width: window.innerWidth,
   };
 
-  handleScroll = ({ scrollTop }) => {
-    if (this.container.current !== null) this.container.scrollTo(scrollTop);
+  handleScroll = scrollDestination => {
+    if (this.container.current !== null) {
+      this.container.current.scrollTo(scrollDestination);
+    }
   };
 
   render() {
+    const { width, columnCount, data } = this.props;
+    const columnWidth = width / columnCount;
+    const rowCount = Math.ceil(data.length / columnCount);
+
+    // Weird fix, together with setting `List`'s direction to 'rtl', to render elements in the correct order
+    const newStyle = Object.assign({}, this.props.style, { direction: 'ltr' });
+
     return (
       <>
-        <WindowScroller onScroll={this.handleScroll}>
-          {() => <div />}
-        </WindowScroller>
+        <WindowScrollerAdapter onScroll={this.handleScroll} />
         <List
+          direction='rtl'
           ref={this.container}
-          itemCount={this.props.itemCount}
-          itemSize={this.props.itemHeight}
-          width={this.props.width}
+          columnCount={columnCount}
+          rowCount={rowCount}
+          rowHeight={this.props.rowHeight}
+          columnWidth={columnWidth}
+          width={width}
           height={this.props.height}
           className={this.props.className}
-          style={this.props.style}
+          style={newStyle}
         >
-          {({ index, style }) => <div style={style}>Row {index}</div>}
+          {({ columnIndex, rowIndex, style }) => {
+            const itemIndex = (rowIndex + 1) * columnCount - (columnIndex + 1);
+            const item = data[itemIndex];
+
+            if (!item) {
+              return null;
+            }
+
+            return this.props.children(style, item);
+          }}
         </List>
       </>
     );
@@ -38,9 +57,10 @@ class VirtualizedScrollableContainer {
 }
 
 VirtualizedScrollableContainer.propTypes = {
-  itemHeight: PropTypes.number.isRequired,
-  itemCount: PropTypes.number.isRequired,
+  columnCount: PropTypes.number.isRequired,
+  rowHeight: PropTypes.number.isRequired,
   children: PropTypes.func.isRequired,
+  data: PropTypes.array.isRequired,
   height: PropTypes.number,
   width: PropTypes.number,
   className: PropTypes.string,

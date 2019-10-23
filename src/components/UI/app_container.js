@@ -4,11 +4,14 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
-  width: calc(25% - 15px);
+  /* width: calc(25% - 15px);
   flex-shrink: 0;
-  margin: 0 20px 20px 0;
+  margin: 0 20px 20px 0; */
+  /* padding: 0 20px 20px 0; */
+  padding: 10px;
   &:nth-of-type(4n + 0) {
-    margin-right: 0px;
+    /* margin-right: 0px; */
+    /* padding-right: 0px; */
   }
 
   @media only screen and (max-width: ${props =>
@@ -35,7 +38,7 @@ const StyledLink = styled(Link)`
   border: 1px solid #2a5974;
   width: 100%;
   border-radius: 4px;
-  height: 180px;
+  height: 100%;
   background-color: #2f556a;
   position: relative;
   cursor: pointer;
@@ -136,12 +139,13 @@ class AppContainer extends React.Component {
       searchQuery,
       iconErrors,
       imgError,
+      ...rest
     } = this.props;
     const { icon, name, repoName, version } = appVersions[0];
     const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
     return (
-      <Wrapper>
+      <Wrapper {...rest}>
         <StyledLink to={to}>
           {repoName === 'managed' && <Badge>MANAGED</Badge>}
           <AppIcon>

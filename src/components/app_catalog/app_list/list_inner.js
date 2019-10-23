@@ -149,16 +149,14 @@ class AppListInner extends React.Component {
           />
         </h1>
         <div className='app-catalog-overview'>
-          <div className='apps'>
-            <AppListItems
-              apps={apps}
-              catalog={catalog}
-              searchQuery={searchQuery}
-              iconErrors={this.state.iconErrors}
-              onImgError={this.onImgError}
-              registerRef={this.registerRef}
-            />
-          </div>
+          <AppListItems
+            apps={apps}
+            catalog={catalog}
+            searchQuery={searchQuery}
+            iconErrors={this.state.iconErrors}
+            onImgError={this.onImgError}
+            registerRef={this.registerRef}
+          />
         </div>
       </>
     );
