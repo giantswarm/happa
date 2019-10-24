@@ -113,38 +113,35 @@ const AppDetails = styled.div`
   }
 `;
 
-class AppContainer extends React.Component {
-  render() {
-    const {
-      appVersions,
-      catalog,
-      searchQuery,
-      iconErrors,
-      imgError,
-    } = this.props;
-    const { icon, name, repoName, version } = appVersions[0];
-    const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
+const AppContainer = ({
+  appVersions,
+  catalog,
+  searchQuery,
+  iconErrors,
+  imgError,
+}) => {
+  const { icon, name, repoName, version } = appVersions[0];
+  const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
-    return (
-      <Wrapper>
-        <StyledLink to={to}>
-          {repoName === 'managed' && <Badge>MANAGED</Badge>}
-          <AppIcon>
-            {icon && !iconErrors[icon] ? (
-              <LazyLoadedImage src={icon} onError={imgError} />
-            ) : (
-              <h3>{name}</h3>
-            )}
-          </AppIcon>
-          <AppDetails>
+  return (
+    <Wrapper>
+      <StyledLink to={to}>
+        {repoName === 'managed' && <Badge>MANAGED</Badge>}
+        <AppIcon>
+          {icon && !iconErrors[icon] ? (
+            <LazyLoadedImage src={icon} onError={imgError} />
+          ) : (
             <h3>{name}</h3>
-            <span>{version}</span>
-          </AppDetails>
-        </StyledLink>
-      </Wrapper>
-    );
-  }
-}
+          )}
+        </AppIcon>
+        <AppDetails>
+          <h3>{name}</h3>
+          <span>{version}</span>
+        </AppDetails>
+      </StyledLink>
+    </Wrapper>
+  );
+};
 
 AppContainer.propTypes = {
   appVersions: PropTypes.array,

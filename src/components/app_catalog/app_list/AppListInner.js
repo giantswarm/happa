@@ -1,6 +1,6 @@
 import { replace } from 'connected-react-router';
-import AppListItems from './list_items';
-import AppListSearch from './list_search';
+import AppListItems from './AppListItems';
+import AppListSearch from './AppListSearch';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -33,7 +33,9 @@ class AppListInner extends React.Component {
         })[0];
       });
 
-      for (const app of apps) this.add(app);
+      for (const app of apps) {
+        this.add(app);
+      }
     });
   }
 

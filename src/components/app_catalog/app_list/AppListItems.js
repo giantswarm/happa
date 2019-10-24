@@ -2,9 +2,7 @@ import AppContainer from 'UI/app_container';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const AppListItems = props => {
-  const { apps, searchQuery } = props;
-
+const AppListItems = ({ apps, searchQuery, ...props }) => {
   if (apps.length === 0) {
     return (
       <div className='emptystate'>
