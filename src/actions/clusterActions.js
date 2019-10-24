@@ -556,28 +556,33 @@ function clusterLoadStatusV4(dispatch, clusterId) {
  */
 export function clusterCreate(cluster, isV5Cluster) {
   return function(dispatch) {
-    dispatch({
-      type: types.CLUSTER_CREATE,
-      cluster,
-    });
-
     const method = isV5Cluster
       ? 'addClusterV5WithHttpInfo'
       : 'addClusterWithHttpInfo';
 
     return clustersApi[method](cluster)
       .then(data => {
-        var location = data.response.headers.location;
+        const location = data.response.headers.location;
         if (location === undefined) {
           throw 'Did not get a location header back.';
         }
 
-        var clusterId = location.split('/')[3];
+        const clusterId = location.split('/')[3];
         if (clusterId === undefined) {
           throw 'Did not get a valid cluster id.';
         }
 
-        dispatch(clusterCreateSuccess(clusterId));
+        if (isV5Cluster) {
+          dispatch({
+            type: types.V5_CLUSTER_CREATE_SUCCESS,
+            clusterId,
+          });
+        } else {
+          dispatch({
+            type: types.CLUSTER_CREATE_SUCCESS,
+            clusterId,
+          });
+        }
 
         new FlashMessage(
           'Your new cluster with ID <code>' +
@@ -722,11 +727,6 @@ export const clusterLoadStatusNotFound = clusterId => ({
 export const clusterLoadStatusError = error => ({
   type: types.CLUSTER_LOAD_STATUS_ERROR,
   error,
-});
-
-export const clusterCreateSuccess = cluster => ({
-  type: types.CLUSTER_CREATE_SUCCESS,
-  cluster,
 });
 
 export const clusterCreateError = cluster => ({

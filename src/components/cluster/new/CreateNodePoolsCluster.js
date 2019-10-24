@@ -187,7 +187,6 @@ class CreateNodePoolsCluster extends Component {
       valid: true,
       validationError: '',
     },
-    releaseVersion: '',
     submitting: false,
     error: false,
     // Not sure which value are we going to pass here... there is no
@@ -276,11 +275,14 @@ class CreateNodePoolsCluster extends Component {
       .dispatch(
         clusterCreate(
           {
-            availabilityZones: this.state.hasAZLabels
-              ? this.state.availabilityZonesLabels.zonesString
-              : this.state.availabilityZonesRandom.value,
+            owner: this.props.selectedOrganization,
             name: this.state.name.value,
-            release_version: this.state.releaseVersion,
+            release_version: '8.6.0', // this.props.selectedRelease,
+            master: {
+              availabilityZone: this.state.hasAZLabels
+                ? this.state.availabilityZonesLabels.zonesString
+                : this.state.availabilityZonesRandom.value,
+            },
           },
           true // is v5
         )
@@ -289,7 +291,7 @@ class CreateNodePoolsCluster extends Component {
         // after successful creation, redirect to cluster details
         this.props.dispatch(
           push(
-            `/organizations/${this.props.selectedOrganization}/clusters/${cluster.id}`
+            `/organizations/${this.props.selectedOrganization}/clusters/${cluster.id}/np`
           )
         );
       })
@@ -311,13 +313,6 @@ class CreateNodePoolsCluster extends Component {
       </div>
     );
   }
-
-  selectRelease = releaseVersion => {
-    this.setState({
-      releaseVersion,
-    });
-    this.props.informParent(releaseVersion);
-  };
 
   toggleMasterAZSelector = () => {
     this.setState(state => ({
@@ -398,7 +393,7 @@ class CreateNodePoolsCluster extends Component {
                   <span className='label-span'>Release version</span>
                   <div>
                     <ReleaseSelector
-                      selectRelease={this.selectRelease}
+                      selectRelease={this.props.informParent}
                       selectedRelease={this.props.selectedRelease}
                       selectableReleases={this.props.selectableReleases}
                       releases={this.props.releases}
@@ -482,8 +477,6 @@ class CreateNodePoolsCluster extends Component {
                     </p>
                   )}
                 </AZWrapperDiv>
-
-                {this.state.error && this.errorState()}
               </FlexColumnDiv>
               {Object.keys(nodePools).length === 0 && <hr />}
               <ReactCSSTransitionGroup
@@ -501,7 +494,7 @@ class CreateNodePoolsCluster extends Component {
                       <AddNodePoolFlexColumnDiv>
                         <AddNodePool
                           clusterId={'m0ckd'}
-                          releaseVersion={'8.2.0'}
+                          selectedRelease={this.props.selectedRelease}
                           informParent={this.updateNodePoolForm}
                           name={name}
                           id={npId}
@@ -522,6 +515,9 @@ class CreateNodePoolsCluster extends Component {
               </Button>
               <hr style={{ margin: '30px 0' }} />
             </WrapperDiv>
+
+            {this.state.error && this.errorState()}
+
             <FlexRowDiv>
               <Button
                 bsSize='large'

@@ -55,13 +55,13 @@ class ReleaseDetailsModal extends React.Component {
                     {// If we have a way of selecting a release, show the selection
                     // buttons. This way the create cluster screen can show the
                     // select button, and the cluster detail screen can omit it.
-                    this.props.releaseSelected ? (
+                    this.props.selectedRelease ? (
                       this.props.selectedRelease === release.version ? (
                         <span className='selected'>Selected</span>
                       ) : (
                         <Button
                           onClick={() =>
-                            this.props.releaseSelected(release.version)
+                            this.props.selectRelease(release.version)
                           }
                         >
                           Select
@@ -124,7 +124,7 @@ class ReleaseDetailsModal extends React.Component {
 ReleaseDetailsModal.propTypes = {
   releases: PropTypes.array,
   selectedRelease: PropTypes.string,
-  releaseSelected: PropTypes.func,
+  selectRelease: PropTypes.func,
 };
 
 export default ReleaseDetailsModal;

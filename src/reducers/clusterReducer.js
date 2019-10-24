@@ -60,7 +60,7 @@ const clusterReducer = produce((draft, action) => {
       // Fill in scaling values when they aren't supplied.
       const { scaling, workers } = draft.items[action.cluster.id];
 
-      if (!scaling.min && !scaling.max) {
+      if (scaling && !scaling.min && !scaling.max) {
         scaling.min = workers.length;
         scaling.max = workers.length;
       }
@@ -118,6 +118,10 @@ const clusterReducer = produce((draft, action) => {
 
     case types.CLUSTER_LOAD_KEY_PAIRS_ERROR:
       draft.items[action.clusterId].isFetchingKeyPairs = false;
+      return;
+
+    case types.V5_CLUSTER_CREATE_SUCCESS:
+      draft.nodePoolsClusters.push(action.clusterId);
       return;
 
     case types.CLUSTER_DELETE_SUCCESS:

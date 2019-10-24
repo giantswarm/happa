@@ -148,7 +148,6 @@ class AddNodePool extends Component {
     },
     // Labels or Input? Initially set to false, so the input is shown
     hasAZLabels: false,
-    releaseVersion: '',
     scaling: {
       automatic: false,
       min: 3,
@@ -498,6 +497,7 @@ AddNodePool.propTypes = {
   informParent: PropTypes.func,
   name: PropTypes.string,
   id: PropTypes.string,
+  selectedRelease: PropTypes.string,
 };
 
 AddNodePool.defaultProps = {

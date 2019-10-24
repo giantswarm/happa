@@ -395,27 +395,31 @@ class ClusterDetailView extends React.Component {
               </div>
             </div>
 
-            <ScaleClusterModal
-              cluster={cluster}
-              provider={provider}
-              ref={s => {
-                this.scaleClusterModal = s;
-              }}
-              workerNodesDesired={this.getDesiredNumberOfNodes()}
-              workerNodesRunning={getNumberOfNodes(cluster)}
-            />
+            {!this.props.isNodePoolView && (
+              <>
+                <ScaleClusterModal
+                  cluster={cluster}
+                  provider={provider}
+                  ref={s => {
+                    this.scaleClusterModal = s;
+                  }}
+                  workerNodesDesired={this.getDesiredNumberOfNodes()}
+                  workerNodesRunning={getNumberOfNodes(cluster)}
+                />
 
-            <ScaleNodePoolModal
-              cluster={cluster}
-              provider={provider}
-              ref={s => {
-                this.scaleNodePoolModal = s;
-              }}
-              workerNodesDesired={this.getDesiredNumberOfNodes()}
-              workerNodesRunning={getNumberOfNodes(cluster)}
-            />
+                <ScaleNodePoolModal
+                  cluster={cluster}
+                  provider={provider}
+                  ref={s => {
+                    this.scaleNodePoolModal = s;
+                  }}
+                  workerNodesDesired={this.getDesiredNumberOfNodes()}
+                  workerNodesRunning={getNumberOfNodes(cluster)}
+                />
+              </>
+            )}
 
-            {targetRelease ? (
+            {targetRelease && (
               <UpgradeClusterModal
                 cluster={cluster}
                 ref={s => {
@@ -424,8 +428,6 @@ class ClusterDetailView extends React.Component {
                 release={release}
                 targetRelease={targetRelease}
               />
-            ) : (
-              undefined
             )}
           </WrapperDiv>
         </DocumentTitle>
