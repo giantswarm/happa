@@ -8,7 +8,6 @@ import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { nodePoolCreate } from 'actions/nodePoolActions';
-import { relativeDate } from 'lib/helpers.js';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
@@ -19,11 +18,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactTimeout from 'react-timeout';
-import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import Versions from './Versions';
 
-const Upgrade = styled.div`
+export const Upgrade = styled.div`
   color: #ce990f;
   span {
     white-space: normal !important;
@@ -204,7 +203,7 @@ export const AddNodePoolFlexColumnDiv = styled.div`
   }
 `;
 
-const FlexWrapperDiv = styled.div`
+export const FlexWrapperDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -236,7 +235,7 @@ const FlexWrapperDiv = styled.div`
   }
 `;
 
-const CopyToClipboardDiv = styled.div`
+export const CopyToClipboardDiv = styled.div`
   display: inline-block;
   &:hover {
     i {
@@ -348,6 +347,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       });
   };
 
+  // TODO We are repeating this in several places, refactor this to a reusable HOC / hooks.
   copyToClipboard = e => {
     e.preventDefault();
     e.stopPropagation();
@@ -390,52 +390,14 @@ class ClusterDetailNodePoolsTable extends React.Component {
             >
               <Code>{region ? region : null}</Code>
             </OverlayTrigger>
-            <div>
-              <span>
-                Created {create_date ? relativeDate(create_date) : 'n/a'}
-              </span>
-              <span>
-                <RefreshableLabel dataItems={[release_version]}>
-                  <>
-                    <Dot style={{ paddingRight: 0 }} />
-                    <i className='fa fa-version-tag' />
-                    {release_version ? release_version : 'n/a'}
-                  </>
-                </RefreshableLabel>
-              </span>
-              <span>
-                {release && (
-                  <>
-                    <Dot />
-                    <i className='fa fa-kubernetes' />
-                    {() => {
-                      var kubernetes = release.components.find(
-                        component => component.name === 'kubernetes'
-                      );
-                      if (kubernetes) return kubernetes.version;
-                    }}
-                  </>
-                )}
-                {!release &&
-                  cluster.kubernetes_version !== '' &&
-                  cluster.kubernetes_version !== undefined &&
-                  <i className='fa fa-kubernetes' /> +
-                    cluster.kubernetes_version}
-              </span>
-            </div>
-            {this.props.canClusterUpgrade && (
-              <a
-                className='upgrade-available'
-                onClick={this.props.showUpgradeModal}
-              >
-                <Upgrade>
-                  <span>
-                    <i className='fa fa-warning' />
-                    Upgrade available
-                  </span>
-                </Upgrade>
-              </a>
-            )}
+            <Versions
+              createDate={create_date}
+              releaseVersion={release_version}
+              release={release}
+              k8sVersion={cluster.kubernetes_version}
+              canUpgrade={this.props.canClusterUpgrade}
+              showUpgradeModal={this.props.showUpgradeModal}
+            />
           </div>
           <div>
             <div>
