@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import WindowScrollerAdapter from './WindowScroller/WindowScrollerAdapter';
 
-class VirtualizedScrollableContainer extends React.Component {
+class VirtualizedScrollableGrid extends React.Component {
   container = React.createRef();
 
   static defaultProps = {
@@ -56,7 +56,7 @@ class VirtualizedScrollableContainer extends React.Component {
   }
 }
 
-VirtualizedScrollableContainer.propTypes = {
+VirtualizedScrollableGrid.propTypes = {
   columnCount: PropTypes.number.isRequired,
   rowHeight: PropTypes.number.isRequired,
   children: PropTypes.func.isRequired,
@@ -67,4 +67,4 @@ VirtualizedScrollableContainer.propTypes = {
   style: PropTypes.object,
 };
 
-export default VirtualizedScrollableContainer;
+export default VirtualizedScrollableGrid;

@@ -1,7 +1,7 @@
 import AppContainer from 'UI/app_container';
 import PropTypes from 'prop-types';
 import React from 'react';
-import VirtualizedScrollableContainer from '../../shared/VirtualizedScrollableContainer';
+import VirtualizedScrollableGrid from '../../shared/VirtualizedScrollableGrid';
 
 class AppListItems extends React.Component {
   render() {
@@ -17,7 +17,7 @@ class AppListItems extends React.Component {
 
     return (
       <div className='apps'>
-        <VirtualizedScrollableContainer
+        <VirtualizedScrollableGrid
           columnCount={4}
           rowHeight={180}
           width={1054}
@@ -35,7 +35,7 @@ class AppListItems extends React.Component {
               searchQuery={searchQuery}
             />
           )}
-        </VirtualizedScrollableContainer>
+        </VirtualizedScrollableGrid>
       </div>
     );
   }
