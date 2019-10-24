@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import WindowScroller from '.';
+import WindowScroller from './';
 
 class WindowScrollerAdapter extends React.Component {
   element = document.createElement('div');

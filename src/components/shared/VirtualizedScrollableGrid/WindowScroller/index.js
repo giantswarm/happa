@@ -1,5 +1,5 @@
 /**
- * File taken from [react-virtualized] (https://github.com/bvaughn/react-virtualized)
+ * Module taken from [react-virtualized] (https://github.com/bvaughn/react-virtualized)
  */
 import WindowScroller, { IS_SCROLLING_TIMEOUT } from './WindowScroller';
 

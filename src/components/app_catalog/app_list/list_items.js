@@ -20,7 +20,6 @@ class AppListItems extends React.Component {
         <VirtualizedScrollableGrid
           columnCount={4}
           rowHeight={180}
-          width={1054}
           data={apps}
           className='apps__scroll-container'
         >
