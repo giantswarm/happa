@@ -22,10 +22,23 @@ import React from 'react';
 import ReactTimeout from 'react-timeout';
 import ScaleClusterModal from './scale_cluster_modal';
 import ScaleNodePoolModal from './scale_node_pool_modal';
+import styled from '@emotion/styled';
 import Tab from 'react-bootstrap/lib/Tab';
 import Tabs from './tabs';
 import UpgradeClusterModal from './upgrade_cluster_modal';
 import ViewAndEditName from 'UI/view_edit_name';
+
+const WrapperDiv = styled.div`
+  h2 {
+    font-weight: 400;
+    font-size: 22px;
+    margin: 0 0 15px;
+  }
+  p {
+    margin: 0 0 20px;
+    line-height: 1.2;
+  }
+`;
 
 class ClusterDetailView extends React.Component {
   state = {
@@ -259,7 +272,7 @@ class ClusterDetailView extends React.Component {
         <DocumentTitle
           title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
         >
-          <div className='cluster-details'>
+          <WrapperDiv className='cluster-details'>
             <div className='row' style={{ marginBottom: '30px' }}>
               <div className='col-sm-12 col-md-7 col-9'>
                 <h1 style={{ marginLeft: '-10px' }}>
@@ -334,25 +347,21 @@ class ClusterDetailView extends React.Component {
                     )}
 
                     <div className='row section cluster_delete col-12'>
-                      <div className='row'>
-                        <h3 className='table-label'>Delete This Cluster</h3>
-                      </div>
-                      <div className='row'>
-                        <p>
-                          All workloads on this cluster will be terminated. Data
-                          stored on the worker nodes will be lost. There is no
-                          way to undo this action.
-                        </p>
-                        <Button
-                          bsStyle='danger'
-                          onClick={this.showDeleteClusterModal.bind(
-                            this,
-                            cluster
-                          )}
-                        >
-                          <i className='fa fa-delete' /> Delete Cluster
-                        </Button>
-                      </div>
+                      <h2 className='table-label'>Delete Cluster</h2>
+                      <p>
+                        All workloads on this cluster will be terminated. Data
+                        stored on the worker nodes will be lost. There is no way
+                        to undo this action.
+                      </p>
+                      <Button
+                        bsStyle='danger'
+                        onClick={this.showDeleteClusterModal.bind(
+                          this,
+                          cluster
+                        )}
+                      >
+                        <i className='fa fa-delete' /> Delete Cluster
+                      </Button>
                     </div>
                   </Tab>
                   <Tab eventKey={2} title='Key Pairs'>
@@ -418,7 +427,7 @@ class ClusterDetailView extends React.Component {
             ) : (
               undefined
             )}
-          </div>
+          </WrapperDiv>
         </DocumentTitle>
       </LoadingOverlay>
     );
