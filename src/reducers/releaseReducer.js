@@ -1,7 +1,11 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
 
-const initialState = { items: {}, releaseSelected: '' };
+const initialState = {
+  items: {},
+  releaseSelected: '',
+  activeSortedReleases: ['8.6.0'], // TODO remove
+};
 
 const releaseReducer = produce((draft, action) => {
   switch (action.type) {

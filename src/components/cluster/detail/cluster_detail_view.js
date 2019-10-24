@@ -39,7 +39,6 @@ const WrapperDiv = styled.div`
     line-height: 1.2;
   }
 `;
-
 class ClusterDetailView extends React.Component {
   state = {
     loading: true,
@@ -347,21 +346,25 @@ class ClusterDetailView extends React.Component {
                     )}
 
                     <div className='row section cluster_delete col-12'>
-                      <h2 className='table-label'>Delete Cluster</h2>
-                      <p>
-                        All workloads on this cluster will be terminated. Data
-                        stored on the worker nodes will be lost. There is no way
-                        to undo this action.
-                      </p>
-                      <Button
-                        bsStyle='danger'
-                        onClick={this.showDeleteClusterModal.bind(
-                          this,
-                          cluster
-                        )}
-                      >
-                        <i className='fa fa-delete' /> Delete Cluster
-                      </Button>
+                      <div className='row'>
+                        <h3 className='table-label'>Delete This Cluster</h3>
+                      </div>
+                      <div className='row'>
+                        <p>
+                          All workloads on this cluster will be terminated. Data
+                          stored on the worker nodes will be lost. There is no
+                          way to undo this action.
+                        </p>
+                        <Button
+                          bsStyle='danger'
+                          onClick={this.showDeleteClusterModal.bind(
+                            this,
+                            cluster
+                          )}
+                        >
+                          <i className='fa fa-delete' /> Delete Cluster
+                        </Button>
+                      </div>
                     </div>
                   </Tab>
                   <Tab eventKey={2} title='Key Pairs'>
@@ -395,28 +398,26 @@ class ClusterDetailView extends React.Component {
               </div>
             </div>
 
-            {!this.props.isNodePoolView && (
-              <>
-                <ScaleClusterModal
-                  cluster={cluster}
-                  provider={provider}
-                  ref={s => {
-                    this.scaleClusterModal = s;
-                  }}
-                  workerNodesDesired={this.getDesiredNumberOfNodes()}
-                  workerNodesRunning={getNumberOfNodes(cluster)}
-                />
-
-                <ScaleNodePoolModal
-                  cluster={cluster}
-                  provider={provider}
-                  ref={s => {
-                    this.scaleNodePoolModal = s;
-                  }}
-                  workerNodesDesired={this.getDesiredNumberOfNodes()}
-                  workerNodesRunning={getNumberOfNodes(cluster)}
-                />
-              </>
+            {isNodePoolView ? (
+              <ScaleNodePoolModal
+                cluster={cluster}
+                provider={provider}
+                ref={s => {
+                  this.scaleNodePoolModal = s;
+                }}
+                workerNodesDesired={this.getDesiredNumberOfNodes()}
+                workerNodesRunning={getNumberOfNodes(cluster)}
+              />
+            ) : (
+              <ScaleClusterModal
+                cluster={cluster}
+                provider={provider}
+                ref={s => {
+                  this.scaleClusterModal = s;
+                }}
+                workerNodesDesired={this.getDesiredNumberOfNodes()}
+                workerNodesRunning={getNumberOfNodes(cluster)}
+              />
             )}
 
             {targetRelease && (

@@ -105,7 +105,8 @@ class NewCluster extends React.Component {
       <Component
         {...props}
         informParent={this.setSelectedRelease}
-        selectedRelease={this.state.selectedRelease}
+        // selectedRelease={this.state.selectedRelease}
+        selectedRelease={'8.6.0'} // TODO remove
         selectableReleases={this.state.selectableReleases}
         releases={this.props.releases}
         activeSortedReleases={this.props.activeSortedReleases}
