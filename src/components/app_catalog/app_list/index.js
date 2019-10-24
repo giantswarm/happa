@@ -1,7 +1,7 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import AppListInner from './list_inner';
+import AppListInner from './AppListInner';
 import DocumentTitle from 'react-document-title';
 import LoadingOverlay from 'UI/loading_overlay';
 import PropTypes from 'prop-types';
