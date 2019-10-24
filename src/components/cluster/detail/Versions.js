@@ -44,7 +44,7 @@ function Versions({
               <Dot />
               <i className='fa fa-kubernetes' />
               {(() => {
-                var kubernetes = release.components.find(
+                const kubernetes = release.components.find(
                   component => component.name === 'kubernetes'
                 );
                 if (kubernetes) return kubernetes.version;
