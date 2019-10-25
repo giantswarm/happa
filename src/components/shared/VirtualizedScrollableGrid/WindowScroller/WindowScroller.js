@@ -16,14 +16,14 @@ import PropTypes from 'prop-types';
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
  */
-export const IS_SCROLLING_TIMEOUT = 150;
+export const IS_SCROLLING_TIMEOUT = 450;
 
 const getWindow = () => (typeof window !== 'undefined' ? window : undefined);
 
 class WindowScroller extends React.PureComponent {
   static defaultProps = {
-    onResize: () => {},
-    onScroll: () => {},
+    onResize: () => { },
+    onScroll: () => { },
     scrollingResetTimeInterval: IS_SCROLLING_TIMEOUT,
     scrollElement: getWindow(),
     serverHeight: 0,
@@ -201,7 +201,7 @@ class WindowScroller extends React.PureComponent {
         scrollTop,
       });
     }
-  };
+  }
 
   // Referenced by utils/onScroll
   __resetIsScrolling = () => {
