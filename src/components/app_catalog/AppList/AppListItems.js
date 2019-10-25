@@ -55,7 +55,7 @@ class AppListItems extends React.Component {
             med: 3,
             large: 4,
           }}
-          rowHeight={parseInt(APP_CONTAINER_HEIGHT, 10)}
+          rowHeight={APP_CONTAINER_HEIGHT}
           data={apps}
           adaptWidthToElement={this.appsListRef.current}
         >
