@@ -6,15 +6,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class AppListInner extends React.Component {
+  iconErrors = {};
+
   state = {
     filters: [],
     searchQuery: null,
-    iconErrors: {},
   };
-
-  // Contains refs to all the app-container divs in dom so that we can
-  // scroll to them if needed.
-  appRefs = {};
 
   constructor(props) {
     super(props);
@@ -54,7 +51,7 @@ class AppListInner extends React.Component {
     var scrollToApp = this.props.location.hash.substring(1);
 
     if (scrollToApp) {
-      window.scrollTo(0, this.appRefs[scrollToApp].offsetTop - 150);
+      // window.scrollTo(0, this.appRefs[scrollToApp].offsetTop - 150);
     }
   }
 
@@ -117,19 +114,7 @@ class AppListInner extends React.Component {
   onImgError = e => {
     const imageUrl = e.target.src;
 
-    this.setState(prevState => {
-      const iconErrors = Object.assign({}, prevState.iconErrors, {
-        [imageUrl]: true,
-      });
-
-      return {
-        iconErrors,
-      };
-    });
-  };
-
-  registerRef = (name, ref) => {
-    this.appRefs[name] = ref;
+    this.iconErrors[imageUrl] = true;
   };
 
   render() {
@@ -153,9 +138,8 @@ class AppListInner extends React.Component {
             apps={apps}
             catalog={catalog}
             searchQuery={searchQuery}
-            iconErrors={this.state.iconErrors}
+            iconErrors={this.iconErrors}
             onImgError={this.onImgError}
-            registerRef={this.registerRef}
           />
         </div>
       </>

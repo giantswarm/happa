@@ -4,6 +4,16 @@ import React from 'react';
 import VirtualizedScrollableGrid from '../../shared/VirtualizedScrollableGrid';
 
 class AppListItems extends React.Component {
+  appsListRef = React.createRef();
+
+  componentDidMount() {
+    /**
+     * Forcing an initial update to have the ref updated with
+     * the right element, while rendering the list
+     */
+    this.forceUpdate();
+  }
+
   render() {
     const { apps, searchQuery } = this.props;
 
@@ -16,16 +26,20 @@ class AppListItems extends React.Component {
     }
 
     return (
-      <div className='apps'>
+      <div ref={this.appsListRef} className='apps'>
         <VirtualizedScrollableGrid
-          columnCount={4}
+          columnCount={{
+            small: 1,
+            med: 3,
+            large: 4,
+          }}
           rowHeight={180}
-          data={apps}
           className='apps__scroll-container'
+          data={apps}
+          adaptWidthToElement={this.appsListRef.current}
         >
           {(style, content) => (
             <AppContainer
-              ref={ref => this.props.registerRef(content[0].name, ref)}
               style={style}
               appVersions={content}
               catalog={this.props.catalog}
@@ -46,7 +60,6 @@ AppListItems.propTypes = {
   catalog: PropTypes.object,
   searchQuery: PropTypes.string,
   onImgError: PropTypes.func,
-  registerRef: PropTypes.func,
 };
 
 export default AppListItems;

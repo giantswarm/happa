@@ -4,15 +4,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
-  /* width: calc(25% - 15px);
-  flex-shrink: 0;
-  margin: 0 20px 20px 0; */
-  /* padding: 0 20px 20px 0; */
   padding: 10px;
-  &:nth-of-type(4n + 0) {
-    /* margin-right: 0px; */
-    /* padding-right: 0px; */
-  }
 
   @media only screen and (max-width: ${props =>
       props.theme.breakpoints.large}) {
