@@ -144,7 +144,6 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  */
 export function nodePoolCreate(clusterId, nodePool) {
   return function(dispatch) {
-    // This is failing now because this enpoint is not ready yet.
     return nodePoolsApi
       .addNodePool(clusterId, nodePool)
       .then(nodePool => {
