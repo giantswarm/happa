@@ -3,7 +3,7 @@ import { catalogLoadIndex, catalogsLoad } from 'actions/catalogActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { Route, Switch } from 'react-router-dom';
-import AppList from './app_list';
+import AppList from './AppList';
 import Catalogs from './catalogs';
 import Detail from './detail';
 import PropTypes from 'prop-types';

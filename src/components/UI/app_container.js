@@ -5,24 +5,6 @@ import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
   padding: 10px;
-
-  @media only screen and (max-width: ${props =>
-      props.theme.breakpoints.large}) {
-    width: calc(33.333% - 13.333px);
-    /* We are unsetting the 4n + 0 rule one above.*/
-    &:nth-of-type(4n + 0) {
-      margin-right: 20px;
-    }
-    &:nth-of-type(3n + 0) {
-      margin-right: 0px;
-    }
-  }
-
-  @media only screen and (max-width: ${props =>
-      props.theme.breakpoints.small}) {
-    width: 100%;
-    margin-right: 0px;
-  }
 `;
 
 const StyledLink = styled(Link)`
