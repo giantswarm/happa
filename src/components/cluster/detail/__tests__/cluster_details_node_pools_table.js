@@ -27,7 +27,7 @@ jest.mock('actions/nodePoolActions', () => {
 
 // Cluster and route we are testing with.
 const clusterId = 'm0ckd';
-const route = `/organizations/acme/clusters/${clusterId}/np`;
+const route = `/organizations/acme/clusters/${clusterId}`;
 
 it('renders all node pools in store', async () => {
   const div = document.createElement('div');

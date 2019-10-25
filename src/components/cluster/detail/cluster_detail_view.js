@@ -234,7 +234,7 @@ class ClusterDetailView extends React.Component {
           clusterPatch(
             this.props.cluster,
             { name: value },
-            this.props.isNodePoolView
+            this.props.isNodePoolsCluster
           )
         )
         .then(() => {
@@ -256,7 +256,7 @@ class ClusterDetailView extends React.Component {
       cluster,
       credentials,
       dispatch,
-      isNodePoolView,
+      isNodePoolsCluster,
       nodePools,
       provider,
       release,
@@ -298,7 +298,7 @@ class ClusterDetailView extends React.Component {
               <div className='col-12'>
                 <Tabs>
                   <Tab eventKey={1} title='General'>
-                    {isNodePoolView ? (
+                    {isNodePoolsCluster ? (
                       <ClusterDetailNodePoolsTable
                         accessCluster={this.accessCluster}
                         canClusterUpgrade={this.canClusterUpgrade()}
@@ -381,7 +381,7 @@ class ClusterDetailView extends React.Component {
               </div>
             </div>
 
-            {isNodePoolView && nodePools && (
+            {isNodePoolsCluster && nodePools && (
               <ScaleNodePoolModal
                 cluster={cluster}
                 provider={provider}
@@ -392,7 +392,7 @@ class ClusterDetailView extends React.Component {
                 workerNodesRunning={getNumberOfNodes(cluster)}
               />
             )}
-            {!isNodePoolView && (
+            {!isNodePoolsCluster && (
               <ScaleClusterModal
                 cluster={cluster}
                 provider={provider}
@@ -433,7 +433,7 @@ ClusterDetailView.propTypes = {
   clusterId: PropTypes.string,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
-  isNodePoolView: PropTypes.bool,
+  isNodePoolsCluster: PropTypes.bool,
   nodePools: PropTypes.object,
   organizationId: PropTypes.string,
   releaseActions: PropTypes.object,

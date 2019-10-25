@@ -291,7 +291,7 @@ class CreateNodePoolsCluster extends Component {
         // after successful creation, redirect to cluster details
         this.props.dispatch(
           push(
-            `/organizations/${this.props.selectedOrganization}/clusters/${cluster.id}/np`
+            `/organizations/${this.props.selectedOrganization}/clusters/${cluster.id}`
           )
         );
       })
