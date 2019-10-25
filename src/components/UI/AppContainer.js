@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
+export const APP_CONTAINER_HEIGHT = '180px';
+
 const Wrapper = styled.div`
   padding: 10px;
 `;
@@ -72,6 +74,7 @@ const AppIcon = styled.div`
 
 const AppDetails = styled.div`
   padding: 10px;
+  height: 80px;
 
   h3 {
     margin: 0px;
