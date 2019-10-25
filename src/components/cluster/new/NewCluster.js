@@ -84,10 +84,7 @@ class NewCluster extends React.Component {
 
   semVerCompare = () => {
     if (this.state.selectedRelease && window.config.firstNodePoolsRelease) {
-      return cmp(
-        this.state.selectedRelease,
-        window.config.firstNodePoolsRelease
-      );
+      return cmp(this.state.selectedRelease, this.props.firstNodePoolsRelease);
     }
     return -1;
   };
@@ -136,6 +133,7 @@ NewCluster.propTypes = {
   selectedRelease: PropTypes.string,
   activeSortedReleases: PropTypes.array,
   provider: PropTypes.string,
+  firstNodePoolsRelease: PropTypes.string,
   user: PropTypes.object,
 };
 
@@ -145,6 +143,8 @@ function mapStateToProps(state) {
     releases: items,
     activeSortedReleases,
     provider: state.app.info.general.provider,
+    firstNodePoolsRelease:
+      state.app.info.features.nodepools.release_version_minimum,
     user: state.app.loggedInUser,
   };
 }
