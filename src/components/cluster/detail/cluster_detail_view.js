@@ -398,7 +398,7 @@ class ClusterDetailView extends React.Component {
               </div>
             </div>
 
-            {isNodePoolView ? (
+            {isNodePoolView && nodePools && (
               <ScaleNodePoolModal
                 cluster={cluster}
                 provider={provider}
@@ -408,7 +408,8 @@ class ClusterDetailView extends React.Component {
                 workerNodesDesired={this.getDesiredNumberOfNodes()}
                 workerNodesRunning={getNumberOfNodes(cluster)}
               />
-            ) : (
+            )}
+            {!isNodePoolView && (
               <ScaleClusterModal
                 cluster={cluster}
                 provider={provider}

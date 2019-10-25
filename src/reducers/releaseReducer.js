@@ -4,7 +4,7 @@ import produce from 'immer';
 const initialState = {
   items: {},
   releaseSelected: '',
-  activeSortedReleases: ['8.6.0'], // TODO remove
+  activeSortedReleases: [],
 };
 
 const releaseReducer = produce((draft, action) => {
