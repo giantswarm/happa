@@ -9,10 +9,15 @@ import React from 'react';
 
 class AppList extends React.Component {
   render() {
+    const { catalog } = this.props;
+
+    const breadCrumbTitle = catalog ? catalog.metadata.name.toUpperCase() : '';
+    const isLoading = !catalog || catalog.isFetchingIndex;
+
     return (
       <Breadcrumb
         data={{
-          title: this.props.catalog.metadata.name.toUpperCase(),
+          title: breadCrumbTitle,
           pathname: this.props.match.url,
         }}
       >
@@ -24,7 +29,7 @@ class AppList extends React.Component {
             </Link>
             <br />
             <br />
-            <LoadingOverlay loading={this.props.catalog.isFetchingIndex}>
+            <LoadingOverlay loading={isLoading}>
               <AppListInner {...this.props} />
             </LoadingOverlay>
           </React.Fragment>

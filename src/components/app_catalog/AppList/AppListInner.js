@@ -11,24 +11,29 @@ class AppListInner extends React.Component {
   state = {
     filters: [],
     searchQuery: null,
+    scrollToApp: null
   };
 
   constructor(props) {
     super(props);
 
-    this.index = lunr(function() {
+    this.index = lunr(function () {
       this.ref('name');
       this.field('name');
       this.field('description');
       this.field('keywords');
 
       const apps = Object.values(props.catalog.apps).map(appVersions => {
-        return appVersions.sort((a, b) => {
+        const orderedApps = appVersions.sort((a, b) => {
           return new Date(b.created) - new Date(a.created);
-        })[0];
+        });
+
+        return orderedApps[0];
       });
 
-      for (const app of apps) this.add(app);
+      for (const app of apps) {
+        this.add(app);
+      }
     });
   }
 
@@ -48,10 +53,10 @@ class AppListInner extends React.Component {
   componentDidMount() {
     // The hash value of the url is used by the app detail screen's back button
     // to indicate what app we should scroll to.
-    var scrollToApp = this.props.location.hash.substring(1);
+    const scrollToApp = this.props.location.hash.substring(1);
 
     if (scrollToApp) {
-      // window.scrollTo(0, this.appRefs[scrollToApp].offsetTop - 150);
+      this.setState({ scrollToApp });
     }
   }
 
@@ -140,6 +145,7 @@ class AppListInner extends React.Component {
             searchQuery={searchQuery}
             iconErrors={this.iconErrors}
             onImgError={this.onImgError}
+            scrollToApp={this.state.scrollToApp}
           />
         </div>
       </>

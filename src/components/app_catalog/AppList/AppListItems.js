@@ -36,8 +36,13 @@ class AppListItems extends React.Component {
     this.forceUpdate();
   }
 
+  findAppToScrollToIndex(apps, appName) {
+    return apps.findIndex(appVersions => (appVersions[0].name === appName));
+  }
+
   render() {
     const { apps, searchQuery } = this.props;
+    const scrollToAppIndex = this.findAppToScrollToIndex(apps, this.props.scrollToApp);
 
     if (apps.length === 0) {
       return (
@@ -58,6 +63,7 @@ class AppListItems extends React.Component {
           rowHeight={APP_CONTAINER_HEIGHT}
           data={apps}
           adaptWidthToElement={this.appsListRef.current}
+          scrollToItemIndex={scrollToAppIndex}
         >
           {(style, content) => (
             <AppContainer
@@ -81,6 +87,7 @@ AppListItems.propTypes = {
   catalog: PropTypes.object,
   searchQuery: PropTypes.string,
   onImgError: PropTypes.func,
+  scrollToApp: PropTypes.string,
 };
 
 export default AppListItems;
