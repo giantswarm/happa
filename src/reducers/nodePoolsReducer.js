@@ -15,7 +15,8 @@ const initialState = {
 const nodePools = produce((draft, action) => {
   switch (action.type) {
     case types.NODEPOOLS_LOAD_SUCCESS:
-      return action.nodePools.items;
+      draft.items = action.nodePools;
+      return;
 
     case types.NODEPOOLS_LOAD_ERROR:
       draft.errorLoading = true;

@@ -454,7 +454,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
         </FlexRowWithTwoBlocksOnEdges>
         <NodePoolsWrapper>
           <h2>Node Pools</h2>
-          {nodePools ? (
+          {nodePools && nodePools.length === 1 && (
             <>
               <GridRowNodePoolsNodes>
                 <div>
@@ -490,7 +490,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                     </GridRowNodePoolsItem>
                   ))}
             </>
-          ) : null}
+          )}
         </NodePoolsWrapper>
         {this.state.isNodePoolBeingAdded ? (
           <ReactCSSTransitionGroup
@@ -546,7 +546,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <Button onClick={this.toggleAddNodePoolForm}>
               <i className='fa fa-add-circle' /> ADD NODE POOL
             </Button>
-            {nodePools && nodePools.length < 2 && (
+            {nodePools && nodePools.length === 1 && (
               <p>
                 With additional node pools, you can add different types of
                 worker nodes to your cluster. Node pools also scale
