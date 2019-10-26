@@ -8,7 +8,7 @@ import React from 'react';
 class AppListInner extends React.Component {
   state = {
     filters: [],
-    searchQuery: null,
+    searchQuery: '',
     iconErrors: {},
   };
 
@@ -24,31 +24,39 @@ class AppListInner extends React.Component {
     if (scrollToApp) {
       window.scrollTo(0, this.appRefs[scrollToApp].offsetTop - 150);
     }
+
+    // This just needs to be ran on initial mounting.
+    // Unless there is a reason why we want to update url, trigger extra renderings
+    // when the user is searching. Also this makes the app to respond slower to user
+    // inputs.
+
+    const searchParams = new URLSearchParams(this.props.location.search);
+    const searchQuery = searchParams.get('q') || '';
+    this.setState({ searchQuery });
   }
 
-  searchQuery = () => {
-    const searchParams = new URLSearchParams(this.props.location.search);
-    return searchParams.get('q') || '';
-  };
-
   updateSearchQuery = e => {
-    const urlParams = new URLSearchParams({
-      q: this.searchQuery(),
-    });
-    // const destination = `?${urlParams}`;
+    const searchQuery = e.target.value;
+    this.setState({ searchQuery });
 
-    // this.props.dispatch(
-    //   replace({
-    //     search: destination,
-    //   })
-    // );
+    // We would trigguer extra rendering if we wait for the state to be set.
+    // This way react only does one rerendering.
+    const urlParams = new URLSearchParams({
+      q: searchQuery,
+    });
+
+    this.props.dispatch(
+      replace({
+        search: `?${urlParams}`,
+      })
+    );
   };
 
   // filter returns a filter object based on the current state
   getFilter() {
     return {
       filters: this.state.filters,
-      searchQuery: this.searchQuery(),
+      searchQuery: this.state.searchQuery,
     };
   }
 
@@ -58,7 +66,7 @@ class AppListInner extends React.Component {
     let filteredApps = [];
     const searchQuery = filter.searchQuery.trim();
 
-    // can't use arrow functions with lunr ...
+    // Can't use arrow functions with lunr.
     const component = this;
 
     // Lunr
@@ -130,7 +138,7 @@ class AppListInner extends React.Component {
         <h1>
           {catalog.spec.title}
           <AppListSearch
-            value={this.searchQuery()}
+            value={this.state.searchQuery}
             onChange={this.updateSearchQuery}
             onReset={this.resetFilters}
           />
@@ -140,7 +148,7 @@ class AppListInner extends React.Component {
             <AppListItems
               apps={apps}
               catalog={catalog}
-              searchQuery={this.searchQuery()}
+              searchQuery={this.state.searchQuery}
               iconErrors={this.state.iconErrors}
               onImgError={this.onImgError}
               registerRef={this.registerRef}
