@@ -16,42 +16,6 @@ class AppListInner extends React.Component {
   // scroll to them if needed.
   appRefs = {};
 
-  index = null;
-
-  constructor(props) {
-    super(props);
-
-    this.index = lunr(function() {
-      this.ref('name');
-      this.field('name');
-      this.field('description');
-      this.field('keywords');
-
-      const apps = Object.values(props.catalog.apps).map(appVersions => {
-        return appVersions.sort((a, b) => {
-          return new Date(b.created) - new Date(a.created);
-        })[0];
-      });
-
-      for (const app of apps) {
-        this.add(app);
-      }
-    });
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const searchParams = new URLSearchParams(nextProps.location.search);
-    const currentSearchQuery = searchParams.get('q') || '';
-
-    if (prevState.searchQuery === null) {
-      return {
-        searchQuery: currentSearchQuery,
-      };
-    }
-
-    return null;
-  }
-
   componentDidMount() {
     // The hash value of the url is used by the app detail screen's back button
     // to indicate what app we should scroll to.
@@ -62,11 +26,29 @@ class AppListInner extends React.Component {
     }
   }
 
+  searchQuery = () => {
+    const searchParams = new URLSearchParams(this.props.location.search);
+    return searchParams.get('q') || '';
+  };
+
+  updateSearchQuery = e => {
+    const urlParams = new URLSearchParams({
+      q: this.searchQuery(),
+    });
+    // const destination = `?${urlParams}`;
+
+    // this.props.dispatch(
+    //   replace({
+    //     search: destination,
+    //   })
+    // );
+  };
+
   // filter returns a filter object based on the current state
   getFilter() {
     return {
       filters: this.state.filters,
-      searchQuery: this.state.searchQuery,
+      searchQuery: this.searchQuery(),
     };
   }
 
@@ -75,6 +57,29 @@ class AppListInner extends React.Component {
   filterApps(allApps, filter) {
     let filteredApps = [];
     const searchQuery = filter.searchQuery.trim();
+
+    // can't use arrow functions with lunr ...
+    const component = this;
+
+    // Lunr
+    this.index = lunr(function() {
+      this.ref('name');
+      this.field('name');
+      this.field('description');
+      this.field('keywords');
+
+      const apps = Object.values(component.props.catalog.apps).map(
+        appVersions => {
+          return appVersions.sort((a, b) => {
+            return new Date(b.created) - new Date(a.created);
+          })[0];
+        }
+      );
+
+      for (const app of apps) {
+        this.add(app);
+      }
+    });
 
     // Lunr search
     const lunrResults = this.index
@@ -90,26 +95,6 @@ class AppListInner extends React.Component {
 
     return filteredApps;
   }
-
-  updateSearchQuery = e => {
-    this.setState(
-      {
-        searchQuery: e.target.value,
-      },
-      () => {
-        const urlParams = new URLSearchParams({
-          q: this.state.searchQuery,
-        });
-        const destination = `?${urlParams}`;
-
-        this.props.dispatch(
-          replace({
-            search: destination,
-          })
-        );
-      }
-    );
-  };
 
   resetFilters = () => {
     this.setState({
@@ -137,9 +122,7 @@ class AppListInner extends React.Component {
   };
 
   render() {
-    const { searchQuery } = this.state;
     const { catalog } = this.props;
-
     const apps = this.filterApps(catalog.apps, this.getFilter());
 
     return (
@@ -147,7 +130,7 @@ class AppListInner extends React.Component {
         <h1>
           {catalog.spec.title}
           <AppListSearch
-            value={searchQuery}
+            value={this.searchQuery()}
             onChange={this.updateSearchQuery}
             onReset={this.resetFilters}
           />
@@ -157,7 +140,7 @@ class AppListInner extends React.Component {
             <AppListItems
               apps={apps}
               catalog={catalog}
-              searchQuery={searchQuery}
+              searchQuery={this.searchQuery()}
               iconErrors={this.state.iconErrors}
               onImgError={this.onImgError}
               registerRef={this.registerRef}

@@ -24,7 +24,11 @@ class AppList extends React.Component {
             </Link>
             <br />
             <br />
-            <LoadingOverlay loading={this.props.catalog.isFetchingIndex}>
+            <LoadingOverlay
+              loading={
+                this.props.catalog.isFetchingIndex && this.props.catalog.apps
+              }
+            >
               <AppListInner {...this.props} />
             </LoadingOverlay>
           </React.Fragment>
