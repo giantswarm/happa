@@ -130,33 +130,29 @@ export function clustersLoad() {
     // Fetch status for each cluster.
     const status = await Promise.all(
       Object.keys(v4ClustersObject).map(clusterId => {
-        if (window.config.environment === 'development') {
-          return { id: clusterId, statusResponse: mockedStatus };
-        } else {
-          // TODO: Find out why we are getting an empty object back from this call.
-          //Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
-          return clustersApi
-            .getClusterStatusWithHttpInfo(clusterId)
-            .then(clusterStatus => {
-              // For some reason we're getting an empty object back.
-              // The Giantswarm JS client is not parsing the returned JSON
-              // and giving us a object in the normal way anymore.
-              // Very stumped, since nothing has changed.
-              // So we need to access the raw response and parse the json
-              // ourselves.
-              let statusResponse = JSON.parse(clusterStatus.response.text);
-              return { id: clusterId, statusResponse: statusResponse };
-            })
-            .catch(error => {
-              if (error.status === 404) {
-                return { id: clusterId, statusResponse: null };
-              } else {
-                console.error(error);
-                dispatch(clusterLoadStatusError(clusterId, error));
-                throw error;
-              }
-            });
-        }
+        // TODO: Find out why we are getting an empty object back from this call.
+        //Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
+        return clustersApi
+          .getClusterStatusWithHttpInfo(clusterId)
+          .then(clusterStatus => {
+            // For some reason we're getting an empty object back.
+            // The Giantswarm JS client is not parsing the returned JSON
+            // and giving us a object in the normal way anymore.
+            // Very stumped, since nothing has changed.
+            // So we need to access the raw response and parse the json
+            // ourselves.
+            let statusResponse = JSON.parse(clusterStatus.response.text);
+            return { id: clusterId, statusResponse: statusResponse };
+          })
+          .catch(error => {
+            if (error.status === 404) {
+              return { id: clusterId, statusResponse: null };
+            } else {
+              console.error(error);
+              dispatch(clusterLoadStatusError(clusterId, error));
+              throw error;
+            }
+          });
       })
     );
 
@@ -178,32 +174,32 @@ export function clustersLoad() {
     );
 
     // Get the details for v5 clusters.
-    if (window.config.environment === 'development') {
-      const clusters = await Promise.all(
-        v5Clusters.map(cluster => clusterDetailsV5(dispatch, getState, cluster))
-      );
+    // if (window.config.environment === 'development') {
+    const v5ClustersDetails = await Promise.all(
+      v5Clusters.map(cluster => clusterDetailsV5(dispatch, getState, cluster))
+    );
 
-      // Clusters array to object, because we are storing an object in the store.
-      let v5ClustersObject = clustersLoadArrayToObject(clusters);
+    // Clusters array to object, because we are storing an object in the store.
+    let v5ClustersObject = clustersLoadArrayToObject(v5ClustersDetails);
 
-      // nodePoolsClusters is an array of NP clusters ids and is stored in items.
-      const nodePoolsClusters = clusters.map(cluster => cluster.id);
+    // nodePoolsClusters is an array of NP clusters ids and is stored in items.
+    const nodePoolsClusters = v5ClustersDetails.map(cluster => cluster.id);
 
-      dispatch(
-        clustersLoadSuccess(
-          v4ClustersObject,
-          v5ClustersObject,
-          nodePoolsClusters,
-          lastUpdated
-        )
-      );
+    dispatch(
+      clustersLoadSuccess(
+        v4ClustersObject,
+        v5ClustersObject,
+        nodePoolsClusters,
+        lastUpdated
+      )
+    );
 
-      // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
-      dispatch(nodePoolsLoad(nodePoolsClusters));
-    } else {
-      // Dispatch with an empty object for v5Clusters and an empty array for node pools clusters.
-      dispatch(clustersLoadSuccess(v4ClustersObject, {}, [], lastUpdated));
-    }
+    // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
+    dispatch(nodePoolsLoad(nodePoolsClusters));
+    // } else {
+    //   // Dispatch with an empty object for v5Clusters and an empty array for node pools clusters.
+    //   dispatch(clustersLoadSuccess(v4ClustersObject, {}, [], lastUpdated));
+    // }
   };
 }
 
@@ -525,24 +521,20 @@ function clusterLoadStatusV4(dispatch, clusterId) {
     .catch(error => {
       // TODO: Find a better way to deal with status endpoint errors in dev:
       // https://github.com/giantswarm/giantswarm/issues/6757
-      if (window.config.environment === 'development') {
-        dispatch(clusterLoadStatusSuccess(clusterId, mockedStatus));
+      console.error(error);
+      if (error.status === 404) {
+        dispatch(clusterLoadStatusNotFound(clusterId));
       } else {
-        console.error(error);
-        if (error.status === 404) {
-          dispatch(clusterLoadStatusNotFound(clusterId));
-        } else {
-          dispatch(clusterLoadStatusError(clusterId, error));
+        dispatch(clusterLoadStatusError(clusterId, error));
 
-          new FlashMessage(
-            'Something went wrong while trying to load the cluster status.',
-            messageType.ERROR,
-            messageTTL.LONG,
-            'Please try again later or contact support: support@giantswarm.io'
-          );
+        new FlashMessage(
+          'Something went wrong while trying to load the cluster status.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
 
-          throw error;
-        }
+        throw error;
       }
     });
 }
