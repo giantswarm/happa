@@ -1,43 +1,19 @@
 import { replace } from 'connected-react-router';
+import _ from 'lodash';
 import AppListItems from './AppListItems';
 import AppListSearch from './AppListSearch';
-import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 class AppListInner extends React.Component {
   state = {
-    filters: [],
-    searchQuery: null,
+    searchQuery: '',
     iconErrors: {},
   };
 
   // Contains refs to all the app-container divs in dom so that we can
   // scroll to them if needed.
   appRefs = {};
-
-  index = null;
-
-  constructor(props) {
-    super(props);
-
-    this.index = lunr(function() {
-      this.ref('name');
-      this.field('name');
-      this.field('description');
-      this.field('keywords');
-
-      const apps = Object.values(props.catalog.apps).map(appVersions => {
-        return appVersions.sort((a, b) => {
-          return new Date(b.created) - new Date(a.created);
-        })[0];
-      });
-
-      for (const app of apps) {
-        this.add(app);
-      }
-    });
-  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const searchParams = new URLSearchParams(nextProps.location.search);
@@ -65,28 +41,49 @@ class AppListInner extends React.Component {
   // filter returns a filter object based on the current state
   getFilter() {
     return {
-      filters: this.state.filters,
       searchQuery: this.state.searchQuery,
     };
   }
 
-  // filterApps is a function that takes a filter and a list of all apps and returns
-  // a filtered set of apps
-  filterApps(allApps, filter) {
+  getAppsWithOrderedVersions = _.memoize(allApps => {
+    const apps = Object.values(allApps);
+
+    apps.map(appVersions => {
+      return appVersions.sort((a, b) => {
+        return new Date(b.created) - new Date(a.created);
+      });
+    });
+
+    return apps;
+  });
+
+  sortVersionsByCreationDateDESC(versions) {
+    return versions.sort((a, b) => {
+      return new Date(b.created) - new Date(a.created);
+    });
+  }
+
+  filterApps(searchQuery, allApps) {
+    const fieldsToCheck = ['name', 'description', 'keywords'];
+    const trimmedSearchQuery = searchQuery.trim().toLowerCase();
+
     let filteredApps = [];
-    const searchQuery = filter.searchQuery.trim();
 
-    // Lunr search
-    const lunrResults = this.index
-      .search(`${searchQuery} ${searchQuery}*`)
-      .map(x => x.ref);
+    if (trimmedSearchQuery === '') return allApps;
 
-    // Search query filter.
-    if (filter.searchQuery === '') {
-      filteredApps = Object.values(allApps);
-    } else {
-      filteredApps = lunrResults.map(appName => allApps[appName]);
-    }
+    filteredApps = allApps.filter(app => {
+      // Go through all the app versions
+      return app.some(appVersions => {
+        // Check if any of the checked fields include the search query
+        return fieldsToCheck.some(field => {
+          const appVersionsField = (appVersions[field] || '').toLowerCase();
+
+          return (
+            appVersionsField && appVersionsField.includes(trimmedSearchQuery)
+          );
+        });
+      });
+    });
 
     return filteredApps;
   }
@@ -113,7 +110,6 @@ class AppListInner extends React.Component {
 
   resetFilters = () => {
     this.setState({
-      filters: [],
       searchQuery: '',
     });
   };
@@ -140,7 +136,10 @@ class AppListInner extends React.Component {
     const { searchQuery } = this.state;
     const { catalog } = this.props;
 
-    const apps = this.filterApps(catalog.apps, this.getFilter());
+    const appsWithOrderedVersions = this.getAppsWithOrderedVersions(
+      catalog.apps
+    );
+    const apps = this.filterApps(searchQuery, appsWithOrderedVersions);
 
     return (
       <>
