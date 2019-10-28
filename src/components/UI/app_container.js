@@ -113,35 +113,34 @@ const AppDetails = styled.div`
   }
 `;
 
-const AppContainer = ({
-  appVersions,
-  catalog,
-  searchQuery,
-  iconErrors,
-  imgError,
-}) => {
-  const { icon, name, repoName, version } = appVersions[0];
-  const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
+const AppContainer = React.forwardRef(
+  ({ appVersions, catalog, searchQuery, iconErrors, imgError }, ref) => {
+    const { icon, name, repoName, version } = appVersions[0];
+    const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
-  return (
-    <Wrapper>
-      <StyledLink to={to}>
-        {repoName === 'managed' && <Badge>MANAGED</Badge>}
-        <AppIcon>
-          {icon && !iconErrors[icon] ? (
-            <LazyLoadedImage src={icon} onError={imgError} />
-          ) : (
+    return (
+      <Wrapper ref={ref}>
+        <StyledLink to={to}>
+          {repoName === 'managed' && <Badge>MANAGED</Badge>}
+          <AppIcon>
+            {icon && !iconErrors[icon] ? (
+              <LazyLoadedImage src={icon} onError={imgError} />
+            ) : (
+              <h3>{name}</h3>
+            )}
+          </AppIcon>
+          <AppDetails>
             <h3>{name}</h3>
-          )}
-        </AppIcon>
-        <AppDetails>
-          <h3>{name}</h3>
-          <span>{version}</span>
-        </AppDetails>
-      </StyledLink>
-    </Wrapper>
-  );
-};
+            <span>{version}</span>
+          </AppDetails>
+        </StyledLink>
+      </Wrapper>
+    );
+  }
+);
+
+// Needed because `AppContainer` loses its name when using `forwardRef()`
+AppContainer.displayName = 'AppContainer';
 
 AppContainer.propTypes = {
   appVersions: PropTypes.array,
