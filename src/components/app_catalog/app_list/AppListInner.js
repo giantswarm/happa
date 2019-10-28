@@ -5,28 +5,16 @@ import AppListSearch from './AppListSearch';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+const SEARCH_URL_PARAM = 'q';
+
 class AppListInner extends React.Component {
   state = {
-    searchQuery: '',
     iconErrors: {},
   };
 
   // Contains refs to all the app-container divs in dom so that we can
   // scroll to them if needed.
   appRefs = {};
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const searchParams = new URLSearchParams(nextProps.location.search);
-    const currentSearchQuery = searchParams.get('q') || '';
-
-    if (prevState.searchQuery === null) {
-      return {
-        searchQuery: currentSearchQuery,
-      };
-    }
-
-    return null;
-  }
 
   componentDidMount() {
     // The hash value of the url is used by the app detail screen's back button
@@ -36,13 +24,6 @@ class AppListInner extends React.Component {
     if (scrollToApp) {
       window.scrollTo(0, this.appRefs[scrollToApp].offsetTop - 150);
     }
-  }
-
-  // filter returns a filter object based on the current state
-  getFilter() {
-    return {
-      searchQuery: this.state.searchQuery,
-    };
   }
 
   getAppsWithOrderedVersions = _.memoize(allApps => {
@@ -76,11 +57,12 @@ class AppListInner extends React.Component {
       return app.some(appVersions => {
         // Check if any of the checked fields include the search query
         return fieldsToCheck.some(field => {
-          const appVersionsField = (appVersions[field] || '').toLowerCase();
+          const appVersionsField = appVersions[field]
+            ? String(appVersions[field])
+            : '';
+          const appVersionsFieldValue = appVersionsField.toLowerCase();
 
-          return (
-            appVersionsField && appVersionsField.includes(trimmedSearchQuery)
-          );
+          return appVersionsFieldValue.includes(trimmedSearchQuery);
         });
       });
     });
@@ -88,30 +70,34 @@ class AppListInner extends React.Component {
     return filteredApps;
   }
 
-  updateSearchQuery = e => {
-    this.setState(
-      {
-        searchQuery: e.target.value,
-      },
-      () => {
-        const urlParams = new URLSearchParams({
-          q: this.state.searchQuery,
-        });
-        const destination = `?${urlParams}`;
-
-        this.props.dispatch(
-          replace({
-            search: destination,
-          })
-        );
-      }
+  setSearchQuery(query) {
+    this.props.dispatch(
+      replace({
+        search: query,
+      })
     );
+  }
+
+  getSearchQueryFromLocation(location) {
+    const searchParams = new URLSearchParams(location.search);
+    const searchQuery = searchParams.get(SEARCH_URL_PARAM);
+
+    return searchQuery || '';
+  }
+
+  updateSearchParams = e => {
+    const searchQuery = e.target.value;
+
+    const urlParams = new URLSearchParams({
+      [SEARCH_URL_PARAM]: searchQuery,
+    });
+    const destination = `?${urlParams}`;
+
+    this.setSearchQuery(destination);
   };
 
   resetFilters = () => {
-    this.setState({
-      searchQuery: '',
-    });
+    this.setSearchQuery('');
   };
 
   onImgError = e => {
@@ -133,13 +119,12 @@ class AppListInner extends React.Component {
   };
 
   render() {
-    const { searchQuery } = this.state;
     const { catalog } = this.props;
 
-    const appsWithOrderedVersions = this.getAppsWithOrderedVersions(
-      catalog.apps
-    );
-    const apps = this.filterApps(searchQuery, appsWithOrderedVersions);
+    const searchQuery = this.getSearchQueryFromLocation(this.props.location);
+
+    const allApps = this.getAppsWithOrderedVersions(catalog.apps);
+    const filteredApps = this.filterApps(searchQuery, allApps);
 
     return (
       <>
@@ -147,14 +132,14 @@ class AppListInner extends React.Component {
           {catalog.spec.title}
           <AppListSearch
             value={searchQuery}
-            onChange={this.updateSearchQuery}
+            onChange={this.updateSearchParams}
             onReset={this.resetFilters}
           />
         </h1>
         <div className='app-catalog-overview'>
           <div className='apps'>
             <AppListItems
-              apps={apps}
+              apps={filteredApps}
               catalog={catalog}
               searchQuery={searchQuery}
               iconErrors={this.state.iconErrors}
