@@ -85,7 +85,7 @@ class NewCluster extends React.Component {
   }
 
   semVerCompare = () => {
-    if (this.state.selectedRelease && window.config.firstNodePoolsRelease) {
+    if (this.state.selectedRelease && this.props.firstNodePoolsRelease) {
       return cmp(this.state.selectedRelease, this.props.firstNodePoolsRelease);
     }
     return -1;
