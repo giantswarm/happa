@@ -7,7 +7,7 @@ import {
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
-import { nodePoolCreate } from 'actions/nodePoolActions';
+import { nodePoolsCreate } from 'actions/nodePoolActions';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
@@ -326,7 +326,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
 
     this.props
       .dispatch(
-        nodePoolCreate(this.props.cluster.id, this.state.nodePoolForm.data)
+        nodePoolsCreate(this.props.cluster.id, [this.state.nodePoolForm.data])
       )
       .then(() => {
         // Reset form data and close the form
@@ -454,7 +454,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
         </FlexRowWithTwoBlocksOnEdges>
         <NodePoolsWrapper>
           <h2>Node Pools</h2>
-          {nodePools && nodePools.length === 1 && (
+          {nodePools && nodePools.length > 0 && (
             <>
               <GridRowNodePoolsNodes>
                 <div>

@@ -102,6 +102,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
       nodePool,
     });
 
+    // TODO optimistical update
     return nodePoolsApi
       .deleteNodePool(clusterId, nodePool.id)
       .then(() => {
@@ -142,38 +143,44 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  *
  * @param {Object} nodepool Node Pool definition object
  */
-export function nodePoolCreate(clusterId, nodePool) {
-  return function(dispatch) {
-    return nodePoolsApi
-      .addNodePool(clusterId, nodePool)
-      .then(nodePool => {
-        new FlashMessage(
-          `Your new node pool with ID <code>${nodePool.id}</code> is being created.`,
-          messageType.SUCCESS,
-          messageTTL.MEDIUM
-        );
+export function nodePoolsCreate(clusterId, nodePools) {
+  // console.log(clusterId, JSON.stringify(nodePool));
+  // return;
 
-        dispatch({
-          type: types.NODEPOOL_CREATE_SUCCESS,
-          nodePool,
+  return async function(dispatch) {
+    nodePools.forEach(nodePool => {
+      return nodePoolsApi
+        .addNodePool(clusterId, nodePool)
+        .then(nodePool => {
+          new FlashMessage(
+            `Your new node pool with ID <code>${nodePool.id}</code> is being created.`,
+            messageType.SUCCESS,
+            messageTTL.MEDIUM
+          );
+
+          dispatch({
+            type: types.NODEPOOL_CREATE_SUCCESS,
+            clusterId,
+            nodePool,
+          });
+        })
+        .catch(error => {
+          dispatch({
+            type: types.NODEPOOL_CREATE_ERROR,
+            error,
+          });
+
+          new FlashMessage(
+            'Something went wrong while trying to create the node pool',
+            messageType.ERROR,
+            messageTTL.MEDIUM,
+            'Please try again later or contact support: support@giantswarm.io'
+          );
+
+          console.error(error);
+          throw error;
         });
-      })
-      .catch(error => {
-        dispatch({
-          type: types.NODEPOOL_CREATE_ERROR,
-          error,
-        });
-
-        new FlashMessage(
-          'Something went wrong while trying to create the node pool',
-          messageType.ERROR,
-          messageTTL.MEDIUM,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        console.error(error);
-        throw error;
-      });
+    });
   };
 }
 

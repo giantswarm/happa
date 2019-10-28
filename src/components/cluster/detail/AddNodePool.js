@@ -257,9 +257,9 @@ class AddNodePool extends Component {
         isValid,
         data: {
           // TODO Is the endpoint expecting to receive either a string or a number??
-          availabilityZones: this.state.hasAZLabels
-            ? this.state.availabilityZonesLabels.zonesString
-            : this.state.availabilityZonesPicker.value,
+          availability_zones: this.state.hasAZLabels
+            ? { zones: this.state.availabilityZonesLabels.zonesString }
+            : { _number: this.state.availabilityZonesPicker.value },
           scaling: {
             min: this.state.scaling.min,
             max: this.state.scaling.max,
@@ -268,7 +268,7 @@ class AddNodePool extends Component {
             this.state.name.value === ''
               ? 'Unnamed node pool'
               : this.state.name.value,
-          nodeSpec: {
+          node_spec: {
             aws: {
               instance_type: this.state.aws.instanceType.value,
             },
