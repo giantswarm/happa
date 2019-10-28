@@ -33,6 +33,27 @@ class AppListInner extends React.Component {
     const searchParams = new URLSearchParams(this.props.location.search);
     const searchQuery = searchParams.get('q') || '';
     this.setState({ searchQuery });
+
+    // Can't use arrow functions with lunr.
+    const appsComponent = this.props.catalog.apps;
+
+    // Lunr
+    this.index = lunr(function() {
+      this.ref('name');
+      this.field('name');
+      this.field('description');
+      this.field('keywords');
+
+      const apps = Object.values(appsComponent).map(appVersions => {
+        return appVersions.sort((a, b) => {
+          return new Date(b.created) - new Date(a.created);
+        })[0];
+      });
+
+      for (const app of apps) {
+        this.add(app);
+      }
+    });
   }
 
   updateSearchQuery = e => {
@@ -66,33 +87,10 @@ class AppListInner extends React.Component {
     let filteredApps = [];
     const searchQuery = filter.searchQuery.trim();
 
-    // Can't use arrow functions with lunr.
-    const component = this;
-
-    // Lunr
-    this.index = lunr(function() {
-      this.ref('name');
-      this.field('name');
-      this.field('description');
-      this.field('keywords');
-
-      const apps = Object.values(component.props.catalog.apps).map(
-        appVersions => {
-          return appVersions.sort((a, b) => {
-            return new Date(b.created) - new Date(a.created);
-          })[0];
-        }
-      );
-
-      for (const app of apps) {
-        this.add(app);
-      }
-    });
-
     // Lunr search
-    const lunrResults = this.index
-      .search(`${searchQuery} ${searchQuery}*`)
-      .map(x => x.ref);
+    const lunrResults =
+      this.index &&
+      this.index.search(`${searchQuery} ${searchQuery}*`).map(x => x.ref);
 
     // Search query filter.
     if (filter.searchQuery === '') {
@@ -130,6 +128,7 @@ class AppListInner extends React.Component {
   };
 
   render() {
+    console.log('render', this.props, this.state);
     const { catalog } = this.props;
     const apps = this.filterApps(catalog.apps, this.getFilter());
 
