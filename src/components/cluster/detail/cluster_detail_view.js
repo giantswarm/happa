@@ -1,7 +1,7 @@
 import * as clusterActions from 'actions/clusterActions';
 import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
-import { clusterPatch } from 'actions/clusterActions';
+import { clusterLoadApps, clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { getNumberOfNodes } from 'utils/cluster_utils';
