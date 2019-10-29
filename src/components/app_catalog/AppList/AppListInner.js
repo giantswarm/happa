@@ -11,13 +11,13 @@ class AppListInner extends React.Component {
   state = {
     filters: [],
     searchQuery: null,
-    scrollToApp: null
+    scrollToApp: null,
   };
 
   constructor(props) {
     super(props);
 
-    this.index = lunr(function () {
+    this.index = lunr(function() {
       this.ref('name');
       this.field('name');
       this.field('description');

@@ -43,7 +43,10 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     const { current: gridElement } = this.gridRef;
 
     if (gridElement && index !== -1) {
-      const [rowIndex, columnIndex] = this.getGridIndexesFromAbsoluteIndex(index, colCount);
+      const [rowIndex, columnIndex] = this.getGridIndexesFromAbsoluteIndex(
+        index,
+        colCount
+      );
 
       gridElement.scrollToItem({
         align: 'center',
@@ -142,10 +145,7 @@ class VirtualizedScrollableGrid extends React.PureComponent {
    * @returns {[Number, Number]} [RowIndex, ColIndex]
    */
   getGridIndexesFromAbsoluteIndex(index, colCount) {
-    return [
-      Math.floor(index / colCount),
-      index % colCount,
-    ];
+    return [Math.floor(index / colCount), index % colCount];
   }
 
   render() {
@@ -177,7 +177,11 @@ class VirtualizedScrollableGrid extends React.PureComponent {
               style={newStyle}
             >
               {({ columnIndex, rowIndex, style }) => {
-                const itemIndex = this.getAbsoluteIndexFromGridIndexes(rowIndex, columnIndex, columnCount);
+                const itemIndex = this.getAbsoluteIndexFromGridIndexes(
+                  rowIndex,
+                  columnIndex,
+                  columnCount
+                );
                 const item = data[itemIndex];
 
                 if (!item) {

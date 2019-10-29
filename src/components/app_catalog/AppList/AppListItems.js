@@ -37,12 +37,15 @@ class AppListItems extends React.Component {
   }
 
   findAppToScrollToIndex(apps, appName) {
-    return apps.findIndex(appVersions => (appVersions[0].name === appName));
+    return apps.findIndex(appVersions => appVersions[0].name === appName);
   }
 
   render() {
     const { apps, searchQuery } = this.props;
-    const scrollToAppIndex = this.findAppToScrollToIndex(apps, this.props.scrollToApp);
+    const scrollToAppIndex = this.findAppToScrollToIndex(
+      apps,
+      this.props.scrollToApp
+    );
 
     if (apps.length === 0) {
       return (
