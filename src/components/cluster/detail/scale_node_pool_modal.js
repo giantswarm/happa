@@ -11,7 +11,7 @@ import NodeCountSelector from 'shared/node_count_selector';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class ScaleClusterModal extends React.Component {
+class ScaleNodePoolModal extends React.Component {
   rollupAnimationDuration = 500;
 
   state = {
@@ -414,7 +414,7 @@ class ScaleClusterModal extends React.Component {
   }
 }
 
-ScaleClusterModal.propTypes = {
+ScaleNodePoolModal.propTypes = {
   cluster: PropTypes.object,
   nodePoolActions: PropTypes.object,
   provider: PropTypes.string,
@@ -433,4 +433,4 @@ export default connect(
   mapDispatchToProps,
   undefined,
   { forwardRef: true }
-)(ScaleClusterModal);
+)(ScaleNodePoolModal);
