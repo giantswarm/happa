@@ -41,7 +41,7 @@ const WrapperDiv = styled.div`
 `;
 class ClusterDetailView extends React.Component {
   state = {
-    loading: true,
+    // loading: true,
     errorLoadingApps: false,
   };
 
@@ -90,33 +90,14 @@ class ClusterDetailView extends React.Component {
 
     dispatch(organizationCredentialsLoad(organizationId));
 
+    // TODO This probably should go to action creators where this logic belongs (?)
     releaseActions
       .loadReleases()
       .then(() => {
         return clusterActions.clusterLoadDetails(cluster.id);
       })
       .then(() => {
-        this.setState({
-          loading: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          loading: 'failed',
-        });
-      })
-      .then(() => {
         return clusterActions.clusterLoadApps(cluster.id);
-      })
-      .then(() => {
-        this.setState({
-          errorLoadingApps: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          errorLoadingApps: true,
-        });
       });
   };
 
@@ -267,7 +248,8 @@ class ClusterDetailView extends React.Component {
       areNodePoolsBeingFetched,
     } = this.props;
 
-    const { loading } = this.state;
+    const { loading } = this.props;
+    // const { loading } = this.state;
 
     return (
       <LoadingOverlay loading={loading || areNodePoolsBeingFetched}>
@@ -384,17 +366,17 @@ class ClusterDetailView extends React.Component {
               </div>
             </div>
 
-            {isNodePoolsCluster && nodePools && (
+            {/* {isNodePoolsCluster && nodePools && (
               <ScaleNodePoolModal
                 cluster={cluster}
+                nodePools={nodePools}
                 provider={provider}
                 ref={s => {
                   this.scaleNodePoolModal = s;
                 }}
-                workerNodesDesired={this.getDesiredNumberOfNodes()}
-                workerNodesRunning={getNumberOfNodes(cluster)}
+                :q
               />
-            )}
+            )} */}
             {!isNodePoolsCluster && (
               <ScaleClusterModal
                 cluster={cluster}
@@ -447,7 +429,19 @@ ClusterDetailView.propTypes = {
   setInterval: PropTypes.func,
   targetRelease: PropTypes.object,
   user: PropTypes.object,
+  loading: PropTypes.bool,
 };
+
+function mapStateToProps(state, ownProps) {
+  const isFetchingReleases = state.entities.releases.isFetching;
+  const isFetchingDetails = state.entities.clusters.isFetching;
+  const isFetchingApps =
+    state.entities.clusters.items[ownProps.clusterId].isFetchingApps;
+
+  return {
+    loading: isFetchingReleases && isFetchingDetails && isFetchingApps,
+  };
+}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -458,6 +452,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(ReactTimeout(ClusterDetailView));

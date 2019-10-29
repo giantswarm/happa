@@ -128,6 +128,16 @@ class NodePool extends Component {
             />
           </>
         )}
+        {/* <ScaleNodePoolModal
+                cluster={cluster}
+                nodePools={nodePools}
+                provider={provider}
+                ref={s => {
+                  this.scaleNodePoolModal = s;
+                }}
+                workerNodesDesired={this.getDesiredNumberOfNodes()}
+                workerNodesRunning={getNumberOfNodes(cluster)}
+              /> */}
       </>
     );
   }

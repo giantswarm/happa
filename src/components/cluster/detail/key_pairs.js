@@ -9,6 +9,7 @@ import CertificateOrgsLabel from './certificate_orgs_label';
 import Copyable from 'shared/copyable';
 import KeypairCreateModal from './key_pair_create_modal';
 import KeyPairDetailsModal from './key_pair_details_modal';
+import LoadingOverlay from 'UI/loading_overlay';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -44,10 +45,10 @@ class ClusterKeyPairs extends React.Component {
   }
 
   loadKeyPairs() {
-    this.setState({
-      loading: true,
-      error: false,
-    });
+    // this.setState({
+    //   loading: true,
+    //   error: false,
+    // });
 
     return this.props.actions
       .clusterLoadKeyPairs(this.props.cluster.id)
@@ -176,75 +177,80 @@ class ClusterKeyPairs extends React.Component {
 
   render() {
     return (
-      <div className='row cluster_key_pairs col-12'>
-        <div className='row'>
-          <p>
-            Key pairs consist of an RSA private key and certificate, signed by
-            the certificate authority (CA) belonging to this cluster. They are
-            used for access to the cluster via the Kubernetes API.
-          </p>
-        </div>
+      <LoadingOverlay loading={this.state.loading}>
+        <div className='row cluster_key_pairs col-12'>
+          <div className='row'>
+            <p>
+              Key pairs consist of an RSA private key and certificate, signed by
+              the certificate authority (CA) belonging to this cluster. They are
+              used for access to the cluster via the Kubernetes API.
+            </p>
+          </div>
 
-        <div className='row'>
-          <div className='col-12'>
-            {(() => {
-              if (this.state.loading) {
-                return (
-                  <p>
-                    <img className='loader' src={spinner} />
-                  </p>
-                );
-              } else if (this.state.error) {
-                return (
-                  <div>
-                    <div className='flash-messages--flash-message flash-messages--danger'>
-                      Something went wrong while trying to load the list of key
-                      pairs.
-                    </div>
-                    <Button onClick={this.loadKeyPairs.bind(this)}>
-                      Try loading key pairs again.
-                    </Button>
-                  </div>
-                );
-              } else if (this.props.cluster.keyPairs.length === 0) {
-                return (
-                  <div>
+          <div className='row'>
+            <div className='col-12'>
+              {(() => {
+                if (this.state.loading) {
+                  return (
                     <p>
-                      No key pairs yet. Why don&apos;t you create your first?
+                      <img className='loader' src={spinner} />
                     </p>
-                  </div>
-                );
-              } else {
-                return (
-                  <div>
-                    <BootstrapTable
-                      bordered={false}
-                      columns={this.getKeypairsTableColumnsConfig()}
-                      data={this.props.cluster.keyPairs}
-                      defaultSortDirection='asc'
-                      defaultSorted={[
-                        { dataField: 'create_date', order: 'desc' },
-                      ]}
-                      keyField='id'
-                    />
-                  </div>
-                );
-              }
-            })()}
-            <KeypairCreateModal
-              actions={this.props.actions}
-              cluster={this.props.cluster}
-              provider={this.props.provider}
-              user={this.props.user}
-            />
-            <KeyPairDetailsModal
-              keyPair={this.state.keyPairDetailsModal.keyPair}
-              onClose={this.hideKeyPairModal}
-              visible={this.state.keyPairDetailsModal.visible}
-            />
+                  );
+                } else if (this.state.error) {
+                  return (
+                    <div>
+                      <div className='flash-messages--flash-message flash-messages--danger'>
+                        Something went wrong while trying to load the list of
+                        key pairs.
+                      </div>
+                      <Button onClick={this.loadKeyPairs.bind(this)}>
+                        Try loading key pairs again.
+                      </Button>
+                    </div>
+                  );
+                } else if (
+                  this.props.cluster.keyPairs &&
+                  this.props.cluster.keyPairs.length === 0
+                ) {
+                  return (
+                    <div>
+                      <p>
+                        No key pairs yet. Why don&apos;t you create your first?
+                      </p>
+                    </div>
+                  );
+                } else if (this.props.cluster.keyPairs) {
+                  return (
+                    <div>
+                      <BootstrapTable
+                        bordered={false}
+                        columns={this.getKeypairsTableColumnsConfig()}
+                        data={this.props.cluster.keyPairs}
+                        defaultSortDirection='asc'
+                        defaultSorted={[
+                          { dataField: 'create_date', order: 'desc' },
+                        ]}
+                        keyField='id'
+                      />
+                    </div>
+                  );
+                }
+              })()}
+              <KeypairCreateModal
+                actions={this.props.actions}
+                cluster={this.props.cluster}
+                provider={this.props.provider}
+                user={this.props.user}
+              />
+              <KeyPairDetailsModal
+                keyPair={this.state.keyPairDetailsModal.keyPair}
+                onClose={this.hideKeyPairModal}
+                visible={this.state.keyPairDetailsModal.visible}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </LoadingOverlay>
     );
   }
 }
