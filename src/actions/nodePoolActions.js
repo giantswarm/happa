@@ -84,7 +84,7 @@ export function nodePoolPatch(clusterId, nodePool, payload) {
     dispatch(nodePoolPatchAction(nodePool, payload));
 
     return nodePoolsApi
-      .modifyNodePool(clusterId, nodePool, payload)
+      .modifyNodePool(clusterId, nodePool.id, payload)
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch(nodePoolPatchError(error, nodePool));
