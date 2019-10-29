@@ -44,31 +44,9 @@ class ClusterKeyPairs extends React.Component {
     ).hostname;
   }
 
-  loadKeyPairs() {
-    // this.setState({
-    //   loading: true,
-    //   error: false,
-    // });
-
-    return this.props.actions
-      .clusterLoadKeyPairs(this.props.cluster.id)
-      .then(() => {
-        this.setState({
-          loading: false,
-          error: false,
-        });
-      })
-      .catch(() => {
-        // In case of error delay a half second so that the user gets a chance to
-        // see the spinner before we blast the error state.
-        setTimeout(() => {
-          this.setState({
-            loading: false,
-            error: true,
-          });
-        }, 500);
-      });
-  }
+  loadKeyPairs = () => {
+    return this.props.actions.clusterLoadKeyPairs(this.props.cluster.id);
+  };
 
   // Provides the configuration for the keypairs table
   getKeypairsTableColumnsConfig = () => {
@@ -203,7 +181,7 @@ class ClusterKeyPairs extends React.Component {
                         Something went wrong while trying to load the list of
                         key pairs.
                       </div>
-                      <Button onClick={this.loadKeyPairs.bind(this)}>
+                      <Button onClick={this.loadKeyPairs}>
                         Try loading key pairs again.
                       </Button>
                     </div>

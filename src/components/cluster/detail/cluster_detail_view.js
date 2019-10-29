@@ -431,13 +431,19 @@ ClusterDetailView.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  const isFetchingReleases = state.entities.releases.isFetching;
-  const isFetchingDetails = state.entities.clusters.isFetching;
-  const isFetchingApps =
-    state.entities.clusters.items[ownProps.clusterId].isFetchingApps;
+  const { releases, clusters } = state.entities;
+  const isFetchingReleases = releases.isFetching;
+  const isFetchingDetails = clusters.isFetching;
+  const isFetchingApps = clusters.items[ownProps.clusterId].isFetchingApps;
+  const isFetchingKeyPairs =
+    clusters.items[ownProps.clusterId].isFetchingKeyPairs;
 
   return {
-    loading: isFetchingReleases && isFetchingDetails && isFetchingApps,
+    loading:
+      isFetchingReleases &&
+      isFetchingDetails &&
+      isFetchingApps &&
+      isFetchingKeyPairs,
   };
 }
 
