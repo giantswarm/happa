@@ -4936,9 +4936,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-"giantswarm@git+https://github.com/giantswarm/giantswarm-js-client.git":
+"giantswarm@git+https://github.com/giantswarm/giantswarm-js-client.git#rename-nodepools-tag-2":
   version "4.0.0"
-  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#bc658ba36d7596b8f461c59b4ccba6a2c5829977"
+  resolved "git+https://github.com/giantswarm/giantswarm-js-client.git#6b11d9178418d04013cdbbaaefa4b0499c6c4ac6"
   dependencies:
     superagent "3.8.3"
 
