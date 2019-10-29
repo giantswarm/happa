@@ -1,10 +1,9 @@
-import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
+import { Code, Dot, FlexRowWithTwoBlocksOnEdges } from 'styles';
 import { CopyToClipboardDiv } from './cluster_detail_node_pools_table';
 import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
-import moment from 'moment';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
