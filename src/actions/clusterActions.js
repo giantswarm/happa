@@ -461,6 +461,7 @@ export function clusterLoadDetails(clusterId) {
       const cluster = isNodePoolsCluster
         ? await clustersApi.getClusterV5(clusterId)
         : await clustersApi.getCluster(clusterId);
+
       dispatch(clusterLoadStatus(clusterId));
 
       cluster.capabilities = computeCapabilities(
@@ -497,7 +498,7 @@ export function clusterLoadStatus(clusterId) {
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
 
     if (isNodePoolsCluster) {
-      // Here we will have something like clusterLoadStatusV5(...);
+      // Here we will have something like clusterLoadStatusV5(...)?
       return;
     }
     clusterLoadStatusV4(dispatch, clusterId);
@@ -513,7 +514,9 @@ function clusterLoadStatusV4(dispatch, clusterId) {
   // TODO: getClusterStatusWithHttpInfo usage copied from line 125. When it is fixed, also fix here
   return clustersApi
     .getClusterStatusWithHttpInfo(clusterId)
-    .then(data => JSON.parse(data.response.text))
+    .then(data => {
+      return JSON.parse(data.response.text);
+    })
     .then(status => {
       dispatch(clusterLoadStatusSuccess(clusterId, status));
       return status;
@@ -521,7 +524,6 @@ function clusterLoadStatusV4(dispatch, clusterId) {
     .catch(error => {
       // TODO: Find a better way to deal with status endpoint errors in dev:
       // https://github.com/giantswarm/giantswarm/issues/6757
-      console.error(error);
       if (error.status === 404) {
         dispatch(clusterLoadStatusNotFound(clusterId));
       } else {
