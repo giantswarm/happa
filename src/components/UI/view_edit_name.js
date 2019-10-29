@@ -125,9 +125,7 @@ class ViewAndEditName extends React.Component {
     if (toggleEditingState) toggleEditingState(false);
 
     // Moved setState() out of then() to avoid setting state in an unmounted component
-    onSubmit(inputFieldValue).catch(error => {
-      console.error(error);
-    });
+    onSubmit(inputFieldValue);
   };
 
   handleKey = evt => {

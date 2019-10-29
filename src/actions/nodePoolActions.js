@@ -82,7 +82,6 @@ export function nodePoolsLoad() {
 export function nodePoolPatch(clusterId, nodePool, payload) {
   return function(dispatch) {
     dispatch(nodePoolPatchAction(nodePool, payload));
-
     return nodePoolsApi
       .modifyNodePool(clusterId, nodePool.id, payload)
       .catch(error => {

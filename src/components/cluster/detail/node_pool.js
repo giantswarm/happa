@@ -33,12 +33,15 @@ class NodePool extends Component {
     this.viewEditNameRef.activateEditMode();
   };
 
-  editNodePoolName = value => {
+  editNodePoolName = name => {
     const { clusterId, nodePool } = this.props;
+
+    // Early return in case the name is not changed.
+    if (nodePool.name === name) return;
 
     return new Promise((resolve, reject) => {
       this.props
-        .dispatch(nodePoolPatch(clusterId, nodePool, { name: value }))
+        .dispatch(nodePoolPatch(clusterId, nodePool, { name }))
         .then(() => {
           new FlashMessage(
             'Succesfully edited node pool name.',
