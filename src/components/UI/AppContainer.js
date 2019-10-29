@@ -4,6 +4,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 export const APP_CONTAINER_HEIGHT = 180;
+export const APP_CONTAINER_IMAGE_HEIGHT = 100;
 
 const Wrapper = styled.div`
   padding: 10px;
@@ -48,7 +49,7 @@ const Badge = styled.div`
 
 const AppIcon = styled.div`
   border-radius: 4px 4px 0 0;
-  height: 100px;
+  height: ${APP_CONTAINER_IMAGE_HEIGHT}px;
   text-align: center;
   padding: 10px;
   display: flex;
@@ -74,7 +75,7 @@ const AppIcon = styled.div`
 
 const AppDetails = styled.div`
   padding: 10px;
-  height: 80px;
+  height: ${APP_CONTAINER_HEIGHT - APP_CONTAINER_IMAGE_HEIGHT}px;
 
   h3 {
     margin: 0px;
