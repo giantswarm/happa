@@ -258,7 +258,7 @@ class AddNodePool extends Component {
         data: {
           // TODO Is the endpoint expecting to receive either a string or a number??
           availability_zones: this.state.hasAZLabels
-            ? { zones: this.state.availabilityZonesLabels.zonesString }
+            ? { zones: this.state.availabilityZonesLabels.zonesArray }
             : { _number: this.state.availabilityZonesPicker.value },
           scaling: {
             min: this.state.scaling.min,

@@ -135,13 +135,19 @@ const clusterReducer = produce((draft, action) => {
       });
       return;
 
+    // TODO does this actually work????
     case types.CLUSTER_PATCH_ERROR:
       draft.items[action.cluster.id] = action.cluster;
       return;
 
     case types.NODEPOOL_CREATE_SUCCESS:
-      console.log(action);
       draft.items[action.clusterId].nodePools.push(action.nodePool.id);
+      return;
+
+    case types.NODEPOOL_CREATE_ERROR:
+      draft.items[action.clusterId].nodePools.filter(
+        np => np === action.nodePool.id
+      );
       return;
   }
 }, initialState);

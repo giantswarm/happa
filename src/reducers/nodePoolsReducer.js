@@ -4,6 +4,7 @@ import produce from 'immer';
 
 const initialState = {
   items: {},
+  isFetching: false,
 };
 
 // With immer the idea is you put your state inside the draft and immer will take
@@ -14,8 +15,14 @@ const initialState = {
 
 const nodePools = produce((draft, action) => {
   switch (action.type) {
+    case types.NODEPOOLS_LOAD:
+      draft.isFetching = true;
+      return;
+
     case types.NODEPOOLS_LOAD_SUCCESS:
       draft.items = action.nodePools;
+      draft.isFetching = false;
+      draft.isFetching = false;
       return;
 
     case types.NODEPOOLS_LOAD_ERROR:
@@ -42,6 +49,7 @@ const nodePools = produce((draft, action) => {
       return;
 
     case types.NODEPOOL_CREATE_ERROR:
+      delete draft.items[action.nodePoolId];
       draft.errorCreating = true;
       return;
   }

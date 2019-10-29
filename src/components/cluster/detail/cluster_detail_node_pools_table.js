@@ -7,7 +7,7 @@ import {
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
-import { nodePoolsCreate } from 'actions/nodePoolActions';
+import { nodePoolsCreate, nodePoolsLoad } from 'actions/nodePoolActions';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
@@ -274,6 +274,16 @@ class ClusterDetailNodePoolsTable extends React.Component {
   };
 
   componentDidMount() {
+    this.produceNodePools();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.nodePools !== this.props.nodePools) {
+      this.props.dispatch(nodePoolsLoad()).then(this.produceNodePools());
+    }
+  }
+
+  produceNodePools = () => {
     const nodePoolsArray = clusterNodePools(
       this.props.nodePools,
       this.props.cluster
@@ -306,7 +316,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
 
       this.setState({ RAM, CPUs, workerNodesRunning });
     });
-  }
+  };
 
   toggleAddNodePoolForm = () =>
     this.setState(prevState => ({
@@ -335,7 +345,10 @@ class ClusterDetailNodePoolsTable extends React.Component {
             draft.nodePoolForm.data = {};
           })
         );
-        this.closeForm();
+        // Close the form.
+        this.toggleAddNodePoolForm();
+        // Reset the node pools state with the new one.
+        this.produceNodePools();
       })
       .catch(error => {
         // TODO Show error in view?
@@ -466,7 +479,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 <span style={{ paddingLeft: '8px', justifySelf: 'left' }}>
                   NAME
                 </span>
-                <span>INSTANCE TYPE</span>
+                <span>INSTANCE TYPE {nodePools.length}</span>
                 <span>AVAILABILITY ZONES</span>
                 <span>MIN</span>
                 <span>MAX</span>
@@ -478,7 +491,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 nodePools
                   .sort((a, b) => (a.name > b.name ? 1 : -1))
                   .map(nodePool => (
-                    <GridRowNodePoolsItem key={nodePool.id}>
+                    <GridRowNodePoolsItem key={nodePool.id || Date.now()}>
                       <NodePool
                         availableZonesGridTemplateAreas={
                           availableZonesGridTemplateAreas

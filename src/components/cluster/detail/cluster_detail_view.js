@@ -262,12 +262,13 @@ class ClusterDetailView extends React.Component {
       release,
       targetRelease,
       region,
+      areNodePoolsBeingFetched,
     } = this.props;
 
     const { loading } = this.state;
 
     return (
-      <LoadingOverlay loading={loading}>
+      <LoadingOverlay loading={loading || areNodePoolsBeingFetched}>
         <DocumentTitle
           title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
         >
@@ -434,6 +435,7 @@ ClusterDetailView.propTypes = {
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
   isNodePoolsCluster: PropTypes.bool,
+  areNodePoolsBeingFetched: PropTypes.bool,
   nodePools: PropTypes.object,
   organizationId: PropTypes.string,
   releaseActions: PropTypes.object,

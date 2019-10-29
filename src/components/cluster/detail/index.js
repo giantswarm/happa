@@ -21,12 +21,7 @@ class ClusterDetailIndex extends React.Component {
           <Route
             exact
             path={`${this.props.match.path}`}
-            render={() => (
-              <ClusterDetailView
-                {...this.props}
-                isNodePoolsCluster={this.props.isNodePoolsCluster}
-              />
-            )}
+            render={() => <ClusterDetailView {...this.props} />}
           />
 
           <Route
@@ -105,6 +100,8 @@ function mapStateToProps(state, ownProps) {
     cluster.id
   );
 
+  const areNodePoolsBeingFetched = state.entities.nodePools.isFetching;
+
   return {
     credentials: state.entities.credentials,
     organizationId: ownProps.match.params.orgId,
@@ -118,6 +115,7 @@ function mapStateToProps(state, ownProps) {
     user: state.app.loggedInUser,
     region: state.app.info.general.datacenter,
     isNodePoolsCluster,
+    areNodePoolsBeingFetched,
   };
 }
 
