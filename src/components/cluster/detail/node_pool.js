@@ -51,6 +51,15 @@ class NodePool extends Component {
     });
   };
 
+  deleteNodePool = () => {
+    this.props.dispatch(
+      this.props.nodePoolActions.nodePoolDelete(
+        this.props.clusterId,
+        this.props.nodePool
+      )
+    );
+  };
+
   render() {
     if (this.props.nodePool && this.props.nodePool.status) {
       const {
@@ -114,7 +123,7 @@ class NodePool extends Component {
                 style={{ justifySelf: 'right' }}
                 clusterId={clusterId}
                 nodePool={nodePool}
-                nodePoolDelete={this.props.nodePoolActions.nodePoolDelete}
+                deleteNodePool={this.deleteNodePool}
                 showNodePoolScalingModal={showNodePoolScalingModal}
                 triggerEditName={this.triggerEditName}
               />

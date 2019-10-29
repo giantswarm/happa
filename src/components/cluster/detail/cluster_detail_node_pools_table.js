@@ -256,6 +256,10 @@ export const CopyToClipboardDiv = styled.div`
   }
 `;
 
+// TODO Now on every addition or deletion of a NP, this component will be rerendered.
+// It would be nice to split this into subcomponents so only the littele bits that need
+// to be updated were updated. Child components might be: RAM, CPUs, workerNodesRunning.
+
 class ClusterDetailNodePoolsTable extends React.Component {
   state = {
     availableZonesGridTemplateAreas: '',
@@ -283,6 +287,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
     }
   }
 
+  // TODO Move this to the action creator so it will be triggered on every NPs load.
   produceNodePools = () => {
     const nodePoolsArray = clusterNodePools(
       this.props.nodePools,
@@ -347,8 +352,6 @@ class ClusterDetailNodePoolsTable extends React.Component {
         );
         // Close the form.
         this.toggleAddNodePoolForm();
-        // Reset the node pools state with the new one.
-        this.produceNodePools();
       })
       .catch(error => {
         // TODO Show error in view?

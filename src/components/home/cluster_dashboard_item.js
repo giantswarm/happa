@@ -104,8 +104,6 @@ class ClusterDashboardItem extends React.Component {
       ? getNumberOfNodePoolsNodes(nodePools)
       : getNumberOfNodes(cluster);
 
-    // const np = isNodePool ? '/np' : '';
-    // const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}${np}`;
     const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}`;
 
     return (

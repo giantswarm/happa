@@ -116,7 +116,6 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
       nodePool,
     });
 
-    // TODO optimistical update
     return nodePoolsApi
       .deleteNodePool(clusterId, nodePool.id)
       .then(() => {
@@ -131,7 +130,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
         );
 
         // ensure refreshing of the node pools list. Needed?
-        // dispatch(clustersLoad());
+        dispatch(nodePoolsLoad());
       })
       .catch(error => {
         dispatch(modalHide());
@@ -204,16 +203,6 @@ const clusterNodePoolsLoadSuccess = (clusterId, nodePools) => ({
   clusterId,
   nodePools: nodePools,
 });
-
-// const nodePoolsLoadSuccess = (nodePools = {}) => ({
-//   type: types.NODEPOOLS_LOAD_SUCCESS,
-//   nodePools,
-// });
-
-// const nodePoolsLoadError = error => ({
-//   type: types.NODEPOOLS_LOAD_ERROR,
-//   error,
-// });
 
 const nodePoolPatchAction = (nodePool, payload) => ({
   type: types.NODEPOOL_PATCH,
