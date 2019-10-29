@@ -492,7 +492,15 @@ class ClusterDetailNodePoolsTable extends React.Component {
               </GridRowNodePoolsHeaders>
               {nodePools &&
                 nodePools
-                  .sort((a, b) => (a.name > b.name ? 1 : -1))
+                  .sort((a, b) =>
+                    a.name > b.name
+                      ? 1
+                      : a.name < b.name
+                      ? -1
+                      : a.id > b.id
+                      ? 1
+                      : -1
+                  )
                   .map(nodePool => (
                     <GridRowNodePoolsItem key={nodePool.id || Date.now()}>
                       <NodePool
