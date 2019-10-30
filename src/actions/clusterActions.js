@@ -554,8 +554,6 @@ export function clusterCreate(cluster, isV5Cluster, nodePools = []) {
       ? 'addClusterV5WithHttpInfo'
       : 'addClusterWithHttpInfo';
 
-    console.log(cluster, isV5Cluster, nodePools);
-
     return clustersApi[method](cluster)
       .then(data => {
         const location = data.response.headers.location;

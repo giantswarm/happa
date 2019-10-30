@@ -304,7 +304,6 @@ class CreateNodePoolsCluster extends Component {
         )
       );
     } catch (error) {
-      console.log(error);
       this.setState({
         submitting: false,
         error: error,

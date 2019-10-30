@@ -351,7 +351,7 @@ class AddNodePool extends Component {
               </div>
               <input
                 type='radio'
-                id='automatically'
+                id={`automatically-${this.props.id}`}
                 value={false}
                 checked={hasAZLabels === false}
                 onChange={() => this.toggleAZSelector(false)}
@@ -411,7 +411,7 @@ class AddNodePool extends Component {
               </div>
               <input
                 type='radio'
-                id='manually'
+                id={`manually-${this.props.id}`}
                 value={true}
                 checked={hasAZLabels === true}
                 tabIndex='0'

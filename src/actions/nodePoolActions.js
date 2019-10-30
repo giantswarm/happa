@@ -176,7 +176,6 @@ export function nodePoolsCreate(clusterId, nodePools) {
               nodePool: nodePoolWithStatus,
             });
 
-            console.log('1: ', nodePoolWithStatus);
             new FlashMessage(
               `Your new node pool with ID <code>${nodePoolWithStatus.id}</code> is being created.`,
               messageType.SUCCESS,
@@ -205,7 +204,6 @@ export function nodePoolsCreate(clusterId, nodePools) {
       })
     );
     const nodePoolsArrayOfIds = allNodePools.map(np => np.id);
-    console.log('2: ', nodePoolsArrayOfIds, allNodePools);
 
     // Dispatch action for populating nodePools key inside cluster
     dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArrayOfIds));

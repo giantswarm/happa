@@ -247,8 +247,6 @@ class ClusterDetailView extends React.Component {
 
     const { loading } = this.props;
 
-    console.log('Cluster: ', this.props.cluster, this.props.nodePools);
-
     return (
       <LoadingOverlay loading={loading || !this.props.cluster}>
         <DocumentTitle
