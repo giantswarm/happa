@@ -69,10 +69,17 @@ const AZLabel = styled.label`
   height: 238px;
   justify-content: flex-start !important;
   position: relative;
+  transition: height 0.3s;
+  transition-delay: 0s;
+  &.with-labels {
+    transition: height 0.3s;
+    transition-delay: 0.4s;
+    height: 170px;
+  }
   div label {
     justify-content: flex-start;
   }
-
+  /* Automatic */
   .az-automatic-enter {
     opacity: 0.01;
     transform: translateY(-8px);
@@ -80,7 +87,8 @@ const AZLabel = styled.label`
   .az-automatic-enter.az-automatic-enter-active {
     opacity: 1;
     transform: translateY(0px);
-    transition: all 300ms;
+    transition: all 500ms;
+    transition-delay: 300ms;
   }
   .az-automatic-leave {
     transform: translateY(0px);
@@ -89,9 +97,10 @@ const AZLabel = styled.label`
   .az-automatic-leave.az-automatic-leave-active {
     opacity: 0.01;
     transform: translateY(0px);
-    transition: all 300ms;
+    transition: all 500ms;
   }
 
+  /* Manual */
   .az-manual-enter,
   .az-manual-appear {
     opacity: 0.01;
@@ -114,7 +123,7 @@ const AZLabel = styled.label`
     transition-delay: 0ms;
   }
 
-  /* Manual */
+  /* Manual Radio Input */
   .manual-radio-input {
     position: absolute;
     top: 75px;
@@ -124,7 +133,7 @@ const AZLabel = styled.label`
     &.down {
       transform: translateY(125px);
       transition: transform 200ms;
-      transition-delay: 0ms;
+      transition-delay: 0.2s;
     }
   }
 `;
@@ -338,7 +347,10 @@ class AddNodePool extends Component {
             <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
           </FlexWrapperDiv>
         </label>
-        <AZLabel htmlFor='availability-zones'>
+        <AZLabel
+          htmlFor='availability-zones'
+          className={hasAZLabels && 'with-labels'}
+        >
           <span className='label-span'>Availability Zones selection</span>
           <RadioWrapperDiv>
             {/* Automatically */}
@@ -367,7 +379,7 @@ class AddNodePool extends Component {
           </RadioWrapperDiv>
           <ReactCSSTransitionGroup
             transitionName='az-automatic'
-            transitionEnterTimeout={300}
+            transitionEnterTimeout={500}
             transitionLeaveTimeout={300}
           >
             {!hasAZLabels && (
