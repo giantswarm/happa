@@ -416,6 +416,7 @@ class ScaleNodePoolModal extends React.Component {
 
 ScaleNodePoolModal.propTypes = {
   cluster: PropTypes.object,
+  nodePool: PropTypes.object,
   nodePoolActions: PropTypes.object,
   provider: PropTypes.string,
   workerNodesRunning: PropTypes.number,

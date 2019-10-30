@@ -1,7 +1,7 @@
 import * as clusterActions from 'actions/clusterActions';
 import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
-import { clusterLoadApps, clusterPatch } from 'actions/clusterActions';
+import { clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { getNumberOfNodes } from 'utils/cluster_utils';
@@ -21,7 +21,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
 import ScaleClusterModal from './scale_cluster_modal';
-import ScaleNodePoolModal from './scale_node_pool_modal';
 import styled from '@emotion/styled';
 import Tab from 'react-bootstrap/lib/Tab';
 import Tabs from './tabs';
@@ -121,12 +120,6 @@ class ClusterDetailView extends React.Component {
   showScalingModal = () => {
     this.scaleClusterModal.reset();
     this.scaleClusterModal.show();
-  };
-
-  showNodePoolScalingModal = nodePool => {
-    this.scaleNodePoolModal.reset();
-    this.scaleNodePoolModal.show();
-    this.scaleNodePoolModal.setNodePool(nodePool);
   };
 
   showUpgradeModal = () => {
@@ -292,7 +285,6 @@ class ClusterDetailView extends React.Component {
                         provider={provider}
                         release={release}
                         region={region}
-                        showNodePoolScalingModal={this.showNodePoolScalingModal}
                         showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
                       />

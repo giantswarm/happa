@@ -366,12 +366,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       workerNodesRunning,
       nodePoolForm,
     } = this.state;
-    const {
-      accessCluster,
-      cluster,
-      showNodePoolScalingModal,
-      region,
-    } = this.props;
+    const { accessCluster, cluster, region } = this.props;
 
     const { create_date, release_version, release, api_endpoint } = cluster;
     const noNodePools = !nodePools || nodePools.length === 0;
@@ -487,9 +482,9 @@ class ClusterDetailNodePoolsTable extends React.Component {
                         availableZonesGridTemplateAreas={
                           availableZonesGridTemplateAreas
                         }
-                        clusterId={cluster.id}
+                        cluster={cluster}
                         nodePool={nodePool}
-                        showNodePoolScalingModal={showNodePoolScalingModal}
+                        provider={this.props.provider}
                       />
                     </GridRowNodePoolsItem>
                   ))}
@@ -588,7 +583,6 @@ ClusterDetailNodePoolsTable.propTypes = {
   region: PropTypes.string,
   release: PropTypes.object,
   setInterval: PropTypes.func,
-  showNodePoolScalingModal: PropTypes.func,
   showUpgradeModal: PropTypes.func,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
