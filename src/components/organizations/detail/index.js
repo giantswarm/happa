@@ -26,7 +26,7 @@ class DetailIndex extends React.Component {
           <Route
             exact
             path={`${this.props.match.path}`}
-            component={() => <DetailView {...this.props} />}
+            render={() => <DetailView {...this.props} />}
           />
           <Route
             component={ClusterDetailIndex}

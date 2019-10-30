@@ -75,7 +75,6 @@ class Layout extends React.Component {
   };
 
   render() {
-    // prettier-ignore
     return (
       <DocumentTitle title='Giant Swarm'>
         <LoadingOverlay loading={!this.props.firstLoadComplete}>
@@ -94,7 +93,11 @@ class Layout extends React.Component {
                 <Route component={AppCatalog} path='/app-catalogs' />
                 <Route component={Users} exact path='/users' />
                 <Route component={Organizations} path='/organizations' />
-                <Route component={AccountSettings} exact path='/account-settings' />
+                <Route
+                  component={AccountSettings}
+                  exact
+                  path='/account-settings'
+                />
                 <Redirect path='*' to='/' />
               </Switch>
             </div>
