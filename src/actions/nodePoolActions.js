@@ -156,22 +156,33 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  * @param {Object} nodepool Node Pool definition object
  */
 export function nodePoolsCreate(clusterId, nodePools) {
-  return function(dispatch) {
-    return Promise.all(
-      nodePools.forEach(nodePool => {
+  return async function(dispatch) {
+    dispatch({ type: types.NODEPOOLS_CREATE });
+
+    const allNodePools = await Promise.all(
+      nodePools.map(nodePool => {
         return nodePoolsApi
           .addNodePool(clusterId, nodePool)
           .then(nodePool => {
+            // When created no status in the response
+            const nodePoolWithStatus = {
+              ...nodePool,
+              status: { nodes_ready: 0, nodes: 0 },
+            };
+
             dispatch({
               type: types.NODEPOOL_CREATE_SUCCESS,
               clusterId,
-              nodePool,
+              nodePool: nodePoolWithStatus,
             });
+
+            console.log('1: ', nodePoolWithStatus);
             new FlashMessage(
-              `Your new node pool with ID <code>${nodePool.id}</code> is being created.`,
+              `Your new node pool with ID <code>${nodePoolWithStatus.id}</code> is being created.`,
               messageType.SUCCESS,
               messageTTL.MEDIUM
             );
+            return nodePoolWithStatus;
           })
           .catch(error => {
             dispatch({
@@ -193,6 +204,14 @@ export function nodePoolsCreate(clusterId, nodePools) {
           });
       })
     );
+    const nodePoolsArrayOfIds = allNodePools.map(np => np.id);
+    console.log('2: ', nodePoolsArrayOfIds, allNodePools);
+
+    // Dispatch action for populating nodePools key inside cluster
+    dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArrayOfIds));
+    dispatch({ type: types.NODEPOOLS_CREATE_SUCCESS });
+
+    return;
   };
 }
 

@@ -22,11 +22,11 @@ const nodePools = produce((draft, action) => {
     case types.NODEPOOLS_LOAD_SUCCESS:
       draft.items = action.nodePools;
       draft.isFetching = false;
-      draft.isFetching = false;
       return;
 
     case types.NODEPOOLS_LOAD_ERROR:
       draft.errorLoading = true;
+      draft.isFetching = false;
       return;
 
     case types.NODEPOOL_PATCH:
@@ -44,13 +44,27 @@ const nodePools = produce((draft, action) => {
       draft.lastUpdated = Date.now();
       return;
 
+    case types.V5_CLUSTER_CREATE_SUCCESS:
+      draft.isFetching = true;
+      return;
+
     case types.NODEPOOL_CREATE_SUCCESS:
       draft.items[action.nodePool.id] = action.nodePool;
       return;
 
     case types.NODEPOOL_CREATE_ERROR:
+    case types.NODEPOOLS_CREATE_ERROR:
       delete draft.items[action.nodePoolId];
       draft.errorCreating = true;
+      draft.isFetching = false;
+      return;
+
+    case types.NODEPOOLS_CREATE:
+      draft.isFetching = true;
+      return;
+
+    case types.NODEPOOLS_CREATE_SUCCESS:
+      draft.isFetching = false;
       return;
   }
   // This empty object is the default state.

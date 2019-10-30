@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
+import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { push } from 'connected-react-router';
 import AddNodePool from '../detail/AddNodePool';
 import AvailabilityZonesParser from '../detail/AvailabilityZonesParser';
@@ -255,7 +256,7 @@ class CreateNodePoolsCluster extends Component {
           ? nodePoolsForms.nodePools[np].isValid
           : false
       )
-      .every(np => np);
+      .every(np => np); // This checks if everything is true.
 
     const isValid =
       name.valid &&
@@ -268,11 +269,15 @@ class CreateNodePoolsCluster extends Component {
     return isValid;
   };
 
-  createCluster = () => {
+  createCluster = async () => {
     this.setState({ submitting: true });
 
-    this.props
-      .dispatch(
+    const nodePools = Object.values(this.state.nodePoolsForms.nodePools).map(
+      np => np.data
+    );
+
+    try {
+      const newCluster = await this.props.dispatch(
         clusterCreate(
           {
             owner: this.props.selectedOrganization,
@@ -284,23 +289,27 @@ class CreateNodePoolsCluster extends Component {
                 : this.state.availabilityZonesRandom.value,
             },
           },
-          true // is v5
+          true, // is v5
+          nodePools
         )
-      )
-      .then(cluster => {
-        // after successful creation, redirect to cluster details
-        this.props.dispatch(
-          push(
-            `/organizations/${this.props.selectedOrganization}/clusters/${cluster.id}`
-          )
-        );
-      })
-      .catch(error => {
-        this.setState({
-          submitting: false,
-          error: error,
-        });
+      );
+
+      // const newNodePools =
+      await this.props.dispatch(nodePoolsCreate(newCluster.id, nodePools));
+
+      // after successful creation, redirect to cluster details
+      this.props.dispatch(
+        push(
+          `/organizations/${this.props.selectedOrganization}/clusters/${newCluster.id}`
+        )
+      );
+    } catch (error) {
+      console.log(error);
+      this.setState({
+        submitting: false,
+        error: error,
       });
+    }
   };
 
   errorState() {

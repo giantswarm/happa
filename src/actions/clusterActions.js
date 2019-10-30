@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
-import { nodePoolsLoad } from './nodePoolActions';
+import { nodePoolsCreate, nodePoolsLoad } from './nodePoolActions';
 import { push } from 'connected-react-router';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
@@ -174,7 +174,6 @@ export function clustersLoad() {
     );
 
     // Get the details for v5 clusters.
-    // if (window.config.environment === 'development') {
     const v5ClustersDetails = await Promise.all(
       v5Clusters.map(cluster => clusterDetailsV5(dispatch, getState, cluster))
     );
@@ -182,7 +181,7 @@ export function clustersLoad() {
     // Clusters array to object, because we are storing an object in the store.
     let v5ClustersObject = clustersLoadArrayToObject(v5ClustersDetails);
 
-    // nodePoolsClusters is an array of NP clusters ids and is stored in items.
+    // nodePoolsClusters is an array of v5 clusters ids and is stored in clusters.
     const nodePoolsClusters = v5ClustersDetails.map(cluster => cluster.id);
 
     dispatch(
@@ -196,10 +195,6 @@ export function clustersLoad() {
 
     // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
     dispatch(nodePoolsLoad(nodePoolsClusters));
-    // } else {
-    //   // Dispatch with an empty object for v5Clusters and an empty array for node pools clusters.
-    //   dispatch(clustersLoadSuccess(v4ClustersObject, {}, [], lastUpdated));
-    // }
   };
 }
 
@@ -547,12 +542,19 @@ function clusterLoadStatusV4(dispatch, clusterId) {
  *
  * @param {Object} cluster Cluster definition object
  * @param {Boolean} isV5Cluster
+ * @param {Array} nodePools array of node pool objects
  */
-export function clusterCreate(cluster, isV5Cluster) {
+export function clusterCreate(cluster, isV5Cluster, nodePools = []) {
   return function(dispatch) {
+    dispatch({
+      type: types.CLUSTER_CREATE,
+    });
+
     const method = isV5Cluster
       ? 'addClusterV5WithHttpInfo'
       : 'addClusterWithHttpInfo';
+
+    console.log(cluster, isV5Cluster, nodePools);
 
     return clustersApi[method](cluster)
       .then(data => {

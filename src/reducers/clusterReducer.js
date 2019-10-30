@@ -120,6 +120,10 @@ const clusterReducer = produce((draft, action) => {
       draft.items[action.clusterId].isFetchingKeyPairs = false;
       return;
 
+    case types.CLUSTER_CREATE:
+      draft.isFetching = true;
+      return;
+
     case types.V5_CLUSTER_CREATE_SUCCESS:
       draft.nodePoolsClusters.push(action.clusterId);
       return;
@@ -140,15 +144,15 @@ const clusterReducer = produce((draft, action) => {
       draft.items[action.cluster.id] = action.cluster;
       return;
 
-    case types.NODEPOOL_CREATE_SUCCESS:
-      draft.items[action.clusterId].nodePools.push(action.nodePool.id);
-      return;
+    // case types.NODEPOOL_CREATE_SUCCESS:
+    //   draft.items[action.clusterId].nodePools.push(action.nodePool.id);
+    //   return;
 
-    case types.NODEPOOL_CREATE_ERROR:
-      draft.items[action.clusterId].nodePools.filter(
-        np => np === action.nodePool.id
-      );
-      return;
+    // case types.NODEPOOL_CREATE_ERROR:
+    //   draft.items[action.clusterId].nodePools.filter(
+    //     np => np === action.nodePool.id
+    //   );
+    //   return;
   }
 }, initialState);
 

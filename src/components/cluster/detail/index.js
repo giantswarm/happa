@@ -100,8 +100,6 @@ function mapStateToProps(state, ownProps) {
     cluster.id
   );
 
-  const areNodePoolsBeingFetched = state.entities.nodePools.isFetching;
-
   return {
     credentials: state.entities.credentials,
     organizationId: ownProps.match.params.orgId,
@@ -115,7 +113,6 @@ function mapStateToProps(state, ownProps) {
     user: state.app.loggedInUser,
     region: state.app.info.general.datacenter,
     isNodePoolsCluster,
-    areNodePoolsBeingFetched,
   };
 }
 
