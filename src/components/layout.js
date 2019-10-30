@@ -68,37 +68,40 @@ class Layout extends React.Component {
   }
 
   selectOrganization = orgId => {
-    this.props.dispatch(organizationSelect(orgId));
+    const { dispatch } = this.props;
+
+    dispatch(organizationSelect(orgId));
+    dispatch(push('/'));
   };
 
   render() {
     // prettier-ignore
     return (
-        <DocumentTitle title='Giant Swarm'>
-          <LoadingOverlay loading={!this.props.firstLoadComplete}>
-            <Modals />
-            <Navigation
-              onSelectOrganization={this.selectOrganization}
-              organizations={this.props.organizations}
-              selectedOrganization={this.props.selectedOrganization}
-              showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
-              user={this.props.user}
-            />
-            <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
-              <div className='main col-9'>
-                <Switch>
-                  <Route component={Home} exact                  path='/' />
-                  <Route       component={AppCatalog}       path='/app-catalogs' />
-                  <Route component={Users} exact             path='/users' />
-                  <Route       component={Organizations}     path='/organizations' />
-                  <Route component={AccountSettings} exact  path='/account-settings' />
-                  <Redirect path='*' to='/' />
-                </Switch>
-              </div>
-            </Breadcrumb>
-          </LoadingOverlay>
-        </DocumentTitle>
-      );
+      <DocumentTitle title='Giant Swarm'>
+        <LoadingOverlay loading={!this.props.firstLoadComplete}>
+          <Modals />
+          <Navigation
+            onSelectOrganization={this.selectOrganization}
+            organizations={this.props.organizations}
+            selectedOrganization={this.props.selectedOrganization}
+            showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
+            user={this.props.user}
+          />
+          <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
+            <div className='main col-9'>
+              <Switch>
+                <Route component={Home} exact path='/' />
+                <Route component={AppCatalog} path='/app-catalogs' />
+                <Route component={Users} exact path='/users' />
+                <Route component={Organizations} path='/organizations' />
+                <Route component={AccountSettings} exact path='/account-settings' />
+                <Redirect path='*' to='/' />
+              </Switch>
+            </div>
+          </Breadcrumb>
+        </LoadingOverlay>
+      </DocumentTitle>
+    );
   }
 }
 

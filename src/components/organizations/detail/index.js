@@ -1,5 +1,6 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { organizationSelect } from 'actions/organizationActions';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import _ from 'underscore';
 import ClusterDetailIndex from '../../cluster/';
@@ -8,6 +9,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class DetailIndex extends React.Component {
+  componentDidMount() {
+    const { id: orgID } = this.props.organization;
+    this.props.dispatch(organizationSelect(orgID));
+  }
+
   render() {
     return (
       <Breadcrumb
@@ -20,7 +26,7 @@ class DetailIndex extends React.Component {
           <Route
             exact
             path={`${this.props.match.path}`}
-            render={() => <DetailView {...this.props} />}
+            component={() => <DetailView {...this.props} />}
           />
           <Route
             component={ClusterDetailIndex}
