@@ -337,7 +337,9 @@ class ClusterDetailNodePoolsTable extends React.Component {
   };
 
   createNodePool = () => {
-    this.setState({ submitting: true });
+    this.setState({
+      nodePoolForm: { ...this.state.nodePoolForm, isSubmitting: true },
+    });
 
     this.props
       .dispatch(
@@ -385,6 +387,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       availableZonesGridTemplateAreas,
       nodePools,
       workerNodesRunning,
+      nodePoolForm,
     } = this.state;
     const {
       accessCluster,
@@ -538,23 +541,26 @@ class ClusterDetailNodePoolsTable extends React.Component {
                   <Button
                     bsSize='large'
                     bsStyle='primary'
-                    disabled={!this.state.nodePoolForm.isValid}
-                    loading={this.state.nodePoolForm.isSubmitting}
+                    disabled={!nodePoolForm.isValid}
+                    loading={nodePoolForm.isSubmitting}
                     onClick={this.createNodePool}
                     type='button'
                   >
                     Create Node Pool
                   </Button>
-                  <Button
-                    bsSize='large'
-                    bsStyle='default'
-                    loading={this.state.nodePoolForm.isSubmitting}
-                    onClick={this.toggleAddNodePoolForm}
-                    style={{ background: 'red' }}
-                    type='button'
-                  >
-                    Cancel
-                  </Button>
+                  {/* We want to hide cancel button when the Create NP button has been clicked */}
+                  {!nodePoolForm.isSubmitting && (
+                    <Button
+                      bsSize='large'
+                      bsStyle='default'
+                      loading={nodePoolForm.isSubmitting}
+                      onClick={this.toggleAddNodePoolForm}
+                      style={{ background: 'red' }}
+                      type='button'
+                    >
+                      Cancel
+                    </Button>
+                  )}
                 </FlexWrapperDiv>
               </AddNodePoolFlexColumnDiv>
             </AddNodePoolWrapperDiv>

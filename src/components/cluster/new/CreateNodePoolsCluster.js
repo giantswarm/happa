@@ -537,16 +537,19 @@ class CreateNodePoolsCluster extends Component {
               >
                 Create Cluster
               </Button>
-              <Button
-                bsSize='large'
-                bsStyle='default'
-                loading={submitting}
-                onClick={this.props.closeForm}
-                style={{ background: 'red' }}
-                type='button'
-              >
-                Cancel
-              </Button>
+              {/* We want to hide cancel button when the Create NP button has been clicked */}
+              {!submitting && (
+                <Button
+                  bsSize='large'
+                  bsStyle='default'
+                  loading={submitting}
+                  onClick={this.props.closeForm}
+                  style={{ background: 'red' }}
+                  type='button'
+                >
+                  Cancel
+                </Button>
+              )}
             </FlexRowDiv>
             <p style={{ maxWidth: '650px', margin: '0 auto' }}>
               Note that it takes around 20 minutes on average until a new
