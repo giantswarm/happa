@@ -67,8 +67,9 @@ function clustersLoadArrayToObject(clusters) {
  */
 export function clustersLoad() {
   return async function(dispatch, getState) {
-    // Fetch all clusters.
+    dispatch({ type: types.CLUSTERS_LOAD });
 
+    // Fetch all clusters.
     const clusters = await clustersApi
       .getClusters()
       .then(clusters => {
@@ -451,6 +452,10 @@ export function clusterLoadDetails(clusterId) {
       type: types.CLUSTER_LOAD_DETAILS,
       clusterId,
     });
+
+    if (isNodePoolsCluster) {
+      dispatch({ type: types.V5_CLUSTER_LOAD_DETAILS });
+    }
 
     try {
       const cluster = isNodePoolsCluster

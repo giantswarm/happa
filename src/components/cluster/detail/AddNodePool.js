@@ -275,7 +275,7 @@ class AddNodePool extends Component {
           },
         },
       },
-      // We need to know wich node pool it is in the v5 cluster creation form
+      // We need to know which node pool it is in the v5 cluster creation form
       this.props.id ? this.props.id : null
     );
   };
@@ -302,9 +302,9 @@ class AddNodePool extends Component {
 
   render() {
     const [RAM, CPUCores] = this.produceRAMAndCores();
-    const { min, max } = window.config.nodePoolAZLimits;
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { hasAZLabels, name } = this.state;
+    const { minAZ, maxAZ } = this.props;
 
     return (
       <>
@@ -377,8 +377,8 @@ class AddNodePool extends Component {
                     Number of availability zones to use:
                   </p>
                   <AvailabilityZonesParser
-                    min={min}
-                    max={max}
+                    min={minAZ}
+                    max={maxAZ}
                     zones={this.props.availabilityZones}
                     updateAZValuesInParent={this.updateAZ}
                     isLabels={hasAZLabels}
@@ -390,7 +390,7 @@ class AddNodePool extends Component {
                   <p style={{ margin: '5px 0 24px 28px', height: '38px' }}>
                     {this.state.availabilityZonesPicker.value < 2
                       ? `Covering one availability zone, the worker nodes of this node pool
-                      will be placed in the same availability zones as the
+                      will be placed in the same availability zone as the
                       cluster's master node.`
                       : `Availability zones will be selected randomly.`}
                   </p>
@@ -435,13 +435,13 @@ class AddNodePool extends Component {
                 <div key='az-manual'>
                   <FlexColumnAZDiv>
                     <p>
-                      You can select up to {max} availability zones to make use
-                      of.
+                      You can select up to {maxAZ} availability zones to make
+                      use of.
                     </p>
                     <FlexWrapperAZDiv>
                       <AvailabilityZonesParser
-                        min={min}
-                        max={max}
+                        min={minAZ}
+                        max={maxAZ}
                         zones={this.props.availabilityZones}
                         updateAZValuesInParent={this.updateAZ}
                         isLabels={hasAZLabels}
@@ -450,10 +450,10 @@ class AddNodePool extends Component {
                       {zonesArray.length < 1 && (
                         <p className='danger'>Please select at least one.</p>
                       )}
-                      {zonesArray.length > max && (
+                      {zonesArray.length > maxAZ && (
                         <p className='danger'>
-                          {max} is the maximum you can have. Please uncheck at
-                          least {zonesArray.length - max} of them.
+                          {maxAZ} is the maximum you can have. Please uncheck at
+                          least {zonesArray.length - maxAZ} of them.
                         </p>
                       )}
                     </FlexWrapperAZDiv>
@@ -498,6 +498,8 @@ AddNodePool.propTypes = {
   name: PropTypes.string,
   id: PropTypes.string,
   selectedRelease: PropTypes.string,
+  maxAZ: PropTypes.number,
+  minAZ: PropTypes.number,
 };
 
 AddNodePool.defaultProps = {
@@ -505,20 +507,20 @@ AddNodePool.defaultProps = {
 };
 
 function mapStateToProps(state) {
-  let availabilityZones = state.app.info.general.availability_zones.zones;
-  let selectedOrganization = state.app.selectedOrganization;
+  const { availability_zones: AZ } = state.app.info.general;
+  const availabilityZones = AZ.zones;
+  // More than 4 AZs is not allowed by now.
+  const maxAZ = AZ.max > 4 ? 4 : AZ.max;
+  const minAZ = AZ.default;
+  const selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
-  let clusterCreationStats = state.app.info.stats.cluster_creation_duration;
+  const clusterCreationStats = state.app.info.stats.cluster_creation_duration;
 
-  var defaultInstanceType;
-  if (
+  const defaultInstanceType =
     state.app.info.workers.instance_type &&
     state.app.info.workers.instance_type.default
-  ) {
-    defaultInstanceType = state.app.info.workers.instance_type.default;
-  } else {
-    defaultInstanceType = 'm3.large';
-  }
+      ? state.app.info.workers.instance_type.default
+      : 'm3.large';
 
   const defaultCPUCores = 4; // TODO
   const defaultMemorySize = 4; // TODO
@@ -537,6 +539,8 @@ function mapStateToProps(state) {
     defaultDiskSize,
     selectedOrganization,
     clusterCreationStats,
+    minAZ,
+    maxAZ,
   };
 }
 

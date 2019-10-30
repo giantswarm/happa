@@ -56,6 +56,7 @@ const clusterReducer = produce((draft, action) => {
         ...action.cluster,
         workers: withAwsKeys.workers,
       };
+      draft.isFetching = false;
 
       // Fill in scaling values when they aren't supplied.
       const { scaling, workers } = draft.items[action.cluster.id];

@@ -42,6 +42,7 @@ export function nodePoolsLoad() {
           type: types.NODEPOOLS_LOAD_SUCCESS,
           nodePools: allNodePools,
         });
+        dispatch({ type: types.NODEPOOLS_CREATE_SUCCESS });
       })
       .catch(error => {
         // if (error.status === 404) {
@@ -203,12 +204,9 @@ export function nodePoolsCreate(clusterId, nodePools) {
           });
       })
     );
-    const nodePoolsArrayOfIds = allNodePools.map(np => np.id);
 
-    // Dispatch action for populating nodePools key inside cluster
-    dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArrayOfIds));
-    dispatch({ type: types.NODEPOOLS_CREATE_SUCCESS });
-
+    // Dispatch action for populating nodePools key inside clusters
+    dispatch(nodePoolsLoad());
     return;
   };
 }

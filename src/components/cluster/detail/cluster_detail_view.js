@@ -243,12 +243,14 @@ class ClusterDetailView extends React.Component {
       release,
       targetRelease,
       region,
+      loading,
+      loadingWithNodePools,
     } = this.props;
 
-    const { loading } = this.props;
-
     return (
-      <LoadingOverlay loading={loading || !this.props.cluster}>
+      <LoadingOverlay
+        loading={isNodePoolsCluster ? loadingWithNodePools : loading}
+      >
         <DocumentTitle
           title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
         >
@@ -262,6 +264,7 @@ class ClusterDetailView extends React.Component {
                     entityType='cluster'
                     onSubmit={this.editClusterName}
                   />{' '}
+                  {/* TODO Remove this */}
                   {loading ? (
                     <img
                       className='loader'
@@ -413,24 +416,22 @@ ClusterDetailView.propTypes = {
   targetRelease: PropTypes.object,
   user: PropTypes.object,
   loading: PropTypes.bool,
+  loadingWithNodePools: PropTypes.bool,
 };
 
 function mapStateToProps(state, ownProps) {
   const { releases, clusters, nodePools } = state.entities;
-  const isFetchingReleases = releases.isFetching;
-  const isFetchingDetails = clusters.isFetching;
-  const isFetchingApps = clusters.items[ownProps.clusterId].isFetchingApps;
-  const isFetchingKeyPairs =
-    clusters.items[ownProps.clusterId].isFetchingKeyPairs;
-  const isFetchingNodePools = nodePools.isFetching;
+
+  const loading = releases.isFetching || clusters.isFetching;
+  const loadingWithNodePools =
+    nodePools.isFetching ||
+    clusters.items[ownProps.clusterId].isFetchingKeyPairs ||
+    clusters.items[ownProps.clusterId].isFetchingApps ||
+    loading;
 
   return {
-    loading:
-      isFetchingReleases &&
-      isFetchingDetails &&
-      isFetchingApps &&
-      isFetchingKeyPairs &&
-      isFetchingNodePools,
+    loading,
+    loadingWithNodePools,
   };
 }
 

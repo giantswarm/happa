@@ -15,8 +15,18 @@ const initialState = {
 
 const nodePools = produce((draft, action) => {
   switch (action.type) {
+    // TODO Find a better/simpler approach.
     case types.NODEPOOLS_LOAD:
+    case types.CLUSTERS_LOAD:
+    case types.NODEPOOL_DELETE_CONFIRMED:
+    case types.V5_CLUSTER_CREATE_SUCCESS:
+    case types.NODEPOOLS_CREATE:
+    case types.RELEASES_LOAD:
       draft.isFetching = true;
+      return;
+
+    case types.CLUSTER_LOAD_DETAILS_SUCCESS:
+      draft.isFetching = false;
       return;
 
     case types.NODEPOOLS_LOAD_SUCCESS:
@@ -25,6 +35,8 @@ const nodePools = produce((draft, action) => {
       return;
 
     case types.NODEPOOLS_LOAD_ERROR:
+    case types.NODEPOOL_DELETE_ERROR:
+    case types.NODEPOOLS_CREATE_SUCCESS:
       draft.errorLoading = true;
       draft.isFetching = false;
       return;
@@ -42,28 +54,17 @@ const nodePools = produce((draft, action) => {
     case types.NODEPOOL_DELETE_SUCCESS:
       delete draft.items[action.nodePoolId];
       draft.lastUpdated = Date.now();
+      draft.isFetching = false;
       return;
 
-    case types.V5_CLUSTER_CREATE_SUCCESS:
-      draft.isFetching = true;
-      return;
-
-    case types.NODEPOOL_CREATE_SUCCESS:
-      draft.items[action.nodePool.id] = action.nodePool;
-      return;
+    // case types.NODEPOOL_CREATE_SUCCESS:
+    //   draft.items[action.nodePool.id] = action.nodePool;
+    //   return;
 
     case types.NODEPOOL_CREATE_ERROR:
     case types.NODEPOOLS_CREATE_ERROR:
       delete draft.items[action.nodePoolId];
       draft.errorCreating = true;
-      draft.isFetching = false;
-      return;
-
-    case types.NODEPOOLS_CREATE:
-      draft.isFetching = true;
-      return;
-
-    case types.NODEPOOLS_CREATE_SUCCESS:
       draft.isFetching = false;
       return;
   }

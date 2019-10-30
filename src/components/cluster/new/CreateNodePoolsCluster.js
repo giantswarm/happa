@@ -285,7 +285,7 @@ class CreateNodePoolsCluster extends Component {
             release_version: this.props.selectedRelease,
             master: {
               availabilityZone: this.state.hasAZLabels
-                ? this.state.availabilityZonesLabels.zonesString
+                ? this.state.availabilityZonesLabels.zonesArray
                 : this.state.availabilityZonesRandom.value,
             },
           },

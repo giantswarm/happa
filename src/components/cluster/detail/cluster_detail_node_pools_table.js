@@ -267,7 +267,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
     RAM: 0,
     CPUs: 0,
     workerNodesRunning: 0,
-    nodePools: [],
+    nodePools: null,
     isNodePoolBeingAdded: false,
     nodePoolForm: {
       isValid: false,
@@ -279,12 +279,6 @@ class ClusterDetailNodePoolsTable extends React.Component {
 
   componentDidMount() {
     this.produceNodePools();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.nodePools !== this.props.nodePools) {
-      this.props.dispatch(nodePoolsLoad()).then(this.produceNodePools());
-    }
   }
 
   // TODO Move this to the action creator so it will be triggered on every NPs load.
@@ -337,32 +331,15 @@ class ClusterDetailNodePoolsTable extends React.Component {
   };
 
   createNodePool = () => {
-    this.setState({
-      nodePoolForm: { ...this.state.nodePoolForm, isSubmitting: true },
-    });
+    const data = [this.state.nodePoolForm.data];
 
-    this.props
-      .dispatch(
-        nodePoolsCreate(this.props.cluster.id, [this.state.nodePoolForm.data])
-      )
-      .then(() => {
-        // Reset form data and close the form
-        this.setState(
-          produce(draft => {
-            draft.nodePoolForm.data = {};
-          })
-        );
-        // Close the form.
-        this.toggleAddNodePoolForm();
+    this.setState(
+      produce(draft => {
+        draft.nodePoolForm.data = { isSubmiting: true };
       })
-      .catch(error => {
-        // TODO Show error in view?
+    );
 
-        this.setState({
-          submitting: false,
-          error: error,
-        });
-      });
+    this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
   };
 
   // TODO We are repeating this in several places, refactor this to a reusable HOC / hooks.
