@@ -361,18 +361,6 @@ class ClusterDetailView extends React.Component {
                 </Tabs>
               </div>
             </div>
-
-            {/* {isNodePoolsCluster && nodePools && (
-              <ScaleNodePoolModal
-                cluster={cluster}
-                nodePools={nodePools}
-                provider={provider}
-                ref={s => {
-                  this.scaleNodePoolModal = s;
-                }}
-                :q
-              />
-            )} */}
             {!isNodePoolsCluster && (
               <ScaleClusterModal
                 cluster={cluster}

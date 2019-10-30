@@ -105,13 +105,13 @@ it('deletes a v4 cluster using the button in cluster details view', async () => 
     div
   );
 
-  // await wait(() => debug());
-  // fireEvent.click(getByText(/delete cluster/i));
+  await wait(() => getByText(/delete cluster/i));
+  fireEvent.click(getByText(/delete cluster/i));
 
-  // expect(mockClusterDelete).toHaveBeenCalledTimes(1);
-  // expect(mockClusterDelete).toHaveBeenCalledWith(
-  //   initialState().entities.clusters.items[clusterId]
-  // );
+  expect(mockClusterDelete).toHaveBeenCalledTimes(1);
+  expect(mockClusterDelete).toHaveBeenCalledWith(
+    initialState().entities.clusters.items[clusterId]
+  );
 });
 
 // The modal is opened calling a function that lives in the parent component of
