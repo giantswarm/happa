@@ -4,7 +4,7 @@ import { modalHide } from './modalActions';
 import GiantSwarm from 'giantswarm';
 
 // API instantiations.
-const nodePoolsApi = new GiantSwarm.NodepoolsApi();
+const nodePoolsApi = new GiantSwarm.NodePoolsApi();
 
 //Loads all node pools for all node pools clusters.
 export function nodePoolsLoad() {
