@@ -37,7 +37,7 @@ export function getMemoryTotal(cluster) {
   var workers = getNumberOfNodes(cluster);
 
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
-    return null;
+    return null; // TODO refactor this and return 0 instead, this is a function that should return a total
   }
   var m = workers * cluster.workers[0].memory.size_gb;
   return m.toFixed(2);
@@ -55,7 +55,7 @@ export function getStorageTotal(cluster) {
 export function getCpusTotal(cluster) {
   var workers = getNumberOfNodes(cluster);
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
-    return null;
+    return null; // TODO refactor this and return 0 instead, this is a function that should return a total
   }
   return workers * cluster.workers[0].cpu.cores;
 }

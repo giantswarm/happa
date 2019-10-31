@@ -97,7 +97,8 @@ class NewCluster extends React.Component {
     const Component =
       this.semVerCompare() < 0 ||
       window.config.environment !== 'development' ||
-      this.props.provider === 'azure'
+      this.props.provider === 'azure' ||
+      this.props.provider === 'kvm'
         ? CreateRegularCluster // new v4 form
         : CreateNodePoolsCluster; // new v5 form
 
