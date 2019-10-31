@@ -6,7 +6,6 @@ import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
-import cmp from 'semver-compare';
 import NodeCountSelector from 'shared/node_count_selector';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -18,9 +17,9 @@ class ScaleNodePoolModal extends React.Component {
     modalVisible: false,
     scaling: {
       automatic: false,
-      min: this.props.cluster.scaling.min,
+      min: this.props.nodePool.scaling.min,
       minValid: true,
-      max: this.props.cluster.scaling.max,
+      max: this.props.nodePool.scaling.max,
       maxValid: true,
     },
     nodePool: null,
@@ -30,8 +29,8 @@ class ScaleNodePoolModal extends React.Component {
     this.setState({
       scaling: {
         ...this.state.scaling,
-        min: this.props.cluster.scaling.min,
-        max: this.props.cluster.scaling.max,
+        min: this.props.nodePool.scaling.min,
+        max: this.props.nodePool.scaling.max,
       },
       loading: false,
       error: null,
@@ -66,32 +65,17 @@ class ScaleNodePoolModal extends React.Component {
     });
   };
 
-  /**
-   * Returns true if autoscaling of worker nodes is possible in this
-   * tenant cluster.
-   *
-   * @param String Provider identifier (aws, azure, kvm)
-   * @param String Semantic release version number
-   */
-  supportsAutoscaling(provider, releaseVer) {
-    if (provider != 'aws') {
-      return false;
-    }
-
-    // In order to have support for automatic scaling and therefore for scaling
-    // limits, provider must be AWS and cluster release >= 6.3.0.
-    return cmp(releaseVer, '6.2.99') === 1;
+  supportsAutoscaling(provider) {
+    if (provider != 'aws') return false;
+    return true;
   }
 
-  updateScaling = nodeCountSelector =>
+  updateScaling = nodeCountSelector => {
+    const { min, max, minValid, maxValid } = nodeCountSelector.scaling;
     this.setState({
-      scaling: {
-        min: nodeCountSelector.scaling.min,
-        minValid: nodeCountSelector.scaling.minValid,
-        max: nodeCountSelector.scaling.max,
-        maxValid: nodeCountSelector.scaling.maxValid,
-      },
+      scaling: { min, minValid, max, maxValid },
     });
+  };
 
   submit = () => {
     this.setState(
@@ -128,31 +112,20 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   workerDelta = () => {
+    const { nodePool, workerNodesDesired } = this.props;
+    const { min, max } = this.state.scaling;
+
     if (
-      !this.supportsAutoscaling(
-        this.props.provider,
-        this.props.cluster.release_version
-      )
+      !this.supportsAutoscaling(this.props.provider, nodePool.release_version)
     ) {
       // On non-auto-scaling clusters scaling.min == scaling.max so comparing
       // only min between props and current state works.
-      return this.state.scaling.min - this.props.cluster.scaling.min;
+      return min - nodePool.scaling.min;
     }
 
-    if (this.props.workerNodesDesired < this.state.scaling.min) {
-      return this.state.scaling.min - this.props.workerNodesDesired;
-    }
-
-    if (this.props.workerNodesDesired > this.state.scaling.max) {
-      return this.state.scaling.max - this.props.workerNodesDesired;
-    }
-
-    if (
-      this.state.scaling.min == this.state.scaling.max &&
-      this.props.workerNodesDesired < this.state.scaling.max
-    ) {
-      return this.props.workerNodesDesired - this.state.scaling.max;
-    }
+    if (workerNodesDesired < min) return min - workerNodesDesired;
+    if (workerNodesDesired > max) return max - workerNodesDesired;
+    if (min == max && workerNodesDesired < max) return workerNodesDesired - max;
 
     return 0;
   };
@@ -168,73 +141,59 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   buttonProperties = () => {
-    var workerDelta = this.workerDelta();
-    var pluralizeWorkers = this.pluralize(workerDelta);
+    let workerDelta = this.workerDelta();
+    let pluralizeWorkers = this.pluralize(workerDelta);
 
-    if (
-      this.supportsAutoscaling(
-        this.props.provider,
-        this.props.cluster.release_version
-      )
-    ) {
-      if (this.state.scaling.min > this.props.workerNodesDesired) {
-        workerDelta = this.state.scaling.min - this.props.workerNodesDesired;
+    const { nodePool, workerNodesDesired } = this.props;
+    const { min, max, minValid, maxValid } = this.state.scaling;
+
+    if (this.supportsAutoscaling(this.props.provider)) {
+      if (min > workerNodesDesired) {
+        workerDelta = min - workerNodesDesired;
         return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
           style: 'success',
-          disabled: !this.state.scaling.minValid,
+          disabled: !minValid,
         };
       }
 
-      if (this.state.scaling.max < this.props.workerNodesDesired) {
-        workerDelta = Math.abs(
-          this.props.workerNodesDesired - this.state.scaling.max
-        );
+      if (max < workerNodesDesired) {
+        workerDelta = Math.abs(workerNodesDesired - max);
         return {
           title: `Remove ${workerDelta} worker node${this.pluralize(
             workerDelta
           )}`,
           style: 'danger',
-          disabled: !this.state.scaling.maxValid,
+          disabled: !maxValid,
         };
       }
 
-      if (this.state.scaling.min != this.props.cluster.scaling.min) {
+      if (min != nodePool.scaling.min) {
         return {
           title: 'Apply',
           style: 'success',
-          disabled: !(
-            this.state.scaling.minValid && this.state.scaling.maxValid
-          ),
+          disabled: !(minValid && maxValid),
         };
       }
 
-      if (this.state.scaling.max != this.props.cluster.scaling.max) {
+      if (max != nodePool.scaling.max) {
         return {
           title: 'Apply',
           style: 'success',
-          disabled: !(
-            this.state.scaling.minValid && this.state.scaling.maxValid
-          ),
+          disabled: !(minValid && maxValid),
         };
       }
 
-      return {
-        disabled: true,
-      };
+      return { disabled: true };
     }
 
-    if (workerDelta === 0) {
-      return {
-        disabled: true,
-      };
-    }
+    if (workerDelta === 0) return { disabled: true };
 
     if (workerDelta > 0) {
       return {
         title: `Add ${workerDelta} worker node${pluralizeWorkers}`,
         style: 'success',
-        disabled: !(this.state.scaling.minValid && this.state.scaling.maxValid),
+        disabled: !(minValid && maxValid),
       };
     }
 
@@ -242,29 +201,24 @@ class ScaleNodePoolModal extends React.Component {
       return {
         title: `Remove ${Math.abs(workerDelta)} worker node${pluralizeWorkers}`,
         style: 'danger',
-        disabled: !(this.state.scaling.minValid && this.state.scaling.maxValid),
+        disabled: !(minValid && maxValid),
       };
     }
 
-    return {
-      disabled: true,
-    };
+    return { disabled: true };
   };
 
   render() {
-    var warnings = [];
-    if (
-      this.state.scaling.max < this.props.workerNodesRunning &&
-      this.state.scaling.minValid
-    ) {
-      var diff = this.props.workerNodesRunning - this.state.scaling.max;
+    const { workerNodesRunning, provider } = this.props;
+    const { error, scaling } = this.state;
+    const { min, max, minValid, loading } = scaling;
 
-      if (
-        this.supportsAutoscaling(
-          this.props.provider,
-          this.props.cluster.release_version
-        )
-      ) {
+    let warnings = [];
+
+    if (max < workerNodesRunning && minValid) {
+      const diff = workerNodesRunning - max;
+
+      if (this.supportsAutoscaling(provider)) {
         warnings.push(
           <CSSTransition
             classNames='rollup'
@@ -275,8 +229,8 @@ class ScaleNodePoolModal extends React.Component {
           >
             <p key='node-removal'>
               <i className='fa fa-warning' /> The node pool currently has{' '}
-              {this.props.workerNodesRunning} worker nodes running. By setting
-              the maximum lower than that, you enforce the removal of{' '}
+              {workerNodesRunning} worker nodes running. By setting the maximum
+              lower than that, you enforce the removal of{' '}
               {diff === 1 ? 'one node' : diff + ' nodes'}. This could result in
               unscheduled workloads.
             </p>
@@ -300,7 +254,7 @@ class ScaleNodePoolModal extends React.Component {
       }
     }
 
-    if (this.state.scaling.min < 3) {
+    if (min < 3) {
       warnings.push(
         <CSSTransition
           classNames='rollup'
@@ -321,19 +275,13 @@ class ScaleNodePoolModal extends React.Component {
     var body = (
       <BootstrapModal.Body>
         <p>
-          {this.supportsAutoscaling(
-            this.props.provider,
-            this.props.cluster.release_version
-          )
+          {this.supportsAutoscaling(provider)
             ? 'Set the scaling range and let the autoscaler set the effective number of worker nodes based on the usage.'
             : 'How many workers would you like your node pool to have?'}
         </p>
         <div className='row section'>
           <NodeCountSelector
-            autoscalingEnabled={this.supportsAutoscaling(
-              this.props.provider,
-              this.props.cluster.release_version
-            )}
+            autoscalingEnabled={this.supportsAutoscaling(provider)}
             onChange={this.updateScaling}
             readOnly={false}
             scaling={this.state.scaling}
@@ -350,7 +298,7 @@ class ScaleNodePoolModal extends React.Component {
           <Button
             bsStyle={this.buttonProperties().style}
             disabled={this.buttonProperties().disabled}
-            loading={this.state.loading}
+            loading={loading}
             loadingPosition='left'
             onClick={this.submit}
             type='submit'
@@ -358,41 +306,29 @@ class ScaleNodePoolModal extends React.Component {
             {this.buttonProperties().title}
           </Button>
         )}
-        <Button
-          bsStyle='link'
-          disabled={this.state.loading}
-          onClick={this.close}
-        >
+        <Button bsStyle='link' disabled={loading} onClick={this.close}>
           Cancel
         </Button>
       </BootstrapModal.Footer>
     );
 
-    if (this.state.error) {
+    if (error) {
       body = (
         <BootstrapModal.Body>
           <p>Something went wrong while trying to scale your node pool:</p>
           <div className='flash-messages--flash-message flash-messages--danger'>
-            {this.state.error.body && this.state.error.body.message
-              ? this.state.error.body.message
-              : this.state.error.message}
+            {error.body && error.body.message
+              ? error.body.message
+              : error.message}
           </div>
         </BootstrapModal.Body>
       );
       footer = (
         <BootstrapModal.Footer>
-          <Button
-            bsStyle='link'
-            disabled={this.state.loading}
-            onClick={this.back}
-          >
+          <Button bsStyle='link' disabled={loading} onClick={this.back}>
             Back
           </Button>
-          <Button
-            bsStyle='link'
-            disabled={this.state.loading}
-            onClick={this.close}
-          >
+          <Button bsStyle='link' disabled={loading} onClick={this.close}>
             Cancel
           </Button>
         </BootstrapModal.Footer>
@@ -404,7 +340,7 @@ class ScaleNodePoolModal extends React.Component {
         <BootstrapModal.Header closeButton>
           <BootstrapModal.Title>
             Edit scaling settings for{' '}
-            <ClusterIDLabel clusterID={this.props.cluster.id} />
+            <ClusterIDLabel clusterID={this.props.nodePool.id} />
           </BootstrapModal.Title>
         </BootstrapModal.Header>
         {body}

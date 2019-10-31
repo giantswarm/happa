@@ -295,7 +295,9 @@ class CreateNodePoolsCluster extends Component {
       );
 
       // const newNodePools =
-      await this.props.dispatch(nodePoolsCreate(newCluster.id, nodePools));
+      const allNodePools = await this.props.dispatch(
+        nodePoolsCreate(newCluster.id, nodePools)
+      );
 
       // after successful creation, redirect to cluster details
       this.props.dispatch(
@@ -304,6 +306,7 @@ class CreateNodePoolsCluster extends Component {
         )
       );
     } catch (error) {
+      console.error(error);
       this.setState({
         submitting: false,
         error: error,

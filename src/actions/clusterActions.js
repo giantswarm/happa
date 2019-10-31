@@ -549,7 +549,7 @@ function clusterLoadStatusV4(dispatch, clusterId) {
  * @param {Boolean} isV5Cluster
  * @param {Array} nodePools array of node pool objects
  */
-export function clusterCreate(cluster, isV5Cluster, nodePools = []) {
+export function clusterCreate(cluster, isV5Cluster) {
   return function(dispatch) {
     dispatch({
       type: types.CLUSTER_CREATE,

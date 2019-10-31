@@ -207,7 +207,7 @@ export function nodePoolsCreate(clusterId, nodePools) {
 
     // Dispatch action for populating nodePools key inside clusters
     dispatch(nodePoolsLoad());
-    return;
+    return allNodePools;
   };
 }
 
