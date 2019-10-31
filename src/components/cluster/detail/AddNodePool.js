@@ -268,7 +268,7 @@ class AddNodePool extends Component {
           // TODO Is the endpoint expecting to receive either a string or a number??
           availability_zones: this.state.hasAZLabels
             ? { zones: this.state.availabilityZonesLabels.zonesArray }
-            : { _number: this.state.availabilityZonesPicker.value },
+            : { number: this.state.availabilityZonesPicker.value },
           scaling: {
             min: this.state.scaling.min,
             max: this.state.scaling.max,
@@ -313,7 +313,7 @@ class AddNodePool extends Component {
     const [RAM, CPUCores] = this.produceRAMAndCores();
     const { zonesArray } = this.state.availabilityZonesLabels;
     const { hasAZLabels, name } = this.state;
-    const { minAZ, maxAZ } = this.props;
+    const { minAZ, maxAZ, defaultAZ } = this.props;
 
     return (
       <>
@@ -391,6 +391,7 @@ class AddNodePool extends Component {
                   <AvailabilityZonesParser
                     min={minAZ}
                     max={maxAZ}
+                    defaultValue={defaultAZ}
                     zones={this.props.availabilityZones}
                     updateAZValuesInParent={this.updateAZ}
                     isLabels={hasAZLabels}
@@ -454,6 +455,7 @@ class AddNodePool extends Component {
                       <AvailabilityZonesParser
                         min={minAZ}
                         max={maxAZ}
+                        defaultValue={2}
                         zones={this.props.availabilityZones}
                         updateAZValuesInParent={this.updateAZ}
                         isLabels={hasAZLabels}
@@ -504,7 +506,6 @@ AddNodePool.propTypes = {
   defaultDiskSize: PropTypes.number,
   match: PropTypes.object,
   clusterCreationStats: PropTypes.object,
-  clusterId: PropTypes.string,
   closeForm: PropTypes.func,
   informParent: PropTypes.func,
   name: PropTypes.string,
@@ -512,6 +513,7 @@ AddNodePool.propTypes = {
   selectedRelease: PropTypes.string,
   maxAZ: PropTypes.number,
   minAZ: PropTypes.number,
+  defaultAZ: PropTypes.number,
 };
 
 AddNodePool.defaultProps = {
@@ -523,7 +525,8 @@ function mapStateToProps(state) {
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
   const maxAZ = AZ.max > 4 ? 4 : AZ.max;
-  const minAZ = AZ.default;
+  const minAZ = 1;
+  const defaultAZ = AZ.default;
   const selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
   const clusterCreationStats = state.app.info.stats.cluster_creation_duration;
@@ -553,6 +556,7 @@ function mapStateToProps(state) {
     clusterCreationStats,
     minAZ,
     maxAZ,
+    defaultAZ,
   };
 }
 

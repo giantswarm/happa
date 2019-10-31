@@ -366,9 +366,9 @@ class ClusterDetailNodePoolsTable extends React.Component {
       workerNodesRunning,
       nodePoolForm,
     } = this.state;
-    const { accessCluster, cluster, region } = this.props;
+    const { accessCluster, cluster, region, release } = this.props;
 
-    const { create_date, release_version, release, api_endpoint } = cluster;
+    const { create_date, release_version, api_endpoint } = cluster;
     const noNodePools = !nodePools || nodePools.length === 0;
 
     return (
@@ -392,26 +392,21 @@ class ClusterDetailNodePoolsTable extends React.Component {
           </div>
           <div>
             <div>
-              {!nodePools ? (
+              {!workerNodesRunning ? (
                 <span>0 nodes</span>
               ) : (
                 <>
                   <span>
-                    {workerNodesRunning} nodes
-                    {!noNodePools && ` in ${nodePools.length} node pools`}
+                    {workerNodesRunning} nodes in {nodePools.length} node pools
                   </span>
-                  {!noNodePools && (
-                    <>
-                      <span>
-                        <Dot />
-                        {this.state.RAM} GB RAM
-                      </span>
-                      <span>
-                        <Dot />
-                        {this.state.CPUs} CPUs
-                      </span>
-                    </>
-                  )}
+                  <span>
+                    <Dot />
+                    {this.state.RAM} GB RAM
+                  </span>
+                  <span>
+                    <Dot />
+                    {this.state.CPUs} CPUs
+                  </span>
                 </>
               )}
             </div>

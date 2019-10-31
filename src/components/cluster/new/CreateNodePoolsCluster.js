@@ -365,8 +365,8 @@ class CreateNodePoolsCluster extends Component {
   render() {
     const { hasAZLabels, name, submitting } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
-    const { min, max } = window.config.v5ClusterAZLimits;
     const { nodePools } = this.state.nodePoolsForms;
+    const { minAZ, maxAZ, defaultAZ } = this.props;
 
     return (
       <Breadcrumb
@@ -468,8 +468,9 @@ class CreateNodePoolsCluster extends Component {
                 <AZWrapperDiv>
                   {hasAZLabels && (
                     <AvailabilityZonesParser
-                      min={min}
-                      max={max}
+                      min={minAZ}
+                      max={maxAZ}
+                      defaultValue={defaultAZ}
                       zones={this.props.availabilityZones}
                       updateAZValuesInParent={this.updateAZ}
                       isLabels={true}
@@ -481,10 +482,10 @@ class CreateNodePoolsCluster extends Component {
                       Please select one availability zone.
                     </p>
                   )}
-                  {hasAZLabels && zonesArray.length > max && (
+                  {hasAZLabels && zonesArray.length > maxAZ && (
                     <p className='danger'>
-                      {max} is the maximum you can have. Please uncheck{' '}
-                      {zonesArray.length - max} of them.
+                      {maxAZ} is the maximum you can have. Please uncheck{' '}
+                      {zonesArray.length - maxAZ} of them.
                     </p>
                   )}
                 </AZWrapperDiv>
@@ -504,7 +505,6 @@ class CreateNodePoolsCluster extends Component {
                       <NodePoolHeading>{name}</NodePoolHeading>
                       <AddNodePoolFlexColumnDiv>
                         <AddNodePool
-                          clusterId={'m0ckd'}
                           selectedRelease={this.props.selectedRelease}
                           informParent={this.updateNodePoolForm}
                           name={name}
@@ -584,10 +584,19 @@ CreateNodePoolsCluster.propTypes = {
   selectableReleases: PropTypes.array,
   releases: PropTypes.object,
   activeSortedReleases: PropTypes.array,
+  maxAZ: PropTypes.number,
+  minAZ: PropTypes.number,
+  defaultAZ: PropTypes.number,
 };
 
 function mapStateToProps(state) {
-  let availabilityZones = state.app.info.general.availability_zones.zones;
+  const { availability_zones: AZ } = state.app.info.general;
+  const availabilityZones = AZ.zones;
+  // More than 4 AZs is not allowed by now.
+  const maxAZ = AZ.max > 4 ? 4 : AZ.max;
+  const minAZ = 1;
+  const defaultAZ = AZ.default;
+
   let selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
   let clusterCreationStats = state.app.info.stats.cluster_creation_duration;
@@ -619,6 +628,9 @@ function mapStateToProps(state) {
     defaultDiskSize,
     selectedOrganization,
     clusterCreationStats,
+    minAZ,
+    maxAZ,
+    defaultAZ,
   };
 }
 
