@@ -114,7 +114,7 @@ class NodeCountSelector extends React.Component {
                 </SpanWrapper>
                 <NumberPicker
                   label=''
-                  max={99}
+                  max={999}
                   min={this.state.scaling.min}
                   onChange={this.updateScalingMax}
                   readOnly={false} // TODO
