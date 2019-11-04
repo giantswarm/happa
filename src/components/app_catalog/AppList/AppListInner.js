@@ -32,11 +32,11 @@ class AppListInner extends React.Component {
     return apps;
   });
 
-  sortVersionsByCreationDateDESC = (versions) => {
+  sortVersionsByCreationDateDESC = versions => {
     return versions.sort((a, b) => {
       return new Date(b.created) - new Date(a.created);
     });
-  }
+  };
 
   filterApps(searchQuery, allApps) {
     const fieldsToCheck = ['name', 'description', 'keywords'];

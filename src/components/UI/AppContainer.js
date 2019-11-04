@@ -130,7 +130,13 @@ const onImgFailLoading = callback => event => {
   callback(event);
 };
 
-const AppContainer = ({ appVersions, catalog, searchQuery, onImgError, ...props }) => {
+const AppContainer = ({
+  appVersions,
+  catalog,
+  searchQuery,
+  onImgError,
+  ...props
+}) => {
   const { icon, name, repoName, version } = appVersions[0];
   const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
