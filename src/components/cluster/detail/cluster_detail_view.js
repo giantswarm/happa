@@ -1,4 +1,5 @@
 import * as clusterActions from 'actions/clusterActions';
+import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
 import { clusterPatch } from 'actions/clusterActions';
@@ -40,9 +41,10 @@ const WrapperDiv = styled.div`
 `;
 class ClusterDetailView extends React.Component {
   state = {
-    // loading: true,
     errorLoadingApps: false,
   };
+
+  loadDataInterval = null;
 
   componentDidMount() {
     this.registerRefreshInterval();
@@ -57,10 +59,9 @@ class ClusterDetailView extends React.Component {
   }
 
   registerRefreshInterval = () => {
-    var refreshInterval = 30 * 1000; // 30 seconds
     this.loadDataInterval = this.props.setInterval(
-      this.refreshClusterData,
-      refreshInterval
+      this.loadDetails,
+      30 * 1000 // 30 seconds
     );
   };
 
@@ -98,10 +99,12 @@ class ClusterDetailView extends React.Component {
       .then(() => {
         return clusterActions.clusterLoadApps(cluster.id);
       });
+
+    this.props.dispatch(nodePoolActions.nodePoolsLoad());
   };
 
   refreshClusterData = () => {
-    this.props.clusterActions.clusterLoadDetails(this.props.cluster.id);
+    this.loadDetails();
   };
 
   handleVisibilityChange = () => {
@@ -431,6 +434,7 @@ function mapDispatchToProps(dispatch) {
   return {
     clusterActions: bindActionCreators(clusterActions, dispatch),
     releaseActions: bindActionCreators(releaseActions, dispatch),
+    nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
     dispatch: dispatch,
   };
 }

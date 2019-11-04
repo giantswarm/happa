@@ -7,10 +7,11 @@ import {
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
-import { nodePoolsCreate, nodePoolsLoad } from 'actions/nodePoolActions';
+import { nodePoolsCreate } from 'actions/nodePoolActions';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
+import moment from 'moment';
 import NodePool from './node_pool';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import produce from 'immer';
@@ -359,6 +360,18 @@ class ClusterDetailNodePoolsTable extends React.Component {
     });
   };
 
+  /**
+   * Returns the proper last updated info string based on available
+   * cluster and/or status information.
+   */
+  lastUpdatedLabel() {
+    const { cluster } = this.props;
+    if (cluster && cluster.lastUpdated) {
+      return moment(cluster.lastUpdated).fromNow();
+    }
+    return 'n/a';
+  }
+
   render() {
     const {
       availableZonesGridTemplateAreas,
@@ -577,6 +590,15 @@ class ClusterDetailNodePoolsTable extends React.Component {
             )}
           </FlexWrapperDiv>
         )}
+        <p className='last-updated' style={{ marginTop: '20px' }}>
+          <small>
+            The information above is auto-refreshing. Details last fetched{' '}
+            <span className='last-updated-datestring'>
+              {this.lastUpdatedLabel()}
+            </span>
+            . <span className='beta-tag'>BETA</span>
+          </small>
+        </p>
       </>
     );
   }

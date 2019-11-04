@@ -19,7 +19,6 @@ class Home extends React.Component {
   visibilityTracker = new PageVisibilityTracker();
 
   componentDidMount() {
-    this.refreshClustersList();
     this.registerRefreshInterval();
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
   }

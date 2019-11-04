@@ -1,11 +1,10 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
-import { nodePoolsCreate, nodePoolsLoad } from './nodePoolActions';
+import { nodePoolsLoad } from './nodePoolActions';
 import { push } from 'connected-react-router';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
-import mockedStatus from 'mockedStatus';
 import moment from 'moment';
 
 // API instantiations.
