@@ -33,7 +33,7 @@ class Home extends React.Component {
    * Load clusters list periodically
    */
   registerRefreshInterval = () => {
-    var refreshIntervalDuration = 3 * 1000; // 30 seconds
+    var refreshIntervalDuration = 30 * 1000; // 30 seconds
     this.refreshInterval = window.setInterval(
       this.refreshClustersList,
       refreshIntervalDuration
