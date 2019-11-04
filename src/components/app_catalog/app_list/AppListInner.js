@@ -128,7 +128,6 @@ class AppListInner extends React.Component {
   };
 
   render() {
-    console.log('render', this.props, this.state);
     const { catalog } = this.props;
     const apps = this.filterApps(catalog.apps, this.getFilter());
 
