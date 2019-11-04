@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
-import LazyLoadedImage from '../shared/LazyLoadedImage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
 export const APP_CONTAINER_HEIGHT = 200;
 export const APP_CONTAINER_IMAGE_HEIGHT = 100;
+
+const IMG_FAILED_LOADING_CLASSNAME = 'failed';
+const IMG_NO_SRC_CLASSNAME = 'hidden';
 
 const Wrapper = styled.div`
   padding: 10px;
@@ -15,15 +17,17 @@ const StyledLink = styled(Link)`
   display: block;
   border: 1px solid #2a5974;
   width: 100%;
-  border-radius: 4px;
   height: 100%;
-  background-color: #2f556a;
+  border-radius: ${({ theme }) => theme.border_radius};
+  background-color: ${({ theme }) => theme.colors.shade4};
   position: relative;
   cursor: pointer;
   overflow: hidden;
+
   &:hover {
     z-index: 10;
-    box-shadow: 0px 0px 5px #549ac3;
+
+    &,
     div:nth-of-type(1) {
       opacity: 1;
       box-shadow: 0px 0px 5px #549ac3;
@@ -35,10 +39,10 @@ const Badge = styled.div`
   background-color: #ef6d3b;
   white-space: nowrap;
   position: absolute;
-  padding: 5px 100px;
+  padding: 5px ${APP_CONTAINER_IMAGE_HEIGHT}px;
   min-width: 300px;
   transform: rotate(-45deg) translate(-37%, 0);
-  color: white;
+  color: #fff;
   text-align: center;
   text-transform: uppercase;
   font-size: 12px;
@@ -49,7 +53,6 @@ const Badge = styled.div`
 `;
 
 const AppIcon = styled.div`
-  border-radius: 4px 4px 0 0;
   height: ${APP_CONTAINER_IMAGE_HEIGHT}px;
   text-align: center;
   padding: 10px;
@@ -58,19 +61,43 @@ const AppIcon = styled.div`
   opacity: 0.9;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   h3 {
     color: #2e556a;
     text-align: center;
     font-size: 20px;
     font-weight: 300;
+    z-index: 1;
+  }
+`;
+
+const StyledAppImage = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.3s ease-out;
+  will-change: opacity;
+
+  &.${IMG_NO_SRC_CLASSNAME}, &.${IMG_FAILED_LOADING_CLASSNAME} {
+    opacity: 0;
+  }
+
+  &.${IMG_NO_SRC_CLASSNAME} {
+    transition: 0;
   }
 
   img {
     max-height: 75px;
     max-width: 60%;
-    margin: auto;
-    vertical-align: middle;
   }
 `;
 
@@ -94,34 +121,33 @@ const AppDetails = styled.div`
   }
 `;
 
-const AppContainer = React.forwardRef(
-  (
-    {
-      appVersions,
-      catalog,
-      searchQuery,
-      iconErrors,
-      imgError,
-      ...props
-    },
-    ref
-  ) => {
+class AppContainer extends React.Component {
+  state = {
+    imgFailedLoading: false,
+  };
+
+  onImgFailLoading = e => {
+    e.target.parentNode.classList.add(IMG_FAILED_LOADING_CLASSNAME);
+    e.target.style.display = 'none';
+
+    this.props.onImgError(e);
+  };
+
+  render() {
+    const { appVersions, catalog, searchQuery, ...props } = this.props;
+
     const { icon, name, repoName, version } = appVersions[0];
     const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
     return (
-      <Wrapper ref={ref} {...props}>
+      <Wrapper {...props}>
         <StyledLink to={to}>
           {repoName === 'managed' && <Badge>MANAGED</Badge>}
           <AppIcon>
-            {
-              icon && !iconErrors[icon]
-                ? (
-                  <LazyLoadedImage src={icon} alt={name} onError={imgError} />
-                ) : (
-                  <h3>{name}</h3>
-                )
-            }
+            <StyledAppImage className={!icon && IMG_NO_SRC_CLASSNAME}>
+              <img src={icon} alt={name} onError={this.onImgFailLoading} />
+            </StyledAppImage>
+            <h3>{name}</h3>
           </AppIcon>
           <AppDetails>
             <h3>{name}</h3>
@@ -131,7 +157,7 @@ const AppContainer = React.forwardRef(
       </Wrapper>
     );
   }
-);
+}
 
 // Needed because `AppContainer` loses its name when using `forwardRef()`
 AppContainer.displayName = 'AppContainer';
@@ -140,8 +166,7 @@ AppContainer.propTypes = {
   appVersions: PropTypes.array,
   catalog: PropTypes.object,
   searchQuery: PropTypes.string,
-  iconErrors: PropTypes.object,
-  imgError: PropTypes.func,
+  onImgError: PropTypes.func,
 };
 
 export default AppContainer;

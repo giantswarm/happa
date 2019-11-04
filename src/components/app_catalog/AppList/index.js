@@ -23,7 +23,7 @@ const AppList = ({ catalog, ...props }) => {
           <Link className='back-link' to={'/app-catalogs/'}>
             <i aria-hidden='true' className='fa fa-chevron-left' />
             Back to all catalogs
-            </Link>
+          </Link>
           <br />
           <br />
           <LoadingOverlay loading={isLoading}>

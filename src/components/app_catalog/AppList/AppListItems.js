@@ -70,16 +70,24 @@ class AppListItems extends React.Component {
           adaptWidthToElement={this.appsListRef.current}
           scrollToItemIndex={scrollToAppIndex}
         >
-          {(style, content) => (
-            <AppContainer
-              style={style}
-              appVersions={content}
-              catalog={this.props.catalog}
-              iconErrors={this.props.iconErrors}
-              imgError={this.props.onImgError}
-              searchQuery={searchQuery}
-            />
-          )}
+          {(style, content) => {
+            const newContent = [].concat(content);
+            const currentIconURL = newContent[0].icon;
+
+            if (this.props.iconErrors.hasOwnProperty(currentIconURL))
+              newContent[0].icon = '';
+
+            return (
+              <AppContainer
+                style={style}
+                appVersions={newContent}
+                catalog={this.props.catalog}
+                hasError={this.props.iconErrors.hasOwnProperty(content[0].icon)}
+                onImgError={this.props.onImgError}
+                searchQuery={searchQuery}
+              />
+            );
+          }}
         </StyledVirtualizedGrid>
       </StyledAppsWrapper>
     );
