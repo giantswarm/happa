@@ -42,17 +42,8 @@ export function nodePoolsLoad() {
           type: types.NODEPOOLS_LOAD_SUCCESS,
           nodePools: allNodePools,
         });
-        dispatch({ type: types.NODEPOOLS_CREATE_SUCCESS });
       })
       .catch(error => {
-        // if (error.status === 404) {
-        //   dispatch({
-        //     type: types.NODEPOOLS_LOAD_SUCCESS,
-        //     nodePools: {},
-        //   });
-        //   return;
-        // }
-
         console.error('Error loading cluster node pools:', error);
         dispatch({
           type: types.NODEPOOLS_LOAD_ERROR,

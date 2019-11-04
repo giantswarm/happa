@@ -30,13 +30,13 @@ const nodePools = produce((draft, action) => {
       return;
 
     case types.NODEPOOLS_LOAD_SUCCESS:
+    case types.NODEPOOLS_CREATE_SUCCESS:
       draft.items = action.nodePools;
       draft.isFetching = false;
       return;
 
     case types.NODEPOOLS_LOAD_ERROR:
     case types.NODEPOOL_DELETE_ERROR:
-    case types.NODEPOOLS_CREATE_SUCCESS:
       draft.errorLoading = true;
       draft.isFetching = false;
       return;
