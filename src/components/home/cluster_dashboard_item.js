@@ -106,7 +106,7 @@ class ClusterDashboardItem extends React.Component {
 
     const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}`;
 
-    // const hasNodePools = cluster.nodePools && cluster.nodePools.length !== 0;
+    const hasNodePools = cluster.nodePools && cluster.nodePools.length !== 0;
 
     return (
       <div className='cluster-dashboard-item well'>
@@ -141,7 +141,7 @@ class ClusterDashboardItem extends React.Component {
             Created {relativeDate(cluster.create_date)}
           </div>
           <div>
-            {numNodes !== 0 && (
+            {numNodes !== 0 && hasNodePools && (
               <RefreshableLabel dataItems={[numNodes]}>
                 <span>{cluster.nodePools.length} node pools, </span>
               </RefreshableLabel>
@@ -149,7 +149,7 @@ class ClusterDashboardItem extends React.Component {
             <RefreshableLabel dataItems={[numNodes]}>
               <span>{numNodes} nodes</span>
             </RefreshableLabel>
-            {numNodes !== 0 && (
+            {numNodes !== 0 && hasNodePools && (
               <>
                 <Dot style={{ paddingLeft: 0 }} />
                 <RefreshableLabel dataItems={[cpus]}>

@@ -157,7 +157,6 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  * @param {Object} nodepool Node Pool definition object
  */
 export function nodePoolsCreate(clusterId, nodePools) {
-  console.log(nodePools);
   return async function(dispatch) {
     dispatch({ type: types.NODEPOOLS_CREATE });
 
