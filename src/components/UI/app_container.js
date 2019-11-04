@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import LazyLoadedImage from '../shared/lazy_loaded_image';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
@@ -112,25 +113,18 @@ const AppDetails = styled.div`
   }
 `;
 
-class AppContainer extends React.Component {
-  render() {
-    const {
-      appVersions,
-      catalog,
-      searchQuery,
-      iconErrors,
-      imgError,
-    } = this.props;
+const AppContainer = React.forwardRef(
+  ({ appVersions, catalog, searchQuery, iconErrors, imgError }, ref) => {
     const { icon, name, repoName, version } = appVersions[0];
     const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
     return (
-      <Wrapper>
+      <Wrapper ref={ref}>
         <StyledLink to={to}>
           {repoName === 'managed' && <Badge>MANAGED</Badge>}
           <AppIcon>
             {icon && !iconErrors[icon] ? (
-              <img onError={imgError} src={icon} />
+              <LazyLoadedImage src={icon} onError={imgError} />
             ) : (
               <h3>{name}</h3>
             )}
@@ -143,7 +137,10 @@ class AppContainer extends React.Component {
       </Wrapper>
     );
   }
-}
+);
+
+// Needed because `AppContainer` loses its name when using `forwardRef()`
+AppContainer.displayName = 'AppContainer';
 
 AppContainer.propTypes = {
   appVersions: PropTypes.array,

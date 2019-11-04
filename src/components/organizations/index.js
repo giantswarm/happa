@@ -6,24 +6,19 @@ import List from './list/';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class Organizations extends React.Component {
-  render() {
-    return (
-      <Breadcrumb
-        data={{ title: 'ORGANIZATIONS', pathname: this.props.match.url }}
-      >
-        <Switch>
-          <Route component={List} exact path={`${this.props.match.path}`} />
-          <Route component={Detail} path={`${this.props.match.path}/:orgId`} />
-          <Redirect
-            path={`${this.props.match.path}*`}
-            to={`${this.props.match.url}`}
-          />
-        </Switch>
-      </Breadcrumb>
-    );
-  }
-}
+const Organizations = props => {
+  const { url, path } = props.match;
+
+  return (
+    <Breadcrumb data={{ title: 'ORGANIZATIONS', pathname: url }}>
+      <Switch>
+        <Route component={List} exact path={`${path}`} />
+        <Route component={Detail} path={`${path}/:orgId`} />
+        <Redirect path={`${path}*`} to={`${url}`} />
+      </Switch>
+    </Breadcrumb>
+  );
+};
 
 Organizations.propTypes = {
   dispatch: PropTypes.func,
