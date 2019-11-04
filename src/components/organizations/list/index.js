@@ -2,9 +2,7 @@ import { connect } from 'react-redux';
 import {
   organizationCreate,
   organizationDelete,
-  organizationSelect,
 } from 'actions/organizationActions';
-import { push } from 'connected-react-router';
 import Button from 'react-bootstrap/lib/Button';
 import DocumentTitle from 'react-document-title';
 import EmptyStateDisplay from 'UI/empty_state_display';
@@ -12,11 +10,9 @@ import OrganizationList from 'UI/organization_list';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class List extends React.Component {
-  viewOrganization = e => {
-    let orgID = e.currentTarget.getAttribute('data-orgID');
-    this.props.dispatch(organizationSelect(orgID));
-    this.props.dispatch(push('/organizations/' + orgID));
+class OrganizationListWrapper extends React.Component {
+  getOrganizationURL = id => {
+    return `/organizations/${id}`;
   };
 
   deleteOrganization = e => {
@@ -44,9 +40,9 @@ class List extends React.Component {
           >
             <OrganizationList
               clusters={this.props.clusters}
+              getViewURL={this.getOrganizationURL}
               deleteOrganization={this.deleteOrganization}
               organizations={this.props.organizations}
-              viewOrganization={this.viewOrganization}
             />
           </EmptyStateDisplay>
           <Button bsStyle='default' onClick={this.createOrganization}>
@@ -58,7 +54,7 @@ class List extends React.Component {
   }
 }
 
-List.propTypes = {
+OrganizationListWrapper.propTypes = {
   dispatch: PropTypes.func,
   organizations: PropTypes.array,
   clusters: PropTypes.object,
@@ -75,4 +71,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(List);
+export default connect(mapStateToProps)(OrganizationListWrapper);
