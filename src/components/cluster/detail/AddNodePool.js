@@ -288,8 +288,7 @@ class AddNodePool extends Component {
     const instanceTypesKeys = Object.keys(this.state.awsInstanceTypes);
 
     const hasInstances =
-      instanceTypesKeys.length > 0 &&
-      instanceTypesKeys.find(type => type === instanceType);
+      instanceTypesKeys && instanceTypesKeys.includes(instanceType);
 
     const RAM = hasInstances
       ? this.state.awsInstanceTypes[instanceType].memory_size_gb
@@ -337,7 +336,7 @@ class AddNodePool extends Component {
               readOnly={false}
               value={this.state.aws.instanceType.value}
             />
-            <p>{`${RAM} CPU cores, ${CPUCores} GB RAM each`}</p>
+            <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
           </FlexWrapperDiv>
         </label>
         <AZLabel htmlFor='availability-zones'>

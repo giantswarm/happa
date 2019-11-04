@@ -95,7 +95,10 @@ class NewCluster extends React.Component {
   renderComponent = props => {
     // TODO Remove environment conditional when we release NPs
     const Component =
-      this.semVerCompare() < 0 || window.config.environment !== 'development'
+      this.semVerCompare() < 0 ||
+      window.config.environment !== 'development' ||
+      this.props.provider === 'azure' ||
+      this.props.provider === 'kvm'
         ? CreateRegularCluster // new v4 form
         : CreateNodePoolsCluster; // new v5 form
 
