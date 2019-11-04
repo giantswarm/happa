@@ -20,6 +20,7 @@ const StyledAppsWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
+/* `Hack` to make `WindowScroller` behave like `facebook` */
 const StyledVirtualizedGrid = styled(VirtualizedScrollableGrid)`
   height: 100% !important;
   width: 100% !important;
@@ -31,7 +32,8 @@ class AppListItems extends React.Component {
   componentDidMount() {
     /**
      * Forcing an initial update to have the ref updated with
-     * the right element, while rendering the list
+     * the right element, to be able to set the right
+     * width to the list
      */
     this.forceUpdate();
   }

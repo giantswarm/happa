@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import LazyLoadedImage from '../shared/LazyLoadedImage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
@@ -93,45 +94,33 @@ const AppDetails = styled.div`
   }
 `;
 
-class AppContainer extends React.Component {
-  iconRef = React.createRef();
-
-  componentDidMount() {
-    this.lazyLoadIcon();
-  }
-
-  lazyLoadIcon() {
-    const { current } = this.iconRef;
-    const { appVersions, iconErrors } = this.props;
-    const { icon } = appVersions[0];
-
-    if (current && icon && !iconErrors[icon]) {
-      current.src = icon;
-    }
-  }
-
-  render() {
-    const {
+const AppContainer = React.forwardRef(
+  (
+    {
       appVersions,
       catalog,
       searchQuery,
       iconErrors,
-      imgError,
-      ...rest
-    } = this.props;
+      imgError
+    },
+    ref
+  ) => {
     const { icon, name, repoName, version } = appVersions[0];
     const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
     return (
-      <Wrapper {...rest}>
+      <Wrapper ref={ref}>
         <StyledLink to={to}>
           {repoName === 'managed' && <Badge>MANAGED</Badge>}
           <AppIcon>
-            {icon && !iconErrors[icon] ? (
-              <img ref={this.iconRef} onError={imgError} />
-            ) : (
-              <h3>{name}</h3>
-            )}
+            {
+              icon && !iconErrors[icon]
+                ? (
+                  <LazyLoadedImage src={icon} alt={name} onError={imgError} />
+                ) : (
+                  <h3>{name}</h3>
+                )
+            }
           </AppIcon>
           <AppDetails>
             <h3>{name}</h3>
@@ -141,7 +130,10 @@ class AppContainer extends React.Component {
       </Wrapper>
     );
   }
-}
+);
+
+// Needed because `AppContainer` loses its name when using `forwardRef()`
+AppContainer.displayName = 'AppContainer';
 
 AppContainer.propTypes = {
   appVersions: PropTypes.array,
