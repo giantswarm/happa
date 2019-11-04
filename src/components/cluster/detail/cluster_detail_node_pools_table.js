@@ -476,6 +476,17 @@ class ClusterDetailNodePoolsTable extends React.Component {
                       ? 1
                       : -1
                   )
+                  .sort((a, b) => {
+                    if (a.name > b.name) {
+                      return 1;
+                    } else if (a.name < b.name) {
+                      return -1;
+                    } else if (a.id > b.id) {
+                      return 1;
+                    } else {
+                      return -1;
+                    }
+                  })
                   .map(nodePool => (
                     <GridRowNodePoolsItem key={nodePool.id || Date.now()}>
                       <NodePool
