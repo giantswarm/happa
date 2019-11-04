@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
-import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { push } from 'connected-react-router';
 import AddNodePool from '../detail/AddNodePool';
 import AvailabilityZonesParser from '../detail/AvailabilityZonesParser';
@@ -292,11 +291,6 @@ class CreateNodePoolsCluster extends Component {
           true, // is v5
           nodePools
         )
-      );
-
-      // const newNodePools =
-      const allNodePools = await this.props.dispatch(
-        nodePoolsCreate(newCluster.id, nodePools)
       );
 
       // after successful creation, redirect to cluster details

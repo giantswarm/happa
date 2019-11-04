@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { nodePoolPatch } from 'actions/nodePoolActions';
 import AvailabilityZonesWrapper from './availability_zones_wrapper';
-import cmp from 'semver-compare';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';

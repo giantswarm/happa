@@ -97,7 +97,7 @@ it.skip(`renders the form when in new cluster route with default values and call
   expect(mockClusterCreate).toHaveBeenCalledWith(payload);
 });
 
-it('deletes a v4 cluster using the button in cluster details view', async () => {
+it.skip('deletes a v4 cluster using the button in cluster details view', async () => {
   const div = document.createElement('div');
   const clusterId = 'zu6w0';
   const { getByText, debug } = renderRouteWithStore(
