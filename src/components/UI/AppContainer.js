@@ -121,43 +121,37 @@ const AppDetails = styled.div`
   }
 `;
 
-class AppContainer extends React.Component {
-  state = {
-    imgFailedLoading: false,
-  };
+const onImgFailLoading = callback => event => {
+  const element = event.target;
 
-  onImgFailLoading = e => {
-    e.target.parentNode.classList.add(IMG_FAILED_LOADING_CLASSNAME);
-    e.target.style.display = 'none';
+  element.parentNode.classList.add(IMG_FAILED_LOADING_CLASSNAME);
+  element.style.display = 'none';
 
-    this.props.onImgError(e);
-  };
+  callback(event);
+};
 
-  render() {
-    const { appVersions, catalog, searchQuery, ...props } = this.props;
+const AppContainer = ({ appVersions, catalog, searchQuery, onImgError, ...props }) => {
+  const { icon, name, repoName, version } = appVersions[0];
+  const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
-    const { icon, name, repoName, version } = appVersions[0];
-    const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
-
-    return (
-      <Wrapper {...props}>
-        <StyledLink to={to}>
-          {repoName === 'managed' && <Badge>MANAGED</Badge>}
-          <AppIcon>
-            <StyledAppImage className={!icon && IMG_NO_SRC_CLASSNAME}>
-              <img src={icon} alt={name} onError={this.onImgFailLoading} />
-            </StyledAppImage>
-            <h3>{name}</h3>
-          </AppIcon>
-          <AppDetails>
-            <h3>{name}</h3>
-            <span>{version}</span>
-          </AppDetails>
-        </StyledLink>
-      </Wrapper>
-    );
-  }
-}
+  return (
+    <Wrapper {...props}>
+      <StyledLink to={to}>
+        {repoName === 'managed' && <Badge>MANAGED</Badge>}
+        <AppIcon>
+          <StyledAppImage className={!icon && IMG_NO_SRC_CLASSNAME}>
+            <img src={icon} alt={name} onError={onImgFailLoading(onImgError)} />
+          </StyledAppImage>
+          <h3>{name}</h3>
+        </AppIcon>
+        <AppDetails>
+          <h3>{name}</h3>
+          <span>{version}</span>
+        </AppDetails>
+      </StyledLink>
+    </Wrapper>
+  );
+};
 
 // Needed because `AppContainer` loses its name when using `forwardRef()`
 AppContainer.displayName = 'AppContainer';

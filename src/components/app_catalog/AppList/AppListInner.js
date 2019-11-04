@@ -27,16 +27,12 @@ class AppListInner extends React.Component {
   getAppsWithOrderedVersions = memoize(allApps => {
     const apps = Object.values(allApps);
 
-    apps.map(appVersions => {
-      return appVersions.sort((a, b) => {
-        return new Date(b.created) - new Date(a.created);
-      });
-    });
+    apps.map(this.sortVersionsByCreationDateDESC);
 
     return apps;
   });
 
-  sortVersionsByCreationDateDESC(versions) {
+  sortVersionsByCreationDateDESC = (versions) => {
     return versions.sort((a, b) => {
       return new Date(b.created) - new Date(a.created);
     });
@@ -85,7 +81,6 @@ class AppListInner extends React.Component {
 
   updateSearchParams = e => {
     const searchQuery = e.target.value;
-
     const urlParams = new URLSearchParams({
       [SEARCH_URL_PARAM]: searchQuery,
     });
