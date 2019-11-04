@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-export const APP_CONTAINER_HEIGHT = 180;
+export const APP_CONTAINER_HEIGHT = 200;
 export const APP_CONTAINER_IMAGE_HEIGHT = 100;
 
 const Wrapper = styled.div`
@@ -101,7 +101,8 @@ const AppContainer = React.forwardRef(
       catalog,
       searchQuery,
       iconErrors,
-      imgError
+      imgError,
+      ...props
     },
     ref
   ) => {
@@ -109,7 +110,7 @@ const AppContainer = React.forwardRef(
     const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
 
     return (
-      <Wrapper ref={ref}>
+      <Wrapper ref={ref} {...props}>
         <StyledLink to={to}>
           {repoName === 'managed' && <Badge>MANAGED</Badge>}
           <AppIcon>

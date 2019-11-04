@@ -1,6 +1,6 @@
+import { debounce } from 'lodash';
 import { FixedSizeGrid as List } from 'react-window';
 import { withTheme } from 'emotion-theming';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import WindowScroller from './WindowScroller';
@@ -56,7 +56,7 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     }
   }
 
-  updateResponsiveFeatures = _.debounce(() => {
+  updateResponsiveFeatures = debounce(() => {
     const newState = Object.assign(
       {},
       this.setColumnCount(this.props),

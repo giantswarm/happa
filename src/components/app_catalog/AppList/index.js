@@ -27,7 +27,7 @@ const AppList = ({ catalog, ...props }) => {
           <br />
           <br />
           <LoadingOverlay loading={isLoading}>
-            <AppListInner {...props} />
+            <AppListInner catalog={catalog} {...props} />
           </LoadingOverlay>
         </React.Fragment>
       </DocumentTitle>

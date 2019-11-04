@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
  */
-export const IS_SCROLLING_TIMEOUT = 450;
+export const IS_SCROLLING_TIMEOUT = 500;
 
 const getWindow = () => (typeof window !== 'undefined' ? window : undefined);
 
