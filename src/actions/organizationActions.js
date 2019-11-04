@@ -1,20 +1,20 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
-import { push } from 'connected-react-router';
 import { setOrganizationToStorage } from 'utils/localStorageUtils';
 import GiantSwarm from 'giantswarm';
 import React from 'react';
 
-// organizationSelect sets the organization that the user is focusing on and
-// stores it in localstorage so that it persists when the users comes back
-// after closing the browser window.
-//
-// It also ensures we have a valid cluster selected.
+/**
+ * Sets the organization that the user is focusing on and
+ * stores it in `Local Storage` so that it persists when the
+ * user comes back after closing the browser window. It
+ * also ensures we have a valid cluster selected.
+ *
+ * @param {String} orgId Organization ID
+ */
 export function organizationSelect(orgId) {
   return function(dispatch) {
-    dispatch(push('/'));
-
     setOrganizationToStorage(orgId);
 
     return dispatch({

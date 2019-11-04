@@ -18,9 +18,9 @@ const OrganizationList = props => {
         {props.organizations.map(organization => {
           return (
             <Row
-              clusters={clustersForOrg(organization.id, props.clusters)}
               key={organization.id}
-              onClick={props.viewOrganization}
+              clusters={clustersForOrg(organization.id, props.clusters)}
+              getViewURL={props.getViewURL}
               onDelete={props.deleteOrganization}
               organization={organization}
             />
@@ -32,8 +32,8 @@ const OrganizationList = props => {
 };
 
 OrganizationList.propTypes = {
+  getViewURL: PropTypes.func.isRequired,
   deleteOrganization: PropTypes.func,
-  viewOrganization: PropTypes.func,
   organizations: PropTypes.array,
   clusters: PropTypes.object,
 };
