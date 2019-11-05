@@ -159,9 +159,6 @@ const AppContainer = ({
   );
 };
 
-// Needed because `AppContainer` loses its name when using `forwardRef()`
-AppContainer.displayName = 'AppContainer';
-
 AppContainer.propTypes = {
   appVersions: PropTypes.array,
   catalog: PropTypes.object,
