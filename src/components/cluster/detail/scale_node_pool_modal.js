@@ -25,7 +25,7 @@ class ScaleNodePoolModal extends React.Component {
     nodePool: null,
   };
 
-  reset = () =>
+  reset = () => {
     this.setState({
       scaling: {
         ...this.state.scaling,
@@ -35,8 +35,9 @@ class ScaleNodePoolModal extends React.Component {
       loading: false,
       error: null,
     });
+  };
 
-  setNodePool = nodePool =>
+  setNodePool = nodePool => {
     this.setState({
       scaling: {
         ...this.state.scaling,
@@ -45,6 +46,7 @@ class ScaleNodePoolModal extends React.Component {
       },
       nodePool,
     });
+  };
 
   back = () => {
     this.setState({
