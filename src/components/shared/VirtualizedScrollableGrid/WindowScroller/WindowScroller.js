@@ -1,5 +1,3 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import {
   getDimensions,
   getPositionOffset,
@@ -9,8 +7,10 @@ import {
   registerScrollListener,
   unregisterScrollListener,
 } from './utils/onScroll';
-import createDetectElementResize from './utils/detectElementResize';
+import createDetectElementResize from '../../../../vendor/detectElementResize';
 import PropTypes from 'prop-types';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.

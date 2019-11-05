@@ -1,7 +1,7 @@
 import {
   cancelAnimationTimeout,
   requestAnimationTimeout,
-} from './requestAnimationTimeout';
+} from '../../../../../vendor/requestAnimationTimeout';
 
 let mountedInstances = [];
 let originalBodyPointerEvents = null;
