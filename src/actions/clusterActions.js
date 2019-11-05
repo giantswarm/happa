@@ -218,7 +218,7 @@ function clusterDetailsV5(dispatch, getState, cluster) {
           'Redirecting you to your organization clusters list'
         );
 
-        dispatch(push('/'));
+        return dispatch(clustersLoad()).then(dispatch => dispatch(push('/')));
       } else {
         console.error('Error loading cluster details:', error);
         dispatch(clusterLoadDetailsError(cluster.id, error));
@@ -490,7 +490,7 @@ export function clusterLoadDetails(clusterId) {
           'Redirecting you to your organization clusters list'
         );
 
-        dispatch(push('/'));
+        return dispatch(clustersLoad()).then(dispatch => dispatch(push('/')));
       } else {
         console.error('Error loading cluster details:', error);
         dispatch(clusterLoadDetailsError(clusterId, error));
