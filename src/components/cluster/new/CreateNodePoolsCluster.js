@@ -187,7 +187,6 @@ class CreateNodePoolsCluster extends Component {
       valid: true,
       validationError: '',
     },
-    releaseVersion: '',
     submitting: false,
     error: false,
     // Not sure which value are we going to pass here... there is no
@@ -256,7 +255,7 @@ class CreateNodePoolsCluster extends Component {
           ? nodePoolsForms.nodePools[np].isValid
           : false
       )
-      .every(np => np);
+      .every(np => np); // This checks if everything is true.
 
     const isValid =
       name.valid &&
@@ -269,36 +268,44 @@ class CreateNodePoolsCluster extends Component {
     return isValid;
   };
 
-  createCluster = () => {
+  createCluster = async () => {
     this.setState({ submitting: true });
 
-    this.props
-      .dispatch(
+    const nodePools = Object.values(this.state.nodePoolsForms.nodePools).map(
+      np => np.data
+    );
+
+    try {
+      const newCluster = await this.props.dispatch(
         clusterCreate(
           {
-            availabilityZones: this.state.hasAZLabels
-              ? this.state.availabilityZonesLabels.zonesString
-              : this.state.availabilityZonesRandom.value,
+            owner: this.props.selectedOrganization,
             name: this.state.name.value,
-            release_version: this.state.releaseVersion,
+            release_version: this.props.selectedRelease,
+            master: {
+              availabilityZone: this.state.hasAZLabels
+                ? this.state.availabilityZonesLabels.zonesArray
+                : this.state.availabilityZonesRandom.value,
+            },
           },
-          true // is v5
+          true, // is v5
+          nodePools
         )
-      )
-      .then(cluster => {
-        // after successful creation, redirect to cluster details
-        this.props.dispatch(
-          push(
-            `/organizations/${this.props.selectedOrganization}/clusters/${cluster.id}`
-          )
-        );
-      })
-      .catch(error => {
-        this.setState({
-          submitting: false,
-          error: error,
-        });
+      );
+
+      // after successful creation, redirect to cluster details
+      this.props.dispatch(
+        push(
+          `/organizations/${this.props.selectedOrganization}/clusters/${newCluster.id}`
+        )
+      );
+    } catch (error) {
+      console.error(error);
+      this.setState({
+        submitting: false,
+        error: error,
       });
+    }
   };
 
   errorState() {
@@ -311,13 +318,6 @@ class CreateNodePoolsCluster extends Component {
       </div>
     );
   }
-
-  selectRelease = releaseVersion => {
-    this.setState({
-      releaseVersion,
-    });
-    this.props.informParent(releaseVersion);
-  };
 
   toggleMasterAZSelector = () => {
     this.setState(state => ({
@@ -359,8 +359,8 @@ class CreateNodePoolsCluster extends Component {
   render() {
     const { hasAZLabels, name, submitting } = this.state;
     const { zonesArray } = this.state.availabilityZonesLabels;
-    const { min, max } = window.config.v5ClusterAZLimits;
     const { nodePools } = this.state.nodePoolsForms;
+    const { minAZ, maxAZ, defaultAZ } = this.props;
 
     return (
       <Breadcrumb
@@ -398,7 +398,7 @@ class CreateNodePoolsCluster extends Component {
                   <span className='label-span'>Release version</span>
                   <div>
                     <ReleaseSelector
-                      selectRelease={this.selectRelease}
+                      selectRelease={this.props.informParent}
                       selectedRelease={this.props.selectedRelease}
                       selectableReleases={this.props.selectableReleases}
                       releases={this.props.releases}
@@ -462,8 +462,9 @@ class CreateNodePoolsCluster extends Component {
                 <AZWrapperDiv>
                   {hasAZLabels && (
                     <AvailabilityZonesParser
-                      min={min}
-                      max={max}
+                      min={minAZ}
+                      max={maxAZ}
+                      defaultValue={defaultAZ}
                       zones={this.props.availabilityZones}
                       updateAZValuesInParent={this.updateAZ}
                       isLabels={true}
@@ -475,15 +476,13 @@ class CreateNodePoolsCluster extends Component {
                       Please select one availability zone.
                     </p>
                   )}
-                  {hasAZLabels && zonesArray.length > max && (
+                  {hasAZLabels && zonesArray.length > maxAZ && (
                     <p className='danger'>
-                      {max} is the maximum you can have. Please uncheck{' '}
-                      {zonesArray.length - max} of them.
+                      {maxAZ} is the maximum you can have. Please uncheck{' '}
+                      {zonesArray.length - maxAZ} of them.
                     </p>
                   )}
                 </AZWrapperDiv>
-
-                {this.state.error && this.errorState()}
               </FlexColumnDiv>
               {Object.keys(nodePools).length === 0 && <hr />}
               <ReactCSSTransitionGroup
@@ -500,8 +499,7 @@ class CreateNodePoolsCluster extends Component {
                       <NodePoolHeading>{name}</NodePoolHeading>
                       <AddNodePoolFlexColumnDiv>
                         <AddNodePool
-                          clusterId={'m0ckd'}
-                          releaseVersion={'8.2.0'}
+                          selectedRelease={this.props.selectedRelease}
                           informParent={this.updateNodePoolForm}
                           name={name}
                           id={npId}
@@ -522,6 +520,9 @@ class CreateNodePoolsCluster extends Component {
               </Button>
               <hr style={{ margin: '30px 0' }} />
             </WrapperDiv>
+
+            {this.state.error && this.errorState()}
+
             <FlexRowDiv>
               <Button
                 bsSize='large'
@@ -533,16 +534,19 @@ class CreateNodePoolsCluster extends Component {
               >
                 Create Cluster
               </Button>
-              <Button
-                bsSize='large'
-                bsStyle='default'
-                loading={submitting}
-                onClick={this.props.closeForm}
-                style={{ background: 'red' }}
-                type='button'
-              >
-                Cancel
-              </Button>
+              {/* We want to hide cancel button when the Create NP button has been clicked */}
+              {!submitting && (
+                <Button
+                  bsSize='large'
+                  bsStyle='default'
+                  loading={submitting}
+                  onClick={this.props.closeForm}
+                  style={{ background: 'red' }}
+                  type='button'
+                >
+                  Cancel
+                </Button>
+              )}
             </FlexRowDiv>
             <p style={{ maxWidth: '650px', margin: '0 auto' }}>
               Note that it takes around 20 minutes on average until a new
@@ -574,10 +578,19 @@ CreateNodePoolsCluster.propTypes = {
   selectableReleases: PropTypes.array,
   releases: PropTypes.object,
   activeSortedReleases: PropTypes.array,
+  maxAZ: PropTypes.number,
+  minAZ: PropTypes.number,
+  defaultAZ: PropTypes.number,
 };
 
 function mapStateToProps(state) {
-  let availabilityZones = state.app.info.general.availability_zones.zones;
+  const { availability_zones: AZ } = state.app.info.general;
+  const availabilityZones = AZ.zones;
+  // More than 4 AZs is not allowed by now.
+  const maxAZ = !AZ.max || AZ.max > 4 ? 4 : AZ.max;
+  const minAZ = 1;
+  const defaultAZ = AZ.default;
+
   let selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
   let clusterCreationStats = state.app.info.stats.cluster_creation_duration;
@@ -609,6 +622,9 @@ function mapStateToProps(state) {
     defaultDiskSize,
     selectedOrganization,
     clusterCreationStats,
+    minAZ,
+    maxAZ,
+    defaultAZ,
   };
 }
 

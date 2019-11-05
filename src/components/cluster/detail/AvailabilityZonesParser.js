@@ -3,11 +3,6 @@ import NumberPicker from 'UI/number_picker';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 
-const initialStatePicker = {
-  value: 1,
-  valid: true,
-};
-
 const initialStateLabels = {
   number: 0,
   zonesString: '',
@@ -25,11 +20,17 @@ const initialStateLabels = {
 export default function AvailabilityZonesParser({
   max,
   min,
+  defaultValue,
   updateAZValuesInParent,
   zones,
   isLabels,
-  isRadioButtons, // Just one label can be selected.
+  isRadioButtons, // If this is set to true, just one label can be selected.
 }) {
+  const initialStatePicker = {
+    value: defaultValue,
+    valid: true,
+  };
+
   // Picker.
   const [AZPicker, setAZPicker] = useState(initialStatePicker);
   useEffect(() => {
@@ -102,6 +103,7 @@ export default function AvailabilityZonesParser({
 AvailabilityZonesParser.propTypes = {
   max: PropTypes.number,
   min: PropTypes.number,
+  defaultValue: PropTypes.number,
   zones: PropTypes.array,
   value: PropTypes.number,
   updateAZValuesInParent: PropTypes.func,

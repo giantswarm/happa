@@ -19,20 +19,22 @@ class NewCluster extends React.Component {
   componentDidMount() {
     this.props.dispatch(loadReleases()).then(() => {
       this.setSelectableReleases();
+      const selectedRelease = this.props.activeSortedReleases[0];
+
       this.setState({
-        selectedRelease: this.props.activeSortedReleases[0],
+        selectedRelease,
         loading: false,
       });
-    });
 
-    if (!this.state.selectedRelease) {
-      new FlashMessage(
-        'Something went wrong while trying to fetch active releases',
-        messageType.ERROR,
-        messageTTL.MEDIUM,
-        'Please try again later or contact support: support@giantswarm.io'
-      );
-    }
+      if (!selectedRelease) {
+        new FlashMessage(
+          'Something went wrong while trying to fetch active releasesssss',
+          messageType.ERROR,
+          messageTTL.MEDIUM,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+      }
+    });
   }
 
   setSelectedRelease = selectedRelease => {
@@ -83,20 +85,15 @@ class NewCluster extends React.Component {
   }
 
   semVerCompare = () => {
-    if (this.state.selectedRelease && window.config.firstNodePoolsRelease) {
-      return cmp(
-        this.state.selectedRelease,
-        window.config.firstNodePoolsRelease
-      );
+    if (this.state.selectedRelease && this.props.firstNodePoolsRelease) {
+      return cmp(this.state.selectedRelease, this.props.firstNodePoolsRelease);
     }
     return -1;
   };
 
   renderComponent = props => {
-    // TODO Remove environment conditional when we release NPs
     const Component =
       this.semVerCompare() < 0 ||
-      window.config.environment !== 'development' ||
       this.props.provider === 'azure' ||
       this.props.provider === 'kvm'
         ? CreateRegularCluster // new v4 form
@@ -136,6 +133,7 @@ NewCluster.propTypes = {
   selectedRelease: PropTypes.string,
   activeSortedReleases: PropTypes.array,
   provider: PropTypes.string,
+  firstNodePoolsRelease: PropTypes.string,
   user: PropTypes.object,
 };
 
@@ -145,6 +143,8 @@ function mapStateToProps(state) {
     releases: items,
     activeSortedReleases,
     provider: state.app.info.general.provider,
+    firstNodePoolsRelease:
+      state.app.info.features.nodepools.release_version_minimum,
     user: state.app.loggedInUser,
   };
 }

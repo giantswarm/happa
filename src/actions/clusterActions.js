@@ -5,7 +5,6 @@ import { nodePoolsLoad } from './nodePoolActions';
 import { push } from 'connected-react-router';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
-import mockedStatus from 'mockedStatus';
 import moment from 'moment';
 
 // API instantiations.
@@ -67,8 +66,9 @@ function clustersLoadArrayToObject(clusters) {
  */
 export function clustersLoad() {
   return async function(dispatch, getState) {
-    // Fetch all clusters.
+    dispatch({ type: types.CLUSTERS_LOAD });
 
+    // Fetch all clusters.
     const clusters = await clustersApi
       .getClusters()
       .then(clusters => {
@@ -130,33 +130,29 @@ export function clustersLoad() {
     // Fetch status for each cluster.
     const status = await Promise.all(
       Object.keys(v4ClustersObject).map(clusterId => {
-        if (window.config.environment === 'development') {
-          return { id: clusterId, statusResponse: mockedStatus };
-        } else {
-          // TODO: Find out why we are getting an empty object back from this call.
-          //Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
-          return clustersApi
-            .getClusterStatusWithHttpInfo(clusterId)
-            .then(clusterStatus => {
-              // For some reason we're getting an empty object back.
-              // The Giantswarm JS client is not parsing the returned JSON
-              // and giving us a object in the normal way anymore.
-              // Very stumped, since nothing has changed.
-              // So we need to access the raw response and parse the json
-              // ourselves.
-              let statusResponse = JSON.parse(clusterStatus.response.text);
-              return { id: clusterId, statusResponse: statusResponse };
-            })
-            .catch(error => {
-              if (error.status === 404) {
-                return { id: clusterId, statusResponse: null };
-              } else {
-                console.error(error);
-                dispatch(clusterLoadStatusError(clusterId, error));
-                throw error;
-              }
-            });
-        }
+        // TODO: Find out why we are getting an empty object back from this call.
+        //Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
+        return clustersApi
+          .getClusterStatusWithHttpInfo(clusterId)
+          .then(clusterStatus => {
+            // For some reason we're getting an empty object back.
+            // The Giantswarm JS client is not parsing the returned JSON
+            // and giving us a object in the normal way anymore.
+            // Very stumped, since nothing has changed.
+            // So we need to access the raw response and parse the json
+            // ourselves.
+            let statusResponse = JSON.parse(clusterStatus.response.text);
+            return { id: clusterId, statusResponse: statusResponse };
+          })
+          .catch(error => {
+            if (error.status === 404) {
+              return { id: clusterId, statusResponse: null };
+            } else {
+              console.error(error);
+              dispatch(clusterLoadStatusError(clusterId, error));
+              throw error;
+            }
+          });
       })
     );
 
@@ -178,32 +174,27 @@ export function clustersLoad() {
     );
 
     // Get the details for v5 clusters.
-    if (window.config.environment === 'development') {
-      const clusters = await Promise.all(
-        v5Clusters.map(cluster => clusterDetailsV5(dispatch, getState, cluster))
-      );
+    const v5ClustersDetails = await Promise.all(
+      v5Clusters.map(cluster => clusterDetailsV5(dispatch, getState, cluster))
+    );
 
-      // Clusters array to object, because we are storing an object in the store.
-      let v5ClustersObject = clustersLoadArrayToObject(clusters);
+    // Clusters array to object, because we are storing an object in the store.
+    let v5ClustersObject = clustersLoadArrayToObject(v5ClustersDetails);
 
-      // nodePoolsClusters is an array of NP clusters ids and is stored in items.
-      const nodePoolsClusters = clusters.map(cluster => cluster.id);
+    // nodePoolsClusters is an array of v5 clusters ids and is stored in clusters.
+    const nodePoolsClusters = v5ClustersDetails.map(cluster => cluster.id);
 
-      dispatch(
-        clustersLoadSuccess(
-          v4ClustersObject,
-          v5ClustersObject,
-          nodePoolsClusters,
-          lastUpdated
-        )
-      );
+    dispatch(
+      clustersLoadSuccess(
+        v4ClustersObject,
+        v5ClustersObject,
+        nodePoolsClusters,
+        lastUpdated
+      )
+    );
 
-      // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
-      dispatch(nodePoolsLoad(nodePoolsClusters));
-    } else {
-      // Dispatch with an empty object for v5Clusters and an empty array for node pools clusters.
-      dispatch(clustersLoadSuccess(v4ClustersObject, {}, [], lastUpdated));
-    }
+    // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
+    dispatch(nodePoolsLoad(nodePoolsClusters));
   };
 }
 
@@ -461,10 +452,15 @@ export function clusterLoadDetails(clusterId) {
       clusterId,
     });
 
+    if (isNodePoolsCluster) {
+      dispatch({ type: types.V5_CLUSTER_LOAD_DETAILS });
+    }
+
     try {
       const cluster = isNodePoolsCluster
         ? await clustersApi.getClusterV5(clusterId)
         : await clustersApi.getCluster(clusterId);
+
       dispatch(clusterLoadStatus(clusterId));
 
       cluster.capabilities = computeCapabilities(
@@ -501,7 +497,7 @@ export function clusterLoadStatus(clusterId) {
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
 
     if (isNodePoolsCluster) {
-      // Here we will have something like clusterLoadStatusV5(...);
+      // Here we will have something like clusterLoadStatusV5(...)?
       return;
     }
     clusterLoadStatusV4(dispatch, clusterId);
@@ -517,7 +513,9 @@ function clusterLoadStatusV4(dispatch, clusterId) {
   // TODO: getClusterStatusWithHttpInfo usage copied from line 125. When it is fixed, also fix here
   return clustersApi
     .getClusterStatusWithHttpInfo(clusterId)
-    .then(data => JSON.parse(data.response.text))
+    .then(data => {
+      return JSON.parse(data.response.text);
+    })
     .then(status => {
       dispatch(clusterLoadStatusSuccess(clusterId, status));
       return status;
@@ -525,24 +523,19 @@ function clusterLoadStatusV4(dispatch, clusterId) {
     .catch(error => {
       // TODO: Find a better way to deal with status endpoint errors in dev:
       // https://github.com/giantswarm/giantswarm/issues/6757
-      if (window.config.environment === 'development') {
-        dispatch(clusterLoadStatusSuccess(clusterId, mockedStatus));
+      if (error.status === 404) {
+        dispatch(clusterLoadStatusNotFound(clusterId));
       } else {
-        console.error(error);
-        if (error.status === 404) {
-          dispatch(clusterLoadStatusNotFound(clusterId));
-        } else {
-          dispatch(clusterLoadStatusError(clusterId, error));
+        dispatch(clusterLoadStatusError(clusterId, error));
 
-          new FlashMessage(
-            'Something went wrong while trying to load the cluster status.',
-            messageType.ERROR,
-            messageTTL.LONG,
-            'Please try again later or contact support: support@giantswarm.io'
-          );
+        new FlashMessage(
+          'Something went wrong while trying to load the cluster status.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
 
-          throw error;
-        }
+        throw error;
       }
     });
 }
@@ -558,7 +551,6 @@ export function clusterCreate(cluster, isV5Cluster) {
   return function(dispatch) {
     dispatch({
       type: types.CLUSTER_CREATE,
-      cluster,
     });
 
     const method = isV5Cluster
@@ -567,17 +559,27 @@ export function clusterCreate(cluster, isV5Cluster) {
 
     return clustersApi[method](cluster)
       .then(data => {
-        var location = data.response.headers.location;
+        const location = data.response.headers.location;
         if (location === undefined) {
           throw 'Did not get a location header back.';
         }
 
-        var clusterId = location.split('/')[3];
+        const clusterId = location.split('/')[3];
         if (clusterId === undefined) {
           throw 'Did not get a valid cluster id.';
         }
 
-        dispatch(clusterCreateSuccess(clusterId));
+        if (isV5Cluster) {
+          dispatch({
+            type: types.V5_CLUSTER_CREATE_SUCCESS,
+            clusterId,
+          });
+        } else {
+          dispatch({
+            type: types.CLUSTER_CREATE_SUCCESS,
+            clusterId,
+          });
+        }
 
         new FlashMessage(
           'Your new cluster with ID <code>' +
@@ -722,11 +724,6 @@ export const clusterLoadStatusNotFound = clusterId => ({
 export const clusterLoadStatusError = error => ({
   type: types.CLUSTER_LOAD_STATUS_ERROR,
   error,
-});
-
-export const clusterCreateSuccess = cluster => ({
-  type: types.CLUSTER_CREATE_SUCCESS,
-  cluster,
 });
 
 export const clusterCreateError = cluster => ({

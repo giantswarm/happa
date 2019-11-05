@@ -56,11 +56,12 @@ const clusterReducer = produce((draft, action) => {
         ...action.cluster,
         workers: withAwsKeys.workers,
       };
+      draft.isFetching = false;
 
       // Fill in scaling values when they aren't supplied.
       const { scaling, workers } = draft.items[action.cluster.id];
 
-      if (!scaling.min && !scaling.max) {
+      if (scaling && !scaling.min && !scaling.max) {
         scaling.min = workers.length;
         scaling.max = workers.length;
       }
@@ -120,6 +121,14 @@ const clusterReducer = produce((draft, action) => {
       draft.items[action.clusterId].isFetchingKeyPairs = false;
       return;
 
+    case types.CLUSTER_CREATE:
+      draft.isFetching = true;
+      return;
+
+    case types.V5_CLUSTER_CREATE_SUCCESS:
+      draft.nodePoolsClusters.push(action.clusterId);
+      return;
+
     case types.CLUSTER_DELETE_SUCCESS:
       delete draft.items[action.clusterId];
       draft.lastUpdated = Date.now();
@@ -131,12 +140,9 @@ const clusterReducer = produce((draft, action) => {
       });
       return;
 
+    // TODO does this actually work????
     case types.CLUSTER_PATCH_ERROR:
       draft.items[action.cluster.id] = action.cluster;
-      return;
-
-    case types.NODEPOOL_CREATE_SUCCESS:
-      draft.items[action.clusterId].nodePools.push(action.nodePool.id);
       return;
   }
 }, initialState);
