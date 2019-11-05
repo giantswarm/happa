@@ -147,7 +147,9 @@ class ClusterDashboardItem extends React.Component {
               </RefreshableLabel>
             )}
             <RefreshableLabel dataItems={[numNodes]}>
-              <span>{numNodes} nodes</span>
+              <span>
+                {numNodes} {numNodes === 1 ? 'node' : 'nodes'}
+              </span>
             </RefreshableLabel>
             {numNodes !== 0 && hasNodePools && (
               <>
