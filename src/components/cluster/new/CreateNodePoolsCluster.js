@@ -291,9 +291,7 @@ class CreateNodePoolsCluster extends Component {
         )
       );
 
-      const allNodePools = await this.props.dispatch(
-        nodePoolsCreate(newCluster.id, nodePools)
-      );
+      await this.props.dispatch(nodePoolsCreate(newCluster.id, nodePools));
 
       // after successful creation, redirect to cluster details
       this.props.dispatch(
