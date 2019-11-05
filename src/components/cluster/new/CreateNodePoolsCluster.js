@@ -189,8 +189,6 @@ class CreateNodePoolsCluster extends Component {
     },
     submitting: false,
     error: false,
-    // Not sure which value are we going to pass here... there is no
-    // input field in the wireframes
     availabilityZonesRandom: {
       // Select automatically
       value: 1,
