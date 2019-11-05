@@ -1,4 +1,5 @@
 import * as clusterActions from 'actions/clusterActions';
+import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
 import { clusterPatch } from 'actions/clusterActions';
@@ -21,17 +22,29 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
 import ScaleClusterModal from './scale_cluster_modal';
-import ScaleNodePoolModal from './scale_node_pool_modal';
+import styled from '@emotion/styled';
 import Tab from 'react-bootstrap/lib/Tab';
 import Tabs from './tabs';
 import UpgradeClusterModal from './upgrade_cluster_modal';
 import ViewAndEditName from 'UI/view_edit_name';
 
+const WrapperDiv = styled.div`
+  h2 {
+    font-weight: 400;
+    font-size: 22px;
+    margin: 0 0 15px;
+  }
+  p {
+    margin: 0 0 20px;
+    line-height: 1.2;
+  }
+`;
 class ClusterDetailView extends React.Component {
   state = {
-    loading: true,
     errorLoadingApps: false,
   };
+
+  loadDataInterval = null;
 
   componentDidMount() {
     this.registerRefreshInterval();
@@ -46,10 +59,9 @@ class ClusterDetailView extends React.Component {
   }
 
   registerRefreshInterval = () => {
-    var refreshInterval = 30 * 1000; // 30 seconds
     this.loadDataInterval = this.props.setInterval(
-      this.refreshClusterData,
-      refreshInterval
+      this.loadDetails,
+      30 * 1000 // 30 seconds
     );
   };
 
@@ -78,38 +90,21 @@ class ClusterDetailView extends React.Component {
 
     dispatch(organizationCredentialsLoad(organizationId));
 
+    // TODO This probably should go to action creators where this logic belongs (?)
     releaseActions
       .loadReleases()
       .then(() => {
         return clusterActions.clusterLoadDetails(cluster.id);
       })
       .then(() => {
-        this.setState({
-          loading: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          loading: 'failed',
-        });
-      })
-      .then(() => {
         return clusterActions.clusterLoadApps(cluster.id);
-      })
-      .then(() => {
-        this.setState({
-          errorLoadingApps: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          errorLoadingApps: true,
-        });
       });
+
+    this.props.dispatch(nodePoolActions.nodePoolsLoad());
   };
 
   refreshClusterData = () => {
-    this.props.clusterActions.clusterLoadDetails(this.props.cluster.id);
+    this.loadDetails();
   };
 
   handleVisibilityChange = () => {
@@ -128,12 +123,6 @@ class ClusterDetailView extends React.Component {
   showScalingModal = () => {
     this.scaleClusterModal.reset();
     this.scaleClusterModal.show();
-  };
-
-  showNodePoolScalingModal = nodePool => {
-    this.scaleNodePoolModal.reset();
-    this.scaleNodePoolModal.show();
-    this.scaleNodePoolModal.setNodePool(nodePool);
   };
 
   showUpgradeModal = () => {
@@ -222,7 +211,7 @@ class ClusterDetailView extends React.Component {
           clusterPatch(
             this.props.cluster,
             { name: value },
-            this.props.isNodePoolView
+            this.props.isNodePoolsCluster
           )
         )
         .then(() => {
@@ -244,22 +233,24 @@ class ClusterDetailView extends React.Component {
       cluster,
       credentials,
       dispatch,
-      isNodePoolView,
+      isNodePoolsCluster,
       nodePools,
       provider,
       release,
       targetRelease,
       region,
+      loading,
+      loadingWithNodePools,
     } = this.props;
 
-    const { loading } = this.state;
-
     return (
-      <LoadingOverlay loading={loading}>
+      <LoadingOverlay
+        loading={isNodePoolsCluster ? loadingWithNodePools : loading}
+      >
         <DocumentTitle
           title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
         >
-          <div className='cluster-details'>
+          <WrapperDiv className='cluster-details'>
             <div className='row' style={{ marginBottom: '30px' }}>
               <div className='col-sm-12 col-md-7 col-9'>
                 <h1 style={{ marginLeft: '-10px' }}>
@@ -269,6 +260,7 @@ class ClusterDetailView extends React.Component {
                     entityType='cluster'
                     onSubmit={this.editClusterName}
                   />{' '}
+                  {/* TODO Remove this */}
                   {loading ? (
                     <img
                       className='loader'
@@ -286,7 +278,7 @@ class ClusterDetailView extends React.Component {
               <div className='col-12'>
                 <Tabs>
                   <Tab eventKey={1} title='General'>
-                    {isNodePoolView ? (
+                    {isNodePoolsCluster ? (
                       <ClusterDetailNodePoolsTable
                         accessCluster={this.accessCluster}
                         canClusterUpgrade={this.canClusterUpgrade()}
@@ -296,7 +288,6 @@ class ClusterDetailView extends React.Component {
                         provider={provider}
                         release={release}
                         region={region}
-                        showNodePoolScalingModal={this.showNodePoolScalingModal}
                         showUpgradeModal={this.showUpgradeModal}
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
                       />
@@ -368,28 +359,19 @@ class ClusterDetailView extends React.Component {
                 </Tabs>
               </div>
             </div>
+            {!isNodePoolsCluster && (
+              <ScaleClusterModal
+                cluster={cluster}
+                provider={provider}
+                ref={s => {
+                  this.scaleClusterModal = s;
+                }}
+                workerNodesDesired={this.getDesiredNumberOfNodes()}
+                workerNodesRunning={getNumberOfNodes(cluster)}
+              />
+            )}
 
-            <ScaleClusterModal
-              cluster={cluster}
-              provider={provider}
-              ref={s => {
-                this.scaleClusterModal = s;
-              }}
-              workerNodesDesired={this.getDesiredNumberOfNodes()}
-              workerNodesRunning={getNumberOfNodes(cluster)}
-            />
-
-            <ScaleNodePoolModal
-              cluster={cluster}
-              provider={provider}
-              ref={s => {
-                this.scaleNodePoolModal = s;
-              }}
-              workerNodesDesired={this.getDesiredNumberOfNodes()}
-              workerNodesRunning={getNumberOfNodes(cluster)}
-            />
-
-            {targetRelease ? (
+            {targetRelease && (
               <UpgradeClusterModal
                 cluster={cluster}
                 ref={s => {
@@ -398,10 +380,8 @@ class ClusterDetailView extends React.Component {
                 release={release}
                 targetRelease={targetRelease}
               />
-            ) : (
-              undefined
             )}
-          </div>
+          </WrapperDiv>
         </DocumentTitle>
       </LoadingOverlay>
     );
@@ -420,7 +400,7 @@ ClusterDetailView.propTypes = {
   clusterId: PropTypes.string,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
-  isNodePoolView: PropTypes.bool,
+  isNodePoolsCluster: PropTypes.bool,
   nodePools: PropTypes.object,
   organizationId: PropTypes.string,
   releaseActions: PropTypes.object,
@@ -430,17 +410,36 @@ ClusterDetailView.propTypes = {
   setInterval: PropTypes.func,
   targetRelease: PropTypes.object,
   user: PropTypes.object,
+  loading: PropTypes.bool,
+  loadingWithNodePools: PropTypes.bool,
 };
+
+function mapStateToProps(state, ownProps) {
+  const { releases, clusters, nodePools } = state.entities;
+
+  const loading = releases.isFetching || clusters.isFetching;
+  const loadingWithNodePools =
+    nodePools.isFetching ||
+    clusters.items[ownProps.clusterId].isFetchingKeyPairs ||
+    clusters.items[ownProps.clusterId].isFetchingApps ||
+    loading;
+
+  return {
+    loading,
+    loadingWithNodePools,
+  };
+}
 
 function mapDispatchToProps(dispatch) {
   return {
     clusterActions: bindActionCreators(clusterActions, dispatch),
     releaseActions: bindActionCreators(releaseActions, dispatch),
+    nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
     dispatch: dispatch,
   };
 }
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(ReactTimeout(ClusterDetailView));

@@ -1,5 +1,6 @@
 import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
+import { clusterLoadKeyPairs } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { relativeDate } from 'lib/helpers.js';
 import { spinner } from 'images';
@@ -43,31 +44,13 @@ class ClusterKeyPairs extends React.Component {
     ).hostname;
   }
 
-  loadKeyPairs() {
+  loadKeyPairs = () => {
     this.setState({
-      loading: true,
+      loading: false,
       error: false,
     });
-
-    return this.props.actions
-      .clusterLoadKeyPairs(this.props.cluster.id)
-      .then(() => {
-        this.setState({
-          loading: false,
-          error: false,
-        });
-      })
-      .catch(() => {
-        // In case of error delay a half second so that the user gets a chance to
-        // see the spinner before we blast the error state.
-        setTimeout(() => {
-          this.setState({
-            loading: false,
-            error: true,
-          });
-        }, 500);
-      });
-  }
+    this.props.dispatch(clusterLoadKeyPairs(this.props.cluster.id));
+  };
 
   // Provides the configuration for the keypairs table
   getKeypairsTableColumnsConfig = () => {
@@ -194,19 +177,22 @@ class ClusterKeyPairs extends React.Component {
                     <img className='loader' src={spinner} />
                   </p>
                 );
-              } else if (this.state.error) {
+              } else if (!this.props.cluster.keyPairs) {
                 return (
                   <div>
                     <div className='flash-messages--flash-message flash-messages--danger'>
                       Something went wrong while trying to load the list of key
                       pairs.
                     </div>
-                    <Button onClick={this.loadKeyPairs.bind(this)}>
+                    <Button onClick={this.loadKeyPairs}>
                       Try loading key pairs again.
                     </Button>
                   </div>
                 );
-              } else if (this.props.cluster.keyPairs.length === 0) {
+              } else if (
+                this.props.cluster.keyPairs &&
+                this.props.cluster.keyPairs.length === 0
+              ) {
                 return (
                   <div>
                     <p>
@@ -254,6 +240,7 @@ ClusterKeyPairs.propTypes = {
   actions: PropTypes.object,
   provider: PropTypes.string,
   cluster: PropTypes.object,
+  dispatch: PropTypes.func,
 };
 
 function mapStateToProps(state) {

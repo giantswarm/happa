@@ -8,6 +8,7 @@ import AvailabilityZonesWrapper from './availability_zones_wrapper';
 import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import ScaleNodePoolModal from './scale_node_pool_modal';
 import styled from '@emotion/styled';
 import theme from 'styles/theme';
 import ViewAndEditName from 'UI/view_edit_name';
@@ -25,17 +26,23 @@ class NodePool extends Component {
     isNameBeingEdited: false,
   };
 
-  toggleEditingState = isNameBeingEdited =>
+  toggleEditingState = isNameBeingEdited => {
     this.setState({ isNameBeingEdited });
+  };
 
-  triggerEditName = () => this.viewEditNameRef.activateEditMode();
+  triggerEditName = () => {
+    this.viewEditNameRef.activateEditMode();
+  };
 
-  editNodePoolName = value => {
-    const { clusterId, nodePool } = this.props;
+  editNodePoolName = name => {
+    const { cluster, nodePool } = this.props;
+
+    // Early return in case the name is not changed.
+    if (nodePool.name === name) return;
 
     return new Promise((resolve, reject) => {
       this.props
-        .dispatch(nodePoolPatch(clusterId, nodePool, { name: value }))
+        .dispatch(nodePoolPatch(cluster.id, nodePool, { name }))
         .then(() => {
           new FlashMessage(
             'Succesfully edited node pool name.',
@@ -51,18 +58,25 @@ class NodePool extends Component {
     });
   };
 
+  deleteNodePool = () => {
+    this.props.dispatch(
+      this.props.nodePoolActions.nodePoolDelete(
+        this.props.cluster.id,
+        this.props.nodePool
+      )
+    );
+  };
+
+  showNodePoolScalingModal = nodePool => {
+    this.scaleNodePoolModal.reset();
+    this.scaleNodePoolModal.show();
+    this.scaleNodePoolModal.setNodePool(nodePool);
+  };
+
   render() {
-    const {
-      availableZonesGridTemplateAreas,
-      clusterId,
-      nodePool,
-      showNodePoolScalingModal,
-    } = this.props;
-
+    const { availableZonesGridTemplateAreas, cluster, nodePool } = this.props;
     const { id, scaling, availability_zones, status, node_spec } = nodePool;
-
     const { nodes_ready: current, nodes: desired } = status;
-
     const { isNameBeingEdited } = this.state;
 
     return (
@@ -111,14 +125,24 @@ class NodePool extends Component {
             {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
             <NodePoolDropdownMenu
               style={{ justifySelf: 'right' }}
-              clusterId={clusterId}
+              clusterId={cluster.id}
               nodePool={nodePool}
-              nodePoolDelete={this.props.nodePoolActions.nodePoolDelete}
-              showNodePoolScalingModal={showNodePoolScalingModal}
+              deleteNodePool={this.deleteNodePool}
+              showNodePoolScalingModal={this.showNodePoolScalingModal}
               triggerEditName={this.triggerEditName}
             />
           </>
         )}
+        <ScaleNodePoolModal
+          cluster={cluster}
+          nodePool={nodePool}
+          provider={this.props.provider}
+          ref={s => {
+            this.scaleNodePoolModal = s;
+          }}
+          workerNodesDesired={desired}
+          workerNodesRunning={current}
+        />
       </>
     );
   }
@@ -126,9 +150,9 @@ class NodePool extends Component {
 
 NodePool.propTypes = {
   availableZonesGridTemplateAreas: PropTypes.string,
-  clusterId: PropTypes.string,
+  cluster: PropTypes.object,
   nodePool: PropTypes.shape({
-    availability_zones: PropTypes.array,
+    availability_zones: PropTypes.any, // TODO fix it.
     id: PropTypes.string,
     name: PropTypes.string,
     node_spec: PropTypes.object,
@@ -143,7 +167,7 @@ NodePool.propTypes = {
   }),
   nodePoolActions: PropTypes.object,
   dispatch: PropTypes.func,
-  showNodePoolScalingModal: PropTypes.func,
+  provider: PropTypes.string,
 };
 
 function mapStateToProps(state, ownProps) {

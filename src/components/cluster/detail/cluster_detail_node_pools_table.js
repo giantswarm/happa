@@ -7,10 +7,11 @@ import {
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
-import { nodePoolCreate } from 'actions/nodePoolActions';
+import { nodePoolsCreate } from 'actions/nodePoolActions';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
+import moment from 'moment';
 import NodePool from './node_pool';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import produce from 'immer';
@@ -256,6 +257,10 @@ export const CopyToClipboardDiv = styled.div`
   }
 `;
 
+// TODO Now on every addition or deletion of a NP, this component will be rerendered.
+// It would be nice to split this into subcomponents so only the littele bits that need
+// to be updated were updated. Child components might be: RAM, CPUs, workerNodesRunning.
+
 class ClusterDetailNodePoolsTable extends React.Component {
   state = {
     availableZonesGridTemplateAreas: '',
@@ -263,7 +268,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
     RAM: 0,
     CPUs: 0,
     workerNodesRunning: 0,
-    nodePools: [],
+    nodePools: null,
     isNodePoolBeingAdded: false,
     nodePoolForm: {
       isValid: false,
@@ -274,6 +279,11 @@ class ClusterDetailNodePoolsTable extends React.Component {
   };
 
   componentDidMount() {
+    this.produceNodePools();
+  }
+
+  // TODO Move this to the action creator so it will be triggered on every NPs load.
+  produceNodePools = () => {
     const nodePoolsArray = clusterNodePools(
       this.props.nodePools,
       this.props.cluster
@@ -306,7 +316,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
 
       this.setState({ RAM, CPUs, workerNodesRunning });
     });
-  }
+  };
 
   toggleAddNodePoolForm = () =>
     this.setState(prevState => ({
@@ -322,29 +332,15 @@ class ClusterDetailNodePoolsTable extends React.Component {
   };
 
   createNodePool = () => {
-    this.setState({ submitting: true });
+    const data = [this.state.nodePoolForm.data];
 
-    this.props
-      .dispatch(
-        nodePoolCreate(this.props.cluster.id, this.state.nodePoolForm.data)
-      )
-      .then(() => {
-        // Reset form data and close the form
-        this.setState(
-          produce(draft => {
-            draft.nodePoolForm.data = {};
-          })
-        );
-        this.closeForm();
+    this.setState(
+      produce(draft => {
+        draft.nodePoolForm.data = { isSubmiting: true };
       })
-      .catch(error => {
-        // TODO Show error in view?
+    );
 
-        this.setState({
-          submitting: false,
-          error: error,
-        });
-      });
+    this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
   };
 
   // TODO We are repeating this in several places, refactor this to a reusable HOC / hooks.
@@ -364,20 +360,28 @@ class ClusterDetailNodePoolsTable extends React.Component {
     });
   };
 
+  /**
+   * Returns the proper last updated info string based on available
+   * cluster and/or status information.
+   */
+  lastUpdatedLabel() {
+    const { cluster } = this.props;
+    if (cluster && cluster.lastUpdated) {
+      return moment(cluster.lastUpdated).fromNow();
+    }
+    return 'n/a';
+  }
+
   render() {
     const {
       availableZonesGridTemplateAreas,
       nodePools,
       workerNodesRunning,
+      nodePoolForm,
     } = this.state;
-    const {
-      accessCluster,
-      cluster,
-      showNodePoolScalingModal,
-      region,
-    } = this.props;
+    const { accessCluster, cluster, region, release } = this.props;
 
-    const { create_date, release_version, release, api_endpoint } = cluster;
+    const { create_date, release_version, api_endpoint } = cluster;
     const noNodePools = !nodePools || nodePools.length === 0;
 
     return (
@@ -401,7 +405,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
           </div>
           <div>
             <div>
-              {!nodePools ? (
+              {!workerNodesRunning ? (
                 <span>0 nodes</span>
               ) : (
                 <>
@@ -454,7 +458,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
         </FlexRowWithTwoBlocksOnEdges>
         <NodePoolsWrapper>
           <h2>Node Pools</h2>
-          {nodePools ? (
+          {nodePools && nodePools.length > 0 && (
             <>
               <GridRowNodePoolsNodes>
                 <div>
@@ -466,7 +470,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 <span style={{ paddingLeft: '8px', justifySelf: 'left' }}>
                   NAME
                 </span>
-                <span>INSTANCE TYPE</span>
+                <span>INSTANCE TYPE {nodePools.length}</span>
                 <span>AVAILABILITY ZONES</span>
                 <span>MIN</span>
                 <span>MAX</span>
@@ -476,21 +480,40 @@ class ClusterDetailNodePoolsTable extends React.Component {
               </GridRowNodePoolsHeaders>
               {nodePools &&
                 nodePools
-                  .sort((a, b) => (a.name > b.name ? 1 : -1))
+                  .sort((a, b) =>
+                    a.name > b.name
+                      ? 1
+                      : a.name < b.name
+                      ? -1
+                      : a.id > b.id
+                      ? 1
+                      : -1
+                  )
+                  .sort((a, b) => {
+                    if (a.name > b.name) {
+                      return 1;
+                    } else if (a.name < b.name) {
+                      return -1;
+                    } else if (a.id > b.id) {
+                      return 1;
+                    } else {
+                      return -1;
+                    }
+                  })
                   .map(nodePool => (
-                    <GridRowNodePoolsItem key={nodePool.id}>
+                    <GridRowNodePoolsItem key={nodePool.id || Date.now()}>
                       <NodePool
                         availableZonesGridTemplateAreas={
                           availableZonesGridTemplateAreas
                         }
-                        clusterId={cluster.id}
+                        cluster={cluster}
                         nodePool={nodePool}
-                        showNodePoolScalingModal={showNodePoolScalingModal}
+                        provider={this.props.provider}
                       />
                     </GridRowNodePoolsItem>
                   ))}
             </>
-          ) : null}
+          )}
         </NodePoolsWrapper>
         {this.state.isNodePoolBeingAdded ? (
           <ReactCSSTransitionGroup
@@ -514,23 +537,26 @@ class ClusterDetailNodePoolsTable extends React.Component {
                   <Button
                     bsSize='large'
                     bsStyle='primary'
-                    disabled={!this.state.nodePoolForm.isValid}
-                    loading={this.state.nodePoolForm.isSubmitting}
+                    disabled={!nodePoolForm.isValid}
+                    loading={nodePoolForm.isSubmitting}
                     onClick={this.createNodePool}
                     type='button'
                   >
                     Create Node Pool
                   </Button>
-                  <Button
-                    bsSize='large'
-                    bsStyle='default'
-                    loading={this.state.nodePoolForm.isSubmitting}
-                    onClick={this.toggleAddNodePoolForm}
-                    style={{ background: 'red' }}
-                    type='button'
-                  >
-                    Cancel
-                  </Button>
+                  {/* We want to hide cancel button when the Create NP button has been clicked */}
+                  {!nodePoolForm.isSubmitting && (
+                    <Button
+                      bsSize='large'
+                      bsStyle='default'
+                      loading={nodePoolForm.isSubmitting}
+                      onClick={this.toggleAddNodePoolForm}
+                      style={{ background: 'red' }}
+                      type='button'
+                    >
+                      Cancel
+                    </Button>
+                  )}
                 </FlexWrapperDiv>
               </AddNodePoolFlexColumnDiv>
             </AddNodePoolWrapperDiv>
@@ -546,7 +572,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
             <Button onClick={this.toggleAddNodePoolForm}>
               <i className='fa fa-add-circle' /> ADD NODE POOL
             </Button>
-            {nodePools && nodePools.length < 2 && (
+            {nodePools && nodePools.length === 1 && (
               <p>
                 With additional node pools, you can add different types of
                 worker nodes to your cluster. Node pools also scale
@@ -564,6 +590,15 @@ class ClusterDetailNodePoolsTable extends React.Component {
             )}
           </FlexWrapperDiv>
         )}
+        <p className='last-updated' style={{ marginTop: '20px' }}>
+          <small>
+            The information above is auto-refreshing. Details last fetched{' '}
+            <span className='last-updated-datestring'>
+              {this.lastUpdatedLabel()}
+            </span>
+            . <span className='beta-tag'>BETA</span>
+          </small>
+        </p>
       </>
     );
   }
@@ -581,7 +616,6 @@ ClusterDetailNodePoolsTable.propTypes = {
   region: PropTypes.string,
   release: PropTypes.object,
   setInterval: PropTypes.func,
-  showNodePoolScalingModal: PropTypes.func,
   showUpgradeModal: PropTypes.func,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,

@@ -9,6 +9,11 @@ const nodePoolsApi = new GiantSwarm.NodePoolsApi();
 //Loads all node pools for all node pools clusters.
 export function nodePoolsLoad() {
   return async function(dispatch, getState) {
+    dispatch({
+      type: types.NODEPOOLS_LOAD,
+      isFetching: true,
+    });
+
     const nodePoolsClustersId =
       getState().entities.clusters.nodePoolsClusters || [];
 
@@ -21,7 +26,7 @@ export function nodePoolsLoad() {
         let nodePoolsArray = (Array.from(nodePools) || []).map(np => np.id);
 
         // Dispatch action for populating nodePools key inside cluster
-        dispatch(clusterNodePoolsLoadSucces(clusterId, nodePoolsArray));
+        dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArray));
 
         return nodePools;
       })
@@ -33,16 +38,17 @@ export function nodePoolsLoad() {
             return { ...accumulator, [np.id]: np };
           }, {});
 
-        dispatch(nodePoolsLoadSucces(allNodePools));
+        dispatch({
+          type: types.NODEPOOLS_LOAD_SUCCESS,
+          nodePools: allNodePools,
+        });
       })
       .catch(error => {
-        if (error.status === 404) {
-          dispatch(nodePoolsLoadSucces({}));
-          return;
-        }
-
         console.error('Error loading cluster node pools:', error);
-        dispatch(nodePoolsLoadError(error));
+        dispatch({
+          type: types.NODEPOOLS_LOAD_ERROR,
+          error,
+        });
 
         new FlashMessage(
           'Something went wrong while trying to load node pools on this cluster.',
@@ -68,9 +74,8 @@ export function nodePoolsLoad() {
 export function nodePoolPatch(clusterId, nodePool, payload) {
   return function(dispatch) {
     dispatch(nodePoolPatchAction(nodePool, payload));
-
     return nodePoolsApi
-      .modifyNodePool(clusterId, nodePool, payload)
+      .modifyNodePool(clusterId, nodePool.id, payload)
       .catch(error => {
         // Undo update to store if the API call fails.
         dispatch(nodePoolPatchError(error, nodePool));
@@ -116,7 +121,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
         );
 
         // ensure refreshing of the node pools list. Needed?
-        // dispatch(clustersLoad());
+        dispatch(nodePoolsLoad());
       })
       .catch(error => {
         dispatch(modalHide());
@@ -142,57 +147,66 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  *
  * @param {Object} nodepool Node Pool definition object
  */
-export function nodePoolCreate(clusterId, nodePool) {
-  return function(dispatch) {
-    // This is failing now because this enpoint is not ready yet.
-    return nodePoolsApi
-      .addNodePool(clusterId, nodePool)
-      .then(nodePool => {
-        new FlashMessage(
-          `Your new node pool with ID <code>${nodePool.id}</code> is being created.`,
-          messageType.SUCCESS,
-          messageTTL.MEDIUM
-        );
+export function nodePoolsCreate(clusterId, nodePools) {
+  return async function(dispatch) {
+    dispatch({ type: types.NODEPOOLS_CREATE });
 
-        dispatch({
-          type: types.NODEPOOL_CREATE_SUCCESS,
-          nodePool,
-        });
+    const allNodePools = await Promise.all(
+      nodePools.map(nodePool => {
+        return nodePoolsApi
+          .addNodePool(clusterId, nodePool)
+          .then(nodePool => {
+            // When created no status in the response
+            const nodePoolWithStatus = {
+              ...nodePool,
+              status: { nodes_ready: 0, nodes: 0 },
+            };
+
+            dispatch({
+              type: types.NODEPOOL_CREATE_SUCCESS,
+              clusterId,
+              nodePool: nodePoolWithStatus,
+            });
+
+            new FlashMessage(
+              `Your new node pool with ID <code>${nodePoolWithStatus.id}</code> is being created.`,
+              messageType.SUCCESS,
+              messageTTL.MEDIUM
+            );
+            return nodePoolWithStatus;
+          })
+          .catch(error => {
+            dispatch({
+              type: types.NODEPOOL_CREATE_ERROR,
+              error,
+              clusterId,
+              nodePool,
+            });
+
+            new FlashMessage(
+              'Something went wrong while trying to create the node pool',
+              messageType.ERROR,
+              messageTTL.MEDIUM,
+              'Please try again later or contact support: support@giantswarm.io'
+            );
+
+            console.error(error);
+            throw error;
+          });
       })
-      .catch(error => {
-        dispatch({
-          type: types.NODEPOOL_CREATE_ERROR,
-          error,
-        });
+    );
 
-        new FlashMessage(
-          'Something went wrong while trying to create the node pool',
-          messageType.ERROR,
-          messageTTL.MEDIUM,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        console.error(error);
-        throw error;
-      });
+    // Dispatch action for populating nodePools key inside clusters
+    dispatch(nodePoolsLoad());
+    return allNodePools;
   };
 }
 
 // Actions
-const clusterNodePoolsLoadSucces = (clusterId, nodePools) => ({
+const clusterNodePoolsLoadSuccess = (clusterId, nodePools) => ({
   type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
   clusterId,
   nodePools: nodePools,
-});
-
-const nodePoolsLoadSucces = (nodePools = {}) => ({
-  type: types.NODEPOOLS_LOAD_SUCCESS,
-  nodePools,
-});
-
-const nodePoolsLoadError = error => ({
-  type: types.NODEPOOLS_LOAD_ERROR,
-  error,
 });
 
 const nodePoolPatchAction = (nodePool, payload) => ({

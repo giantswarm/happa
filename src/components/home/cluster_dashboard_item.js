@@ -104,8 +104,9 @@ class ClusterDashboardItem extends React.Component {
       ? getNumberOfNodePoolsNodes(nodePools)
       : getNumberOfNodes(cluster);
 
-    const np = isNodePool ? '/np' : '';
-    const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}${np}`;
+    const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}`;
+
+    const hasNodePools = cluster.nodePools && cluster.nodePools.length !== 0;
 
     return (
       <div className='cluster-dashboard-item well'>
@@ -140,7 +141,7 @@ class ClusterDashboardItem extends React.Component {
             Created {relativeDate(cluster.create_date)}
           </div>
           <div>
-            {cluster.nodePools && (
+            {numNodes !== 0 && hasNodePools && (
               <RefreshableLabel dataItems={[numNodes]}>
                 <span>{cluster.nodePools.length} node pools, </span>
               </RefreshableLabel>
@@ -148,14 +149,18 @@ class ClusterDashboardItem extends React.Component {
             <RefreshableLabel dataItems={[numNodes]}>
               <span>{numNodes} nodes</span>
             </RefreshableLabel>
-            <Dot style={{ paddingLeft: 0 }} />
-            <RefreshableLabel dataItems={[cpus]}>
-              <span>{cpus ? cpus : '0'} CPU cores</span>
-            </RefreshableLabel>
-            <Dot style={{ paddingLeft: 0 }} />
-            <RefreshableLabel dataItems={[memory]}>
-              <span>{memory ? memory : '0'} GB RAM</span>
-            </RefreshableLabel>
+            {numNodes !== 0 && hasNodePools && (
+              <>
+                <Dot style={{ paddingLeft: 0 }} />
+                <RefreshableLabel dataItems={[cpus]}>
+                  <span>{cpus ? cpus : '0'} CPU cores</span>
+                </RefreshableLabel>
+                <Dot style={{ paddingLeft: 0 }} />
+                <RefreshableLabel dataItems={[memory]}>
+                  <span>{memory ? memory : '0'} GB RAM</span>
+                </RefreshableLabel>
+              </>
+            )}
             {cluster.kvm ? (
               <span>
                 <Dot style={{ paddingLeft: 0 }} />
