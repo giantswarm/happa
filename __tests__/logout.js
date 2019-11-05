@@ -55,12 +55,10 @@ it('logging out redirects to the login page', async () => {
 
   // The response to the clusters call (no clusters)
   const clustersRequest = nock('http://localhost:8000')
-    .persist()
     .get('/v4/clusters/')
     .reply(200, []);
 
   const appcatalogsRequest = nock('http://localhost:8000')
-    .persist()
     .get('/v4/appcatalogs/')
     .reply(200, []);
 

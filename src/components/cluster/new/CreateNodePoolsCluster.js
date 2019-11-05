@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
+import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { push } from 'connected-react-router';
 import AddNodePool from '../detail/AddNodePool';
 import AvailabilityZonesParser from '../detail/AvailabilityZonesParser';
@@ -189,8 +190,6 @@ class CreateNodePoolsCluster extends Component {
     },
     submitting: false,
     error: false,
-    // Not sure which value are we going to pass here... there is no
-    // input field in the wireframes
     availabilityZonesRandom: {
       // Select automatically
       value: 1,
@@ -288,10 +287,11 @@ class CreateNodePoolsCluster extends Component {
                 : this.state.availabilityZonesRandom.value,
             },
           },
-          true, // is v5
-          nodePools
+          true // is v5
         )
       );
+
+      await this.props.dispatch(nodePoolsCreate(newCluster.id, nodePools));
 
       // after successful creation, redirect to cluster details
       this.props.dispatch(
@@ -587,7 +587,7 @@ function mapStateToProps(state) {
   const { availability_zones: AZ } = state.app.info.general;
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
-  const maxAZ = !AZ.max || AZ.max > 4 ? 4 : AZ.max;
+  const maxAZ = Math.min(AZ.max, 4);
   const minAZ = 1;
   const defaultAZ = AZ.default;
 
