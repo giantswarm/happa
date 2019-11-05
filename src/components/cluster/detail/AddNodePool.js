@@ -524,7 +524,7 @@ function mapStateToProps(state) {
   const { availability_zones: AZ } = state.app.info.general;
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
-  const maxAZ = !AZ.max || AZ.max > 4 ? 4 : AZ.max;
+  const maxAZ = Math.min(AZ.max, 4);
   const minAZ = 1;
   const defaultAZ = AZ.default;
   const selectedOrganization = state.app.selectedOrganization;
