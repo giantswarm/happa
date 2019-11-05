@@ -149,9 +149,7 @@ class CreateRegularCluster extends React.Component {
   };
 
   createCluster = () => {
-    this.setState({
-      submitting: true,
-    });
+    this.setState({ submitting: true });
 
     var i;
     var workers = [];

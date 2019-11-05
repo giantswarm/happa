@@ -113,22 +113,19 @@ class ViewAndEditName extends React.Component {
       return;
     }
 
-    onSubmit(inputFieldValue)
-      .then(() => {
-        this.setState({
-          editing: false,
-          name:
-            this.props.entityType === 'node pool'
-              ? truncate(inputFieldValue, 14)
-              : inputFieldValue,
-        });
+    this.setState({
+      editing: false,
+      name:
+        this.props.entityType === 'node pool'
+          ? truncate(inputFieldValue, 14)
+          : inputFieldValue,
+    });
 
-        const { toggleEditingState } = this.props;
-        if (toggleEditingState) toggleEditingState(false);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    const { toggleEditingState } = this.props;
+    if (toggleEditingState) toggleEditingState(false);
+
+    // Moved setState() out of then() to avoid setting state in an unmounted component
+    onSubmit(inputFieldValue);
   };
 
   handleKey = evt => {

@@ -25,12 +25,6 @@ class ClusterDetailIndex extends React.Component {
           />
 
           <Route
-            exact
-            path={`${this.props.match.path}/np`}
-            render={() => <ClusterDetailView {...this.props} isNodePoolView />}
-          />
-
-          <Route
             path={`${this.props.match.path}/getting-started/`}
             render={() => <GettingStarted {...this.props} />}
           />
@@ -64,9 +58,10 @@ ClusterDetailIndex.propTypes = {
   provider: PropTypes.string,
   targetRelease: PropTypes.object,
   user: PropTypes.object,
+  isNodePoolsCluster: PropTypes.bool,
 };
 function mapStateToProps(state, ownProps) {
-  var cluster = state.entities.clusters.items[ownProps.match.params.clusterId];
+  let cluster = state.entities.clusters.items[ownProps.match.params.clusterId];
   let release;
   let targetReleaseVersion;
 
@@ -101,6 +96,10 @@ function mapStateToProps(state, ownProps) {
     }
   }
 
+  const isNodePoolsCluster = state.entities.clusters.nodePoolsClusters.includes(
+    cluster.id
+  );
+
   return {
     credentials: state.entities.credentials,
     organizationId: ownProps.match.params.orgId,
@@ -113,6 +112,7 @@ function mapStateToProps(state, ownProps) {
     targetRelease: state.entities.releases.items[targetReleaseVersion],
     user: state.app.loggedInUser,
     region: state.app.info.general.datacenter,
+    isNodePoolsCluster,
   };
 }
 

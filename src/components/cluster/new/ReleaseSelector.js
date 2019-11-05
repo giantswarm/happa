@@ -77,8 +77,8 @@ class ReleaseSelector extends React.Component {
           ref={r => {
             this.releaseDetailsModal = r;
           }}
-          releaseSelected={this.props.selectRelease}
           releases={this.props.selectableReleases}
+          selectRelease={this.props.selectRelease}
           selectedRelease={this.props.selectedRelease}
         />
       </LoadingOverlay>
