@@ -161,12 +161,14 @@ class ClusterDetailTable extends React.Component {
       <WrapperDiv>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            <OverlayTrigger
-              overlay={<Tooltip id='tooltip'>Region</Tooltip>}
-              placement='top'
-            >
-              <Code>{region && region}</Code>
-            </OverlayTrigger>
+            {region && (
+              <OverlayTrigger
+                overlay={<Tooltip id='tooltip'>Region</Tooltip>}
+                placement='top'
+              >
+                <Code>{region && region}</Code>
+              </OverlayTrigger>
+            )}
             <Versions
               createDate={create_date}
               releaseVersion={release_version}
