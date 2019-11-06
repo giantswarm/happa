@@ -1,4 +1,4 @@
-import { memoize } from 'lodash';
+import { memoize } from 'underscore';
 import { replace } from 'connected-react-router';
 import AppListItems from './AppListItems';
 import AppListSearch from './AppListSearch';
