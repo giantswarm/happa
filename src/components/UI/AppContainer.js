@@ -87,7 +87,13 @@ const StyledAppImage = styled.div`
   transition: opacity 0.3s ease-out;
   will-change: opacity;
 
-  &.${IMG_NO_SRC_CLASSNAME}, &.${IMG_FAILED_LOADING_CLASSNAME} {
+  img {
+    max-height: 75px;
+    max-width: 60%;
+  }
+
+  &.${IMG_NO_SRC_CLASSNAME},
+  &.${IMG_FAILED_LOADING_CLASSNAME} {
     opacity: 0;
   }
 
@@ -95,9 +101,10 @@ const StyledAppImage = styled.div`
     transition: 0;
   }
 
-  img {
-    max-height: 75px;
-    max-width: 60%;
+  &.${IMG_FAILED_LOADING_CLASSNAME} {
+    img {
+      display: none;
+    }
   }
 `;
 
@@ -125,7 +132,6 @@ const onImgFailLoading = callback => event => {
   const element = event.target;
 
   element.parentNode.classList.add(IMG_FAILED_LOADING_CLASSNAME);
-  element.style.display = 'none';
 
   callback(event);
 };
