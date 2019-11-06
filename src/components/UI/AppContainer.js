@@ -92,8 +92,7 @@ const StyledAppImage = styled.div`
     max-width: 60%;
   }
 
-  &.${IMG_NO_SRC_CLASSNAME},
-  &.${IMG_FAILED_LOADING_CLASSNAME} {
+  &.${IMG_NO_SRC_CLASSNAME}, &.${IMG_FAILED_LOADING_CLASSNAME} {
     opacity: 0;
   }
 
