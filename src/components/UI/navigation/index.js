@@ -1,6 +1,6 @@
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { logo } from 'images';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 import OrganizationDropdown from './organization_dropdown';
 import PropTypes from 'prop-types';
@@ -118,13 +118,9 @@ class Navigation extends React.Component {
     return (
       <OuterNav>
         <div className='main-nav col-9'>
-          <a
-            href='https://giantswarm.io'
-            rel='noopener noreferrer'
-            target='_blank'
-          >
+          <Link to='/'>
             <img className='logo' src={logo} />
-          </a>
+          </Link>
           <div className='nav-responsive'>
             <NavLink activeClassName='active' exact to='/'>
               Clusters
