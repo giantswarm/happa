@@ -1,9 +1,9 @@
 import { debounce } from 'underscore';
 import { FixedSizeGrid as List } from 'react-window';
-import { WindowScroller } from 'react-virtualized';
 import { withTheme } from 'emotion-theming';
 import PropTypes from 'prop-types';
 import React from 'react';
+import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller/WindowScroller';
 
 const MIN_COLUMN_COUNT = 1;
 
