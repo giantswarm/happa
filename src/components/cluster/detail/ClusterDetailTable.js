@@ -166,7 +166,7 @@ class ClusterDetailTable extends React.Component {
                 overlay={<Tooltip id='tooltip'>Region</Tooltip>}
                 placement='top'
               >
-                <Code>{region && region}</Code>
+                <Code>{region}</Code>
               </OverlayTrigger>
             )}
             <Versions

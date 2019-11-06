@@ -393,7 +393,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 overlay={<Tooltip id='tooltip'>Region</Tooltip>}
                 placement='top'
               >
-                <Code>{region ? region : null}</Code>
+                <Code>{region}</Code>
               </OverlayTrigger>
             )}
             <Versions
