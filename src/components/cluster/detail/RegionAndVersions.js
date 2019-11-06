@@ -1,24 +1,35 @@
-import { Dot } from 'styles';
+import { Code, Dot } from 'styles';
 import { relativeDate } from 'lib/helpers.js';
 import { Upgrade } from './cluster_detail_node_pools_table';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import RefreshableLabel from 'UI/refreshable_label';
 import ReleaseDetailsModal from 'modals/release_details_modal';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 // Versions data and icons at the top of cluster details view.
-function Versions({
+function RegionAndVersions({
   createDate,
   releaseVersion,
   release,
   k8sVersion,
   canUpgrade,
   showUpgradeModal,
+  region,
 }) {
   const releaseDetailsModal = useRef(null);
 
   return (
     <>
+      {region && (
+        <OverlayTrigger
+          overlay={<Tooltip id='tooltip'>Region</Tooltip>}
+          placement='top'
+        >
+          <Code>{region}</Code>
+        </OverlayTrigger>
+      )}
       <div>
         <span>Created {createDate ? relativeDate(createDate) : 'n/a'}</span>
         <span>
@@ -74,13 +85,14 @@ function Versions({
   );
 }
 
-Versions.propTypes = {
+RegionAndVersions.propTypes = {
   createDate: PropTypes.string,
   releaseVersion: PropTypes.string,
   release: PropTypes.object,
   k8sVersion: PropTypes.string,
   canUpgrade: PropTypes.bool,
   showUpgradeModal: PropTypes.func,
+  region: PropTypes.string,
 };
 
-export default Versions;
+export default RegionAndVersions;
