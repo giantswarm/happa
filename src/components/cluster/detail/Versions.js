@@ -33,6 +33,7 @@ function Versions({
   showUpgradeModal,
 }) {
   const releaseDetailsModal = useRef(null);
+  const onReleaseDetailClick = showReleaseDetailsModal(releaseDetailsModal);
 
   return (
     <>
@@ -43,7 +44,7 @@ function Versions({
             <>
               <Dot style={{ paddingRight: 0 }} />
               <ReleaseDetail
-                onClick={showReleaseDetailsModal(releaseDetailsModal)}
+                onClick={onReleaseDetailClick}
               >
                 <i className='fa fa-version-tag' />
                 {releaseVersion ? releaseVersion : 'n/a'}
@@ -51,7 +52,7 @@ function Versions({
             </>
           </RefreshableLabel>
         </span>
-        <ReleaseDetail onClick={showReleaseDetailsModal(releaseDetailsModal)}>
+        <ReleaseDetail onClick={onReleaseDetailClick}>
           {release && (
             <>
               <Dot />
