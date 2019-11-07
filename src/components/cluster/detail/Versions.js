@@ -9,11 +9,19 @@ import styled from '@emotion/styled';
 
 const ReleaseDetail = styled.span`
   text-decoration: underline;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.white2};
 
   &:hover {
-    opacity: 0.7;
+    color: ${({ theme }) => theme.colors.white1};
   }
 `;
+
+const showReleaseDetailsModal = modalRef => () => {
+  const { current: modalElement } = modalRef;
+
+  if (modalElement) modalElement.show();
+};
 
 // Versions data and icons at the top of cluster details view.
 function Versions({
@@ -35,8 +43,7 @@ function Versions({
             <>
               <Dot style={{ paddingRight: 0 }} />
               <ReleaseDetail
-                className='pointer'
-                onClick={() => releaseDetailsModal.current.show()}
+                onClick={showReleaseDetailsModal(releaseDetailsModal)}
               >
                 <i className='fa fa-version-tag' />
                 {releaseVersion ? releaseVersion : 'n/a'}
@@ -44,10 +51,7 @@ function Versions({
             </>
           </RefreshableLabel>
         </span>
-        <ReleaseDetail
-          className='pointer'
-          onClick={() => releaseDetailsModal.current.show()}
-        >
+        <ReleaseDetail onClick={showReleaseDetailsModal(releaseDetailsModal)}>
           {release && (
             <>
               <Dot />
