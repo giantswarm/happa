@@ -501,7 +501,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 <span style={{ paddingLeft: '8px', justifySelf: 'left' }}>
                   NAME
                 </span>
-                <span>INSTANCE TYPE {nodePools.length}</span>
+                <span>INSTANCE TYPE</span>
                 <span>AVAILABILITY ZONES</span>
                 <span>MIN</span>
                 <span>MAX</span>
