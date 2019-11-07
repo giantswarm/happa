@@ -11,6 +11,13 @@ export class Requester {
   }
 
   request = req => {
+    if (!this.store.getState().app.loggedInUser) {
+      let err = new Error(
+        `user is not logged in yet, unable to report error to GS API`
+      );
+      throw err;
+    }
+
     let scheme = this.store.getState().app.loggedInUser.auth.scheme;
     let token = this.store.getState().app.loggedInUser.auth.token;
     let authHeader = scheme + ' ' + token;
