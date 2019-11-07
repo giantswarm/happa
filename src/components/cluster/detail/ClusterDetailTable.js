@@ -182,7 +182,10 @@ class ClusterDetailTable extends React.Component {
                 <span>0 nodes</span>
               ) : (
                 <>
-                  <span>{workerNodesRunning} nodes</span>
+                  <span>
+                    {workerNodesRunning}
+                    {workerNodesRunning === 1 ? ' node' : ' nodes'}
+                  </span>
                   <span>
                     <Dot />
                     {this.state.RAM} GB RAM

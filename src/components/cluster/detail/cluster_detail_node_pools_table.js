@@ -410,7 +410,11 @@ class ClusterDetailNodePoolsTable extends React.Component {
               ) : (
                 <>
                   <span>
-                    {workerNodesRunning} nodes in {nodePools.length} node pools
+                    {workerNodesRunning}
+                    {workerNodesRunning === 1 ? ' node' : ' nodes'} in
+                    {` ${nodePools.length}${
+                      nodePools.length === 1 ? ' node pool' : ' node pools'
+                    }`}
                   </span>
                   <span>
                     <Dot />
@@ -470,7 +474,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 <span style={{ paddingLeft: '8px', justifySelf: 'left' }}>
                   NAME
                 </span>
-                <span>INSTANCE TYPE {nodePools.length}</span>
+                <span>INSTANCE TYPE</span>
                 <span>AVAILABILITY ZONES</span>
                 <span>MIN</span>
                 <span>MAX</span>
@@ -480,15 +484,6 @@ class ClusterDetailNodePoolsTable extends React.Component {
               </GridRowNodePoolsHeaders>
               {nodePools &&
                 nodePools
-                  .sort((a, b) =>
-                    a.name > b.name
-                      ? 1
-                      : a.name < b.name
-                      ? -1
-                      : a.id > b.id
-                      ? 1
-                      : -1
-                  )
                   .sort((a, b) => {
                     if (a.name > b.name) {
                       return 1;
