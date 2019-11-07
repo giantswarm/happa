@@ -43,6 +43,28 @@ const NodePoolsWrapper = styled.div`
     font-size: 22px;
     margin: 0;
   }
+  /* Manual */
+  .np-enter,
+  .np-appear {
+    opacity: 0.01;
+    transform: translateX(20px);
+  }
+  .np-enter.np-enter-active,
+  .np-appear.np-appear-active {
+    opacity: 1;
+    transform: translateX(0px);
+    transition: opacity 200ms, transform 300ms;
+    transition-delay: 300ms, 300ms;
+  }
+  .np-leave {
+    opacity: 1;
+  }
+  .np-leave.np-leave-active {
+    opacity: 0.01;
+    transform: translateX(0px);
+    transition: all 100ms ease-in;
+    transition-delay: 0ms;
+  }
 `;
 
 const GridRowNodePoolsBase = css`
@@ -286,7 +308,6 @@ class ClusterDetailNodePoolsTable extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.nodePools !== this.props.nodePools && this.props.nodePools) {
-      console.log('before: ', this.state.nodePools);
       this.produceNodePools();
     }
   }
@@ -298,8 +319,6 @@ class ClusterDetailNodePoolsTable extends React.Component {
       this.props.nodePools,
       this.props.cluster
     );
-
-    console.log(nodePools);
 
     const allZones = nodePools
       ? nodePools
@@ -323,12 +342,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
     const CPUs = getCpusTotalNodePools(nodePools);
     const workerNodesRunning = getNumberOfNodePoolsNodes(nodePools);
 
-    this.setState(
-      { nodePools, RAM, CPUs, workerNodesRunning, loading: false },
-      () => {
-        console.log(this.state.loading, this.state.nodePools);
-      }
-    );
+    this.setState({ nodePools, RAM, CPUs, workerNodesRunning, loading: false });
   };
 
   toggleAddNodePoolForm = () =>
@@ -497,33 +511,39 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 <span>CURRENT</span>
                 <span> </span>
               </GridRowNodePoolsHeaders>
-              {/* <LoadingOverlay loading={this.props.loadingNPs}> */}
-              {nodePools &&
-                nodePools
-                  .sort((a, b) => {
-                    if (a.name > b.name) {
-                      return 1;
-                    } else if (a.name < b.name) {
-                      return -1;
-                    } else if (a.id > b.id) {
-                      return 1;
-                    } else {
-                      return -1;
-                    }
-                  })
-                  .map(nodePool => (
-                    <GridRowNodePoolsItem key={nodePool.id || Date.now()}>
-                      <NodePool
-                        availableZonesGridTemplateAreas={
-                          availableZonesGridTemplateAreas
-                        }
-                        cluster={cluster}
-                        nodePool={nodePool}
-                        provider={this.props.provider}
-                      />
-                    </GridRowNodePoolsItem>
-                  ))}
-              {/* </LoadingOverlay> */}
+              <ReactCSSTransitionGroup
+                transitionName='np'
+                transitionEnterTimeout={500}
+                transitionLeave={false}
+                transitionAppearTimeout={500}
+                transitionAppear={true}
+              >
+                {nodePools &&
+                  nodePools
+                    .sort((a, b) => {
+                      if (a.name > b.name) {
+                        return 1;
+                      } else if (a.name < b.name) {
+                        return -1;
+                      } else if (a.id > b.id) {
+                        return 1;
+                      } else {
+                        return -1;
+                      }
+                    })
+                    .map(nodePool => (
+                      <GridRowNodePoolsItem key={nodePool.id || Date.now()}>
+                        <NodePool
+                          availableZonesGridTemplateAreas={
+                            availableZonesGridTemplateAreas
+                          }
+                          cluster={cluster}
+                          nodePool={nodePool}
+                          provider={this.props.provider}
+                        />
+                      </GridRowNodePoolsItem>
+                    ))}
+              </ReactCSSTransitionGroup>
             </>
           )}
         </NodePoolsWrapper>
