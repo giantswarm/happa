@@ -240,14 +240,10 @@ class ClusterDetailView extends React.Component {
       targetRelease,
       region,
       loading,
-      loadingWithNodePools,
     } = this.props;
 
     return (
-      <LoadingOverlay
-        // loading={isNodePoolsCluster ? loadingWithNodePools : loading}
-        loading={loading}
-      >
+      <LoadingOverlay loading={loading}>
         <DocumentTitle
           title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
         >
@@ -286,7 +282,6 @@ class ClusterDetailView extends React.Component {
                         cluster={cluster}
                         credentials={credentials}
                         nodePools={nodePools}
-                        loadingNPs={loadingWithNodePools}
                         provider={provider}
                         release={release}
                         region={region}
@@ -413,22 +408,14 @@ ClusterDetailView.propTypes = {
   targetRelease: PropTypes.object,
   user: PropTypes.object,
   loading: PropTypes.bool,
-  loadingWithNodePools: PropTypes.bool,
 };
 
-function mapStateToProps(state, ownProps) {
-  const { releases, clusters, nodePools } = state.entities;
-
+function mapStateToProps(state) {
+  const { releases, clusters } = state.entities;
   const loading = releases.isFetching || clusters.isFetching;
-  const loadingWithNodePools =
-    nodePools.isFetching ||
-    clusters.items[ownProps.clusterId].isFetchingKeyPairs ||
-    clusters.items[ownProps.clusterId].isFetchingApps ||
-    loading;
 
   return {
     loading,
-    loadingWithNodePools,
   };
 }
 

@@ -11,7 +11,6 @@ import { nodePoolsCreate } from 'actions/nodePoolActions';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
-import LoadingOverlay from 'UI/loading_overlay';
 import moment from 'moment';
 import NodePool from './node_pool';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -245,7 +244,7 @@ export const FlexWrapperDiv = styled.div`
   button {
     margin-right: 16px;
   }
-  &.no-nodepools {
+  &.zero-nodepools {
     flex-direction: column;
     justify-content: space-between;
     height: 147px;
@@ -410,7 +409,6 @@ class ClusterDetailNodePoolsTable extends React.Component {
     const { accessCluster, cluster, region, release } = this.props;
 
     const { create_date, release_version, api_endpoint } = cluster;
-    const noNodePools = !nodePools || nodePools.length === 0;
     const zeroNodePools = nodePools && nodePools.length === 0;
 
     return (
@@ -594,7 +592,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
             </AddNodePoolWrapperDiv>
           </ReactCSSTransitionGroup>
         ) : (
-          <FlexWrapperDiv className={zeroNodePools && 'no-nodepools'}>
+          <FlexWrapperDiv className={zeroNodePools && 'zero-nodepools'}>
             {zeroNodePools && (
               <>
                 <p>
@@ -653,7 +651,6 @@ ClusterDetailNodePoolsTable.propTypes = {
   showUpgradeModal: PropTypes.func,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
-  loadingNPs: PropTypes.bool,
 };
 
 function mapDispatchToProps(dispatch) {
