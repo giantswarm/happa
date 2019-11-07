@@ -61,7 +61,7 @@ class ClusterDetailView extends React.Component {
   registerRefreshInterval = () => {
     this.loadDataInterval = this.props.setInterval(
       this.loadDetails,
-      3 * 1000 // 30 seconds
+      30 * 1000 // 30 seconds
     );
   };
 
