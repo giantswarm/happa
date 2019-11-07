@@ -29,6 +29,11 @@ $slide-curve: ease-out
 
 // Slide-Right
 
+[class*="slide-right"]
+  position: absolute!important
+  top: 0
+  left: 0
+
 .slide-right-enter
   // position: absolute
   left: -$slide-amount
@@ -39,14 +44,12 @@ $slide-curve: ease-out
   left: 0px
   opacity: 1
 
-
-.slide-right-leave
+.slide-right-exit
   opacity: 1
   transition: all $slide-duration $slide-curve
 
-.slide-right-leave.slide-right-leave-active
+.slide-right-exit.slide-right-exit-active
   opacity: 0
-
 
 // rollup is an animation where an element grows from zero to full height on entry
 // and shrinks the same way on removal.

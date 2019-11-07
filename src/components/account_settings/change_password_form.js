@@ -1,11 +1,11 @@
 import { Base64 } from 'js-base64';
+import { SlideRightTransition } from 'styles/transitions/SlideTransitions';
 import { validatePassword } from 'lib/password_validation';
 import Button from 'UI/button';
 import GiantSwarm from 'giantswarm';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class ChangePassword extends React.Component {
   state = {
@@ -211,48 +211,30 @@ class ChangePassword extends React.Component {
             </div>
 
             <div className='button-area'>
-              <ReactCSSTransitionGroup
-                transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}
-                transitionName='slide-right'
-              >
-                {this.state.buttonVisible ? (
-                  <Button
-                    bsStyle='primary'
-                    disabled={!this.state.formValid}
-                    loading={this.state.submitting}
-                    loadingMessage='Saving...'
-                    type='submit'
-                  >
-                    Set New Password
-                  </Button>
-                ) : null}
-              </ReactCSSTransitionGroup>
+              <SlideRightTransition in={this.state.buttonVisible}>
+                <Button
+                  bsStyle='primary'
+                  disabled={!this.state.formValid}
+                  loading={this.state.submitting}
+                  loadingMessage='Saving...'
+                  type='submit'
+                >
+                  Set New Password
+                </Button>
+              </SlideRightTransition>
 
-              <ReactCSSTransitionGroup
-                transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}
-                transitionName='slide-right'
-              >
-                {this.state.success ? (
-                  <div className='form-success'>
-                    <i className='fa fa-done' />
-                    Password set succesfully
-                  </div>
-                ) : null}
-              </ReactCSSTransitionGroup>
+              <SlideRightTransition in={this.state.success}>
+                <div className='form-success'>
+                  <i className='fa fa-done' />
+                  Password set succesfully
+                </div>
+              </SlideRightTransition>
 
-              <ReactCSSTransitionGroup
-                transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}
-                transitionName='slide-right'
-              >
-                {this.state.error ? (
-                  <div className='flash-messages--flash-message flash-messages--danger'>
-                    {this.state.errorMessage}
-                  </div>
-                ) : null}
-              </ReactCSSTransitionGroup>
+              <SlideRightTransition in={this.state.error}>
+                <div className='flash-messages--flash-message flash-messages--danger'>
+                  {this.state.errorMessage}
+                </div>
+              </SlideRightTransition>
             </div>
           </form>
         </div>
