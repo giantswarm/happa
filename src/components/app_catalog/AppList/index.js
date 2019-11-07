@@ -7,32 +7,33 @@ import LoadingOverlay from 'UI/loading_overlay';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class AppList extends React.Component {
-  render() {
-    return (
-      <Breadcrumb
-        data={{
-          title: this.props.catalog.metadata.name.toUpperCase(),
-          pathname: this.props.match.url,
-        }}
-      >
-        <DocumentTitle title={'Apps | Giant Swarm '}>
-          <React.Fragment>
-            <Link className='back-link' to={'/app-catalogs/'}>
-              <i aria-hidden='true' className='fa fa-chevron-left' />
-              Back to all catalogs
-            </Link>
-            <br />
-            <br />
-            <LoadingOverlay loading={this.props.catalog.isFetchingIndex}>
-              <AppListInner {...this.props} />
-            </LoadingOverlay>
-          </React.Fragment>
-        </DocumentTitle>
-      </Breadcrumb>
-    );
-  }
-}
+const AppList = ({ catalog, ...props }) => {
+  const breadCrumbTitle = catalog ? catalog.metadata.name.toUpperCase() : '';
+  const isLoading = !catalog || catalog.isFetchingIndex;
+
+  return (
+    <Breadcrumb
+      data={{
+        title: breadCrumbTitle,
+        pathname: props.match.url,
+      }}
+    >
+      <DocumentTitle title={'Apps | Giant Swarm '}>
+        <React.Fragment>
+          <Link className='back-link' to={'/app-catalogs/'}>
+            <i aria-hidden='true' className='fa fa-chevron-left' />
+            Back to all catalogs
+          </Link>
+          <br />
+          <br />
+          <LoadingOverlay loading={isLoading}>
+            <AppListInner catalog={catalog} {...props} />
+          </LoadingOverlay>
+        </React.Fragment>
+      </DocumentTitle>
+    </Breadcrumb>
+  );
+};
 
 AppList.propTypes = {
   catalog: PropTypes.object,

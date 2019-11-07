@@ -21,7 +21,7 @@ const theme = {
     gray: '#ccc',
     error: '#e49090',
   },
-  border_radius: 4,
+  border_radius: '4px',
   breakpoints: {
     small: 540,
     med: 825,
