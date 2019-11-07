@@ -43,9 +43,7 @@ function Versions({
           <RefreshableLabel dataItems={[releaseVersion]}>
             <>
               <Dot style={{ paddingRight: 0 }} />
-              <ReleaseDetail
-                onClick={onReleaseDetailClick}
-              >
+              <ReleaseDetail onClick={onReleaseDetailClick}>
                 <i className='fa fa-version-tag' />
                 {releaseVersion ? releaseVersion : 'n/a'}
               </ReleaseDetail>
