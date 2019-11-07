@@ -245,7 +245,8 @@ class ClusterDetailView extends React.Component {
 
     return (
       <LoadingOverlay
-        loading={isNodePoolsCluster ? loadingWithNodePools : loading}
+        // loading={isNodePoolsCluster ? loadingWithNodePools : loading}
+        loading={loading}
       >
         <DocumentTitle
           title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
@@ -285,6 +286,7 @@ class ClusterDetailView extends React.Component {
                         cluster={cluster}
                         credentials={credentials}
                         nodePools={nodePools}
+                        loadingNPs={loadingWithNodePools}
                         provider={provider}
                         release={release}
                         region={region}

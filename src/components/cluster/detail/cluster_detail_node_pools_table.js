@@ -11,6 +11,7 @@ import { nodePoolsCreate } from 'actions/nodePoolActions';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
+import LoadingOverlay from 'UI/loading_overlay';
 import moment from 'moment';
 import NodePool from './node_pool';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -263,6 +264,7 @@ export const CopyToClipboardDiv = styled.div`
 
 class ClusterDetailNodePoolsTable extends React.Component {
   state = {
+    loading: false,
     availableZonesGridTemplateAreas: '',
     awsInstanceTypes: {},
     RAM: 0,
@@ -282,40 +284,51 @@ class ClusterDetailNodePoolsTable extends React.Component {
     this.produceNodePools();
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.nodePools !== this.props.nodePools && this.props.nodePools) {
+      console.log('before: ', this.state.nodePools);
+      this.produceNodePools();
+    }
+  }
+
   // TODO Move this to the action creator so it will be triggered on every NPs load.
   produceNodePools = () => {
-    const nodePoolsArray = clusterNodePools(
+    this.setState({ loading: true });
+    const nodePools = clusterNodePools(
       this.props.nodePools,
       this.props.cluster
     );
 
-    this.setState({ nodePools: nodePoolsArray }, () => {
-      const { nodePools } = this.state;
+    console.log(nodePools);
 
-      const allZones = nodePools
-        ? nodePools
-            .reduce((accumulator, current) => {
-              return [...accumulator, ...current.availability_zones];
-            }, [])
-            .map(zone => zone.slice(-1))
-        : [];
+    const allZones = nodePools
+      ? nodePools
+          .reduce((accumulator, current) => {
+            return [...accumulator, ...current.availability_zones];
+          }, [])
+          .map(zone => zone.slice(-1))
+      : [];
 
-      // This array stores available zones that are in at least one node pool.
-      // We only want unique values because this is used fot building the grid.
-      const availableZonesGridTemplateAreas = [...new Set(allZones)]
-        .sort()
-        .join(' ');
-      this.setState({
-        availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
-      });
-
-      // Compute RAM & CPU:
-      const RAM = getMemoryTotalNodePools(nodePools);
-      const CPUs = getCpusTotalNodePools(nodePools);
-      const workerNodesRunning = getNumberOfNodePoolsNodes(nodePools);
-
-      this.setState({ RAM, CPUs, workerNodesRunning });
+    // This array stores available zones that are in at least one node pool.
+    // We only want unique values because this is used fot building the grid.
+    const availableZonesGridTemplateAreas = [...new Set(allZones)]
+      .sort()
+      .join(' ');
+    this.setState({
+      availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
     });
+
+    // Compute RAM & CPU:
+    const RAM = getMemoryTotalNodePools(nodePools);
+    const CPUs = getCpusTotalNodePools(nodePools);
+    const workerNodesRunning = getNumberOfNodePoolsNodes(nodePools);
+
+    this.setState(
+      { nodePools, RAM, CPUs, workerNodesRunning, loading: false },
+      () => {
+        console.log(this.state.loading, this.state.nodePools);
+      }
+    );
   };
 
   toggleAddNodePoolForm = () =>
@@ -340,6 +353,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
       })
     );
 
+    this.toggleAddNodePoolForm();
     this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
   };
 
@@ -383,6 +397,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
 
     const { create_date, release_version, api_endpoint } = cluster;
     const noNodePools = !nodePools || nodePools.length === 0;
+    const zeroNodePools = nodePools && nodePools.length === 0;
 
     return (
       <>
@@ -462,7 +477,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
         </FlexRowWithTwoBlocksOnEdges>
         <NodePoolsWrapper>
           <h2>Node Pools</h2>
-          {nodePools && nodePools.length > 0 && (
+          {nodePools && nodePools.length > 0 && !this.state.loading && (
             <>
               <GridRowNodePoolsNodes>
                 <div>
@@ -482,6 +497,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 <span>CURRENT</span>
                 <span> </span>
               </GridRowNodePoolsHeaders>
+              {/* <LoadingOverlay loading={this.props.loadingNPs}> */}
               {nodePools &&
                 nodePools
                   .sort((a, b) => {
@@ -507,6 +523,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                       />
                     </GridRowNodePoolsItem>
                   ))}
+              {/* </LoadingOverlay> */}
             </>
           )}
         </NodePoolsWrapper>
@@ -557,12 +574,14 @@ class ClusterDetailNodePoolsTable extends React.Component {
             </AddNodePoolWrapperDiv>
           </ReactCSSTransitionGroup>
         ) : (
-          <FlexWrapperDiv className={noNodePools && 'no-nodepools'}>
-            {noNodePools && (
-              <p>
-                Add at least one node pool to this cluster so that you can
-                actually run workloads.
-              </p>
+          <FlexWrapperDiv className={zeroNodePools && 'no-nodepools'}>
+            {zeroNodePools && (
+              <>
+                <p>
+                  Add at least one node pool to this cluster so that you can
+                  actually run workloads.
+                </p>
+              </>
             )}
             <Button onClick={this.toggleAddNodePoolForm}>
               <i className='fa fa-add-circle' /> ADD NODE POOL
@@ -614,6 +633,7 @@ ClusterDetailNodePoolsTable.propTypes = {
   showUpgradeModal: PropTypes.func,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
+  loadingNPs: PropTypes.bool,
 };
 
 function mapDispatchToProps(dispatch) {
