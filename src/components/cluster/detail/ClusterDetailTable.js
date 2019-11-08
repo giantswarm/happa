@@ -9,9 +9,9 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
+import RegionAndVersions from './RegionAndVersions';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import Versions from './Versions';
 import WorkerNodesAWS from './WorkerNodesAWS';
 import WorkerNodesAzure from './WorkerNodesAzure';
 import WorkerNodesKVM from './WorkerNodesKVM';
@@ -161,19 +161,14 @@ class ClusterDetailTable extends React.Component {
       <WrapperDiv>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            <OverlayTrigger
-              overlay={<Tooltip id='tooltip'>Region</Tooltip>}
-              placement='top'
-            >
-              <Code>{region && region}</Code>
-            </OverlayTrigger>
-            <Versions
+            <RegionAndVersions
               createDate={create_date}
               releaseVersion={release_version}
               release={release}
               k8sVersion={cluster.kubernetes_version}
               canUpgrade={this.props.canClusterUpgrade}
               showUpgradeModal={this.props.showUpgradeModal}
+              region={region}
             />
           </div>
           <div>

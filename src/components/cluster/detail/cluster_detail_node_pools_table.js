@@ -19,9 +19,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactTimeout from 'react-timeout';
+import RegionAndVersions from './RegionAndVersions';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import Versions from './Versions';
 
 export const Upgrade = styled.div`
   color: #ce990f;
@@ -415,19 +415,14 @@ class ClusterDetailNodePoolsTable extends React.Component {
       <>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            <OverlayTrigger
-              overlay={<Tooltip id='tooltip'>Region</Tooltip>}
-              placement='top'
-            >
-              <Code>{region ? region : null}</Code>
-            </OverlayTrigger>
-            <Versions
+            <RegionAndVersions
               createDate={create_date}
               releaseVersion={release_version}
               release={release}
               k8sVersion={cluster.kubernetes_version}
               canUpgrade={this.props.canClusterUpgrade}
               showUpgradeModal={this.props.showUpgradeModal}
+              region={region}
             />
           </div>
           <div>
