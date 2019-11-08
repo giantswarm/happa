@@ -1,6 +1,6 @@
 import { Code, Dot } from 'styles';
 import { relativeDate } from 'lib/helpers.js';
-import { Upgrade } from './cluster_detail_node_pools_table';
+import { Upgrade } from './V5ClusterDetailTable';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
