@@ -1,5 +1,5 @@
+import { memoize } from 'underscore';
 import { replace } from 'connected-react-router';
-import _ from 'lodash';
 import AppListItems from './AppListItems';
 import AppListSearch from './AppListSearch';
 import PropTypes from 'prop-types';
@@ -8,13 +8,11 @@ import React from 'react';
 const SEARCH_URL_PARAM = 'q';
 
 class AppListInner extends React.Component {
-  state = {
-    iconErrors: {},
-  };
+  iconErrors = {};
 
-  // Contains refs to all the app-container divs in dom so that we can
-  // scroll to them if needed.
-  appRefs = {};
+  state = {
+    scrollToApp: null,
+  };
 
   componentDidMount() {
     // The hash value of the url is used by the app detail screen's back button
@@ -22,27 +20,23 @@ class AppListInner extends React.Component {
     const scrollToApp = this.props.location.hash.substring(1);
 
     if (scrollToApp) {
-      window.scrollTo(0, this.appRefs[scrollToApp].offsetTop - 150);
+      this.setState({ scrollToApp });
     }
   }
 
-  getAppsWithOrderedVersions = _.memoize(allApps => {
+  getAppsWithOrderedVersions = memoize(allApps => {
     const apps = Object.values(allApps);
 
-    apps.map(appVersions => {
-      return appVersions.sort((a, b) => {
-        return new Date(b.created) - new Date(a.created);
-      });
-    });
+    apps.map(this.sortVersionsByCreationDateDESC);
 
     return apps;
   });
 
-  sortVersionsByCreationDateDESC(versions) {
+  sortVersionsByCreationDateDESC = versions => {
     return versions.sort((a, b) => {
       return new Date(b.created) - new Date(a.created);
     });
-  }
+  };
 
   filterApps(searchQuery, allApps) {
     const fieldsToCheck = ['name', 'description', 'keywords'];
@@ -87,7 +81,6 @@ class AppListInner extends React.Component {
 
   updateSearchParams = e => {
     const searchQuery = e.target.value;
-
     const urlParams = new URLSearchParams({
       [SEARCH_URL_PARAM]: searchQuery,
     });
@@ -103,19 +96,7 @@ class AppListInner extends React.Component {
   onImgError = e => {
     const imageUrl = e.target.src;
 
-    this.setState(prevState => {
-      const iconErrors = Object.assign({}, prevState.iconErrors, {
-        [imageUrl]: true,
-      });
-
-      return {
-        iconErrors,
-      };
-    });
-  };
-
-  registerRef = (name, ref) => {
-    this.appRefs[name] = ref;
+    this.iconErrors[imageUrl] = true;
   };
 
   render() {
@@ -137,16 +118,14 @@ class AppListInner extends React.Component {
           />
         </h1>
         <div className='app-catalog-overview'>
-          <div className='apps'>
-            <AppListItems
-              apps={filteredApps}
-              catalog={catalog}
-              searchQuery={searchQuery}
-              iconErrors={this.state.iconErrors}
-              onImgError={this.onImgError}
-              registerRef={this.registerRef}
-            />
-          </div>
+          <AppListItems
+            apps={filteredApps}
+            catalog={catalog}
+            searchQuery={searchQuery}
+            iconErrors={this.iconErrors}
+            onImgError={this.onImgError}
+            scrollToApp={this.state.scrollToApp}
+          />
         </div>
       </>
     );

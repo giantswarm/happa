@@ -9,6 +9,7 @@ import NodePoolDropdownMenu from './node_pool_dropdown_menu';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ScaleNodePoolModal from './scale_node_pool_modal';
+import { spinner } from 'images';
 import styled from '@emotion/styled';
 import theme from 'styles/theme';
 import ViewAndEditName from 'UI/view_edit_name';
@@ -74,77 +75,81 @@ class NodePool extends Component {
   };
 
   render() {
-    const { availableZonesGridTemplateAreas, cluster, nodePool } = this.props;
-    const { id, scaling, availability_zones, status, node_spec } = nodePool;
-    const { nodes_ready: current, nodes: desired } = status;
-    const { isNameBeingEdited } = this.state;
+    if (!this.props.nodePool) {
+      return <img className='loader' src={spinner} />;
+    } else {
+      const { availableZonesGridTemplateAreas, cluster, nodePool } = this.props;
+      const { id, scaling, availability_zones, status, node_spec } = nodePool;
+      const { nodes_ready: current, nodes: desired } = status;
+      const { isNameBeingEdited } = this.state;
 
-    return (
-      <>
-        <Code data-testid='node-pool-id'>{id}</Code>
-        {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
-        <div
-          style={{
-            paddingLeft: '8px',
-            justifySelf: 'left',
-            gridColumn: isNameBeingEdited ? '2 / 9' : null,
-          }}
-        >
-          <ViewAndEditName
-            cssClass='np'
-            entity={nodePool}
-            entityType='node pool'
-            onSubmit={this.editNodePoolName}
-            ref={viewEditName => (this.viewEditNameRef = viewEditName)}
-            toggleEditingState={this.toggleEditingState}
-          />
-        </div>
-        {/* Hide the rest of fields when editing name */}
-        {!isNameBeingEdited && (
-          <>
-            <Code>{node_spec.aws.instance_type}</Code>
-            <div>
-              <AvailabilityZonesWrapper
-                availableZonesGridTemplateAreas={
-                  availableZonesGridTemplateAreas
-                }
-                zones={availability_zones}
-              />
-            </div>
-            <NodesWrapper>{scaling.min}</NodesWrapper>
-            <NodesWrapper>{scaling.max}</NodesWrapper>
-            <NodesWrapper>{desired}</NodesWrapper>
-            <NodesWrapper
-              style={{
-                background:
-                  current < desired ? theme.colors.goldBackground : null,
-              }}
-            >
-              {current}
-            </NodesWrapper>
-            {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
-            <NodePoolDropdownMenu
-              style={{ justifySelf: 'right' }}
-              clusterId={cluster.id}
-              nodePool={nodePool}
-              deleteNodePool={this.deleteNodePool}
-              showNodePoolScalingModal={this.showNodePoolScalingModal}
-              triggerEditName={this.triggerEditName}
+      return (
+        <>
+          <Code data-testid='node-pool-id'>{id}</Code>
+          {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
+          <div
+            style={{
+              paddingLeft: '8px',
+              justifySelf: 'left',
+              gridColumn: isNameBeingEdited ? '2 / 9' : null,
+            }}
+          >
+            <ViewAndEditName
+              cssClass='np'
+              entity={nodePool}
+              entityType='node pool'
+              onSubmit={this.editNodePoolName}
+              ref={viewEditName => (this.viewEditNameRef = viewEditName)}
+              toggleEditingState={this.toggleEditingState}
             />
-          </>
-        )}
-        <ScaleNodePoolModal
-          cluster={cluster}
-          nodePool={nodePool}
-          provider={this.props.provider}
-          ref={s => {
-            this.scaleNodePoolModal = s;
-          }}
-          workerNodesDesired={desired}
-          workerNodesRunning={current}
-        />
-      </>
-    );
+          </div>
+          {/* Hide the rest of fields when editing name */}
+          {!isNameBeingEdited && (
+            <>
+              <Code>{node_spec.aws.instance_type}</Code>
+              <div>
+                <AvailabilityZonesWrapper
+                  availableZonesGridTemplateAreas={
+                    availableZonesGridTemplateAreas
+                  }
+                  zones={availability_zones}
+                />
+              </div>
+              <NodesWrapper>{scaling.min}</NodesWrapper>
+              <NodesWrapper>{scaling.max}</NodesWrapper>
+              <NodesWrapper>{desired}</NodesWrapper>
+              <NodesWrapper
+                style={{
+                  background:
+                    current < desired ? theme.colors.goldBackground : null,
+                }}
+              >
+                {current}
+              </NodesWrapper>
+              {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
+              <NodePoolDropdownMenu
+                style={{ justifySelf: 'right' }}
+                clusterId={cluster.id}
+                nodePool={nodePool}
+                deleteNodePool={this.deleteNodePool}
+                showNodePoolScalingModal={this.showNodePoolScalingModal}
+                triggerEditName={this.triggerEditName}
+              />
+            </>
+          )}
+          <ScaleNodePoolModal
+            cluster={cluster}
+            nodePool={nodePool}
+            provider={this.props.provider}
+            ref={s => {
+              this.scaleNodePoolModal = s;
+            }}
+            workerNodesDesired={desired}
+            workerNodesRunning={current}
+          />
+        </>
+      );
+    }
   }
 }
 

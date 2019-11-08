@@ -3,7 +3,7 @@ import { catalogLoadIndex, catalogsLoad } from 'actions/catalogActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { Route, Switch } from 'react-router-dom';
-import AppList from './app_list';
+import AppList from './AppList';
 import Catalogs from './catalogs';
 import Detail from './detail';
 import PropTypes from 'prop-types';
@@ -42,9 +42,9 @@ class CatalogIndex extends React.Component {
         <div className='app-catalog'>
           <Switch>
             <Route
+              component={Detail}
               exact
-              path={`${this.props.match.path}`}
-              render={() => <Catalogs {...this.props} />}
+              path={`${this.props.match.path}/:repo/:app`}
             />
             <Route
               component={AppList}
@@ -52,9 +52,8 @@ class CatalogIndex extends React.Component {
               path={`${this.props.match.path}/:repo`}
             />
             <Route
-              component={Detail}
-              exact
-              path={`${this.props.match.path}/:repo/:app`}
+              path={`${this.props.match.path}`}
+              render={() => <Catalogs {...this.props} />}
             />
           </Switch>
         </div>
