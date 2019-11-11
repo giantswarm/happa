@@ -32,7 +32,7 @@ import React from 'react';
 import theme from 'styles/theme';
 
 // Components
-import NodePoolDropdownMenu from '../node_pool_dropdown_menu';
+import NodePoolDropdownMenu from '../NodePoolDropdownMenu';
 
 // Mocking localStorage utils, otherwise no way to refreshUser and to set data
 // to loca storage

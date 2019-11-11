@@ -3,7 +3,7 @@ import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { RadioWrapper } from '../new/CreateNodePoolsCluster';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
-import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
+import AWSInstanceTypeSelector from '../new/AWSInstanceTypeSelector';
 import NodeCountSelector from 'shared/node_count_selector';
 import produce from 'immer';
 import PropTypes from 'prop-types';

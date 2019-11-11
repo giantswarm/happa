@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
 
-import Tabs from '../tabs';
+import Tabs from '../Tabs';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');

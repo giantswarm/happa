@@ -2,7 +2,7 @@ import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
-import ExpiryHoursPicker from './expiry_hours_picker';
+import ExpiryHoursPicker from './ExpiryHoursPicker';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import useDebounce from 'lib/effects/use_debounce';

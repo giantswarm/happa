@@ -1,5 +1,5 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges } from 'styles';
-import { CopyToClipboardDiv } from './cluster_detail_node_pools_table';
+import { CopyToClipboardDiv } from './V5ClusterDetailTable';
 import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';
@@ -30,7 +30,7 @@ const WrapperDiv = styled.div`
   }
 `;
 
-class ClusterDetailTable extends React.Component {
+class V4ClusterDetailTable extends React.Component {
   state = {
     enpointCopied: false,
     RAM: 0,
@@ -276,7 +276,7 @@ class ClusterDetailTable extends React.Component {
   }
 }
 
-ClusterDetailTable.propTypes = {
+V4ClusterDetailTable.propTypes = {
   accessCluster: PropTypes.func,
   canClusterUpgrade: PropTypes.bool,
   cluster: PropTypes.object,
@@ -292,4 +292,4 @@ ClusterDetailTable.propTypes = {
   workerNodesRunning: PropTypes.number,
 };
 
-export default ReactTimeout(ClusterDetailTable);
+export default ReactTimeout(V4ClusterDetailTable);
