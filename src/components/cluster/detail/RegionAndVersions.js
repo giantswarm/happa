@@ -6,7 +6,24 @@ import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import RefreshableLabel from 'UI/refreshable_label';
 import ReleaseDetailsModal from 'modals/release_details_modal';
+import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+
+const ReleaseDetail = styled.span`
+  text-decoration: underline;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.white2};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.white1};
+  }
+`;
+
+const showReleaseDetailsModal = modalRef => () => {
+  const { current: modalElement } = modalRef;
+
+  if (modalElement) modalElement.show();
+};
 
 // Versions data and icons at the top of cluster details view.
 function RegionAndVersions({
@@ -19,6 +36,7 @@ function RegionAndVersions({
   region,
 }) {
   const releaseDetailsModal = useRef(null);
+  const onReleaseDetailClick = showReleaseDetailsModal(releaseDetailsModal);
 
   return (
     <>
@@ -36,20 +54,14 @@ function RegionAndVersions({
           <RefreshableLabel dataItems={[releaseVersion]}>
             <>
               <Dot style={{ paddingRight: 0 }} />
-              <i className='fa fa-version-tag' />
-              <span
-                className='pointer'
-                onClick={() => releaseDetailsModal.current.show()}
-              >
+              <ReleaseDetail onClick={onReleaseDetailClick}>
+                <i className='fa fa-version-tag' />
                 {releaseVersion ? releaseVersion : 'n/a'}
-              </span>
+              </ReleaseDetail>
             </>
           </RefreshableLabel>
         </span>
-        <span
-          className='pointer'
-          onClick={() => releaseDetailsModal.current.show()}
-        >
+        <ReleaseDetail onClick={onReleaseDetailClick}>
           {release && (
             <>
               <Dot />
@@ -66,7 +78,7 @@ function RegionAndVersions({
             k8sVersion !== '' &&
             k8sVersion !== undefined &&
             <i className='fa fa-kubernetes' /> + k8sVersion}
-        </span>
+        </ReleaseDetail>
       </div>
       {canUpgrade && (
         <a className='upgrade-available' onClick={showUpgradeModal}>
