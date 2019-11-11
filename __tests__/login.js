@@ -83,17 +83,11 @@ it('tells the user to give a password if they leave it blank', async () => {
   // Given I arrive at the login page with nothing in the state.
   const state = {};
   const div = document.createElement('div');
-  const { getByText, getByLabelText } = renderRouteWithStore(
-    '/login',
-    div,
-    state
-  );
+  const { getByText, getByLabelText } = renderRouteWithStore('/login', div, state);
 
   // When I type in my email but not my password.
   const emailInput = getByLabelText('Email');
-  fireEvent.change(emailInput, {
-    target: { value: 'developer@giantswarm.io' },
-  });
+  fireEvent.change(emailInput, { target: { value: 'developer@giantswarm.io' } })
 
   // And click submit
   const button = getByText('Log in');
@@ -109,15 +103,11 @@ it('tells the user to give a email if they leave it blank', async () => {
   // Given I arrive at the login page with nothing in the state.
   const state = {};
   const div = document.createElement('div');
-  const { getByText, getByLabelText } = renderRouteWithStore(
-    '/login',
-    div,
-    state
-  );
+  const { getByText, getByLabelText } = renderRouteWithStore('/login', div, state);
 
   // When I type in my password but not my email.
   const passwordInput = getByLabelText('Password');
-  fireEvent.change(passwordInput, { target: { value: 'password' } });
+  fireEvent.change(passwordInput, { target: { value: 'password' } })
 
   // And click submit
   const button = getByText('Log in');
@@ -134,26 +124,20 @@ it('shows an error if the user logs in with invalid credentials', async () => {
 
   // The failed 401 response to the login call
   const authTokensRequest = nock('http://localhost:8000')
-    .post('/v4/auth-tokens/')
-    .reply(401);
+  .post('/v4/auth-tokens/')
+  .reply(401);
 
   // And I arrive at the login page with nothing in the state.
   const state = {};
   const div = document.createElement('div');
-  const { getByText, getByLabelText } = renderRouteWithStore(
-    '/login',
-    div,
-    state
-  );
+  const { getByText, getByLabelText } = renderRouteWithStore('/login', div, state);
 
   // When I type in my email and password
   const emailInput = getByLabelText('Email');
   const passwordInput = getByLabelText('Password');
 
-  fireEvent.change(emailInput, {
-    target: { value: 'developer@giantswarm.io' },
-  });
-  fireEvent.change(passwordInput, { target: { value: 'password' } });
+  fireEvent.change(emailInput, { target: { value: 'developer@giantswarm.io' } })
+  fireEvent.change(passwordInput, { target: { value: 'password' } })
 
   // And click submit
   const button = getByText('Log in');
