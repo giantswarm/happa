@@ -1,5 +1,5 @@
 import { Base64 } from 'js-base64';
-import { SlideRightTransition } from 'styles/transitions/SlideTransitions';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import { validatePassword } from 'lib/password_validation';
 import Button from 'UI/button';
 import GiantSwarm from 'giantswarm';
@@ -211,7 +211,7 @@ class ChangePassword extends React.Component {
             </div>
 
             <div className='button-area'>
-              <SlideRightTransition in={this.state.buttonVisible}>
+              <SlideTransition in={this.state.buttonVisible}>
                 <Button
                   bsStyle='primary'
                   disabled={!this.state.formValid}
@@ -221,20 +221,20 @@ class ChangePassword extends React.Component {
                 >
                   Set New Password
                 </Button>
-              </SlideRightTransition>
+              </SlideTransition>
 
-              <SlideRightTransition in={this.state.success}>
+              <SlideTransition in={this.state.success}>
                 <div className='form-success'>
                   <i className='fa fa-done' />
                   Password set succesfully
                 </div>
-              </SlideRightTransition>
+              </SlideTransition>
 
-              <SlideRightTransition in={this.state.error}>
+              <SlideTransition in={this.state.error}>
                 <div className='flash-messages--flash-message flash-messages--danger'>
                   {this.state.errorMessage}
                 </div>
-              </SlideRightTransition>
+              </SlideTransition>
             </div>
           </form>
         </div>

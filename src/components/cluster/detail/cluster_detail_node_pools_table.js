@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import AddNodePool from './AddNodePool';
-import BaseTransition from 'styles/transitions/BaseTransition';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import moment from 'moment';
@@ -19,6 +18,7 @@ import produce from 'immer';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Versions from './Versions';
@@ -511,15 +511,15 @@ class ClusterDetailNodePoolsTable extends React.Component {
           )}
         </NodePoolsWrapper>
         {this.state.isNodePoolBeingAdded ? (
-          <BaseTransition
+          <SlideTransition
             in={true}
             appear={true}
+            direction='down'
             timeout={{
               appear: 200,
               enter: 200,
               exit: 200,
             }}
-            classNames='login_form--transition'
           >
             {/* Add Node Pool */}
             <AddNodePoolWrapperDiv>
@@ -558,7 +558,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 </FlexWrapperDiv>
               </AddNodePoolFlexColumnDiv>
             </AddNodePoolWrapperDiv>
-          </BaseTransition>
+          </SlideTransition>
         ) : (
           <FlexWrapperDiv className={noNodePools && 'no-nodepools'}>
             {noNodePools && (

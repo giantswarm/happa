@@ -11,10 +11,9 @@ import { giantswarmLogin } from 'actions/userActions';
 import { Link } from 'react-router-dom';
 import { parseErrorMessages } from '../auth/_parse_error_messages';
 import { push } from 'connected-react-router';
-import { SlideRightTransition } from 'styles/transitions/SlideTransitions';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import { spinner } from 'images';
 import { validatePassword } from 'lib/password_validation';
-import BaseTransition from 'styles/transitions/BaseTransition';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -274,9 +273,9 @@ class SetPassword extends React.Component {
             >
               {this.state.submitting ? 'Submitting ...' : 'Submit'}
             </button>
-            <SlideRightTransition in={this.state.submitting}>
+            <SlideTransition in={this.state.submitting}>
               <img className='loader' src={spinner} />
-            </SlideRightTransition>
+            </SlideTransition>
           </div>
           <Link to='/login'>Back to login form</Link>
         </form>
@@ -334,9 +333,9 @@ class SetPassword extends React.Component {
           >
             {this.state.submitting ? 'Submitting ...' : 'Submit'}
           </button>
-          <SlideRightTransition in={this.state.submitting}>
+          <SlideTransition in={this.state.submitting}>
             <img className='loader' src={spinner} />
-          </SlideRightTransition>
+          </SlideTransition>
         </div>
         <Link to='/login'>Back to login form</Link>
         <br />
@@ -351,10 +350,10 @@ class SetPassword extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <BaseTransition
+        <SlideTransition
           in={true}
           appear={true}
-          classNames='login_form--transition'
+          direction='down'
           timeout={{
             enter: 200,
             exit: 200,
@@ -365,7 +364,7 @@ class SetPassword extends React.Component {
             <h1>Set your new password</h1>
             {this.state.email ? this.setPasswordForm() : this.setEmailForm()}
           </div>
-        </BaseTransition>
+        </SlideTransition>
       </div>
     );
   }

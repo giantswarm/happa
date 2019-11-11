@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
 import Auth from 'lib/auth0';
-import BaseTransition from 'styles/transitions/BaseTransition';
 import PropTypes from 'prop-types';
 import React from 'react';
+import SlideTransition from 'styles/transitions/SlideTransition';
 
 class OAuthCallback extends React.Component {
   state = {
@@ -61,15 +61,15 @@ class OAuthCallback extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <BaseTransition
+        <SlideTransition
           in={true}
           appear={true}
+          direction='down'
           timeout={{
             appear: 200,
             enter: 200,
             exit: 200,
           }}
-          classNames='login_form--transition'
         >
           <div className='login_form--container col-4 login_form--admin'>
             {this.state.error ? (
@@ -78,7 +78,7 @@ class OAuthCallback extends React.Component {
               <img className='loader' src={spinner} />
             )}
           </div>
-        </BaseTransition>
+        </SlideTransition>
       </div>
     );
   }

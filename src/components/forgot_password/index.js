@@ -8,7 +8,7 @@ import {
 } from 'lib/flash_message';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import BaseTransition from 'styles/transitions/BaseTransition';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/button';
 import LoginFormContainer from 'UI/login_form_container';
 import PropTypes from 'prop-types';
@@ -155,10 +155,10 @@ class ForgotPassword extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <BaseTransition
+        <SlideTransition
           in={true}
           appear={true}
-          classNames='login_form--transition'
+          direction='down'
           timeout={{
             enter: 200,
             exit: 200,
@@ -168,7 +168,7 @@ class ForgotPassword extends React.Component {
           <LoginFormContainer>
             {this.state.tokenRequested ? this.success() : this.form()}
           </LoginFormContainer>
-        </BaseTransition>
+        </SlideTransition>
       </div>
     );
   }

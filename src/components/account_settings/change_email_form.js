@@ -1,4 +1,4 @@
-import { SlideRightTransition } from 'styles/transitions/SlideTransitions';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/button';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
@@ -135,7 +135,7 @@ class ChangeEmailForm extends React.Component {
           />
 
           <div className='button-area'>
-            <SlideRightTransition in={this.state.isButtonVisible}>
+            <SlideTransition in={this.state.isButtonVisible}>
               <Button
                 bsStyle='primary'
                 disabled={!this.state.isValid}
@@ -145,20 +145,20 @@ class ChangeEmailForm extends React.Component {
               >
                 Set New Email
               </Button>
-            </SlideRightTransition>
+            </SlideTransition>
 
-            <SlideRightTransition in={this.state.isSuccess}>
+            <SlideTransition in={this.state.isSuccess}>
               <div className='form-success'>
                 <i className='fa fa-done' />
                 Saved Succesfully
               </div>
-            </SlideRightTransition>
+            </SlideTransition>
 
-            <SlideRightTransition in={this.state.error}>
+            <SlideTransition in={this.state.error}>
               <div className='flash-messages--flash-message flash-messages--danger'>
                 {this.state.errorMessage}
               </div>
-            </SlideRightTransition>
+            </SlideTransition>
           </div>
         </form>
       </div>

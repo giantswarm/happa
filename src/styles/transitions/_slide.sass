@@ -2,14 +2,53 @@ $slide-duration: 0.2s
 $slide-amount: 10px
 $slide-curve: ease-out
 
+// Slide-up
+
+.slide-up-appear, .slide-up-enter
+  opacity: 0
+  transform: translateY($slide-amount)
+
+.slide-up-appear.slide-up-appear-active,
+.slide-up-enter.slide-up-enter-active
+  opacity: 1
+  transform: translateY(0)
+  transition: all $slide-duration $slide-curve
+
+.slide-up-exit
+  opacity: 1
+
+.slide-up-exit.slide-up-exit-active
+  opacity: 0
+  transition: all $slide-duration $slide-curve
+
+// Slide-down
+
+.slide-down-appear, .slide-down-enter
+  opacity: 0
+  transform: translateY(-$slide-amount)
+
+.slide-down-appear.slide-down-appear-active,
+.slide-down-enter.slide-down-enter-active
+  opacity: 1
+  transform: translateY(0)
+  transition: all $slide-duration $slide-curve
+
+.slide-down-exit
+  opacity: 1
+
+.slide-down-exit.slide-down-exit-active
+  opacity: 0
+  transition: all $slide-duration $slide-curve
+
 // Slide-left
 
-.slide-left-enter
+.slide-left-appear, .slide-left-enter
   position: absolute
   left: $slide-amount
   top: 0px
   opacity: 0
 
+.slide-left-appear.slide-left-appear-active,
 .slide-left-enter.slide-left-enter-active
   left: 0px
   top: 0px
@@ -29,12 +68,13 @@ $slide-curve: ease-out
 
 // Slide-Right
 
-.slide-right-enter
+.slide-right-appear, .slide-right-enter
   position: absolute
   left: -$slide-amount
   opacity: 0
   transition: all $slide-duration $slide-curve
 
+.slide-right-appear.slide-right-appear-active,
 .slide-right-enter.slide-right-enter-active
   left: 0px
   opacity: 1

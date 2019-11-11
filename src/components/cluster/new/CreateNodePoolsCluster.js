@@ -12,13 +12,13 @@ import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { push } from 'connected-react-router';
 import AddNodePool from '../detail/AddNodePool';
 import AvailabilityZonesParser from '../detail/AvailabilityZonesParser';
-import BaseTransition from 'styles/transitions/BaseTransition';
 import Button from 'UI/button';
 import DocumentTitle from 'react-document-title';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReleaseSelector from './ReleaseSelector';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
@@ -485,15 +485,15 @@ class CreateNodePoolsCluster extends Component {
                 </AZWrapperDiv>
               </FlexColumnDiv>
               {Object.keys(nodePools).length === 0 && <hr />}
-              <BaseTransition
+              <SlideTransition
                 in={true}
                 appear={true}
+                direction='down'
                 timeout={{
                   appear: 200,
                   enter: 200,
                   exit: 200,
                 }}
-                classNames='login_form--transition'
               >
                 {Object.keys(nodePools).map(npId => {
                   const name = nodePools[npId].data.name;
@@ -517,7 +517,7 @@ class CreateNodePoolsCluster extends Component {
                     </AddNodePoolWrapperDiv>
                   );
                 })}
-              </BaseTransition>
+              </SlideTransition>
               <Button onClick={this.addNodePoolForm}>
                 <i className='fa fa-add-circle' /> ADD NODE POOL
               </Button>

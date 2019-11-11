@@ -2,10 +2,10 @@ import * as userActions from 'actions/userActions';
 import { bindActionCreators } from 'redux';
 import { clearQueues } from 'lib/flash_message';
 import { connect } from 'react-redux';
-import BaseTransition from 'styles/transitions/BaseTransition';
 import PropTypes from 'prop-types';
 import QueryString from 'query-string';
 import React from 'react';
+import SlideTransition from 'styles/transitions/SlideTransition';
 
 class OauthCallback extends React.Component {
   componentWillUnmount() {
@@ -19,15 +19,15 @@ class OauthCallback extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <BaseTransition
+        <SlideTransition
           in={true}
           appear={true}
+          direction='down'
           timeout={{
             appear: 200,
             enter: 200,
             exit: 200,
           }}
-          classNames='login_form--transition'
         >
           <div className='login_form--container col-4'>
             <h1>OAuth Callback</h1>
@@ -54,7 +54,7 @@ class OauthCallback extends React.Component {
             <b>State:</b>
             <pre>{parsedHash.state}</pre>
           </div>
-        </BaseTransition>
+        </SlideTransition>
       </div>
     );
   }
