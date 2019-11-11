@@ -485,11 +485,7 @@ class CreateNodePoolsCluster extends Component {
                 </AZWrapperDiv>
               </FlexColumnDiv>
               {Object.keys(nodePools).length === 0 && <hr />}
-              <SlideTransition
-                in={true}
-                appear={true}
-                direction='down'
-              >
+              <SlideTransition in={true} appear={true} direction='down'>
                 {Object.keys(nodePools).map(npId => {
                   const name = nodePools[npId].data.name;
                   return (

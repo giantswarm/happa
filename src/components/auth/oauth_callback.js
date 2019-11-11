@@ -61,11 +61,7 @@ class OAuthCallback extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <SlideTransition
-          in={true}
-          appear={true}
-          direction='down'
-        >
+        <SlideTransition in={true} appear={true} direction='down'>
           <div className='login_form--container col-4 login_form--admin'>
             {this.state.error ? (
               this.errorMessage()

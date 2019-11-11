@@ -155,11 +155,7 @@ class ForgotPassword extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <SlideTransition
-          in={true}
-          appear={true}
-          direction='down'
-        >
+        <SlideTransition in={true} appear={true} direction='down'>
           <LoginFormContainer>
             {this.state.tokenRequested ? this.success() : this.form()}
           </LoginFormContainer>

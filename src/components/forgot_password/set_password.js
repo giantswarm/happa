@@ -350,11 +350,7 @@ class SetPassword extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <SlideTransition
-          in={true}
-          appear={true}
-          direction='down'
-        >
+        <SlideTransition in={true} appear={true} direction='down'>
           <div className='login_form--container col-4'>
             <h1>Set your new password</h1>
             {this.state.email ? this.setPasswordForm() : this.setEmailForm()}

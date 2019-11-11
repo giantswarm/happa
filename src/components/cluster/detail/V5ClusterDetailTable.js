@@ -541,11 +541,7 @@ class V5ClusterDetailTable extends React.Component {
           )}
         </NodePoolsWrapper>
         {this.state.isNodePoolBeingAdded ? (
-          <SlideTransition
-            in={true}
-            appear={true}
-            direction='down'
-          >
+          <SlideTransition in={true} appear={true} direction='down'>
             {/* Add Node Pool */}
             <AddNodePoolWrapperDiv>
               <h3 className='table-label'>Add Node Pool</h3>
