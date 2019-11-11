@@ -10,10 +10,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { parseErrorMessages } from './_parse_error_messages';
 import { push } from 'connected-react-router';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Login extends React.Component {
   state = {
@@ -97,12 +97,10 @@ class Login extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <ReactCSSTransitionGroup
-          transitionAppear={true}
-          transitionAppearTimeout={200}
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionName={`login_form--transition`}
+        <BaseTransition
+          appear={true}
+          in={true}
+          classNames='login_form--transition'
         >
           <div className='login_form--container col-4'>
             <h1>Log in to Giant&nbsp;Swarm</h1>
@@ -158,7 +156,7 @@ class Login extends React.Component {
               <a href='mailto:support@giantswarm.io'>support@giantswarm.io</a>
             </div>
           </div>
-        </ReactCSSTransitionGroup>
+        </BaseTransition>
       </div>
     );
   }

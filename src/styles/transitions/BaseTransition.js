@@ -4,20 +4,20 @@ import React from 'react';
 
 export const BaseTransitionPropTypes = {
   classNames: PropTypes.string,
-  visible: PropTypes.bool,
+  in: PropTypes.bool,
   children: PropTypes.element,
 };
 
-const BaseTransition = ({ visible, children, ...props }) => {
+const BaseTransition = ({ children, ...props }) => {
   return (
-    <CSSTransition in={visible} mountOnEnter unmountOnExit {...props}>
+    <CSSTransition mountOnEnter unmountOnExit {...props}>
       {children}
     </CSSTransition>
   );
 };
 
 BaseTransition.defaultProps = {
-  visible: true,
+  in: false,
   timeout: 200,
 };
 

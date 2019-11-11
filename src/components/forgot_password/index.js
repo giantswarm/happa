@@ -8,11 +8,11 @@ import {
 } from 'lib/flash_message';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import Button from 'UI/button';
 import LoginFormContainer from 'UI/login_form_container';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class ForgotPassword extends React.Component {
   state = {
@@ -155,17 +155,20 @@ class ForgotPassword extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <ReactCSSTransitionGroup
-          transitionAppear={true}
-          transitionAppearTimeout={200}
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionName={`login_form--transition`}
+        <BaseTransition
+          in={true}
+          appear={true}
+          classNames='login_form--transition'
+          timeout={{
+            enter: 200,
+            exit: 200,
+            appear: 200,
+          }}
         >
           <LoginFormContainer>
             {this.state.tokenRequested ? this.success() : this.form()}
           </LoginFormContainer>
-        </ReactCSSTransitionGroup>
+        </BaseTransition>
       </div>
     );
   }

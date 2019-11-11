@@ -11,12 +11,13 @@ import { giantswarmLogin } from 'actions/userActions';
 import { Link } from 'react-router-dom';
 import { parseErrorMessages } from '../auth/_parse_error_messages';
 import { push } from 'connected-react-router';
+import { SlideRightTransition } from 'styles/transitions/SlideTransitions';
 import { spinner } from 'images';
 import { validatePassword } from 'lib/password_validation';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import StatusMessage from '../signup/status_message';
 
 class SetPassword extends React.Component {
@@ -273,15 +274,9 @@ class SetPassword extends React.Component {
             >
               {this.state.submitting ? 'Submitting ...' : 'Submit'}
             </button>
-            <ReactCSSTransitionGroup
-              transitionEnterTimeout={200}
-              transitionLeaveTimeout={200}
-              transitionName='slide-right'
-            >
-              {this.state.submitting ? (
-                <img className='loader' src={spinner} />
-              ) : null}
-            </ReactCSSTransitionGroup>
+            <SlideRightTransition in={this.state.submitting}>
+              <img className='loader' src={spinner} />
+            </SlideRightTransition>
           </div>
           <Link to='/login'>Back to login form</Link>
         </form>
@@ -339,15 +334,9 @@ class SetPassword extends React.Component {
           >
             {this.state.submitting ? 'Submitting ...' : 'Submit'}
           </button>
-          <ReactCSSTransitionGroup
-            transitionEnterTimeout={200}
-            transitionLeaveTimeout={200}
-            transitionName='slide-right'
-          >
-            {this.state.submitting ? (
-              <img className='loader' src={spinner} />
-            ) : null}
-          </ReactCSSTransitionGroup>
+          <SlideRightTransition in={this.state.submitting}>
+            <img className='loader' src={spinner} />
+          </SlideRightTransition>
         </div>
         <Link to='/login'>Back to login form</Link>
         <br />
@@ -362,18 +351,21 @@ class SetPassword extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <ReactCSSTransitionGroup
-          transitionAppear={true}
-          transitionAppearTimeout={200}
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionName={`login_form--transition`}
+        <BaseTransition
+          in={true}
+          appear={true}
+          classNames='login_form--transition'
+          timeout={{
+            enter: 200,
+            exit: 200,
+            appear: 200,
+          }}
         >
           <div className='login_form--container col-4'>
             <h1>Set your new password</h1>
             {this.state.email ? this.setPasswordForm() : this.setEmailForm()}
           </div>
-        </ReactCSSTransitionGroup>
+        </BaseTransition>
       </div>
     );
   }

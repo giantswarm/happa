@@ -16,26 +16,21 @@ $slide-curve: ease-out
   opacity: 1
   transition: all $slide-duration $slide-curve
 
-.slide-left-leave
+.slide-left-exit
   position: absolute
   left: 0px
   top: 0px
   opacity: 1
 
-.slide-left-leave.slide-left-leave-active
+.slide-left-exit.slide-left-exit-active
   opacity: 0
   left: -$slide-amount
   transition: all $slide-duration $slide-curve
 
 // Slide-Right
 
-[class*="slide-right"]
-  position: absolute!important
-  top: 0
-  left: 0
-
 .slide-right-enter
-  // position: absolute
+  position: absolute
   left: -$slide-amount
   opacity: 0
   transition: all $slide-duration $slide-curve
@@ -45,6 +40,7 @@ $slide-curve: ease-out
   opacity: 1
 
 .slide-right-exit
+  position: absolute
   opacity: 1
   transition: all $slide-duration $slide-curve
 

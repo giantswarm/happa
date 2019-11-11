@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import AddNodePool from './AddNodePool';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import moment from 'moment';
@@ -17,7 +18,6 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactTimeout from 'react-timeout';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -433,7 +433,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
           <CopyToClipboardDiv onMouseLeave={this.mouseLeave}>
             <span>Kubernetes endpoint URI:</span>
             <Code>{api_endpoint}</Code>
-            {/* Copy to clipboard. 
+            {/* Copy to clipboard.
             TODO make a render prop component or a hooks function with it */}
             {this.state.endpointCopied ? (
               <i aria-hidden='true' className='fa fa-done' />
@@ -511,12 +511,15 @@ class ClusterDetailNodePoolsTable extends React.Component {
           )}
         </NodePoolsWrapper>
         {this.state.isNodePoolBeingAdded ? (
-          <ReactCSSTransitionGroup
-            transitionAppear={true}
-            transitionAppearTimeout={200}
-            transitionEnterTimeout={200}
-            transitionLeaveTimeout={200}
-            transitionName={`login_form--transition`}
+          <BaseTransition
+            in={true}
+            appear={true}
+            timeout={{
+              appear: 200,
+              enter: 200,
+              exit: 200,
+            }}
+            classNames='login_form--transition'
           >
             {/* Add Node Pool */}
             <AddNodePoolWrapperDiv>
@@ -555,7 +558,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
                 </FlexWrapperDiv>
               </AddNodePoolFlexColumnDiv>
             </AddNodePoolWrapperDiv>
-          </ReactCSSTransitionGroup>
+          </BaseTransition>
         ) : (
           <FlexWrapperDiv className={noNodePools && 'no-nodepools'}>
             {noNodePools && (

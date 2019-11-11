@@ -1,7 +1,7 @@
 import { spinner } from 'images';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import styled from '@emotion/styled';
 
 const ProgressButtonStatusIndicator = styled.div`
@@ -10,15 +10,12 @@ const ProgressButtonStatusIndicator = styled.div`
 
 const LoadingIndicator = props => (
   <ProgressButtonStatusIndicator>
-    <ReactCSSTransitionGroup
-      transitionEnterTimeout={200}
-      transitionLeaveTimeout={200}
-      transitionName={`slide-${props.loadingPosition}`}
+    <BaseTransition
+      in={props.loading}
+      classNames={`slide-${props.loadingPosition}`}
     >
-      {props.loading && (
-        <img className={'loader ' + props.loadingPosition} src={spinner} />
-      )}
-    </ReactCSSTransitionGroup>
+      <img className={'loader ' + props.loadingPosition} src={spinner} />
+    </BaseTransition>
   </ProgressButtonStatusIndicator>
 );
 
