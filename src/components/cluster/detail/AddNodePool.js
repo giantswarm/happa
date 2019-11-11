@@ -4,11 +4,11 @@ import { hasAppropriateLength } from 'lib/helpers';
 import { RadioWrapper } from '../new/CreateNodePoolsCluster';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
 import AWSInstanceTypeSelector from '../new/aws_instance_type_selector';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import NodeCountSelector from 'shared/node_count_selector';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
@@ -377,40 +377,41 @@ class AddNodePool extends Component {
               </label>
             </div>
           </RadioWrapperDiv>
-          <ReactCSSTransitionGroup
-            transitionName='az-automatic'
-            transitionEnterTimeout={500}
-            transitionLeaveTimeout={300}
+          <BaseTransition
+            in={!hasAZLabels}
+            timeout={{
+              enter: 500,
+              exit: 300,
+            }}
+            classNames='az-automatic'
           >
-            {!hasAZLabels && (
-              <div key='az-automatic'>
-                <FlexWrapperAZDiv>
-                  <p className='emphasized no-margin'>
-                    Number of availability zones to use:
-                  </p>
-                  <AvailabilityZonesParser
-                    min={minAZ}
-                    max={maxAZ}
-                    defaultValue={defaultAZ}
-                    zones={this.props.availabilityZones}
-                    updateAZValuesInParent={this.updateAZ}
-                    isLabels={hasAZLabels}
-                  />
-                </FlexWrapperAZDiv>
-                <FlexWrapperAZDiv>
-                  {/* This is a hack for fixing height for this element and at the same time
+            <div key='az-automatic'>
+              <FlexWrapperAZDiv>
+                <p className='emphasized no-margin'>
+                  Number of availability zones to use:
+                </p>
+                <AvailabilityZonesParser
+                  min={minAZ}
+                  max={maxAZ}
+                  defaultValue={defaultAZ}
+                  zones={this.props.availabilityZones}
+                  updateAZValuesInParent={this.updateAZ}
+                  isLabels={hasAZLabels}
+                />
+              </FlexWrapperAZDiv>
+              <FlexWrapperAZDiv>
+                {/* This is a hack for fixing height for this element and at the same time
                   control the height of the wrapper so it matches labels wrapper */}
-                  <p style={{ margin: '5px 0 24px 28px', height: '38px' }}>
-                    {this.state.availabilityZonesPicker.value < 2
-                      ? `Covering one availability zone, the worker nodes of this node pool
+                <p style={{ margin: '5px 0 24px 28px', height: '38px' }}>
+                  {this.state.availabilityZonesPicker.value < 2
+                    ? `Covering one availability zone, the worker nodes of this node pool
                       will be placed in the same availability zone as the
                       cluster's master node.`
-                      : `Availability zones will be selected randomly.`}
-                  </p>
-                </FlexWrapperAZDiv>
-              </div>
-            )}
-          </ReactCSSTransitionGroup>
+                    : `Availability zones will be selected randomly.`}
+                </p>
+              </FlexWrapperAZDiv>
+            </div>
+          </BaseTransition>
           {/* Manual */}
           <RadioWrapperDiv
             className={`manual-radio-input ${!hasAZLabels ? 'down' : null}`}
@@ -437,44 +438,45 @@ class AddNodePool extends Component {
                 Manual
               </label>
             </div>
-            <ReactCSSTransitionGroup
-              transitionName='az-manual'
-              transitionEnterTimeout={500}
-              transitionLeaveTimeout={100}
-              transitionAppearTimeout={500}
-              transitionAppear={true}
+            <BaseTransition
+              in={hasAZLabels}
+              appear={true}
+              timeout={{
+                appear: 500,
+                enter: 500,
+                exit: 100,
+              }}
+              classNames='az-manual'
             >
-              {hasAZLabels && (
-                <div key='az-manual'>
-                  <FlexColumnAZDiv>
-                    <p>
-                      You can select up to {maxAZ} availability zones to make
-                      use of.
-                    </p>
-                    <FlexWrapperAZDiv>
-                      <AvailabilityZonesParser
-                        min={minAZ}
-                        max={maxAZ}
-                        defaultValue={2}
-                        zones={this.props.availabilityZones}
-                        updateAZValuesInParent={this.updateAZ}
-                        isLabels={hasAZLabels}
-                      />
-                      {/* Validation messages */}
-                      {zonesArray.length < 1 && (
-                        <p className='danger'>Please select at least one.</p>
-                      )}
-                      {zonesArray.length > maxAZ && (
-                        <p className='danger'>
-                          {maxAZ} is the maximum you can have. Please uncheck at
-                          least {zonesArray.length - maxAZ} of them.
-                        </p>
-                      )}
-                    </FlexWrapperAZDiv>
-                  </FlexColumnAZDiv>
-                </div>
-              )}
-            </ReactCSSTransitionGroup>
+              <div key='az-manual'>
+                <FlexColumnAZDiv>
+                  <p>
+                    You can select up to {maxAZ} availability zones to make use
+                    of.
+                  </p>
+                  <FlexWrapperAZDiv>
+                    <AvailabilityZonesParser
+                      min={minAZ}
+                      max={maxAZ}
+                      defaultValue={2}
+                      zones={this.props.availabilityZones}
+                      updateAZValuesInParent={this.updateAZ}
+                      isLabels={hasAZLabels}
+                    />
+                    {/* Validation messages */}
+                    {zonesArray.length < 1 && (
+                      <p className='danger'>Please select at least one.</p>
+                    )}
+                    {zonesArray.length > maxAZ && (
+                      <p className='danger'>
+                        {maxAZ} is the maximum you can have. Please uncheck at
+                        least {zonesArray.length - maxAZ} of them.
+                      </p>
+                    )}
+                  </FlexWrapperAZDiv>
+                </FlexColumnAZDiv>
+              </div>
+            </BaseTransition>
           </RadioWrapperDiv>
         </AZLabel>
         <label className='scaling-range' htmlFor='scaling-range'>
