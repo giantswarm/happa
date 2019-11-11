@@ -545,11 +545,6 @@ class V5ClusterDetailTable extends React.Component {
             in={true}
             appear={true}
             direction='down'
-            timeout={{
-              appear: 200,
-              enter: 200,
-              exit: 200,
-            }}
           >
             {/* Add Node Pool */}
             <AddNodePoolWrapperDiv>

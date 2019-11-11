@@ -489,11 +489,6 @@ class CreateNodePoolsCluster extends Component {
                 in={true}
                 appear={true}
                 direction='down'
-                timeout={{
-                  appear: 200,
-                  enter: 200,
-                  exit: 200,
-                }}
               >
                 {Object.keys(nodePools).map(npId => {
                   const name = nodePools[npId].data.name;

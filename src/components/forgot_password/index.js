@@ -159,11 +159,6 @@ class ForgotPassword extends React.Component {
           in={true}
           appear={true}
           direction='down'
-          timeout={{
-            enter: 200,
-            exit: 200,
-            appear: 200,
-          }}
         >
           <LoginFormContainer>
             {this.state.tokenRequested ? this.success() : this.form()}

@@ -354,11 +354,6 @@ class SetPassword extends React.Component {
           in={true}
           appear={true}
           direction='down'
-          timeout={{
-            enter: 200,
-            exit: 200,
-            appear: 200,
-          }}
         >
           <div className='login_form--container col-4'>
             <h1>Set your new password</h1>
