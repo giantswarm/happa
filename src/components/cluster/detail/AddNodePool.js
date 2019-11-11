@@ -90,11 +90,11 @@ const AZLabel = styled.label`
     transition: all 500ms;
     transition-delay: 300ms;
   }
-  .az-automatic-leave {
+  .az-automatic-exit {
     transform: translateY(0px);
     opacity: 1;
   }
-  .az-automatic-leave.az-automatic-leave-active {
+  .az-automatic-exit.az-automatic-exit-active {
     opacity: 0.01;
     transform: translateY(0px);
     transition: all 500ms;
@@ -113,10 +113,10 @@ const AZLabel = styled.label`
     transition: opacity 200ms, transform 300ms;
     transition-delay: 300ms, 300ms;
   }
-  .az-manual-leave {
+  .az-manual-exit {
     opacity: 1;
   }
-  .az-manual-leave.az-manual-leave-active {
+  .az-manual-exit.az-manual-exit-active {
     opacity: 0.01;
     transform: translateY(0px);
     transition: all 100ms ease-in;
