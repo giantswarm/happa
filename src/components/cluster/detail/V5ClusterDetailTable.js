@@ -482,7 +482,7 @@ class V5ClusterDetailTable extends React.Component {
             </Button>
           </div>
         </FlexRowWithTwoBlocksOnEdges>
-        <NodePoolsWrapper>
+        <NodePoolsWrapper className='oriol'>
           <h2>Node Pools</h2>
           {nodePools && nodePools.length > 0 && !this.state.loading && (
             <>
