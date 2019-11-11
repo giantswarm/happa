@@ -12,16 +12,16 @@ import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import moment from 'moment';
-import NodePool from './node_pool';
+import NodePool from './NodePool';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactTimeout from 'react-timeout';
+import RegionAndVersions from './RegionAndVersions';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import Versions from './Versions';
 
 export const Upgrade = styled.div`
   color: #ce990f;
@@ -283,7 +283,7 @@ export const CopyToClipboardDiv = styled.div`
 // It would be nice to split this into subcomponents so only the littele bits that need
 // to be updated were updated. Child components might be: RAM, CPUs, workerNodesRunning.
 
-class ClusterDetailNodePoolsTable extends React.Component {
+class V5ClusterDetailTable extends React.Component {
   state = {
     loading: false,
     availableZonesGridTemplateAreas: '',
@@ -415,19 +415,14 @@ class ClusterDetailNodePoolsTable extends React.Component {
       <>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            <OverlayTrigger
-              overlay={<Tooltip id='tooltip'>Region</Tooltip>}
-              placement='top'
-            >
-              <Code>{region ? region : null}</Code>
-            </OverlayTrigger>
-            <Versions
+            <RegionAndVersions
               createDate={create_date}
               releaseVersion={release_version}
               release={release}
               k8sVersion={cluster.kubernetes_version}
               canUpgrade={this.props.canClusterUpgrade}
               showUpgradeModal={this.props.showUpgradeModal}
+              region={region}
             />
           </div>
           <div>
@@ -636,7 +631,7 @@ class ClusterDetailNodePoolsTable extends React.Component {
   }
 }
 
-ClusterDetailNodePoolsTable.propTypes = {
+V5ClusterDetailTable.propTypes = {
   accessCluster: PropTypes.func,
   canClusterUpgrade: PropTypes.bool,
   cluster: PropTypes.object,
@@ -662,4 +657,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   undefined,
   mapDispatchToProps
-)(ReactTimeout(ClusterDetailNodePoolsTable));
+)(ReactTimeout(V5ClusterDetailTable));

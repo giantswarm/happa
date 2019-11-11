@@ -1,7 +1,7 @@
 import {
   AddNodePoolFlexColumnDiv,
   AddNodePoolWrapper,
-} from '../detail/cluster_detail_node_pools_table';
+} from '../detail/V5ClusterDetailTable';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';

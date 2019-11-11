@@ -2,13 +2,13 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import _ from 'underscore';
-import ClusterDetailView from './cluster_detail_view';
+import ClusterDetailView from './ClusterDetailView';
 import cmp from 'semver-compare';
 import GettingStarted from '../../getting-started';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class ClusterDetailIndex extends React.Component {
+class ClusterDetail extends React.Component {
   render() {
     return (
       <Breadcrumb
@@ -39,12 +39,12 @@ class ClusterDetailIndex extends React.Component {
   }
 }
 
-ClusterDetailIndex.propTypes = {
+ClusterDetail.propTypes = {
   dispatch: PropTypes.func,
   match: PropTypes.object,
 };
 
-ClusterDetailIndex.propTypes = {
+ClusterDetail.propTypes = {
   catalogs: PropTypes.object,
   clusterActions: PropTypes.object,
   cluster: PropTypes.object,
@@ -116,4 +116,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps)(ClusterDetailIndex);
+export default connect(mapStateToProps)(ClusterDetail);
