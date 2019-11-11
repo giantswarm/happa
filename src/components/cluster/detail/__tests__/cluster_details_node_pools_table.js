@@ -1,45 +1,98 @@
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, render, wait } from '@testing-library/react';
-import { nodePoolPatch as mockNodePoolPatch } from 'actions/nodePoolActions';
+import * as localStorageUtils from 'utils/localStorageUtils';
+import {
+  getMockCall,
+  getPersistedMockCall,
+  postMockCall,
+  appCatalogsResponse,
+  authTokenResponse,
+  infoResponse,
+  nodePoolsResponse,
+  orgResponse,
+  orgsResponse,
+  releasesResponse,
+  userResponse,
+  v5ClusterResponse,
+  v5ClustersResponse,
+  ORGANIZATION,
+  V5_CLUSTER,
+  USER_EMAIL,
+} from 'test_utils/mockHttpCalls';
+import {
+  fireEvent,
+  render,
+  wait,
+  waitForDomChange,
+} from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
 import { truncate } from 'lib/helpers';
 import initialState from 'test_utils/initialState';
 import React from 'react';
-import statusState from 'test_utils/statusState';
 import theme from 'styles/theme';
 
 // Components
 import NodePoolDropdownMenu from '../node_pool_dropdown_menu';
 
-// Mock actions to return nothing, we don't want them perform API calls and we don't
-// want them to return any values either cause we are using a mocked store.
-jest.mock('actions/userActions');
-jest.mock('actions/organizationActions');
-jest.mock('actions/clusterActions');
-jest.mock('actions/releaseActions');
-jest.mock('actions/catalogActions');
-jest.mock('actions/nodePoolActions', () => {
-  return {
-    nodePoolPatch: jest.fn(() => () => Promise.resolve()),
-  };
-});
+// Mocking localStorage utils, otherwise no way to refreshUser and to set data
+// to loca storage
+jest.mock('utils/localStorageUtils');
 
 // Cluster and route we are testing with.
-const clusterId = 'm0ckd';
-const route = `/organizations/acme/clusters/${clusterId}`;
+const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
 
-it.skip('renders all node pools in store', async () => {
+it('renders all node pools in store', async () => {
+  // Responses to requests
+  const userInfoRequest = getMockCall('/v4/user/', userResponse);
+  const infoRequest = getMockCall('/v4/info/', infoResponse);
+  const organizationsRequest = getMockCall('/v4/organizations/', orgsResponse);
+  const organizationRequest = getMockCall(
+    `/v4/organizations/${ORGANIZATION}/`,
+    orgResponse
+  );
+  const clustersRequest = getMockCall('/v4/clusters/', v5ClustersResponse);
+  const clusterRequest = getPersistedMockCall(
+    `/v5/clusters/${V5_CLUSTER.id}/`,
+    v5ClusterResponse
+  );
+  const credentialsRequest = getMockCall(
+    `/v4/organizations/${ORGANIZATION}/credentials/`
+  );
+  const releasesRequest = getMockCall('/v4/releases/', releasesResponse);
+  const nodePoolsRequest = getPersistedMockCall(
+    `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
+    nodePoolsResponse
+  );
+  const appcatalogsRequest = getMockCall(
+    '/v4/appcatalogs/',
+    appCatalogsResponse
+  );
+
   const div = document.createElement('div');
-  const { getByText } = renderRouteWithStore(route, div);
+  const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE, div, {});
 
-  const nodePools = Object.keys(initialState().entities.nodePools.items);
+  await wait(() => findAllByTestId('node-pool-id'));
 
-  await wait(() => {
-    nodePools.forEach(nodePool => {
-      expect(getByText(nodePool)).toBeInTheDocument();
-    });
+  nodePoolsResponse.forEach(nodePool => {
+    expect(getByText(nodePool.id)).toBeInTheDocument();
   });
+
+  // Assert that the mocked responses got called, tell them to stop waiting for
+  // a request.
+  userInfoRequest.done();
+  infoRequest.done();
+  organizationsRequest.done();
+  organizationRequest.done();
+  clustersRequest.done();
+  clusterRequest.done();
+  credentialsRequest.done();
+  releasesRequest.done();
+  nodePoolsRequest.done();
+  appcatalogsRequest.done();
+
+  // TODO. Find out why we are performing two calls for each endpoint
+  clusterRequest.persist(false);
+  nodePoolsRequest.persist(false);
 });
 
 it('shows the dropdown when the three dots button is clicked', () => {
@@ -55,13 +108,10 @@ it('shows the dropdown when the three dots button is clicked', () => {
   expect(menu).toBeInTheDocument();
 });
 
-// Here we are testing everything UI related.
-// We are NOT testing the http call and redux internals, just checking that we are
-// calling the right method with the right arguments when clicking the submit button
 it.skip('patches node pool name correctly', async () => {
   const div = document.createElement('div');
   const { getAllByText, getByText, container } = renderRouteWithStore(
-    route,
+    ROUTE,
     div
   );
 
@@ -85,10 +135,10 @@ it.skip('patches node pool name correctly', async () => {
   // instead of mocked action creators
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
-  expect(mockNodePoolPatch).toHaveBeenCalledTimes(1);
-  expect(mockNodePoolPatch).toHaveBeenCalledWith(clusterId, nodePool, {
-    name: newNodePoolName,
-  });
+  // expect(mockNodePoolPatch).toHaveBeenCalledTimes(1);
+  // expect(mockNodePoolPatch).toHaveBeenCalledWith(V5_CLUSTER.id, nodePool, {
+  //   name: newNodePoolName,
+  // });
 });
 
 // The modal is opened calling a function that lives in the parent component of
@@ -100,7 +150,7 @@ it.skip(`shows the modal when the button is clicked with default values and call
   const state = initialState();
 
   const { getByText, getAllByText, getAllByTestId } = renderRouteWithStore(
-    route,
+    ROUTE,
     div,
     state
   );
