@@ -11,12 +11,12 @@ import { giantswarmLogin } from 'actions/userActions';
 import { Link } from 'react-router-dom';
 import { parseErrorMessages } from '../auth/_parse_error_messages';
 import { push } from 'connected-react-router';
-import SlideTransition from 'styles/transitions/SlideTransition';
 import { spinner } from 'images';
 import { validatePassword } from 'lib/password_validation';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
 import React from 'react';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import StatusMessage from '../signup/status_message';
 
 class SetPassword extends React.Component {

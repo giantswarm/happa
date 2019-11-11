@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import AddNodePool from './AddNodePool';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import moment from 'moment';
@@ -55,10 +56,10 @@ const NodePoolsWrapper = styled.div`
     transition: opacity 200ms, transform 300ms;
     transition-delay: 300ms, 300ms;
   }
-  .np-leave {
+  .np-exit {
     opacity: 1;
   }
-  .np-leave.np-leave-active {
+  .np-exit.np-exit-active {
     opacity: 0.01;
     transform: translateX(0px);
     transition: all 100ms ease-in;
@@ -504,39 +505,38 @@ class V5ClusterDetailTable extends React.Component {
                 <span>CURRENT</span>
                 <span> </span>
               </GridRowNodePoolsHeaders>
-              <ReactCSSTransitionGroup
-                transitionName='np'
-                transitionEnterTimeout={500}
-                transitionLeave={false}
-                transitionAppearTimeout={500}
-                transitionAppear={true}
+              <BaseTransition
+                in={nodePools}
+                appear={true}
+                exit={false}
+                classNames='np'
+                timeout={{ enter: 500, appear: 500 }}
               >
-                {nodePools &&
-                  nodePools
-                    .sort((a, b) => {
-                      if (a.name > b.name) {
-                        return 1;
-                      } else if (a.name < b.name) {
-                        return -1;
-                      } else if (a.id > b.id) {
-                        return 1;
-                      } else {
-                        return -1;
-                      }
-                    })
-                    .map(nodePool => (
-                      <GridRowNodePoolsItem key={nodePool.id || Date.now()}>
-                        <NodePool
-                          availableZonesGridTemplateAreas={
-                            availableZonesGridTemplateAreas
-                          }
-                          cluster={cluster}
-                          nodePool={nodePool}
-                          provider={this.props.provider}
-                        />
-                      </GridRowNodePoolsItem>
-                    ))}
-              </ReactCSSTransitionGroup>
+                {nodePools
+                  .sort((a, b) => {
+                    if (a.name > b.name) {
+                      return 1;
+                    } else if (a.name < b.name) {
+                      return -1;
+                    } else if (a.id > b.id) {
+                      return 1;
+                    } else {
+                      return -1;
+                    }
+                  })
+                  .map(nodePool => (
+                    <GridRowNodePoolsItem key={nodePool.id || Date.now()}>
+                      <NodePool
+                        availableZonesGridTemplateAreas={
+                          availableZonesGridTemplateAreas
+                        }
+                        cluster={cluster}
+                        nodePool={nodePool}
+                        provider={this.props.provider}
+                      />
+                    </GridRowNodePoolsItem>
+                  ))}
+              </BaseTransition>
             </>
           )}
         </NodePoolsWrapper>

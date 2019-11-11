@@ -1,8 +1,8 @@
-import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/button';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import update from 'react-addons-update';
 
 class ChangeEmailForm extends React.Component {

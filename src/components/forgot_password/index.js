@@ -8,11 +8,11 @@ import {
 } from 'lib/flash_message';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/button';
 import LoginFormContainer from 'UI/login_form_container';
 import PropTypes from 'prop-types';
 import React from 'react';
+import SlideTransition from 'styles/transitions/SlideTransition';
 
 class ForgotPassword extends React.Component {
   state = {
