@@ -75,6 +75,13 @@ class ViewAndEditName extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const { name } = this.props.entity;
+    if (prevProps.entity.name !== name) {
+      this.setState({ name, inputFieldValue: name });
+    }
+  }
+
   activateEditMode = () => {
     this.setState({
       editing: true,
