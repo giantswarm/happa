@@ -56,7 +56,6 @@
     "prop-types": "15.7.2",
     "query-string": "6.8.2",
     "react": "16.9.0",
-    "react-addons-css-transition-group": "15.6.2",
     "react-addons-update": "15.6.2",
     "react-bootstrap": "0.32.4",
     "react-bootstrap-table-next": "2.2.0",
