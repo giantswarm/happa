@@ -6,15 +6,15 @@ import { relativeDate } from 'lib/helpers.js';
 import { spinner } from 'images';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'UI/button';
-import CertificateOrgsLabel from './certificate_orgs_label';
+import CertificateOrgsLabel from './CertificateOrgsLabel';
 import Copyable from 'shared/copyable';
-import KeypairCreateModal from './key_pair_create_modal';
-import KeyPairDetailsModal from './key_pair_details_modal';
+import KeypairCreateModal from './KeyPairCreateModal';
+import KeyPairDetailsModal from './KeyPairDetailsModal';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class ClusterKeyPairs extends React.Component {
+class KeyPairs extends React.Component {
   state = {
     loading: true,
     error: false,
@@ -235,7 +235,7 @@ class ClusterKeyPairs extends React.Component {
   }
 }
 
-ClusterKeyPairs.propTypes = {
+KeyPairs.propTypes = {
   user: PropTypes.object,
   actions: PropTypes.object,
   provider: PropTypes.string,
@@ -261,4 +261,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ClusterKeyPairs);
+)(KeyPairs);

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { organizationSelect } from 'actions/organizationActions';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import _ from 'underscore';
-import ClusterDetailIndex from '../../cluster/';
+import Cluster from 'cluster/Cluster';
 import DetailView from './view';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -29,7 +29,7 @@ class DetailIndex extends React.Component {
             render={() => <DetailView {...this.props} />}
           />
           <Route
-            component={ClusterDetailIndex}
+            component={Cluster}
             path={`${this.props.match.path}/clusters`}
           />
           <Redirect

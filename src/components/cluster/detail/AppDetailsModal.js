@@ -15,7 +15,7 @@ import ClusterIDLabel from 'UI/cluster_id_label';
 import GenericModal from '../../modals/generic_modal';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import YAMLFileUpload from './yaml_file_upload';
+import YAMLFileUpload from './YamlFileUpload';
 
 const AppDetailsModal = props => {
   const [pane, setPane] = useState('initial');
