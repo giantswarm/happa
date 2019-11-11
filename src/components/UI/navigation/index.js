@@ -1,6 +1,6 @@
 import { Breadcrumbs } from 'react-breadcrumbs';
+import { Link, NavLink } from 'react-router-dom';
 import { logo } from 'images';
-import { NavLink, Link } from 'react-router-dom';
 
 import OrganizationDropdown from './organization_dropdown';
 import PropTypes from 'prop-types';

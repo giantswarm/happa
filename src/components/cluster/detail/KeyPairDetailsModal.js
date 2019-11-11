@@ -1,5 +1,5 @@
 import { relativeDate } from 'lib/helpers.js';
-import CertificateOrgsLabel from './certificate_orgs_label';
+import CertificateOrgsLabel from './CertificateOrgsLabel';
 import Copyable from 'shared/copyable';
 import GenericModal from '../../modals/generic_modal';
 import moment from 'moment';

@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { render } from '@testing-library/react';
 import React from 'react';
 
-import CertificateOrgsLabel from '../certificate_orgs_label.js';
+import CertificateOrgsLabel from '../CertificateOrgsLabel';
 
 it('renders single label without crashing', () => {
   const div = document.createElement('div');

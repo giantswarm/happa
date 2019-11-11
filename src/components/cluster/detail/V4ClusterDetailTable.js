@@ -1,5 +1,5 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges } from 'styles';
-import { CopyToClipboardDiv } from './cluster_detail_node_pools_table';
+import { CopyToClipboardDiv } from './V5ClusterDetailTable';
 import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';
@@ -9,9 +9,9 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
+import RegionAndVersions from './RegionAndVersions';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import Versions from './Versions';
 import WorkerNodesAWS from './WorkerNodesAWS';
 import WorkerNodesAzure from './WorkerNodesAzure';
 import WorkerNodesKVM from './WorkerNodesKVM';
@@ -30,7 +30,7 @@ const WrapperDiv = styled.div`
   }
 `;
 
-class ClusterDetailTable extends React.Component {
+class V4ClusterDetailTable extends React.Component {
   state = {
     enpointCopied: false,
     RAM: 0,
@@ -161,19 +161,14 @@ class ClusterDetailTable extends React.Component {
       <WrapperDiv>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            <OverlayTrigger
-              overlay={<Tooltip id='tooltip'>Region</Tooltip>}
-              placement='top'
-            >
-              <Code>{region && region}</Code>
-            </OverlayTrigger>
-            <Versions
+            <RegionAndVersions
               createDate={create_date}
               releaseVersion={release_version}
               release={release}
               k8sVersion={cluster.kubernetes_version}
               canUpgrade={this.props.canClusterUpgrade}
               showUpgradeModal={this.props.showUpgradeModal}
+              region={region}
             />
           </div>
           <div>
@@ -281,7 +276,7 @@ class ClusterDetailTable extends React.Component {
   }
 }
 
-ClusterDetailTable.propTypes = {
+V4ClusterDetailTable.propTypes = {
   accessCluster: PropTypes.func,
   canClusterUpgrade: PropTypes.bool,
   cluster: PropTypes.object,
@@ -297,4 +292,4 @@ ClusterDetailTable.propTypes = {
   workerNodesRunning: PropTypes.number,
 };
 
-export default ReactTimeout(ClusterDetailTable);
+export default ReactTimeout(V4ClusterDetailTable);
