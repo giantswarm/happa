@@ -115,12 +115,15 @@ it('shows the dropdown when the three dots button is clicked', () => {
 
 it('patches node pool name correctly', async () => {
   const newNodePoolName = 'New NP name';
+  const nodePoolName = nodePoolsResponse[0].name;
 
   // Response to request should be the exact same NP with the new name
   const nodePoolPatchResponse = {
     ...nodePoolsResponse[0],
     name: newNodePoolName,
   };
+
+  // Request
   const nodePoolPatchRequest = nock(API_ENDPOINT)
     .intercept(
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePoolsResponse[0].id}/`,
@@ -128,13 +131,12 @@ it('patches node pool name correctly', async () => {
     )
     .reply(200, nodePoolPatchResponse);
 
+  // Mounting
   const div = document.createElement('div');
   const { getAllByText, getByText, container, debug } = renderRouteWithStore(
     ROUTE,
     div
   );
-
-  const nodePoolName = nodePoolsResponse[0].name;
 
   await wait(() => {
     // All mock node pools have the same first 14 characters.
@@ -142,6 +144,7 @@ it('patches node pool name correctly', async () => {
     fireEvent.click(nodePoolNameEl[0]);
   });
 
+  // Write the new name and submit it
   container.querySelector(
     `input[value="${nodePoolName}"]`
   ).value = newNodePoolName;
@@ -149,7 +152,7 @@ it('patches node pool name correctly', async () => {
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
 
-  //Wait fcor the Flash message to appear
+  //Wait for the Flash message to appear
   await wait(() => {
     getByText(/succesfully edited node pool name/i);
   });
