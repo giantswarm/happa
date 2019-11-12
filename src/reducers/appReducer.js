@@ -11,7 +11,7 @@ const initialState = () => ({
   selectedOrganization: fetchSelectedOrganizationFromStorage(),
   selectedClusterID: undefined,
   firstLoadComplete: false,
-  loggedInUser: (() => {console.log('fetching'); return fetchUserFromStorage()})(),
+  loggedInUser: fetchUserFromStorage(),
   info: {
     general: {
       availability_zones: {

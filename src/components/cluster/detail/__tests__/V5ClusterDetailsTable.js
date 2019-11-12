@@ -73,7 +73,6 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('renders all node pools in store', async () => {
-  console.log('start');
   const div = document.createElement('div');
 
   const { getByText, findAllByTestId, debug } = renderRouteWithStore(ROUTE, div, {}, {user: '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"'});
