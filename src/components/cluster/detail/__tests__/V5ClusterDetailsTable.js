@@ -75,7 +75,15 @@ afterAll(() => {
 it('renders all node pools in store', async () => {
   const div = document.createElement('div');
 
-  const { getByText, findAllByTestId, debug } = renderRouteWithStore(ROUTE, div, {}, {user: '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"'});
+  const { getByText, findAllByTestId, debug } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {},
+    {
+      user:
+        '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+    }
+  );
 
   debug();
   await wait(() => findAllByTestId('node-pool-id'));
@@ -126,7 +134,10 @@ it('patches node pool name correctly', async () => {
     ROUTE,
     div,
     {},
-    {user: '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"'}
+    {
+      user:
+        '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+    }
   );
 
   await wait(() => {
@@ -168,7 +179,10 @@ it.skip(`shows the modal when the button is clicked with default values and call
     ROUTE,
     div,
     state,
-    {user: '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"'}
+    {
+      user:
+        '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+    }
   );
 
   await wait(() => {

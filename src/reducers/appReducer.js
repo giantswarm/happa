@@ -68,7 +68,7 @@ const makeAppReducer = () => {
         draft.selectedClusterID = action.clusterID;
         return;
     }
-  }, initialState())
+  }, initialState());
 };
 
 export default makeAppReducer;
