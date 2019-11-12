@@ -26,10 +26,6 @@ import theme from 'styles/theme';
 // Components
 import NodePoolDropdownMenu from '../NodePoolDropdownMenu';
 
-// Mocking localStorage utils, otherwise no way to refreshUser and to set data
-// to local storage
-// jest.mock('utils/localStorageUtils');
-
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
 

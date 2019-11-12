@@ -34,8 +34,8 @@ Object.defineProperty(window, 'localStorage', {
 global.console = {
   log: console.log,
   error: console.error,
-  warn: jest.fn(), // warnings are surpressed.
-  // warn: console.warn, // warnings are not surpressed.
+  // warn: jest.fn(), // warnings are surpressed.
+  warn: console.warn, // warnings are not surpressed.
   info: console.info,
   debug: console.debug,
 };
