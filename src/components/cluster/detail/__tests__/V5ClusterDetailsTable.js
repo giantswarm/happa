@@ -1,29 +1,20 @@
 import '@testing-library/jest-dom/extend-expect';
-import * as localStorageUtils from 'utils/localStorageUtils';
 import {
-  getMockCall,
-  getPersistedMockCall,
-  postMockCall,
+  API_ENDPOINT,
   appCatalogsResponse,
-  authTokenResponse,
+  getPersistedMockCall,
   infoResponse,
   nodePoolsResponse,
+  ORGANIZATION,
   orgResponse,
   orgsResponse,
   releasesResponse,
   userResponse,
+  V5_CLUSTER,
   v5ClusterResponse,
   v5ClustersResponse,
-  ORGANIZATION,
-  V5_CLUSTER,
-  API_ENDPOINT,
 } from 'test_utils/mockHttpCalls';
-import {
-  fireEvent,
-  render,
-  wait,
-  waitForDomChange,
-} from '@testing-library/react';
+import { fireEvent, render, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
 import { truncate } from 'lib/helpers';
