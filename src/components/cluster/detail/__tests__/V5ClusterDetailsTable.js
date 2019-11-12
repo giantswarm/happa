@@ -85,10 +85,6 @@ it('renders all node pools in store', async () => {
   nodePoolsResponse.forEach(nodePool => {
     expect(getByText(nodePool.id)).toBeInTheDocument();
   });
-
-  // TODO. Find out why we are performing two calls for each endpoint
-  // requests.clusterRequest.persist(false);
-  // requests.nodePoolsRequest.persist(false);
 });
 
 it('shows the dropdown when the three dots button is clicked', () => {
@@ -104,9 +100,10 @@ it('shows the dropdown when the three dots button is clicked', () => {
   expect(menu).toBeInTheDocument();
 });
 
-it('patches node pool name correctly', async () => {
+it('patches node pool name correctly and re-sort node pools accordingly', async () => {
   const newNodePoolName = 'New NP name';
   const nodePoolName = nodePoolsResponse[0].name;
+  const nodePoolId = nodePoolsResponse[0].id;
 
   // Response to request should be the exact same NP with the new name
   const nodePoolPatchResponse = {
@@ -124,16 +121,20 @@ it('patches node pool name correctly', async () => {
 
   // Mounting
   const div = document.createElement('div');
-  const { getAllByText, getByText, container, debug } = renderRouteWithStore(
+  const { getAllByTestId, getByText, container } = renderRouteWithStore(
     ROUTE,
     div
   );
 
-  await wait(() => {
-    // All mock node pools have the same first 14 characters.
-    const nodePoolNameEl = getAllByText(truncate(nodePoolName, 14));
-    fireEvent.click(nodePoolNameEl[0]);
-  });
+  await wait(() => getByText(truncate(nodePoolName, 14)));
+
+  // All mock node pools have the same first 14 characters.
+  const nodePoolNameEl = getByText(truncate(nodePoolName, 14));
+  const nodePools = getAllByTestId('node-pool-id');
+
+  // Is this NP the first in the list?
+  expect(nodePools[0]).toContainHTML(nodePoolNameEl);
+  fireEvent.click(nodePoolNameEl);
 
   // Write the new name and submit it
   container.querySelector(
@@ -151,39 +152,42 @@ it('patches node pool name correctly', async () => {
   // Is the new NP name in the document?
   expect(getByText(newNodePoolName)).toBeInTheDocument();
 
+  // Is it now the 2nd node pool in list?
+  const reSortedNodePools = getAllByTestId('node-pool-id');
+  expect(reSortedNodePools[1]).toHaveTextContent(nodePoolId);
+
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
   nodePoolPatchRequest.done();
 });
 
-// The modal is opened calling a function that lives in the parent component of
-// <NodePoolDropdownMenu>, so we can't test it in isolation, we need to render
-// the full tree.
-it.skip(`shows the modal when the button is clicked with default values and calls
-  the action creator with the correct arguments`, async () => {
+it(`shows the scaling modal when the button is clicked with default values and scales 
+node pools correctly`, async () => {
+  const nodePool = nodePoolsResponse[0];
+
   const div = document.createElement('div');
-  const state = initialState();
+  const {
+    getByText,
+    getAllByText,
+    getAllByTestId,
+    getByLabelText,
+  } = renderRouteWithStore(ROUTE, div, {});
 
-  const { getByText, getAllByText, getAllByTestId } = renderRouteWithStore(
-    ROUTE,
-    div,
-    state
-  );
+  await wait(() => getAllByTestId('node-pool-id'));
 
-  await wait(() => {
-    getAllByTestId('node-pool-id')[0];
-  });
-
+  // Expect first nodePool is
   const nodePoolId = getAllByTestId('node-pool-id')[0].textContent;
-  const nodePool = state.entities.nodePools.items[nodePoolId];
-  fireEvent.click(getAllByText('•••')[0]);
+  expect(nodePoolId).toBe(nodePool.id);
 
+  fireEvent.click(getAllByText('•••')[0]);
   fireEvent.click(getByText(/edit scaling limits/i));
   const modalTitle = getByText(/edit scaling settings for/i);
+  expect(modalTitle).toHaveTextContent('3jx');
 
   // Is the modal in the document?
   expect(modalTitle).toBeInTheDocument();
 
-  // TODO expect correct values and call to action creator.
-  // Continue when scaling modal development for NPs is finished.
+  // Can't edit inputs because of bootstrap implementation of inputs, or at least
+  // that' what I guess, so mocking the patch response and expecting to see the values
+  // in the view:
 });
