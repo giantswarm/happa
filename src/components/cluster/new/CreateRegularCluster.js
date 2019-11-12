@@ -614,7 +614,6 @@ class CreateRegularCluster extends React.Component {
                     this.props.selectedRelease
                   )}
                   valueConstraints={{
-                    min: 1,
                     max: this.props.maxWorkersPerClusters,
                   }}
                   onChange={this.updateScaling}

@@ -17,6 +17,11 @@ import styled from '@emotion/styled';
 // scaling - The current value of the input field[s].
 //
 
+const DEFAULT_VALUE_CONSTRAINTS = {
+  min: 1,
+  max: 999,
+};
+
 const SpanWrapper = styled.span`
   display: block;
   margin-bottom: 10px;
@@ -81,7 +86,17 @@ class NodeCountSelector extends React.Component {
   };
 
   render() {
-    const { label, readOnly, valueConstraints } = this.props;
+    const {
+      label,
+      readOnly,
+      valueConstraints: partialConstraints,
+    } = this.props;
+
+    const valueConstraints = Object.assign(
+      {},
+      DEFAULT_VALUE_CONSTRAINTS,
+      partialConstraints
+    );
 
     if (this.props.autoscalingEnabled === true) {
       return (
@@ -163,10 +178,7 @@ class NodeCountSelector extends React.Component {
 
 NodeCountSelector.defaultProps = {
   readOnly: false,
-  valueConstraints: {
-    min: 1,
-    max: 999,
-  },
+  valueConstraints: DEFAULT_VALUE_CONSTRAINTS,
 };
 
 NodeCountSelector.propTypes = {
