@@ -614,7 +614,7 @@ class CreateRegularCluster extends React.Component {
                     this.props.selectedRelease
                   )}
                   valueConstraints={{
-                    max: this.props.maxWorkersPerClusters,
+                    max: this.props.maxWorkersPerCluster,
                   }}
                   onChange={this.updateScaling}
                   readOnly={false}
@@ -666,7 +666,7 @@ CreateRegularCluster.defaultProps = {
 CreateRegularCluster.propTypes = {
   minAvailabilityZones: PropTypes.number,
   maxAvailabilityZones: PropTypes.number,
-  maxWorkersPerClusters: PropTypes.number,
+  maxWorkersPerCluster: PropTypes.number,
   allowedInstanceTypes: PropTypes.array,
   allowedVMSizes: PropTypes.array,
   selectedOrganization: PropTypes.string,
@@ -721,11 +721,8 @@ function mapStateToProps(state) {
   }
 
   if (state.app.info.workers.count_per_cluster.max) {
-    propsToPush.maxWorkersPerClusters =
+    propsToPush.maxWorkersPerCluster =
       state.app.info.workers.count_per_cluster.max;
-  } else {
-    propsToPush.maxWorkersPerClusters =
-      state.app.info.workers.count_per_cluster.default;
   }
 
   return propsToPush;

@@ -332,7 +332,7 @@ class ScaleClusterModal extends React.Component {
               this.props.cluster.release_version
             )}
             valueConstraints={{
-              max: this.props.maxWorkersPerClusters,
+              max: this.props.maxWorkersPerCluster,
             }}
             onChange={this.updateScaling}
             readOnly={false}
@@ -418,21 +418,20 @@ ScaleClusterModal.propTypes = {
   cluster: PropTypes.object,
   clusterActions: PropTypes.object,
   provider: PropTypes.string,
-  maxWorkersPerClusters: PropTypes.number,
+  maxWorkersPerCluster: PropTypes.number,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
 };
 
 function mapStateToProps(state) {
-  let maxWorkersPerClusters = 0;
+  const propsToPush = {};
 
   if (state.app.info.workers.count_per_cluster.max) {
-    maxWorkersPerClusters = state.app.info.workers.count_per_cluster.max;
-  } else {
-    maxWorkersPerClusters = state.app.info.workers.count_per_cluster.default;
+    propsToPush.maxWorkersPerCluster =
+      state.app.info.workers.count_per_cluster.max;
   }
 
-  return { maxWorkersPerClusters };
+  return propsToPush;
 }
 
 function mapDispatchToProps(dispatch) {
