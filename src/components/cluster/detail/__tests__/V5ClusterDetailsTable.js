@@ -16,7 +16,7 @@ import {
   v5ClustersResponse,
   ORGANIZATION,
   V5_CLUSTER,
-  USER_EMAIL,
+  API_ENDPOINT,
 } from 'test_utils/mockHttpCalls';
 import {
   fireEvent,
@@ -28,6 +28,7 @@ import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
 import { truncate } from 'lib/helpers';
 import initialState from 'test_utils/initialState';
+import nock from 'nock';
 import React from 'react';
 import theme from 'styles/theme';
 
@@ -44,57 +45,43 @@ const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
 // Tests setup
 const requests = {};
 
-beforeEach(() => {
-  // Responses to requests
-  requests.userInfoRequest = getPersistedMockCall('/v4/user/', userResponse);
-  requests.infoRequest = getPersistedMockCall('/v4/info/', infoResponse);
-  requests.organizationsRequest = getPersistedMockCall(
+// Responses to requests
+beforeAll(() => {
+  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
+  requests.info = getPersistedMockCall('/v4/info/', infoResponse);
+  requests.organizations = getPersistedMockCall(
     '/v4/organizations/',
     orgsResponse
   );
-  requests.organizationRequest = getPersistedMockCall(
+  requests.organization = getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/`,
     orgResponse
   );
-  requests.clustersRequest = getPersistedMockCall(
-    '/v4/clusters/',
-    v5ClustersResponse
-  );
-  requests.clusterRequest = getPersistedMockCall(
+  requests.clusters = getPersistedMockCall('/v4/clusters/', v5ClustersResponse);
+  requests.cluster = getPersistedMockCall(
     `/v5/clusters/${V5_CLUSTER.id}/`,
     v5ClusterResponse
   );
-  requests.credentialsRequest = getPersistedMockCall(
+  requests.credentials = getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/credentials/`
   );
-  requests.releasesRequest = getPersistedMockCall(
-    '/v4/releases/',
-    releasesResponse
-  );
-  requests.nodePoolsRequest = getPersistedMockCall(
+  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
+  requests.nodePools = getPersistedMockCall(
     `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
     nodePoolsResponse
   );
-  requests.appcatalogsRequest = getPersistedMockCall(
+  requests.appcatalogs = getPersistedMockCall(
     '/v4/appcatalogs/',
     appCatalogsResponse
   );
 });
 
-const markReqestsAsDone = () => {
-  // Assert that the mocked responses got called, tell them to stop waiting for
-  // a request.
-  requests.userInfoRequest.done();
-  requests.infoRequest.done();
-  requests.organizationsRequest.done();
-  requests.organizationRequest.done();
-  requests.clustersRequest.done();
-  requests.clusterRequest.done();
-  requests.credentialsRequest.done();
-  requests.releasesRequest.done();
-  requests.nodePoolsRequest.done();
-  requests.appcatalogsRequest.done();
-};
+// Stop persisting responses
+afterAll(() => {
+  Object.keys(requests).forEach(req => {
+    requests[req].persist(false);
+  });
+});
 
 /************ TESTS ************/
 
@@ -107,8 +94,6 @@ it('renders all node pools in store', async () => {
   nodePoolsResponse.forEach(nodePool => {
     expect(getByText(nodePool.id)).toBeInTheDocument();
   });
-
-  markReqestsAsDone();
 
   // TODO. Find out why we are performing two calls for each endpoint
   // requests.clusterRequest.persist(false);
@@ -128,37 +113,53 @@ it('shows the dropdown when the three dots button is clicked', () => {
   expect(menu).toBeInTheDocument();
 });
 
-it.skip('patches node pool name correctly', async () => {
+it('patches node pool name correctly', async () => {
+  const newNodePoolName = 'New NP name';
+
+  // Response to request should be the exact same NP with the new name
+  const nodePoolPatchResponse = {
+    ...nodePoolsResponse[0],
+    name: newNodePoolName,
+  };
+  const nodePoolPatchRequest = nock(API_ENDPOINT)
+    .intercept(
+      `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePoolsResponse[0].id}/`,
+      'PATCH'
+    )
+    .reply(200, nodePoolPatchResponse);
+
   const div = document.createElement('div');
-  const { getAllByText, getByText, container } = renderRouteWithStore(
+  const { getAllByText, getByText, container, debug } = renderRouteWithStore(
     ROUTE,
     div
   );
 
-  const nodePools = Object.keys(initialState().entities.nodePools.items);
-  const nodePool = initialState().entities.nodePools.items[nodePools[0]];
-  const nodePoolName = initialState().entities.nodePools.items[nodePools[0]]
-    .name;
-  const newNodePoolName = 'New NP name';
+  const nodePoolName = nodePoolsResponse[0].name;
 
   await wait(() => {
     // All mock node pools have the same first 14 characters.
-    const nodePoolNameEls = getAllByText(truncate(nodePoolName, 14));
-    fireEvent.click(nodePoolNameEls[0]);
+    const nodePoolNameEl = getAllByText(truncate(nodePoolName, 14));
+    fireEvent.click(nodePoolNameEl[0]);
   });
 
   container.querySelector(
     `input[value="${nodePoolName}"]`
   ).value = newNodePoolName;
 
-  // TODO change it and look for rendered changes once we have API calls mocked
-  // instead of mocked action creators
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
-  // expect(mockNodePoolPatch).toHaveBeenCalledTimes(1);
-  // expect(mockNodePoolPatch).toHaveBeenCalledWith(V5_CLUSTER.id, nodePool, {
-  //   name: newNodePoolName,
-  // });
+
+  //Wait fcor the Flash message to appear
+  await wait(() => {
+    getByText(/succesfully edited node pool name/i);
+  });
+
+  // Is the new NP name in the document?
+  expect(getByText(newNodePoolName)).toBeInTheDocument();
+
+  // Assert that the mocked responses got called, tell them to stop waiting for
+  // a request.
+  nodePoolPatchRequest.done();
 });
 
 // The modal is opened calling a function that lives in the parent component of
