@@ -26,10 +26,6 @@ import theme from 'styles/theme';
 // Components
 import NodePoolDropdownMenu from '../NodePoolDropdownMenu';
 
-// Mocking localStorage utils, otherwise no way to refreshUser and to set data
-// to local storage
-jest.mock('utils/localStorageUtils');
-
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
 
@@ -78,8 +74,18 @@ afterAll(() => {
 
 it('renders all node pools in store', async () => {
   const div = document.createElement('div');
-  const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE, div, {});
 
+  const { getByText, findAllByTestId, debug } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {},
+    {
+      user:
+        '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+    }
+  );
+
+  debug();
   await wait(() => findAllByTestId('node-pool-id'));
 
   nodePoolsResponse.forEach(nodePool => {
@@ -126,7 +132,12 @@ it('patches node pool name correctly', async () => {
   const div = document.createElement('div');
   const { getAllByText, getByText, container, debug } = renderRouteWithStore(
     ROUTE,
-    div
+    div,
+    {},
+    {
+      user:
+        '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+    }
   );
 
   await wait(() => {
@@ -167,7 +178,11 @@ it.skip(`shows the modal when the button is clicked with default values and call
   const { getByText, getAllByText, getAllByTestId } = renderRouteWithStore(
     ROUTE,
     div,
-    state
+    state,
+    {
+      user:
+        '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+    }
   );
 
   await wait(() => {

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
-import app from './appReducer';
+import makeAppReducer from './appReducer';
 import catalogs from './catalogsReducer';
 import clusters from './clusterReducer';
 import credentials from './credentialReducer';
@@ -25,7 +25,7 @@ const entities = combineReducers({
 const rootReducer = history =>
   combineReducers({
     router: connectRouter(history),
-    app,
+    app: makeAppReducer(),
     entities,
     modal,
   });
