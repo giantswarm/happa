@@ -34,6 +34,9 @@ class NodeCountSelector extends React.Component {
   };
 
   static mergeConstraints(partialConstraints, defaultConstraints) {
+    if (Object.is(partialConstraints, defaultConstraints))
+      return defaultConstraints;
+
     const currentConstraints = defaultConstraints;
 
     for (const [cName, cValue] of Object.entries(partialConstraints)) {
