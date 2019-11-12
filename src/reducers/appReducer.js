@@ -7,11 +7,11 @@ import {
 } from 'utils/localStorageUtils';
 import produce from 'immer';
 
-const initialState = {
+const initialState = () => ({
   selectedOrganization: fetchSelectedOrganizationFromStorage(),
   selectedClusterID: undefined,
   firstLoadComplete: false,
-  loggedInUser: fetchUserFromStorage(),
+  loggedInUser: (() => {console.log('fetching'); return fetchUserFromStorage()})(),
   info: {
     general: {
       availability_zones: {
@@ -21,7 +21,7 @@ const initialState = {
       provider: '',
     },
   },
-};
+});
 
 const appReducer = produce((draft, action) => {
   switch (action.type) {
@@ -67,6 +67,6 @@ const appReducer = produce((draft, action) => {
       draft.selectedClusterID = action.clusterID;
       return;
   }
-}, initialState);
+}, initialState());
 
 export default appReducer;

@@ -28,7 +28,7 @@ import NodePoolDropdownMenu from '../NodePoolDropdownMenu';
 
 // Mocking localStorage utils, otherwise no way to refreshUser and to set data
 // to local storage
-jest.mock('utils/localStorageUtils');
+// jest.mock('utils/localStorageUtils');
 
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
@@ -77,9 +77,12 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('renders all node pools in store', async () => {
+  console.log('start');
   const div = document.createElement('div');
-  const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE, div, {});
 
+  const { getByText, findAllByTestId, debug } = renderRouteWithStore(ROUTE, div, {}, {user: '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"'});
+
+  debug();
   await wait(() => findAllByTestId('node-pool-id'));
 
   nodePoolsResponse.forEach(nodePool => {
@@ -91,7 +94,7 @@ it('renders all node pools in store', async () => {
   // requests.nodePoolsRequest.persist(false);
 });
 
-it('shows the dropdown when the three dots button is clicked', () => {
+it.skip('shows the dropdown when the three dots button is clicked', () => {
   const div = document.createElement('div');
   const { getByText, getByRole } = render(
     <ThemeProvider theme={theme}>
@@ -104,7 +107,7 @@ it('shows the dropdown when the three dots button is clicked', () => {
   expect(menu).toBeInTheDocument();
 });
 
-it('patches node pool name correctly', async () => {
+it.skip('patches node pool name correctly', async () => {
   const newNodePoolName = 'New NP name';
   const nodePoolName = nodePoolsResponse[0].name;
 

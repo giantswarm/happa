@@ -20,9 +20,13 @@ export function renderRouteWithStore(
   initialRoute = '/',
   container,
   state = initialState(),
-  history = createMemoryHistory()
+  storage = {},
+  history = createMemoryHistory(),
 ) {
+  localStorage.replaceWith(storage);
+
   const store = configureStore(state, history);
+  console.log(store.getState())
 
   const app = render(
     <Provider store={store}>
