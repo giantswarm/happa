@@ -81,7 +81,7 @@ class NodeCountSelector extends React.Component {
   };
 
   render() {
-    const { label } = this.props;
+    const { label, readOnly, valueConstraints } = this.props;
 
     if (this.props.autoscalingEnabled === true) {
       return (
@@ -99,9 +99,9 @@ class NodeCountSelector extends React.Component {
                 <NumberPicker
                   label=''
                   max={this.state.scaling.max}
-                  min={1}
+                  min={valueConstraints.min}
                   onChange={this.updateScalingMin}
-                  readOnly={false}
+                  readOnly={readOnly}
                   stepSize={1}
                   value={this.state.scaling.min}
                 />
@@ -114,10 +114,10 @@ class NodeCountSelector extends React.Component {
                 </SpanWrapper>
                 <NumberPicker
                   label=''
-                  max={999}
+                  max={valueConstraints.max}
                   min={this.state.scaling.min}
                   onChange={this.updateScalingMax}
-                  readOnly={false} // TODO
+                  readOnly={readOnly} // TODO
                   stepSize={1}
                   value={this.state.scaling.max}
                 />
@@ -146,10 +146,10 @@ class NodeCountSelector extends React.Component {
             >
               <NumberPicker
                 label=''
-                max={999}
-                min={1}
+                min={valueConstraints.min}
+                max={valueConstraints.max}
                 onChange={this.updateNodeCount}
-                readOnly={false} // TODO
+                readOnly={readOnly} // TODO
                 stepSize={1}
                 value={this.state.scaling.max}
               />
@@ -161,11 +161,23 @@ class NodeCountSelector extends React.Component {
   }
 }
 
+NodeCountSelector.defaultProps = {
+  readOnly: false,
+  valueConstraints: {
+    min: 1,
+    max: 999,
+  },
+};
+
 NodeCountSelector.propTypes = {
   autoscalingEnabled: PropTypes.bool,
   label: PropTypes.shape({
     min: PropTypes.string,
     max: PropTypes.string,
+  }),
+  valueConstraints: PropTypes.shape({
+    min: PropTypes.number,
+    max: PropTypes.number,
   }),
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
