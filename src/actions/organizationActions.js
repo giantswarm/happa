@@ -81,17 +81,18 @@ export function organizationsLoad() {
 
     return organizationsApi
       .getOrganizations()
-      .then(async organizations => {
+      .then(organizations => {
         var organizationsArray = organizations.map(organization => {
           return organization.id;
         });
 
         var orgDetails = Promise.all(
-          organizationsArray.map(async organizationName => {
-            const orgs = await organizationsApi.getOrganization(
-              organizationName
-            );
-            return orgs;
+          organizationsArray.map(organizationName => {
+            return organizationsApi
+              .getOrganization(organizationName)
+              .then(organization => {
+                return organization;
+              });
           })
         );
 
