@@ -35,39 +35,70 @@ import theme from 'styles/theme';
 import NodePoolDropdownMenu from '../NodePoolDropdownMenu';
 
 // Mocking localStorage utils, otherwise no way to refreshUser and to set data
-// to loca storage
+// to local storage
 jest.mock('utils/localStorageUtils');
 
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
 
-it('renders all node pools in store', async () => {
+// Tests setup
+const requests = {};
+
+beforeEach(() => {
   // Responses to requests
-  const userInfoRequest = getMockCall('/v4/user/', userResponse);
-  const infoRequest = getMockCall('/v4/info/', infoResponse);
-  const organizationsRequest = getMockCall('/v4/organizations/', orgsResponse);
-  const organizationRequest = getMockCall(
+  requests.userInfoRequest = getPersistedMockCall('/v4/user/', userResponse);
+  requests.infoRequest = getPersistedMockCall('/v4/info/', infoResponse);
+  requests.organizationsRequest = getPersistedMockCall(
+    '/v4/organizations/',
+    orgsResponse
+  );
+  requests.organizationRequest = getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/`,
     orgResponse
   );
-  const clustersRequest = getMockCall('/v4/clusters/', v5ClustersResponse);
-  const clusterRequest = getPersistedMockCall(
+  requests.clustersRequest = getPersistedMockCall(
+    '/v4/clusters/',
+    v5ClustersResponse
+  );
+  requests.clusterRequest = getPersistedMockCall(
     `/v5/clusters/${V5_CLUSTER.id}/`,
     v5ClusterResponse
   );
-  const credentialsRequest = getMockCall(
+  requests.credentialsRequest = getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/credentials/`
   );
-  const releasesRequest = getMockCall('/v4/releases/', releasesResponse);
-  const nodePoolsRequest = getPersistedMockCall(
+  requests.releasesRequest = getPersistedMockCall(
+    '/v4/releases/',
+    releasesResponse
+  );
+  requests.nodePoolsRequest = getPersistedMockCall(
     `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
     nodePoolsResponse
   );
-  const appcatalogsRequest = getMockCall(
+  requests.appcatalogsRequest = getPersistedMockCall(
     '/v4/appcatalogs/',
     appCatalogsResponse
   );
+});
 
+const markReqestsAsDone = () => {
+  // Assert that the mocked responses got called, tell them to stop waiting for
+  // a request.
+  requests.userInfoRequest.done();
+  requests.infoRequest.done();
+  requests.organizationsRequest.done();
+  requests.organizationRequest.done();
+  requests.clustersRequest.done();
+  requests.clusterRequest.done();
+  requests.credentialsRequest.done();
+  requests.releasesRequest.done();
+  requests.nodePoolsRequest.done();
+  requests.appcatalogsRequest.done();
+};
+
+/************ TESTS ************/
+
+it('renders all node pools in store', async () => {
   const div = document.createElement('div');
   const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE, div, {});
 
@@ -77,22 +108,11 @@ it('renders all node pools in store', async () => {
     expect(getByText(nodePool.id)).toBeInTheDocument();
   });
 
-  // Assert that the mocked responses got called, tell them to stop waiting for
-  // a request.
-  userInfoRequest.done();
-  infoRequest.done();
-  organizationsRequest.done();
-  organizationRequest.done();
-  clustersRequest.done();
-  clusterRequest.done();
-  credentialsRequest.done();
-  releasesRequest.done();
-  nodePoolsRequest.done();
-  appcatalogsRequest.done();
+  markReqestsAsDone();
 
   // TODO. Find out why we are performing two calls for each endpoint
-  clusterRequest.persist(false);
-  nodePoolsRequest.persist(false);
+  // requests.clusterRequest.persist(false);
+  // requests.nodePoolsRequest.persist(false);
 });
 
 it('shows the dropdown when the three dots button is clicked', () => {
