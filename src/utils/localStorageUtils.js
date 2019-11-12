@@ -9,8 +9,6 @@ export const fetchSelectedOrganizationFromStorage = () => {
 export const fetchUserFromStorage = () => {
   let user;
 
-  console.log(localStorage.getItem('user'));
-
   try {
     user = JSON.parse(localStorage.getItem('user'));
   } catch (e) {
