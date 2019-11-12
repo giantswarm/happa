@@ -33,6 +33,18 @@ class NodeCountSelector extends React.Component {
     scaling: this.props.scaling,
   };
 
+  static mergeConstraints(partialConstraints, defaultConstraints) {
+    const currentConstraints = defaultConstraints;
+
+    for (const [cName, cValue] of Object.entries(partialConstraints)) {
+      if (cValue) {
+        currentConstraints[cName] = cValue;
+      }
+    }
+
+    return currentConstraints;
+  }
+
   updateScalingMin = numberPicker => {
     this.setState(
       {
@@ -92,10 +104,9 @@ class NodeCountSelector extends React.Component {
       valueConstraints: partialConstraints,
     } = this.props;
 
-    const valueConstraints = Object.assign(
-      {},
-      DEFAULT_VALUE_CONSTRAINTS,
-      partialConstraints
+    const valueConstraints = NodeCountSelector.mergeConstraints(
+      partialConstraints,
+      DEFAULT_VALUE_CONSTRAINTS
     );
 
     if (this.props.autoscalingEnabled === true) {
