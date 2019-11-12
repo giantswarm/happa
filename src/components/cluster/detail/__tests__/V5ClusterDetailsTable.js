@@ -18,17 +18,12 @@ import { fireEvent, render, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
 import { truncate } from 'lib/helpers';
-import initialState from 'test_utils/initialState';
 import nock from 'nock';
 import React from 'react';
 import theme from 'styles/theme';
 
 // Components
 import NodePoolDropdownMenu from '../NodePoolDropdownMenu';
-
-// Mocking localStorage utils, otherwise no way to refreshUser and to set data
-// to local storage
-jest.mock('utils/localStorageUtils');
 
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
@@ -78,8 +73,18 @@ afterAll(() => {
 
 it('renders all node pools in store', async () => {
   const div = document.createElement('div');
-  const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE, div, {});
 
+  const { getByText, findAllByTestId, debug } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {},
+    {
+      user:
+        '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+    }
+  );
+
+  debug();
   await wait(() => findAllByTestId('node-pool-id'));
 
   nodePoolsResponse.forEach(nodePool => {
@@ -123,7 +128,12 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   const div = document.createElement('div');
   const { getAllByTestId, getByText, container } = renderRouteWithStore(
     ROUTE,
-    div
+    div,
+    {},
+    {
+      user:
+        '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+    }
   );
 
   await wait(() => getByText(truncate(nodePoolName, 14)));
@@ -171,7 +181,15 @@ node pools correctly`, async () => {
     getAllByText,
     getAllByTestId,
     getByLabelText,
-  } = renderRouteWithStore(ROUTE, div, {});
+  } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {},
+    {
+      user:
+        '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+    }
+  );
 
   await wait(() => getAllByTestId('node-pool-id'));
 
