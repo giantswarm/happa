@@ -94,7 +94,7 @@ it('renders all node pools in store', async () => {
   // requests.nodePoolsRequest.persist(false);
 });
 
-it.skip('shows the dropdown when the three dots button is clicked', () => {
+it('shows the dropdown when the three dots button is clicked', () => {
   const div = document.createElement('div');
   const { getByText, getByRole } = render(
     <ThemeProvider theme={theme}>
@@ -107,7 +107,7 @@ it.skip('shows the dropdown when the three dots button is clicked', () => {
   expect(menu).toBeInTheDocument();
 });
 
-it.skip('patches node pool name correctly', async () => {
+it('patches node pool name correctly', async () => {
   const newNodePoolName = 'New NP name';
   const nodePoolName = nodePoolsResponse[0].name;
 
@@ -129,7 +129,9 @@ it.skip('patches node pool name correctly', async () => {
   const div = document.createElement('div');
   const { getAllByText, getByText, container, debug } = renderRouteWithStore(
     ROUTE,
-    div
+    div,
+    {},
+    {user: '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"'}
   );
 
   await wait(() => {
@@ -170,7 +172,8 @@ it.skip(`shows the modal when the button is clicked with default values and call
   const { getByText, getAllByText, getAllByTestId } = renderRouteWithStore(
     ROUTE,
     div,
-    state
+    state,
+    {user: '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"'}
   );
 
   await wait(() => {
