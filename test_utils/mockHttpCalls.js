@@ -1,6 +1,7 @@
 import nock from 'nock';
 
 /***** Constants *****/
+export const API_ENDPOINT = 'http://localhost:8000';
 export const USER_EMAIL = 'developer@giantswarm.io';
 export const ORGANIZATION = 'acme';
 export const V5_CLUSTER = {
@@ -11,18 +12,18 @@ export const V5_CLUSTER = {
 
 /***** Helper functions *****/
 export const getMockCall = (endpoint, response = []) =>
-  nock('http://localhost:8000')
+  nock(API_ENDPOINT)
     .get(endpoint)
     .reply(200, response);
 
 export const getPersistedMockCall = (endpoint, response = []) =>
-  nock('http://localhost:8000')
+  nock(API_ENDPOINT)
     .persist()
     .get(endpoint)
     .reply(200, response);
 
 export const postMockCall = (endpoint, response = []) =>
-  nock('http://localhost:8000')
+  nock(API_ENDPOINT)
     .post(endpoint)
     .reply(200, response);
 
@@ -82,7 +83,7 @@ export const v5ClustersResponse = [
 ];
 
 export const v5ClusterResponse = {
-  api_endpoint: 'http://localhost:8000',
+  api_endpoint: API_ENDPOINT,
   create_date: '2019-11-10T19:22:08Z',
   id: V5_CLUSTER.id,
   master: { availability_zone: 'eu-central-1a' },
