@@ -162,9 +162,9 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   nodePoolPatchRequest.done();
 });
 
-// TODO This test triggers an memory leak error related with setting state depending
+// TODO This test triggers a memory leak error related with setting state depending
 // on the response of an asynchronous call in ScaleNodePoolModal.
-// Not fixing it now because is a "minor" error, anything that can break the app and
+// Not fixing it now because is a "minor" error, this error can't break the app and
 // because I will be working on the data flow refactor that will solve this.
 it(`shows the scaling modal when the button is clicked with default values and scales 
 node pools correctly`, async () => {

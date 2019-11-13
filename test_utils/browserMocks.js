@@ -19,7 +19,7 @@ var localStorageMock = (function() {
     // in testing to set the full localStorage to a known set of values.
     replaceWith: function(newStore) {
       store = newStore;
-    },
+    }
   };
 })();
 
@@ -31,7 +31,8 @@ Object.defineProperty(window, 'localStorage', {
 global.console = {
   log: console.log,
   error: console.error,
-  warn: jest.fn(), // warnings are surpressed.
+  // warn: jest.fn(), // warnings are surpressed.
+  warn: console.warn, // warnings are not surpressed.
   info: console.info,
   debug: console.debug,
 };
