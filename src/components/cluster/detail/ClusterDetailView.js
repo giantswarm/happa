@@ -9,23 +9,23 @@ import { getNumberOfNodes } from 'utils/cluster_utils';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
 import { push } from 'connected-react-router';
 import Button from 'UI/button';
-import ClusterApps from './cluster_apps';
-import ClusterDetailNodePoolsTable from './cluster_detail_node_pools_table';
-import ClusterDetailTable from './ClusterDetailTable';
+import ClusterApps from './ClusterApps';
 import ClusterIDLabel from 'UI/cluster_id_label';
-import ClusterKeyPairs from './key_pairs';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
+import KeyPairs from './KeyPairs';
 import LoadingOverlay from 'UI/loading_overlay';
 import PageVisibilityTracker from 'lib/page_visibility_tracker';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
-import ScaleClusterModal from './scale_cluster_modal';
+import ScaleClusterModal from './ScaleClusterModal';
 import styled from '@emotion/styled';
 import Tab from 'react-bootstrap/lib/Tab';
-import Tabs from './tabs';
-import UpgradeClusterModal from './upgrade_cluster_modal';
+import Tabs from './Tabs';
+import UpgradeClusterModal from './UpgradeClusterModal';
+import V4ClusterDetailTable from './V4ClusterDetailTable';
+import V5ClusterDetailTable from './V5ClusterDetailTable';
 import ViewAndEditName from 'UI/view_edit_name';
 
 const WrapperDiv = styled.div`
@@ -240,13 +240,10 @@ class ClusterDetailView extends React.Component {
       targetRelease,
       region,
       loading,
-      loadingWithNodePools,
     } = this.props;
 
     return (
-      <LoadingOverlay
-        loading={isNodePoolsCluster ? loadingWithNodePools : loading}
-      >
+      <LoadingOverlay loading={loading}>
         <DocumentTitle
           title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
         >
@@ -279,7 +276,7 @@ class ClusterDetailView extends React.Component {
                 <Tabs>
                   <Tab eventKey={1} title='General'>
                     {isNodePoolsCluster ? (
-                      <ClusterDetailNodePoolsTable
+                      <V5ClusterDetailTable
                         accessCluster={this.accessCluster}
                         canClusterUpgrade={this.canClusterUpgrade()}
                         cluster={cluster}
@@ -292,7 +289,7 @@ class ClusterDetailView extends React.Component {
                         workerNodesDesired={this.getDesiredNumberOfNodes()}
                       />
                     ) : (
-                      <ClusterDetailTable
+                      <V4ClusterDetailTable
                         accessCluster={this.accessCluster}
                         canClusterUpgrade={this.canClusterUpgrade()}
                         cluster={cluster}
@@ -330,7 +327,7 @@ class ClusterDetailView extends React.Component {
                     </div>
                   </Tab>
                   <Tab eventKey={2} title='Key Pairs'>
-                    <ClusterKeyPairs cluster={cluster} />
+                    <KeyPairs cluster={cluster} />
                   </Tab>
                   <Tab eventKey={3} title='Apps'>
                     {release ? (
@@ -411,22 +408,14 @@ ClusterDetailView.propTypes = {
   targetRelease: PropTypes.object,
   user: PropTypes.object,
   loading: PropTypes.bool,
-  loadingWithNodePools: PropTypes.bool,
 };
 
-function mapStateToProps(state, ownProps) {
-  const { releases, clusters, nodePools } = state.entities;
-
+function mapStateToProps(state) {
+  const { releases, clusters } = state.entities;
   const loading = releases.isFetching || clusters.isFetching;
-  const loadingWithNodePools =
-    nodePools.isFetching ||
-    clusters.items[ownProps.clusterId].isFetchingKeyPairs ||
-    clusters.items[ownProps.clusterId].isFetchingApps ||
-    loading;
 
   return {
     loading,
-    loadingWithNodePools,
   };
 }
 

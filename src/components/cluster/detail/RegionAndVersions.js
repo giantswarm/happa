@@ -1,44 +1,67 @@
-import { Dot } from 'styles';
+import { Code, Dot } from 'styles';
 import { relativeDate } from 'lib/helpers.js';
-import { Upgrade } from './cluster_detail_node_pools_table';
+import { Upgrade } from './V5ClusterDetailTable';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import RefreshableLabel from 'UI/refreshable_label';
 import ReleaseDetailsModal from 'modals/release_details_modal';
+import styled from '@emotion/styled';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
+
+const ReleaseDetail = styled.span`
+  text-decoration: underline;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.white2};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.white1};
+  }
+`;
+
+const showReleaseDetailsModal = modalRef => () => {
+  const { current: modalElement } = modalRef;
+
+  if (modalElement) modalElement.show();
+};
 
 // Versions data and icons at the top of cluster details view.
-function Versions({
+function RegionAndVersions({
   createDate,
   releaseVersion,
   release,
   k8sVersion,
   canUpgrade,
   showUpgradeModal,
+  region,
 }) {
   const releaseDetailsModal = useRef(null);
+  const onReleaseDetailClick = showReleaseDetailsModal(releaseDetailsModal);
 
   return (
     <>
+      {region && (
+        <OverlayTrigger
+          overlay={<Tooltip id='tooltip'>Region</Tooltip>}
+          placement='top'
+        >
+          <Code>{region}</Code>
+        </OverlayTrigger>
+      )}
       <div>
         <span>Created {createDate ? relativeDate(createDate) : 'n/a'}</span>
         <span>
           <RefreshableLabel dataItems={[releaseVersion]}>
             <>
               <Dot style={{ paddingRight: 0 }} />
-              <i className='fa fa-version-tag' />
-              <span
-                className='pointer'
-                onClick={() => releaseDetailsModal.current.show()}
-              >
+              <ReleaseDetail onClick={onReleaseDetailClick}>
+                <i className='fa fa-version-tag' />
                 {releaseVersion ? releaseVersion : 'n/a'}
-              </span>
+              </ReleaseDetail>
             </>
           </RefreshableLabel>
         </span>
-        <span
-          className='pointer'
-          onClick={() => releaseDetailsModal.current.show()}
-        >
+        <ReleaseDetail onClick={onReleaseDetailClick}>
           {release && (
             <>
               <Dot />
@@ -55,7 +78,7 @@ function Versions({
             k8sVersion !== '' &&
             k8sVersion !== undefined &&
             <i className='fa fa-kubernetes' /> + k8sVersion}
-        </span>
+        </ReleaseDetail>
       </div>
       {canUpgrade && (
         <a className='upgrade-available' onClick={showUpgradeModal}>
@@ -74,13 +97,14 @@ function Versions({
   );
 }
 
-Versions.propTypes = {
+RegionAndVersions.propTypes = {
   createDate: PropTypes.string,
   releaseVersion: PropTypes.string,
   release: PropTypes.object,
   k8sVersion: PropTypes.string,
   canUpgrade: PropTypes.bool,
   showUpgradeModal: PropTypes.func,
+  region: PropTypes.string,
 };
 
-export default Versions;
+export default RegionAndVersions;
