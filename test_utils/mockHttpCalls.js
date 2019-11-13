@@ -124,7 +124,7 @@ export const nodePoolsResponse = [
     availability_zones: ['eu-central-1a'],
     scaling: { min: 3, max: 10 },
     node_spec: {
-      aws: { instance_type: 'm4.xlarge' },
+      aws: { instance_type: 'm3.xlarge' },
       volume_sizes_gb: { docker: 100, kubelet: 100 },
     },
     status: { nodes: 0, nodes_ready: 0 },
@@ -136,7 +136,7 @@ export const nodePoolsResponse = [
     availability_zones: ['eu-central-1a'],
     scaling: { min: 3, max: 10 },
     node_spec: {
-      aws: { instance_type: 'm4.xlarge' },
+      aws: { instance_type: 'm3.xlarge' },
       volume_sizes_gb: { docker: 100, kubelet: 100 },
     },
     status: { nodes: 0, nodes_ready: 0 },
