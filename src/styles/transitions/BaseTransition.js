@@ -1,16 +1,26 @@
 import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import React from 'react';
+import useDelayedChange from 'lib/effects/useDelayedChange';
 
 export const BaseTransitionPropTypes = {
-  classNames: PropTypes.string,
   in: PropTypes.bool,
-  children: PropTypes.element,
+  children: PropTypes.element.isRequired,
+  timeout: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      appear: PropTypes.number,
+      enter: PropTypes.number,
+      exit: PropTypes.number,
+    }),
+  ]),
 };
 
-const BaseTransition = ({ children, ...props }) => {
+const BaseTransition = ({ children, in: inProp, ...props }) => {
+  const delayedInProp = useDelayedChange(inProp, 500);
+
   return (
-    <CSSTransition mountOnEnter unmountOnExit {...props}>
+    <CSSTransition in={delayedInProp} mountOnEnter unmountOnExit {...props}>
       {children}
     </CSSTransition>
   );

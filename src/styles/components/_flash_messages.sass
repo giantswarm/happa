@@ -102,12 +102,12 @@
     color: #a94442
     font-weight: bold
 
-
 .flash-messages--transition-appear, .flash-messages--transition-enter
   opacity: 0
   transform: translateY(-5px)
 
-.flash-messages--transition-appear-active, .flash-messages--transition-enter-active
+.flash-messages--transition-appear.flash-messages--transition-appear-active,
+.flash-messages--transition-enter.flash-messages--transition-enter-active
   opacity: 1
   transform: translateY(0px)
   transition: all 0.2s linear
@@ -115,7 +115,7 @@
 .flash-messages--transition-exit
   opacity: 1
 
-.flash-messages--transition-exit-active
+.flash-messages--transition-exit.flash-messages--transition-exit-active
   transition: all 0.2s linear
   transform: translateY(-5px)
   opacity: 0
