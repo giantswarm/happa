@@ -490,11 +490,7 @@ class CreateNodePoolsCluster extends Component {
                 {Object.keys(nodePools).map(npId => {
                   const name = nodePools[npId].data.name;
                   return (
-                    <SlideTransition
-                      key={npId}
-                      appear={true}
-                      direction='down'
-                    >
+                    <SlideTransition key={npId} appear={true} direction='down'>
                       <AddNodePoolWrapperDiv>
                         <NodePoolHeading>{name}</NodePoolHeading>
                         <AddNodePoolFlexColumnDiv>
