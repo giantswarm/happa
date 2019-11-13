@@ -146,7 +146,7 @@ class NodeCountSelector extends React.Component {
                   max={valueConstraints.max}
                   min={this.state.scaling.min}
                   onChange={this.updateScalingMax}
-                  readOnly={readOnly} // TODO
+                  readOnly={readOnly}
                   stepSize={1}
                   value={this.state.scaling.max}
                 />
@@ -178,7 +178,7 @@ class NodeCountSelector extends React.Component {
                 min={valueConstraints.min}
                 max={valueConstraints.max}
                 onChange={this.updateNodeCount}
-                readOnly={readOnly} // TODO
+                readOnly={readOnly}
                 stepSize={1}
                 value={this.state.scaling.max}
               />
