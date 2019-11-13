@@ -8,6 +8,7 @@ import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
+import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from './AddNodePool';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import Button from 'UI/button';
@@ -505,13 +506,7 @@ class V5ClusterDetailTable extends React.Component {
                 <span>CURRENT</span>
                 <span> </span>
               </GridRowNodePoolsHeaders>
-              <BaseTransition
-                in={nodePools}
-                appear={true}
-                exit={false}
-                classNames='np'
-                timeout={{ enter: 500, appear: 500 }}
-              >
+              <TransitionGroup>
                 {nodePools
                   .sort((a, b) => {
                     if (a.name > b.name) {
@@ -525,18 +520,26 @@ class V5ClusterDetailTable extends React.Component {
                     }
                   })
                   .map(nodePool => (
-                    <GridRowNodePoolsItem key={nodePool.id || Date.now()}>
-                      <NodePool
-                        availableZonesGridTemplateAreas={
-                          availableZonesGridTemplateAreas
-                        }
-                        cluster={cluster}
-                        nodePool={nodePool}
-                        provider={this.props.provider}
-                      />
-                    </GridRowNodePoolsItem>
+                    <BaseTransition
+                      key={nodePool.id || Date.now()}
+                      appear={true}
+                      exit={false}
+                      classNames='np'
+                      timeout={{ enter: 500, appear: 500 }}
+                    >
+                      <GridRowNodePoolsItem>
+                        <NodePool
+                          availableZonesGridTemplateAreas={
+                            availableZonesGridTemplateAreas
+                          }
+                          cluster={cluster}
+                          nodePool={nodePool}
+                          provider={this.props.provider}
+                        />
+                      </GridRowNodePoolsItem>
+                    </BaseTransition>
                   ))}
-              </BaseTransition>
+              </TransitionGroup>
             </>
           )}
         </NodePoolsWrapper>

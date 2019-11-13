@@ -5,7 +5,7 @@ import useDelayedChange from 'lib/effects/useDelayedChange';
 
 export const BaseTransitionPropTypes = {
   in: PropTypes.bool,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
   timeout: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.shape({
