@@ -80,7 +80,6 @@ it('renders all node pools in store', async () => {
     {}
   );
 
-  debug();
   await wait(() => findAllByTestId('node-pool-id'));
 
   nodePoolsResponse.forEach(nodePool => {
@@ -163,11 +162,21 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   nodePoolPatchRequest.done();
 });
 
-// TO BE FINISHED YET
+// TODO This test triggers an memory leak error related with setting state depending
+// on the response of an asynchronous call in ScaleNodePoolModal.
+// Not fixing it now because is a "minor" error, anything that can break the app and
+// because I will be working on the data flow refactor that will solve this.
 it(`shows the scaling modal when the button is clicked with default values and scales 
 node pools correctly`, async () => {
+  // TODO default values from constants file
+  const defaultScaling = { min: 3, max: 10 };
+  const increaseValue = 1;
+  const newScaling = {
+    min: defaultScaling.min + increaseValue,
+    max: defaultScaling.max + increaseValue,
+  };
+
   const nodePool = nodePoolsResponse[0];
-  const newScaling = { min: 4, max: 11 };
   const nodePoolPatchResponse = {
     ...nodePoolsResponse[0],
     scaling: newScaling,
@@ -176,7 +185,7 @@ node pools correctly`, async () => {
   // Request
   const nodePoolPatchRequest = nock(API_ENDPOINT)
     .intercept(
-      `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePoolsResponse[0].id}/`,
+      `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
       'PATCH'
     )
     .reply(200, nodePoolPatchResponse);
@@ -197,13 +206,43 @@ node pools correctly`, async () => {
 
   fireEvent.click(getAllByText('•••')[0]);
   fireEvent.click(getByText(/edit scaling limits/i));
-  const modalTitle = getByText(/edit scaling settings for/i);
-  expect(modalTitle).toHaveTextContent('3jx');
+
+  await wait(() => getByText(/edit scaling settings for/i));
 
   // Is the modal in the document?
+  const modalTitle = getByText(/edit scaling settings for/i);
   expect(modalTitle).toBeInTheDocument();
+  expect(modalTitle).toHaveTextContent(nodePool.id);
 
-  // Can't edit inputs because of bootstrap implementation of inputs, or at least
-  // that' what I guess, so mocking the patch response and expecting to see the values
-  // in the view:
+  const inputMin = getByLabelText(/minimum/i);
+  const inputMax = getByLabelText(/maximum/i);
+
+  // Are the correct values in the correct fields?
+  expect(inputMin.value).toBe(defaultScaling.min.toString());
+  expect(inputMax.value).toBe(defaultScaling.max.toString());
+
+  // Change the values and modify the scaling settingsw
+  fireEvent.change(inputMin, { target: { value: newScaling.min } });
+  fireEvent.change(inputMax, { target: { value: newScaling.max } });
+  const textButton = `Increase minimum number of nodes by ${newScaling.min}`;
+
+  await wait(() => getByText(textButton));
+
+  const submitButton = getByText(textButton);
+  fireEvent.click(submitButton);
+
+  //Wait for the Flash message to appear
+  await wait(() => {
+    getByText(/succesfully edited node pool name/i);
+  });
+
+  // Our node pool is the first one. Does it have the scaling values updated?
+  expect(getAllByTestId('scaling-min')[0]).toHaveTextContent(
+    newScaling.min.toString()
+  );
+  expect(getAllByTestId('scaling-max')[0]).toHaveTextContent(
+    newScaling.max.toString()
+  );
+
+  nodePoolPatchRequest.done();
 });
