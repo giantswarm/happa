@@ -10,6 +10,11 @@ import initialState from 'test_utils/initialState';
 import React from 'react';
 import theme from 'styles/theme';
 
+const initialStorage = {
+  user:
+    '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+};
+
 /**
  * This function will render the whole app with a mocked store in the route
  * provided.
@@ -20,8 +25,11 @@ export function renderRouteWithStore(
   initialRoute = '/',
   container,
   state = initialState(),
+  storage = initialStorage,
   history = createMemoryHistory()
 ) {
+  localStorage.replaceWith(storage);
+
   const store = configureStore(state, history);
 
   const app = render(

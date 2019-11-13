@@ -10,7 +10,7 @@ import statusState from 'test_utils/statusState';
 import theme from 'styles/theme';
 
 // Components
-import NodePoolDropdownMenu from '../NodePoolDropdownMenu';
+import NodePoolDropdownMenu from 'cluster/detail/NodePoolDropdownMenu';
 
 // Mock actions to return nothing, we don't want them perform API calls and we don't
 // want them to return any values either cause we are using a mocked store.
