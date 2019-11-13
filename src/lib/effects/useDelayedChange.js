@@ -23,7 +23,7 @@ function useDelayedChange(value, delay) {
 
     let secondsToNextUpdate = 0;
 
-    if (currentTime - lastUpdateTime >= 0) {
+    if (currentTime - lastUpdateTime < 0) {
       secondsToNextUpdate = delay + (lastUpdateTime - currentTime);
     }
 
@@ -32,6 +32,8 @@ function useDelayedChange(value, delay) {
     setTimeout(() => {
       if (isComponentMounted.current) {
         setDelayedValue(value);
+
+        console.log('fired');
       }
     }, secondsToNextUpdate);
   }, [value]);
