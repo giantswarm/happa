@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import {
   authTokenResponse,
   getMockCall,
+  getPersistedMockCall,
   infoResponse,
   postMockCall,
   userResponse,
@@ -31,7 +32,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // The response to the info call
   const infoRequest = getMockCall('/v4/info/', infoResponse);
   // The response to the org call (no orgs)
-  const orgRequest = getMockCall('/v4/organizations/');
+  const orgRequest = getPersistedMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
   const clustersRequest = getMockCall('/v4/clusters/');
   // The response to the appcatalogs call (no catalogs)
@@ -76,6 +77,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   userInfoRequest.done();
   infoRequest.done();
   orgRequest.done();
+  orgRequest.persist(false);
   clustersRequest.done();
   appcatalogsRequest.done();
 });
