@@ -33,21 +33,6 @@ class NodeCountSelector extends React.Component {
     scaling: this.props.scaling,
   };
 
-  static mergeConstraints(partialConstraints, defaultConstraints) {
-    if (Object.is(partialConstraints, defaultConstraints))
-      return defaultConstraints;
-
-    const currentConstraints = defaultConstraints;
-
-    for (const [cName, cValue] of Object.entries(partialConstraints)) {
-      if (cValue) {
-        currentConstraints[cName] = cValue;
-      }
-    }
-
-    return currentConstraints;
-  }
-
   updateScalingMin = numberPicker => {
     this.setState(
       {
@@ -101,16 +86,7 @@ class NodeCountSelector extends React.Component {
   };
 
   render() {
-    const {
-      label,
-      readOnly,
-      valueConstraints: partialConstraints,
-    } = this.props;
-
-    const valueConstraints = NodeCountSelector.mergeConstraints(
-      partialConstraints,
-      DEFAULT_VALUE_CONSTRAINTS
-    );
+    const { label, readOnly } = this.props;
 
     if (this.props.autoscalingEnabled === true) {
       return (
@@ -128,7 +104,7 @@ class NodeCountSelector extends React.Component {
                 <NumberPicker
                   label=''
                   max={this.state.scaling.max}
-                  min={valueConstraints.min}
+                  min={this.props.minValue}
                   onChange={this.updateScalingMin}
                   readOnly={readOnly}
                   stepSize={1}
@@ -143,7 +119,7 @@ class NodeCountSelector extends React.Component {
                 </SpanWrapper>
                 <NumberPicker
                   label=''
-                  max={valueConstraints.max}
+                  max={this.props.maxValue}
                   min={this.state.scaling.min}
                   onChange={this.updateScalingMax}
                   readOnly={readOnly}
@@ -175,8 +151,8 @@ class NodeCountSelector extends React.Component {
             >
               <NumberPicker
                 label=''
-                min={valueConstraints.min}
-                max={valueConstraints.max}
+                min={this.props.minValue}
+                max={this.props.maxValue}
                 onChange={this.updateNodeCount}
                 readOnly={readOnly}
                 stepSize={1}
@@ -192,7 +168,8 @@ class NodeCountSelector extends React.Component {
 
 NodeCountSelector.defaultProps = {
   readOnly: false,
-  valueConstraints: DEFAULT_VALUE_CONSTRAINTS,
+  minValue: DEFAULT_VALUE_CONSTRAINTS.min,
+  maxValue: DEFAULT_VALUE_CONSTRAINTS.max,
 };
 
 NodeCountSelector.propTypes = {
@@ -201,10 +178,8 @@ NodeCountSelector.propTypes = {
     min: PropTypes.string,
     max: PropTypes.string,
   }),
-  valueConstraints: PropTypes.shape({
-    min: PropTypes.number,
-    max: PropTypes.number,
-  }),
+  minValue: PropTypes.number,
+  maxValue: PropTypes.number,
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
   scaling: PropTypes.object,

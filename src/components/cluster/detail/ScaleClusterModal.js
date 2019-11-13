@@ -331,9 +331,7 @@ class ScaleClusterModal extends React.Component {
               this.props.provider,
               this.props.cluster.release_version
             )}
-            valueConstraints={{
-              max: this.props.maxWorkersPerCluster,
-            }}
+            maxValue={this.props.maxWorkersPerCluster}
             onChange={this.updateScaling}
             readOnly={false}
             scaling={this.state.scaling}
