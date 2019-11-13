@@ -74,11 +74,7 @@ afterAll(() => {
 it('renders all node pools in store', async () => {
   const div = document.createElement('div');
 
-  const { getByText, findAllByTestId, debug } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
-  );
+  const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE, div, {});
 
   await wait(() => findAllByTestId('node-pool-id'));
 
