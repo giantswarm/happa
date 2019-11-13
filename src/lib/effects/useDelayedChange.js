@@ -32,8 +32,6 @@ function useDelayedChange(value, delay) {
     setTimeout(() => {
       if (isComponentMounted.current) {
         setDelayedValue(value);
-
-        console.log('fired');
       }
     }, secondsToNextUpdate);
   }, [value]);
