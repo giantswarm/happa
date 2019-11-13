@@ -6,7 +6,7 @@ import nock from 'nock';
 it('takes us to the forgot password form when clicking on "Forgot your password?" from the login form', async () => {
   // Given I am not logged in and visit the app.
   const div = document.createElement('div');
-  const { getByText } = renderRouteWithStore('/', div, {});
+  const { getByText } = renderRouteWithStore('/', div, {}, {});
 
   // Wait till the app is ready and we're on the login page.
   await wait(() => {
@@ -40,6 +40,7 @@ it('gives me a confirmation message after entering something into the email fiel
   const { getByText, getByLabelText } = renderRouteWithStore(
     '/forgot_password',
     div,
+    {},
     {}
   );
 
