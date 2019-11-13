@@ -86,7 +86,7 @@ class NodeCountSelector extends React.Component {
   };
 
   render() {
-    const { label, readOnly } = this.props;
+    const { label, readOnly, maxValue, minValue } = this.props;
 
     if (this.props.autoscalingEnabled === true) {
       return (
@@ -104,7 +104,7 @@ class NodeCountSelector extends React.Component {
                 <NumberPicker
                   label=''
                   max={this.state.scaling.max}
-                  min={this.props.minValue}
+                  min={minValue}
                   onChange={this.updateScalingMin}
                   readOnly={readOnly}
                   stepSize={1}
@@ -119,7 +119,7 @@ class NodeCountSelector extends React.Component {
                 </SpanWrapper>
                 <NumberPicker
                   label=''
-                  max={this.props.maxValue}
+                  max={maxValue}
                   min={this.state.scaling.min}
                   onChange={this.updateScalingMax}
                   readOnly={readOnly}
@@ -151,8 +151,8 @@ class NodeCountSelector extends React.Component {
             >
               <NumberPicker
                 label=''
-                min={this.props.minValue}
-                max={this.props.maxValue}
+                min={minValue}
+                max={maxValue}
                 onChange={this.updateNodeCount}
                 readOnly={readOnly}
                 stepSize={1}
