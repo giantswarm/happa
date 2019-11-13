@@ -132,7 +132,7 @@ export function organizationsLoad() {
         console.error('Error loading organizations:', error);
 
         new FlashMessage(
-          'An error occurred as we tried to load organizations.',
+          `An error occurred as we tried to load organizations. Error ${error.status}, ${error.message}`,
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io.'
