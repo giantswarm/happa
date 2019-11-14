@@ -30,19 +30,6 @@ import theme from 'styles/theme';
 // Components
 import NodePoolDropdownMenu from 'cluster/detail/NodePoolDropdownMenu';
 
-// React transition group mocks
-// jest.mock('react-addons-css-transition-group', () => {
-//   return {
-//     TransitionGroup: props => (props.in ? props.children : null),
-//   };
-// });
-jest.mock('react-transition-group', () => {
-  return {
-    CSSTransition: props => (props.in ? props.children : null),
-    TransitionGroup: props => (props.in ? props.children : null),
-  };
-});
-
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
 
@@ -288,7 +275,6 @@ it('deletes a node pool', async () => {
 
   // WAit for node pools to render
   await wait(() => getAllByTestId('node-pool-id'));
-  // console.log(getAllByText('•••'));
 
   fireEvent.click(getAllByText('•••')[0]);
   // Regex doesn't work, don't know why...
@@ -296,20 +282,18 @@ it('deletes a node pool', async () => {
   fireEvent.click(getByText('Delete'));
 
   // Is the modal in the document?
-  // const titleText = `Are you sure you want to delete node pool ${nodePool.name} ${nodePool.id}?`;
   const titleText = /are you sure you want to delete/i;
   await wait(() => getByText(titleText));
   const modalTitle = getByText(titleText);
   expect(modalTitle).toBeInTheDocument();
   expect(modalTitle.textContent.includes(nodePool.id)).toBeTruthy();
 
-  const nodePoolEl = queryByTestId(nodePool.id);
-  // Click delete button
+  // Click delete button.
   const deleteButtonText = 'Delete Node Pool';
   const deleteButton = getByText(deleteButtonText);
   fireEvent.click(deleteButton);
 
-  // Flash message confirming deletion
+  // Flash message confirming deletion.
   await wait(() => {
     getByText(/will be deleted/i);
   });
@@ -317,7 +301,7 @@ it('deletes a node pool', async () => {
   expect(flashElement).toBeInTheDocument();
   expect(flashElement).toHaveTextContent(nodePool.id);
 
-  // Expect the node pool is not in the view
+  // Expect the node pool is not in the view.
   await wait(() => {
     expect(queryByTestId(nodePool.id)).not.toBeInTheDocument();
   });
@@ -325,5 +309,4 @@ it('deletes a node pool', async () => {
   nodePoolDeleteRequest.done();
 });
 
-
-it('adds a node pool', async () => {}
+// it('adds a node pool', async () => {}
