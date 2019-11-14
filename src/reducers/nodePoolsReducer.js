@@ -58,9 +58,9 @@ const nodePools = produce((draft, action) => {
       draft.isFetching = false;
       return;
 
-    // case types.NODEPOOL_CREATE_SUCCESS:
-    //   draft.items[action.nodePool.id] = action.nodePool;
-    //   return;
+    case types.NODEPOOL_CREATE_SUCCESS:
+      draft.items[action.nodePool.id] = action.nodePool;
+      return;
 
     case types.NODEPOOL_CREATE_ERROR:
     case types.NODEPOOLS_CREATE_ERROR:
