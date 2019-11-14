@@ -52,7 +52,6 @@ const nodePools = produce((draft, action) => {
       return;
 
     case types.NODEPOOL_DELETE_SUCCESS:
-      console.log('called: ', action.nodePoolId);
       delete draft.items[action.nodePoolId];
       draft.lastUpdated = Date.now();
       draft.isFetching = false;

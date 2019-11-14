@@ -262,7 +262,7 @@ scales node pools correctly`, async () => {
   nodePoolPatchRequest.done();
 });
 
-it('deletes the node pool', async () => {
+it('deletes a node pool', async () => {
   const nodePool = nodePoolsResponse[0];
   const nodePoolDeleteResponse = {
     code: 'RESOURCE_DELETION_STARTED',
@@ -281,11 +281,8 @@ it('deletes the node pool', async () => {
   const {
     getByText,
     getAllByText,
-    getByTestId,
-    getAllByTestId,
-    getByLabelText,
     queryByTestId,
-    queryByText,
+    getAllByTestId,
     debug,
   } = renderRouteWithStore(ROUTE, div, {});
 
@@ -306,16 +303,7 @@ it('deletes the node pool', async () => {
   expect(modalTitle).toBeInTheDocument();
   expect(modalTitle.textContent.includes(nodePool.id)).toBeTruthy();
 
-  // Clear the response with 2 NPs in it and provide just the second node pool in the response
-  // requests.nodePools.persist(false);
-  // requests.nodePools = getPersistedMockCall(
-  //   `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
-  //   [nodePoolsResponse[1]]
-  // );
-  // const nodePoolsRequestAfterDeletion = nock(API_ENDPOINT)
-  //   .intercept(`/v5/clusters/${V5_CLUSTER.id}/nodepools/`, 'GET')
-  //   .reply(200, [nodePoolsResponse[1]]);
-
+  const nodePoolEl = queryByTestId(nodePool.id);
   // Click delete button
   const deleteButtonText = 'Delete Node Pool';
   const deleteButton = getByText(deleteButtonText);
@@ -329,17 +317,13 @@ it('deletes the node pool', async () => {
   expect(flashElement).toBeInTheDocument();
   expect(flashElement).toHaveTextContent(nodePool.id);
 
-  debug(getByTestId(nodePool.id));
-
-  // await waitForElementToBeRemoved(() => getByTestId(nodePool.id));
-  // await wait(() => expect(getByTestId(nodePool.id)).not.toBeInTheDocument());
+  // Expect the node pool is not in the view
+  await wait(() => {
+    expect(queryByTestId(nodePool.id)).not.toBeInTheDocument();
+  });
 
   nodePoolDeleteRequest.done();
-  // requests.nodePools.persist(false);
-
-  // // Reset nodePols call
-  // requests.nodePools = getPersistedMockCall(
-  //   `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
-  //   nodePoolsResponse
-  // );
 });
+
+
+it('adds a node pool', async () => {}
