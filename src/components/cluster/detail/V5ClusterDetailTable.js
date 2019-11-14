@@ -306,6 +306,7 @@ class V5ClusterDetailTable extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log(this.props.nodePools);
     if (prevProps.nodePools !== this.props.nodePools && this.props.nodePools) {
       this.produceNodePools();
     }
@@ -317,6 +318,13 @@ class V5ClusterDetailTable extends React.Component {
     const nodePools = clusterNodePools(
       this.props.nodePools,
       this.props.cluster
+    );
+
+    console.log(
+      'NPS in produce: ',
+      nodePools,
+      this.props.cluster,
+      this.props.nodePools
     );
 
     const allZones = nodePools
