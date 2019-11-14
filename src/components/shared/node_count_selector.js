@@ -1,21 +1,12 @@
-import { connect } from 'react-redux';
 import NumberPicker from 'UI/number_picker';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-// NodeCountSelector is a component that allows a user to pick a number of
-// nodes by incrementing / decrementing a node count value or adjusting min and
-// max values for scaling limits.
-//
-// State explanation:
-//
-// scaling - The current value of the input field[s].
-//
-
 const DEFAULT_VALUE_CONSTRAINTS = {
   min: 1,
   max: 999,
+  stepSize: 1,
 };
 
 const SpanWrapper = styled.span`
@@ -23,57 +14,42 @@ const SpanWrapper = styled.span`
   margin-bottom: 10px;
 `;
 
+/**
+ * NodeCountSelector is a component that allows a user to pick a number of
+ * nodes by incrementing / decrementing a node count value or adjusting min and
+ * max values for scaling limits.
+ */
 class NodeCountSelector extends React.Component {
-  state = {
-    scaling: this.props.scaling,
+  handleFormSubmit = e => {
+    e.preventDefault();
   };
 
+  updateValue(valuesToAdd) {
+    const nextScalingValue = Object.assign({}, this.props.scaling, valuesToAdd);
+
+    this.props.onChange({
+      scaling: nextScalingValue,
+    });
+  }
+
   updateScalingMin = numberPicker => {
-    this.setState(
-      {
-        scaling: {
-          min: numberPicker.value,
-          minValid: numberPicker.valid,
-          max: this.state.scaling.max,
-          maxValid: this.state.scaling.maxValid,
-        },
-      },
-      () => {
-        this.props.onChange(this.state);
-      }
-    );
+    this.updateValue({ min: numberPicker.value, minValid: numberPicker.valid });
   };
 
   updateScalingMax = numberPicker => {
-    this.setState(
-      {
-        scaling: {
-          min: this.state.scaling.min,
-          minValid: this.state.scaling.minValid,
-          max: numberPicker.value,
-          maxValid: numberPicker.valid,
-        },
-      },
-      () => {
-        this.props.onChange(this.state);
-      }
-    );
+    this.updateValue({
+      max: numberPicker.value,
+      maxValid: numberPicker.valid,
+    });
   };
 
   updateNodeCount = numberPicker => {
-    this.setState(
-      {
-        scaling: {
-          min: numberPicker.value,
-          minValid: numberPicker.valid,
-          max: numberPicker.value,
-          maxValid: numberPicker.valid,
-        },
-      },
-      () => {
-        this.props.onChange(this.state);
-      }
-    );
+    this.updateValue({
+      min: numberPicker.value,
+      minValid: numberPicker.valid,
+      max: numberPicker.value,
+      maxValid: numberPicker.valid,
+    });
   };
 
   handleFocus = event => {
@@ -81,15 +57,11 @@ class NodeCountSelector extends React.Component {
   };
 
   render() {
-    const { label, readOnly, maxValue, minValue } = this.props;
+    const { label, readOnly, maxValue, minValue, scaling } = this.props;
 
     if (this.props.autoscalingEnabled === true) {
       return (
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-          }}
-        >
+        <form onSubmit={this.handleFormSubmit}>
           <div className='row'>
             <div className='col-6'>
               <label>
@@ -98,12 +70,12 @@ class NodeCountSelector extends React.Component {
                 </SpanWrapper>
                 <NumberPicker
                   label=''
-                  max={this.state.scaling.max}
+                  max={scaling.max}
                   min={minValue}
                   onChange={this.updateScalingMin}
                   readOnly={readOnly}
-                  stepSize={1}
-                  value={this.state.scaling.min}
+                  stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
+                  value={scaling.min}
                 />
               </label>
             </div>
@@ -115,11 +87,11 @@ class NodeCountSelector extends React.Component {
                 <NumberPicker
                   label=''
                   max={maxValue}
-                  min={this.state.scaling.min}
+                  min={scaling.min}
                   onChange={this.updateScalingMax}
                   readOnly={readOnly}
-                  stepSize={1}
-                  value={this.state.scaling.max}
+                  stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
+                  value={scaling.max}
                 />
               </label>
             </div>
@@ -127,7 +99,7 @@ class NodeCountSelector extends React.Component {
           <div className='row'>
             <div className='col-12'>
               <p>
-                {this.state.scaling.min === this.state.scaling.max
+                {scaling.min === scaling.max
                   ? 'To enable autoscaling, set minimum and maximum to different values.'
                   : 'To disable autoscaling, set both numbers to the same value.'}
               </p>
@@ -139,19 +111,15 @@ class NodeCountSelector extends React.Component {
       return (
         <div className='row'>
           <div className='col-12'>
-            <form
-              onSubmit={e => {
-                e.preventDefault();
-              }}
-            >
+            <form onSubmit={this.handleFormSubmit}>
               <NumberPicker
                 label=''
                 min={minValue}
                 max={maxValue}
                 onChange={this.updateNodeCount}
                 readOnly={readOnly}
-                stepSize={1}
-                value={this.state.scaling.max}
+                stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
+                value={scaling.max}
               />
             </form>
           </div>
@@ -180,15 +148,4 @@ NodeCountSelector.propTypes = {
   scaling: PropTypes.object,
 };
 
-function mapStateToProps() {
-  return {};
-}
-
-function mapDispatchToProps() {
-  return {};
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NodeCountSelector);
+export default NodeCountSelector;
