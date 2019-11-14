@@ -64,7 +64,7 @@ class NodeCountSelector extends React.Component {
         <form onSubmit={this.handleFormSubmit}>
           <div className='row'>
             <div className='col-6'>
-              <label>
+              <label data-testid='node-count-selector-picker'>
                 <SpanWrapper>
                   {label && label.min ? label.min : 'Minimum'}
                 </SpanWrapper>
@@ -80,7 +80,7 @@ class NodeCountSelector extends React.Component {
               </label>
             </div>
             <div className='col-6'>
-              <label>
+              <label data-testid='node-count-selector-picker'>
                 <SpanWrapper>
                   {label && label.max ? label.max : 'Maximum'}
                 </SpanWrapper>
@@ -112,15 +112,17 @@ class NodeCountSelector extends React.Component {
         <div className='row'>
           <div className='col-12'>
             <form onSubmit={this.handleFormSubmit}>
-              <NumberPicker
-                label=''
-                min={minValue}
-                max={maxValue}
-                onChange={this.updateNodeCount}
-                readOnly={readOnly}
-                stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
-                value={scaling.max}
-              />
+              <label data-testid='node-count-selector-picker'>
+                <NumberPicker
+                  label=''
+                  min={minValue}
+                  max={maxValue}
+                  onChange={this.updateNodeCount}
+                  readOnly={readOnly}
+                  stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
+                  value={scaling.max}
+                />
+              </label>
             </form>
           </div>
         </div>
@@ -130,6 +132,7 @@ class NodeCountSelector extends React.Component {
 }
 
 NodeCountSelector.defaultProps = {
+  autoscalingEnabled: false,
   readOnly: false,
   minValue: DEFAULT_VALUE_CONSTRAINTS.min,
   maxValue: DEFAULT_VALUE_CONSTRAINTS.max,
