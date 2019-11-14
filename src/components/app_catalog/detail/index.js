@@ -33,7 +33,9 @@ class AppDetail extends React.Component {
           pathname: '/app-catalogs/' + this.props.match.params.repo + '/',
         }}
       >
-        <LoadingOverlay loading={!this.props.repo || this.props.repo.isFetchingIndex}>
+        <LoadingOverlay
+          loading={!this.props.repo || this.props.repo.isFetchingIndex}
+        >
           <Breadcrumb
             data={{
               title: this.props.app.name,

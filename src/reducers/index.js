@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
-import makeAppReducer from './appReducer';
 import catalogs from './catalogsReducer';
 import clusters from './clusterReducer';
 import credentials from './credentialReducer';
 import invitations from './invitationReducer';
+import makeAppReducer from './appReducer';
 import modal from './modalReducer';
 import nodePools from './nodePoolsReducer';
 import organizations from './organizationReducer';
