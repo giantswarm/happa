@@ -25,6 +25,9 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // Given I have a Giant Swarm API with no clusters, organizations, appcatalogs
   // that I can log in to.
 
+  // Using persisted version odf nock interceptors because weird enough in CircleCI
+  // some calls are performed more then once
+
   // The response to the login call
   const authTokensRequest = postMockCall('/v4/auth-tokens/', authTokenResponse);
   // The response to the user info call

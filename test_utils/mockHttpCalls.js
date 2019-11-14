@@ -13,7 +13,6 @@ export const V5_CLUSTER = {
 /***** Helper functions *****/
 export const getMockCall = (endpoint, response = []) =>
   nock(API_ENDPOINT)
-    // .log(console.log)  // Enables logging
     .get(endpoint)
     .reply(200, response);
 
