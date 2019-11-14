@@ -133,6 +133,12 @@ NodeCountSelector.defaultProps = {
   readOnly: false,
   minValue: DEFAULT_VALUE_CONSTRAINTS.min,
   maxValue: DEFAULT_VALUE_CONSTRAINTS.max,
+  scaling: {
+    min: DEFAULT_VALUE_CONSTRAINTS.min,
+    minValid: true,
+    max: DEFAULT_VALUE_CONSTRAINTS.max,
+    maxValid: true,
+  },
 };
 
 NodeCountSelector.propTypes = {
