@@ -119,9 +119,6 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
           messageType.INFO,
           messageTTL.SHORT
         );
-
-        // ensure refreshing of the node pools list. Needed?
-        // dispatch(nodePoolsLoad());
       })
       .catch(error => {
         dispatch(modalHide());
