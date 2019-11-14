@@ -73,12 +73,6 @@ it('redirects to / and shows the layout after a succesful login', async () => {
 
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
-  authTokensRequest.done();
-  userInfoRequest.done();
-  infoRequest.done();
-  orgRequest.done();
-  clustersRequest.done();
-  appcatalogsRequest.done();
   authTokensRequest.persist(false);
   userInfoRequest.persist(false);
   infoRequest.persist(false);

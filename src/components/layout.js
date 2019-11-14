@@ -55,7 +55,7 @@ class Layout extends React.Component {
             this.props.dispatch(push('/login'));
           } else {
             new FlashMessage(
-              `Something went wrong while trying to load user and organization information. Error: ${error.status}, ${error.message}`,
+              'Something went wrong while trying to load user and organization information.',
               messageType.ERROR,
               messageTTL.LONG,
               'Please try again in a moment or contact support: support@giantswarm.io'
