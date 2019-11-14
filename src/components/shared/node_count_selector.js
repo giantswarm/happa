@@ -10,10 +10,6 @@ import styled from '@emotion/styled';
 //
 // State explanation:
 //
-// autoscalingEnabled - Boolean whether cluster supports autoscaling or not.
-//                      This is used to determine whether only number of nodes
-//                      is displayed of if there is pickers for min/max values.
-//
 // scaling - The current value of the input field[s].
 //
 
@@ -29,7 +25,6 @@ const SpanWrapper = styled.span`
 
 class NodeCountSelector extends React.Component {
   state = {
-    autoscalingEnabled: this.props.autoscalingEnabled,
     scaling: this.props.scaling,
   };
 
