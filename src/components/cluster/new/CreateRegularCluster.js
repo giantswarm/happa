@@ -9,7 +9,7 @@ import Button from 'UI/button';
 import ClusterCreationDuration from './ClusterCreationDuration';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
-import NodeCountSelector from 'shared/node_count_selector';
+import NodeCountSelector from 'shared/NodeCountSelector';
 import NumberPicker from 'UI/number_picker';
 import PropTypes from 'prop-types';
 import ProviderCredentials from './ProviderCredentials';
