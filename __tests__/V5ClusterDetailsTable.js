@@ -14,7 +14,12 @@ import {
   v5ClusterResponse,
   v5ClustersResponse,
 } from 'test_utils/mockHttpCalls';
-import { fireEvent, render, wait } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  wait,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
 import { truncate } from 'lib/helpers';
@@ -24,6 +29,19 @@ import theme from 'styles/theme';
 
 // Components
 import NodePoolDropdownMenu from 'cluster/detail/NodePoolDropdownMenu';
+
+// React transition group mocks
+// jest.mock('react-addons-css-transition-group', () => {
+//   return {
+//     TransitionGroup: props => (props.in ? props.children : null),
+//   };
+// });
+jest.mock('react-transition-group', () => {
+  return {
+    CSSTransition: props => (props.in ? props.children : null),
+    TransitionGroup: props => (props.in ? props.children : null),
+  };
+});
 
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
@@ -263,8 +281,11 @@ it('deletes the node pool', async () => {
   const {
     getByText,
     getAllByText,
+    getByTestId,
     getAllByTestId,
     getByLabelText,
+    queryByTestId,
+    queryByText,
     debug,
   } = renderRouteWithStore(ROUTE, div, {});
 
@@ -273,6 +294,52 @@ it('deletes the node pool', async () => {
   // console.log(getAllByText('•••'));
 
   fireEvent.click(getAllByText('•••')[0]);
-  await wait(() => getByText(/Delete/i));
+  // Regex doesn't work, don't know why...
+  await wait(() => getByText('Delete'));
   fireEvent.click(getByText('Delete'));
+
+  // Is the modal in the document?
+  // const titleText = `Are you sure you want to delete node pool ${nodePool.name} ${nodePool.id}?`;
+  const titleText = /are you sure you want to delete/i;
+  await wait(() => getByText(titleText));
+  const modalTitle = getByText(titleText);
+  expect(modalTitle).toBeInTheDocument();
+  expect(modalTitle.textContent.includes(nodePool.id)).toBeTruthy();
+
+  // Clear the response with 2 NPs in it and provide just the second node pool in the response
+  // requests.nodePools.persist(false);
+  // requests.nodePools = getPersistedMockCall(
+  //   `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
+  //   [nodePoolsResponse[1]]
+  // );
+  // const nodePoolsRequestAfterDeletion = nock(API_ENDPOINT)
+  //   .intercept(`/v5/clusters/${V5_CLUSTER.id}/nodepools/`, 'GET')
+  //   .reply(200, [nodePoolsResponse[1]]);
+
+  // Click delete button
+  const deleteButtonText = 'Delete Node Pool';
+  const deleteButton = getByText(deleteButtonText);
+  fireEvent.click(deleteButton);
+
+  // Flash message confirming deletion
+  await wait(() => {
+    getByText(/will be deleted/i);
+  });
+  const flashElement = getByText(/will be deleted/i);
+  expect(flashElement).toBeInTheDocument();
+  expect(flashElement).toHaveTextContent(nodePool.id);
+
+  debug(getByTestId(nodePool.id));
+
+  // await waitForElementToBeRemoved(() => getByTestId(nodePool.id));
+  // await wait(() => expect(getByTestId(nodePool.id)).not.toBeInTheDocument());
+
+  nodePoolDeleteRequest.done();
+  // requests.nodePools.persist(false);
+
+  // // Reset nodePols call
+  // requests.nodePools = getPersistedMockCall(
+  //   `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
+  //   nodePoolsResponse
+  // );
 });

@@ -109,8 +109,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
 
     return nodePoolsApi
       .deleteNodePool(clusterId, nodePool.id)
-      .then(d => {
-        console.log(d);
+      .then(() => {
         dispatch(nodePoolDeleteSuccess(clusterId, nodePool.id));
 
         dispatch(modalHide());
@@ -122,7 +121,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
         );
 
         // ensure refreshing of the node pools list. Needed?
-        dispatch(nodePoolsLoad());
+        // dispatch(nodePoolsLoad());
       })
       .catch(error => {
         dispatch(modalHide());

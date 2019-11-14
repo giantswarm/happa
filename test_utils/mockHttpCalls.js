@@ -18,6 +18,7 @@ export const getMockCall = (endpoint, response = []) =>
 
 export const getPersistedMockCall = (endpoint, response = []) =>
   nock(API_ENDPOINT)
+    .log(console.log)
     .persist()
     .get(endpoint)
     .reply(200, response);
