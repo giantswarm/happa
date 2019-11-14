@@ -109,7 +109,8 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
 
     return nodePoolsApi
       .deleteNodePool(clusterId, nodePool.id)
-      .then(() => {
+      .then(d => {
+        console.log(d);
         dispatch(nodePoolDeleteSuccess(clusterId, nodePool.id));
 
         dispatch(modalHide());

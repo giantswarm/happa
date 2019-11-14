@@ -83,7 +83,7 @@ it('renders all node pools in store', async () => {
   });
 });
 
-// Not really needed actually.
+// Not really needed actually. Keeping it by now as an example of simple test without store.
 it('shows the dropdown when the three dots button is clicked', () => {
   const div = document.createElement('div');
   const { getByText, getByRole } = render(
@@ -242,4 +242,37 @@ scales node pools correctly`, async () => {
   );
 
   nodePoolPatchRequest.done();
+});
+
+it('deletes the node pool', async () => {
+  const nodePool = nodePoolsResponse[0];
+  const nodePoolDeleteResponse = {
+    code: 'RESOURCE_DELETION_STARTED',
+    message: `Deletion of node pool with ID '${nodePool.id}' is in progress.`,
+  };
+
+  // Request
+  const nodePoolDeleteRequest = nock(API_ENDPOINT)
+    .intercept(
+      `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
+      'DELETE'
+    )
+    .reply(200, nodePoolDeleteResponse);
+
+  const div = document.createElement('div');
+  const {
+    getByText,
+    getAllByText,
+    getAllByTestId,
+    getByLabelText,
+    debug,
+  } = renderRouteWithStore(ROUTE, div, {});
+
+  // WAit for node pools to render
+  await wait(() => getAllByTestId('node-pool-id'));
+  // console.log(getAllByText('•••'));
+
+  fireEvent.click(getAllByText('•••')[0]);
+  await wait(() => getByText(/Delete/i));
+  fireEvent.click(getByText('Delete'));
 });
