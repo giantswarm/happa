@@ -53,24 +53,23 @@ export function catalogsLoad() {
     return appsApi
       .getAppCatalogs()
       .then(catalogs => {
-        let catalogsDict = {};
+        /**
+         * Since `catalogs` comes back as an iterable object,
+         * we're converting it to an array
+         */
+        const catalogsDict = Array.from(catalogs).reduce((agg, currCatalog) => {
+          const { labels } = currCatalog.metadata;
 
-        // Swagger generated API client returns weird array objects.
-        // This "Array.from" ensures I have a normal array with map and forEach on it.
-        catalogs = Array.from(catalogs);
-
-        catalogs.forEach(catalog => {
-          // Exclude internal catalogs from the store.
           if (
-            catalog.metadata.labels &&
-            catalog.metadata.labels[
-              'application.giantswarm.io/catalog-type'
-            ] !== 'internal'
+            labels &&
+            labels['application.giantswarm.io/catalog-type'] !== 'internal'
           ) {
-            catalog.isFetchingIndex = true;
-            catalogsDict[catalog.metadata.name] = catalog;
+            currCatalog.isFetchingIndex = true;
+            agg[currCatalog.metadata.name] = currCatalog;
           }
-        });
+
+          return agg;
+        }, {});
 
         dispatch({
           type: types.CATALOGS_LOAD_SUCCESS,
@@ -81,10 +80,12 @@ export function catalogsLoad() {
       })
       .catch(error => {
         console.error(error);
+
         dispatch({
           type: types.CATALOGS_LOAD_ERROR,
           error: error,
         });
+
         throw error;
       });
   };
