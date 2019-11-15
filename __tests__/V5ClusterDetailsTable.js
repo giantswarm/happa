@@ -2,11 +2,9 @@ import '@testing-library/jest-dom/extend-expect';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
-  getMockCall,
   getPersistedMockCall,
   infoResponse,
   nodePoolsResponse,
-  nodePoolsResponseWithNodes,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -16,12 +14,7 @@ import {
   v5ClusterResponse,
   v5ClustersResponse,
 } from 'test_utils/mockHttpCalls';
-import {
-  fireEvent,
-  render,
-  wait,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, render, wait } from '@testing-library/react';
 import { getNumberOfNodePoolsNodes } from 'utils/cluster_utils';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
@@ -81,11 +74,7 @@ afterAll(() => {
 
 it('renders all the cluster data correctly with 0 nodes ready', async () => {
   const div = document.createElement('div');
-  const { getByText, debug, getAllByText, getByTestId } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
-  );
+  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
 
   await wait(() => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
@@ -97,6 +86,11 @@ it('renders all the cluster data correctly with 0 nodes ready', async () => {
 });
 
 it('renders nodes data correctly with nodes ready', async () => {
+  const nodePoolsResponseWithNodes = nodePoolsResponse.map(np => ({
+    ...np,
+    status: { nodes: 3, nodes_ready: 3 },
+  }));
+
   // Replace nodePools response
   requests.nodePools.persist(false);
   requests.nodePools = getPersistedMockCall(
@@ -322,7 +316,7 @@ it('deletes a node pool', async () => {
     debug,
   } = renderRouteWithStore(ROUTE, div, {});
 
-  // WAit for node pools to render
+  // Wait for node pools to render
   await wait(() => getAllByTestId('node-pool-id'));
 
   fireEvent.click(getAllByText('•••')[0]);
@@ -358,4 +352,45 @@ it('deletes a node pool', async () => {
   nodePoolDeleteRequest.done();
 });
 
-it('adds a node pool', async () => {});
+it('adds a node pool with default values', async () => {
+  const nodePoolCreationResponse = {
+    id: '2bbzf',
+    name: 'My third node pool',
+    availability_zones: ['eu-central-1a'],
+    scaling: { min: 3, max: 10 },
+    node_spec: {
+      aws: { instance_type: 'm3.xlarge' },
+      volume_sizes_gb: { docker: 100, kubelet: 100 },
+    },
+    status: { nodes: 0, nodes_ready: 0 },
+    subnet: '10.1.7.0/24',
+  };
+
+  // Request
+  const nodePoolCreationRequest = nock(API_ENDPOINT)
+    .intercept(`/v5/clusters/${V5_CLUSTER.id}/nodepools/`, 'POST')
+    .reply(200, nodePoolCreationResponse);
+
+  const div = document.createElement('div');
+  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
+
+  await wait(() => getAllByText(/add node pool/i));
+
+  fireEvent.click(getByText(/add node pool/i));
+  await wait(() => getByText(/create node pool/i));
+  fireEvent.click(getByText(/create node pool/i));
+
+  // Flash message confirming creation.
+  await wait(() => {
+    getByText(/Your new node pool with ID/i);
+  });
+  expect(getByText(/Your new node pool with ID/i)).toHaveTextContent(
+    nodePoolCreationResponse.id
+  );
+
+  // Is the new NodePool in the document?
+  await wait(() => getByText(nodePoolCreationResponse.id));
+  expect(getByText(nodePoolCreationResponse.id)).toBeInTheDocument();
+
+  nodePoolCreationRequest.done();
+});

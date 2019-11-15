@@ -428,10 +428,10 @@ class V5ClusterDetailTable extends React.Component {
           <div>
             <div>
               {!workerNodesRunning ? (
-                <span data-testid='nodes-running'>0 nodes</span>
+                <span>0 nodes</span>
               ) : (
                 <>
-                  <span data-testid='nodes-running'>
+                  <span>
                     {workerNodesRunning}
                     {workerNodesRunning === 1 ? ' node' : ' nodes'} in
                     {` ${nodePools.length}${
