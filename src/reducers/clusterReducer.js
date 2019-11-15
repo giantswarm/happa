@@ -96,10 +96,7 @@ const clusterReducer = produce((draft, action) => {
 
     case types.CLUSTER_LOAD_APPS_SUCCESS:
       draft.items[action.clusterId].isFetchingApps = false;
-      // For some reason the array that we get back
-      // from the generated js client does not have
-      // .map on it. So I make a new one here.
-      draft.items[action.clusterId].apps = Array(...action.apps);
+      draft.items[action.clusterId].apps = action.apps;
       draft.items[action.clusterId].lastUpdated = Date.now();
       return;
 
