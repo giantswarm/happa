@@ -143,6 +143,8 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
 
 /**
  * Takes an array of node pool objects and tries to create each one.
+ * This way we have a unique function that can be used in v5 cluster creation form and when
+ * adding multiple node pools from the v5 cluster deails view
  * Dispatches NODEPOOL_CREATE_SUCCESS on success or NODEPOOL_CREATE_ERROR on error.
  *
  * @param {Array} nodePools Array of Node Pool definition objects
