@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 import {
   authTokenResponse,
-  getMockCall,
   getPersistedMockCall,
   infoResponse,
   postMockCall,
@@ -26,7 +25,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // that I can log in to.
 
   // Using persisted version odf nock interceptors because weird enough in CircleCI
-  // some calls are performed more then once
+  // some calls are performed more than once
 
   // The response to the login call
   const authTokensRequest = postMockCall('/v4/auth-tokens/', authTokenResponse);

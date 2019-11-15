@@ -143,10 +143,9 @@ function mapStateToProps(state) {
     releases: items,
     activeSortedReleases,
     provider: state.app.info.general.provider,
-    firstNodePoolsRelease: '9.0.0',
-    // state.app.info.features
-    // ? state.app.info.features.nodepools.release_version_minimum
-    // : '10.0.0',
+    firstNodePoolsRelease: state.app.info.features
+      ? state.app.info.features.nodepools.release_version_minimum
+      : '10.0.0',
     user: state.app.loggedInUser,
   };
 }
