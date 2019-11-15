@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
+  appsResponse,
   getPersistedMockCall,
   infoResponse,
   nodePoolsResponse,
@@ -10,9 +11,10 @@ import {
   orgsResponse,
   releasesResponse,
   userResponse,
-  V5_CLUSTER,
-  v5ClusterResponse,
-  v5ClustersResponse,
+  V4_CLUSTER,
+  v4AWSClusterResponse,
+  v4ClustersResponse,
+  v4AWSClusterStatusResponse,
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, render, wait } from '@testing-library/react';
 import { getNumberOfNodePoolsNodes } from 'utils/cluster_utils';
@@ -22,12 +24,10 @@ import { truncate } from 'lib/helpers';
 import nock from 'nock';
 import React from 'react';
 import theme from 'styles/theme';
-
-// Components
-import NodePoolDropdownMenu from 'cluster/detail/NodePoolDropdownMenu';
+import { request } from 'https';
 
 // Cluster and route we are testing with.
-const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
+const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V4_CLUSTER.id}`;
 
 // Tests setup
 const requests = {};
@@ -44,25 +44,32 @@ beforeAll(() => {
     `/v4/organizations/${ORGANIZATION}/`,
     orgResponse
   );
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v5ClustersResponse);
+  requests.clusters = getPersistedMockCall('/v4/clusters/', v4ClustersResponse);
   requests.cluster = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/`,
-    v5ClusterResponse
+    `/v4/clusters/${V4_CLUSTER.id}/`,
+    v4AWSClusterResponse
+  );
+  requests.status = getPersistedMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/status/`,
+    v4AWSClusterStatusResponse
+  );
+  requests.apps = getPersistedMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/apps/`,
+    appsResponse
+  );
+  // TODO we are not requesting this in v5 cluster calls
+  // Empty response
+  request.keyPairs = getPersistedMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/key-pairs/`
   );
   requests.credentials = getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/credentials/`
   );
   requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.nodePools = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
-    nodePoolsResponse
-  );
   requests.appcatalogs = getPersistedMockCall(
     '/v4/appcatalogs/',
     appCatalogsResponse
   );
-
-  // TODO no apps response?? Check on gauss.
 });
 
 // Stop persisting responses
@@ -74,20 +81,27 @@ afterAll(() => {
 
 /************ TESTS ************/
 
-it('renders all the v5 cluster data correctly with 0 nodes ready', async () => {
+// This triggers a warning because of this weird array-like value we are receiving
+// as a response to the apps call. Here we are using a real array to mock the response
+// and hence the warning because we are transforming an array into an array
+it('renders all the v4 cluster data correctly with 0 nodes ready', async () => {
   const div = document.createElement('div');
   const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
 
   await wait(() => {
-    expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
+    expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
-  expect(getAllByText(V5_CLUSTER.id)).toHaveLength(2);
+  expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
   expect(getByText('0 nodes')).toBeInTheDocument();
   const k8sEndpoint = getByText('Kubernetes endpoint URI:').nextSibling;
   expect(k8sEndpoint).not.toBeEmpty();
+  // n/a because the cluster hasn't been updated yet
+  expect(document.querySelector('abbr')).toHaveTextContent('n/a');
+  expect(getByText(V4_CLUSTER.instanceType)).toBeInTheDocument();
+  expect(getByText('Pinned at 3')).toBeInTheDocument();
 });
 
-it('renders nodes data correctly with nodes ready in v5 cluster view', async () => {
+it.skip('renders nodes data correctly with nodes ready', async () => {
   const nodePoolsResponseWithNodes = nodePoolsResponse.map(np => ({
     ...np,
     status: { nodes: 3, nodes_ready: 3 },
@@ -96,7 +110,7 @@ it('renders nodes data correctly with nodes ready in v5 cluster view', async () 
   // Replace nodePools response
   requests.nodePools.persist(false);
   requests.nodePools = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
+    `/v5/clusters/${V4_CLUSTER.id}/nodepools/`,
     nodePoolsResponseWithNodes
   );
 
@@ -116,12 +130,12 @@ it('renders nodes data correctly with nodes ready in v5 cluster view', async () 
   // Restore nodePools response
   requests.nodePools.persist(false);
   requests.nodePools = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
+    `/v5/clusters/${V4_CLUSTER.id}/nodepools/`,
     nodePoolsResponse
   );
 });
 
-it('renders all node pools in store', async () => {
+it.skip('renders all node pools in store', async () => {
   const div = document.createElement('div');
 
   const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE, div, {});
@@ -133,88 +147,12 @@ it('renders all node pools in store', async () => {
   });
 });
 
-// Not really needed actually. Keeping it by now as an example of simple test without store.
-it('shows the dropdown when the three dots button is clicked', () => {
-  const div = document.createElement('div');
-  const { getByText, getByRole } = render(
-    <ThemeProvider theme={theme}>
-      <NodePoolDropdownMenu render={{ isOpen: true }} />
-    </ThemeProvider>,
-    div
-  );
-  fireEvent.click(getByText('•••'));
-  const menu = getByRole('menu');
-  expect(menu).toBeInTheDocument();
-});
-
-it('patches node pool name correctly and re-sort node pools accordingly', async () => {
-  const newNodePoolName = 'New NP name';
-  const nodePoolName = nodePoolsResponse[0].name;
-  const nodePoolId = nodePoolsResponse[0].id;
-
-  // Response to request should be the exact same NP with the new name
-  const nodePoolPatchResponse = {
-    ...nodePoolsResponse[0],
-    name: newNodePoolName,
-  };
-
-  // Request
-  const nodePoolPatchRequest = nock(API_ENDPOINT)
-    .intercept(
-      `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePoolsResponse[0].id}/`,
-      'PATCH'
-    )
-    .reply(200, nodePoolPatchResponse);
-
-  // Mounting
-  const div = document.createElement('div');
-  const { getAllByTestId, getByText, container } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
-  );
-
-  await wait(() => getByText(truncate(nodePoolName, 14)));
-
-  // All mock node pools have the same first 14 characters.
-  const nodePoolNameEl = getByText(truncate(nodePoolName, 14));
-  const nodePools = getAllByTestId('node-pool-id');
-
-  // Is this NP the first in the list?
-  expect(nodePools[0]).toContainHTML(nodePoolNameEl);
-  fireEvent.click(nodePoolNameEl);
-
-  // Write the new name and submit it
-  container.querySelector(
-    `input[value="${nodePoolName}"]`
-  ).value = newNodePoolName;
-
-  const submitButton = getByText(/ok/i);
-  fireEvent.click(submitButton);
-
-  //Wait for the Flash message to appear
-  await wait(() => {
-    getByText(/succesfully edited node pool name/i);
-  });
-
-  // Is the new NP name in the document?
-  expect(getByText(newNodePoolName)).toBeInTheDocument();
-
-  // Is it now the 2nd node pool in list?
-  const reSortedNodePools = getAllByTestId('node-pool-id');
-  expect(reSortedNodePools[1]).toHaveTextContent(nodePoolId);
-
-  // Assert that the mocked responses got called, tell them to stop waiting for
-  // a request.
-  nodePoolPatchRequest.done();
-});
-
 // TODO This test triggers a memory leak error related with setting state depending
 // on the response of an asynchronous call in ScaleNodePoolModal.
 // Not fixing it now because is a "minor" error, this error can't break the app and
 // because I will be working on the data flow refactor that will solve this.
-it(`shows the v5 cluster scaling modal when the button is clicked with default values and 
-scales node pools correctly`, async () => {
+it.skip(`shows the v4 cluster scaling modal when the button is clicked with default values and 
+scales correctly`, async () => {
   // TODO default values from constants file
   const defaultScaling = { min: 3, max: 10 };
   const increaseValue = 1;
@@ -232,7 +170,7 @@ scales node pools correctly`, async () => {
   // Request
   const nodePoolPatchRequest = nock(API_ENDPOINT)
     .intercept(
-      `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
+      `/v5/clusters/${V4_CLUSTER.id}/nodepools/${nodePool.id}/`,
       'PATCH'
     )
     .reply(200, nodePoolPatchResponse);
@@ -294,16 +232,16 @@ scales node pools correctly`, async () => {
   nodePoolPatchRequest.done();
 });
 
-it('deletes a v5 cluster', async () => {
-  const cluster = v5ClusterResponse;
+it.skip('deletes a v4 cluster', async () => {
+  const cluster = v4ClusterResponse;
   const clusterDeleteResponse = {
     code: 'RESOURCE_DELETION_STARTED',
-    message: `Deletion of cluster with ID '${V5_CLUSTER.id}' is in progress.`,
+    message: `Deletion of cluster with ID '${V4_CLUSTER.id}' is in progress.`,
   };
 
   // Request
   const clusterDeleteRequest = nock(API_ENDPOINT)
-    .intercept(`/v4/clusters/${V5_CLUSTER.id}/`, 'DELETE')
+    .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'DELETE')
     .reply(200, clusterDeleteResponse);
 
   const div = document.createElement('div');
@@ -318,7 +256,7 @@ it('deletes a v5 cluster', async () => {
 
   // Wait for the view to render
   await wait(() => {
-    expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
+    expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
 
   // fireEvent.click(getAllByText('•••')[0]);
@@ -354,107 +292,4 @@ it('deletes a v5 cluster', async () => {
   // the next test with a flash message
   document.querySelector('#noty_layout__topRight').remove();
   clusterDeleteRequest.done();
-});
-
-it('deletes a node pool', async () => {
-  const nodePool = nodePoolsResponse[0];
-  const nodePoolDeleteResponse = {
-    code: 'RESOURCE_DELETION_STARTED',
-    message: `Deletion of node pool with ID '${nodePool.id}' is in progress.`,
-  };
-
-  // Request
-  const nodePoolDeleteRequest = nock(API_ENDPOINT)
-    .intercept(
-      `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
-      'DELETE'
-    )
-    .reply(200, nodePoolDeleteResponse);
-
-  const div = document.createElement('div');
-  const {
-    getByText,
-    getAllByText,
-    queryByTestId,
-    getAllByTestId,
-    debug,
-  } = renderRouteWithStore(ROUTE, div, {});
-
-  // Wait for node pools to render
-  await wait(() => getAllByTestId('node-pool-id'));
-
-  fireEvent.click(getAllByText('•••')[0]);
-  // Regex doesn't work, don't know why...
-  await wait(() => getByText('Delete'));
-  fireEvent.click(getByText('Delete'));
-
-  // Is the modal in the document?
-  const titleText = /are you sure you want to delete/i;
-  await wait(() => getByText(titleText));
-  const modalTitle = getByText(titleText);
-  expect(modalTitle).toBeInTheDocument();
-  expect(modalTitle.textContent.includes(nodePool.id)).toBeTruthy();
-
-  // Click delete button.
-  const deleteButtonText = 'Delete Node Pool';
-  const deleteButton = getByText(deleteButtonText);
-  fireEvent.click(deleteButton);
-
-  // Flash message confirming deletion.
-  await wait(() => {
-    getByText(/will be deleted/i);
-  });
-  const flashElement = getByText(/will be deleted/i);
-  expect(flashElement).toBeInTheDocument();
-  expect(flashElement).toHaveTextContent(nodePool.id);
-
-  // Expect the node pool is not in the view.
-  await wait(() => {
-    expect(queryByTestId(nodePool.id)).not.toBeInTheDocument();
-  });
-
-  nodePoolDeleteRequest.done();
-});
-
-it('adds a node pool with default values', async () => {
-  const nodePoolCreationResponse = {
-    id: '2bbzf',
-    name: 'My third node pool',
-    availability_zones: ['eu-central-1a'],
-    scaling: { min: 3, max: 10 },
-    node_spec: {
-      aws: { instance_type: 'm3.xlarge' },
-      volume_sizes_gb: { docker: 100, kubelet: 100 },
-    },
-    status: { nodes: 0, nodes_ready: 0 },
-    subnet: '10.1.7.0/24',
-  };
-
-  // Request
-  const nodePoolCreationRequest = nock(API_ENDPOINT)
-    .intercept(`/v5/clusters/${V5_CLUSTER.id}/nodepools/`, 'POST')
-    .reply(200, nodePoolCreationResponse);
-
-  const div = document.createElement('div');
-  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
-
-  await wait(() => getAllByText(/add node pool/i));
-
-  fireEvent.click(getByText(/add node pool/i));
-  await wait(() => getByText(/create node pool/i));
-  fireEvent.click(getByText(/create node pool/i));
-
-  // Flash message confirming creation.
-  await wait(() => {
-    getByText(/Your new node pool with ID/i);
-  });
-  expect(getByText(/Your new node pool with ID/i)).toHaveTextContent(
-    nodePoolCreationResponse.id
-  );
-
-  // Is the new NodePool in the document?
-  await wait(() => getByText(nodePoolCreationResponse.id));
-  expect(getByText(nodePoolCreationResponse.id)).toBeInTheDocument();
-
-  nodePoolCreationRequest.done();
 });
