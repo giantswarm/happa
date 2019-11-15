@@ -142,10 +142,10 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
 }
 
 /**
- * Takes a node pool object and tries to create it. Dispatches NODEPOOL_CREATE_SUCCESS
- * on success or NODEPOOL_CREATE_ERROR on error.
+ * Takes an array of node pool objects and tries to create each one.
+ * Dispatches NODEPOOL_CREATE_SUCCESS on success or NODEPOOL_CREATE_ERROR on error.
  *
- * @param {Object} nodepool Node Pool definition object
+ * @param {Array} nodePools Array of Node Pool definition objects
  */
 export function nodePoolsCreate(clusterId, nodePools) {
   return async function(dispatch) {
