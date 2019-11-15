@@ -2,9 +2,11 @@ import '@testing-library/jest-dom/extend-expect';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
+  getMockCall,
   getPersistedMockCall,
   infoResponse,
   nodePoolsResponse,
+  nodePoolsResponseWithNodes,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -20,6 +22,7 @@ import {
   wait,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import { getNumberOfNodePoolsNodes } from 'utils/cluster_utils';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
 import { ThemeProvider } from 'emotion-theming';
 import { truncate } from 'lib/helpers';
@@ -75,6 +78,52 @@ afterAll(() => {
 });
 
 /************ TESTS ************/
+
+it('renders all the cluster data correctly with 0 nodes ready', async () => {
+  const div = document.createElement('div');
+  const { getByText, debug, getAllByText, getByTestId } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {}
+  );
+
+  await wait(() => {
+    expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
+  });
+  expect(getAllByText('m0ckd')).toHaveLength(2);
+  expect(getByText('0 nodes')).toBeInTheDocument();
+  const k8sEndpoint = getByText('Kubernetes endpoint URI:').nextSibling;
+  expect(k8sEndpoint).not.toBeEmpty();
+});
+
+it('renders nodes data correctly with nodes ready', async () => {
+  // Replace nodePools response
+  requests.nodePools.persist(false);
+  requests.nodePools = getPersistedMockCall(
+    `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
+    nodePoolsResponseWithNodes
+  );
+
+  const div = document.createElement('div');
+  const { getByText } = renderRouteWithStore(ROUTE, div, {});
+
+  const workerNodesRunning = getNumberOfNodePoolsNodes(
+    nodePoolsResponseWithNodes
+  );
+  const textRendered = `${workerNodesRunning} nodes in ${nodePoolsResponseWithNodes.length} node pools`;
+
+  // Expect computed values are rendered
+  await wait(() => {
+    expect(getByText(textRendered)).toBeInTheDocument();
+  });
+
+  // Restore nodePools response
+  requests.nodePools.persist(false);
+  requests.nodePools = getPersistedMockCall(
+    `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
+    nodePoolsResponse
+  );
+});
 
 it('renders all node pools in store', async () => {
   const div = document.createElement('div');
@@ -309,4 +358,4 @@ it('deletes a node pool', async () => {
   nodePoolDeleteRequest.done();
 });
 
-// it('adds a node pool', async () => {}
+it('adds a node pool', async () => {});

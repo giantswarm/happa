@@ -428,10 +428,10 @@ class V5ClusterDetailTable extends React.Component {
           <div>
             <div>
               {!workerNodesRunning ? (
-                <span>0 nodes</span>
+                <span data-testid='nodes-running'>0 nodes</span>
               ) : (
                 <>
-                  <span>
+                  <span data-testid='nodes-running'>
                     {workerNodesRunning}
                     {workerNodesRunning === 1 ? ' node' : ' nodes'} in
                     {` ${nodePools.length}${
@@ -647,7 +647,7 @@ V5ClusterDetailTable.propTypes = {
   release: PropTypes.object,
   setInterval: PropTypes.func,
   showUpgradeModal: PropTypes.func,
-  workerNodesRunning: PropTypes.number,
+  workerNodesRunning: PropTypes.number, // TODO Delete?
   workerNodesDesired: PropTypes.number,
 };
 

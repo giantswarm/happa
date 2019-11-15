@@ -144,6 +144,11 @@ export const nodePoolsResponse = [
   },
 ];
 
+export const nodePoolsResponseWithNodes = nodePoolsResponse.map(np => ({
+  ...np,
+  status: { nodes: 3, nodes_ready: 3 },
+}));
+
 // Releases
 // Just thre of them: a false release, a pre node pools release and a node pools release
 export const releasesResponse = [
