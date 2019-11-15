@@ -79,7 +79,7 @@ it('renders all the cluster data correctly with 0 nodes ready', async () => {
   await wait(() => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
   });
-  expect(getAllByText('m0ckd')).toHaveLength(2);
+  expect(getAllByText(V5_CLUSTER.id)).toHaveLength(2);
   expect(getByText('0 nodes')).toBeInTheDocument();
   const k8sEndpoint = getByText('Kubernetes endpoint URI:').nextSibling;
   expect(k8sEndpoint).not.toBeEmpty();
@@ -290,6 +290,68 @@ scales node pools correctly`, async () => {
   );
 
   nodePoolPatchRequest.done();
+});
+
+it('deletes a v5 cluster', async () => {
+  const cluster = v5ClusterResponse;
+  const clusterDeleteResponse = {
+    code: 'RESOURCE_DELETION_STARTED',
+    message: `Deletion of cluster with ID '${V5_CLUSTER.id}' is in progress.`,
+  };
+
+  // Request
+  const clusterDeleteRequest = nock(API_ENDPOINT)
+    .intercept(`/v4/clusters/${V5_CLUSTER.id}/`, 'DELETE')
+    .reply(200, clusterDeleteResponse);
+
+  const div = document.createElement('div');
+  const {
+    getByText,
+    getAllByText,
+    queryByTestId,
+    getAllByTestId,
+    debug,
+    container,
+  } = renderRouteWithStore(ROUTE, div, {});
+
+  // Wait for the view to render
+  await wait(() => {
+    expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
+  });
+
+  // fireEvent.click(getAllByText('•••')[0]);
+  await wait(() => getByText('Delete Cluster'));
+  fireEvent.click(getByText('Delete Cluster'));
+
+  // Is the modal in the document?
+  const titleText = /are you sure you want to delete/i;
+  await wait(() => getByText(titleText));
+  const modalTitle = getByText(titleText);
+  expect(modalTitle).toBeInTheDocument();
+  expect(modalTitle.textContent.includes(cluster.id)).toBeTruthy();
+
+  // Click delete button.
+  const modalDeleteButton = getAllByText('Delete Cluster')[1];
+  fireEvent.click(modalDeleteButton);
+
+  // Flash message confirming deletion.
+  await wait(() => {
+    getByText(/will be deleted/i);
+  });
+  const flashElement = getByText(/will be deleted/i);
+  expect(flashElement).toBeInTheDocument();
+  expect(flashElement).toHaveTextContent(cluster.id);
+
+  // Expect the cluster is not in the clusters list.
+  await wait(() => {
+    expect(queryByTestId(cluster.id)).not.toBeInTheDocument();
+  });
+
+  // This is not inside the component tree we are testing and so it is not cleaned up
+  // after test, so we have to remnove it manually in order to not cause conflicts with
+  // the next test with a flash message
+  document.querySelector('#noty_layout__topRight').remove();
+  clusterDeleteRequest.done();
 });
 
 it('deletes a node pool', async () => {
