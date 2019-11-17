@@ -222,6 +222,128 @@ export const v4AWSClusterStatusResponse = {
   },
 };
 
+export const v4AWSClusterStatusResponseWithNodes = {
+  aws: {
+    availabilityZones: [
+      {
+        name: 'eu-central-1a',
+        subnet: {
+          private: { cidr: '10.1.2.0/25' },
+          public: { cidr: '10.1.2.128/25' },
+        },
+      },
+    ],
+    autoScalingGroup: { name: '' },
+  },
+  cluster: {
+    conditions: [
+      {
+        lastTransitionTime: '2019-11-15T15:54:05.711696992Z',
+        status: 'True',
+        type: 'Creating',
+      },
+    ],
+    network: { cidr: '10.1.2.0/24' },
+    nodes: [
+      {
+        labels: {
+          'aws-operator.giantswarm.io/version': '5.5.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': 'c5.large',
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
+          'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
+          'giantswarm.io/provider': 'aws',
+          ip: '10.1.2.18',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname':
+            'ip-10-1-2-18.eu-central-1.compute.internal',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-11-14T05:28:11.958410127Z',
+        name: 'ip-10-1-2-18.eu-central-1.compute.internal',
+        version: '5.5.0',
+      },
+      {
+        labels: {
+          'aws-operator.giantswarm.io/version': '5.5.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': 'm4.xlarge',
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
+          'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
+          'giantswarm.io/provider': 'aws',
+          ip: '10.1.2.49',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname':
+            'ip-10-1-2-49.eu-central-1.compute.internal',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'master',
+          'node-role.kubernetes.io/master': '',
+          'node.kubernetes.io/master': '',
+          role: 'master',
+        },
+        lastTransitionTime: '2019-11-14T05:28:11.958410751Z',
+        name: 'ip-10-1-2-49.eu-central-1.compute.internal',
+        version: '5.5.0',
+      },
+      {
+        labels: {
+          'aws-operator.giantswarm.io/version': '5.5.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': 'c5.large',
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
+          'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
+          'giantswarm.io/provider': 'aws',
+          ip: '10.1.2.52',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname':
+            'ip-10-1-2-52.eu-central-1.compute.internal',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-11-14T05:28:11.958411157Z',
+        name: 'ip-10-1-2-52.eu-central-1.compute.internal',
+        version: '5.5.0',
+      },
+      {
+        labels: {
+          'aws-operator.giantswarm.io/version': '5.5.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': 'c5.large',
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
+          'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
+          'giantswarm.io/provider': 'aws',
+          ip: '10.1.2.85',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname':
+            'ip-10-1-2-85.eu-central-1.compute.internal',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-11-14T05:28:11.958411586Z',
+        name: 'ip-10-1-2-85.eu-central-1.compute.internal',
+        version: '5.5.0',
+      },
+    ],
+    resources: null,
+    scaling: { desiredCapacity: 3 },
+    versions: [],
+  },
+};
+
 // Apps
 export const appsResponse = [
   {

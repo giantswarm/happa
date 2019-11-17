@@ -15,6 +15,7 @@ import {
   v4AWSClusterResponse,
   v4ClustersResponse,
   v4AWSClusterStatusResponse,
+  v4AWSClusterStatusResponseWithNodes,
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, render, wait } from '@testing-library/react';
 import { getNumberOfNodePoolsNodes } from 'utils/cluster_utils';
@@ -84,7 +85,7 @@ afterAll(() => {
 // This triggers a warning because of this weird array-like value we are receiving
 // as a response to the apps call. Here we are using a real array to mock the response
 // and hence the warning because we are transforming an array into an array
-it('renders all the v4 cluster data correctly with 0 nodes ready', async () => {
+it('renders all the v4 AWS cluster data correctly without nodes ready', async () => {
   const div = document.createElement('div');
   const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
 
@@ -101,50 +102,36 @@ it('renders all the v4 cluster data correctly with 0 nodes ready', async () => {
   expect(getByText('Pinned at 3')).toBeInTheDocument();
 });
 
-it.skip('renders nodes data correctly with nodes ready', async () => {
-  const nodePoolsResponseWithNodes = nodePoolsResponse.map(np => ({
-    ...np,
-    status: { nodes: 3, nodes_ready: 3 },
-  }));
-
+it('renders v4 AWS cluster nodes data correctly with nodes ready', async () => {
   // Replace nodePools response
-  requests.nodePools.persist(false);
-  requests.nodePools = getPersistedMockCall(
-    `/v5/clusters/${V4_CLUSTER.id}/nodepools/`,
-    nodePoolsResponseWithNodes
+  requests.status.persist(false);
+  requests.status = getPersistedMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/status/`,
+    v4AWSClusterStatusResponseWithNodes
   );
 
   const div = document.createElement('div');
-  const { getByText } = renderRouteWithStore(ROUTE, div, {});
-
-  const workerNodesRunning = getNumberOfNodePoolsNodes(
-    nodePoolsResponseWithNodes
+  const { getByTestId, debug, container } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {}
   );
-  const textRendered = `${workerNodesRunning} nodes in ${nodePoolsResponseWithNodes.length} node pools`;
 
-  // Expect computed values are rendered
   await wait(() => {
-    expect(getByText(textRendered)).toBeInTheDocument();
+    expect(
+      getByTestId('desired-nodes').querySelector('div:nth-child(2)').textContent
+    ).toBe('3');
+    expect(
+      getByTestId('running-nodes').querySelector('div:nth-child(2)').textContent
+    ).toBe('3');
   });
 
-  // Restore nodePools response
-  requests.nodePools.persist(false);
-  requests.nodePools = getPersistedMockCall(
-    `/v5/clusters/${V4_CLUSTER.id}/nodepools/`,
-    nodePoolsResponse
+  // Restore status response
+  requests.status.persist(false);
+  requests.status = getPersistedMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/status/`,
+    v4AWSClusterStatusResponse
   );
-});
-
-it.skip('renders all node pools in store', async () => {
-  const div = document.createElement('div');
-
-  const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE, div, {});
-
-  await wait(() => findAllByTestId('node-pool-id'));
-
-  nodePoolsResponse.forEach(nodePool => {
-    expect(getByText(nodePool.id)).toBeInTheDocument();
-  });
 });
 
 // TODO This test triggers a memory leak error related with setting state depending
