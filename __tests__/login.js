@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 import {
   authTokenResponse,
-  getMockCall,
+  getPersistedMockCall,
   infoResponse,
   postMockCall,
   userResponse,
@@ -24,18 +24,21 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // Given I have a Giant Swarm API with no clusters, organizations, appcatalogs
   // that I can log in to.
 
+  // Using persisted version odf nock interceptors because weird enough in CircleCI
+  // some calls are performed more than once
+
   // The response to the login call
   const authTokensRequest = postMockCall('/v4/auth-tokens/', authTokenResponse);
   // The response to the user info call
-  const userInfoRequest = getMockCall('/v4/user/', userResponse);
+  const userInfoRequest = getPersistedMockCall('/v4/user/', userResponse);
   // The response to the info call
-  const infoRequest = getMockCall('/v4/info/', infoResponse);
+  const infoRequest = getPersistedMockCall('/v4/info/', infoResponse);
   // The response to the org call (no orgs)
-  const orgRequest = getMockCall('/v4/organizations/');
+  const orgRequest = getPersistedMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
-  const clustersRequest = getMockCall('/v4/clusters/');
+  const clustersRequest = getPersistedMockCall('/v4/clusters/');
   // The response to the appcatalogs call (no catalogs)
-  const appcatalogsRequest = getMockCall('/v4/appcatalogs/');
+  const appcatalogsRequest = getPersistedMockCall('/v4/appcatalogs/');
 
   // AND I arrive at the login page with nothing in the state.
   const state = {};
@@ -72,12 +75,12 @@ it('redirects to / and shows the layout after a succesful login', async () => {
 
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
-  authTokensRequest.done();
-  userInfoRequest.done();
-  infoRequest.done();
-  orgRequest.done();
-  clustersRequest.done();
-  appcatalogsRequest.done();
+  authTokensRequest.persist(false);
+  userInfoRequest.persist(false);
+  infoRequest.persist(false);
+  orgRequest.persist(false);
+  clustersRequest.persist(false);
+  appcatalogsRequest.persist(false);
 });
 
 it('tells the user to give a password if they leave it blank', async () => {
