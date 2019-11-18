@@ -101,6 +101,19 @@ export const authTokenResponse = {
 };
 
 // Clusters
+
+export const v4ClustersResponse = [
+  {
+    create_date: '2019-11-15T15:53:58.549065412Z',
+    delete_date: '0001-01-01T00:00:00Z',
+    id: V4_CLUSTER.id,
+    name: V4_CLUSTER.name,
+    owner: ORGANIZATION,
+    release_version: V4_CLUSTER.releaseVersion,
+    path: `/v4/clusters/${V4_CLUSTER.id}/`,
+  },
+];
+
 export const v4AWSClusterResponse = {
   id: V4_CLUSTER.id,
   create_date: '2019-11-15T15:53:59Z',
@@ -134,18 +147,6 @@ export const v4AWSClusterResponse = {
     },
   ],
 };
-
-export const v4ClustersResponse = [
-  {
-    create_date: '2019-11-15T15:53:58.549065412Z',
-    delete_date: '0001-01-01T00:00:00Z',
-    id: V4_CLUSTER.id,
-    name: V4_CLUSTER.name,
-    owner: ORGANIZATION,
-    release_version: V4_CLUSTER.releaseVersion,
-    path: `/v4/clusters/${V4_CLUSTER.id}/`,
-  },
-];
 
 export const v5ClustersResponse = [
   {

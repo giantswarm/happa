@@ -135,19 +135,6 @@ scales correctly`, async () => {
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
     .reply(200, clusterPatchResponse);
 
-  // Replace status response
-  requests.status.persist(false);
-  requests.status = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    {
-      ...v4AWSClusterStatusResponse,
-      cluster: {
-        ...v4AWSClusterStatusResponse.cluster,
-        scaling: { desiredCapacity: newScaling.max },
-      },
-    }
-  );
-
   const div = document.createElement('div');
   const {
     debug,
@@ -164,6 +151,19 @@ scales correctly`, async () => {
       getByTestId('running-nodes').querySelector('div:nth-child(2)').textContent
     ).toBe('3');
   });
+
+  // Replace status response
+  requests.status.persist(false);
+  requests.status = getPersistedMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/status/`,
+    {
+      ...v4AWSClusterStatusResponse,
+      cluster: {
+        ...v4AWSClusterStatusResponse.cluster,
+        scaling: { desiredCapacity: newScaling.max },
+      },
+    }
+  );
 
   // Click edit button. Will throw an error if it founds more thanon edit button
   fireEvent.click(getByText(/edit/i));
@@ -194,11 +194,8 @@ scales correctly`, async () => {
   //Wait for the Flash message to appear
   await wait(() => {
     getByText(/the cluster will be scaled within the next couple of minutes./i);
-
     // Does the cluster have node values updated?
-    expect(
-      getByTestId('desired-nodes').querySelector('div:nth-child(2)').textContent
-    ).toBe(newScaling.max.toString());
+    expect(getByText(`Pinned at ${newScaling.min}`));
   });
 
   clusterPatchRequest.done();
@@ -211,8 +208,8 @@ scales correctly`, async () => {
   );
 });
 
-it.skip('deletes a v4 cluster', async () => {
-  const cluster = v4ClusterResponse;
+it('deletes a v4 cluster', async () => {
+  const cluster = v4AWSClusterResponse;
   const clusterDeleteResponse = {
     code: 'RESOURCE_DELETION_STARTED',
     message: `Deletion of cluster with ID '${V4_CLUSTER.id}' is in progress.`,
@@ -224,21 +221,17 @@ it.skip('deletes a v4 cluster', async () => {
     .reply(200, clusterDeleteResponse);
 
   const div = document.createElement('div');
-  const {
-    getByText,
-    getAllByText,
-    queryByTestId,
-    getAllByTestId,
-    debug,
-    container,
-  } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText, getAllByText, queryByTestId } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {}
+  );
 
   // Wait for the view to render
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
 
-  // fireEvent.click(getAllByText('•••')[0]);
   await wait(() => getByText('Delete Cluster'));
   fireEvent.click(getByText('Delete Cluster'));
 
@@ -267,8 +260,58 @@ it.skip('deletes a v4 cluster', async () => {
   });
 
   // This is not inside the component tree we are testing and so it is not cleaned up
-  // after test, so we have to remnove it manually in order to not cause conflicts with
+  // after test, so we have to remove it manually in order to not cause conflicts with
   // the next test with a flash message
   document.querySelector('#noty_layout__topRight').remove();
   clusterDeleteRequest.done();
+});
+
+it('patches v4 cluster name correctly', async () => {
+  const newClusterName = 'New cluster name';
+  const clusterName = V4_CLUSTER.name;
+
+  // Response to request should be the exact same NP with the new name
+  const clusterPatchResponse = {
+    ...v4AWSClusterResponse,
+    name: newClusterName,
+  };
+
+  // Request
+  const clusterPatchRequest = nock(API_ENDPOINT)
+    .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
+    .reply(200, clusterPatchResponse);
+
+  // Mounting
+  const div = document.createElement('div');
+  const { getAllByTestId, getByText, container, debug } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {}
+  );
+
+  await wait(() => getByText(clusterName));
+  const clusterNameEl = getByText(clusterName);
+  fireEvent.click(clusterNameEl);
+
+  await wait(() => debug(getByText(clusterName)));
+
+  // Change the new name and submit it.
+  fireEvent.change(getByText(clusterName), {
+    target: { value: newClusterName },
+  });
+
+  const submitButton = getByText(/ok/i);
+  fireEvent.click(submitButton);
+
+  //Wait for the Flash message to appear
+  await wait(() => {
+    getByText(/succesfully edited cluster name/i);
+  });
+
+  // Is the new NP name in the document?
+  expect(getByText(newClusterName)).toBeInTheDocument();
+
+  // Assert that the mocked responses got called, tell them to stop waiting for
+  // a request.
+  clusterPatchRequest.done();
 });
