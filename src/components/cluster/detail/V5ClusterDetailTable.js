@@ -647,7 +647,6 @@ V5ClusterDetailTable.propTypes = {
   release: PropTypes.object,
   setInterval: PropTypes.func,
   showUpgradeModal: PropTypes.func,
-  workerNodesRunning: PropTypes.number, // TODO Delete?
   workerNodesDesired: PropTypes.number,
 };
 
