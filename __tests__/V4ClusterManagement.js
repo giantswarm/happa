@@ -5,7 +5,6 @@ import {
   appsResponse,
   getPersistedMockCall,
   infoResponse,
-  nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -16,15 +15,9 @@ import {
   v4ClustersResponse,
   v4AWSClusterStatusResponse,
 } from 'test_utils/mockHttpCalls';
-import { fireEvent, render, wait } from '@testing-library/react';
-import { getNumberOfNodePoolsNodes } from 'utils/cluster_utils';
+import { fireEvent, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
-import { ThemeProvider } from 'emotion-theming';
-import { truncate } from 'lib/helpers';
 import nock from 'nock';
-import React from 'react';
-import theme from 'styles/theme';
-import { request } from 'https';
 
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V4_CLUSTER.id}`;
@@ -59,7 +52,7 @@ beforeAll(() => {
   );
   // TODO we are not requesting this in v5 cluster calls
   // Empty response
-  request.keyPairs = getPersistedMockCall(
+  requests.keyPairs = getPersistedMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/key-pairs/`
   );
   requests.credentials = getPersistedMockCall(
@@ -136,12 +129,11 @@ scales correctly`, async () => {
     .reply(200, clusterPatchResponse);
 
   const div = document.createElement('div');
-  const {
-    debug,
-    getByTestId,
-    getByText,
-    getByLabelText,
-  } = renderRouteWithStore(ROUTE, div, {});
+  const { getByTestId, getByText, getByLabelText } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {}
+  );
 
   await wait(() => {
     expect(
@@ -283,11 +275,7 @@ it('patches v4 cluster name correctly', async () => {
 
   // Mounting
   const div = document.createElement('div');
-  const { getAllByTestId, getByText, container, debug } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
-  );
+  const { getByText, debug } = renderRouteWithStore(ROUTE, div, {});
 
   await wait(() => getByText(clusterName));
   const clusterNameEl = getByText(clusterName);
