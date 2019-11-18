@@ -17,7 +17,7 @@ function renderWithProps(props) {
   return render(getComponent(props));
 }
 
-const testID = 'node-count-selector-picker';
+const labelTestID = 'node-count-selector-picker';
 
 afterEach(cleanup);
 
@@ -29,13 +29,13 @@ describe('NodeCountSelector', () => {
   it('shows 1 picker with autoscale off', () => {
     const { getAllByTestId } = renderWithProps({ autoscalingEnabled: false });
 
-    expect(getAllByTestId(testID).length).toBe(1);
+    expect(getAllByTestId(labelTestID).length).toBe(1);
   });
 
   it('shows 2 pickers with autoscale on', () => {
     const { getAllByTestId } = renderWithProps({ autoscalingEnabled: true });
 
-    expect(getAllByTestId(testID).length).toBe(2);
+    expect(getAllByTestId(labelTestID).length).toBe(2);
   });
 
   it('shows disabled inputs in read-only mode, with autoscale off', () => {
@@ -43,7 +43,7 @@ describe('NodeCountSelector', () => {
       autoscalingEnabled: false,
       readOnly: true,
     });
-    const input = getByTestId(testID).querySelector('input');
+    const input = getByTestId(labelTestID).querySelector('input');
 
     expect(input.disabled).toBe(true);
   });
@@ -53,7 +53,7 @@ describe('NodeCountSelector', () => {
       autoscalingEnabled: true,
       readOnly: true,
     });
-    const inputs = getAllByTestId(testID).map(label =>
+    const inputs = getAllByTestId(labelTestID).map(label =>
       label.querySelector('input')
     );
 
@@ -71,7 +71,7 @@ describe('NodeCountSelector', () => {
       minValue,
       maxValue,
     });
-    const input = getByTestId(testID).querySelector('input');
+    const input = getByTestId(labelTestID).querySelector('input');
 
     fireEvent.change(input, {
       target: {
@@ -99,7 +99,7 @@ describe('NodeCountSelector', () => {
       minValue,
       maxValue,
     });
-    const inputs = getAllByTestId(testID).map(label =>
+    const inputs = getAllByTestId(labelTestID).map(label =>
       label.querySelector('input')
     );
 
@@ -127,7 +127,7 @@ describe('NodeCountSelector', () => {
       onChange: onChangeCallback,
     });
 
-    const input = getByTestId(testID).querySelector('input');
+    const input = getByTestId(labelTestID).querySelector('input');
 
     fireEvent.change(input, {
       target: {
@@ -155,7 +155,7 @@ describe('NodeCountSelector', () => {
       onChange: onChangeCallback,
     });
 
-    const inputs = getAllByTestId(testID).map(label =>
+    const inputs = getAllByTestId(labelTestID).map(label =>
       label.querySelector('input')
     );
 
@@ -234,7 +234,7 @@ describe('NodeCountSelector', () => {
     const { getByTestId } = renderWithProps({
       autoscalingEnabled: false,
     });
-    const input = getByTestId(testID).querySelector('input');
+    const input = getByTestId(labelTestID).querySelector('input');
     const initialValue = input.value;
 
     fireEvent.keyPress(input, {
@@ -248,7 +248,7 @@ describe('NodeCountSelector', () => {
     const { getAllByTestId } = renderWithProps({
       autoscalingEnabled: true,
     });
-    const inputs = getAllByTestId(testID).map(label =>
+    const inputs = getAllByTestId(labelTestID).map(label =>
       label.querySelector('input')
     );
     const initialValues = inputs.map(input => input.value);
