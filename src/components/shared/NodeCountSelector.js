@@ -98,7 +98,7 @@ class NodeCountSelector extends React.Component {
           </div>
           <div className='row'>
             <div className='col-12'>
-              <p>
+              <p data-testid='node-count-selector-autoscaling-label'>
                 {scaling.min === scaling.max
                   ? 'To enable autoscaling, set minimum and maximum to different values.'
                   : 'To disable autoscaling, set both numbers to the same value.'}
@@ -142,6 +142,7 @@ NodeCountSelector.defaultProps = {
     max: DEFAULT_VALUE_CONSTRAINTS.max,
     maxValid: true,
   },
+  onChange: () => {},
 };
 
 NodeCountSelector.propTypes = {
