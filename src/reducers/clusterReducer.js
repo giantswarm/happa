@@ -141,6 +141,12 @@ const clusterReducer = produce((draft, action) => {
     case types.CLUSTER_PATCH_ERROR:
       draft.items[action.cluster.id] = action.cluster;
       return;
+
+    case types.NODEPOOL_DELETE_SUCCESS:
+      draft.items[action.clusterId].nodePools = draft.items[
+        action.clusterId
+      ].nodePools.filter(np => np !== action.nodePoolId);
+      return;
   }
 }, initialState);
 
