@@ -247,7 +247,7 @@ scales node pools correctly`, async () => {
 
   await wait(() => getAllByTestId('node-pool-id'));
 
-  // Expect first nodePool is
+  // Expect first nodePool is the first one in the list.
   const nodePoolId = getAllByTestId('node-pool-id')[0].textContent;
   expect(nodePoolId).toBe(nodePool.id);
 

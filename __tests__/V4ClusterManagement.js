@@ -15,7 +15,6 @@ import {
   v4AWSClusterResponse,
   v4ClustersResponse,
   v4AWSClusterStatusResponse,
-  v4AWSClusterStatusResponseWithNodes,
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, render, wait } from '@testing-library/react';
 import { getNumberOfNodePoolsNodes } from 'utils/cluster_utils';
@@ -87,13 +86,23 @@ afterAll(() => {
 // and hence the warning because we are transforming an array into an array
 it('renders all the v4 AWS cluster data correctly without nodes ready', async () => {
   const div = document.createElement('div');
-  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText, getAllByText, getByTestId } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {}
+  );
 
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
   expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
-  expect(getByText('0 nodes')).toBeInTheDocument();
+  // expect(getByText('0 nodes')).toBeInTheDocument();
+  expect(
+    getByTestId('desired-nodes').querySelector('div:nth-child(2)').textContent
+  ).toBe('3');
+  expect(
+    getByTestId('running-nodes').querySelector('div:nth-child(2)').textContent
+  ).toBe('3');
   const k8sEndpoint = getByText('Kubernetes endpoint URI:').nextSibling;
   expect(k8sEndpoint).not.toBeEmpty();
   // n/a because the cluster hasn't been updated yet
@@ -102,20 +111,50 @@ it('renders all the v4 AWS cluster data correctly without nodes ready', async ()
   expect(getByText('Pinned at 3')).toBeInTheDocument();
 });
 
-it('renders v4 AWS cluster nodes data correctly with nodes ready', async () => {
-  // Replace nodePools response
+it(`shows the v4 AWS cluster scaling modal when the button is clicked with default values and 
+scales correctly`, async () => {
+  const cluster = v4AWSClusterResponse;
+  const defaultScaling = cluster.scaling;
+  const increaseValue = 1;
+  const newScaling = {
+    min: defaultScaling.min + increaseValue,
+    max: defaultScaling.max + increaseValue,
+  };
+
+  const clusterPatchResponse = {
+    ...cluster,
+    scaling: newScaling,
+    workers: [
+      ...cluster.workers,
+      cluster.workers[0], // Just adding another worker
+    ],
+  };
+
+  // Cluster patch request
+  const clusterPatchRequest = nock(API_ENDPOINT)
+    .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
+    .reply(200, clusterPatchResponse);
+
+  // Replace status response
   requests.status.persist(false);
   requests.status = getPersistedMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponseWithNodes
+    {
+      ...v4AWSClusterStatusResponse,
+      cluster: {
+        ...v4AWSClusterStatusResponse.cluster,
+        scaling: { desiredCapacity: newScaling.max },
+      },
+    }
   );
 
   const div = document.createElement('div');
-  const { getByTestId, debug, container } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
-  );
+  const {
+    debug,
+    getByTestId,
+    getByText,
+    getByLabelText,
+  } = renderRouteWithStore(ROUTE, div, {});
 
   await wait(() => {
     expect(
@@ -126,65 +165,15 @@ it('renders v4 AWS cluster nodes data correctly with nodes ready', async () => {
     ).toBe('3');
   });
 
-  // Restore status response
-  requests.status.persist(false);
-  requests.status = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponse
-  );
-});
-
-// TODO This test triggers a memory leak error related with setting state depending
-// on the response of an asynchronous call in ScaleNodePoolModal.
-// Not fixing it now because is a "minor" error, this error can't break the app and
-// because I will be working on the data flow refactor that will solve this.
-it.skip(`shows the v4 cluster scaling modal when the button is clicked with default values and 
-scales correctly`, async () => {
-  // TODO default values from constants file
-  const defaultScaling = { min: 3, max: 10 };
-  const increaseValue = 1;
-  const newScaling = {
-    min: defaultScaling.min + increaseValue,
-    max: defaultScaling.max + increaseValue,
-  };
-
-  const nodePool = nodePoolsResponse[0];
-  const nodePoolPatchResponse = {
-    ...nodePoolsResponse[0],
-    scaling: newScaling,
-  };
-
-  // Request
-  const nodePoolPatchRequest = nock(API_ENDPOINT)
-    .intercept(
-      `/v5/clusters/${V4_CLUSTER.id}/nodepools/${nodePool.id}/`,
-      'PATCH'
-    )
-    .reply(200, nodePoolPatchResponse);
-
-  const div = document.createElement('div');
-  const {
-    getByText,
-    getAllByText,
-    getAllByTestId,
-    getByLabelText,
-  } = renderRouteWithStore(ROUTE, div, {});
-
-  await wait(() => getAllByTestId('node-pool-id'));
-
-  // Expect first nodePool is
-  const nodePoolId = getAllByTestId('node-pool-id')[0].textContent;
-  expect(nodePoolId).toBe(nodePool.id);
-
-  fireEvent.click(getAllByText('•••')[0]);
-  fireEvent.click(getByText(/edit scaling limits/i));
+  // Click edit button. Will throw an error if it founds more thanon edit button
+  fireEvent.click(getByText(/edit/i));
 
   await wait(() => getByText(/edit scaling settings for/i));
 
   // Is the modal in the document?
   const modalTitle = getByText(/edit scaling settings for/i);
   expect(modalTitle).toBeInTheDocument();
-  expect(modalTitle).toHaveTextContent(nodePool.id);
+  expect(modalTitle).toHaveTextContent(V4_CLUSTER.id);
 
   const inputMin = getByLabelText(/minimum/i);
   const inputMax = getByLabelText(/maximum/i);
@@ -193,30 +182,33 @@ scales correctly`, async () => {
   expect(inputMin.value).toBe(defaultScaling.min.toString());
   expect(inputMax.value).toBe(defaultScaling.max.toString());
 
-  // Change the values and modify the scaling settingsw
-  fireEvent.change(inputMin, { target: { value: newScaling.min } });
+  // Change the values and modify the scaling settings
   fireEvent.change(inputMax, { target: { value: newScaling.max } });
-  const textButton = `Increase minimum number of nodes by ${newScaling.min}`;
+  await wait(() => expect(inputMax.value).toBe(newScaling.max.toString()));
 
-  await wait(() => getByText(textButton));
-
+  fireEvent.change(inputMin, { target: { value: newScaling.min } });
+  const textButton = `Increase minimum number of nodes by ${increaseValue}`;
   const submitButton = getByText(textButton);
   fireEvent.click(submitButton);
 
   //Wait for the Flash message to appear
   await wait(() => {
-    getByText(/succesfully edited node pool name/i);
+    getByText(/the cluster will be scaled within the next couple of minutes./i);
+
+    // Does the cluster have node values updated?
+    expect(
+      getByTestId('desired-nodes').querySelector('div:nth-child(2)').textContent
+    ).toBe(newScaling.max.toString());
   });
 
-  // Our node pool is the first one. Does it have the scaling values updated?
-  expect(getAllByTestId('scaling-min')[0]).toHaveTextContent(
-    newScaling.min.toString()
-  );
-  expect(getAllByTestId('scaling-max')[0]).toHaveTextContent(
-    newScaling.max.toString()
-  );
+  clusterPatchRequest.done();
 
-  nodePoolPatchRequest.done();
+  // Restore status response
+  requests.status.persist(false);
+  requests.status = getPersistedMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/status/`,
+    v4AWSClusterStatusResponse
+  );
 });
 
 it.skip('deletes a v4 cluster', async () => {

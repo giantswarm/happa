@@ -215,41 +215,12 @@ export const v4AWSClusterStatusResponse = {
       },
     ],
     network: { cidr: '10.1.2.0/24' },
-    nodes: [],
-    resources: null,
-    scaling: { desiredCapacity: 0 },
-    versions: [],
-  },
-};
-
-export const v4AWSClusterStatusResponseWithNodes = {
-  aws: {
-    availabilityZones: [
-      {
-        name: 'eu-central-1a',
-        subnet: {
-          private: { cidr: '10.1.2.0/25' },
-          public: { cidr: '10.1.2.128/25' },
-        },
-      },
-    ],
-    autoScalingGroup: { name: '' },
-  },
-  cluster: {
-    conditions: [
-      {
-        lastTransitionTime: '2019-11-15T15:54:05.711696992Z',
-        status: 'True',
-        type: 'Creating',
-      },
-    ],
-    network: { cidr: '10.1.2.0/24' },
     nodes: [
       {
         labels: {
           'aws-operator.giantswarm.io/version': '5.5.0',
           'beta.kubernetes.io/arch': 'amd64',
-          'beta.kubernetes.io/instance-type': 'c5.large',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
@@ -272,7 +243,7 @@ export const v4AWSClusterStatusResponseWithNodes = {
         labels: {
           'aws-operator.giantswarm.io/version': '5.5.0',
           'beta.kubernetes.io/arch': 'amd64',
-          'beta.kubernetes.io/instance-type': 'm4.xlarge',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
@@ -295,7 +266,7 @@ export const v4AWSClusterStatusResponseWithNodes = {
         labels: {
           'aws-operator.giantswarm.io/version': '5.5.0',
           'beta.kubernetes.io/arch': 'amd64',
-          'beta.kubernetes.io/instance-type': 'c5.large',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
@@ -318,7 +289,7 @@ export const v4AWSClusterStatusResponseWithNodes = {
         labels: {
           'aws-operator.giantswarm.io/version': '5.5.0',
           'beta.kubernetes.io/arch': 'amd64',
-          'beta.kubernetes.io/instance-type': 'c5.large',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
