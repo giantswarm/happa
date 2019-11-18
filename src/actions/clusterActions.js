@@ -245,10 +245,11 @@ export function clusterLoadApps(clusterId) {
     return appsApi
       .getClusterApps(clusterId)
       .then(apps => {
-        // For some reason the array that we get back
-        // from the generated js client does not have
-        // .map on it. So I make a new one here.
-        const appsArray = apps.map ? apps : Array.from(apps);
+        // For some reason the array that we get back from the generated js client is an
+        // array-like structure, so I make a new one here.
+        // In tests we are using a real array, so we are applying Array.from() to an actual
+        // array. Apparently it works fine.
+        const appsArray = Array.from(apps);
         dispatch({
           type: types.CLUSTER_LOAD_APPS_SUCCESS,
           clusterId,
