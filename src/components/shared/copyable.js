@@ -1,56 +1,44 @@
-import copy from 'copy-to-clipboard';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
-class Copyable extends React.Component {
-  state = {
-    copied: false,
+const Copyable = ({ children, copyText }) => {
+  const [isCopiedToClipboard, setCopyToClipboard] = useCopyToClipboard();
+
+  const handleCopyToClipboard = () => {
+    setCopyToClipboard(copyText);
   };
 
-  copyToClipboard = e => {
-    e.preventDefault();
-    e.stopPropagation();
-    copy(this.props.copyText);
-
-    this.setState({
-      copied: true,
-    });
+  const handleDisplayCopyingDone = () => {
+    setCopyToClipboard(null);
   };
 
-  mouseLeave = () => {
-    this.setState({
-      copied: false,
-    });
-  };
+  return (
+    <div
+      className='copyable'
+      onClick={handleCopyToClipboard}
+      onMouseLeave={handleDisplayCopyingDone}
+      style={{ cursor: 'pointer' }}
+    >
+      <div className='copyable-content'>{children}</div>
 
-  render() {
-    return (
-      <div
-        className='copyable'
-        onClick={this.copyToClipboard}
-        onMouseLeave={this.mouseLeave}
-        style={{ cursor: 'pointer' }}
-      >
-        <div className='copyable-content'>{this.props.children}</div>
-
-        <div className='copyable-tooltip'>
-          {this.state.copied ? (
-            <i aria-hidden='true' className='fa fa-done' />
-          ) : (
-            <OverlayTrigger
-              overlay={<Tooltip id='tooltip'>Copy to clipboard.</Tooltip>}
-              placement='top'
-            >
-              <i aria-hidden='true' className='fa fa-content-copy' />
-            </OverlayTrigger>
-          )}
-        </div>
+      <div className='copyable-tooltip'>
+        {isCopiedToClipboard ? (
+          <i aria-hidden='true' className='fa fa-done' />
+        ) : (
+          <OverlayTrigger
+            overlay={<Tooltip id='tooltip'>Copy to clipboard.</Tooltip>}
+            placement='top'
+          >
+            <i aria-hidden='true' className='fa fa-content-copy' />
+          </OverlayTrigger>
+        )}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 Copyable.propTypes = {
   children: PropTypes.object,
