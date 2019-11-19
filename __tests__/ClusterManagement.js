@@ -12,6 +12,11 @@ import {
   v5ClustersResponse,
   v4AWSClusterStatusResponse,
   appsResponse,
+  V4_CLUSTER,
+  v4ClustersResponse,
+  v4AWSClusterResponse,
+  v5ClusterResponse,
+  nodePoolsResponse,
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
@@ -53,17 +58,6 @@ afterAll(() => {
 
 /************ TESTS ************/
 it('creates a v5 cluster and redirect to details view', async () => {
-  // Cluster response
-  const v5ClusterResponse = {
-    api_endpoint: 'https://api.xich7.k8s.gauss.eu-central-1.aws.gigantic.io',
-    create_date: '2019-11-19T08:33:38Z',
-    id: 'xich7',
-    master: { availability_zone: 'eu-central-1a' },
-    name: 'V5 Cluster creation test',
-    owner: 'acme',
-    release_version: '10.0.0',
-  };
-
   const v5ClusterCreationResponse = {
     code: 'RESOURCE_CREATED',
     message: `The cluster with ID ${v5ClusterResponse.id} has been created.`,
@@ -72,21 +66,12 @@ it('creates a v5 cluster and redirect to details view', async () => {
   // Cluster POST request
   const v5ClusterCreationRequest = nock(API_ENDPOINT)
     .intercept(`/v5/clusters/`, 'POST')
-    .reply(200, v5ClusterCreationResponse, { location: '/v5/clusters/xich7/' });
+    .reply(200, v5ClusterCreationResponse, {
+      location: `/v5/clusters/${v5ClusterResponse.id}/`,
+    });
 
   // Node Pools POST response
-  const nodePoolCreationResponse = {
-    id: '9sud8',
-    name: 'Node Pool #1',
-    availability_zones: ['eu-central-1a'],
-    scaling: { min: 3, max: 10 },
-    node_spec: {
-      aws: { instance_type: 'm4.xlarge' },
-      volume_sizes_gb: { docker: 100, kubelet: 100 },
-    },
-    status: { nodes: 0, nodes_ready: 0 },
-    subnet: '10.1.7.0/24',
-  };
+  const nodePoolCreationResponse = { ...nodePoolsResponse[0] };
 
   // Node pools POST request
   const nodePoolCreationRequest = nock(API_ENDPOINT)
@@ -144,91 +129,46 @@ it('creates a v5 cluster and redirect to details view', async () => {
 
 it(`switches to v4 cluster creation form, creates a v4 cluster and redirect to
 details view`, async () => {
-  // Cluster response
-  const v4ClusterResponse = {
-    id: '83wk7',
-    create_date: '2019-11-19T11:55:56Z',
-    api_endpoint: 'https://api.83wk7.k8s.gauss.eu-central-1.aws.gigantic.io',
-    owner: 'acme',
-    name: 'V4 Cluster creation test',
-    release_version: '9.0.0',
-    scaling: { min: 3, max: 3 },
-    credential_id: '',
-    workers: [
-      {
-        cpu: { cores: 4 },
-        labels: {},
-        memory: { size_gb: 16 },
-        storage: { size_gb: 0 },
-        aws: { instance_type: 'm4.xlarge' },
-      },
-      {
-        cpu: { cores: 4 },
-        labels: {},
-        memory: { size_gb: 16 },
-        storage: { size_gb: 0 },
-        aws: { instance_type: 'm4.xlarge' },
-      },
-      {
-        cpu: { cores: 4 },
-        labels: {},
-        memory: { size_gb: 16 },
-        storage: { size_gb: 0 },
-        aws: { instance_type: 'm4.xlarge' },
-      },
-    ],
-  };
-
   const v4ClusterCreationResponse = {
     code: 'RESOURCE_CREATED',
-    message: `The cluster with ID ${v4ClusterResponse.id} has been created.`,
+    message: `The cluster with ID ${V4_CLUSTER.id} has been created.`,
   };
 
   // Cluster POST request
   const v4ClusterCreationRequest = nock(API_ENDPOINT)
     .intercept(`/v4/clusters/`, 'POST')
     .reply(200, v4ClusterCreationResponse, {
-      location: `/v4/clusters/${v4ClusterResponse.id}/`,
+      location: `/v4/clusters/${V4_CLUSTER.id}/`, // Headers
     });
 
   // Clusters GET request
-  requests.clusters = getPersistedMockCall('/v4/clusters/', [
-    {
-      create_date: '2019-11-15T15:53:58.549065412Z',
-      delete_date: '0001-01-01T00:00:00Z',
-      id: v4ClusterResponse.id,
-      name: v4ClusterResponse.name,
-      owner: ORGANIZATION,
-      release_version: v4ClusterResponse.releaseVersion,
-      path: `/v4/clusters/${v4ClusterResponse.id}/`,
-    },
-  ]);
+  requests.clusters = getPersistedMockCall('/v4/clusters/', v4ClustersResponse);
 
   // Cluster GET request
   const clusterRequest = getPersistedMockCall(
-    `/v4/clusters/${v4ClusterResponse.id}/`,
-    v4ClusterResponse
+    `/v4/clusters/${V4_CLUSTER.id}/`,
+    v4AWSClusterResponse
   );
 
   const div = document.createElement('div');
-  const { getByText, getByTestId, getAllByText, debug } = renderRouteWithStore(
+  const { getByText, getByTestId, getAllByText } = renderRouteWithStore(
     '/organizations/acme/clusters/new/',
     div,
     {}
   );
 
   requests.status = getPersistedMockCall(
-    `/v4/clusters/${v4ClusterResponse.id}/status/`,
+    `/v4/clusters/${V4_CLUSTER.id}/status/`,
     v4AWSClusterStatusResponse
   );
   requests.apps = getPersistedMockCall(
-    `/v4/clusters/${v4ClusterResponse.id}/apps/`,
+    `/v4/clusters/${V4_CLUSTER.id}/apps/`,
     appsResponse
   );
   // TODO we are not requesting this in v5 cluster calls
   // Empty response
   requests.keyPairs = getPersistedMockCall(
-    `/v4/clusters/${v4ClusterResponse.id}/key-pairs/`
+    `/v4/clusters/${V4_CLUSTER.id}/key-pairs/`
   );
 
   await wait(() => getByText('Details and Alternatives'));
@@ -252,7 +192,7 @@ details view`, async () => {
 
   // Expect we have been redirected to the cluster details view
   expect(getByTestId('cluster-details-view')).toBeInTheDocument();
-  expect(getAllByText(v4ClusterResponse.id)[0]).toBeInTheDocument();
+  expect(getAllByText(V4_CLUSTER.id)[0]).toBeInTheDocument();
 
   v4ClusterCreationRequest.done();
 
