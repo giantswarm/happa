@@ -529,7 +529,10 @@ class V5ClusterDetailTable extends React.Component {
                       }
                     })
                     .map(nodePool => (
-                      <GridRowNodePoolsItem key={nodePool.id || Date.now()}>
+                      <GridRowNodePoolsItem
+                        key={nodePool.id || Date.now()}
+                        data-testid={nodePool.id}
+                      >
                         <NodePool
                           availableZonesGridTemplateAreas={
                             availableZonesGridTemplateAreas
@@ -648,7 +651,6 @@ V5ClusterDetailTable.propTypes = {
   release: PropTypes.object,
   setInterval: PropTypes.func,
   showUpgradeModal: PropTypes.func,
-  workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
 };
 
