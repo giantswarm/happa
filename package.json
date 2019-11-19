@@ -15,7 +15,7 @@
     "test:coverage": "yarn test --collect-coverage",
     "format": "./node_modules/.bin/prettier \"src/**/*.js\"",
     "prettier": "yarn format --write",
-    "validate-prettier": "yarn format --version; yarn format --no-color --check \"src/**/*.js\""
+    "validate-prettier": "yarn format --version; yarn format --no-color --check"
   },
   "prettier": {
     "singleQuote": true,
