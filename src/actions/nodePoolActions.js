@@ -110,7 +110,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
     return nodePoolsApi
       .deleteNodePool(clusterId, nodePool.id)
       .then(() => {
-        dispatch(nodePoolDeleteSuccess(clusterId, nodePool.id));
+        dispatch(nodePoolDeleteSuccess(nodePool.id, clusterId));
 
         dispatch(modalHide());
 
@@ -119,9 +119,6 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
           messageType.INFO,
           messageTTL.SHORT
         );
-
-        // ensure refreshing of the node pools list. Needed?
-        dispatch(nodePoolsLoad());
       })
       .catch(error => {
         dispatch(modalHide());
@@ -142,10 +139,12 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
 }
 
 /**
- * Takes a node pool object and tries to create it. Dispatches NODEPOOL_CREATE_SUCCESS
- * on success or NODEPOOL_CREATE_ERROR on error.
+ * Takes an array of node pool objects and tries to create each one.
+ * This way we have a unique function that can be used in v5 cluster creation form and when
+ * adding multiple node pools from the v5 cluster details view
+ * Dispatches NODEPOOL_CREATE_SUCCESS on success or NODEPOOL_CREATE_ERROR on error.
  *
- * @param {Object} nodepool Node Pool definition object
+ * @param {Array} nodePools Array of Node Pool definition objects
  */
 export function nodePoolsCreate(clusterId, nodePools) {
   return async function(dispatch) {
@@ -227,9 +226,10 @@ export const nodePoolDelete = (clusterId, nodePool) => ({
   nodePool,
 });
 
-const nodePoolDeleteSuccess = nodePoolId => ({
+const nodePoolDeleteSuccess = (nodePoolId, clusterId) => ({
   type: types.NODEPOOL_DELETE_SUCCESS,
   nodePoolId,
+  clusterId,
 });
 
 const nodePoolDeleteError = (nodePoolId, error) => ({
