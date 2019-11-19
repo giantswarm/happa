@@ -26,6 +26,8 @@ class AppDetail extends React.Component {
   }
 
   render() {
+    const { repo } = this.props;
+
     return (
       <Breadcrumb
         data={{
@@ -33,7 +35,7 @@ class AppDetail extends React.Component {
           pathname: '/app-catalogs/' + this.props.match.params.repo + '/',
         }}
       >
-        <LoadingOverlay loading={this.props.repo.isFetchingIndex}>
+        <LoadingOverlay loading={!repo || this.props.repo.isFetchingIndex}>
           <Breadcrumb
             data={{
               title: this.props.app.name,
@@ -41,23 +43,25 @@ class AppDetail extends React.Component {
             }}
           >
             <DocumentTitle title={`${this.props.app.name} | Giant Swarm `}>
-              <AppDetails
-                app={this.props.app}
-                imgError={this.imgError}
-                imgErrorFlag={this.state.imgError}
-                params={this.props.match.params}
-                q={this.state.q}
-                repo={this.props.repo}
-              >
-                <InstallAppModal
-                  app={{
-                    catalog: this.props.repo.metadata.name,
-                    name: this.props.app.name,
-                    version: this.props.app.version,
-                  }}
-                  selectedClusterID={this.props.selectedClusterID}
-                />
-              </AppDetails>
+              {repo && (
+                <AppDetails
+                  app={this.props.app}
+                  imgError={this.imgError}
+                  imgErrorFlag={this.state.imgError}
+                  params={this.props.match.params}
+                  q={this.state.q}
+                  repo={repo}
+                >
+                  <InstallAppModal
+                    app={{
+                      catalog: repo.metadata.name,
+                      name: this.props.app.name,
+                      version: this.props.app.version,
+                    }}
+                    selectedClusterID={this.props.selectedClusterID}
+                  />
+                </AppDetails>
+              )}
             </DocumentTitle>
           </Breadcrumb>
         </LoadingOverlay>
