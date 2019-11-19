@@ -45,5 +45,5 @@ it('doesnt show port mappings when given an invalid cluster object', () => {
     </Router>
   );
 
-  expect(queryByText(/Ingress Ports/i)).not.toBeInTheDocument();
+  expect(queryByText(/Ingress ports/i)).not.toBeInTheDocument();
 });
