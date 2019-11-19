@@ -272,18 +272,24 @@ it('patches v4 cluster name correctly', async () => {
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
     .reply(200, clusterPatchResponse);
 
+  requests.cluster.persist(false);
+  requests.cluster = getPersistedMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/`,
+    clusterPatchResponse
+  );
+
   // Mounting
   const div = document.createElement('div');
-  const { getByText } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText, getByDisplayValue } = renderRouteWithStore(ROUTE, div, {});
 
   await wait(() => getByText(clusterName));
   const clusterNameEl = getByText(clusterName);
   fireEvent.click(clusterNameEl);
 
-  await wait(() => getByText(clusterName));
+  await wait(() => getByDisplayValue(clusterName));
 
   // Change the new name and submit it.
-  fireEvent.change(getByText(clusterName), {
+  fireEvent.change(getByDisplayValue(clusterName), {
     target: { value: newClusterName },
   });
 
@@ -295,10 +301,16 @@ it('patches v4 cluster name correctly', async () => {
     getByText(/succesfully edited cluster name/i);
   });
 
-  // Is the new NP name in the document?
   expect(getByText(newClusterName)).toBeInTheDocument();
 
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
   clusterPatchRequest.done();
+
+  // Restore response
+  requests.cluster.persist(false);
+  requests.cluster = getPersistedMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/`,
+    v4AWSClusterResponse
+  );
 });
