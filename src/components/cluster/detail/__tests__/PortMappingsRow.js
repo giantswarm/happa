@@ -32,7 +32,7 @@ it('shows port mappings when given a valid cluster object', () => {
     </Router>
   );
 
-  expect(getByText(/http/i)).toBeInTheDocument();
+  expect(getByText(/HTTP/)).toBeInTheDocument();
   expect(getByText(/12345/i)).toBeInTheDocument();
 });
 
