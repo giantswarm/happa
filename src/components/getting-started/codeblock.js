@@ -4,6 +4,7 @@ import Line from './line';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
 // CodeBlock
 // Use this to show some commands and output to the user.
@@ -47,7 +48,7 @@ const getPromptLinesAsString = children => {
 
 export const CodeBlock = ({ children }) => {
   const [isHovering, setHovering] = useState(false);
-  const [isClicked, setClicked] = useState(false);
+  const [isCopiedToClipboard, setCopyToClipboard] = useCopyToClipboard();
 
   const preElement = useRef(null);
 
@@ -55,9 +56,7 @@ export const CodeBlock = ({ children }) => {
     e.preventDefault();
 
     const contentToCopy = getPromptLinesAsString(children);
-
-    copy(contentToCopy);
-    setClicked(false);
+    setCopyToClipboard(contentToCopy);
   };
 
   const classNames = () => {
@@ -71,7 +70,7 @@ export const CodeBlock = ({ children }) => {
     if (isHovering) {
       classNames.push('hovering');
     }
-    if (isClicked) {
+    if (isCopiedToClipboard) {
       classNames.push('clicked');
     }
     if (childrenArray.length === 1) {
@@ -90,16 +89,16 @@ export const CodeBlock = ({ children }) => {
         <div className='codeblock--buttons'>
           <a
             href='#'
-            onClick={copyCodeToClipboard}
+            onClick={() => {
+              setCopyToClipboard(null);
+            }}
             onMouseOut={() => {
               setHovering(false);
             }}
             onMouseOver={() => {
               setHovering(true);
             }}
-            onMouseUp={() => {
-              setClicked(true);
-            }}
+            onMouseUp={copyCodeToClipboard}
           >
             <i aria-hidden='true' className='fa fa-content-copy' />
           </a>
@@ -109,7 +108,7 @@ export const CodeBlock = ({ children }) => {
           transitionLeaveTimeout={1000}
           transitionName={'checkmark'}
         >
-          {isClicked ? (
+          {isCopiedToClipboard ? (
             <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
           ) : null}
         </ReactCSSTransitionGroup>
