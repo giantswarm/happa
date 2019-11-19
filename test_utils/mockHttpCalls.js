@@ -52,8 +52,9 @@ export const infoResponse = {
         'r3.2xlarge',
         'r3.4xlarge',
         'r3.8xlarge',
+        'm4.xlarge',
       ],
-      default: 'm3.large',
+      default: 'm4.xlarge',
     },
   },
 };

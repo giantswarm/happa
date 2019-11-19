@@ -413,7 +413,7 @@ class V5ClusterDetailTable extends React.Component {
 
     return (
       <>
-        <FlexRowWithTwoBlocksOnEdges>
+        <FlexRowWithTwoBlocksOnEdges data-testid='v5-cluster-details-view'>
           <div>
             <RegionAndVersions
               createDate={create_date}
