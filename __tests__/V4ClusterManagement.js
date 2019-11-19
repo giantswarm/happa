@@ -12,8 +12,8 @@ import {
   userResponse,
   V4_CLUSTER,
   v4AWSClusterResponse,
-  v4ClustersResponse,
   v4AWSClusterStatusResponse,
+  v4ClustersResponse,
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
@@ -89,7 +89,6 @@ it('renders all the v4 AWS cluster data correctly without nodes ready', async ()
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
   expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
-  // expect(getByText('0 nodes')).toBeInTheDocument();
   expect(
     getByTestId('desired-nodes').querySelector('div:nth-child(2)').textContent
   ).toBe('3');
@@ -275,13 +274,13 @@ it('patches v4 cluster name correctly', async () => {
 
   // Mounting
   const div = document.createElement('div');
-  const { getByText, debug } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText } = renderRouteWithStore(ROUTE, div, {});
 
   await wait(() => getByText(clusterName));
   const clusterNameEl = getByText(clusterName);
   fireEvent.click(clusterNameEl);
 
-  await wait(() => debug(getByText(clusterName)));
+  await wait(() => getByText(clusterName));
 
   // Change the new name and submit it.
   fireEvent.change(getByText(clusterName), {
