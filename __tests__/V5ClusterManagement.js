@@ -14,17 +14,11 @@ import {
   v5ClusterResponse,
   v5ClustersResponse,
 } from 'test_utils/mockHttpCalls';
-import { fireEvent, render, wait } from '@testing-library/react';
+import { fireEvent, wait } from '@testing-library/react';
 import { getNumberOfNodePoolsNodes } from 'utils/cluster_utils';
 import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
-import { ThemeProvider } from 'emotion-theming';
 import { truncate } from 'lib/helpers';
 import nock from 'nock';
-import React from 'react';
-import theme from 'styles/theme';
-
-// Components
-import NodePoolDropdownMenu from 'cluster/detail/NodePoolDropdownMenu';
 
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
@@ -61,6 +55,8 @@ beforeAll(() => {
     '/v4/appcatalogs/',
     appCatalogsResponse
   );
+
+  // TODO no apps response?? Check on gauss.
 });
 
 // Stop persisting responses
@@ -72,7 +68,7 @@ afterAll(() => {
 
 /************ TESTS ************/
 
-it('renders all the cluster data correctly with 0 nodes ready', async () => {
+it('renders all the v5 cluster data correctly with 0 nodes ready', async () => {
   const div = document.createElement('div');
   const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
 
@@ -85,7 +81,7 @@ it('renders all the cluster data correctly with 0 nodes ready', async () => {
   expect(k8sEndpoint).not.toBeEmpty();
 });
 
-it('renders nodes data correctly with nodes ready', async () => {
+it('renders nodes data correctly with nodes ready in v5 cluster view', async () => {
   const nodePoolsResponseWithNodes = nodePoolsResponse.map(np => ({
     ...np,
     status: { nodes: 3, nodes_ready: 3 },
@@ -129,20 +125,6 @@ it('renders all node pools in store', async () => {
   nodePoolsResponse.forEach(nodePool => {
     expect(getByText(nodePool.id)).toBeInTheDocument();
   });
-});
-
-// Not really needed actually. Keeping it by now as an example of simple test without store.
-it('shows the dropdown when the three dots button is clicked', () => {
-  const div = document.createElement('div');
-  const { getByText, getByRole } = render(
-    <ThemeProvider theme={theme}>
-      <NodePoolDropdownMenu render={{ isOpen: true }} />
-    </ThemeProvider>,
-    div
-  );
-  fireEvent.click(getByText('•••'));
-  const menu = getByRole('menu');
-  expect(menu).toBeInTheDocument();
 });
 
 it('patches node pool name correctly and re-sort node pools accordingly', async () => {
@@ -201,6 +183,11 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   // Is it now the 2nd node pool in list?
   const reSortedNodePools = getAllByTestId('node-pool-id');
   expect(reSortedNodePools[1]).toHaveTextContent(nodePoolId);
+
+  // This is not inside the component tree we are testing and so it is not cleaned up
+  // after test, so we have to remove it manually in order to not cause conflicts with
+  // the next test with a flash message
+  document.querySelector('#noty_layout__topRight').remove();
 
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
@@ -266,7 +253,7 @@ scales node pools correctly`, async () => {
   expect(inputMin.value).toBe(defaultScaling.min.toString());
   expect(inputMax.value).toBe(defaultScaling.max.toString());
 
-  // Change the values and modify the scaling settingsw
+  // Change the values and modify the scaling settings.
   fireEvent.change(inputMin, { target: { value: newScaling.min } });
   fireEvent.change(inputMax, { target: { value: newScaling.max } });
   const textButton = `Increase minimum number of nodes by ${newScaling.min}`;
@@ -278,7 +265,9 @@ scales node pools correctly`, async () => {
 
   //Wait for the Flash message to appear
   await wait(() => {
-    getByText(/succesfully edited node pool name/i);
+    getByText(
+      /The node pool will be scaled within the next couple of minutes./i
+    );
   });
 
   // Our node pool is the first one. Does it have the scaling values updated?
@@ -288,6 +277,11 @@ scales node pools correctly`, async () => {
   expect(getAllByTestId('scaling-max')[0]).toHaveTextContent(
     newScaling.max.toString()
   );
+
+  // This is not inside the component tree we are testing and so it is not cleaned up
+  // after test, so we have to remove it manually in order to not cause conflicts with
+  // the next test with a flash message
+  document.querySelector('#noty_layout__topRight').remove();
 
   nodePoolPatchRequest.done();
 });
@@ -305,21 +299,17 @@ it('deletes a v5 cluster', async () => {
     .reply(200, clusterDeleteResponse);
 
   const div = document.createElement('div');
-  const {
-    getByText,
-    getAllByText,
-    queryByTestId,
-    getAllByTestId,
-    debug,
-    container,
-  } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText, getAllByText, queryByTestId } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {}
+  );
 
   // Wait for the view to render
   await wait(() => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
   });
 
-  // fireEvent.click(getAllByText('•••')[0]);
   await wait(() => getByText('Delete Cluster'));
   fireEvent.click(getByText('Delete Cluster'));
 
@@ -348,7 +338,7 @@ it('deletes a v5 cluster', async () => {
   });
 
   // This is not inside the component tree we are testing and so it is not cleaned up
-  // after test, so we have to remnove it manually in order to not cause conflicts with
+  // after test, so we have to remove it manually in order to not cause conflicts with
   // the next test with a flash message
   document.querySelector('#noty_layout__topRight').remove();
   clusterDeleteRequest.done();
@@ -375,7 +365,6 @@ it('deletes a node pool', async () => {
     getAllByText,
     queryByTestId,
     getAllByTestId,
-    debug,
   } = renderRouteWithStore(ROUTE, div, {});
 
   // Wait for node pools to render
