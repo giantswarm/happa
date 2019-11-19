@@ -188,17 +188,25 @@ details view`, async () => {
   const v4ClusterCreationRequest = nock(API_ENDPOINT)
     .intercept(`/v4/clusters/`, 'POST')
     .reply(200, v4ClusterCreationResponse, {
-      location: `/v4/clusters/${v4ClusterResponse}/`,
+      location: `/v4/clusters/${v4ClusterResponse.id}/`,
     });
 
   // Clusters GET request
   requests.clusters = getPersistedMockCall('/v4/clusters/', [
-    v4ClusterResponse,
+    {
+      create_date: '2019-11-15T15:53:58.549065412Z',
+      delete_date: '0001-01-01T00:00:00Z',
+      id: v4ClusterResponse.id,
+      name: v4ClusterResponse.name,
+      owner: ORGANIZATION,
+      release_version: v4ClusterResponse.releaseVersion,
+      path: `/v4/clusters/${v4ClusterResponse.id}/`,
+    },
   ]);
 
   // Cluster GET request
   const clusterRequest = getPersistedMockCall(
-    `/v5/clusters/${v4ClusterResponse.id}/`,
+    `/v4/clusters/${v4ClusterResponse.id}/`,
     v4ClusterResponse
   );
 
