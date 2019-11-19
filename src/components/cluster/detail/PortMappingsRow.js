@@ -38,7 +38,7 @@ function PortMappingsRow({ cluster }) {
       <PortMappings>
         <FlexRowWithTwoBlocksOnEdges>
           <div>
-            Ingress Ports:
+            Ingress ports:
             <dl>
               {cluster.kvm.port_mappings.map(mapping => {
                 return (
