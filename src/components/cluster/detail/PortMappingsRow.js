@@ -43,7 +43,7 @@ function PortMappingsRow({ cluster }) {
               {cluster.kvm.port_mappings.map(mapping => {
                 return (
                   <div key={mapping.protocol}>
-                    <dt>{mapping.protocol}</dt>
+                    <dt>{mapping.protocol.toUpperCase()}</dt>
                     <dd>{mapping.port}</dd>
                   </div>
                 );
