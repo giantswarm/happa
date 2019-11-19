@@ -28,7 +28,12 @@ const PortMappings = styled.div`
 `;
 
 function PortMappingsRow({ cluster }) {
-  if (cluster && cluster.kvm && cluster.kvm.port_mappings && cluster.kvm.port_mappings.length !== 0) {
+  if (
+    cluster &&
+    cluster.kvm &&
+    cluster.kvm.port_mappings &&
+    cluster.kvm.port_mappings.length !== 0
+  ) {
     return (
       <PortMappings>
         <FlexRowWithTwoBlocksOnEdges>

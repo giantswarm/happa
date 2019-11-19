@@ -23,7 +23,11 @@ it('shows port mappings when given a valid cluster object', () => {
   const { getByText } = render(
     <Router>
       <ThemeProvider theme={theme}>
-        <PortMappingsRow cluster={{kvm: {port_mappings: [{protocol: "http", port: "12345"}]}}} />
+        <PortMappingsRow
+          cluster={{
+            kvm: { port_mappings: [{ protocol: 'http', port: '12345' }] },
+          }}
+        />
       </ThemeProvider>
     </Router>
   );
@@ -36,7 +40,7 @@ it('doesnt show port mappings when given an invalid cluster object', () => {
   const { queryByText } = render(
     <Router>
       <ThemeProvider theme={theme}>
-        <PortMappingsRow cluster={{kvm: {yolo: [{foo: "bar"}]}}} />
+        <PortMappingsRow cluster={{ kvm: { yolo: [{ foo: 'bar' }] } }} />
       </ThemeProvider>
     </Router>
   );
