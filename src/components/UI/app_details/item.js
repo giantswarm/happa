@@ -44,7 +44,7 @@ const AppDetailsItem = props => {
 };
 
 AppDetailsItem.propTypes = {
-  data: PropTypes.array,
+  data: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   label: PropTypes.string,
 };
 
