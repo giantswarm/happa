@@ -14,6 +14,7 @@ import copy from 'copy-to-clipboard';
 import moment from 'moment';
 import NodePool from './NodePool';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import PortMappingsRow from './PortMappingsRow';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -455,7 +456,7 @@ class V5ClusterDetailTable extends React.Component {
           <CopyToClipboardDiv onMouseLeave={this.mouseLeave}>
             <span>Kubernetes endpoint URI:</span>
             <Code>{api_endpoint}</Code>
-            {/* Copy to clipboard. 
+            {/* Copy to clipboard.
             TODO make a render prop component or a hooks function with it */}
             {this.state.endpointCopied ? (
               <i aria-hidden='true' className='fa fa-done' />
@@ -482,6 +483,9 @@ class V5ClusterDetailTable extends React.Component {
             </Button>
           </div>
         </FlexRowWithTwoBlocksOnEdges>
+
+        <PortMappingsRow cluster={cluster} />
+
         <NodePoolsWrapper>
           <h2>Node Pools</h2>
           {nodePools && nodePools.length > 0 && !this.state.loading && (
