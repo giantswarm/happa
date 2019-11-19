@@ -7,14 +7,15 @@
   "src": "src",
   "test": "test",
   "scripts": {
-    "lint:css": "stylelint './src/**/*.js'",
-    "start": "webpack-dev-server --open --progress --colors --config ./webpack.dev.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:clean-cache": "jest --clearCache && ./node_modules/.bin/jest --clearCache",
-    "test:coverage": "jest --collect-coverage",
-    "prettier": "prettier --write \"src/**/*.js\"",
-    "validate-prettier": "prettier --version; prettier --no-color --check \"src/**/*.js\""
+    "lint:css": "./node_modules/.bin/stylelint './src/**/*.js'",
+    "start": "./node_modules/.bin/webpack-dev-server --open --progress --colors --config ./webpack.dev.js",
+    "test": "./node_modules/.bin/jest",
+    "test:watch": "yarn test --watch",
+    "test:clean-cache": "yarn test --clearCache",
+    "test:coverage": "yarn test --collect-coverage",
+    "format": "./node_modules/.bin/prettier \"src/**/*.js\"",
+    "prettier": "yarn format --write",
+    "validate-prettier": "yarn format --version; yarn format --no-color --check \"src/**/*.js\""
   },
   "prettier": {
     "singleQuote": true,
