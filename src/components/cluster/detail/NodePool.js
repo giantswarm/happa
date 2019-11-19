@@ -115,8 +115,12 @@ class NodePool extends Component {
                   zones={availability_zones}
                 />
               </div>
-              <NodesWrapper>{scaling.min}</NodesWrapper>
-              <NodesWrapper>{scaling.max}</NodesWrapper>
+              <NodesWrapper data-testid='scaling-min'>
+                {scaling.min}
+              </NodesWrapper>
+              <NodesWrapper data-testid='scaling-max'>
+                {scaling.max}
+              </NodesWrapper>
               <NodesWrapper>{desired}</NodesWrapper>
               <NodesWrapper
                 style={{
