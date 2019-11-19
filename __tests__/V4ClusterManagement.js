@@ -257,7 +257,7 @@ it('deletes a v4 cluster', async () => {
   clusterDeleteRequest.done();
 });
 
-it.skip('patches v4 cluster name correctly', async () => {
+it('patches v4 cluster name correctly', async () => {
   const newClusterName = 'New cluster name';
   const clusterName = V4_CLUSTER.name;
 
