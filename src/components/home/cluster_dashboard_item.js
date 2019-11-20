@@ -108,6 +108,27 @@ class ClusterDashboardItem extends React.Component {
 
     const hasNodePools = cluster.nodePools && cluster.nodePools.length !== 0;
 
+    if (typeof cluster.delete_date !== 'undefined' && cluster.delete_date) {
+      return (
+        <div className='cluster-dashboard-item well deleted'>
+          <div className='cluster-dashboard-item--label'>
+            <ClusterIDLabel clusterID={cluster.id} copyEnabled />
+          </div>
+
+          <div className='cluster-dashboard-item--content'>
+            <div className='cluster-dashboard-item--title'>
+              <span className='cluster-dashboard-item--name'>
+                {cluster.name}
+              </span>
+            </div>
+            <div className='cluster-dashboard-item--delete-date'>
+              Deleted {relativeDate(cluster.delete_date)}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className='cluster-dashboard-item well'>
         <div className='cluster-dashboard-item--label'>
@@ -120,10 +141,7 @@ class ClusterDashboardItem extends React.Component {
           <div className='cluster-dashboard-item--title'>
             <Link to={linkToCluster}>
               <RefreshableLabel dataItems={[cluster.name]}>
-                <span
-                  className='cluster-dashboard-item--name'
-                  style={{ fontWeight: 'bold' }}
-                >
+                <span className='cluster-dashboard-item--name'>
                   {cluster.name}
                 </span>
               </RefreshableLabel>

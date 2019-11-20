@@ -30,8 +30,19 @@
 .cluster-dashboard-item
   display: flex
 
+  &.deleted
+    background-color: $darkerblue1
+    
+    .cluster-dashboard-item--delete-date, .cluster-dashboard-item--content
+      color: $lighterblue5
+
   b
     font-weight: 400
+  
+  
+
+.cluster-dashboard-item--name
+  font-weight: 700
 
 .cluster-dashboard-item--content
   flex: 1;
