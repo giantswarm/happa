@@ -2,16 +2,22 @@ import { clustersForOrg } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Row from './row';
+import styled from '@emotion/styled';
+
+const StyledTableHeader = styled.th`
+  text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
+`;
 
 const OrganizationList = props => {
   return (
     <table>
       <thead>
         <tr>
-          <th>Name</th>
-          <th style={{ textAlign: 'center' }}>Clusters</th>
-          <th style={{ textAlign: 'center' }}>Members</th>
-          <th />
+          <StyledTableHeader>Name</StyledTableHeader>
+          <StyledTableHeader centered={true}>Clusters</StyledTableHeader>
+          <StyledTableHeader centered={true}>Members</StyledTableHeader>
+          <StyledTableHeader centered={true}>Has Credentials</StyledTableHeader>
+          <StyledTableHeader />
         </tr>
       </thead>
       <tbody>

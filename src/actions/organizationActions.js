@@ -59,22 +59,19 @@ const determineSelectedOrganization = (organizations, selectedOrganization) => {
   return firstOrganization;
 };
 
-// organizationsLoad
-// -----------------
-// This long function does various requests to the Giant Swarm API
-// and massages the responses into some reasonable state for Happa to
-// work with.
-//
+/**
+ * This action does various requests to the Giant Swarm API
+ * and massages the responses into some reasonable state for Happa to
+ * work with.
+ */
 export function organizationsLoad() {
   return function(dispatch, getState) {
-    var organizationsApi = new GiantSwarm.OrganizationsApi();
+    const organizationsApi = new GiantSwarm.OrganizationsApi();
 
-    var alreadyFetching = getState().entities.organizations.isFetching;
+    const alreadyFetching = getState().entities.organizations.isFetching;
 
     if (alreadyFetching) {
-      return new Promise(resolve => {
-        resolve();
-      });
+      return new Promise(resolve => resolve());
     }
 
     dispatch({ type: types.ORGANIZATIONS_LOAD });
@@ -82,16 +79,26 @@ export function organizationsLoad() {
     return organizationsApi
       .getOrganizations()
       .then(organizations => {
-        var organizationsArray = organizations.map(organization => {
-          return organization.id;
-        });
+        const organizationsArray = organizations.map(
+          organization => organization.id
+        );
 
-        var orgDetails = Promise.all(
+        const orgDetails = Promise.all(
           organizationsArray.map(organizationName => {
             return organizationsApi
               .getOrganization(organizationName)
               .then(organization => {
-                return organization;
+                return organizationsApi
+                  .getCredentials(organization.id)
+                  .then(credentials => {
+                    const organizationWithCredentials = Object.assign(
+                      {},
+                      organization,
+                      { credentials }
+                    );
+
+                    return organizationWithCredentials;
+                  });
               });
           })
         );
@@ -100,9 +107,9 @@ export function organizationsLoad() {
       })
       .then(orgDetails => {
         // create an object with organization IDs as key
-        var organizations = orgDetails.reduce((previous, current) => {
-          var orgId = current.id;
-          var orgDetails = current;
+        const organizations = orgDetails.reduce((previous, current) => {
+          const orgId = current.id;
+          const orgDetails = current;
 
           orgDetails.members = orgDetails.members.sort();
 
@@ -111,6 +118,7 @@ export function organizationsLoad() {
             getState().entities.organizations.items[orgId],
             orgDetails
           );
+
           return previous;
         }, {});
 
@@ -124,6 +132,7 @@ export function organizationsLoad() {
         );
 
         setOrganizationToStorage(selectedOrganization);
+
         return dispatch(
           organizationsLoadSuccess(organizations, selectedOrganization)
         );

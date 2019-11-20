@@ -1,34 +1,50 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
 
-const OrganizationListRow = props => {
-  const orgID = props.organization.id;
-  const organizationDetailURL = props.getViewURL(orgID);
+const StyledTableDataCell = styled.td`
+  text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
+`;
+
+const OrganizationListRow = ({
+  clusters,
+  organization,
+  onDelete,
+  getViewURL,
+}) => {
+  const orgID = organization.id;
+  const organizationDetailURL = getViewURL(orgID);
+
+  const hasCredentialsClassName =
+    organization.credentials.length > 0 ? 'fa fa-done' : 'fa fa-close';
 
   return (
     <tr>
-      <td>
+      <StyledTableDataCell>
         <Link to={organizationDetailURL}>{orgID}</Link>
-      </td>
-      <td style={{ textAlign: 'center' }}>
-        <Link to={organizationDetailURL}>{props.clusters.length}</Link>
-      </td>
-      <td style={{ textAlign: 'center' }}>
+      </StyledTableDataCell>
+      <StyledTableDataCell centered={true}>
+        <Link to={organizationDetailURL}>{clusters.length}</Link>
+      </StyledTableDataCell>
+      <StyledTableDataCell centered={true}>
+        <Link to={organizationDetailURL}>{organization.members.length}</Link>
+      </StyledTableDataCell>
+      <StyledTableDataCell centered={true}>
         <Link to={organizationDetailURL}>
-          {props.organization.members.length}
+          <i className={hasCredentialsClassName} />
         </Link>
-      </td>
-      <td>
+      </StyledTableDataCell>
+      <StyledTableDataCell>
         <div className='contextual'>
           <i
             className='fa fa-delete clickable'
             data-orgid={orgID}
-            onClick={props.onDelete}
+            onClick={onDelete}
             title='Delete this organization'
           />
         </div>
-      </td>
+      </StyledTableDataCell>
     </tr>
   );
 };
