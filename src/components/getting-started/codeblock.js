@@ -1,5 +1,4 @@
 import * as Helpers from 'lib/helpers';
-import copy from 'copy-to-clipboard';
 import Line from './line';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
@@ -33,33 +32,33 @@ export const Output = ({ children }) => {
   return <Line prompt={false} text={Helpers.dedent(children)} />;
 };
 
-const getPromptLinesAsString = children => {
-  const string = React.Children.toArray(children)
-    .filter(x => {
-      return x.type.displayName === 'Prompt';
-    })
-    .map(x => {
-      return x.props.children;
-    })
-    .join('\n');
-
-  return Helpers.dedent(string);
-};
-
 export const CodeBlock = ({ children }) => {
   const [isHovering, setHovering] = useState(false);
   const [isCopiedToClipboard, setCopyToClipboard] = useCopyToClipboard();
 
   const preElement = useRef(null);
 
+  const getPromptLinesAsString = () => {
+    const string = React.Children.toArray(children)
+      .filter(x => {
+        return x.type.displayName === 'Prompt';
+      })
+      .map(x => {
+        return x.props.children;
+      })
+      .join('\n');
+
+    return Helpers.dedent(string);
+  };
+
   const copyCodeToClipboard = e => {
     e.preventDefault();
 
-    const contentToCopy = getPromptLinesAsString(children);
+    const contentToCopy = getPromptLinesAsString();
     setCopyToClipboard(contentToCopy);
   };
 
-  const classNames = () => {
+  const getClassNames = () => {
     // props.children is either an array or in the case of 1 child
     // just that child object
     // So this makes sure I always have an array, and flattens it.
@@ -81,7 +80,7 @@ export const CodeBlock = ({ children }) => {
   };
 
   return (
-    <div className={classNames()}>
+    <div className={getClassNames()}>
       <pre>
         <div className='content' ref={preElement}>
           {children}
@@ -89,15 +88,9 @@ export const CodeBlock = ({ children }) => {
         <div className='codeblock--buttons'>
           <a
             href='#'
-            onClick={() => {
-              setCopyToClipboard(null);
-            }}
-            onMouseOut={() => {
-              setHovering(false);
-            }}
-            onMouseOver={() => {
-              setHovering(true);
-            }}
+            onClick={() => setCopyToClipboard(null)}
+            onMouseOut={() => setHovering(false)}
+            onMouseOver={() => setHovering(true)}
             onMouseUp={copyCodeToClipboard}
           >
             <i aria-hidden='true' className='fa fa-content-copy' />

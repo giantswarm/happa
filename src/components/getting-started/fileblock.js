@@ -1,9 +1,9 @@
 import * as Helpers from 'lib/helpers';
-import copy from 'copy-to-clipboard';
 import Line from './line';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
 // FileBlock
 // Use this to show the contents of a file to a user.
@@ -23,110 +23,86 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 var Modernizr = window.Modernizr;
 
-class FileBlock extends React.Component {
-  state = {
-    hovering: false,
-  };
+export const FileBlock = ({ children, hideText, fileName }) => {
+  const [isHovering, setHovering] = useState(false);
+  const preElement = useRef(null);
+  const [isCopiedToClipboard, setCopyToClipboard] = useCopyToClipboard();
 
-  copyCodeToClipboard = e => {
+  const copyCodeToClipboard = e => {
     e.preventDefault();
 
-    copy(Helpers.dedent(this.props.children));
-
-    this.setState({ clicked: false });
+    const contentToCopy = Helpers.dedent(children);
+    setCopyToClipboard(contentToCopy);
   };
 
-  classNames() {
-    var classNames = [];
+  const classNames = () => {
+    const classNames = ['codeblock--container'];
 
-    classNames.push('codeblock--container');
-    if (this.state.hovering) {
+    if (isHovering) {
       classNames.push('hovering');
     }
-    if (this.state.clicked) {
+    if (isCopiedToClipboard) {
       classNames.push('clicked');
     }
-    if (this.props.hideText) {
+    if (hideText) {
       classNames.push('oneline');
     }
 
     return classNames.join(' ');
-  }
+  };
 
-  blob() {
-    var blob = new Blob([Helpers.dedent(this.props.children)], {
+  const getFileAsBlob = () => {
+    const blob = new Blob([Helpers.dedent(children)], {
       type: 'application/plain;charset=utf-8',
     });
-    return blob;
-  }
 
-  downloadAsFileLink() {
+    return blob;
+  };
+
+  const downloadAsFileLink = () => {
     return (
-      <a
-        download={this.props.fileName}
-        href={window.URL.createObjectURL(this.blob())}
-      >
+      <a download={fileName} href={window.URL.createObjectURL(getFileAsBlob())}>
         <i aria-hidden='true' className='fa fa-file-download' />
       </a>
     );
-  }
+  };
 
-  render() {
-    return (
-      <div className={this.classNames()}>
-        <pre>
-          <div
-            className='content'
-            ref={d => {
-              this.pre = d;
-            }}
-          >
-            <div className='codeblock--filename'>{this.props.fileName}</div>
-            <div className='codeblock--filecontents'>
-              {this.props.hideText ? (
-                undefined
-              ) : (
-                <Line text={Helpers.dedent(this.props.children)} />
-              )}
-            </div>
+  return (
+    <div className={classNames()}>
+      <pre>
+        <div className='content' ref={preElement}>
+          <div className='codeblock--filename'>{fileName}</div>
+          <div className='codeblock--filecontents'>
+            {hideText ? undefined : <Line text={Helpers.dedent(children)} />}
           </div>
-          <div
-            className='codeblock--buttons'
-            onMouseOut={function() {
-              this.setState({ hovering: false });
-            }.bind(this)}
-            onMouseOver={function() {
-              this.setState({ hovering: true });
-            }.bind(this)}
+        </div>
+        <div
+          className='codeblock--buttons'
+          onMouseOut={() => setHovering(false)}
+          onMouseOver={() => setHovering(true)}
+        >
+          {Modernizr.adownload ? downloadAsFileLink() : null}
+          <a
+            href='#'
+            onClick={() => setCopyToClipboard(null)}
+            onMouseUp={copyCodeToClipboard}
           >
-            {Modernizr.adownload ? this.downloadAsFileLink() : null}
-            <a
-              href='#'
-              onClick={this.copyCodeToClipboard}
-              onMouseUp={function() {
-                this.setState({ clicked: true });
-              }.bind(this)}
-            >
-              <i aria-hidden='true' className='fa fa-content-copy' />
-            </a>
-          </div>
-          <ReactCSSTransitionGroup
-            transitionEnterTimeout={1000}
-            transitionLeaveTimeout={1000}
-            transitionName={'checkmark'}
-          >
-            {this.state.clicked ? (
-              <i
-                aria-hidden='true'
-                className='fa fa-done codeblock--checkmark'
-              />
-            ) : null}
-          </ReactCSSTransitionGroup>
-        </pre>
-      </div>
-    );
-  }
-}
+            <i aria-hidden='true' className='fa fa-content-copy' />
+          </a>
+        </div>
+        <ReactCSSTransitionGroup
+          transitionEnterTimeout={1000}
+          transitionLeaveTimeout={1000}
+          transitionName={'checkmark'}
+        >
+          {isCopiedToClipboard ? (
+            <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
+          ) : null}
+        </ReactCSSTransitionGroup>
+      </pre>
+    </div>
+  );
+};
 
 FileBlock.propTypes = {
   children: PropTypes.node,
