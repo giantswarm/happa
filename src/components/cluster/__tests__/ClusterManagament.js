@@ -5,7 +5,7 @@ import {
   clusterDelete as mockClusterDelete,
   clusterPatch as mockClusterPatch,
 } from 'actions/clusterActions';
-import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
+import { renderRouteWithStore } from 'test_utils/renderUtils';
 import initialState from 'test_utils/initialState';
 import statusState from 'test_utils/statusState';
 

@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -282,14 +281,6 @@ NumberPicker.propTypes = {
   theme: PropTypes.string,
 };
 
-function mapStateToProps() {
-  return {};
-}
-
-function mapDispatchToProps() {
-  return {};
-}
-
 function isWholeNumber(value) {
   if (typeof value === 'number' && value % 1 === 0) {
     return true;
@@ -298,7 +289,4 @@ function isWholeNumber(value) {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NumberPicker);
+export default NumberPicker;

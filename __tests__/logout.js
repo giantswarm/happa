@@ -5,7 +5,7 @@ import {
   infoResponse,
   userResponse,
 } from 'test_utils/mockHttpCalls';
-import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
+import { renderRouteWithStore } from 'test_utils/renderUtils';
 import initialState from 'test_utils/initialState';
 
 it('logging out redirects to the login page', async () => {
