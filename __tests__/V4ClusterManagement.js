@@ -16,7 +16,7 @@ import {
   v4ClustersResponse,
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
-import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
+import { renderRouteWithStore } from 'test_utils/renderUtils';
 import nock from 'nock';
 
 // Cluster and route we are testing with.
