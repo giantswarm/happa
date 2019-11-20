@@ -25,8 +25,9 @@ var Modernizr = window.Modernizr;
 
 export const FileBlock = ({ children, hideText, fileName }) => {
   const [isHovering, setHovering] = useState(false);
-  const preElement = useRef(null);
   const [isCopiedToClipboard, setCopyToClipboard] = useCopyToClipboard();
+
+  const preElement = useRef(null);
 
   const copyCodeToClipboard = e => {
     e.preventDefault();
