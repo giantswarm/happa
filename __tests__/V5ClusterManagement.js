@@ -16,7 +16,7 @@ import {
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
 import { getNumberOfNodePoolsNodes } from 'utils/cluster_utils';
-import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
+import { renderRouteWithStore } from 'test_utils/renderUtils';
 import { truncate } from 'lib/helpers';
 import nock from 'nock';
 
@@ -198,7 +198,7 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
 // on the response of an asynchronous call in ScaleNodePoolModal.
 // Not fixing it now because is a "minor" error, this error can't break the app and
 // because I will be working on the data flow refactor that will solve this.
-it(`shows the v5 cluster scaling modal when the button is clicked with default values and 
+it(`shows the v5 cluster scaling modal when the button is clicked with default values and
 scales node pools correctly`, async () => {
   // TODO default values from constants file
   const defaultScaling = { min: 3, max: 10 };
