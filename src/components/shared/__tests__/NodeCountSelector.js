@@ -1,17 +1,9 @@
 import { cleanup, fireEvent, render } from '@testing-library/react';
-import { ThemeProvider } from 'emotion-theming';
-import React from 'react';
-import theme from 'styles/theme';
+import { getComponentWithTheme } from 'test_utils/renderUtils';
 
 import NodeCountSelector from 'shared/NodeCountSelector';
 
-function getComponent(props) {
-  return (
-    <ThemeProvider theme={theme}>
-      <NodeCountSelector {...props} />
-    </ThemeProvider>
-  );
-}
+const getComponent = props => getComponentWithTheme(NodeCountSelector, props);
 
 function renderWithProps(props) {
   return render(getComponent(props));
