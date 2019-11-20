@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { getComponentWithTheme } from 'test_utils/renderUtils';
 
 import NodeCountSelector from 'shared/NodeCountSelector';
@@ -10,8 +10,6 @@ function renderWithProps(props) {
 }
 
 const labelTestID = 'node-count-selector-picker';
-
-afterEach(cleanup);
 
 describe('NodeCountSelector', () => {
   it('renders without crashing', () => {
