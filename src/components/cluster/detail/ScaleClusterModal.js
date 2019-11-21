@@ -7,7 +7,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import cmp from 'semver-compare';
-import NodeCountSelector from 'shared/node_count_selector';
+import NodeCountSelector from 'shared/NodeCountSelector';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -331,6 +331,7 @@ class ScaleClusterModal extends React.Component {
               this.props.provider,
               this.props.cluster.release_version
             )}
+            maxValue={this.props.maxWorkersPerCluster}
             onChange={this.updateScaling}
             readOnly={false}
             scaling={this.state.scaling}
@@ -415,9 +416,21 @@ ScaleClusterModal.propTypes = {
   cluster: PropTypes.object,
   clusterActions: PropTypes.object,
   provider: PropTypes.string,
+  maxWorkersPerCluster: PropTypes.number,
   workerNodesRunning: PropTypes.number,
   workerNodesDesired: PropTypes.number,
 };
+
+function mapStateToProps(state) {
+  const propsToPush = {};
+
+  if (state.app.info.workers.count_per_cluster.max) {
+    propsToPush.maxWorkersPerCluster =
+      state.app.info.workers.count_per_cluster.max;
+  }
+
+  return propsToPush;
+}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -426,7 +439,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps,
   undefined,
   { forwardRef: true }
