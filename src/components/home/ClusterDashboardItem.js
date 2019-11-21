@@ -11,6 +11,7 @@ import {
   getStorageTotal,
 } from 'utils/cluster_utils';
 import { connect } from 'react-redux';
+import { css } from '@emotion/core';
 import { Dot } from 'styles';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
@@ -22,6 +23,57 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import RefreshableLabel from 'UI/refreshable_label';
+import styled from '@emotion/styled';
+import theme from 'styles/theme';
+
+const WrapperStyles = css`
+  display: flex;
+  background-color: ${theme.colors.darkBlueLighter1};
+  border-radius: 5px;
+  border: 0px;
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+`;
+
+const Wrapper = styled.div`
+  ${WrapperStyles};
+`;
+
+const WrapperDeleted = styled.div`
+  ${WrapperStyles};
+  background-color: ${theme.colors.darkBlueDarker1};
+`;
+
+const LabelWrapper = styled.div`
+  flex: 0 0 90px;
+  font-size: 1.2em;
+`;
+
+const ContentWrapper = styled.div`
+  flex: 1;
+  padding-right: 15px;
+`;
+
+const TitleWrapper = styled.div`
+  font-size: 1.2em;
+  z-index: 120;
+  position: relative;
+`;
+
+const NameWrapper = styled.span`
+  font-weight: 700;
+`;
+
+const ButtonsWrapper = styled.div`
+  text-align: right;
+  flex: 0 0 210px;
+`;
+
+const DeleteDateWrapper = styled.div`
+  color: ${theme.colors.darkBlueLighter5};
+`;
 
 class ClusterDashboardItem extends React.Component {
   state = {
@@ -110,43 +162,39 @@ class ClusterDashboardItem extends React.Component {
 
     if (typeof cluster.delete_date !== 'undefined' && cluster.delete_date) {
       return (
-        <div className='cluster-dashboard-item well deleted'>
-          <div className='cluster-dashboard-item--label'>
+        <WrapperDeleted>
+          <LabelWrapper>
             <ClusterIDLabel clusterID={cluster.id} copyEnabled />
-          </div>
+          </LabelWrapper>
 
-          <div className='cluster-dashboard-item--content'>
-            <div className='cluster-dashboard-item--title'>
-              <span className='cluster-dashboard-item--name'>
-                {cluster.name}
-              </span>
-            </div>
-            <div className='cluster-dashboard-item--delete-date'>
+          <ContentWrapper>
+            <TitleWrapper>
+              <NameWrapper>{cluster.name}</NameWrapper>
+            </TitleWrapper>
+            <DeleteDateWrapper>
               Deleted {relativeDate(cluster.delete_date)}
-            </div>
-          </div>
-        </div>
+            </DeleteDateWrapper>
+          </ContentWrapper>
+        </WrapperDeleted>
       );
     }
 
     return (
-      <div className='cluster-dashboard-item well'>
-        <div className='cluster-dashboard-item--label'>
+      <Wrapper>
+        <LabelWrapper>
           <Link to={linkToCluster}>
             <ClusterIDLabel clusterID={cluster.id} copyEnabled />
           </Link>
-        </div>
+        </LabelWrapper>
 
-        <div className='cluster-dashboard-item--content'>
-          <div className='cluster-dashboard-item--title'>
+        <ContentWrapper>
+          <TitleWrapper>
             <Link to={linkToCluster}>
               <RefreshableLabel dataItems={[cluster.name]}>
-                <span className='cluster-dashboard-item--name'>
-                  {cluster.name}
-                </span>
+                <NameWrapper>{cluster.name}</NameWrapper>
               </RefreshableLabel>
             </Link>
-          </div>
+          </TitleWrapper>
 
           <div>
             <RefreshableLabel dataItems={[cluster.release_version]}>
@@ -192,9 +240,9 @@ class ClusterDashboardItem extends React.Component {
               undefined
             )}
           </div>
-        </div>
+        </ContentWrapper>
 
-        <div className='cluster-dashboard-item--buttons'>
+        <ButtonsWrapper>
           {this.clusterYoungerThan30Days() ? (
             <ButtonGroup>
               <Button onClick={this.accessCluster}>
@@ -205,8 +253,8 @@ class ClusterDashboardItem extends React.Component {
           ) : (
             ''
           )}
-        </div>
-      </div>
+        </ButtonsWrapper>
+      </Wrapper>
     );
   }
 }
