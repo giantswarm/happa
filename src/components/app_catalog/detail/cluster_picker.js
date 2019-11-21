@@ -1,9 +1,9 @@
-import * as theme from 'lib/theme';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import Input from './input';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
+import theme from 'styles/theme';
 
 const ClusterPickerWrapper = styled.div`
   display: flex;
@@ -18,20 +18,20 @@ const ClusterList = styled.div`
 
 const Cluster = styled.div`
   align-items: center;
-  border-radius: ${theme.BORDER_RADIUS};
+  border-radius: ${theme.border_radius};
   display: flex;
   padding: 10px 15px;
   :hover {
-    background-color: ${theme.COLORS.shade4};
+    background-color: ${theme.colors.shade4};
     cursor: pointer;
   }
   &.selected {
-    background-color: ${theme.COLORS.shade4};
+    background-color: ${theme.colors.shade4};
   }
 `;
 
 const ClusterTitle = styled.div`
-  color: ${theme.COLORS.white2};
+  color: ${theme.colors.white2};
   flex-grow: 1;
   font-size: 16px;
   font-weight: 800;
@@ -39,7 +39,7 @@ const ClusterTitle = styled.div`
 `;
 
 const Organisation = styled.div`
-  color: ${theme.COLORS.white2};
+  color: ${theme.colors.white2};
   font-size: 12px;
 `;
 
