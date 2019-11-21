@@ -6,7 +6,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import _ from 'underscore';
 import Button from 'UI/button';
-import ClusterDashboardItem from './cluster_dashboard_item';
+import ClusterDashboardItem from './ClusterDashboardItem';
 import ClusterEmptyState from 'UI/cluster_empty_state';
 import DocumentTitle from 'react-document-title';
 import moment from 'moment';
