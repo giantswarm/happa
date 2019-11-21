@@ -64,6 +64,7 @@ function mapStateToProps(state, ownProps) {
   let cluster = state.entities.clusters.items[ownProps.match.params.clusterId];
   let release;
   let targetReleaseVersion;
+  let isNodePoolsCluster = false;
 
   if (cluster) {
     if (cluster.release_version && cluster.release_version !== '') {
@@ -94,11 +95,11 @@ function mapStateToProps(state, ownProps) {
           availableVersions.indexOf(cluster.release_version) + 1
         ];
     }
-  }
 
-  const isNodePoolsCluster = state.entities.clusters.nodePoolsClusters.includes(
-    cluster.id
-  );
+    isNodePoolsCluster = state.entities.clusters.nodePoolsClusters.includes(
+      cluster.id
+    );
+  }
 
   return {
     credentials: state.entities.credentials,
