@@ -48,12 +48,6 @@ class OrganizationDetail extends React.Component {
         sort: true,
       },
       {
-        dataField: 'create_date',
-        text: 'Created',
-        sort: true,
-        formatter: relativeDate,
-      },
-      {
         dataField: 'release_version',
         text: 'Release',
         sort: true,
@@ -63,6 +57,18 @@ class OrganizationDetail extends React.Component {
           }
           return cmp(a, b);
         },
+      },
+      {
+        dataField: 'create_date',
+        text: 'Created',
+        sort: true,
+        formatter: relativeDate,
+      },
+      {
+        dataField: 'delete_date',
+        text: 'Deleted',
+        sort: true,
+        formatter: relativeDate,
       },
       {
         dataField: 'actionsDummy',
@@ -217,6 +223,10 @@ function clusterIDCellFormatter(cell) {
 }
 
 function clusterActionsCellFormatter(cell, row) {
+  if (row.delete_date) {
+    return <span />;
+  }
+
   return (
     <Link
       to={
