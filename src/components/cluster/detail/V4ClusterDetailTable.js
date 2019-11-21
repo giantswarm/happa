@@ -6,6 +6,7 @@ import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import moment from 'moment';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import PortMappingsRow from './PortMappingsRow';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
@@ -224,6 +225,8 @@ class V4ClusterDetailTable extends React.Component {
             </Button>
           </div>
         </FlexRowWithTwoBlocksOnEdges>
+
+        <PortMappingsRow cluster={cluster} />
 
         {credentialInfoRows.length !== 0 && (
           <FlexRowWithTwoBlocksOnEdges>
