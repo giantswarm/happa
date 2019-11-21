@@ -17,8 +17,7 @@ const OrganizationListRow = ({
   const orgID = organization.id;
   const organizationDetailURL = getViewURL(orgID);
 
-  const hasCredentialsClassName =
-    organization.credentials.length > 0 ? 'fa fa-done' : 'fa fa-cancel';
+  const hasCredentials = organization.credentials.length > 0;
 
   return (
     <tr>
@@ -34,9 +33,11 @@ const OrganizationListRow = ({
 
       {provider !== 'kvm' && (
         <StyledTableDataCell centered={true}>
-          <Link to={organizationDetailURL}>
-            <i className={hasCredentialsClassName} />
-          </Link>
+          {hasCredentials && (
+            <Link to={organizationDetailURL}>
+              <i className='fa fa-done' />
+            </Link>
+          )}
         </StyledTableDataCell>
       )}
 
