@@ -8,7 +8,7 @@ const StyledTableHeader = styled.th`
   text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
 `;
 
-const OrganizationList = props => {
+const OrganizationList = ({ provider, ...props }) => {
   return (
     <table>
       <thead>
@@ -16,7 +16,13 @@ const OrganizationList = props => {
           <StyledTableHeader>Name</StyledTableHeader>
           <StyledTableHeader centered={true}>Clusters</StyledTableHeader>
           <StyledTableHeader centered={true}>Members</StyledTableHeader>
-          <StyledTableHeader centered={true}>Has Credentials</StyledTableHeader>
+
+          {provider !== 'kvm' && (
+            <StyledTableHeader centered={true}>
+              Provider Credentials
+            </StyledTableHeader>
+          )}
+
           <StyledTableHeader />
         </tr>
       </thead>
@@ -29,6 +35,7 @@ const OrganizationList = props => {
               getViewURL={props.getViewURL}
               onDelete={props.deleteOrganization}
               organization={organization}
+              provider={provider}
             />
           );
         })}
@@ -42,6 +49,7 @@ OrganizationList.propTypes = {
   deleteOrganization: PropTypes.func,
   organizations: PropTypes.array,
   clusters: PropTypes.object,
+  provider: PropTypes.string,
 };
 
 export default OrganizationList;

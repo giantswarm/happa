@@ -12,12 +12,13 @@ const OrganizationListRow = ({
   organization,
   onDelete,
   getViewURL,
+  provider,
 }) => {
   const orgID = organization.id;
   const organizationDetailURL = getViewURL(orgID);
 
   const hasCredentialsClassName =
-    organization.credentials.length > 0 ? 'fa fa-done' : 'fa fa-close';
+    organization.credentials.length > 0 ? 'fa fa-done' : 'fa fa-cancel';
 
   return (
     <tr>
@@ -30,11 +31,15 @@ const OrganizationListRow = ({
       <StyledTableDataCell centered={true}>
         <Link to={organizationDetailURL}>{organization.members.length}</Link>
       </StyledTableDataCell>
-      <StyledTableDataCell centered={true}>
-        <Link to={organizationDetailURL}>
-          <i className={hasCredentialsClassName} />
-        </Link>
-      </StyledTableDataCell>
+
+      {provider !== 'kvm' && (
+        <StyledTableDataCell centered={true}>
+          <Link to={organizationDetailURL}>
+            <i className={hasCredentialsClassName} />
+          </Link>
+        </StyledTableDataCell>
+      )}
+
       <StyledTableDataCell>
         <div className='contextual'>
           <i
@@ -55,6 +60,7 @@ OrganizationListRow.propTypes = {
   onSelect: PropTypes.func,
   organization: PropTypes.object,
   clusters: PropTypes.array,
+  provider: PropTypes.string,
 };
 
 export default OrganizationListRow;
