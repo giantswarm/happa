@@ -243,144 +243,152 @@ class ClusterDetailView extends React.Component {
     } = this.props;
 
     return (
-      <LoadingOverlay loading={loading}>
-        <DocumentTitle
-          title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
-        >
-          <WrapperDiv className='cluster-details'>
-            <div className='row' style={{ marginBottom: '30px' }}>
-              <div className='col-sm-12 col-md-7 col-9'>
-                <h1 style={{ marginLeft: '-10px' }}>
-                  <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
-                  <ViewAndEditName
-                    entity={cluster}
-                    entityType='cluster'
-                    onSubmit={this.editClusterName}
-                  />{' '}
-                  {/* TODO Remove this */}
-                  {loading ? (
-                    <img
-                      className='loader'
-                      height='25px'
-                      src='/images/loader_oval_light.svg'
-                      width='25px'
-                    />
-                  ) : (
-                    ''
-                  )}
-                </h1>
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col-12'>
-                <Tabs>
-                  <Tab eventKey={1} title='General'>
-                    {isNodePoolsCluster ? (
-                      <V5ClusterDetailTable
-                        accessCluster={this.accessCluster}
-                        canClusterUpgrade={this.canClusterUpgrade()}
-                        cluster={cluster}
-                        credentials={credentials}
-                        nodePools={nodePools}
-                        provider={provider}
-                        release={release}
-                        region={region}
-                        showUpgradeModal={this.showUpgradeModal}
-                        workerNodesDesired={this.getDesiredNumberOfNodes()}
+      <>
+        <LoadingOverlay loading={loading} />
+
+        {!loading && (
+          <DocumentTitle
+            title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
+          >
+            <WrapperDiv
+              className='cluster-details'
+              data-testid='cluster-details-view'
+            >
+              <div className='row' style={{ marginBottom: '30px' }}>
+                <div className='col-sm-12 col-md-7 col-9'>
+                  <h1 style={{ marginLeft: '-10px' }}>
+                    <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
+                    <ViewAndEditName
+                      entity={cluster}
+                      entityType='cluster'
+                      onSubmit={this.editClusterName}
+                    />{' '}
+                    {/* TODO Remove this */}
+                    {loading ? (
+                      <img
+                        className='loader'
+                        height='25px'
+                        src='/images/loader_oval_light.svg'
+                        width='25px'
                       />
                     ) : (
-                      <V4ClusterDetailTable
-                        accessCluster={this.accessCluster}
-                        canClusterUpgrade={this.canClusterUpgrade()}
-                        cluster={cluster}
-                        credentials={credentials}
-                        provider={provider}
-                        release={release}
-                        region={region}
-                        showScalingModal={this.showScalingModal}
-                        showUpgradeModal={this.showUpgradeModal}
-                        workerNodesDesired={this.getDesiredNumberOfNodes()}
-                        workerNodesRunning={getNumberOfNodes(cluster)}
-                      />
+                      ''
                     )}
-
-                    <div className='row section cluster_delete col-12'>
-                      <div className='row'>
-                        <h3 className='table-label'>Delete This Cluster</h3>
-                      </div>
-                      <div className='row'>
-                        <p>
-                          All workloads on this cluster will be terminated. Data
-                          stored on the worker nodes will be lost. There is no
-                          way to undo this action.
-                        </p>
-                        <Button
-                          bsStyle='danger'
-                          onClick={this.showDeleteClusterModal.bind(
-                            this,
-                            cluster
-                          )}
-                        >
-                          <i className='fa fa-delete' /> Delete Cluster
-                        </Button>
-                      </div>
-                    </div>
-                  </Tab>
-                  <Tab eventKey={2} title='Key Pairs'>
-                    <KeyPairs cluster={cluster} />
-                  </Tab>
-                  <Tab eventKey={3} title='Apps'>
-                    {release ? (
-                      <ClusterApps
-                        clusterId={this.props.clusterId}
-                        dispatch={dispatch}
-                        errorLoading={this.state.errorLoadingApps}
-                        installedApps={cluster.apps}
-                        release={release}
-                        showInstalledAppsBlock={
-                          Object.keys(this.props.catalogs.items).length > 0 &&
-                          cluster.capabilities.canInstallApps
-                        }
-                      />
-                    ) : (
-                      <div className='well'>
-                        We had some trouble loading this pane. Please come back
-                        later or contact support in your slack channel or at{' '}
-                        <a href='mailto:support@giantswarm.io'>
-                          support@giantswarm.io
-                        </a>
-                        .
-                      </div>
-                    )}
-                  </Tab>
-                </Tabs>
+                  </h1>
+                </div>
               </div>
-            </div>
-            {!isNodePoolsCluster && (
-              <ScaleClusterModal
-                cluster={cluster}
-                provider={provider}
-                ref={s => {
-                  this.scaleClusterModal = s;
-                }}
-                workerNodesDesired={this.getDesiredNumberOfNodes()}
-                workerNodesRunning={getNumberOfNodes(cluster)}
-              />
-            )}
+              <div className='row'>
+                <div className='col-12'>
+                  <Tabs>
+                    <Tab eventKey={1} title='General'>
+                      {isNodePoolsCluster ? (
+                        <V5ClusterDetailTable
+                          accessCluster={this.accessCluster}
+                          canClusterUpgrade={this.canClusterUpgrade()}
+                          cluster={cluster}
+                          credentials={credentials}
+                          nodePools={nodePools}
+                          provider={provider}
+                          release={release}
+                          region={region}
+                          showUpgradeModal={this.showUpgradeModal}
+                          workerNodesDesired={this.getDesiredNumberOfNodes()}
+                        />
+                      ) : (
+                        <V4ClusterDetailTable
+                          accessCluster={this.accessCluster}
+                          canClusterUpgrade={this.canClusterUpgrade()}
+                          cluster={cluster}
+                          credentials={credentials}
+                          provider={provider}
+                          release={release}
+                          region={region}
+                          showScalingModal={this.showScalingModal}
+                          showUpgradeModal={this.showUpgradeModal}
+                          workerNodesDesired={this.getDesiredNumberOfNodes()}
+                          workerNodesRunning={getNumberOfNodes(cluster)}
+                        />
+                      )}
 
-            {targetRelease && (
-              <UpgradeClusterModal
-                cluster={cluster}
-                ref={s => {
-                  this.upgradeClusterModal = s;
-                }}
-                release={release}
-                targetRelease={targetRelease}
-              />
-            )}
-          </WrapperDiv>
-        </DocumentTitle>
-      </LoadingOverlay>
+                      <div className='row section cluster_delete col-12'>
+                        <div className='row'>
+                          <h3 className='table-label'>Delete This Cluster</h3>
+                        </div>
+                        <div className='row'>
+                          <p>
+                            All workloads on this cluster will be terminated.
+                            Data stored on the worker nodes will be lost. There
+                            is no way to undo this action.
+                          </p>
+                          <Button
+                            bsStyle='danger'
+                            onClick={this.showDeleteClusterModal.bind(
+                              this,
+                              cluster
+                            )}
+                          >
+                            <i className='fa fa-delete' /> Delete Cluster
+                          </Button>
+                        </div>
+                      </div>
+                    </Tab>
+                    <Tab eventKey={2} title='Key Pairs'>
+                      <KeyPairs cluster={cluster} />
+                    </Tab>
+                    <Tab eventKey={3} title='Apps'>
+                      {release ? (
+                        <ClusterApps
+                          clusterId={this.props.clusterId}
+                          dispatch={dispatch}
+                          errorLoading={this.state.errorLoadingApps}
+                          installedApps={cluster.apps}
+                          release={release}
+                          showInstalledAppsBlock={
+                            Object.keys(this.props.catalogs.items).length > 0 &&
+                            cluster.capabilities.canInstallApps
+                          }
+                        />
+                      ) : (
+                        <div className='well'>
+                          We had some trouble loading this pane. Please come
+                          back later or contact support in your slack channel or
+                          at{' '}
+                          <a href='mailto:support@giantswarm.io'>
+                            support@giantswarm.io
+                          </a>
+                          .
+                        </div>
+                      )}
+                    </Tab>
+                  </Tabs>
+                </div>
+              </div>
+              {!isNodePoolsCluster && (
+                <ScaleClusterModal
+                  cluster={cluster}
+                  provider={provider}
+                  ref={s => {
+                    this.scaleClusterModal = s;
+                  }}
+                  workerNodesDesired={this.getDesiredNumberOfNodes()}
+                  workerNodesRunning={getNumberOfNodes(cluster)}
+                />
+              )}
+
+              {targetRelease && (
+                <UpgradeClusterModal
+                  cluster={cluster}
+                  ref={s => {
+                    this.upgradeClusterModal = s;
+                  }}
+                  release={release}
+                  targetRelease={targetRelease}
+                />
+              )}
+            </WrapperDiv>
+          </DocumentTitle>
+        )}
+      </>
     );
   }
 }
@@ -410,9 +418,10 @@ ClusterDetailView.propTypes = {
   loading: PropTypes.bool,
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const { releases, clusters } = state.entities;
-  const loading = releases.isFetching || clusters.isFetching;
+  const loading =
+    releases.isFetching || clusters.isFetching || !ownProps.cluster;
 
   return {
     loading,
