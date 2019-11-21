@@ -710,8 +710,9 @@ export const clusterLoadDetailsSuccess = cluster => ({
   cluster,
 });
 
-export const clusterLoadDetailsError = error => ({
+export const clusterLoadDetailsError = (clusterId, error) => ({
   type: types.CLUSTER_LOAD_DETAILS_ERROR,
+  clusterId,
   error,
 });
 
