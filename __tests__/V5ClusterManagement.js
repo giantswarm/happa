@@ -55,6 +55,8 @@ beforeAll(() => {
     '/v4/appcatalogs/',
     appCatalogsResponse
   );
+
+  // TODO no apps response?? Check on gauss.
 });
 
 // Stop persisting responses
@@ -66,7 +68,7 @@ afterAll(() => {
 
 /************ TESTS ************/
 
-it('renders all the cluster data correctly with 0 nodes ready', async () => {
+it('renders all the v5 cluster data correctly with 0 nodes ready', async () => {
   const div = document.createElement('div');
   const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
 
@@ -79,7 +81,7 @@ it('renders all the cluster data correctly with 0 nodes ready', async () => {
   expect(k8sEndpoint).not.toBeEmpty();
 });
 
-it('renders nodes data correctly with nodes ready', async () => {
+it('renders nodes data correctly with nodes ready in v5 cluster view', async () => {
   const nodePoolsResponseWithNodes = nodePoolsResponse.map(np => ({
     ...np,
     status: { nodes: 3, nodes_ready: 3 },
