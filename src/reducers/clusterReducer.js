@@ -70,7 +70,7 @@ const clusterReducer = produce((draft, action) => {
     }
 
     case types.CLUSTER_LOAD_DETAILS_ERROR:
-      draft.items[action.cluster.id].errorLoading = true;
+      draft.items[action.clusterId].errorLoading = true;
       return;
 
     case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS:
@@ -96,10 +96,7 @@ const clusterReducer = produce((draft, action) => {
 
     case types.CLUSTER_LOAD_APPS_SUCCESS:
       draft.items[action.clusterId].isFetchingApps = false;
-      // For some reason the array that we get back
-      // from the generated js client does not have
-      // .map on it. So I make a new one here.
-      draft.items[action.clusterId].apps = Array(...action.apps);
+      draft.items[action.clusterId].apps = action.apps;
       draft.items[action.clusterId].lastUpdated = Date.now();
       return;
 
@@ -143,6 +140,12 @@ const clusterReducer = produce((draft, action) => {
     // TODO does this actually work????
     case types.CLUSTER_PATCH_ERROR:
       draft.items[action.cluster.id] = action.cluster;
+      return;
+
+    case types.NODEPOOL_DELETE_SUCCESS:
+      draft.items[action.clusterId].nodePools = draft.items[
+        action.clusterId
+      ].nodePools.filter(np => np !== action.nodePoolId);
       return;
   }
 }, initialState);

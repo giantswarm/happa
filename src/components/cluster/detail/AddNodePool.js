@@ -5,7 +5,7 @@ import { RadioWrapper } from '../new/CreateNodePoolsCluster';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
 import AWSInstanceTypeSelector from '../new/AWSInstanceTypeSelector';
 import BaseTransition from 'styles/transitions/BaseTransition';
-import NodeCountSelector from 'shared/node_count_selector';
+import NodeCountSelector from 'shared/NodeCountSelector';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';

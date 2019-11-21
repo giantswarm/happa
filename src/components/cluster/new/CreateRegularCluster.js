@@ -9,7 +9,7 @@ import Button from 'UI/button';
 import ClusterCreationDuration from './ClusterCreationDuration';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
-import NodeCountSelector from 'shared/node_count_selector';
+import NodeCountSelector from 'shared/NodeCountSelector';
 import NumberPicker from 'UI/number_picker';
 import PropTypes from 'prop-types';
 import ProviderCredentials from './ProviderCredentials';
@@ -613,6 +613,7 @@ class CreateRegularCluster extends React.Component {
                     this.props.provider,
                     this.props.selectedRelease
                   )}
+                  maxValue={this.props.maxWorkersPerCluster}
                   onChange={this.updateScaling}
                   readOnly={false}
                   scaling={this.state.scaling}
@@ -650,9 +651,20 @@ class CreateRegularCluster extends React.Component {
   }
 }
 
+CreateRegularCluster.defaultProps = {
+  defaultInstanceType: 'm3.large',
+  defaultVMSize: 'Standard_D2s_v3',
+  defaultCPUCores: 4,
+  defaultMemorySize: 4,
+  defaultDiskSize: 20,
+  allowedInstanceTypes: [],
+  allowedVMSizes: [],
+};
+
 CreateRegularCluster.propTypes = {
   minAvailabilityZones: PropTypes.number,
   maxAvailabilityZones: PropTypes.number,
+  maxWorkersPerCluster: PropTypes.number,
   allowedInstanceTypes: PropTypes.array,
   allowedVMSizes: PropTypes.array,
   selectedOrganization: PropTypes.string,
@@ -673,60 +685,45 @@ CreateRegularCluster.propTypes = {
 };
 
 function mapStateToProps(state) {
-  var minAvailabilityZones = state.app.info.general.availability_zones.default;
-  var maxAvailabilityZones = state.app.info.general.availability_zones.max;
-  var selectedOrganization = state.app.selectedOrganization;
-  var provider = state.app.info.general.provider;
-  var clusterCreationStats = state.app.info.stats.cluster_creation_duration;
+  const provider = state.app.info.general.provider;
+  const propsToPush = {
+    minAvailabilityZones: state.app.info.general.availability_zones.default,
+    maxAvailabilityZones: state.app.info.general.availability_zones.max,
+    selectedOrganization: state.app.selectedOrganization,
+    clusterCreationStats: state.app.info.stats.cluster_creation_duration,
+    provider,
+  };
 
-  var defaultInstanceType;
   if (
     state.app.info.workers.instance_type &&
     state.app.info.workers.instance_type.default
   ) {
-    defaultInstanceType = state.app.info.workers.instance_type.default;
-  } else {
-    defaultInstanceType = 'm3.large';
+    propsToPush.defaultInstanceType =
+      state.app.info.workers.instance_type.default;
   }
 
-  var defaultVMSize;
   if (
     state.app.info.workers.vm_size &&
     state.app.info.workers.vm_size.default
   ) {
-    defaultVMSize = state.app.info.workers.vm_size.default;
-  } else {
-    defaultVMSize = 'Standard_D2s_v3';
+    propsToPush.defaultVMSize = state.app.info.workers.vm_size.default;
   }
 
-  var defaultCPUCores = 4; // TODO
-  var defaultMemorySize = 4; // TODO
-  var defaultDiskSize = 20; // TODO
-
-  var allowedInstanceTypes = [];
   if (provider === 'aws') {
-    allowedInstanceTypes = state.app.info.workers.instance_type.options;
+    propsToPush.allowedInstanceTypes =
+      state.app.info.workers.instance_type.options;
   }
 
-  var allowedVMSizes = [];
   if (provider === 'azure') {
-    allowedVMSizes = state.app.info.workers.vm_size.options;
+    propsToPush.allowedVMSizes = state.app.info.workers.vm_size.options;
   }
 
-  return {
-    minAvailabilityZones,
-    maxAvailabilityZones,
-    allowedInstanceTypes,
-    allowedVMSizes,
-    provider,
-    defaultInstanceType,
-    defaultVMSize,
-    defaultCPUCores,
-    defaultMemorySize,
-    defaultDiskSize,
-    selectedOrganization,
-    clusterCreationStats,
-  };
+  if (state.app.info.workers.count_per_cluster.max) {
+    propsToPush.maxWorkersPerCluster =
+      state.app.info.workers.count_per_cluster.max;
+  }
+
+  return propsToPush;
 }
 
 function mapDispatchToProps(dispatch) {

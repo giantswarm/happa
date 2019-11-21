@@ -1,5 +1,5 @@
 [![CircleCI](https://circleci.com/gh/giantswarm/happa/tree/master.svg?style=shield&circle-token=6e98ba111259986b590f228cd20e20fcea3dd2e5)](https://circleci.com/gh/giantswarm/happa/tree/master)
-[![Docker Repository on Quay](https://quay.io/repository/giantswarm/happa/status?token=f90886ab-d4af-4c3f-b814-45bc317c2cd6 "Docker Repository on Quay")](https://quay.io/repository/giantswarm/happa)
+[![Docker Repository on Quay](https://quay.io/repository/giantswarm/happa/status?token=f90886ab-d4af-4c3f-b814-45bc317c2cd6 'Docker Repository on Quay')](https://quay.io/repository/giantswarm/happa)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=shield)](https://github.com/prettier/prettier)
 [![Known Vulnerabilities](https://snyk.io/test/github/giantswarm/happa/badge.svg?targetFile=package.json)](https://snyk.io/test/github/giantswarm/happa?targetFile=package.json)
 
@@ -44,8 +44,8 @@ make up
 ```
 
 > Notice the `make aws` command in that example? There is also `make azure` and `make kvm`
-to create a docker-compose file that sets up the API and other microservices as if
-they were on these types of installations.
+> to create a docker-compose file that sets up the API and other microservices as if
+> they were on these types of installations.
 
 As part of `make up`, `./fixtures.sh` will run and create the initial user and
 organization you can log in with.
@@ -56,6 +56,7 @@ You should now be able to start happa's development server from within this
 ```nohighlight
 docker-compose up --build
 ```
+
 It can take a minute or two for dependencies to be available.
 Wait for a line like `: Compiled successfully.` to appear in the console.
 This shows that the dev server is ready to handle requests.
@@ -76,19 +77,16 @@ Hit `Ctrl-C` to escape from `docker-compose` log output.
 
 Use `docker-compose stop` to stop containers or `docker-compose down` to remove them.
 
-Running tests
--------------
+## Running tests
 
 We have a few tests, and are adding more. Run them with `yarn test`
 
-Deploying
----------
+## Deploying
 
 Commits to the master branch are continuously deployed to Giant Swarm test installations.
 Tagged releases are continuously deployed to all installations.
 
-Building / Running locally
---------------------------
+## Building / Running locally
 
 If you want to test locally `make production` will build and run
 Happa's production container.
@@ -101,23 +99,22 @@ The build process is as follows:
 0. Build the development container `make docker-build-dev`
 
 1. Create production assets using the development container (`grunt build`), save them in the
-dist folder. `make dist`
+   dist folder. `make dist`
 
-2. Create the production container `make docker-build-prod`
+1. Create the production container `make docker-build-prod`
 
-Configuration
--------------
+## Configuration
 
 Use environment variables to adjust the behavior of this application in production.
 
-|Variable Name|Description|Default|
-|-------------|-----------|-------|
-|API_ENDPOINT |URL to Giant Swarm's API.|http://docker.dev:9000|
-|PASSAGE_ENDPOINT|URL to Passage, which helps users when they lose their password or have been invited to create an account.|http://docker.dev:5001|
-|INGRESS_BASE_DOMAIN|The ingress base domain of the installation that Happa is on. This affects the getting started guide.|k8s.sample.io|
-|AWS_CAPABILITIES_JSON|A JSON array representing all the details of AWS instance types. This has been extracted so that we have a single point of truth for this information||
-|AZURE_CAPABILITIES_JSON|A JSON array representing all the details of Azure vm sizes. This has been extracted so that we have a single point of truth for this information||
-|ENVIRONMENT  |A string that indicates where Happa is running. |development|
+| Variable Name           | Description                                                                                                                                           | Default                |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| API_ENDPOINT            | URL to Giant Swarm's API.                                                                                                                             | http://docker.dev:9000 |
+| PASSAGE_ENDPOINT        | URL to Passage, which helps users when they lose their password or have been invited to create an account.                                            | http://docker.dev:5001 |
+| INGRESS_BASE_DOMAIN     | The ingress base domain of the installation that Happa is on. This affects the getting started guide.                                                 | k8s.sample.io          |
+| AWS_CAPABILITIES_JSON   | A JSON array representing all the details of AWS instance types. This has been extracted so that we have a single point of truth for this information |                        |
+| AZURE_CAPABILITIES_JSON | A JSON array representing all the details of Azure vm sizes. This has been extracted so that we have a single point of truth for this information     |                        |
+| ENVIRONMENT             | A string that indicates where Happa is running.                                                                                                       | development            |
 
 These environment variables affect the config object in `index.html`.
 A startup script (`start.sh`) applies the values from the environment variables
@@ -127,8 +124,8 @@ that can be served by nginx.
 In development, environment variables are not applied. This is because the development container
 does not start in the same way that the production container does.
 
-Redux in a nutshell
---------------------
+## Redux in a nutshell
+
 ```
 ╔═════════╗       ╔══════════╗       ╔═══════════╗       ╔═════════════════╗
 ║ Actions ║──────>║ Reducers ║──────>║   Store   ║──────>║ View Components ║
@@ -136,6 +133,7 @@ Redux in a nutshell
      ^                                                           │
      └───────────────────────────────────────────────────────────┘
 ```
+
 Components should only emit actions.
 
 Reducers listen for actions and emit a new state.
@@ -146,8 +144,7 @@ By following these guidelines we should get some benefits in keeping component
 logic focused on rendering, and not on doing the actual work of manipulating
 state.
 
-Icons
------
+## Icons
 
 Happa uses a custom icon pack which we can manage at https://fortawesome.com
 Login details are in keypass, search for 'fortawesome'.
@@ -157,12 +154,9 @@ index.html is what includes the file for us.
 More information about our font kit and how to use it can be found here:
 https://fortawesome.com/kits/d940f7eb/docs
 
-
-Checking for outdated dependencies
-----------------------------------
+## Checking for outdated dependencies
 
 To see what dependencies have updates run `make npm-check-updates`
-
 
 # Code Style
 
@@ -172,33 +166,19 @@ Happa's Code Style is determined by `prettier`. Please make sure files in the
 A CI step will enforce that this has happened, failing the CI if it detects that
 `prettier` would make any changes.
 
-You can run `prettier` on the whole codebase using `yarn run prettier`.
+You can run `prettier` on the whole codebase using `yarn prettier`.
 
 We use the following config params:
+
 - `--jsx-single-quote`
 - `--single-quote`
 - `--trailing-comma es5`
 
-
 ### Pre commit hooks
 
-To avoid pushing code that will fail the CI due to codestyle issues, you can add
-the following as a pre-commit hook.
+To avoid pushing code that will fail the CI due to codestyle issues, we've added a pre-commit hook using [`husky`](https://github.com/typicode/husky/).
 
-```bash
-#!/bin/bash
-
-git diff --name-only --cached | grep "\.js$"
-
-if [ $? -eq 0 ]; then
-  make validate-prettier
-fi
-```
-
-To add a pre-commit hook, save the above as a file called `pre-commit` in the
-`.git/hooks` folder.
-
-Make sure it has has `0755` as the permission.
+This runs before every commit, and it will not let commits go through if the `prettier` check has not passed.
 
 ### Publishing a Release
 
