@@ -11,7 +11,7 @@ import React from 'react';
 
 class NewCluster extends React.Component {
   state = {
-    selectedRelease: window.config.firstNodePoolsRelease,
+    selectedRelease: this.props.firstNodePoolsRelease,
     selectableReleases: [],
     loading: true,
   };
