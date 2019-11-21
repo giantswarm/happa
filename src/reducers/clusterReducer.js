@@ -70,7 +70,7 @@ const clusterReducer = produce((draft, action) => {
     }
 
     case types.CLUSTER_LOAD_DETAILS_ERROR:
-      draft.items[action.cluster.id].errorLoading = true;
+      draft.items[action.clusterId].errorLoading = true;
       return;
 
     case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS:
