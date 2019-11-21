@@ -1,4 +1,4 @@
-import * as Helpers from 'lib/helpers';
+import { dedent } from 'lib/helpers';
 import Line from './line';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
@@ -25,37 +25,33 @@ import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 // take the content in the Prompt tags.
 
 export const Prompt = ({ children }) => {
-  return <Line prompt={true} text={Helpers.dedent(children)} />;
+  return <Line prompt={true} text={dedent(children)} />;
 };
 
 export const Output = ({ children }) => {
-  return <Line prompt={false} text={Helpers.dedent(children)} />;
+  return <Line prompt={false} text={dedent(children)} />;
 };
 
 export const CodeBlock = ({ children }) => {
   const [isHovering, setHovering] = useState(false);
-  const [isCopiedToClipboard, setCopyToClipboard] = useCopyToClipboard();
+  const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const preElement = useRef(null);
 
   const getPromptLinesAsString = () => {
     const string = React.Children.toArray(children)
-      .filter(x => {
-        return x.type.displayName === 'Prompt';
-      })
-      .map(x => {
-        return x.props.children;
-      })
+      .filter(x => x.type.displayName === 'Prompt')
+      .map(x => x.props.children)
       .join('\n');
 
-    return Helpers.dedent(string);
+    return dedent(string);
   };
 
   const copyCodeToClipboard = e => {
     e.preventDefault();
 
     const contentToCopy = getPromptLinesAsString();
-    setCopyToClipboard(contentToCopy);
+    setClipboardContent(contentToCopy);
   };
 
   const getClassNames = () => {
@@ -69,7 +65,7 @@ export const CodeBlock = ({ children }) => {
     if (isHovering) {
       classNames.push('hovering');
     }
-    if (isCopiedToClipboard) {
+    if (hasContentInClipboard) {
       classNames.push('clicked');
     }
     if (childrenArray.length === 1) {
@@ -88,7 +84,7 @@ export const CodeBlock = ({ children }) => {
         <div className='codeblock--buttons'>
           <a
             href='#'
-            onClick={() => setCopyToClipboard(null)}
+            onClick={() => setClipboardContent(null)}
             onMouseOut={() => setHovering(false)}
             onMouseOver={() => setHovering(true)}
             onMouseUp={copyCodeToClipboard}
@@ -101,7 +97,7 @@ export const CodeBlock = ({ children }) => {
           transitionLeaveTimeout={1000}
           transitionName={'checkmark'}
         >
-          {isCopiedToClipboard ? (
+          {hasContentInClipboard ? (
             <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
           ) : null}
         </ReactCSSTransitionGroup>

@@ -49,23 +49,23 @@ function calculateColour(str) {
 }
 
 const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
-  const [isCopiedToClipboard, setCopyToClipboard] = useCopyToClipboard();
+  const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const copyToClipboard = e => {
     e.preventDefault();
     e.stopPropagation();
 
-    setCopyToClipboard(clusterID);
+    setClipboardContent(clusterID);
   };
 
   return (
-    <Wrapper onMouseLeave={() => setCopyToClipboard(clusterID)}>
+    <Wrapper onMouseLeave={() => setClipboardContent(null)}>
       <Label clusterID={clusterID} title={'Unique Cluster ID: ' + clusterID}>
         {clusterID}
       </Label>
 
       {copyEnabled &&
-        (isCopiedToClipboard ? (
+        (hasContentInClipboard ? (
           <i aria-hidden='true' className='fa fa-done' />
         ) : (
           <OverlayTrigger

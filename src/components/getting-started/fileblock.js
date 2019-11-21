@@ -1,4 +1,4 @@
-import * as Helpers from 'lib/helpers';
+import { dedent } from 'lib/helpers';
 import Line from './line';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
@@ -25,15 +25,15 @@ var Modernizr = window.Modernizr;
 
 export const FileBlock = ({ children, hideText, fileName }) => {
   const [isHovering, setHovering] = useState(false);
-  const [isCopiedToClipboard, setCopyToClipboard] = useCopyToClipboard();
+  const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const preElement = useRef(null);
 
   const copyCodeToClipboard = e => {
     e.preventDefault();
 
-    const contentToCopy = Helpers.dedent(children);
-    setCopyToClipboard(contentToCopy);
+    const contentToCopy = dedent(children);
+    setClipboardContent(contentToCopy);
   };
 
   const classNames = () => {
@@ -42,7 +42,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
     if (isHovering) {
       classNames.push('hovering');
     }
-    if (isCopiedToClipboard) {
+    if (hasContentInClipboard) {
       classNames.push('clicked');
     }
     if (hideText) {
@@ -53,7 +53,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
   };
 
   const getFileAsBlob = () => {
-    const blob = new Blob([Helpers.dedent(children)], {
+    const blob = new Blob([dedent(children)], {
       type: 'application/plain;charset=utf-8',
     });
 
@@ -74,7 +74,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
         <div className='content' ref={preElement}>
           <div className='codeblock--filename'>{fileName}</div>
           <div className='codeblock--filecontents'>
-            {hideText ? undefined : <Line text={Helpers.dedent(children)} />}
+            {!hideText && <Line text={dedent(children)} />}
           </div>
         </div>
         <div
@@ -85,7 +85,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
           {Modernizr.adownload ? downloadAsFileLink() : null}
           <a
             href='#'
-            onClick={() => setCopyToClipboard(null)}
+            onClick={() => setClipboardContent(null)}
             onMouseUp={copyCodeToClipboard}
           >
             <i aria-hidden='true' className='fa fa-content-copy' />
@@ -96,7 +96,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
           transitionLeaveTimeout={1000}
           transitionName={'checkmark'}
         >
-          {isCopiedToClipboard ? (
+          {hasContentInClipboard ? (
             <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
           ) : null}
         </ReactCSSTransitionGroup>

@@ -5,14 +5,14 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
 const Copyable = ({ children, copyText }) => {
-  const [isCopiedToClipboard, setCopyToClipboard] = useCopyToClipboard();
+  const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const handleCopyToClipboard = () => {
-    setCopyToClipboard(copyText);
+    setClipboardContent(copyText);
   };
 
   const handleDisplayCopyingDone = () => {
-    setCopyToClipboard(null);
+    setClipboardContent(null);
   };
 
   return (
@@ -25,7 +25,7 @@ const Copyable = ({ children, copyText }) => {
       <div className='copyable-content'>{children}</div>
 
       <div className='copyable-tooltip'>
-        {isCopiedToClipboard ? (
+        {hasContentInClipboard ? (
           <i aria-hidden='true' className='fa fa-done' />
         ) : (
           <OverlayTrigger

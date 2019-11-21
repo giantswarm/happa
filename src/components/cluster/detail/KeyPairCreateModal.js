@@ -17,7 +17,7 @@ const KeyPairCreateModal = props => {
     defaultDescription(props.user.email)
   );
   const [useInternalAPI, setUseInternalAPI] = useState(false);
-  const [isCopiedToClipboard, setCopyToClipboard] = useCopyToClipboard();
+  const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
   const [kubeconfig, setKubeconfig] = useState(false);
   const [cnPrefix, setCNPrefix] = useState('');
   const [cnPrefixError, setCNPrefixError] = useState(null);
@@ -38,9 +38,9 @@ const KeyPairCreateModal = props => {
   const copyKubeConfig = e => {
     e.preventDefault();
 
-    setCopyToClipboard(kubeconfig);
+    setClipboardContent(kubeconfig);
     setTimeout(() => {
-      setCopyToClipboard(null);
+      setClipboardContent(null);
     }, 500);
   };
 
@@ -335,7 +335,7 @@ const KeyPairCreateModal = props => {
                     <textarea readOnly value={kubeconfig} />
                   </form>
 
-                  {isCopiedToClipboard ? (
+                  {hasContentInClipboard ? (
                     <Button bsStyle='default' onClick={copyKubeConfig}>
                       &nbsp;&nbsp;
                       <i aria-hidden='true' className='fa fa-done' />

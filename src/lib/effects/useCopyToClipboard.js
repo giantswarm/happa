@@ -5,7 +5,7 @@ import copy from 'copy-to-clipboard';
  * Hook for copying text to the user's clipboard
  *
  * Use setter to set value to null for resetting the copy state.
- * @returns {[Boolean, (textToCopy: string|null) => void]} [isCopiedToClipboard, setCopyToClipboard]
+ * @returns {[Boolean, (textToCopy: string|null) => void]} [hasContentInClipboard, setClipboardContent]
  */
 function useCopyToClipboard() {
   const [copiedText, copyToClipboard] = useState(null);
