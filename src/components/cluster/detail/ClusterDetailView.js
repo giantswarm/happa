@@ -250,7 +250,10 @@ class ClusterDetailView extends React.Component {
           <DocumentTitle
             title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
           >
-            <WrapperDiv className='cluster-details'>
+            <WrapperDiv
+              className='cluster-details'
+              data-testid='cluster-details-view'
+            >
               <div className='row' style={{ marginBottom: '30px' }}>
                 <div className='col-sm-12 col-md-7 col-9'>
                   <h1 style={{ marginLeft: '-10px' }}>
