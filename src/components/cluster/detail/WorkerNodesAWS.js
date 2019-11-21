@@ -42,11 +42,11 @@ function WorkerNodesAWS({
         </div>
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
-      <LineDiv>
+      <LineDiv data-testid='desired-nodes'>
         <div>Desired number</div>
         <div>{workerNodesDesired && workerNodesDesired}</div>
       </LineDiv>
-      <LineDiv>
+      <LineDiv data-testid='running-nodes'>
         <div>Current number</div>
         <div>{workerNodesRunning && workerNodesRunning}</div>
       </LineDiv>
