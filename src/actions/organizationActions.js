@@ -45,8 +45,7 @@ export function organizationsLoadSuccess(organizations, selectedOrganization) {
 //
 // Using this information, it ensures we always have a valid organization selected.
 const determineSelectedOrganization = (organizations, selectedOrganization) => {
-  const organizationStillExists =
-    organizations.indexOf(selectedOrganization) > -1;
+  const organizationStillExists = organizations.includes(selectedOrganization);
 
   if (selectedOrganization && organizationStillExists) {
     // The user had an organization selected, and it still exists.
@@ -56,6 +55,7 @@ const determineSelectedOrganization = (organizations, selectedOrganization) => {
   // The user didn't have an organization selected yet, or the one
   // they selected is gone. Switch to the first organization in the list.
   const firstOrganization = organizations[0];
+
   return firstOrganization;
 };
 
@@ -65,93 +65,100 @@ const determineSelectedOrganization = (organizations, selectedOrganization) => {
  * work with.
  */
 export function organizationsLoad() {
-  return function(dispatch, getState) {
-    const organizationsApi = new GiantSwarm.OrganizationsApi();
+  return async (dispatch, getState) => {
+    try {
+      const currentOrganizations = getState().entities.organizations;
+      const alreadyFetching = currentOrganizations.isFetching;
 
-    const alreadyFetching = getState().entities.organizations.isFetching;
+      if (alreadyFetching) {
+        return new Promise(resolve => resolve());
+      }
 
-    if (alreadyFetching) {
-      return new Promise(resolve => resolve());
-    }
+      dispatch({ type: types.ORGANIZATIONS_LOAD });
 
-    dispatch({ type: types.ORGANIZATIONS_LOAD });
+      const organizationsApi = new GiantSwarm.OrganizationsApi();
+      const organizations = await organizationsApi.getOrganizations();
+      const currentlySelectedOrganization = getState().app.selectedOrganization;
 
-    return organizationsApi
-      .getOrganizations()
-      .then(organizations => {
-        const organizationsArray = organizations.map(
-          organization => organization.id
-        );
+      const organizationsWithDetails = await Promise.all(
+        organizations.map(organization => {
+          const organizationID = organization.id;
 
-        const orgDetails = Promise.all(
-          organizationsArray.map(organizationName => {
-            return organizationsApi
-              .getOrganization(organizationName)
-              .then(organization => {
-                return organizationsApi
-                  .getCredentials(organization.id)
-                  .then(credentials => {
-                    const organizationWithCredentials = Object.assign(
-                      {},
-                      organization,
-                      { credentials }
-                    );
-
-                    return organizationWithCredentials;
-                  });
-              });
-          })
-        );
-
-        return orgDetails;
-      })
-      .then(orgDetails => {
-        // create an object with organization IDs as key
-        const organizations = orgDetails.reduce((previous, current) => {
-          const orgId = current.id;
-          const orgDetails = current;
-
-          orgDetails.members = orgDetails.members.sort();
-
-          previous[orgId] = Object.assign(
-            {},
-            getState().entities.organizations.items[orgId],
-            orgDetails
+          return updateOrganizationDetailsForID(
+            organizationID,
+            currentOrganizations.items[organizationID]
           );
+        })
+      );
+      const organizationsAsMap = organizationsWithDetails.reduce(
+        (orgAcc, currentOrg) => {
+          orgAcc[currentOrg.id] = currentOrg;
 
-          return previous;
-        }, {});
+          return orgAcc;
+        },
+        {}
+      );
 
-        // Organizations have been loaded.
-        const organizationsArray = Object.keys(organizations);
+      const selectedOrganization = determineSelectedOrganization(
+        Object.keys(organizationsAsMap),
+        currentlySelectedOrganization
+      );
 
-        // Deterimine what organization should be selected.
-        const selectedOrganization = determineSelectedOrganization(
-          organizationsArray,
-          getState().app.selectedOrganization
-        );
+      setOrganizationToStorage(selectedOrganization);
 
-        setOrganizationToStorage(selectedOrganization);
+      return dispatch(
+        organizationsLoadSuccess(organizationsAsMap, selectedOrganization)
+      );
+    } catch (error) {
+      console.error('Error loading organizations:', error);
 
-        return dispatch(
-          organizationsLoadSuccess(organizations, selectedOrganization)
-        );
-      })
-      .catch(error => {
-        console.error('Error loading organizations:', error);
+      new FlashMessage(
+        'An error occurred as we tried to load organizations.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io.'
+      );
 
-        new FlashMessage(
-          'An error occurred as we tried to load organizations.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io.'
-        );
-
-        dispatch({
-          type: types.ORGANIZATIONS_LOAD_ERROR,
-        });
+      dispatch({
+        type: types.ORGANIZATIONS_LOAD_ERROR,
       });
+    }
   };
+}
+
+/**
+ * Update organization details and credentials for ID
+ * @param {String} id Organization ID
+ * @param {Record<string, any>} previousOrganizationDetails Previous organization details to append data to
+ */
+async function updateOrganizationDetailsForID(
+  id,
+  previousOrganizationDetails = {}
+) {
+  const organizationsApi = new GiantSwarm.OrganizationsApi();
+
+  /**
+   * @type {[Object, Array]}
+   */
+  const organizationDetails = await Promise.all([
+    organizationsApi.getOrganization(id),
+    organizationsApi.getCredentials(id),
+  ]);
+
+  const [organizationInfo, organizationCredentials] = organizationDetails;
+  const sortedMembers = organizationInfo.members.sort();
+
+  const organizationWithCredentials = Object.assign(
+    {},
+    previousOrganizationDetails,
+    organizationInfo,
+    {
+      members: sortedMembers,
+      credentials: organizationCredentials,
+    }
+  );
+
+  return organizationWithCredentials;
 }
 
 // organizationDeleteConfirmed is called when the user confirms they want to delete
