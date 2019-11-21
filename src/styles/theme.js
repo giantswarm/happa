@@ -37,9 +37,11 @@ const theme = {
     shade8: '#5c7f9a',
     shade9: '#316786',
     shade10: '#1b3848',
+
     white1: '#FFFFFF',
     white2: '#D7D7D7',
     white3: '#B9C1C8',
+
     whiteInput: '#f0f0f0',
     yellow1: '#ddb03a',
     gold: '#ce990f',
