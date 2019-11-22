@@ -36,6 +36,13 @@ export const FileBlock = ({ children, hideText, fileName }) => {
     setClipboardContent(contentToCopy);
   };
 
+  const handleClick = e => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setClipboardContent(null);
+  };
+
   const classNames = () => {
     const classNames = ['codeblock--container'];
 
@@ -83,11 +90,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
           onMouseOver={() => setHovering(true)}
         >
           {Modernizr.adownload ? downloadAsFileLink() : null}
-          <a
-            href='#'
-            onClick={() => setClipboardContent(null)}
-            onMouseUp={copyCodeToClipboard}
-          >
+          <a href='#' onClick={handleClick} onMouseUp={copyCodeToClipboard}>
             <i aria-hidden='true' className='fa fa-content-copy' />
           </a>
         </div>

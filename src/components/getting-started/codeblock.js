@@ -75,6 +75,13 @@ export const CodeBlock = ({ children }) => {
     return classNames.join(' ');
   };
 
+  const handleClick = e => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setClipboardContent(null);
+  };
+
   return (
     <div className={getClassNames()}>
       <pre>
@@ -84,7 +91,7 @@ export const CodeBlock = ({ children }) => {
         <div className='codeblock--buttons'>
           <a
             href='#'
-            onClick={() => setClipboardContent(null)}
+            onClick={handleClick}
             onMouseOut={() => setHovering(false)}
             onMouseOver={() => setHovering(true)}
             onMouseUp={copyCodeToClipboard}
