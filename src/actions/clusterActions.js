@@ -174,11 +174,16 @@ export function clustersLoad() {
     );
 
     // Get the details for v5 clusters.
-    const v5ClustersDetails = await Promise.all(
+    let v5ClustersDetails = await Promise.all(
       v5Clusters.map(cluster => clusterDetailsV5(dispatch, getState, cluster))
     );
 
+    // Sometimes we fail to fetch a detail, and get undefined back.
+    // So remove those from this list.
+    v5ClustersDetails = v5ClustersDetails.filter(x => x);
+
     // Clusters array to object, because we are storing an object in the store.
+
     let v5ClustersObject = clustersLoadArrayToObject(v5ClustersDetails);
 
     // nodePoolsClusters is an array of v5 clusters ids and is stored in clusters.
