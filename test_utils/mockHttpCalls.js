@@ -4,6 +4,12 @@ import nock from 'nock';
 export const API_ENDPOINT = 'http://localhost:8000';
 export const USER_EMAIL = 'developer@giantswarm.io';
 export const ORGANIZATION = 'acme';
+export const V4_CLUSTER = {
+  id: '7ccr6',
+  name: 'My v4 cluster',
+  releaseVersion: '8.5.0',
+  instanceType: 'm4.xlarge',
+};
 export const V5_CLUSTER = {
   id: 'm0ckd',
   name: 'All purpose cluster',
@@ -32,28 +38,52 @@ export const postMockCall = (endpoint, response = []) =>
 // Info
 export const infoResponse = {
   general: {
-    availability_zones: { default: 1, max: 3 },
+    availability_zones: {
+      default: 1,
+      max: 3,
+      zones: ['eu-central-1a', 'eu-central-1b', 'eu-central-1c'],
+    },
+    datacenter: 'eu-central-1',
     installation_name: 'local',
     provider: 'aws',
   },
-  stats: {
-    cluster_creation_duration: { median: 805, p25: 657, p75: 1031 },
-  },
+  features: { nodepools: { release_version_minimum: '10.0.0' } },
+  stats: { cluster_creation_duration: { median: 805, p25: 657, p75: 1031 } },
   workers: {
     count_per_cluster: { max: null, default: 3 },
     instance_type: {
       options: [
-        'm5.large',
+        'c5.large',
+        'c5.xlarge',
+        'c5.2xlarge',
+        'c5.4xlarge',
+        'c5.9xlarge',
+        'i3.xlarge',
         'm3.large',
         'm3.xlarge',
         'm3.2xlarge',
+        'm4.large',
+        'm4.xlarge',
+        'm4.2xlarge',
+        'm4.4xlarge',
+        'm5.large',
+        'm5.xlarge',
+        'm5.2xlarge',
+        'm5.4xlarge',
         'r3.large',
         'r3.xlarge',
         'r3.2xlarge',
         'r3.4xlarge',
         'r3.8xlarge',
+        'r5.2xlarge',
+        't2.large',
+        't2.xlarge',
+        't2.2xlarge',
+        'p2.xlarge',
+        'p3.2xlarge',
+        'p3.8xlarge',
       ],
-      default: 'm3.large',
+      default: 'm4.xlarge',
     },
   },
 };
@@ -71,12 +101,59 @@ export const authTokenResponse = {
 };
 
 // Clusters
+
+export const v4ClustersResponse = [
+  {
+    create_date: '2019-11-15T15:53:58.549065412Z',
+    delete_date: '0001-01-01T00:00:00Z',
+    id: V4_CLUSTER.id,
+    name: V4_CLUSTER.name,
+    owner: ORGANIZATION,
+    release_version: V4_CLUSTER.releaseVersion,
+    path: `/v4/clusters/${V4_CLUSTER.id}/`,
+  },
+];
+
+export const v4AWSClusterResponse = {
+  id: V4_CLUSTER.id,
+  create_date: '2019-11-15T15:53:59Z',
+  api_endpoint: 'https://api.7ccr6.k8s.gauss.eu-central-1.aws.gigantic.io',
+  owner: ORGANIZATION,
+  name: V4_CLUSTER.name,
+  release_version: V4_CLUSTER.releaseVersion,
+  scaling: { min: 3, max: 3 },
+  credential_id: '',
+  workers: [
+    {
+      cpu: { cores: 4 },
+      labels: {},
+      memory: { size_gb: 16 },
+      storage: { size_gb: 0 },
+      aws: { instance_type: V4_CLUSTER.instanceType },
+    },
+    {
+      cpu: { cores: 4 },
+      labels: {},
+      memory: { size_gb: 16 },
+      storage: { size_gb: 0 },
+      aws: { instance_type: V4_CLUSTER.instanceType },
+    },
+    {
+      cpu: { cores: 4 },
+      labels: {},
+      memory: { size_gb: 16 },
+      storage: { size_gb: 0 },
+      aws: { instance_type: V4_CLUSTER.instanceType },
+    },
+  ],
+};
+
 export const v5ClustersResponse = [
   {
     create_date: '2019-11-08T13:50:32.333996123Z',
     id: V5_CLUSTER.id,
     name: 'V5 CLUSTER',
-    owner: 'giantswarm',
+    owner: ORGANIZATION,
     path: `/v5/clusters/${V5_CLUSTER.id}/`,
     release_version: V5_CLUSTER.releaseVersion,
   },
@@ -115,6 +192,205 @@ export const orgResponse = {
   id: ORGANIZATION,
   members: [{ email: USER_EMAIL }],
 };
+
+// Status
+export const v4AWSClusterStatusResponse = {
+  aws: {
+    availabilityZones: [
+      {
+        name: 'eu-central-1a',
+        subnet: {
+          private: { cidr: '10.1.2.0/25' },
+          public: { cidr: '10.1.2.128/25' },
+        },
+      },
+    ],
+    autoScalingGroup: { name: '' },
+  },
+  cluster: {
+    conditions: [
+      {
+        lastTransitionTime: '2019-11-15T15:54:05.711696992Z',
+        status: 'True',
+        type: 'Creating',
+      },
+    ],
+    network: { cidr: '10.1.2.0/24' },
+    nodes: [
+      {
+        labels: {
+          'aws-operator.giantswarm.io/version': '5.5.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
+          'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
+          'giantswarm.io/provider': 'aws',
+          ip: '10.1.2.18',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname':
+            'ip-10-1-2-18.eu-central-1.compute.internal',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-11-14T05:28:11.958410127Z',
+        name: 'ip-10-1-2-18.eu-central-1.compute.internal',
+        version: '5.5.0',
+      },
+      {
+        labels: {
+          'aws-operator.giantswarm.io/version': '5.5.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
+          'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
+          'giantswarm.io/provider': 'aws',
+          ip: '10.1.2.49',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname':
+            'ip-10-1-2-49.eu-central-1.compute.internal',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'master',
+          'node-role.kubernetes.io/master': '',
+          'node.kubernetes.io/master': '',
+          role: 'master',
+        },
+        lastTransitionTime: '2019-11-14T05:28:11.958410751Z',
+        name: 'ip-10-1-2-49.eu-central-1.compute.internal',
+        version: '5.5.0',
+      },
+      {
+        labels: {
+          'aws-operator.giantswarm.io/version': '5.5.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
+          'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
+          'giantswarm.io/provider': 'aws',
+          ip: '10.1.2.52',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname':
+            'ip-10-1-2-52.eu-central-1.compute.internal',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-11-14T05:28:11.958411157Z',
+        name: 'ip-10-1-2-52.eu-central-1.compute.internal',
+        version: '5.5.0',
+      },
+      {
+        labels: {
+          'aws-operator.giantswarm.io/version': '5.5.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
+          'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
+          'giantswarm.io/provider': 'aws',
+          ip: '10.1.2.85',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname':
+            'ip-10-1-2-85.eu-central-1.compute.internal',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-11-14T05:28:11.958411586Z',
+        name: 'ip-10-1-2-85.eu-central-1.compute.internal',
+        version: '5.5.0',
+      },
+    ],
+    resources: null,
+    scaling: { desiredCapacity: 3 },
+    versions: [],
+  },
+};
+
+// Apps
+export const appsResponse = [
+  {
+    metadata: { name: 'chart-operator' },
+    spec: {
+      catalog: 'default',
+      name: 'chart-operator',
+      namespace: 'giantswarm',
+      user_config: {
+        configmap: { name: '', namespace: '' },
+        secret: { name: '', namespace: '' },
+      },
+      version: '0.10.8',
+    },
+    status: {
+      app_version: '',
+      release: { last_deployed: '0001-01-01T00:00:00Z', status: '' },
+      version: '',
+    },
+  },
+  {
+    metadata: { name: 'kube-state-metrics' },
+    spec: {
+      catalog: 'default',
+      name: 'kube-state-metrics-app',
+      namespace: 'kube-system',
+      user_config: {
+        configmap: { name: '', namespace: '' },
+        secret: { name: '', namespace: '' },
+      },
+      version: '0.6.0',
+    },
+    status: {
+      app_version: '',
+      release: { last_deployed: '0001-01-01T00:00:00Z', status: '' },
+      version: '',
+    },
+  },
+  {
+    metadata: { name: 'metrics-server' },
+    spec: {
+      catalog: 'default',
+      name: 'metrics-server-app',
+      namespace: 'kube-system',
+      user_config: {
+        configmap: { name: '', namespace: '' },
+        secret: { name: '', namespace: '' },
+      },
+      version: '0.4.1',
+    },
+    status: {
+      app_version: '',
+      release: { last_deployed: '0001-01-01T00:00:00Z', status: '' },
+      version: '',
+    },
+  },
+  {
+    metadata: { name: 'node-exporter' },
+    spec: {
+      catalog: 'default',
+      name: 'node-exporter-app',
+      namespace: 'kube-system',
+      user_config: {
+        configmap: { name: '', namespace: '' },
+        secret: { name: '', namespace: '' },
+      },
+      version: '0.6.0',
+    },
+    status: {
+      app_version: '',
+      release: { last_deployed: '0001-01-01T00:00:00Z', status: '' },
+      version: '',
+    },
+  },
+];
 
 // Node Pools
 export const nodePoolsResponse = [
