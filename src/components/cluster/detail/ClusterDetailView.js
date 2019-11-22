@@ -281,7 +281,7 @@ class ClusterDetailView extends React.Component {
                 <div className='col-12'>
                   <Tabs>
                     <Tab eventKey={1} title='General'>
-                      {!isNodePoolsCluster ? (
+                      {isNodePoolsCluster ? (
                         <V5ClusterDetailTable
                           accessCluster={this.accessCluster}
                           canClusterUpgrade={this.canClusterUpgrade()}
