@@ -7,7 +7,7 @@ import React from 'react';
 function CredentialInfoRow({ cluster, credentials, provider }) {
   const { credential_id } = cluster;
 
-  let credentialInfoRows = [];
+  const credentialInfoRows = [];
 
   if (
     cluster &&
