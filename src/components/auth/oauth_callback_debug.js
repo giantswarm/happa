@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import QueryString from 'query-string';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import SlideTransition from 'styles/transitions/SlideTransition';
 
 class OauthCallback extends React.Component {
   componentWillUnmount() {
@@ -19,13 +19,7 @@ class OauthCallback extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <ReactCSSTransitionGroup
-          transitionAppear={true}
-          transitionAppearTimeout={200}
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionName={`login_form--transition`}
-        >
+        <SlideTransition in={true} appear={true} direction='down'>
           <div className='login_form--container col-4'>
             <h1>OAuth Callback</h1>
             <p>
@@ -51,7 +45,7 @@ class OauthCallback extends React.Component {
             <b>State:</b>
             <pre>{parsedHash.state}</pre>
           </div>
-        </ReactCSSTransitionGroup>
+        </SlideTransition>
       </div>
     );
   }
