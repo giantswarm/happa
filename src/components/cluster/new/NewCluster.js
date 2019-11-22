@@ -28,7 +28,7 @@ class NewCluster extends React.Component {
 
       if (!selectedRelease) {
         new FlashMessage(
-          'Something went wrong while trying to fetch active releasesssss',
+          'Something went wrong while trying to fetch active releases',
           messageType.ERROR,
           messageTTL.MEDIUM,
           'Please try again later or contact support: support@giantswarm.io'
