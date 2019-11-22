@@ -11,6 +11,7 @@ import { nodePoolsCreate } from 'actions/nodePoolActions';
 import AddNodePool from './AddNodePool';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
+import CredentialInfoRow from './CredentialInfoRow';
 import moment from 'moment';
 import NodePool from './NodePool';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -407,7 +408,14 @@ class V5ClusterDetailTable extends React.Component {
       workerNodesRunning,
       nodePoolForm,
     } = this.state;
-    const { accessCluster, cluster, region, release } = this.props;
+    const {
+      accessCluster,
+      cluster,
+      credentials,
+      provider,
+      region,
+      release,
+    } = this.props;
 
     const { create_date, release_version, api_endpoint } = cluster;
     const zeroNodePools = nodePools && nodePools.length === 0;
@@ -485,6 +493,12 @@ class V5ClusterDetailTable extends React.Component {
         </FlexRowWithTwoBlocksOnEdges>
 
         <PortMappingsRow cluster={cluster} />
+
+        <CredentialInfoRow
+          cluster={cluster}
+          credentials={credentials}
+          provider={provider}
+        />
 
         <NodePoolsWrapper>
           <h2>Node Pools</h2>

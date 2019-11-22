@@ -98,12 +98,7 @@ class V4ClusterDetailTable extends React.Component {
       workerNodesRunning,
     } = this.props;
 
-    const {
-      credential_id,
-      create_date,
-      release_version,
-      api_endpoint,
-    } = cluster;
+    const { create_date, release_version, api_endpoint } = cluster;
 
     return (
       <WrapperDiv>
@@ -174,6 +169,7 @@ class V4ClusterDetailTable extends React.Component {
         </FlexRowWithTwoBlocksOnEdges>
 
         <PortMappingsRow cluster={cluster} />
+
         <CredentialInfoRow
           cluster={cluster}
           credentials={credentials}
