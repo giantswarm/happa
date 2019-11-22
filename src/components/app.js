@@ -38,23 +38,26 @@ const store = configureStore({}, history);
 monkeyPatchGiantSwarmClient(store);
 
 // Configure an airbrake notifier for exception notification.
-// We use the airbrake notifier here instead of rolling our own notification
-// client, it is a stable project used by many. Though instead of sending our
-// exception reports to airbrake we send it to an endpoint of our own API, to
-// ensure no customer data is being shared with a third party.
-const airbrake = new Notifier({
-  // projectId and projectKey are not relevant to our exception notification endpoint, but are required to create a valid notifier.
-  projectId: 1,
-  projectKey: 'happa',
-  environment: window.config.environment,
-});
+// But only when not in development.
+if (window.config.environment !== 'development') {
+  // We use the airbrake notifier here instead of rolling our own notification
+  // client, it is a stable project used by many. Though instead of sending our
+  // exception reports to airbrake we send it to an endpoint of our own API, to
+  // ensure no customer data is being shared with a third party.
+  const airbrake = new Notifier({
+    // projectId and projectKey are not relevant to our exception notification endpoint, but are required to create a valid notifier.
+    projectId: 1,
+    projectKey: 'happa',
+    environment: window.config.environment,
+  });
 
-// Reach into the airbrake notifier instance and modify the private _url and
-// _requester attributes since the constructor does not allow us to edit the
-// url or the headers used during the request easily. We need to set headers so
-// that we can authenticate against our API endpoint.
-airbrake._url = window.config.apiEndpoint + '/v5/exception-notifications/';
-airbrake._requester = new Requester(store).request;
+  // Reach into the airbrake notifier instance and modify the private _url and
+  // _requester attributes since the constructor does not allow us to edit the
+  // url or the headers used during the request easily. We need to set headers so
+  // that we can authenticate against our API endpoint.
+  airbrake._url = window.config.apiEndpoint + '/v5/exception-notifications/';
+  airbrake._requester = new Requester(store).request;
+}
 
 // Scroll to the top when we change the URL.
 history.listen(() => {
