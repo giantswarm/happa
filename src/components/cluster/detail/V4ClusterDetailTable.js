@@ -230,7 +230,7 @@ class V4ClusterDetailTable extends React.Component {
 
         {credentialInfoRows.length !== 0 && (
           <FlexRowWithTwoBlocksOnEdges>
-            credentialInfoRows
+            {credentialInfoRows}
           </FlexRowWithTwoBlocksOnEdges>
         )}
 
