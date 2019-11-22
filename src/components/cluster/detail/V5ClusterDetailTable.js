@@ -8,7 +8,9 @@ import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
+import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from './AddNodePool';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import moment from 'moment';
@@ -18,9 +20,9 @@ import PortMappingsRow from './PortMappingsRow';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReactTimeout from 'react-timeout';
 import RegionAndVersions from './RegionAndVersions';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
@@ -56,10 +58,10 @@ const NodePoolsWrapper = styled.div`
     transition: opacity 200ms, transform 300ms;
     transition-delay: 300ms, 300ms;
   }
-  .np-leave {
+  .np-exit {
     opacity: 1;
   }
-  .np-leave.np-leave-active {
+  .np-exit.np-exit-active {
     opacity: 0.01;
     transform: translateX(0px);
     transition: all 100ms ease-in;
@@ -508,31 +510,28 @@ class V5ClusterDetailTable extends React.Component {
                 <span>CURRENT</span>
                 <span> </span>
               </GridRowNodePoolsHeaders>
-              <ReactCSSTransitionGroup
-                transitionName='np'
-                transitionEnterTimeout={500}
-                transitionLeave={false}
-                transitionAppearTimeout={500}
-                transitionAppear={true}
-              >
-                {nodePools &&
-                  nodePools
-                    .sort((a, b) => {
-                      if (a.name > b.name) {
-                        return 1;
-                      } else if (a.name < b.name) {
-                        return -1;
-                      } else if (a.id > b.id) {
-                        return 1;
-                      } else {
-                        return -1;
-                      }
-                    })
-                    .map(nodePool => (
-                      <GridRowNodePoolsItem
-                        key={nodePool.id || Date.now()}
-                        data-testid={nodePool.id}
-                      >
+              <TransitionGroup>
+                {nodePools
+                  .sort((a, b) => {
+                    if (a.name > b.name) {
+                      return 1;
+                    } else if (a.name < b.name) {
+                      return -1;
+                    } else if (a.id > b.id) {
+                      return 1;
+                    } else {
+                      return -1;
+                    }
+                  })
+                  .map(nodePool => (
+                    <BaseTransition
+                      key={nodePool.id || Date.now()}
+                      appear={true}
+                      exit={false}
+                      classNames='np'
+                      timeout={{ enter: 500, appear: 500 }}
+                    >
+                      <GridRowNodePoolsItem data-testid={nodePool.id}>
                         <NodePool
                           availableZonesGridTemplateAreas={
                             availableZonesGridTemplateAreas
@@ -542,19 +541,14 @@ class V5ClusterDetailTable extends React.Component {
                           provider={this.props.provider}
                         />
                       </GridRowNodePoolsItem>
-                    ))}
-              </ReactCSSTransitionGroup>
+                    </BaseTransition>
+                  ))}
+              </TransitionGroup>
             </>
           )}
         </NodePoolsWrapper>
         {this.state.isNodePoolBeingAdded ? (
-          <ReactCSSTransitionGroup
-            transitionAppear={true}
-            transitionAppearTimeout={200}
-            transitionEnterTimeout={200}
-            transitionLeaveTimeout={200}
-            transitionName={`login_form--transition`}
-          >
+          <SlideTransition in={true} appear={true} direction='down'>
             {/* Add Node Pool */}
             <AddNodePoolWrapperDiv>
               <h3 className='table-label'>Add Node Pool</h3>
@@ -592,7 +586,7 @@ class V5ClusterDetailTable extends React.Component {
                 </FlexWrapperDiv>
               </AddNodePoolFlexColumnDiv>
             </AddNodePoolWrapperDiv>
-          </ReactCSSTransitionGroup>
+          </SlideTransition>
         ) : (
           <FlexWrapperDiv className={zeroNodePools && 'zero-nodepools'}>
             {zeroNodePools && (

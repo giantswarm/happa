@@ -16,7 +16,7 @@ import { validatePassword } from 'lib/password_validation';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import StatusMessage from '../signup/status_message';
 
 class SetPassword extends React.Component {
@@ -273,15 +273,9 @@ class SetPassword extends React.Component {
             >
               {this.state.submitting ? 'Submitting ...' : 'Submit'}
             </button>
-            <ReactCSSTransitionGroup
-              transitionEnterTimeout={200}
-              transitionLeaveTimeout={200}
-              transitionName='slide-right'
-            >
-              {this.state.submitting ? (
-                <img className='loader' src={spinner} />
-              ) : null}
-            </ReactCSSTransitionGroup>
+            <SlideTransition in={this.state.submitting}>
+              <img className='loader' src={spinner} />
+            </SlideTransition>
           </div>
           <Link to='/login'>Back to login form</Link>
         </form>
@@ -339,15 +333,9 @@ class SetPassword extends React.Component {
           >
             {this.state.submitting ? 'Submitting ...' : 'Submit'}
           </button>
-          <ReactCSSTransitionGroup
-            transitionEnterTimeout={200}
-            transitionLeaveTimeout={200}
-            transitionName='slide-right'
-          >
-            {this.state.submitting ? (
-              <img className='loader' src={spinner} />
-            ) : null}
-          </ReactCSSTransitionGroup>
+          <SlideTransition in={this.state.submitting}>
+            <img className='loader' src={spinner} />
+          </SlideTransition>
         </div>
         <Link to='/login'>Back to login form</Link>
         <br />
@@ -362,18 +350,12 @@ class SetPassword extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <ReactCSSTransitionGroup
-          transitionAppear={true}
-          transitionAppearTimeout={200}
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionName={`login_form--transition`}
-        >
+        <SlideTransition in={true} appear={true} direction='down'>
           <div className='login_form--container col-4'>
             <h1>Set your new password</h1>
             {this.state.email ? this.setPasswordForm() : this.setEmailForm()}
           </div>
-        </ReactCSSTransitionGroup>
+        </SlideTransition>
       </div>
     );
   }
