@@ -1,28 +1,9 @@
 import { dedent } from 'lib/helpers';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import Line from './line';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
-
-// CodeBlock
-// Use this to show some commands and output to the user.
-// User's can copy the commands to their clipboard easily.
-//
-//      <CodeBlock>
-//        <Prompt>
-//          {`kubectl version \\
-//            long \\
-//            command`}
-//        </Prompt>
-//
-//        <Output>
-//          {`output`}
-//        </Output>
-//      </CodeBlock>
-//
-// Output and Prompt can be in any order. The copy to clipboard button will only
-// take the content in the Prompt tags.
 
 export const Prompt = ({ children }) => {
   return <Line prompt={true} text={dedent(children)} />;
@@ -32,6 +13,29 @@ export const Output = ({ children }) => {
   return <Line prompt={false} text={dedent(children)} />;
 };
 
+/**
+ * Use this to show some commands and output to the user.
+ *
+ * Users can copy the commands to their clipboard easily.
+ *
+ * @example
+ * ```js
+ * <CodeBlock>
+ *   <Prompt>
+ *     {`kubectl version \\
+ *       long \\
+ *       command`}
+ *   </Prompt>
+ *   <Output>
+ *     {`output`}
+ *   </Output>
+ * </CodeBlock>
+ * ```
+ *
+ * Output and Prompt can be in any order.
+ *
+ * The copy to clipboard button will only take the content in the Prompt tags.
+ */
 export const CodeBlock = ({ children }) => {
   const [isHovering, setHovering] = useState(false);
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
@@ -99,15 +103,13 @@ export const CodeBlock = ({ children }) => {
             <i aria-hidden='true' className='fa fa-content-copy' />
           </a>
         </div>
-        <ReactCSSTransitionGroup
-          transitionEnterTimeout={1000}
-          transitionLeaveTimeout={1000}
-          transitionName={'checkmark'}
+        <BaseTransition
+          in={this.state.clicked}
+          timeout={{ enter: 1000, exit: 1000 }}
+          classNames='checkmark'
         >
-          {hasContentInClipboard ? (
-            <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
-          ) : null}
-        </ReactCSSTransitionGroup>
+          <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
+        </BaseTransition>
       </pre>
     </div>
   );

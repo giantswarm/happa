@@ -1,28 +1,32 @@
 import { dedent } from 'lib/helpers';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import Line from './line';
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
-
-// FileBlock
-// Use this to show the contents of a file to a user.
-// The user can then easily download the file or copy it to clipboard
-//
-// <FileBlock fileName={'my-filename.txt'}>
-// {`
-//   The contents of the file
-//
-//   Indentation
-//   -----------
-//     Indentation should be preserved based on where the first line
-//     started.
-// `}
-// </FileBlock>
-//
 
 var Modernizr = window.Modernizr;
 
+/**
+ *
+ * Use this to show the contents of a file to a user.
+ *
+ * The user can then easily download the file or copy it to clipboard
+ *
+ * @example
+ * ```js
+ * <FileBlock fileName={'my-filename.txt'}>
+ * {`
+ *   The contents of the file
+ *
+ *   Indentation
+ *   -----------
+ *     Indentation should be preserved based on where the first line
+ *     started.
+ * `}
+ * </FileBlock>
+ *```
+ */
 export const FileBlock = ({ children, hideText, fileName }) => {
   const [isHovering, setHovering] = useState(false);
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
@@ -94,15 +98,13 @@ export const FileBlock = ({ children, hideText, fileName }) => {
             <i aria-hidden='true' className='fa fa-content-copy' />
           </a>
         </div>
-        <ReactCSSTransitionGroup
-          transitionEnterTimeout={1000}
-          transitionLeaveTimeout={1000}
-          transitionName={'checkmark'}
+        <BaseTransition
+          in={this.state.clicked}
+          timeout={{ enter: 1000, exit: 1000 }}
+          classNames='checkmark'
         >
-          {hasContentInClipboard ? (
-            <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
-          ) : null}
-        </ReactCSSTransitionGroup>
+          <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
+        </BaseTransition>
       </pre>
     </div>
   );
