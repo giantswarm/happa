@@ -15,7 +15,7 @@
 .flash_message_close
   animation: noty_anim_out 0.2s cubic-bezier(0.68, 0, 0.265, 1.55)
   animation-fill-mode: forwards
-  
+
 .modal-open .flash-messages--container
   padding-right: 15px
 
@@ -102,20 +102,20 @@
     color: #a94442
     font-weight: bold
 
-
 .flash-messages--transition-appear, .flash-messages--transition-enter
   opacity: 0
   transform: translateY(-5px)
 
-.flash-messages--transition-appear-active, .flash-messages--transition-enter-active
+.flash-messages--transition-appear.flash-messages--transition-appear-active,
+.flash-messages--transition-enter.flash-messages--transition-enter-active
   opacity: 1
   transform: translateY(0px)
   transition: all 0.2s linear
 
-.flash-messages--transition-leave
+.flash-messages--transition-exit
   opacity: 1
 
-.flash-messages--transition-leave-active
+.flash-messages--transition-exit.flash-messages--transition-exit-active
   transition: all 0.2s linear
   transform: translateY(-5px)
   opacity: 0

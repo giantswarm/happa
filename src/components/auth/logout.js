@@ -3,9 +3,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Logout extends React.Component {
   componentDidMount() {
@@ -29,15 +29,18 @@ class Logout extends React.Component {
   render() {
     return (
       <div>
-        <ReactCSSTransitionGroup
-          transitionAppear={true}
-          transitionAppearTimeout={400}
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionName='logout--mask--transition'
+        <BaseTransition
+          in={true}
+          appear={true}
+          timeout={{
+            appear: 400,
+            enter: 200,
+            exit: 200,
+          }}
+          classNames='logout--mask--transition'
         >
           <div className='logout--mask' />
-        </ReactCSSTransitionGroup>
+        </BaseTransition>
         <div className='logout--container'>
           <img className='loader' src={spinner} />
         </div>

@@ -6,10 +6,10 @@
 
 import { connect } from 'react-redux';
 import { flashRemove } from 'actions/flashMessageActions';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import FlashMessage from './flash_message';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class FlashMessages extends React.Component {
   makeFlashComponent = flashMessage => {
@@ -30,13 +30,13 @@ class FlashMessages extends React.Component {
   render() {
     return (
       <div className='flash-messages--container'>
-        <ReactCSSTransitionGroup
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionName='flash-messages--transition'
+        <BaseTransition
+          in={true}
+          appear={true}
+          classNames='flash-messages--transition'
         >
           {this.props.flashMessages.toArray().map(this.makeFlashComponent)}
-        </ReactCSSTransitionGroup>
+        </BaseTransition>
       </div>
     );
   }

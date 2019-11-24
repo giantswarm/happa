@@ -10,6 +10,7 @@ import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { push } from 'connected-react-router';
+import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from '../detail/AddNodePool';
 import AvailabilityZonesParser from '../detail/AvailabilityZonesParser';
 import Button from 'UI/button';
@@ -17,8 +18,8 @@ import DocumentTitle from 'react-document-title';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReleaseSelector from './ReleaseSelector';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
@@ -485,36 +486,32 @@ class CreateNodePoolsCluster extends Component {
                 </AZWrapperDiv>
               </FlexColumnDiv>
               {Object.keys(nodePools).length === 0 && <hr />}
-              <ReactCSSTransitionGroup
-                transitionAppear={true}
-                transitionAppearTimeout={200}
-                transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}
-                transitionName={`login_form--transition`}
-              >
+              <TransitionGroup>
                 {Object.keys(nodePools).map(npId => {
                   const name = nodePools[npId].data.name;
                   return (
-                    <AddNodePoolWrapperDiv key={npId}>
-                      <NodePoolHeading>{name}</NodePoolHeading>
-                      <AddNodePoolFlexColumnDiv>
-                        <AddNodePool
-                          selectedRelease={this.props.selectedRelease}
-                          informParent={this.updateNodePoolForm}
-                          name={name}
-                          id={npId}
-                        />
-                        <i
-                          className='fa fa-close clickable'
-                          title='Remove node pool'
-                          aria-hidden='true'
-                          onClick={() => this.removeNodePoolForm(npId)}
-                        ></i>
-                      </AddNodePoolFlexColumnDiv>
-                    </AddNodePoolWrapperDiv>
+                    <SlideTransition key={npId} appear={true} direction='down'>
+                      <AddNodePoolWrapperDiv>
+                        <NodePoolHeading>{name}</NodePoolHeading>
+                        <AddNodePoolFlexColumnDiv>
+                          <AddNodePool
+                            selectedRelease={this.props.selectedRelease}
+                            informParent={this.updateNodePoolForm}
+                            name={name}
+                            id={npId}
+                          />
+                          <i
+                            className='fa fa-close clickable'
+                            title='Remove node pool'
+                            aria-hidden='true'
+                            onClick={() => this.removeNodePoolForm(npId)}
+                          ></i>
+                        </AddNodePoolFlexColumnDiv>
+                      </AddNodePoolWrapperDiv>
+                    </SlideTransition>
                   );
                 })}
-              </ReactCSSTransitionGroup>
+              </TransitionGroup>
               <Button onClick={this.addNodePoolForm}>
                 <i className='fa fa-add-circle' /> ADD NODE POOL
               </Button>
