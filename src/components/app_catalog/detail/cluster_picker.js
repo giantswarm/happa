@@ -3,7 +3,6 @@ import Input from './input';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
-import theme from 'styles/theme';
 
 const ClusterPickerWrapper = styled.div`
   display: flex;
@@ -18,20 +17,20 @@ const ClusterList = styled.div`
 
 const Cluster = styled.div`
   align-items: center;
-  border-radius: ${theme.border_radius};
+  border-radius: ${({ theme }) => theme.border_radius};
   display: flex;
   padding: 10px 15px;
   :hover {
-    background-color: ${theme.colors.shade4};
+    background-color: ${({ theme }) => theme.colors.shade4};
     cursor: pointer;
   }
   &.selected {
-    background-color: ${theme.colors.shade4};
+    background-color: ${({ theme }) => theme.colors.shade4};
   }
 `;
 
 const ClusterTitle = styled.div`
-  color: ${theme.colors.white2};
+  color: ${({ theme }) => theme.colors.white2};
   flex-grow: 1;
   font-size: 16px;
   font-weight: 800;
@@ -39,7 +38,7 @@ const ClusterTitle = styled.div`
 `;
 
 const Organisation = styled.div`
-  color: ${theme.colors.white2};
+  color: ${({ theme }) => theme.colors.white2};
   font-size: 12px;
 `;
 
