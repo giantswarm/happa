@@ -194,7 +194,7 @@ class ClusterDetailView extends React.Component {
     ) {
       return this.props.cluster.status.cluster.scaling.desiredCapacity;
     }
-    return 0; // if we return null no valu is rendered in AWS v4 cluster view
+    return 0; // if we return null no value is rendered in AWS v4 cluster view
   }
 
   accessCluster = () => {
