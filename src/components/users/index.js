@@ -9,18 +9,15 @@ import {
   userRemoveExpiration,
   usersLoad,
 } from 'actions/userActions';
-import _ from 'underscore';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'UI/button';
-import copy from 'copy-to-clipboard';
+import DeleteUserModal from './DeleteUserModal';
 import DocumentTitle from 'react-document-title';
+import InviteUserModal from './InviteUserModal';
 import moment from 'moment';
-import MultiSelect from '@khanacademy/react-multi-select';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
+import UnexpireUserModal from './UnexpireUserModal';
 
 class Users extends React.Component {
   state = {
@@ -114,17 +111,10 @@ class Users extends React.Component {
         visible: true,
         loading: false,
       },
-      invitationForm: {
-        email: '',
-        error: '',
-        organizations: this.state.invitationForm.organizations,
-        sendEmail: true,
-        valid: true,
-      },
     });
   }
 
-  confirmInviteUser() {
+  confirmInviteUser = invitationForm => {
     this.setState({
       modal: {
         template: 'inviteUser',
@@ -136,12 +126,12 @@ class Users extends React.Component {
     this.props
       .dispatch(usersLoad()) // Hack to ensure fresh Giant Swarm access token before inviting the user.
       .then(() => {
-        return this.props.dispatch(invitationCreate(this.state.invitationForm));
+        return this.props.dispatch(invitationCreate(invitationForm));
       })
       .then(result => {
         this.setState({
           modal: {
-            template: 'inviteUserDone',
+            template: 'inviteUser',
             invitationResult: result,
             visible: true,
             loading: false,
@@ -151,58 +141,7 @@ class Users extends React.Component {
       .catch(() => {
         this.closeModal();
       });
-  }
-
-  handleEmailChange(e) {
-    var invitationForm = Object.assign({}, this.state.invitationForm);
-
-    invitationForm.email = e.target.value;
-
-    invitationForm = this.validateInvitationForm(invitationForm);
-
-    this.setState({
-      invitationForm: invitationForm,
-    });
-  }
-
-  validateInvitationForm(invitationForm) {
-    invitationForm.valid = true;
-    invitationForm.error = '';
-
-    // Don't allow adding non @giantswarm.io emails to the giantswarm org
-    // since we know there is a serverside validation against that as well.
-    if (invitationForm.organization === 'giantswarm') {
-      if (!isGiantSwarmEmail(invitationForm.email)) {
-        invitationForm.valid = false;
-        invitationForm.error =
-          'Only @giantswarm.io domains may be invited to the giantswarm organization.';
-      }
-    }
-
-    return invitationForm;
-  }
-
-  handleSendEmailChange(e) {
-    var invitationForm = Object.assign({}, this.state.invitationForm);
-    var checked = e.target.checked;
-    invitationForm.sendEmail = checked;
-
-    this.setState({
-      invitationForm: invitationForm,
-    });
-  }
-
-  handleOrganizationChange(orgIds) {
-    var invitationForm = Object.assign({}, this.state.invitationForm);
-
-    invitationForm.organizations = orgIds;
-
-    invitationForm = this.validateInvitationForm(invitationForm);
-
-    this.setState({
-      invitationForm: invitationForm,
-    });
-  }
+  };
 
   closeModal() {
     this.setState({
@@ -247,20 +186,6 @@ class Users extends React.Component {
       },
     ];
   };
-
-  copyToClipboard(value) {
-    this.setState({
-      copied: true,
-    });
-
-    setTimeout(() => {
-      this.setState({
-        copied: false,
-      });
-    }, 1000);
-
-    copy(value);
-  }
 
   // Provides the configuraiton for the clusters table
   getTableColumnsConfig = () => {
@@ -384,271 +309,45 @@ class Users extends React.Component {
               switch (this.state.modal.template) {
                 case 'unexpireUser':
                   return (
-                    <BootstrapModal
-                      className='create-key-pair-modal'
-                      onHide={this.closeModal.bind(this)}
+                    <UnexpireUserModal
                       show={this.state.modal.visible}
-                    >
-                      <BootstrapModal.Header closeButton>
-                        <BootstrapModal.Title>
-                          Remove Expiration Date from {this.state.selectedUser}
-                        </BootstrapModal.Title>
-                      </BootstrapModal.Header>
-
-                      <BootstrapModal.Body>
-                        <p>
-                          Are you sure you want to remove the expiration date
-                          from {this.state.selectedUser}?
-                        </p>
-                        <p>This account will never expire.</p>
-                        <p>
-                          If the account was expired, the user will be able to
-                          log in again.
-                        </p>
-                      </BootstrapModal.Body>
-                      <BootstrapModal.Footer>
-                        <Button
-                          bsStyle='primary'
-                          loading={this.state.modal.loading}
-                          onClick={this.confirmRemoveExpiration.bind(
-                            this,
-                            this.state.selectedUser
-                          )}
-                          type='submit'
-                        >
-                          {this.state.modal.loading
-                            ? 'Removing Expiration'
-                            : 'Remove Expiration'}
-                        </Button>
-
-                        {this.state.modal.loading ? null : (
-                          <Button
-                            bsStyle='link'
-                            onClick={this.closeModal.bind(this)}
-                          >
-                            Cancel
-                          </Button>
-                        )}
-                      </BootstrapModal.Footer>
-                    </BootstrapModal>
+                      forUser={this.state.selectedUser}
+                      onClose={this.closeModal.bind(this)}
+                      onConfirm={this.confirmRemoveExpiration.bind(
+                        this,
+                        this.state.selectedUser
+                      )}
+                      isLoading={this.state.modal.loading}
+                    />
                   );
 
                 case 'deleteUser':
                   return (
-                    <BootstrapModal
-                      className='create-key-pair-modal'
-                      onHide={this.closeModal.bind(this)}
+                    <DeleteUserModal
                       show={this.state.modal.visible}
-                    >
-                      <BootstrapModal.Header closeButton>
-                        <BootstrapModal.Title>
-                          Delete {this.state.selectedUser}
-                        </BootstrapModal.Title>
-                      </BootstrapModal.Header>
-
-                      <BootstrapModal.Body>
-                        <p>
-                          Are you sure you want to delete{' '}
-                          {this.state.selectedUser}?
-                        </p>
-                        <p>There is no undo.</p>
-                      </BootstrapModal.Body>
-                      <BootstrapModal.Footer>
-                        <Button
-                          bsStyle='danger'
-                          loading={this.state.modal.loading}
-                          onClick={this.confirmDeleteUser.bind(
-                            this,
-                            this.state.selectedUser
-                          )}
-                          type='submit'
-                        >
-                          {this.state.modal.loading
-                            ? 'Deleting User'
-                            : 'Delete User'}
-                        </Button>
-
-                        {this.state.modal.loading ? null : (
-                          <Button
-                            bsStyle='link'
-                            onClick={this.closeModal.bind(this)}
-                          >
-                            Cancel
-                          </Button>
-                        )}
-                      </BootstrapModal.Footer>
-                    </BootstrapModal>
+                      forUser={this.state.selectedUser}
+                      onClose={this.closeModal.bind(this)}
+                      onConfirm={this.confirmDeleteUser.bind(
+                        this,
+                        this.state.selectedUser
+                      )}
+                      isLoading={this.state.modal.loading}
+                    />
                   );
 
                 case 'inviteUser':
                   return (
-                    <BootstrapModal
-                      className='create-key-pair-modal'
-                      onHide={this.closeModal.bind(this)}
+                    <InviteUserModal
                       show={this.state.modal.visible}
-                    >
-                      <BootstrapModal.Header closeButton>
-                        <BootstrapModal.Title>
-                          Invite a New User
-                        </BootstrapModal.Title>
-                      </BootstrapModal.Header>
-
-                      <BootstrapModal.Body>
-                        <form
-                          onSubmit={e => {
-                            e.preventDefault();
-                          }}
-                        >
-                          <p>
-                            Creating an invitation is the way to get new people
-                            onto this installation.
-                          </p>
-                          <p>Invitations are valid for 48 hours.</p>
-
-                          <div className='textfield'>
-                            <label>Email:</label>
-                            <input
-                              autoFocus
-                              onChange={this.handleEmailChange.bind(this)}
-                              type='text'
-                              value={this.state.invitationForm.email}
-                            />
-                          </div>
-
-                          <div className='textfield'>
-                            <label>Organizations:</label>
-                            <MultiSelect
-                              options={_.sortBy(
-                                this.props.organizations.items,
-                                'id'
-                              ).map(organization => ({
-                                label: organization.id,
-                                value: organization.id,
-                              }))}
-                              selected={this.state.invitationForm.organizations}
-                              onSelectedChanged={this.handleOrganizationChange.bind(
-                                this
-                              )}
-                            />
-                          </div>
-
-                          <div className='textfield'>
-                            <label>Send Email:</label>
-                            <div className='checkbox'>
-                              <label htmlFor='sendEmail'>
-                                <input
-                                  checked={this.state.invitationForm.sendEmail}
-                                  id='sendEmail'
-                                  onChange={this.handleSendEmailChange.bind(
-                                    this
-                                  )}
-                                  type='checkbox'
-                                />
-                                Send the invitee an e-mail with the accept
-                                invitation link.
-                              </label>
-                            </div>
-                          </div>
-                          {this.state.invitationForm.error !== '' ? (
-                            <div className='flash-messages--flash-message flash-messages--danger'>
-                              {this.state.invitationForm.error}
-                            </div>
-                          ) : (
-                            undefined
-                          )}
-                        </form>
-                      </BootstrapModal.Body>
-                      <BootstrapModal.Footer>
-                        <Button
-                          bsStyle='primary'
-                          disabled={!this.state.invitationForm.valid}
-                          loading={this.state.modal.loading}
-                          onClick={this.confirmInviteUser.bind(this)}
-                          type='submit'
-                        >
-                          {this.state.modal.loading
-                            ? 'Inviting User'
-                            : 'Invite User'}
-                        </Button>
-
-                        {this.state.modal.loading ? null : (
-                          <Button
-                            bsStyle='link'
-                            onClick={this.closeModal.bind(this)}
-                          >
-                            Cancel
-                          </Button>
-                        )}
-                      </BootstrapModal.Footer>
-                    </BootstrapModal>
-                  );
-
-                case 'inviteUserDone':
-                  return (
-                    <BootstrapModal
-                      className='create-key-pair-modal'
-                      onHide={this.closeModal.bind(this)}
-                      show={this.state.modal.visible}
-                    >
-                      <BootstrapModal.Header closeButton>
-                        <BootstrapModal.Title>
-                          {this.state.invitationForm.email} has been Invited
-                        </BootstrapModal.Title>
-                      </BootstrapModal.Header>
-
-                      <BootstrapModal.Body>
-                        <p>Invitation has been created succesfully!</p>
-                        {this.state.invitationForm.sendEmail ? (
-                          <p>
-                            An email has been sent to{' '}
-                            {this.state.invitationForm.email} with further
-                            instructions.
-                          </p>
-                        ) : (
-                          <p>
-                            You&apos;ve chosen not to send them an email. Send
-                            them the link below to accept the invitation.
-                          </p>
-                        )}
-                        <label>Invitation Accept Link:</label>
-                        <br />
-                        <code>
-                          {
-                            this.state.modal.invitationResult
-                              .invitation_accept_link
-                          }
-                        </code>
-                        &nbsp;
-                        {this.state.copied ? (
-                          <i aria-hidden='true' className='fa fa-done' />
-                        ) : (
-                          <OverlayTrigger
-                            overlay={
-                              <Tooltip id='tooltip'>Copy to clipboard.</Tooltip>
-                            }
-                            placement='top'
-                          >
-                            <i
-                              aria-hidden='true'
-                              className='copy-link fa fa-content-copy'
-                              onClick={this.copyToClipboard.bind(
-                                this,
-                                this.state.modal.invitationResult
-                                  .invitation_accept_link
-                              )}
-                            />
-                          </OverlayTrigger>
-                        )}
-                      </BootstrapModal.Body>
-                      <BootstrapModal.Footer>
-                        <Button
-                          bsStyle='link'
-                          onClick={this.closeModal.bind(this)}
-                        >
-                          Close
-                        </Button>
-                      </BootstrapModal.Footer>
-                    </BootstrapModal>
+                      onClose={this.closeModal.bind(this)}
+                      onConfirm={this.confirmInviteUser}
+                      isLoading={this.state.modal.loading}
+                      organizations={this.props.organizations}
+                      initiallySelectedOrganizations={
+                        this.props.initialSelectedOrganizations
+                      }
+                      invitationResult={this.state.modal.invitationResult}
+                    />
                   );
               }
             })()}
@@ -772,19 +471,6 @@ function isExpired(timestamp) {
   }
 
   return false;
-}
-
-function isGiantSwarmEmail(email) {
-  if (email && typeof email === 'string') {
-    var domain = email.split('@')[1];
-    if (domain === 'giantswarm.io') {
-      return true;
-    } else {
-      return false;
-    }
-  } else {
-    return false;
-  }
 }
 
 function mapStateToProps(state) {
