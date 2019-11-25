@@ -1,6 +1,31 @@
+import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
+
+const themeColorWhite2 = theme => css`
+  color: ${theme.colors.white2};
+`;
+
+const themeColorWhite3 = theme => css`
+  color: ${theme.colors.white3};
+`;
+
+const themeColorYellow1 = theme => css`
+  color: ${theme.colors.yellow1};
+`;
+
+const themeBorderRadius = theme => css`
+  border-radius: ${theme.border_radius};
+`;
+
+const themeBackgroundShade5 = theme => css`
+  background-color: ${theme.colors.shade5};
+`;
+
+const themeBorderColorShade6 = theme => css`
+  border-color: ${theme.colors.shade6};
+`;
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -11,7 +36,7 @@ const Wrapper = styled.div`
 
 const Text = styled.div`
   font-size: 14px;
-  color: ${({ theme }) => theme.colors.white2};
+  ${themeColorWhite2};
 `;
 
 const InputWrapper = styled.div`
@@ -20,9 +45,10 @@ const InputWrapper = styled.div`
 `;
 
 const Input = styled.input`
-  background-color: ${({ theme }) => theme.colors.shade5};
-  border: 1px solid ${({ theme }) => theme.colors.shade6};
-  border-radius: ${({ theme }) => theme.border_radius};
+  ${themeBackgroundShade5};
+  border: 1px solid #000;
+  ${themeBorderColorShade6};
+  ${themeBorderRadius};
   font-size: 14px;
   line-height: normal;
   padding: 8px 10px;
@@ -30,14 +56,14 @@ const Input = styled.input`
 `;
 
 const Icon = styled.i`
-  color: ${({ theme }) => theme.colors.white3};
+  ${themeColorWhite3};
   font-size: 24px;
   margin-right: 5px;
 `;
 
 const ValidationError = styled.span`
   font-size: 12px;
-  color: ${({ theme }) => theme.colors.yellow1};
+  ${themeColorYellow1};
 `;
 
 const Hint = styled.span`
