@@ -159,7 +159,7 @@ class ClusterDashboardItem extends React.Component {
 
     const hasNodePools = cluster.nodePools && cluster.nodePools.length !== 0;
 
-    if (typeof cluster.delete_date !== 'undefined' && cluster.delete_date) {
+    if (cluster.delete_date) {
       return (
         <WrapperDeleted>
           <LabelWrapper>
