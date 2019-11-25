@@ -11,6 +11,7 @@ import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import NumberPicker from 'UI/number_picker';
+import produce from 'immer';
 import PropTypes from 'prop-types';
 import ProviderCredentials from './ProviderCredentials';
 import React from 'react';
@@ -120,6 +121,10 @@ class CreateRegularCluster extends React.Component {
       awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
       azureInstanceTypes: JSON.parse(window.config.azureCapabilitiesJSON),
     });
+
+    // If there is a name in localStorage we use it.
+    const clusterName = localStorage.getItem('clusterName');
+    if (clusterName) this.setState({ clusterName });
   }
 
   updateAvailabilityZonesPicker = n => {
@@ -143,9 +148,9 @@ class CreateRegularCluster extends React.Component {
   };
 
   updateClusterName = event => {
-    this.setState({
-      clusterName: event.target.value,
-    });
+    const clusterName = event.target.value;
+    this.setState({ clusterName });
+    localStorage.setItem('clusterName', clusterName);
   };
 
   createCluster = () => {

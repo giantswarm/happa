@@ -181,11 +181,12 @@ const NodePoolHeading = styled.div`
 `;
 
 const defaultNodePool = id => ({ data: { name: `Node Pool #${id}` } });
+const defaultClusterName = 'Unnamed Cluster';
 
 class CreateNodePoolsCluster extends Component {
   state = {
     name: {
-      value: 'Unnamed Cluster',
+      value: defaultClusterName,
       valid: true,
       validationError: '',
     },
@@ -213,12 +214,24 @@ class CreateNodePoolsCluster extends Component {
   };
 
   componentDidMount() {
+    const clusterName = localStorage.getItem('clusterName');
+
     this.isValid();
+
+    // If there is a name in localStorage we use it, we do it after isValid() cause it
+    // writes in localStorage.
+    this.setState(
+      produce(draft => {
+        draft.name.value = clusterName || defaultClusterName;
+      })
+    );
   }
 
   updateName = event => {
     const name = event.target.value;
     const [isValid, message] = hasAppropriateLength(name, 0, 100);
+
+    localStorage.setItem('clusterName', name);
 
     // We don't let the user write more characters if the name exceeds the max number allowed
     if (!isValid) {
@@ -388,7 +401,7 @@ class CreateNodePoolsCluster extends Component {
                       onChange={this.updateName}
                       id='name'
                       type='text'
-                      placeholder={name.value === '' ? 'Unnamed cluster' : null}
+                      placeholder={name.value}
                     ></input>
                     <ValidationErrorMessage message={name.validationError} />
                   </div>
