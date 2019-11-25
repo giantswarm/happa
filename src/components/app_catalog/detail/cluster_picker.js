@@ -1,4 +1,3 @@
-import { css } from '@emotion/core';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import Input from './input';
 import PropTypes from 'prop-types';
@@ -16,34 +15,22 @@ const ClusterList = styled.div`
   overflow: auto;
 `;
 
-const themeBorderRadius = ({ theme }) => css`
-  border-radius: ${theme.border_radius};
-`;
-
-const themeBackgroundShade4 = ({ theme }) => css`
-  background-color: ${theme.colors.shade4};
-`;
-
-const themeColorWhite2 = ({ theme }) => css`
-  color: ${theme.colors.white2};
-`;
-
 const Cluster = styled.div`
   align-items: center;
-  ${themeBorderRadius};
+  border-radius: ${props => props.theme.border_radius};
   display: flex;
   padding: 10px 15px;
   :hover {
-    ${themeBackgroundShade4};
+    background-color: ${props => props.theme.colors.shade4};
     cursor: pointer;
   }
   &.selected {
-    ${themeBackgroundShade4};
+    background-color: ${props => props.theme.colors.shade4};
   }
 `;
 
 const ClusterTitle = styled.div`
-  ${themeColorWhite2};
+  color: ${props => props.theme.colors.white2};
   flex-grow: 1;
   font-size: 16px;
   font-weight: 800;
@@ -51,7 +38,7 @@ const ClusterTitle = styled.div`
 `;
 
 const Organisation = styled.div`
-  ${themeColorWhite2};
+  color: ${props => props.theme.colors.white2};
   font-size: 12px;
 `;
 

@@ -25,21 +25,9 @@ import React from 'react';
 import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
 
-const themeBackgroundLighter1 = ({ theme }) => css`
-  background-color: ${theme.colors.darkBlueLighter1};
-`;
-
-const themeColorLighter5 = ({ theme }) => css`
-  color: ${theme.colors.darkBlueLighter5};
-`;
-
-const themeBackgroundDarker1 = ({ theme }) => css`
-  background-color: ${theme.colors.darkBlueDarker1};
-`;
-
 const WrapperStyles = css`
   display: flex;
-  ${themeBackgroundLighter1};
+  background-color: ${props => props.theme.colors.darkBlueLighter1};
   border-radius: 5px;
   border: 0px;
   min-height: 20px;
@@ -54,7 +42,7 @@ const Wrapper = styled.div`
 
 const WrapperDeleted = styled.div`
   ${WrapperStyles};
-  ${themeBackgroundDarker1};
+  background-color: ${props => props.theme.colors.darkBlueDarker1};
 `;
 
 const LabelWrapper = styled.div`
@@ -83,7 +71,7 @@ const ButtonsWrapper = styled.div`
 `;
 
 const DeleteDateWrapper = styled.div`
-  ${themeColorLighter5};
+  color: ${props => props.theme.colors.darkBlueLighter5};
 `;
 
 class ClusterDashboardItem extends React.Component {
