@@ -214,12 +214,10 @@ class CreateNodePoolsCluster extends Component {
   };
 
   componentDidMount() {
-    const clusterName = localStorage.getItem('clusterName');
-
     this.isValid();
 
-    // If there is a name in localStorage we use it, we do it after isValid() cause it
-    // writes in localStorage.
+    // If there is a name in localStorage we use it.
+    const clusterName = localStorage.getItem('clusterName');
     this.setState(
       produce(draft => {
         draft.name.value = clusterName || defaultClusterName;
