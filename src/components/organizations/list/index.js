@@ -39,6 +39,7 @@ class OrganizationListWrapper extends React.Component {
             }
           >
             <OrganizationList
+              provider={this.props.provider}
               clusters={this.props.clusters}
               getViewURL={this.getOrganizationURL}
               deleteOrganization={this.deleteOrganization}
@@ -58,16 +59,18 @@ OrganizationListWrapper.propTypes = {
   dispatch: PropTypes.func,
   organizations: PropTypes.array,
   clusters: PropTypes.object,
+  provider: PropTypes.string,
 };
 
 function mapStateToProps(state) {
-  let sortedOrganizations = Object.values(
+  const sortedOrganizations = Object.values(
     state.entities.organizations.items
   ).sort((a, b) => a.id.localeCompare(b.id));
 
   return {
     organizations: sortedOrganizations,
     clusters: state.entities.clusters.items,
+    provider: state.app.info.general.provider,
   };
 }
 
