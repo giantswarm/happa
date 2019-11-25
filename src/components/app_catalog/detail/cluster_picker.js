@@ -16,15 +16,15 @@ const ClusterList = styled.div`
   overflow: auto;
 `;
 
-const themeBorderRadius = theme => css`
+const themeBorderRadius = ({ theme }) => css`
   border-radius: ${theme.border_radius};
 `;
 
-const themeBackgroundShade4 = theme => css`
+const themeBackgroundShade4 = ({ theme }) => css`
   background-color: ${theme.colors.shade4};
 `;
 
-const themeColorWhite2 = theme => css`
+const themeColorWhite2 = ({ theme }) => css`
   color: ${theme.colors.white2};
 `;
 

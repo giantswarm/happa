@@ -3,27 +3,27 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
-const themeColorWhite2 = theme => css`
+const themeColorWhite2 = ({ theme }) => css`
   color: ${theme.colors.white2};
 `;
 
-const themeColorWhite3 = theme => css`
+const themeColorWhite3 = ({ theme }) => css`
   color: ${theme.colors.white3};
 `;
 
-const themeColorYellow1 = theme => css`
+const themeColorYellow1 = ({ theme }) => css`
   color: ${theme.colors.yellow1};
 `;
 
-const themeBorderRadius = theme => css`
+const themeBorderRadius = ({ theme }) => css`
   border-radius: ${theme.border_radius};
 `;
 
-const themeBackgroundShade5 = theme => css`
+const themeBackgroundShade5 = ({ theme }) => css`
   background-color: ${theme.colors.shade5};
 `;
 
-const themeBorderColorShade6 = theme => css`
+const themeBorderColorShade6 = ({ theme }) => css`
   border-color: ${theme.colors.shade6};
 `;
 

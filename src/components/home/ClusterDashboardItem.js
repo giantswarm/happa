@@ -25,15 +25,15 @@ import React from 'react';
 import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
 
-const themeBackgroundLighter1 = theme => css`
+const themeBackgroundLighter1 = ({ theme }) => css`
   background-color: ${theme.colors.darkBlueLighter1};
 `;
 
-const themeColorLighter5 = theme => css`
+const themeColorLighter5 = ({ theme }) => css`
   color: ${theme.colors.darkBlueLighter5};
 `;
 
-const themeBackgroundDarker1 = theme => css`
+const themeBackgroundDarker1 = ({ theme }) => css`
   background-color: ${theme.colors.darkBlueDarker1};
 `;
 
