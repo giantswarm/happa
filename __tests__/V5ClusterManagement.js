@@ -228,6 +228,7 @@ scales node pools correctly`, async () => {
     getAllByText,
     getAllByTestId,
     getByLabelText,
+    debug,
   } = renderRouteWithStore(ROUTE, div, {});
 
   await wait(() => getAllByTestId('node-pool-id'));
@@ -256,7 +257,7 @@ scales node pools correctly`, async () => {
   // Change the values and modify the scaling settings.
   fireEvent.change(inputMin, { target: { value: newScaling.min } });
   fireEvent.change(inputMax, { target: { value: newScaling.max } });
-  const textButton = `Increase minimum number of nodes by ${newScaling.min}`;
+  const textButton = `Apply`;
 
   await wait(() => getByText(textButton));
 
