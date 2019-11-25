@@ -12,10 +12,10 @@ import Tooltip from 'react-bootstrap/lib/Tooltip';
 const ReleaseDetail = styled.span`
   text-decoration: underline;
   cursor: pointer;
-  color: ${props => props.theme.colors.white2};
+  color: ${({ theme }) => theme.colors.white2};
 
   &:hover {
-    color: ${props => props.theme.colors.white1};
+    color: ${({ theme }) => theme.colors.white1};
   }
 `;
 
