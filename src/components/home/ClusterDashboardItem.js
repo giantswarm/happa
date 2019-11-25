@@ -25,9 +25,9 @@ import React from 'react';
 import RefreshableLabel from 'UI/refreshable_label';
 import styled from '@emotion/styled';
 
-const WrapperStyles = css`
+const WrapperStyles = props => css`
   display: flex;
-  background-color: ${props => props.theme.colors.darkBlueLighter1};
+  background-color: ${props.theme.colors.darkBlueLighter1};
   border-radius: 5px;
   border: 0px;
   min-height: 20px;
