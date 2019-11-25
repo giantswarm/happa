@@ -228,7 +228,6 @@ scales node pools correctly`, async () => {
     getAllByText,
     getAllByTestId,
     getByLabelText,
-    debug,
   } = renderRouteWithStore(ROUTE, div, {});
 
   await wait(() => getAllByTestId('node-pool-id'));
