@@ -1,34 +1,56 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from '@emotion/styled';
 
-const OrganizationListRow = props => {
-  const orgID = props.organization.id;
-  const organizationDetailURL = props.getViewURL(orgID);
+const StyledTableDataCell = styled.td`
+  text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
+`;
+
+const OrganizationListRow = ({
+  clusters,
+  organization,
+  onDelete,
+  getViewURL,
+  provider,
+}) => {
+  const orgID = organization.id;
+  const organizationDetailURL = getViewURL(orgID);
+
+  const hasCredentials = organization.credentials.length > 0;
 
   return (
     <tr>
-      <td>
+      <StyledTableDataCell>
         <Link to={organizationDetailURL}>{orgID}</Link>
-      </td>
-      <td style={{ textAlign: 'center' }}>
-        <Link to={organizationDetailURL}>{props.clusters.length}</Link>
-      </td>
-      <td style={{ textAlign: 'center' }}>
-        <Link to={organizationDetailURL}>
-          {props.organization.members.length}
-        </Link>
-      </td>
-      <td>
+      </StyledTableDataCell>
+      <StyledTableDataCell centered={true}>
+        <Link to={organizationDetailURL}>{clusters.length}</Link>
+      </StyledTableDataCell>
+      <StyledTableDataCell centered={true}>
+        <Link to={organizationDetailURL}>{organization.members.length}</Link>
+      </StyledTableDataCell>
+
+      {provider !== 'kvm' && (
+        <StyledTableDataCell centered={true}>
+          {hasCredentials && (
+            <Link to={organizationDetailURL}>
+              <i className='fa fa-done' />
+            </Link>
+          )}
+        </StyledTableDataCell>
+      )}
+
+      <StyledTableDataCell>
         <div className='contextual'>
           <i
             className='fa fa-delete clickable'
             data-orgid={orgID}
-            onClick={props.onDelete}
+            onClick={onDelete}
             title='Delete this organization'
           />
         </div>
-      </td>
+      </StyledTableDataCell>
     </tr>
   );
 };
@@ -39,6 +61,7 @@ OrganizationListRow.propTypes = {
   onSelect: PropTypes.func,
   organization: PropTypes.object,
   clusters: PropTypes.array,
+  provider: PropTypes.string,
 };
 
 export default OrganizationListRow;

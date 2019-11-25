@@ -2,16 +2,28 @@ import { clustersForOrg } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Row from './row';
+import styled from '@emotion/styled';
 
-const OrganizationList = props => {
+const StyledTableHeader = styled.th`
+  text-align: ${({ centered }) => (centered ? 'center' : 'initial')};
+`;
+
+const OrganizationList = ({ provider, ...props }) => {
   return (
     <table>
       <thead>
         <tr>
-          <th>Name</th>
-          <th style={{ textAlign: 'center' }}>Clusters</th>
-          <th style={{ textAlign: 'center' }}>Members</th>
-          <th />
+          <StyledTableHeader>Name</StyledTableHeader>
+          <StyledTableHeader centered={true}>Clusters</StyledTableHeader>
+          <StyledTableHeader centered={true}>Members</StyledTableHeader>
+
+          {provider !== 'kvm' && (
+            <StyledTableHeader centered={true}>
+              Provider Credentials
+            </StyledTableHeader>
+          )}
+
+          <StyledTableHeader />
         </tr>
       </thead>
       <tbody>
@@ -23,6 +35,7 @@ const OrganizationList = props => {
               getViewURL={props.getViewURL}
               onDelete={props.deleteOrganization}
               organization={organization}
+              provider={provider}
             />
           );
         })}
@@ -36,6 +49,7 @@ OrganizationList.propTypes = {
   deleteOrganization: PropTypes.func,
   organizations: PropTypes.array,
   clusters: PropTypes.object,
+  provider: PropTypes.string,
 };
 
 export default OrganizationList;
