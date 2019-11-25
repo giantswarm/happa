@@ -15,7 +15,7 @@ export function loadReleases() {
             'Something went wrong while trying to fetch the list of releases. No releases found.',
             messageType.ERROR,
             messageTTL.LONG,
-            'please try again later or contact support: support@giantswarm.io'
+            'Please try again later or contact support: support@giantswarm.io'
           );
         }
 
@@ -41,7 +41,7 @@ export function loadReleases() {
           'Something went wrong while trying to fetch the list of releases.',
           messageType.ERROR,
           messageTTL.LONG,
-          'please try again later or contact support: support@giantswarm.io'
+          'Please try again later or contact support: support@giantswarm.io'
         );
 
         throw error;
