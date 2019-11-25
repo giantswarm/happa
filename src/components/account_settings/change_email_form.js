@@ -2,7 +2,7 @@ import Button from 'UI/button';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import update from 'react-addons-update';
 
 class ChangeEmailForm extends React.Component {
@@ -135,48 +135,30 @@ class ChangeEmailForm extends React.Component {
           />
 
           <div className='button-area'>
-            <ReactCSSTransitionGroup
-              transitionEnterTimeout={200}
-              transitionLeaveTimeout={200}
-              transitionName='slide-right'
-            >
-              {this.state.isButtonVisible ? (
-                <Button
-                  bsStyle='primary'
-                  disabled={!this.state.isValid}
-                  loading={this.state.isSubmitting}
-                  loadingMessage='Saving...'
-                  type='submit'
-                >
-                  Set New Email
-                </Button>
-              ) : null}
-            </ReactCSSTransitionGroup>
+            <SlideTransition in={this.state.isButtonVisible}>
+              <Button
+                bsStyle='primary'
+                disabled={!this.state.isValid}
+                loading={this.state.isSubmitting}
+                loadingMessage='Saving...'
+                type='submit'
+              >
+                Set New Email
+              </Button>
+            </SlideTransition>
 
-            <ReactCSSTransitionGroup
-              transitionEnterTimeout={200}
-              transitionLeaveTimeout={200}
-              transitionName='slide-right'
-            >
-              {this.state.isSuccess ? (
-                <div className='form-success'>
-                  <i className='fa fa-done' />
-                  Saved Succesfully
-                </div>
-              ) : null}
-            </ReactCSSTransitionGroup>
+            <SlideTransition in={this.state.isSuccess}>
+              <div className='form-success'>
+                <i className='fa fa-done' />
+                Saved Succesfully
+              </div>
+            </SlideTransition>
 
-            <ReactCSSTransitionGroup
-              transitionEnterTimeout={200}
-              transitionLeaveTimeout={200}
-              transitionName='slide-right'
-            >
-              {this.state.error ? (
-                <div className='flash-messages--flash-message flash-messages--danger'>
-                  {this.state.errorMessage}
-                </div>
-              ) : null}
-            </ReactCSSTransitionGroup>
+            <SlideTransition in={this.state.error}>
+              <div className='flash-messages--flash-message flash-messages--danger'>
+                {this.state.errorMessage}
+              </div>
+            </SlideTransition>
           </div>
         </form>
       </div>

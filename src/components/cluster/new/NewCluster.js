@@ -25,15 +25,6 @@ class NewCluster extends React.Component {
         selectedRelease,
         loading: false,
       });
-
-      if (!selectedRelease) {
-        new FlashMessage(
-          'Something went wrong while trying to fetch active releasesssss',
-          messageType.ERROR,
-          messageTTL.MEDIUM,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-      }
     });
   }
 

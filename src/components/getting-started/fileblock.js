@@ -1,9 +1,9 @@
 import * as Helpers from 'lib/helpers';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import copy from 'copy-to-clipboard';
 import Line from './line';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 // FileBlock
 // Use this to show the contents of a file to a user.
@@ -110,18 +110,13 @@ class FileBlock extends React.Component {
               <i aria-hidden='true' className='fa fa-content-copy' />
             </a>
           </div>
-          <ReactCSSTransitionGroup
-            transitionEnterTimeout={1000}
-            transitionLeaveTimeout={1000}
-            transitionName={'checkmark'}
+          <BaseTransition
+            in={this.state.clicked}
+            timeout={{ enter: 1000, exit: 1000 }}
+            classNames='checkmark'
           >
-            {this.state.clicked ? (
-              <i
-                aria-hidden='true'
-                className='fa fa-done codeblock--checkmark'
-              />
-            ) : null}
-          </ReactCSSTransitionGroup>
+            <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
+          </BaseTransition>
         </pre>
       </div>
     );

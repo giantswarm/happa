@@ -12,7 +12,7 @@ import Button from 'UI/button';
 import LoginFormContainer from 'UI/login_form_container';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import SlideTransition from 'styles/transitions/SlideTransition';
 
 class ForgotPassword extends React.Component {
   state = {
@@ -155,17 +155,11 @@ class ForgotPassword extends React.Component {
       <div>
         <div className='login_form--mask' />
 
-        <ReactCSSTransitionGroup
-          transitionAppear={true}
-          transitionAppearTimeout={200}
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionName={`login_form--transition`}
-        >
+        <SlideTransition in={true} appear={true} direction='down'>
           <LoginFormContainer>
             {this.state.tokenRequested ? this.success() : this.form()}
           </LoginFormContainer>
-        </ReactCSSTransitionGroup>
+        </SlideTransition>
       </div>
     );
   }
