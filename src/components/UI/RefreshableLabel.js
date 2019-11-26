@@ -1,8 +1,6 @@
 import { keyframes } from '@emotion/core';
-import _ from 'underscore';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import ReactTimeout from 'react-timeout';
 import styled from '@emotion/styled';
 
 const yellowfade = keyframes`
