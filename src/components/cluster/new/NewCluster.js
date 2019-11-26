@@ -14,6 +14,7 @@ class NewCluster extends React.Component {
     selectedRelease: this.props.firstNodePoolsRelease,
     selectableReleases: [],
     loading: true,
+    clusterName: 'Unnamed cluster',
   };
 
   componentDidMount() {
@@ -50,6 +51,8 @@ class NewCluster extends React.Component {
 
     this.setState({ selectableReleases: selectableReleases });
   }
+
+  updateClusterName = clusterName => this.setState({ clusterName });
 
   // Lets non admin users know that creating a cluster will probably fail for them,
   // since all releases are WIP and only admins can create clusters from WIP releases.
@@ -98,6 +101,8 @@ class NewCluster extends React.Component {
         selectableReleases={this.state.selectableReleases}
         releases={this.props.releases}
         activeSortedReleases={this.props.activeSortedReleases}
+        clusterName={this.state.clusterName}
+        updateClusterNameInParent={this.updateClusterName}
       />
     );
   };
