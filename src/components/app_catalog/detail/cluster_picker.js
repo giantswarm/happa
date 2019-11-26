@@ -1,4 +1,3 @@
-import * as theme from 'lib/theme';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import Input from './input';
 import PropTypes from 'prop-types';
@@ -18,20 +17,20 @@ const ClusterList = styled.div`
 
 const Cluster = styled.div`
   align-items: center;
-  border-radius: ${theme.BORDER_RADIUS};
+  border-radius: ${props => props.theme.border_radius};
   display: flex;
   padding: 10px 15px;
   :hover {
-    background-color: ${theme.COLORS.shade4};
+    background-color: ${props => props.theme.colors.shade4};
     cursor: pointer;
   }
   &.selected {
-    background-color: ${theme.COLORS.shade4};
+    background-color: ${props => props.theme.colors.shade4};
   }
 `;
 
 const ClusterTitle = styled.div`
-  color: ${theme.COLORS.white2};
+  color: ${props => props.theme.colors.white2};
   flex-grow: 1;
   font-size: 16px;
   font-weight: 800;
@@ -39,7 +38,7 @@ const ClusterTitle = styled.div`
 `;
 
 const Organisation = styled.div`
-  color: ${theme.COLORS.white2};
+  color: ${props => props.theme.colors.white2};
   font-size: 12px;
 `;
 

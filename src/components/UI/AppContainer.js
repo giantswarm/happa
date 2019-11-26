@@ -18,8 +18,8 @@ const StyledLink = styled(Link)`
   border: 1px solid #2a5974;
   width: 100%;
   height: 100%;
-  border-radius: ${({ theme }) => theme.border_radius};
-  background-color: ${({ theme }) => theme.colors.shade4};
+  border-radius: ${props => props.theme.border_radius};
+  background-color: ${props => props.theme.colors.shade4};
   position: relative;
   cursor: pointer;
   overflow: hidden;
