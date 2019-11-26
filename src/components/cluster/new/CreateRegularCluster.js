@@ -74,7 +74,7 @@ class CreateRegularCluster extends React.Component {
       valid: true,
     },
     releaseVersion: this.props.selectedRelease,
-    clusterName: 'Unnamed cluster',
+    clusterName: this.props.clusterName,
     scaling: {
       automatic: false,
       min: 3,
@@ -144,9 +144,9 @@ class CreateRegularCluster extends React.Component {
   };
 
   updateClusterName = event => {
-    this.setState({
-      clusterName: event.target.value,
-    });
+    const clusterName = event.target.value;
+    this.setState({ clusterName });
+    this.props.updateClusterNameInParent(clusterName);
   };
 
   createCluster = () => {
@@ -683,6 +683,8 @@ CreateRegularCluster.propTypes = {
   selectableReleases: PropTypes.array,
   releases: PropTypes.object,
   activeSortedReleases: PropTypes.array,
+  clusterName: PropTypes.string,
+  updateClusterNameInParent: PropTypes.func,
 };
 
 function mapStateToProps(state) {
