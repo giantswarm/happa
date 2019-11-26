@@ -181,8 +181,8 @@ class ClusterDetailView extends React.Component {
     // Desired number of nodes only makes sense with auto-scaling and that is
     // only available on AWS starting from release 6.3.0 onwards.
     if (
-      this.props.provider != 'aws' ||
-      cmp(this.props.cluster.release_version, '6.2.99') != 1
+      this.props.provider !== 'aws' ||
+      cmp(this.props.cluster.release_version, '6.2.99') !== 1
     ) {
       return null;
     }
@@ -194,7 +194,7 @@ class ClusterDetailView extends React.Component {
     ) {
       return this.props.cluster.status.cluster.scaling.desiredCapacity;
     }
-    return null;
+    return 0; // if we return null no value is rendered in AWS v4 cluster view
   }
 
   accessCluster = () => {
