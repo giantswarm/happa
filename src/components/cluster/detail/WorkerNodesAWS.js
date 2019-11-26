@@ -4,6 +4,7 @@ import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RefreshableLabel from 'UI/RefreshableLabel';
 import theme from 'styles/theme';
 
 function WorkerNodesAWS({
@@ -28,27 +29,37 @@ function WorkerNodesAWS({
         <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
           {instanceName && instanceName}
         </Code>
-        <div>
+        <RefreshableLabel dataItems={[instanceType]}>
           {instanceType && instanceType.cpu_cores} CPUs,{' '}
           {instanceType && instanceType.memory_size_gb.toFixed(0)} GB RAM
-        </div>
+        </RefreshableLabel>
       </LineDiv>
       <LineDiv>
         <div>Scaling</div>
-        <div style={{ marginRight: '30px' }}>
+        <RefreshableLabel dataItems={[scaling.min, scaling.max]}>
           {scaling && scaling.min === scaling.max
             ? `Pinned at ${scaling.min}`
             : `Autoscaling between ${scaling.min} and ${scaling.max}`}
-        </div>
+        </RefreshableLabel>
+        {/* TODO Remove this! */}
+        <div style={{ width: '25px' }}></div>
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
       <LineDiv data-testid='desired-nodes'>
         <div>Desired number</div>
-        <div>{workerNodesDesired && workerNodesDesired}</div>
+        {workerNodesDesired !== undefined && (
+          <RefreshableLabel dataItems={[workerNodesDesired]}>
+            {workerNodesDesired}
+          </RefreshableLabel>
+        )}
       </LineDiv>
       <LineDiv data-testid='running-nodes'>
         <div>Current number</div>
-        <div>{workerNodesRunning && workerNodesRunning}</div>
+        {workerNodesRunning !== undefined && (
+          <RefreshableLabel dataItems={[workerNodesRunning]}>
+            {workerNodesRunning}
+          </RefreshableLabel>
+        )}
       </LineDiv>
     </WrapperDiv>
   );
