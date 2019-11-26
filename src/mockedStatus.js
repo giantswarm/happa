@@ -1,4 +1,4 @@
-import * as Providers from 'shared/constants';
+import { Providers } from 'shared/constants';
 
 const mockedStatus = {
   aws: {

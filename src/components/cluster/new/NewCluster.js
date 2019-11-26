@@ -1,7 +1,7 @@
-import * as Providers from 'shared/constants';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { loadReleases } from 'actions/releaseActions';
+import { Providers } from 'shared/constants';
 import { Route, Switch } from 'react-router-dom';
 import cmp from 'semver-compare';
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';

@@ -1,7 +1,7 @@
-import * as Providers from 'shared/constants';
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges } from 'styles';
 import { CopyToClipboardDiv } from './V5ClusterDetailTable';
 import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
+import { Providers } from 'shared/constants';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import CredentialInfoRow from './CredentialInfoRow';

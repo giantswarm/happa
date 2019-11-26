@@ -1,7 +1,7 @@
-import * as Providers from 'shared/constants';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
+import { Providers } from 'shared/constants';
 import { RadioWrapper } from '../new/CreateNodePoolsCluster';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
 import AWSInstanceTypeSelector from '../new/AWSInstanceTypeSelector';

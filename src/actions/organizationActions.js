@@ -1,7 +1,7 @@
-import * as Providers from 'shared/constants';
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
+import { Providers } from 'shared/constants';
 import { setOrganizationToStorage } from 'utils/localStorageUtils';
 import GiantSwarm from 'giantswarm';
 import React from 'react';

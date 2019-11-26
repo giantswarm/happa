@@ -1,4 +1,4 @@
-import * as Providers from 'shared/constants';
+import { AuthorizationTypes, Providers } from 'shared/constants';
 
 const initialState = function() {
   return {
@@ -8,7 +8,7 @@ const initialState = function() {
       loggedInUser: {
         email: 'oriol@giantswarm.io',
         auth: {
-          scheme: 'Bearer',
+          scheme: AuthorizationTypes.BEARER,
           token: 'a-valid-token',
         },
         isAdmin: true,

@@ -1,4 +1,5 @@
 import * as userActions from 'actions/userActions';
+import { AuthorizationTypes } from 'shared/constants';
 import { bindActionCreators } from 'redux';
 import { clearQueues } from 'lib/flash_message';
 import { connect } from 'react-redux';
@@ -16,7 +17,7 @@ class AdminLogin extends React.Component {
     if (
       this.props.user &&
       this.props.user.auth &&
-      this.props.user.auth.scheme === 'Bearer'
+      this.props.user.auth.scheme === AuthorizationTypes.BEARER
     ) {
       if (isJwtExpired(this.props.user.auth.token)) {
         // Token is expired. Try to renew it silently, and if that succeeds, redirect

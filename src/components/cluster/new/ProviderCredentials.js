@@ -1,6 +1,6 @@
-import * as Providers from 'shared/constants';
 import { connect } from 'react-redux';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
+import { Providers } from 'shared/constants';
 import AWSAccountID from 'UI/aws_account_id';
 import PropTypes from 'prop-types';
 import React from 'react';

@@ -1,8 +1,8 @@
 import * as OrganizationActions from 'actions/organizationActions';
-import * as Providers from 'shared/constants';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Providers } from 'shared/constants';
 import { relativeDate } from 'lib/helpers.js';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/lib/Button';

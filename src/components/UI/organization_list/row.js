@@ -1,5 +1,5 @@
-import * as Providers from 'shared/constants';
 import { Link } from 'react-router-dom';
+import { Providers } from 'shared/constants';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';

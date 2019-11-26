@@ -1,4 +1,3 @@
-import * as Providers from 'shared/constants';
 import {
   AddNodePoolFlexColumnDiv,
   AddNodePoolWrapper,
@@ -10,6 +9,7 @@ import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
+import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
 import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from '../detail/AddNodePool';

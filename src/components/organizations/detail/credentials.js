@@ -1,10 +1,10 @@
-import * as Providers from 'shared/constants';
 import { connect } from 'react-redux';
 import {
   organizationCredentialsLoad,
   organizationCredentialsSet,
   organizationCredentialsSetConfirmed,
 } from 'actions/organizationActions';
+import { Providers } from 'shared/constants';
 import { spinner } from 'images';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';

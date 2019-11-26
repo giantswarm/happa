@@ -1,5 +1,5 @@
-import * as Providers from 'shared/constants';
 import { clustersForOrg } from 'lib/helpers';
+import { Providers } from 'shared/constants';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Row from './row';
