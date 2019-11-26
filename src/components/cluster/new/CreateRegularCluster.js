@@ -475,46 +475,47 @@ class CreateRegularCluster extends React.Component {
 
             <FlexColumnDiv>
               <div className='worker-nodes'>Worker nodes</div>
-              {this.props.provider === 'aws' && (
-                <label
-                  className='availability-zones'
-                  htmlFor='availability-zones'
-                >
-                  <span className='label-span'>Availability Zones</span>
-                  {// For now we want to handle cases where older clusters do
-                  // still not support AZ selection. The special handling here
-                  // can be removed once all clusters run at least on 6.1.0.
-                  //
-                  //     https://github.com/giantswarm/giantswarm/pull/2202
-                  //
-                  cmp(this.props.selectedRelease, '6.0.0') === 1 ? (
-                    <FlexWrapperAZDiv>
-                      <p>Number of availability zones to use:</p>
-                      <div>
-                        <NumberPicker
-                          label=''
-                          max={this.props.maxAvailabilityZones}
-                          min={this.props.minAvailabilityZones}
-                          onChange={this.updateAvailabilityZonesPicker}
-                          readOnly={false}
-                          stepSize={1}
-                          value={this.state.availabilityZonesPicker.value}
-                        />
-                      </div>
-                    </FlexWrapperAZDiv>
-                  ) : (
-                    <>
-                      <p>
-                        Selection of availability zones is only possible for
-                        release version 6.1.0 or greater.
-                      </p>
-                      <div className='col-3'>
-                        <NumberPicker readOnly={true} value={1} />
-                      </div>
-                    </>
-                  )}
-                </label>
-              )}
+              {this.props.provider === 'aws' ||
+                (this.props.provider === 'azure' && (
+                  <label
+                    className='availability-zones'
+                    htmlFor='availability-zones'
+                  >
+                    <span className='label-span'>Availability Zones</span>
+                    {// For now we want to handle cases where older clusters do
+                    // still not support AZ selection. The special handling here
+                    // can be removed once all clusters run at least on 6.1.0.
+                    //
+                    //     https://github.com/giantswarm/giantswarm/pull/2202
+                    //
+                    cmp(this.props.selectedRelease, '6.0.0') === 1 ? (
+                      <FlexWrapperAZDiv>
+                        <p>Number of availability zones to use:</p>
+                        <div>
+                          <NumberPicker
+                            label=''
+                            max={this.props.maxAvailabilityZones}
+                            min={this.props.minAvailabilityZones}
+                            onChange={this.updateAvailabilityZonesPicker}
+                            readOnly={false}
+                            stepSize={1}
+                            value={this.state.availabilityZonesPicker.value}
+                          />
+                        </div>
+                      </FlexWrapperAZDiv>
+                    ) : (
+                      <>
+                        <p>
+                          Selection of availability zones is only possible for
+                          release version 6.1.0 or greater.
+                        </p>
+                        <div className='col-3'>
+                          <NumberPicker readOnly={true} value={1} />
+                        </div>
+                      </>
+                    )}
+                  </label>
+                ))}
 
               <label htmlFor='instance-type'>
                 {(() => {
