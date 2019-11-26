@@ -16,6 +16,23 @@ function WorkerNodesAWS({
   workerNodesDesired,
   workerNodesRunning,
 }) {
+  const instanceTypeText = instanceType
+    ? `${instanceType.cpu_cores} CPUs, ${instanceType.memory_size_gb.toFixed(
+        0
+      )} GB RAM`
+    : '0 CPUs, 0 GB RAM';
+
+  const scalingText =
+    scaling && scaling.min === scaling.max
+      ? `Pinned at ${scaling.min}`
+      : `Autoscaling between ${scaling.min} and ${scaling.max}`;
+
+  // TODO remove after checks
+  const workerNodesDesiredText =
+    workerNodesDesired !== undefined ? workerNodesDesired : 0;
+  const workerNodesRunningText =
+    workerNodesRunning !== undefined ? workerNodesRunning : 0;
+
   return (
     <WrapperDiv>
       <LineDiv>
@@ -29,38 +46,31 @@ function WorkerNodesAWS({
         <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
           {instanceName && instanceName}
         </Code>
-        <RefreshableLabel value={(instanceType.cpu_cores, instanceType.memory)}>
-          {instanceType && instanceType.cpu_cores} CPUs,{' '}
-          {instanceType && instanceType.memory_size_gb.toFixed(0)} GB RAM
+        <RefreshableLabel value={instanceTypeText}>
+          {instanceTypeText}
         </RefreshableLabel>
       </LineDiv>
       <LineDiv>
         <div>Scaling</div>
         <RefreshableLabel
-          dataItems={[scaling.min, scaling.max]}
+          dataItems={scalingText}
           style={{ marginRight: '25px' }}
         >
-          {scaling && scaling.min === scaling.max
-            ? `Pinned at ${scaling.min}`
-            : `Autoscaling between ${scaling.min} and ${scaling.max}`}
+          {scalingText}
         </RefreshableLabel>
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
       <LineDiv data-testid='desired-nodes'>
         <div>Desired number</div>
-        {workerNodesDesired !== undefined && (
-          <RefreshableLabel value={[workerNodesDesired]}>
-            {workerNodesDesired}
-          </RefreshableLabel>
-        )}
+        <RefreshableLabel value={workerNodesDesiredText}>
+          {workerNodesDesired}
+        </RefreshableLabel>
       </LineDiv>
       <LineDiv data-testid='running-nodes'>
         <div>Current number</div>
-        {workerNodesRunning !== undefined && (
-          <RefreshableLabel value={[workerNodesRunning]}>
-            {workerNodesRunning}
-          </RefreshableLabel>
-        )}
+        <RefreshableLabel value={workerNodesRunningText}>
+          {workerNodesRunning}
+        </RefreshableLabel>
       </LineDiv>
     </WrapperDiv>
   );

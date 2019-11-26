@@ -22,6 +22,12 @@ export const LineDiv = styled.div`
 `;
 
 function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
+  const instanceTypeText = instanceType
+    ? `${instanceType.cpu_cores} CPUs, ${instanceType.memory_size_gb.toFixed(
+        0
+      )} GB RAM`
+    : '0 CPUs, 0 GB RAM';
+
   return (
     <WrapperDiv>
       <LineDiv>
@@ -29,19 +35,17 @@ function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
         <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
           {instanceType && instanceType.name}
         </Code>
-        <RefreshableLabel value={instanceType}>
-          {instanceType && instanceType.numberOfCores} CPUs,{' '}
-          {instanceType && (instanceType.memoryInMb / 1000.0).toFixed(1)} GB RAM
+        <RefreshableLabel value={instanceTypeText}>
+          {instanceTypeText}
         </RefreshableLabel>
       </LineDiv>
       <LineDiv>
         <div>Nodes</div>
-        <RefreshableLabel
-          dataItems={[instanceType]}
-          style={{ marginRight: '30px' }}
-        >
-          {nodes && nodes}
-        </RefreshableLabel>
+        {nodes && (
+          <RefreshableLabel value={nodes} style={{ marginRight: '30px' }}>
+            {nodes}
+          </RefreshableLabel>
+        )}
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>
