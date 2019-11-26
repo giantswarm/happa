@@ -74,7 +74,7 @@ class CreateRegularCluster extends React.Component {
       valid: true,
     },
     releaseVersion: this.props.selectedRelease,
-    clusterName: 'Unnamed cluster',
+    clusterName: this.props.clusterName,
     scaling: {
       automatic: false,
       min: 3,
@@ -121,10 +121,6 @@ class CreateRegularCluster extends React.Component {
       awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
       azureInstanceTypes: JSON.parse(window.config.azureCapabilitiesJSON),
     });
-
-    // If there is a name in localStorage we use it.
-    const clusterName = localStorage.getItem('clusterName');
-    if (clusterName) this.setState({ clusterName });
   }
 
   updateAvailabilityZonesPicker = n => {
@@ -150,7 +146,7 @@ class CreateRegularCluster extends React.Component {
   updateClusterName = event => {
     const clusterName = event.target.value;
     this.setState({ clusterName });
-    localStorage.setItem('clusterName', clusterName);
+    this.props.updateClusterNameInParent(clusterName);
   };
 
   createCluster = () => {
@@ -687,6 +683,8 @@ CreateRegularCluster.propTypes = {
   selectableReleases: PropTypes.array,
   releases: PropTypes.object,
   activeSortedReleases: PropTypes.array,
+  clusterName: PropTypes.string,
+  updateClusterNameInParent: PropTypes.func,
 };
 
 function mapStateToProps(state) {

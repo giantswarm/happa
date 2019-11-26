@@ -181,12 +181,11 @@ const NodePoolHeading = styled.div`
 `;
 
 const defaultNodePool = id => ({ data: { name: `Node Pool #${id}` } });
-const defaultClusterName = 'Unnamed Cluster';
 
 class CreateNodePoolsCluster extends Component {
   state = {
     name: {
-      value: defaultClusterName,
+      value: this.props.clusterName,
       valid: true,
       validationError: '',
     },
@@ -215,21 +214,13 @@ class CreateNodePoolsCluster extends Component {
 
   componentDidMount() {
     this.isValid();
-
-    // If there is a name in localStorage we use it.
-    const clusterName = localStorage.getItem('clusterName');
-    this.setState(
-      produce(draft => {
-        draft.name.value = clusterName || defaultClusterName;
-      })
-    );
   }
 
   updateName = event => {
     const name = event.target.value;
     const [isValid, message] = hasAppropriateLength(name, 0, 100);
 
-    localStorage.setItem('clusterName', name);
+    this.props.updateClusterNameInParent(name);
 
     // We don't let the user write more characters if the name exceeds the max number allowed
     if (!isValid) {
@@ -589,6 +580,8 @@ CreateNodePoolsCluster.propTypes = {
   maxAZ: PropTypes.number,
   minAZ: PropTypes.number,
   defaultAZ: PropTypes.number,
+  clusterName: PropTypes.string,
+  updateClusterNameInParent: PropTypes.func,
 };
 
 function mapStateToProps(state) {

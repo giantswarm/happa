@@ -599,9 +599,6 @@ export function clusterCreate(cluster, isV5Cluster) {
           messageTTL.MEDIUM
         );
 
-        // after successful creation, cleanup localStorage.
-        localStorage.removeItem('clusterName');
-
         return dispatch(clusterLoadDetails(clusterId));
       })
       .catch(error => {
