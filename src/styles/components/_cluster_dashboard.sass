@@ -12,7 +12,6 @@
         opacity: 1
         transform: translateY(0)
 
-
 .cluster-list-item-enter
   opacity: 0
 
@@ -27,23 +26,8 @@
   opacity: 0
   transition: opacity 500ms ease-in
 
-.cluster-dashboard-item
-  display: flex
-
-  b
-    font-weight: 400
-
-.cluster-dashboard-item--content
-  flex: 1;
-  padding-right: 15px
-
-.cluster-dashboard-item--label
-  flex: 0 0 90px;
-
+// FIXME: not sure why this progress_button--container is here and whether it has to be migrated into ClusterDashboardItem styled stuff.
 .cluster-dashboard-item--buttons
-  text-align: right
-  flex: 0 0 210px
-
   .progress_button--container:last-child
     margin-right: 0px
 
@@ -63,11 +47,3 @@
       text-align: center
       left: 50%
       margin-left: -25px
-
-.cluster-dashboard-item--label
-  font-size: 1.2em
-
-.cluster-dashboard-item--title
-  font-size: 1.2em
-  z-index: 120
-  position: relative

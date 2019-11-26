@@ -148,9 +148,11 @@ class ScaleNodePoolModal extends React.Component {
 
     const { nodePool, workerNodesDesired } = this.props;
     const { min, max, minValid, maxValid } = this.state.scaling;
+    // Are there any nodes already?
+    const hasNodes = nodePool.status.nodes && nodePool.status.nodes_ready;
 
     if (this.supportsAutoscaling(this.props.provider)) {
-      if (min > workerNodesDesired) {
+      if (min > workerNodesDesired && hasNodes) {
         workerDelta = min - workerNodesDesired;
         return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
@@ -159,7 +161,7 @@ class ScaleNodePoolModal extends React.Component {
         };
       }
 
-      if (max < workerNodesDesired) {
+      if (max < workerNodesDesired && hasNodes) {
         workerDelta = Math.abs(workerNodesDesired - max);
         return {
           title: `Remove ${workerDelta} worker node${this.pluralize(
