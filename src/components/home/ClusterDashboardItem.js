@@ -22,7 +22,7 @@ import ClusterIDLabel from 'UI/cluster_id_label';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import RefreshableLabel from 'UI/refreshable_label';
+import RefreshableLabel from 'UI/RefreshableLabel';
 import styled from '@emotion/styled';
 
 const WrapperStyles = props => css`
