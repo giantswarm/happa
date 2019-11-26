@@ -51,7 +51,7 @@ function RegionAndVersions({
       <div>
         <span>Created {createDate ? relativeDate(createDate) : 'n/a'}</span>
         <span>
-          <RefreshableLabel value={releaseVersion}>
+          <RefreshableLabel value={releaseVersion ? releaseVersion : 'n/a'}>
             <>
               <Dot style={{ paddingRight: 0 }} />
               <ReleaseDetail onClick={onReleaseDetailClick}>
