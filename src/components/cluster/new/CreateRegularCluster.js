@@ -11,7 +11,6 @@ import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import NumberPicker from 'UI/number_picker';
-import produce from 'immer';
 import PropTypes from 'prop-types';
 import ProviderCredentials from './ProviderCredentials';
 import React from 'react';
