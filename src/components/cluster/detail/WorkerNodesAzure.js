@@ -2,6 +2,7 @@ import { Code } from 'styles/index';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RefreshableLabel from 'UI/RefreshableLabel';
 import styled from '@emotion/styled';
 import theme from 'styles/theme';
 
@@ -28,14 +29,19 @@ function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
         <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
           {instanceType && instanceType.name}
         </Code>
-        <div>
+        <RefreshableLabel value={instanceType}>
           {instanceType && instanceType.numberOfCores} CPUs,{' '}
           {instanceType && (instanceType.memoryInMb / 1000.0).toFixed(1)} GB RAM
-        </div>
+        </RefreshableLabel>
       </LineDiv>
       <LineDiv>
         <div>Nodes</div>
-        <div style={{ marginRight: '30px' }}>{nodes && nodes}</div>
+        <RefreshableLabel
+          dataItems={[instanceType]}
+          style={{ marginRight: '30px' }}
+        >
+          {nodes && nodes}
+        </RefreshableLabel>
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>
