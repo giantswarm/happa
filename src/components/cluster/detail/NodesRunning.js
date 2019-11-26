@@ -19,11 +19,11 @@ const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
           </span>
           <span>
             <Dot />
-            {this.state.RAM} GB RAM
+            {RAM} GB RAM
           </span>
           <span>
             <Dot />
-            {this.state.CPUs} CPUs
+            {CPUs} CPUs
           </span>
         </>
       )}

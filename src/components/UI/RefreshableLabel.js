@@ -65,7 +65,7 @@ export function RefreshableLabel({ children, value, style }) {
 }
 
 RefreshableLabel.propTypes = {
-  children: PropTypes.object,
+  children: PropTypes.any,
   style: PropTypes.object,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
