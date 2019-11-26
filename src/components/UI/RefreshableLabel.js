@@ -55,7 +55,9 @@ export function RefreshableLabel({ children, dataItems, style }) {
     setTimeout(() => setHasDataChanged(false), 5000);
   };
 
-  useEffect(() => compareData(), [dataItems]);
+  useEffect(() => {
+    compareData();
+  }, [dataItems]);
 
   return (
     <Wrapper className={hasDataChanged && 'changed'} style={style}>
