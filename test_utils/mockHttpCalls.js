@@ -1,3 +1,4 @@
+import * as Providers from 'shared/constants';
 import nock from 'nock';
 
 /***** Constants *****/
@@ -45,7 +46,7 @@ export const infoResponse = {
     },
     datacenter: 'eu-central-1',
     installation_name: 'local',
-    provider: 'aws',
+    provider: Providers.AWS,
   },
   features: { nodepools: { release_version_minimum: '10.0.0' } },
   stats: { cluster_creation_duration: { median: 805, p25: 657, p75: 1031 } },
@@ -226,7 +227,7 @@ export const v4AWSClusterStatusResponse = {
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
-          'giantswarm.io/provider': 'aws',
+          'giantswarm.io/provider': Providers.AWS,
           ip: '10.1.2.18',
           'kubernetes.io/arch': 'amd64',
           'kubernetes.io/hostname':
@@ -249,7 +250,7 @@ export const v4AWSClusterStatusResponse = {
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
-          'giantswarm.io/provider': 'aws',
+          'giantswarm.io/provider': Providers.AWS,
           ip: '10.1.2.49',
           'kubernetes.io/arch': 'amd64',
           'kubernetes.io/hostname':
@@ -272,7 +273,7 @@ export const v4AWSClusterStatusResponse = {
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
-          'giantswarm.io/provider': 'aws',
+          'giantswarm.io/provider': Providers.AWS,
           ip: '10.1.2.52',
           'kubernetes.io/arch': 'amd64',
           'kubernetes.io/hostname':
@@ -295,7 +296,7 @@ export const v4AWSClusterStatusResponse = {
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
-          'giantswarm.io/provider': 'aws',
+          'giantswarm.io/provider': Providers.AWS,
           ip: '10.1.2.85',
           'kubernetes.io/arch': 'amd64',
           'kubernetes.io/hostname':

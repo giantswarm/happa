@@ -1,3 +1,4 @@
+import * as Providers from 'shared/constants';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
@@ -159,7 +160,7 @@ class CreateRegularCluster extends React.Component {
     // for the 'third' cluster type that we support to be able to make decisions
     // about a meaningful abstraction. For now, going with a easy solution.
 
-    if (this.props.provider === 'aws') {
+    if (this.props.provider === Providers.AWS) {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           aws: {
@@ -167,7 +168,7 @@ class CreateRegularCluster extends React.Component {
           },
         });
       }
-    } else if (this.props.provider === 'azure') {
+    } else if (this.props.provider === Providers.AZURE) {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           azure: {
@@ -244,7 +245,7 @@ class CreateRegularCluster extends React.Component {
   };
 
   isScalingAutomatic(provider, releaseVer) {
-    if (provider != 'aws') {
+    if (provider !== Providers.AWS) {
       return false;
     }
 
@@ -475,7 +476,7 @@ class CreateRegularCluster extends React.Component {
 
             <FlexColumnDiv>
               <div className='worker-nodes'>Worker nodes</div>
-              {this.props.provider === 'aws' && (
+              {this.props.provider === Providers.AWS && (
                 <label
                   className='availability-zones'
                   htmlFor='availability-zones'
@@ -519,7 +520,7 @@ class CreateRegularCluster extends React.Component {
               <label htmlFor='instance-type'>
                 {(() => {
                   switch (this.props.provider) {
-                    case 'aws': {
+                    case Providers.AWS: {
                       const [RAM, CPUCores] = this.produceRAMAndCoresAWS();
 
                       return (
@@ -539,7 +540,7 @@ class CreateRegularCluster extends React.Component {
                         </>
                       );
                     }
-                    case 'kvm':
+                    case Providers.KVM:
                       return (
                         <>
                           <span className='label-span'>
@@ -585,7 +586,7 @@ class CreateRegularCluster extends React.Component {
                           />
                         </>
                       );
-                    case 'azure': {
+                    case Providers.AZURE: {
                       const [RAM, CPUCores] = this.produceRAMAndCoresAzure();
 
                       return (
@@ -709,12 +710,12 @@ function mapStateToProps(state) {
     propsToPush.defaultVMSize = state.app.info.workers.vm_size.default;
   }
 
-  if (provider === 'aws') {
+  if (provider === Providers.AWS) {
     propsToPush.allowedInstanceTypes =
       state.app.info.workers.instance_type.options;
   }
 
-  if (provider === 'azure') {
+  if (provider === Providers.AZURE) {
     propsToPush.allowedVMSizes = state.app.info.workers.vm_size.options;
   }
 

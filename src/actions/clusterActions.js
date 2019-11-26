@@ -1,3 +1,4 @@
+import * as Providers from 'shared/constants';
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
@@ -33,7 +34,7 @@ function computeCapabilities(cluster, provider) {
   // or any provider and larger than 8.2.0
   if (
     (cmp(releaseVer, '8.0.99') === 1 &&
-      (provider === 'aws' || provider === 'kvm')) ||
+      (provider === Providers.AWS || provider === Providers.KVM)) ||
     cmp(releaseVer, '8.1.99') === 1
   ) {
     capabilities.canInstallApps = true;

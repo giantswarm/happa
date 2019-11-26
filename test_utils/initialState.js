@@ -1,3 +1,5 @@
+import * as Providers from 'shared/constants';
+
 const initialState = function() {
   return {
     app: {
@@ -14,7 +16,7 @@ const initialState = function() {
       info: {
         general: {
           installation_name: 'local',
-          provider: 'aws',
+          provider: Providers.AWS,
           availability_zones: {
             max: 3,
             default: 1,

@@ -1,3 +1,4 @@
+import * as Providers from 'shared/constants';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
@@ -544,7 +545,9 @@ function mapStateToProps(state) {
   const defaultDiskSize = 20; // TODO
 
   const allowedInstanceTypes =
-    provider === 'aws' ? state.app.info.workers.instance_type.options : [];
+    provider === Providers.AWS
+      ? state.app.info.workers.instance_type.options
+      : [];
 
   return {
     availabilityZones,

@@ -1,4 +1,5 @@
 import * as OrganizationActions from 'actions/organizationActions';
+import * as Providers from 'shared/constants';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -27,7 +28,7 @@ class OrganizationDetail extends React.Component {
   // determine whether the component should deal with BYOC credentials
   // (not relevant on KVM)
   canCredentials = provider => {
-    if (provider === 'aws' || provider === 'azure') {
+    if (provider === Providers.AWS || provider === Providers.AZURE) {
       return true;
     }
     return false;

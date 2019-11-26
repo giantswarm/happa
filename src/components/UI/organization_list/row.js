@@ -1,3 +1,4 @@
+import * as Providers from 'shared/constants';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -31,7 +32,7 @@ const OrganizationListRow = ({
         <Link to={organizationDetailURL}>{organization.members.length}</Link>
       </StyledTableDataCell>
 
-      {provider !== 'kvm' && (
+      {provider !== Providers.KVM && (
         <StyledTableDataCell centered={true}>
           {hasCredentials && (
             <Link to={organizationDetailURL}>

@@ -1,5 +1,6 @@
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
+import * as Providers from 'shared/constants';
 import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
 import { clusterPatch } from 'actions/clusterActions';
@@ -160,17 +161,17 @@ class ClusterDetailView extends React.Component {
       return false;
     }
 
-    if (this.props.provider === 'aws') {
+    if (this.props.provider === Providers.AWS) {
       return true;
     }
 
-    if (this.props.provider === 'kvm') {
+    if (this.props.provider === Providers.KVM) {
       return true;
     }
 
     // on Azure, release version must be >= 1.0.0
     if (
-      this.props.provider === 'azure' &&
+      this.props.provider === Providers.AZURE &&
       cmp(this.props.cluster.release_version, '1.0.0') !== -1
     ) {
       return true;
@@ -181,7 +182,7 @@ class ClusterDetailView extends React.Component {
     // Desired number of nodes only makes sense with auto-scaling and that is
     // only available on AWS starting from release 6.3.0 onwards.
     if (
-      this.props.provider !== 'aws' ||
+      this.props.provider !== Providers.AWS ||
       cmp(this.props.cluster.release_version, '6.2.99') !== 1
     ) {
       return null;

@@ -1,4 +1,5 @@
 import * as clusterActions from 'actions/clusterActions';
+import * as Providers from 'shared/constants';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -70,7 +71,7 @@ class ScaleClusterModal extends React.Component {
    * @param String Semantic release version number
    */
   supportsAutoscaling(provider, releaseVer) {
-    if (provider != 'aws') {
+    if (provider !== Providers.AWS) {
       return false;
     }
 

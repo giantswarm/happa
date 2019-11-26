@@ -1,3 +1,4 @@
+import * as Providers from 'shared/constants';
 import { connect } from 'react-redux';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
 import AWSAccountID from 'UI/aws_account_id';
@@ -24,7 +25,7 @@ class ProviderCredentials extends React.Component {
       !this.props.credentials.isFetching &&
       this.props.credentials.items.length > 0
     ) {
-      if (this.props.provider === 'aws') {
+      if (this.props.provider === Providers.AWS) {
         showInfo = true;
         details = (
           <p>
@@ -35,7 +36,7 @@ class ProviderCredentials extends React.Component {
             , as set for this organization.
           </p>
         );
-      } else if (this.props.provider === 'azure') {
+      } else if (this.props.provider === Providers.AZURE) {
         showInfo = true;
         details = (
           <p>

@@ -1,3 +1,4 @@
+import * as Providers from 'shared/constants';
 import { clustersForOrg } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -17,7 +18,7 @@ const OrganizationList = ({ provider, ...props }) => {
           <StyledTableHeader centered={true}>Clusters</StyledTableHeader>
           <StyledTableHeader centered={true}>Members</StyledTableHeader>
 
-          {provider !== 'kvm' && (
+          {provider !== Providers.KVM && (
             <StyledTableHeader centered={true}>
               Provider Credentials
             </StyledTableHeader>

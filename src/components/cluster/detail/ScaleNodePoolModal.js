@@ -1,4 +1,5 @@
 import * as nodePoolActions from 'actions/nodePoolActions';
+import * as Providers from 'shared/constants';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -68,7 +69,7 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   supportsAutoscaling(provider) {
-    if (provider != 'aws') return false;
+    if (provider !== Providers.AWS) return false;
     return true;
   }
 

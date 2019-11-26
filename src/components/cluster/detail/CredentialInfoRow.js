@@ -1,3 +1,4 @@
+import * as Providers from 'shared/constants';
 import { FlexRowWithTwoBlocksOnEdges } from 'styles';
 import AWSAccountID from 'UI/aws_account_id';
 import PropTypes from 'prop-types';
@@ -27,7 +28,7 @@ function CredentialInfoRow({ cluster, credentials, provider }) {
         </div>
       );
     } else {
-      if (provider === 'aws') {
+      if (provider === Providers.AWS) {
         credentialInfoRows.push(
           <div key='awsAccountID'>
             <div>AWS account</div>
@@ -38,7 +39,7 @@ function CredentialInfoRow({ cluster, credentials, provider }) {
             </div>
           </div>
         );
-      } else if (provider === 'azure') {
+      } else if (provider === Providers.AZURE) {
         credentialInfoRows.push(
           <div key='azureSubscriptionID'>
             <div>Azure subscription</div>
