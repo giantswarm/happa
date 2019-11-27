@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
-const yellowfade = keyframes`
+const yellowFade = keyframes`
   from {
     background: #e8d986;
   }
@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   padding-left: 5px;
   padding-right: 5px;
   &.changed {
-    animation: ${yellowfade} 2s ease;
+    animation: ${yellowFade} 2s ease;
   }
 `;
 
@@ -38,7 +38,7 @@ const Wrapper = styled.div`
  */
 
 // As this hook has styles, we are going to pass a styles prop to overwrite/add any styles
-export function RefreshableLabel({ children, value, style }) {
+export function RefreshableLabel({ value, style }) {
   // used for outputting 'changed' css class
   const [hasDataChanged, setHasDataChanged] = useState(false);
   // used for storing dataItems and so be able to compare with new props
@@ -59,13 +59,12 @@ export function RefreshableLabel({ children, value, style }) {
 
   return (
     <Wrapper className={hasDataChanged && 'changed'} style={style}>
-      {children}
+      {this.props.children}
     </Wrapper>
   );
 }
 
 RefreshableLabel.propTypes = {
-  children: PropTypes.any,
   style: PropTypes.object,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
