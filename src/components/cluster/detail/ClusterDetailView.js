@@ -182,8 +182,8 @@ class ClusterDetailView extends React.Component {
     // Desired number of nodes only makes sense with auto-scaling and that is
     // only available on AWS starting from release 6.3.0 onwards.
     if (
-      this.props.provider !== Providers.AWS ||
-      this.props.provider !== Providers.AZURE ||
+      (this.props.provider !== Providers.AWS &&
+        this.props.provider !== Providers.AZURE) ||
       cmp(this.props.cluster.release_version, '6.2.99') !== 1
     ) {
       return null;
