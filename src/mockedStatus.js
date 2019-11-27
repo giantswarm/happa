@@ -1,3 +1,5 @@
+import { Providers } from 'shared/constants';
+
 const mockedStatus = {
   aws: {
     availabilityZones: [
@@ -37,7 +39,7 @@ const mockedStatus = {
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
-          'giantswarm.io/provider': 'aws',
+          'giantswarm.io/provider': Providers.AWS,
           ip: '10.1.6.23',
           'kubernetes.io/arch': 'amd64',
           'kubernetes.io/hostname':
@@ -60,7 +62,7 @@ const mockedStatus = {
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
-          'giantswarm.io/provider': 'aws',
+          'giantswarm.io/provider': Providers.AWS,
           ip: '10.1.6.28',
           'kubernetes.io/arch': 'amd64',
           'kubernetes.io/hostname':
@@ -83,7 +85,7 @@ const mockedStatus = {
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
-          'giantswarm.io/provider': 'aws',
+          'giantswarm.io/provider': Providers.AWS,
           ip: '10.1.6.39',
           'kubernetes.io/arch': 'amd64',
           'kubernetes.io/hostname':
@@ -106,7 +108,7 @@ const mockedStatus = {
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
-          'giantswarm.io/provider': 'aws',
+          'giantswarm.io/provider': Providers.AWS,
           ip: '10.1.6.91',
           'kubernetes.io/arch': 'amd64',
           'kubernetes.io/hostname':

@@ -1,4 +1,5 @@
 import * as types from './actionTypes';
+import { AuthorizationTypes } from 'shared/constants';
 import { Base64 } from 'js-base64';
 import {
   clearQueues,
@@ -98,7 +99,7 @@ export function auth0Login(authResult) {
       var userData = {
         email: authResult.idTokenPayload.email,
         auth: {
-          scheme: 'Bearer',
+          scheme: AuthorizationTypes.BEARER,
           token: authResult.accessToken,
         },
         isAdmin: isAdmin,
