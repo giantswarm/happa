@@ -2,6 +2,7 @@ import { keyframes } from '@emotion/core';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
+import usePrevious from 'lib/effects/usePrevious';
 
 const yellowFade = keyframes`
   from {
@@ -31,31 +32,29 @@ const Wrapper = styled.div`
  * It is typically used to indicate that its content
  * has changed. To detect a change, it provides a property
  *
- *   dataItems (Array)
+ *   value (String or Number)
  *
- * which is an array of arbitrary values. When this
- * array changes, visual highlighting is triggered.
+ * which is a string or a number. When this
+ * value changes, visual highlighting is triggered.
  */
 
 // As this hook has styles, we are going to pass a styles prop to overwrite/add any styles
-export function RefreshableLabel({ children, value, style }) {
+function RefreshableLabel({ children, value, style }) {
   // used for outputting 'changed' css class
   const [hasDataChanged, setHasDataChanged] = useState(false);
-  // used for storing dataItems and so be able to compare with new props
-  const [prevValue, setPrevValue] = useState(value);
+  // used for storing previous value and so be able to compare with new value
+  const prevValue = usePrevious(value);
 
   const compareData = () => {
     if (value === prevValue) {
       setHasDataChanged(true);
-      setPrevValue(value);
     }
-
     setTimeout(() => setHasDataChanged(false), 5000);
   };
 
   useEffect(() => {
     compareData();
-  }, [prevValue]);
+  }, [value]);
 
   return (
     <Wrapper className={hasDataChanged && 'changed'} style={style}>

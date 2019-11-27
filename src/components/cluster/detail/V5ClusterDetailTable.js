@@ -4,7 +4,7 @@ import {
   getMemoryTotalNodePools,
   getNumberOfNodePoolsNodes,
 } from 'utils/cluster_utils';
-import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
+import { Code, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { nodePoolsCreate } from 'actions/nodePoolActions';

@@ -52,10 +52,7 @@ function WorkerNodesAWS({
       </LineDiv>
       <LineDiv>
         <div>Scaling</div>
-        <RefreshableLabel
-          dataItems={scalingText}
-          style={{ marginRight: '25px' }}
-        >
+        <RefreshableLabel value={scalingText} style={{ marginRight: '25px' }}>
           {scalingText}
         </RefreshableLabel>
         <Button onClick={showScalingModal}>Edit</Button>

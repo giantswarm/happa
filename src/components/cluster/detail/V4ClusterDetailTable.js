@@ -1,4 +1,4 @@
-import { Code, Dot, FlexRowWithTwoBlocksOnEdges } from 'styles';
+import { Code, FlexRowWithTwoBlocksOnEdges } from 'styles';
 import { CopyToClipboardDiv } from './V5ClusterDetailTable';
 import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
 import { Providers } from 'shared/constants';
