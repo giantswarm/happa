@@ -1,6 +1,7 @@
 ### SublimeText ###
 *.sublime-workspace
-.vscode
+.vscode/*
+!vscode/launch.json
 
 ### OSX ###
 .DS_Store
