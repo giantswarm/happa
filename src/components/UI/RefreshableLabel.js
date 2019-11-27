@@ -13,6 +13,8 @@ const yellowFade = keyframes`
   }
 `;
 
+const animationDuration = 2; // in seconds
+
 const Wrapper = styled.div`
   display: inline-block;
   line-height: 1.7;
@@ -21,7 +23,7 @@ const Wrapper = styled.div`
   padding-left: 5px;
   padding-right: 5px;
   &.changed {
-    animation: ${yellowFade} 2s ease;
+    animation: ${yellowFade} ${animationDuration}s ease;
   }
 `;
 
@@ -46,10 +48,10 @@ function RefreshableLabel({ children, value, style }) {
   const prevValue = usePrevious(value);
 
   const compareData = () => {
-    if (value === prevValue) {
+    if (value !== prevValue) {
       setHasDataChanged(true);
     }
-    setTimeout(() => setHasDataChanged(false), 5000);
+    setTimeout(() => setHasDataChanged(false), animationDuration * 1000);
   };
 
   useEffect(() => {
