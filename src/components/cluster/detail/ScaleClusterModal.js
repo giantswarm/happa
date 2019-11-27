@@ -306,8 +306,8 @@ class ScaleClusterModal extends React.Component {
           timeout={this.rollupAnimationDuration}
         >
           <p key='unsupported'>
-            <i className='fa fa-warning' /> We recommend that you run clusters with at
-            least three worker nodes.
+            <i className='fa fa-warning' /> We recommend that you run clusters
+            with at least three worker nodes.
           </p>
         </CSSTransition>
       );
