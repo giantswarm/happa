@@ -1,4 +1,5 @@
 import { Code } from 'styles/index';
+import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -20,9 +21,15 @@ export const LineDiv = styled.div`
   }
 `;
 
-function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
+function WorkerNodesAzure({ az, instanceType, nodes, showScalingModal }) {
   return (
     <WrapperDiv>
+      <LineDiv>
+        <div>Availability zones</div>
+        <div>
+          <AvailabilityZonesLabels zones={az} />
+        </div>
+      </LineDiv>
       <LineDiv>
         <div>Instance type</div>
         <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
@@ -43,6 +50,7 @@ function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
 }
 
 WorkerNodesAzure.propTypes = {
+  az: PropTypes.array,
   instanceType: PropTypes.object,
   nodes: PropTypes.number,
   showScalingModal: PropTypes.func,
