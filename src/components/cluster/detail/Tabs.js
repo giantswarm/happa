@@ -4,13 +4,18 @@ import React from 'react';
 
 const Tabs = props => {
   return (
-    <BootstrapTabs animation={false} defaultActiveKey={1} id='tabs'>
+    <BootstrapTabs
+      animation={false}
+      defaultActiveKey={props.defaultActiveKey || 1}
+      id='tabs'
+    >
       {props.children}
     </BootstrapTabs>
   );
 };
 
 Tabs.propTypes = {
+  defaultActiveKey: PropTypes.any,
   children: PropTypes.node,
 };
 

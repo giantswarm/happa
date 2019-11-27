@@ -21,7 +21,25 @@ class ClusterDetail extends React.Component {
           <Route
             exact
             path={`${this.props.match.path}`}
-            render={() => <ClusterDetailView {...this.props} />}
+            render={() => (
+              <ClusterDetailView {...this.props} defaultActiveTab='general' />
+            )}
+          />
+
+          <Route
+            exact
+            path={`${this.props.match.path}/apps/`}
+            render={() => (
+              <ClusterDetailView {...this.props} defaultActiveTab='apps' />
+            )}
+          />
+
+          <Route
+            exact
+            path={`${this.props.match.path}/keypairs/`}
+            render={() => (
+              <ClusterDetailView {...this.props} defaultActiveTab='keypairs' />
+            )}
           />
 
           <Route

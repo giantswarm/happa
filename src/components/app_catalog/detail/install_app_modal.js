@@ -169,7 +169,7 @@ const InstallAppModal = props => {
           push(
             `/organizations/${
               props.clusters.find(c => c.id === clusterID).owner
-            }/clusters/${clusterID}/`
+            }/clusters/${clusterID}/apps/`
           )
         );
       })

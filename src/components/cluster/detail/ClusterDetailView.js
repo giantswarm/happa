@@ -232,6 +232,7 @@ class ClusterDetailView extends React.Component {
     const {
       cluster,
       credentials,
+      defaultActiveTab,
       dispatch,
       isNodePoolsCluster,
       nodePools,
@@ -279,8 +280,8 @@ class ClusterDetailView extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-12'>
-                  <Tabs>
-                    <Tab eventKey={1} title='General'>
+                  <Tabs defaultActiveKey={defaultActiveTab}>
+                    <Tab eventKey={'general'} title='General'>
                       {isNodePoolsCluster ? (
                         <V5ClusterDetailTable
                           accessCluster={this.accessCluster}
@@ -332,10 +333,10 @@ class ClusterDetailView extends React.Component {
                         </div>
                       </div>
                     </Tab>
-                    <Tab eventKey={2} title='Key Pairs'>
+                    <Tab eventKey={'keypairs'} title='Key Pairs'>
                       <KeyPairs cluster={cluster} />
                     </Tab>
-                    <Tab eventKey={3} title='Apps'>
+                    <Tab eventKey={'apps'} title='Apps'>
                       {release ? (
                         <ClusterApps
                           clusterId={this.props.clusterId}
@@ -404,6 +405,7 @@ ClusterDetailView.propTypes = {
   cluster: PropTypes.object,
   clusterId: PropTypes.string,
   credentials: PropTypes.object,
+  defaultActiveTab: PropTypes.string,
   dispatch: PropTypes.func,
   isNodePoolsCluster: PropTypes.bool,
   nodePools: PropTypes.object,
