@@ -1,4 +1,5 @@
 import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
+import { Providers } from 'shared/constants';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
@@ -260,7 +261,7 @@ const KeyPairCreateModal = props => {
                       onChange={handleTTLChange}
                     />
 
-                    {props.provider === 'aws' && (
+                    {props.provider === Providers.AWS && (
                       <>
                         <br />
 
