@@ -1,6 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
+import { Providers } from 'shared/constants';
 import { setOrganizationToStorage } from 'utils/localStorageUtils';
 import GiantSwarm from 'giantswarm';
 import React from 'react';
@@ -472,7 +473,7 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
     let requestBody = new GiantSwarm.V4AddCredentialsRequest();
     requestBody.provider = provider;
 
-    if (provider === 'azure') {
+    if (provider === Providers.AZURE) {
       requestBody.azure = new GiantSwarm.V4AddCredentialsRequestAzure();
       requestBody.azure.credential = new GiantSwarm.V4AddCredentialsRequestAzureCredential(
         data.azureClientID,
@@ -480,7 +481,7 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
         data.azureSubscriptionID,
         data.azureTenantID
       );
-    } else if (provider === 'aws') {
+    } else if (provider === Providers.AWS) {
       requestBody.aws = new GiantSwarm.V4AddCredentialsRequestAws();
       requestBody.aws.roles = new GiantSwarm.V4AddCredentialsRequestAwsRoles(
         data.awsAdminRoleARN,
