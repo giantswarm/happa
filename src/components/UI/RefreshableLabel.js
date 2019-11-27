@@ -38,7 +38,7 @@ const Wrapper = styled.div`
  */
 
 // As this hook has styles, we are going to pass a styles prop to overwrite/add any styles
-export function RefreshableLabel({ value, style }) {
+export function RefreshableLabel({ children, value, style }) {
   // used for outputting 'changed' css class
   const [hasDataChanged, setHasDataChanged] = useState(false);
   // used for storing dataItems and so be able to compare with new props
@@ -59,12 +59,13 @@ export function RefreshableLabel({ value, style }) {
 
   return (
     <Wrapper className={hasDataChanged && 'changed'} style={style}>
-      {this.props.children}
+      {children}
     </Wrapper>
   );
 }
 
 RefreshableLabel.propTypes = {
+  children: PropTypes.node,
   style: PropTypes.object,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };

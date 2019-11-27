@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
-  const nodeSingularPlural = workerNodesRunning === 1 ? ' node' : ' nodes';
+  const nodesSingularPlural = workerNodesRunning === 1 ? ' node' : ' nodes';
   const npSingularPlural =
-    nodePools.length === 1 ? ' node pool' : ' node pools';
+    nodePools && nodePools.length === 1 ? ' node pool' : ' node pools';
 
   return (
     <div>
@@ -14,7 +14,7 @@ const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
       ) : (
         <>
           <span>
-            {`${workerNodesRunning} ${nodeSingularPlural} `}
+            {`${workerNodesRunning} ${nodesSingularPlural}`}
             {nodePools && ` in ${nodePools.length} ${npSingularPlural}`}
           </span>
           <span>
