@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { Providers } from 'shared/constants';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
@@ -70,7 +71,7 @@ class ScaleClusterModal extends React.Component {
    * @param String Semantic release version number
    */
   supportsAutoscaling(provider, releaseVer) {
-    if (provider != 'aws') {
+    if (provider !== Providers.AWS) {
       return false;
     }
 
@@ -305,11 +306,8 @@ class ScaleClusterModal extends React.Component {
           timeout={this.rollupAnimationDuration}
         >
           <p key='unsupported'>
-            <i className='fa fa-warning' /> With less than 3 worker nodes, the
-            cluster does not fall under the Giant Swarm{' '}
-            <abbr title='Service Level Agreement'>SLA</abbr>. Giant Swarm staff
-            will not be alerted in case of problems and will not provide
-            proactive support.
+            <i className='fa fa-warning' /> We recommend that you run clusters
+            with at least three worker nodes.
           </p>
         </CSSTransition>
       );

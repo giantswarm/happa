@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { loadReleases } from 'actions/releaseActions';
+import { Providers } from 'shared/constants';
 import { Route, Switch } from 'react-router-dom';
 import cmp from 'semver-compare';
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
@@ -60,7 +61,7 @@ class NewCluster extends React.Component {
   // TODO: Remove this, as there are releases for Azure now.
   informWIP() {
     if (!this.props.user.isAdmin) {
-      if (this.props.provider === 'azure') {
+      if (this.props.provider === Providers.AZURE) {
         new FlashMessage(
           'Support for Microsoft Azure is still in an early stage.',
           messageType.INFO,
@@ -88,8 +89,8 @@ class NewCluster extends React.Component {
   renderComponent = props => {
     const Component =
       this.semVerCompare() < 0 ||
-      this.props.provider === 'azure' ||
-      this.props.provider === 'kvm'
+      this.props.provider === Providers.AZURE ||
+      this.props.provider === Providers.KVM
         ? CreateRegularCluster // new v4 form
         : CreateNodePoolsCluster; // new v5 form
 
