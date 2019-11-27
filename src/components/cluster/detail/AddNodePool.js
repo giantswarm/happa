@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
+import { Providers } from 'shared/constants';
 import { RadioWrapper } from '../new/CreateNodePoolsCluster';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
 import AWSInstanceTypeSelector from '../new/AWSInstanceTypeSelector';
@@ -544,7 +545,9 @@ function mapStateToProps(state) {
   const defaultDiskSize = 20; // TODO
 
   const allowedInstanceTypes =
-    provider === 'aws' ? state.app.info.workers.instance_type.options : [];
+    provider === Providers.AWS
+      ? state.app.info.workers.instance_type.options
+      : [];
 
   return {
     availabilityZones,

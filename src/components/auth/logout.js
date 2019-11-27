@@ -1,4 +1,5 @@
 import * as userActions from 'actions/userActions';
+import { AuthorizationTypes } from 'shared/constants';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
@@ -14,7 +15,7 @@ class Logout extends React.Component {
       this.props.user.auth &&
       this.props.user.auth.scheme
     ) {
-      if (this.props.user.auth.scheme === 'Bearer') {
+      if (this.props.user.auth.scheme === AuthorizationTypes.BEARER) {
         this.props.dispatch(push('/login'));
         this.props.actions.logoutSuccess();
       } else {

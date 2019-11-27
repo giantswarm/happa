@@ -9,6 +9,7 @@ import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
+import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
 import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from '../detail/AddNodePool';
@@ -611,7 +612,9 @@ function mapStateToProps(state) {
   const defaultDiskSize = 20; // TODO
 
   const allowedInstanceTypes =
-    provider === 'aws' ? state.app.info.workers.instance_type.options : [];
+    provider === Providers.AWS
+      ? state.app.info.workers.instance_type.options
+      : [];
 
   return {
     availabilityZones,
