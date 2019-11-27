@@ -28,7 +28,7 @@ const Wrapper = styled.div`
  * RefreshableLabel is an inline-block HTML container
  * that is used to temporarily highlight its content.
  *
- * It is typically used to indicated that its content
+ * It is typically used to indicate that its content
  * has changed. To detect a change, it provides a property
  *
  *   dataItems (Array)
