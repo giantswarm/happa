@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { Providers } from 'shared/constants';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
@@ -68,7 +69,7 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   supportsAutoscaling(provider) {
-    if (provider != 'aws') return false;
+    if (provider !== Providers.AWS) return false;
     return true;
   }
 

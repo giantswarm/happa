@@ -4,6 +4,7 @@ import {
   organizationCredentialsSet,
   organizationCredentialsSetConfirmed,
 } from 'actions/organizationActions';
+import { Providers } from 'shared/constants';
 import { spinner } from 'images';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';
@@ -112,7 +113,7 @@ class CredentialsDisplay extends React.Component {
           </Button>
         );
 
-        if (this.props.provider === 'azure') {
+        if (this.props.provider === Providers.AZURE) {
           return (
             <div>
               <p>
@@ -275,7 +276,7 @@ class CredentialsForm extends React.Component {
    * input field values. If yes, this.state.isValid is set to true.
    */
   validate = () => {
-    if (this.props.provider === 'azure') {
+    if (this.props.provider === Providers.AZURE) {
       if (
         this.state.azureSubscriptionID &&
         this.state.azureTenantID &&
@@ -326,7 +327,7 @@ class CredentialsForm extends React.Component {
   };
 
   render() {
-    if (this.props.provider === 'azure') {
+    if (this.props.provider === Providers.AZURE) {
       return (
         <form>
           <p>
@@ -412,7 +413,7 @@ class CredentialsForm extends React.Component {
           </Button>
         </form>
       );
-    } else if (this.props.provider === 'aws') {
+    } else if (this.props.provider === Providers.AWS) {
       return (
         <form>
           <p>

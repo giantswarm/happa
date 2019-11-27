@@ -1,6 +1,7 @@
 import { Code, Dot, FlexRowWithTwoBlocksOnEdges } from 'styles';
 import { CopyToClipboardDiv } from './V5ClusterDetailTable';
 import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
+import { Providers } from 'shared/constants';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import CredentialInfoRow from './CredentialInfoRow';
@@ -178,7 +179,7 @@ class V4ClusterDetailTable extends React.Component {
 
         <hr style={{ margin: '25px 0' }} />
         <h2>Worker nodes</h2>
-        {provider === 'azure' && (
+        {provider === Providers.AZURE && (
           <WorkerNodesAzure
             instanceType={
               this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
@@ -187,14 +188,14 @@ class V4ClusterDetailTable extends React.Component {
             showScalingModal={this.props.showScalingModal}
           />
         )}
-        {provider === 'kvm' && (
+        {provider === Providers.KVM && (
           <WorkerNodesKVM
             worker={cluster.workers[0]}
             nodes={workerNodesRunning}
             showScalingModal={this.props.showScalingModal}
           />
         )}
-        {provider === 'aws' && (
+        {provider === Providers.AWS && (
           <WorkerNodesAWS
             az={cluster.availability_zones}
             instanceName={cluster.workers[0].aws.instance_type}
