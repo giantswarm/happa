@@ -220,7 +220,8 @@ class ClusterApps extends React.Component {
             <h3 className='table-label'>Installed Apps</h3>
             <div className='row'>
               {this.userInstalledApps() &&
-                this.userInstalledApps().length === 0 && (
+                this.userInstalledApps().length === 0 &&
+                !this.props.errorLoading && (
                   <p
                     className='well'
                     data-testid='no-apps-found'
