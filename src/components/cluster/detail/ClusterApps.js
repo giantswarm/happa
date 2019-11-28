@@ -5,14 +5,14 @@ import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-// This component gets a list of managed services from the release endpoint
-// and tries to organize them in a predefined way.
-// The `appMetas` object below is a mapping of known
-// release component names to logos and categories.
-
-// Since some components are not yet in the release endpoint output, but we do
-// still want to see them on this page, we manually add them to the release endpoint
-// response before running the mapping.
+// This component shows the list of components and apps installed on a cluster.
+// Apps can be:
+//  - installed by users,
+//  - installed automatically by our operators during cluster creation
+//
+// Components are
+//  - not really ever installed (no App CR) but still something we want to show
+//    here. These would be components from the release.
 
 class ClusterApps extends React.Component {
   state = {
@@ -22,6 +22,8 @@ class ClusterApps extends React.Component {
     },
   };
 
+  // The `appMetas` object below is a mapping of known
+  // release component names to logos and categories.
   appMetas = {
     calico: {
       name: 'calico',
@@ -95,6 +97,10 @@ class ClusterApps extends React.Component {
     },
   };
 
+  // Since some components are not yet in the release endpoint output, but we do
+  // still want to see them on this page, we manually add them to the release endpoint
+  // response before running the mapping.
+
   // manuallyAddAppMetas represent all the components we currently do not
   // have in the release endpoint response, but that we still want to show in
   // Happa.
@@ -119,6 +125,9 @@ class ClusterApps extends React.Component {
     },
   ];
 
+  // This makes a list of apps that are installed as part of the cluster creation.
+  // It combines information from the release endpoint with the latest info
+  // coming from App CRs.
   preinstalledApps() {
     if (this.props.release === undefined) {
       return {};
@@ -190,6 +199,19 @@ class ClusterApps extends React.Component {
     });
   };
 
+  // userInstallApps returns a list of just the apps that the user installed
+  // since the list of apps in a cluster also includes apps that were installed
+  // automatically.
+  userInstalledApps = () => {
+    if (!this.props.installedApps) {
+      return [];
+    }
+
+    return this.props.installedApps.filter(
+      x => x.metadata.labels['giantswarm.io/managed-by'] !== 'cluster-operator'
+    );
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -197,8 +219,8 @@ class ClusterApps extends React.Component {
           <div data-testid='installed-apps-section' id='installed-apps-section'>
             <h3 className='table-label'>Installed Apps</h3>
             <div className='row'>
-              {this.props.installedApps &&
-                this.props.installedApps.length === 0 && (
+              {this.userInstalledApps() &&
+                this.userInstalledApps().length === 0 && (
                   <p
                     className='well'
                     data-testid='no-apps-found'
@@ -223,9 +245,9 @@ class ClusterApps extends React.Component {
                   again.
                 </p>
               )}
-              {this.props.installedApps && this.props.installedApps.length > 0 && (
+              {this.userInstalledApps() && this.userInstalledApps().length > 0 && (
                 <div data-testid='installed-apps' id='installed-apps'>
-                  {this.props.installedApps.map(app => {
+                  {this.userInstalledApps().map(app => {
                     return (
                       <div
                         className='installed-apps--app'
