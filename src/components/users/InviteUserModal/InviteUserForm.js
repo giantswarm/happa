@@ -1,8 +1,8 @@
 import { getInitialState } from '.';
-import _ from 'underscore';
+import { sortBy } from 'underscore';
 import MultiSelect from '@khanacademy/react-multi-select';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 const InviteUserForm = ({
   inviteForm,
@@ -12,6 +12,13 @@ const InviteUserForm = ({
   handleSendEmailChange,
   ...props
 }) => {
+  const memoizedOptions = useMemo(() => {
+    return sortBy(organizations.items, 'id').map(organization => ({
+      label: organization.id,
+      value: organization.id,
+    }));
+  }, [organizations.items]);
+
   return (
     <form onSubmit={e => e.preventDefault()} {...props}>
       <p>
@@ -33,10 +40,7 @@ const InviteUserForm = ({
       <div className='textfield'>
         <label>Organizations:</label>
         <MultiSelect
-          options={_.sortBy(organizations.items, 'id').map(organization => ({
-            label: organization.id,
-            value: organization.id,
-          }))}
+          options={memoizedOptions}
           selected={inviteForm.organizations}
           onSelectedChanged={handleOrganizationChange}
         />

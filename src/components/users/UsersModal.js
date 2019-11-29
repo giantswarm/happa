@@ -13,6 +13,7 @@ const UsersModal = ({
   confirmText,
   confirmDisabled,
   confirmHidden,
+  cancelText,
   ...props
 }) => {
   return (
@@ -42,7 +43,7 @@ const UsersModal = ({
 
         {!isLoading && (
           <Button bsStyle='link' onClick={onClose}>
-            Cancel
+            {cancelText}
           </Button>
         )}
       </BootstrapModal.Footer>
@@ -59,6 +60,7 @@ UsersModal.defaultProps = {
   confirmText: 'Confirm',
   confirmDisabled: false,
   confirmHidden: false,
+  cancelText: 'Cancel',
 };
 
 export const UsersModalPropTypes = {
@@ -71,6 +73,7 @@ export const UsersModalPropTypes = {
   confirmText: PropTypes.string,
   confirmDisabled: PropTypes.bool,
   confirmHidden: PropTypes.bool,
+  cancelText: PropTypes.string,
 };
 
 UsersModal.propTypes = UsersModalPropTypes;

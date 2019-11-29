@@ -2,22 +2,20 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { invitationCreate, invitationsLoad } from 'actions/invitationActions';
 import { push } from 'connected-react-router';
-import { relativeDate } from 'lib/helpers.js';
-import { spinner } from 'images';
 import {
   userDelete,
   userRemoveExpiration,
   usersLoad,
 } from 'actions/userActions';
-import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'UI/button';
 import DeleteUserModal from './DeleteUserModal';
 import DocumentTitle from 'react-document-title';
 import InviteUserModal from './InviteUserModal';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import UnexpireUserModal from './UnexpireUserModal';
+import UsersTable from './UsersTable';
+import moment from 'moment';
 
 class Users extends React.Component {
   state = {
@@ -45,7 +43,7 @@ class Users extends React.Component {
     }
   }
 
-  removeExpiration(email) {
+  removeExpiration = email => {
     this.setState({
       selectedUser: email,
       modal: {
@@ -54,7 +52,7 @@ class Users extends React.Component {
         loading: false,
       },
     });
-  }
+  };
 
   confirmRemoveExpiration(email) {
     this.setState({
@@ -74,7 +72,7 @@ class Users extends React.Component {
       });
   }
 
-  deleteUser(email) {
+  deleteUser = email => {
     this.setState({
       selectedUser: email,
       modal: {
@@ -83,7 +81,7 @@ class Users extends React.Component {
         loading: false,
       },
     });
-  }
+  };
 
   confirmDeleteUser(email) {
     this.setState({
@@ -152,89 +150,16 @@ class Users extends React.Component {
     });
   }
 
-  // Provides the configuraiton for the clusters table
-  getTableColumnsConfig = () => {
-    return [
-      {
-        dataField: 'email',
-        text: 'Email',
-        sort: true,
-      },
-      {
-        dataField: 'emaildomain',
-        text: 'Email Domain',
-        sort: true,
-      },
-      {
-        dataField: 'created',
-        text: 'Created',
-        sort: true,
-        formatter: relativeDate,
-      },
-      {
-        dataField: 'expiry',
-        text: 'Expiry',
-        sort: true,
-        formatter: expiryCellFormatter.bind(this),
-      },
-      {
-        dataField: 'actionsDummy',
-        isDummyField: true,
-        text: '',
-        align: 'right',
-        formatter: actionsCellFormatter.bind(this),
-      },
-    ];
-  };
-
-  // Provides the configuraiton for the clusters table
-  getTableColumnsConfig = () => {
-    return [
-      {
-        classes: 'email',
-        dataField: 'email',
-        text: 'Email',
-        sort: true,
-      },
-      {
-        classes: 'emaildomain',
-        dataField: 'emaildomain',
-        text: 'Email Domain',
-        sort: true,
-      },
-      {
-        classes: 'created',
-        dataField: 'created',
-        text: 'Created',
-        sort: true,
-        formatter: relativeDate,
-      },
-      {
-        classes: 'expiry',
-        dataField: 'expiry',
-        text: 'Expiry',
-        sort: true,
-        formatter: expiryCellFormatter.bind(this),
-      },
-      {
-        classes: 'status',
-        dataField: 'status',
-        text: 'STATUS',
-        sort: true,
-        formatter: statusCellFormatter.bind(this),
-      },
-      {
-        classes: 'actions',
-        dataField: 'actionsDummy',
-        isDummyField: true,
-        text: '',
-        align: 'right',
-        formatter: actionsCellFormatter.bind(this),
-      },
-    ];
-  };
-
   render() {
+    const {
+      users,
+      invitations,
+      installation_name,
+      invitationsAndUsers,
+    } = this.props;
+
+    const installationNameLabel = installation_name || 'unknown installation';
+
     return (
       <Breadcrumb data={{ title: 'USERS', pathname: '/users/' }}>
         <DocumentTitle title='Users | Giant Swarm'>
@@ -253,11 +178,7 @@ class Users extends React.Component {
             </div>
             <p>
               This is the list of user accounts on{' '}
-              <code>
-                {this.props.installation_name
-                  ? this.props.installation_name
-                  : 'unknown installation'}
-              </code>
+              <code>{installationNameLabel}</code>
             </p>
             <br />
             <h5>What about SSO users?</h5>
@@ -266,45 +187,13 @@ class Users extends React.Component {
               whatever is in the JWT token being used by that user.
             </p>
             <br />
-            {(() => {
-              if (
-                !this.props.users ||
-                (this.props.users.isFetching &&
-                  Object.keys(this.props.users.items).length === 0)
-              ) {
-                return (
-                  <img
-                    className='loader'
-                    height='20px'
-                    src={spinner}
-                    width='20px'
-                  />
-                );
-              } else if (
-                Object.keys(this.props.users.items).length === 0 &&
-                Object.keys(this.props.invitations.items).length === 0
-              ) {
-                return (
-                  <div>
-                    <p>No users in the system yet.</p>
-                  </div>
-                );
-              } else {
-                return (
-                  <div className='users-table'>
-                    <BootstrapTable
-                      bordered={false}
-                      columns={this.getTableColumnsConfig()}
-                      data={Object.values(this.props.invitationsAndUsers)}
-                      defaultSortDirection='asc'
-                      defaultSorted={tableDefaultSorting}
-                      keyField='email'
-                    />
-                  </div>
-                );
-              }
-            })()}
-
+            <UsersTable
+              users={users}
+              invitationsAndUsers={invitationsAndUsers}
+              onRemoveExpiration={this.removeExpiration}
+              onDelete={this.deleteUser}
+              invitations={invitations}
+            />
             {(() => {
               switch (this.state.modal.template) {
                 case 'unexpireUser':
@@ -369,67 +258,7 @@ Users.propTypes = {
   installation_name: PropTypes.string,
 };
 
-const tableDefaultSorting = [
-  {
-    dataField: 'email',
-    order: 'asc',
-  },
-];
-
-const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
-
-function actionsCellFormatter(cell, row) {
-  if (row.invited_by) {
-    return '';
-  } else {
-    return (
-      <Button
-        bsStyle='default'
-        onClick={this.deleteUser.bind(this, row.email)}
-        type='button'
-      >
-        Delete
-      </Button>
-    );
-  }
-}
-
-function expiryCellFormatter(cell, row) {
-  var expiryClass = '';
-
-  if (isExpiringSoon(cell)) {
-    expiryClass = 'expiring';
-  }
-
-  if (cell === NEVER_EXPIRES) {
-    return '';
-  } else {
-    return (
-      <span className={expiryClass}>
-        {relativeDate(cell)} &nbsp;
-        <i
-          className='fa fa-close clickable'
-          onClick={this.removeExpiration.bind(this, row.email)}
-          title='Remove expiration'
-        />
-      </span>
-    );
-  }
-}
-
-function statusCellFormatter(cell, row) {
-  var status = cell;
-  var subText = row.invited_by ? 'Invited by ' + row.invited_by : undefined;
-
-  return (
-    <div>
-      <small>{status}</small>
-      <small>{subText}</small>
-    </div>
-  );
-}
-
-function statusFor(user) {
+const formatStatus = user => {
   if (user.invited_by) {
     return 'PENDING';
   }
@@ -443,35 +272,31 @@ function statusFor(user) {
   }
 
   return 'ACTIVE';
-}
+};
 
-function isExpiringSoon(timestamp) {
-  var expirySeconds =
-    moment(timestamp)
-      .utc()
-      .diff(moment().utc()) / 1000;
+const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
 
-  if (expirySeconds > 0 && expirySeconds < 60 * 60 * 24) {
-    return true;
-  }
-
-  return false;
-}
-
-function isExpired(timestamp) {
-  var expirySeconds =
+const isExpired = timestamp => {
+  const expirySeconds =
     moment(timestamp)
       .utc()
       .diff(moment().utc()) / 1000;
 
   if (timestamp === NEVER_EXPIRES) {
     return false;
-  } else if (expirySeconds < 0) {
-    return true;
   }
 
-  return false;
-}
+  return expirySeconds < 0;
+};
+
+const isExpiringSoon = timestamp => {
+  const expirySeconds =
+    moment(timestamp)
+      .utc()
+      .diff(moment().utc()) / 1000;
+
+  return expirySeconds > 0 && expirySeconds < 60 * 60 * 24;
+};
 
 function mapStateToProps(state) {
   var users = Object.entries(state.entities.users.items).map(([, user]) => {
@@ -480,7 +305,7 @@ function mapStateToProps(state) {
       emaildomain: user.emaildomain,
       created: user.created,
       expiry: user.expiry,
-      status: statusFor(user),
+      status: formatStatus(user),
     };
   });
 
@@ -492,7 +317,7 @@ function mapStateToProps(state) {
         created: invitation.created,
         expiry: invitation.expiry,
         invited_by: invitation.invited_by,
-        status: statusFor(invitation),
+        status: formatStatus(invitation),
       };
     }
   );

@@ -3,6 +3,7 @@ import InviteUserSuccess from './InviteUserSuccess';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import UsersModal, { UsersModalPropTypes } from '../UsersModal';
+import usePrevious from 'lib/effects/usePrevious';
 
 export function getInitialState(initiallySelectedOrganizations) {
   return {
@@ -58,10 +59,12 @@ const InviteUserModal = ({
   const [inviteForm, setInviteForm] = useState(
     getInitialState(initiallySelectedOrganizations)
   );
+  const prevShow = usePrevious(show);
 
   const isInvited = Object.keys(invitationResult).length > 0;
 
   const confirmButtonText = isLoading ? 'Inviting User' : 'Invite User';
+  const cancelText = isInvited ? 'Close' : 'Cancel';
   let modalTitle = 'Invite a New User';
 
   if (isInvited) {
@@ -95,7 +98,7 @@ const InviteUserModal = ({
   };
 
   useEffect(() => {
-    if (show === true) {
+    if (show !== prevShow && show === true) {
       setInviteForm(getInitialState(initiallySelectedOrganizations));
     }
   }, [show, initiallySelectedOrganizations]);
@@ -109,6 +112,7 @@ const InviteUserModal = ({
       onConfirm={() => onConfirm(inviteForm)}
       confirmDisabled={!inviteForm.isValid}
       confirmHidden={isInvited}
+      cancelText={cancelText}
       {...props}
     >
       {isInvited ? (
