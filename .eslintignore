@@ -1,0 +1,5 @@
+src/vendor/*
+src/mockedStatus.js
+src/test/*
+src/images/*
+src/styles/*
