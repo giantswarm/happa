@@ -70,55 +70,74 @@ const clusterReducer = produce((draft, action) => {
     }
 
     case types.CLUSTER_LOAD_DETAILS_ERROR:
-      draft.items[action.cluster.id].errorLoading = true;
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].errorLoading = true;
+      }
       return;
 
     case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS:
-      draft.items[action.clusterId].nodePools = action.nodePools;
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].nodePools = action.nodePools;
+      }
       return;
 
     case types.CLUSTER_LOAD_STATUS_SUCCESS:
-      draft.items[action.clusterId].status = action.status;
-      draft.items[action.clusterId].status.lastUpdated = Date.now();
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].status = action.status;
+        draft.items[action.clusterId].status.lastUpdated = Date.now();
+      }
       return;
 
     case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
-      draft.items[action.clusterId].status = null;
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].status = null;
+      }
       return;
 
     case types.CLUSTER_LOAD_STATUS_ERROR:
-      draft.items[action.clusterId].errorLoading = true;
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].errorLoading = true;
+      }
       return;
 
     case types.CLUSTER_LOAD_APPS:
-      draft.items[action.clusterId].isFetchingApps = true;
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].isFetchingApps = true;
+      }
       return;
 
     case types.CLUSTER_LOAD_APPS_SUCCESS:
-      draft.items[action.clusterId].isFetchingApps = false;
-      // For some reason the array that we get back
-      // from the generated js client does not have
-      // .map on it. So I make a new one here.
-      draft.items[action.clusterId].apps = Array(...action.apps);
-      draft.items[action.clusterId].lastUpdated = Date.now();
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].isFetchingApps = false;
+        draft.items[action.clusterId].apps = action.apps;
+        draft.items[action.clusterId].lastUpdated = Date.now();
+      }
       return;
 
     case types.CLUSTER_LOAD_APPS_ERROR:
-      draft.items[action.clusterId].isFetchingApps = false;
-      draft.items[action.clusterId].lastUpdated = Date.now();
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].isFetchingApps = false;
+        draft.items[action.clusterId].lastUpdated = Date.now();
+      }
       return;
 
     case types.CLUSTER_LOAD_KEY_PAIRS:
-      draft.items[action.clusterId].isFetchingKeyPairs = true;
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].isFetchingKeyPairs = true;
+      }
       return;
 
     case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
-      draft.items[action.clusterId].isFetchingKeyPairs = false;
-      draft.items[action.clusterId].keyPairs = action.keyPairs;
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].isFetchingKeyPairs = false;
+        draft.items[action.clusterId].keyPairs = action.keyPairs;
+      }
       return;
 
     case types.CLUSTER_LOAD_KEY_PAIRS_ERROR:
-      draft.items[action.clusterId].isFetchingKeyPairs = false;
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].isFetchingKeyPairs = false;
+      }
       return;
 
     case types.CLUSTER_CREATE:
@@ -136,13 +155,25 @@ const clusterReducer = produce((draft, action) => {
 
     case types.CLUSTER_PATCH:
       Object.keys(action.payload).forEach(key => {
-        draft.items[action.cluster.id][key] = action.payload[key];
+        if (draft.items[action.cluster.id]) {
+          draft.items[action.cluster.id][key] = action.payload[key];
+        }
       });
       return;
 
     // TODO does this actually work????
     case types.CLUSTER_PATCH_ERROR:
-      draft.items[action.cluster.id] = action.cluster;
+      if (draft.items[action.cluster.id]) {
+        draft.items[action.cluster.id] = action.cluster;
+      }
+      return;
+
+    case types.NODEPOOL_DELETE_SUCCESS:
+      if (draft.items[action.clusterId]) {
+        draft.items[action.clusterId].nodePools = draft.items[
+          action.clusterId
+        ].nodePools.filter(np => np !== action.nodePoolId);
+      }
       return;
   }
 }, initialState);

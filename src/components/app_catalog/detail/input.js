@@ -1,4 +1,3 @@
-import * as theme from 'lib/theme';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
@@ -12,7 +11,7 @@ const Wrapper = styled.div`
 
 const Text = styled.div`
   font-size: 14px;
-  color: ${theme.COLORS.white2};
+  color: ${props => props.theme.colors.white2};
 `;
 
 const InputWrapper = styled.div`
@@ -21,9 +20,9 @@ const InputWrapper = styled.div`
 `;
 
 const Input = styled.input`
-  background-color: ${theme.COLORS.shade5};
-  border: 1px solid ${theme.COLORS.shade6};
-  border-radius: ${theme.BORDER_RADIUS};
+  background-color: ${props => props.theme.colors.shade5};
+  border: 1px solid ${props => props.theme.colors.shade6};
+  border-radius: ${props => props.theme.border_radius};
   font-size: 14px;
   line-height: normal;
   padding: 8px 10px;
@@ -31,14 +30,14 @@ const Input = styled.input`
 `;
 
 const Icon = styled.i`
-  color: ${theme.COLORS.white3};
+  color: ${props => props.theme.colors.white3};
   font-size: 24px;
   margin-right: 5px;
 `;
 
 const ValidationError = styled.span`
   font-size: 12px;
-  color: ${theme.COLORS.yellow1};
+  color: ${props => props.theme.colors.yellow1};
 `;
 
 const Hint = styled.span`

@@ -2,6 +2,7 @@ import * as OrganizationActions from 'actions/organizationActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Providers } from 'shared/constants';
 import { relativeDate } from 'lib/helpers.js';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/lib/Button';
@@ -27,7 +28,7 @@ class OrganizationDetail extends React.Component {
   // determine whether the component should deal with BYOC credentials
   // (not relevant on KVM)
   canCredentials = provider => {
-    if (provider === 'aws' || provider === 'azure') {
+    if (provider === Providers.AWS || provider === Providers.AZURE) {
       return true;
     }
     return false;
@@ -48,12 +49,6 @@ class OrganizationDetail extends React.Component {
         sort: true,
       },
       {
-        dataField: 'create_date',
-        text: 'Created',
-        sort: true,
-        formatter: relativeDate,
-      },
-      {
         dataField: 'release_version',
         text: 'Release',
         sort: true,
@@ -63,6 +58,18 @@ class OrganizationDetail extends React.Component {
           }
           return cmp(a, b);
         },
+      },
+      {
+        dataField: 'create_date',
+        text: 'Created',
+        sort: true,
+        formatter: relativeDate,
+      },
+      {
+        dataField: 'delete_date',
+        text: 'Deleted',
+        sort: true,
+        formatter: relativeDate,
       },
       {
         dataField: 'actionsDummy',
@@ -217,6 +224,10 @@ function clusterIDCellFormatter(cell) {
 }
 
 function clusterActionsCellFormatter(cell, row) {
+  if (row.delete_date) {
+    return <span />;
+  }
+
   return (
     <Link
       to={

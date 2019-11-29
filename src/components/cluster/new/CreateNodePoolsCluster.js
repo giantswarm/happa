@@ -1,7 +1,7 @@
 import {
   AddNodePoolFlexColumnDiv,
   AddNodePoolWrapper,
-} from '../detail/cluster_detail_node_pools_table';
+} from '../detail/V5ClusterDetailTable';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
@@ -9,7 +9,9 @@ import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles/index';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
+import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
+import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from '../detail/AddNodePool';
 import AvailabilityZonesParser from '../detail/AvailabilityZonesParser';
 import Button from 'UI/button';
@@ -17,8 +19,8 @@ import DocumentTitle from 'react-document-title';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ReleaseSelector from './ReleaseSelector';
+import SlideTransition from 'styles/transitions/SlideTransition';
 import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
@@ -184,7 +186,7 @@ const defaultNodePool = id => ({ data: { name: `Node Pool #${id}` } });
 class CreateNodePoolsCluster extends Component {
   state = {
     name: {
-      value: 'Unnamed Cluster',
+      value: this.props.clusterName,
       valid: true,
       validationError: '',
     },
@@ -218,6 +220,8 @@ class CreateNodePoolsCluster extends Component {
   updateName = event => {
     const name = event.target.value;
     const [isValid, message] = hasAppropriateLength(name, 0, 100);
+
+    this.props.updateClusterNameInParent(name);
 
     // We don't let the user write more characters if the name exceeds the max number allowed
     if (!isValid) {
@@ -387,7 +391,7 @@ class CreateNodePoolsCluster extends Component {
                       onChange={this.updateName}
                       id='name'
                       type='text'
-                      placeholder={name.value === '' ? 'Unnamed cluster' : null}
+                      placeholder={name.value}
                     ></input>
                     <ValidationErrorMessage message={name.validationError} />
                   </div>
@@ -485,36 +489,32 @@ class CreateNodePoolsCluster extends Component {
                 </AZWrapperDiv>
               </FlexColumnDiv>
               {Object.keys(nodePools).length === 0 && <hr />}
-              <ReactCSSTransitionGroup
-                transitionAppear={true}
-                transitionAppearTimeout={200}
-                transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}
-                transitionName={`login_form--transition`}
-              >
+              <TransitionGroup>
                 {Object.keys(nodePools).map(npId => {
                   const name = nodePools[npId].data.name;
                   return (
-                    <AddNodePoolWrapperDiv key={npId}>
-                      <NodePoolHeading>{name}</NodePoolHeading>
-                      <AddNodePoolFlexColumnDiv>
-                        <AddNodePool
-                          selectedRelease={this.props.selectedRelease}
-                          informParent={this.updateNodePoolForm}
-                          name={name}
-                          id={npId}
-                        />
-                        <i
-                          className='fa fa-close clickable'
-                          title='Remove node pool'
-                          aria-hidden='true'
-                          onClick={() => this.removeNodePoolForm(npId)}
-                        ></i>
-                      </AddNodePoolFlexColumnDiv>
-                    </AddNodePoolWrapperDiv>
+                    <SlideTransition key={npId} appear={true} direction='down'>
+                      <AddNodePoolWrapperDiv>
+                        <NodePoolHeading>{name}</NodePoolHeading>
+                        <AddNodePoolFlexColumnDiv>
+                          <AddNodePool
+                            selectedRelease={this.props.selectedRelease}
+                            informParent={this.updateNodePoolForm}
+                            name={name}
+                            id={npId}
+                          />
+                          <i
+                            className='fa fa-close clickable'
+                            title='Remove node pool'
+                            aria-hidden='true'
+                            onClick={() => this.removeNodePoolForm(npId)}
+                          ></i>
+                        </AddNodePoolFlexColumnDiv>
+                      </AddNodePoolWrapperDiv>
+                    </SlideTransition>
                   );
                 })}
-              </ReactCSSTransitionGroup>
+              </TransitionGroup>
               <Button onClick={this.addNodePoolForm}>
                 <i className='fa fa-add-circle' /> ADD NODE POOL
               </Button>
@@ -581,6 +581,8 @@ CreateNodePoolsCluster.propTypes = {
   maxAZ: PropTypes.number,
   minAZ: PropTypes.number,
   defaultAZ: PropTypes.number,
+  clusterName: PropTypes.string,
+  updateClusterNameInParent: PropTypes.func,
 };
 
 function mapStateToProps(state) {
@@ -610,7 +612,9 @@ function mapStateToProps(state) {
   const defaultDiskSize = 20; // TODO
 
   const allowedInstanceTypes =
-    provider === 'aws' ? state.app.info.workers.instance_type.options : [];
+    provider === Providers.AWS
+      ? state.app.info.workers.instance_type.options
+      : [];
 
   return {
     availabilityZones,

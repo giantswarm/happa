@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { loadReleases } from 'actions/releaseActions';
+import { Providers } from 'shared/constants';
 import { Route, Switch } from 'react-router-dom';
 import cmp from 'semver-compare';
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
@@ -11,9 +12,10 @@ import React from 'react';
 
 class NewCluster extends React.Component {
   state = {
-    selectedRelease: window.config.firstNodePoolsRelease,
+    selectedRelease: this.props.firstNodePoolsRelease,
     selectableReleases: [],
     loading: true,
+    clusterName: 'Unnamed cluster',
   };
 
   componentDidMount() {
@@ -25,15 +27,6 @@ class NewCluster extends React.Component {
         selectedRelease,
         loading: false,
       });
-
-      if (!selectedRelease) {
-        new FlashMessage(
-          'Something went wrong while trying to fetch active releasesssss',
-          messageType.ERROR,
-          messageTTL.MEDIUM,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-      }
     });
   }
 
@@ -60,13 +53,15 @@ class NewCluster extends React.Component {
     this.setState({ selectableReleases: selectableReleases });
   }
 
+  updateClusterName = clusterName => this.setState({ clusterName });
+
   // Lets non admin users know that creating a cluster will probably fail for them,
   // since all releases are WIP and only admins can create clusters from WIP releases.
   //
   // TODO: Remove this, as there are releases for Azure now.
   informWIP() {
     if (!this.props.user.isAdmin) {
-      if (this.props.provider === 'azure') {
+      if (this.props.provider === Providers.AZURE) {
         new FlashMessage(
           'Support for Microsoft Azure is still in an early stage.',
           messageType.INFO,
@@ -94,8 +89,8 @@ class NewCluster extends React.Component {
   renderComponent = props => {
     const Component =
       this.semVerCompare() < 0 ||
-      this.props.provider === 'azure' ||
-      this.props.provider === 'kvm'
+      this.props.provider === Providers.AZURE ||
+      this.props.provider === Providers.KVM
         ? CreateRegularCluster // new v4 form
         : CreateNodePoolsCluster; // new v5 form
 
@@ -107,6 +102,8 @@ class NewCluster extends React.Component {
         selectableReleases={this.state.selectableReleases}
         releases={this.props.releases}
         activeSortedReleases={this.props.activeSortedReleases}
+        clusterName={this.state.clusterName}
+        updateClusterNameInParent={this.updateClusterName}
       />
     );
   };
@@ -143,8 +140,9 @@ function mapStateToProps(state) {
     releases: items,
     activeSortedReleases,
     provider: state.app.info.general.provider,
-    firstNodePoolsRelease:
-      state.app.info.features.nodepools.release_version_minimum,
+    firstNodePoolsRelease: state.app.info.features
+      ? state.app.info.features.nodepools.release_version_minimum
+      : '10.0.0',
     user: state.app.loggedInUser,
   };
 }

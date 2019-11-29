@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom/extend-expect';
 import {
   authTokenResponse,
-  getMockCall,
+  getPersistedMockCall,
   infoResponse,
   postMockCall,
   userResponse,
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
-import { renderRouteWithStore } from 'test_utils/renderRouteWithStore';
+import { renderRouteWithStore } from 'test_utils/renderUtils';
 import nock from 'nock';
 
 it('renders the login page at /login', async () => {
@@ -24,18 +24,21 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // Given I have a Giant Swarm API with no clusters, organizations, appcatalogs
   // that I can log in to.
 
+  // Using persisted version odf nock interceptors because weird enough in CircleCI
+  // some calls are performed more than once
+
   // The response to the login call
   const authTokensRequest = postMockCall('/v4/auth-tokens/', authTokenResponse);
   // The response to the user info call
-  const userInfoRequest = getMockCall('/v4/user/', userResponse);
+  const userInfoRequest = getPersistedMockCall('/v4/user/', userResponse);
   // The response to the info call
-  const infoRequest = getMockCall('/v4/info/', infoResponse);
+  const infoRequest = getPersistedMockCall('/v4/info/', infoResponse);
   // The response to the org call (no orgs)
-  const orgRequest = getMockCall('/v4/organizations/');
+  const orgRequest = getPersistedMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
-  const clustersRequest = getMockCall('/v4/clusters/');
+  const clustersRequest = getPersistedMockCall('/v4/clusters/');
   // The response to the appcatalogs call (no catalogs)
-  const appcatalogsRequest = getMockCall('/v4/appcatalogs/');
+  const appcatalogsRequest = getPersistedMockCall('/v4/appcatalogs/');
 
   // AND I arrive at the login page with nothing in the state.
   const state = {};
@@ -43,7 +46,8 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   const { getByText, getByLabelText } = renderRouteWithStore(
     '/login',
     div,
-    state
+    state,
+    {}
   );
 
   // When I type in my email and password
@@ -71,23 +75,30 @@ it('redirects to / and shows the layout after a succesful login', async () => {
 
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
-  authTokensRequest.done();
-  userInfoRequest.done();
-  infoRequest.done();
-  orgRequest.done();
-  clustersRequest.done();
-  appcatalogsRequest.done();
+  authTokensRequest.persist(false);
+  userInfoRequest.persist(false);
+  infoRequest.persist(false);
+  orgRequest.persist(false);
+  clustersRequest.persist(false);
+  appcatalogsRequest.persist(false);
 });
 
 it('tells the user to give a password if they leave it blank', async () => {
   // Given I arrive at the login page with nothing in the state.
   const state = {};
   const div = document.createElement('div');
-  const { getByText, getByLabelText } = renderRouteWithStore('/login', div, state);
+  const { getByText, getByLabelText } = renderRouteWithStore(
+    '/login',
+    div,
+    state,
+    {}
+  );
 
   // When I type in my email but not my password.
   const emailInput = getByLabelText('Email');
-  fireEvent.change(emailInput, { target: { value: 'developer@giantswarm.io' } })
+  fireEvent.change(emailInput, {
+    target: { value: 'developer@giantswarm.io' },
+  });
 
   // And click submit
   const button = getByText('Log in');
@@ -103,11 +114,16 @@ it('tells the user to give a email if they leave it blank', async () => {
   // Given I arrive at the login page with nothing in the state.
   const state = {};
   const div = document.createElement('div');
-  const { getByText, getByLabelText } = renderRouteWithStore('/login', div, state);
+  const { getByText, getByLabelText } = renderRouteWithStore(
+    '/login',
+    div,
+    state,
+    {}
+  );
 
   // When I type in my password but not my email.
   const passwordInput = getByLabelText('Password');
-  fireEvent.change(passwordInput, { target: { value: 'password' } })
+  fireEvent.change(passwordInput, { target: { value: 'password' } });
 
   // And click submit
   const button = getByText('Log in');
@@ -124,20 +140,27 @@ it('shows an error if the user logs in with invalid credentials', async () => {
 
   // The failed 401 response to the login call
   const authTokensRequest = nock('http://localhost:8000')
-  .post('/v4/auth-tokens/')
-  .reply(401);
+    .post('/v4/auth-tokens/')
+    .reply(401);
 
   // And I arrive at the login page with nothing in the state.
   const state = {};
   const div = document.createElement('div');
-  const { getByText, getByLabelText } = renderRouteWithStore('/login', div, state);
+  const { getByText, getByLabelText } = renderRouteWithStore(
+    '/login',
+    div,
+    state,
+    {}
+  );
 
   // When I type in my email and password
   const emailInput = getByLabelText('Email');
   const passwordInput = getByLabelText('Password');
 
-  fireEvent.change(emailInput, { target: { value: 'developer@giantswarm.io' } })
-  fireEvent.change(passwordInput, { target: { value: 'password' } })
+  fireEvent.change(emailInput, {
+    target: { value: 'developer@giantswarm.io' },
+  });
+  fireEvent.change(passwordInput, { target: { value: 'password' } });
 
   // And click submit
   const button = getByText('Log in');

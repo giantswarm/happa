@@ -2,6 +2,7 @@ import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { modalHide } from './modalActions';
 import { nodePoolsLoad } from './nodePoolActions';
+import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
@@ -33,7 +34,7 @@ function computeCapabilities(cluster, provider) {
   // or any provider and larger than 8.2.0
   if (
     (cmp(releaseVer, '8.0.99') === 1 &&
-      (provider === 'aws' || provider === 'kvm')) ||
+      (provider === Providers.AWS || provider === Providers.KVM)) ||
     cmp(releaseVer, '8.1.99') === 1
   ) {
     capabilities.canInstallApps = true;
@@ -174,11 +175,16 @@ export function clustersLoad() {
     );
 
     // Get the details for v5 clusters.
-    const v5ClustersDetails = await Promise.all(
+    let v5ClustersDetails = await Promise.all(
       v5Clusters.map(cluster => clusterDetailsV5(dispatch, getState, cluster))
     );
 
+    // Sometimes we fail to fetch a detail, and get undefined back.
+    // So remove those from this list.
+    v5ClustersDetails = v5ClustersDetails.filter(x => x);
+
     // Clusters array to object, because we are storing an object in the store.
+
     let v5ClustersObject = clustersLoadArrayToObject(v5ClustersDetails);
 
     // nodePoolsClusters is an array of v5 clusters ids and is stored in clusters.
@@ -256,10 +262,15 @@ export function clusterLoadApps(clusterId) {
     return appsApi
       .getClusterApps(clusterId)
       .then(apps => {
+        // For some reason the array that we get back from the generated js client is an
+        // array-like structure, so I make a new one here.
+        // In tests we are using a real array, so we are applying Array.from() to an actual
+        // array. Apparently it works fine.
+        const appsArray = Array.from(apps);
         dispatch({
           type: types.CLUSTER_LOAD_APPS_SUCCESS,
           clusterId,
-          apps,
+          apps: appsArray,
         });
 
         return apps;
@@ -727,8 +738,9 @@ export const clusterLoadDetailsSuccess = cluster => ({
   cluster,
 });
 
-export const clusterLoadDetailsError = error => ({
+export const clusterLoadDetailsError = (clusterId, error) => ({
   type: types.CLUSTER_LOAD_DETAILS_ERROR,
+  clusterId,
   error,
 });
 

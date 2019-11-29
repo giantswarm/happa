@@ -37,7 +37,9 @@ export default function LoadingOverlay(props) {
         </LoadingOverlayInner>
       </LoadingOverlayOuter>
     );
-  } else {
+  } else if (props.children) {
     return props.children;
+  } else {
+    return null;
   }
 }
