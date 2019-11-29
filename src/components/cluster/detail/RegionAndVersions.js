@@ -4,7 +4,7 @@ import { Upgrade } from './V5ClusterDetailTable';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
-import RefreshableLabel from 'UI/refreshable_label';
+import RefreshableLabel from 'UI/RefreshableLabel';
 import ReleaseDetailsModal from 'modals/release_details_modal';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
@@ -51,7 +51,7 @@ function RegionAndVersions({
       <div>
         <span>Created {createDate ? relativeDate(createDate) : 'n/a'}</span>
         <span>
-          <RefreshableLabel dataItems={[releaseVersion]}>
+          <RefreshableLabel value={releaseVersion ? releaseVersion : 'n/a'}>
             <>
               <Dot style={{ paddingRight: 0 }} />
               <ReleaseDetail onClick={onReleaseDetailClick}>
