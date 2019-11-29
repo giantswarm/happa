@@ -33,8 +33,8 @@ const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
 
 NodesRunning.propTypes = {
   workerNodesRunning: PropTypes.number,
-  RAM: PropTypes.number,
-  CPUs: PropTypes.number,
+  RAM: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  CPUs: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   nodePools: PropTypes.array,
 };
 
