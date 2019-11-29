@@ -2,6 +2,7 @@ import { Code } from 'styles/index';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RefreshableLabel from 'UI/RefreshableLabel';
 import styled from '@emotion/styled';
 import theme from 'styles/theme';
 
@@ -21,6 +22,11 @@ export const LineDiv = styled.div`
 `;
 
 function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
+  const instanceTypeText = instanceType
+    ? // prettier-ignore
+      `${instanceType.cpu_cores} CPUs, ${(instanceType.memoryInMb / 1000.0).toFixed(1)} GB RAM`
+    : '0 CPUs, 0 GB RAM';
+
   return (
     <WrapperDiv>
       <LineDiv>
@@ -28,14 +34,17 @@ function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
         <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
           {instanceType && instanceType.name}
         </Code>
-        <div>
-          {instanceType && instanceType.numberOfCores} CPUs,{' '}
-          {instanceType && (instanceType.memoryInMb / 1000.0).toFixed(1)} GB RAM
-        </div>
+        <RefreshableLabel value={instanceTypeText}>
+          {instanceTypeText}
+        </RefreshableLabel>
       </LineDiv>
       <LineDiv>
         <div>Nodes</div>
-        <div style={{ marginRight: '30px' }}>{nodes && nodes}</div>
+        {nodes && (
+          <RefreshableLabel value={nodes} style={{ marginRight: '30px' }}>
+            {nodes}
+          </RefreshableLabel>
+        )}
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>

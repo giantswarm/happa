@@ -1,4 +1,4 @@
-import { Code, Dot, FlexRowWithTwoBlocksOnEdges } from 'styles';
+import { Code, FlexRowWithTwoBlocksOnEdges } from 'styles';
 import { CopyToClipboardDiv } from './V5ClusterDetailTable';
 import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
 import { Providers } from 'shared/constants';
@@ -6,6 +6,7 @@ import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import CredentialInfoRow from './CredentialInfoRow';
 import moment from 'moment';
+import NodesRunning from './NodesRunning';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PortMappingsRow from './PortMappingsRow';
 import PropTypes from 'prop-types';
@@ -116,26 +117,11 @@ class V4ClusterDetailTable extends React.Component {
             />
           </div>
           <div>
-            <div>
-              {!workerNodesRunning ? (
-                <span>0 nodes</span>
-              ) : (
-                <>
-                  <span>
-                    {workerNodesRunning}
-                    {workerNodesRunning === 1 ? ' node' : ' nodes'}
-                  </span>
-                  <span>
-                    <Dot />
-                    {this.state.RAM} GB RAM
-                  </span>
-                  <span>
-                    <Dot />
-                    {this.state.CPUs} CPUs
-                  </span>
-                </>
-              )}
-            </div>
+            <NodesRunning
+              workerNodesRunning={workerNodesRunning}
+              RAM={this.state.RAM}
+              CPUs={this.state.CPUs}
+            />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
         <FlexRowWithTwoBlocksOnEdges>

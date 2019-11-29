@@ -4,7 +4,7 @@ import {
   getMemoryTotalNodePools,
   getNumberOfNodePoolsNodes,
 } from 'utils/cluster_utils';
-import { Code, Dot, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
+import { Code, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
@@ -16,6 +16,7 @@ import copy from 'copy-to-clipboard';
 import CredentialInfoRow from './CredentialInfoRow';
 import moment from 'moment';
 import NodePool from './NodePool';
+import NodesRunning from './NodesRunning';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PortMappingsRow from './PortMappingsRow';
 import produce from 'immer';
@@ -437,29 +438,12 @@ class V5ClusterDetailTable extends React.Component {
             />
           </div>
           <div>
-            <div>
-              {!workerNodesRunning ? (
-                <span>0 nodes</span>
-              ) : (
-                <>
-                  <span>
-                    {workerNodesRunning}
-                    {workerNodesRunning === 1 ? ' node' : ' nodes'} in
-                    {` ${nodePools.length}${
-                      nodePools.length === 1 ? ' node pool' : ' node pools'
-                    }`}
-                  </span>
-                  <span>
-                    <Dot />
-                    {this.state.RAM} GB RAM
-                  </span>
-                  <span>
-                    <Dot />
-                    {this.state.CPUs} CPUs
-                  </span>
-                </>
-              )}
-            </div>
+            <NodesRunning
+              workerNodesRunning={workerNodesRunning}
+              RAM={this.state.RAM}
+              CPUs={this.state.CPUs}
+              nodePools={nodePools}
+            />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
         <FlexRowWithTwoBlocksOnEdges>

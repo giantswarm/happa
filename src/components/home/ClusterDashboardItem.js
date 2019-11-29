@@ -22,7 +22,7 @@ import ClusterIDLabel from 'UI/cluster_id_label';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import RefreshableLabel from 'UI/refreshable_label';
+import RefreshableLabel from 'UI/RefreshableLabel';
 import styled from '@emotion/styled';
 
 const WrapperStyles = props => css`
@@ -189,14 +189,14 @@ class ClusterDashboardItem extends React.Component {
         <ContentWrapper>
           <TitleWrapper>
             <Link to={linkToCluster}>
-              <RefreshableLabel dataItems={[cluster.name]}>
+              <RefreshableLabel value={cluster.name}>
                 <NameWrapper>{cluster.name}</NameWrapper>
               </RefreshableLabel>
             </Link>
           </TitleWrapper>
 
           <div>
-            <RefreshableLabel dataItems={[cluster.release_version]}>
+            <RefreshableLabel value={cluster.release_version}>
               <span>
                 <i className='fa fa-version-tag' title='Release version' />{' '}
                 {cluster.release_version}
@@ -207,11 +207,11 @@ class ClusterDashboardItem extends React.Component {
           </div>
           <div>
             {numNodes !== 0 && hasNodePools && (
-              <RefreshableLabel dataItems={[numNodes]}>
+              <RefreshableLabel value={numNodes}>
                 <span>{cluster.nodePools.length} node pools, </span>
               </RefreshableLabel>
             )}
-            <RefreshableLabel dataItems={[numNodes]}>
+            <RefreshableLabel value={numNodes}>
               <span>
                 {numNodes} {numNodes === 1 ? 'node' : 'nodes'}
               </span>
@@ -219,11 +219,11 @@ class ClusterDashboardItem extends React.Component {
             {numNodes !== 0 && hasNodePools && (
               <>
                 <Dot style={{ paddingLeft: 0 }} />
-                <RefreshableLabel dataItems={[cpus]}>
+                <RefreshableLabel value={cpus}>
                   <span>{cpus ? cpus : '0'} CPU cores</span>
                 </RefreshableLabel>
                 <Dot style={{ paddingLeft: 0 }} />
-                <RefreshableLabel dataItems={[memory]}>
+                <RefreshableLabel value={memory}>
                   <span>{memory ? memory : '0'} GB RAM</span>
                 </RefreshableLabel>
               </>
@@ -231,7 +231,7 @@ class ClusterDashboardItem extends React.Component {
             {cluster.kvm ? (
               <span>
                 <Dot style={{ paddingLeft: 0 }} />
-                <RefreshableLabel dataItems={[storage]}>
+                <RefreshableLabel value={storage}>
                   <span>{storage ? storage : '0'} GB storage</span>
                 </RefreshableLabel>
               </span>
