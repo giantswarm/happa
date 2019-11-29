@@ -9,7 +9,8 @@ export const V4_CLUSTER = {
   id: '7ccr6',
   name: 'My v4 cluster',
   releaseVersion: '8.5.0',
-  instanceType: 'm4.xlarge',
+  AWSInstanceType: 'm4.xlarge',
+  AzureInstanceType: 'Standard_A2_v2',
 };
 export const V5_CLUSTER = {
   id: 'm0ckd',
@@ -37,7 +38,7 @@ export const postMockCall = (endpoint, response = []) =>
 /***** Responses *****/
 
 // Info
-export const infoResponse = {
+export const AWSInfoResponse = {
   general: {
     availability_zones: {
       default: 1,
@@ -89,6 +90,45 @@ export const infoResponse = {
   },
 };
 
+export const azureInfoResponse = {
+  general: {
+    availability_zones: { default: 1, max: 1 },
+    datacenter: 'westeurope',
+    installation_name: 'ghost',
+    provider: Providers.AZURE,
+  },
+  stats: { cluster_creation_duration: { median: 627, p25: 527, p75: 817 } },
+  workers: {
+    count_per_cluster: { max: null, default: 3 },
+    vm_size: {
+      options: [
+        'Standard_A2_v2',
+        'Standard_A4_v2',
+        'Standard_A8_v2',
+        'Standard_D2_v3',
+        'Standard_D2s_v3',
+        'Standard_D4_v3',
+        'Standard_D4s_v3',
+        'Standard_D8_v3',
+        'Standard_D8s_v3',
+        'Standard_D16_v3',
+        'Standard_D16s_v3',
+        'Standard_D32_v3',
+        'Standard_D32s_v3',
+        'Standard_E4s_v3',
+        'Standard_E8s_v3',
+        'Standard_E16s_v3',
+        'Standard_E32s_v3',
+        'Standard_F4s_v2',
+        'Standard_F8s_v2',
+        'Standard_F16s_v2',
+        'Standard_F32s_v2',
+      ],
+      default: 'Standard_D4s_v3',
+    },
+  },
+};
+
 // User
 export const userResponse = {
   email: USER_EMAIL,
@@ -118,7 +158,7 @@ export const v4ClustersResponse = [
 export const v4AWSClusterResponse = {
   id: V4_CLUSTER.id,
   create_date: '2019-11-15T15:53:59Z',
-  api_endpoint: 'https://api.7ccr6.k8s.gauss.eu-central-1.aws.gigantic.io',
+  api_endpoint: `https://api.${V4_CLUSTER.id}.k8s.gauss.eu-central-1.aws.gigantic.io`,
   owner: ORGANIZATION,
   name: V4_CLUSTER.name,
   release_version: V4_CLUSTER.releaseVersion,
@@ -130,21 +170,48 @@ export const v4AWSClusterResponse = {
       labels: {},
       memory: { size_gb: 16 },
       storage: { size_gb: 0 },
-      aws: { instance_type: V4_CLUSTER.instanceType },
+      aws: { instance_type: V4_CLUSTER.AWSInstanceType },
     },
     {
       cpu: { cores: 4 },
       labels: {},
       memory: { size_gb: 16 },
       storage: { size_gb: 0 },
-      aws: { instance_type: V4_CLUSTER.instanceType },
+      aws: { instance_type: V4_CLUSTER.AWSInstanceType },
     },
     {
       cpu: { cores: 4 },
       labels: {},
       memory: { size_gb: 16 },
       storage: { size_gb: 0 },
-      aws: { instance_type: V4_CLUSTER.instanceType },
+      aws: { instance_type: V4_CLUSTER.AWSInstanceType },
+    },
+  ],
+};
+
+export const v4AzureClusterResponse = {
+  id: V4_CLUSTER.id,
+  create_date: '2019-11-29T09:40:45Z',
+  api_endpoint: `https://api.${V4_CLUSTER.id}.k8s.godsmack.westeurope.azure.gigantic.io`,
+  owner: ORGANIZATION,
+  name: V4_CLUSTER.name,
+  release_version: '9.1.0',
+  scaling: { min: 2, max: 2 },
+  credential_id: '',
+  workers: [
+    {
+      cpu: { cores: 4 },
+      labels: null,
+      memory: { size_gb: 17.179869183999998 },
+      storage: { size_gb: 34.359738367999995 },
+      azure: { vm_size: V4_CLUSTER.AzureInstanceType },
+    },
+    {
+      cpu: { cores: 4 },
+      labels: null,
+      memory: { size_gb: 17.179869183999998 },
+      storage: { size_gb: 34.359738367999995 },
+      azure: { vm_size: V4_CLUSTER.AzureInstanceType },
     },
   ],
 };
@@ -223,7 +290,7 @@ export const v4AWSClusterStatusResponse = {
         labels: {
           'aws-operator.giantswarm.io/version': '5.5.0',
           'beta.kubernetes.io/arch': 'amd64',
-          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.AWSInstanceType,
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
@@ -246,7 +313,7 @@ export const v4AWSClusterStatusResponse = {
         labels: {
           'aws-operator.giantswarm.io/version': '5.5.0',
           'beta.kubernetes.io/arch': 'amd64',
-          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.AWSInstanceType,
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
@@ -269,7 +336,7 @@ export const v4AWSClusterStatusResponse = {
         labels: {
           'aws-operator.giantswarm.io/version': '5.5.0',
           'beta.kubernetes.io/arch': 'amd64',
-          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.AWSInstanceType,
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
@@ -292,7 +359,7 @@ export const v4AWSClusterStatusResponse = {
         labels: {
           'aws-operator.giantswarm.io/version': '5.5.0',
           'beta.kubernetes.io/arch': 'amd64',
-          'beta.kubernetes.io/instance-type': V4_CLUSTER.instanceType,
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.AWSInstanceType,
           'beta.kubernetes.io/os': 'linux',
           'failure-domain.beta.kubernetes.io/region': 'eu-central-1',
           'failure-domain.beta.kubernetes.io/zone': 'eu-central-1c',
@@ -315,6 +382,130 @@ export const v4AWSClusterStatusResponse = {
     resources: null,
     scaling: { desiredCapacity: 3 },
     versions: [],
+  },
+};
+
+export const v4AzureClusterStatusResponse = {
+  aws: { availabilityZones: null, autoScalingGroup: { name: '' } },
+  cluster: {
+    conditions: [
+      {
+        lastTransitionTime: '2019-11-29T16:03:28.054594841Z',
+        status: 'True',
+        type: 'Created',
+      },
+    ],
+    network: { cidr: '' },
+    nodes: [
+      {
+        labels: {
+          'azure-operator.giantswarm.io/version': '2.7.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.AzureInstanceType,
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'westeurope',
+          'failure-domain.beta.kubernetes.io/zone': '0',
+          'giantswarm.io/provider': Providers.azure,
+          ip: '10.1.0.5',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname': 'o7oyb-master-000000',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'master',
+          'node-role.kubernetes.io/master': '',
+          'node.kubernetes.io/master': '',
+          role: 'master',
+        },
+        lastTransitionTime: '2019-11-29T16:03:27.992976986Z',
+        name: 'o7oyb-master-000000',
+        version: '2.7.0',
+      },
+      {
+        labels: {
+          'azure-operator.giantswarm.io/version': '2.7.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.AzureInstanceType,
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'westeurope',
+          'failure-domain.beta.kubernetes.io/zone': '4',
+          'giantswarm.io/provider': Providers.azure,
+          ip: '10.1.1.8',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname': 'o7oyb-worker-000004',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-11-29T16:03:27.992978386Z',
+        name: 'o7oyb-worker-000004',
+        version: '2.7.0',
+      },
+      {
+        labels: {
+          'azure-operator.giantswarm.io/version': '2.7.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.AzureInstanceType,
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'westeurope',
+          'failure-domain.beta.kubernetes.io/zone': '0',
+          'giantswarm.io/provider': Providers.azure,
+          ip: '10.1.1.9',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname': 'o7oyb-worker-000005',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-11-29T16:03:27.992978986Z',
+        name: 'o7oyb-worker-000005',
+        version: '2.7.0',
+      },
+      {
+        labels: {
+          'azure-operator.giantswarm.io/version': '2.7.0',
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/instance-type': V4_CLUSTER.AzureInstanceType,
+          'beta.kubernetes.io/os': 'linux',
+          'failure-domain.beta.kubernetes.io/region': 'westeurope',
+          'failure-domain.beta.kubernetes.io/zone': '1',
+          'giantswarm.io/provider': Providers.azure,
+          ip: '10.1.1.10',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname': 'o7oyb-worker-000006',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-11-29T16:03:27.992979386Z',
+        name: 'o7oyb-worker-000006',
+        version: '2.7.0',
+      },
+    ],
+    resources: [
+      {
+        conditions: [
+          {
+            lastTransitionTime: '0001-01-01T00:00:00Z',
+            status: 'InstancesUpgrading',
+            type: 'Stage',
+          },
+        ],
+        name: 'instancev11',
+      },
+    ],
+    scaling: { desiredCapacity: 0 },
+    versions: [
+      {
+        date: '0001-01-01T00:00:00Z',
+        lastTransitionTime: '2019-11-29T16:03:28.105736089Z',
+        semver: '2.7.0',
+      },
+    ],
   },
 };
 

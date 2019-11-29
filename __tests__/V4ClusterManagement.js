@@ -3,8 +3,8 @@ import {
   API_ENDPOINT,
   appCatalogsResponse,
   appsResponse,
+  AWSInfoResponse,
   getPersistedMockCall,
-  infoResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -28,7 +28,7 @@ const requests = {};
 // Responses to requests
 beforeAll(() => {
   requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', infoResponse);
+  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
   requests.organizations = getPersistedMockCall(
     '/v4/organizations/',
     orgsResponse
@@ -79,7 +79,7 @@ afterAll(() => {
 // and hence the warning because we are transforming an array into an array
 it('renders all the v4 AWS cluster data correctly without nodes ready', async () => {
   const div = document.createElement('div');
-  const { getByText, getAllByText, getByTestId } = renderRouteWithStore(
+  const { getByText, getAllByText, getByTestId, debug } = renderRouteWithStore(
     ROUTE,
     div,
     {}
@@ -95,11 +95,10 @@ it('renders all the v4 AWS cluster data correctly without nodes ready', async ()
   expect(
     getByTestId('running-nodes').querySelector('div:nth-child(2)').textContent
   ).toBe('3');
-  const k8sEndpoint = getByText('Kubernetes endpoint URI:').nextSibling;
-  expect(k8sEndpoint).not.toBeEmpty();
+  expect(getByText(v4AWSClusterResponse.api_endpoint)).toBeInTheDocument();
   // n/a because the cluster hasn't been updated yet
   expect(document.querySelector('abbr')).toHaveTextContent('n/a');
-  expect(getByText(V4_CLUSTER.instanceType)).toBeInTheDocument();
+  expect(getByText(V4_CLUSTER.AWSInstanceType)).toBeInTheDocument();
   expect(getByText('Pinned at 3')).toBeInTheDocument();
 });
 

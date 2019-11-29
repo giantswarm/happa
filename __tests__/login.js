@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import {
   authTokenResponse,
   getPersistedMockCall,
-  infoResponse,
+  AWSInfoResponse,
   postMockCall,
   userResponse,
 } from 'test_utils/mockHttpCalls';
@@ -32,7 +32,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // The response to the user info call
   const userInfoRequest = getPersistedMockCall('/v4/user/', userResponse);
   // The response to the info call
-  const infoRequest = getPersistedMockCall('/v4/info/', infoResponse);
+  const infoRequest = getPersistedMockCall('/v4/info/', AWSInfoResponse);
   // The response to the org call (no orgs)
   const orgRequest = getPersistedMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
