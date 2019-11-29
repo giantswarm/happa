@@ -58,6 +58,7 @@ it('renders a block for installed apps if there are some', () => {
     {
       metadata: {
         name: 'test-app',
+        labels: {},
       },
     },
   ];
