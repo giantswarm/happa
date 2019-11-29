@@ -17,9 +17,8 @@ function WorkerNodesAWS({
   workerNodesRunning,
 }) {
   const instanceTypeText = instanceType
-    ? `${instanceType.cpu_cores} CPUs, ${instanceType.memory_size_gb.toFixed(
-        0
-      )} GB RAM`
+    ? // prettier-ignore
+      `${instanceType.cpu_cores} CPUs, ${instanceType.memory_size_gb.toFixed(0)} GB RAM`
     : '0 CPUs, 0 GB RAM';
 
   const scalingText =
