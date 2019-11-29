@@ -224,7 +224,8 @@ function clusterDetailsV5(dispatch, getState, cluster) {
           'Redirecting you to your organization clusters list'
         );
 
-        return dispatch(clustersLoad()).then(() => dispatch(push('/')));
+        dispatch(clusterDeleteSuccess(cluster.id));
+        dispatch(push('/'));
       } else {
         console.error('Error loading cluster details:', error);
         dispatch(clusterLoadDetailsError(cluster.id, error));
@@ -501,7 +502,8 @@ export function clusterLoadDetails(clusterId) {
           'Redirecting you to your organization clusters list'
         );
 
-        return dispatch(clustersLoad()).then(() => dispatch(push('/')));
+        dispatch(clusterDeleteSuccess(clusterId));
+        dispatch(push('/'));
       } else {
         console.error('Error loading cluster details:', error);
         dispatch(clusterLoadDetailsError(clusterId, error));
