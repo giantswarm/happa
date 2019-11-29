@@ -1,4 +1,5 @@
 import { auth0Login } from 'actions/userActions';
+import { AuthorizationTypes } from 'shared/constants';
 import { isJwtExpired } from 'lib/helpers';
 import Auth0 from 'lib/auth0';
 import GiantSwarm from 'giantswarm';
@@ -31,7 +32,7 @@ function monkeyPatchGiantSwarmClient(store) {
     // If we're using a JWT token, and it's expired, refresh the token before making
     // any call.
     if (
-      defaultClientAuth.apiKeyPrefix === 'Bearer' &&
+      defaultClientAuth.apiKeyPrefix === AuthorizationTypes.BEARER &&
       defaultClientAuth.apiKey
     ) {
       if (isJwtExpired(defaultClientAuth.apiKey)) {
@@ -42,7 +43,9 @@ function monkeyPatchGiantSwarmClient(store) {
             store.dispatch(auth0Login(result));
 
             // Ensure the second attempt uses the new token.
-            headerParams['Authorization'] = 'Bearer ' + result.accessToken;
+            headerParams[
+              'Authorization'
+            ] = `${AuthorizationTypes.BEARER} ${result.accessToken}`;
 
             return origCallApi(
               path,

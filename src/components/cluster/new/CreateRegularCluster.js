@@ -2,6 +2,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlexColumnDiv, Wrapper } from './CreateNodePoolsCluster';
+import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
 import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
 import AzureVMSizeSelector from './AzureVMSizeSelector';
@@ -73,7 +74,7 @@ class CreateRegularCluster extends React.Component {
       valid: true,
     },
     releaseVersion: this.props.selectedRelease,
-    clusterName: 'Unnamed cluster',
+    clusterName: this.props.clusterName,
     scaling: {
       automatic: false,
       min: 3,
@@ -143,9 +144,9 @@ class CreateRegularCluster extends React.Component {
   };
 
   updateClusterName = event => {
-    this.setState({
-      clusterName: event.target.value,
-    });
+    const clusterName = event.target.value;
+    this.setState({ clusterName });
+    this.props.updateClusterNameInParent(clusterName);
   };
 
   createCluster = () => {
@@ -159,7 +160,7 @@ class CreateRegularCluster extends React.Component {
     // for the 'third' cluster type that we support to be able to make decisions
     // about a meaningful abstraction. For now, going with a easy solution.
 
-    if (this.props.provider === 'aws') {
+    if (this.props.provider === Providers.AWS) {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           aws: {
@@ -167,7 +168,7 @@ class CreateRegularCluster extends React.Component {
           },
         });
       }
-    } else if (this.props.provider === 'azure') {
+    } else if (this.props.provider === Providers.AZURE) {
       for (i = 0; i < this.state.scaling.min; i++) {
         workers.push({
           azure: {
@@ -244,7 +245,7 @@ class CreateRegularCluster extends React.Component {
   };
 
   isScalingAutomatic(provider, releaseVer) {
-    if (provider != 'aws') {
+    if (provider !== Providers.AWS) {
       return false;
     }
 
@@ -475,7 +476,7 @@ class CreateRegularCluster extends React.Component {
 
             <FlexColumnDiv>
               <div className='worker-nodes'>Worker nodes</div>
-              {this.props.provider === 'aws' && (
+              {this.props.provider === Providers.AWS && (
                 <label
                   className='availability-zones'
                   htmlFor='availability-zones'
@@ -519,7 +520,7 @@ class CreateRegularCluster extends React.Component {
               <label htmlFor='instance-type'>
                 {(() => {
                   switch (this.props.provider) {
-                    case 'aws': {
+                    case Providers.AWS: {
                       const [RAM, CPUCores] = this.produceRAMAndCoresAWS();
 
                       return (
@@ -539,7 +540,7 @@ class CreateRegularCluster extends React.Component {
                         </>
                       );
                     }
-                    case 'kvm':
+                    case Providers.KVM:
                       return (
                         <>
                           <span className='label-span'>
@@ -585,7 +586,7 @@ class CreateRegularCluster extends React.Component {
                           />
                         </>
                       );
-                    case 'azure': {
+                    case Providers.AZURE: {
                       const [RAM, CPUCores] = this.produceRAMAndCoresAzure();
 
                       return (
@@ -682,6 +683,8 @@ CreateRegularCluster.propTypes = {
   selectableReleases: PropTypes.array,
   releases: PropTypes.object,
   activeSortedReleases: PropTypes.array,
+  clusterName: PropTypes.string,
+  updateClusterNameInParent: PropTypes.func,
 };
 
 function mapStateToProps(state) {
@@ -709,12 +712,12 @@ function mapStateToProps(state) {
     propsToPush.defaultVMSize = state.app.info.workers.vm_size.default;
   }
 
-  if (provider === 'aws') {
+  if (provider === Providers.AWS) {
     propsToPush.allowedInstanceTypes =
       state.app.info.workers.instance_type.options;
   }
 
-  if (provider === 'azure') {
+  if (provider === Providers.AZURE) {
     propsToPush.allowedVMSizes = state.app.info.workers.vm_size.options;
   }
 

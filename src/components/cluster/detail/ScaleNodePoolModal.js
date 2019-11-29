@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { Providers } from 'shared/constants';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
@@ -68,7 +69,7 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   supportsAutoscaling(provider) {
-    if (provider != 'aws') return false;
+    if (provider !== Providers.AWS) return false;
     return true;
   }
 
@@ -148,9 +149,11 @@ class ScaleNodePoolModal extends React.Component {
 
     const { nodePool, workerNodesDesired } = this.props;
     const { min, max, minValid, maxValid } = this.state.scaling;
+    // Are there any nodes already?
+    const hasNodes = nodePool.status.nodes && nodePool.status.nodes_ready;
 
     if (this.supportsAutoscaling(this.props.provider)) {
-      if (min > workerNodesDesired) {
+      if (min > workerNodesDesired && hasNodes) {
         workerDelta = min - workerNodesDesired;
         return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
@@ -159,7 +162,7 @@ class ScaleNodePoolModal extends React.Component {
         };
       }
 
-      if (max < workerNodesDesired) {
+      if (max < workerNodesDesired && hasNodes) {
         workerDelta = Math.abs(workerNodesDesired - max);
         return {
           title: `Remove ${workerDelta} worker node${this.pluralize(
@@ -264,11 +267,8 @@ class ScaleNodePoolModal extends React.Component {
           timeout={this.rollupAnimationDuration}
         >
           <p key='unsupported'>
-            <i className='fa fa-warning' /> With less than 3 worker nodes, the
-            cluster does not fall under the Giant Swarm{' '}
-            <abbr title='Service Level Agreement'>SLA</abbr>. Giant Swarm staff
-            will not be alerted in case of problems and will not provide
-            proactive support.
+            <i className='fa fa-warning' /> We recommend that you run clusters
+            with at least three worker nodes.
           </p>
         </CSSTransition>
       );

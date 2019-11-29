@@ -1,10 +1,12 @@
-import { Code, Dot, FlexRowWithTwoBlocksOnEdges } from 'styles';
+import { Code, FlexRowWithTwoBlocksOnEdges } from 'styles';
 import { CopyToClipboardDiv } from './V5ClusterDetailTable';
 import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
-import AWSAccountID from 'UI/aws_account_id';
+import { Providers } from 'shared/constants';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
+import CredentialInfoRow from './CredentialInfoRow';
 import moment from 'moment';
+import NodesRunning from './NodesRunning';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PortMappingsRow from './PortMappingsRow';
 import PropTypes from 'prop-types';
@@ -98,65 +100,7 @@ class V4ClusterDetailTable extends React.Component {
       workerNodesRunning,
     } = this.props;
 
-    const {
-      credential_id,
-      create_date,
-      release_version,
-      api_endpoint,
-    } = cluster;
-
-    // TODO Refactor credentials: markup in render, data in variables or functions outside render
-    // BYOC provider credential info
-    let credentialInfoRows = [];
-    if (
-      cluster &&
-      credential_id &&
-      credential_id != '' &&
-      credentials.items.length === 1
-    ) {
-      // check if we have the right credential info
-      if (credentials.items[0].id !== credential_id) {
-        credentialInfoRows.push(
-          <div key='providerCredentialsInvalid'>
-            <div>Provider credentials</div>
-            <div className='value'>
-              Error: cluster credentials do not match organization credentials.
-              Please contact support for details.
-            </div>
-          </div>
-        );
-      } else {
-        if (provider === 'aws') {
-          credentialInfoRows.push(
-            <div key='awsAccountID'>
-              <div>AWS account</div>
-              <div className='value code'>
-                <AWSAccountID
-                  roleARN={credentials.items[0].aws.roles.awsoperator}
-                />
-              </div>
-            </div>
-          );
-        } else if (provider === 'azure') {
-          credentialInfoRows.push(
-            <div key='azureSubscriptionID'>
-              <div>Azure subscription</div>
-              <div className='value code'>
-                {credentials.items[0].azure.credential.subscription_id}
-              </div>
-            </div>
-          );
-          credentialInfoRows.push(
-            <div key='azureTenantID'>
-              <div>Azure tenant</div>
-              <div className='value code'>
-                {credentials.items[0].azure.credential.tenant_id}
-              </div>
-            </div>
-          );
-        }
-      }
-    }
+    const { create_date, release_version, api_endpoint } = cluster;
 
     return (
       <WrapperDiv>
@@ -173,26 +117,11 @@ class V4ClusterDetailTable extends React.Component {
             />
           </div>
           <div>
-            <div>
-              {!workerNodesRunning ? (
-                <span>0 nodes</span>
-              ) : (
-                <>
-                  <span>
-                    {workerNodesRunning}
-                    {workerNodesRunning === 1 ? ' node' : ' nodes'}
-                  </span>
-                  <span>
-                    <Dot />
-                    {this.state.RAM} GB RAM
-                  </span>
-                  <span>
-                    <Dot />
-                    {this.state.CPUs} CPUs
-                  </span>
-                </>
-              )}
-            </div>
+            <NodesRunning
+              workerNodesRunning={workerNodesRunning}
+              RAM={this.state.RAM}
+              CPUs={this.state.CPUs}
+            />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
         <FlexRowWithTwoBlocksOnEdges>
@@ -228,15 +157,15 @@ class V4ClusterDetailTable extends React.Component {
 
         <PortMappingsRow cluster={cluster} />
 
-        {credentialInfoRows.length !== 0 && (
-          <FlexRowWithTwoBlocksOnEdges>
-            credentialInfoRows
-          </FlexRowWithTwoBlocksOnEdges>
-        )}
+        <CredentialInfoRow
+          cluster={cluster}
+          credentials={credentials}
+          provider={provider}
+        />
 
         <hr style={{ margin: '25px 0' }} />
         <h2>Worker nodes</h2>
-        {provider === 'azure' && (
+        {provider === Providers.AZURE && (
           <WorkerNodesAzure
             instanceType={
               this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
@@ -245,14 +174,14 @@ class V4ClusterDetailTable extends React.Component {
             showScalingModal={this.props.showScalingModal}
           />
         )}
-        {provider === 'kvm' && (
+        {provider === Providers.KVM && (
           <WorkerNodesKVM
             worker={cluster.workers[0]}
             nodes={workerNodesRunning}
             showScalingModal={this.props.showScalingModal}
           />
         )}
-        {provider === 'aws' && (
+        {provider === Providers.AWS && (
           <WorkerNodesAWS
             az={cluster.availability_zones}
             instanceName={cluster.workers[0].aws.instance_type}
