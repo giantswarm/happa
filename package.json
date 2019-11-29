@@ -8,8 +8,8 @@
   "test": "test",
   "scripts": {
     "lint": "./node_modules/.bin/eslint --ignore-path .eslintignore ./src/**/*.js",
-    "lint:fix": "./node_modules/.bin/eslint ./src/**/*.js",
-    "lint:css": "yarn lint --fix",
+    "lint:fix": "yarn lint --fix",
+    "lint:css": "./node_modules/.bin/stylelint './src/**/*.js'",
     "start": "./node_modules/.bin/webpack-dev-server --open --progress --colors --config ./webpack.dev.js",
     "test": "./node_modules/.bin/jest",
     "test:watch": "yarn test --watch",
