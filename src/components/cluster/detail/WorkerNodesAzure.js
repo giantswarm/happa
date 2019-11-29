@@ -24,7 +24,7 @@ export const LineDiv = styled.div`
 function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
   const instanceTypeText = instanceType
     ? // prettier-ignore
-      `${instanceType.cpu_cores} CPUs, ${(instanceType.memoryInMb / 1000.0).toFixed(1)} GB RAM`
+      `${instanceType.numberOfCores} CPUs, ${(instanceType.memoryInMb / 1000.0).toFixed(1)} GB RAM`
     : '0 CPUs, 0 GB RAM';
 
   return (
