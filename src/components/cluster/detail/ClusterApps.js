@@ -199,16 +199,17 @@ class ClusterApps extends React.Component {
     });
   };
 
-  // userInstallApps returns a list of just the apps that the user installed
+  // getUserInstallApps returns a list of just the apps that the user installed
   // since the list of apps in a cluster also includes apps that were installed
   // automatically.
-  userInstalledApps = () => {
+  getUserInstalledApps = () => {
     if (!this.props.installedApps) {
       return [];
     }
 
     return this.props.installedApps.filter(
-      x => x.metadata.labels['giantswarm.io/managed-by'] !== 'cluster-operator'
+      app =>
+        app.metadata.labels['giantswarm.io/managed-by'] !== 'cluster-operator'
     );
   };
 
@@ -219,8 +220,8 @@ class ClusterApps extends React.Component {
           <div data-testid='installed-apps-section' id='installed-apps-section'>
             <h3 className='table-label'>Installed Apps</h3>
             <div className='row'>
-              {this.userInstalledApps() &&
-                this.userInstalledApps().length === 0 &&
+              {this.getUserInstalledApps() &&
+                this.getUserInstalledApps().length === 0 &&
                 !this.props.errorLoading && (
                   <p
                     className='well'
@@ -246,48 +247,49 @@ class ClusterApps extends React.Component {
                   again.
                 </p>
               )}
-              {this.userInstalledApps() && this.userInstalledApps().length > 0 && (
-                <div data-testid='installed-apps' id='installed-apps'>
-                  {this.userInstalledApps().map(app => {
-                    return (
-                      <div
-                        className='installed-apps--app'
-                        key={app.metadata.name}
-                      >
-                        <div className='details'>
-                          {app.logoUrl &&
-                            !this.state.iconErrors[app.logoUrl] && (
-                              <img
-                                alt={app.metadata.name + ' icon'}
-                                height='36'
-                                onError={this.imgError}
-                                src={app.logoUrl}
-                                width='36'
-                              />
-                            )}
-                          {app.metadata.name}
-                          <small>
-                            App Version:{' '}
-                            {app && app.spec && app.spec.version
-                              ? app.spec.version
-                              : 'n/a'}
-                          </small>
+              {this.getUserInstalledApps() &&
+                this.getUserInstalledApps().length > 0 && (
+                  <div data-testid='installed-apps' id='installed-apps'>
+                    {this.getUserInstalledApps().map(app => {
+                      return (
+                        <div
+                          className='installed-apps--app'
+                          key={app.metadata.name}
+                        >
+                          <div className='details'>
+                            {app.logoUrl &&
+                              !this.state.iconErrors[app.logoUrl] && (
+                                <img
+                                  alt={app.metadata.name + ' icon'}
+                                  height='36'
+                                  onError={this.imgError}
+                                  src={app.logoUrl}
+                                  width='36'
+                                />
+                              )}
+                            {app.metadata.name}
+                            <small>
+                              App Version:{' '}
+                              {app && app.spec && app.spec.version
+                                ? app.spec.version
+                                : 'n/a'}
+                            </small>
+                          </div>
+                          <div className='actions'>
+                            <Button
+                              onClick={this.showAppDetail.bind(
+                                this,
+                                app.metadata.name
+                              )}
+                            >
+                              Details
+                            </Button>
+                          </div>
                         </div>
-                        <div className='actions'>
-                          <Button
-                            onClick={this.showAppDetail.bind(
-                              this,
-                              app.metadata.name
-                            )}
-                          >
-                            Details
-                          </Button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+                      );
+                    })}
+                  </div>
+                )}
 
               <div className='browse-apps'>
                 <Button onClick={this.openAppCatalog}>
