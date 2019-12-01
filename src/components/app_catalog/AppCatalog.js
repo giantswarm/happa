@@ -3,13 +3,13 @@ import { catalogLoadIndex, catalogsLoad } from 'actions/catalogActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { Route, Switch } from 'react-router-dom';
-import AppList from './AppList';
-import Catalogs from './catalogs';
-import Detail from './detail';
+import AppList from './AppList/AppList';
+import Catalogs from './CatalogList/CatalogList';
+import Detail from './AppDetail/AppDetail';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class CatalogIndex extends React.Component {
+class AppCatalog extends React.Component {
   componentDidMount() {
     this.props
       .dispatch(catalogsLoad())
@@ -62,7 +62,7 @@ class CatalogIndex extends React.Component {
   }
 }
 
-CatalogIndex.propTypes = {
+AppCatalog.propTypes = {
   catalogs: PropTypes.object,
   dispatch: PropTypes.func,
   location: PropTypes.object,
@@ -84,4 +84,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CatalogIndex);
+)(AppCatalog);

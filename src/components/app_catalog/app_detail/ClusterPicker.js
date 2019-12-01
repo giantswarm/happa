@@ -1,5 +1,5 @@
 import ClusterIDLabel from 'UI/cluster_id_label';
-import Input from './input';
+import Input from './Input';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
