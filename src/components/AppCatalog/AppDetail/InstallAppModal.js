@@ -30,6 +30,9 @@ const InstallAppModal = props => {
   const [valuesYAML, setValuesYAML] = useState({});
   const [valuesYAMLError, setValuesYAMLError] = useState('');
 
+  const [secretsYAML, setSecretsYAML] = useState({});
+  const [secretsYAMLError, setSecretsYAMLError] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
 
@@ -146,6 +149,24 @@ const InstallAppModal = props => {
     reader.readAsText(files[0]);
   };
 
+  const updateSecretsYAML = files => {
+    var reader = new FileReader();
+
+    reader.onload = (function() {
+      return function(e) {
+        try {
+          let parsedYAML = yaml.safeLoad(e.target.result);
+          setSecretsYAML(parsedYAML);
+          setSecretsYAMLError('');
+        } catch (err) {
+          setSecretsYAMLError('Unable to parse valid YAML from this file.');
+        }
+      };
+    })(files[0]);
+
+    reader.readAsText(files[0]);
+  };
+
   const anyValidationErrors = () => {
     if (namespaceError !== '' || nameError !== '' || valuesYAMLError !== '') {
       return true;
@@ -167,6 +188,7 @@ const InstallAppModal = props => {
             version: props.app.version,
             namespace: namespace,
             valuesYAML: valuesYAML,
+            secretsYAML: secretsYAML,
           },
           clusterID
         )
@@ -260,7 +282,10 @@ const InstallAppModal = props => {
                   namespaceError={namespaceError}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
+                  onChangeSecretsYAML={updateSecretsYAML}
                   onChangeValuesYAML={updateValuesYAML}
+                  secretsYAML={secretsYAML}
+                  secretsYAMLError={secretsYAMLError}
                   valuesYAML={valuesYAML}
                   valuesYAMLError={valuesYAMLError}
                 />
