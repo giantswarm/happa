@@ -267,11 +267,8 @@ class ScaleNodePoolModal extends React.Component {
           timeout={this.rollupAnimationDuration}
         >
           <p key='unsupported'>
-            <i className='fa fa-warning' /> With less than 3 worker nodes, the
-            cluster does not fall under the Giant Swarm{' '}
-            <abbr title='Service Level Agreement'>SLA</abbr>. Giant Swarm staff
-            will not be alerted in case of problems and will not provide
-            proactive support.
+            <i className='fa fa-warning' /> We recommend that you run clusters
+            with at least three worker nodes.
           </p>
         </CSSTransition>
       );

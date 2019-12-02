@@ -1,56 +1,33 @@
 import * as types from 'actions/actionTypes';
+import produce from 'immer';
 
-export default function userReducer(
-  state = { lastUpdated: 0, isFetching: false, items: {} },
-  action = undefined
-) {
-  var items;
+const initialState = { lastUpdated: 0, isFetching: false, items: {} };
 
+const userReducer = produce((draft, action) => {
   switch (action.type) {
     case types.USERS_LOAD:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: true,
-        items: state.items,
-      };
+      draft.isFetching = true;
+      return;
 
     case types.USERS_LOAD_SUCCESS:
-      return {
-        lastUpdated: Date.now(),
-        isFetching: false,
-        items: action.users,
-      };
+      // TODO move dates into action creators
+      draft.lastUpdated = Date.now();
+      draft.isFetching = false;
+      draft.items = action.users;
+      return;
 
     case types.USERS_LOAD_ERROR:
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: state.items,
-      };
+      draft.isFetching = false;
+      return;
 
     case types.USERS_REMOVE_EXPIRATION_SUCCESS:
-      items = Object.assign({}, state.items);
-
-      items[action.user.email] = action.user;
-
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: items,
-      };
+      draft.items[action.user.email] = action.user;
+      return;
 
     case types.USERS_DELETE_SUCCESS:
-      items = Object.assign({}, state.items);
-
-      delete items[action.email];
-
-      return {
-        lastUpdated: state.lastUpdated,
-        isFetching: false,
-        items: items,
-      };
-
-    default:
-      return state;
+      delete draft.items[action.email];
+      return;
   }
-}
+}, initialState);
+
+export default userReducer;

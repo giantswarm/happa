@@ -2,20 +2,26 @@ import { LineDiv, WrapperDiv } from './WorkerNodesAzure';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RefreshableLabel from 'UI/RefreshableLabel';
 
 function WorkerNodesKVM({ worker, nodes, showScalingModal }) {
+  const nodeSpecText = worker
+    ? `${worker.cpu.cores} CPUs, ${worker.memory.size_gb} GB RAM`
+    : '0 CPUs, 0 GB RAM';
+
   return (
     <WrapperDiv>
       <LineDiv>
         <div>Node spec</div>
-        <div>
-          {worker && worker.cpu.cores} CPUs, {worker && worker.memory.size_gb}{' '}
-          GB RAM
-        </div>
+        <RefreshableLabel value={nodeSpecText}>{nodeSpecText}</RefreshableLabel>
       </LineDiv>
       <LineDiv>
         <div>Nodes</div>
-        <div style={{ marginRight: '30px' }}>{nodes && nodes}</div>
+        {nodes && nodes !== 0 && (
+          <RefreshableLabel value={nodes} style={{ marginRight: '25px' }}>
+            {nodes}
+          </RefreshableLabel>
+        )}
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>
