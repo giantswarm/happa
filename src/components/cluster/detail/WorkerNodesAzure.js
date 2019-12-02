@@ -40,8 +40,8 @@ function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
       </LineDiv>
       <LineDiv>
         <div>Nodes</div>
-        {nodes && (
-          <RefreshableLabel value={nodes} style={{ marginRight: '30px' }}>
+        {nodes && nodes !== 0 && (
+          <RefreshableLabel value={nodes} style={{ marginRight: '25px' }}>
             {nodes}
           </RefreshableLabel>
         )}
