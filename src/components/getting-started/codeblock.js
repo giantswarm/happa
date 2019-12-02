@@ -2,7 +2,7 @@ import { dedent } from 'lib/helpers';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import Line from './line';
 import PropTypes from 'prop-types';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
 export const Prompt = ({ children }) => {
@@ -39,8 +39,6 @@ export const Output = ({ children }) => {
 export const CodeBlock = ({ children }) => {
   const [isHovering, setHovering] = useState(false);
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
-
-  const preElement = useRef(null);
 
   const getPromptLinesAsString = () => {
     const string = React.Children.toArray(children)
@@ -89,9 +87,7 @@ export const CodeBlock = ({ children }) => {
   return (
     <div className={getClassNames()}>
       <pre>
-        <div className='content' ref={preElement}>
-          {children}
-        </div>
+        <div className='content'>{children}</div>
         <div className='codeblock--buttons'>
           <a
             href='#'

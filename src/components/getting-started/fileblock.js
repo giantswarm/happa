@@ -2,7 +2,7 @@ import { dedent } from 'lib/helpers';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import Line from './line';
 import PropTypes from 'prop-types';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
 var Modernizr = window.Modernizr;
@@ -30,8 +30,6 @@ var Modernizr = window.Modernizr;
 export const FileBlock = ({ children, hideText, fileName }) => {
   const [isHovering, setHovering] = useState(false);
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
-
-  const preElement = useRef(null);
 
   const copyCodeToClipboard = e => {
     e.preventDefault();
@@ -82,7 +80,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
   return (
     <div className={classNames()}>
       <pre>
-        <div className='content' ref={preElement}>
+        <div className='content'>
           <div className='codeblock--filename'>{fileName}</div>
           <div className='codeblock--filecontents'>
             {!hideText && <Line text={dedent(children)} />}
