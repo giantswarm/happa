@@ -36,7 +36,7 @@ const BlockWrapper = styled.div`
 
 const getTooltip = text => <Tooltip id='tooltip'>{text}</Tooltip>;
 
-const URIBlock = ({ children, title }) => {
+const URIBlock = ({ children, title, ...props }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
   const tooltipText = `Copy ${children} to clipboard.`;
 
@@ -46,7 +46,7 @@ const URIBlock = ({ children, title }) => {
   const handleMouseLeave = () => setClipboardContent(null);
 
   return (
-    <BlockWrapper onMouseLeave={handleMouseLeave}>
+    <BlockWrapper {...props} onMouseLeave={handleMouseLeave}>
       {title && <span>{title}</span>}
 
       <Code>{children}</Code>
