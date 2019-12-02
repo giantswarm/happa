@@ -216,8 +216,20 @@ function clusterDetailsV5(dispatch, getState, cluster) {
       return clusterDetails;
     })
     .catch(error => {
-      console.error('Error loading cluster details:', error);
-      dispatch(clusterLoadDetailsError(cluster.id, error));
+      if (error.status === 404) {
+        new FlashMessage(
+          'This cluster no longer exists.',
+          messageType.INFO,
+          messageTTL.MEDIUM,
+          'Redirecting you to your organization clusters list'
+        );
+
+        dispatch(clusterDeleteSuccess(cluster.id));
+        dispatch(push('/'));
+      } else {
+        console.error('Error loading cluster details:', error);
+        dispatch(clusterLoadDetailsError(cluster.id, error));
+      }
     });
 }
 
@@ -482,17 +494,29 @@ export function clusterLoadDetails(clusterId) {
       dispatch(clusterLoadDetailsSuccess(cluster));
       return cluster;
     } catch (error) {
-      console.error('Error loading cluster details:', error);
-      dispatch(clusterLoadDetailsError(clusterId, error));
+      if (error.status === 404) {
+        new FlashMessage(
+          'This cluster no longer exists.',
+          messageType.INFO,
+          messageTTL.MEDIUM,
+          'Redirecting you to your organization clusters list'
+        );
 
-      new FlashMessage(
-        'Something went wrong while trying to load cluster details.',
-        messageType.ERROR,
-        messageTTL.LONG,
-        'Please try again later or contact support: support@giantswarm.io'
-      );
+        dispatch(clusterDeleteSuccess(clusterId));
+        dispatch(push('/'));
+      } else {
+        console.error('Error loading cluster details:', error);
+        dispatch(clusterLoadDetailsError(clusterId, error));
 
-      throw error;
+        new FlashMessage(
+          'Something went wrong while trying to load cluster details.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        throw error;
+      }
     }
   };
 }
