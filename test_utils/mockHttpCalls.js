@@ -77,6 +77,16 @@ export const azureInfoResponse = {
   },
 };
 
+export const KVMInfoResponse = {
+  general: {
+    availability_zones: { default: 1, max: 1 },
+    installation_name: 'geckon',
+    provider: 'kvm',
+  },
+  stats: { cluster_creation_duration: { median: 378, p25: 370, p75: 386 } },
+  workers: { count_per_cluster: { max: 5, default: 3 } },
+};
+
 // User
 export const userResponse = {
   email: USER_EMAIL,
@@ -160,6 +170,43 @@ export const v4AzureClusterResponse = {
       memory: { size_gb: 17.179869183999998 },
       storage: { size_gb: 34.359738367999995 },
       azure: { vm_size: V4_CLUSTER.AzureInstanceType },
+    },
+  ],
+};
+
+export const v4KVMClusterResponse = {
+  id: V4_CLUSTER.id,
+  create_date: '2019-11-26T19:59:15Z',
+  api_endpoint: `https://api.${V4_CLUSTER.id}.k8s.geckon.gridscale.kvm.gigantic.io`,
+  owner: ORGANIZATION,
+  name: V4_CLUSTER.name,
+  release_version: '9.1.0',
+  scaling: { min: 3, max: 3 },
+  credential_id: '',
+  kvm: {
+    port_mappings: [
+      { port: 30168, protocol: 'http' },
+      { port: 30169, protocol: 'https' },
+    ],
+  },
+  workers: [
+    {
+      cpu: { cores: 2 },
+      labels: {},
+      memory: { size_gb: 7.5 },
+      storage: { size_gb: 40 },
+    },
+    {
+      cpu: { cores: 2 },
+      labels: {},
+      memory: { size_gb: 7.5 },
+      storage: { size_gb: 40 },
+    },
+    {
+      cpu: { cores: 2 },
+      labels: {},
+      memory: { size_gb: 7.5 },
+      storage: { size_gb: 40 },
     },
   ],
 };
@@ -452,6 +499,107 @@ export const v4AzureClusterStatusResponse = {
         date: '0001-01-01T00:00:00Z',
         lastTransitionTime: '2019-11-29T16:03:28.105736089Z',
         semver: '2.7.0',
+      },
+    ],
+  },
+};
+
+export const v4KVMClusterStatusResponse = {
+  aws: { availabilityZones: null, autoScalingGroup: { name: '' } },
+  cluster: {
+    conditions: [
+      {
+        lastTransitionTime: '2019-11-27T09:22:45.131944981Z',
+        status: 'True',
+        type: 'Created',
+      },
+    ],
+    network: { cidr: '' },
+    nodes: [
+      {
+        labels: {
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/os': 'linux',
+          'giantswarm.io/provider': 'kvm',
+          ip: '172.23.9.10',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname': 'master-w0je0-7fcb8856b6-4r8jj',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'master',
+          'kvm-operator.giantswarm.io/version': '3.10.0',
+          'node-role.kubernetes.io/master': '',
+          'node.kubernetes.io/master': '',
+          role: 'master',
+        },
+        lastTransitionTime: '2019-12-02T04:36:46.868446664Z',
+        name: 'master-w0je0-7fcb8856b6-4r8jj',
+        version: '3.10.0',
+      },
+      {
+        labels: {
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/os': 'linux',
+          'giantswarm.io/provider': 'kvm',
+          ip: '172.23.9.194',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname': 'worker-3c8x8-85c74757f5-x95d5',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'kvm-operator.giantswarm.io/version': '3.10.0',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-12-02T04:36:46.868447575Z',
+        name: 'worker-3c8x8-85c74757f5-x95d5',
+        version: '3.10.0',
+      },
+      {
+        labels: {
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/os': 'linux',
+          'giantswarm.io/provider': 'kvm',
+          ip: '172.23.9.186',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname': 'worker-87jfz-bf8df564c-jnst9',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'kvm-operator.giantswarm.io/version': '3.10.0',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-12-02T04:36:46.868448272Z',
+        name: 'worker-87jfz-bf8df564c-jnst9',
+        version: '3.10.0',
+      },
+      {
+        labels: {
+          'beta.kubernetes.io/arch': 'amd64',
+          'beta.kubernetes.io/os': 'linux',
+          'giantswarm.io/provider': 'kvm',
+          ip: '172.23.9.234',
+          'kubernetes.io/arch': 'amd64',
+          'kubernetes.io/hostname': 'worker-r0e8m-696fd6c7bc-slgsh',
+          'kubernetes.io/os': 'linux',
+          'kubernetes.io/role': 'worker',
+          'kvm-operator.giantswarm.io/version': '3.10.0',
+          'node-role.kubernetes.io/worker': '',
+          'node.kubernetes.io/worker': '',
+          role: 'worker',
+        },
+        lastTransitionTime: '2019-12-02T04:36:46.868448804Z',
+        name: 'worker-r0e8m-696fd6c7bc-slgsh',
+        version: '3.10.0',
+      },
+    ],
+    resources: null,
+    scaling: { desiredCapacity: 0 },
+    versions: [
+      {
+        date: '0001-01-01T00:00:00Z',
+        lastTransitionTime: '2019-11-27T09:22:45.332250352Z',
+        semver: '3.10.0',
       },
     ],
   },

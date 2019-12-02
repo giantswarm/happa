@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import {
   appCatalogsResponse,
   appsResponse,
-  azureInfoResponse,
+  KVMInfoResponse,
   getPersistedMockCall,
   ORGANIZATION,
   orgResponse,
@@ -10,13 +10,13 @@ import {
   releasesResponse,
   userResponse,
   V4_CLUSTER,
-  v4AzureClusterResponse,
-  v4AzureClusterStatusResponse,
+  v4KVMClusterResponse,
+  v4KVMClusterStatusResponse,
   v4ClustersResponse,
 } from 'test_utils/mockHttpCalls';
 import { getNumberOfNodes } from 'utils/cluster_utils';
 import { renderRouteWithStore } from 'test_utils/renderUtils';
-import { wait } from '@testing-library/react';
+import { wait, within } from '@testing-library/react';
 
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V4_CLUSTER.id}`;
@@ -27,7 +27,7 @@ const requests = {};
 // Responses to requests
 beforeAll(() => {
   requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', azureInfoResponse);
+  requests.info = getPersistedMockCall('/v4/info/', KVMInfoResponse);
   requests.organizations = getPersistedMockCall(
     '/v4/organizations/',
     orgsResponse
@@ -39,11 +39,11 @@ beforeAll(() => {
   requests.clusters = getPersistedMockCall('/v4/clusters/', v4ClustersResponse);
   requests.cluster = getPersistedMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/`,
-    v4AzureClusterResponse
+    v4KVMClusterResponse
   );
   requests.status = getPersistedMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AzureClusterStatusResponse
+    v4KVMClusterStatusResponse
   );
   requests.apps = getPersistedMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/apps/`,
@@ -71,28 +71,38 @@ afterAll(() => {
   });
 });
 
-it('renders all the v4 Azure cluster data correctly without nodes ready', async () => {
+it('renders all the v4 KVM cluster data correctly without nodes ready', async () => {
   const div = document.createElement('div');
-  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText, getAllByText, debug } = renderRouteWithStore(
+    ROUTE,
+    div,
+    {}
+  );
 
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
   expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
 
-  const apiEndpoint = getByText(v4AzureClusterResponse.api_endpoint);
+  const apiEndpoint = getByText(v4KVMClusterResponse.api_endpoint);
   expect(apiEndpoint).toBeInTheDocument();
 
-  const instance = getByText(V4_CLUSTER.AzureInstanceType);
-  expect(instance).toBeInTheDocument();
+  const portsInResponse = v4KVMClusterResponse.kvm.port_mappings;
+  const portsContainer = getByText('Ingress ports:');
+
+  portsInResponse.forEach(mapping => {
+    const protocol = mapping.protocol.toUpperCase();
+    const html = `<dt>${protocol}</dt><dd>${mapping.port}</dd>`;
+    expect(portsContainer).toContainHTML(html);
+  });
 
   const nodes = getByText('Nodes').nextSibling;
   const nodesRunning = getNumberOfNodes({
-    ...v4AzureClusterResponse,
-    status: v4AzureClusterStatusResponse,
+    ...v4KVMClusterResponse,
+    status: v4KVMClusterStatusResponse,
   });
   expect(nodes).toHaveTextContent(nodesRunning);
 });
 
-it.skip(`shows the v4 Azure cluster scaling modal when the button is clicked with default values and 
+it.skip(`shows the v4 KVM cluster scaling modal when the button is clicked with default values and 
 scales correctly`, async () => {});
