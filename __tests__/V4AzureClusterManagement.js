@@ -16,6 +16,7 @@ import {
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderUtils';
+const { globals } = require('jest-config');
 
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V4_CLUSTER.id}`;
@@ -83,17 +84,16 @@ it('renders all the v4 Azure cluster data correctly without nodes ready', async 
   });
   expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
 
-  // debug();
-  // expect(
-  //   getByTestId('running-nodes').querySelector('div:nth-child(2)').textContent
-  // ).toBe('3');
-
   const apiEndpoint = getByText(v4AzureClusterResponse.api_endpoint);
   expect(apiEndpoint).toBeInTheDocument();
+
   const instance = getByText(V4_CLUSTER.AzureInstanceType);
   expect(instance).toBeInTheDocument();
 
-  // const nodes = getByText('Nodes').nextSibling;
-  // debug(nodes);
-  // expect(getByText('Pinned at 3')).toBeInTheDocument();
+  const nodes = getByText('Nodes').nextSibling;
+  debug(nodes);
+  expect(nodes).toHaveTextContent(v4AzureClusterResponse.scaling.min);
 });
+
+it(`shows the v4 Azure cluster scaling modal when the button is clicked with default values and 
+scales correctly`, async () => {});
