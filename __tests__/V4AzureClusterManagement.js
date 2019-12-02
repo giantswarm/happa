@@ -14,9 +14,9 @@ import {
   v4AzureClusterStatusResponse,
   v4ClustersResponse,
 } from 'test_utils/mockHttpCalls';
-import { fireEvent, wait } from '@testing-library/react';
+import { getNumberOfNodes } from 'utils/cluster_utils';
+import { wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'test_utils/renderUtils';
-const { globals } = require('jest-config');
 
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V4_CLUSTER.id}`;
@@ -91,8 +91,11 @@ it('renders all the v4 Azure cluster data correctly without nodes ready', async 
   expect(instance).toBeInTheDocument();
 
   const nodes = getByText('Nodes').nextSibling;
-  debug(nodes);
-  expect(nodes).toHaveTextContent(v4AzureClusterResponse.scaling.min);
+  const nodesRunning = getNumberOfNodes({
+    ...v4AzureClusterResponse,
+    status: v4AzureClusterStatusResponse,
+  });
+  expect(nodes).toHaveTextContent(nodesRunning);
 });
 
 it(`shows the v4 Azure cluster scaling modal when the button is clicked with default values and 
