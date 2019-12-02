@@ -321,7 +321,28 @@ export const v4AWSClusterStatusResponse = {
 // Apps
 export const appsResponse = [
   {
-    metadata: { name: 'chart-operator' },
+    metadata: { name: 'my app', labels: {} },
+    spec: {
+      catalog: 'default',
+      name: 'my-app',
+      namespace: 'giantswarm',
+      user_config: {
+        configmap: { name: '', namespace: '' },
+        secret: { name: '', namespace: '' },
+      },
+      version: '0.0.1',
+    },
+    status: {
+      app_version: '',
+      release: { last_deployed: '0001-01-01T00:00:00Z', status: '' },
+      version: '',
+    },
+  },
+  {
+    metadata: {
+      name: 'chart-operator',
+      labels: { 'giantswarm.io/managed-by': 'cluster-operator' },
+    },
     spec: {
       catalog: 'default',
       name: 'chart-operator',
@@ -339,7 +360,10 @@ export const appsResponse = [
     },
   },
   {
-    metadata: { name: 'kube-state-metrics' },
+    metadata: {
+      name: 'kube-state-metrics',
+      labels: { 'giantswarm.io/managed-by': 'cluster-operator' },
+    },
     spec: {
       catalog: 'default',
       name: 'kube-state-metrics-app',
@@ -357,7 +381,10 @@ export const appsResponse = [
     },
   },
   {
-    metadata: { name: 'metrics-server' },
+    metadata: {
+      name: 'metrics-server',
+      labels: { 'giantswarm.io/managed-by': 'cluster-operator' },
+    },
     spec: {
       catalog: 'default',
       name: 'metrics-server-app',
@@ -375,7 +402,10 @@ export const appsResponse = [
     },
   },
   {
-    metadata: { name: 'node-exporter' },
+    metadata: {
+      name: 'node-exporter',
+      labels: { 'giantswarm.io/managed-by': 'cluster-operator' },
+    },
     spec: {
       catalog: 'default',
       name: 'node-exporter-app',

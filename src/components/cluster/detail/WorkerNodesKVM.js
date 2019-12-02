@@ -17,9 +17,11 @@ function WorkerNodesKVM({ worker, nodes, showScalingModal }) {
       </LineDiv>
       <LineDiv>
         <div>Nodes</div>
-        <div style={{ marginRight: '30px' }}>
-          {nodes && <RefreshableLabel value={nodes}>{nodes}</RefreshableLabel>}
-        </div>
+        {nodes && nodes !== 0 && (
+          <RefreshableLabel value={nodes} style={{ marginRight: '25px' }}>
+            {nodes}
+          </RefreshableLabel>
+        )}
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>
