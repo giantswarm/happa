@@ -1,7 +1,7 @@
+import { formatStatus, isExpiringSoon, NEVER_EXPIRES } from './UsersUtils';
 import { relativeDate } from 'lib/helpers.js';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'UI/button';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import UsersLoader from './UsersLoader';
@@ -13,46 +13,6 @@ const tableDefaultSorting = [
     order: 'asc',
   },
 ];
-
-const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
-
-const isExpired = timestamp => {
-  const expirySeconds =
-    moment(timestamp)
-      .utc()
-      .diff(moment().utc()) / 1000;
-
-  if (timestamp === NEVER_EXPIRES) {
-    return false;
-  }
-
-  return expirySeconds < 0;
-};
-
-const isExpiringSoon = timestamp => {
-  const expirySeconds =
-    moment(timestamp)
-      .utc()
-      .diff(moment().utc()) / 1000;
-
-  return expirySeconds > 0 && expirySeconds < 60 * 60 * 24;
-};
-
-const formatStatus = user => {
-  if (user.invited_by) {
-    return 'PENDING';
-  }
-
-  if (isExpired(user.expiry)) {
-    return 'EXPIRED';
-  }
-
-  if (isExpiringSoon(user.expiry)) {
-    return 'EXPIRING SOON';
-  }
-
-  return 'ACTIVE';
-};
 
 const getStatusCellFormatter = (status, row) => {
   const { invited_by: invitedBy } = row;
@@ -86,7 +46,7 @@ const getExpiryCellFormatter = (cell, row, removeExpiration) => {
   );
 };
 
-function getActionsCellFormatter(_cell, row, deleteUser) {
+const getActionsCellFormatter = (_cell, row, deleteUser) => {
   if (row.invited_by) {
     return '';
   }
@@ -98,7 +58,7 @@ function getActionsCellFormatter(_cell, row, deleteUser) {
       Delete
     </Button>
   );
-}
+};
 
 // Provides the configuraiton for the clusters table
 const getTableColumnsConfig = (onRemoveExpiration, onDelete) => {

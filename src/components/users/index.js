@@ -1,5 +1,6 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { formatStatus } from './UsersUtils';
 import { invitationCreate, invitationsLoad } from 'actions/invitationActions';
 import { push } from 'connected-react-router';
 import {
@@ -15,21 +16,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import UnexpireUserModal from './UnexpireUserModal';
 import UsersTable from './UsersTable';
-import moment from 'moment';
+
+const UserModalTypes = {
+  Unexpire: 'unexpire',
+  Delete: 'delete',
+  Invite: 'invite',
+};
 
 class Users extends React.Component {
   state = {
     selectedUser: null,
     modal: {
+      template: '',
       visible: false,
       loading: false,
-    },
-    invitationForm: {
-      email: '',
-      error: '',
-      organizations: this.props.initialSelectedOrganizations,
-      sendEmail: true,
-      valid: true,
+      invitationResult: {},
     },
   };
 
@@ -47,14 +48,14 @@ class Users extends React.Component {
     this.setState({
       selectedUser: email,
       modal: {
-        template: 'unexpireUser',
+        template: UserModalTypes.Unexpire,
         visible: true,
         loading: false,
       },
     });
   };
 
-  confirmRemoveExpiration(email) {
+  confirmRemoveExpiration = email => {
     this.setState({
       modal: {
         visible: true,
@@ -70,23 +71,23 @@ class Users extends React.Component {
       .catch(() => {
         this.closeModal();
       });
-  }
+  };
 
   deleteUser = email => {
     this.setState({
       selectedUser: email,
       modal: {
-        template: 'deleteUser',
+        template: UserModalTypes.Delete,
         visible: true,
         loading: false,
       },
     });
   };
 
-  confirmDeleteUser(email) {
+  confirmDeleteUser = email => {
     this.setState({
       modal: {
-        template: 'deleteUser',
+        template: UserModalTypes.Delete,
         visible: true,
         loading: true,
       },
@@ -100,22 +101,22 @@ class Users extends React.Component {
       .catch(() => {
         this.closeModal();
       });
-  }
+  };
 
-  inviteUser() {
+  inviteUser = () => {
     this.setState({
       modal: {
-        template: 'inviteUser',
+        template: UserModalTypes.Invite,
         visible: true,
         loading: false,
       },
     });
-  }
+  };
 
   confirmInviteUser = invitationForm => {
     this.setState({
       modal: {
-        template: 'inviteUser',
+        template: UserModalTypes.Invite,
         visible: true,
         loading: true,
       },
@@ -129,7 +130,7 @@ class Users extends React.Component {
       .then(result => {
         this.setState({
           modal: {
-            template: 'inviteUser',
+            template: UserModalTypes.Invite,
             invitationResult: result,
             visible: true,
             loading: false,
@@ -141,13 +142,57 @@ class Users extends React.Component {
       });
   };
 
-  closeModal() {
+  closeModal = () => {
     this.setState({
       modal: {
         visible: false,
         loading: false,
       },
     });
+  };
+
+  renderModalComponent() {
+    let ModalComponent = InviteUserModal;
+
+    const { modal, selectedUser } = this.state;
+    const { organizations, initialSelectedOrganizations } = this.props;
+    const propsToAdd = {};
+
+    switch (modal.template) {
+      case UserModalTypes.Unexpire:
+        ModalComponent = UnexpireUserModal;
+
+        propsToAdd.forUser = selectedUser;
+        propsToAdd.onConfirm = this.confirmRemoveExpiration.bind(
+          this,
+          selectedUser
+        );
+
+        break;
+
+      case UserModalTypes.Delete:
+        ModalComponent = DeleteUserModal;
+
+        propsToAdd.forUser = selectedUser;
+        propsToAdd.onConfirm = this.confirmDeleteUser.bind(this, selectedUser);
+
+        break;
+
+      default:
+        propsToAdd.onConfirm = this.confirmInviteUser;
+        propsToAdd.organizations = organizations;
+        propsToAdd.initiallySelectedOrganizations = initialSelectedOrganizations;
+        propsToAdd.invitationResult = modal.invitationResult;
+    }
+
+    return (
+      <ModalComponent
+        {...propsToAdd}
+        show={modal.visible}
+        onClose={this.closeModal}
+        isLoading={modal.loading}
+      />
+    );
   }
 
   render() {
@@ -170,7 +215,7 @@ class Users extends React.Component {
               </div>
               <div className='col-5'>
                 <div className='pull-right btn-group'>
-                  <Button onClick={this.inviteUser.bind(this)}>
+                  <Button onClick={this.inviteUser}>
                     <i className='fa fa-add-circle' /> INVITE USER
                   </Button>
                 </div>
@@ -194,52 +239,7 @@ class Users extends React.Component {
               onDelete={this.deleteUser}
               invitations={invitations}
             />
-            {(() => {
-              switch (this.state.modal.template) {
-                case 'unexpireUser':
-                  return (
-                    <UnexpireUserModal
-                      show={this.state.modal.visible}
-                      forUser={this.state.selectedUser}
-                      onClose={this.closeModal.bind(this)}
-                      onConfirm={this.confirmRemoveExpiration.bind(
-                        this,
-                        this.state.selectedUser
-                      )}
-                      isLoading={this.state.modal.loading}
-                    />
-                  );
-
-                case 'deleteUser':
-                  return (
-                    <DeleteUserModal
-                      show={this.state.modal.visible}
-                      forUser={this.state.selectedUser}
-                      onClose={this.closeModal.bind(this)}
-                      onConfirm={this.confirmDeleteUser.bind(
-                        this,
-                        this.state.selectedUser
-                      )}
-                      isLoading={this.state.modal.loading}
-                    />
-                  );
-
-                case 'inviteUser':
-                  return (
-                    <InviteUserModal
-                      show={this.state.modal.visible}
-                      onClose={this.closeModal.bind(this)}
-                      onConfirm={this.confirmInviteUser}
-                      isLoading={this.state.modal.loading}
-                      organizations={this.props.organizations}
-                      initiallySelectedOrganizations={
-                        this.props.initialSelectedOrganizations
-                      }
-                      invitationResult={this.state.modal.invitationResult}
-                    />
-                  );
-              }
-            })()}
+            {this.renderModalComponent()}
           </div>
         </DocumentTitle>
       </Breadcrumb>
@@ -258,48 +258,8 @@ Users.propTypes = {
   installation_name: PropTypes.string,
 };
 
-const formatStatus = user => {
-  if (user.invited_by) {
-    return 'PENDING';
-  }
-
-  if (isExpired(user.expiry)) {
-    return 'EXPIRED';
-  }
-
-  if (isExpiringSoon(user.expiry)) {
-    return 'EXPIRING SOON';
-  }
-
-  return 'ACTIVE';
-};
-
-const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
-
-const isExpired = timestamp => {
-  const expirySeconds =
-    moment(timestamp)
-      .utc()
-      .diff(moment().utc()) / 1000;
-
-  if (timestamp === NEVER_EXPIRES) {
-    return false;
-  }
-
-  return expirySeconds < 0;
-};
-
-const isExpiringSoon = timestamp => {
-  const expirySeconds =
-    moment(timestamp)
-      .utc()
-      .diff(moment().utc()) / 1000;
-
-  return expirySeconds > 0 && expirySeconds < 60 * 60 * 24;
-};
-
 function mapStateToProps(state) {
-  var users = Object.entries(state.entities.users.items).map(([, user]) => {
+  const users = Object.entries(state.entities.users.items).map(([, user]) => {
     return {
       email: user.email,
       emaildomain: user.emaildomain,
@@ -309,7 +269,7 @@ function mapStateToProps(state) {
     };
   });
 
-  var invitations = Object.entries(state.entities.invitations.items).map(
+  const invitations = Object.entries(state.entities.invitations.items).map(
     ([, invitation]) => {
       return {
         email: invitation.email,
@@ -322,7 +282,7 @@ function mapStateToProps(state) {
     }
   );
 
-  var invitationsAndUsers = users.concat(invitations);
+  const invitationsAndUsers = users.concat(invitations);
 
   return {
     currentUser: state.app.loggedInUser,
