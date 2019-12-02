@@ -4,20 +4,18 @@ import {
   getMemoryTotalNodePools,
   getNumberOfNodePoolsNodes,
 } from 'utils/cluster_utils';
-import { Code, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
+import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from './AddNodePool';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import Button from 'UI/button';
-import copy from 'copy-to-clipboard';
 import CredentialInfoRow from './CredentialInfoRow';
 import moment from 'moment';
 import NodePool from './NodePool';
 import NodesRunning from './NodesRunning';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PortMappingsRow from './PortMappingsRow';
 import produce from 'immer';
 import PropTypes from 'prop-types';
@@ -26,7 +24,7 @@ import ReactTimeout from 'react-timeout';
 import RegionAndVersions from './RegionAndVersions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import styled from '@emotion/styled';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
+import URIBlock from './URIBlock';
 
 export const Upgrade = styled.div`
   color: #ce990f;
@@ -303,7 +301,6 @@ class V5ClusterDetailTable extends React.Component {
       isSubmitting: false,
       data: {},
     },
-    enpointCopied: false,
   };
 
   componentDidMount() {
@@ -375,23 +372,6 @@ class V5ClusterDetailTable extends React.Component {
     this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
   };
 
-  // TODO We are repeating this in several places, refactor this to a reusable HOC / hooks.
-  copyToClipboard = e => {
-    e.preventDefault();
-    e.stopPropagation();
-    copy(this.props.cluster.api_endpoint);
-
-    this.setState({
-      endpointCopied: true,
-    });
-  };
-
-  mouseLeave = () => {
-    this.setState({
-      endpointCopied: false,
-    });
-  };
-
   /**
    * Returns the proper last updated info string based on available
    * cluster and/or status information.
@@ -447,30 +427,7 @@ class V5ClusterDetailTable extends React.Component {
           </div>
         </FlexRowWithTwoBlocksOnEdges>
         <FlexRowWithTwoBlocksOnEdges>
-          <CopyToClipboardDiv onMouseLeave={this.mouseLeave}>
-            <span>Kubernetes endpoint URI:</span>
-            <Code>{api_endpoint}</Code>
-            {/* Copy to clipboard.
-            TODO make a render prop component or a hooks function with it */}
-            {this.state.endpointCopied ? (
-              <i aria-hidden='true' className='fa fa-done' />
-            ) : (
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id='tooltip'>
-                    Copy {api_endpoint} to clipboard.
-                  </Tooltip>
-                }
-                placement='top'
-              >
-                <i
-                  aria-hidden='true'
-                  className='fa fa-content-copy'
-                  onClick={this.copyToClipboard}
-                />
-              </OverlayTrigger>
-            )}
-          </CopyToClipboardDiv>
+          <URIBlock title='Kubernetes endpoint URI:'>{api_endpoint}</URIBlock>
           <div style={{ transform: 'translateX(10px)' }}>
             <Button onClick={accessCluster}>
               <i className='fa fa-start' /> GET STARTED

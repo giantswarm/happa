@@ -97,6 +97,8 @@ const InviteUserModal = ({
     setInviteForm(invitationForm);
   };
 
+  const confirmInviteForm = () => onConfirm(inviteForm);
+
   useEffect(() => {
     if (show !== prevShow && show === true) {
       setInviteForm(getInitialState(initiallySelectedOrganizations));
@@ -109,7 +111,7 @@ const InviteUserModal = ({
       isLoading={isLoading}
       title={modalTitle}
       confirmText={confirmButtonText}
-      onConfirm={() => onConfirm(inviteForm)}
+      onConfirm={confirmInviteForm}
       confirmDisabled={!inviteForm.isValid}
       confirmHidden={isInvited}
       cancelText={cancelText}

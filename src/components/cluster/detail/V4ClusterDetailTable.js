@@ -1,20 +1,17 @@
-import { Code, FlexRowWithTwoBlocksOnEdges } from 'styles';
-import { CopyToClipboardDiv } from './V5ClusterDetailTable';
+import { FlexRowWithTwoBlocksOnEdges } from 'styles';
 import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
 import { Providers } from 'shared/constants';
 import Button from 'UI/button';
-import copy from 'copy-to-clipboard';
 import CredentialInfoRow from './CredentialInfoRow';
 import moment from 'moment';
 import NodesRunning from './NodesRunning';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PortMappingsRow from './PortMappingsRow';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
 import RegionAndVersions from './RegionAndVersions';
 import styled from '@emotion/styled';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
+import URIBlock from './URIBlock';
 import WorkerNodesAWS from './WorkerNodesAWS';
 import WorkerNodesAzure from './WorkerNodesAzure';
 import WorkerNodesKVM from './WorkerNodesKVM';
@@ -35,7 +32,6 @@ const WrapperDiv = styled.div`
 
 class V4ClusterDetailTable extends React.Component {
   state = {
-    enpointCopied: false,
     RAM: 0,
     CPUs: 0,
     awsInstanceTypes: {},
@@ -60,23 +56,6 @@ class V4ClusterDetailTable extends React.Component {
 
     this.setState({ awsInstanceTypes, azureVMSizes, RAM, CPUs });
   }
-
-  // TODO We are repeating this in several places, refactor this to a reusable HOC / hooks.
-  copyToClipboard = e => {
-    e.preventDefault();
-    e.stopPropagation();
-    copy(this.props.cluster.api_endpoint);
-
-    this.setState({
-      endpointCopied: true,
-    });
-  };
-
-  mouseLeave = () => {
-    this.setState({
-      endpointCopied: false,
-    });
-  };
 
   /**
    * Returns the proper last updated info string based on available
@@ -125,29 +104,7 @@ class V4ClusterDetailTable extends React.Component {
           </div>
         </FlexRowWithTwoBlocksOnEdges>
         <FlexRowWithTwoBlocksOnEdges>
-          <CopyToClipboardDiv onMouseLeave={this.mouseLeave}>
-            <span>Kubernetes endpoint URI:</span>
-            <Code>{api_endpoint}</Code>
-            {/* Copy to clipboard. */}
-            {this.state.endpointCopied ? (
-              <i aria-hidden='true' className='fa fa-done' />
-            ) : (
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id='tooltip'>
-                    Copy {api_endpoint} to clipboard.
-                  </Tooltip>
-                }
-                placement='top'
-              >
-                <i
-                  aria-hidden='true'
-                  className='fa fa-content-copy'
-                  onClick={this.copyToClipboard}
-                />
-              </OverlayTrigger>
-            )}
-          </CopyToClipboardDiv>
+          <URIBlock title='Kubernetes endpoint URI:'>{api_endpoint}</URIBlock>
           <div style={{ transform: 'translateX(10px)' }}>
             <Button onClick={this.props.accessCluster}>
               <i className='fa fa-start' /> GET STARTED

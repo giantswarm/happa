@@ -94,6 +94,7 @@
     "babel-eslint": "10.0.3",
     "babel-jest": "^24.7.1",
     "babel-loader": "8.0.6",
+    "babel-plugin-emotion": "^10.0.23",
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-plugin-transform-react-jsx": "~6.24.1",
     "babel-polyfill": "6.26.0",
