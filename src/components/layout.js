@@ -20,7 +20,7 @@ import Navigation from './UI/navigation';
 import Organizations from './organizations';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Users from './users/Users';
+import Users from './Users/Users';
 
 var defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
