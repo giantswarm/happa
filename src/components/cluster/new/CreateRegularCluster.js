@@ -5,6 +5,7 @@ import { FlexColumnDiv, Wrapper } from './CreateNodePoolsCluster';
 import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
 import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
+import AzureMultiAZSelector from './AzureMultiAZSelector';
 import AzureVMSizeSelector from './AzureVMSizeSelector';
 import Button from 'UI/button';
 import ClusterCreationDuration from './ClusterCreationDuration';
@@ -424,6 +425,8 @@ class CreateRegularCluster extends React.Component {
   }
 
   render() {
+    const { minAvailabilityZones, maxAvailabilityZones, provider } = this.props;
+
     return (
       <Breadcrumb
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
@@ -476,8 +479,7 @@ class CreateRegularCluster extends React.Component {
 
             <FlexColumnDiv>
               <div className='worker-nodes'>Worker nodes</div>
-              {(this.props.provider === Providers.AWS ||
-                this.props.provider === Providers.AZURE) && (
+              {provider === Providers.AWS && (
                 <label
                   className='availability-zones'
                   htmlFor='availability-zones'
@@ -495,8 +497,8 @@ class CreateRegularCluster extends React.Component {
                       <div>
                         <NumberPicker
                           label=''
-                          max={this.props.maxAvailabilityZones}
-                          min={this.props.minAvailabilityZones}
+                          max={maxAvailabilityZones}
+                          min={minAvailabilityZones}
                           onChange={this.updateAvailabilityZonesPicker}
                           readOnly={false}
                           stepSize={1}
@@ -518,9 +520,18 @@ class CreateRegularCluster extends React.Component {
                 </label>
               )}
 
+              {provider === Providers.AZURE && (
+                <AzureMultiAZSelector
+                  defaultValue={minAvailabilityZones}
+                  minValue={minAvailabilityZones}
+                  maxValue={maxAvailabilityZones}
+                  availableZones={['1', '2', '3', '4', '5']}
+                />
+              )}
+
               <label htmlFor='instance-type'>
                 {(() => {
-                  switch (this.props.provider) {
+                  switch (provider) {
                     case Providers.AWS: {
                       const [RAM, CPUCores] = this.produceRAMAndCoresAWS();
 
@@ -612,7 +623,7 @@ class CreateRegularCluster extends React.Component {
                 <span className='label-span'>Number of worker nodes</span>
                 <NodeCountSelector
                   autoscalingEnabled={this.isScalingAutomatic(
-                    this.props.provider,
+                    provider,
                     this.props.selectedRelease
                   )}
                   maxValue={this.props.maxWorkersPerCluster}
@@ -622,7 +633,7 @@ class CreateRegularCluster extends React.Component {
                 />
                 <ProviderCredentials
                   organizationName={this.props.selectedOrganization}
-                  provider={this.props.provider}
+                  provider={provider}
                 />
                 {this.state.error && this.errorState()}
               </label>

@@ -43,8 +43,7 @@ const Wrapper = styled.abbr`
   display: inline-block;
   width: 1.6em;
   text-align: center;
-  margin-left: 4px;
-  margin-right: 4px;
+  margin-right: 8px;
   line-height: 1.4em;
   text-decoration: none;
   font-weight: 400;
@@ -102,7 +101,7 @@ function AvailabilityZonesLabel({
   const color = azColors[colorIndex];
 
   const toggleChecked = () => {
-    if (!isMaxReached && isChecked && isRadioButtons) {
+    if (!isMaxReached || isChecked || isRadioButtons) {
       onToggleChecked(!isChecked, { title, value, label });
     }
   };
