@@ -4,7 +4,7 @@ import { push } from 'connected-react-router';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import ClusterPicker from './ClusterPicker';
-import GenericModal from '../../modals/generic_modal';
+import GenericModal from '../../Modals/GenericModal';
 import InstallAppForm from './InstallAppForm';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';

@@ -15,7 +15,7 @@ import DocumentTitle from 'react-document-title';
 import GiantSwarm from 'giantswarm';
 import Home from './Home/Home';
 import LoadingOverlay from './UI/loading_overlay';
-import Modals from './modals/Modals';
+import Modals from './Modals/Modals';
 import Navigation from './UI/navigation';
 import Organizations from './Organizations/Organizations';
 import PropTypes from 'prop-types';

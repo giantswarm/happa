@@ -3,7 +3,7 @@ import LoadingOverlay from 'UI/loading_overlay';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReleaseComponentLabel from 'UI/release_component_label';
-import ReleaseDetailsModal from '../../modals/ReleaseDetailsModal';
+import ReleaseDetailsModal from '../../Modals/ReleaseDetailsModal';
 import styled from '@emotion/styled';
 
 const FlexRowDiv = styled.div`

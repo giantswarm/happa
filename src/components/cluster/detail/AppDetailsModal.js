@@ -12,7 +12,7 @@ import {
 import { truncate } from 'lib/helpers';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
-import GenericModal from '../../modals/GenericModal';
+import GenericModal from '../../Modals/GenericModal';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import YAMLFileUpload from './YamlFileUpload';
