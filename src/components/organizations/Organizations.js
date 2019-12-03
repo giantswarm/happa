@@ -1,8 +1,8 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Detail from './detail/';
-import List from './list/';
+import Detail from './detail';
+import List from './list';
 import PropTypes from 'prop-types';
 import React from 'react';
 

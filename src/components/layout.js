@@ -17,7 +17,7 @@ import Home from './home/Home';
 import LoadingOverlay from './UI/loading_overlay';
 import Modals from './modals/Modals';
 import Navigation from './UI/navigation';
-import Organizations from './organizations';
+import Organizations from './organizations/Organizations';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Users from './Users/Users';
