@@ -1,7 +1,7 @@
 import * as userActions from 'actions/userActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { push } from 'connected-react-router';
 import { validatePassword } from 'lib/password_validation';
 import Button from 'UI/button';

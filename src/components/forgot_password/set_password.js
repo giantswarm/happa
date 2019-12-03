@@ -5,7 +5,7 @@ import {
   FlashMessage,
   messageTTL,
   messageType,
-} from 'lib/flash_message';
+} from 'lib/flashMessage';
 import { connect } from 'react-redux';
 import { giantswarmLogin } from 'actions/userActions';
 import { Link } from 'react-router-dom';

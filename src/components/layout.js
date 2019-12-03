@@ -4,7 +4,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { catalogsLoad } from 'actions/catalogActions';
 import { clustersLoad } from 'actions/clusterActions';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { organizationSelect } from 'actions/organizationActions';
 import { organizationsLoad } from 'actions/organizationActions';
 import { push } from 'connected-react-router';

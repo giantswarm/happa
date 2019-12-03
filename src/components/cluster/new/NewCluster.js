@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { loadReleases } from 'actions/releaseActions';
 import { Providers } from 'shared/constants';
 import { Route, Switch } from 'react-router-dom';

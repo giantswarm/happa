@@ -4,7 +4,7 @@ import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
 import { clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { getNumberOfNodes } from 'utils/cluster_utils';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
 import { Providers } from 'shared/constants';
