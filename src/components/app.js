@@ -10,7 +10,7 @@ import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import React from 'react';
-import Routes from './routes';
+import Routes from './Routes';
 import theme from 'styles/theme';
 
 // CSS Imports
