@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import _ from 'underscore';
-import Passage from 'lib/passage_client';
+import Passage from 'lib/passageClient';
 
 // invitationsLoad
 // -----------------
