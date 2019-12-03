@@ -149,6 +149,25 @@ export function giantswarmLogin(email, password) {
       .catch(error => {
         console.error('Error trying to log in:', error);
 
+        console.error('Error refreshing user info', error);
+
+        if (error.status === 401) {
+          new FlashMessage(
+            'Please log in again, as your previously saved credentials appear to be invalid.',
+            messageType.WARNING,
+            messageTTL.MEDIUM
+          );
+
+          this.props.dispatch(push('/login'));
+        } else {
+          new FlashMessage(
+            'Something went wrong while trying to load user and organization information.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again in a moment or contact support: support@giantswarm.io'
+          );
+        }
+
         dispatch(loginError(error));
         dispatch(push('/login'));
 

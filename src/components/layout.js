@@ -22,6 +22,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Users from './users';
 
+import { batchedLayout } from 'actions/batchedActions';
+
 var defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 defaultClient.timeout = 10000;
@@ -34,34 +36,37 @@ class Layout extends React.Component {
       defaultClientAuth.apiKeyPrefix = this.props.user.auth.scheme;
       defaultClientAuth.apiKey = this.props.user.auth.token;
 
+      this.props.dispatch(batchedLayout());
+
       // This is the first component that loads,
       // and refreshUserInfo and the subsequent organisationsLoad() are the
       // first calls happa makes to the API.
-      this.props.actions
-        .refreshUserInfo()
-        .then(() => this.props.dispatch(organizationsLoad()))
-        .then(() => this.props.dispatch(clustersLoad()))
-        .then(() => this.props.dispatch(catalogsLoad()))
-        .catch(error => {
-          console.error('Error refreshing user info', error);
 
-          if (error.status === 401) {
-            new FlashMessage(
-              'Please log in again, as your previously saved credentials appear to be invalid.',
-              messageType.WARNING,
-              messageTTL.MEDIUM
-            );
+      // this.props.actions
+      //   .refreshUserInfo()
+      //   .then(() => this.props.dispatch(organizationsLoad()))
+      //   .then(() => this.props.dispatch(clustersLoad()))
+      //   .then(() => this.props.dispatch(catalogsLoad()))
+      //   .catch(error => {
+      //     console.error('Error refreshing user info', error);
 
-            this.props.dispatch(push('/login'));
-          } else {
-            new FlashMessage(
-              'Something went wrong while trying to load user and organization information.',
-              messageType.ERROR,
-              messageTTL.LONG,
-              'Please try again in a moment or contact support: support@giantswarm.io'
-            );
-          }
-        });
+      //     if (error.status === 401) {
+      //       new FlashMessage(
+      //         'Please log in again, as your previously saved credentials appear to be invalid.',
+      //         messageType.WARNING,
+      //         messageTTL.MEDIUM
+      //       );
+
+      //       this.props.dispatch(push('/login'));
+      //     } else {
+      //       new FlashMessage(
+      //         'Something went wrong while trying to load user and organization information.',
+      //         messageType.ERROR,
+      //         messageTTL.LONG,
+      //         'Please try again in a moment or contact support: support@giantswarm.io'
+      //       );
+      //     }
+      //   });
     } else {
       this.props.dispatch(push('/login'));
     }

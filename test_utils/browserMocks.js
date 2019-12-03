@@ -30,7 +30,7 @@ Object.defineProperty(window, 'localStorage', {
 // Adjust the console logging behaviour during test runs.
 global.console = {
   log: console.log,
-  error: console.error,
+  error: jest.fn(), // console.error,
   warn: jest.fn(), // warnings are surpressed.
   info: console.info,
   debug: console.debug,

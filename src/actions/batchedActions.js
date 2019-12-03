@@ -13,9 +13,13 @@ import { catalogsLoad } from './catalogActions';
 // first calls happa makes to the API.
 export function batchedLayout() {
   return async (dispatch, getState) => {
-    const users = await dispatch(refreshUserInfo());
-    const orgsLoad = await dispatch(organizationsLoad());
-    const clLoad = await dispatch(clustersLoad());
-    const catsLoad = await dispatch(catalogsLoad());
+    try {
+      await dispatch(refreshUserInfo());
+      await dispatch(organizationsLoad());
+      await dispatch(clustersLoad());
+      await dispatch(catalogsLoad());
+    } catch (err) {
+      console.error('Error in batchedLayout', err);
+    }
   };
 }
