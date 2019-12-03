@@ -16,7 +16,7 @@ import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import KeyPairs from './KeyPairs';
 import LoadingOverlay from 'UI/loading_overlay';
-import PageVisibilityTracker from 'lib/page_visibility_tracker';
+import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';

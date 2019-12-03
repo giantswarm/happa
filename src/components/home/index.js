@@ -10,7 +10,7 @@ import ClusterDashboardItem from './ClusterDashboardItem';
 import ClusterEmptyState from 'UI/cluster_empty_state';
 import DocumentTitle from 'react-document-title';
 import moment from 'moment';
-import PageVisibilityTracker from 'lib/page_visibility_tracker';
+import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
