@@ -13,11 +13,11 @@ import { parseErrorMessages } from '../auth/_parse_error_messages';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
 import { validatePassword } from 'lib/passwordValidation';
-import PasswordField from '../signup/PasswordField';
+import PasswordField from '../SignUp/PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import StatusMessage from '../signup/StatusMessage';
+import StatusMessage from '../SignUp/StatusMessage';
 
 class SetPassword extends React.Component {
   constructor(props) {

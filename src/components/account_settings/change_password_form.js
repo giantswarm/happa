@@ -2,7 +2,7 @@ import { Base64 } from 'js-base64';
 import { validatePassword } from 'lib/passwordValidation';
 import Button from 'UI/button';
 import GiantSwarm from 'giantswarm';
-import PasswordField from '../signup/PasswordField';
+import PasswordField from '../SignUp/PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
