@@ -8,7 +8,7 @@ import { Requester } from 'lib/patched_airbrake_requester';
 import { ThemeProvider } from 'emotion-theming';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
-import monkeyPatchGiantSwarmClient from 'lib/giantswarm_client_patcher';
+import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import React from 'react';
 import Routes from './routes';
 import theme from 'styles/theme';
