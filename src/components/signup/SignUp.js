@@ -9,7 +9,7 @@ import Passage from 'lib/passageClient';
 import PasswordField from './PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
-import StatusMessage from './status_message';
+import StatusMessage from './StatusMessage';
 import TermsOfService from './terms_of_service';
 
 // TODO: Figure out a way to make the test suite know about our standard

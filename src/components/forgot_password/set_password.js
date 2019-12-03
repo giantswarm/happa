@@ -17,7 +17,7 @@ import PasswordField from '../signup/PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import StatusMessage from '../signup/status_message';
+import StatusMessage from '../signup/StatusMessage';
 
 class SetPassword extends React.Component {
   constructor(props) {
