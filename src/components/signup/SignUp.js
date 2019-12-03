@@ -6,7 +6,7 @@ import { push } from 'connected-react-router';
 import { validatePassword } from 'lib/passwordValidation';
 import Button from 'UI/button';
 import Passage from 'lib/passageClient';
-import PasswordField from './password_field';
+import PasswordField from './PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
 import StatusMessage from './status_message';

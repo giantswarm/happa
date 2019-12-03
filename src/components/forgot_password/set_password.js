@@ -13,7 +13,7 @@ import { parseErrorMessages } from '../auth/_parse_error_messages';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
 import { validatePassword } from 'lib/passwordValidation';
-import PasswordField from '../signup/password_field';
+import PasswordField from '../signup/PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
