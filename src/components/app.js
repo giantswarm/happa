@@ -4,7 +4,7 @@ import { hot } from 'react-hot-loader';
 import { Notifier } from '@airbrake/browser';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
-import { Requester } from 'lib/patched_airbrake_requester';
+import { Requester } from 'lib/patchedAirbrakeRequester';
 import { ThemeProvider } from 'emotion-theming';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
