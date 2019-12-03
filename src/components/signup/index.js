@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { push } from 'connected-react-router';
-import { validatePassword } from 'lib/password_validation';
+import { validatePassword } from 'lib/passwordValidation';
 import Button from 'UI/button';
 import Passage from 'lib/passageClient';
 import PasswordField from './password_field';

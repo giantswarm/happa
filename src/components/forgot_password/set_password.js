@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import { parseErrorMessages } from '../auth/_parse_error_messages';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
-import { validatePassword } from 'lib/password_validation';
+import { validatePassword } from 'lib/passwordValidation';
 import PasswordField from '../signup/password_field';
 import PropTypes from 'prop-types';
 import React from 'react';
