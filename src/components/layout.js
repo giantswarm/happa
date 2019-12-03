@@ -13,7 +13,7 @@ import AccountSettings from './account_settings';
 import AppCatalog from './app_catalog/AppCatalog';
 import DocumentTitle from 'react-document-title';
 import GiantSwarm from 'giantswarm';
-import Home from './home/Home';
+import Home from './Home/Home';
 import LoadingOverlay from './UI/loading_overlay';
 import Modals from './modals/Modals';
 import Navigation from './UI/navigation';
