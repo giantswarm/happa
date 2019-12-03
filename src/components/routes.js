@@ -1,7 +1,7 @@
 import { Route, Switch } from 'react-router-dom';
 import AdminLogin from './auth/admin';
 import ForgotPassword from './forgot_password/index';
-import Layout from './layout';
+import Layout from './Layout';
 import Login from './auth/login';
 import Logout from './auth/logout';
 import OAuthCallback from './auth/oauth_callback';
