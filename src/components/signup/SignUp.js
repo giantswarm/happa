@@ -10,7 +10,7 @@ import PasswordField from './PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
 import StatusMessage from './StatusMessage';
-import TermsOfService from './terms_of_service';
+import TermsOfService from './TermsOfService';
 
 // TODO: Figure out a way to make the test suite know about our standard
 // 'window.config' object. Or change the way these config params are passed
