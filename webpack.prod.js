@@ -13,7 +13,6 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'production',
-  // not inlined to reduce bundle size
   devtool: 'source-map',
   stats: {
     colors: true,
@@ -21,7 +20,10 @@ module.exports = merge(common, {
   },
   optimization: {
     // Terser is a substitution for AgressiveMergingPlugin
-    minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})],
+    minimizer: [
+      new TerserPlugin({ sourceMap: true }),
+      new OptimizeCSSAssetsPlugin({}),
+    ],
   },
   plugins: [
     new MiniCssExtractPlugin({
