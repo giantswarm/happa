@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import _ from 'underscore';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
+import BootstrapModal from 'react-bootstrap/Modal';
 import Button from 'UI/button';
 import ComponentChangelog from 'UI/component_changelog';
 import diff from 'deep-diff';
@@ -158,10 +158,10 @@ class UpgradeClusterModal extends React.Component {
           </ul>
         </BootstrapModal.Body>
         <BootstrapModal.Footer>
-          <Button bsStyle='primary' onClick={this.inspectChanges}>
+          <Button variant='primary' onClick={this.inspectChanges}>
             Inspect Changes
           </Button>
-          <Button bsStyle='link' onClick={this.close}>
+          <Button variant='link' onClick={this.close}>
             Cancel
           </Button>
         </BootstrapModal.Footer>
@@ -181,13 +181,13 @@ class UpgradeClusterModal extends React.Component {
         <BootstrapModal.Body>{this.changedComponents()}</BootstrapModal.Body>
         <BootstrapModal.Footer>
           <Button
-            bsStyle='primary'
+            variant='primary'
             loading={this.state.loading}
             onClick={this.submit}
           >
             Start Upgrade
           </Button>
-          <Button bsStyle='link' onClick={this.close}>
+          <Button variant='link' onClick={this.close}>
             Cancel
           </Button>
         </BootstrapModal.Footer>

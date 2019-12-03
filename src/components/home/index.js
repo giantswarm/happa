@@ -89,7 +89,7 @@ class Home extends React.Component {
                 <Link
                   to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
                 >
-                  <Button bsStyle='primary' type='button'>
+                  <Button variant='primary' type='button'>
                     <i className='fa fa-add-circle' /> Launch New Cluster
                   </Button>
                 </Link>

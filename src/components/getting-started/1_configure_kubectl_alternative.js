@@ -225,7 +225,7 @@ class ConfigKubeCtl extends React.Component {
         ) : (
           <div className='create-key-pair'>
             <Button
-              bsStyle='primary'
+              variant='primary'
               loading={this.state.keyPair.generating}
               onClick={this.generateKeyPair}
             >

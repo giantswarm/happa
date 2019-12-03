@@ -631,8 +631,8 @@ class CreateRegularCluster extends React.Component {
 
             <FlexColumnDiv>
               <Button
-                bsSize='large'
-                bsStyle='primary'
+                size='lg'
+                variant='primary'
                 disabled={!this.valid()}
                 loading={this.state.submitting}
                 onClick={this.createCluster}

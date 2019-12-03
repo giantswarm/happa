@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Providers } from 'shared/constants';
 import { relativeDate } from 'lib/helpers.js';
 import BootstrapTable from 'react-bootstrap-table-next';
-import Button from 'react-bootstrap/lib/Button';
+import Button from 'react-bootstrap/Button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import cmp from 'semver-compare';
 import Credentials from './credentials.js';
@@ -154,7 +154,7 @@ class OrganizationDetail extends React.Component {
                 <Link
                   to={`/organizations/${this.props.organization.id}/clusters/new/`}
                 >
-                  <Button bsStyle='default'>
+                  <Button variant='default'>
                     <i className='fa fa-add-circle' /> Create Cluster
                   </Button>
                 </Link>
@@ -178,7 +178,7 @@ class OrganizationDetail extends React.Component {
                     keyField='email'
                   />
                 )}
-                <Button bsStyle='default' onClick={this.addMember}>
+                <Button variant='default' onClick={this.addMember}>
                   <i className='fa fa-add-circle' /> Add Member
                 </Button>
               </div>
@@ -234,7 +234,7 @@ function clusterActionsCellFormatter(cell, row) {
         '/organizations/' + this.props.organization.id + '/clusters/' + row.id
       }
     >
-      <Button bsStyle='default' type='button'>
+      <Button variant='default' type='button'>
         Details
       </Button>
     </Link>

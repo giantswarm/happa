@@ -1,8 +1,8 @@
 import _ from 'underscore';
 import moment from 'moment';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import React from 'react';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
+import Tooltip from 'react-bootstrap/Tooltip';
 import validate from 'validate.js';
 
 export function dedent(strings, ...values) {

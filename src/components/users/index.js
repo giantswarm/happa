@@ -10,17 +10,17 @@ import {
   usersLoad,
 } from 'actions/userActions';
 import _ from 'underscore';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
+import BootstrapModal from 'react-bootstrap/Modal';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import DocumentTitle from 'react-document-title';
 import moment from 'moment';
 import MultiSelect from '@khanacademy/react-multi-select';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 class Users extends React.Component {
   state = {
@@ -408,7 +408,7 @@ class Users extends React.Component {
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          bsStyle='primary'
+                          variant='primary'
                           loading={this.state.modal.loading}
                           onClick={this.confirmRemoveExpiration.bind(
                             this,
@@ -423,7 +423,7 @@ class Users extends React.Component {
 
                         {this.state.modal.loading ? null : (
                           <Button
-                            bsStyle='link'
+                            variant='link'
                             onClick={this.closeModal.bind(this)}
                           >
                             Cancel
@@ -455,7 +455,7 @@ class Users extends React.Component {
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          bsStyle='danger'
+                          variant='danger'
                           loading={this.state.modal.loading}
                           onClick={this.confirmDeleteUser.bind(
                             this,
@@ -470,7 +470,7 @@ class Users extends React.Component {
 
                         {this.state.modal.loading ? null : (
                           <Button
-                            bsStyle='link'
+                            variant='link'
                             onClick={this.closeModal.bind(this)}
                           >
                             Cancel
@@ -560,7 +560,7 @@ class Users extends React.Component {
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          bsStyle='primary'
+                          variant='primary'
                           disabled={!this.state.invitationForm.valid}
                           loading={this.state.modal.loading}
                           onClick={this.confirmInviteUser.bind(this)}
@@ -573,7 +573,7 @@ class Users extends React.Component {
 
                         {this.state.modal.loading ? null : (
                           <Button
-                            bsStyle='link'
+                            variant='link'
                             onClick={this.closeModal.bind(this)}
                           >
                             Cancel
@@ -642,7 +642,7 @@ class Users extends React.Component {
                       </BootstrapModal.Body>
                       <BootstrapModal.Footer>
                         <Button
-                          bsStyle='link'
+                          variant='link'
                           onClick={this.closeModal.bind(this)}
                         >
                           Close
@@ -685,7 +685,7 @@ function actionsCellFormatter(cell, row) {
   } else {
     return (
       <Button
-        bsStyle='default'
+        variant='default'
         onClick={this.deleteUser.bind(this, row.email)}
         type='button'
       >

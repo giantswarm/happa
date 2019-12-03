@@ -423,8 +423,8 @@ export class SignUp extends React.Component {
           <StatusMessage status={this.state.statusMessage} />
           {this.state.buttonText[this.state.currentStep] != '' ? (
             <Button
-              bsSize='large'
-              bsStyle='primary'
+              size='lg'
+              variant='primary'
               disabled={!this.state.advancable || this.state.submitting}
               loading={this.state.submitting}
               onClick={this.logIn}

@@ -1,4 +1,4 @@
-import BsButton from 'react-bootstrap/lib/Button';
+import BsButton from 'react-bootstrap/Button';
 import LoadingIndicator from './loading_indicator';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -7,7 +7,7 @@ import React from 'react';
 //
 // <Button
 //   type='button|submit|reset'
-//   bsStyle='primary|success|danger|info|warning|link'
+//   variant='primary|success|danger|info|warning|link'
 //   loading=true|false
 //   disabled=true|false
 //   onClick=function>
@@ -33,8 +33,8 @@ const Button = props => {
       )}
 
       <BsButton
-        bsSize={props.bsSize}
-        bsStyle={props.bsStyle}
+        size={props.size}
+        variant={props.variant}
         disabled={props.disabled || props.loading}
         onClick={props.onClick}
         type={props.type}
@@ -53,8 +53,8 @@ const Button = props => {
 
 Button.propTypes = {
   type: PropTypes.string,
-  bsStyle: PropTypes.string,
-  bsSize: PropTypes.string,
+  variant: PropTypes.string,
+  size: PropTypes.string,
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   loading: PropTypes.bool,

@@ -525,8 +525,8 @@ class CreateNodePoolsCluster extends Component {
 
             <FlexRowDiv>
               <Button
-                bsSize='large'
-                bsStyle='primary'
+                size='lg'
+                variant='primary'
                 disabled={!this.isValid()}
                 loading={submitting}
                 onClick={this.createCluster}
@@ -537,8 +537,8 @@ class CreateNodePoolsCluster extends Component {
               {/* We want to hide cancel button when the Create NP button has been clicked */}
               {!submitting && (
                 <Button
-                  bsSize='large'
-                  bsStyle='default'
+                  size='lg'
+                  variant='default'
                   loading={submitting}
                   onClick={this.props.closeForm}
                   style={{ background: 'red' }}

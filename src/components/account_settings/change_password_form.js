@@ -213,7 +213,7 @@ class ChangePassword extends React.Component {
             <div className='button-area'>
               <SlideTransition in={this.state.buttonVisible}>
                 <Button
-                  bsStyle='primary'
+                  variant='primary'
                   disabled={!this.state.formValid}
                   loading={this.state.submitting}
                   loadingMessage='Saving...'

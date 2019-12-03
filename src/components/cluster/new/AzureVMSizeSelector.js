@@ -1,4 +1,4 @@
-import BootstrapModal from 'react-bootstrap/lib/Modal';
+import BootstrapModal from 'react-bootstrap/Modal';
 import Button from 'UI/button';
 import InputField from 'shared/input_field';
 import PropTypes from 'prop-types';
@@ -178,11 +178,11 @@ class AzureVMSizeSelector extends React.Component {
             </table>
           </BootstrapModal.Body>
           <BootstrapModal.Footer>
-            <Button bsStyle='primary' onClick={this.selectVMSize} type='submit'>
+            <Button variant='primary' onClick={this.selectVMSize} type='submit'>
               Select VM Size
             </Button>
 
-            <Button bsStyle='link' onClick={this.closeModal}>
+            <Button variant='link' onClick={this.closeModal}>
               Cancel
             </Button>
           </BootstrapModal.Footer>

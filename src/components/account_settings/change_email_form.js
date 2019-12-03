@@ -137,7 +137,7 @@ class ChangeEmailForm extends React.Component {
           <div className='button-area'>
             <SlideTransition in={this.state.isButtonVisible}>
               <Button
-                bsStyle='primary'
+                variant='primary'
                 disabled={!this.state.isValid}
                 loading={this.state.isSubmitting}
                 loadingMessage='Saving...'

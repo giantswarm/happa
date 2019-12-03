@@ -3,7 +3,7 @@ import {
   organizationCreate,
   organizationDelete,
 } from 'actions/organizationActions';
-import Button from 'react-bootstrap/lib/Button';
+import Button from 'react-bootstrap/Button';
 import DocumentTitle from 'react-document-title';
 import EmptyStateDisplay from 'UI/empty_state_display';
 import OrganizationList from 'UI/organization_list';
@@ -46,7 +46,7 @@ class OrganizationListWrapper extends React.Component {
               organizations={this.props.organizations}
             />
           </EmptyStateDisplay>
-          <Button bsStyle='default' onClick={this.createOrganization}>
+          <Button variant='default' onClick={this.createOrganization}>
             <i className='fa fa-add-circle' /> Create New Organization
           </Button>
         </>

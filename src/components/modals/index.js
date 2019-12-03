@@ -9,7 +9,7 @@ import {
   organizationDeleteConfirmed,
   organizationRemoveMemberConfirmed,
 } from 'actions/organizationActions';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
+import BootstrapModal from 'react-bootstrap/Modal';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import EmailField from 'shared/email_field';
@@ -105,7 +105,7 @@ class Modals extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                bsStyle='danger'
+                variant='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
                 onClick={this.deleteOrganisation.bind(
@@ -120,7 +120,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button variant='link' onClick={this.close.bind(this)}>
                   Cancel
                 </Button>
               )}
@@ -153,7 +153,7 @@ class Modals extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                bsStyle='primary'
+                variant='primary'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
                 onClick={this.createOrganisation.bind(this)}
@@ -165,7 +165,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button variant='link' onClick={this.close.bind(this)}>
                   Cancel
                 </Button>
               )}
@@ -203,7 +203,7 @@ class Modals extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                bsStyle='primary'
+                variant='primary'
                 disabled={!this.state.emailValid}
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
@@ -216,7 +216,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button variant='link' onClick={this.close.bind(this)}>
                   Cancel
                 </Button>
               )}
@@ -242,7 +242,7 @@ class Modals extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                bsStyle='danger'
+                variant='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
                 onClick={this.removeMember.bind(this)}
@@ -254,7 +254,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button variant='link' onClick={this.close.bind(this)}>
                   Cancel
                 </Button>
               )}
@@ -287,7 +287,7 @@ class Modals extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                bsStyle='danger'
+                variant='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
                 onClick={this.deleteClusterConfirmed.bind(this, cluster)}
@@ -299,7 +299,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button variant='link' onClick={this.close.bind(this)}>
                   Cancel
                 </Button>
               )}
@@ -331,7 +331,7 @@ class Modals extends React.Component {
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
-                bsStyle='danger'
+                variant='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
                 onClick={() =>
@@ -347,7 +347,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button variant='link' onClick={this.close.bind(this)}>
                   Cancel
                 </Button>
               )}

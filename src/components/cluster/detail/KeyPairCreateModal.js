@@ -1,6 +1,6 @@
 import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
 import { Providers } from 'shared/constants';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
+import BootstrapModal from 'react-bootstrap/Modal';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';
 import ExpiryHoursPicker from './ExpiryHoursPicker';
@@ -184,7 +184,7 @@ const KeyPairCreateModal = props => {
 
   return (
     <React.Fragment>
-      <Button bsStyle='default' className='small' onClick={show}>
+      <Button variant='default' className='small' onClick={show}>
         <i className='fa fa-add-circle' /> Create Key Pair and Kubeconfig
       </Button>
       {(() => {
@@ -290,7 +290,7 @@ const KeyPairCreateModal = props => {
                   </BootstrapModal.Body>
                   <BootstrapModal.Footer>
                     <Button
-                      bsStyle='primary'
+                      variant='primary'
                       disabled={cnPrefixError !== null}
                       loading={modal.loading}
                       onClick={confirmAddKeyPair}
@@ -300,7 +300,7 @@ const KeyPairCreateModal = props => {
                     </Button>
 
                     {modal.loading ? null : (
-                      <Button bsStyle='link' onClick={close}>
+                      <Button variant='link' onClick={close}>
                         Cancel
                       </Button>
                     )}
@@ -338,13 +338,13 @@ const KeyPairCreateModal = props => {
                   </form>
 
                   {copied ? (
-                    <Button bsStyle='default' onClick={copyKubeConfig}>
+                    <Button variant='default' onClick={copyKubeConfig}>
                       &nbsp;&nbsp;
                       <i aria-hidden='true' className='fa fa-done' />
                       &nbsp;&nbsp;
                     </Button>
                   ) : (
-                    <Button bsStyle='default' onClick={copyKubeConfig}>
+                    <Button variant='default' onClick={copyKubeConfig}>
                       Copy
                     </Button>
                   )}
@@ -352,7 +352,7 @@ const KeyPairCreateModal = props => {
                   {downloadAsFileLink()}
                 </BootstrapModal.Body>
                 <BootstrapModal.Footer>
-                  <Button bsStyle='link' onClick={close}>
+                  <Button variant='link' onClick={close}>
                     Close
                   </Button>
                 </BootstrapModal.Footer>
@@ -381,7 +381,7 @@ const KeyPairCreateModal = props => {
                   </p>
                 </BootstrapModal.Body>
                 <BootstrapModal.Footer>
-                  <Button bsStyle='link' onClick={close}>
+                  <Button variant='link' onClick={close}>
                     Close
                   </Button>
                 </BootstrapModal.Footer>

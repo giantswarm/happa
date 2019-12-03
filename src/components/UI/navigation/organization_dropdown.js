@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import _ from 'underscore';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
@@ -124,13 +124,13 @@ class OrganizationDropdown extends React.Component {
               </span>
             }
           >
-            <MenuItem
-              componentClass={NavLink}
+            <Dropdown.Item
+              as={NavLink}
               href='/organizations/'
               to='/organizations/'
             >
               Manage organizations
-            </MenuItem>
+            </Dropdown.Item>
           </DropdownButton>
         ) : (
           <DropdownButton
@@ -143,32 +143,32 @@ class OrganizationDropdown extends React.Component {
               </span>
             }
           >
-            <MenuItem
-              componentClass={NavLink}
+            <Dropdown.Item
+              as={NavLink}
               href='/organizations/'
               to={'/organizations/' + this.props.selectedOrganization}
             >
               Details for {this.props.selectedOrganization}
-            </MenuItem>
-            <MenuItem divider />
-            <MenuItem
-              componentClass={NavLink}
+            </Dropdown.Item>
+            <Dropdown.Item divider />
+            <Dropdown.Item
+              as={NavLink}
               href='/organizations/'
               to='/organizations/'
             >
               Manage organizations
-            </MenuItem>
-            <MenuItem divider />
-            <MenuItem header>Switch Organization</MenuItem>
+            </Dropdown.Item>
+            <Dropdown.Item divider />
+            <Dropdown.Item header>Switch Organization</Dropdown.Item>
             {_.sortBy(this.props.organizations.items, 'id').map(org => {
               return (
-                <MenuItem
+                <Dropdown.Item
                   eventKey={org.id}
                   key={org.id}
                   onSelect={this.props.onSelectOrganization}
                 >
                   {org.id}
-                </MenuItem>
+                </Dropdown.Item>
               );
             })}
           </DropdownButton>

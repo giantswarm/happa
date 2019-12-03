@@ -1,4 +1,4 @@
-import BootstrapModal from 'react-bootstrap/lib/Modal';
+import BootstrapModal from 'react-bootstrap/Modal';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -18,7 +18,7 @@ const GenericModal = props => {
         {props.footer ? (
           props.footer
         ) : (
-          <Button bsStyle='link' onClick={props.onClose}>
+          <Button variant='link' onClick={props.onClose}>
             Close
           </Button>
         )}

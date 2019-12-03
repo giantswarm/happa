@@ -131,7 +131,7 @@ class Login extends React.Component {
               </div>
 
               <Button
-                bsStyle='primary'
+                variant='primary'
                 loading={this.state.authenticating}
                 onClick={this.logIn}
                 type='submit'

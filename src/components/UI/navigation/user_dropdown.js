@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import Gravatar from 'react-gravatar';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
+import Dropdown from 'react-bootstrap/Dropdown';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
@@ -101,19 +101,19 @@ class UserDropdown extends React.Component {
           }
         >
           {this.props.user.auth.scheme === 'giantswarm' ? (
-            <MenuItem
-              componentClass={NavLink}
+            <Dropdown.Item
+              as={NavLink}
               href='/account-settings/'
               to='/account-settings/'
             >
               Account Settings
-            </MenuItem>
+            </Dropdown.Item>
           ) : (
             undefined
           )}
-          <MenuItem componentClass={NavLink} href='/logout' to='/logout'>
+          <Dropdown.Item as={NavLink} href='/logout' to='/logout'>
             Logout
-          </MenuItem>
+          </Dropdown.Item>
         </DropdownButton>
       </Wrapper>
     );

@@ -17,7 +17,7 @@ import CredentialInfoRow from './CredentialInfoRow';
 import moment from 'moment';
 import NodePool from './NodePool';
 import NodesRunning from './NodesRunning';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import PortMappingsRow from './PortMappingsRow';
 import produce from 'immer';
 import PropTypes from 'prop-types';
@@ -26,7 +26,7 @@ import ReactTimeout from 'react-timeout';
 import RegionAndVersions from './RegionAndVersions';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import styled from '@emotion/styled';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 export const Upgrade = styled.div`
   color: #ce990f;
@@ -559,8 +559,8 @@ class V5ClusterDetailTable extends React.Component {
                 />
                 <FlexWrapperDiv>
                   <Button
-                    bsSize='large'
-                    bsStyle='primary'
+                    size='lg'
+                    variant='primary'
                     disabled={!nodePoolForm.isValid}
                     loading={nodePoolForm.isSubmitting}
                     onClick={this.createNodePool}
@@ -571,8 +571,8 @@ class V5ClusterDetailTable extends React.Component {
                   {/* We want to hide cancel button when the Create NP button has been clicked */}
                   {!nodePoolForm.isSubmitting && (
                     <Button
-                      bsSize='large'
-                      bsStyle='default'
+                      size='lg'
+                      variant='default'
                       loading={nodePoolForm.isSubmitting}
                       onClick={this.toggleAddNodePoolForm}
                       style={{ background: 'red' }}

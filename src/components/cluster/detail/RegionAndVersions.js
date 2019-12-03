@@ -1,13 +1,13 @@
 import { Code, Dot } from 'styles';
 import { relativeDate } from 'lib/helpers.js';
 import { Upgrade } from './V5ClusterDetailTable';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import RefreshableLabel from 'UI/RefreshableLabel';
 import ReleaseDetailsModal from 'modals/release_details_modal';
 import styled from '@emotion/styled';
-import Tooltip from 'react-bootstrap/lib/Tooltip';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const ReleaseDetail = styled.span`
   text-decoration: underline;

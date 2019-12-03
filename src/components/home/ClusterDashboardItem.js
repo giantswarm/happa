@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
 import Button from 'UI/button';
-import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import moment from 'moment';
 import PropTypes from 'prop-types';

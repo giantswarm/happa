@@ -8,9 +8,9 @@ import { Providers } from 'shared/constants';
 import { spinner } from 'images';
 import AWSAccountID from 'UI/aws_account_id';
 import Button from 'UI/button';
-import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import FormControl from 'react-bootstrap/lib/FormControl';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
+import FormLabel from 'react-bootstrap/FormLabel';
+import FormControl from 'react-bootstrap/FormControl';
+import FormGroup from 'react-bootstrap/FormGroup';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -105,7 +105,7 @@ class CredentialsDisplay extends React.Component {
       if (this.props.credentials.items.length === 0) {
         let button = (
           <Button
-            bsStyle='default'
+            variant='default'
             className='small'
             onClick={this.props.onShowForm}
           >
@@ -350,7 +350,7 @@ class CredentialsForm extends React.Component {
           </p>
 
           <FormGroup controlId='azureSubscriptionID'>
-            <ControlLabel>Azure Subscription ID</ControlLabel>
+            <FormLabel>Azure Subscription ID</FormLabel>
             <FormControl
               name='azureSubscriptionID'
               onChange={this.handleChange}
@@ -361,7 +361,7 @@ class CredentialsForm extends React.Component {
           </FormGroup>
 
           <FormGroup controlId='azureTenantID'>
-            <ControlLabel>Azure Tenant ID</ControlLabel>
+            <FormLabel>Azure Tenant ID</FormLabel>
             <FormControl
               name='azureTenantID'
               onChange={this.handleChange}
@@ -372,7 +372,7 @@ class CredentialsForm extends React.Component {
           </FormGroup>
 
           <FormGroup controlId='azureClientID'>
-            <ControlLabel>Azure Client ID</ControlLabel>
+            <FormLabel>Azure Client ID</FormLabel>
             <FormControl
               name='azureClientID'
               onChange={this.handleChange}
@@ -383,7 +383,7 @@ class CredentialsForm extends React.Component {
           </FormGroup>
 
           <FormGroup controlId='azureClientSecret'>
-            <ControlLabel>Azure Client Secret</ControlLabel>
+            <FormLabel>Azure Client Secret</FormLabel>
             <FormControl
               name='azureClientSecret'
               onChange={this.handleChange}
@@ -394,7 +394,7 @@ class CredentialsForm extends React.Component {
           </FormGroup>
 
           <FormGroup controlId='azureClientSecretAgain'>
-            <ControlLabel>Azure Client Secret (again)</ControlLabel>
+            <FormLabel>Azure Client Secret (again)</FormLabel>
             <FormControl
               name='azureClientSecretAgain'
               onChange={this.handleChange}
@@ -405,7 +405,7 @@ class CredentialsForm extends React.Component {
           </FormGroup>
 
           <Button
-            bsStyle='primary'
+            variant='primary'
             disabled={!this.state.isValid}
             onClick={this.handleSubmit}
           >
@@ -437,7 +437,7 @@ class CredentialsForm extends React.Component {
           </p>
 
           <FormGroup controlId='awsAdminRoleARN'>
-            <ControlLabel>AWS admin role ARN (GiantSwarmAdmin)</ControlLabel>
+            <FormLabel>AWS admin role ARN (GiantSwarmAdmin)</FormLabel>
             <FormControl
               name='awsAdminRoleARN'
               onChange={this.handleChange}
@@ -450,9 +450,7 @@ class CredentialsForm extends React.Component {
           </FormGroup>
 
           <FormGroup controlId='awsOperatorRoleARN'>
-            <ControlLabel>
-              AWS operator role ARN (GiantSwarmAWSOperator)
-            </ControlLabel>
+            <FormLabel>AWS operator role ARN (GiantSwarmAWSOperator)</FormLabel>
             <FormControl
               name='awsOperatorRoleARN'
               onChange={this.handleChange}
@@ -467,7 +465,7 @@ class CredentialsForm extends React.Component {
           </FormGroup>
 
           <Button
-            bsStyle='primary'
+            variant='primary'
             disabled={!this.state.isValid}
             onClick={this.handleSubmit}
           >

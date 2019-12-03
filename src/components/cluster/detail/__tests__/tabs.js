@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 import { render } from '@testing-library/react';
 import React from 'react';
-import Tab from 'react-bootstrap/lib/Tab';
+import Tab from 'react-bootstrap/Tab';
 
 import Tabs from '../Tabs';
 
@@ -27,18 +27,18 @@ it('renders only the first tab', () => {
     div
   );
 
-  expect(container.querySelector('#tabs-pane-1')).toHaveAttribute(
+  expect(container.querySelector('#tabs-tab-1')).toHaveAttribute(
     'class',
-    'tab-pane active'
+    'nav-item nav-link active'
   );
 
-  expect(container.querySelector('#tabs-pane-2')).toHaveAttribute(
+  expect(container.querySelector('#tabs-tab-2')).toHaveAttribute(
     'class',
-    'tab-pane'
+    'nav-item nav-link'
   );
 
-  expect(container.querySelector('#tabs-pane-3')).toHaveAttribute(
+  expect(container.querySelector('#tabs-tab-3')).toHaveAttribute(
     'class',
-    'tab-pane'
+    'nav-item nav-link'
   );
 });

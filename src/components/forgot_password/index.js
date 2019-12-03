@@ -137,7 +137,7 @@ class ForgotPassword extends React.Component {
             />
           </div>
           <Button
-            bsStyle='primary'
+            variant='primary'
             loading={this.state.submitting}
             onClick={this.submit}
             type='submit'

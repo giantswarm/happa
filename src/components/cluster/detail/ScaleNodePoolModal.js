@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
 import { Providers } from 'shared/constants';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
+import BootstrapModal from 'react-bootstrap/Modal';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import NodeCountSelector from 'shared/NodeCountSelector';
@@ -298,7 +298,7 @@ class ScaleNodePoolModal extends React.Component {
           undefined
         ) : (
           <Button
-            bsStyle={this.buttonProperties().style}
+            variant={this.buttonProperties().style}
             disabled={this.buttonProperties().disabled}
             loading={loading}
             loadingPosition='left'
@@ -308,7 +308,7 @@ class ScaleNodePoolModal extends React.Component {
             {this.buttonProperties().title}
           </Button>
         )}
-        <Button bsStyle='link' disabled={loading} onClick={this.close}>
+        <Button variant='link' disabled={loading} onClick={this.close}>
           Cancel
         </Button>
       </BootstrapModal.Footer>
@@ -327,10 +327,10 @@ class ScaleNodePoolModal extends React.Component {
       );
       footer = (
         <BootstrapModal.Footer>
-          <Button bsStyle='link' disabled={loading} onClick={this.back}>
+          <Button variant='link' disabled={loading} onClick={this.back}>
             Back
           </Button>
-          <Button bsStyle='link' disabled={loading} onClick={this.close}>
+          <Button variant='link' disabled={loading} onClick={this.close}>
             Cancel
           </Button>
         </BootstrapModal.Footer>

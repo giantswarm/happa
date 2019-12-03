@@ -247,7 +247,7 @@ const AppDetailsModal = props => {
                       )}
                     />
 
-                    <Button bsStyle='danger' onClick={showDeleteAppConfigPane}>
+                    <Button variant='danger' onClick={showDeleteAppConfigPane}>
                       <i className='fa fa-delete'></i> Delete
                     </Button>
                   </div>
@@ -293,7 +293,7 @@ const AppDetailsModal = props => {
                       )}
                     />
 
-                    <Button bsStyle='danger' onClick={showDeleteAppSecretPane}>
+                    <Button variant='danger' onClick={showDeleteAppSecretPane}>
                       <i className='fa fa-delete'></i> Delete
                     </Button>
                   </div>
@@ -323,7 +323,7 @@ const AppDetailsModal = props => {
             <div className='labelvaluepair--label delete-app'>
               Delete This App
             </div>
-            <Button bsStyle='danger' onClick={showDeleteAppPane}>
+            <Button variant='danger' onClick={showDeleteAppPane}>
               <i className='fa fa-delete'></i>Delete App
             </Button>
           </div>
@@ -338,7 +338,7 @@ const AppDetailsModal = props => {
         footer={
           <div>
             <Button
-              bsStyle='danger'
+              variant='danger'
               onClick={dispatchDeleteAppConfig.bind(
                 this,
                 props.app,
@@ -348,7 +348,7 @@ const AppDetailsModal = props => {
             >
               <i className='fa fa-delete'></i>Delete ConfigMap
             </Button>
-            <Button bsStyle='link' onClick={showInitialPane}>
+            <Button variant='link' onClick={showInitialPane}>
               Cancel
             </Button>
           </div>
@@ -380,7 +380,7 @@ const AppDetailsModal = props => {
         footer={
           <div>
             <Button
-              bsStyle='danger'
+              variant='danger'
               onClick={dispatchDeleteAppSecret.bind(
                 this,
                 props.app,
@@ -390,7 +390,7 @@ const AppDetailsModal = props => {
             >
               <i className='fa fa-delete'></i>Delete Secret
             </Button>
-            <Button bsStyle='link' onClick={showInitialPane}>
+            <Button variant='link' onClick={showInitialPane}>
               Cancel
             </Button>
           </div>
@@ -422,7 +422,7 @@ const AppDetailsModal = props => {
         footer={
           <div>
             <Button
-              bsStyle='danger'
+              variant='danger'
               onClick={dispatchDeleteApp.bind(
                 this,
                 props.app,
@@ -432,7 +432,7 @@ const AppDetailsModal = props => {
             >
               <i className='fa fa-delete'></i>Delete App
             </Button>
-            <Button bsStyle='link' onClick={showInitialPane}>
+            <Button variant='link' onClick={showInitialPane}>
               Cancel
             </Button>
           </div>

@@ -22,7 +22,7 @@ import React from 'react';
 import ReactTimeout from 'react-timeout';
 import ScaleClusterModal from './ScaleClusterModal';
 import styled from '@emotion/styled';
-import Tab from 'react-bootstrap/lib/Tab';
+import Tab from 'react-bootstrap/Tab';
 import Tabs from './Tabs';
 import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
@@ -322,7 +322,7 @@ class ClusterDetailView extends React.Component {
                             is no way to undo this action.
                           </p>
                           <Button
-                            bsStyle='danger'
+                            variant='danger'
                             onClick={this.showDeleteClusterModal.bind(
                               this,
                               cluster

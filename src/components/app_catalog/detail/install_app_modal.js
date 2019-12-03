@@ -181,7 +181,7 @@ const InstallAppModal = props => {
 
   return (
     <React.Fragment>
-      <Button bsStyle='primary' onClick={openModal}>
+      <Button variant='primary' onClick={openModal}>
         Configure &amp; Install
       </Button>
       {(() => {
@@ -192,10 +192,10 @@ const InstallAppModal = props => {
                 {...props}
                 footer={
                   <React.Fragment>
-                    <Button bsStyle='primary' onClick={next}>
+                    <Button variant='primary' onClick={next}>
                       Next
                     </Button>
-                    <Button bsStyle='link' onClick={onClose}>
+                    <Button variant='link' onClick={onClose}>
                       Cancel
                     </Button>
                   </React.Fragment>
@@ -221,17 +221,17 @@ const InstallAppModal = props => {
                 footer={
                   <React.Fragment>
                     <Button
-                      bsStyle='primary'
+                      variant='primary'
                       disabled={anyValidationErrors()}
                       loading={loading}
                       onClick={createApp}
                     >
                       Install App
                     </Button>
-                    <Button bsStyle='link' onClick={previous}>
+                    <Button variant='link' onClick={previous}>
                       Pick a different Cluster
                     </Button>
-                    <Button bsStyle='link' onClick={onClose}>
+                    <Button variant='link' onClick={onClose}>
                       Cancel
                     </Button>
                   </React.Fragment>
