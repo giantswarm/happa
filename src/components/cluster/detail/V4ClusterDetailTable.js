@@ -1,6 +1,6 @@
 import { Code, FlexRowWithTwoBlocksOnEdges } from 'styles';
 import { CopyToClipboardDiv } from './V5ClusterDetailTable';
-import { getCpusTotal, getMemoryTotal } from 'utils/cluster_utils';
+import { getCpusTotal, getMemoryTotal } from 'utils/clusterUtils';
 import { Providers } from 'shared/constants';
 import Button from 'UI/button';
 import copy from 'copy-to-clipboard';

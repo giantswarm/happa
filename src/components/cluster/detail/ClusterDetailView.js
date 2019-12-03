@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { getNumberOfNodes } from 'utils/cluster_utils';
+import { getNumberOfNodes } from 'utils/clusterUtils';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
 import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';

@@ -3,7 +3,7 @@ import {
   getCpusTotalNodePools,
   getMemoryTotalNodePools,
   getNumberOfNodePoolsNodes,
-} from 'utils/cluster_utils';
+} from 'utils/clusterUtils';
 import { Code, FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
