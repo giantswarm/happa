@@ -79,7 +79,7 @@ afterAll(() => {
 // and hence the warning because we are transforming an array into an array
 it('renders all the v4 AWS cluster data correctly without nodes ready', async () => {
   const div = document.createElement('div');
-  const { getByText, getAllByText, getByTestId, debug } = renderRouteWithStore(
+  const { getByText, getAllByText, getByTestId } = renderRouteWithStore(
     ROUTE,
     div,
     {}
