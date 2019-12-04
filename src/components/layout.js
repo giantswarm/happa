@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import AccountSettings from './account_settings';
-import AppCatalog from './app_catalog';
+import AppCatalog from './app_catalog/AppCatalog';
 import DocumentTitle from 'react-document-title';
 import GiantSwarm from 'giantswarm';
 import Home from './home';
