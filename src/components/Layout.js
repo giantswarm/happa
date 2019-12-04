@@ -9,7 +9,7 @@ import { organizationSelect } from 'actions/organizationActions';
 import { organizationsLoad } from 'actions/organizationActions';
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import AccountSettings from './account_settings';
+import AccountSettings from './account_settings/AccountSettings';
 import AppCatalog from './app_catalog/AppCatalog';
 import DocumentTitle from 'react-document-title';
 import GiantSwarm from 'giantswarm';
