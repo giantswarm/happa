@@ -1,6 +1,6 @@
 import { Route, Switch } from 'react-router-dom';
 import AdminLogin from './auth/admin';
-import ForgotPassword from './forgot_password/index';
+import ForgotPassword from './forgot_password/ForgotPassword';
 import Layout from './Layout';
 import Login from './auth/login';
 import Logout from './auth/logout';
