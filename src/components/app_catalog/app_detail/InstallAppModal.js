@@ -180,7 +180,7 @@ const InstallAppModal = props => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <Button bsStyle='primary' onClick={openModal}>
         Configure &amp; Install
       </Button>
@@ -191,14 +191,14 @@ const InstallAppModal = props => {
               <GenericModal
                 {...props}
                 footer={
-                  <React.Fragment>
+                  <>
                     <Button bsStyle='primary' onClick={next}>
                       Next
                     </Button>
                     <Button bsStyle='link' onClick={onClose}>
                       Cancel
                     </Button>
-                  </React.Fragment>
+                  </>
                 }
                 onClose={onClose}
                 title={`Install ${props.app.name}: Pick a cluster`}
@@ -219,7 +219,7 @@ const InstallAppModal = props => {
               <GenericModal
                 {...props}
                 footer={
-                  <React.Fragment>
+                  <>
                     <Button
                       bsStyle='primary'
                       disabled={anyValidationErrors()}
@@ -234,14 +234,14 @@ const InstallAppModal = props => {
                     <Button bsStyle='link' onClick={onClose}>
                       Cancel
                     </Button>
-                  </React.Fragment>
+                  </>
                 }
                 onClose={onClose}
                 title={
-                  <React.Fragment>
+                  <>
                     {`Install ${props.app.name} on`}{' '}
                     <ClusterIDLabel clusterID={clusterID} />
-                  </React.Fragment>
+                  </>
                 }
                 visible={visible}
               >
@@ -260,7 +260,7 @@ const InstallAppModal = props => {
             );
         }
       })()}
-    </React.Fragment>
+    </>
   );
 };
 
