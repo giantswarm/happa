@@ -33,8 +33,9 @@ const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
 
 NodesRunning.propTypes = {
   workerNodesRunning: PropTypes.number,
-  RAM: PropTypes.number,
-  CPUs: PropTypes.number,
+  // TODO Change this when cluster_utils functions are refactored
+  RAM: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  CPUs: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   nodePools: PropTypes.array,
 };
 
