@@ -8,15 +8,22 @@ import * as organizationActions from './organizationActions';
 import * as clusterActions from './clusterActions';
 import * as catalogActions from './catalogActions';
 
-export function batchedLayout() {
-  return async (dispatch, getState) => {
-    try {
-      await dispatch(userActions.refreshUserInfo());
-      await dispatch(organizationActions.organizationsLoad());
-      await dispatch(clusterActions.clustersLoad());
-      await dispatch(catalogActions.catalogsLoad());
-    } catch (err) {
-      console.error('Error in batchedLayout', err);
-    }
-  };
-}
+export const batchedLayout = () => async dispatch => {
+  try {
+    await dispatch(userActions.refreshUserInfo());
+    await dispatch(organizationActions.organizationsLoad());
+    dispatch(catalogActions.catalogsLoad());
+    dispatch(clusterActions.clustersLoad());
+  } catch (err) {
+    console.error('Error in batchedLayout', err);
+  }
+};
+
+export const batchedOrganizationSelect = orgId => async dispatch => {
+  try {
+    await dispatch(organizationActions.organizationSelect(orgId));
+    dispatch(clusterActions.clustersLoad());
+  } catch (err) {
+    console.error('Error in batchedOrganizationSelect', err);
+  }
+};

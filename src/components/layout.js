@@ -1,13 +1,11 @@
 import * as UserActions from 'actions/userActions';
-import { batchedLayout } from 'actions/batchedActions';
+import {
+  batchedLayout,
+  batchedOrganizationSelect,
+} from 'actions/batchedActions';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { catalogsLoad } from 'actions/catalogActions';
-import { clustersLoad } from 'actions/clusterActions';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
-import { organizationSelect } from 'actions/organizationActions';
-import { organizationsLoad } from 'actions/organizationActions';
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import AccountSettings from './account_settings';
@@ -46,7 +44,7 @@ class Layout extends React.Component {
   selectOrganization = orgId => {
     const { dispatch } = this.props;
 
-    dispatch(organizationSelect(orgId));
+    dispatch(batchedOrganizationSelect(orgId));
     dispatch(push('/'));
   };
 
