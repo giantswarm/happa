@@ -23,50 +23,46 @@ class CatalogList extends React.Component {
               resources yet for your installation. Please come back later!
             </p>
           ) : (
-            <>
-              <div className='app-catalog--repos'>
-                {Object.keys(this.props.catalogs.items).map(catalogName => {
-                  return (
-                    <div
-                      className='app-catalog--repo'
-                      key={this.props.catalogs.items[catalogName].metadata.name}
-                    >
-                      <img
-                        height='100px'
-                        src={
-                          this.props.catalogs.items[catalogName].spec.logoURL
-                        }
-                        width='100px'
-                      />
+            <div className='app-catalog--repos'>
+              {Object.keys(this.props.catalogs.items).map(catalogName => {
+                return (
+                  <div
+                    className='app-catalog--repo'
+                    key={this.props.catalogs.items[catalogName].metadata.name}
+                  >
+                    <img
+                      height='100px'
+                      src={this.props.catalogs.items[catalogName].spec.logoURL}
+                      width='100px'
+                    />
 
-                      <div className='app-catalog--description'>
-                        <h3>
-                          {this.props.catalogs.items[catalogName].spec.title}
-                        </h3>
-                        <CatalogTypeLabel
-                          catalogType={
-                            this.props.catalogs.items[catalogName].metadata
-                              .labels['application.giantswarm.io/catalog-type']
-                          }
-                        />
-                        <ReactMarkdown>
-                          {
-                            this.props.catalogs.items[catalogName].spec
-                              .description
-                          }
-                        </ReactMarkdown>
-                        <Link
-                          className='app-catalog--open-catalog'
-                          to={'/app-catalogs/' + catalogName + '/'}
-                        >
-                          <Button>Browse Apps</Button>
-                        </Link>
-                      </div>
+                    <div className='app-catalog--description'>
+                      <h3>
+                        {this.props.catalogs.items[catalogName].spec.title}
+                      </h3>
+                      <CatalogTypeLabel
+                        catalogType={
+                          this.props.catalogs.items[catalogName].metadata
+                            .labels['application.giantswarm.io/catalog-type']
+                        }
+                      />
+                      <ReactMarkdown>
+                        {
+                          this.props.catalogs.items[catalogName].spec
+                            .description
+                        }
+                      </ReactMarkdown>
+                      <Link
+                        className='app-catalog--open-catalog'
+                        to={'/app-catalogs/' + catalogName + '/'}
+                      >
+                        <Button>Browse Apps</Button>
+                      </Link>
                     </div>
-                  );
-                })}
-              </div>
-            </>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </>
       </DocumentTitle>
