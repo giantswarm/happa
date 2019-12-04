@@ -3,7 +3,7 @@ import AdminLogin from './auth/admin';
 import ForgotPassword from './ForgotPassword/ForgotPassword';
 import Layout from './Layout';
 import Login from './auth/login';
-import Logout from './auth/logout';
+import Logout from './auth/Logout';
 import OAuthCallback from './auth/OAuthCallback';
 import React from 'react';
 import SetPassword from './ForgotPassword/SetPassword';
