@@ -486,7 +486,7 @@ class V5ClusterDetailTable extends React.Component {
           provider={provider}
         />
 
-        <NodePoolsWrapper id='nps'>
+        <NodePoolsWrapper>
           <h2>Node Pools</h2>
           {nodePools && nodePools.length > 0 && !this.state.loading && (
             <>
