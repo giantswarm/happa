@@ -1,5 +1,5 @@
 import { Route, Switch } from 'react-router-dom';
-import AdminLogin from './auth/admin';
+import AdminLogin from './auth/AdminLogin';
 import ForgotPassword from './ForgotPassword/ForgotPassword';
 import Layout from './Layout';
 import Login from './auth/Login';
