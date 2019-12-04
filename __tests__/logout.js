@@ -6,7 +6,6 @@ import {
   userResponse,
 } from 'test_utils/mockHttpCalls';
 import { renderRouteWithStore } from 'test_utils/renderUtils';
-import initialState from 'test_utils/initialState';
 
 it('logging out redirects to the login page', async () => {
   // Given I have a Giant Swarm API with no clusters, organizations, appcatalogs
@@ -24,8 +23,7 @@ it('logging out redirects to the login page', async () => {
   const appcatalogsRequest = getMockCall('/v4/appcatalogs/');
 
   // Given I am logged in and on the home page.
-  const div = document.createElement('div');
-  const { getByText } = renderRouteWithStore('/', div, initialState());
+  const { getByText } = renderRouteWithStore('/');
 
   // Wait till the app is ready and we're on the home page.
   await wait(() => {
