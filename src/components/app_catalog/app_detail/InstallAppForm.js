@@ -1,5 +1,5 @@
-import FileInput from './fileinput';
-import Input from './input';
+import FileInput from './FileInput';
+import Input from './Input';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';

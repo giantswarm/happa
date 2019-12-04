@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
-class Catalogs extends React.Component {
+class CatalogList extends React.Component {
   render() {
     return (
       <DocumentTitle title={`App Catalogs | Giant Swarm `}>
@@ -74,9 +74,9 @@ class Catalogs extends React.Component {
   }
 }
 
-Catalogs.propTypes = {
+CatalogList.propTypes = {
   catalogs: PropTypes.object,
   match: PropTypes.object,
 };
 
-export default Catalogs;
+export default CatalogList;
