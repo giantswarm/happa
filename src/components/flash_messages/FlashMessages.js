@@ -7,7 +7,7 @@
 import { connect } from 'react-redux';
 import { flashRemove } from 'actions/flashMessageActions';
 import BaseTransition from 'styles/transitions/BaseTransition';
-import FlashMessage from './flash_message';
+import FlashMessage from './FlashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 
