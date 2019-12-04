@@ -2,7 +2,7 @@ import { Route, Switch } from 'react-router-dom';
 import AdminLogin from './auth/admin';
 import ForgotPassword from './ForgotPassword/ForgotPassword';
 import Layout from './Layout';
-import Login from './auth/login';
+import Login from './auth/Login';
 import Logout from './auth/Logout';
 import OAuthCallback from './auth/OAuthCallback';
 import React from 'react';
