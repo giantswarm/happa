@@ -134,17 +134,15 @@ const InstallAppModal = props => {
   const updateValuesYAML = files => {
     const reader = new FileReader();
 
-    reader.onload = (function() {
-      return function(e) {
-        try {
-          const parsedYAML = yaml.safeLoad(e.target.result);
-          setValuesYAML(parsedYAML);
-          setValuesYAMLError('');
-        } catch (err) {
-          setValuesYAMLError('Unable to parse valid YAML from this file.');
-        }
-      };
-    })(files[0]);
+    reader.onload = function(e) {
+      try {
+        const parsedYAML = yaml.safeLoad(e.target.result);
+        setValuesYAML(parsedYAML);
+        setValuesYAMLError('');
+      } catch {
+        setValuesYAMLError('Unable to parse valid YAML from this file.');
+      }
+    };
 
     reader.readAsText(files[0]);
   };
@@ -152,17 +150,15 @@ const InstallAppModal = props => {
   const updateSecretsYAML = files => {
     var reader = new FileReader();
 
-    reader.onload = (function() {
-      return function(e) {
-        try {
-          let parsedYAML = yaml.safeLoad(e.target.result);
-          setSecretsYAML(parsedYAML);
-          setSecretsYAMLError('');
-        } catch (err) {
-          setSecretsYAMLError('Unable to parse valid YAML from this file.');
-        }
-      };
-    })(files[0]);
+    reader.onload = function(e) {
+      try {
+        let parsedYAML = yaml.safeLoad(e.target.result);
+        setSecretsYAML(parsedYAML);
+        setSecretsYAMLError('');
+      } catch {
+        setSecretsYAMLError('Unable to parse valid YAML from this file.');
+      }
+    };
 
     reader.readAsText(files[0]);
   };
