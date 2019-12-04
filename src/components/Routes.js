@@ -4,7 +4,7 @@ import ForgotPassword from './ForgotPassword/ForgotPassword';
 import Layout from './Layout';
 import Login from './auth/login';
 import Logout from './auth/logout';
-import OAuthCallback from './auth/oauth_callback';
+import OAuthCallback from './auth/OAuthCallback';
 import React from 'react';
 import SetPassword from './ForgotPassword/SetPassword';
 import SignUp from './SignUp/SignUp';
