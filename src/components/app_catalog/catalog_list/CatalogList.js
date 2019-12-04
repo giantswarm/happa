@@ -10,7 +10,7 @@ class CatalogList extends React.Component {
   render() {
     return (
       <DocumentTitle title={`App Catalogs | Giant Swarm `}>
-        <React.Fragment>
+        <>
           <h1>App Catalogs</h1>
           <p>Pick an App Catalog to browse all the Apps in it.</p>
           {Object.keys(this.props.catalogs.items).length === 0 ? (
@@ -23,7 +23,7 @@ class CatalogList extends React.Component {
               resources yet for your installation. Please come back later!
             </p>
           ) : (
-            <React.Fragment>
+            <>
               <div className='app-catalog--repos'>
                 {Object.keys(this.props.catalogs.items).map(catalogName => {
                   return (
@@ -66,9 +66,9 @@ class CatalogList extends React.Component {
                   );
                 })}
               </div>
-            </React.Fragment>
+            </>
           )}
-        </React.Fragment>
+        </>
       </DocumentTitle>
     );
   }

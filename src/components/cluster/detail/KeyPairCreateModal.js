@@ -183,7 +183,7 @@ const KeyPairCreateModal = props => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <Button bsStyle='default' className='small' onClick={show}>
         <i className='fa fa-add-circle' /> Create Key Pair and Kubeconfig
       </Button>
@@ -389,7 +389,7 @@ const KeyPairCreateModal = props => {
             );
         }
       })()}
-    </React.Fragment>
+    </>
   );
 };
 

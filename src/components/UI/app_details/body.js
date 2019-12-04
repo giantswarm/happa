@@ -25,14 +25,14 @@ const AppDetailsBody = props => {
   return (
     <DescriptionList>
       {description && description !== '' && (
-        <React.Fragment>
+        <>
           <dt>
             <small>Description</small>
           </dt>
           <dd>
             <p>{description}</p>
           </dd>
-        </React.Fragment>
+        </>
       )}
       {children}
     </DescriptionList>
