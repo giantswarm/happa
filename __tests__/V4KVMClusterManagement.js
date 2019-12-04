@@ -73,7 +73,7 @@ afterAll(() => {
 
 it('renders all the v4 KVM cluster data correctly without nodes ready', async () => {
   const div = document.createElement('div');
-  const { getByText, getAllByText, debug } = renderRouteWithStore(
+  const { getByText, getAllByText } = renderRouteWithStore(
     ROUTE,
     div,
     {}
