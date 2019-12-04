@@ -2,7 +2,7 @@ import * as UserActions from 'actions/userActions';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import ChangeEmailForm from './change_email_form';
+import ChangeEmailForm from './ChangeEmailForm';
 import ChangePasswordForm from './change_password_form';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
