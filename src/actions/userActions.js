@@ -42,9 +42,10 @@ export function logoutError(errorMessage) {
 // about the user based on the response.
 export function refreshUserInfo() {
   return function(dispatch, getState) {
-    var usersApi = new GiantSwarm.UsersApi();
+    const usersApi = new GiantSwarm.UsersApi();
+    const loggedInUser = getState().app.loggedInUser;
 
-    if (!getState().app.loggedInUser) {
+    if (!loggedInUser) {
       dispatch({
         type: types.REFRESH_USER_INFO_ERROR,
         error: 'No logged in user to refresh.',
@@ -55,13 +56,13 @@ export function refreshUserInfo() {
     return usersApi
       .getCurrentUser()
       .then(data => {
-        var userData = {
+        const userData = {
           email: data.email,
           auth: {
-            scheme: getState().app.loggedInUser.auth.scheme,
-            token: getState().app.loggedInUser.auth.token,
+            scheme: loggedInUser.auth.scheme,
+            token: loggedInUser.auth.token,
           },
-          isAdmin: getState().app.loggedInUser.isAdmin,
+          isAdmin: loggedInUser.isAdmin,
         };
 
         localStorage.setItem('user', JSON.stringify(userData));
@@ -71,10 +72,7 @@ export function refreshUserInfo() {
           userData: userData,
         });
       })
-      .then(getInfo().bind(this, dispatch, getState))
       .catch(error => {
-        console.error('Error refreshing user info', error);
-
         if (error.status === 401) {
           new FlashMessage(
             'Please log in again, as your previously saved credentials appear to be invalid.',
@@ -82,7 +80,7 @@ export function refreshUserInfo() {
             messageTTL.MEDIUM
           );
 
-          this.props.dispatch(push('/login'));
+          dispatch(push('/login'));
         } else {
           new FlashMessage(
             'Something went wrong while trying to load user and organization information.',
@@ -96,7 +94,6 @@ export function refreshUserInfo() {
           type: types.REFRESH_USER_INFO_ERROR,
           error: error,
         });
-        throw error;
       });
   };
 }

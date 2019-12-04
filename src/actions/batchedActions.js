@@ -11,6 +11,7 @@ import * as catalogActions from './catalogActions';
 export const batchedLayout = () => async dispatch => {
   try {
     await dispatch(userActions.refreshUserInfo());
+    await dispatch(userActions.getInfo());
     await dispatch(organizationActions.organizationsLoad());
     dispatch(catalogActions.catalogsLoad());
     dispatch(clusterActions.clustersLoad());
