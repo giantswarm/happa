@@ -19,7 +19,7 @@ const AppList = ({ catalog, ...props }) => {
       }}
     >
       <DocumentTitle title={'Apps | Giant Swarm '}>
-        <React.Fragment>
+        <>
           <Link className='back-link' to={'/app-catalogs/'}>
             <i aria-hidden='true' className='fa fa-chevron-left' />
             Back to all catalogs
@@ -29,7 +29,7 @@ const AppList = ({ catalog, ...props }) => {
           <LoadingOverlay loading={isLoading}>
             <AppListInner catalog={catalog} {...props} />
           </LoadingOverlay>
-        </React.Fragment>
+        </>
       </DocumentTitle>
     </Breadcrumb>
   );
