@@ -8,12 +8,10 @@ import theme from 'styles/theme';
 import NodePoolDropdownMenu from 'cluster/detail/NodePoolDropdownMenu';
 // Not really needed actually. Keeping it by now as an example of simple test without store.
 it('shows the dropdown when the three dots button is clicked', () => {
-  const div = document.createElement('div');
   const { getByText, getByRole } = render(
     <ThemeProvider theme={theme}>
       <NodePoolDropdownMenu render={{ isOpen: true }} />
-    </ThemeProvider>,
-    div
+    </ThemeProvider>
   );
   fireEvent.click(getByText('•••'));
   const menu = getByRole('menu');

@@ -72,12 +72,7 @@ afterAll(() => {
 });
 
 it('renders all the v4 KVM cluster data correctly without nodes ready', async () => {
-  const div = document.createElement('div');
-  const { getByText, getAllByText } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
-  );
+  const { getByText, getAllByText } = renderRouteWithStore(ROUTE);
 
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
