@@ -134,7 +134,7 @@ const InstallAppModal = props => {
   const updateValuesYAML = files => {
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = e => {
       try {
         const parsedYAML = yaml.safeLoad(e.target.result);
         setValuesYAML(parsedYAML);
@@ -148,9 +148,9 @@ const InstallAppModal = props => {
   };
 
   const updateSecretsYAML = files => {
-    var reader = new FileReader();
+    const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = e => {
       try {
         let parsedYAML = yaml.safeLoad(e.target.result);
         setSecretsYAML(parsedYAML);
