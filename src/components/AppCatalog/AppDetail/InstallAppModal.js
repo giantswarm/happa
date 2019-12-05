@@ -152,7 +152,7 @@ const InstallAppModal = props => {
 
     reader.onload = e => {
       try {
-        let parsedYAML = yaml.safeLoad(e.target.result);
+        const parsedYAML = yaml.safeLoad(e.target.result);
         setSecretsYAML(parsedYAML);
         setSecretsYAMLError('');
       } catch {
