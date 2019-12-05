@@ -228,39 +228,21 @@ export function clusterInstallApp(app, clusterID) {
     });
 
     const appsApi = new GiantSwarm.AppsApi();
-    const appConfigsApi = new GiantSwarm.AppConfigsApi();
-    const appSecretsApi = new GiantSwarm.AppSecretsApi();
 
     try {
       // If we have user config that we want to create, then
       // fire off the call to create it.
-      Object.keys(app.valuesYAML).length !== 0 &&
-        (await appConfigsApi
-          .createClusterAppConfig(clusterID, app.name, {
-            body: app.valuesYAML,
-          })
-          .catch(error => {
-            appConfigErrorFlashMessages(
-              'ConfigMap',
-              app.name,
-              clusterID,
-              error
-            );
-            throw error;
-          }));
+      if (Object.keys(app.valuesYAML).length !== 0) {
+        await createAppConfig(app, clusterID);
+      }
 
       // If we have an app secret that we want to create, then
       // fire off the call to create it.
-      Object.keys(app.secretsYAML).length !== 0 &&
-        (await appSecretsApi
-          .createClusterAppSecret(clusterID, app.name, {
-            body: app.secretsYAML,
-          })
-          .catch(error => {
-            appConfigErrorFlashMessages('Secret', app.name, clusterID, error);
-            throw error;
-          }));
+      if (Object.keys(app.secretsYAML).length !== 0) {
+        await createAppSecret(app, clusterID);
+      }
 
+      // Create the App.
       await appsApi
         .createClusterApp(clusterID, app.name, {
           body: {
@@ -302,16 +284,54 @@ export function clusterInstallApp(app, clusterID) {
 }
 
 /**
+ * createAppConfig takes an app and a clusterID and tries to create the config map
+ * of that app. The app object must have a valuesYAML field representing the config
+ * map to be created.
+ * @param {object} app
+ * @param {string} clusterID
+ */
+async function createAppConfig(app, clusterID) {
+  const appConfigsApi = new GiantSwarm.AppConfigsApi();
+
+  return await appConfigsApi
+    .createClusterAppConfig(clusterID, app.name, {
+      body: app.valuesYAML,
+    })
+    .catch(error => {
+      appConfigErrorFlashMessages('ConfigMap', app.name, clusterID, error);
+      throw error;
+    });
+}
+
+/**
+ * createAppSecret takes an app and a clusterID and tries to create the secret
+ * of that app. The app object must have a secretsYAML field representing the secret
+ * to be created.
+ * @param {object} app
+ * @param {string} clusterID
+ */
+async function createAppSecret(app, clusterID) {
+  const appSecretsApi = new GiantSwarm.AppSecretsApi();
+
+  return await appSecretsApi
+    .createClusterAppSecret(clusterID, app.name, {
+      body: app.secretsYAML,
+    })
+    .catch(error => {
+      appConfigErrorFlashMessages('Secret', app.name, clusterID, error);
+      throw error;
+    });
+}
+
+/**
  * appConfigErrorFlashMessages provides flash messages when something went wrong
  * when creating either the ConfigMap or Secret during app installation.
  *
  * @param {string} resource Name of the resource we were trying to create.
  * @param {string} appName Name of the app.
  * @param {string} clusterID Where we tried to install the app on.
- *  @param {object} error The error that occured.
+ * @param {object} error The error that occured.
  */
-// a
-// while creating a resource (ConfigMap or Secret) for an app.
 function appConfigErrorFlashMessages(thing, app, clusterID, error) {
   if (error.status === 409) {
     new FlashMessage(
@@ -339,7 +359,7 @@ function appConfigErrorFlashMessages(thing, app, clusterID, error) {
  *
  * @param {string} appName Name of the app.
  * @param {string} clusterID Where we tried to install the app on.
- *  @param {object} error The error that occured.
+ * @param {object} error The error that occured.
  */
 function appInstallationErrorFlashMessage(appName, clusterID, error) {
   if (error.status === 409) {

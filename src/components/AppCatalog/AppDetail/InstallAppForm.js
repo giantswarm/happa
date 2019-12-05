@@ -58,7 +58,7 @@ const InstallAppForm = props => {
 
       <FileInput
         description='Sensitive configuration can be uploaded separately as a secret.'
-        hint={<React.Fragment>&nbsp;</React.Fragment>}
+        hint={<>&nbsp;</>}
         label='Secret:'
         onChange={updateSecretsYAML}
         validationError={props.secretsYAMLError}
@@ -74,9 +74,9 @@ InstallAppForm.propTypes = {
   namespace: PropTypes.string,
   namespaceError: PropTypes.string,
   valuesYAMLError: PropTypes.string,
-  valuesYAML: PropTypes.string,
+  valuesYAML: PropTypes.object,
   secretsYAMLError: PropTypes.string,
-  secretsYAML: PropTypes.string,
+  secretsYAML: PropTypes.object,
   onChangeName: PropTypes.func,
   onChangeNamespace: PropTypes.func,
   onChangeValuesYAML: PropTypes.func,
