@@ -7,6 +7,14 @@
     {
       "type": "chrome",
       "request": "launch",
+      "name": "Debug happa [UNSAFE MODE]",
+      "runtimeArgs": ["--disable-web-security"],
+      "url": "http://localhost:7000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
       "name": "Debug happa",
       "url": "http://localhost:7000",
       "webRoot": "${workspaceFolder}"

@@ -215,7 +215,7 @@ class ClusterApps extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         {this.props.showInstalledAppsBlock && (
           <div data-testid='installed-apps-section' id='installed-apps-section'>
             <h3 className='table-label'>Installed Apps</h3>
@@ -339,7 +339,7 @@ class ClusterApps extends React.Component {
           onClose={this.hideAppModal}
           visible={this.state.appDetailsModal.visible}
         />
-      </React.Fragment>
+      </>
     );
   }
 }
