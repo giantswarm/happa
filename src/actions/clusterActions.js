@@ -293,7 +293,7 @@ export function clusterInstallApp(app, clusterID) {
 async function createAppConfig(app, clusterID) {
   const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
-  return await appConfigsApi
+  await appConfigsApi
     .createClusterAppConfig(clusterID, app.name, {
       body: app.valuesYAML,
     })
@@ -313,7 +313,7 @@ async function createAppConfig(app, clusterID) {
 async function createAppSecret(app, clusterID) {
   const appSecretsApi = new GiantSwarm.AppSecretsApi();
 
-  return await appSecretsApi
+  await appSecretsApi
     .createClusterAppSecret(clusterID, app.name, {
       body: app.secretsYAML,
     })
