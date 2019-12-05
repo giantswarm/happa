@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, wait } from '@testing-library/react';
 import {
   getMockCall,
-  infoResponse,
+  AWSInfoResponse,
   userResponse,
 } from 'test_utils/mockHttpCalls';
 import { renderRouteWithStore } from 'test_utils/renderUtils';
@@ -15,7 +15,7 @@ it('logging out redirects to the login page', async () => {
   // The response to the user info call
   const userInfoRequest = getMockCall('/v4/user/', userResponse);
   // The response to the info call
-  const infoRequest = getMockCall('/v4/info/', infoResponse);
+  const infoRequest = getMockCall('/v4/info/', AWSInfoResponse);
   // The response to the org call (no orgs)
   const orgRequest = getMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)

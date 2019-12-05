@@ -11,7 +11,7 @@ const AppDetailsItem = props => {
   const { label, data } = props;
 
   return (
-    <React.Fragment>
+    <>
       <dt>
         <small>{label}</small>
       </dt>
@@ -39,7 +39,7 @@ const AppDetailsItem = props => {
           </ul>
         )}
       </dd>
-    </React.Fragment>
+    </>
   );
 };
 
