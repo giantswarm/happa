@@ -3,7 +3,7 @@ import {
   API_ENDPOINT,
   appCatalogsResponse,
   getPersistedMockCall,
-  infoResponse,
+  AWSInfoResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -30,7 +30,7 @@ const requests = {};
 beforeAll(() => {
   requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
   requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.info = getPersistedMockCall('/v4/info/', infoResponse);
+  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
   requests.organizations = getPersistedMockCall(
     '/v4/organizations/',
     orgsResponse

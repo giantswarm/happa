@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import {
   authTokenResponse,
   getPersistedMockCall,
-  infoResponse,
+  AWSInfoResponse,
   postMockCall,
   userResponse,
 } from 'test_utils/mockHttpCalls';
@@ -22,7 +22,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // Given I have a Giant Swarm API with no clusters, organizations, appcatalogs
   // that I can log in to.
 
-  // Using persisted version odf nock interceptors because weird enough in CircleCI
+  // Using persisted version of nock interceptors because weird enough in CircleCI
   // some calls are performed more than once
 
   // The response to the login call
@@ -30,7 +30,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // The response to the user info call
   const userInfoRequest = getPersistedMockCall('/v4/user/', userResponse);
   // The response to the info call
-  const infoRequest = getPersistedMockCall('/v4/info/', infoResponse);
+  const infoRequest = getPersistedMockCall('/v4/info/', AWSInfoResponse);
   // The response to the org call (no orgs)
   const orgRequest = getPersistedMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
@@ -113,6 +113,10 @@ it('tells the user to give a email if they leave it blank', async () => {
 });
 
 it('shows an error if the user logs in with invalid credentials', async () => {
+  // Don't want to pollute the terminal with this error
+  const originalConsoleError = console.error;
+  console.error = jest.fn();
+
   // Given I have a Giant Swarm API that does not accept my login attempt
 
   // The failed 401 response to the login call
@@ -140,4 +144,7 @@ it('shows an error if the user logs in with invalid credentials', async () => {
   await wait(() => {
     expect(getByText(/Could not log in/i)).toBeInTheDocument();
   });
+
+  // Restore console.og
+  console.error = originalConsoleError;
 });
