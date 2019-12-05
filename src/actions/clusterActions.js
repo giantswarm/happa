@@ -255,7 +255,7 @@ export function clusterInstallApp(app, clusterID) {
           },
         })
         .catch(error => {
-          appInstallationErrorFlashMessage(app, clusterID, error);
+          showAppInstallationErrorFlashMessage(app, clusterID, error);
           throw error;
         });
 
@@ -298,7 +298,7 @@ async function createAppConfig(app, clusterID) {
       body: app.valuesYAML,
     })
     .catch(error => {
-      appConfigErrorFlashMessages('ConfigMap', app.name, clusterID, error);
+      showAppConfigErrorFlashMessages('ConfigMap', app.name, clusterID, error);
       throw error;
     });
 }
@@ -318,13 +318,13 @@ async function createAppSecret(app, clusterID) {
       body: app.secretsYAML,
     })
     .catch(error => {
-      appConfigErrorFlashMessages('Secret', app.name, clusterID, error);
+      showAppConfigErrorFlashMessages('Secret', app.name, clusterID, error);
       throw error;
     });
 }
 
 /**
- * appConfigErrorFlashMessages provides flash messages when something went wrong
+ * showAppConfigErrorFlashMessages provides flash messages when something went wrong
  * when creating either the ConfigMap or Secret during app installation.
  *
  * @param {string} resource Name of the resource we were trying to create.
@@ -332,7 +332,7 @@ async function createAppSecret(app, clusterID) {
  * @param {string} clusterID Where we tried to install the app on.
  * @param {object} error The error that occured.
  */
-function appConfigErrorFlashMessages(thing, app, clusterID, error) {
+function showAppConfigErrorFlashMessages(thing, app, clusterID, error) {
   if (error.status === 409) {
     new FlashMessage(
       `The ${thing} for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
@@ -361,7 +361,7 @@ function appConfigErrorFlashMessages(thing, app, clusterID, error) {
  * @param {string} clusterID Where we tried to install the app on.
  * @param {object} error The error that occured.
  */
-function appInstallationErrorFlashMessage(appName, clusterID, error) {
+function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
   if (error.status === 409) {
     new FlashMessage(
       `An app called <code>${appName}</code> already exists on cluster <code>${clusterID}</code>`,
