@@ -290,10 +290,10 @@ export function clusterInstallApp(app, clusterID) {
  * @param {object} app
  * @param {string} clusterID
  */
-async function createAppConfig(app, clusterID) {
+function createAppConfig(app, clusterID) {
   const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
-  await appConfigsApi
+  return appConfigsApi
     .createClusterAppConfig(clusterID, app.name, {
       body: app.valuesYAML,
     })
@@ -310,10 +310,10 @@ async function createAppConfig(app, clusterID) {
  * @param {object} app
  * @param {string} clusterID
  */
-async function createAppSecret(app, clusterID) {
+function createAppSecret(app, clusterID) {
   const appSecretsApi = new GiantSwarm.AppSecretsApi();
 
-  await appSecretsApi
+  return appSecretsApi
     .createClusterAppSecret(clusterID, app.name, {
       body: app.secretsYAML,
     })
