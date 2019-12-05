@@ -1,12 +1,12 @@
-import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link, NavLink } from 'react-router-dom';
-import { logo } from 'images';
-
+import { Breadcrumbs } from 'react-breadcrumbs';
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import OrganizationDropdown from './organization_dropdown';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 import UserDropdown from './user_dropdown';
+import { logo } from 'images';
+import styled from '@emotion/styled';
 
 const OuterNav = styled.nav`
   height: 50px;
@@ -150,13 +150,15 @@ class Navigation extends React.Component {
           </div>
 
           <div className='subactions'>
-            <OrganizationDropdown
-              onSelectOrganization={this.props.onSelectOrganization}
-              organizations={this.props.organizations}
-              selectedOrganization={this.props.selectedOrganization}
-            />
-            &nbsp; &nbsp;
-            <UserDropdown user={this.props.user} />
+            <ButtonToolbar>
+              <OrganizationDropdown
+                onSelectOrganization={this.props.onSelectOrganization}
+                organizations={this.props.organizations}
+                selectedOrganization={this.props.selectedOrganization}
+              />
+              &nbsp; &nbsp;
+              <UserDropdown user={this.props.user} />
+            </ButtonToolbar>
           </div>
         </div>
 

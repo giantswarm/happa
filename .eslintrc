@@ -55,7 +55,10 @@
     "consistent-return": 2,
     "default-param-last": 2,
     "eqeqeq": 2,
-    "dot-notation": [2, { "allowPattern": "^(([a-z]+_[a-z]+)|([A-Z][^A-Z]+))+$" }],
+    "dot-notation": [
+      2,
+      { "allowPattern": "^(([a-z]+_[a-z]+)|([A-Z][^A-Z]+))+$" }
+    ],
     "guard-for-in": 2,
     "max-classes-per-file": 2,
     "no-alert": 2,
@@ -144,7 +147,10 @@
     "prefer-spread": 2,
     "require-yield": 2,
     "prefer-template": 2,
-    "sort-imports": 1,
+    "sort-imports": [
+      1,
+      { "memberSyntaxSortOrder": ["none", "all", "multiple", "single"] }
+    ],
     "react/button-has-type": 2,
     "react/prefer-es6-class": [1, "always"],
     "react/no-find-dom-node": 2,

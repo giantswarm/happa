@@ -1,18 +1,17 @@
-import { NavLink } from 'react-router-dom';
-import _ from 'underscore';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
+import _ from 'underscore';
 import styled from '@emotion/styled';
 
-const Wrapper = styled.div`
-  display: inline;
-
-  ul.dropdown-menu {
-    background-color: #2a5874;
+const OrgDropdown = styled(DropdownButton)`
+  .dropdown-menu {
+    background-color: ${props => props.theme.colors.shade2};
     border: none;
     border-radius: 5px;
+    box-shadow: none;
 
     .dropdown-header {
       color: #ccc;
@@ -93,11 +92,6 @@ const Wrapper = styled.div`
       background-color: ${props => props.theme.colors.shade5} !important;
       color: ${props => props.theme.colors.white1};
     }
-
-    ul.dropdown-menu {
-      background-color: ${props => props.theme.colors.shade2};
-      box-shadow: none;
-    }
   }
 
   .open {
@@ -111,69 +105,57 @@ const Wrapper = styled.div`
 
 class OrganizationDropdown extends React.Component {
   render() {
-    return (
-      <Wrapper>
-        {Object.entries(this.props.organizations.items).length === 0 &&
-        !this.props.organizations.isFetching ? (
-          <DropdownButton
-            id='org_dropdown'
-            key='2'
-            title={
-              <span>
-                <span className='label label-default'>ORG</span>No organizations
-              </span>
-            }
-          >
+    return Object.entries(this.props.organizations.items).length === 0 &&
+      !this.props.organizations.isFetching ? (
+      <OrgDropdown
+        variant='default'
+        id='org_dropdown'
+        title={
+          <span>
+            <span className='label label-default'>ORG</span>No organizations
+          </span>
+        }
+      >
+        <Dropdown.Item as={NavLink} href='/organizations/' to='/organizations/'>
+          Manage organizations
+        </Dropdown.Item>
+      </OrgDropdown>
+    ) : (
+      <OrgDropdown
+        variant='default'
+        id='org_dropdown'
+        title={
+          <span>
+            <span className='label label-default'>ORG</span>{' '}
+            {this.props.selectedOrganization}
+          </span>
+        }
+      >
+        <Dropdown.Item
+          as={NavLink}
+          href='/organizations/'
+          to={'/organizations/' + this.props.selectedOrganization}
+        >
+          Details for {this.props.selectedOrganization}
+        </Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Item as={NavLink} href='/organizations/' to='/organizations/'>
+          Manage organizations
+        </Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Header>Switch Organization</Dropdown.Header>
+        {_.sortBy(this.props.organizations.items, 'id').map(org => {
+          return (
             <Dropdown.Item
-              as={NavLink}
-              href='/organizations/'
-              to='/organizations/'
+              eventKey={org.id}
+              key={org.id}
+              onSelect={this.props.onSelectOrganization}
             >
-              Manage organizations
+              {org.id}
             </Dropdown.Item>
-          </DropdownButton>
-        ) : (
-          <DropdownButton
-            id='org_dropdown'
-            key='2'
-            title={
-              <span>
-                <span className='label label-default'>ORG</span>{' '}
-                {this.props.selectedOrganization}
-              </span>
-            }
-          >
-            <Dropdown.Item
-              as={NavLink}
-              href='/organizations/'
-              to={'/organizations/' + this.props.selectedOrganization}
-            >
-              Details for {this.props.selectedOrganization}
-            </Dropdown.Item>
-            <Dropdown.Item divider />
-            <Dropdown.Item
-              as={NavLink}
-              href='/organizations/'
-              to='/organizations/'
-            >
-              Manage organizations
-            </Dropdown.Item>
-            <Dropdown.Item divider />
-            <Dropdown.Item header>Switch Organization</Dropdown.Item>
-            {_.sortBy(this.props.organizations.items, 'id').map(org => {
-              return (
-                <Dropdown.Item
-                  eventKey={org.id}
-                  key={org.id}
-                  onSelect={this.props.onSelectOrganization}
-                >
-                  {org.id}
-                </Dropdown.Item>
-              );
-            })}
-          </DropdownButton>
-        )}
-      </Wrapper>
+          );
+        })}
+      </OrgDropdown>
     );
   }
 }
