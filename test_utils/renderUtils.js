@@ -7,7 +7,7 @@ import { ThemeProvider } from 'emotion-theming';
 import configureStore from 'stores/configureStore';
 import initialState from 'test_utils/initialState';
 import React from 'react';
-import Routes from 'routes';
+import Routes from 'Routes';
 import theme from 'styles/theme';
 
 const initialStorage = {

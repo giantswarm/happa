@@ -15,7 +15,7 @@ import {
   v5ClustersResponse,
 } from 'test_utils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
-import { getNumberOfNodePoolsNodes } from 'utils/cluster_utils';
+import { getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
 import { renderRouteWithStore } from 'test_utils/renderUtils';
 import { truncate } from 'lib/helpers';
 import nock from 'nock';
