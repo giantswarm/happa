@@ -7,7 +7,7 @@ import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
-import { Input } from 'styles/index';
+import { Input } from 'styles';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
