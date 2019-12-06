@@ -28,6 +28,10 @@ const initialState = {
 
 const clusterReducer = produce((draft, action) => {
   switch (action.type) {
+    case types.CLUSTERS_LOAD:
+      draft.isFetching = true;
+      return;
+
     case types.CLUSTERS_LOAD_SUCCESS:
       Object.keys(action.v4Clusters).forEach(clusterId => {
         const withAwsKeys = ensureWorkersHaveAWSkey(
@@ -43,6 +47,7 @@ const clusterReducer = produce((draft, action) => {
       });
       draft.lastUpdated = action.lastUpdated;
       draft.nodePoolsClusters = action.nodePoolsClusters;
+      draft.isFetching = false;
       return;
 
     case types.CLUSTERS_LOAD_ERROR:

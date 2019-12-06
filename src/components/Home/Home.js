@@ -93,7 +93,7 @@ class Home extends React.Component {
                     <i className='fa fa-add-circle' /> Launch New Cluster
                   </Button>
                 </Link>
-                {this.props.clusters.length === 0
+                {this.props.clusters.length === 0 && !this.props.clustersLoading
                   ? 'Ready to launch your first cluster? Click the green button!'
                   : ''}
               </div>
@@ -101,7 +101,7 @@ class Home extends React.Component {
               undefined
             )}
 
-            {this.props.clusters.length === 0 ? (
+            {this.props.clusters.length === 0 && !this.props.clustersLoading ? (
               <ClusterEmptyState
                 errorLoadingClusters={this.props.errorLoadingClusters}
                 organizations={this.props.organizations}
@@ -171,6 +171,7 @@ function mapStateToProps(state) {
   var errorLoadingClusters = state.entities.clusters.errorLoading;
   const nodePoolsClusters = state.entities.clusters.nodePoolsClusters;
   const nodePools = state.entities.nodePools.items;
+  const clustersLoading = state.entities.clusters.isFetching;
 
   var clusters = [];
   if (selectedOrganization) {
@@ -181,6 +182,7 @@ function mapStateToProps(state) {
 
   return {
     clusters: clusters,
+    clustersLoading,
     organizations: organizations,
     errorLoadingClusters: errorLoadingClusters,
     selectedOrganization: selectedOrganization,
