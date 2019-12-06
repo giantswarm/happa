@@ -15,7 +15,7 @@ import { organizationsLoad } from 'actions/organizationActions';
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import AccountSettings from './AccountSettings/AccountSettings';
-import AppCatalog from './app_catalog/AppCatalog';
+import AppCatalog from './AppCatalog/AppCatalog';
 import DocumentTitle from 'react-document-title';
 import GiantSwarm from 'giantswarm';
 import Home from './Home/Home';
