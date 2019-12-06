@@ -1,19 +1,19 @@
 import {
   AddNodePoolFlexColumnDiv,
   AddNodePoolWrapper,
-} from '../detail/V5ClusterDetailTable';
+} from '../ClusterDetail/V5ClusterDetailTable';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
-import { Input } from 'styles/index';
+import { Input } from 'styles';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
 import { TransitionGroup } from 'react-transition-group';
-import AddNodePool from '../detail/AddNodePool';
-import AvailabilityZonesParser from '../detail/AvailabilityZonesParser';
+import AddNodePool from '../ClusterDetail/AddNodePool';
+import AvailabilityZonesParser from '../ClusterDetail/AvailabilityZonesParser';
 import Button from 'UI/button';
 import DocumentTitle from 'react-document-title';
 import produce from 'immer';

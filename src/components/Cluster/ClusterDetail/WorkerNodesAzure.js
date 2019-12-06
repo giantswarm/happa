@@ -1,4 +1,4 @@
-import { Code } from 'styles/index';
+import { Code } from 'styles';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';

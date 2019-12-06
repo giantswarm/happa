@@ -6,7 +6,7 @@ import {
 import Button from 'react-bootstrap/lib/Button';
 import DocumentTitle from 'react-document-title';
 import EmptyStateDisplay from 'UI/empty_state_display';
-import OrganizationList from 'UI/organization_list';
+import OrganizationList from 'UI/OrganizationList';
 import PropTypes from 'prop-types';
 import React from 'react';
 

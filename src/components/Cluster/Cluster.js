@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import ClusterDetail from './detail/ClusterDetail';
-import NewCluster from './new/NewCluster';
+import ClusterDetail from './ClusterDetail/ClusterDetail';
+import NewCluster from './NewCluster/NewCluster';
 import PropTypes from 'prop-types';
 import React from 'react';
 
