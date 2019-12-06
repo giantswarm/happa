@@ -6,12 +6,9 @@ import {
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-//<<<<<<< HEAD:src/components/Layout.js
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { organizationSelect } from 'actions/organizationActions';
 import { organizationsLoad } from 'actions/organizationActions';
-//=======
-//>>>>>>> master:src/components/layout.js
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import AccountSettings from './AccountSettings/AccountSettings';
