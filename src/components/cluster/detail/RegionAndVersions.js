@@ -5,7 +5,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import ReleaseDetailsModal from 'modals/release_details_modal';
+import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal';
 import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/Tooltip';
 

@@ -12,7 +12,7 @@ import {
 import BootstrapModal from 'react-bootstrap/Modal';
 import Button from 'UI/button';
 import ClusterIDLabel from 'UI/cluster_id_label';
-import EmailField from 'shared/email_field';
+import EmailField from 'shared/EmailField';
 import PropTypes from 'prop-types';
 import React from 'react';
 

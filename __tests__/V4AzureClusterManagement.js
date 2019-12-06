@@ -14,7 +14,7 @@ import {
   v4AzureClusterStatusResponse,
   v4ClustersResponse,
 } from 'test_utils/mockHttpCalls';
-import { getNumberOfNodes } from 'utils/cluster_utils';
+import { getNumberOfNodes } from 'utils/clusterUtils';
 import { renderRouteWithStore } from 'test_utils/renderUtils';
 import { wait } from '@testing-library/react';
 
@@ -72,8 +72,7 @@ afterAll(() => {
 });
 
 it('renders all the v4 Azure cluster data correctly without nodes ready', async () => {
-  const div = document.createElement('div');
-  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText, getAllByText } = renderRouteWithStore(ROUTE);
 
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();

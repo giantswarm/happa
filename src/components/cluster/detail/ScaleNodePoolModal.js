@@ -2,7 +2,7 @@ import * as nodePoolActions from 'actions/nodePoolActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { Providers } from 'shared/constants';
 import BootstrapModal from 'react-bootstrap/Modal';
 import Button from 'UI/button';

@@ -8,14 +8,12 @@ import theme from 'styles/theme';
 import PortMappingsRow from '../PortMappingsRow';
 
 it('renders without crashing', () => {
-  const div = document.createElement('div');
   render(
     <Router>
       <ThemeProvider theme={theme}>
         <PortMappingsRow />
       </ThemeProvider>
-    </Router>,
-    div
+    </Router>
   );
 });
 

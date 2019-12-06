@@ -8,7 +8,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/Button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import cmp from 'semver-compare';
-import Credentials from './credentials.js';
+import Credentials from './Credentials';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React from 'react';

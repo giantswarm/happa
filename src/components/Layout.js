@@ -1,26 +1,31 @@
 import * as UserActions from 'actions/userActions';
+import {
+  batchedLayout,
+  batchedOrganizationSelect,
+} from 'actions/batchedActions';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { catalogsLoad } from 'actions/catalogActions';
-import { clustersLoad } from 'actions/clusterActions';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+//<<<<<<< HEAD:src/components/Layout.js
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { organizationSelect } from 'actions/organizationActions';
 import { organizationsLoad } from 'actions/organizationActions';
+//=======
+//>>>>>>> master:src/components/layout.js
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import AccountSettings from './account_settings';
+import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './app_catalog/AppCatalog';
 import DocumentTitle from 'react-document-title';
 import GiantSwarm from 'giantswarm';
-import Home from './home';
+import Home from './Home/Home';
 import LoadingOverlay from './UI/loading_overlay';
-import Modals from './modals';
+import Modals from './Modals/Modals';
 import Navigation from './UI/navigation';
-import Organizations from './organizations';
+import Organizations from './Organizations/Organizations';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Users from './users';
+import Users from './Users/Users';
 
 var defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
@@ -34,34 +39,9 @@ class Layout extends React.Component {
       defaultClientAuth.apiKeyPrefix = this.props.user.auth.scheme;
       defaultClientAuth.apiKey = this.props.user.auth.token;
 
-      // This is the first component that loads,
-      // and refreshUserInfo and the subsequent organisationsLoad() are the
-      // first calls happa makes to the API.
-      this.props.actions
-        .refreshUserInfo()
-        .then(() => this.props.dispatch(organizationsLoad()))
-        .then(() => this.props.dispatch(clustersLoad()))
-        .then(() => this.props.dispatch(catalogsLoad()))
-        .catch(error => {
-          console.error('Error refreshing user info', error);
-
-          if (error.status === 401) {
-            new FlashMessage(
-              'Please log in again, as your previously saved credentials appear to be invalid.',
-              messageType.WARNING,
-              messageTTL.MEDIUM
-            );
-
-            this.props.dispatch(push('/login'));
-          } else {
-            new FlashMessage(
-              'Something went wrong while trying to load user and organization information.',
-              messageType.ERROR,
-              messageTTL.LONG,
-              'Please try again in a moment or contact support: support@giantswarm.io'
-            );
-          }
-        });
+      // This is the first component that loads, these are the
+      // firsts calls happa makes to the API.
+      this.props.dispatch(batchedLayout());
     } else {
       this.props.dispatch(push('/login'));
     }
@@ -70,7 +50,7 @@ class Layout extends React.Component {
   selectOrganization = orgId => {
     const { dispatch } = this.props;
 
-    dispatch(organizationSelect(orgId));
+    dispatch(batchedOrganizationSelect(orgId));
     dispatch(push('/'));
   };
 

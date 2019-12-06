@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { CodeBlock, Output, Prompt } from './codeblock';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { Link } from 'react-router-dom';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';

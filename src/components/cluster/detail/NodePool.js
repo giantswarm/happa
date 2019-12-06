@@ -2,7 +2,7 @@ import * as nodePoolActions from 'actions/nodePoolActions';
 import { bindActionCreators } from 'redux';
 import { Code } from 'styles/';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { nodePoolPatch } from 'actions/nodePoolActions';
 import { spinner } from 'images';
 import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';

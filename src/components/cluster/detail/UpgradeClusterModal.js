@@ -1,7 +1,7 @@
 import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/Modal';
 import Button from 'UI/button';

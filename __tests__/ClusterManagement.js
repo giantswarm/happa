@@ -95,11 +95,8 @@ it('creates a v5 cluster and redirect to details view', async () => {
     v5ClusterResponse
   );
 
-  const div = document.createElement('div');
   const { getAllByText, getByText, getByTestId } = renderRouteWithStore(
-    '/organizations/acme/clusters/new/',
-    div,
-    {}
+    '/organizations/acme/clusters/new/'
   );
 
   await wait(() => {
@@ -150,11 +147,8 @@ details view`, async () => {
     v4AWSClusterResponse
   );
 
-  const div = document.createElement('div');
   const { getByText, getByTestId, getAllByText } = renderRouteWithStore(
-    '/organizations/acme/clusters/new/',
-    div,
-    {}
+    '/organizations/acme/clusters/new/'
   );
 
   requests.status = getPersistedMockCall(

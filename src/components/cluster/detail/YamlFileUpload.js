@@ -1,4 +1,4 @@
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';

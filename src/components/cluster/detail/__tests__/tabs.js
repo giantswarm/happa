@@ -6,12 +6,10 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from '../Tabs';
 
 it('renders without crashing', () => {
-  const div = document.createElement('div');
-  render(<Tabs />, div);
+  render(<Tabs />);
 });
 
 it('renders only the first tab', () => {
-  const div = document.createElement('div');
   const { container } = render(
     <Tabs>
       <Tab eventKey={1} title='first'>
@@ -23,8 +21,7 @@ it('renders only the first tab', () => {
       <Tab eventKey={3} title='third'>
         <h1>Third Tab</h1>
       </Tab>
-    </Tabs>,
-    div
+    </Tabs>
   );
 
   expect(container.querySelector('#tabs-tab-1')).toHaveAttribute(

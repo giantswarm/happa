@@ -1,16 +1,16 @@
 import * as userActions from 'actions/userActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { push } from 'connected-react-router';
-import { validatePassword } from 'lib/password_validation';
+import { validatePassword } from 'lib/passwordValidation';
 import Button from 'UI/button';
-import Passage from 'lib/passage_client';
-import PasswordField from './password_field';
+import Passage from 'lib/passageClient';
+import PasswordField from './PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
-import StatusMessage from './status_message';
-import TermsOfService from './terms_of_service';
+import StatusMessage from './StatusMessage';
+import TermsOfService from './TermsOfService';
 
 // TODO: Figure out a way to make the test suite know about our standard
 // 'window.config' object. Or change the way these config params are passed

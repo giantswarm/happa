@@ -1,7 +1,7 @@
 import * as userActions from 'actions/userActions';
 import { AuthorizationTypes } from 'shared/constants';
 import { bindActionCreators } from 'redux';
-import { clearQueues } from 'lib/flash_message';
+import { clearQueues } from 'lib/flashMessage';
 import { connect } from 'react-redux';
 import { isJwtExpired } from 'lib/helpers';
 import { push } from 'connected-react-router';

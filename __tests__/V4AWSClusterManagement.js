@@ -78,12 +78,7 @@ afterAll(() => {
 // as a response to the apps call. Here we are using a real array to mock the response
 // and hence the warning because we are transforming an array into an array
 it('renders all the v4 AWS cluster data correctly without nodes ready', async () => {
-  const div = document.createElement('div');
-  const { getByText, getAllByText, getByTestId } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
-  );
+  const { getByText, getAllByText, getByTestId } = renderRouteWithStore(ROUTE);
 
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
@@ -126,11 +121,8 @@ scales correctly`, async () => {
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
     .reply(200, clusterPatchResponse);
 
-  const div = document.createElement('div');
   const { getByTestId, getByText, getByLabelText } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
+    ROUTE
   );
 
   await wait(() => {
@@ -210,11 +202,8 @@ it('deletes a v4 cluster', async () => {
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'DELETE')
     .reply(200, clusterDeleteResponse);
 
-  const div = document.createElement('div');
   const { getByText, getAllByText, queryByTestId } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
+    ROUTE
   );
 
   // Wait for the view to render
@@ -278,8 +267,7 @@ it('patches v4 cluster name correctly', async () => {
   );
 
   // Mounting
-  const div = document.createElement('div');
-  const { getByText, getByDisplayValue } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText, getByDisplayValue } = renderRouteWithStore(ROUTE);
 
   await wait(() => getByText(clusterName));
   const clusterNameEl = getByText(clusterName);
