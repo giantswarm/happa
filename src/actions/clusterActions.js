@@ -69,9 +69,14 @@ export function clustersLoad() {
   return async function(dispatch, getState) {
     dispatch({ type: types.CLUSTERS_LOAD });
 
+    const organizationSelected = getState().app.selectedOrganization;
+
     // Fetch all clusters.
     const clusters = await clustersApi
       .getClusters()
+      .then(clusters =>
+        clusters.filter(cluster => cluster.owner === organizationSelected)
+      )
       .then(clusters => {
         // ? Do we really need to do this here? We are doing it after when fetching details.
         const enhancedClusters = enhanceWithCapabilities(

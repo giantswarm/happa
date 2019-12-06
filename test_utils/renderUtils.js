@@ -5,7 +5,6 @@ import { push } from 'connected-react-router';
 import TestingLibrary, { render } from '@testing-library/react';
 import { ThemeProvider } from 'emotion-theming';
 import configureStore from 'stores/configureStore';
-import initialState from 'test_utils/initialState';
 import React from 'react';
 import Routes from 'Routes';
 import theme from 'styles/theme';
@@ -23,8 +22,7 @@ const initialStorage = {
  */
 export function renderRouteWithStore(
   initialRoute = '/',
-  container,
-  state = initialState(),
+  state = {},
   storage = initialStorage,
   history = createMemoryHistory()
 ) {
@@ -39,8 +37,7 @@ export function renderRouteWithStore(
           <Routes />
         </ConnectedRouter>
       </ThemeProvider>
-    </Provider>,
-    container
+    </Provider>
   );
 
   store.dispatch(push(initialRoute));

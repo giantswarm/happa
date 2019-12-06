@@ -69,8 +69,7 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('renders all the v5 cluster data correctly with 0 nodes ready', async () => {
-  const div = document.createElement('div');
-  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, {});
 
   await wait(() => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
@@ -94,8 +93,7 @@ it('renders nodes data correctly with nodes ready in v5 cluster view', async () 
     nodePoolsResponseWithNodes
   );
 
-  const div = document.createElement('div');
-  const { getByText } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText } = renderRouteWithStore(ROUTE);
 
   const workerNodesRunning = getNumberOfNodePoolsNodes(
     nodePoolsResponseWithNodes
@@ -116,9 +114,7 @@ it('renders nodes data correctly with nodes ready in v5 cluster view', async () 
 });
 
 it('renders all node pools in store', async () => {
-  const div = document.createElement('div');
-
-  const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE);
 
   await wait(() => findAllByTestId('node-pool-id'));
 
@@ -147,12 +143,7 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
     .reply(200, nodePoolPatchResponse);
 
   // Mounting
-  const div = document.createElement('div');
-  const { getAllByTestId, getByText, container } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
-  );
+  const { getAllByTestId, getByText, container } = renderRouteWithStore(ROUTE);
 
   await wait(() => getByText(truncate(nodePoolName, 14)));
 
@@ -222,13 +213,12 @@ scales node pools correctly`, async () => {
     )
     .reply(200, nodePoolPatchResponse);
 
-  const div = document.createElement('div');
   const {
     getByText,
     getAllByText,
     getAllByTestId,
     getByLabelText,
-  } = renderRouteWithStore(ROUTE, div, {});
+  } = renderRouteWithStore(ROUTE);
 
   await wait(() => getAllByTestId('node-pool-id'));
 
@@ -298,11 +288,8 @@ it('deletes a v5 cluster', async () => {
     .intercept(`/v4/clusters/${V5_CLUSTER.id}/`, 'DELETE')
     .reply(200, clusterDeleteResponse);
 
-  const div = document.createElement('div');
   const { getByText, getAllByText, queryByTestId } = renderRouteWithStore(
-    ROUTE,
-    div,
-    {}
+    ROUTE
   );
 
   // Wait for the view to render
@@ -359,13 +346,12 @@ it('deletes a node pool', async () => {
     )
     .reply(200, nodePoolDeleteResponse);
 
-  const div = document.createElement('div');
   const {
     getByText,
     getAllByText,
     queryByTestId,
     getAllByTestId,
-  } = renderRouteWithStore(ROUTE, div, {});
+  } = renderRouteWithStore(ROUTE);
 
   // Wait for node pools to render
   await wait(() => getAllByTestId('node-pool-id'));
@@ -422,8 +408,7 @@ it('adds a node pool with default values', async () => {
     .intercept(`/v5/clusters/${V5_CLUSTER.id}/nodepools/`, 'POST')
     .reply(200, nodePoolCreationResponse);
 
-  const div = document.createElement('div');
-  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, div, {});
+  const { getByText, getAllByText } = renderRouteWithStore(ROUTE);
 
   await wait(() => getAllByText(/add node pool/i));
 

@@ -5,19 +5,14 @@ import React from 'react';
 import CertificateOrgsLabel from '../CertificateOrgsLabel';
 
 it('renders single label without crashing', () => {
-  const div = document.createElement('div');
-  render(<CertificateOrgsLabel value={'foobar'} />, div);
+  render(<CertificateOrgsLabel value={'foobar'} />);
 });
 
 it('renders multiple labels without crashing', () => {
-  const div = document.createElement('div');
-  render(<CertificateOrgsLabel value={'foobar,foo,bar'} />, div);
+  render(<CertificateOrgsLabel value={'foobar,foo,bar'} />);
 });
 
-it('renders empty label without crashing', () => {
-  const div = document.createElement('div');
-  render(<CertificateOrgsLabel value={''} />, div);
-});
+it('renders empty label without crashing', () => {});
 
 it('renders multiple labels in alphabetic order', () => {
   const { getByTestId } = render(
