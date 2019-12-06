@@ -6,20 +6,26 @@ import {
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+//<<<<<<< HEAD:src/components/Layout.js
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { organizationSelect } from 'actions/organizationActions';
+import { organizationsLoad } from 'actions/organizationActions';
+//=======
+//>>>>>>> master:src/components/layout.js
 import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import AccountSettings from './account_settings';
+import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './app_catalog/AppCatalog';
 import DocumentTitle from 'react-document-title';
 import GiantSwarm from 'giantswarm';
-import Home from './home';
+import Home from './Home/Home';
 import LoadingOverlay from './UI/loading_overlay';
-import Modals from './modals';
+import Modals from './Modals/Modals';
 import Navigation from './UI/navigation';
-import Organizations from './organizations';
+import Organizations from './Organizations/Organizations';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Users from './users';
+import Users from './Users/Users';
 
 var defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;

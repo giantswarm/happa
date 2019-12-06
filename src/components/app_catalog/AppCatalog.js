@@ -1,9 +1,9 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { catalogLoadIndex, catalogsLoad } from 'actions/catalogActions';
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { Route, Switch } from 'react-router-dom';
-import AppList from './app_list/AppList';
+import AppList from './AppList/AppList';
 import Catalogs from './catalog_list/CatalogList';
 import Detail from './app_detail/AppDetail';
 import PropTypes from 'prop-types';

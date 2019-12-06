@@ -1,13 +1,13 @@
 import { Route, Switch } from 'react-router-dom';
-import AdminLogin from './auth/admin';
-import ForgotPassword from './forgot_password/index';
-import Layout from './layout';
-import Login from './auth/login';
-import Logout from './auth/logout';
-import OAuthCallback from './auth/oauth_callback';
+import AdminLogin from './Auth/AdminLogin';
+import ForgotPassword from './ForgotPassword/ForgotPassword';
+import Layout from './Layout';
+import Login from './Auth/Login';
+import Logout from './Auth/Logout';
+import OAuthCallback from './Auth/OAuthCallback';
 import React from 'react';
-import SetPassword from './forgot_password/set_password';
-import SignUp from './signup/index';
+import SetPassword from './ForgotPassword/SetPassword';
+import SignUp from './SignUp/SignUp';
 import StyleGuide from './UI/style_guide';
 
 const Routes = () => {

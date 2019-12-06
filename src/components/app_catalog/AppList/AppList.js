@@ -19,17 +19,15 @@ const AppList = ({ catalog, ...props }) => {
       }}
     >
       <DocumentTitle title={'Apps | Giant Swarm '}>
-        <>
-          <Link className='back-link' to={'/app-catalogs/'}>
-            <i aria-hidden='true' className='fa fa-chevron-left' />
-            Back to all catalogs
-          </Link>
-          <br />
-          <br />
-          <LoadingOverlay loading={isLoading}>
-            <AppListInner catalog={catalog} {...props} />
-          </LoadingOverlay>
-        </>
+        <Link className='back-link' to={'/app-catalogs/'}>
+          <i aria-hidden='true' className='fa fa-chevron-left' />
+          Back to all catalogs
+        </Link>
+        <br />
+        <br />
+        <LoadingOverlay loading={isLoading}>
+          <AppListInner catalog={catalog} {...props} />
+        </LoadingOverlay>
       </DocumentTitle>
     </Breadcrumb>
   );

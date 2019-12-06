@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { truncate } from 'lib/helpers';
 import Button from './button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';

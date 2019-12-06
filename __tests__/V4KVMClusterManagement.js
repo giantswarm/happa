@@ -14,7 +14,7 @@ import {
   v4KVMClusterStatusResponse,
   v4ClustersResponse,
 } from 'test_utils/mockHttpCalls';
-import { getNumberOfNodes } from 'utils/cluster_utils';
+import { getNumberOfNodes } from 'utils/clusterUtils';
 import { renderRouteWithStore } from 'test_utils/renderUtils';
 import { wait, within } from '@testing-library/react';
 

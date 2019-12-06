@@ -9,7 +9,7 @@ import {
   getNumberOfNodePoolsNodes,
   getNumberOfNodes,
   getStorageTotal,
-} from 'utils/cluster_utils';
+} from 'utils/clusterUtils';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { Dot } from 'styles';

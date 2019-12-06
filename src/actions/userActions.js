@@ -6,7 +6,7 @@ import {
   FlashMessage,
   messageTTL,
   messageType,
-} from 'lib/flash_message';
+} from 'lib/flashMessage';
 import { push } from 'connected-react-router';
 import _ from 'underscore';
 import GiantSwarm from 'giantswarm';

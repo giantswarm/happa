@@ -5,19 +5,19 @@ import {
   FlashMessage,
   messageTTL,
   messageType,
-} from 'lib/flash_message';
+} from 'lib/flashMessage';
 import { connect } from 'react-redux';
 import { giantswarmLogin } from 'actions/userActions';
 import { Link } from 'react-router-dom';
-import { parseErrorMessages } from '../auth/_parse_error_messages';
+import { parseErrorMessages } from '../Auth/parseErrorMessages';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
-import { validatePassword } from 'lib/password_validation';
-import PasswordField from '../signup/password_field';
+import { validatePassword } from 'lib/passwordValidation';
+import PasswordField from '../SignUp/PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import StatusMessage from '../signup/status_message';
+import StatusMessage from '../SignUp/StatusMessage';
 
 class SetPassword extends React.Component {
   constructor(props) {

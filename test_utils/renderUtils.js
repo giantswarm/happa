@@ -6,7 +6,7 @@ import TestingLibrary, { render } from '@testing-library/react';
 import { ThemeProvider } from 'emotion-theming';
 import configureStore from 'stores/configureStore';
 import React from 'react';
-import Routes from 'routes';
+import Routes from 'Routes';
 import theme from 'styles/theme';
 
 const initialStorage = {

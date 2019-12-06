@@ -1,7 +1,7 @@
 import { relativeDate } from 'lib/helpers.js';
 import CertificateOrgsLabel from './CertificateOrgsLabel';
-import Copyable from 'shared/copyable';
-import GenericModal from '../../modals/generic_modal';
+import Copyable from 'shared/Copyable';
+import GenericModal from '../../Modals/GenericModal';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';

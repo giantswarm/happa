@@ -5,10 +5,10 @@ import {
   FlashMessage,
   messageTTL,
   messageType,
-} from 'lib/flash_message';
+} from 'lib/flashMessage';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { parseErrorMessages } from './_parse_error_messages';
+import { parseErrorMessages } from './parseErrorMessages';
 import { push } from 'connected-react-router';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
