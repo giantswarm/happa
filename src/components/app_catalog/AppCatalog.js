@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { Route, Switch } from 'react-router-dom';
 import AppList from './AppList/AppList';
-import Catalogs from './catalog_list/CatalogList';
+import Catalogs from './CatalogList/CatalogList';
 import Detail from './AppDetail/AppDetail';
 import PropTypes from 'prop-types';
 import React from 'react';
