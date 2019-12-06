@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import React from 'react';
 
-import ClusterApps from '../ClusterApps.js';
+import ClusterApps from '../ClusterApps';
 
 it('renders without crashing', () => {
   render(

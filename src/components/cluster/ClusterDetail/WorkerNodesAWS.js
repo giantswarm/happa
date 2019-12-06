@@ -1,4 +1,4 @@
-import { Code } from 'styles/index';
+import { Code } from 'styles';
 import { LineDiv, WrapperDiv } from './WorkerNodesAzure';
 import AvailabilityZonesLabels from 'UI/availability_zones_labels';
 import Button from 'UI/button';
