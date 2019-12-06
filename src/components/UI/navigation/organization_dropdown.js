@@ -54,6 +54,7 @@ const OrgDropdown = styled(DropdownButton)`
     color: #ccd;
 
     .label {
+      font-size: 0.8rem;
       margin-right: 10px;
       position: absolute;
       top: 0;
@@ -68,6 +69,7 @@ const OrgDropdown = styled(DropdownButton)`
       padding-right: 10px;
       font-weight: normal;
       letter-spacing: 0.5px;
+      opacity: 1;
     }
 
     &:active {

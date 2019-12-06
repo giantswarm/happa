@@ -10,6 +10,8 @@ const UsrDropdown = styled(DropdownButton)`
   margin-left: 10px;
 
   .user_dropdown--toggle {
+    display: inline-block;
+
     @media only screen and (max-width: ${props =>
         props.theme.breakpoints.large}px) {
       span {
@@ -88,7 +90,6 @@ class UserDropdown extends React.Component {
               <Gravatar default='mm' email={this.props.user.email} size={100} />
               <span>{this.props.user.email}</span>
             </div>
-            {/* <span className='caret' /> */}
           </>
         }
       >
