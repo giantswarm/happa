@@ -4,8 +4,8 @@ import {
   getMockCall,
   AWSInfoResponse,
   userResponse,
-} from 'test_utils/mockHttpCalls';
-import { renderRouteWithStore } from 'test_utils/renderUtils';
+} from 'testUtils/mockHttpCalls';
+import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 it('logging out redirects to the login page', async () => {
   // Given I have a Giant Swarm API with no clusters, organizations, appcatalogs
