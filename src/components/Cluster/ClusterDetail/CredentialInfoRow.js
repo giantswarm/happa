@@ -1,6 +1,6 @@
 import { FlexRowWithTwoBlocksOnEdges } from 'styles';
 import { Providers } from 'shared/constants';
-import AWSAccountID from 'UI/aws_account_id';
+import AWSAccountID from 'UI/AWSAccountID';
 import PropTypes from 'prop-types';
 import React from 'react';
 // import styled from '@emotion/styled';
