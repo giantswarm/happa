@@ -1,6 +1,6 @@
 import { Code } from 'styles';
 import { LineDiv, WrapperDiv } from './WorkerNodesAzure';
-import AvailabilityZonesLabels from 'UI/availability_zones_labels';
+import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/button';
 import PropTypes from 'prop-types';
 import React from 'react';

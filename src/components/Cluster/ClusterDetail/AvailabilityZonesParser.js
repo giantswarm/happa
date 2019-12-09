@@ -1,4 +1,4 @@
-import AvailabilityZonesLabels from 'UI/availability_zones_labels';
+import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import NumberPicker from 'UI/number_picker';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
