@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import AppDetails from 'UI/AppDetails';
 import DocumentTitle from 'react-document-title';
 import InstallAppModal from './InstallAppModal';
-import LoadingOverlay from 'UI/loading_overlay';
+import LoadingOverlay from 'UI/LoadingOverlay';
 import PropTypes from 'prop-types';
 import React from 'react';
 

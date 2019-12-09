@@ -15,7 +15,7 @@ import ClusterIDLabel from 'UI/ClusterIDLabel';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import KeyPairs from './KeyPairs';
-import LoadingOverlay from 'UI/loading_overlay';
+import LoadingOverlay from 'UI/LoadingOverlay';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import PropTypes from 'prop-types';
 import React from 'react';

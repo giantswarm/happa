@@ -1,5 +1,5 @@
 import Button from 'UI/Button';
-import LoadingOverlay from 'UI/loading_overlay';
+import LoadingOverlay from 'UI/LoadingOverlay';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReleaseComponentLabel from 'UI/release_component_label';

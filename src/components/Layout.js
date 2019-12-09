@@ -16,7 +16,7 @@ import AppCatalog from './AppCatalog/AppCatalog';
 import DocumentTitle from 'react-document-title';
 import GiantSwarm from 'giantswarm';
 import Home from './Home/Home';
-import LoadingOverlay from './UI/loading_overlay';
+import LoadingOverlay from './UI/LoadingOverlay';
 import Modals from './Modals/Modals';
 import Navigation from './UI/Navigation';
 import Organizations from './Organizations/Organizations';
