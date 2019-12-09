@@ -27,7 +27,7 @@ import Tabs from './Tabs';
 import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
 import V5ClusterDetailTable from './V5ClusterDetailTable';
-import ViewAndEditName from 'UI/view_edit_name';
+import ViewAndEditName from 'UI/ViewEditName';
 
 const WrapperDiv = styled.div`
   h2 {
