@@ -4,7 +4,7 @@ import { CodeBlock, Prompt } from './CodeBlock';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import Button from 'UI/Button';
-import FileBlock from './fileblock';
+import FileBlock from './FileBlock';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
