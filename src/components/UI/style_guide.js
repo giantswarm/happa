@@ -1,5 +1,5 @@
 import ClusterEmptyState from './ClusterEmptyState';
-import ComponentChangelog from './component_changelog';
+import ComponentChangelog from './ComponentChangelog';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReleaseComponentLabel from './release_component_label';
