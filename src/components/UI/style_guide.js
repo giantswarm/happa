@@ -2,7 +2,7 @@ import ClusterEmptyState from './ClusterEmptyState';
 import ComponentChangelog from './ComponentChangelog';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReleaseComponentLabel from './release_component_label';
+import ReleaseComponentLabel from './ReleaseComponentLabel';
 import styled from '@emotion/styled';
 
 const Wrapper = styled.div`

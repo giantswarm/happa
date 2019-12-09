@@ -9,7 +9,7 @@ import ComponentChangelog from 'UI/ComponentChangelog';
 import diff from 'deep-diff';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReleaseComponentLabel from 'UI/release_component_label';
+import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 class UpgradeClusterModal extends React.Component {
   state = {

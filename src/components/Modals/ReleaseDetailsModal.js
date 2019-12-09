@@ -5,7 +5,7 @@ import Button from 'UI/Button';
 import ComponentChangelog from 'UI/ComponentChangelog';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReleaseComponentLabel from 'UI/release_component_label';
+import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 import theme from 'styles/theme';
 
 class ReleaseDetailsModal extends React.Component {
