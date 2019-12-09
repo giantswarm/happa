@@ -18,7 +18,7 @@ import GiantSwarm from 'giantswarm';
 import Home from './Home/Home';
 import LoadingOverlay from './UI/LoadingOverlay';
 import Modals from './Modals/Modals';
-import Navigation from './UI/Navigation';
+import Navigation from './UI/Navigation/Navigation';
 import Organizations from './Organizations/Organizations';
 import PropTypes from 'prop-types';
 import React from 'react';
