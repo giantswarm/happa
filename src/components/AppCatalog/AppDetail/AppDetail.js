@@ -1,6 +1,6 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import AppDetails from 'UI/AppDetails';
+import AppDetails from 'UI/AppDetails/AppDetails';
 import DocumentTitle from 'react-document-title';
 import InstallAppModal from './InstallAppModal';
 import LoadingOverlay from 'UI/LoadingOverlay';
