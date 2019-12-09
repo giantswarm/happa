@@ -2,7 +2,7 @@ import { clusterInstallApp } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/cluster_id_label';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ClusterPicker from './ClusterPicker';
 import GenericModal from '../../Modals/GenericModal';
 import InstallAppForm from './InstallAppForm';

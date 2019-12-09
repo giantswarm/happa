@@ -11,7 +11,7 @@ import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
 import Button from 'UI/Button';
 import ClusterApps from './ClusterApps';
-import ClusterIDLabel from 'UI/cluster_id_label';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';
 import KeyPairs from './KeyPairs';

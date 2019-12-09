@@ -11,7 +11,7 @@ import {
 } from 'actions/appSecretActions';
 import { truncate } from 'lib/helpers';
 import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/cluster_id_label';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 import GenericModal from '../../Modals/GenericModal';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
