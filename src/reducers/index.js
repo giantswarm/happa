@@ -10,6 +10,7 @@ import nodePools from './nodePoolsReducer';
 import organizations from './organizationReducer';
 import releases from './releaseReducer';
 import users from './userReducer';
+import loadingFlags from './loadingReducer';
 
 const entities = combineReducers({
   catalogs,
@@ -20,6 +21,7 @@ const entities = combineReducers({
   releases,
   users,
   nodePools,
+  loadingFlags,
 });
 
 const rootReducer = history =>
