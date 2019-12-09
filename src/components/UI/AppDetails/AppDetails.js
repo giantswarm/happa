@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import AppDetailsBody from './body';
+import AppDetailsBody from './AppDetailsBody';
 import AppDetailsItem from './item';
 import PropTypes from 'prop-types';
 import React from 'react';
