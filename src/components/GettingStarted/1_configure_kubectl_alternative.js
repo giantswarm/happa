@@ -1,6 +1,6 @@
 import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
-import { CodeBlock, Prompt } from './codeblock';
+import { CodeBlock, Prompt } from './CodeBlock';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import Button from 'UI/Button';
