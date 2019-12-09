@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import CatalogTypeLabel from 'UI/catalog_type_label';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';

@@ -12,7 +12,7 @@ import {
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import BootstrapTable from 'react-bootstrap-table-next';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import copy from 'copy-to-clipboard';
 import DocumentTitle from 'react-document-title';
 import moment from 'moment';

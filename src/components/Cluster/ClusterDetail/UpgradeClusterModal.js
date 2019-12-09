@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import ComponentChangelog from 'UI/component_changelog';
 import diff from 'deep-diff';
 import PropTypes from 'prop-types';

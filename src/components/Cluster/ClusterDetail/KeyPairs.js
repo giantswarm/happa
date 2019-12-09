@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { relativeDate } from 'lib/helpers.js';
 import { spinner } from 'images';
 import BootstrapTable from 'react-bootstrap-table-next';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import CertificateOrgsLabel from './CertificateOrgsLabel';
 import Copyable from 'shared/Copyable';
 import KeypairCreateModal from './KeyPairCreateModal';

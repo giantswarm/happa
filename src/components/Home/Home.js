@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import _ from 'underscore';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import ClusterDashboardItem from './ClusterDashboardItem';
 import ClusterEmptyState from 'UI/cluster_empty_state';
 import DocumentTitle from 'react-document-title';

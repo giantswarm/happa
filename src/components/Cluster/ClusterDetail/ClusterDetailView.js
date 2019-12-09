@@ -9,7 +9,7 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
 import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import ClusterApps from './ClusterApps';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import cmp from 'semver-compare';

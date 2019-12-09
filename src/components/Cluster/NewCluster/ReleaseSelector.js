@@ -1,4 +1,4 @@
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import LoadingOverlay from 'UI/loading_overlay';
 import PropTypes from 'prop-types';
 import React from 'react';

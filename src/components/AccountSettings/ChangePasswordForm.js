@@ -1,6 +1,6 @@
 import { Base64 } from 'js-base64';
 import { validatePassword } from 'lib/passwordValidation';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import GiantSwarm from 'giantswarm';
 import PasswordField from '../SignUp/PasswordField';
 import PropTypes from 'prop-types';

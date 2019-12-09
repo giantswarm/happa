@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { CodeBlock, Prompt } from './codeblock';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import FileBlock from './fileblock';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';

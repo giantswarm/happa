@@ -5,7 +5,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { Providers } from 'shared/constants';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import PropTypes from 'prop-types';

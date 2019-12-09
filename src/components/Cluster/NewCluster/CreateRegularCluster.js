@@ -6,7 +6,7 @@ import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
 import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
 import AzureVMSizeSelector from './AzureVMSizeSelector';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import ClusterCreationDuration from './ClusterCreationDuration';
 import cmp from 'semver-compare';
 import DocumentTitle from 'react-document-title';

@@ -2,7 +2,7 @@ import { Code, FlexRowWithTwoBlocksOnEdges } from 'styles';
 import { CopyToClipboardDiv } from './V5ClusterDetailTable';
 import { getCpusTotal, getMemoryTotal } from 'utils/clusterUtils';
 import { Providers } from 'shared/constants';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import copy from 'copy-to-clipboard';
 import CredentialInfoRow from './CredentialInfoRow';
 import moment from 'moment';
