@@ -6,7 +6,7 @@ import OrganizationDropdown from './OrganizationDropdown';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
-import UserDropdown from './user_dropdown';
+import UserDropdown from './UserDropdown';
 
 const OuterNav = styled.nav`
   height: 50px;
