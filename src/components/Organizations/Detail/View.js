@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/lib/Button';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import cmp from 'semver-compare';
 import Credentials from './Credentials';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 

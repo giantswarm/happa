@@ -13,7 +13,7 @@ import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import GiantSwarm from 'giantswarm';
 import Home from './Home/Home';
 import LoadingOverlay from './UI/loading_overlay';

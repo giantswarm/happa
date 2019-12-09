@@ -13,7 +13,7 @@ import Button from 'UI/button';
 import ClusterApps from './ClusterApps';
 import ClusterIDLabel from 'UI/cluster_id_label';
 import cmp from 'semver-compare';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import KeyPairs from './KeyPairs';
 import LoadingOverlay from 'UI/loading_overlay';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';

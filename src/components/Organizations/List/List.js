@@ -4,7 +4,7 @@ import {
   organizationDelete,
 } from 'actions/organizationActions';
 import Button from 'react-bootstrap/lib/Button';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import EmptyStateDisplay from 'UI/empty_state_display';
 import OrganizationList from 'UI/OrganizationList';
 import PropTypes from 'prop-types';

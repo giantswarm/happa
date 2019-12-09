@@ -2,7 +2,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import AppListInner from './AppListInner';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import LoadingOverlay from 'UI/loading_overlay';
 import PropTypes from 'prop-types';
 import React from 'react';

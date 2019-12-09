@@ -34,7 +34,7 @@ function useDelayedChange(value, delay) {
         setDelayedValue(value);
       }
     }, secondsToNextUpdate);
-  }, [value]);
+  }, [value, delay]);
 
   return delayedValue;
 }

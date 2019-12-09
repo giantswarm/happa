@@ -9,7 +9,7 @@ import AzureVMSizeSelector from './AzureVMSizeSelector';
 import Button from 'UI/button';
 import ClusterCreationDuration from './ClusterCreationDuration';
 import cmp from 'semver-compare';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import NumberPicker from 'UI/number_picker';
 import PropTypes from 'prop-types';
