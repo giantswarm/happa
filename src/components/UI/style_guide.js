@@ -1,4 +1,4 @@
-import ClusterEmptyState from './cluster_empty_state';
+import ClusterEmptyState from './ClusterEmptyState';
 import ComponentChangelog from './component_changelog';
 import PropTypes from 'prop-types';
 import React from 'react';
