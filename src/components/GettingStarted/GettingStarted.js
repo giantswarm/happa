@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import Page0_Overview from './Steps/Overview';
 import Page1_ConfigureKubeCTL from './Steps/ConfigureKubectl';
-import Page2_SimpleExample from './2_simple_example';
+import Page2_SimpleExample from './Steps/SimpleExample';
 import Page3_NextSteps from './Steps/NextSteps';
 import PropTypes from 'prop-types';
 import React from 'react';
