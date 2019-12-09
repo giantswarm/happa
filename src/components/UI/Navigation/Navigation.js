@@ -2,7 +2,7 @@ import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link, NavLink } from 'react-router-dom';
 import { logo } from 'images';
 
-import OrganizationDropdown from './organization_dropdown';
+import OrganizationDropdown from './OrganizationDropdown';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
