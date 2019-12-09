@@ -8,7 +8,7 @@ const DocumentTitle = ({ title, children }) => {
 };
 
 DocumentTitle.defaultProps = {
-  title: '',
+  title: 'Giant Swarm',
 };
 
 DocumentTitle.propTypes = {
