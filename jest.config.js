@@ -13,9 +13,9 @@ module.exports = {
     path.resolve(__dirname + '/'),
   ],
   moduleNameMapper: {
-    '\\.css$': require.resolve('./test_utils/assets-mock.js'),
+    '\\.css$': require.resolve('./test_utils/assetsMock.js'),
     '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': require.resolve(
-      './test_utils/assets-mock.js'
+      './test_utils/assetsMock.js'
     ),
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],
