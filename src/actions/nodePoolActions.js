@@ -6,7 +6,34 @@ import GiantSwarm from 'giantswarm';
 // API instantiations.
 const nodePoolsApi = new GiantSwarm.NodePoolsApi();
 
-//Loads all node pools for all node pools clusters.
+// Loads one cluster node pools
+export function clusterNodePoolsLoad() {
+  nodePoolsApi
+    .getNodePools(clusterId)
+    .then(data => {
+      // Receiving an array-like with weird prototype from API call,
+      // so converting it to an array.
+      let nodePoolsArray = (Array.from(data) || []).map(np => np.id);
+      // Dispatch action for populating nodePools key inside cluster
+      dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArray));
+    })
+    .catch(error => {
+      console.error('Error loading cluster node pools:', error);
+      dispatch({
+        type: types.NODEPOOLS_LOAD_ERROR,
+        error,
+      });
+
+      new FlashMessage(
+        'Something went wrong while trying to load node pools on this cluster.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+    });
+}
+
+// Loads all node pools for all v5 clusters in store.
 export function nodePoolsLoad() {
   return async function(dispatch, getState) {
     dispatch({
@@ -17,48 +44,14 @@ export function nodePoolsLoad() {
     const nodePoolsClustersId =
       getState().entities.clusters.nodePoolsClusters || [];
 
-    return Promise.all(
-      nodePoolsClustersId.map(async clusterId => {
-        const nodePools = await nodePoolsApi.getNodePools(clusterId);
+    await Promise.all(
+      nodePoolsClustersId.map(clusterId => clusterNodePoolsLoad(clusterId))
+    );
 
-        // Receiving an array-like with weird prototype from API call,
-        // so converting it to an array.
-        let nodePoolsArray = (Array.from(nodePools) || []).map(np => np.id);
-
-        // Dispatch action for populating nodePools key inside cluster
-        dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArray));
-
-        return nodePools;
-      })
-    )
-      .then(nodePools => {
-        const allNodePools = Array.from(nodePools)
-          .flat()
-          .reduce((accumulator, np) => {
-            return { ...accumulator, [np.id]: np };
-          }, {});
-
-        dispatch({
-          type: types.NODEPOOLS_LOAD_SUCCESS,
-          nodePools: allNodePools,
-        });
-      })
-      .catch(error => {
-        console.error('Error loading cluster node pools:', error);
-        dispatch({
-          type: types.NODEPOOLS_LOAD_ERROR,
-          error,
-        });
-
-        new FlashMessage(
-          'Something went wrong while trying to load node pools on this cluster.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        throw error;
-      });
+    dispatch({
+      type: types.NODEPOOLS_LOAD,
+      isFetching: false,
+    });
   };
 }
 

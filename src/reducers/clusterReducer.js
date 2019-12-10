@@ -28,6 +28,14 @@ const initialState = {
 
 const clusterReducer = produce((draft, action) => {
   switch (action.type) {
+    case types.CLUSTERS_LIST_SUCCESS:
+      draft.items = action.clusters;
+      return;
+
+    case types.CLUSTERS_LIST_ERROR:
+      draft.errorLoading = true;
+      return;
+
     case types.CLUSTERS_LOAD_SUCCESS:
       Object.keys(action.v4Clusters).forEach(clusterId => {
         const withAwsKeys = ensureWorkersHaveAWSkey(

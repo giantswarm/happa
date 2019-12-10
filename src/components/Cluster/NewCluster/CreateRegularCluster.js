@@ -1,9 +1,10 @@
+import { batchedClusterCreate } from 'actions/batchedActions';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { clusterCreate } from 'actions/clusterActions';
+// import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlexColumnDiv, Wrapper } from './CreateNodePoolsCluster';
 import { Providers } from 'shared/constants';
-import { push } from 'connected-react-router';
+// import { push } from 'connected-react-router';
 import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
 import AzureVMSizeSelector from './AzureVMSizeSelector';
 import Button from 'UI/Button';
@@ -201,47 +202,48 @@ class CreateRegularCluster extends React.Component {
       workers.push(firstWorker);
     }
 
-    this.props
-      .dispatch(
-        clusterCreate({
-          availability_zones: this.state.availabilityZonesPicker.value,
-          scaling: {
-            min: this.state.scaling.min,
-            max: this.state.scaling.max,
-          },
-          name:
-            this.state.clusterName === ''
-              ? 'Unnamed cluster'
-              : this.state.clusterName,
-          owner: this.props.selectedOrganization,
-          release_version: this.props.selectedRelease,
-          workers: workers,
-        })
-      )
-      .then(cluster => {
-        // after successful creation, redirect to cluster details
-        this.props.dispatch(
-          push(
-            '/organizations/' +
-              this.props.selectedOrganization +
-              '/clusters/' +
-              cluster.id
-          )
-        );
+    this.props.dispatch(
+      batchedClusterCreate({
+        availability_zones: this.state.availabilityZonesPicker.value,
+        scaling: {
+          min: this.state.scaling.min,
+          max: this.state.scaling.max,
+        },
+        name:
+          this.state.clusterName === ''
+            ? 'Unnamed cluster'
+            : this.state.clusterName,
+        owner: this.props.selectedOrganization,
+        release_version: this.props.selectedRelease,
+        workers: workers,
       })
-      .catch(error => {
-        var errorMessage = '';
+    );
+    // .then(cluster => {
+    //   // after successful creation, redirect to cluster details
+    //   this.props.dispatch(
+    //     push(
+    //       '/organizations/' +
+    //         this.props.selectedOrganization +
+    //         '/clusters/' +
+    //         cluster.id
+    //     )
+    //   );
+    // })
+    // .catch(error => {
+    //   var errorMessage = '';
 
-        if (error.body && error.body.message) {
-          errorMessage = error.body.message;
-        }
+    //   console.error(error);
 
-        this.setState({
-          submitting: false,
-          error: error,
-          errorMessage: errorMessage,
-        });
-      });
+    //   if (error.body && error.body.message) {
+    //     errorMessage = error.body.message;
+    //   }
+
+    //   this.setState({
+    //     submitting: false,
+    //     error: error,
+    //     errorMessage: errorMessage,
+    //   });
+    // });
   };
 
   isScalingAutomatic(provider, releaseVer) {

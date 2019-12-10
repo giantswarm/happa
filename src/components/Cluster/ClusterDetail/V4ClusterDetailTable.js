@@ -181,19 +181,23 @@ class V4ClusterDetailTable extends React.Component {
             showScalingModal={this.props.showScalingModal}
           />
         )}
-        {provider === Providers.AWS && (
-          <WorkerNodesAWS
-            az={cluster.availability_zones}
-            instanceName={cluster.workers[0].aws.instance_type}
-            instanceType={
-              this.state.awsInstanceTypes[cluster.workers[0].aws.instance_type]
-            }
-            scaling={cluster.scaling}
-            showScalingModal={this.props.showScalingModal}
-            workerNodesDesired={this.props.workerNodesDesired}
-            workerNodesRunning={workerNodesRunning}
-          />
-        )}
+        {provider === Providers.AWS &&
+          cluster.workers &&
+          cluster.workers.length !== 0 && (
+            <WorkerNodesAWS
+              az={cluster.availability_zones}
+              instanceName={cluster.workers[0].aws.instance_type}
+              instanceType={
+                this.state.awsInstanceTypes[
+                  cluster.workers[0].aws.instance_type
+                ]
+              }
+              scaling={cluster.scaling}
+              showScalingModal={this.props.showScalingModal}
+              workerNodesDesired={this.props.workerNodesDesired}
+              workerNodesRunning={workerNodesRunning}
+            />
+          )}
         <p className='last-updated'>
           <small>
             The information above is auto-refreshing. Details last fetched{' '}

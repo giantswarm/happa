@@ -14,14 +14,14 @@ const clustersApi = new GiantSwarm.ClustersApi();
 // enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
 // their release version and provider.
 // ? Do we reaaly need this function?
-function enhanceWithCapabilities(clusters, provider) {
-  clusters = clusters.map(c => {
-    c.capabilities = computeCapabilities(c, provider);
-    return c;
-  });
+// function enhanceWithCapabilities(clusters, provider) {
+//   clusters = clusters.map(c => {
+//     c.capabilities = computeCapabilities(c, provider);
+//     return c;
+//   });
 
-  return clusters;
-}
+//   return clusters;
+// }
 
 // computeCapabilities takes a cluster object and provider and returns a
 // capabilities object with the features that this cluster supports.
@@ -43,8 +43,8 @@ function computeCapabilities(cluster, provider) {
   return capabilities;
 }
 
-// This is a helper function, not an action creator.
-// For some reason we are storing clusters as objects instead as arrays
+// This is a helper function that transforms an array of clusters into an object of clusters
+// with its ids as keys. Also we are adding some data to the cluters objects.
 function clustersLoadArrayToObject(clusters) {
   return clusters
     .map(cluster => {
@@ -62,30 +62,136 @@ function clustersLoadArrayToObject(clusters) {
 }
 
 /**
- * Performs the getClusters API call and dispatches the clustersLoadSuccess
- * action.
+ * Performs the getClusters API call and dispatches related actions
+ * This is just for getting all the clusters, but not their details.
+ * @param {Boolean} withLoadingFlags Set to false to avoid loading state (eg when refreshing)
  */
-export function clustersLoad() {
-  return async function(dispatch, getState) {
-    dispatch({ type: types.CLUSTERS_LOAD });
+export function clustersList({ withLoadingFlags }) {
+  return async function(dispatch) {
+    if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
 
     // Fetch all clusters.
-    const clusters = await clustersApi
+    return clustersApi
       .getClusters()
-      .then(clusters => {
+      .then(data => {
         // ? Do we really need to do this here? We are doing it after when fetching details.
-        const enhancedClusters = enhanceWithCapabilities(
-          clusters,
-          getState().app.info.general.provider
-        );
+        // const enhancedClusters = enhanceWithCapabilities(
+        //   data,
+        //   getState().app.info.general.provider
+        // );
 
-        return enhancedClusters;
+        const clusters = clustersLoadArrayToObject(data);
+        dispatch({ type: types.CLUSTERS_LIST_SUCCESS, clusters });
       })
       .catch(error => {
         console.error(error);
-        dispatch(clustersLoadError(error));
+        dispatch({ type: types.CLUSTERS_LIST_ERROR, error });
       });
+  };
+}
 
+/**
+ * Performs getCluster API call to get the details of all clusters in store
+ * @param {Boolean} filterBySelectedOrganization
+ */
+export function clustersDetails({
+  filterBySelectedOrganization,
+  withLoadingFlags,
+}) {
+  return async function(dispatch, getState) {
+    if (withLoadingFlags) {
+      dispatch({ type: types.CLUSTERS_DETAILS_REQUEST });
+    }
+
+    const selectedOrganization = getState().app.selectedOrganization;
+    const allClusters = await getState().entities.clusters.items;
+
+    const clusters = filterBySelectedOrganization
+      ? Object.keys(allClusters).filter(
+          id => allClusters[id].owner === selectedOrganization
+        )
+      : allClusters;
+
+    const clusterDetails = await Promise.all(
+      Object.keys(clusters).map(clusterId => {
+        return dispatch(clusterLoadDetails(clusterId));
+      })
+    );
+
+    // We actually don't care if success or error, just want to set loading flag to
+    // false when all the promises are resolved/rejected.
+    dispatch({ type: types.CLUSTERS_DETAILS_FINISHED });
+    return clusterDetails; // just in case we want to await it
+  };
+}
+
+/**
+ * Loads details for a cluster.
+ * @param {String} clusterId Cluster ID
+ */
+export function clusterLoadDetails(clusterId) {
+  return async function(dispatch, getState) {
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
+
+    dispatch({
+      type: types.CLUSTER_LOAD_DETAILS,
+      clusterId,
+    });
+
+    if (isNodePoolsCluster) {
+      dispatch({ type: types.V5_CLUSTER_LOAD_DETAILS });
+    }
+
+    try {
+      const cluster = isNodePoolsCluster
+        ? await clustersApi.getClusterV5(clusterId)
+        : await clustersApi.getCluster(clusterId);
+
+      dispatch(clusterLoadStatus(clusterId)); // TODO
+
+      cluster.capabilities = computeCapabilities(
+        cluster,
+        getState().app.info.general.provider
+      );
+
+      dispatch(clusterLoadDetailsSuccess(cluster));
+      return cluster;
+    } catch (error) {
+      if (error.status === 404) {
+        new FlashMessage(
+          'This cluster no longer exists.',
+          messageType.INFO,
+          messageTTL.MEDIUM,
+          'Redirecting you to your organization clusters list'
+        );
+
+        // Delete the cluster in te store.
+        dispatch(clusterDeleteSuccess(clusterId));
+        dispatch(push('/'));
+      } else {
+        console.error('Error loading cluster details:', error);
+        dispatch(clusterLoadDetailsError(clusterId, error));
+
+        new FlashMessage(
+          'Something went wrong while trying to load cluster details.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        throw error;
+      }
+    }
+
+    // Here we are chaining because we always want to get the node pools when fetching
+    // cluster details.
+    if (isNodePoolsCluster) dispatch(nodePoolsLoad(clusterId));
+  };
+}
+
+export function _clustersDetails() {
+  return async function(dispatch, getState) {
     // Extract v4 clusters from the clusters fetched array.
     const v4Clusters = clusters.filter(cluster =>
       cluster.path.startsWith('/v4')
@@ -461,67 +567,6 @@ export function clusterDeleteApp(appName, clusterID) {
 }
 
 /**
- * Loads details for a cluster.
- *
- * @param {String} clusterId Cluster ID
- */
-export function clusterLoadDetails(clusterId) {
-  return async function(dispatch, getState) {
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
-
-    dispatch({
-      type: types.CLUSTER_LOAD_DETAILS,
-      clusterId,
-    });
-
-    if (isNodePoolsCluster) {
-      dispatch({ type: types.V5_CLUSTER_LOAD_DETAILS });
-    }
-
-    try {
-      const cluster = isNodePoolsCluster
-        ? await clustersApi.getClusterV5(clusterId)
-        : await clustersApi.getCluster(clusterId);
-
-      dispatch(clusterLoadStatus(clusterId));
-
-      cluster.capabilities = computeCapabilities(
-        cluster,
-        getState().app.info.general.provider
-      );
-
-      dispatch(clusterLoadDetailsSuccess(cluster));
-      return cluster;
-    } catch (error) {
-      if (error.status === 404) {
-        new FlashMessage(
-          'This cluster no longer exists.',
-          messageType.INFO,
-          messageTTL.MEDIUM,
-          'Redirecting you to your organization clusters list'
-        );
-
-        dispatch(clusterDeleteSuccess(clusterId));
-        dispatch(push('/'));
-      } else {
-        console.error('Error loading cluster details:', error);
-        dispatch(clusterLoadDetailsError(clusterId, error));
-
-        new FlashMessage(
-          'Something went wrong while trying to load cluster details.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        throw error;
-      }
-    }
-  };
-}
-
-/**
  * Takes a clusterId and loads status for that cluster.
  *
  * @param {String} clusterId Cluster ID
@@ -558,6 +603,7 @@ function clusterLoadStatusV4(dispatch, clusterId) {
     .catch(error => {
       // TODO: Find a better way to deal with status endpoint errors in dev:
       // https://github.com/giantswarm/giantswarm/issues/6757
+      console.error(error);
       if (error.status === 404) {
         dispatch(clusterLoadStatusNotFound(clusterId));
       } else {
@@ -570,7 +616,7 @@ function clusterLoadStatusV4(dispatch, clusterId) {
           'Please try again later or contact support: support@giantswarm.io'
         );
 
-        throw error;
+        // throw error;
       }
     });
 }
@@ -617,14 +663,12 @@ export function clusterCreate(cluster, isV5Cluster) {
         }
 
         new FlashMessage(
-          'Your new cluster with ID <code>' +
-            clusterId +
-            '</code> is being created.',
+          `Your new cluster with ID <code>${clusterId}</code> is being created.`,
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );
 
-        return dispatch(clusterLoadDetails(clusterId));
+        return { clusterId, owner: cluster.owner };
       })
       .catch(error => {
         console.error(error);
@@ -662,7 +706,7 @@ export function clusterDeleteConfirmed(cluster) {
         );
 
         // ensure refreshing of the clusters list
-        dispatch(clustersLoad());
+        dispatch(clustersList());
       })
       .catch(error => {
         dispatch(modalHide());

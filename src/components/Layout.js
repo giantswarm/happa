@@ -54,7 +54,7 @@ class Layout extends React.Component {
   render() {
     return (
       <DocumentTitle>
-        <LoadingOverlay loading={!this.props.firstLoadComplete}>
+        <LoadingOverlay loading={this.props.loadingClustersList !== false}>
           <Modals />
           <Navigation
             onSelectOrganization={this.selectOrganization}
@@ -101,11 +101,13 @@ Layout.propTypes = {
 };
 
 function mapStateToProps(state) {
+  const { loadingFlags } = state.entities;
+
   return {
     organizations: state.entities.organizations,
     user: state.app.loggedInUser,
     selectedOrganization: state.app.selectedOrganization,
-    firstLoadComplete: state.app.firstLoadComplete,
+    loadingClustersList: loadingFlags.CLUSTERS_LIST,
     catalogs: state.entities.catalogs,
   };
 }
