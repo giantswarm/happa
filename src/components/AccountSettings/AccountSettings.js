@@ -14,7 +14,7 @@ class AccountSettings extends React.Component {
       <Breadcrumb
         data={{ title: 'ACCOUNT SETTINGS', pathname: '/account-settings/' }}
       >
-        <DocumentTitle title='Account Settings | Giant Swarm'>
+        <DocumentTitle title='Account Settings'>
           <div>
             <div className='row'>
               <div className='col-12'>

@@ -11,7 +11,7 @@ import React from 'react';
 class GettingStarted extends React.Component {
   render() {
     return (
-      <DocumentTitle title={'Getting Started | Giant Swarm'}>
+      <DocumentTitle title='Getting Started'>
         <Breadcrumb
           data={{
             title: 'GETTING STARTED',

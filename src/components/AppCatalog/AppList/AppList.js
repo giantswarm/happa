@@ -18,7 +18,7 @@ const AppList = ({ catalog, ...props }) => {
         pathname: props.match.url,
       }}
     >
-      <DocumentTitle title={'Apps | Giant Swarm '}>
+      <DocumentTitle title='Apps'>
         <>
           <Link className='back-link' to={'/app-catalogs/'}>
             <i aria-hidden='true' className='fa fa-chevron-left' />

@@ -312,7 +312,7 @@ class Users extends React.Component {
   render() {
     return (
       <Breadcrumb data={{ title: 'USERS', pathname: '/users/' }}>
-        <DocumentTitle title='Users | Giant Swarm'>
+        <DocumentTitle title='Users'>
           <div>
             <div className='row'>
               <div className='col-7'>

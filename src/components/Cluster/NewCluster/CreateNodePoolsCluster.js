@@ -371,11 +371,7 @@ class CreateNodePoolsCluster extends Component {
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
       >
         <DocumentTitle
-          title={
-            'Create Cluster | ' +
-            this.props.selectedOrganization +
-            ' | Giant Swarm'
-          }
+          title={`Create Cluster | ${this.props.selectedOrganization}`}
         >
           <>
             <WrapperDiv data-testid='nodepool-cluster-creation-view'>

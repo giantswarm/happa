@@ -9,7 +9,7 @@ import ReactMarkdown from 'react-markdown';
 class CatalogList extends React.Component {
   render() {
     return (
-      <DocumentTitle title={`App Catalogs | Giant Swarm `}>
+      <DocumentTitle title='App Catalogs'>
         <>
           <h1>App Catalogs</h1>
           <p>Pick an App Catalog to browse all the Apps in it.</p>

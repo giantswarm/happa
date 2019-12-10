@@ -42,7 +42,7 @@ class AppDetail extends React.Component {
               pathname: this.props.match.url,
             }}
           >
-            <DocumentTitle title={`${this.props.app.name} | Giant Swarm `}>
+            <DocumentTitle title={this.props.app.name}>
               {repo && (
                 <AppDetails
                   app={this.props.app}

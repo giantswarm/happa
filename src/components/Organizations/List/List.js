@@ -26,7 +26,7 @@ class OrganizationListWrapper extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title='Organizations | Giant Swarm'>
+      <DocumentTitle title='Organizations'>
         <>
           <h1>Organizations</h1>
           <br />

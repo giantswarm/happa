@@ -121,11 +121,7 @@ class OrganizationDetail extends React.Component {
     if (this.props.organization) {
       return (
         <DocumentTitle
-          title={
-            'Organization Details | ' +
-            this.props.organization.id +
-            ' | Giant Swarm'
-          }
+          title={`Organization Details | ${this.props.organization.id}`}
         >
           <div>
             <div className='row'>

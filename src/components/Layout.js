@@ -53,7 +53,7 @@ class Layout extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title='Giant Swarm'>
+      <DocumentTitle>
         <LoadingOverlay loading={!this.props.firstLoadComplete}>
           <Modals />
           <Navigation

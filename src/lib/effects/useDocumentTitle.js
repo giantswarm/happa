@@ -18,7 +18,13 @@ function useDocumentTitle(defaultTitle) {
   }, []);
 
   useEffect(() => {
-    document.title = title;
+    let titleToSet = 'Giant Swarm';
+
+    if (title) {
+      titleToSet = `${title} | ${titleToSet}`;
+    }
+
+    document.title = titleToSet;
   }, [title]);
 
   return [title, setTitle];

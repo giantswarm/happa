@@ -17,11 +17,11 @@ describe('DocumentTitle', () => {
     initialTitle = document.title;
   });
 
-  afterAll(() => {
+  beforeEach(() => {
     document.title = initialTitle;
   });
 
-  beforeEach(() => {
+  afterAll(() => {
     document.title = initialTitle;
   });
 
@@ -40,7 +40,7 @@ describe('DocumentTitle', () => {
 
     const { rerender } = renderWithProps({ title: titles[0] });
 
-    expect(document.title).toBe(titles[0]);
+    expect(document.title).toContain(titles[0]);
 
     rerender(
       getComponent({
@@ -48,7 +48,7 @@ describe('DocumentTitle', () => {
       })
     );
 
-    expect(document.title).toBe(titles[1]);
+    expect(document.title).toContain(titles[1]);
   });
 
   it(`resets to previous title after unmount`, () => {
@@ -56,6 +56,6 @@ describe('DocumentTitle', () => {
 
     unmount();
 
-    expect(document.title).toBe(initialTitle);
+    expect(document.title).toContain(initialTitle);
   });
 });

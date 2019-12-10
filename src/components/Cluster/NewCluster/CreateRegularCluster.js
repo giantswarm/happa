@@ -429,11 +429,7 @@ class CreateRegularCluster extends React.Component {
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
       >
         <DocumentTitle
-          title={
-            'Create Cluster | ' +
-            this.props.selectedOrganization +
-            ' | Giant Swarm'
-          }
+          title={`Create Cluster | ${this.props.selectedOrganization}`}
         >
           {/* <div className='new-cluster' data-testid='cluster-creation-view'> */}
           <WrapperDiv data-testid='cluster-creation-view'>

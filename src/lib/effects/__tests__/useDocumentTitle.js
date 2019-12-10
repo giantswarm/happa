@@ -8,11 +8,11 @@ describe('useDocumentTitle hook', () => {
     initialTitle = document.title;
   });
 
-  afterAll(() => {
+  beforeEach(() => {
     document.title = initialTitle;
   });
 
-  beforeEach(() => {
+  afterAll(() => {
     document.title = initialTitle;
   });
 
@@ -20,7 +20,7 @@ describe('useDocumentTitle hook', () => {
     const testTitle = 'Test title';
     renderHook(() => useDocumentTitle(testTitle));
 
-    expect(document.title).toBe(testTitle);
+    expect(document.title).toContain(testTitle);
   });
 
   it('handles document title changes', () => {
@@ -32,6 +32,6 @@ describe('useDocumentTitle hook', () => {
       result.current[1](titles[1]);
     });
 
-    expect(document.title).toBe(titles[1]);
+    expect(document.title).toContain(titles[1]);
   });
 });

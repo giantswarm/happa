@@ -248,9 +248,7 @@ class ClusterDetailView extends React.Component {
         <LoadingOverlay loading={loading} />
 
         {!loading && (
-          <DocumentTitle
-            title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
-          >
+          <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
             <WrapperDiv
               className='cluster-details'
               data-testid='cluster-details-view'
