@@ -15,7 +15,7 @@ import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from '../ClusterDetail/AddNodePool';
 import AvailabilityZonesParser from '../ClusterDetail/AvailabilityZonesParser';
 import Button from 'UI/Button';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';

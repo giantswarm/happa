@@ -8,7 +8,7 @@ import _ from 'underscore';
 import Button from 'UI/Button';
 import ClusterDashboardItem from './ClusterDashboardItem';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import moment from 'moment';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import PropTypes from 'prop-types';

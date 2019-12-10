@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import Button from 'UI/Button';
 import CatalogTypeLabel from 'UI/CatalogTypeLabel';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
