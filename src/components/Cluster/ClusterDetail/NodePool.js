@@ -12,7 +12,7 @@ import React, { Component } from 'react';
 import ScaleNodePoolModal from './ScaleNodePoolModal';
 import styled from '@emotion/styled';
 import theme from 'styles/theme';
-import ViewAndEditName from 'UI/view_edit_name';
+import ViewAndEditName from 'UI/ViewEditName';
 
 const NodesWrapper = styled.div`
   width: 36px;

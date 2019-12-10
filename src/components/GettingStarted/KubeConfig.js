@@ -1,5 +1,5 @@
 import { makeKubeConfigTextFile } from 'lib/helpers';
-import FileBlock from './fileblock';
+import FileBlock from './FileBlock';
 import PropTypes from 'prop-types';
 import React from 'react';
 

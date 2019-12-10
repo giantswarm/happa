@@ -1,5 +1,5 @@
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
 

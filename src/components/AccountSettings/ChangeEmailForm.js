@@ -1,4 +1,4 @@
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';

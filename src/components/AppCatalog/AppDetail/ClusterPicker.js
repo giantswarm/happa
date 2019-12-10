@@ -1,4 +1,4 @@
-import ClusterIDLabel from 'UI/cluster_id_label';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 import Input from './Input';
 import PropTypes from 'prop-types';
 import React from 'react';

@@ -6,8 +6,8 @@ import {
 } from 'actions/organizationActions';
 import { Providers } from 'shared/constants';
 import { spinner } from 'images';
-import AWSAccountID from 'UI/aws_account_id';
-import Button from 'UI/button';
+import AWSAccountID from 'UI/AWSAccountID';
+import Button from 'UI/Button';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import FormGroup from 'react-bootstrap/lib/FormGroup';

@@ -6,7 +6,7 @@ import { Providers } from 'shared/constants';
 import { relativeDate } from 'lib/helpers.js';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/lib/Button';
-import ClusterIDLabel from 'UI/cluster_id_label';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 import cmp from 'semver-compare';
 import Credentials from './Credentials';
 import DocumentTitle from 'react-document-title';

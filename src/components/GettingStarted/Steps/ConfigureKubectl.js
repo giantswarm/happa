@@ -1,12 +1,12 @@
 import * as clusterActions from 'actions/clusterActions';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { CodeBlock, Prompt } from './codeblock';
+import { CodeBlock, Prompt } from '../CodeBlock';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { Link } from 'react-router-dom';
-import ClusterIDLabel from 'UI/cluster_id_label';
-import ConfigureKubeCtlAlternative from './1_configure_kubectl_alternative';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
+import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
