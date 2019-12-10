@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import AppDetailsBody from './body';
-import AppDetailsItem from './item';
+import AppDetailsBody from './AppDetailsBody';
+import AppDetailsItem from './AppDetailsItem';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';

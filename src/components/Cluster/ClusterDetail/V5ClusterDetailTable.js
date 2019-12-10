@@ -11,7 +11,7 @@ import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from './AddNodePool';
 import BaseTransition from 'styles/transitions/BaseTransition';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import copy from 'copy-to-clipboard';
 import CredentialInfoRow from './CredentialInfoRow';
 import moment from 'moment';

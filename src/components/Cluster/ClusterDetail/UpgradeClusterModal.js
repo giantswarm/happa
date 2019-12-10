@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import _ from 'underscore';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/button';
-import ComponentChangelog from 'UI/component_changelog';
+import Button from 'UI/Button';
+import ComponentChangelog from 'UI/ComponentChangelog';
 import diff from 'deep-diff';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReleaseComponentLabel from 'UI/release_component_label';
+import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 class UpgradeClusterModal extends React.Component {
   state = {

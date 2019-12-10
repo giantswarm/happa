@@ -5,8 +5,8 @@ import {
 } from 'actions/organizationActions';
 import Button from 'react-bootstrap/lib/Button';
 import DocumentTitle from 'react-document-title';
-import EmptyStateDisplay from 'UI/empty_state_display';
-import OrganizationList from 'UI/OrganizationList';
+import EmptyStateDisplay from 'UI/EmptyStateDisplay';
+import OrganizationList from 'UI/OrganizationList/OrganizationList';
 import PropTypes from 'prop-types';
 import React from 'react';
 
