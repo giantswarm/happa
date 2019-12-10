@@ -218,32 +218,6 @@ class CreateRegularCluster extends React.Component {
         workers: workers,
       })
     );
-    // .then(cluster => {
-    //   // after successful creation, redirect to cluster details
-    //   this.props.dispatch(
-    //     push(
-    //       '/organizations/' +
-    //         this.props.selectedOrganization +
-    //         '/clusters/' +
-    //         cluster.id
-    //     )
-    //   );
-    // })
-    // .catch(error => {
-    //   var errorMessage = '';
-
-    //   console.error(error);
-
-    //   if (error.body && error.body.message) {
-    //     errorMessage = error.body.message;
-    //   }
-
-    //   this.setState({
-    //     submitting: false,
-    //     error: error,
-    //     errorMessage: errorMessage,
-    //   });
-    // });
   };
 
   isScalingAutomatic(provider, releaseVer) {

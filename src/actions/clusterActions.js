@@ -11,18 +11,6 @@ import moment from 'moment';
 // API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
 
-// enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
-// their release version and provider.
-// ? Do we reaaly need this function?
-// function enhanceWithCapabilities(clusters, provider) {
-//   clusters = clusters.map(c => {
-//     c.capabilities = computeCapabilities(c, provider);
-//     return c;
-//   });
-
-//   return clusters;
-// }
-
 // computeCapabilities takes a cluster object and provider and returns a
 // capabilities object with the features that this cluster supports.
 function computeCapabilities(cluster, provider) {
@@ -74,12 +62,6 @@ export function clustersList({ withLoadingFlags }) {
     return clustersApi
       .getClusters()
       .then(data => {
-        // ? Do we really need to do this here? We are doing it after when fetching details.
-        // const enhancedClusters = enhanceWithCapabilities(
-        //   data,
-        //   getState().app.info.general.provider
-        // );
-
         const clusters = clustersLoadArrayToObject(data);
         dispatch({ type: types.CLUSTERS_LIST_SUCCESS, clusters });
       })
