@@ -34,4 +34,19 @@ describe('useDocumentTitle hook', () => {
 
     expect(document.title).toContain(titles[1]);
   });
+
+  it(`suffixes document titles with the '| Giant Swarm' label `, () => {
+    const suffix = '| Giant Swarm';
+    const titles = ['Test title 1', 'Test title 2'];
+
+    const { result } = renderHook(() => useDocumentTitle(titles[0]));
+
+    expect(document.title).toBe(`${titles[0]} ${suffix}`);
+
+    act(() => {
+      result.current[1](titles[1]);
+    });
+
+    expect(document.title).toBe(`${titles[1]} ${suffix}`);
+  });
 });

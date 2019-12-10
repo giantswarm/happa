@@ -35,7 +35,7 @@ describe('DocumentTitle', () => {
     expect(document.title).toBe('Giant Swarm');
   });
 
-  it(`handles title changes`, () => {
+  it('handles title changes', () => {
     const titles = ['Test title 1', 'Test title 2'];
 
     const { rerender } = renderWithProps({ title: titles[0] });
@@ -51,7 +51,7 @@ describe('DocumentTitle', () => {
     expect(document.title).toContain(titles[1]);
   });
 
-  it(`resets to previous title after unmount`, () => {
+  it('resets to previous title after unmount', () => {
     const { unmount } = renderWithProps({ title: 'Test title' });
 
     unmount();
