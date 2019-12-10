@@ -167,6 +167,7 @@ class V4ClusterDetailTable extends React.Component {
         <h2>Worker nodes</h2>
         {provider === Providers.AZURE && (
           <WorkerNodesAzure
+            az={cluster.availability_zones}
             instanceType={
               this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
             }

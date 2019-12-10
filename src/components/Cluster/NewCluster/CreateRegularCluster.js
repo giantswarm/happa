@@ -424,6 +424,8 @@ class CreateRegularCluster extends React.Component {
   }
 
   render() {
+    const { provider } = this.props;
+
     return (
       <Breadcrumb
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
@@ -472,7 +474,7 @@ class CreateRegularCluster extends React.Component {
 
             <FlexColumnDiv>
               <div className='worker-nodes'>Worker nodes</div>
-              {this.props.provider === Providers.AWS && (
+              {(provider === Providers.AWS || provider === Providers.AZURE) && (
                 <label
                   className='availability-zones'
                   htmlFor='availability-zones'
@@ -515,7 +517,7 @@ class CreateRegularCluster extends React.Component {
 
               <label htmlFor='instance-type'>
                 {(() => {
-                  switch (this.props.provider) {
+                  switch (provider) {
                     case Providers.AWS: {
                       const [RAM, CPUCores] = this.produceRAMAndCoresAWS();
 
@@ -607,7 +609,7 @@ class CreateRegularCluster extends React.Component {
                 <span className='label-span'>Number of worker nodes</span>
                 <NodeCountSelector
                   autoscalingEnabled={this.isScalingAutomatic(
-                    this.props.provider,
+                    provider,
                     this.props.selectedRelease
                   )}
                   maxValue={this.props.maxWorkersPerCluster}
@@ -617,7 +619,7 @@ class CreateRegularCluster extends React.Component {
                 />
                 <ProviderCredentials
                   organizationName={this.props.selectedOrganization}
-                  provider={this.props.provider}
+                  provider={provider}
                 />
                 {this.state.error && this.errorState()}
               </label>
