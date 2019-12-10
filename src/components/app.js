@@ -4,13 +4,13 @@ import { hot } from 'react-hot-loader';
 import { Notifier } from '@airbrake/browser';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
-import { Requester } from 'lib/patched_airbrake_requester';
+import { Requester } from 'lib/patchedAirbrakeRequester';
 import { ThemeProvider } from 'emotion-theming';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
-import monkeyPatchGiantSwarmClient from 'lib/giantswarm_client_patcher';
+import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import React from 'react';
-import Routes from './routes';
+import Routes from './Routes';
 import theme from 'styles/theme';
 
 // CSS Imports

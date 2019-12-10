@@ -3,7 +3,7 @@ import {
   API_ENDPOINT,
   appCatalogsResponse,
   getPersistedMockCall,
-  infoResponse,
+  AWSInfoResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -17,9 +17,9 @@ import {
   v4AWSClusterResponse,
   v5ClusterResponse,
   nodePoolsResponse,
-} from 'test_utils/mockHttpCalls';
+} from 'testUtils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
-import { renderRouteWithStore } from 'test_utils/renderUtils';
+import { renderRouteWithStore } from 'testUtils/renderUtils';
 import nock from 'nock';
 import { within } from '@testing-library/dom';
 
@@ -30,7 +30,7 @@ const requests = {};
 beforeAll(() => {
   requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
   requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.info = getPersistedMockCall('/v4/info/', infoResponse);
+  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
   requests.organizations = getPersistedMockCall(
     '/v4/organizations/',
     orgsResponse
@@ -95,11 +95,8 @@ it('creates a v5 cluster and redirect to details view', async () => {
     v5ClusterResponse
   );
 
-  const div = document.createElement('div');
   const { getAllByText, getByText, getByTestId } = renderRouteWithStore(
-    '/organizations/acme/clusters/new/',
-    div,
-    {}
+    '/organizations/acme/clusters/new/'
   );
 
   await wait(() => {
@@ -150,11 +147,8 @@ details view`, async () => {
     v4AWSClusterResponse
   );
 
-  const div = document.createElement('div');
   const { getByText, getByTestId, getAllByText } = renderRouteWithStore(
-    '/organizations/acme/clusters/new/',
-    div,
-    {}
+    '/organizations/acme/clusters/new/'
   );
 
   requests.status = getPersistedMockCall(

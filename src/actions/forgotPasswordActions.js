@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import Passage from 'lib/passage_client';
+import Passage from 'lib/passageClient';
 
 // TODO: Figure out a way to make the test suite know about our standard
 // 'window.config' object. Or change the way these config params are passed

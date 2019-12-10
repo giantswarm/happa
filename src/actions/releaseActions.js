@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from 'lib/flash_message';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
 
