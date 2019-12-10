@@ -8,7 +8,7 @@ import OAuthCallback from './Auth/OAuthCallback';
 import React from 'react';
 import SetPassword from './ForgotPassword/SetPassword';
 import SignUp from './SignUp/SignUp';
-import StyleGuide from './UI/style_guide';
+import StyleGuide from './UI/StyleGuide';
 
 const Routes = () => {
   return (

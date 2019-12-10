@@ -1,4 +1,4 @@
-import NumberPicker from 'UI/number_picker';
+import NumberPicker from 'UI/NumberPicker';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';

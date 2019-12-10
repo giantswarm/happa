@@ -11,7 +11,7 @@ import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from './AddNodePool';
 import BaseTransition from 'styles/transitions/BaseTransition';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import copy from 'copy-to-clipboard';
 import CredentialInfoRow from './CredentialInfoRow';
 import moment from 'moment';
@@ -622,7 +622,7 @@ class V5ClusterDetailTable extends React.Component {
             <span className='last-updated-datestring'>
               {this.lastUpdatedLabel()}
             </span>
-            . <span className='beta-tag'>BETA</span>
+            .
           </small>
         </p>
       </>

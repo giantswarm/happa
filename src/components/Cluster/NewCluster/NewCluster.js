@@ -6,7 +6,7 @@ import { Route, Switch } from 'react-router-dom';
 import cmp from 'semver-compare';
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
 import CreateRegularCluster from './CreateRegularCluster';
-import LoadingOverlay from 'UI/loading_overlay';
+import LoadingOverlay from 'UI/LoadingOverlay';
 import PropTypes from 'prop-types';
 import React from 'react';
 

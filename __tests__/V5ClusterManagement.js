@@ -13,10 +13,10 @@ import {
   V5_CLUSTER,
   v5ClusterResponse,
   v5ClustersResponse,
-} from 'test_utils/mockHttpCalls';
+} from 'testUtils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
 import { getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
-import { renderRouteWithStore } from 'test_utils/renderUtils';
+import { renderRouteWithStore } from 'testUtils/renderUtils';
 import { truncate } from 'lib/helpers';
 import nock from 'nock';
 

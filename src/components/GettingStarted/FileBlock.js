@@ -1,7 +1,7 @@
 import * as Helpers from 'lib/helpers';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import copy from 'copy-to-clipboard';
-import Line from './line';
+import Line from './Line';
 import PropTypes from 'prop-types';
 import React from 'react';
 

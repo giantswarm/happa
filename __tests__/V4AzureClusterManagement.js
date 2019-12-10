@@ -13,9 +13,9 @@ import {
   v4AzureClusterResponse,
   v4AzureClusterStatusResponse,
   v4ClustersResponse,
-} from 'test_utils/mockHttpCalls';
+} from 'testUtils/mockHttpCalls';
 import { getNumberOfNodes } from 'utils/clusterUtils';
-import { renderRouteWithStore } from 'test_utils/renderUtils';
+import { renderRouteWithStore } from 'testUtils/renderUtils';
 import { wait } from '@testing-library/react';
 
 // Cluster and route we are testing with.

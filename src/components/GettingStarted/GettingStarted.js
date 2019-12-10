@@ -1,10 +1,10 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import DocumentTitle from 'components/shared/DocumentTitle';
-import Page0_Overview from './0_overview';
-import Page1_ConfigureKubeCTL from './1_configure_kubectl';
-import Page2_SimpleExample from './2_simple_example';
-import Page3_NextSteps from './3_next_steps';
+import DocumentTitle from 'react-document-title';
+import Page0_Overview from './Steps/Overview';
+import Page1_ConfigureKubeCTL from './Steps/ConfigureKubectl';
+import Page2_SimpleExample from './Steps/SimpleExample';
+import Page3_NextSteps from './Steps/NextSteps';
 import PropTypes from 'prop-types';
 import React from 'react';
 

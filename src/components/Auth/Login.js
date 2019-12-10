@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { parseErrorMessages } from './parseErrorMessages';
 import { push } from 'connected-react-router';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';

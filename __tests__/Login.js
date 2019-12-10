@@ -5,9 +5,9 @@ import {
   AWSInfoResponse,
   postMockCall,
   userResponse,
-} from 'test_utils/mockHttpCalls';
+} from 'testUtils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
-import { renderRouteWithStore } from 'test_utils/renderUtils';
+import { renderRouteWithStore } from 'testUtils/renderUtils';
 import nock from 'nock';
 
 it('renders the login page at /login', async () => {

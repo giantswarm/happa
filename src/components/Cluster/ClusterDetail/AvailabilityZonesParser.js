@@ -1,5 +1,5 @@
-import AvailabilityZonesLabels from 'UI/availability_zones_labels';
-import NumberPicker from 'UI/number_picker';
+import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
+import NumberPicker from 'UI/NumberPicker';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 
