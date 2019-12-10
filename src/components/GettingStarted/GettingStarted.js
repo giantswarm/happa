@@ -1,6 +1,6 @@
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import Page0_Overview from './Steps/Overview';
 import Page1_ConfigureKubeCTL from './Steps/ConfigureKubectl';
 import Page2_SimpleExample from './Steps/SimpleExample';
@@ -11,7 +11,7 @@ import React from 'react';
 class GettingStarted extends React.Component {
   render() {
     return (
-      <DocumentTitle title={'Getting Started | Giant Swarm'}>
+      <DocumentTitle title='Getting Started'>
         <Breadcrumb
           data={{
             title: 'GETTING STARTED',

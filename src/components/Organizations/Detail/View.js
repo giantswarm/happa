@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/lib/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import cmp from 'semver-compare';
 import Credentials from './Credentials';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -121,11 +121,7 @@ class OrganizationDetail extends React.Component {
     if (this.props.organization) {
       return (
         <DocumentTitle
-          title={
-            'Organization Details | ' +
-            this.props.organization.id +
-            ' | Giant Swarm'
-          }
+          title={`Organization Details | ${this.props.organization.id}`}
         >
           <div>
             <div className='row'>

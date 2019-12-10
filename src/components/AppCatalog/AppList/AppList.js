@@ -2,7 +2,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import AppListInner from './AppListInner';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import LoadingOverlay from 'UI/LoadingOverlay';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -18,7 +18,7 @@ const AppList = ({ catalog, ...props }) => {
         pathname: props.match.url,
       }}
     >
-      <DocumentTitle title={'Apps | Giant Swarm '}>
+      <DocumentTitle title='Apps'>
         <>
           <Link className='back-link' to={'/app-catalogs/'}>
             <i aria-hidden='true' className='fa fa-chevron-left' />

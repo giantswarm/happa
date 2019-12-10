@@ -14,7 +14,7 @@ import BootstrapModal from 'react-bootstrap/lib/Modal';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'UI/Button';
 import copy from 'copy-to-clipboard';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import moment from 'moment';
 import MultiSelect from '@khanacademy/react-multi-select';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -312,7 +312,7 @@ class Users extends React.Component {
   render() {
     return (
       <Breadcrumb data={{ title: 'USERS', pathname: '/users/' }}>
-        <DocumentTitle title='Users | Giant Swarm'>
+        <DocumentTitle title='Users'>
           <div>
             <div className='row'>
               <div className='col-7'>
