@@ -1,5 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
-import { getComponentWithTheme } from 'test_utils/renderUtils';
+import { getComponentWithTheme } from 'testUtils/renderUtils';
 
 import NodeCountSelector from 'shared/NodeCountSelector';
 
