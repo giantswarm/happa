@@ -200,7 +200,7 @@ class V4ClusterDetailTable extends React.Component {
             <span className='last-updated-datestring'>
               {this.lastUpdatedLabel()}
             </span>
-            . <span className='beta-tag'>BETA</span>
+            .
           </small>
         </p>
       </WrapperDiv>
