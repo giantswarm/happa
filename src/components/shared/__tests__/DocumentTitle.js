@@ -1,6 +1,6 @@
 import DocumentTitle from 'shared/DocumentTitle';
 import React from 'react';
-import { getComponentWithTheme } from 'test_utils/renderUtils';
+import { getComponentWithTheme } from 'testUtils/renderUtils';
 import { render } from '@testing-library/react';
 
 let initialTitle = '';
