@@ -2,8 +2,8 @@ import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import { batchedRefreshClusters } from 'actions/batchedActions';
 import { bindActionCreators } from 'redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { connect } from 'react-redux';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import _ from 'underscore';
 import Button from 'UI/Button';
@@ -59,9 +59,13 @@ class Home extends React.Component {
    */
   title() {
     if (this.props.selectedOrganization) {
-      return `Cluster Overview | ${this.props.selectedOrganization}`;
+      return (
+        'Cluster Overview | ' +
+        this.props.selectedOrganization +
+        ' | Giant Swarm'
+      );
     } else {
-      return 'Cluster Overview';
+      return 'Cluster Overview | Giant Swarm';
     }
   }
 
@@ -104,22 +108,6 @@ class Home extends React.Component {
                   selectedOrganization={this.props.selectedOrganization}
                 />
               )}
-<<<<<<< HEAD
-            </TransitionGroup>
-
-            {this.props.clusters.length > 0 ? (
-              <p className='last-updated'>
-                <small>
-                  This table is auto-refreshing. Details last fetched{' '}
-                  <span className='last-updated-datestring'>
-                    {this.lastUpdatedLabel()}
-                  </span>
-                  .
-                </small>
-              </p>
-            ) : null}
-          </div>
-=======
 
               <TransitionGroup className='cluster-list'>
                 {_.sortBy(this.props.clusters, cluster => cluster.name).map(
@@ -160,7 +148,6 @@ class Home extends React.Component {
               ) : null}
             </div>
           </LoadingOverlay>
->>>>>>> 6659e4c... Batched cluster create
         }
       </DocumentTitle>
     );
