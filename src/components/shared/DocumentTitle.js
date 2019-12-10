@@ -1,8 +1,13 @@
 import PropTypes from 'prop-types';
 import useDocumentTitle from 'lib/effects/useDocumentTitle';
+import { useEffect } from 'react';
 
 const DocumentTitle = ({ title, children }) => {
-  useDocumentTitle(title);
+  const [_, setTitle] = useDocumentTitle(title);
+
+  useEffect(() => {
+    setTitle(title);
+  }, [title, setTitle]);
 
   return children;
 };

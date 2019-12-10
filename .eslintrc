@@ -22,7 +22,15 @@
     "emotion/syntax-preference": [1, "string"],
     "no-console": 1,
     "no-underscore-dangle": 0,
-    "no-unused-vars": 2,
+    "no-unused-vars": [
+      2,
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "ignoreRestSiblings": true,
+        "args": "all"
+      }
+    ],
     "no-useless-escape": 0,
     "quotes": [2, "single", { "allowTemplateLiterals": true }],
     "semi": [2, "always"],
