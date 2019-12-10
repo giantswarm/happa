@@ -1,7 +1,7 @@
 import { formatStatus, isExpiringSoon, NEVER_EXPIRES } from './UsersUtils';
 import { relativeDate } from 'lib/helpers.js';
 import BootstrapTable from 'react-bootstrap-table-next';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
 import UsersLoader from './UsersLoader';
