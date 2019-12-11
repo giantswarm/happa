@@ -29,7 +29,7 @@ Organizations.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const loadingClustersDetails = state.entities.loadingFlags.CLUSTERS_DETAILS;
+  const loadingClustersDetails = state.loadingFlags.CLUSTERS_DETAILS;
 
   return {
     loadingClustersDetails,

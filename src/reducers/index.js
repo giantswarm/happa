@@ -21,7 +21,6 @@ const entities = combineReducers({
   releases,
   users,
   nodePools,
-  loadingFlags,
 });
 
 const rootReducer = history =>
@@ -30,6 +29,7 @@ const rootReducer = history =>
     app: makeAppReducer(),
     entities,
     modal,
+    loadingFlags,
   });
 
 export default rootReducer;

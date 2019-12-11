@@ -172,7 +172,6 @@ function mapStateToProps(state) {
   var errorLoadingClusters = state.entities.clusters.errorLoading;
   const nodePoolsClusters = state.entities.clusters.nodePoolsClusters;
   const nodePools = state.entities.nodePools.items;
-  const { loadingFlags } = state.entities;
 
   var clusters = [];
   if (selectedOrganization) {
@@ -188,8 +187,8 @@ function mapStateToProps(state) {
     selectedOrganization: selectedOrganization,
     nodePoolsClusters,
     nodePools,
-    loadingClustersList: loadingFlags.CLUSTERS_LIST,
-    loadingClustersDetails: loadingFlags.CLUSTERS_DETAILS,
+    loadingClustersList: state.loadingFlags.CLUSTERS_LIST,
+    loadingClustersDetails: state.loadingFlags.CLUSTERS_DETAILS,
   };
 }
 

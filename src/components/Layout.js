@@ -101,13 +101,11 @@ Layout.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { loadingFlags } = state.entities;
-
   return {
     organizations: state.entities.organizations,
     user: state.app.loggedInUser,
     selectedOrganization: state.app.selectedOrganization,
-    loadingClustersList: loadingFlags.CLUSTERS_LIST,
+    loadingClustersList: state.loadingFlags.CLUSTERS_LIST,
     catalogs: state.entities.catalogs,
   };
 }
