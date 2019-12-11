@@ -4,10 +4,12 @@ import GiantSwarm from 'giantswarm';
 import { push } from 'connected-react-router';
 
 // actions
-import * as userActions from './userActions';
-import * as organizationActions from './organizationActions';
 import * as clusterActions from './clusterActions';
 import * as catalogActions from './catalogActions';
+import * as modalActions from './modalActions';
+import * as nodePoolActions from './nodePoolActions';
+import * as organizationActions from './organizationActions';
+import * as userActions from './userActions';
 
 export const batchedLayout = () => async dispatch => {
   try {
@@ -33,12 +35,20 @@ export const batchedRefreshClusters = () => async dispatch => {
 
 export const batchedClusterCreate = (
   cluster,
-  isV5Cluster
+  isV5Cluster,
+  nodePools = []
 ) => async dispatch => {
   try {
     const { clusterId, owner } = await dispatch(
       clusterActions.clusterCreate(cluster, isV5Cluster)
     );
+
+    if (isV5Cluster) {
+      // Check nodePools instead?
+      await dispatch(nodePoolActions.nodePoolsCreate(clusterId, nodePools));
+      await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId));
+    }
+
     await dispatch(clusterActions.clusterLoadDetails(clusterId));
     dispatch(push(`/organizations/${owner}/clusters/${clusterId}`));
   } catch (err) {
@@ -52,5 +62,21 @@ export const batchedOrganizationSelect = orgId => async dispatch => {
     dispatch(clusterActions.clustersDetails());
   } catch (err) {
     console.error('Error in batchedOrganizationSelect', err);
+  }
+};
+
+export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
+  console.log('running?');
+  try {
+    const data = await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
+    console.log(data);
+    // ensure refreshing of the clusters list
+    await dispatch(clusterActions.clustersList({ withLoadingFlags: false }));
+    dispatch(modalActions.modalHide());
+    dispatch(push(`/organizations/${cluster.owner}`));
+  } catch (err) {
+    console.error('Error in batchedClusterDeleteConfirmed', err);
+    // } finally {
+    //   dispatch(modalActions.modalHide());
   }
 };

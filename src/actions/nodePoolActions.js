@@ -7,30 +7,33 @@ import GiantSwarm from 'giantswarm';
 const nodePoolsApi = new GiantSwarm.NodePoolsApi();
 
 // Loads one cluster node pools
-export function clusterNodePoolsLoad() {
-  nodePoolsApi
-    .getNodePools(clusterId)
-    .then(data => {
-      // Receiving an array-like with weird prototype from API call,
-      // so converting it to an array.
-      let nodePoolsArray = (Array.from(data) || []).map(np => np.id);
-      // Dispatch action for populating nodePools key inside cluster
-      dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArray));
-    })
-    .catch(error => {
-      console.error('Error loading cluster node pools:', error);
-      dispatch({
-        type: types.NODEPOOLS_LOAD_ERROR,
-        error,
-      });
+export function clusterNodePoolsLoad(clusterId) {
+  return function(dispatch) {
+    return nodePoolsApi
+      .getNodePools(clusterId)
+      .then(data => {
+        // Receiving an array-like with weird prototype from API call,
+        // so converting it to an array.
+        const nodePoolsArray = (Array.from(data) || []).map(np => np.id);
+        // Dispatch action for populating nodePools key inside cluster
+        dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArray));
+        return nodePoolsArray;
+      })
+      .catch(error => {
+        console.error('Error loading cluster node pools:', error);
+        dispatch({
+          type: types.NODEPOOLS_LOAD_ERROR,
+          error,
+        });
 
-      new FlashMessage(
-        'Something went wrong while trying to load node pools on this cluster.',
-        messageType.ERROR,
-        messageTTL.LONG,
-        'Please try again later or contact support: support@giantswarm.io'
-      );
-    });
+        new FlashMessage(
+          'Something went wrong while trying to load node pools on this cluster.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+      });
+  };
 }
 
 // Loads all node pools for all v5 clusters in store.
@@ -190,6 +193,7 @@ export function nodePoolsCreate(clusterId, nodePools) {
 
     // Dispatch action for populating nodePools key inside clusters
     dispatch(nodePoolsLoad());
+    console.log(allNodePools);
     return allNodePools;
   };
 }

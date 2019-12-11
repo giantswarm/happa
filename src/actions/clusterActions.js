@@ -675,28 +675,20 @@ export function clusterDeleteConfirmed(cluster) {
 
     return clustersApi
       .deleteCluster(cluster.id)
-      .then(() => {
-        dispatch(push('/organizations/' + cluster.owner));
+      .then(data => {
         dispatch(clusterDeleteSuccess(cluster.id));
 
-        dispatch(modalHide());
-
         new FlashMessage(
-          'Cluster <code>' + cluster.id + '</code> will be deleted',
+          `Cluster <code>${cluster.id}</code> will be deleted`,
           messageType.INFO,
           messageTTL.SHORT
         );
 
-        // ensure refreshing of the clusters list
-        dispatch(clustersList());
+        return data;
       })
       .catch(error => {
-        dispatch(modalHide());
-
         new FlashMessage(
-          'An error occurred when trying to delete cluster <code>' +
-            cluster.id +
-            '</code>.',
+          `An error occurred when trying to delete cluster <code>${cluster.id}</code>.`,
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
