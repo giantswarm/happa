@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 import { render } from '@testing-library/react';
-import CatalogTypeLabel from 'UI/catalog_type_label';
+import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 import React from 'react';
 
 it('renders without crashing', () => {

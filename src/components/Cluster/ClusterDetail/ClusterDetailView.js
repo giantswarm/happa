@@ -9,13 +9,13 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
 import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import ClusterApps from './ClusterApps';
-import ClusterIDLabel from 'UI/cluster_id_label';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 import cmp from 'semver-compare';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import KeyPairs from './KeyPairs';
-import LoadingOverlay from 'UI/loading_overlay';
+import LoadingOverlay from 'UI/LoadingOverlay';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -27,7 +27,7 @@ import Tabs from './Tabs';
 import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
 import V5ClusterDetailTable from './V5ClusterDetailTable';
-import ViewAndEditName from 'UI/view_edit_name';
+import ViewAndEditName from 'UI/ViewEditName';
 
 const WrapperDiv = styled.div`
   h2 {
@@ -248,9 +248,7 @@ class ClusterDetailView extends React.Component {
         <LoadingOverlay loading={loading} />
 
         {!loading && (
-          <DocumentTitle
-            title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
-          >
+          <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
             <WrapperDiv
               className='cluster-details'
               data-testid='cluster-details-view'

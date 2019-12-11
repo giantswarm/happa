@@ -1,5 +1,5 @@
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import yaml from 'js-yaml';

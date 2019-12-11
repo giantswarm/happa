@@ -1,5 +1,5 @@
 import { Code } from 'styles';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
 import RefreshableLabel from 'UI/RefreshableLabel';

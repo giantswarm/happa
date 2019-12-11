@@ -1,12 +1,12 @@
 import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
 import { Providers } from 'shared/constants';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import copy from 'copy-to-clipboard';
 import ExpiryHoursPicker from './ExpiryHoursPicker';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import useDebounce from 'lib/effects/use_debounce';
+import useDebounce from 'lib/effects/useDebounce';
 
 const KeyPairCreateModal = props => {
   const defaultDescription = email => {

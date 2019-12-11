@@ -14,8 +14,8 @@ import { push } from 'connected-react-router';
 import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from '../ClusterDetail/AddNodePool';
 import AvailabilityZonesParser from '../ClusterDetail/AvailabilityZonesParser';
-import Button from 'UI/button';
-import DocumentTitle from 'react-document-title';
+import Button from 'UI/Button';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import produce from 'immer';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -371,11 +371,7 @@ class CreateNodePoolsCluster extends Component {
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
       >
         <DocumentTitle
-          title={
-            'Create Cluster | ' +
-            this.props.selectedOrganization +
-            ' | Giant Swarm'
-          }
+          title={`Create Cluster | ${this.props.selectedOrganization}`}
         >
           <>
             <WrapperDiv data-testid='nodepool-cluster-creation-view'>

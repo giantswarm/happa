@@ -1,4 +1,4 @@
-import AvailabilityZonesLabels from 'UI/availability_zones_labels';
+import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';

@@ -1,14 +1,14 @@
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import _ from 'underscore';
-import Button from 'UI/button';
+import Button from 'UI/Button';
 import ClusterDashboardItem from './ClusterDashboardItem';
-import ClusterEmptyState from 'UI/cluster_empty_state';
-import DocumentTitle from 'react-document-title';
+import ClusterEmptyState from 'UI/ClusterEmptyState';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import moment from 'moment';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import PropTypes from 'prop-types';
@@ -57,13 +57,9 @@ class Home extends React.Component {
    */
   title() {
     if (this.props.selectedOrganization) {
-      return (
-        'Cluster Overview | ' +
-        this.props.selectedOrganization +
-        ' | Giant Swarm'
-      );
+      return `Cluster Overview | ${this.props.selectedOrganization}`;
     } else {
-      return 'Cluster Overview | Giant Swarm';
+      return 'Cluster Overview';
     }
   }
 
@@ -142,7 +138,7 @@ class Home extends React.Component {
                   <span className='last-updated-datestring'>
                     {this.lastUpdatedLabel()}
                   </span>
-                  . <span className='beta-tag'>BETA</span>
+                  .
                 </small>
               </p>
             ) : null}

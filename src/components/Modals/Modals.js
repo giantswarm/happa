@@ -10,8 +10,8 @@ import {
   organizationRemoveMemberConfirmed,
 } from 'actions/organizationActions';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/button';
-import ClusterIDLabel from 'UI/cluster_id_label';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 import EmailField from 'shared/EmailField';
 import PropTypes from 'prop-types';
 import React from 'react';

@@ -5,7 +5,7 @@ process.env.DEBUG_PRINT_LIMIT = 10000;
 module.exports = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
   testURL: 'http://localhost',
-  setupFiles: [path.resolve(__dirname + '/test_utils/browserMocks.js')],
+  setupFiles: [path.resolve(__dirname + '/testUtils/browserMocks.js')],
   moduleDirectories: [
     'node_modules',
     path.resolve(__dirname + '/src'),
@@ -13,9 +13,9 @@ module.exports = {
     path.resolve(__dirname + '/'),
   ],
   moduleNameMapper: {
-    '\\.css$': require.resolve('./test_utils/assets-mock.js'),
+    '\\.css$': require.resolve('./testUtils/assetsMock.js'),
     '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': require.resolve(
-      './test_utils/assets-mock.js'
+      './testUtils/assetsMock.js'
     ),
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],

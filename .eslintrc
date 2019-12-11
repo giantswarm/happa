@@ -22,7 +22,15 @@
     "emotion/syntax-preference": [1, "string"],
     "no-console": 1,
     "no-underscore-dangle": 0,
-    "no-unused-vars": 2,
+    "no-unused-vars": [
+      2,
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "ignoreRestSiblings": true,
+        "args": "all"
+      }
+    ],
     "no-useless-escape": 0,
     "quotes": [2, "single", { "allowTemplateLiterals": true }],
     "semi": [2, "always"],
@@ -55,7 +63,10 @@
     "consistent-return": 2,
     "default-param-last": 2,
     "eqeqeq": 2,
-    "dot-notation": 2,
+    "dot-notation": [
+      2,
+      { "allowPattern": "^(([a-z]+_[a-z]+)|([A-Z][^A-Z]+))+$" }
+    ],
     "guard-for-in": 2,
     "max-classes-per-file": 2,
     "no-alert": 2,
@@ -76,14 +87,14 @@
     "no-implicit-coercion": 2,
     "no-implicit-globals": 2,
     "no-implied-eval": 2,
-    "no-invalid-this": 2,
+    "no-invalid-this": 0,
     "no-iterator": 2,
     "no-labels": 2,
     "no-lone-blocks": 1,
     "no-loop-func": 2,
     "no-magic-numbers": [
       1,
-      { "ignore": [-1, 0, 1, 2], "detectObjects": true, "enforceConst": true }
+      { "ignore": [-1, 0, 1, 2], "detectObjects": false, "enforceConst": true }
     ],
     "no-multi-str": 1,
     "no-new-func": 2,
@@ -144,7 +155,10 @@
     "prefer-spread": 2,
     "require-yield": 2,
     "prefer-template": 2,
-    "sort-imports": 1,
+    "sort-imports": [
+      1,
+      { "memberSyntaxSortOrder": ["none", "all", "multiple", "single"] }
+    ],
     "react/button-has-type": 2,
     "react/prefer-es6-class": [1, "always"],
     "react/no-find-dom-node": 2,
@@ -172,7 +186,7 @@
     "react/react-in-jsx-scope": 2,
     "react/require-render-return": 2,
     "react/self-closing-comp": 2,
-    "react/state-in-constructor": 2,
+    "react/state-in-constructor": [2, "never"],
     "react/void-dom-elements-no-children": 2,
     "react/jsx-no-undef": 2,
     "react/jsx-key": 2,

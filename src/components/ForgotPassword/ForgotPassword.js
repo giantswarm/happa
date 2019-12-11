@@ -8,8 +8,8 @@ import {
 } from 'lib/flashMessage';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Button from 'UI/button';
-import LoginFormContainer from 'UI/login_form_container';
+import Button from 'UI/Button';
+import LoginFormContainer from 'UI/LoginFormContainer';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';

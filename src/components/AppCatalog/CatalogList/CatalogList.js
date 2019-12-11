@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import Button from 'UI/button';
-import CatalogTypeLabel from 'UI/catalog_type_label';
-import DocumentTitle from 'react-document-title';
+import Button from 'UI/Button';
+import CatalogTypeLabel from 'UI/CatalogTypeLabel';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -9,7 +9,7 @@ import ReactMarkdown from 'react-markdown';
 class CatalogList extends React.Component {
   render() {
     return (
-      <DocumentTitle title={`App Catalogs | Giant Swarm `}>
+      <DocumentTitle title='App Catalogs'>
         <>
           <h1>App Catalogs</h1>
           <p>Pick an App Catalog to browse all the Apps in it.</p>

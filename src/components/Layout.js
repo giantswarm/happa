@@ -13,12 +13,12 @@ import { push } from 'connected-react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import GiantSwarm from 'giantswarm';
 import Home from './Home/Home';
-import LoadingOverlay from './UI/loading_overlay';
+import LoadingOverlay from './UI/LoadingOverlay';
 import Modals from './Modals/Modals';
-import Navigation from './UI/Navigation';
+import Navigation from './UI/Navigation/Navigation';
 import Organizations from './Organizations/Organizations';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -53,7 +53,7 @@ class Layout extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title='Giant Swarm'>
+      <DocumentTitle>
         <LoadingOverlay loading={!this.props.firstLoadComplete}>
           <Modals />
           <Navigation

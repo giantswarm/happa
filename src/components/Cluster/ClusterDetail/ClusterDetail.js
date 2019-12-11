@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import _ from 'underscore';
 import ClusterDetailView from './ClusterDetailView';
 import cmp from 'semver-compare';
-import GettingStarted from '../../GettingStarted';
+import GettingStarted from '../../GettingStarted/GettingStarted';
 import PropTypes from 'prop-types';
 import React from 'react';
 

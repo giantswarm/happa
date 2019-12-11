@@ -17,9 +17,9 @@ import {
   v4AWSClusterResponse,
   v5ClusterResponse,
   nodePoolsResponse,
-} from 'test_utils/mockHttpCalls';
+} from 'testUtils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
-import { renderRouteWithStore } from 'test_utils/renderUtils';
+import { renderRouteWithStore } from 'testUtils/renderUtils';
 import nock from 'nock';
 import { within } from '@testing-library/dom';
 
