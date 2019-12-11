@@ -66,10 +66,8 @@ export const batchedOrganizationSelect = orgId => async dispatch => {
 };
 
 export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
-  console.log('running?');
   try {
-    const data = await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
-    console.log(data);
+    await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
     // ensure refreshing of the clusters list
     await dispatch(clusterActions.clustersList({ withLoadingFlags: false }));
     dispatch(modalActions.modalHide());
