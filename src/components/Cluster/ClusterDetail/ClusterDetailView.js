@@ -250,7 +250,7 @@ class ClusterDetailView extends React.Component {
       targetRelease,
       region,
       loadingCluster,
-      loadingNodePools,
+      // loadingNodePools,
     } = this.props;
 
     const loading = loadingCluster !== false; // || loadingNodePools !== false;

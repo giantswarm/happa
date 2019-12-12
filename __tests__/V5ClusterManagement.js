@@ -297,8 +297,8 @@ it('deletes a v5 cluster', async () => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
   });
 
-  await wait(() => getByText('Delete Cluster'));
-  fireEvent.click(getByText('Delete Cluster'));
+  const button = getByText(/delete cluster/i);
+  fireEvent.click(button);
 
   // Is the modal in the document?
   const titleText = /are you sure you want to delete/i;
@@ -310,6 +310,7 @@ it('deletes a v5 cluster', async () => {
   // Click delete button.
   const modalDeleteButton = getAllByText('Delete Cluster')[1];
   fireEvent.click(modalDeleteButton);
+  // return;
 
   // Flash message confirming deletion.
   await wait(() => {
@@ -351,6 +352,7 @@ it('deletes a node pool', async () => {
     getAllByText,
     queryByTestId,
     getAllByTestId,
+    debug,
   } = renderRouteWithStore(ROUTE);
 
   // Wait for node pools to render
@@ -424,8 +426,14 @@ it('adds a node pool with default values', async () => {
     nodePoolCreationResponse.id
   );
 
+  // Remove flash message.
+  document.querySelector('#noty_layout__topRight').remove();
+
   // Is the new NodePool in the document?
-  await wait(() => getByText(nodePoolCreationResponse.id));
+  await wait(() => {
+    getByText(nodePoolCreationResponse.id);
+  });
+
   expect(getByText(nodePoolCreationResponse.id)).toBeInTheDocument();
 
   nodePoolCreationRequest.done();

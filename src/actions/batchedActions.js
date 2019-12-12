@@ -44,6 +44,9 @@ export const batchedClusterCreate = (
       clusterActions.clusterCreate(cluster, isV5Cluster)
     );
 
+    // TODO We can avoid this call by computing cpabilities in the call above abd storing the cluster
+    await dispatch(clusterActions.clusterLoadDetails(clusterId));
+
     if (isV5Cluster) {
       // Check nodePools instead?
       await dispatch(nodePoolActions.nodePoolsCreate(clusterId, nodePools));
@@ -86,11 +89,11 @@ export const batchedClusterDetailView = (
 
 export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
   try {
+    dispatch(push(`/organizations/${cluster.owner}`));
     await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
+    dispatch(modalActions.modalHide());
     // ensure refreshing of the clusters list
     await dispatch(clusterActions.clustersList({ withLoadingFlags: false }));
-    dispatch(modalActions.modalHide());
-    dispatch(push(`/organizations/${cluster.owner}`));
   } catch (err) {
     console.error('Error in batchedClusterDeleteConfirmed', err);
     // } finally {

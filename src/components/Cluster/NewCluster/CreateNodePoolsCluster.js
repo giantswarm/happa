@@ -279,7 +279,6 @@ class CreateNodePoolsCluster extends Component {
       np => np.data
     );
 
-    // try {
     await this.props.dispatch(
       batchedClusterCreate(
         {

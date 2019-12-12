@@ -325,8 +325,6 @@ class V5ClusterDetailTable extends React.Component {
         this.props.cluster
       );
 
-      console.log(this.props.nodePools, nodePools);
-
       const allZones = nodePools
         ? nodePools
             .reduce((accumulator, current) => {

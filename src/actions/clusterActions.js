@@ -14,8 +14,8 @@ const clustersApi = new GiantSwarm.ClustersApi();
 // computeCapabilities takes a cluster object and provider and returns a
 // capabilities object with the features that this cluster supports.
 function computeCapabilities(cluster, provider) {
-  let capabilities = {};
-  let releaseVer = cluster.release_version;
+  const capabilities = {};
+  const releaseVer = cluster.release_version;
 
   // Installing Apps
   // Must be AWS or KVM and larger than 8.1.0
@@ -140,7 +140,10 @@ export function clusterLoadDetails(clusterId) {
 
       if (isV5Cluster) cluster.nodePools = [];
 
-      dispatch(clusterLoadDetailsSuccess(cluster));
+      dispatch({
+        type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
+        cluster,
+      });
       return cluster;
     } catch (error) {
       if (error.status === 404) {
@@ -602,11 +605,6 @@ export function clusterLoadKeyPairs(clusterId) {
       });
   };
 }
-
-export const clusterLoadDetailsSuccess = cluster => ({
-  type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
-  cluster,
-});
 
 export const clusterLoadDetailsError = (clusterId, error) => ({
   type: types.CLUSTER_LOAD_DETAILS_ERROR,
