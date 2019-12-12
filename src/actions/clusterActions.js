@@ -122,13 +122,9 @@ export function clusterLoadDetails(clusterId) {
     const isV5Cluster = v5Clusters.includes(clusterId);
 
     dispatch({
-      type: types.CLUSTER_LOAD_DETAILS,
+      type: types.CLUSTER_LOAD_DETAILS_REQUEST,
       clusterId,
     });
-
-    if (isV5Cluster) {
-      dispatch({ type: types.V5_CLUSTER_LOAD_DETAILS });
-    }
 
     try {
       const cluster = isV5Cluster
@@ -141,6 +137,8 @@ export function clusterLoadDetails(clusterId) {
         cluster,
         getState().app.info.general.provider
       );
+
+      if (isV5Cluster) cluster.nodePools = [];
 
       dispatch(clusterLoadDetailsSuccess(cluster));
       return cluster;
@@ -170,10 +168,6 @@ export function clusterLoadDetails(clusterId) {
         throw error;
       }
     }
-
-    // Here we are chaining dispatches because we always want to get the node pools when
-    // fetching cluster details.
-    if (isV5Cluster) dispatch(nodePoolsLoad(clusterId));
   };
 }
 

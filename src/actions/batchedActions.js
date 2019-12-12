@@ -9,6 +9,7 @@ import * as catalogActions from './catalogActions';
 import * as modalActions from './modalActions';
 import * as nodePoolActions from './nodePoolActions';
 import * as organizationActions from './organizationActions';
+import * as releaseActions from './releaseActions';
 import * as userActions from './userActions';
 
 export const batchedLayout = () => async dispatch => {
@@ -18,7 +19,7 @@ export const batchedLayout = () => async dispatch => {
     await dispatch(organizationActions.organizationsLoad());
     dispatch(catalogActions.catalogsLoad());
     await dispatch(clusterActions.clustersList({ withLoadingFlags: true }));
-    dispatch(clusterActions.clustersDetails({ withLoadingFlags: true }));
+    await dispatch(clusterActions.clustersDetails({ withLoadingFlags: true }));
   } catch (err) {
     console.error('Error in batchedLayout', err);
   }
@@ -50,18 +51,36 @@ export const batchedClusterCreate = (
     }
 
     await dispatch(clusterActions.clusterLoadDetails(clusterId));
+
+    if (isV5Cluster) {
+      await dispatch(nodePoolActions.nodePoolsLoad(clusterId));
+    }
+
     dispatch(push(`/organizations/${owner}/clusters/${clusterId}`));
   } catch (err) {
     console.error('Error in batchedCreateCluster', err);
   }
 };
 
-export const batchedOrganizationSelect = orgId => async dispatch => {
+export const batchedClusterDetailView = (
+  organizationId,
+  clusterId,
+  isV5Cluster
+) => async dispatch => {
   try {
-    await dispatch(organizationActions.organizationSelect(orgId));
-    dispatch(clusterActions.clustersDetails());
+    await dispatch(
+      organizationActions.organizationCredentialsLoad(organizationId, clusterId)
+    );
+
+    await dispatch(releaseActions.loadReleases());
+    await clusterActions.clusterLoadDetails(clusterId);
+    await clusterActions.clusterLoadApps(clusterId);
+
+    if (isV5Cluster) {
+      await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId));
+    }
   } catch (err) {
-    console.error('Error in batchedOrganizationSelect', err);
+    console.error('Error in batchedClusterDetailView', err);
   }
 };
 
@@ -76,5 +95,14 @@ export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
     console.error('Error in batchedClusterDeleteConfirmed', err);
     // } finally {
     //   dispatch(modalActions.modalHide());
+  }
+};
+
+export const batchedOrganizationSelect = orgId => async dispatch => {
+  try {
+    await dispatch(organizationActions.organizationSelect(orgId));
+    dispatch(clusterActions.clustersDetails());
+  } catch (err) {
+    console.error('Error in batchedOrganizationSelect', err);
   }
 };

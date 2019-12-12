@@ -84,6 +84,10 @@ const clusterReducer = produce((draft, action) => {
       }
       return;
 
+    case types.CLUSTER_NODEPOOLS_LOAD_SUCCESS:
+      draft.items[action.clusterId].nodePools = action.nodePoolsIds;
+      return;
+
     case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].nodePools = action.nodePools;
@@ -175,6 +179,10 @@ const clusterReducer = produce((draft, action) => {
       if (draft.items[action.cluster.id]) {
         draft.items[action.cluster.id] = action.cluster;
       }
+      return;
+
+    case types.NODEPOOL_CREATE_SUCCESS:
+      draft.items[action.clusterId].nodePools.push(action.nodePool.id);
       return;
 
     case types.NODEPOOL_DELETE_SUCCESS:

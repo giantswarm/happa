@@ -1,6 +1,7 @@
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
+import { batchedClusterDetailView } from 'actions/batchedActions';
 import { bindActionCreators } from 'redux';
 import { clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
@@ -89,19 +90,27 @@ class ClusterDetailView extends React.Component {
       return;
     }
 
-    dispatch(organizationCredentialsLoad(organizationId));
+    dispatch(
+      batchedClusterDetailView(
+        organizationId,
+        cluster.id,
+        this.props.isNodePoolsCluster
+      )
+    );
 
-    // TODO This probably should go to action creators where this logic belongs (?)
-    releaseActions
-      .loadReleases()
-      .then(() => {
-        return clusterActions.clusterLoadDetails(cluster.id);
-      })
-      .then(() => {
-        return clusterActions.clusterLoadApps(cluster.id);
-      });
+    // dispatch(organizationCredentialsLoad(organizationId));
 
-    this.props.dispatch(nodePoolActions.nodePoolsLoad());
+    // // TODO This probably should go to action creators where this logic belongs (?)
+    // releaseActions
+    //   .loadReleases()
+    //   .then(() => {
+    //     return clusterActions.clusterLoadDetails(cluster.id);
+    //   })
+    //   .then(() => {
+    //     return clusterActions.clusterLoadApps(cluster.id);
+    //   });
+
+    // this.props.dispatch(nodePoolActions.nodePoolsLoad());
   };
 
   refreshClusterData = () => {
@@ -240,8 +249,11 @@ class ClusterDetailView extends React.Component {
       release,
       targetRelease,
       region,
-      loading,
+      loadingCluster,
+      loadingNodePools,
     } = this.props;
+
+    const loading = loadingCluster !== false; // || loadingNodePools !== false;
 
     return (
       <>
@@ -263,7 +275,7 @@ class ClusterDetailView extends React.Component {
                       onSubmit={this.editClusterName}
                     />{' '}
                     {/* TODO Remove this */}
-                    {loading ? (
+                    {loadingCluster !== false ? (
                       <img
                         className='loader'
                         height='25px'
@@ -332,7 +344,11 @@ class ClusterDetailView extends React.Component {
                       </div>
                     </Tab>
                     <Tab eventKey={2} title='Key Pairs'>
-                      <KeyPairs cluster={cluster} />
+                      <LoadingOverlay
+                        loading={this.props.loadingClusterDetails !== false}
+                      >
+                        <KeyPairs cluster={cluster} />
+                      </LoadingOverlay>
                     </Tab>
                     <Tab eventKey={3} title='Apps'>
                       {release ? (
@@ -414,16 +430,14 @@ ClusterDetailView.propTypes = {
   setInterval: PropTypes.func,
   targetRelease: PropTypes.object,
   user: PropTypes.object,
-  loading: PropTypes.bool,
+  loadingCluster: PropTypes.bool,
+  loadingNodePools: PropTypes.bool,
 };
 
-function mapStateToProps(state, ownProps) {
-  const { releases, clusters } = state.entities;
-  const loading =
-    releases.isFetching || clusters.isFetching || !ownProps.cluster;
-
+function mapStateToProps(state) {
   return {
-    loading,
+    loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
+    // loadingNodePools: state.loadingFlags.CLUSTER_NODEPOOLS_LOAD,
   };
 }
 
