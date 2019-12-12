@@ -45,7 +45,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
     setClipboardContent(null);
   };
 
-  const classNames = () => {
+  const getClassNames = () => {
     const classNames = ['codeblock--container'];
 
     if (isHovering) {
@@ -78,7 +78,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
   };
 
   return (
-    <div className={classNames()}>
+    <div className={getClassNames()}>
       <pre>
         <div className='content'>
           <div className='codeblock--filename'>{fileName}</div>
@@ -97,7 +97,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
           </a>
         </div>
         <BaseTransition
-          in={this.state.clicked}
+          in={hasContentInClipboard}
           timeout={{ enter: 1000, exit: 1000 }}
           classNames='checkmark'
         >

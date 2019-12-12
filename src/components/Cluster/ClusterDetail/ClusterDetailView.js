@@ -13,7 +13,7 @@ import Button from 'UI/Button';
 import ClusterApps from './ClusterApps';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import cmp from 'semver-compare';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import KeyPairs from './KeyPairs';
 import LoadingOverlay from 'UI/LoadingOverlay';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
@@ -248,9 +248,7 @@ class ClusterDetailView extends React.Component {
         <LoadingOverlay loading={loading} />
 
         {!loading && (
-          <DocumentTitle
-            title={'Cluster Details | ' + this.clusterName() + ' | Giant Swarm'}
-          >
+          <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
             <WrapperDiv
               className='cluster-details'
               data-testid='cluster-details-view'

@@ -48,7 +48,7 @@ function RefreshableLabel({ children, value, style }) {
   const prevValue = usePrevious(value);
 
   const compareData = () => {
-    if (value !== prevValue) {
+    if (prevValue && value !== prevValue) {
       setHasDataChanged(true);
     }
     return setTimeout(() => setHasDataChanged(false), animationDuration * 1000);

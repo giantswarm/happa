@@ -10,7 +10,7 @@ import {
 } from 'actions/userActions';
 import Button from 'UI/Button';
 import DeleteUserModal from './DeleteUserModal';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import InviteUserModal from './InviteUserModal';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -207,7 +207,7 @@ class Users extends React.Component {
 
     return (
       <Breadcrumb data={{ title: 'USERS', pathname: '/users/' }}>
-        <DocumentTitle title='Users | Giant Swarm'>
+        <DocumentTitle title='Users'>
           <div>
             <div className='row'>
               <div className='col-7'>

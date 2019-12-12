@@ -9,7 +9,7 @@ import AzureVMSizeSelector from './AzureVMSizeSelector';
 import Button from 'UI/Button';
 import ClusterCreationDuration from './ClusterCreationDuration';
 import cmp from 'semver-compare';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import NumberPicker from 'UI/NumberPicker';
 import PropTypes from 'prop-types';
@@ -429,11 +429,7 @@ class CreateRegularCluster extends React.Component {
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
       >
         <DocumentTitle
-          title={
-            'Create Cluster | ' +
-            this.props.selectedOrganization +
-            ' | Giant Swarm'
-          }
+          title={`Create Cluster | ${this.props.selectedOrganization}`}
         >
           {/* <div className='new-cluster' data-testid='cluster-creation-view'> */}
           <WrapperDiv data-testid='cluster-creation-view'>

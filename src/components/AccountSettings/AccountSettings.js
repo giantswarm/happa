@@ -4,7 +4,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import ChangeEmailForm from './ChangeEmailForm';
 import ChangePasswordForm from './ChangePasswordForm';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -14,7 +14,7 @@ class AccountSettings extends React.Component {
       <Breadcrumb
         data={{ title: 'ACCOUNT SETTINGS', pathname: '/account-settings/' }}
       >
-        <DocumentTitle title='Account Settings | Giant Swarm'>
+        <DocumentTitle title='Account Settings'>
           <div>
             <div className='row'>
               <div className='col-12'>

@@ -1,13 +1,9 @@
 import { fireEvent, render } from '@testing-library/react';
+import NodeCountSelector from 'shared/NodeCountSelector';
 import { getComponentWithTheme } from 'testUtils/renderUtils';
 
-import NodeCountSelector from 'shared/NodeCountSelector';
-
 const getComponent = props => getComponentWithTheme(NodeCountSelector, props);
-
-function renderWithProps(props) {
-  return render(getComponent(props));
-}
+const renderWithProps = props => render(getComponent(props));
 
 const labelTestID = 'node-count-selector-picker';
 
@@ -257,7 +253,7 @@ describe('NodeCountSelector', () => {
   });
 
   it('shows correct autoscale suggestion labels, with autoscaling on', () => {
-    const labelTestID = 'node-count-selector-autoscaling-label';
+    const autoScalingLabelTestID = 'node-count-selector-autoscaling-label';
     const targetValue = 5;
 
     const baseProps = {
@@ -274,7 +270,7 @@ describe('NodeCountSelector', () => {
       },
     });
 
-    expect(getByTestId(labelTestID).textContent).toBe(
+    expect(getByTestId(autoScalingLabelTestID).textContent).toBe(
       'To enable autoscaling, set minimum and maximum to different values.'
     );
 
@@ -290,7 +286,7 @@ describe('NodeCountSelector', () => {
       })
     );
 
-    expect(getByTestId(labelTestID).textContent).toBe(
+    expect(getByTestId(autoScalingLabelTestID).textContent).toBe(
       'To disable autoscaling, set both numbers to the same value.'
     );
   });

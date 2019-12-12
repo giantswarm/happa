@@ -100,7 +100,7 @@ export const CodeBlock = ({ children }) => {
           </a>
         </div>
         <BaseTransition
-          in={this.state.clicked}
+          in={hasContentInClipboard}
           timeout={{ enter: 1000, exit: 1000 }}
           classNames='checkmark'
         >
