@@ -44,11 +44,10 @@ export function nodePoolsLoad() {
       isFetching: true,
     });
 
-    const nodePoolsClustersId =
-      getState().entities.clusters.nodePoolsClusters || [];
+    const v5ClustersId = getState().entities.clusters.v5Clusters || [];
 
     await Promise.all(
-      nodePoolsClustersId.map(clusterId => clusterNodePoolsLoad(clusterId))
+      v5ClustersId.map(clusterId => clusterNodePoolsLoad(clusterId))
     );
 
     dispatch({

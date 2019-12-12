@@ -63,7 +63,12 @@ export function clustersList({ withLoadingFlags }) {
       .getClusters()
       .then(data => {
         const clusters = clustersLoadArrayToObject(data);
-        dispatch({ type: types.CLUSTERS_LIST_SUCCESS, clusters });
+
+        const v5ClusterIds = data
+          .filter(cluster => cluster.path.startsWith('/v5'))
+          .map(cluster => cluster.id);
+
+        dispatch({ type: types.CLUSTERS_LIST_SUCCESS, clusters, v5ClusterIds });
       })
       .catch(error => {
         console.error(error);
@@ -113,20 +118,20 @@ export function clustersDetails({
  */
 export function clusterLoadDetails(clusterId) {
   return async function(dispatch, getState) {
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterId);
 
     dispatch({
       type: types.CLUSTER_LOAD_DETAILS,
       clusterId,
     });
 
-    if (isNodePoolsCluster) {
+    if (isV5Cluster) {
       dispatch({ type: types.V5_CLUSTER_LOAD_DETAILS });
     }
 
     try {
-      const cluster = isNodePoolsCluster
+      const cluster = isV5Cluster
         ? await clustersApi.getClusterV5(clusterId)
         : await clustersApi.getCluster(clusterId);
 
@@ -168,7 +173,7 @@ export function clusterLoadDetails(clusterId) {
 
     // Here we are chaining dispatches because we always want to get the node pools when
     // fetching cluster details.
-    if (isNodePoolsCluster) dispatch(nodePoolsLoad(clusterId));
+    if (isV5Cluster) dispatch(nodePoolsLoad(clusterId));
   };
 }
 
@@ -181,9 +186,9 @@ export function clusterLoadApps(clusterId) {
   return function(dispatch, getState) {
     // This method is going to work for NP clusters, now in local dev it is not
     // working, so early return if the cluster is a NP one.
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
-    if (isNodePoolsCluster) {
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterId);
+    if (isV5Cluster) {
       dispatch({
         type: types.CLUSTER_LOAD_APPS_SUCCESS,
         clusterId,
@@ -406,10 +411,10 @@ export function clusterDeleteApp(appName, clusterID) {
  */
 export function clusterLoadStatus(clusterId) {
   return function(dispatch, getState) {
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterId);
 
-    if (isNodePoolsCluster) {
+    if (isV5Cluster) {
       // Here we will have something like clusterLoadStatusV5(...)?
       return;
     }
@@ -562,9 +567,9 @@ export function clusterLoadKeyPairs(clusterId) {
   return function(dispatch, getState) {
     // This method is going to work for NP clusters, now in local dev it is not
     // working, so early return if the cluster is a NP one.
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
-    if (isNodePoolsCluster) return Promise.resolve([]);
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterId);
+    if (isV5Cluster) return Promise.resolve([]);
 
     var keypairsApi = new GiantSwarm.KeyPairsApi();
 
@@ -652,19 +657,19 @@ export const clusterDeleteError = (clusterId, error) => ({
   error,
 });
 
-// nodePoolsClusters is an array of clusters id
-const clustersLoadSuccess = (
-  v4ClustersObject,
-  v5ClustersObject,
-  nodePoolsClusters,
-  lastUpdated
-) => ({
-  type: types.CLUSTERS_LOAD_SUCCESS,
-  v4Clusters: v4ClustersObject,
-  v5Clusters: v5ClustersObject,
-  nodePoolsClusters,
-  lastUpdated,
-});
+// v5Clusters is an array of clusters id
+// const clustersLoadSuccess = (
+//   v4ClustersObject,
+//   v5ClustersObject,
+//   v5Clusters,
+//   lastUpdated
+// ) => ({
+//   type: types.CLUSTERS_LOAD_SUCCESS,
+//   v4Clusters: v4ClustersObject,
+//   v5Clusters: v5ClustersObject,
+//   v5Clusters,
+//   lastUpdated,
+// });
 
 export const clustersLoadError = error => ({
   type: types.CLUSTERS_LOAD_ERROR,

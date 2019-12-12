@@ -84,71 +84,67 @@ class Home extends React.Component {
   render() {
     return (
       <DocumentTitle title={this.title()}>
-        {
-          <LoadingOverlay loading={this.props.loadingClustersList !== false}>
-            <div>
-              {this.props.selectedOrganization && (
-                <div className='well launch-new-cluster'>
-                  <Link
-                    to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
-                  >
-                    <Button bsStyle='primary' type='button'>
-                      <i className='fa fa-add-circle' /> Launch New Cluster
-                    </Button>
-                  </Link>
-                  {this.props.clusters.length === 0 &&
-                    'Ready to launch your first cluster? Click the green button!'}
-                </div>
-              )}
+        <LoadingOverlay loading={this.props.loadingClustersList !== false}>
+          <div>
+            {this.props.selectedOrganization && (
+              <div className='well launch-new-cluster'>
+                <Link
+                  to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
+                >
+                  <Button bsStyle='primary' type='button'>
+                    <i className='fa fa-add-circle' /> Launch New Cluster
+                  </Button>
+                </Link>
+                {this.props.clusters.length === 0 &&
+                  'Ready to launch your first cluster? Click the green button!'}
+              </div>
+            )}
 
-              {this.props.clusters.length === 0 && (
-                <ClusterEmptyState
-                  errorLoadingClusters={this.props.errorLoadingClusters}
-                  organizations={this.props.organizations}
-                  selectedOrganization={this.props.selectedOrganization}
-                />
-              )}
+            {this.props.clusters.length === 0 && (
+              <ClusterEmptyState
+                errorLoadingClusters={this.props.errorLoadingClusters}
+                organizations={this.props.organizations}
+                selectedOrganization={this.props.selectedOrganization}
+              />
+            )}
 
-              <TransitionGroup className='cluster-list'>
-                {_.sortBy(this.props.clusters, cluster => cluster.name).map(
-                  cluster => {
-                    return (
-                      <CSSTransition
-                        classNames='cluster-list-item'
+            <TransitionGroup className='cluster-list'>
+              {_.sortBy(this.props.clusters, cluster => cluster.name).map(
+                cluster => {
+                  return (
+                    <CSSTransition
+                      classNames='cluster-list-item'
+                      key={cluster.id}
+                      timeout={500}
+                    >
+                      <ClusterDashboardItem
+                        animate={true}
+                        cluster={cluster}
+                        isNodePool={this.props.v5Clusters.includes(cluster.id)}
                         key={cluster.id}
-                        timeout={500}
-                      >
-                        <ClusterDashboardItem
-                          animate={true}
-                          cluster={cluster}
-                          isNodePool={this.props.nodePoolsClusters.includes(
-                            cluster.id
-                          )}
-                          key={cluster.id}
-                          nodePools={this.props.nodePools}
-                          selectedOrganization={this.props.selectedOrganization}
-                        />
-                      </CSSTransition>
-                    );
-                  },
-                  cluster => cluster.id
-                )}
-              </TransitionGroup>
+                        nodePools={this.props.nodePools}
+                        selectedOrganization={this.props.selectedOrganization}
+                      />
+                    </CSSTransition>
+                  );
+                },
+                cluster => cluster.id
+              )}
+            </TransitionGroup>
 
-              {this.props.clusters.length > 0 ? (
-                <p className='last-updated'>
-                  <small>
-                    This table is auto-refreshing. Details last fetched{' '}
-                    <span className='last-updated-datestring'>
-                      {this.lastUpdatedLabel()}
-                    </span>
-                    . <span className='beta-tag'>BETA</span>
-                  </small>
-                </p>
-              ) : null}
-            </div>
-          </LoadingOverlay>
-        }
+            {this.props.clusters.length > 0 ? (
+              <p className='last-updated'>
+                <small>
+                  This table is auto-refreshing. Details last fetched{' '}
+                  <span className='last-updated-datestring'>
+                    {this.lastUpdatedLabel()}
+                  </span>
+                  . <span className='beta-tag'>BETA</span>
+                </small>
+              </p>
+            ) : null}
+          </div>
+        </LoadingOverlay>
       </DocumentTitle>
     );
   }
@@ -161,7 +157,7 @@ Home.propTypes = {
   selectedOrganization: PropTypes.string,
   organizations: PropTypes.object,
   errorLoadingClusters: PropTypes.bool,
-  nodePoolsClusters: PropTypes.array,
+  v5Clusters: PropTypes.array,
   nodePools: PropTypes.object,
 };
 
@@ -170,7 +166,7 @@ function mapStateToProps(state) {
   var organizations = state.entities.organizations.items;
   var allClusters = state.entities.clusters.items;
   var errorLoadingClusters = state.entities.clusters.errorLoading;
-  const nodePoolsClusters = state.entities.clusters.nodePoolsClusters;
+  const v5Clusters = state.entities.clusters.v5Clusters;
   const nodePools = state.entities.nodePools.items;
 
   var clusters = [];
@@ -185,7 +181,7 @@ function mapStateToProps(state) {
     organizations: organizations,
     errorLoadingClusters: errorLoadingClusters,
     selectedOrganization: selectedOrganization,
-    nodePoolsClusters,
+    v5Clusters,
     nodePools,
     loadingClustersList: state.loadingFlags.CLUSTERS_LIST,
     loadingClustersDetails: state.loadingFlags.CLUSTERS_DETAILS,

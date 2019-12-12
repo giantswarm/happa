@@ -35,7 +35,7 @@ export default {
       lastUpdated: null,
       isFetching: false,
       items: {},
-      nodePoolsClusters: [],
+      v5Clusters: [],
     },
     credentials: {
       lastUpdated: 0,

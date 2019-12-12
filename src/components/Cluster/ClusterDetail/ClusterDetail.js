@@ -96,7 +96,7 @@ function mapStateToProps(state, ownProps) {
         ];
     }
 
-    isNodePoolsCluster = state.entities.clusters.nodePoolsClusters.includes(
+    isNodePoolsCluster = state.entities.clusters.v5Clusters.includes(
       cluster.id
     );
   }

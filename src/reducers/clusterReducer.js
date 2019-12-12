@@ -23,13 +23,14 @@ const initialState = {
   lastUpdated: null,
   isFetching: false,
   items: {},
-  nodePoolsClusters: [],
+  v5Clusters: [],
 };
 
 const clusterReducer = produce((draft, action) => {
   switch (action.type) {
     case types.CLUSTERS_LIST_SUCCESS:
       draft.items = action.clusters;
+      draft.v5Clusters = action.v5ClusterIds;
       return;
 
     case types.CLUSTERS_LIST_ERROR:
@@ -50,7 +51,7 @@ const clusterReducer = produce((draft, action) => {
         draft.items[clusterId] = action.v5Clusters[clusterId];
       });
       draft.lastUpdated = action.lastUpdated;
-      draft.nodePoolsClusters = action.nodePoolsClusters;
+      draft.v5Clusters = action.v5Clusters;
       return;
 
     case types.CLUSTERS_LOAD_ERROR:
@@ -153,7 +154,7 @@ const clusterReducer = produce((draft, action) => {
       return;
 
     case types.V5_CLUSTER_CREATE_SUCCESS:
-      draft.nodePoolsClusters.push(action.clusterId);
+      draft.v5Clusters.push(action.clusterId);
       return;
 
     case types.CLUSTER_DELETE_SUCCESS:
