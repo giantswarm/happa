@@ -97,20 +97,6 @@ class ClusterDetailView extends React.Component {
         this.props.isNodePoolsCluster
       )
     );
-
-    // dispatch(organizationCredentialsLoad(organizationId));
-
-    // // TODO This probably should go to action creators where this logic belongs (?)
-    // releaseActions
-    //   .loadReleases()
-    //   .then(() => {
-    //     return clusterActions.clusterLoadDetails(cluster.id);
-    //   })
-    //   .then(() => {
-    //     return clusterActions.clusterLoadApps(cluster.id);
-    //   });
-
-    // this.props.dispatch(nodePoolActions.nodePoolsLoad());
   };
 
   refreshClusterData = () => {
