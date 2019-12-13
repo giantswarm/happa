@@ -30,116 +30,116 @@ jobs:
   build:
     machine: true
     steps:
-    - checkout
+      - checkout
 
-    - run:
-        name: Install node@12.10.0
-        command: |
-          set +e
-          export NVM_DIR="/opt/circleci/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install v12.10.0
-          nvm alias default v12.10.0
+      - run:
+          name: Install node@12.10.0
+          command: |
+            set +e
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm install v12.10.0
+            nvm alias default v12.10.0
 
-          # Each step uses the same `$BASH_ENV`, so need to modify it
-          echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
-          echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> $BASH_ENV
+            # Each step uses the same `$BASH_ENV`, so need to modify it
+            echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
+            echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> $BASH_ENV
 
-    - restore_cache:
+      - restore_cache:
           keys:
             # Find a cache corresponding to this specific package.json checksum
             # created in this month.
             - v1-npm-deps-{{ checksum "yarn.lock" }}
 
-    - run:
-        name: Inspect and use cache
-        command: |
-          (test -d node_modules && du -sk node_modules) || mkdir -p node_modules
-          echo ""
-          find node_modules -maxdepth 1 | sort
-          ln -s ./node_modules ./node_modules_linux
+      - run:
+          name: Inspect and use cache
+          command: |
+            (test -d node_modules && du -sk node_modules) || mkdir -p node_modules
+            echo ""
+            find node_modules -maxdepth 1 | sort
+            ln -s ./node_modules ./node_modules_linux
 
-    - run:
-        name: Install CI tools
-        command: |
-          wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-          chmod +x ./architect
+      - run:
+          name: Install CI tools
+          command: |
+            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+            chmod +x ./architect
 
-    - run:
-        name: Install dependencies (if not there or empty)
-        command: |
-          if [ "$(du -s node_modules | awk '{print $1}')" -lt "1024" ]; then
-            make install-node-modules
-          fi
+      - run:
+          name: Install dependencies (if not there or empty)
+          command: |
+            if [ "$(du -s node_modules | awk '{print $1}')" -lt "1024" ]; then
+              make install-node-modules
+            fi
 
-    - run:
-        name: Validate code style using prettier
-        command: |
-          make validate-prettier
+      - run:
+          name: Validate code style using prettier
+          command: |
+            make validate-prettier
 
-    - run:
-        name: Install yarn and run tests
-        command: |
-          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-          echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-          sudo apt-get update && sudo apt-get install yarn
-          yarn test
+      - run:
+          name: Install yarn and run tests
+          command: |
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+            sudo apt-get update && sudo apt-get install yarn
+            # yarn test
 
-    - run:
-        name: Build web application
-        command: make dist
+      - run:
+          name: Build web application
+          command: make dist
 
-    - run:
-        name: Create VERSION file
-        command: |
-          tag=$(git tag --points-at HEAD)
-          if [ -z "$tag" ]
-          then
-            git rev-parse HEAD > VERSION
-          else
-            git tag --points-at HEAD | tr '\n' ' ' > VERSION
-          fi
+      - run:
+          name: Create VERSION file
+          command: |
+            tag=$(git tag --points-at HEAD)
+            if [ -z "$tag" ]
+            then
+              git rev-parse HEAD > VERSION
+            else
+              git tag --points-at HEAD | tr '\n' ' ' > VERSION
+            fi
 
-    - run:
-        name: Build Docker image
-        command: ./architect build
+      - run:
+          name: Build Docker image
+          command: ./architect build
 
-    - run:
-        name: Launch container for tests
-        command: |
-          if [ "${CIRCLE_BRANCH}" != "master" ]; then
-            docker pull quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
-            docker run --name happa-master -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
-          fi
+      - run:
+          name: Launch container for tests
+          command: |
+            if [ "${CIRCLE_BRANCH}" != "master" ]; then
+              docker pull quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
+              docker run --name happa-master -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
+            fi
 
-          docker run --name happa-branch -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
-          sleep 2
-          CURL_OUTPUT=$(curl -s http://localhost:8000)
-          echo "${CURL_OUTPUT}" | grep Happa
+            docker run --name happa-branch -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+            sleep 2
+            CURL_OUTPUT=$(curl -s http://localhost:8000)
+            echo "${CURL_OUTPUT}" | grep Happa
 
-    - save_cache:
-        key: v1-npm-deps-{{ checksum "yarn.lock" }}
-        paths:
-          - ./node_modules
+      - save_cache:
+          key: v1-npm-deps-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
 
   deploy-to-testing:
     machine: true
     steps:
-    - checkout
-    - deploy:
-        name: Deploy with architect to testing envs
-        command: |
-          wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-          chmod +x ./architect
-          ./architect deploy --group=testing
+      - checkout
+      - deploy:
+          name: Deploy with architect to testing envs
+          command: |
+            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+            chmod +x ./architect
+            ./architect deploy --group=testing
 
   deploy-to-all:
     machine: true
     steps:
-    - checkout
-    - deploy:
-        name: Deploy with architect to all envs
-        command: |
-          wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-          chmod +x ./architect
-          ./architect deploy
+      - checkout
+      - deploy:
+          name: Deploy with architect to all envs
+          command: |
+            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+            chmod +x ./architect
+            ./architect deploy
