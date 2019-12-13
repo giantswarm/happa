@@ -124,7 +124,7 @@
     "prefer-promise-reject-errors": 1,
     "prefer-regex-literals": 1,
     "require-await": 2,
-    "wrap-iife": 2,
+    "wrap-iife": [2, "any"],
     "yoda": 2,
     "eol-last": 1,
     "init-declarations": 2,
