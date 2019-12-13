@@ -42,6 +42,13 @@ class Layout extends React.Component {
     } else {
       this.props.dispatch(push('/login'));
     }
+
+    this.test();
+  }
+
+  test() {
+    let hello = {};
+    hello.something.something += 1;
   }
 
   selectOrganization = orgId => {
