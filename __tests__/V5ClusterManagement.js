@@ -143,7 +143,13 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
     .reply(200, nodePoolPatchResponse);
 
   // Mounting
-  const { getAllByTestId, getByText, container } = renderRouteWithStore(ROUTE);
+  const {
+    getAllByTestId,
+    getByText,
+    container,
+    debug,
+    getByDisplayValue,
+  } = renderRouteWithStore(ROUTE);
 
   await wait(() => getByText(truncate(nodePoolName, 14)));
 
@@ -156,9 +162,18 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   fireEvent.click(nodePoolNameEl);
 
   // Write the new name and submit it
-  container.querySelector(
-    `input[value="${nodePoolName}"]`
-  ).value = newNodePoolName;
+  // container.querySelector(
+  //   `input[value="${nodePoolName}"]`
+  // ).value = newNodePoolName;
+
+  await wait(() => {
+    getByDisplayValue(nodePoolName);
+  });
+
+  // Change the new name and submit it.
+  fireEvent.change(getByDisplayValue(nodePoolName), {
+    target: { value: newNodePoolName },
+  });
 
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
