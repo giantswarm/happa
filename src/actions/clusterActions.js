@@ -87,9 +87,10 @@ export function clustersLoad() {
       });
 
     // Extract v4 clusters from the clusters fetched array.
-    const v4Clusters = clusters.filter(cluster =>
-      cluster.path.startsWith('/v4')
-    );
+    let v4Clusters = [];
+    if (clusters) {
+      v4Clusters = clusters.filter(cluster => cluster.path.startsWith('/v4'));
+    }
 
     // TODO at some point we will probably have just one flow for all clusters.
     // Now we can't as we are not computing capabilities and not getting status
