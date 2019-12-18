@@ -1,4 +1,5 @@
 import * as clusterActions from 'actions/clusterActions';
+import * as appActions from 'actions/appActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
@@ -98,7 +99,7 @@ class ClusterDetailView extends React.Component {
         return clusterActions.clusterLoadDetails(cluster.id);
       })
       .then(() => {
-        return clusterActions.clusterLoadApps(cluster.id);
+        return appActions.loadApps(cluster.id);
       });
 
     this.props.dispatch(nodePoolActions.nodePoolsLoad());
