@@ -71,8 +71,8 @@ afterAll(() => {
   });
 });
 
-it.skip('renders all the v4 KVM cluster data correctly without nodes ready', async () => {
-  const { getByText, getAllByText, debug } = renderRouteWithStore(ROUTE);
+it('renders all the v4 KVM cluster data correctly without nodes ready', async () => {
+  const { getByText, getAllByText } = renderRouteWithStore(ROUTE);
 
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
@@ -92,13 +92,18 @@ it.skip('renders all the v4 KVM cluster data correctly without nodes ready', asy
   });
 
   const nodes = getByText('Nodes').nextSibling;
-  const nodesRunning = getNumberOfNodes({
-    ...v4KVMClusterResponse,
-    status: v4KVMClusterStatusResponse,
-  });
-  console.log(nodesRunning, nodes.textContent);
+  await wait(() => expect(nodes).toHaveTextContent('0'));
+});
 
-  await wait(() => expect(nodes).toHaveTextContent(nodesRunning));
+/******************** PENDING TESTS ********************/
+
+it.skip('renders all the v4 KVM nodes', async () => {
+  // TODO Expect nodesRunning to be in nodes element
+  // const nodes = getByText('Nodes').nextSibling;
+  // const nodesRunning = getNumberOfNodes({
+  //   ...v4KVMClusterResponse,
+  //   status: v4KVMClusterStatusResponse,
+  // });
   // expect(nodes).toHaveTextContent(nodesRunning);
 });
 

@@ -86,10 +86,10 @@ it('renders all the v4 AWS cluster data correctly without nodes ready', async ()
   expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
   expect(
     getByTestId('desired-nodes').querySelector('div:nth-child(2)').textContent
-  ).toBe('3');
+  ).toBe('0');
   expect(
     getByTestId('running-nodes').querySelector('div:nth-child(2)').textContent
-  ).toBe('3');
+  ).toBe('0');
   expect(getByText(v4AWSClusterResponse.api_endpoint)).toBeInTheDocument();
   // n/a because the cluster hasn't been updated yet
   expect(document.querySelector('abbr')).toHaveTextContent('n/a');
@@ -301,3 +301,7 @@ it('patches v4 cluster name correctly', async () => {
     v4AWSClusterResponse
   );
 });
+
+/******************** PENDING TESTS ********************/
+
+it.skip('renders all the v4 AWS nodes', async () => {});
