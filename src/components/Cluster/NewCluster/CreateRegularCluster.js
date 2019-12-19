@@ -17,6 +17,7 @@ import ProviderCredentials from './ProviderCredentials';
 import React from 'react';
 import ReleaseSelector from './ReleaseSelector';
 import styled from '@emotion/styled';
+import AvailabilityZonesSelector from './AvailabilityZonesSelector';
 
 const WrapperDiv = styled.div`
   ${Wrapper}
@@ -121,6 +122,26 @@ class CreateRegularCluster extends React.Component {
       awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
       azureInstanceTypes: JSON.parse(window.config.azureCapabilitiesJSON),
     });
+  }
+
+  static getAvailabilityZonesEnabledState(provider, release) {
+    let availabilityZonesEnabled = false;
+
+    switch (provider) {
+      case Providers.AWS:
+        availabilityZonesEnabled = cmp(release, '6.0.0') === 1;
+        break;
+
+      case Providers.AZURE:
+        // TODO: Add version check for next release
+        availabilityZonesEnabled = true;
+        break;
+
+      default:
+        availabilityZonesEnabled = false;
+    }
+
+    return availabilityZonesEnabled;
   }
 
   updateAvailabilityZonesPicker = n => {
@@ -426,6 +447,11 @@ class CreateRegularCluster extends React.Component {
   render() {
     const { provider } = this.props;
 
+    const areAZsEnabled = CreateRegularCluster.getAvailabilityZonesEnabledState(
+      provider,
+      this.props.selectedRelease
+    );
+
     return (
       <Breadcrumb
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
@@ -475,46 +501,21 @@ class CreateRegularCluster extends React.Component {
             <FlexColumnDiv>
               <div className='worker-nodes'>Worker nodes</div>
               {(provider === Providers.AWS || provider === Providers.AZURE) && (
-                <label
-                  className='availability-zones'
-                  htmlFor='availability-zones'
-                >
-                  <span className='label-span'>Availability Zones</span>
-                  {// For now we want to handle cases where older clusters do
-                  // still not support AZ selection. The special handling here
-                  // can be removed once all clusters run at least on 6.1.0.
-                  //
-                  //     https://github.com/giantswarm/giantswarm/pull/2202
-                  //
-                  cmp(this.props.selectedRelease, '6.0.0') === 1 ? (
-                    <FlexWrapperAZDiv>
-                      <p>Number of availability zones to use:</p>
-                      <div>
-                        <NumberPicker
-                          label=''
-                          max={this.props.maxAvailabilityZones}
-                          min={this.props.minAvailabilityZones}
-                          onChange={this.updateAvailabilityZonesPicker}
-                          readOnly={false}
-                          stepSize={1}
-                          value={this.state.availabilityZonesPicker.value}
-                        />
-                      </div>
-                    </FlexWrapperAZDiv>
-                  ) : (
-                    <>
-                      <p>
-                        Selection of availability zones is only possible for
-                        release version 6.1.0 or greater.
-                      </p>
-                      <div className='col-3'>
-                        <NumberPicker readOnly={true} value={1} />
-                      </div>
-                    </>
-                  )}
-                </label>
+                /* For now we want to handle cases where older clusters do
+                 * still not support AZ selection. The special handling here
+                 * can be removed once all clusters run at least on 6.1.0.
+                 *
+                 * https://github.com/giantswarm/giantswarm/pull/2202
+                 *
+                 */
+                <AvailabilityZonesSelector
+                  minValue={this.props.minAvailabilityZones}
+                  maxValue={this.props.maxAvailabilityZones}
+                  onChange={this.updateAvailabilityZonesPicker}
+                  value={this.state.availabilityZonesPicker.value}
+                  available={areAZsEnabled}
+                />
               )}
-
               <label htmlFor='instance-type'>
                 {(() => {
                   switch (provider) {
