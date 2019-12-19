@@ -129,10 +129,6 @@ class ClusterApps extends React.Component {
   // It combines information from the release endpoint with the latest info
   // coming from App CRs.
   preinstalledApps() {
-    if (this.props.release === undefined) {
-      return {};
-    }
-
     var displayApps = {
       essentials: [],
       management: [],
@@ -307,22 +303,29 @@ class ClusterApps extends React.Component {
             by Giant Swarm.
           </p>
           <div className='row'>
-            {Object.keys(this.preinstalledApps()).map(appCategory => {
-              return (
-                <div className='col-4' key={appCategory}>
-                  <h6>{appCategory}</h6>
-                  {this.preinstalledApps()[appCategory].map(app => {
-                    return (
-                      <div className='cluster-apps--app' key={app.name}>
-                        <img alt={app.title + ' icon'} src={app.logoUrl} />
-                        {app.name}
-                        <small>{app.version}&nbsp;</small>
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
+            {this.props.release ? (
+              Object.keys(this.preinstalledApps()).map(appCategory => {
+                return (
+                  <div className='col-4' key={appCategory}>
+                    <h6>{appCategory}</h6>
+                    {this.preinstalledApps()[appCategory].map(app => {
+                      return (
+                        <div className='cluster-apps--app' key={app.name}>
+                          <img alt={app.title + ' icon'} src={app.logoUrl} />
+                          {app.name}
+                          <small>{app.version}&nbsp;</small>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })
+            ) : (
+              <div className='flash-messages--flash-message flash-messages--danger'>
+                Unable to load the list of preinstalled apps. Please try again
+                later or contact support: support@giantswarm.io
+              </div>
+            )}
           </div>
         </div>
         <AppDetailsModal
