@@ -124,24 +124,20 @@ class CreateRegularCluster extends React.Component {
     });
   }
 
-  static getAvailabilityZonesEnabledState(provider, release) {
-    let availabilityZonesEnabled = false;
+  static getRequiredVersionForAZ(provider) {
+    let requiredVersion = '';
 
     switch (provider) {
-      case Providers.AWS:
-        availabilityZonesEnabled = cmp(release, '6.0.0') === 1;
-        break;
-
       case Providers.AZURE:
         // TODO: Add version check for next release
-        availabilityZonesEnabled = true;
+        requiredVersion = '6.0.0';
         break;
 
       default:
-        availabilityZonesEnabled = false;
+        requiredVersion = '6.0.0';
     }
 
-    return availabilityZonesEnabled;
+    return requiredVersion;
   }
 
   updateAvailabilityZonesPicker = n => {
@@ -447,9 +443,8 @@ class CreateRegularCluster extends React.Component {
   render() {
     const { provider } = this.props;
 
-    const areAZsEnabled = CreateRegularCluster.getAvailabilityZonesEnabledState(
-      provider,
-      this.props.selectedRelease
+    const requiredReleaseForAZ = CreateRegularCluster.getRequiredVersionForAZ(
+      provider
     );
 
     return (
@@ -513,7 +508,8 @@ class CreateRegularCluster extends React.Component {
                   maxValue={this.props.maxAvailabilityZones}
                   onChange={this.updateAvailabilityZonesPicker}
                   value={this.state.availabilityZonesPicker.value}
-                  available={areAZsEnabled}
+                  requiredReleaseVersion={requiredReleaseForAZ}
+                  currentReleaseVersion={this.props.selectedRelease}
                 />
               )}
               <label htmlFor='instance-type'>

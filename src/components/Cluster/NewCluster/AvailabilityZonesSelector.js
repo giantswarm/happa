@@ -18,14 +18,17 @@ const AvailabilityZonesSelector = ({
   minValue,
   maxValue,
   value,
-  available,
   readOnly,
   onChange,
+  requiredReleaseVersion,
+  currentReleaseVersion,
 }) => {
+  const isAvailable = cmp(currentReleaseVersion, requiredReleaseVersion) === 1;
+
   return (
     <label className='availability-zones' htmlFor='availability-zones'>
       <span className='label-span'>Availability Zones</span>
-      {available ? (
+      {isAvailable ? (
         <FlexWrapperAZDiv>
           <p>Number of availability zones to use:</p>
           <div>
@@ -44,7 +47,7 @@ const AvailabilityZonesSelector = ({
         <>
           <p>
             Selection of availability zones is only possible for release version
-            6.1.0 or greater.
+            {requiredReleaseVersion} or greater.
           </p>
           <div className='col-3'>
             <NumberPicker readOnly={true} value={1} />
@@ -62,7 +65,8 @@ AvailabilityZonesSelector.defaultProps = {
   onChange: () => {},
   readOnly: false,
   value: 1,
-  available: false,
+  requiredReleaseVersion: '0.0.1',
+  currentReleaseVersion: '0.0.2',
 };
 
 AvailabilityZonesSelector.propTypes = {
@@ -71,7 +75,8 @@ AvailabilityZonesSelector.propTypes = {
   onChange: PropTypes.func,
   readOnly: PropTypes.bool,
   value: PropTypes.number,
-  available: PropTypes.bool,
+  requiredReleaseVersion: PropTypes.string,
+  currentReleaseVersion: PropTypes.string,
 };
 
 export default AvailabilityZonesSelector;
