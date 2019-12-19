@@ -99,7 +99,10 @@ class ClusterDetailView extends React.Component {
         return clusterActions.clusterLoadDetails(cluster.id);
       })
       .then(() => {
-        return appActions.loadApps(cluster.id);
+        return this.props.dispatch(appActions.loadApps(cluster.id));
+      })
+      .catch(error => {
+        console.error(error);
       });
 
     this.props.dispatch(nodePoolActions.nodePoolsLoad());
@@ -336,29 +339,17 @@ class ClusterDetailView extends React.Component {
                       <KeyPairs cluster={cluster} />
                     </Tab>
                     <Tab eventKey={3} title='Apps'>
-                      {release ? (
-                        <ClusterApps
-                          clusterId={this.props.clusterId}
-                          dispatch={dispatch}
-                          errorLoading={this.state.errorLoadingApps}
-                          installedApps={cluster.apps}
-                          release={release}
-                          showInstalledAppsBlock={
-                            Object.keys(this.props.catalogs.items).length > 0 &&
-                            cluster.capabilities.canInstallApps
-                          }
-                        />
-                      ) : (
-                        <div className='well'>
-                          We had some trouble loading this pane. Please come
-                          back later or contact support in your slack channel or
-                          at{' '}
-                          <a href='mailto:support@giantswarm.io'>
-                            support@giantswarm.io
-                          </a>
-                          .
-                        </div>
-                      )}
+                      <ClusterApps
+                        clusterId={this.props.clusterId}
+                        dispatch={dispatch}
+                        errorLoading={this.state.errorLoadingApps}
+                        installedApps={cluster.apps}
+                        release={release}
+                        showInstalledAppsBlock={
+                          Object.keys(this.props.catalogs.items).length > 0 &&
+                          cluster.capabilities.canInstallApps
+                        }
+                      />
                     </Tab>
                   </Tabs>
                 </div>
