@@ -1,4 +1,6 @@
 import * as types from './actionTypes';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import GiantSwarm from 'giantswarm';
 
 // selectCluster stores a clusterID in the state.
 export function selectCluster(clusterID) {
@@ -12,17 +14,16 @@ export function selectCluster(clusterID) {
  */
 export function loadApps(clusterId) {
   return function(dispatch, getState) {
-    // This method is going to work for NP clusters, now in local dev it is not
-    // working, so early return if the cluster is a NP one.
+    const appsApi = new GiantSwarm.AppsApi();
+
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
+
+    let getClusterAppsFunc;
     if (isNodePoolsCluster) {
-      dispatch({
-        type: types.CLUSTER_LOAD_APPS_SUCCESS,
-        clusterId,
-        apps: [],
-      });
-      return;
+      getClusterAppsFunc = appsApi.getClusterAppsV5.bind(appsApi);
+    } else {
+      getClusterAppsFunc = appsApi.getClusterAppsV4.bind(appsApi);
     }
 
     dispatch({
@@ -30,10 +31,7 @@ export function loadApps(clusterId) {
       clusterId,
     });
 
-    var appsApi = new GiantSwarm.AppsApi();
-
-    return appsApi
-      .getClusterApps(clusterId)
+    return getClusterAppsFunc(clusterId)
       .then(apps => {
         // For some reason the array that we get back from the generated js client is an
         // array-like structure, so I make a new one here.
@@ -81,24 +79,40 @@ export function loadApps(clusterId) {
  * @param {Object} clusterID Where to install the app.
  */
 export function installApp(app, clusterID) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({
       type: types.CLUSTER_INSTALL_APP,
       clusterID,
       app,
     });
 
-    var appsApi = new GiantSwarm.AppsApi();
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    const appsApi = new GiantSwarm.AppsApi();
+    const appConfigsApi = new GiantSwarm.AppConfigsApi();
+
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolsCluster = nodePoolsClusters.includes(clusterID);
+
+    let createAppConfigurationFunc;
+    let createAppFunc;
+    if (isNodePoolsCluster) {
+      createAppConfigurationFunc = appConfigsApi.createClusterAppConfigV5.bind(
+        appConfigsApi
+      );
+      createAppFunc = appsApi.createClusterAppV5.bind(appsApi);
+    } else {
+      createAppConfigurationFunc = appConfigsApi.createClusterAppConfigV4.bind(
+        appConfigsApi
+      );
+      createAppFunc = appsApi.createClusterAppV4.bind(appsApi);
+    }
 
     var optionalCreateAppConfiguration = new Promise((resolve, reject) => {
       if (Object.keys(app.valuesYAML).length !== 0) {
         // If we have user config that we want to create, then
         // fire off the call to create it.
-        appConfigsApi
-          .createClusterAppConfig(clusterID, app.name, {
-            body: app.valuesYAML,
-          })
+        createAppConfigurationFunc(clusterID, app.name, {
+          body: app.valuesYAML,
+        })
           .then(() => {
             // The call succeeded, resolve the promise
             resolve();
@@ -134,39 +148,37 @@ export function installApp(app, clusterID) {
 
     return optionalCreateAppConfiguration
       .then(() => {
-        return appsApi
-          .createClusterApp(clusterID, app.name, {
-            body: {
-              spec: {
-                catalog: app.catalog,
-                name: app.chartName,
-                namespace: app.namespace,
-                version: app.version,
-              },
+        return createAppFunc(clusterID, app.name, {
+          body: {
+            spec: {
+              catalog: app.catalog,
+              name: app.chartName,
+              namespace: app.namespace,
+              version: app.version,
             },
-          })
-          .catch(error => {
-            if (error.status === 409) {
-              new FlashMessage(
-                `An app called <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
-                messageType.ERROR,
-                messageTTL.LONG
-              );
-            } else if (error.status === 400) {
-              new FlashMessage(
-                `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
-                messageType.ERROR,
-                messageTTL.LONG
-              );
-            } else {
-              new FlashMessage(
-                `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`,
-                messageType.ERROR,
-                messageTTL.LONG
-              );
-            }
-            throw error;
-          });
+          },
+        }).catch(error => {
+          if (error.status === 409) {
+            new FlashMessage(
+              `An app called <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
+              messageType.ERROR,
+              messageTTL.LONG
+            );
+          } else if (error.status === 400) {
+            new FlashMessage(
+              `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
+              messageType.ERROR,
+              messageTTL.LONG
+            );
+          } else {
+            new FlashMessage(
+              `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`,
+              messageType.ERROR,
+              messageTTL.LONG
+            );
+          }
+          throw error;
+        });
       })
       .then(() => {
         dispatch({
@@ -202,17 +214,26 @@ export function installApp(app, clusterID) {
  * @param {Object} clusterID Where to delete the app.
  */
 export function deleteApp(appName, clusterID) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({
       type: types.CLUSTER_DELETE_APP,
       clusterID,
       appName,
     });
 
-    var appsApi = new GiantSwarm.AppsApi();
+    const appsApi = new GiantSwarm.AppsApi();
 
-    return appsApi
-      .deleteClusterApp(clusterID, appName)
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolsCluster = nodePoolsClusters.includes(clusterID);
+
+    let deleteAppFunc;
+    if (isNodePoolsCluster) {
+      deleteAppFunc = appsApi.deleteClusterAppV5.bind(appsApi);
+    } else {
+      deleteAppFunc = appsApi.deleteClusterAppV4.bind(appsApi);
+    }
+
+    return deleteAppFunc(clusterID, appName)
       .then(() => {
         new FlashMessage(
           `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
