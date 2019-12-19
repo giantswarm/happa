@@ -25,6 +25,7 @@
     "trailingComma": "es5"
   },
   "jest": {
+    "testEnvironment": "node",
     "setupFilesAfterEnv": [
       "./src/setupTests.js"
     ]

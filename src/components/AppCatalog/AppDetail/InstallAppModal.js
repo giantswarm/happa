@@ -1,4 +1,4 @@
-import { clusterInstallApp } from 'actions/clusterActions';
+import { installApp } from 'actions/appActions';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import Button from 'UI/Button';
@@ -151,7 +151,7 @@ const InstallAppModal = props => {
 
     props
       .dispatch(
-        clusterInstallApp(
+        installApp(
           {
             name: name,
             catalog: props.app.catalog,
