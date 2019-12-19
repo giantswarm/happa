@@ -13,7 +13,6 @@ export function selectCluster(clusterID) {
  * @param {String} clusterId Cluster ID
  */
 export function loadApps(clusterId) {
-  console.log('loading1');
   return function(dispatch, getState) {
     const appsApi = new GiantSwarm.AppsApi();
 
