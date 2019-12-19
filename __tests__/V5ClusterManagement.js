@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
+  appsResponse,
   getPersistedMockCall,
   AWSInfoResponse,
   nodePoolsResponse,
@@ -42,6 +43,10 @@ beforeAll(() => {
   requests.cluster = getPersistedMockCall(
     `/v5/clusters/${V5_CLUSTER.id}/`,
     v5ClusterResponse
+  );
+  requests.apps = getPersistedMockCall(
+    `/v5/clusters/${V5_CLUSTER.id}/apps/`,
+    appsResponse
   );
   requests.credentials = getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/credentials/`
