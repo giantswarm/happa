@@ -43,12 +43,14 @@ export function updateAppSecret(appName, clusterID, values) {
           appName,
         });
 
+        // eslint-disable-next-line no-magic-numbers
         if (error.status === 404) {
           new FlashMessage(
             `Could not find an app or app secret to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
+          // eslint-disable-next-line no-magic-numbers
         } else if (error.status === 400) {
           new FlashMessage(
             `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
@@ -107,12 +109,14 @@ export function createAppSecret(appName, clusterID, values) {
           appName,
         });
 
+        // eslint-disable-next-line no-magic-numbers
         if (error.status === 404) {
           new FlashMessage(
             `Could not find <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
+          // eslint-disable-next-line no-magic-numbers
         } else if (error.status === 400) {
           new FlashMessage(
             `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
@@ -168,12 +172,14 @@ export function deleteAppSecret(appName, clusterID) {
           appName,
         });
 
+        // eslint-disable-next-line no-magic-numbers
         if (error.status === 404) {
           new FlashMessage(
             `Could not find the Secret for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
+          // eslint-disable-next-line no-magic-numbers
         } else if (error.status === 400) {
           new FlashMessage(
             `The request appears to be invalid. Please try again later or contact support: support@giantswarm.io.`,

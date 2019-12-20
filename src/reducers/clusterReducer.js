@@ -26,6 +26,7 @@ const initialState = {
   nodePoolsClusters: [],
 };
 
+// eslint-disable-next-line complexity
 const clusterReducer = produce((draft, action) => {
   switch (action.type) {
     case types.CLUSTERS_LOAD_SUCCESS:
@@ -43,13 +44,13 @@ const clusterReducer = produce((draft, action) => {
       });
       draft.lastUpdated = action.lastUpdated;
       draft.nodePoolsClusters = action.nodePoolsClusters;
-      
-return;
+
+      return;
 
     case types.CLUSTERS_LOAD_ERROR:
       draft.errorLoading = true;
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS: {
       const withAwsKeys = ensureWorkersHaveAWSkey(action.cluster);
@@ -75,44 +76,44 @@ return;
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].errorLoading = true;
       }
-      
-return;
+
+      return;
 
     case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].nodePools = action.nodePools;
       }
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_STATUS_SUCCESS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].status = action.status;
         draft.items[action.clusterId].status.lastUpdated = Date.now();
       }
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].status = null;
       }
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_STATUS_ERROR:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].errorLoading = true;
       }
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_APPS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingApps = true;
       }
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_APPS_SUCCESS:
       if (draft.items[action.clusterId]) {
@@ -120,54 +121,54 @@ return;
         draft.items[action.clusterId].apps = action.apps;
         draft.items[action.clusterId].lastUpdated = Date.now();
       }
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_APPS_ERROR:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingApps = false;
         draft.items[action.clusterId].lastUpdated = Date.now();
       }
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_KEY_PAIRS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingKeyPairs = true;
       }
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingKeyPairs = false;
         draft.items[action.clusterId].keyPairs = action.keyPairs;
       }
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_KEY_PAIRS_ERROR:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingKeyPairs = false;
       }
-      
-return;
+
+      return;
 
     case types.CLUSTER_CREATE:
       draft.isFetching = true;
-      
-return;
+
+      return;
 
     case types.V5_CLUSTER_CREATE_SUCCESS:
       draft.nodePoolsClusters.push(action.clusterId);
-      
-return;
+
+      return;
 
     case types.CLUSTER_DELETE_SUCCESS:
       delete draft.items[action.clusterId];
       draft.lastUpdated = Date.now();
-      
-return;
+
+      return;
 
     case types.CLUSTER_PATCH:
       Object.keys(action.payload).forEach(key => {
@@ -175,16 +176,16 @@ return;
           draft.items[action.cluster.id][key] = action.payload[key];
         }
       });
-      
-return;
+
+      return;
 
     // TODO does this actually work????
     case types.CLUSTER_PATCH_ERROR:
       if (draft.items[action.cluster.id]) {
         draft.items[action.cluster.id] = action.cluster;
       }
-      
-return;
+
+      return;
 
     case types.NODEPOOL_DELETE_SUCCESS:
       if (draft.items[action.clusterId]) {
@@ -192,7 +193,6 @@ return;
           action.clusterId
         ].nodePools.filter(np => np !== action.nodePoolId);
       }
-      
   }
 }, initialState);
 

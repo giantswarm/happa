@@ -20,7 +20,7 @@ export class Requester {
 
     const scheme = this.store.getState().app.loggedInUser.auth.scheme;
     const token = this.store.getState().app.loggedInUser.auth.token;
-    const authHeader = `${scheme  } ${  token}`;
+    const authHeader = `${scheme} ${token}`;
 
     const opt = {
       method: req.method,
@@ -29,8 +29,9 @@ export class Requester {
         Authorization: authHeader,
       },
     };
-    
-return fetch(req.url, opt).then(resp => {
+
+    return fetch(req.url, opt).then(resp => {
+      // eslint-disable-next-line no-magic-numbers
       if (resp.status === 201) {
         return { json: null };
       }

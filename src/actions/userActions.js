@@ -74,6 +74,7 @@ export function refreshUserInfo() {
         });
       })
       .catch(error => {
+        // eslint-disable-next-line no-magic-numbers
         if (error.status === 401) {
           new FlashMessage(
             'Please log in again, as your previously saved credentials appear to be invalid.',

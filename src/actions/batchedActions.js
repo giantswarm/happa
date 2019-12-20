@@ -1,12 +1,8 @@
-import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import GiantSwarm from 'giantswarm';
-
 // actions
-import * as userActions from './userActions';
-import * as organizationActions from './organizationActions';
-import * as clusterActions from './clusterActions';
 import * as catalogActions from './catalogActions';
+import * as clusterActions from './clusterActions';
+import * as organizationActions from './organizationActions';
+import * as userActions from './userActions';
 
 export const batchedLayout = () => async dispatch => {
   try {
@@ -16,6 +12,7 @@ export const batchedLayout = () => async dispatch => {
     dispatch(catalogActions.catalogsLoad());
     dispatch(clusterActions.clustersLoad());
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Error in batchedLayout', err);
   }
 };
@@ -25,6 +22,7 @@ export const batchedOrganizationSelect = orgId => async dispatch => {
     await dispatch(organizationActions.organizationSelect(orgId));
     dispatch(clusterActions.clustersLoad());
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Error in batchedOrganizationSelect', err);
   }
 };

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*! modernizr 3.3.1 (Custom Build) | MIT *
  * https://modernizr.com/download/?-adownload-setclasses !*/
 !(function(e, n, s) {
