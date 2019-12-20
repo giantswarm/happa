@@ -180,9 +180,9 @@ jobs:
             echo "${CURL_OUTPUT}" | grep Happa
 
       - persist_to_workspace:
-        root: .
-        paths:
-          - ./dist
+          root: .
+          paths:
+            - ./dist
 
       - save_cache:
           key: v1-npm-deps-{{ checksum "yarn.lock" }}
