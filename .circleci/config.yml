@@ -30,6 +30,7 @@ workflows:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
             branches:
               ignore: /.*/
+
       - deploy-to-testing:
           requires:
             - build
@@ -61,7 +62,7 @@ workflows:
             tags:
               only: /^v.*/
           requires:
-            - build
+            - push-app-pr-operator-to-quay
 
 jobs:
   build:
@@ -177,6 +178,11 @@ jobs:
             sleep 2
             CURL_OUTPUT=$(curl -s http://localhost:8000)
             echo "${CURL_OUTPUT}" | grep Happa
+
+      - persist_to_workspace:
+        root: .
+        paths:
+          - ./dist
 
       - save_cache:
           key: v1-npm-deps-{{ checksum "yarn.lock" }}
