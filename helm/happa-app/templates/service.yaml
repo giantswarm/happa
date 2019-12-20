@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.resource.default.name  . }}
+  namespace: {{ tpl .Values.resource.default.namespace  . }}
+  labels:
+    app: {{ tpl .Values.resource.default.name  . }}
+spec:
+  ports:
+  - name: {{ .Values.project.name }}
+    port: {{ .Values.port }}
+    targetPort: {{ .Values.port }}
+  selector:
+    app: {{ tpl .Values.resource.default.name  . }}
+    version:

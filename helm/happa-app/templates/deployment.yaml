@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ tpl .Values.resource.default.name  . }}
+  namespace: {{ tpl .Values.resource.default.namespace  . }}
+  labels:
+    app: {{ tpl .Values.resource.default.name  . }}
+    version: {{ .Values.project.version }}
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        releasetime: {{ $.Release.Time }}
+      labels:
+        app: {{ tpl .Values.resource.default.name  . }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: {{ tpl .Values.resource.default.name  . }}
+              topologyKey: kubernetes.io/hostname
+      serviceAccountName: {{ tpl .Values.resource.default.name  . }}
+      securityContext:
+        runAsUser: {{ .Values.userID }}
+        runAsGroup: {{ .Values.groupID }}
+      containers:
+      - name: {{ .Values.project.name }}
+        image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        env:
+        - name: AWS_CAPABILITIES_JSON
+          valueFrom:
+            configMapKeyRef:
+              name: {{ tpl .Values.resource.default.name  . }}
+              key: aws-capabilities-json
+        - name: AZURE_CAPABILITIES_JSON
+          valueFrom:
+            configMapKeyRef:
+              name: {{ tpl .Values.resource.default.name  . }}
+              key: azure-capabilities-json
+        - name: PASSAGE_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ tpl .Values.resource.default.name  . }}
+              key: passage-endpoint
+        - name: API_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ tpl .Values.resource.default.name  . }}
+              key: api-endpoint
+        - name: INGRESS_BASE_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              name: {{ tpl .Values.resource.default.name  . }}
+              key: ingress-base-domain
+        - name: ENVIRONMENT
+          value: kubernetes
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 20Mi
+          limits:
+            cpu: 250m
+            memory: 250Mi
+      imagePullSecrets:
+      - name: {{ tpl .Values.resource.default.name  . }}-pull-secret
