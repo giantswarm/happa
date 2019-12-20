@@ -12,17 +12,17 @@ export class Requester {
 
   request = req => {
     if (!this.store.getState().app.loggedInUser) {
-      let err = new Error(
+      const err = new Error(
         `user is not logged in yet, unable to report error to GS API`
       );
       throw err;
     }
 
-    let scheme = this.store.getState().app.loggedInUser.auth.scheme;
-    let token = this.store.getState().app.loggedInUser.auth.token;
-    let authHeader = scheme + ' ' + token;
+    const scheme = this.store.getState().app.loggedInUser.auth.scheme;
+    const token = this.store.getState().app.loggedInUser.auth.token;
+    const authHeader = `${scheme  } ${  token}`;
 
-    let opt = {
+    const opt = {
       method: req.method,
       body: req.body,
       headers: {
@@ -35,7 +35,7 @@ export class Requester {
       }
 
       return resp.text().then(body => {
-        let err = new Error(
+        const err = new Error(
           `airbrake: fetch: unexpected response: code=${resp.status} body='${body}'`
         );
         throw err;

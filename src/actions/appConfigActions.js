@@ -17,7 +17,7 @@ export function updateAppConfig(appName, clusterID, values) {
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
       .modifyClusterAppConfig(clusterID, appName, {
@@ -81,7 +81,7 @@ export function createAppConfig(appName, clusterID, values) {
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
       .createClusterAppConfig(clusterID, appName, {
@@ -144,7 +144,7 @@ export function deleteAppConfig(appName, clusterID) {
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
       .deleteClusterAppConfig(clusterID, appName)

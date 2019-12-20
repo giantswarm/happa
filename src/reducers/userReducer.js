@@ -26,7 +26,7 @@ const userReducer = produce((draft, action) => {
 
     case types.USERS_DELETE_SUCCESS:
       delete draft.items[action.email];
-      return;
+      
   }
 }, initialState);
 

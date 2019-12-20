@@ -27,7 +27,7 @@ const releaseReducer = produce((draft, action) => {
 
     case types.RELEASE_SELECTED:
       draft.releaseSelected = action.release;
-      return;
+      
   }
 }, initialState);
 

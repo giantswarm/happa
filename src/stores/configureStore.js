@@ -3,7 +3,7 @@ import { routerMiddleware } from 'connected-react-router';
 import rootReducer from 'reducers';
 import thunk from 'redux-thunk';
 
-var store;
+let store;
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

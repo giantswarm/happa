@@ -30,9 +30,9 @@ export function dedent(strings, ...values) {
   const lines = result.split('\n');
   let mindent = null;
   lines.forEach(l => {
-    let m = l.match(/^(\s+)\S+/);
+    const m = l.match(/^(\s+)\S+/);
     if (m) {
-      let indent = m[1].length;
+      const indent = m[1].length;
       if (!mindent) {
         // this is the first indented line
         mindent = indent;
@@ -55,7 +55,7 @@ export function dedent(strings, ...values) {
 
 export function humanFileSize(bytes, si = true, decimals = 1) {
   // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
-  var thresh = si ? 1000 : 1024;
+  const thresh = si ? 1000 : 1024;
 
   if (Math.abs(bytes) < thresh) {
     return {
@@ -64,11 +64,11 @@ export function humanFileSize(bytes, si = true, decimals = 1) {
     };
   }
 
-  var units = si
+  const units = si
     ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
     : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
 
-  var u = -1;
+  let u = -1;
 
   do {
     bytes /= thresh;
@@ -87,16 +87,16 @@ export function humanFileSize(bytes, si = true, decimals = 1) {
 // Raises a TypeError with helpful message if the validation fails.
 //
 export function validateOrRaise(validatable, constraints) {
-  var validationErrors = validate(validatable, constraints, {
+  const validationErrors = validate(validatable, constraints, {
     fullMessages: false,
   });
 
   if (validationErrors) {
     // If there are validation errors, throw a TypeError that has readable
     // information about what went wrong.
-    var messages = Object.entries(validationErrors).map(
+    const messages = Object.entries(validationErrors).map(
       ([field, errorMessages]) => {
-        return field + ': ' + errorMessages.join(', ');
+        return `${field  }: ${  errorMessages.join(', ')}`;
       }
     );
     throw new TypeError(messages.join('\n'));
@@ -113,8 +113,8 @@ export function relativeDate(ISO8601DateString) {
     return <span>n/a</span>;
   }
 
-  var formatedDate = formatDate(ISO8601DateString);
-  var relativeDate = moment.utc(ISO8601DateString).fromNow();
+  const formatedDate = formatDate(ISO8601DateString);
+  const relativeDate = moment.utc(ISO8601DateString).fromNow();
 
   return (
     <OverlayTrigger
@@ -128,17 +128,17 @@ export function relativeDate(ISO8601DateString) {
 
 export function toTitleCase(str) {
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-  return str.replace(/\w\S*/g, function(txt) {
+  return str.replace(/\w\S*/g, (txt) => {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
 
 export function truncate(string, maxLength = 20) {
   if (string.length > maxLength) {
-    return string.substring(0, maxLength) + '\u2026';
-  } else {
+    return `${string.substring(0, maxLength)  }\u2026`;
+  } 
     return string;
-  }
+  
 }
 
 export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
@@ -148,7 +148,7 @@ export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
   // into: https://internal-api.j7j4c.g8s.fra-1.giantswarm.io
   // if useInternalAPI is true.
   if (useInternalAPI) {
-    let apiEndpointParts = apiEndpoint.split('api');
+    const apiEndpointParts = apiEndpoint.split('api');
     apiEndpointParts.splice(1, 0, 'internal-api');
 
     apiEndpoint = apiEndpointParts.join('');
@@ -181,7 +181,7 @@ export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
 // clustersForOrg takes a orgId and a list of clusters and returns just the clusters
 // that are owned by that orgId
 export function clustersForOrg(orgId, allClusters) {
-  var clusters = [];
+  let clusters = [];
 
   clusters = _.filter(allClusters, cluster => {
     return cluster.owner === orgId;
@@ -192,12 +192,12 @@ export function clustersForOrg(orgId, allClusters) {
 
 // isJwtExpired expired takes a JWT token and will return true if it is expired.
 export function isJwtExpired(token) {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  var parsedToken = JSON.parse(window.atob(base64));
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const parsedToken = JSON.parse(window.atob(base64));
 
-  var now = Math.round(Date.now() / 1000); // Browsers have millisecond precision, which we don't need.
-  var expire = parsedToken.exp;
+  const now = Math.round(Date.now() / 1000); // Browsers have millisecond precision, which we don't need.
+  const expire = parsedToken.exp;
 
   return now > expire;
 }

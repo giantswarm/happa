@@ -17,7 +17,7 @@ export function updateAppSecret(appName, clusterID, values) {
       appName,
     });
 
-    var appSecretsApi = new GiantSwarm.AppSecretsApi();
+    const appSecretsApi = new GiantSwarm.AppSecretsApi();
 
     return appSecretsApi
       .modifyClusterAppSecret(clusterID, appName, {
@@ -81,7 +81,7 @@ export function createAppSecret(appName, clusterID, values) {
       appName,
     });
 
-    var appSecretsApi = new GiantSwarm.AppSecretsApi();
+    const appSecretsApi = new GiantSwarm.AppSecretsApi();
 
     return appSecretsApi
       .createClusterAppSecret(clusterID, appName, {
@@ -144,7 +144,7 @@ export function deleteAppSecret(appName, clusterID) {
       appName,
     });
 
-    var appSecretsApi = new GiantSwarm.AppSecretsApi();
+    const appSecretsApi = new GiantSwarm.AppSecretsApi();
 
     return appSecretsApi
       .deleteClusterAppSecret(clusterID, appName)

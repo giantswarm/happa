@@ -21,7 +21,7 @@ const credentialReducer = produce((draft, action) => {
 
     case types.ORGANIZATION_CREDENTIALS_LOAD_ERROR:
       draft.isFetching = false;
-      return;
+      
   }
 }, initialState);
 

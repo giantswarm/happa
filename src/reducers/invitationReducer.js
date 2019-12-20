@@ -17,7 +17,7 @@ const invitationReducer = produce((draft, action) => {
 
     case types.INVITATIONS_LOAD_ERROR:
       draft.isFetching = false;
-      return;
+      
   }
 }, initialState);
 

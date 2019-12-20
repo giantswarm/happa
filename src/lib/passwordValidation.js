@@ -1,6 +1,6 @@
 export function validatePassword(password) {
-  var valid = false;
-  var statusMessage = '';
+  let valid = false;
+  let statusMessage = '';
 
   if (password.length < 8) {
     statusMessage = 'password_too_short';

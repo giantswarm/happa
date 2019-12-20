@@ -16,7 +16,7 @@ export function getNumberOfNodes(cluster) {
   let workers = nodes.reduce((accumulator, node) => {
     if (
       node.labels &&
-      node.labels['role'] !== 'master' &&
+      node.labels.role !== 'master' &&
       node.labels['kubernetes.io/role'] !== 'master'
     ) {
       accumulator++;
@@ -34,26 +34,26 @@ export function getNumberOfNodes(cluster) {
 }
 
 export function getMemoryTotal(cluster) {
-  var workers = getNumberOfNodes(cluster);
+  const workers = getNumberOfNodes(cluster);
 
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null; // TODO refactor this and return 0 instead, this is a function that should return a total
   }
-  var m = workers * cluster.workers[0].memory.size_gb;
+  const m = workers * cluster.workers[0].memory.size_gb;
   return m.toFixed(2);
 }
 
 export function getStorageTotal(cluster) {
-  var workers = getNumberOfNodes(cluster);
+  const workers = getNumberOfNodes(cluster);
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null;
   }
-  var s = workers * cluster.workers[0].storage.size_gb;
+  const s = workers * cluster.workers[0].storage.size_gb;
   return s.toFixed(2);
 }
 
 export function getCpusTotal(cluster) {
-  var workers = getNumberOfNodes(cluster);
+  const workers = getNumberOfNodes(cluster);
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null; // TODO refactor this and return 0 instead, this is a function that should return a total
   }

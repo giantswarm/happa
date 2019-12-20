@@ -23,7 +23,7 @@ export function nodePoolsLoad() {
 
         // Receiving an array-like with weird prototype from API call,
         // so converting it to an array.
-        let nodePoolsArray = (Array.from(nodePools) || []).map(np => np.id);
+        const nodePoolsArray = (Array.from(nodePools) || []).map(np => np.id);
 
         // Dispatch action for populating nodePools key inside cluster
         dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArray));
@@ -115,7 +115,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
         dispatch(modalHide());
 
         new FlashMessage(
-          'Node Pool <code>' + nodePool.id + '</code> will be deleted',
+          `Node Pool <code>${  nodePool.id  }</code> will be deleted`,
           messageType.INFO,
           messageTTL.SHORT
         );
@@ -124,9 +124,9 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
         dispatch(modalHide());
 
         new FlashMessage(
-          'An error occurred when trying to delete node pool <code>' +
-            nodePool.id +
-            '</code>.',
+          `An error occurred when trying to delete node pool <code>${ 
+            nodePool.id 
+            }</code>.`,
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'

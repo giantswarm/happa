@@ -7,10 +7,10 @@ import produce from 'immer';
  *
  * @param {Object} clusterDetails Cluster object
  */
-var ensureWorkersHaveAWSkey = function(clusterDetails) {
+const ensureWorkersHaveAWSkey = function(clusterDetails) {
   clusterDetails.workers = clusterDetails.workers || [];
 
-  for (var i = 0; i < clusterDetails.workers.length; i++) {
+  for (let i = 0; i < clusterDetails.workers.length; i++) {
     clusterDetails.workers[i].aws = clusterDetails.workers[i].aws || {
       instance_type: '',
     };
@@ -174,7 +174,7 @@ const clusterReducer = produce((draft, action) => {
           action.clusterId
         ].nodePools.filter(np => np !== action.nodePoolId);
       }
-      return;
+      
   }
 }, initialState);
 

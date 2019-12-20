@@ -66,7 +66,7 @@ const nodePools = produce((draft, action) => {
       delete draft.items[action.nodePoolId];
       draft.errorCreating = true;
       draft.isFetching = false;
-      return;
+      
   }
   // This empty object is the default state.
 }, initialState);

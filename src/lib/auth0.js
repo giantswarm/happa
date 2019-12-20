@@ -5,7 +5,7 @@ export default class Auth {
     domain: 'giantswarm.eu.auth0.com',
     clientID: 'mgYdxCGCZ2eao0OJUGOFXurGIaQAACHs',
     redirectUri:
-      location.protocol + '//' + window.location.host + '/oauth/callback',
+      `${location.protocol  }//${  window.location.host  }/oauth/callback`,
     prompt: 'none',
     audience: window.config.apiEndpoint,
     responseType: 'id_token token',

@@ -2,8 +2,8 @@ import * as types from './actionTypes';
 import { AuthorizationTypes } from 'shared/constants';
 import { Base64 } from 'js-base64';
 import {
-  clearQueues,
   FlashMessage,
+  clearQueues,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
@@ -103,7 +103,7 @@ export function refreshUserInfo() {
 // the userReducer takes care of storing this in state.
 export function auth0Login(authResult) {
   return function(dispatch) {
-    return new Promise(function(resolve) {
+    return new Promise(((resolve) => {
       let isAdmin = false;
       if (
         authResult.idTokenPayload['https://giantswarm.io/groups'] ===
@@ -112,7 +112,7 @@ export function auth0Login(authResult) {
         isAdmin = true;
       }
 
-      var userData = {
+      const userData = {
         email: authResult.idTokenPayload.email,
         auth: {
           scheme: AuthorizationTypes.BEARER,
@@ -123,7 +123,7 @@ export function auth0Login(authResult) {
 
       localStorage.setItem('user', JSON.stringify(userData));
       resolve(dispatch(loginSuccess(userData)));
-    });
+    }));
   };
 }
 
@@ -134,7 +134,7 @@ export function auth0Login(authResult) {
 // the userReducer takes care of storing this in state.
 export function giantswarmLogin(email, password) {
   return function(dispatch) {
-    let authTokensApi = new GiantSwarm.AuthTokensApi();
+    const authTokensApi = new GiantSwarm.AuthTokensApi();
 
     dispatch({
       type: types.LOGIN,
@@ -147,7 +147,7 @@ export function giantswarmLogin(email, password) {
         password_base64: Base64.encode(password),
       })
       .then(response => {
-        let userData = {
+        const userData = {
           email: email,
           auth: {
             scheme: 'giantswarm',
@@ -178,21 +178,21 @@ export function giantswarmLogin(email, password) {
 // it to the login screen.
 export function giantswarmLogout() {
   return function(dispatch, getState) {
-    var authToken;
+    let authToken;
     if (getState().app.loggedInUser) {
       authToken = getState().app.loggedInUser.auth.token;
     } else {
       authToken = undefined;
     }
 
-    var authTokensApi = new GiantSwarm.AuthTokensApi();
+    const authTokensApi = new GiantSwarm.AuthTokensApi();
 
     dispatch({
       type: types.LOGOUT,
     });
 
     return authTokensApi
-      .deleteAuthToken('giantswarm ' + authToken)
+      .deleteAuthToken(`giantswarm ${  authToken}`)
       .then(() => {
         dispatch(push('/login'));
         return dispatch(logoutSuccess());
@@ -243,7 +243,7 @@ export function unauthorized() {
 // the resulting info into the state.
 export function getInfo() {
   return function(dispatch) {
-    var infoApi = new GiantSwarm.InfoApi();
+    const infoApi = new GiantSwarm.InfoApi();
 
     dispatch({
       type: types.INFO_LOAD,
@@ -276,9 +276,9 @@ export function getInfo() {
 // /v4/users/
 export function usersLoad() {
   return function(dispatch, getState) {
-    var usersApi = new GiantSwarm.UsersApi();
+    const usersApi = new GiantSwarm.UsersApi();
 
-    var alreadyFetching = getState().entities.users.isFetching;
+    const alreadyFetching = getState().entities.users.isFetching;
 
     if (alreadyFetching) {
       return new Promise(resolve => {
@@ -291,7 +291,7 @@ export function usersLoad() {
     return usersApi
       .getUsers()
       .then(usersArray => {
-        var users = {};
+        const users = {};
 
         _.each(usersArray, user => {
           user.emaildomain = user.email.split('@')[1];
@@ -327,7 +327,7 @@ export function userRemoveExpiration(email) {
   return function(dispatch) {
     const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
 
-    var usersApi = new GiantSwarm.UsersApi();
+    const usersApi = new GiantSwarm.UsersApi();
 
     dispatch({ type: types.USERS_REMOVE_EXPIRATION });
 
@@ -360,7 +360,7 @@ export function userRemoveExpiration(email) {
 // Deletes the given user.
 export function userDelete(email) {
   return function(dispatch) {
-    var usersApi = new GiantSwarm.UsersApi();
+    const usersApi = new GiantSwarm.UsersApi();
 
     dispatch({ type: types.USERS_DELETE });
 

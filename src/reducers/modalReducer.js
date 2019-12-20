@@ -107,7 +107,7 @@ const modalReducer = produce((draft, action) => {
         loading: true,
       };
       draft.template = 'nodePoolDelete';
-      return;
+      
   }
 }, initialState);
 

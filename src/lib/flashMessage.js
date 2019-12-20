@@ -22,9 +22,9 @@ export const messageTTL = {
 export class FlashMessage {
   constructor(text, type, ttl, subtext) {
     // make sure to only pass escaped HTML to this.text!
-    this.text = '<p>' + escapeHTML(text) + '</p>';
+    this.text = `<p>${  escapeHTML(text)  }</p>`;
     if (subtext) {
-      this.text += '<p>' + escapeHTML(subtext) + '</p>';
+      this.text += `<p>${  escapeHTML(subtext)  }</p>`;
     }
 
     this.timeout = false;
@@ -73,7 +73,7 @@ export function clearQueue(queueName) {
  * @returns {string}
  */
 function escapeHTML(unsafe) {
-  var safe = unsafe
+  let safe = unsafe
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')

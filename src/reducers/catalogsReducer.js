@@ -32,7 +32,7 @@ const catalogReducer = produce((draft, action) => {
       draft.items[action.catalog.metadata.name].isFetchingIndex = false;
       draft.lastUpdated = Date.now();
       draft.isFetching = false;
-      return;
+      
   }
 }, initialState);
 

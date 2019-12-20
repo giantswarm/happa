@@ -24,10 +24,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Users from './Users/Users';
 
-var defaultClient = GiantSwarm.ApiClient.instance;
+const defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 defaultClient.timeout = 10000;
-var defaultClientAuth =
+const defaultClientAuth =
   defaultClient.authentications['AuthorizationHeaderToken'];
 
 class Layout extends React.Component {

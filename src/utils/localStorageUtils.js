@@ -31,8 +31,8 @@ export const fetchUserFromStorage = () => {
 
 export const setUserToStorage = userData => {
   localStorage.setItem('user', JSON.stringify(userData));
-  var defaultClient = GiantSwarm.ApiClient.instance;
-  var defaultClientAuth =
+  const defaultClient = GiantSwarm.ApiClient.instance;
+  const defaultClientAuth =
     defaultClient.authentications['AuthorizationHeaderToken'];
   defaultClientAuth.apiKey = userData.auth.token;
   defaultClientAuth.apiKeyPrefix = userData.auth.scheme;

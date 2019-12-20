@@ -10,9 +10,9 @@ import GiantSwarm from 'giantswarm';
 function monkeyPatchGiantSwarmClient(store) {
   const auth0 = new Auth0();
 
-  var defaultClient = GiantSwarm.ApiClient.instance;
+  const defaultClient = GiantSwarm.ApiClient.instance;
 
-  var origCallApi = defaultClient.callApi.bind(defaultClient);
+  const origCallApi = defaultClient.callApi.bind(defaultClient);
 
   defaultClient.callApi = function callApi(
     path,
@@ -27,7 +27,7 @@ function monkeyPatchGiantSwarmClient(store) {
     accepts,
     returnType
   ) {
-    var defaultClientAuth = this.authentications['AuthorizationHeaderToken'];
+    const defaultClientAuth = this.authentications['AuthorizationHeaderToken'];
 
     // If we're using a JWT token, and it's expired, refresh the token before making
     // any call.

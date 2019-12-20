@@ -26,8 +26,8 @@ function enhanceWithCapabilities(clusters, provider) {
 // computeCapabilities takes a cluster object and provider and returns a
 // capabilities object with the features that this cluster supports.
 function computeCapabilities(cluster, provider) {
-  let capabilities = {};
-  let releaseVer = cluster.release_version;
+  const capabilities = {};
+  const releaseVer = cluster.release_version;
 
   // Installing Apps
   // Must be AWS or KVM and larger than 8.1.0
@@ -99,7 +99,7 @@ export function clustersLoad() {
     /********************** V4 CLUSTER DETAILS FETCHING **********************/
 
     // Clusters array to object, because we are storing an object in the store
-    let v4ClustersObject = clustersLoadArrayToObject(v4Clusters);
+    const v4ClustersObject = clustersLoadArrayToObject(v4Clusters);
 
     // Fetch all details for each cluster.
     const details = await Promise.all(
@@ -142,17 +142,17 @@ export function clustersLoad() {
             // Very stumped, since nothing has changed.
             // So we need to access the raw response and parse the json
             // ourselves.
-            let statusResponse = JSON.parse(clusterStatus.response.text);
+            const statusResponse = JSON.parse(clusterStatus.response.text);
             return { id: clusterId, statusResponse: statusResponse };
           })
           .catch(error => {
             if (error.status === 404) {
               return { id: clusterId, statusResponse: null };
-            } else {
+            } 
               console.error(error);
               dispatch(clusterLoadStatusError(clusterId, error));
               throw error;
-            }
+            
           });
       })
     );
@@ -185,7 +185,7 @@ export function clustersLoad() {
 
     // Clusters array to object, because we are storing an object in the store.
 
-    let v5ClustersObject = clustersLoadArrayToObject(v5ClustersDetails);
+    const v5ClustersObject = clustersLoadArrayToObject(v5ClustersDetails);
 
     // nodePoolsClusters is an array of v5 clusters ids and is stored in clusters.
     const nodePoolsClusters = v5ClustersDetails.map(cluster => cluster.id);
@@ -390,9 +390,9 @@ export function clusterCreate(cluster, isV5Cluster) {
         }
 
         new FlashMessage(
-          'Your new cluster with ID <code>' +
-            clusterId +
-            '</code> is being created.',
+          `Your new cluster with ID <code>${ 
+            clusterId 
+            }</code> is being created.`,
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );
@@ -423,13 +423,13 @@ export function clusterDeleteConfirmed(cluster) {
     return clustersApi
       .deleteCluster(cluster.id)
       .then(() => {
-        dispatch(push('/organizations/' + cluster.owner));
+        dispatch(push(`/organizations/${  cluster.owner}`));
         dispatch(clusterDeleteSuccess(cluster.id));
 
         dispatch(modalHide());
 
         new FlashMessage(
-          'Cluster <code>' + cluster.id + '</code> will be deleted',
+          `Cluster <code>${  cluster.id  }</code> will be deleted`,
           messageType.INFO,
           messageTTL.SHORT
         );
@@ -441,9 +441,9 @@ export function clusterDeleteConfirmed(cluster) {
         dispatch(modalHide());
 
         new FlashMessage(
-          'An error occurred when trying to delete cluster <code>' +
-            cluster.id +
-            '</code>.',
+          `An error occurred when trying to delete cluster <code>${ 
+            cluster.id 
+            }</code>.`,
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
@@ -470,7 +470,7 @@ export function clusterLoadKeyPairs(clusterId) {
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
     if (isNodePoolsCluster) return Promise.resolve([]);
 
-    var keypairsApi = new GiantSwarm.KeyPairsApi();
+    const keypairsApi = new GiantSwarm.KeyPairsApi();
 
     dispatch({
       type: types.CLUSTER_LOAD_KEY_PAIRS,
@@ -632,7 +632,7 @@ export function clusterCreateKeyPair(clusterId, keypair) {
       keypair,
     });
 
-    var keypairsApi = new GiantSwarm.KeyPairsApi();
+    const keypairsApi = new GiantSwarm.KeyPairsApi();
     return keypairsApi
       .addKeyPair(clusterId, keypair)
       .then(keypair => {
