@@ -183,6 +183,7 @@ jobs:
           root: .
           paths:
             - ./dist
+            - ./VERSION
 
       - save_cache:
           key: v1-npm-deps-{{ checksum "yarn.lock" }}
