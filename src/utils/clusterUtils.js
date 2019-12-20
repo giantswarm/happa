@@ -14,14 +14,16 @@ export function getNumberOfNodes(cluster) {
   const nodes = cluster.status.cluster.nodes;
 
   let workers = nodes.reduce((accumulator, node) => {
+    let newAccumulator = accumulator;
+
     if (
       node.labels &&
       node.labels.role !== 'master' &&
       node.labels['kubernetes.io/role'] !== 'master'
     ) {
-      accumulator++;
+      newAccumulator++;
     }
-    return accumulator;
+    return newAccumulator;
   }, 0);
 
   if (workers === 0) {
@@ -84,6 +86,7 @@ export function getMemoryTotalNodePools(nodePools = []) {
   const TotalRAM = nodePools.reduce((accumulator, nodePool) => {
     const instanceTypeRAM =
       awsInstanceTypes[nodePool.node_spec.aws.instance_type].memory_size_gb;
+
     return accumulator + instanceTypeRAM * nodePool.status.nodes_ready;
   }, 0);
 
