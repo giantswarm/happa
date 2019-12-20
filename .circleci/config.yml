@@ -15,7 +15,7 @@ workflows:
           # Trigger job on git tag.
           filters:
             tags:
-            only: /^v.*/
+              only: /^v.*/
           requires:
             - build
 
