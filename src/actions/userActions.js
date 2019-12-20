@@ -160,7 +160,8 @@ export function giantswarmLogin(email, password) {
       .then(userData => {
         localStorage.setItem('user', JSON.stringify(userData));
         dispatch(loginSuccess(userData));
-        return userData;
+        
+return userData;
       })
       .catch(error => {
         console.error('Error trying to log in:', error);
@@ -195,7 +196,8 @@ export function giantswarmLogout() {
       .deleteAuthToken(`giantswarm ${  authToken}`)
       .then(() => {
         dispatch(push('/login'));
-        return dispatch(logoutSuccess());
+        
+return dispatch(logoutSuccess());
       })
       .catch(error => {
         dispatch(push('/login'));

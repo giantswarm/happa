@@ -74,7 +74,8 @@ export function nodePoolsLoad() {
 export function nodePoolPatch(clusterId, nodePool, payload) {
   return function(dispatch) {
     dispatch(nodePoolPatchAction(nodePool, payload));
-    return nodePoolsApi
+    
+return nodePoolsApi
       .modifyNodePool(clusterId, nodePool.id, payload)
       .catch(error => {
         // Undo update to store if the API call fails.
@@ -133,7 +134,8 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
         );
 
         console.error(error);
-        return dispatch(nodePoolDeleteError(nodePool.id, error));
+        
+return dispatch(nodePoolDeleteError(nodePool.id, error));
       });
   };
 }
@@ -172,7 +174,8 @@ export function nodePoolsCreate(clusterId, nodePools) {
               messageType.SUCCESS,
               messageTTL.MEDIUM
             );
-            return nodePoolWithStatus;
+            
+return nodePoolWithStatus;
           })
           .catch(error => {
             dispatch({
@@ -197,7 +200,8 @@ export function nodePoolsCreate(clusterId, nodePools) {
 
     // Dispatch action for populating nodePools key inside clusters
     dispatch(nodePoolsLoad());
-    return allNodePools;
+    
+return allNodePools;
   };
 }
 

@@ -29,7 +29,8 @@ export class Requester {
         Authorization: authHeader,
       },
     };
-    return fetch(req.url, opt).then(resp => {
+    
+return fetch(req.url, opt).then(resp => {
       if (resp.status === 201) {
         return { json: null };
       }

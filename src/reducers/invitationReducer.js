@@ -7,13 +7,15 @@ const invitationReducer = produce((draft, action) => {
   switch (action.type) {
     case types.INVITATIONS_LOAD:
       draft.isFetching = true;
-      return;
+      
+return;
 
     case types.INVITATIONS_LOAD_SUCCESS:
       draft.lastUpdated = Date.now();
       draft.isFetching = false;
       draft.items = action.invites;
-      return;
+      
+return;
 
     case types.INVITATIONS_LOAD_ERROR:
       draft.isFetching = false;

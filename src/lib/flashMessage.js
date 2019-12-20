@@ -82,5 +82,6 @@ function escapeHTML(unsafe) {
   safe = safe
     .replace(/&lt;code&gt;/g, '<code>')
     .replace(/&lt;\/code&gt;/g, '</code>');
-  return safe;
+  
+return safe;
 }

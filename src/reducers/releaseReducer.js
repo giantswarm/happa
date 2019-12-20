@@ -12,18 +12,21 @@ const releaseReducer = produce((draft, action) => {
   switch (action.type) {
     case types.RELEASES_LOAD:
       draft.isFetching = true;
-      return;
+      
+return;
 
     case types.RELEASES_LOAD_SUCCESS:
       draft.items = action.releases;
       draft.activeSortedReleases = action.activeSortedReleases;
       draft.isFetching = false;
-      return;
+      
+return;
 
     case types.RELEASES_LOAD_ERROR:
       draft.errorLoading = true;
       draft.isFetching = false;
-      return;
+      
+return;
 
     case types.RELEASE_SELECTED:
       draft.releaseSelected = action.release;

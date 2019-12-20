@@ -325,7 +325,8 @@ export function organizationAddMemberConfirmed(orgId, email) {
       .getOrganization(orgId)
       .then(organization => {
         const members = organization.members.concat([{ email: email }]);
-        return organizationsApi.modifyOrganization(orgId, { members });
+        
+return organizationsApi.modifyOrganization(orgId, { members });
       })
       .then(() => {
         new FlashMessage(
@@ -374,7 +375,8 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
         const members = organization.members.filter(member => {
           return member.email !== email;
         });
-        return organizationsApi.modifyOrganization(orgId, { members });
+        
+return organizationsApi.modifyOrganization(orgId, { members });
       })
       .then(() => {
         new FlashMessage(

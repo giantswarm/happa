@@ -137,7 +137,8 @@ export function truncate(string, maxLength = 20) {
   if (string.length > maxLength) {
     return `${string.substring(0, maxLength)  }\u2026`;
   } 
-    return string;
+    
+return string;
   
 }
 

@@ -17,7 +17,8 @@ const clustersApi = new GiantSwarm.ClustersApi();
 function enhanceWithCapabilities(clusters, provider) {
   clusters = clusters.map(c => {
     c.capabilities = computeCapabilities(c, provider);
-    return c;
+    
+return c;
   });
 
   return clusters;
@@ -111,7 +112,8 @@ export function clustersLoad() {
               clusterDetails,
               getState().app.info.general.provider
             );
-            return clusterDetails;
+            
+return clusterDetails;
           })
           .catch(error => {
             console.error('Error loading cluster details:', error);
@@ -143,7 +145,8 @@ export function clustersLoad() {
             // So we need to access the raw response and parse the json
             // ourselves.
             const statusResponse = JSON.parse(clusterStatus.response.text);
-            return { id: clusterId, statusResponse: statusResponse };
+            
+return { id: clusterId, statusResponse: statusResponse };
           })
           .catch(error => {
             if (error.status === 404) {
@@ -265,7 +268,8 @@ export function clusterLoadDetails(clusterId) {
       );
 
       dispatch(clusterLoadDetailsSuccess(cluster));
-      return cluster;
+      
+return cluster;
     } catch (error) {
       if (error.status === 404) {
         new FlashMessage(
@@ -326,7 +330,8 @@ function clusterLoadStatusV4(dispatch, clusterId) {
     })
     .then(status => {
       dispatch(clusterLoadStatusSuccess(clusterId, status));
-      return status;
+      
+return status;
     })
     .catch(error => {
       // TODO: Find a better way to deal with status endpoint errors in dev:
@@ -450,7 +455,8 @@ export function clusterDeleteConfirmed(cluster) {
         );
 
         console.error(error);
-        return dispatch(clusterDeleteError(cluster.id, error));
+        
+return dispatch(clusterDeleteError(cluster.id, error));
       });
   };
 }
@@ -486,7 +492,8 @@ export function clusterLoadKeyPairs(clusterId) {
             keyPair.expire_date = moment(keyPair.create_date)
               .utc()
               .add(keyPair.ttl_hours, 'hours');
-            return keyPair;
+            
+return keyPair;
           }
         );
 
@@ -633,7 +640,8 @@ export function clusterCreateKeyPair(clusterId, keypair) {
     });
 
     const keypairsApi = new GiantSwarm.KeyPairsApi();
-    return keypairsApi
+    
+return keypairsApi
       .addKeyPair(clusterId, keypair)
       .then(keypair => {
         dispatch({

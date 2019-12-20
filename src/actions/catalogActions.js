@@ -9,7 +9,8 @@ function loadCatalogIndex(catalog) {
       console.error(
         `Fetch error for ${catalog.spec.storage.URL}, attempting with cors anywhere.`
       );
-      return fetch(
+      
+return fetch(
         `https://cors-anywhere.herokuapp.com/${ 
           catalog.spec.storage.URL 
           }index.yaml`,
@@ -30,7 +31,8 @@ function loadCatalogIndex(catalog) {
     .then(body => {
       const rawCatalog = yaml.safeLoad(body);
       catalog.apps = rawCatalog.entries;
-      return catalog;
+      
+return catalog;
     })
     .catch(error => {
       console.error('YAML error: ', error);
