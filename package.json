@@ -18,7 +18,8 @@
     "format": "./node_modules/.bin/prettier \"src/**/*.js\"",
     "format:staged": "pretty-quick --staged --pattern ./src/**/*.js",
     "prettier": "yarn format --write",
-    "validate-prettier": "yarn format --version; yarn format --no-color --check"
+    "validate-prettier": "yarn format --version; yarn format --no-color --check",
+    "ci-test": "yarn lint && yarn validate-prettier"
   },
   "prettier": {
     "singleQuote": true,
@@ -139,7 +140,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:fix && npm run format:staged"
+      "pre-commit": "yarn format:staged",
+      "pre-push": "yarn lint:fix"
     }
   }
 }
