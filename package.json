@@ -140,8 +140,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn format:staged",
-      "pre-push": "yarn lint:fix"
+      "pre-commit": "yarn lint:fix && yarn format:staged"
     }
   }
 }
