@@ -1,15 +1,15 @@
 import * as types from './actionTypes';
-import { AuthorizationTypes } from 'shared/constants';
-import { Base64 } from 'js-base64';
 import {
   FlashMessage,
   clearQueues,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
-import { push } from 'connected-react-router';
-import _ from 'underscore';
+import { AuthorizationTypes } from 'shared/constants';
+import { Base64 } from 'js-base64';
 import GiantSwarm from 'giantswarm';
+import _ from 'underscore';
+import { push } from 'connected-react-router';
 
 export function loginSuccess(userData) {
   return {
@@ -50,7 +50,8 @@ export function refreshUserInfo() {
         type: types.REFRESH_USER_INFO_ERROR,
         error: 'No logged in user to refresh.',
       });
-      throw 'No logged in user to refresh.';
+
+      throw new Error('No logged in user to refresh.');
     }
 
     return usersApi
@@ -103,7 +104,7 @@ export function refreshUserInfo() {
 // the userReducer takes care of storing this in state.
 export function auth0Login(authResult) {
   return function(dispatch) {
-    return new Promise(((resolve) => {
+    return new Promise(resolve => {
       let isAdmin = false;
       if (
         authResult.idTokenPayload['https://giantswarm.io/groups'] ===
@@ -123,7 +124,7 @@ export function auth0Login(authResult) {
 
       localStorage.setItem('user', JSON.stringify(userData));
       resolve(dispatch(loginSuccess(userData)));
-    }));
+    });
   };
 }
 
@@ -160,10 +161,11 @@ export function giantswarmLogin(email, password) {
       .then(userData => {
         localStorage.setItem('user', JSON.stringify(userData));
         dispatch(loginSuccess(userData));
-        
-return userData;
+
+        return userData;
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error trying to log in:', error);
 
         dispatch(loginError(error));
@@ -179,11 +181,10 @@ return userData;
 // it to the login screen.
 export function giantswarmLogout() {
   return function(dispatch, getState) {
-    let authToken;
+    let authToken = null;
+
     if (getState().app.loggedInUser) {
       authToken = getState().app.loggedInUser.auth.token;
-    } else {
-      authToken = undefined;
     }
 
     const authTokensApi = new GiantSwarm.AuthTokensApi();
@@ -193,11 +194,11 @@ export function giantswarmLogout() {
     });
 
     return authTokensApi
-      .deleteAuthToken(`giantswarm ${  authToken}`)
+      .deleteAuthToken(`giantswarm ${authToken}`)
       .then(() => {
         dispatch(push('/login'));
-        
-return dispatch(logoutSuccess());
+
+        return dispatch(logoutSuccess());
       })
       .catch(error => {
         dispatch(push('/login'));
@@ -260,6 +261,7 @@ export function getInfo() {
         });
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error loading installation info:', error);
 
         dispatch({
@@ -306,6 +308,7 @@ export function usersLoad() {
         });
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error(error);
 
         new FlashMessage(
@@ -342,6 +345,7 @@ export function userRemoveExpiration(email) {
         });
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error removing user expiration:', error);
 
         new FlashMessage(
@@ -375,6 +379,7 @@ export function userDelete(email) {
         });
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error when deleting user:', error);
 
         new FlashMessage(

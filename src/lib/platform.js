@@ -29,6 +29,7 @@ const mapping = {
 // if detailedPlatform contains one of those values in it somewhere
 // set the result to the key.
 //
+// eslint-disable-next-line no-labels
 outer: for (const key in mapping) {
   if (mapping.hasOwnProperty(key)) {
     const eligibleMatches = mapping[key];
@@ -36,6 +37,8 @@ outer: for (const key in mapping) {
     for (const find of eligibleMatches) {
       if (detailedPlatform !== null && detailedPlatform.indexOf(find) !== -1) {
         result = key;
+
+        // eslint-disable-next-line no-labels
         break outer;
       }
     }

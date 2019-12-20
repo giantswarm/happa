@@ -14,7 +14,7 @@ const helpers = require('./helpers');
 // var passage = new Passage({endpoint: 'http://localhost:5000'})
 //
 const Passage = function(config) {
-  const constraints = {
+  let constraints = {
     endpoint: {
       presence: true,
       url: {
@@ -25,7 +25,7 @@ const Passage = function(config) {
 
   helpers.validateOrRaise(config, constraints);
 
-  if (config.timeout_ms === undefined) {
+  if (typeof config.timeout_ms === 'undefined') {
     config.timeout_ms = 10000;
   }
 
@@ -37,7 +37,7 @@ const Passage = function(config) {
     // params: {token: 'abcdef'}
     //
     checkInvite: function(params) {
-      const constraints = {
+      constraints = {
         token: { presence: true },
       };
 
@@ -49,9 +49,8 @@ const Passage = function(config) {
       }).then(x => {
         if (x.body.is_valid) {
           return x.body;
-        } 
-          throw Error('InvalidToken');
-        
+        }
+        throw Error('InvalidToken');
       });
 
       return promise;
@@ -64,7 +63,7 @@ const Passage = function(config) {
     // params: {inviteToken: 'abcdef', password: 'uvwxyz'}
     //
     createAccount: function(params) {
-      const constraints = {
+      constraints = {
         inviteToken: { presence: true },
         password: { presence: true },
       };
@@ -101,7 +100,7 @@ const Passage = function(config) {
     // params: {email: 'some_valid_email@example.com'}
     //
     requestPasswordRecoveryToken: function(params) {
-      const constraints = {
+      constraints = {
         email: { presence: true, email: true },
       };
 
@@ -137,7 +136,7 @@ const Passage = function(config) {
     // params: {email: 'some_valid_email@example.com', token: '123456abcdefg'}
     //
     verifyPasswordRecoveryToken: function(params) {
-      const constraints = {
+      constraints = {
         email: { presence: true, email: true },
         token: { presence: true },
       };
@@ -160,9 +159,8 @@ const Passage = function(config) {
       }).then(x => {
         if (x.body.is_valid) {
           return x.body;
-        } 
-          throw new Error('Invalid Token');
-        
+        }
+        throw new Error('Invalid Token');
       });
 
       return promise;
@@ -178,7 +176,7 @@ const Passage = function(config) {
     // params: {email: 'some_valid_email@example.com', token: '123456abcdefg', password: 'users_new_password'}
     //
     setNewPassword: function(params) {
-      const constraints = {
+      constraints = {
         email: { presence: true, email: true },
         token: { presence: true },
         password: { presence: true },
@@ -222,7 +220,7 @@ const Passage = function(config) {
             .get(url)
             .timeout(config.timeout_ms)
             .set('ContentType', 'application/json')
-            .set('Authorization', `Bearer ${  authToken}`)
+            .set('Authorization', `Bearer ${authToken}`)
         );
       }).then(x => {
         return x.body;
@@ -248,7 +246,7 @@ const Passage = function(config) {
     createInvitation: function(authToken, invitation) {
       const url = `${config.endpoint}/invite/`;
 
-      const constraints = {
+      constraints = {
         email: { presence: true, email: true },
         organizations: { presence: { allowEmpty: false } },
         sendEmail: { presence: true },
@@ -268,7 +266,7 @@ const Passage = function(config) {
             .timeout(config.timeout_ms)
             .send(payload)
             .set('ContentType', 'application/json')
-            .set('Authorization', `Bearer ${  authToken}`)
+            .set('Authorization', `Bearer ${authToken}`)
         );
       }).then(x => {
         return x.body;

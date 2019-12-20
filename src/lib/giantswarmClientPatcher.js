@@ -1,8 +1,8 @@
-import { auth0Login } from 'actions/userActions';
-import { AuthorizationTypes } from 'shared/constants';
-import { isJwtExpired } from 'lib/helpers';
 import Auth0 from 'lib/auth0';
+import { AuthorizationTypes } from 'shared/constants';
 import GiantSwarm from 'giantswarm';
+import { auth0Login } from 'actions/userActions';
+import { isJwtExpired } from 'lib/helpers';
 
 // monkeyPatchGiantSwarmClient will patch the client's callApi function to check
 // the JWT token before making a call to the Giant Swarm API. If the token is

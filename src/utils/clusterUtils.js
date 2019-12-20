@@ -23,8 +23,8 @@ export function getNumberOfNodes(cluster) {
     ) {
       newAccumulator++;
     }
-    
-return newAccumulator;
+
+    return newAccumulator;
   }, 0);
 
   if (workers === 0) {
@@ -43,8 +43,8 @@ export function getMemoryTotal(cluster) {
     return null; // TODO refactor this and return 0 instead, this is a function that should return a total
   }
   const m = workers * cluster.workers[0].memory.size_gb;
-  
-return m.toFixed(2);
+
+  return m.toFixed(2);
 }
 
 export function getStorageTotal(cluster) {
@@ -53,8 +53,8 @@ export function getStorageTotal(cluster) {
     return null;
   }
   const s = workers * cluster.workers[0].storage.size_gb;
-  
-return s.toFixed(2);
+
+  return s.toFixed(2);
 }
 
 export function getCpusTotal(cluster) {
@@ -62,8 +62,8 @@ export function getCpusTotal(cluster) {
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null; // TODO refactor this and return 0 instead, this is a function that should return a total
   }
-  
-return workers * cluster.workers[0].cpu.cores;
+
+  return workers * cluster.workers[0].cpu.cores;
 }
 
 // Node pools clusters functions.
@@ -77,7 +77,7 @@ export function getNumberOfNodePoolsNodes(nodePools = []) {
 
 export function getMemoryTotalNodePools(nodePools = []) {
   if (!window.config.awsCapabilitiesJSON || nodePools.length === 0) {
-    return;
+    return 0;
   }
 
   const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
@@ -99,7 +99,7 @@ export function getMemoryTotalNodePools(nodePools = []) {
 
 export function getCpusTotalNodePools(nodePools = []) {
   if (!window.config.awsCapabilitiesJSON || nodePools.length === 0) {
-    return;
+    return 0;
   }
 
   const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
@@ -112,8 +112,8 @@ export function getCpusTotalNodePools(nodePools = []) {
   const TotalCPUs = nodePools.reduce((accumulator, nodePool) => {
     const instanceTypeCPUs =
       awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
-    
-return accumulator + instanceTypeCPUs * nodePool.status.nodes_ready;
+
+    return accumulator + instanceTypeCPUs * nodePool.status.nodes_ready;
   }, 0);
 
   return TotalCPUs;
@@ -130,4 +130,6 @@ export const clusterNodePools = (nodePools, cluster) => {
   ) {
     return cluster.nodePools.map(np => nodePools[np]);
   }
+
+  return [];
 };

@@ -1,18 +1,12 @@
 import * as UserActions from 'actions/userActions';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   batchedLayout,
   batchedOrganizationSelect,
 } from 'actions/batchedActions';
-import { bindActionCreators } from 'redux';
-import { Breadcrumb } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { organizationSelect } from 'actions/organizationActions';
-import { organizationsLoad } from 'actions/organizationActions';
-import { push } from 'connected-react-router';
-import { Redirect, Route, Switch } from 'react-router-dom';
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
+import { Breadcrumb } from 'react-breadcrumbs';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import GiantSwarm from 'giantswarm';
 import Home from './Home/Home';
@@ -23,6 +17,9 @@ import Organizations from './Organizations/Organizations';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Users from './Users/Users';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 
 const defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;

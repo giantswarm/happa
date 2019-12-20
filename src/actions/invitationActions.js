@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import _ from 'underscore';
 import Passage from 'lib/passageClient';
+import _ from 'underscore';
 
 // invitationsLoad
 // -----------------
@@ -40,6 +40,7 @@ export function invitationsLoad() {
         });
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error when loading invitation:', error);
 
         new FlashMessage(
@@ -87,6 +88,7 @@ export function invitationCreate(invitation) {
         return result;
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error inviting user:', error);
 
         new FlashMessage(

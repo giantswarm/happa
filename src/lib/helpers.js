@@ -1,12 +1,13 @@
-import _ from 'underscore';
-import moment from 'moment';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import React from 'react';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import _ from 'underscore';
+import moment from 'moment';
 import validate from 'validate.js';
 
 export function dedent(strings, ...values) {
-  let raw;
+  let raw = [];
+
   if (typeof strings === 'string') {
     // dedent can be used as a plain function
     raw = [strings];
@@ -55,11 +56,13 @@ export function dedent(strings, ...values) {
 
 export function humanFileSize(bytes, si = true, decimals = 1) {
   // http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable
+  // eslint-disable-next-line no-magic-numbers
   const thresh = si ? 1000 : 1024;
+  let newBytes = bytes;
 
-  if (Math.abs(bytes) < thresh) {
+  if (Math.abs(newBytes) < thresh) {
     return {
-      value: bytes.toFixed(decimals),
+      value: newBytes.toFixed(decimals),
       unit: 'B',
     };
   }
@@ -71,12 +74,12 @@ export function humanFileSize(bytes, si = true, decimals = 1) {
   let u = -1;
 
   do {
-    bytes /= thresh;
+    newBytes /= thresh;
     ++u;
-  } while (Math.abs(bytes) >= thresh && u < units.length - 1);
+  } while (Math.abs(newBytes) >= thresh && u < units.length - 1);
 
   return {
-    value: bytes.toFixed(decimals),
+    value: newBytes.toFixed(decimals),
     unit: units[u],
   };
 }
@@ -96,7 +99,7 @@ export function validateOrRaise(validatable, constraints) {
     // information about what went wrong.
     const messages = Object.entries(validationErrors).map(
       ([field, errorMessages]) => {
-        return `${field  }: ${  errorMessages.join(', ')}`;
+        return `${field}: ${errorMessages.join(', ')}`;
       }
     );
     throw new TypeError(messages.join('\n'));
@@ -113,33 +116,33 @@ export function relativeDate(ISO8601DateString) {
     return <span>n/a</span>;
   }
 
-  const formatedDate = formatDate(ISO8601DateString);
-  const relativeDate = moment.utc(ISO8601DateString).fromNow();
+  const formattedDate = formatDate(ISO8601DateString);
+  const relDate = moment.utc(ISO8601DateString).fromNow();
 
   return (
     <OverlayTrigger
-      overlay={<Tooltip id='tooltip'>{formatedDate}</Tooltip>}
+      overlay={<Tooltip id='tooltip'>{formattedDate}</Tooltip>}
       placement='top'
     >
-      <span>{relativeDate}</span>
+      <span>{relDate}</span>
     </OverlayTrigger>
   );
 }
 
 export function toTitleCase(str) {
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-  return str.replace(/\w\S*/g, (txt) => {
+  return str.replace(/\w\S*/g, txt => {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
 
+// eslint-disable-next-line no-magic-numbers
 export function truncate(string, maxLength = 20) {
   if (string.length > maxLength) {
-    return `${string.substring(0, maxLength)  }\u2026`;
-  } 
-    
-return string;
-  
+    return `${string.substring(0, maxLength)}\u2026`;
+  }
+
+  return string;
 }
 
 export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
@@ -193,11 +196,12 @@ export function clustersForOrg(orgId, allClusters) {
 
 // isJwtExpired expired takes a JWT token and will return true if it is expired.
 export function isJwtExpired(token) {
+  const msToS = 1000;
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const parsedToken = JSON.parse(window.atob(base64));
 
-  const now = Math.round(Date.now() / 1000); // Browsers have millisecond precision, which we don't need.
+  const now = Math.round(Date.now() / msToS); // Browsers have millisecond precision, which we don't need.
   const expire = parsedToken.exp;
 
   return now > expire;

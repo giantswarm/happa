@@ -4,8 +4,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'giantswarm.eu.auth0.com',
     clientID: 'mgYdxCGCZ2eao0OJUGOFXurGIaQAACHs',
-    redirectUri:
-      `${location.protocol  }//${  window.location.host  }/oauth/callback`,
+    redirectUri: `${location.protocol}//${window.location.host}/oauth/callback`,
     prompt: 'none',
     audience: window.config.apiEndpoint,
     responseType: 'id_token token',
@@ -32,9 +31,11 @@ export default class Auth {
 
   renewToken() {
     return new Promise((resolve, reject) => {
+      const renewTimeout = 10000;
+
       setTimeout(() => {
-        reject('timeout while trying to renew your session');
-      }, 10000);
+        reject(new Error('timeout while trying to renew your session'));
+      }, renewTimeout);
 
       this.auth0.checkSession({}, (err, result) => {
         if (!err) {
