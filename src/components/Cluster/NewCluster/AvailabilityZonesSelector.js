@@ -23,7 +23,7 @@ const AvailabilityZonesSelector = ({
   requiredReleaseVersion,
   currentReleaseVersion,
 }) => {
-  const isAvailable = cmp(currentReleaseVersion, requiredReleaseVersion) === 1;
+  const isAvailable = cmp(currentReleaseVersion, requiredReleaseVersion) >= 0;
 
   return (
     <label className='availability-zones' htmlFor='availability-zones'>
