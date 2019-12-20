@@ -23,8 +23,8 @@ lint:
 		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
 		-v ${PWD}/package.json:/usr/src/app/package.json:z \
 		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock:z \
-		-v ${PWD}/yarn.lock:/usr/src/app/.eslintrc:z \
-		-v ${PWD}/yarn.lock:/usr/src/app/.eslintignore:z \
+		-v ${PWD}/.eslintrc:/usr/src/app/.eslintrc:z \
+		-v ${PWD}/.eslintignore:/usr/src/app/.eslintignore:z \
 		quay.io/giantswarm/happa-build:latest yarn lint
 
 run-prettier:
