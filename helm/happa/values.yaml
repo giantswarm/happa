@@ -7,9 +7,14 @@ groupID: 101
 port: 8000
 protocol: TCP
 
+image:
+  registry: 'quay.io'
+  name: 'giantswarm/happa'
+  tag: '[[ .Version ]]'
+
 project:
-  name: "happa"
-  version: "[[ .Version ]]"
+  name: 'happa'
+  version: '[[ .Version ]]'
 
 # Resource names are truncated to 47 characters.
 #
@@ -26,4 +31,4 @@ project:
 resource:
   default:
     name: '{{ .Release.Name | replace "." "-" | trunc 47 }}'
-    namespace: "giantswarm"
+    namespace: 'giantswarm'
