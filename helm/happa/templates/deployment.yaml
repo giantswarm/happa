@@ -9,6 +9,9 @@ metadata:
 spec:
   replicas: 2
   revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: {{ tpl .Values.resource.default.name  . }}
   strategy:
     type: RollingUpdate
   template:
