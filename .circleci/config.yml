@@ -5,19 +5,6 @@ orbs:
 
 workflows:
   version: 2
-  push-to-app-catalog:
-    jobs:
-      - architect/push-to-app-catalog:
-          name: 'package and push chart to app catalog'
-          app_catalog: 'control-plane-catalog'
-          app_catalog_test: 'control-plane-test-catalog'
-          chart: 'happa-app'
-          # Trigger job on git tag.
-          filters:
-            tags:
-              only: /^v.*/
-          requires:
-            - build
 
   build-and-deploy:
     jobs:
@@ -51,6 +38,18 @@ workflows:
             branches:
               only:
                 - master
+
+      - architect/push-to-app-catalog:
+          name: 'package and push chart to app catalog'
+          app_catalog: 'control-plane-catalog'
+          app_catalog_test: 'control-plane-test-catalog'
+          chart: 'happa-app'
+          # Trigger job on git tag.
+          filters:
+            tags:
+              only: /^v.*/
+          requires:
+            - build
 
 jobs:
   build:
