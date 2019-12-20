@@ -28,21 +28,21 @@ const makeAppReducer = () => {
     switch (action.type) {
       case types.REFRESH_USER_INFO_SUCCESS:
         draft.loggedInUser = action.userData;
-        
-return;
+
+        return;
 
       case types.INFO_LOAD_SUCCESS:
         draft.info = action.info;
-        
-return;
+
+        return;
 
       case types.LOGIN_SUCCESS:
         // TODO This is a Side effect.
         // Is there a better place for setUserToStorage()?
         setUserToStorage(action.userData);
         draft.loggedInUser = action.userData;
-        
-return;
+
+        return;
 
       case types.LOGIN_ERROR:
       case types.LOGOUT_SUCCESS:
@@ -53,27 +53,26 @@ return;
         removeUserFromStorage();
         draft.loggedInUser = {};
         draft.firstLoadComplete = false;
-        
-return;
+
+        return;
 
       case types.ORGANIZATION_SELECT:
         draft.selectedOrganization = action.orgId;
-        
-return;
+
+        return;
 
       case types.ORGANIZATIONS_LOAD_SUCCESS:
         draft.selectedOrganization = action.selectedOrganization;
-        
-return;
+
+        return;
 
       case types.CLUSTERS_LOAD_SUCCESS:
         draft.firstLoadComplete = true;
-        
-return;
+
+        return;
 
       case types.CLUSTER_SELECT:
         draft.selectedClusterID = action.clusterID;
-        
     }
   }, initialState());
 };

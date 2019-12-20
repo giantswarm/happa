@@ -22,9 +22,9 @@ export const messageTTL = {
 export class FlashMessage {
   constructor(text, type, ttl, subtext) {
     // make sure to only pass escaped HTML to this.text!
-    this.text = `<p>${  escapeHTML(text)  }</p>`;
+    this.text = `<p>${escapeHTML(text)}</p>`;
     if (subtext) {
-      this.text += `<p>${  escapeHTML(subtext)  }</p>`;
+      this.text += `<p>${escapeHTML(subtext)}</p>`;
     }
 
     this.timeout = false;
@@ -82,6 +82,6 @@ function escapeHTML(unsafe) {
   safe = safe
     .replace(/&lt;code&gt;/g, '<code>')
     .replace(/&lt;\/code&gt;/g, '</code>');
-  
-return safe;
+
+  return safe;
 }

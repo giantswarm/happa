@@ -23,58 +23,57 @@ const nodePools = produce((draft, action) => {
     case types.NODEPOOLS_CREATE:
     case types.RELEASES_LOAD:
       draft.isFetching = true;
-      
-return;
+
+      return;
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS:
       draft.isFetching = false;
-      
-return;
+
+      return;
 
     case types.NODEPOOLS_LOAD_SUCCESS:
     case types.NODEPOOLS_CREATE_SUCCESS:
       draft.items = action.nodePools;
       draft.isFetching = false;
-      
-return;
+
+      return;
 
     case types.NODEPOOLS_LOAD_ERROR:
     case types.NODEPOOL_DELETE_ERROR:
       draft.errorLoading = true;
       draft.isFetching = false;
-      
-return;
+
+      return;
 
     case types.NODEPOOL_PATCH:
       Object.keys(action.payload).forEach(key => {
         draft.items[action.nodePool.id][key] = action.payload[key];
       });
-      
-return;
+
+      return;
 
     case types.NODEPOOL_PATCH_ERROR:
       draft.items[action.nodePool.id] = action.nodePool;
-      
-return;
+
+      return;
 
     case types.NODEPOOL_DELETE_SUCCESS:
       delete draft.items[action.nodePoolId];
       draft.lastUpdated = Date.now();
       draft.isFetching = false;
-      
-return;
+
+      return;
 
     case types.NODEPOOL_CREATE_SUCCESS:
       draft.items[action.nodePool.id] = action.nodePool;
-      
-return;
+
+      return;
 
     case types.NODEPOOL_CREATE_ERROR:
     case types.NODEPOOLS_CREATE_ERROR:
       delete draft.items[action.nodePoolId];
       draft.errorCreating = true;
       draft.isFetching = false;
-      
   }
   // This empty object is the default state.
 }, initialState);

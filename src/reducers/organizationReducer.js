@@ -15,41 +15,40 @@ const organizationReducer = produce((draft, action) => {
   switch (action.type) {
     case types.ORGANIZATIONS_LOAD:
       draft.isFetching = true;
-      
-return;
+
+      return;
 
     case types.ORGANIZATIONS_LOAD_SUCCESS:
       draft.lastUpdated = Date.now();
       draft.isFetching = false;
       draft.items = action.organizations;
-      
-return;
+
+      return;
 
     case types.ORGANIZATIONS_LOAD_ERROR:
       draft.isFetching = false;
-      
-return;
+
+      return;
 
     case types.ORGANIZATION_DELETE_SUCCESS:
       delete draft.items[action.orgId];
-      
-return;
+
+      return;
 
     case types.ORGANIZATION_DELETE_ERROR:
       draft.isFetching = false;
-      
-return;
+
+      return;
 
     case types.ORGANIZATION_CREDENTIALS_SET:
     case types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED:
     case types.ORGANIZATION_CREDENTIALS_SET_ERROR:
       draft.showCredentialsForm = true;
-      
-return;
+
+      return;
 
     case types.ORGANIZATION_CREDENTIALS_SET_SUCCESS:
       draft.showCredentialsForm = false;
-      
   }
 }, initialState);
 

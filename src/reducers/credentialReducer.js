@@ -11,19 +11,18 @@ const credentialReducer = produce((draft, action) => {
   switch (action.type) {
     case types.ORGANIZATION_CREDENTIALS_LOAD:
       draft.isFetching = true;
-      
-return;
+
+      return;
 
     case types.ORGANIZATION_CREDENTIALS_LOAD_SUCCESS:
       draft.lastUpdated = Date.now();
       draft.isFetching = false;
       draft.items = action.credentials;
-      
-return;
+
+      return;
 
     case types.ORGANIZATION_CREDENTIALS_LOAD_ERROR:
       draft.isFetching = false;
-      
   }
 }, initialState);
 

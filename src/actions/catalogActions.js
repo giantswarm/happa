@@ -27,7 +27,9 @@ function loadCatalogIndex(catalog) {
         return response.text();
       }
 
-      throw new Error(`Could not fetch index.yaml at ${catalog.spec.storage.URL}`);
+      throw new Error(
+        `Could not fetch index.yaml at ${catalog.spec.storage.URL}`
+      );
     })
     .then(body => {
       const rawCatalog = yaml.safeLoad(body);

@@ -54,7 +54,7 @@ if (window.config.environment !== 'development') {
   // _requester attributes since the constructor does not allow us to edit the
   // url or the headers used during the request easily. We need to set headers so
   // that we can authenticate against our API endpoint.
-  airbrake._url = `${window.config.apiEndpoint  }/v5/exception-notifications/`;
+  airbrake._url = `${window.config.apiEndpoint}/v5/exception-notifications/`;
   airbrake._requester = new Requester(store).request;
 }
 

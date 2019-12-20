@@ -50,7 +50,7 @@ export function updateAppConfig(appName, clusterID, values) {
             messageType.ERROR,
             messageTTL.LONG
           );
-        // eslint-disable-next-line no-magic-numbers
+          // eslint-disable-next-line no-magic-numbers
         } else if (error.status === 400) {
           new FlashMessage(
             `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
@@ -116,7 +116,7 @@ export function createAppConfig(appName, clusterID, values) {
             messageType.ERROR,
             messageTTL.LONG
           );
-        // eslint-disable-next-line no-magic-numbers
+          // eslint-disable-next-line no-magic-numbers
         } else if (error.status === 400) {
           new FlashMessage(
             `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
@@ -179,7 +179,7 @@ export function deleteAppConfig(appName, clusterID) {
             messageType.ERROR,
             messageTTL.LONG
           );
-        // eslint-disable-next-line no-magic-numbers
+          // eslint-disable-next-line no-magic-numbers
         } else if (error.status === 400) {
           new FlashMessage(
             `The request appears to be invalid. Please try again later or contact support: support@giantswarm.io.`,
