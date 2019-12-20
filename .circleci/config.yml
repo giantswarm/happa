@@ -39,6 +39,18 @@ workflows:
               only:
                 - master
 
+      - architect/push-to-docker:
+          name: push-app-pr-operator-to-quay
+          image: 'quay.io/giantswarm/happa'
+          username_envar: 'QUAY_USERNAME'
+          password_envar: 'QUAY_PASSWORD'
+          requires:
+            - build
+          # Needed to trigger job also on git tag.
+          filters:
+            tags:
+              only: /^v.*/
+
       - architect/push-to-app-catalog:
           name: 'package and push chart to app catalog'
           app_catalog: 'control-plane-catalog'
