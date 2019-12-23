@@ -27,5 +27,5 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{ tpl .Values.resource.default.name  . }}-{{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
+    - {{ tpl .Values.resource.default.name  . | replace "happa-" "" | trunc 7 }}.{{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
     secretName: {{ tpl .Values.resource.default.name  . }}-tls
