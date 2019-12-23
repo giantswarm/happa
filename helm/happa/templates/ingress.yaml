@@ -15,7 +15,10 @@ metadata:
       add_header X-Frame-Options deny always;
 spec:
   rules:
-  - host: {{ tpl .Values.resource.default.name  . }}-{{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
+    # We want a hostname that ends up looking like
+    # https://SHA.happa.g8s.codename.eu-central-1.aws.gigantic.io/
+    # We have the SHA in the release name, so we take it from there.
+  - host: {{ tpl .Values.resource.default.name  . | replace "happa-" "" | trunc 7 }}.{{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
     http:
       paths:
       - backend:

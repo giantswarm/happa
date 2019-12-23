@@ -1,0 +1,36 @@
+# This file contains some sample values so that you can test the chart templating
+# with `helm template happa-0b06caf22fb6012b63eff4d8ef631aa04dcfeed3 helm/happa -f helm/happa/sample-values.yaml`
+#
+# happa-0b06caf22fb6012b63eff4d8ef631aa04dcfeed3 is a sample release name.
+# it's important to test with a realistic release name, if you want to make sure
+# things like the ingress host name are ending up as desired.
+Installation:
+  V1:
+    Guest:
+      Kubernetes:
+        IngressController:
+          BaseDomain: g8s.test.com
+    GiantSwarm:
+      Passage:
+        Address: passage.g8s.test.com
+      API:
+        Address: api.g8s.test.com
+      Happa:
+        Host: happa.g8s.test.com
+    Provider:
+      Azure:
+        VM:
+          VmSize:
+            Capabilities: "yolo"
+      AWS:
+        EC2:
+          Instance:
+            Capabilities: "yolo"
+      Kind: aws
+    Security:
+      RestrictAccess:
+        GSAPI: false
+    Secret:
+      Registry:
+        PullSecret:
+          DockerConfigJSON: yolo
