@@ -91,8 +91,8 @@ it('renders all the v4 KVM cluster data correctly without nodes ready', async ()
     expect(portsContainer).toContainHTML(html);
   });
 
-  const nodes = getByText('Nodes').nextSibling;
-  await wait(() => expect(nodes).toHaveTextContent('0'));
+  const nodes = getByText('Nodes').nextSibling.textContent;
+  expect(nodes).toBe('0');
 });
 
 /******************** PENDING TESTS ********************/

@@ -72,7 +72,7 @@ afterAll(() => {
 });
 
 it('renders all the v4 Azure cluster data correctly without nodes ready', async () => {
-  const { getByText, getAllByText, debug } = renderRouteWithStore(ROUTE);
+  const { getByText, getAllByText } = renderRouteWithStore(ROUTE);
 
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
@@ -85,9 +85,8 @@ it('renders all the v4 Azure cluster data correctly without nodes ready', async 
   const instance = getByText(V4_CLUSTER.AzureInstanceType);
   expect(instance).toBeInTheDocument();
 
-  const nodes = getByText('Nodes').nextSibling;
-  console.log(nodes.textContent);
-  // expect(nodes).toHaveTextContent('0');
+  const nodes = getByText('Nodes').nextSibling.textContent;
+  expect(nodes).toBe('0');
 });
 
 it.skip(`shows the v4 Azure cluster scaling modal when the button is clicked with default values and 
