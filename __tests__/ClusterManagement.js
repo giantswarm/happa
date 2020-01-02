@@ -101,9 +101,9 @@ it('creates a v5 cluster and redirect to details view', async () => {
 
   await wait(() => {
     getByText('Create Cluster');
-    // Is this the v5 form?
-    expect(getByTestId('nodepool-cluster-creation-view')).toBeInTheDocument();
   });
+  // Is this the v5 form?
+  expect(getByTestId('nodepool-cluster-creation-view')).toBeInTheDocument();
 
   fireEvent.click(getByText('Create Cluster'));
   await wait(() => getByTestId('cluster-details-view'));

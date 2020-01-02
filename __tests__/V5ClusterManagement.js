@@ -148,7 +148,9 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
     .reply(200, nodePoolPatchResponse);
 
   // Mounting
-  const { getAllByTestId, getByText, container } = renderRouteWithStore(ROUTE);
+  const { getAllByTestId, getByText, getByDisplayValue } = renderRouteWithStore(
+    ROUTE
+  );
 
   await wait(() => getByText(truncate(nodePoolName, 14)));
 
@@ -160,10 +162,14 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   expect(nodePools[0]).toContainHTML(nodePoolNameEl);
   fireEvent.click(nodePoolNameEl);
 
-  // Write the new name and submit it
-  container.querySelector(
-    `input[value="${nodePoolName}"]`
-  ).value = newNodePoolName;
+  await wait(() => {
+    getByDisplayValue(nodePoolName);
+  });
+
+  // Change the new name and submit it.
+  fireEvent.change(getByDisplayValue(nodePoolName), {
+    target: { value: newNodePoolName },
+  });
 
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
@@ -302,8 +308,8 @@ it('deletes a v5 cluster', async () => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
   });
 
-  await wait(() => getByText('Delete Cluster'));
-  fireEvent.click(getByText('Delete Cluster'));
+  const button = getByText(/delete cluster/i);
+  fireEvent.click(button);
 
   // Is the modal in the document?
   const titleText = /are you sure you want to delete/i;
@@ -429,8 +435,14 @@ it('adds a node pool with default values', async () => {
     nodePoolCreationResponse.id
   );
 
+  // Remove flash message.
+  document.querySelector('#noty_layout__topRight').remove();
+
   // Is the new NodePool in the document?
-  await wait(() => getByText(nodePoolCreationResponse.id));
+  await wait(() => {
+    getByText(nodePoolCreationResponse.id);
+  });
+
   expect(getByText(nodePoolCreationResponse.id)).toBeInTheDocument();
 
   nodePoolCreationRequest.done();

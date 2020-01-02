@@ -6,47 +6,31 @@ import GiantSwarm from 'giantswarm';
 // API instantiations.
 const nodePoolsApi = new GiantSwarm.NodePoolsApi();
 
-//Loads all node pools for all node pools clusters.
-export function nodePoolsLoad() {
-  return async function(dispatch, getState) {
-    dispatch({
-      type: types.NODEPOOLS_LOAD,
-      isFetching: true,
-    });
+// Loads one cluster node pools
+export function clusterNodePoolsLoad(clusterId) {
+  return function(dispatch) {
+    dispatch({ type: types.CLUSTER_NODEPOOLS_LOAD_REQUEST });
 
-    const nodePoolsClustersId =
-      getState().entities.clusters.nodePoolsClusters || [];
-
-    return Promise.all(
-      nodePoolsClustersId.map(async clusterId => {
-        const nodePools = await nodePoolsApi.getNodePools(clusterId);
-
+    return nodePoolsApi
+      .getNodePools(clusterId)
+      .then(data => {
         // Receiving an array-like with weird prototype from API call,
         // so converting it to an array.
-        let nodePoolsArray = (Array.from(nodePools) || []).map(np => np.id);
+        const nodePoolsArray = Array.from(data) || [];
 
         // Dispatch action for populating nodePools key inside cluster
-        dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArray));
-
-        return nodePools;
-      })
-    )
-      .then(nodePools => {
-        const allNodePools = Array.from(nodePools)
-          .flat()
-          .reduce((accumulator, np) => {
-            return { ...accumulator, [np.id]: np };
-          }, {});
-
         dispatch({
-          type: types.NODEPOOLS_LOAD_SUCCESS,
-          nodePools: allNodePools,
+          type: types.CLUSTER_NODEPOOLS_LOAD_SUCCESS,
+          clusterId,
+          nodePools: nodePoolsArray, // nodePools
+          nodePoolsIds: nodePoolsArray.map(np => np.id), // array of ids to store in cluster
         });
+        return nodePoolsArray;
       })
       .catch(error => {
         console.error('Error loading cluster node pools:', error);
         dispatch({
-          type: types.NODEPOOLS_LOAD_ERROR,
+          type: types.CLUSTER_NODEPOOLS_LOAD_ERROR,
           error,
         });
 
@@ -56,9 +40,21 @@ export function nodePoolsLoad() {
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
         );
-
-        throw error;
       });
+  };
+}
+
+// Loads all node pools for all v5 clusters in store.
+export function nodePoolsLoad() {
+  return async function(dispatch, getState) {
+    dispatch({ type: types.NODEPOOLS_LOAD_REQUEST });
+
+    const v5ClustersId = getState().entities.clusters.v5Clusters || [];
+    await Promise.all(
+      v5ClustersId.map(clusterId => clusterNodePoolsLoad(clusterId))
+    );
+
+    dispatch({ type: types.NODEPOOLS_LOAD_FINISHED });
   };
 }
 
@@ -154,10 +150,10 @@ export function nodePoolsCreate(clusterId, nodePools) {
       nodePools.map(nodePool => {
         return nodePoolsApi
           .addNodePool(clusterId, nodePool)
-          .then(nodePool => {
+          .then(newNodePool => {
             // When created no status in the response
             const nodePoolWithStatus = {
-              ...nodePool,
+              ...newNodePool,
               status: { nodes_ready: 0, nodes: 0 },
             };
 
@@ -202,12 +198,6 @@ export function nodePoolsCreate(clusterId, nodePools) {
 }
 
 // Actions
-const clusterNodePoolsLoadSuccess = (clusterId, nodePools) => ({
-  type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
-  clusterId,
-  nodePools: nodePools,
-});
-
 const nodePoolPatchAction = (nodePool, payload) => ({
   type: types.NODEPOOL_PATCH,
   nodePool,

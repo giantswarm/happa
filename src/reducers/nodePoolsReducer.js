@@ -29,7 +29,13 @@ const nodePools = produce((draft, action) => {
       draft.isFetching = false;
       return;
 
-    case types.NODEPOOLS_LOAD_SUCCESS:
+    case types.CLUSTER_NODEPOOLS_LOAD_SUCCESS:
+      action.nodePools.forEach(np => {
+        draft.items[np.id] = np;
+      });
+      draft.isFetching = false;
+      return;
+
     case types.NODEPOOLS_CREATE_SUCCESS:
       draft.items = action.nodePools;
       draft.isFetching = false;

@@ -2,15 +2,13 @@ import {
   AddNodePoolFlexColumnDiv,
   AddNodePoolWrapper,
 } from '../ClusterDetail/V5ClusterDetailTable';
+import { batchedClusterCreate } from 'actions/batchedActions';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles';
-import { nodePoolsCreate } from 'actions/nodePoolActions';
 import { Providers } from 'shared/constants';
-import { push } from 'connected-react-router';
 import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from '../ClusterDetail/AddNodePool';
 import AvailabilityZonesParser from '../ClusterDetail/AvailabilityZonesParser';
@@ -278,38 +276,22 @@ class CreateNodePoolsCluster extends Component {
       np => np.data
     );
 
-    try {
-      const newCluster = await this.props.dispatch(
-        clusterCreate(
-          {
-            owner: this.props.selectedOrganization,
-            name: this.state.name.value,
-            release_version: this.props.selectedRelease,
-            master: {
-              availabilityZone: this.state.hasAZLabels
-                ? this.state.availabilityZonesLabels.zonesArray
-                : this.state.availabilityZonesRandom.value,
-            },
+    await this.props.dispatch(
+      batchedClusterCreate(
+        {
+          owner: this.props.selectedOrganization,
+          name: this.state.name.value,
+          release_version: this.props.selectedRelease,
+          master: {
+            availabilityZone: this.state.hasAZLabels
+              ? this.state.availabilityZonesLabels.zonesArray
+              : this.state.availabilityZonesRandom.value,
           },
-          true // is v5
-        )
-      );
-
-      await this.props.dispatch(nodePoolsCreate(newCluster.id, nodePools));
-
-      // after successful creation, redirect to cluster details
-      this.props.dispatch(
-        push(
-          `/organizations/${this.props.selectedOrganization}/clusters/${newCluster.id}`
-        )
-      );
-    } catch (error) {
-      console.error(error);
-      this.setState({
-        submitting: false,
-        error: error,
-      });
-    }
+        },
+        true, // is v5
+        nodePools
+      )
+    );
   };
 
   errorState() {

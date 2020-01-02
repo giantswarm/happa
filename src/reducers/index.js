@@ -10,6 +10,7 @@ import nodePools from './nodePoolsReducer';
 import organizations from './organizationReducer';
 import releases from './releaseReducer';
 import users from './userReducer';
+import loadingFlags from './loadingReducer';
 
 const entities = combineReducers({
   catalogs,
@@ -28,6 +29,7 @@ const rootReducer = history =>
     app: makeAppReducer(),
     entities,
     modal,
+    loadingFlags,
   });
 
 export default rootReducer;

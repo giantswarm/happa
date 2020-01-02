@@ -308,42 +308,50 @@ class V5ClusterDetailTable extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nodePools !== this.props.nodePools && this.props.nodePools) {
+    if (prevProps.nodePools !== this.props.nodePools) {
       this.produceNodePools();
     }
   }
 
   // TODO Move this to the action creator so it will be triggered on every NPs load.
   produceNodePools = () => {
-    this.setState({ loading: true });
-    const nodePools = clusterNodePools(
-      this.props.nodePools,
-      this.props.cluster
-    );
+    if (Object.keys(this.props.nodePools).length > 0) {
+      this.setState({ loading: true });
+      const nodePools = clusterNodePools(
+        this.props.nodePools,
+        this.props.cluster
+      );
 
-    const allZones = nodePools
-      ? nodePools
-          .reduce((accumulator, current) => {
-            return [...accumulator, ...current.availability_zones];
-          }, [])
-          .map(zone => zone.slice(-1))
-      : [];
+      const allZones = nodePools
+        ? nodePools
+            .reduce((accumulator, current) => {
+              return [...accumulator, ...current.availability_zones];
+            }, [])
+            .map(zone => zone.slice(-1))
+        : [];
 
-    // This array stores available zones that are in at least one node pool.
-    // We only want unique values because this is used fot building the grid.
-    const availableZonesGridTemplateAreas = [...new Set(allZones)]
-      .sort()
-      .join(' ');
-    this.setState({
-      availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
-    });
+      // This array stores available zones that are in at least one node pool.
+      // We only want unique values because this is used fot building the grid.
+      const availableZonesGridTemplateAreas = [...new Set(allZones)]
+        .sort()
+        .join(' ');
+      this.setState({
+        availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
+      });
 
-    // Compute RAM & CPU:
-    const RAM = getMemoryTotalNodePools(nodePools);
-    const CPUs = getCpusTotalNodePools(nodePools);
-    const workerNodesRunning = getNumberOfNodePoolsNodes(nodePools);
+      // Compute RAM & CPU:
+      const RAM = getMemoryTotalNodePools(nodePools);
+      const CPUs = getCpusTotalNodePools(nodePools);
+      const workerNodesRunning = getNumberOfNodePoolsNodes(nodePools);
 
-    this.setState({ nodePools, RAM, CPUs, workerNodesRunning, loading: false });
+      this.setState({
+        nodePools,
+        RAM,
+        CPUs,
+        workerNodesRunning,
+        loading: false,
+      });
+    }
   };
 
   toggleAddNodePoolForm = () =>
@@ -359,7 +367,7 @@ class V5ClusterDetailTable extends React.Component {
     );
   };
 
-  createNodePool = () => {
+  createNodePool = async () => {
     const data = [this.state.nodePoolForm.data];
 
     this.setState(
@@ -369,7 +377,7 @@ class V5ClusterDetailTable extends React.Component {
     );
 
     this.toggleAddNodePoolForm();
-    this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
+    await this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
   };
 
   /**

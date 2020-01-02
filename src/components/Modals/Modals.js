@@ -1,3 +1,4 @@
+import { batchedClusterDeleteConfirmed } from 'actions/batchedActions';
 import { clusterDeleteConfirmed } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { modalHide } from 'actions/modalActions';
@@ -290,7 +291,9 @@ class Modals extends React.Component {
                 bsStyle='danger'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
-                onClick={this.deleteClusterConfirmed.bind(this, cluster)}
+                onClick={() =>
+                  this.props.dispatch(batchedClusterDeleteConfirmed(cluster))
+                }
                 type='submit'
               >
                 {this.props.modal.templateValues.loading
