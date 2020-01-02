@@ -68,14 +68,7 @@ class ClusterDetailView extends React.Component {
   };
 
   loadDetails = () => {
-    const {
-      cluster,
-      clusterId,
-      clusterActions,
-      organizationId,
-      dispatch,
-      releaseActions,
-    } = this.props;
+    const { cluster, clusterId, organizationId, dispatch } = this.props;
 
     if (cluster === undefined) {
       dispatch(push('/organizations/' + organizationId));
@@ -236,10 +229,9 @@ class ClusterDetailView extends React.Component {
       targetRelease,
       region,
       loadingCluster,
-      // loadingNodePools,
     } = this.props;
 
-    const loading = loadingCluster !== false; // || loadingNodePools !== false;
+    const loading = loadingCluster !== false;
 
     return (
       <>
@@ -260,17 +252,6 @@ class ClusterDetailView extends React.Component {
                       entityType='cluster'
                       onSubmit={this.editClusterName}
                     />{' '}
-                    {/* TODO Remove this */}
-                    {loadingCluster !== false ? (
-                      <img
-                        className='loader'
-                        height='25px'
-                        src='/images/loader_oval_light.svg'
-                        width='25px'
-                      />
-                    ) : (
-                      ''
-                    )}
                   </h1>
                 </div>
               </div>

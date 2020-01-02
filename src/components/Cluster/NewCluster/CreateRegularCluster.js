@@ -1,10 +1,8 @@
 import { batchedClusterCreate } from 'actions/batchedActions';
 import { Breadcrumb } from 'react-breadcrumbs';
-// import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlexColumnDiv, Wrapper } from './CreateNodePoolsCluster';
 import { Providers } from 'shared/constants';
-// import { push } from 'connected-react-router';
 import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
 import AzureVMSizeSelector from './AzureVMSizeSelector';
 import Button from 'UI/Button';

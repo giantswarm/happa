@@ -31,8 +31,8 @@ function computeCapabilities(cluster, provider) {
   return capabilities;
 }
 
-// This is a helper function that transforms an array of clusters into an object of clusters
-// with its ids as keys. Also we are adding some data to the cluters objects.
+// This is a helper function that transforms an array of clusters into an object
+// of clusters with its ids as keys. Also we add some data to the clusters objects.
 function clustersLoadArrayToObject(clusters) {
   return clusters
     .map(cluster => {
@@ -648,20 +648,6 @@ export const clusterDeleteError = (clusterId, error) => ({
   clusterId,
   error,
 });
-
-// v5Clusters is an array of clusters id
-// const clustersLoadSuccess = (
-//   v4ClustersObject,
-//   v5ClustersObject,
-//   v5Clusters,
-//   lastUpdated
-// ) => ({
-//   type: types.CLUSTERS_LOAD_SUCCESS,
-//   v4Clusters: v4ClustersObject,
-//   v5Clusters: v5ClustersObject,
-//   v5Clusters,
-//   lastUpdated,
-// });
 
 export const clustersLoadError = error => ({
   type: types.CLUSTERS_LOAD_ERROR,

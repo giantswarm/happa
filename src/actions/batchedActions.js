@@ -1,6 +1,3 @@
-import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import GiantSwarm from 'giantswarm';
 import { push } from 'connected-react-router';
 
 // actions
@@ -44,7 +41,7 @@ export const batchedClusterCreate = (
       clusterActions.clusterCreate(cluster, isV5Cluster)
     );
 
-    // TODO We can avoid this call by computing cpabilities in the call above abd storing the cluster
+    // TODO We can avoid this call by computing capabilities in the call above abd storing the cluster
     await dispatch(clusterActions.clusterLoadDetails(clusterId));
 
     if (isV5Cluster) {
@@ -96,8 +93,6 @@ export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
     await dispatch(clusterActions.clustersList({ withLoadingFlags: false }));
   } catch (err) {
     console.error('Error in batchedClusterDeleteConfirmed', err);
-    // } finally {
-    //   dispatch(modalActions.modalHide());
   }
 };
 

@@ -95,7 +95,7 @@ it('creates a v5 cluster and redirect to details view', async () => {
     v5ClusterResponse
   );
 
-  const { getAllByText, getByText, getByTestId, debug } = renderRouteWithStore(
+  const { getAllByText, getByText, getByTestId } = renderRouteWithStore(
     '/organizations/acme/clusters/new/'
   );
 
@@ -107,7 +107,6 @@ it('creates a v5 cluster and redirect to details view', async () => {
 
   fireEvent.click(getByText('Create Cluster'));
   await wait(() => getByTestId('cluster-details-view'));
-  return;
 
   // Expect we have been redirected to the cluster details view
   expect(getByTestId('cluster-details-view')).toBeInTheDocument();

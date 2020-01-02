@@ -143,13 +143,9 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
     .reply(200, nodePoolPatchResponse);
 
   // Mounting
-  const {
-    getAllByTestId,
-    getByText,
-    container,
-    debug,
-    getByDisplayValue,
-  } = renderRouteWithStore(ROUTE);
+  const { getAllByTestId, getByText, getByDisplayValue } = renderRouteWithStore(
+    ROUTE
+  );
 
   await wait(() => getByText(truncate(nodePoolName, 14)));
 
@@ -160,11 +156,6 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   // Is this NP the first in the list?
   expect(nodePools[0]).toContainHTML(nodePoolNameEl);
   fireEvent.click(nodePoolNameEl);
-
-  // Write the new name and submit it
-  // container.querySelector(
-  //   `input[value="${nodePoolName}"]`
-  // ).value = newNodePoolName;
 
   await wait(() => {
     getByDisplayValue(nodePoolName);
@@ -325,7 +316,6 @@ it('deletes a v5 cluster', async () => {
   // Click delete button.
   const modalDeleteButton = getAllByText('Delete Cluster')[1];
   fireEvent.click(modalDeleteButton);
-  // return;
 
   // Flash message confirming deletion.
   await wait(() => {
@@ -367,7 +357,6 @@ it('deletes a node pool', async () => {
     getAllByText,
     queryByTestId,
     getAllByTestId,
-    debug,
   } = renderRouteWithStore(ROUTE);
 
   // Wait for node pools to render
