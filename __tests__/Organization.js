@@ -68,9 +68,7 @@ afterAll(() => {
 });
 
 it('correctly renders the organizations list', async () => {
-  const { getByText, getAllByText, getByTestId, debug } = renderRouteWithStore(
-    BASE_ROUTE
-  );
+  const { getByText, getByTestId } = renderRouteWithStore(BASE_ROUTE);
 
   // We want to make sure correct values appear in the row for number of clusters
   // and members.
@@ -85,6 +83,7 @@ it('correctly renders the organizations list', async () => {
 
   expect(getByTestId(`${orgResponse.id}-members`).textContent).toBe(members);
   expect(getByTestId(`${orgResponse.id}-clusters`).textContent).toBe(clusters);
+  expect(getByTestId(`${orgResponse.id}-delete`)).toBeInTheDocument();
 
   expect(getByText(/create new organization/i)).toBeInTheDocument();
 });
