@@ -67,6 +67,23 @@ afterAll(() => {
   });
 });
 
+it('navigation has selected the right page when in organization list route', async () => {
+  const { getByText } = renderRouteWithStore(BASE_ROUTE);
+
+  await wait(() => {
+    expect(
+      //
+      getByText(
+        (content, element) =>
+          element.tagName.toLowerCase() === 'a' &&
+          element.attributes['aria-current'] &&
+          element.attributes['aria-current'].value === 'page' &&
+          content === 'Organizations'
+      )
+    ).toBeInTheDocument();
+  });
+});
+
 it('correctly renders the organizations list', async () => {
   const { getByText, getByTestId } = renderRouteWithStore(BASE_ROUTE);
 
