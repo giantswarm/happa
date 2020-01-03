@@ -78,7 +78,7 @@ export const FlexColumnDiv = styled.div`
   .name-container {
     margin-bottom: 21px;
   }
-  input[id='name'] {
+  input[id='cluster-name'] {
     margin-bottom: 0;
   }
 `;
@@ -379,16 +379,16 @@ class CreateNodePoolsCluster extends Component {
 
               <FlexColumnDiv>
                 {/* Name */}
-                <label htmlFor='name'>
+                <label htmlFor='cluster-name'>
                   <span className='label-span'>Name</span>
                   <div className='name-container'>
                     <input
                       value={name.value}
                       onChange={this.updateName}
-                      id='name'
+                      id='cluster-name'
                       type='text'
                       placeholder={name.value}
-                    ></input>
+                    />
                     <ValidationErrorMessage message={name.validationError} />
                   </div>
                   <p>Give your cluster a name to recognize it among others.</p>
