@@ -82,16 +82,20 @@ it('correctly renders the organizations list', async () => {
       )
     ).toBeInTheDocument();
   });
-  // table cell for the organization
-  expect(
-    getByText(
-      (content, element) =>
-        element.tagName.toLowerCase() === 'a' &&
-        element.parentElement &&
-        element.parentElement.tagName.toLowerCase() === 'td' &&
-        content === ORGANIZATION
-    )
-  );
+
+  await wait(() => {
+    // table cell for the organization
+    expect(
+      getByText(
+        (content, element) =>
+          element.tagName.toLowerCase() === 'a' &&
+          element.parentElement &&
+          element.parentElement.tagName.toLowerCase() === 'td' &&
+          content === ORGANIZATION
+      )
+    ).toBeInTheDocument();
+  });
+
   expect(
     container.querySelector(
       `i[data-orgid=${ORGANIZATION}][title="Delete this organization"]`
