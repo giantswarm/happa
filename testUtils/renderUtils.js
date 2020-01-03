@@ -1,12 +1,11 @@
-import { ConnectedRouter } from 'connected-react-router';
-import { createMemoryHistory } from 'history';
+import { ConnectedRouter, push } from 'connected-react-router';
 import { Provider } from 'react-redux';
-import { push } from 'connected-react-router';
-import TestingLibrary, { render } from '@testing-library/react';
-import { ThemeProvider } from 'emotion-theming';
-import configureStore from 'stores/configureStore';
 import React from 'react';
 import Routes from 'Routes';
+import { ThemeProvider } from 'emotion-theming';
+import configureStore from 'stores/configureStore';
+import { createMemoryHistory } from 'history';
+import { render } from '@testing-library/react';
 import theme from 'styles/theme';
 
 const initialStorage = {

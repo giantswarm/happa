@@ -2,10 +2,10 @@ import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
 import { Providers } from 'shared/constants';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/Button';
-import copy from 'copy-to-clipboard';
 import ExpiryHoursPicker from './ExpiryHoursPicker';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import useDebounce from 'lib/effects/useDebounce';
 
 const KeyPairCreateModal = props => {
@@ -18,7 +18,7 @@ const KeyPairCreateModal = props => {
     defaultDescription(props.user.email)
   );
   const [useInternalAPI, setUseInternalAPI] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
   const [kubeconfig, setKubeconfig] = useState(false);
   const [cnPrefix, setCNPrefix] = useState('');
   const [cnPrefixError, setCNPrefixError] = useState(null);
@@ -38,12 +38,11 @@ const KeyPairCreateModal = props => {
 
   const copyKubeConfig = e => {
     e.preventDefault();
-    copy(kubeconfig);
-    setCopied(true, () => {
-      setTimeout(() => {
-        setCopied(false);
-      }, 500);
-    });
+
+    setClipboardContent(kubeconfig);
+    setTimeout(() => {
+      setClipboardContent(null);
+    }, 500);
   };
 
   const confirmAddKeyPair = e => {
@@ -337,7 +336,7 @@ const KeyPairCreateModal = props => {
                     <textarea readOnly value={kubeconfig} />
                   </form>
 
-                  {copied ? (
+                  {hasContentInClipboard ? (
                     <Button bsStyle='default' onClick={copyKubeConfig}>
                       &nbsp;&nbsp;
                       <i aria-hidden='true' className='fa fa-done' />

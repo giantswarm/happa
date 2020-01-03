@@ -1,5 +1,5 @@
-var localStorageMock = (function() {
-  var store = {};
+const localStorageMock = (function() {
+  let store = {};
 
   return {
     getItem: function(key) {
@@ -28,6 +28,7 @@ Object.defineProperty(window, 'localStorage', {
 });
 
 // Adjust the console logging behaviour during test runs.
+/* eslint-disable no-console */
 global.console = {
   log: console.log,
   error: console.error,
@@ -35,3 +36,4 @@ global.console = {
   info: console.info,
   debug: console.debug,
 };
+/* eslint-enable no-console */

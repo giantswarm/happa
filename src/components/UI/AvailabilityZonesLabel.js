@@ -86,16 +86,15 @@ function AvailabilityZonesLabel({
     isMaxReached && !isRadioButtons ? 'is-max-reached' : '';
   const classNames = `${letter} ${notCheckedClass} ${pointerClass} ${isMaxReachedClass}`;
 
+  const onClick = () => {
+    isMaxReached && !isChecked && !isRadioButtons
+      ? null
+      : onToggleChecked &&
+        onToggleChecked(!isChecked, { title, letter, label });
+  };
+
   return (
-    <Wrapper
-      className={classNames}
-      title={title}
-      onClick={
-        isMaxReached && !isChecked && !isRadioButtons
-          ? null
-          : () => onToggleChecked(!isChecked, { title, letter, label })
-      }
-    >
+    <Wrapper className={classNames} title={title} onClick={onClick}>
       {label}
     </Wrapper>
   );
