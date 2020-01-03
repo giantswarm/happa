@@ -22,6 +22,7 @@ function WorkerNodesKVM({ worker, nodes, showScalingModal }) {
             {nodes}
           </RefreshableLabel>
         )}
+        {' '}
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>
