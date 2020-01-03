@@ -68,34 +68,23 @@ afterAll(() => {
 });
 
 it('correctly renders the organizations list', async () => {
-  const { getByText, container } = renderRouteWithStore(BASE_ROUTE);
-
-  await wait(() => {
-    expect(
-      // navigation has selected the right page
-      getByText(
-        (content, element) =>
-          element.tagName.toLowerCase() === 'a' &&
-          element.attributes['aria-current'] &&
-          element.attributes['aria-current'].value === 'page' &&
-          content === 'Organizations'
-      )
-    ).toBeInTheDocument();
-  });
-  // table cell for the organization
-  expect(
-    getByText(
-      (content, element) =>
-        element.tagName.toLowerCase() === 'a' &&
-        element.parentElement &&
-        element.parentElement.tagName.toLowerCase() === 'td' &&
-        content === ORGANIZATION
-    )
+  const { getByText, getAllByText, getByTestId, debug } = renderRouteWithStore(
+    BASE_ROUTE
   );
-  expect(
-    container.querySelector(
-      `i[data-orgid=${ORGANIZATION}][title="Delete this organization"]`
-    )
-  ).toBeInTheDocument();
-  expect(getByText('Create New Organization')).toBeInTheDocument();
+
+  // We want to make sure correct values appear in the row for number of clusters
+  // and members.
+  const members = orgResponse.members.length.toString();
+  const clusters = v4ClustersResponse
+    .filter(cluster => cluster.owner === orgResponse.id)
+    .length.toString();
+
+  await wait(() =>
+    expect(getByTestId(`${orgResponse.id}-name`)).toBeInTheDocument()
+  );
+
+  expect(getByTestId(`${orgResponse.id}-members`).textContent).toBe(members);
+  expect(getByTestId(`${orgResponse.id}-clusters`).textContent).toBe(clusters);
+
+  expect(getByText(/create new organization/i)).toBeInTheDocument();
 });
