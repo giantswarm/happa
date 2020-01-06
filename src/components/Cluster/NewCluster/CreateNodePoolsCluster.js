@@ -282,13 +282,14 @@ class CreateNodePoolsCluster extends Component {
 
     try {
       const newCluster = await this.props.dispatch(
+        // TODO: Remove random AZ generation here, as this is done on the API side.
         clusterCreate(
           {
             owner: this.props.selectedOrganization,
             name: this.state.name.value,
             release_version: this.props.selectedRelease,
             master: {
-              availabilityZone: this.state.hasAZLabels
+              availability_zone: this.state.hasAZLabels
                 ? this.state.availabilityZonesLabels.zonesArray
                 : this.state.availabilityZonesRandom.value,
             },
