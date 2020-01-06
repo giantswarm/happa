@@ -44,8 +44,7 @@ function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
           <RefreshableLabel value={nodes} style={{ marginRight: '25px' }}>
             {nodes}
           </RefreshableLabel>
-        )}
-        {' '}
+        )}{' '}
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>
