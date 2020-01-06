@@ -284,12 +284,13 @@ class CreateNodePoolsCluster extends Component {
       owner: this.props.selectedOrganization,
       name: this.state.name.value,
       release_version: this.props.selectedRelease,
-      master: {},
     };
 
     if (this.state.hasAZLabels) {
       // TODO: don't use array here as long as there can be only one master node.
-      createPayload.master = this.state.availabilityZonesLabels.zonesArray[0];
+      createPayload.master = {
+        availability_zones: this.state.availabilityZonesLabels.zonesArray[0],
+      };
     }
 
     try {
