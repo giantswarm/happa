@@ -1,10 +1,12 @@
 import '@testing-library/jest-dom/extend-expect';
 import {
+  API_ENDPOINT,
   AWSInfoResponse,
   ORGANIZATION,
   V4_CLUSTER,
   appCatalogsResponse,
   appsResponse,
+  generateRandomString,
   getPersistedMockCall,
   orgResponse,
   orgsResponse,
@@ -14,8 +16,10 @@ import {
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
 } from 'testUtils/mockHttpCalls';
+import { fireEvent, wait } from '@testing-library/react';
+import { StatusCodes } from 'shared/constants';
+import nock from 'nock';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { wait } from '@testing-library/react';
 
 const BASE_ROUTE = '/organizations';
 
@@ -103,4 +107,44 @@ it('correctly renders the organizations list', async () => {
   expect(getByTestId(`${orgResponse.id}-delete`)).toBeInTheDocument();
 
   expect(getByText(/create new organization/i)).toBeInTheDocument();
+});
+
+it('shows the organization creation modal when requested and organization creation success flash', async () => {
+  const newOrganizationId = generateRandomString();
+  const newOrganizationPutRequest = nock(API_ENDPOINT)
+    .intercept(`/v4/organizations/${newOrganizationId}/`, 'PUT')
+    .reply(StatusCodes.Created, { id: newOrganizationId, members: null });
+
+  const { getByText, getByLabelText } = renderRouteWithStore(BASE_ROUTE);
+
+  await wait(() => {
+    expect(getByText('Create New Organization')).toBeInTheDocument();
+  });
+
+  fireEvent.click(getByText('Create New Organization'));
+
+  await wait(() => {
+    expect(getByText('Create an Organization')).toBeInTheDocument();
+  });
+
+  const newOrganizationNameInput = getByLabelText(/Organization Name:/);
+  expect(newOrganizationNameInput).toBeInTheDocument();
+
+  fireEvent.change(newOrganizationNameInput, {
+    target: { value: newOrganizationId },
+  });
+
+  fireEvent.click(getByText('Create Organization'));
+
+  newOrganizationPutRequest.done();
+
+  await wait(() => {
+    expect(
+      getByText(
+        (_, element) =>
+          element.innerHTML ===
+          `Organization <code>${newOrganizationId}</code> has been created`
+      )
+    ).toBeInTheDocument();
+  });
 });
