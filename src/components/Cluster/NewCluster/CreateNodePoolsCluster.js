@@ -280,20 +280,22 @@ class CreateNodePoolsCluster extends Component {
       np => np.data
     );
 
+    let createPayload = {
+      owner: this.props.selectedOrganization,
+      name: this.state.name.value,
+      release_version: this.props.selectedRelease,
+      master: {},
+    };
+
+    if (this.state.hasAZLabels) {
+      // TODO: don't use array here as long as there can be only one master node.
+      createPayload.master = this.state.availabilityZonesLabels.zonesArray[0];
+    }
+
     try {
       const newCluster = await this.props.dispatch(
-        // TODO: Remove random AZ generation here, as this is done on the API side.
         clusterCreate(
-          {
-            owner: this.props.selectedOrganization,
-            name: this.state.name.value,
-            release_version: this.props.selectedRelease,
-            master: {
-              availability_zone: this.state.hasAZLabels
-                ? this.state.availabilityZonesLabels.zonesArray
-                : this.state.availabilityZonesRandom.value,
-            },
-          },
+          createPayload,
           true // is v5
         )
       );
