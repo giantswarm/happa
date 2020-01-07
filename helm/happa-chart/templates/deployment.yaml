@@ -35,7 +35,7 @@ spec:
         runAsGroup: {{ .Values.groupID }}
       containers:
       - name: happa
-        image: quay.io/giantswarm/happa:[[ .SHA ]]
+        image: {{ .Values.Installation.V1.Registry.Domain }}/giantswarm/happa:[[ .SHA ]]
         env:
         - name: AWS_CAPABILITIES_JSON
           valueFrom:
