@@ -19,10 +19,10 @@ export function loadApps(clusterId) {
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
 
-    let getClusterApps = appsApi.getClusterAppsV4;
+    let getClusterApps = appsApi.getClusterAppsV4.bind(appsApi);
 
     if (isNodePoolsCluster) {
-      getClusterApps = appsApi.getClusterAppsV5;
+      getClusterApps = appsApi.getClusterAppsV5.bind(appsApi);
     }
 
     dispatch({
@@ -30,7 +30,7 @@ export function loadApps(clusterId) {
       clusterId,
     });
 
-    return getClusterApps(appsApi, clusterId)
+    return getClusterApps(clusterId)
       .then(apps => {
         // For some reason the array that we get back from the generated js client is an
         // array-like structure, so I make a new one here.
@@ -93,19 +93,19 @@ export function installApp(app, clusterID) {
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterID);
 
-    let createAppConfiguration = appConfigsApi.createClusterAppConfigV4;
-    let createApp = appConfigsApi.createClusterAppConfigV4;
+    let createAppConfiguration = appConfigsApi.createClusterAppConfigV4.bind(appConfigsApi);
+    let createApp = appConfigsApi.createClusterAppConfigV4.bind(appsApi);
 
     if (isNodePoolsCluster) {
-      createAppConfiguration = appConfigsApi.createClusterAppConfigV5;
-      createApp = appsApi.createClusterAppV5;
+      createAppConfiguration = appConfigsApi.createClusterAppConfigV5.bind(appConfigsApi);
+      createApp = appsApi.createClusterAppV5.bind(appsApi);
     }
 
     const optionalCreateAppConfiguration = new Promise((resolve, reject) => {
       if (Object.keys(app.valuesYAML).length !== 0) {
         // If we have user config that we want to create, then
         // fire off the call to create it.
-        createAppConfiguration(appConfigsApi, clusterID, app.name, {
+        createAppConfiguration(clusterID, app.name, {
           body: app.valuesYAML,
         })
           .then(() => {
@@ -145,7 +145,7 @@ export function installApp(app, clusterID) {
 
     return optionalCreateAppConfiguration
       .then(() => {
-        return createApp(appsApi, clusterID, app.name, {
+        return createApp(clusterID, app.name, {
           body: {
             spec: {
               catalog: app.catalog,
@@ -225,13 +225,13 @@ export function deleteApp(appName, clusterID) {
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterID);
 
-    let removeApp = appsApi.deleteClusterAppV4;
+    let removeApp = appsApi.deleteClusterAppV4.bind(appsApi);
 
     if (isNodePoolsCluster) {
-      removeApp = appsApi.deleteClusterAppV5;
+      removeApp = appsApi.deleteClusterAppV5.bind(appsApi);
     }
 
-    return removeApp(appsApi, clusterID, appName)
+    return removeApp(clusterID, appName)
       .then(() => {
         new FlashMessage(
           `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
