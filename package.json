@@ -43,7 +43,7 @@
     "bootstrap": "3.4.1",
     "classnames": "^2.2.5",
     "color-hash": "latest",
-    "connected-react-router": "6.5.2",
+    "connected-react-router": "6.6.1",
     "copy-to-clipboard": "3.2.0",
     "deep-diff": "1.0.2",
     "emotion-theming": "^10.0.10",
