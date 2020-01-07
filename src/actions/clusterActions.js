@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { Providers, StatusCodes } from 'shared/constants';
 import GiantSwarm from 'giantswarm';
-import { Providers } from 'shared/constants';
 import cmp from 'semver-compare';
 import { modalHide } from './modalActions';
 import moment from 'moment';
@@ -220,8 +220,7 @@ export function clustersLoad() {
             return { id: clusterId, statusResponse: statusResponse };
           })
           .catch(error => {
-            // eslint-disable-next-line no-magic-numbers
-            if (error.status === 404) {
+            if (error.status === StatusCodes.NotFound) {
               return { id: clusterId, statusResponse: null };
             }
             // eslint-disable-next-line no-console
@@ -292,8 +291,7 @@ function clusterDetailsV5(dispatch, getState, cluster) {
       return clusterDetails;
     })
     .catch(error => {
-      // eslint-disable-next-line no-magic-numbers
-      if (error.status === 404) {
+      if (error.status === StatusCodes.NotFound) {
         new FlashMessage(
           'This cluster no longer exists.',
           messageType.INFO,
@@ -347,8 +345,7 @@ export function clusterLoadDetails(clusterId) {
 
       return cluster;
     } catch (error) {
-      // eslint-disable-next-line no-magic-numbers
-      if (error.status === 404) {
+      if (error.status === StatusCodes.NotFound) {
         new FlashMessage(
           'This cluster no longer exists.',
           messageType.INFO,
@@ -416,8 +413,7 @@ function clusterLoadStatusV4(dispatch, clusterId) {
     .catch(error => {
       // TODO: Find a better way to deal with status endpoint errors in dev:
       // https://github.com/giantswarm/giantswarm/issues/6757
-      // eslint-disable-next-line no-magic-numbers
-      if (error.status === 404) {
+      if (error.status === StatusCodes.NotFound) {
         dispatch(clusterLoadStatusNotFound(clusterId));
       } else {
         dispatch(clusterLoadStatusError(clusterId, error));

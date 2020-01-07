@@ -1,11 +1,11 @@
 import * as types from './actionTypes';
+import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import {
   FlashMessage,
   clearQueues,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
-import { AuthorizationTypes } from 'shared/constants';
 import { Base64 } from 'js-base64';
 import GiantSwarm from 'giantswarm';
 import _ from 'underscore';
@@ -74,8 +74,7 @@ export function refreshUserInfo() {
         });
       })
       .catch(error => {
-        // eslint-disable-next-line no-magic-numbers
-        if (error.status === 401) {
+        if (error.status === StatusCodes.Unauthorized) {
           new FlashMessage(
             'Please log in again, as your previously saved credentials appear to be invalid.',
             messageType.WARNING,
