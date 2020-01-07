@@ -280,7 +280,7 @@ class CreateNodePoolsCluster extends Component {
       np => np.data
     );
 
-    let createPayload = {
+    const createPayload = {
       owner: this.props.selectedOrganization,
       name: this.state.name.value,
       release_version: this.props.selectedRelease,
