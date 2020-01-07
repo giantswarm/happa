@@ -9,7 +9,7 @@ import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
-import { Providers } from 'shared/constants';
+import { Providers, Constants } from 'shared/constants';
 import { push } from 'connected-react-router';
 import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from '../ClusterDetail/AddNodePool';
@@ -78,7 +78,7 @@ export const FlexColumnDiv = styled.div`
   .name-container {
     margin-bottom: 21px;
   }
-  input[id='name'] {
+  input[id='cluster-name'] {
     margin-bottom: 0;
   }
 `;
@@ -137,7 +137,7 @@ const RadioWrapperDiv = styled.div`
 `;
 
 const AZWrapperDiv = styled.div`
-  margin: 0 0 8px 24px;
+  margin: 0 0 25px 24px;
   height: 26px;
   display: flex;
   justify-content: flex-start;
@@ -181,7 +181,9 @@ const NodePoolHeading = styled.div`
   word-break: break-all;
 `;
 
-const defaultNodePool = id => ({ data: { name: `Node Pool #${id}` } });
+const defaultNodePool = () => ({
+  data: { name: Constants.DEFAULT_NODEPOOL_NAME },
+});
 
 class CreateNodePoolsCluster extends Component {
   state = {
@@ -278,19 +280,23 @@ class CreateNodePoolsCluster extends Component {
       np => np.data
     );
 
+    const createPayload = {
+      owner: this.props.selectedOrganization,
+      name: this.state.name.value,
+      release_version: this.props.selectedRelease,
+    };
+
+    if (this.state.hasAZLabels) {
+      // TODO: don't use array here as long as there can be only one master node.
+      createPayload.master = {
+        availability_zone: this.state.availabilityZonesLabels.zonesArray[0],
+      };
+    }
+
     try {
       const newCluster = await this.props.dispatch(
         clusterCreate(
-          {
-            owner: this.props.selectedOrganization,
-            name: this.state.name.value,
-            release_version: this.props.selectedRelease,
-            master: {
-              availabilityZone: this.state.hasAZLabels
-                ? this.state.availabilityZonesLabels.zonesArray
-                : this.state.availabilityZonesRandom.value,
-            },
-          },
+          createPayload,
           true // is v5
         )
       );
@@ -379,16 +385,16 @@ class CreateNodePoolsCluster extends Component {
 
               <FlexColumnDiv>
                 {/* Name */}
-                <label htmlFor='name'>
+                <label htmlFor='cluster-name'>
                   <span className='label-span'>Name</span>
                   <div className='name-container'>
                     <input
                       value={name.value}
                       onChange={this.updateName}
-                      id='name'
+                      id='cluster-name'
                       type='text'
                       placeholder={name.value}
-                    ></input>
+                    />
                     <ValidationErrorMessage message={name.validationError} />
                   </div>
                   <p>Give your cluster a name to recognize it among others.</p>

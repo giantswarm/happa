@@ -64,7 +64,7 @@ class UpgradeClusterModal extends React.Component {
 
     return (
       <div>
-        {release === undefined ? (
+        {typeof release === 'undefined' ? (
           <div className='flash-messages--flash-message flash-messages--info'>
             Could not get component information for release version{' '}
             {this.props.cluster.release_version}.<br />

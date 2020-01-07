@@ -1,8 +1,8 @@
-import { auth0Login } from 'actions/userActions';
-import { AuthorizationTypes } from 'shared/constants';
-import { isJwtExpired } from 'lib/helpers';
 import Auth0 from 'lib/auth0';
+import { AuthorizationTypes } from 'shared/constants';
 import GiantSwarm from 'giantswarm';
+import { auth0Login } from 'actions/userActions';
+import { isJwtExpired } from 'lib/helpers';
 
 // monkeyPatchGiantSwarmClient will patch the client's callApi function to check
 // the JWT token before making a call to the Giant Swarm API. If the token is
@@ -10,9 +10,9 @@ import GiantSwarm from 'giantswarm';
 function monkeyPatchGiantSwarmClient(store) {
   const auth0 = new Auth0();
 
-  var defaultClient = GiantSwarm.ApiClient.instance;
+  const defaultClient = GiantSwarm.ApiClient.instance;
 
-  var origCallApi = defaultClient.callApi.bind(defaultClient);
+  const origCallApi = defaultClient.callApi.bind(defaultClient);
 
   defaultClient.callApi = function callApi(
     path,
@@ -27,7 +27,7 @@ function monkeyPatchGiantSwarmClient(store) {
     accepts,
     returnType
   ) {
-    var defaultClientAuth = this.authentications['AuthorizationHeaderToken'];
+    const defaultClientAuth = this.authentications['AuthorizationHeaderToken'];
 
     // If we're using a JWT token, and it's expired, refresh the token before making
     // any call.
