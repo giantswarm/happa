@@ -18,12 +18,6 @@ workflows:
           password_envar: "ALIYUN_PASSWORD"
           requires:
             - build
-     #     filters:
-     #       tags:
-     #         only: /^[0-9]+\.[0-9]+\.[0-9]+$/
-     #       branches:
-     #         only: master
-
       - deploy-to-all:
           requires:
             - build
@@ -121,6 +115,7 @@ jobs:
         paths:
         - ./dist
         - ./architect
+        - ./VERSION
     - run:
         name: Build Docker image
         command: ./architect build
