@@ -23,8 +23,8 @@ const ExampleBox = styled.div`
 
 const Header = props => {
   const { name } = props;
-  
-return (
+
+  return (
     <h2 id={name}>
       {name} <a href={`#${name}`}>¶</a>
     </h2>
@@ -35,6 +35,7 @@ Header.propTypes = {
   name: PropTypes.string,
 };
 
+// eslint-disable-next-line react/no-multi-comp
 const StyleGuide = () => {
   return (
     <Wrapper className='main col-9'>

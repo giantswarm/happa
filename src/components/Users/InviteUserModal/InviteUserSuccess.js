@@ -1,8 +1,8 @@
-import { getInitialState } from '.';
+import React, { useEffect } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import { getInitialState } from '.';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
 const InviteUserSuccess = ({ inviteForm, invitationResult }) => {
@@ -15,14 +15,17 @@ const InviteUserSuccess = ({ inviteForm, invitationResult }) => {
     sendEmailContent = `An email has been sent to ${inviteForm.email} with further instructions.`;
   }
 
+  // eslint-disable-next-line react/no-multi-comp
   const getOverlayTooltip = () => (
     <Tooltip id='tooltip'>Copy to clipboard.</Tooltip>
   );
 
   useEffect(() => {
+    const resetClipboardTimeout = 1000;
+
     setTimeout(() => {
       setClipboardContent(null);
-    }, 1000);
+    }, resetClipboardTimeout);
   }, [hasContentInClipboard, setClipboardContent]);
 
   return (

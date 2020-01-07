@@ -54,7 +54,9 @@ const UsersModal = ({
 UsersModal.defaultProps = {
   show: false,
   title: '',
+  // eslint-disable-next-line no-empty-function
   onClose: () => {},
+  // eslint-disable-next-line no-empty-function
   onConfirm: () => {},
   isLoading: false,
   confirmText: 'Confirm',

@@ -1,12 +1,15 @@
-import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { truncate } from 'lib/helpers';
 import Button from './Button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import { connect } from 'react-redux';
+import styled from '@emotion/styled';
+import { truncate } from 'lib/helpers';
+
+const MIN_NAME_LENGTH = 3;
+const MAX_NAME_LENGTH = 14;
 
 const FormWrapper = styled.div`
   display: inline-block;
@@ -70,7 +73,7 @@ class ViewAndEditName extends React.Component {
 
   componentDidMount() {
     if (this.props.entityType === 'node pool') {
-      const name = truncate(this.props.entity.name, 14);
+      const name = truncate(this.props.entity.name, MAX_NAME_LENGTH);
       this.setState({ name });
     }
   }
@@ -113,19 +116,19 @@ class ViewAndEditName extends React.Component {
     const validate = this.validate();
     if (typeof validate === 'object') {
       new FlashMessage(
-        `Error: ${  validate.error}`,
+        `Error: ${validate.error}`,
         messageType.ERROR,
         messageTTL.MEDIUM
       );
-      
-return;
+
+      return;
     }
 
     this.setState({
       editing: false,
       name:
         this.props.entityType === 'node pool'
-          ? truncate(inputFieldValue, 14)
+          ? truncate(inputFieldValue, MAX_NAME_LENGTH)
           : inputFieldValue,
     });
 
@@ -138,13 +141,14 @@ return;
 
   handleKey = evt => {
     // 27 = Escape key
+    // eslint-disable-next-line no-magic-numbers
     if (evt.keyCode === 27) {
       this.deactivateEditMode();
     }
   };
 
   validate = () => {
-    if (this.nameInputRef.current.value.length < 3) {
+    if (this.nameInputRef.current.value.length < MIN_NAME_LENGTH) {
       return {
         valid: false,
         error: 'Please use a name with at least 3 characters',

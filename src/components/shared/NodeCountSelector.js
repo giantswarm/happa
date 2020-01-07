@@ -107,8 +107,8 @@ class NodeCountSelector extends React.Component {
           </div>
         </form>
       );
-    } 
-      
+    }
+
 return (
         <div className='row'>
           <div className='col-12'>
@@ -128,7 +128,7 @@ return (
           </div>
         </div>
       );
-    
+
   }
 }
 
@@ -143,6 +143,7 @@ NodeCountSelector.defaultProps = {
     max: DEFAULT_VALUE_CONSTRAINTS.max,
     maxValid: true,
   },
+  // eslint-disable-next-line no-empty-function
   onChange: () => {},
 };
 

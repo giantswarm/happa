@@ -1,8 +1,8 @@
-import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 
 // NumberPicker is a component that allows a user to pick a number by
 // incrementing / decrementing a value or typing it straight into the input
@@ -64,7 +64,7 @@ const ValueSpan = styled.span`
   }
   input[type='number']::-webkit-inner-spin-button,
   input[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
+    --webkit-appearance: none;
     margin: 0;
   }
 `;
@@ -159,6 +159,7 @@ class NumberPicker extends React.Component {
     const desiredValue = e.target.value;
 
     // Validate.
+    // eslint-disable-next-line prefer-const
     let { value, validationError } = this.validateInput(desiredValue);
 
     // Ensure values are never above max or below min. They can be null.
@@ -206,13 +207,13 @@ class NumberPicker extends React.Component {
         value: parseInt(desiredValue),
         validationError: 'Value must be a whole number',
       };
-    } 
-      
+    }
+
 return {
         value: parseInt(desiredValue),
         validationError: '',
       };
-    
+
   };
 
   handleFocus = event => {
@@ -285,10 +286,10 @@ NumberPicker.propTypes = {
 function isWholeNumber(value) {
   if (typeof value === 'number' && value % 1 === 0) {
     return true;
-  } 
-    
+  }
+
 return false;
-  
+
 }
 
 export default NumberPicker;

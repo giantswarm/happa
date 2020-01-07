@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
-let typingTimer;
+let typingTimer = 0;
 const doneTypingInterval = 250; // ms
 
 //
@@ -29,7 +29,7 @@ class InputField extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.value != state.value) {
+    if (props.value !== state.value) {
       const validation = props.validate(props.value);
 
       return {
@@ -38,8 +38,8 @@ class InputField extends React.Component {
         validationError: validation.validationError,
       };
     }
-    
-return null;
+
+    return null;
   }
 
   shouldComponentUpdate(nextProps) {
@@ -87,10 +87,10 @@ return null;
 
     // Check after a few ms afer stopping typing if it is invalid, and then show an error message
     typingTimer = setTimeout(() => {
-      const validation = this.props.validate(currentValue);
-      if (!validation.valid) {
+      const validationOutput = this.props.validate(currentValue);
+      if (!validationOutput.valid) {
         this.setState({
-          validationError: validation.validationError,
+          validationError: validationOutput.validationError,
         });
       }
     }, doneTypingInterval);
@@ -105,10 +105,12 @@ return null;
   };
 
   focus = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.input).focus();
   };
 
   blur = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.input).blur();
   };
 

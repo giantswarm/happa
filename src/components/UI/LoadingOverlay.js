@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from '@emotion/styled';
 
@@ -28,7 +29,7 @@ const LoadingOverlayInner = styled.div`
   margin-left: -100px;
 `;
 
-export default function LoadingOverlay(props) {
+function LoadingOverlay(props) {
   if (props.loading) {
     return (
       <LoadingOverlayOuter>
@@ -39,8 +40,14 @@ export default function LoadingOverlay(props) {
     );
   } else if (props.children) {
     return props.children;
-  } 
-    
-return null;
-  
+  }
+
+  return null;
 }
+
+LoadingOverlay.propTypes = {
+  loading: PropTypes.bool,
+  children: PropTypes.node,
+};
+
+export default LoadingOverlay;

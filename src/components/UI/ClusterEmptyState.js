@@ -23,6 +23,7 @@ const Inner = styled.div`
   }
 `;
 
+// eslint-disable-next-line react/prefer-stateless-function
 class ClusterEmptyState extends React.Component {
   render() {
     return (
@@ -58,8 +59,8 @@ class ClusterEmptyState extends React.Component {
                   </p>
                 </>
               );
-            } 
-              
+            }
+
 return (
                 <>
                   <h1>
@@ -76,7 +77,7 @@ return (
                   </p>
                 </>
               );
-            
+
           })()}
         </Inner>
       </Wrapper>

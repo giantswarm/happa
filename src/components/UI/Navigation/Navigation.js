@@ -1,12 +1,11 @@
-import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link, NavLink } from 'react-router-dom';
-import { logo } from 'images';
-
+import { Breadcrumbs } from 'react-breadcrumbs';
 import OrganizationDropdown from './OrganizationDropdown';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 import UserDropdown from './UserDropdown';
+import { logo } from 'images';
+import styled from '@emotion/styled';
 
 const OuterNav = styled.nav`
   height: 50px;
@@ -113,6 +112,7 @@ const OuterNav = styled.nav`
   }
 `;
 
+// eslint-disable-next-line react/prefer-stateless-function
 class Navigation extends React.Component {
   render() {
     return (

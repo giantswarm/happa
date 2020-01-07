@@ -1,11 +1,11 @@
 import { NEVER_EXPIRES, formatStatus, isExpiringSoon } from './UsersUtils';
-import { relativeDate } from 'lib/helpers.js';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
 import UsersLoader from './UsersLoader';
 import UsersPlaceholder from './UsersPlaceholder';
+import { relativeDate } from 'lib/helpers.js';
 
 const tableDefaultSorting = [
   {
@@ -26,6 +26,7 @@ const getStatusCellFormatter = (status, row) => {
   );
 };
 
+// eslint-disable-next-line react/no-multi-comp
 const getExpiryCellFormatter = (cell, row, removeExpiration) => {
   if (cell === NEVER_EXPIRES) {
     return '';
@@ -46,6 +47,7 @@ const getExpiryCellFormatter = (cell, row, removeExpiration) => {
   );
 };
 
+// eslint-disable-next-line react/no-multi-comp
 const getActionsCellFormatter = (_cell, row, deleteUser) => {
   if (row.invited_by) {
     return '';
@@ -108,6 +110,7 @@ const getTableColumnsConfig = (onRemoveExpiration, onDelete) => {
   ];
 };
 
+// eslint-disable-next-line react/no-multi-comp
 const UsersTable = ({
   onRemoveExpiration,
   onDelete,
@@ -123,8 +126,8 @@ const UsersTable = ({
     return <UsersLoader />;
   } else if (!hasUsers && !hasInvitations) {
     return <UsersPlaceholder />;
-  } 
-    
+  }
+
 return (
       <div className='users-table'>
         <BootstrapTable
@@ -137,14 +140,16 @@ return (
         />
       </div>
     );
-  
+
 };
 
 UsersTable.defaultProps = {
   users: {},
   invitationsAndUsers: {},
   invitations: {},
+  // eslint-disable-next-line no-empty-function
   onRemoveExpiration: () => {},
+  // eslint-disable-next-line no-empty-function
   onDelete: () => {},
 };
 

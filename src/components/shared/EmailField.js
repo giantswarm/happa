@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-let typingTimer;
+let typingTimer = 0;
 const doneTypingInterval = 250; // ms
 
 //
@@ -83,10 +83,12 @@ class EmailField extends React.Component {
   };
 
   focus = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.input).focus();
   };
 
   blur = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.input).blur();
   };
 

@@ -1,8 +1,8 @@
-import { getInitialState } from '.';
-import { sortBy } from 'underscore';
+import React, { useMemo } from 'react';
 import MultiSelect from '@khanacademy/react-multi-select';
 import PropTypes from 'prop-types';
-import React, { useMemo } from 'react';
+import { getInitialState } from '.';
+import { sortBy } from 'underscore';
 
 const InviteUserForm = ({
   inviteForm,
@@ -73,8 +73,11 @@ const InviteUserForm = ({
 InviteUserForm.defaultProps = {
   inviteForm: getInitialState([]),
   organizations: [],
+  // eslint-disable-next-line no-empty-function
   handleEmailChange: () => {},
+  // eslint-disable-next-line no-empty-function
   handleOrganizationChange: () => {},
+  // eslint-disable-next-line no-empty-function
   handleSendEmailChange: () => {},
 };
 

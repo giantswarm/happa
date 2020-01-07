@@ -1,8 +1,8 @@
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
   font-size: 12px;
@@ -27,8 +27,8 @@ const Wrapper = styled.div`
  * CatalogTypeLabel shows some information about a catalog depending on its type.
  */
 const CatalogTypeLabel = props => {
-  let icon;
-  let message;
+  let icon = '';
+  let message = '';
 
   const validCatalogTypes = ['community', 'incubator', 'test'];
 
