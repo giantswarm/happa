@@ -18,11 +18,11 @@ workflows:
           password_envar: "ALIYUN_PASSWORD"
           requires:
             - build
-          filters:
-            tags:
-              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
-            branches:
-              only: master
+     #     filters:
+     #       tags:
+     #         only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+     #       branches:
+     #         only: master
 
       - deploy-to-all:
           requires:
