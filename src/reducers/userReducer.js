@@ -7,6 +7,7 @@ const userReducer = produce((draft, action) => {
   switch (action.type) {
     case types.USERS_LOAD:
       draft.isFetching = true;
+
       return;
 
     case types.USERS_LOAD_SUCCESS:
@@ -14,19 +15,21 @@ const userReducer = produce((draft, action) => {
       draft.lastUpdated = Date.now();
       draft.isFetching = false;
       draft.items = action.users;
+
       return;
 
     case types.USERS_LOAD_ERROR:
       draft.isFetching = false;
+
       return;
 
     case types.USERS_REMOVE_EXPIRATION_SUCCESS:
       draft.items[action.user.email] = action.user;
+
       return;
 
     case types.USERS_DELETE_SUCCESS:
       delete draft.items[action.email];
-      return;
   }
 }, initialState);
 

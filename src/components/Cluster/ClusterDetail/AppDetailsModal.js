@@ -1,4 +1,4 @@
-import { clusterDeleteApp, clusterLoadApps } from 'actions/clusterActions';
+import { deleteApp, loadApps } from 'actions/appActions';
 import {
   createAppConfig,
   deleteAppConfig,
@@ -44,7 +44,7 @@ const AppDetailsModal = props => {
   function dispatchDeleteAppConfig(app, clusterId, dispatch) {
     dispatch(deleteAppConfig(app.metadata.name, clusterId))
       .then(() => {
-        return dispatch(clusterLoadApps(clusterId));
+        return dispatch(loadApps(clusterId));
       })
       .then(() => {
         onClose();
@@ -57,7 +57,7 @@ const AppDetailsModal = props => {
   function dispatchDeleteAppSecret(app, clusterId, dispatch) {
     dispatch(deleteAppSecret(app.metadata.name, clusterId))
       .then(() => {
-        return dispatch(clusterLoadApps(clusterId));
+        return dispatch(loadApps(clusterId));
       })
       .then(() => {
         onClose();
@@ -68,9 +68,9 @@ const AppDetailsModal = props => {
   }
 
   function dispatchDeleteApp(app, clusterId, dispatch) {
-    dispatch(clusterDeleteApp(app.metadata.name, clusterId))
+    dispatch(deleteApp(app.metadata.name, clusterId))
       .then(() => {
-        return dispatch(clusterLoadApps(clusterId));
+        return dispatch(loadApps(clusterId));
       })
       .then(() => {
         onClose();
@@ -93,7 +93,7 @@ const AppDetailsModal = props => {
   ) {
     return dispatch(createAppConfig(appName, clusterId, values))
       .then(() => {
-        return dispatch(clusterLoadApps(clusterId));
+        return dispatch(loadApps(clusterId));
       })
       .then(() => {
         done();
@@ -118,7 +118,7 @@ const AppDetailsModal = props => {
   ) {
     return dispatch(updateAppConfig(appName, clusterId, values))
       .then(() => {
-        return dispatch(clusterLoadApps(clusterId));
+        return dispatch(loadApps(clusterId));
       })
       .then(() => {
         done();
@@ -143,7 +143,7 @@ const AppDetailsModal = props => {
   ) {
     return dispatch(createAppSecret(appName, clusterId, values))
       .then(() => {
-        return dispatch(clusterLoadApps(clusterId));
+        return dispatch(loadApps(clusterId));
       })
       .then(() => {
         done();
@@ -168,7 +168,7 @@ const AppDetailsModal = props => {
   ) {
     return dispatch(updateAppSecret(appName, clusterId, values))
       .then(() => {
-        return dispatch(clusterLoadApps(clusterId));
+        return dispatch(loadApps(clusterId));
       })
       .then(() => {
         done();

@@ -6,7 +6,7 @@ import Passage from 'lib/passageClient';
 // in. Or change the way these components get at these supporting libraries.
 window.config = window.config || { passageEndpoint: 'http://localhost:5000' };
 // EndTODO
-var passage = new Passage({ endpoint: window.config.passageEndpoint });
+const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
 export function requestPasswordRecoveryToken(email) {
   return function(dispatch) {

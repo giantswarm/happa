@@ -1,4 +1,5 @@
 import * as clusterActions from 'actions/clusterActions';
+import * as appActions from 'actions/appActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
@@ -76,7 +77,7 @@ class ClusterDetailView extends React.Component {
       releaseActions,
     } = this.props;
 
-    if (cluster === undefined) {
+    if (typeof cluster === 'undefined') {
       dispatch(push('/organizations/' + organizationId));
 
       new FlashMessage(
@@ -98,7 +99,10 @@ class ClusterDetailView extends React.Component {
         return clusterActions.clusterLoadDetails(cluster.id);
       })
       .then(() => {
-        return clusterActions.clusterLoadApps(cluster.id);
+        return this.props.dispatch(appActions.loadApps(cluster.id));
+      })
+      .catch(error => {
+        console.error(error);
       });
 
     this.props.dispatch(nodePoolActions.nodePoolsLoad());
@@ -335,29 +339,17 @@ class ClusterDetailView extends React.Component {
                       <KeyPairs cluster={cluster} />
                     </Tab>
                     <Tab eventKey={3} title='Apps'>
-                      {release ? (
-                        <ClusterApps
-                          clusterId={this.props.clusterId}
-                          dispatch={dispatch}
-                          errorLoading={this.state.errorLoadingApps}
-                          installedApps={cluster.apps}
-                          release={release}
-                          showInstalledAppsBlock={
-                            Object.keys(this.props.catalogs.items).length > 0 &&
-                            cluster.capabilities.canInstallApps
-                          }
-                        />
-                      ) : (
-                        <div className='well'>
-                          We had some trouble loading this pane. Please come
-                          back later or contact support in your slack channel or
-                          at{' '}
-                          <a href='mailto:support@giantswarm.io'>
-                            support@giantswarm.io
-                          </a>
-                          .
-                        </div>
-                      )}
+                      <ClusterApps
+                        clusterId={this.props.clusterId}
+                        dispatch={dispatch}
+                        errorLoading={this.state.errorLoadingApps}
+                        installedApps={cluster.apps}
+                        release={release}
+                        showInstalledAppsBlock={
+                          Object.keys(this.props.catalogs.items).length > 0 &&
+                          cluster.capabilities.canInstallApps
+                        }
+                      />
                     </Tab>
                   </Tabs>
                 </div>

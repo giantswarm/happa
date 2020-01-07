@@ -28,10 +28,12 @@ const makeAppReducer = () => {
     switch (action.type) {
       case types.REFRESH_USER_INFO_SUCCESS:
         draft.loggedInUser = action.userData;
+
         return;
 
       case types.INFO_LOAD_SUCCESS:
         draft.info = action.info;
+
         return;
 
       case types.LOGIN_SUCCESS:
@@ -39,6 +41,7 @@ const makeAppReducer = () => {
         // Is there a better place for setUserToStorage()?
         setUserToStorage(action.userData);
         draft.loggedInUser = action.userData;
+
         return;
 
       case types.LOGIN_ERROR:
@@ -50,23 +53,26 @@ const makeAppReducer = () => {
         removeUserFromStorage();
         draft.loggedInUser = {};
         draft.firstLoadComplete = false;
+
         return;
 
       case types.ORGANIZATION_SELECT:
         draft.selectedOrganization = action.orgId;
+
         return;
 
       case types.ORGANIZATIONS_LOAD_SUCCESS:
         draft.selectedOrganization = action.selectedOrganization;
+
         return;
 
       case types.CLUSTERS_LOAD_SUCCESS:
         draft.firstLoadComplete = true;
+
         return;
 
       case types.CLUSTER_SELECT:
         draft.selectedClusterID = action.clusterID;
-        return;
     }
   }, initialState());
 };

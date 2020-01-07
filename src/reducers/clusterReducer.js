@@ -7,10 +7,10 @@ import produce from 'immer';
  *
  * @param {Object} clusterDetails Cluster object
  */
-var ensureWorkersHaveAWSkey = function(clusterDetails) {
+const ensureWorkersHaveAWSkey = function(clusterDetails) {
   clusterDetails.workers = clusterDetails.workers || [];
 
-  for (var i = 0; i < clusterDetails.workers.length; i++) {
+  for (let i = 0; i < clusterDetails.workers.length; i++) {
     clusterDetails.workers[i].aws = clusterDetails.workers[i].aws || {
       instance_type: '',
     };
@@ -26,6 +26,7 @@ const initialState = {
   nodePoolsClusters: [],
 };
 
+// eslint-disable-next-line complexity
 const clusterReducer = produce((draft, action) => {
   switch (action.type) {
     case types.CLUSTERS_LOAD_SUCCESS:
@@ -43,10 +44,12 @@ const clusterReducer = produce((draft, action) => {
       });
       draft.lastUpdated = action.lastUpdated;
       draft.nodePoolsClusters = action.nodePoolsClusters;
+
       return;
 
     case types.CLUSTERS_LOAD_ERROR:
       draft.errorLoading = true;
+
       return;
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS: {
@@ -73,12 +76,14 @@ const clusterReducer = produce((draft, action) => {
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].errorLoading = true;
       }
+
       return;
 
     case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].nodePools = action.nodePools;
       }
+
       return;
 
     case types.CLUSTER_LOAD_STATUS_SUCCESS:
@@ -86,24 +91,28 @@ const clusterReducer = produce((draft, action) => {
         draft.items[action.clusterId].status = action.status;
         draft.items[action.clusterId].status.lastUpdated = Date.now();
       }
+
       return;
 
     case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].status = null;
       }
+
       return;
 
     case types.CLUSTER_LOAD_STATUS_ERROR:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].errorLoading = true;
       }
+
       return;
 
     case types.CLUSTER_LOAD_APPS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingApps = true;
       }
+
       return;
 
     case types.CLUSTER_LOAD_APPS_SUCCESS:
@@ -112,6 +121,7 @@ const clusterReducer = produce((draft, action) => {
         draft.items[action.clusterId].apps = action.apps;
         draft.items[action.clusterId].lastUpdated = Date.now();
       }
+
       return;
 
     case types.CLUSTER_LOAD_APPS_ERROR:
@@ -119,12 +129,14 @@ const clusterReducer = produce((draft, action) => {
         draft.items[action.clusterId].isFetchingApps = false;
         draft.items[action.clusterId].lastUpdated = Date.now();
       }
+
       return;
 
     case types.CLUSTER_LOAD_KEY_PAIRS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingKeyPairs = true;
       }
+
       return;
 
     case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
@@ -132,25 +144,30 @@ const clusterReducer = produce((draft, action) => {
         draft.items[action.clusterId].isFetchingKeyPairs = false;
         draft.items[action.clusterId].keyPairs = action.keyPairs;
       }
+
       return;
 
     case types.CLUSTER_LOAD_KEY_PAIRS_ERROR:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingKeyPairs = false;
       }
+
       return;
 
     case types.CLUSTER_CREATE:
       draft.isFetching = true;
+
       return;
 
     case types.V5_CLUSTER_CREATE_SUCCESS:
       draft.nodePoolsClusters.push(action.clusterId);
+
       return;
 
     case types.CLUSTER_DELETE_SUCCESS:
       delete draft.items[action.clusterId];
       draft.lastUpdated = Date.now();
+
       return;
 
     case types.CLUSTER_PATCH:
@@ -159,6 +176,7 @@ const clusterReducer = produce((draft, action) => {
           draft.items[action.cluster.id][key] = action.payload[key];
         }
       });
+
       return;
 
     // TODO does this actually work????
@@ -166,6 +184,7 @@ const clusterReducer = produce((draft, action) => {
       if (draft.items[action.cluster.id]) {
         draft.items[action.cluster.id] = action.cluster;
       }
+
       return;
 
     case types.NODEPOOL_DELETE_SUCCESS:
@@ -174,7 +193,6 @@ const clusterReducer = produce((draft, action) => {
           action.clusterId
         ].nodePools.filter(np => np !== action.nodePoolId);
       }
-      return;
   }
 }, initialState);
 

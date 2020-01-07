@@ -1,10 +1,10 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { modalHide } from './modalActions';
-import { Providers } from 'shared/constants';
-import { setOrganizationToStorage } from 'utils/localStorageUtils';
 import GiantSwarm from 'giantswarm';
+import { Providers } from 'shared/constants';
 import React from 'react';
+import { modalHide } from './modalActions';
+import { setOrganizationToStorage } from 'utils/localStorageUtils';
 
 /**
  * Sets the organization that the user is focusing on and
@@ -111,6 +111,7 @@ export function organizationsLoad() {
         organizationsLoadSuccess(organizationsAsMap, selectedOrganization)
       );
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error loading organizations:', error);
 
       new FlashMessage(
@@ -120,7 +121,7 @@ export function organizationsLoad() {
         'Please try again later or contact support: support@giantswarm.io.'
       );
 
-      dispatch({
+      return dispatch({
         type: types.ORGANIZATIONS_LOAD_ERROR,
       });
     }
@@ -169,13 +170,13 @@ export function organizationDeleteConfirmed(orgId) {
   return function(dispatch) {
     dispatch({ type: types.ORGANIZATION_DELETE_CONFIRMED, orgId: orgId });
 
-    var organizationsApi = new GiantSwarm.OrganizationsApi();
+    const organizationsApi = new GiantSwarm.OrganizationsApi();
 
     return organizationsApi
       .deleteOrganization(orgId)
       .then(() => {
         new FlashMessage(
-          'Organization  <code>' + orgId + '</code> deleted',
+          `Organization  <code>${orgId}</code> deleted`,
           messageType.INFO,
           messageTTL.SHORT
         );
@@ -188,10 +189,11 @@ export function organizationDeleteConfirmed(orgId) {
       })
       .catch(error => {
         dispatch(modalHide());
+        // eslint-disable-next-line no-console
         console.error('Error deleting organization:', error);
 
         new FlashMessage(
-          'Could not delete organization <code>' + orgId + '</code>.',
+          `Could not delete organization <code>${orgId}</code>.`,
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again or contact support at support@giantswarm.io.'
@@ -224,13 +226,13 @@ export function organizationCreateConfirmed(orgId) {
   return function(dispatch, getState) {
     dispatch({ type: types.ORGANIZATION_CREATE_CONFIRMED });
 
-    var organizationsApi = new GiantSwarm.OrganizationsApi();
+    const organizationsApi = new GiantSwarm.OrganizationsApi();
 
     // When creating an org as a normal user, we must add ourselves to the org.
     // As an admin however, you can't add yourself to an org, because admins
     // don't actually have any user accounts in userd. So for admins,
     // we leave the members array empty.
-    var members = [];
+    let members = [];
     if (!getState().app.loggedInUser.isAdmin) {
       members = [{ email: getState().app.loggedInUser.email }];
     }
@@ -242,7 +244,7 @@ export function organizationCreateConfirmed(orgId) {
       .then(() => {
         // Success
         new FlashMessage(
-          'Organization <code>' + orgId + '</code> has been created',
+          `Organization <code>${orgId}</code> has been created`,
           messageType.SUCCESS,
           messageTTL.SHORT
         );
@@ -255,11 +257,12 @@ export function organizationCreateConfirmed(orgId) {
       })
       .then(dispatch.bind(this, modalHide()))
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error creating organization:', error);
         dispatch(modalHide());
 
         new FlashMessage(
-          'Could not create organization <code>' + orgId + '</code>',
+          `Could not create organization <code>${orgId}</code>`,
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again in a moment or contact support at support@giantswarm.io'
@@ -305,8 +308,8 @@ export function organizationAddMemberConfirmed(orgId, email) {
       getState().entities.organizations.items[orgId] &&
       getState().entities.organizations.items[orgId].members
     ) {
-      var members = getState().entities.organizations.items[orgId].members;
-      var memberEmails = members.map(member => {
+      const members = getState().entities.organizations.items[orgId].members;
+      const memberEmails = members.map(member => {
         return member.email;
       });
 
@@ -319,21 +322,18 @@ export function organizationAddMemberConfirmed(orgId, email) {
       }
     }
 
-    var organizationsApi = new GiantSwarm.OrganizationsApi();
+    const organizationsApi = new GiantSwarm.OrganizationsApi();
 
     return organizationsApi
       .getOrganization(orgId)
       .then(organization => {
-        var members = organization.members.concat([{ email: email }]);
+        const members = organization.members.concat([{ email: email }]);
+
         return organizationsApi.modifyOrganization(orgId, { members });
       })
       .then(() => {
         new FlashMessage(
-          'Added <code>' +
-            email +
-            '</code> to organization <code>' +
-            orgId +
-            '</code>',
+          `Added <code>${email}</code> to organization <code>${orgId}</code>`,
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );
@@ -366,23 +366,20 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
       email: email,
     });
 
-    var organizationsApi = new GiantSwarm.OrganizationsApi();
+    const organizationsApi = new GiantSwarm.OrganizationsApi();
 
     organizationsApi
       .getOrganization(orgId)
       .then(organization => {
-        var members = organization.members.filter(member => {
+        const members = organization.members.filter(member => {
           return member.email !== email;
         });
+
         return organizationsApi.modifyOrganization(orgId, { members });
       })
       .then(() => {
         new FlashMessage(
-          'Removed <code>' +
-            email +
-            '</code> from organization <code>' +
-            orgId +
-            '</code>',
+          `Removed <code>${email}</code> from organization <code>${orgId}</code>`,
           messageType.INFO,
           messageTTL.MEDIUM
         );
@@ -391,15 +388,12 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
       })
       .then(dispatch.bind(this, modalHide()))
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error removing member from org:', error);
         dispatch(modalHide());
 
         new FlashMessage(
-          'Error removing <code>' +
-            email +
-            '</code> from organization <code>' +
-            orgId +
-            '</code>',
+          `Error removing <code>${email}</code> from organization <code>${orgId}</code>`,
           messageType.ERROR,
           messageTTL.LONG
         );
@@ -426,7 +420,7 @@ export function organizationCredentialsLoad(orgId) {
       type: types.ORGANIZATION_CREDENTIALS_LOAD,
     });
 
-    var organizationsApi = new GiantSwarm.OrganizationsApi();
+    const organizationsApi = new GiantSwarm.OrganizationsApi();
 
     organizationsApi
       .getCredentials(orgId)
@@ -437,9 +431,10 @@ export function organizationCredentialsLoad(orgId) {
         });
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error loading credentials for organization:', error);
         new FlashMessage(
-          'Could not load credentials for <code>' + orgId + '</code>.',
+          `Could not load credentials for <code>${orgId}</code>.`,
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again in a moment or contact support at support@giantswarm.io.'
@@ -470,7 +465,7 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
       type: types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED,
     });
 
-    let requestBody = new GiantSwarm.V4AddCredentialsRequest();
+    const requestBody = new GiantSwarm.V4AddCredentialsRequest();
     requestBody.provider = provider;
 
     if (provider === Providers.AZURE) {
@@ -489,7 +484,7 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
       );
     }
 
-    var organizationsApi = new GiantSwarm.OrganizationsApi();
+    const organizationsApi = new GiantSwarm.OrganizationsApi();
     organizationsApi
       .addCredentials(orgId, requestBody)
       .then(response => {
@@ -509,12 +504,11 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
         return dispatch(organizationCredentialsLoad(orgId));
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('ORGANIZATION_CREDENTIALS_SET_ERROR', error);
 
         new FlashMessage(
-          'Could not set credentials for organization <code>' +
-            orgId +
-            '</code>.',
+          `Could not set credentials for organization <code>${orgId}</code>.`,
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again in a moment or contact support at support@giantswarm.io.'
