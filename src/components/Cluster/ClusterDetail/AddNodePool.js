@@ -318,16 +318,16 @@ class AddNodePool extends Component {
 
     return (
       <>
-        <label htmlFor='name'>
+        <label htmlFor='node-pool-name'>
           <span className='label-span'>Name</span>
           <div className='name-container'>
             <input
               value={name.value}
               onChange={this.updateName}
-              id='name'
+              id='node-pool-name'
               type='text'
               placeholder={name.value === '' ? 'Unnamed node pool' : null}
-            ></input>
+            />
             <ValidationErrorMessage message={name.validationError} />
           </div>
           <p>
