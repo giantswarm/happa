@@ -83,7 +83,7 @@
     "serialize-javascript": "^2.1.1",
     "superagent": "5.1.3",
     "superagent-bluebird-promise": "4.2.0",
-    "underscore": "1.9.1",
+    "underscore": "1.9.2",
     "validate.js": "0.12.0"
   },
   "devDependencies": {
