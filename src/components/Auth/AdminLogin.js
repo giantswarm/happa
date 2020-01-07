@@ -91,7 +91,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AdminLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminLogin);
