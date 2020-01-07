@@ -1,10 +1,11 @@
-import { Breadcrumb } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+
+import { Breadcrumb } from 'react-breadcrumbs';
 import Detail from './Detail/Detail';
 import List from './List/List';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 const Organizations = props => {
   const { url, path } = props.match;
