@@ -17,9 +17,9 @@ class ChangePassword extends React.Component {
   };
 
   newPasswordValid = () => {
-    var password = this.new_password.value();
+    const password = this.new_password.value();
 
-    var validationResult = validatePassword(password);
+    const validationResult = validatePassword(password);
 
     if (validationResult.statusMessage === 'password_too_short') {
       validationResult.statusMessage = 'Your new password is too short';
@@ -41,8 +41,8 @@ class ChangePassword extends React.Component {
   };
 
   newPasswordConfirmationValid = () => {
-    var password = this.new_password.value();
-    var passwordConfirmation = this.new_password_confirmation.value();
+    const password = this.new_password.value();
+    const passwordConfirmation = this.new_password_confirmation.value();
 
     if (
       password !== passwordConfirmation &&
@@ -108,7 +108,7 @@ class ChangePassword extends React.Component {
       error: false,
     });
 
-    var usersApi = new GiantSwarm.UsersApi();
+    const usersApi = new GiantSwarm.UsersApi();
 
     usersApi
       .modifyPassword(this.props.user.email, {
@@ -130,7 +130,7 @@ class ChangePassword extends React.Component {
         );
       })
       .catch(error => {
-        var errorMessage;
+        let errorMessage;
 
         if (
           error.body &&

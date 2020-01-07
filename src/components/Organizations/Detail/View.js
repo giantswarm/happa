@@ -31,7 +31,8 @@ class OrganizationDetail extends React.Component {
     if (provider === Providers.AWS || provider === Providers.AZURE) {
       return true;
     }
-    return false;
+    
+return false;
   };
 
   // Provides the configuraiton for the clusters table
@@ -56,7 +57,8 @@ class OrganizationDetail extends React.Component {
           if (order === 'desc') {
             return cmp(a, b) * -1;
           }
-          return cmp(a, b);
+          
+return cmp(a, b);
         },
       },
       {
@@ -104,7 +106,7 @@ class OrganizationDetail extends React.Component {
   };
 
   render() {
-    var credentialsSection;
+    let credentialsSection;
     if (this.canCredentials(this.props.app.info.general.provider)) {
       credentialsSection = (
         <div className='row section' id='credentials-section'>
@@ -184,10 +186,10 @@ class OrganizationDetail extends React.Component {
           </div>
         </DocumentTitle>
       );
-    } else {
+    } 
       // 404 or fetching
       return <h1>404 or fetching</h1>;
-    }
+    
   }
 }
 
@@ -227,7 +229,7 @@ function clusterActionsCellFormatter(cell, row) {
   return (
     <Link
       to={
-        '/organizations/' + this.props.organization.id + '/clusters/' + row.id
+        `/organizations/${  this.props.organization.id  }/clusters/${  row.id}`
       }
     >
       <Button bsStyle='default' type='button'>

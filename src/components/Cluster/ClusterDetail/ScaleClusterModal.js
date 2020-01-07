@@ -97,7 +97,7 @@ class ScaleClusterModal extends React.Component {
         loading: true,
       },
       () => {
-        var scaling = {
+        const scaling = {
           min: this.state.scaling.min,
           max: this.state.scaling.max,
         };
@@ -156,7 +156,7 @@ class ScaleClusterModal extends React.Component {
   };
 
   pluralize = nodes => {
-    var pluralize = 's';
+    let pluralize = 's';
 
     if (Math.abs(nodes) === 1) {
       pluralize = '';
@@ -166,8 +166,8 @@ class ScaleClusterModal extends React.Component {
   };
 
   buttonProperties = () => {
-    var workerDelta = this.workerDelta();
-    var pluralizeWorkers = this.pluralize(workerDelta);
+    let workerDelta = this.workerDelta();
+    const pluralizeWorkers = this.pluralize(workerDelta);
 
     if (
       this.supportsAutoscaling(
@@ -177,7 +177,8 @@ class ScaleClusterModal extends React.Component {
     ) {
       if (this.state.scaling.min > this.props.workerNodesDesired) {
         workerDelta = this.state.scaling.min - this.props.workerNodesDesired;
-        return {
+        
+return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
           style: 'success',
           disabled: !this.state.scaling.minValid,
@@ -188,7 +189,8 @@ class ScaleClusterModal extends React.Component {
         workerDelta = Math.abs(
           this.props.workerNodesDesired - this.state.scaling.max
         );
-        return {
+        
+return {
           title: `Remove ${workerDelta} worker node${this.pluralize(
             workerDelta
           )}`,
@@ -250,12 +252,12 @@ class ScaleClusterModal extends React.Component {
   };
 
   render() {
-    var warnings = [];
+    const warnings = [];
     if (
       this.state.scaling.max < this.props.workerNodesRunning &&
       this.state.scaling.minValid
     ) {
-      var diff = this.props.workerNodesRunning - this.state.scaling.max;
+      const diff = this.props.workerNodesRunning - this.state.scaling.max;
 
       if (
         this.supportsAutoscaling(
@@ -275,7 +277,7 @@ class ScaleClusterModal extends React.Component {
               <i className='fa fa-warning' /> The cluster currently has{' '}
               {this.props.workerNodesRunning} worker nodes running. By setting
               the maximum lower than that, you enforce the removal of{' '}
-              {diff === 1 ? 'one node' : diff + ' nodes'}. This could result in
+              {diff === 1 ? 'one node' : `${diff  } nodes`}. This could result in
               unscheduled workloads.
             </p>
           </CSSTransition>
@@ -289,7 +291,7 @@ class ScaleClusterModal extends React.Component {
           >
             <p key='node-removal'>
               <i className='fa fa-warning' /> You are about to enforce the
-              removal of {diff === 1 ? 'one node' : diff + ' nodes'}. Please
+              removal of {diff === 1 ? 'one node' : `${diff  } nodes`}. Please
               make sure the cluster has enough capacity to schedule all
               workloads.
             </p>
@@ -313,7 +315,7 @@ class ScaleClusterModal extends React.Component {
       );
     }
 
-    var body = (
+    let body = (
       <BootstrapModal.Body>
         <p>
           {this.supportsAutoscaling(
@@ -338,7 +340,7 @@ class ScaleClusterModal extends React.Component {
         <TransitionGroup>{warnings}</TransitionGroup>
       </BootstrapModal.Body>
     );
-    var footer = (
+    let footer = (
       <BootstrapModal.Footer>
         {this.buttonProperties().disabled ? (
           undefined

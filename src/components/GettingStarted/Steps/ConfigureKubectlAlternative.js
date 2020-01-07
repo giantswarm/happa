@@ -9,7 +9,7 @@ import platform from 'lib/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-var Modernizr = window.Modernizr;
+const Modernizr = window.Modernizr;
 
 class ConfigKubeCtl extends React.Component {
   state = {
@@ -291,7 +291,7 @@ class ConfigKubeCtl extends React.Component {
         </p>
 
         <CodeBlock>
-          <Prompt>{`kubectl config view`}</Prompt>
+          <Prompt>kubectl config view</Prompt>
         </CodeBlock>
 
         <p>
@@ -300,7 +300,7 @@ class ConfigKubeCtl extends React.Component {
         </p>
 
         <CodeBlock>
-          <Prompt>{`kubectl config use-context giantswarm-default`}</Prompt>
+          <Prompt>kubectl config use-context giantswarm-default</Prompt>
         </CodeBlock>
 
         <div className='aside'>

@@ -11,7 +11,7 @@ const ProgressButtonStatusIndicator = styled.div`
 const LoadingIndicator = props => (
   <ProgressButtonStatusIndicator>
     <SlideTransition direction={props.loadingPosition} in={props.loading}>
-      <img className={'loader ' + props.loadingPosition} src={spinner} />
+      <img className={`loader ${  props.loadingPosition}`} src={spinner} />
     </SlideTransition>
   </ProgressButtonStatusIndicator>
 );

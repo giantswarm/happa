@@ -14,7 +14,7 @@ class AppCatalog extends React.Component {
     this.props
       .dispatch(catalogsLoad())
       .then(catalogs => {
-        let promises = Object.keys(catalogs).map(catalog => {
+        const promises = Object.keys(catalogs).map(catalog => {
           return this.props.dispatch(catalogLoadIndex(catalogs[catalog]));
         });
 

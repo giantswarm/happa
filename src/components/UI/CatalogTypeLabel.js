@@ -30,7 +30,7 @@ const CatalogTypeLabel = props => {
   let icon;
   let message;
 
-  let validCatalogTypes = ['community', 'incubator', 'test'];
+  const validCatalogTypes = ['community', 'incubator', 'test'];
 
   // Early return if we're dealing with a unknown catalog type.
   if (!validCatalogTypes.includes(props.catalogType)) {
@@ -58,8 +58,7 @@ const CatalogTypeLabel = props => {
   }
 
   return (
-    <>
-      <Wrapper>
+    <Wrapper>
         <OverlayTrigger
           overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
           placement='top'
@@ -69,7 +68,6 @@ const CatalogTypeLabel = props => {
           </div>
         </OverlayTrigger>
       </Wrapper>
-    </>
   );
 };
 

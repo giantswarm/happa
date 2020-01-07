@@ -31,11 +31,12 @@ const YAMLFileUpload = props => {
   function fileInputOnChange(e) {
     setFileUploading(true);
 
-    var reader = new FileReader();
+    const reader = new FileReader();
 
     reader.onload = (function() {
       let parsedYAML;
-      return function(e) {
+      
+return function(e) {
         try {
           parsedYAML = yaml.safeLoad(e.target.result);
         } catch (err) {
@@ -46,7 +47,8 @@ const YAMLFileUpload = props => {
           );
           setFileUploading(false);
           refreshFileInputs();
-          return;
+          
+return;
         }
 
         props.onInputChange(parsedYAML, () => {

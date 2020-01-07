@@ -3,8 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
-var typingTimer;
-var doneTypingInterval = 250; // ms
+let typingTimer;
+const doneTypingInterval = 250; // ms
 
 //
 // InputField
@@ -30,7 +30,7 @@ class InputField extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
     if (props.value != state.value) {
-      var validation = props.validate(props.value);
+      const validation = props.validate(props.value);
 
       return {
         value: props.value,
@@ -38,7 +38,8 @@ class InputField extends React.Component {
         validationError: validation.validationError,
       };
     }
-    return null;
+    
+return null;
   }
 
   shouldComponentUpdate(nextProps) {
@@ -53,10 +54,10 @@ class InputField extends React.Component {
   };
 
   onChange = () => {
-    var currentValue = this.input.value;
-    var validation = this.props.validate(currentValue);
-    var valid = false;
-    var validationError = this.state.validationError;
+    const currentValue = this.input.value;
+    const validation = this.props.validate(currentValue);
+    let valid = false;
+    let validationError = this.state.validationError;
 
     if (this.props.onStartTyping) {
       this.props.onStartTyping(currentValue);
@@ -86,7 +87,7 @@ class InputField extends React.Component {
 
     // Check after a few ms afer stopping typing if it is invalid, and then show an error message
     typingTimer = setTimeout(() => {
-      var validation = this.props.validate(currentValue);
+      const validation = this.props.validate(currentValue);
       if (!validation.valid) {
         this.setState({
           validationError: validation.validationError,

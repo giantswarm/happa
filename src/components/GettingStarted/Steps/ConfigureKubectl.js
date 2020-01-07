@@ -158,7 +158,7 @@ class ConfigKubeCtl extends React.Component {
   };
 
   friendlyClusterName = cluster => {
-    return cluster.name + ' ' + '(' + cluster.id + ')';
+    return `${cluster.name  } ` + `(${  cluster.id  })`;
   };
 
   render() {
@@ -167,11 +167,11 @@ class ConfigKubeCtl extends React.Component {
         data={{
           title: 'CONFIGURE',
           pathname:
-            '/organizations/' +
-            this.props.match.params.orgId +
-            '/clusters/' +
-            this.props.match.params.clusterId +
-            '/getting-started/configure/',
+            `/organizations/${ 
+            this.props.match.params.orgId 
+            }/clusters/${ 
+            this.props.match.params.clusterId 
+            }/getting-started/configure/`,
         }}
       >
         <div className='centered col-9'>
@@ -225,7 +225,7 @@ class ConfigKubeCtl extends React.Component {
 
           <CodeBlock>
             <Prompt>
-              {`gsctl --endpoint ` + window.config.apiEndpoint + ` info`}
+              {`gsctl --endpoint ${  window.config.apiEndpoint  } info`}
             </Prompt>
           </CodeBlock>
 
@@ -251,16 +251,16 @@ class ConfigKubeCtl extends React.Component {
           <CodeBlock>
             <Prompt>
               {`
-                gsctl --endpoint ` +
-                window.config.apiEndpoint +
-                ` \\
+                gsctl --endpoint ${ 
+                window.config.apiEndpoint 
+                } \\
                   create kubeconfig \\
-                  --cluster ` +
-                this.props.selectedCluster.id +
-                ` \\
+                  --cluster ${ 
+                this.props.selectedCluster.id 
+                } \\
                   --certificate-organizations system:masters \\
-                  --auth-token ` +
-                this.props.user.auth.token}
+                  --auth-token ${ 
+                this.props.user.auth.token}`}
             </Prompt>
           </CodeBlock>
 
@@ -329,13 +329,13 @@ class ConfigKubeCtl extends React.Component {
           </p>
 
           <CodeBlock>
-            <Prompt>{`kubectl cluster-info`}</Prompt>
+            <Prompt>kubectl cluster-info</Prompt>
           </CodeBlock>
 
           <p>This should print some information on your cluster.</p>
 
           <CodeBlock>
-            <Prompt>{`kubectl get nodes`}</Prompt>
+            <Prompt>kubectl get nodes</Prompt>
           </CodeBlock>
 
           <p>Here you should see a list of the worker nodes in your cluster.</p>
@@ -379,7 +379,7 @@ ConfigKubeCtl.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  var selectedCluster =
+  const selectedCluster =
     state.entities.clusters.items[ownProps.match.params.clusterId];
 
   return {

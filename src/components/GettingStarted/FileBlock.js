@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
-var Modernizr = window.Modernizr;
+const Modernizr = window.Modernizr;
 
 /**
  *

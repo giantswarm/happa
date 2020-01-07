@@ -54,7 +54,7 @@ class CatalogList extends React.Component {
                       </ReactMarkdown>
                       <Link
                         className='app-catalog--open-catalog'
-                        to={'/app-catalogs/' + catalogName + '/'}
+                        to={`/app-catalogs/${  catalogName  }/`}
                       >
                         <Button>Browse Apps</Button>
                       </Link>

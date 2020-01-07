@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var typingTimer;
-var doneTypingInterval = 250; // ms
+let typingTimer;
+const doneTypingInterval = 250; // ms
 
 //
 // EmailField
@@ -13,7 +13,7 @@ var doneTypingInterval = 250; // ms
 //
 // And shows a error message if the email is not valid
 
-var validationRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const validationRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 class EmailField extends React.Component {
   state = {
@@ -35,9 +35,9 @@ class EmailField extends React.Component {
   };
 
   onChange = () => {
-    var currentValue = this.input.value;
-    var valid = false;
-    var validationError = this.state.validationError;
+    const currentValue = this.input.value;
+    let valid = false;
+    let validationError = this.state.validationError;
 
     if (this.props.onStartTyping) {
       this.props.onStartTyping(currentValue);

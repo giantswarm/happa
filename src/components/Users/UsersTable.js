@@ -1,4 +1,4 @@
-import { formatStatus, isExpiringSoon, NEVER_EXPIRES } from './UsersUtils';
+import { NEVER_EXPIRES, formatStatus, isExpiringSoon } from './UsersUtils';
 import { relativeDate } from 'lib/helpers.js';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'UI/Button';
@@ -123,8 +123,9 @@ const UsersTable = ({
     return <UsersLoader />;
   } else if (!hasUsers && !hasInvitations) {
     return <UsersPlaceholder />;
-  } else {
-    return (
+  } 
+    
+return (
       <div className='users-table'>
         <BootstrapTable
           bordered={false}
@@ -136,7 +137,7 @@ const UsersTable = ({
         />
       </div>
     );
-  }
+  
 };
 
 UsersTable.defaultProps = {

@@ -23,7 +23,8 @@ const ExampleBox = styled.div`
 
 const Header = props => {
   const { name } = props;
-  return (
+  
+return (
     <h2 id={name}>
       {name} <a href={`#${name}`}>¶</a>
     </h2>

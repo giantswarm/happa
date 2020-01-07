@@ -13,8 +13,8 @@ class ProviderCredentials extends React.Component {
   }
 
   render() {
-    var showInfo = false;
-    var details = (
+    let showInfo = false;
+    let details = (
       <span>
         Provider credentials for {this.props.organizationName}{' '}
         {this.props.provider}
@@ -63,9 +63,10 @@ class ProviderCredentials extends React.Component {
           <div className='col-9'>{details}</div>
         </div>
       );
-    } else {
-      return <div />;
-    }
+    } 
+      
+return <div />;
+    
   }
 }
 

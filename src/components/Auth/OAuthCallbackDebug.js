@@ -13,7 +13,7 @@ class OauthCallback extends React.Component {
   }
 
   render() {
-    var parsedHash = QueryString.parse(this.props.location.hash);
+    const parsedHash = QueryString.parse(this.props.location.hash);
 
     return (
       <div>

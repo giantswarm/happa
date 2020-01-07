@@ -51,7 +51,7 @@ class ExpiryHoursPicker extends React.Component {
   }
 
   handleYearChange(event) {
-    var value = parseInt(event.target.value) || 0;
+    const value = parseInt(event.target.value) || 0;
     this.setState(
       {
         yearsValue: value,
@@ -64,7 +64,7 @@ class ExpiryHoursPicker extends React.Component {
   }
 
   handleMonthChange(event) {
-    var value = parseInt(event.target.value) || 0;
+    const value = parseInt(event.target.value) || 0;
     this.setState(
       {
         monthsValue: value,
@@ -77,7 +77,7 @@ class ExpiryHoursPicker extends React.Component {
   }
 
   handleDayChange(event) {
-    var value = parseInt(event.target.value) || 0;
+    const value = parseInt(event.target.value) || 0;
     this.setState(
       {
         daysValue: value,
@@ -90,7 +90,7 @@ class ExpiryHoursPicker extends React.Component {
   }
 
   handleHourChange(event) {
-    var value = parseInt(event.target.value) || 0;
+    const value = parseInt(event.target.value) || 0;
     this.setState(
       {
         hoursValue: value,
@@ -114,11 +114,11 @@ class ExpiryHoursPicker extends React.Component {
   }
 
   updateTTL() {
-    var expireDate; // The expiration date the user intends
+    let expireDate; // The expiration date the user intends
     // This will either come straight from the date picker state
     // or calculated based on values from the various year/month/day/hour
     // inputs.
-    var TTL;
+    let TTL;
 
     if (this.state.selectionType === 'date') {
       // expireDate is at the start of the day of whatever the user picked.

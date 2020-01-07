@@ -24,8 +24,8 @@ class ChangeEmailForm extends React.Component {
   }
 
   validateEmail = e => {
-    var email = e.target.value;
-    var isButtonVisible;
+    const email = e.target.value;
+    let isButtonVisible;
 
     if (email !== this.props.user.email) {
       isButtonVisible = true;
@@ -33,7 +33,7 @@ class ChangeEmailForm extends React.Component {
       isButtonVisible = false;
     }
 
-    var newState = update(this.state, {
+    let newState = update(this.state, {
       isSuccess: { $set: false },
       isButtonVisible: { $set: isButtonVisible },
 
@@ -44,7 +44,7 @@ class ChangeEmailForm extends React.Component {
       },
     });
 
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (re.test(email)) {
       newState = update(newState, {
         isValid: { $set: true },
@@ -65,7 +65,7 @@ class ChangeEmailForm extends React.Component {
 
     // Don't submit the form if nothing changed.
     if (this.props.user.email != this.state.fields.email.value) {
-      var usersApi = new GiantSwarm.UsersApi();
+      const usersApi = new GiantSwarm.UsersApi();
 
       this.setState({
         isSubmitting: true,
@@ -87,7 +87,7 @@ class ChangeEmailForm extends React.Component {
           return this.props.actions.refreshUserInfo();
         })
         .catch(error => {
-          var errorMessage;
+          let errorMessage;
 
           if (
             error.body &&

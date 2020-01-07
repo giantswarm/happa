@@ -16,7 +16,7 @@ class OrganizationListWrapper extends React.Component {
   };
 
   deleteOrganization = e => {
-    let orgID = e.currentTarget.getAttribute('data-orgID');
+    const orgID = e.currentTarget.getAttribute('data-orgID');
     this.props.dispatch(organizationDelete(orgID));
   };
 

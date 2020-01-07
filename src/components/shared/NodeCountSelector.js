@@ -107,8 +107,9 @@ class NodeCountSelector extends React.Component {
           </div>
         </form>
       );
-    } else {
-      return (
+    } 
+      
+return (
         <div className='row'>
           <div className='col-12'>
             <form onSubmit={this.handleFormSubmit}>
@@ -127,7 +128,7 @@ class NodeCountSelector extends React.Component {
           </div>
         </div>
       );
-    }
+    
   }
 }
 

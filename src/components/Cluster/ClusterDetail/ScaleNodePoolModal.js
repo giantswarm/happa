@@ -70,7 +70,8 @@ class ScaleNodePoolModal extends React.Component {
 
   supportsAutoscaling(provider) {
     if (provider !== Providers.AWS) return false;
-    return true;
+    
+return true;
   }
 
   updateScaling = nodeCountSelector => {
@@ -134,7 +135,7 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   pluralize = nodes => {
-    var pluralize = 's';
+    let pluralize = 's';
 
     if (Math.abs(nodes) === 1) {
       pluralize = '';
@@ -145,7 +146,7 @@ class ScaleNodePoolModal extends React.Component {
 
   buttonProperties = () => {
     let workerDelta = this.workerDelta();
-    let pluralizeWorkers = this.pluralize(workerDelta);
+    const pluralizeWorkers = this.pluralize(workerDelta);
 
     const { nodePool, workerNodesDesired } = this.props;
     const { min, max, minValid, maxValid } = this.state.scaling;
@@ -155,7 +156,8 @@ class ScaleNodePoolModal extends React.Component {
     if (this.supportsAutoscaling(this.props.provider)) {
       if (min > workerNodesDesired && hasNodes) {
         workerDelta = min - workerNodesDesired;
-        return {
+        
+return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
           style: 'success',
           disabled: !minValid,
@@ -164,7 +166,8 @@ class ScaleNodePoolModal extends React.Component {
 
       if (max < workerNodesDesired && hasNodes) {
         workerDelta = Math.abs(workerNodesDesired - max);
-        return {
+        
+return {
           title: `Remove ${workerDelta} worker node${this.pluralize(
             workerDelta
           )}`,
@@ -218,7 +221,7 @@ class ScaleNodePoolModal extends React.Component {
     const { error, scaling } = this.state;
     const { min, max, minValid, loading } = scaling;
 
-    let warnings = [];
+    const warnings = [];
 
     if (max < workerNodesRunning && minValid) {
       const diff = workerNodesRunning - max;
@@ -236,7 +239,7 @@ class ScaleNodePoolModal extends React.Component {
               <i className='fa fa-warning' /> The node pool currently has{' '}
               {workerNodesRunning} worker nodes running. By setting the maximum
               lower than that, you enforce the removal of{' '}
-              {diff === 1 ? 'one node' : diff + ' nodes'}. This could result in
+              {diff === 1 ? 'one node' : `${diff  } nodes`}. This could result in
               unscheduled workloads.
             </p>
           </CSSTransition>
@@ -250,7 +253,7 @@ class ScaleNodePoolModal extends React.Component {
           >
             <p key='node-removal'>
               <i className='fa fa-warning' /> You are about to enforce the
-              removal of {diff === 1 ? 'one node' : diff + ' nodes'}. Please
+              removal of {diff === 1 ? 'one node' : `${diff  } nodes`}. Please
               make sure the node pool has enough capacity to schedule all
               workloads.
             </p>
@@ -274,7 +277,7 @@ class ScaleNodePoolModal extends React.Component {
       );
     }
 
-    var body = (
+    let body = (
       <BootstrapModal.Body>
         <p>
           {this.supportsAutoscaling(provider)
@@ -292,7 +295,7 @@ class ScaleNodePoolModal extends React.Component {
         <TransitionGroup>{warnings}</TransitionGroup>
       </BootstrapModal.Body>
     );
-    var footer = (
+    let footer = (
       <BootstrapModal.Footer>
         {this.buttonProperties().disabled ? (
           undefined

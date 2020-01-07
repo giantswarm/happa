@@ -20,7 +20,7 @@ const AppList = ({ catalog, ...props }) => {
     >
       <DocumentTitle title='Apps'>
         <>
-          <Link className='back-link' to={'/app-catalogs/'}>
+          <Link className='back-link' to="/app-catalogs/">
             <i aria-hidden='true' className='fa fa-chevron-left' />
             Back to all catalogs
           </Link>

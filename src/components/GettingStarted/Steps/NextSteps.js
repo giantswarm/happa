@@ -10,11 +10,11 @@ class NextSteps extends React.Component {
         data={{
           title: 'NEXT-STEPS',
           pathname:
-            '/organizations/' +
-            this.props.match.params.orgId +
-            '/clusters/' +
-            this.props.match.params.clusterId +
-            '/getting-started/next-steps/',
+            `/organizations/${ 
+            this.props.match.params.orgId 
+            }/clusters/${ 
+            this.props.match.params.clusterId 
+            }/getting-started/next-steps/`,
         }}
       >
         <div className='centered col-9'>

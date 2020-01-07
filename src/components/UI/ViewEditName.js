@@ -110,14 +110,15 @@ class ViewAndEditName extends React.Component {
     const { onSubmit } = this.props;
     const inputFieldValue = this.nameInputRef.current.value;
 
-    var validate = this.validate();
+    const validate = this.validate();
     if (typeof validate === 'object') {
       new FlashMessage(
-        'Error: ' + validate.error,
+        `Error: ${  validate.error}`,
         messageType.ERROR,
         messageTTL.MEDIUM
       );
-      return;
+      
+return;
     }
 
     this.setState({

@@ -146,7 +146,7 @@ class OrganizationDropdown extends React.Component {
             <MenuItem
               componentClass={NavLink}
               href='/organizations/'
-              to={'/organizations/' + this.props.selectedOrganization}
+              to={`/organizations/${  this.props.selectedOrganization}`}
             >
               Details for {this.props.selectedOrganization}
             </MenuItem>

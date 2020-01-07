@@ -1,8 +1,8 @@
 import * as userActions from 'actions/userActions';
 import { bindActionCreators } from 'redux';
 import {
-  clearQueues,
   FlashMessage,
+  clearQueues,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
@@ -79,7 +79,7 @@ class Login extends React.Component {
             authenticating: false,
           });
 
-          var [heading, message] = parseErrorMessages(error);
+          const [heading, message] = parseErrorMessages(error);
 
           new FlashMessage(
             heading,

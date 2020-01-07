@@ -103,7 +103,7 @@ const InviteUserModal = ({
     if (show !== prevShow && show === true) {
       setInviteForm(getInitialState(initiallySelectedOrganizations));
     }
-  }, [show, initiallySelectedOrganizations]);
+  }, [show, initiallySelectedOrganizations, prevShow]);
 
   return (
     <UsersModal

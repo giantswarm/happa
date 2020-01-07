@@ -19,8 +19,8 @@ class KeyPairDetailsModal extends React.Component {
   }
 
   expireDate(expiry) {
-    var expiryClass = '';
-    var expirySeconds = expiry.utc().diff(moment().utc()) / 1000;
+    let expiryClass = '';
+    const expirySeconds = expiry.utc().diff(moment().utc()) / 1000;
     if (Math.abs(expirySeconds) < 60 * 60 * 24) {
       expiryClass = 'expiring';
     }

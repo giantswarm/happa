@@ -27,9 +27,9 @@ class FlashMessage extends React.Component {
       return (
         <div
           className={
-            'flash-messages--flash-message' +
-            ' flash-messages--' +
-            this.props.class
+            `${'flash-messages--flash-message' +
+            ' flash-messages--'}${ 
+            this.props.class}`
           }
         >
           {this.props.message ? this.props.message : this.props.children}
@@ -40,9 +40,10 @@ class FlashMessage extends React.Component {
           />
         </div>
       );
-    } else {
-      return null;
-    }
+    } 
+      
+return null;
+    
   }
 }
 

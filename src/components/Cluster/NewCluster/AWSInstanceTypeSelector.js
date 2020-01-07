@@ -13,15 +13,15 @@ class AWSInstanceTypeSelector extends React.Component {
   constructor(props) {
     super(props);
 
-    var instanceTypes = {};
+    let instanceTypes = {};
 
     if (window.config.awsCapabilitiesJSON != '') {
       instanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
     }
 
-    var availableInstanceTypes = [];
+    const availableInstanceTypes = [];
     // Create a list of only the allowed instance types
-    props.allowedInstanceTypes.forEach(function(it) {
+    props.allowedInstanceTypes.forEach((it) => {
       if (typeof instanceTypes[it] === 'object') {
         availableInstanceTypes.push(
           Object.assign({}, instanceTypes[it], { name: it })
@@ -61,9 +61,10 @@ class AWSInstanceTypeSelector extends React.Component {
   buttonClass() {
     if (this.props.readOnly) {
       return 'disabled';
-    } else {
-      return '';
-    }
+    } 
+      
+return '';
+    
   }
 
   preSelect(instanceTypeName) {
@@ -81,10 +82,10 @@ class AWSInstanceTypeSelector extends React.Component {
   };
 
   validateInstanceType = instanceTypeName => {
-    var valid;
-    var validationError;
+    let valid;
+    let validationError;
 
-    var validInstanceTypes = this.state.instanceTypes.map(x => {
+    const validInstanceTypes = this.state.instanceTypes.map(x => {
       return x.name;
     });
 
@@ -130,8 +131,8 @@ class AWSInstanceTypeSelector extends React.Component {
 
             <div
               className={
-                'new-cluster--instance-type-selector-button ' +
-                this.buttonClass()
+                `new-cluster--instance-type-selector-button ${ 
+                this.buttonClass()}`
               }
               onClick={this.showModal}
             >

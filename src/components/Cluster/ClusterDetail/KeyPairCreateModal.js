@@ -10,7 +10,7 @@ import useDebounce from 'lib/effects/useDebounce';
 
 const KeyPairCreateModal = props => {
   const defaultDescription = email => {
-    return 'Added by user ' + email + ' using Happa web interface';
+    return `Added by user ${  email  } using Happa web interface`;
   };
 
   const [expireTTL, setExpireTTL] = useState(720);
@@ -30,10 +30,11 @@ const KeyPairCreateModal = props => {
   });
 
   const blob = () => {
-    var blob = new Blob([kubeconfig], {
+    const blob = new Blob([kubeconfig], {
       type: 'application/plain;charset=utf-8',
     });
-    return blob;
+    
+return blob;
   };
 
   const copyKubeConfig = e => {
@@ -111,16 +112,17 @@ const KeyPairCreateModal = props => {
   const cnPrefixOrEmail = () => {
     if (cnPrefix == '') {
       return props.user.email;
-    } else {
-      return cnPrefix;
-    }
+    } 
+      
+return cnPrefix;
+    
   };
 
   const cnPrefixValidation = value => {
-    var error = null;
+    let error = null;
     if (value !== '') {
-      var endRegex = /[a-zA-Z0-9]$/g;
-      var regex = /^[a-zA-Z0-9][a-zA-Z0-9@\.-]*$/g;
+      const endRegex = /[a-zA-Z0-9]$/g;
+      const regex = /^[a-zA-Z0-9][a-zA-Z0-9@\.-]*$/g;
       if (!endRegex.test(value)) {
         error = 'The CN prefix must end with a-z, A-Z, 0-9';
       } else if (!regex.test(value)) {
@@ -147,7 +149,7 @@ const KeyPairCreateModal = props => {
   );
 
   const handleCNPrefixChange = e => {
-    var inputValue = e.target.value;
+    const inputValue = e.target.value;
 
     if (cnPrefixError) {
       setCNPrefix(inputValue);
@@ -222,7 +224,7 @@ const KeyPairCreateModal = props => {
                         />
                         <div className='text-field-hint'>
                           {cnPrefixError === null ? (
-                            cnPrefixOrEmail() + '.user.api.clusterdomain'
+                            `${cnPrefixOrEmail()  }.user.api.clusterdomain`
                           ) : (
                             <span className='error'>
                               <i className='fa fa-warning' /> {cnPrefixError}

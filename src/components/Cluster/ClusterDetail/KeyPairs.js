@@ -94,8 +94,8 @@ class KeyPairs extends React.Component {
   }
 
   expireDateCellFormatter(cell, row) {
-    var expiryClass = '';
-    var expirySeconds =
+    let expiryClass = '';
+    const expirySeconds =
       moment(row.expire_date)
         .utc()
         .diff(moment().utc()) / 1000;
@@ -113,7 +113,7 @@ class KeyPairs extends React.Component {
    */
   commonNameFormatter = (cell, row) => {
     let displayName = row.common_name;
-    displayName = displayName.replace('.' + this.apiEndpointHostname, '...');
+    displayName = displayName.replace(`.${  this.apiEndpointHostname}`, '...');
 
     return (
       <Copyable copyText={row.common_name}>
@@ -130,7 +130,8 @@ class KeyPairs extends React.Component {
         </Copyable>
       );
     }
-    return <span />;
+    
+return <span />;
   }
 
   showKeyPairModal = row => {
@@ -200,8 +201,9 @@ class KeyPairs extends React.Component {
                     </p>
                   </div>
                 );
-              } else {
-                return (
+              } 
+                
+return (
                   <div>
                     <BootstrapTable
                       bordered={false}
@@ -215,7 +217,7 @@ class KeyPairs extends React.Component {
                     />
                   </div>
                 );
-              }
+              
             })()}
             <KeypairCreateModal
               actions={this.props.actions}

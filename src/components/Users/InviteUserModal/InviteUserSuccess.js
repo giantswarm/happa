@@ -23,7 +23,7 @@ const InviteUserSuccess = ({ inviteForm, invitationResult }) => {
     setTimeout(() => {
       setClipboardContent(null);
     }, 1000);
-  }, [hasContentInClipboard]);
+  }, [hasContentInClipboard, setClipboardContent]);
 
   return (
     <>

@@ -17,7 +17,7 @@ import TermsOfService from './TermsOfService';
 // in. Or change the way these components get at these supporting libraries.
 window.config = window.config || { passageEndpoint: 'http://localhost:5000' };
 // EndTODO
-var passage = new Passage({ endpoint: window.config.passageEndpoint });
+const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
 export class SignUp extends React.Component {
   state = {
@@ -53,7 +53,7 @@ export class SignUp extends React.Component {
   }
 
   componentDidMount() {
-    var token = this.props.match.params.token;
+    const token = this.props.match.params.token;
 
     passage
       .checkInvite({ token })
@@ -65,13 +65,13 @@ export class SignUp extends React.Component {
         });
 
         setTimeout(
-          function() {
+          () => {
             this.setState({
               statusMessage: 'enter_password',
             });
 
             this.advanceForm();
-          }.bind(this),
+          },
           800
         );
       })
@@ -80,7 +80,7 @@ export class SignUp extends React.Component {
           checkInviteStatus: 'failed',
         });
 
-        var statusMessage = 'verify_failed';
+        let statusMessage = 'verify_failed';
 
         if (error.message === 'InvalidToken') {
           statusMessage = 'invalid_token';
@@ -100,7 +100,7 @@ export class SignUp extends React.Component {
   }
 
   advanceForm() {
-    var nextStep = this.state.currentStep + 1;
+    const nextStep = this.state.currentStep + 1;
 
     this.setState(
       {
@@ -152,7 +152,7 @@ export class SignUp extends React.Component {
           password: this.state.passwordField.value,
         })
         .then(data => {
-          var userData = {
+          const userData = {
             username: data.username,
             email: data.email,
             auth: {
@@ -181,9 +181,9 @@ export class SignUp extends React.Component {
   };
 
   tosChanged = e => {
-    var checked = e.target.checked;
+    const checked = e.target.checked;
 
-    var statusMessage = this.state.statusMessage;
+    let statusMessage = this.state.statusMessage;
 
     this.setState({
       formValid: false,
@@ -194,8 +194,8 @@ export class SignUp extends React.Component {
       },
     });
 
-    var termsOfServiceFieldValid = false;
-    var termsOfServiceFieldValue = false;
+    let termsOfServiceFieldValid = false;
+    let termsOfServiceFieldValue = false;
 
     if (checked) {
       termsOfServiceFieldValid = true;
@@ -233,7 +233,7 @@ export class SignUp extends React.Component {
   };
 
   passwordEditingCompleted = password => {
-    var validationResult = validatePassword(password);
+    const validationResult = validatePassword(password);
 
     this.setState({
       statusMessage: validationResult.statusMessage,
@@ -282,8 +282,8 @@ export class SignUp extends React.Component {
   };
 
   passwordConfirmationEditingCompleted = passwordConfirmation => {
-    var statusMessage = this.state.statusMessage;
-    var valid = this.state.passwordConfirmationField.valid;
+    let statusMessage = this.state.statusMessage;
+    let valid = this.state.passwordConfirmationField.valid;
 
     this.setState({
       formValid: false,
@@ -316,9 +316,9 @@ export class SignUp extends React.Component {
   };
 
   validateForm() {
-    var advancable = false;
-    var formValid = false;
-    var statusMessage = this.state.statusMessage;
+    let advancable = false;
+    let formValid = false;
+    let statusMessage = this.state.statusMessage;
 
     if (this.state.currentStep === 1 && this.state.passwordField.valid) {
       advancable = true;
@@ -369,7 +369,7 @@ export class SignUp extends React.Component {
         </h1>
 
         <form
-          className={'step-' + this.state.currentStep}
+          className={`step-${  this.state.currentStep}`}
           onSubmit={this.handleSubmit}
           ref={f => {
             this.signupForm = f;

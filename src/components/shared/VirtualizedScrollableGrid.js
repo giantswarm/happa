@@ -158,8 +158,7 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     const newStyle = Object.assign({}, this.props.style, { direction: 'ltr' });
 
     return (
-      <>
-        <WindowScroller onScroll={this.handleScroll}>
+      <WindowScroller onScroll={this.handleScroll}>
           {({ isScrolling, onChildScroll, scrollTop }) => (
             <List
               direction='rtl'
@@ -193,7 +192,6 @@ class VirtualizedScrollableGrid extends React.PureComponent {
             </List>
           )}
         </WindowScroller>
-      </>
     );
   }
 }

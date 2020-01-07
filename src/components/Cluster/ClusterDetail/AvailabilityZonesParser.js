@@ -40,7 +40,7 @@ export default function AvailabilityZonesParser({
     // We could save state instead. I'm just doing this because it's easier.
     setAZLabels(initialStateLabels);
     updateAZValuesInParent(AZPicker);
-  }, [AZPicker]);
+  }, [AZPicker, isLabels, updateAZValuesInParent]);
 
   // Labels.
   const [AZLabels, setAZLabels] = useState(initialStateLabels);
@@ -50,7 +50,7 @@ export default function AvailabilityZonesParser({
     // Reset picker
     setAZPicker(initialStatePicker);
     updateAZValuesInParent(AZLabels);
-  }, [AZLabels]);
+  }, [AZLabels, initialStatePicker, isLabels, updateAZValuesInParent]);
 
   // Function passed to child Number Picker component to allow it to update state here
   const updateAZPicker = payload => {

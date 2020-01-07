@@ -16,11 +16,11 @@ class GettingStarted extends React.Component {
           data={{
             title: 'GETTING STARTED',
             pathname:
-              '/organizations/' +
-              this.props.match.params.orgId +
-              '/clusters/' +
-              this.props.match.params.clusterId +
-              '/getting-started/',
+              `/organizations/${ 
+              this.props.match.params.orgId 
+              }/clusters/${ 
+              this.props.match.params.clusterId 
+              }/getting-started/`,
           }}
         >
           <div>

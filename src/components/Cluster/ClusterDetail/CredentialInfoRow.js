@@ -66,9 +66,10 @@ function CredentialInfoRow({ cluster, credentials, provider }) {
         {credentialInfoRows}
       </FlexRowWithTwoBlocksOnEdges>
     );
-  } else {
-    return null;
-  }
+  } 
+    
+return null;
+  
 }
 
 CredentialInfoRow.propTypes = {

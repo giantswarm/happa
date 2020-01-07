@@ -152,8 +152,8 @@ class CreateRegularCluster extends React.Component {
   createCluster = () => {
     this.setState({ submitting: true });
 
-    var i;
-    var workers = [];
+    let i;
+    let workers = [];
 
     // TODO/FYI: This IF / ELSE on this.props.provider is a antipattern that
     // will spread throughout the codebase if we are not careful. I am waiting
@@ -196,7 +196,7 @@ class CreateRegularCluster extends React.Component {
       workers.length > 1
     ) {
       // Only one worker is allowed to be present when auto scaling is enabled.
-      var firstWorker = workers[0];
+      const firstWorker = workers[0];
       workers = [];
       workers.push(firstWorker);
     }
@@ -222,15 +222,15 @@ class CreateRegularCluster extends React.Component {
         // after successful creation, redirect to cluster details
         this.props.dispatch(
           push(
-            '/organizations/' +
-              this.props.selectedOrganization +
-              '/clusters/' +
-              cluster.id
+            `/organizations/${ 
+              this.props.selectedOrganization 
+              }/clusters/${ 
+              cluster.id}`
           )
         );
       })
       .catch(error => {
-        var errorMessage = '';
+        let errorMessage = '';
 
         if (error.body && error.body.message) {
           errorMessage = error.body.message;
@@ -356,7 +356,8 @@ class CreateRegularCluster extends React.Component {
     const CPUCores = hasInstances
       ? awsInstanceTypes[instanceType].cpu_cores
       : '0';
-    return [RAM, CPUCores];
+    
+return [RAM, CPUCores];
   };
 
   produceRAMAndCoresAzure = () => {
@@ -376,7 +377,8 @@ class CreateRegularCluster extends React.Component {
     const CPUCores = hasInstances
       ? azureInstanceTypes[instanceType].numberOfCores
       : '0';
-    return [RAM, CPUCores];
+    
+return [RAM, CPUCores];
   };
 
   valid() {

@@ -9,7 +9,7 @@ import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
-import { Providers, Constants } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
 import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from '../ClusterDetail/AddNodePool';
@@ -256,9 +256,9 @@ class CreateNodePoolsCluster extends Component {
 
     const areNodePoolsValid = Object.keys(nodePoolsForms.nodePools)
       .map(np =>
-        nodePoolsForms.nodePools[np].isValid
+        (nodePoolsForms.nodePools[np].isValid
           ? nodePoolsForms.nodePools[np].isValid
-          : false
+          : false)
       )
       .every(np => np); // This checks if everything is true.
 
@@ -494,7 +494,8 @@ class CreateNodePoolsCluster extends Component {
               <TransitionGroup>
                 {Object.keys(nodePools).map(npId => {
                   const name = nodePools[npId].data.name;
-                  return (
+                  
+return (
                     <SlideTransition key={npId} appear={true} direction='down'>
                       <AddNodePoolWrapperDiv>
                         <NodePoolHeading>{name}</NodePoolHeading>
@@ -510,7 +511,7 @@ class CreateNodePoolsCluster extends Component {
                             title='Remove node pool'
                             aria-hidden='true'
                             onClick={() => this.removeNodePoolForm(npId)}
-                          ></i>
+                           />
                         </AddNodePoolFlexColumnDiv>
                       </AddNodePoolWrapperDiv>
                     </SlideTransition>
@@ -595,11 +596,11 @@ function mapStateToProps(state) {
   const minAZ = 1;
   const defaultAZ = AZ.default;
 
-  let selectedOrganization = state.app.selectedOrganization;
+  const selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
-  let clusterCreationStats = state.app.info.stats.cluster_creation_duration;
+  const clusterCreationStats = state.app.info.stats.cluster_creation_duration;
 
-  var defaultInstanceType;
+  let defaultInstanceType;
   if (
     state.app.info.workers.instance_type &&
     state.app.info.workers.instance_type.default

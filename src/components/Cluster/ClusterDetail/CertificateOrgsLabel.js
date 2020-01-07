@@ -2,12 +2,12 @@ import ColorHash from 'color-hash';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-var certificateOrgsColorHashCache = {};
+const certificateOrgsColorHashCache = {};
 
 class CertificateOrgsLabel extends React.Component {
   calculateColour(str) {
     if (!certificateOrgsColorHashCache[str]) {
-      let col = new ColorHash({ lightness: 0.25, saturation: 0.6 }).hex(str);
+      const col = new ColorHash({ lightness: 0.25, saturation: 0.6 }).hex(str);
       certificateOrgsColorHashCache[str] = col;
     }
 
@@ -24,7 +24,7 @@ class CertificateOrgsLabel extends React.Component {
             if (element != '') {
               return (
                 <span
-                  className={'orglabel'}
+                  className="orglabel"
                   data-testid={`orglabel-${index}`}
                   key={element}
                   style={{ backgroundColor: this.calculateColour(element) }}

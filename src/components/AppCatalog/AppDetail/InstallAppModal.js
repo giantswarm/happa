@@ -85,7 +85,7 @@ const InstallAppModal = props => {
 
   if (query !== '') {
     clusters = lunrIndex
-      .search(query.trim() + ' ' + query.trim() + '*')
+      .search(`${query.trim()  } ${  query.trim()  }*`)
       .map(result => {
         return props.clusters.find(cluster => cluster.id === result.ref);
       });
@@ -107,12 +107,12 @@ const InstallAppModal = props => {
   };
 
   const updateValuesYAML = files => {
-    var reader = new FileReader();
+    const reader = new FileReader();
 
     reader.onload = (function() {
       return function(e) {
         try {
-          let parsedYAML = yaml.safeLoad(e.target.result);
+          const parsedYAML = yaml.safeLoad(e.target.result);
           setValuesYAML(parsedYAML);
           setValuesYAMLError('');
         } catch (err) {
@@ -272,7 +272,7 @@ InstallAppModal.propTypes = {
 };
 
 function mapStateToProps(state) {
-  let clusters = Object.keys(state.entities.clusters.items).map(clusterID => {
+  const clusters = Object.keys(state.entities.clusters.items).map(clusterID => {
     return {
       id: clusterID,
       name: state.entities.clusters.items[clusterID].name,

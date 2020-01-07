@@ -40,27 +40,27 @@ class UpgradeClusterModal extends React.Component {
 
   changedComponents = () => {
     const { release } = this.props;
-    var currentComponents = {};
+    let currentComponents = {};
     if (release && release.components) {
       currentComponents = release.components;
     }
 
-    var components = {};
+    const components = {};
     currentComponents.forEach(component => {
       components[component.name] = component;
     });
 
-    var targetComponents = {};
+    const targetComponents = {};
     this.props.targetRelease.components.forEach(component => {
       targetComponents[component.name] = component;
     });
 
-    var changedComponents = diff.diff(components, targetComponents);
+    const changedComponents = diff.diff(components, targetComponents);
 
-    let changes = _.groupBy(this.props.targetRelease.changelog, item => {
+    const changes = _.groupBy(this.props.targetRelease.changelog, item => {
       return item.component;
     });
-    let changedComponentNames = Object.keys(changes).sort();
+    const changedComponentNames = Object.keys(changes).sort();
 
     return (
       <div>
@@ -79,8 +79,9 @@ class UpgradeClusterModal extends React.Component {
         <div className='release-selector-modal--components'>
           {_.sortBy(changedComponents, 'name').map(diffEdit => {
             if (diffEdit.kind === 'E') {
-              let component = components[diffEdit.path[0]];
-              return (
+              const component = components[diffEdit.path[0]];
+              
+return (
                 <ReleaseComponentLabel
                   key={component.name}
                   name={component.name}
@@ -91,8 +92,9 @@ class UpgradeClusterModal extends React.Component {
             }
 
             if (diffEdit.kind === 'N') {
-              let component = diffEdit.rhs;
-              return (
+              const component = diffEdit.rhs;
+              
+return (
                 <ReleaseComponentLabel
                   isAdded
                   name={component.name}
@@ -102,8 +104,9 @@ class UpgradeClusterModal extends React.Component {
             }
 
             if (diffEdit.kind === 'D') {
-              let component = diffEdit.lhs;
-              return (
+              const component = diffEdit.lhs;
+              
+return (
                 <ReleaseComponentLabel
                   isRemoved
                   name={component.name}
@@ -201,7 +204,7 @@ class UpgradeClusterModal extends React.Component {
         loading: true,
       },
       () => {
-        var targetReleaseVersion = this.props.targetRelease.version;
+        const targetReleaseVersion = this.props.targetRelease.version;
 
         this.props.clusterActions
           .clusterPatch(this.props.cluster, {

@@ -109,7 +109,7 @@ class ClusterDashboardItem extends React.Component {
    * dates, fresh.
    */
   registerReRenderInterval = () => {
-    var refreshInterval = 10 * 1000; // 10 seconds
+    const refreshInterval = 10 * 1000; // 10 seconds
     this.reRenderInterval = window.setInterval(() => {
       // enforce re-rendering by state change
       this.setState({ enforceReRender: Date.now() });
@@ -120,7 +120,7 @@ class ClusterDashboardItem extends React.Component {
    * Returns true if the cluster is younger than 30 days
    */
   clusterYoungerThan30Days() {
-    var age = Math.abs(
+    const age = Math.abs(
       moment(this.props.cluster.create_date)
         .utc()
         .diff(moment().utc()) / 1000
@@ -141,17 +141,17 @@ class ClusterDashboardItem extends React.Component {
     const { cluster, isNodePool, selectedOrganization } = this.props;
     const { nodePools } = this.state;
 
-    var memory = isNodePool
+    const memory = isNodePool
       ? getMemoryTotalNodePools(nodePools)
       : getMemoryTotal(cluster);
 
-    var storage = getStorageTotal(cluster);
+    const storage = getStorageTotal(cluster);
 
-    var cpus = isNodePool
+    const cpus = isNodePool
       ? getCpusTotalNodePools(nodePools)
       : getCpusTotal(cluster);
 
-    var numNodes = isNodePool
+    const numNodes = isNodePool
       ? getNumberOfNodePoolsNodes(nodePools)
       : getNumberOfNodes(cluster);
 

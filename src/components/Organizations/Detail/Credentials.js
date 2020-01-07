@@ -58,8 +58,9 @@ class Credentials extends React.Component {
           provider={this.props.app.info.general.provider}
         />
       );
-    } else {
-      return (
+    } 
+      
+return (
         <CredentialsDisplay
           credentials={this.props.credentials}
           onShowForm={this.handleShowForm}
@@ -67,7 +68,7 @@ class Credentials extends React.Component {
           provider={this.props.app.info.general.provider}
         />
       );
-    }
+    
   }
 }
 
@@ -101,9 +102,9 @@ class CredentialsDisplay extends React.Component {
           <span>Loading credentials</span>
         </span>
       );
-    } else {
+    } 
       if (this.props.credentials.items.length === 0) {
-        let button = (
+        const button = (
           <Button
             bsStyle='default'
             className='small'
@@ -125,7 +126,8 @@ class CredentialsDisplay extends React.Component {
             </div>
           );
         }
-        return (
+        
+return (
           <div>
             <p>
               No credentials set. Clusters of this organization will be created
@@ -134,13 +136,13 @@ class CredentialsDisplay extends React.Component {
             {button}
           </div>
         );
-      } else {
+      } 
         /**
          * Credentials display. This is built to support only one item, as the
          * API currently won't allow for more than that.
          */
 
-        var providerWarning;
+        let providerWarning;
         if (
           typeof this.props.credentials.items[0][this.props.provider] ===
           'undefined'
@@ -160,7 +162,7 @@ class CredentialsDisplay extends React.Component {
               {providerWarning}
               <table
                 className='table resource-details'
-                id={'credential-' + this.props.credentials.items[0].id}
+                id={`credential-${  this.props.credentials.items[0].id}`}
               >
                 <tbody>
                   <tr key='account_id'>
@@ -231,8 +233,8 @@ class CredentialsDisplay extends React.Component {
             </div>
           );
         }
-      }
-    }
+      
+    
   }
 }
 
@@ -310,8 +312,8 @@ class CredentialsForm extends React.Component {
    * handleChange copies the current input field value into this.state[fieldname].
    */
   handleChange = e => {
-    let fieldName = e.target.name;
-    let fleldVal = e.target.value;
+    const fieldName = e.target.name;
+    const fleldVal = e.target.value;
     this.setState({ [fieldName]: fleldVal }, () => {
       // setState is asynchronous. this is a callback called after setState has been executed.
       this.validate();

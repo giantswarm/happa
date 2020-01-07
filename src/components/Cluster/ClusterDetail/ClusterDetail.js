@@ -61,7 +61,7 @@ ClusterDetail.propTypes = {
   isNodePoolsCluster: PropTypes.bool,
 };
 function mapStateToProps(state, ownProps) {
-  let cluster = state.entities.clusters.items[ownProps.match.params.clusterId];
+  const cluster = state.entities.clusters.items[ownProps.match.params.clusterId];
   let release;
   let targetReleaseVersion;
   let isNodePoolsCluster = false;
@@ -71,11 +71,11 @@ function mapStateToProps(state, ownProps) {
       release = state.entities.releases.items[cluster.release_version];
     }
 
-    let activeReleases = _.filter(state.entities.releases.items, x => {
+    const activeReleases = _.filter(state.entities.releases.items, x => {
       return x.active;
     });
 
-    let availableVersions = activeReleases.map(x => x.version).sort(cmp);
+    const availableVersions = activeReleases.map(x => x.version).sort(cmp);
 
     // Guard against the release version of this cluster not being in the /v4/releases/
     // response.

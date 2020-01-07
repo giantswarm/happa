@@ -53,9 +53,10 @@ function PortMappingsRow({ cluster }) {
         </FlexRowWithTwoBlocksOnEdges>
       </PortMappings>
     );
-  } else {
-    return null;
-  }
+  } 
+    
+return null;
+  
 }
 
 PortMappingsRow.propTypes = {

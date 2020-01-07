@@ -19,9 +19,10 @@ class SimpleExample extends React.Component {
   clusterBaseDomain() {
     if (this.props.cluster) {
       return `${this.props.cluster.id}.${this.state.ingressBaseDomain}`;
-    } else {
-      return `12345.${this.state.ingressBaseDomain}`;
-    }
+    } 
+      
+return `12345.${this.state.ingressBaseDomain}`;
+    
   }
 
   selectPlatform(platform) {
@@ -86,14 +87,15 @@ class SimpleExample extends React.Component {
       return 'Could not figure out the url for your hello world app. Sorry.';
     } else if (this.state.loading) {
       return 'Figuring out the url...';
-    } else {
-      var url = `http://helloworld.${this.clusterBaseDomain()}`;
-      return (
+    } 
+      const url = `http://helloworld.${this.clusterBaseDomain()}`;
+      
+return (
         <a href={url} rel='noopener noreferrer' target='_blank'>
           {url}
         </a>
       );
-    }
+    
   }
 
   render() {
@@ -102,11 +104,11 @@ class SimpleExample extends React.Component {
         data={{
           title: 'EXAMPLE',
           pathname:
-            '/organizations/' +
-            this.props.match.params.orgId +
-            '/clusters/' +
-            this.props.match.params.clusterId +
-            '/getting-started/example/',
+            `/organizations/${ 
+            this.props.match.params.orgId 
+            }/clusters/${ 
+            this.props.match.params.clusterId 
+            }/getting-started/example/`,
         }}
       >
         <div className='centered col-9'>
@@ -218,7 +220,7 @@ class SimpleExample extends React.Component {
           </p>
 
           <CodeBlock>
-            <Prompt>{`kubectl get deployment -l app=helloworld`}</Prompt>
+            <Prompt>kubectl get deployment -l app=helloworld</Prompt>
             <Output>
               {`
                   NAME         DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
@@ -234,7 +236,7 @@ class SimpleExample extends React.Component {
           </p>
 
           <CodeBlock>
-            <Prompt>{`kubectl get svc -l app=helloworld`}</Prompt>
+            <Prompt>kubectl get svc -l app=helloworld</Prompt>
             <Output>
               {`
                   NAME         CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
@@ -246,7 +248,7 @@ class SimpleExample extends React.Component {
           <p>And finally we list the pods:</p>
 
           <CodeBlock>
-            <Prompt>{`kubectl get pods -l app=helloworld`}</Prompt>
+            <Prompt>kubectl get pods -l app=helloworld</Prompt>
             <Output>
               {`
                   NAME                          READY     STATUS    RESTARTS   AGE
@@ -308,7 +310,7 @@ class SimpleExample extends React.Component {
 
           <CodeBlock>
             <Prompt>
-              {`kubectl delete service,deployment,ingress helloworld`}
+              kubectl delete service,deployment,ingress helloworld
             </Prompt>
             <Output>
               {`
@@ -351,7 +353,7 @@ SimpleExample.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  var selectedCluster =
+  const selectedCluster =
     state.entities.clusters.items[ownProps.match.params.clusterId];
 
   return {

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
-import { Providers, Constants } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import { RadioWrapper } from '../NewCluster/CreateNodePoolsCluster';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
 import AWSInstanceTypeSelector from '../NewCluster/AWSInstanceTypeSelector';
@@ -198,7 +198,8 @@ class AddNodePool extends Component {
           draft.name.validationError = message;
         })
       );
-      return;
+      
+return;
     }
 
     this.setState(

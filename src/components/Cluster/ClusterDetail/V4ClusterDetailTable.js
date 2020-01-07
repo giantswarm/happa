@@ -66,7 +66,8 @@ class V4ClusterDetailTable extends React.Component {
     if (cluster && cluster.status && cluster.status.lastUpdated) {
       return moment(cluster.status.lastUpdated).fromNow();
     }
-    return 'n/a';
+    
+return 'n/a';
   }
 
   render() {

@@ -62,7 +62,7 @@ const TextInput = props => {
         {props.description ? <p>{props.description}</p> : undefined}
       </Text>
       <InputWrapper>
-        {props.icon ? <Icon className={'fa fa-' + props.icon} /> : undefined}
+        {props.icon ? <Icon className={`fa fa-${  props.icon}`} /> : undefined}
         <Input
           id={props.label}
           onChange={onChange}

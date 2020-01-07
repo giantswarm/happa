@@ -32,7 +32,7 @@ class Home extends React.Component {
    * Load clusters list periodically
    */
   registerRefreshInterval = () => {
-    var refreshIntervalDuration = 30 * 1000; // 30 seconds
+    const refreshIntervalDuration = 30 * 1000; // 30 seconds
     this.refreshInterval = window.setInterval(
       this.refreshClustersList,
       refreshIntervalDuration
@@ -58,9 +58,10 @@ class Home extends React.Component {
   title() {
     if (this.props.selectedOrganization) {
       return `Cluster Overview | ${this.props.selectedOrganization}`;
-    } else {
-      return 'Cluster Overview';
-    }
+    } 
+      
+return 'Cluster Overview';
+    
   }
 
   /**
@@ -68,18 +69,18 @@ class Home extends React.Component {
    * cluster and/or status information.
    */
   lastUpdatedLabel = () => {
-    var maxTimestamp = 0;
+    let maxTimestamp = 0;
     this.props.clusters.forEach(cluster => {
       maxTimestamp = Math.max(maxTimestamp, cluster.lastUpdated);
     });
-    return moment(maxTimestamp).fromNow();
+    
+return moment(maxTimestamp).fromNow();
   };
 
   render() {
     return (
       <DocumentTitle title={this.title()}>
-        {
-          <div>
+        <div>
             {this.props.selectedOrganization ? (
               <div className='well launch-new-cluster'>
                 <Link
@@ -143,7 +144,6 @@ class Home extends React.Component {
               </p>
             ) : null}
           </div>
-        }
       </DocumentTitle>
     );
   }
@@ -161,14 +161,14 @@ Home.propTypes = {
 };
 
 function mapStateToProps(state) {
-  var selectedOrganization = state.app.selectedOrganization;
-  var organizations = state.entities.organizations.items;
-  var allClusters = state.entities.clusters.items;
-  var errorLoadingClusters = state.entities.clusters.errorLoading;
+  const selectedOrganization = state.app.selectedOrganization;
+  const organizations = state.entities.organizations.items;
+  const allClusters = state.entities.clusters.items;
+  const errorLoadingClusters = state.entities.clusters.errorLoading;
   const nodePoolsClusters = state.entities.clusters.nodePoolsClusters;
   const nodePools = state.entities.nodePools.items;
 
-  var clusters = [];
+  let clusters = [];
   if (selectedOrganization) {
     clusters = _.filter(allClusters, cluster => {
       return cluster.owner === selectedOrganization;

@@ -8,14 +8,14 @@ class AzureVMSizeSelector extends React.Component {
   constructor(props) {
     super(props);
 
-    var vmSizes = {};
+    let vmSizes = {};
     if (window.config.azureCapabilitiesJSON != '') {
       vmSizes = JSON.parse(window.config.azureCapabilitiesJSON);
     }
 
-    var availableVMSizes = [];
+    const availableVMSizes = [];
     // Create a list of only the allowed VM sizes.
-    props.allowedVMSizes.forEach(function(vs) {
+    props.allowedVMSizes.forEach((vs) => {
       if (typeof vmSizes[vs] === 'object') {
         availableVMSizes.push(vmSizes[vs]);
       }
@@ -53,9 +53,10 @@ class AzureVMSizeSelector extends React.Component {
   buttonClass() {
     if (this.props.readOnly) {
       return 'disabled';
-    } else {
-      return '';
-    }
+    } 
+      
+return '';
+    
   }
 
   preSelect(vmSize) {
@@ -73,10 +74,10 @@ class AzureVMSizeSelector extends React.Component {
   };
 
   validateVMSize = vmSize => {
-    var valid;
-    var validationError;
+    let valid;
+    let validationError;
 
-    var validVMSizes = this.state.vmSizes.map(x => {
+    const validVMSizes = this.state.vmSizes.map(x => {
       return x.name;
     });
 
@@ -118,8 +119,8 @@ class AzureVMSizeSelector extends React.Component {
 
             <div
               className={
-                'new-cluster--instance-type-selector-button ' +
-                this.buttonClass()
+                `new-cluster--instance-type-selector-button ${ 
+                this.buttonClass()}`
               }
               onClick={this.showModal}
             >

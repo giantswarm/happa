@@ -52,14 +52,14 @@ DetailIndex.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  var allClusters = state.entities.clusters.items;
-  var clusters = [];
+  const allClusters = state.entities.clusters.items;
+  let clusters = [];
 
   clusters = _.filter(allClusters, cluster => {
     return cluster.owner === ownProps.match.params.orgId;
   });
 
-  var membersForTable = state.entities.organizations.items[
+  const membersForTable = state.entities.organizations.items[
     ownProps.match.params.orgId
   ].members.map(member => {
     return Object.assign({}, member, {

@@ -1,8 +1,8 @@
 import * as forgotPasswordActions from 'actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
 import {
-  clearQueues,
   FlashMessage,
+  clearQueues,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
@@ -112,7 +112,7 @@ class SetPassword extends React.Component {
         return null;
       })
       .catch(error => {
-        var [heading, message] = parseErrorMessages(error);
+        const [heading, message] = parseErrorMessages(error);
 
         new FlashMessage(heading, messageType.ERROR, messageTTL.LONG, message);
       });
@@ -173,7 +173,7 @@ class SetPassword extends React.Component {
   };
 
   passwordEditingCompleted = password => {
-    var validationResult = validatePassword(password);
+    const validationResult = validatePassword(password);
 
     this.setState({
       statusMessage: validationResult.statusMessage,
@@ -186,8 +186,8 @@ class SetPassword extends React.Component {
   };
 
   passwordConfirmationEditingStarted = confirmation => {
-    var valid = false;
-    var statusMessage = this.state.statusMessage;
+    let valid = false;
+    let statusMessage = this.state.statusMessage;
 
     if (this.state.passwordField.valid) {
       if (this.state.passwordField.value === confirmation) {
@@ -207,8 +207,8 @@ class SetPassword extends React.Component {
   };
 
   passwordConfirmationEditingCompleted = confirmation => {
-    var valid = false;
-    var statusMessage = this.state.statusMessage;
+    let valid = false;
+    let statusMessage = this.state.statusMessage;
 
     if (this.state.passwordField.valid) {
       if (this.state.passwordField.value === confirmation) {
@@ -280,7 +280,7 @@ class SetPassword extends React.Component {
           <Link to='/login'>Back to login form</Link>
         </form>
       );
-    } else {
+    } 
       if (this.state.verifyingToken) {
         return (
           <div className='forgot-password--token-validating'>
@@ -289,8 +289,9 @@ class SetPassword extends React.Component {
             Validating your token...
           </div>
         );
-      } else {
-        return (
+      } 
+        
+return (
           <div>
             <div className='forgot-password--token-validating'>
               Something went wrong.
@@ -299,8 +300,8 @@ class SetPassword extends React.Component {
             <Link to='/forgot_password'>Request a new token</Link>
           </div>
         );
-      }
-    }
+      
+    
   };
 
   setEmailForm = () => {

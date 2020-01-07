@@ -78,10 +78,10 @@ class ClusterDetailView extends React.Component {
     } = this.props;
 
     if (typeof cluster === 'undefined') {
-      dispatch(push('/organizations/' + organizationId));
+      dispatch(push(`/organizations/${  organizationId}`));
 
       new FlashMessage(
-        'Cluster <code>' + clusterId + '</code> not found',
+        `Cluster <code>${  clusterId  }</code> not found`,
         messageType.ERROR,
         messageTTL.FOREVER,
         'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.'
@@ -137,9 +137,10 @@ class ClusterDetailView extends React.Component {
   clusterName() {
     if (this.props.cluster) {
       return this.props.cluster.name;
-    } else {
-      return 'Not found';
-    }
+    } 
+      
+return 'Not found';
+    
   }
 
   // Determine whether the current cluster can be upgraded
@@ -148,7 +149,7 @@ class ClusterDetailView extends React.Component {
     if (this.props.cluster.release_version === '') return false;
 
     // a target release to upgrade to must be defined
-    if (!!this.props.targetRelease !== true) {
+    if (Boolean(this.props.targetRelease) !== true) {
       return false;
     }
 
@@ -199,7 +200,8 @@ class ClusterDetailView extends React.Component {
     ) {
       return this.props.cluster.status.cluster.scaling.desiredCapacity;
     }
-    return 0; // if we return null no value is rendered in AWS v4 cluster view
+    
+return 0; // if we return null no value is rendered in AWS v4 cluster view
   }
 
   accessCluster = () => {

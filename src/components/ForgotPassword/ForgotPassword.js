@@ -1,8 +1,8 @@
 import * as forgotPasswordActions from 'actions/forgotPasswordActions';
 import { bindActionCreators } from 'redux';
 import {
-  clearQueues,
   FlashMessage,
+  clearQueues,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';

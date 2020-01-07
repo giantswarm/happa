@@ -77,7 +77,7 @@ class NodePool extends Component {
   render() {
     if (!this.props.nodePool) {
       return <img className='loader' src={spinner} />;
-    } else {
+    } 
       const { availableZonesGridTemplateAreas, cluster, nodePool } = this.props;
       const { id, scaling, availability_zones, status, node_spec } = nodePool;
       const { nodes_ready: current, nodes: desired } = status;
@@ -153,7 +153,7 @@ class NodePool extends Component {
           />
         </>
       );
-    }
+    
   }
 }
 

@@ -51,13 +51,15 @@ function RefreshableLabel({ children, value, style }) {
     if (prevValue && value !== prevValue) {
       setHasDataChanged(true);
     }
-    return setTimeout(() => setHasDataChanged(false), animationDuration * 1000);
+    
+return setTimeout(() => setHasDataChanged(false), animationDuration * 1000);
   };
 
   useEffect(() => {
     const timer = compareData();
-    return () => clearTimeout(timer);
-  }, [value]);
+    
+return () => clearTimeout(timer);
+  }, [compareData, value]);
 
   return (
     <Wrapper className={hasDataChanged && 'changed'} style={style}>

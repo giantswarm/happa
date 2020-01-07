@@ -39,11 +39,11 @@ class ReleaseDetailsModal extends React.Component {
           <BootstrapModal.Body>
             {this.props.releases.map(release => {
               // group changes by component
-              let changes = _.groupBy(release.changelog, item => {
+              const changes = _.groupBy(release.changelog, item => {
                 return item.component;
               });
 
-              let changedComponents = Object.keys(changes).sort();
+              const changedComponents = Object.keys(changes).sort();
 
               return (
                 <div
@@ -111,13 +111,14 @@ class ReleaseDetailsModal extends React.Component {
           </BootstrapModal.Footer>
         </BootstrapModal>
       );
-    } else {
-      return (
+    } 
+      
+return (
         <p style={{ color: theme.colors.error, fontWeight: 400 }}>
           No releases found.
         </p>
       );
-    }
+    
   }
 }
 

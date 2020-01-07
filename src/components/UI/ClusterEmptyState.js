@@ -58,8 +58,9 @@ class ClusterEmptyState extends React.Component {
                   </p>
                 </>
               );
-            } else {
-              return (
+            } 
+              
+return (
                 <>
                   <h1>
                     Couldn&apos;t find any clusters in organization{' '}
@@ -75,7 +76,7 @@ class ClusterEmptyState extends React.Component {
                   </p>
                 </>
               );
-            }
+            
           })()}
         </Inner>
       </Wrapper>
