@@ -1,6 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import GiantSwarm from 'giantswarm';
+import { StatusCodes } from 'shared/constants';
 
 /**
  * updateAppConfig updates an appConfig
@@ -17,7 +18,7 @@ export function updateAppConfig(appName, clusterID, values) {
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
       .modifyClusterAppConfig(clusterID, appName, {
@@ -43,13 +44,13 @@ export function updateAppConfig(appName, clusterID, values) {
           appName,
         });
 
-        if (error.status === 404) {
+        if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
             `Could not find an app or app config to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
-        } else if (error.status === 400) {
+        } else if (error.status === StatusCodes.BadRequest) {
           new FlashMessage(
             `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
             messageType.ERROR,
@@ -81,7 +82,7 @@ export function createAppConfig(appName, clusterID, values) {
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
       .createClusterAppConfig(clusterID, appName, {
@@ -107,13 +108,13 @@ export function createAppConfig(appName, clusterID, values) {
           appName,
         });
 
-        if (error.status === 404) {
+        if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
             `Could not find an app to create a ConfigMap for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
-        } else if (error.status === 400) {
+        } else if (error.status === StatusCodes.BadRequest) {
           new FlashMessage(
             `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
             messageType.ERROR,
@@ -144,7 +145,7 @@ export function deleteAppConfig(appName, clusterID) {
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
     return appConfigsApi
       .deleteClusterAppConfig(clusterID, appName)
@@ -168,13 +169,13 @@ export function deleteAppConfig(appName, clusterID) {
           appName,
         });
 
-        if (error.status === 404) {
+        if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
             `Could not find ConfigMap for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
-        } else if (error.status === 400) {
+        } else if (error.status === StatusCodes.BadRequest) {
           new FlashMessage(
             `The request appears to be invalid. Please try again later or contact support: support@giantswarm.io.`,
             messageType.ERROR,

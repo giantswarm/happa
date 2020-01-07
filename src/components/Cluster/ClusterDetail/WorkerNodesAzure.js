@@ -30,7 +30,7 @@ function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
   return (
     <WrapperDiv>
       <LineDiv>
-        <div>Instance type</div>
+        <div>VM size</div>
         <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
           {instanceType && instanceType.name}
         </Code>
@@ -44,7 +44,7 @@ function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
           <RefreshableLabel value={nodes} style={{ marginRight: '25px' }}>
             {nodes}
           </RefreshableLabel>
-        )}
+        )}{' '}
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>

@@ -1,39 +1,47 @@
 import * as types from './actionTypes';
 import GiantSwarm from 'giantswarm';
+import { StatusCodes } from 'shared/constants';
 import yaml from 'js-yaml';
 
 // loadCatalog takes a catalog object and tries to load further data.
 function loadCatalogIndex(catalog) {
-  return fetch(catalog.spec.storage.URL + 'index.yaml', { mode: 'cors' })
+  return fetch(`${catalog.spec.storage.URL}index.yaml`, { mode: 'cors' })
     .catch(() => {
+      // eslint-disable-next-line no-console
       console.error(
         `Fetch error for ${catalog.spec.storage.URL}, attempting with cors anywhere.`
       );
+
       return fetch(
-        'https://cors-anywhere.herokuapp.com/' +
-          catalog.spec.storage.URL +
-          'index.yaml',
+        `https://cors-anywhere.herokuapp.com/${catalog.spec.storage.URL}index.yaml`,
         { mode: 'cors' }
       );
     })
     .catch(error => {
+      // eslint-disable-next-line no-console
       console.error('Fetch error: ', error);
       throw error;
     })
     .then(response => {
-      if (response.status === 200) {
+      // eslint-disable-next-line no-magic-numbers
+      if (response.status === StatusCodes.Ok) {
         return response.text();
-      } else {
-        throw `Could not fetch index.yaml at ${catalog.spec.storage.URL}`;
       }
+
+      throw new Error(
+        `Could not fetch index.yaml at ${catalog.spec.storage.URL}`
+      );
     })
     .then(body => {
-      let rawCatalog = yaml.safeLoad(body);
+      const rawCatalog = yaml.safeLoad(body);
       catalog.apps = rawCatalog.entries;
+
       return catalog;
     })
     .catch(error => {
+      // eslint-disable-next-line no-console
       console.error('YAML error: ', error);
+
       throw error;
     });
 }
@@ -48,7 +56,7 @@ export function catalogsLoad() {
   return function(dispatch) {
     dispatch({ type: types.CATALOGS_LOAD });
 
-    var appsApi = new GiantSwarm.AppsApi();
+    const appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
       .getAppCatalogs()
@@ -79,6 +87,7 @@ export function catalogsLoad() {
         return catalogsDict;
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error(error);
 
         dispatch({
@@ -107,12 +116,15 @@ export function catalogLoadIndex(catalog) {
       })
 
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error(error);
+
         dispatch({
           type: types.CATALOG_LOAD_INDEX_ERROR,
           error: error,
           catalogName: catalog.metadata.name,
         });
+
         throw error;
       });
   };
