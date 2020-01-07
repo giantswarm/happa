@@ -280,19 +280,23 @@ class CreateNodePoolsCluster extends Component {
       np => np.data
     );
 
+    const createPayload = {
+      owner: this.props.selectedOrganization,
+      name: this.state.name.value,
+      release_version: this.props.selectedRelease,
+    };
+
+    if (this.state.hasAZLabels) {
+      // TODO: don't use array here as long as there can be only one master node.
+      createPayload.master = {
+        availability_zone: this.state.availabilityZonesLabels.zonesArray[0],
+      };
+    }
+
     try {
       const newCluster = await this.props.dispatch(
         clusterCreate(
-          {
-            owner: this.props.selectedOrganization,
-            name: this.state.name.value,
-            release_version: this.props.selectedRelease,
-            master: {
-              availabilityZone: this.state.hasAZLabels
-                ? this.state.availabilityZonesLabels.zonesArray
-                : this.state.availabilityZonesRandom.value,
-            },
-          },
+          createPayload,
           true // is v5
         )
       );
