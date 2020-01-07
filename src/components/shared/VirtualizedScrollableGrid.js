@@ -124,12 +124,12 @@ class VirtualizedScrollableGrid extends React.PureComponent {
       const currentBreakpointResolution = theme.breakpoints[breakpoint];
 
       return (
-        currentBreakpointResolution !== undefined &&
+        typeof currentBreakpointResolution !== 'undefined' &&
         windowWidth < currentBreakpointResolution
       );
     });
 
-    if (currentColumn === undefined) return null;
+    if (typeof currentColumn === 'undefined') return null;
 
     return columnCountObj[currentColumn];
   }

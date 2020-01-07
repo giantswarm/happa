@@ -76,7 +76,7 @@ function RegionAndVersions({
           )}
           {!release &&
             k8sVersion !== '' &&
-            k8sVersion !== undefined &&
+            typeof k8sVersion !== 'undefined' &&
             <i className='fa fa-kubernetes' /> + k8sVersion}
         </ReleaseDetail>
       </div>

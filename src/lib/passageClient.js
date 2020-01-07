@@ -1,5 +1,5 @@
-var request = require('superagent-bluebird-promise');
-var helpers = require('./helpers');
+const request = require('superagent-bluebird-promise');
+const helpers = require('./helpers');
 
 //
 // Passage
@@ -13,8 +13,8 @@ var helpers = require('./helpers');
 // Example Usage:
 // var passage = new Passage({endpoint: 'http://localhost:5000'})
 //
-var Passage = function(config) {
-  var constraints = {
+const Passage = function(config) {
+  let constraints = {
     endpoint: {
       presence: true,
       url: {
@@ -25,7 +25,7 @@ var Passage = function(config) {
 
   helpers.validateOrRaise(config, constraints);
 
-  if (config.timeout_ms === undefined) {
+  if (typeof config.timeout_ms === 'undefined') {
     config.timeout_ms = 10000;
   }
 
@@ -37,21 +37,20 @@ var Passage = function(config) {
     // params: {token: 'abcdef'}
     //
     checkInvite: function(params) {
-      var constraints = {
+      constraints = {
         token: { presence: true },
       };
 
-      var url = `${config.endpoint}/invite/${params.token}`;
+      const url = `${config.endpoint}/invite/${params.token}`;
 
-      var promise = new Promise(resolve => {
+      const promise = new Promise(resolve => {
         helpers.validateOrRaise(params, constraints);
         resolve(request.get(url).timeout(config.timeout_ms));
       }).then(x => {
         if (x.body.is_valid) {
           return x.body;
-        } else {
-          throw Error('InvalidToken');
         }
+        throw Error('InvalidToken');
       });
 
       return promise;
@@ -64,21 +63,21 @@ var Passage = function(config) {
     // params: {inviteToken: 'abcdef', password: 'uvwxyz'}
     //
     createAccount: function(params) {
-      var constraints = {
+      constraints = {
         inviteToken: { presence: true },
         password: { presence: true },
       };
 
-      var url = `${config.endpoint}/accounts/`;
+      const url = `${config.endpoint}/accounts/`;
 
       // Passage is not expecting camelcase in its json body
       // Converting it here.
-      var payload = {
+      const payload = {
         invite_token: params.inviteToken,
         password: params.password,
       };
 
-      var promise = new Promise(resolve => {
+      const promise = new Promise(resolve => {
         helpers.validateOrRaise(params, constraints);
         resolve(
           request
@@ -101,17 +100,17 @@ var Passage = function(config) {
     // params: {email: 'some_valid_email@example.com'}
     //
     requestPasswordRecoveryToken: function(params) {
-      var constraints = {
+      constraints = {
         email: { presence: true, email: true },
       };
 
-      var url = `${config.endpoint}/recovery/`;
+      const url = `${config.endpoint}/recovery/`;
 
-      var payload = {
+      const payload = {
         email: params.email,
       };
 
-      var promise = new Promise(resolve => {
+      const promise = new Promise(resolve => {
         helpers.validateOrRaise(params, constraints);
         resolve(
           request
@@ -137,18 +136,18 @@ var Passage = function(config) {
     // params: {email: 'some_valid_email@example.com', token: '123456abcdefg'}
     //
     verifyPasswordRecoveryToken: function(params) {
-      var constraints = {
+      constraints = {
         email: { presence: true, email: true },
         token: { presence: true },
       };
 
-      var url = `${config.endpoint}/recovery/${params.token}/`;
+      const url = `${config.endpoint}/recovery/${params.token}/`;
 
-      var payload = {
+      const payload = {
         email: params.email,
       };
 
-      var promise = new Promise(resolve => {
+      const promise = new Promise(resolve => {
         helpers.validateOrRaise(params, constraints);
         resolve(
           request
@@ -160,9 +159,8 @@ var Passage = function(config) {
       }).then(x => {
         if (x.body.is_valid) {
           return x.body;
-        } else {
-          throw new Error('Invalid Token');
         }
+        throw new Error('Invalid Token');
       });
 
       return promise;
@@ -178,20 +176,20 @@ var Passage = function(config) {
     // params: {email: 'some_valid_email@example.com', token: '123456abcdefg', password: 'users_new_password'}
     //
     setNewPassword: function(params) {
-      var constraints = {
+      constraints = {
         email: { presence: true, email: true },
         token: { presence: true },
         password: { presence: true },
       };
 
-      var url = `${config.endpoint}/recovery/${params.token}/password/`;
+      const url = `${config.endpoint}/recovery/${params.token}/password/`;
 
-      var payload = {
+      const payload = {
         email: params.email,
         password: params.password,
       };
 
-      var promise = new Promise(resolve => {
+      const promise = new Promise(resolve => {
         helpers.validateOrRaise(params, constraints);
         resolve(
           request
@@ -214,15 +212,15 @@ var Passage = function(config) {
     // Requires a valid admin JWT token.
     //
     getInvitations: function(authToken) {
-      var url = `${config.endpoint}/invites/`;
+      const url = `${config.endpoint}/invites/`;
 
-      var promise = new Promise(resolve => {
+      const promise = new Promise(resolve => {
         resolve(
           request
             .get(url)
             .timeout(config.timeout_ms)
             .set('ContentType', 'application/json')
-            .set('Authorization', 'Bearer ' + authToken)
+            .set('Authorization', `Bearer ${authToken}`)
         );
       }).then(x => {
         return x.body;
@@ -246,21 +244,21 @@ var Passage = function(config) {
     // }
     //
     createInvitation: function(authToken, invitation) {
-      var url = `${config.endpoint}/invite/`;
+      const url = `${config.endpoint}/invite/`;
 
-      var constraints = {
+      constraints = {
         email: { presence: true, email: true },
         organizations: { presence: { allowEmpty: false } },
         sendEmail: { presence: true },
       };
 
-      var payload = {
+      const payload = {
         email: invitation.email,
         organizations: invitation.organizations,
         send_email: invitation.sendEmail,
       };
 
-      var promise = new Promise(resolve => {
+      const promise = new Promise(resolve => {
         helpers.validateOrRaise(invitation, constraints);
         resolve(
           request
@@ -268,7 +266,7 @@ var Passage = function(config) {
             .timeout(config.timeout_ms)
             .send(payload)
             .set('ContentType', 'application/json')
-            .set('Authorization', 'Bearer ' + authToken)
+            .set('Authorization', `Bearer ${authToken}`)
         );
       }).then(x => {
         return x.body;

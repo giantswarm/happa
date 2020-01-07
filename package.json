@@ -16,6 +16,7 @@
     "test:clean-cache": "yarn test --clearCache",
     "test:coverage": "yarn test --collect-coverage",
     "format": "./node_modules/.bin/prettier \"src/**/*.js\"",
+    "format:staged": "pretty-quick --staged --pattern ./src/**/*.js",
     "prettier": "yarn format --write",
     "validate-prettier": "yarn format --version; yarn format --no-color --check"
   },
@@ -138,7 +139,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged --pattern ./src/**/*.js"
+      "pre-commit": "yarn lint:fix && yarn format:staged"
     }
   }
 }

@@ -1,24 +1,23 @@
 import 'babel-polyfill';
 import { ConnectedRouter } from 'connected-react-router';
-import { hot } from 'react-hot-loader';
 import { Notifier } from '@airbrake/browser';
 import { Provider } from 'react-redux';
-import { render } from 'react-dom';
+import React from 'react';
 import { Requester } from 'lib/patchedAirbrakeRequester';
+import Routes from './Routes';
 import { ThemeProvider } from 'emotion-theming';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
+import { hot } from 'react-hot-loader';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
-import React from 'react';
-import Routes from './Routes';
+import { render } from 'react-dom';
 import theme from 'styles/theme';
 
 // CSS Imports
 // Keep the blank lines to allow for a certain ordering!
+// eslint-disable-next-line sort-imports
 import 'normalize.css';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import 'noty/lib/noty.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/app.sass';
@@ -55,7 +54,7 @@ if (window.config.environment !== 'development') {
   // _requester attributes since the constructor does not allow us to edit the
   // url or the headers used during the request easily. We need to set headers so
   // that we can authenticate against our API endpoint.
-  airbrake._url = window.config.apiEndpoint + '/v5/exception-notifications/';
+  airbrake._url = `${window.config.apiEndpoint}/v5/exception-notifications/`;
   airbrake._requester = new Requester(store).request;
 }
 
