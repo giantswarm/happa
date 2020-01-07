@@ -1,6 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import GiantSwarm from 'giantswarm';
+import { StatusCodes } from 'shared/constants';
 
 /**
  * updateAppConfig updates an appConfig
@@ -43,15 +44,13 @@ export function updateAppConfig(appName, clusterID, values) {
           appName,
         });
 
-        // eslint-disable-next-line no-magic-numbers
-        if (error.status === 404) {
+        if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
             `Could not find an app or app config to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
-          // eslint-disable-next-line no-magic-numbers
-        } else if (error.status === 400) {
+        } else if (error.status === StatusCodes.BadRequest) {
           new FlashMessage(
             `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
             messageType.ERROR,
@@ -109,15 +108,13 @@ export function createAppConfig(appName, clusterID, values) {
           appName,
         });
 
-        // eslint-disable-next-line no-magic-numbers
-        if (error.status === 404) {
+        if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
             `Could not find an app to create a ConfigMap for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
-          // eslint-disable-next-line no-magic-numbers
-        } else if (error.status === 400) {
+        } else if (error.status === StatusCodes.BadRequest) {
           new FlashMessage(
             `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
             messageType.ERROR,
@@ -172,15 +169,13 @@ export function deleteAppConfig(appName, clusterID) {
           appName,
         });
 
-        // eslint-disable-next-line no-magic-numbers
-        if (error.status === 404) {
+        if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
             `Could not find ConfigMap for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
-          // eslint-disable-next-line no-magic-numbers
-        } else if (error.status === 400) {
+        } else if (error.status === StatusCodes.BadRequest) {
           new FlashMessage(
             `The request appears to be invalid. Please try again later or contact support: support@giantswarm.io.`,
             messageType.ERROR,
