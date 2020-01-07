@@ -93,11 +93,15 @@ export function installApp(app, clusterID) {
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterID);
 
-    let createAppConfiguration = appConfigsApi.createClusterAppConfigV4.bind(appConfigsApi);
+    let createAppConfiguration = appConfigsApi.createClusterAppConfigV4.bind(
+      appConfigsApi
+    );
     let createApp = appConfigsApi.createClusterAppConfigV4.bind(appsApi);
 
     if (isNodePoolsCluster) {
-      createAppConfiguration = appConfigsApi.createClusterAppConfigV5.bind(appConfigsApi);
+      createAppConfiguration = appConfigsApi.createClusterAppConfigV5.bind(
+        appConfigsApi
+      );
       createApp = appsApi.createClusterAppV5.bind(appsApi);
     }
 
