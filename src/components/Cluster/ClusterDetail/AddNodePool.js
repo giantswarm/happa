@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
-import { Providers } from 'shared/constants';
+import { Providers, Constants } from 'shared/constants';
 import { RadioWrapper } from '../NewCluster/CreateNodePoolsCluster';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
 import AWSInstanceTypeSelector from '../NewCluster/AWSInstanceTypeSelector';
@@ -520,7 +520,7 @@ AddNodePool.propTypes = {
 };
 
 AddNodePool.defaultProps = {
-  name: 'My node pool',
+  name: Constants.DEFAULT_NODEPOOL_NAME,
 };
 
 function mapStateToProps(state) {
