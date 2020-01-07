@@ -9,7 +9,7 @@ import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
 import { Input } from 'styles';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
-import { Providers } from 'shared/constants';
+import { Providers, Constants } from 'shared/constants';
 import { push } from 'connected-react-router';
 import { TransitionGroup } from 'react-transition-group';
 import AddNodePool from '../ClusterDetail/AddNodePool';
@@ -181,7 +181,9 @@ const NodePoolHeading = styled.div`
   word-break: break-all;
 `;
 
-const defaultNodePool = id => ({ data: { name: `Node Pool #${id}` } });
+const defaultNodePool = () => ({
+  data: { name: Constants.DEFAULT_NODEPOOL_NAME },
+});
 
 class CreateNodePoolsCluster extends Component {
   state = {
