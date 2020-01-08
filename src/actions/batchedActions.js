@@ -1,14 +1,12 @@
-import { push } from 'connected-react-router';
-
-// actions
 import * as appActions from './appActions';
-import * as clusterActions from './clusterActions';
 import * as catalogActions from './catalogActions';
+import * as clusterActions from './clusterActions';
 import * as modalActions from './modalActions';
 import * as nodePoolActions from './nodePoolActions';
 import * as organizationActions from './organizationActions';
 import * as releaseActions from './releaseActions';
 import * as userActions from './userActions';
+import { push } from 'connected-react-router';
 
 export const batchedLayout = () => async dispatch => {
   try {
@@ -29,6 +27,7 @@ export const batchedRefreshClusters = () => async dispatch => {
     await dispatch(clusterActions.clustersList({ withLoadingFlags: false }));
     dispatch(clusterActions.clustersDetails({ withLoadingFlags: false }));
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Error in batchedRefreshClusters', err);
   }
 };
@@ -60,6 +59,7 @@ export const batchedClusterCreate = (
 
     dispatch(push(`/organizations/${owner}/clusters/${clusterId}`));
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Error in batchedCreateCluster', err);
   }
 };
@@ -82,6 +82,7 @@ export const batchedClusterDetailView = (
       await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId));
     }
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Error in batchedClusterDetailView', err);
   }
 };
@@ -94,6 +95,7 @@ export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
     // ensure refreshing of the clusters list
     await dispatch(clusterActions.clustersList({ withLoadingFlags: false }));
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Error in batchedClusterDeleteConfirmed', err);
   }
 };

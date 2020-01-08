@@ -4,13 +4,13 @@ import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import credentials from './credentialReducer';
 import invitations from './invitationReducer';
+import loadingFlags from './loadingReducer';
 import makeAppReducer from './appReducer';
 import modal from './modalReducer';
 import nodePools from './nodePoolsReducer';
 import organizations from './organizationReducer';
 import releases from './releaseReducer';
 import users from './userReducer';
-import loadingFlags from './loadingReducer';
 
 const entities = combineReducers({
   catalogs,

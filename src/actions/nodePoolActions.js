@@ -137,6 +137,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
 
         // eslint-disable-next-line no-console
         console.error(error);
+
         // eslint-disable-next-line no-use-before-define
         return dispatch(nodePoolDeleteError(nodePool.id, error));
       });

@@ -219,6 +219,7 @@ function clusterLoadStatusV4(dispatch, clusterId) {
     .catch(error => {
       // TODO: Find a better way to deal with status endpoint errors in dev:
       // https://github.com/giantswarm/giantswarm/issues/6757
+      // eslint-disable-next-line no-console
       console.error(error);
       if (error.status === StatusCodes.NotFound) {
         // eslint-disable-next-line no-use-before-define
