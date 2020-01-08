@@ -33,4 +33,8 @@ export const postMockCall = (endpoint, response = []) =>
   nock(API_ENDPOINT)
     .post(endpoint)
     .reply(200, response);
+
+// https://gist.github.com/6174/6062387#gistcomment-2651745
+export const generateRandomString = (length = 8) =>
+  Array.from({ length }, () => (~~(Math.random() * 36)).toString(36)).join('');
 /* eslint-enable no-magic-numbers */
