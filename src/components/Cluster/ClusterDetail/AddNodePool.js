@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { css } from '@emotion/core';
 import { hasAppropriateLength } from 'lib/helpers';
-import { Providers } from 'shared/constants';
+import { Providers, Constants } from 'shared/constants';
 import { RadioWrapper } from '../NewCluster/CreateNodePoolsCluster';
 import AvailabilityZonesParser from './AvailabilityZonesParser';
 import AWSInstanceTypeSelector from '../NewCluster/AWSInstanceTypeSelector';
@@ -318,16 +318,16 @@ class AddNodePool extends Component {
 
     return (
       <>
-        <label htmlFor='name'>
+        <label htmlFor='node-pool-name'>
           <span className='label-span'>Name</span>
           <div className='name-container'>
             <input
               value={name.value}
               onChange={this.updateName}
-              id='name'
+              id='node-pool-name'
               type='text'
               placeholder={name.value === '' ? 'Unnamed node pool' : null}
-            ></input>
+            />
             <ValidationErrorMessage message={name.validationError} />
           </div>
           <p>
@@ -520,7 +520,7 @@ AddNodePool.propTypes = {
 };
 
 AddNodePool.defaultProps = {
-  name: 'My node pool',
+  name: Constants.DEFAULT_NODEPOOL_NAME,
 };
 
 function mapStateToProps(state) {

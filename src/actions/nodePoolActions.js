@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { modalHide } from './modalActions';
 import GiantSwarm from 'giantswarm';
+import { modalHide } from './modalActions';
 
 // API instantiations.
 const nodePoolsApi = new GiantSwarm.NodePoolsApi();
@@ -25,10 +25,13 @@ export function clusterNodePoolsLoad(clusterId) {
           nodePools: nodePoolsArray, // nodePools
           nodePoolsIds: nodePoolsArray.map(np => np.id), // array of ids to store in cluster
         });
+
         return nodePoolsArray;
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error loading cluster node pools:', error);
+
         dispatch({
           type: types.CLUSTER_NODEPOOLS_LOAD_ERROR,
           error,
@@ -69,11 +72,14 @@ export function nodePoolsLoad() {
  */
 export function nodePoolPatch(clusterId, nodePool, payload) {
   return function(dispatch) {
+    // eslint-disable-next-line no-use-before-define
     dispatch(nodePoolPatchAction(nodePool, payload));
+
     return nodePoolsApi
       .modifyNodePool(clusterId, nodePool.id, payload)
       .catch(error => {
         // Undo update to store if the API call fails.
+        // eslint-disable-next-line no-use-before-define
         dispatch(nodePoolPatchError(error, nodePool));
 
         new FlashMessage(
@@ -83,7 +89,9 @@ export function nodePoolPatch(clusterId, nodePool, payload) {
           'Please try again later or contact support: support@giantswarm.io'
         );
 
+        // eslint-disable-next-line no-console
         console.error(error);
+
         throw error;
       });
   };
@@ -106,12 +114,13 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
     return nodePoolsApi
       .deleteNodePool(clusterId, nodePool.id)
       .then(() => {
+        // eslint-disable-next-line no-use-before-define
         dispatch(nodePoolDeleteSuccess(nodePool.id, clusterId));
 
         dispatch(modalHide());
 
         new FlashMessage(
-          'Node Pool <code>' + nodePool.id + '</code> will be deleted',
+          `Node Pool <code>${nodePool.id}</code> will be deleted`,
           messageType.INFO,
           messageTTL.SHORT
         );
@@ -120,15 +129,15 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
         dispatch(modalHide());
 
         new FlashMessage(
-          'An error occurred when trying to delete node pool <code>' +
-            nodePool.id +
-            '</code>.',
+          `An error occurred when trying to delete node pool <code>${nodePool.id}</code>.`,
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
         );
 
+        // eslint-disable-next-line no-console
         console.error(error);
+        // eslint-disable-next-line no-use-before-define
         return dispatch(nodePoolDeleteError(nodePool.id, error));
       });
   };
@@ -168,6 +177,7 @@ export function nodePoolsCreate(clusterId, nodePools) {
               messageType.SUCCESS,
               messageTTL.MEDIUM
             );
+
             return nodePoolWithStatus;
           })
           .catch(error => {
@@ -185,7 +195,9 @@ export function nodePoolsCreate(clusterId, nodePools) {
               'Please try again later or contact support: support@giantswarm.io'
             );
 
+            // eslint-disable-next-line no-console
             console.error(error);
+
             throw error;
           });
       })
@@ -193,6 +205,7 @@ export function nodePoolsCreate(clusterId, nodePools) {
 
     // Dispatch action for populating nodePools key inside clusters
     dispatch(nodePoolsLoad());
+
     return allNodePools;
   };
 }

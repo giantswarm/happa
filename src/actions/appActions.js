@@ -1,6 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import GiantSwarm from 'giantswarm';
+import { StatusCodes } from 'shared/constants';
 
 // selectCluster stores a clusterID in the state.
 export function selectCluster(clusterID) {
@@ -19,11 +20,10 @@ export function loadApps(clusterId) {
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
 
-    let getClusterAppsFunc;
+    let getClusterApps = appsApi.getClusterAppsV4.bind(appsApi);
+
     if (isNodePoolsCluster) {
-      getClusterAppsFunc = appsApi.getClusterAppsV5.bind(appsApi);
-    } else {
-      getClusterAppsFunc = appsApi.getClusterAppsV4.bind(appsApi);
+      getClusterApps = appsApi.getClusterAppsV5.bind(appsApi);
     }
 
     dispatch({
@@ -31,7 +31,7 @@ export function loadApps(clusterId) {
       clusterId,
     });
 
-    return getClusterAppsFunc(clusterId)
+    return getClusterApps(clusterId)
       .then(apps => {
         // For some reason the array that we get back from the generated js client is an
         // array-like structure, so I make a new one here.
@@ -47,7 +47,9 @@ export function loadApps(clusterId) {
         return apps;
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error loading cluster apps:', error);
+
         dispatch({
           type: types.CLUSTER_LOAD_APPS_ERROR,
           clusterId,
@@ -92,25 +94,23 @@ export function installApp(app, clusterID) {
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterID);
 
-    let createAppConfigurationFunc;
-    let createAppFunc;
+    let createAppConfiguration = appConfigsApi.createClusterAppConfigV4.bind(
+      appConfigsApi
+    );
+    let createApp = appsApi.createClusterAppV4.bind(appsApi);
+
     if (isNodePoolsCluster) {
-      createAppConfigurationFunc = appConfigsApi.createClusterAppConfigV5.bind(
+      createAppConfiguration = appConfigsApi.createClusterAppConfigV5.bind(
         appConfigsApi
       );
-      createAppFunc = appsApi.createClusterAppV5.bind(appsApi);
-    } else {
-      createAppConfigurationFunc = appConfigsApi.createClusterAppConfigV4.bind(
-        appConfigsApi
-      );
-      createAppFunc = appsApi.createClusterAppV4.bind(appsApi);
+      createApp = appsApi.createClusterAppV5.bind(appsApi);
     }
 
-    var optionalCreateAppConfiguration = new Promise((resolve, reject) => {
+    const optionalCreateAppConfiguration = new Promise((resolve, reject) => {
       if (Object.keys(app.valuesYAML).length !== 0) {
         // If we have user config that we want to create, then
         // fire off the call to create it.
-        createAppConfigurationFunc(clusterID, app.name, {
+        createAppConfiguration(clusterID, app.name, {
           body: app.valuesYAML,
         })
           .then(() => {
@@ -118,13 +118,13 @@ export function installApp(app, clusterID) {
             resolve();
           })
           .catch(error => {
-            if (error.status === 409) {
+            if (error.status === StatusCodes.Conflict) {
               new FlashMessage(
                 `The ConfigMap for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
                 messageType.ERROR,
                 messageTTL.LONG
               );
-            } else if (error.status === 400) {
+            } else if (error.status === StatusCodes.BadRequest) {
               new FlashMessage(
                 `Your ConfigMap appears to be invalid. Please make sure all fields are filled in correctly.`,
                 messageType.ERROR,
@@ -148,7 +148,7 @@ export function installApp(app, clusterID) {
 
     return optionalCreateAppConfiguration
       .then(() => {
-        return createAppFunc(clusterID, app.name, {
+        return createApp(clusterID, app.name, {
           body: {
             spec: {
               catalog: app.catalog,
@@ -158,13 +158,13 @@ export function installApp(app, clusterID) {
             },
           },
         }).catch(error => {
-          if (error.status === 409) {
+          if (error.status === StatusCodes.Conflict) {
             new FlashMessage(
               `An app called <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
               messageType.ERROR,
               messageTTL.LONG
             );
-          } else if (error.status === 400) {
+          } else if (error.status === StatusCodes.BadRequest) {
             new FlashMessage(
               `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
               messageType.ERROR,
@@ -226,14 +226,13 @@ export function deleteApp(appName, clusterID) {
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterID);
 
-    let deleteAppFunc;
+    let removeApp = appsApi.deleteClusterAppV4.bind(appsApi);
+
     if (isNodePoolsCluster) {
-      deleteAppFunc = appsApi.deleteClusterAppV5.bind(appsApi);
-    } else {
-      deleteAppFunc = appsApi.deleteClusterAppV4.bind(appsApi);
+      removeApp = appsApi.deleteClusterAppV5.bind(appsApi);
     }
 
-    return deleteAppFunc(clusterID, appName)
+    return removeApp(clusterID, appName)
       .then(() => {
         new FlashMessage(
           `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,

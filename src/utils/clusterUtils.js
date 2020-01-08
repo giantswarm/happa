@@ -14,14 +14,17 @@ export function getNumberOfNodes(cluster) {
   const nodes = cluster.status.cluster.nodes;
 
   let workers = nodes.reduce((accumulator, node) => {
+    let newAccumulator = accumulator;
+
     if (
       node.labels &&
-      node.labels['role'] !== 'master' &&
+      node.labels.role !== 'master' &&
       node.labels['kubernetes.io/role'] !== 'master'
     ) {
-      accumulator++;
+      newAccumulator++;
     }
-    return accumulator;
+
+    return newAccumulator;
   }, 0);
 
   if (workers === 0) {
@@ -34,29 +37,32 @@ export function getNumberOfNodes(cluster) {
 }
 
 export function getMemoryTotal(cluster) {
-  var workers = getNumberOfNodes(cluster);
+  const workers = getNumberOfNodes(cluster);
 
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null; // TODO refactor this and return 0 instead, this is a function that should return a total
   }
-  var m = workers * cluster.workers[0].memory.size_gb;
+  const m = workers * cluster.workers[0].memory.size_gb;
+
   return m.toFixed(2);
 }
 
 export function getStorageTotal(cluster) {
-  var workers = getNumberOfNodes(cluster);
+  const workers = getNumberOfNodes(cluster);
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null;
   }
-  var s = workers * cluster.workers[0].storage.size_gb;
+  const s = workers * cluster.workers[0].storage.size_gb;
+
   return s.toFixed(2);
 }
 
 export function getCpusTotal(cluster) {
-  var workers = getNumberOfNodes(cluster);
+  const workers = getNumberOfNodes(cluster);
   if (!workers || !cluster.workers || cluster.workers.length === 0) {
     return null; // TODO refactor this and return 0 instead, this is a function that should return a total
   }
+
   return workers * cluster.workers[0].cpu.cores;
 }
 
@@ -71,7 +77,7 @@ export function getNumberOfNodePoolsNodes(nodePools = []) {
 
 export function getMemoryTotalNodePools(nodePools = []) {
   if (!window.config.awsCapabilitiesJSON || nodePools.length === 0) {
-    return;
+    return 0;
   }
 
   const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
@@ -84,6 +90,7 @@ export function getMemoryTotalNodePools(nodePools = []) {
   const TotalRAM = nodePools.reduce((accumulator, nodePool) => {
     const instanceTypeRAM =
       awsInstanceTypes[nodePool.node_spec.aws.instance_type].memory_size_gb;
+
     return accumulator + instanceTypeRAM * nodePool.status.nodes_ready;
   }, 0);
 
@@ -92,7 +99,7 @@ export function getMemoryTotalNodePools(nodePools = []) {
 
 export function getCpusTotalNodePools(nodePools = []) {
   if (!window.config.awsCapabilitiesJSON || nodePools.length === 0) {
-    return;
+    return 0;
   }
 
   const awsInstanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
@@ -105,6 +112,7 @@ export function getCpusTotalNodePools(nodePools = []) {
   const TotalCPUs = nodePools.reduce((accumulator, nodePool) => {
     const instanceTypeCPUs =
       awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
+
     return accumulator + instanceTypeCPUs * nodePool.status.nodes_ready;
   }, 0);
 
@@ -122,4 +130,6 @@ export const clusterNodePools = (nodePools, cluster) => {
   ) {
     return cluster.nodePools.map(np => nodePools[np]);
   }
+
+  return [];
 };

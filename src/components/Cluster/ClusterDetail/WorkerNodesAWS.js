@@ -28,9 +28,9 @@ function WorkerNodesAWS({
 
   // TODO remove after checks
   const workerNodesDesiredText =
-    workerNodesDesired !== undefined ? workerNodesDesired : 0;
+    typeof workerNodesDesired !== 'undefined' ? workerNodesDesired : 0;
   const workerNodesRunningText =
-    workerNodesRunning !== undefined ? workerNodesRunning : 0;
+    typeof workerNodesRunning !== 'undefined' ? workerNodesRunning : 0;
 
   return (
     <WrapperDiv>

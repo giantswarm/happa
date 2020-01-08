@@ -64,7 +64,7 @@ class UpgradeClusterModal extends React.Component {
 
     return (
       <div>
-        {release === undefined ? (
+        {typeof release === 'undefined' ? (
           <div className='flash-messages--flash-message flash-messages--info'>
             Could not get component information for release version{' '}
             {this.props.cluster.release_version}.<br />
@@ -259,9 +259,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  undefined,
-  mapDispatchToProps,
-  undefined,
-  { forwardRef: true }
-)(UpgradeClusterModal);
+export default connect(undefined, mapDispatchToProps, undefined, {
+  forwardRef: true,
+})(UpgradeClusterModal);

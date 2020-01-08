@@ -71,7 +71,7 @@ class ClusterDetailView extends React.Component {
   loadDetails = () => {
     const { cluster, clusterId, organizationId, dispatch } = this.props;
 
-    if (cluster === undefined) {
+    if (typeof cluster === 'undefined') {
       dispatch(push('/organizations/' + organizationId));
 
       new FlashMessage(

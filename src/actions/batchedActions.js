@@ -19,6 +19,7 @@ export const batchedLayout = () => async dispatch => {
     await dispatch(clusterActions.clustersList({ withLoadingFlags: true }));
     await dispatch(clusterActions.clustersDetails({ withLoadingFlags: true }));
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Error in batchedLayout', err);
   }
 };
@@ -102,6 +103,7 @@ export const batchedOrganizationSelect = orgId => async dispatch => {
     await dispatch(organizationActions.organizationSelect(orgId));
     dispatch(clusterActions.clustersDetails());
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Error in batchedOrganizationSelect', err);
   }
 };

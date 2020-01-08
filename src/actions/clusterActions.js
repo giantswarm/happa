@@ -1,12 +1,10 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { modalHide } from './modalActions';
-import { nodePoolsLoad } from './nodePoolActions';
-import { Providers } from 'shared/constants';
-import { push } from 'connected-react-router';
-import cmp from 'semver-compare';
+import { Providers, StatusCodes } from 'shared/constants';
 import GiantSwarm from 'giantswarm';
+import cmp from 'semver-compare';
 import moment from 'moment';
+import { push } from 'connected-react-router';
 
 // API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
@@ -55,7 +53,7 @@ function clustersLoadArrayToObject(clusters) {
  * @param {Boolean} withLoadingFlags Set to false to avoid loading state (eg when refreshing)
  */
 export function clustersList({ withLoadingFlags }) {
-  return async function(dispatch) {
+  return function(dispatch) {
     if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
 
     // Fetch all clusters.
@@ -71,6 +69,7 @@ export function clustersList({ withLoadingFlags }) {
         dispatch({ type: types.CLUSTERS_LIST_SUCCESS, clusters, v5ClusterIds });
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error(error);
         dispatch({ type: types.CLUSTERS_LIST_ERROR, error });
       });
@@ -108,6 +107,7 @@ export function clustersDetails({
     // We actually don't care if success or error, just want to set loading flag to
     // false when all the promises are resolved/rejected.
     dispatch({ type: types.CLUSTERS_DETAILS_FINISHED });
+
     return clusterDetails; // just in case we want to await it
   };
 }
@@ -144,9 +144,10 @@ export function clusterLoadDetails(clusterId) {
         type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
         cluster,
       });
+
       return cluster;
     } catch (error) {
-      if (error.status === 404) {
+      if (error.status === StatusCodes.NotFound) {
         new FlashMessage(
           'This cluster no longer exists.',
           messageType.INFO,
@@ -155,21 +156,26 @@ export function clusterLoadDetails(clusterId) {
         );
 
         // Delete the cluster in te store.
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterDeleteSuccess(clusterId));
         dispatch(push('/'));
-      } else {
-        console.error('Error loading cluster details:', error);
-        dispatch(clusterLoadDetailsError(clusterId, error));
 
-        new FlashMessage(
-          'Something went wrong while trying to load cluster details.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        throw error;
+        return {};
       }
+
+      // eslint-disable-next-line no-console
+      console.error('Error loading cluster details:', error);
+      // eslint-disable-next-line no-use-before-define
+      dispatch(clusterLoadDetailsError(clusterId, error));
+
+      new FlashMessage(
+        'Something went wrong while trying to load cluster details.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      throw error;
     }
   };
 }
@@ -205,16 +211,20 @@ function clusterLoadStatusV4(dispatch, clusterId) {
       return JSON.parse(data.response.text);
     })
     .then(status => {
+      // eslint-disable-next-line no-use-before-define
       dispatch(clusterLoadStatusSuccess(clusterId, status));
+
       return status;
     })
     .catch(error => {
       // TODO: Find a better way to deal with status endpoint errors in dev:
       // https://github.com/giantswarm/giantswarm/issues/6757
       console.error(error);
-      if (error.status === 404) {
+      if (error.status === StatusCodes.NotFound) {
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterLoadStatusNotFound(clusterId));
       } else {
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterLoadStatusError(clusterId, error));
 
         new FlashMessage(
@@ -249,13 +259,14 @@ export function clusterCreate(cluster, isV5Cluster) {
     return clustersApi[method](cluster)
       .then(data => {
         const location = data.response.headers.location;
-        if (location === undefined) {
-          throw 'Did not get a location header back.';
+        if (typeof location === 'undefined') {
+          throw new Error('Did not get a location header back.');
         }
 
-        const clusterId = location.split('/')[3];
-        if (clusterId === undefined) {
-          throw 'Did not get a valid cluster id.';
+        const clusterIdURLParamIndex = 3;
+        const clusterId = location.split('/')[clusterIdURLParamIndex];
+        if (typeof clusterId === 'undefined') {
+          throw new Error('Did not get a valid cluster id.');
         }
 
         if (isV5Cluster) {
@@ -279,8 +290,12 @@ export function clusterCreate(cluster, isV5Cluster) {
         return { clusterId, owner: cluster.owner };
       })
       .catch(error => {
-        console.error(error);
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterCreateError(cluster.id, error));
+
+        // eslint-disable-next-line no-console
+        console.error(error);
+
         throw error;
       });
   };
@@ -302,6 +317,7 @@ export function clusterDeleteConfirmed(cluster) {
     return clustersApi
       .deleteCluster(cluster.id)
       .then(data => {
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterDeleteSuccess(cluster.id));
 
         new FlashMessage(
@@ -320,7 +336,10 @@ export function clusterDeleteConfirmed(cluster) {
           'Please try again later or contact support: support@giantswarm.io'
         );
 
+        // eslint-disable-next-line no-console
         console.error(error);
+
+        // eslint-disable-next-line no-use-before-define
         return dispatch(clusterDeleteError(cluster.id, error));
       });
   };
@@ -341,7 +360,7 @@ export function clusterLoadKeyPairs(clusterId) {
     const isV5Cluster = v5Clusters.includes(clusterId);
     if (isV5Cluster) return Promise.resolve([]);
 
-    var keypairsApi = new GiantSwarm.KeyPairsApi();
+    const keypairsApi = new GiantSwarm.KeyPairsApi();
 
     dispatch({
       type: types.CLUSTER_LOAD_KEY_PAIRS,
@@ -357,6 +376,7 @@ export function clusterLoadKeyPairs(clusterId) {
             keyPair.expire_date = moment(keyPair.create_date)
               .utc()
               .add(keyPair.ttl_hours, 'hours');
+
             return keyPair;
           }
         );
@@ -373,7 +393,9 @@ export function clusterLoadKeyPairs(clusterId) {
           clusterId,
         });
 
+        // eslint-disable-next-line no-console
         console.error(error);
+
         throw error;
       });
   };
@@ -463,7 +485,9 @@ export function clusterPatch(cluster, payload, isNodePoolCluster) {
         'Please try again later or contact support: support@giantswarm.io'
       );
 
+      // eslint-disable-next-line no-console
       console.error(error);
+
       throw error;
     });
   };
@@ -484,16 +508,17 @@ export function clusterCreateKeyPair(clusterId, keypair) {
       keypair,
     });
 
-    var keypairsApi = new GiantSwarm.KeyPairsApi();
+    const keypairsApi = new GiantSwarm.KeyPairsApi();
+
     return keypairsApi
       .addKeyPair(clusterId, keypair)
-      .then(keypair => {
+      .then(pair => {
         dispatch({
           type: types.CLUSTER_CREATE_KEY_PAIR_SUCCESS,
-          keypair,
+          pair,
         });
 
-        return keypair;
+        return pair;
       })
       .catch(error => {
         dispatch({
@@ -501,7 +526,9 @@ export function clusterCreateKeyPair(clusterId, keypair) {
           error,
         });
 
+        // eslint-disable-next-line no-console
         console.error(error);
+
         throw error;
       });
   };

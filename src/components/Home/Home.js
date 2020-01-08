@@ -192,7 +192,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReactTimeout(Home));
+export default connect(mapStateToProps, mapDispatchToProps)(ReactTimeout(Home));
