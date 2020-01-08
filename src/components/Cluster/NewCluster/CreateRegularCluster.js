@@ -73,6 +73,7 @@ class CreateRegularCluster extends React.Component {
       value: 1,
       valid: true,
     },
+    releaseVersion: this.props.selectedRelease,
     clusterName: this.props.clusterName,
     scaling: {
       automatic: false,
@@ -82,6 +83,7 @@ class CreateRegularCluster extends React.Component {
       maxValid: true,
     },
     submitting: false,
+    valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
     error: false,
     aws: {
       instanceType: {
@@ -150,7 +152,7 @@ class CreateRegularCluster extends React.Component {
   createCluster = () => {
     this.setState({ submitting: true });
 
-    let i = 0;
+    let i;
     let workers = [];
 
     // TODO/FYI: This IF / ELSE on this.props.provider is a antipattern that
@@ -187,7 +189,7 @@ class CreateRegularCluster extends React.Component {
     // Adjust final workers array when cluster uses auto scaling. This is currently
     // only in AWS and from release 6.1.0 onwards.
     if (
-      CreateRegularCluster.isScalingAutomatic(
+      this.isScalingAutomatic(
         this.props.provider,
         this.props.selectedRelease
       ) &&
@@ -239,7 +241,7 @@ class CreateRegularCluster extends React.Component {
       });
   };
 
-  static isScalingAutomatic(provider, releaseVer) {
+  isScalingAutomatic(provider, releaseVer) {
     if (provider !== Providers.AWS) {
       return false;
     }
@@ -250,6 +252,9 @@ class CreateRegularCluster extends React.Component {
   }
 
   selectRelease = releaseVersion => {
+    this.setState({
+      releaseVersion,
+    });
     this.props.informParent(releaseVersion);
   };
 
@@ -293,42 +298,42 @@ class CreateRegularCluster extends React.Component {
   };
 
   updateCPUCores = value => {
-    this.setState(prevState => ({
+    this.setState({
       kvm: {
         cpuCores: {
           value: value.value,
           valid: value.valid,
         },
-        memorySize: prevState.kvm.memorySize,
-        diskSize: prevState.kvm.diskSize,
+        memorySize: this.state.kvm.memorySize,
+        diskSize: this.state.kvm.diskSize,
       },
-    }));
+    });
   };
 
   updateMemorySize = value => {
-    this.setState(prevState => ({
+    this.setState({
       kvm: {
-        cpuCores: prevState.kvm.cpuCores,
+        cpuCores: this.state.kvm.cpuCores,
         memorySize: {
           value: value.value,
           valid: value.valid,
         },
-        diskSize: prevState.kvm.diskSize,
+        diskSize: this.state.kvm.diskSize,
       },
-    }));
+    });
   };
 
   updateDiskSize = value => {
-    this.setState(prevState => ({
+    this.setState({
       kvm: {
-        cpuCores: prevState.kvm.cpuCores,
-        memorySize: prevState.kvm.memorySize,
+        cpuCores: this.state.kvm.cpuCores,
+        memorySize: this.state.kvm.memorySize,
         diskSize: {
           value: value.value,
           valid: value.valid,
         },
       },
-    }));
+    });
   };
 
   produceRAMAndCoresAWS = () => {
@@ -364,8 +369,7 @@ class CreateRegularCluster extends React.Component {
       instanceTypesKeys && instanceTypesKeys.includes(instanceType);
 
     const RAM = hasInstances
-      ? // eslint-disable-next-line no-magic-numbers
-        (azureInstanceTypes[instanceType].memoryInMb / 1000).toFixed(2)
+      ? (azureInstanceTypes[instanceType].memoryInMb / 1000).toFixed(2)
       : '0';
     const CPUCores = hasInstances
       ? azureInstanceTypes[instanceType].numberOfCores
@@ -596,14 +600,12 @@ class CreateRegularCluster extends React.Component {
                       );
                     }
                   }
-
-                  return null;
                 })()}
               </label>
               <label className='scaling-range' htmlFor='scaling-range'>
                 <span className='label-span'>Number of worker nodes</span>
                 <NodeCountSelector
-                  autoscalingEnabled={CreateRegularCluster.isScalingAutomatic(
+                  autoscalingEnabled={this.isScalingAutomatic(
                     this.props.provider,
                     this.props.selectedRelease
                   )}

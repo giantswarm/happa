@@ -13,13 +13,23 @@ import React from 'react';
 
 class ConfigKubeCtl extends React.Component {
   state = {
+    loading: true,
     selectedPlatform: platform,
     alternativeOpen: false,
   };
 
   componentDidMount() {
+    this.setState({
+      loading: true,
+    });
+
     this.props.actions
       .clusterLoadDetails(this.props.selectedCluster.id)
+      .then(() => {
+        this.setState({
+          loading: false,
+        });
+      })
       .catch(() => {
         new FlashMessage(
           'Something went wrong while trying to load cluster details.',
@@ -27,6 +37,10 @@ class ConfigKubeCtl extends React.Component {
           messageTTL.MEDIUM,
           'Please try again later or contact support: support@giantswarm.io'
         );
+
+        this.setState({
+          loading: 'failed',
+        });
       });
   }
 
@@ -34,9 +48,9 @@ class ConfigKubeCtl extends React.Component {
     this.props.actions.clusterSelect(clusterId);
   }
 
-  selectPlatform(newPlatform) {
+  selectPlatform(platform) {
     this.setState({
-      selectedPlatform: newPlatform,
+      selectedPlatform: platform,
     });
   }
 
@@ -129,18 +143,18 @@ class ConfigKubeCtl extends React.Component {
           </div>
         );
       default:
-        return <p>Shouldn&apos;t be here</p>;
+        <p>Shouldn&apos;t be here</p>;
     }
   }
 
-  isSelectedPlatform(newPlatform) {
-    return this.state.selectedPlatform === newPlatform;
+  isSelectedPlatform(platform) {
+    return this.state.selectedPlatform === platform;
   }
 
   toggleAlternative = () => {
-    this.setState(prevState => ({
-      alternativeOpen: !prevState.alternativeOpen,
-    }));
+    this.setState({
+      alternativeOpen: !this.state.alternativeOpen,
+    });
   };
 
   friendlyClusterName = cluster => {

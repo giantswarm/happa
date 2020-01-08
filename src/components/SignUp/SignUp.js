@@ -1,5 +1,9 @@
 import * as userActions from 'actions/userActions';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { push } from 'connected-react-router';
+import { validatePassword } from 'lib/passwordValidation';
 import Button from 'UI/Button';
 import Passage from 'lib/passageClient';
 import PasswordField from './PasswordField';
@@ -7,10 +11,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import StatusMessage from './StatusMessage';
 import TermsOfService from './TermsOfService';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
-import { validatePassword } from 'lib/passwordValidation';
 
 // TODO: Figure out a way to make the test suite know about our standard
 // 'window.config' object. Or change the way these config params are passed
@@ -22,6 +22,7 @@ const passage = new Passage({ endpoint: window.config.passageEndpoint });
 export class SignUp extends React.Component {
   state = {
     statusMessage: 'verify_started',
+    checkInviteStatus: 'started',
     email: undefined,
     passwordField: { value: '', valid: false },
     passwordConfirmationField: { value: '', valid: false },
@@ -29,6 +30,7 @@ export class SignUp extends React.Component {
     formValid: undefined,
     submitting: false,
     buttonText: ['', 'Next', 'Next', 'Create your account now'],
+    formSteps: ['', 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
     currentStep: 0,
     advancable: false,
   };
@@ -36,6 +38,7 @@ export class SignUp extends React.Component {
   resetForm() {
     this.setState({
       statusMessage: 'verify_started',
+      checkInviteStatus: 'started',
       email: undefined,
       passwordField: { value: '', valid: false },
       passwordConfirmationField: { value: '', valid: false },
@@ -43,6 +46,7 @@ export class SignUp extends React.Component {
       formValid: undefined,
       submitting: false,
       buttonText: ['', 'Next', 'Next', 'Create your account now'],
+      formSteps: ['', 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
       currentStep: 0,
       advancable: false,
     });
@@ -50,7 +54,6 @@ export class SignUp extends React.Component {
 
   componentDidMount() {
     const token = this.props.match.params.token;
-    const advanceFormTimeout = 800;
 
     passage
       .checkInvite({ token })
@@ -58,6 +61,7 @@ export class SignUp extends React.Component {
         this.setState({
           email: data.email,
           statusMessage: 'verify_completed',
+          checkInviteStatus: 'completed',
         });
 
         setTimeout(() => {
@@ -66,9 +70,13 @@ export class SignUp extends React.Component {
           });
 
           this.advanceForm();
-        }, advanceFormTimeout);
+        }, 800);
       })
       .catch(error => {
+        this.setState({
+          checkInviteStatus: 'failed',
+        });
+
         let statusMessage = 'verify_failed';
 
         if (error.message === 'InvalidToken') {
@@ -82,7 +90,7 @@ export class SignUp extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.match.params.token !== this.props.match.params.token) {
+    if (prevProps.match.params.token != this.props.match.params.token) {
       this.resetForm();
       this.componentDidMount();
     }
@@ -96,34 +104,22 @@ export class SignUp extends React.Component {
         currentStep: nextStep,
       },
       () => {
-        switch (nextStep) {
-          case 1:
-            this.password.focus();
+        if (nextStep === 1) {
+          this.password.focus();
+        } else if (nextStep === 2) {
+          this.passwordConfirmation.focus();
+        } else if (nextStep === 3) {
+          this.setState({
+            statusMessage: 'tos_intro',
+          });
 
-            break;
-
-          case 2:
-            this.passwordConfirmation.focus();
-
-            break;
-
-          // eslint-disable-next-line no-magic-numbers
-          case 3:
-            this.setState({
-              statusMessage: 'tos_intro',
-            });
-
-            this.passwordConfirmation.blur();
-
-            break;
+          this.passwordConfirmation.blur();
         }
       }
     );
   }
 
   accountCreated() {
-    const redirectTimeout = 1000;
-
     // Delay a bit so the user sees the DONE message
     // and then transition to the getting started guide
     //
@@ -135,7 +131,7 @@ export class SignUp extends React.Component {
 
     setTimeout(() => {
       this.props.dispatch(push('/'));
-    }, redirectTimeout);
+    }, 1000);
   }
 
   handleSubmit = e => {
@@ -330,7 +326,6 @@ export class SignUp extends React.Component {
     ) {
       advancable = true;
     } else if (
-      // eslint-disable-next-line no-magic-numbers
       this.state.currentStep === 3 &&
       this.state.passwordField.valid &&
       this.state.passwordConfirmationField.valid &&
@@ -423,7 +418,7 @@ export class SignUp extends React.Component {
           </div>
 
           <StatusMessage status={this.state.statusMessage} />
-          {this.state.buttonText[this.state.currentStep] !== '' ? (
+          {this.state.buttonText[this.state.currentStep] != '' ? (
             <Button
               bsSize='large'
               bsStyle='primary'
