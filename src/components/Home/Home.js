@@ -59,13 +59,9 @@ class Home extends React.Component {
    */
   title() {
     if (this.props.selectedOrganization) {
-      return (
-        'Cluster Overview | ' +
-        this.props.selectedOrganization +
-        ' | Giant Swarm'
-      );
+      return `Cluster Overview | ${this.props.selectedOrganization}`;
     } else {
-      return 'Cluster Overview | Giant Swarm';
+      return 'Cluster Overview';
     }
   }
 
