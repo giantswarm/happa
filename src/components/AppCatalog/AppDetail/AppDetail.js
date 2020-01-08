@@ -105,4 +105,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppDetail);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppDetail);

@@ -82,4 +82,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailIndex);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DetailIndex);

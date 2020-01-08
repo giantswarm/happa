@@ -367,6 +367,11 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(undefined, mapDispatchToProps, undefined, {
-  forwardRef: true,
-})(ScaleNodePoolModal);
+export default connect(
+  undefined,
+  mapDispatchToProps,
+  undefined,
+  {
+    forwardRef: true,
+  }
+)(ScaleNodePoolModal);

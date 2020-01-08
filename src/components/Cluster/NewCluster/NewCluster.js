@@ -154,4 +154,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewCluster);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewCluster);

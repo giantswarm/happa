@@ -290,4 +290,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InstallAppModal);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(InstallAppModal);

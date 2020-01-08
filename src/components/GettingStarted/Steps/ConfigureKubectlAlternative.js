@@ -328,4 +328,7 @@ ConfigKubeCtl.propTypes = {
   actions: PropTypes.object,
 };
 
-export default connect(undefined, mapDispatchToProps)(ConfigKubeCtl);
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(ConfigKubeCtl);

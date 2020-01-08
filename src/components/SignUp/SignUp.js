@@ -454,4 +454,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(null, mapDispatchToProps)(SignUp);
+export default connect(
+  null,
+  mapDispatchToProps
+)(SignUp);

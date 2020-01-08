@@ -69,4 +69,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Logout);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Logout);

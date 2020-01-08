@@ -36,8 +36,8 @@ const nodePools = produce((draft, action) => {
         draft.items[np.id] = np;
       });
       draft.isFetching = false;
-      
-return;
+
+      return;
 
     case types.NODEPOOLS_CREATE_SUCCESS:
       draft.items = action.nodePools;

@@ -258,4 +258,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(KeyPairs);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(KeyPairs);

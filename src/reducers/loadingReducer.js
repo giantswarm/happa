@@ -17,7 +17,6 @@ const loadingReducer = produce((draft, action) => {
   // e.g. will be true when receiving GET_TODOS_REQUEST
   //      and false when receiving GET_TODOS_SUCCESS / GET_TODOS_ERROR
   draft[requestName] = requestState === 'REQUEST';
-  
 }, initialState);
 
 export default loadingReducer;
