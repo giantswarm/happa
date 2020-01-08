@@ -177,7 +177,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(ForgotPassword);
+export default connect(null, mapDispatchToProps)(ForgotPassword);

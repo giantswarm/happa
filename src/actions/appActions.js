@@ -1,6 +1,7 @@
 import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import GiantSwarm from 'giantswarm';
+import { StatusCodes } from 'shared/constants';
 
 // selectCluster stores a clusterID in the state.
 export function selectCluster(clusterID) {
@@ -96,7 +97,7 @@ export function installApp(app, clusterID) {
     let createAppConfiguration = appConfigsApi.createClusterAppConfigV4.bind(
       appConfigsApi
     );
-    let createApp = appConfigsApi.createClusterAppConfigV4.bind(appsApi);
+    let createApp = appsApi.createClusterAppV4.bind(appsApi);
 
     if (isNodePoolsCluster) {
       createAppConfiguration = appConfigsApi.createClusterAppConfigV5.bind(
@@ -117,15 +118,13 @@ export function installApp(app, clusterID) {
             resolve();
           })
           .catch(error => {
-            // eslint-disable-next-line no-magic-numbers
-            if (error.status === 409) {
+            if (error.status === StatusCodes.Conflict) {
               new FlashMessage(
                 `The ConfigMap for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
                 messageType.ERROR,
                 messageTTL.LONG
               );
-              // eslint-disable-next-line no-magic-numbers
-            } else if (error.status === 400) {
+            } else if (error.status === StatusCodes.BadRequest) {
               new FlashMessage(
                 `Your ConfigMap appears to be invalid. Please make sure all fields are filled in correctly.`,
                 messageType.ERROR,
@@ -159,15 +158,13 @@ export function installApp(app, clusterID) {
             },
           },
         }).catch(error => {
-          // eslint-disable-next-line no-magic-numbers
-          if (error.status === 409) {
+          if (error.status === StatusCodes.Conflict) {
             new FlashMessage(
               `An app called <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
               messageType.ERROR,
               messageTTL.LONG
             );
-            // eslint-disable-next-line no-magic-numbers
-          } else if (error.status === 400) {
+          } else if (error.status === StatusCodes.BadRequest) {
             new FlashMessage(
               `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
               messageType.ERROR,

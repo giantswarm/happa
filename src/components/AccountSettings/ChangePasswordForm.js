@@ -44,10 +44,7 @@ class ChangePassword extends React.Component {
     const password = this.new_password.value();
     const passwordConfirmation = this.new_password_confirmation.value();
 
-    if (
-      password !== passwordConfirmation &&
-      (password && passwordConfirmation)
-    ) {
+    if (password !== passwordConfirmation && password && passwordConfirmation) {
       this.setState({
         newPassworConfirmationValidationMessage:
           'Password confirmation does not match',

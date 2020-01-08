@@ -262,9 +262,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  undefined,
-  mapDispatchToProps,
-  undefined,
-  { forwardRef: true }
-)(UpgradeClusterModal);
+export default connect(undefined, mapDispatchToProps, undefined, {
+  forwardRef: true,
+})(UpgradeClusterModal);

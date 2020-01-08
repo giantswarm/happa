@@ -73,7 +73,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(OauthCallback);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(OauthCallback);

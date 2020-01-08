@@ -253,7 +253,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  undefined,
-  mapDispatchToProps
-)(OrganizationDetail);
+export default connect(undefined, mapDispatchToProps)(OrganizationDetail);

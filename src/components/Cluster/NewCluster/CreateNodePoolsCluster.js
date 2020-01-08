@@ -194,11 +194,6 @@ class CreateNodePoolsCluster extends Component {
     },
     submitting: false,
     error: false,
-    availabilityZonesRandom: {
-      // Select automatically
-      value: 1,
-      valid: true,
-    },
     availabilityZonesLabels: {
       // Manually select AZs
       number: 0,
@@ -250,7 +245,6 @@ class CreateNodePoolsCluster extends Component {
       name,
       hasAZLabels,
       availabilityZonesLabels,
-      availabilityZonesRandom,
       nodePoolsForms,
     } = this.state;
 
@@ -265,8 +259,7 @@ class CreateNodePoolsCluster extends Component {
     const isValid =
       name.valid &&
       areNodePoolsValid &&
-      ((hasAZLabels && availabilityZonesLabels.valid) ||
-        (!hasAZLabels && availabilityZonesRandom.valid))
+      ((hasAZLabels && availabilityZonesLabels.valid) || !hasAZLabels)
         ? true
         : false;
 

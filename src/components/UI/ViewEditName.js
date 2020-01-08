@@ -210,9 +210,6 @@ ViewAndEditName.propTypes = {
   toggleEditingState: PropTypes.func,
 };
 
-export default connect(
-  undefined,
-  undefined,
-  undefined,
-  { forwardRef: true }
-)(ViewAndEditName);
+export default connect(undefined, undefined, undefined, { forwardRef: true })(
+  ViewAndEditName
+);
