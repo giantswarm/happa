@@ -71,7 +71,7 @@ afterAll(() => {
   });
 });
 
-it('renders all the v4 Azure cluster data correctly without nodes ready', async () => {
+it('renders all the v4 Azure cluster data correctly', async () => {
   const { getByText, getAllByText } = renderRouteWithStore(ROUTE);
 
   await wait(() => {
@@ -85,19 +85,15 @@ it('renders all the v4 Azure cluster data correctly without nodes ready', async 
   const instance = getByText(V4_CLUSTER.AzureInstanceType);
   expect(instance).toBeInTheDocument();
 
-  const nodes = getByText('Nodes').nextSibling.textContent;
-  expect(nodes).toBe('0');
+  const nodesRunning = getNumberOfNodes({
+    ...v4AzureClusterResponse,
+    status: v4AzureClusterStatusResponse,
+  }).toString();
+
+  await wait(() => {
+    expect(getByText('Nodes').nextSibling.textContent).toBe(nodesRunning);
+  });
 });
 
 it.skip(`shows the v4 Azure cluster scaling modal when the button is clicked with default values and 
 scales correctly`, async () => {});
-
-/******************** PENDING TESTS ********************/
-
-it.skip('renders all the v4 Azure nodes', async () => {
-  // TODO Expect nodesRunning to be in nodes element
-  // const nodesRunning = getNumberOfNodes({
-  //   ...v4AzureClusterResponse,
-  //   status: v4AzureClusterStatusResponse,
-  // });
-});
