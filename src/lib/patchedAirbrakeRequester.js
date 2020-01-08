@@ -3,6 +3,7 @@
 
 // Airbrake doesn't expose a easy interface for setting custom headers for each
 // request. We need to set headers for authentication against our API.
+import { StatusCodes } from 'shared/constants';
 import fetch from 'cross-fetch';
 
 export class Requester {
@@ -31,8 +32,7 @@ export class Requester {
     };
 
     return fetch(req.url, opt).then(resp => {
-      // eslint-disable-next-line no-magic-numbers
-      if (resp.status === 201) {
+      if (resp.status === StatusCodes.Created) {
         return { json: null };
       }
 

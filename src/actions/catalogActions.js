@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import GiantSwarm from 'giantswarm';
+import { StatusCodes } from 'shared/constants';
 import yaml from 'js-yaml';
 
 // loadCatalog takes a catalog object and tries to load further data.
@@ -23,7 +24,7 @@ function loadCatalogIndex(catalog) {
     })
     .then(response => {
       // eslint-disable-next-line no-magic-numbers
-      if (response.status === 200) {
+      if (response.status === StatusCodes.Ok) {
         return response.text();
       }
 
