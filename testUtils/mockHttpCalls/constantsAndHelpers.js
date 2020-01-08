@@ -1,3 +1,4 @@
+import { StatusCodes } from 'shared/constants';
 import nock from 'nock';
 
 export const API_ENDPOINT = 'http://localhost:8000';
@@ -17,24 +18,24 @@ export const V5_CLUSTER = {
 };
 
 /***** Helper functions *****/
-/* eslint-disable no-magic-numbers */
 export const getMockCall = (endpoint, response = []) =>
   nock(API_ENDPOINT)
     .get(endpoint)
-    .reply(200, response);
+    .reply(StatusCodes.Ok, response);
 
 export const getPersistedMockCall = (endpoint, response = []) =>
   nock(API_ENDPOINT)
     .persist()
     .get(endpoint)
-    .reply(200, response);
+    .reply(StatusCodes.Ok, response);
 
 export const postMockCall = (endpoint, response = []) =>
   nock(API_ENDPOINT)
     .post(endpoint)
-    .reply(200, response);
+    .reply(StatusCodes.Ok, response);
 
 // https://gist.github.com/6174/6062387#gistcomment-2651745
+/* eslint-disable no-magic-numbers */
 export const generateRandomString = (length = 8) =>
   Array.from({ length }, () => (~~(Math.random() * 36)).toString(36)).join('');
 /* eslint-enable no-magic-numbers */
