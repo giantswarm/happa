@@ -1,25 +1,26 @@
-import * as UserActions from 'actions/userActions';
-import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   batchedLayout,
   batchedOrganizationSelect,
 } from 'actions/batchedActions';
-import AccountSettings from './AccountSettings/AccountSettings';
-import AppCatalog from './AppCatalog/AppCatalog';
-import { Breadcrumb } from 'react-breadcrumbs';
+import * as UserActions from 'actions/userActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
+import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
-import Home from './Home/Home';
-import LoadingOverlay from './UI/LoadingOverlay';
-import Modals from './Modals/Modals';
-import Navigation from './UI/Navigation/Navigation';
-import Organizations from './Organizations/Organizations';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Users from './Users/Users';
-import { bindActionCreators } from 'redux';
+import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+
+import AccountSettings from './AccountSettings/AccountSettings';
+import AppCatalog from './AppCatalog/AppCatalog';
+import Home from './Home/Home';
+import Modals from './Modals/Modals';
+import Organizations from './Organizations/Organizations';
+import LoadingOverlay from './UI/LoadingOverlay';
+import Navigation from './UI/Navigation/Navigation';
+import Users from './Users/Users';
 
 const defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;

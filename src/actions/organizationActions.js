@@ -1,10 +1,11 @@
-import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import GiantSwarm from 'giantswarm';
-import { Providers } from 'shared/constants';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import React from 'react';
-import { modalHide } from './modalActions';
+import { Providers } from 'shared/constants';
 import { setOrganizationToStorage } from 'utils/localStorageUtils';
+
+import * as types from './actionTypes';
+import { modalHide } from './modalActions';
 
 /**
  * Sets the organization that the user is focusing on and

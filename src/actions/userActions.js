@@ -1,15 +1,16 @@
-import * as types from './actionTypes';
-import { AuthorizationTypes, StatusCodes } from 'shared/constants';
+import { push } from 'connected-react-router';
+import GiantSwarm from 'giantswarm';
+import { Base64 } from 'js-base64';
 import {
-  FlashMessage,
   clearQueues,
+  FlashMessage,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
-import { Base64 } from 'js-base64';
-import GiantSwarm from 'giantswarm';
+import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import _ from 'underscore';
-import { push } from 'connected-react-router';
+
+import * as types from './actionTypes';
 
 export function loginSuccess(userData) {
   return {

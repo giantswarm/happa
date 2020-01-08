@@ -1,12 +1,13 @@
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+
 import AdminLogin from './Auth/AdminLogin';
-import ForgotPassword from './ForgotPassword/ForgotPassword';
-import Layout from './Layout';
 import Login from './Auth/Login';
 import Logout from './Auth/Logout';
 import OAuthCallback from './Auth/OAuthCallback';
-import React from 'react';
+import ForgotPassword from './ForgotPassword/ForgotPassword';
 import SetPassword from './ForgotPassword/SetPassword';
+import Layout from './Layout';
 import SignUp from './SignUp/SignUp';
 import StyleGuide from './UI/StyleGuide';
 

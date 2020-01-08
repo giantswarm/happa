@@ -1,7 +1,8 @@
-import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import GiantSwarm from 'giantswarm';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { StatusCodes } from 'shared/constants';
+
+import * as types from './actionTypes';
 
 // selectCluster stores a clusterID in the state.
 export function selectCluster(clusterID) {
