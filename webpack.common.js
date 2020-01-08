@@ -20,7 +20,18 @@ module.exports = {
       },
       {
         test: /\.sass$/,
-        loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded',
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                outputStyle: 'expanded',
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpg)$/,
