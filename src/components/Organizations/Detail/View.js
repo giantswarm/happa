@@ -13,6 +13,20 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+const clusterTableDefaultSorting = [
+  {
+    dataField: 'id',
+    order: 'asc',
+  },
+];
+
+const memberTableDefaultSorting = [
+  {
+    dataField: 'email',
+    order: 'asc',
+  },
+];
+
 class OrganizationDetail extends React.Component {
   addMember = () => {
     this.props.actions.organizationAddMember(this.props.organization.id);
@@ -31,8 +45,8 @@ class OrganizationDetail extends React.Component {
     if (provider === Providers.AWS || provider === Providers.AZURE) {
       return true;
     }
-    
-return false;
+
+    return false;
   };
 
   // Provides the configuraiton for the clusters table
@@ -57,8 +71,8 @@ return false;
           if (order === 'desc') {
             return cmp(a, b) * -1;
           }
-          
-return cmp(a, b);
+
+          return cmp(a, b);
         },
       },
       {
@@ -106,7 +120,8 @@ return cmp(a, b);
   };
 
   render() {
-    let credentialsSection;
+    let credentialsSection = null;
+
     if (this.canCredentials(this.props.app.info.general.provider)) {
       credentialsSection = (
         <div className='row section' id='credentials-section'>
@@ -186,10 +201,10 @@ return cmp(a, b);
           </div>
         </DocumentTitle>
       );
-    } 
-      // 404 or fetching
-      return <h1>404 or fetching</h1>;
-    
+    }
+
+    // 404 or fetching
+    return <h1>404 or fetching</h1>;
   }
 }
 
@@ -203,34 +218,21 @@ OrganizationDetail.propTypes = {
   membersForTable: PropTypes.array,
 };
 
-const clusterTableDefaultSorting = [
-  {
-    dataField: 'id',
-    order: 'asc',
-  },
-];
-
-const memberTableDefaultSorting = [
-  {
-    dataField: 'email',
-    order: 'asc',
-  },
-];
-
+// eslint-disable-next-line react/no-multi-comp
 function clusterIDCellFormatter(cell) {
   return <ClusterIDLabel clusterID={cell} copyEnabled />;
 }
 
-function clusterActionsCellFormatter(cell, row) {
+// eslint-disable-next-line react/no-multi-comp
+function clusterActionsCellFormatter(_cell, row) {
   if (row.delete_date) {
     return <span />;
   }
 
   return (
     <Link
-      to={
-        `/organizations/${  this.props.organization.id  }/clusters/${  row.id}`
-      }
+      // eslint-disable-next-line react/no-this-in-sfc
+      to={`/organizations/${this.props.organization.id}/clusters/${row.id}`}
     >
       <Button bsStyle='default' type='button'>
         Details
@@ -239,8 +241,10 @@ function clusterActionsCellFormatter(cell, row) {
   );
 }
 
-function memberActionsCellFormatter(cell, row) {
+// eslint-disable-next-line react/no-multi-comp
+function memberActionsCellFormatter(_cell, row) {
   return (
+    // eslint-disable-next-line react/no-this-in-sfc
     <Button onClick={this.removeMember.bind(this, row.email)} type='button'>
       Remove
     </Button>

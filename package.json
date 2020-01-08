@@ -7,7 +7,7 @@
   "src": "src",
   "test": "test",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint --ignore-path .eslintignore ./src/ --ext .js",
+    "lint": "./node_modules/.bin/eslint --ignore-path .eslintignore --ext .js ./src/",
     "lint:fix": "yarn lint --fix",
     "lint:css": "./node_modules/.bin/stylelint './src/**/*.js'",
     "start": "./node_modules/.bin/webpack-dev-server --open --progress --colors --config ./webpack.dev.js",
