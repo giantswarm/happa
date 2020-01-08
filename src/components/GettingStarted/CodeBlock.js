@@ -9,6 +9,7 @@ export const Prompt = ({ children }) => {
   return <Line prompt={true} text={dedent(children)} />;
 };
 
+// eslint-disable-next-line react/no-multi-comp
 export const Output = ({ children }) => {
   return <Line prompt={false} text={dedent(children)} />;
 };
@@ -36,6 +37,7 @@ export const Output = ({ children }) => {
  *
  * The copy to clipboard button will only take the content in the Prompt tags.
  */
+// eslint-disable-next-line react/no-multi-comp
 export const CodeBlock = ({ children }) => {
   const [isHovering, setHovering] = useState(false);
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();

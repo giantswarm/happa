@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class Overview extends React.Component {
-  testFileContent() {
+  static testFileContent() {
     return `
       The contents of the file
 

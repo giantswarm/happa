@@ -20,34 +20,26 @@ import SlideTransition from 'styles/transitions/SlideTransition';
 import StatusMessage from '../SignUp/StatusMessage';
 
 class SetPassword extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    email: localStorage.getItem('user.email') || '',
+    emailField: '',
 
-    this.state = {
-      password: '',
-      passwordConfirmation: '',
-      email: localStorage.getItem('user.email') || '',
-      emailField: '',
+    submitting: false,
 
-      submitting: false,
+    passwordField: {
+      valid: false,
+      value: '',
+    },
 
-      passwordField: {
-        valid: false,
-        value: '',
-      },
+    passwordConfirmationField: {
+      valid: false,
+      value: '',
+    },
 
-      passwordConfirmationField: {
-        valid: false,
-        value: '',
-      },
-
-      formIsValid: false,
-
-      verifyingToken: false,
-      tokenValid: false,
-      statusMessage: 'enter_password',
-    };
-  }
+    verifyingToken: false,
+    tokenValid: false,
+    statusMessage: 'enter_password',
+  };
 
   componentDidMount() {
     // If we have the email already from localstorage, verify the token immediately.
@@ -146,9 +138,9 @@ class SetPassword extends React.Component {
     event.preventDefault();
     clearQueues();
     this.setState(
-      {
-        email: this.state.emailField,
-      },
+      prevState => ({
+        email: prevState.emailField,
+      }),
       () => {
         this.verifyToken();
       }
@@ -186,46 +178,50 @@ class SetPassword extends React.Component {
   };
 
   passwordConfirmationEditingStarted = confirmation => {
-    let valid = false;
-    let statusMessage = this.state.statusMessage;
+    this.setState(prevState => {
+      let valid = false;
+      let statusMessage = prevState.statusMessage;
 
-    if (this.state.passwordField.valid) {
-      if (this.state.passwordField.value === confirmation) {
-        statusMessage = 'password_confirmation_ok';
-        valid = true;
+      if (prevState.passwordField.valid) {
+        if (prevState.passwordField.value === confirmation) {
+          statusMessage = 'password_confirmation_ok';
+          valid = true;
+        }
       }
-    }
 
-    this.setState({
-      statusMessage: statusMessage,
+      return {
+        statusMessage: statusMessage,
 
-      passwordConfirmationField: {
-        valid: valid,
-        value: confirmation,
-      },
+        passwordConfirmationField: {
+          valid: valid,
+          value: confirmation,
+        },
+      };
     });
   };
 
   passwordConfirmationEditingCompleted = confirmation => {
-    let valid = false;
-    let statusMessage = this.state.statusMessage;
+    this.setState(prevState => {
+      let valid = false;
+      let statusMessage = prevState.statusMessage;
 
-    if (this.state.passwordField.valid) {
-      if (this.state.passwordField.value === confirmation) {
-        statusMessage = 'password_confirmation_ok';
-        valid = true;
-      } else {
-        statusMessage = 'password_confirmation_mismatch';
+      if (prevState.passwordField.valid) {
+        if (prevState.passwordField.value === confirmation) {
+          statusMessage = 'password_confirmation_ok';
+          valid = true;
+        } else {
+          statusMessage = 'password_confirmation_mismatch';
+        }
       }
-    }
 
-    this.setState({
-      statusMessage: statusMessage,
+      return {
+        statusMessage: statusMessage,
 
-      passwordConfirmationField: {
-        valid: valid,
-        value: confirmation,
-      },
+        passwordConfirmationField: {
+          valid: valid,
+          value: confirmation,
+        },
+      };
     });
   };
 
@@ -280,28 +276,26 @@ class SetPassword extends React.Component {
           <Link to='/login'>Back to login form</Link>
         </form>
       );
-    } 
-      if (this.state.verifyingToken) {
-        return (
-          <div className='forgot-password--token-validating'>
-            <img className='loader' src={spinner} />
-            <br />
-            Validating your token...
-          </div>
-        );
-      } 
-        
-return (
-          <div>
-            <div className='forgot-password--token-validating'>
-              Something went wrong.
-            </div>
-            <br />
-            <Link to='/forgot_password'>Request a new token</Link>
-          </div>
-        );
-      
-    
+    }
+    if (this.state.verifyingToken) {
+      return (
+        <div className='forgot-password--token-validating'>
+          <img className='loader' src={spinner} />
+          <br />
+          Validating your token...
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <div className='forgot-password--token-validating'>
+          Something went wrong.
+        </div>
+        <br />
+        <Link to='/forgot_password'>Request a new token</Link>
+      </div>
+    );
   };
 
   setEmailForm = () => {

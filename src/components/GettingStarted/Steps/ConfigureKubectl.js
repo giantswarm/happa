@@ -13,23 +13,13 @@ import React from 'react';
 
 class ConfigKubeCtl extends React.Component {
   state = {
-    loading: true,
     selectedPlatform: platform,
     alternativeOpen: false,
   };
 
   componentDidMount() {
-    this.setState({
-      loading: true,
-    });
-
     this.props.actions
       .clusterLoadDetails(this.props.selectedCluster.id)
-      .then(() => {
-        this.setState({
-          loading: false,
-        });
-      })
       .catch(() => {
         new FlashMessage(
           'Something went wrong while trying to load cluster details.',
@@ -37,10 +27,6 @@ class ConfigKubeCtl extends React.Component {
           messageTTL.MEDIUM,
           'Please try again later or contact support: support@giantswarm.io'
         );
-
-        this.setState({
-          loading: 'failed',
-        });
       });
   }
 
@@ -48,9 +34,9 @@ class ConfigKubeCtl extends React.Component {
     this.props.actions.clusterSelect(clusterId);
   }
 
-  selectPlatform(platform) {
+  selectPlatform(newPlatform) {
     this.setState({
-      selectedPlatform: platform,
+      selectedPlatform: newPlatform,
     });
   }
 
@@ -143,22 +129,22 @@ class ConfigKubeCtl extends React.Component {
           </div>
         );
       default:
-        <p>Shouldn&apos;t be here</p>;
+        return <p>Shouldn&apos;t be here</p>;
     }
   }
 
-  isSelectedPlatform(platform) {
-    return this.state.selectedPlatform === platform;
+  isSelectedPlatform(newPlatform) {
+    return this.state.selectedPlatform === newPlatform;
   }
 
   toggleAlternative = () => {
-    this.setState({
-      alternativeOpen: !this.state.alternativeOpen,
-    });
+    this.setState(prevState => ({
+      alternativeOpen: !prevState.alternativeOpen,
+    }));
   };
 
   friendlyClusterName = cluster => {
-    return `${cluster.name  } ` + `(${  cluster.id  })`;
+    return `${cluster.name} ` + `(${cluster.id})`;
   };
 
   render() {
@@ -166,12 +152,7 @@ class ConfigKubeCtl extends React.Component {
       <Breadcrumb
         data={{
           title: 'CONFIGURE',
-          pathname:
-            `/organizations/${ 
-            this.props.match.params.orgId 
-            }/clusters/${ 
-            this.props.match.params.clusterId 
-            }/getting-started/configure/`,
+          pathname: `/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/configure/`,
         }}
       >
         <div className='centered col-9'>
@@ -225,7 +206,7 @@ class ConfigKubeCtl extends React.Component {
 
           <CodeBlock>
             <Prompt>
-              {`gsctl --endpoint ${  window.config.apiEndpoint  } info`}
+              {`gsctl --endpoint ${window.config.apiEndpoint} info`}
             </Prompt>
           </CodeBlock>
 
@@ -251,16 +232,11 @@ class ConfigKubeCtl extends React.Component {
           <CodeBlock>
             <Prompt>
               {`
-                gsctl --endpoint ${ 
-                window.config.apiEndpoint 
-                } \\
+                gsctl --endpoint ${window.config.apiEndpoint} \\
                   create kubeconfig \\
-                  --cluster ${ 
-                this.props.selectedCluster.id 
-                } \\
+                  --cluster ${this.props.selectedCluster.id} \\
                   --certificate-organizations system:masters \\
-                  --auth-token ${ 
-                this.props.user.auth.token}`}
+                  --auth-token ${this.props.user.auth.token}`}
             </Prompt>
           </CodeBlock>
 

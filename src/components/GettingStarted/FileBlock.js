@@ -69,6 +69,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
     return blob;
   };
 
+  // eslint-disable-next-line react/no-multi-comp
   const downloadAsFileLink = () => {
     return (
       <a download={fileName} href={window.URL.createObjectURL(getFileAsBlob())}>

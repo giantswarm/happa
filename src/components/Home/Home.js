@@ -32,6 +32,7 @@ class Home extends React.Component {
    * Load clusters list periodically
    */
   registerRefreshInterval = () => {
+    // eslint-disable-next-line no-magic-numbers
     const refreshIntervalDuration = 30 * 1000; // 30 seconds
     this.refreshInterval = window.setInterval(
       this.refreshClustersList,
@@ -58,10 +59,10 @@ class Home extends React.Component {
   title() {
     if (this.props.selectedOrganization) {
       return `Cluster Overview | ${this.props.selectedOrganization}`;
-    } 
-      
+    }
+
 return 'Cluster Overview';
-    
+
   }
 
   /**
@@ -73,7 +74,7 @@ return 'Cluster Overview';
     this.props.clusters.forEach(cluster => {
       maxTimestamp = Math.max(maxTimestamp, cluster.lastUpdated);
     });
-    
+
 return moment(maxTimestamp).fromNow();
   };
 

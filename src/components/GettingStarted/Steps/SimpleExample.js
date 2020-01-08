@@ -19,15 +19,14 @@ class SimpleExample extends React.Component {
   clusterBaseDomain() {
     if (this.props.cluster) {
       return `${this.props.cluster.id}.${this.state.ingressBaseDomain}`;
-    } 
-      
-return `12345.${this.state.ingressBaseDomain}`;
-    
+    }
+
+    return `12345.${this.state.ingressBaseDomain}`;
   }
 
-  selectPlatform(platform) {
+  selectPlatform(newPlatform) {
     this.setState({
-      selectedPlatform: platform,
+      selectedPlatform: newPlatform,
     });
   }
 
@@ -39,8 +38,8 @@ return `12345.${this.state.ingressBaseDomain}`;
     );
   }
 
-  isSelectedPlatform(platform) {
-    return this.state.selectedPlatform === platform;
+  isSelectedPlatform(newPlatform) {
+    return this.state.selectedPlatform === newPlatform;
   }
 
   componentDidMount() {
@@ -87,15 +86,14 @@ return `12345.${this.state.ingressBaseDomain}`;
       return 'Could not figure out the url for your hello world app. Sorry.';
     } else if (this.state.loading) {
       return 'Figuring out the url...';
-    } 
-      const url = `http://helloworld.${this.clusterBaseDomain()}`;
-      
-return (
-        <a href={url} rel='noopener noreferrer' target='_blank'>
-          {url}
-        </a>
-      );
-    
+    }
+    const url = `http://helloworld.${this.clusterBaseDomain()}`;
+
+    return (
+      <a href={url} rel='noopener noreferrer' target='_blank'>
+        {url}
+      </a>
+    );
   }
 
   render() {
@@ -103,12 +101,7 @@ return (
       <Breadcrumb
         data={{
           title: 'EXAMPLE',
-          pathname:
-            `/organizations/${ 
-            this.props.match.params.orgId 
-            }/clusters/${ 
-            this.props.match.params.clusterId 
-            }/getting-started/example/`,
+          pathname: `/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/example/`,
         }}
       >
         <div className='centered col-9'>

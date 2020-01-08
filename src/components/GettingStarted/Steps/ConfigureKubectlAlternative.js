@@ -13,7 +13,6 @@ const Modernizr = window.Modernizr;
 
 class ConfigKubeCtl extends React.Component {
   state = {
-    loading: true,
     selectedPlatform: platform,
     alternativeOpen: false,
     keyPair: {
@@ -47,7 +46,9 @@ class ConfigKubeCtl extends React.Component {
         });
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error(error);
+        const resetTimeout = 200;
 
         setTimeout(() => {
           this.setState({
@@ -57,7 +58,7 @@ class ConfigKubeCtl extends React.Component {
               error: true,
             },
           });
-        }, 200);
+        }, resetTimeout);
       });
   };
 
@@ -69,34 +70,15 @@ class ConfigKubeCtl extends React.Component {
         messageTTL.LONG,
         'Functions on this page might not work as expected'
       );
-
-      this.setState({
-        loading: 'failed',
-      });
     } else {
-      this.setState({
-        loading: true,
+      this.props.actions.clusterLoadDetails(this.props.cluster.id).catch(() => {
+        new FlashMessage(
+          'Something went wrong while trying to load cluster details.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
       });
-
-      this.props.actions
-        .clusterLoadDetails(this.props.cluster.id)
-        .then(() => {
-          this.setState({
-            loading: false,
-          });
-        })
-        .catch(() => {
-          new FlashMessage(
-            'Something went wrong while trying to load cluster details.',
-            messageType.ERROR,
-            messageTTL.LONG,
-            'Please try again later or contact support: support@giantswarm.io'
-          );
-
-          this.setState({
-            loading: 'failed',
-          });
-        });
     }
   }
 
@@ -197,14 +179,14 @@ class ConfigKubeCtl extends React.Component {
     );
   }
 
-  isSelectedPlatform(platform) {
-    return this.state.selectedPlatform === platform;
+  isSelectedPlatform(newPlatform) {
+    return this.state.selectedPlatform === newPlatform;
   }
 
   toggleAlternative() {
-    this.setState({
-      alternativeOpen: !this.state.alternativeOpen,
-    });
+    this.setState(prevState => ({
+      alternativeOpen: !prevState.alternativeOpen,
+    }));
   }
 
   selectCluster(clusterId) {

@@ -51,9 +51,9 @@ class ForgotPassword extends React.Component {
               messageTTL.MEDIUM
             );
             break;
-          default:
-            var heading = 'Unable to reset password';
-            var message =
+          default: {
+            const heading = 'Unable to reset password';
+            let message =
               'Something went wrong. Our servers might be down, or perhaps you&apos;ve made too many requests in a row. Please try again in 5 minutes.';
 
             if (error.message) {
@@ -69,6 +69,7 @@ class ForgotPassword extends React.Component {
               messageTTL.LONG,
               message
             );
+          }
         }
 
         this.setState({
@@ -78,6 +79,7 @@ class ForgotPassword extends React.Component {
       });
   };
 
+  // eslint-disable-next-line class-methods-use-this
   componentWillUnmount() {
     clearQueues();
   }

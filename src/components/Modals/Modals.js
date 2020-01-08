@@ -262,12 +262,12 @@ class Modals extends React.Component {
           </BootstrapModal>
         );
 
-      case 'clusterDelete':
-        var cluster = this.props.modal.templateValues.cluster;
-        var clusterId = this.props.modal.templateValues.cluster.id;
-        var clusterName = this.props.modal.templateValues.cluster.name;
-        
-return (
+      case 'clusterDelete': {
+        const cluster = this.props.modal.templateValues.cluster;
+        const clusterId = this.props.modal.templateValues.cluster.id;
+        const clusterName = this.props.modal.templateValues.cluster.name;
+
+        return (
           <BootstrapModal
             onHide={this.close.bind(this)}
             show={this.props.modal.visible}
@@ -307,6 +307,7 @@ return (
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
+      }
 
       case 'nodePoolDelete': {
         const nodePool = this.props.modal.templateValues.nodePool;
