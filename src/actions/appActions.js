@@ -97,7 +97,7 @@ export function installApp(app, clusterID) {
     let createAppConfiguration = appConfigsApi.createClusterAppConfigV4.bind(
       appConfigsApi
     );
-    let createApp = appConfigsApi.createClusterAppConfigV4.bind(appsApi);
+    let createApp = appsApi.createClusterAppV4.bind(appsApi);
 
     if (isNodePoolsCluster) {
       createAppConfiguration = appConfigsApi.createClusterAppConfigV5.bind(
