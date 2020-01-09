@@ -272,20 +272,20 @@ class ClusterDetailView extends React.Component {
                           workerNodesDesired={this.getDesiredNumberOfNodes()}
                         />
                       ) : (
-                          <V4ClusterDetailTable
-                            accessCluster={this.accessCluster}
-                            canClusterUpgrade={this.canClusterUpgrade()}
-                            cluster={cluster}
-                            credentials={credentials}
-                            provider={provider}
-                            release={release}
-                            region={region}
-                            showScalingModal={this.showScalingModal}
-                            showUpgradeModal={this.showUpgradeModal}
-                            workerNodesDesired={this.getDesiredNumberOfNodes()}
-                            workerNodesRunning={getNumberOfNodes(cluster)}
-                          />
-                        )}
+                        <V4ClusterDetailTable
+                          accessCluster={this.accessCluster}
+                          canClusterUpgrade={this.canClusterUpgrade()}
+                          cluster={cluster}
+                          credentials={credentials}
+                          provider={provider}
+                          release={release}
+                          region={region}
+                          showScalingModal={this.showScalingModal}
+                          showUpgradeModal={this.showUpgradeModal}
+                          workerNodesDesired={this.getDesiredNumberOfNodes()}
+                          workerNodesRunning={getNumberOfNodes(cluster)}
+                        />
+                      )}
 
                       <div className='row section cluster_delete col-12'>
                         <div className='row'>
