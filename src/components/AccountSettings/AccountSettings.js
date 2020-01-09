@@ -8,7 +8,7 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const AccountSettings = () => (
+const AccountSettings = props => (
   <Breadcrumb
     data={{ title: 'ACCOUNT SETTINGS', pathname: '/account-settings/' }}
   >
@@ -31,17 +31,11 @@ const AccountSettings = () => (
               organization.
             </p>
 
-            <ChangeEmailForm
-              actions={this.props.actions}
-              user={this.props.user}
-            />
+            <ChangeEmailForm actions={props.actions} user={props.user} />
           </div>
         </div>
 
-        <ChangePasswordForm
-          actions={this.props.actions}
-          user={this.props.user}
-        />
+        <ChangePasswordForm actions={props.actions} user={props.user} />
 
         <div className='row section'>
           <div className='col-3'>
