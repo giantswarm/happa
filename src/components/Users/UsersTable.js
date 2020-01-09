@@ -6,7 +6,7 @@ import Button from 'UI/Button';
 
 import UsersLoader from './UsersLoader';
 import UsersPlaceholder from './UsersPlaceholder';
-import { formatStatus, isExpiringSoon,NEVER_EXPIRES } from './UsersUtils';
+import { formatStatus, isExpiringSoon, NEVER_EXPIRES } from './UsersUtils';
 
 const tableDefaultSorting = [
   {
@@ -129,19 +129,18 @@ const UsersTable = ({
     return <UsersPlaceholder />;
   }
 
-return (
-      <div className='users-table'>
-        <BootstrapTable
-          bordered={false}
-          columns={getTableColumnsConfig(onRemoveExpiration, onDelete)}
-          data={invitesAndUsers}
-          defaultSortDirection='asc'
-          defaultSorted={tableDefaultSorting}
-          keyField='email'
-        />
-      </div>
-    );
-
+  return (
+    <div className='users-table'>
+      <BootstrapTable
+        bordered={false}
+        columns={getTableColumnsConfig(onRemoveExpiration, onDelete)}
+        data={invitesAndUsers}
+        defaultSortDirection='asc'
+        defaultSorted={tableDefaultSorting}
+        keyField='email'
+      />
+    </div>
+  );
 };
 
 UsersTable.defaultProps = {

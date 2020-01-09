@@ -59,15 +59,15 @@ const CatalogTypeLabel = props => {
 
   return (
     <Wrapper>
-        <OverlayTrigger
-          overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
-          placement='top'
-        >
-          <div>
-            <span>{props.catalogType}</span> <i className={`fa fa-${icon}`} />
-          </div>
-        </OverlayTrigger>
-      </Wrapper>
+      <OverlayTrigger
+        overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
+        placement='top'
+      >
+        <div>
+          <span>{props.catalogType}</span> <i className={`fa fa-${icon}`} />
+        </div>
+      </OverlayTrigger>
+    </Wrapper>
   );
 };
 

@@ -18,7 +18,7 @@ class AWSAccountID extends React.Component {
       <Wrapper>
         {accountID}{' '}
         <a
-          href={`https://${  accountID  }.signin.aws.amazon.com/console`}
+          href={`https://${accountID}.signin.aws.amazon.com/console`}
           rel='noopener noreferrer'
           target='_blank'
         >

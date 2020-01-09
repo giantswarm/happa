@@ -9,10 +9,9 @@ import PropTypes from 'prop-types';
 const EmptyStateDisplay = props => {
   if (props.displayEmptyState) {
     return props.emptyState;
-  } 
-    
-return props.children;
-  
+  }
+
+  return props.children;
 };
 
 EmptyStateDisplay.propTypes = {

@@ -84,8 +84,8 @@ class NewCluster extends React.Component {
     if (this.state.selectedRelease && this.props.firstNodePoolsRelease) {
       return cmp(this.state.selectedRelease, this.props.firstNodePoolsRelease);
     }
-    
-return -1;
+
+    return -1;
   };
 
   renderComponent = props => {
@@ -138,8 +138,8 @@ NewCluster.propTypes = {
 
 function mapStateToProps(state) {
   const { items, activeSortedReleases } = state.entities.releases;
-  
-return {
+
+  return {
     releases: items,
     activeSortedReleases,
     provider: state.app.info.general.provider,

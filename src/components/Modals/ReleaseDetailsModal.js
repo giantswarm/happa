@@ -111,14 +111,13 @@ class ReleaseDetailsModal extends React.Component {
           </BootstrapModal.Footer>
         </BootstrapModal>
       );
-    } 
-      
-return (
-        <p style={{ color: theme.colors.error, fontWeight: 400 }}>
-          No releases found.
-        </p>
-      );
-    
+    }
+
+    return (
+      <p style={{ color: theme.colors.error, fontWeight: 400 }}>
+        No releases found.
+      </p>
+    );
   }
 }
 

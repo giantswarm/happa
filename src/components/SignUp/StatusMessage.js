@@ -65,9 +65,13 @@ class StatusMessage extends React.Component {
     return (
       <div className='signup--status'>
         <div className='signup--status-text'>
-          {StatusMessage.statusMessage()[this.props.status] || <span>&nbsp;</span>}
+          {StatusMessage.statusMessage()[this.props.status] || (
+            <span>&nbsp;</span>
+          )}
         </div>
-        {StatusMessage.showLoader() ? <img className='loader' src={spinner} /> : null}
+        {StatusMessage.showLoader() ? (
+          <img className='loader' src={spinner} />
+        ) : null}
       </div>
     );
   }

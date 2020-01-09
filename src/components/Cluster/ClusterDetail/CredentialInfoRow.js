@@ -9,11 +9,7 @@ function CredentialInfoRow({ cluster, credentials, provider }) {
 
   const credentialInfoRows = [];
 
-  if (
-    cluster &&
-    credential_id &&
-    credentials.items.length === 1
-  ) {
+  if (cluster && credential_id && credentials.items.length === 1) {
     // check if we have the right credential info
     if (credentials.items[0].id !== credential_id) {
       credentialInfoRows.push(

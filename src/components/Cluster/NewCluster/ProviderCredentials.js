@@ -63,10 +63,9 @@ class ProviderCredentials extends React.Component {
           <div className='col-9'>{details}</div>
         </div>
       );
-    } 
-      
-return <div />;
-    
+    }
+
+    return <div />;
   }
 }
 

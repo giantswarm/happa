@@ -109,26 +109,25 @@ class NodeCountSelector extends React.Component {
       );
     }
 
-return (
-        <div className='row'>
-          <div className='col-12'>
-            <form onSubmit={this.handleFormSubmit}>
-              <label data-testid='node-count-selector-picker'>
-                <NumberPicker
-                  label=''
-                  min={minValue}
-                  max={maxValue}
-                  onChange={this.updateNodeCount}
-                  readOnly={readOnly}
-                  stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
-                  value={scaling.max}
-                />
-              </label>
-            </form>
-          </div>
+    return (
+      <div className='row'>
+        <div className='col-12'>
+          <form onSubmit={this.handleFormSubmit}>
+            <label data-testid='node-count-selector-picker'>
+              <NumberPicker
+                label=''
+                min={minValue}
+                max={maxValue}
+                onChange={this.updateNodeCount}
+                readOnly={readOnly}
+                stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
+                value={scaling.max}
+              />
+            </label>
+          </form>
         </div>
-      );
-
+      </div>
+    );
   }
 }
 

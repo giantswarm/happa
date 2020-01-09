@@ -6,7 +6,7 @@ import Button from 'UI/Button';
 const GenericModal = props => {
   return (
     <BootstrapModal
-      className={`modal ${  props.className}`}
+      className={`modal ${props.className}`}
       onHide={props.onClose}
       show={props.visible}
     >

@@ -60,7 +60,7 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
 
   return (
     <Wrapper onMouseLeave={() => setClipboardContent(null)}>
-      <Label clusterID={clusterID} title={`Unique Cluster ID: ${  clusterID}`}>
+      <Label clusterID={clusterID} title={`Unique Cluster ID: ${clusterID}`}>
         {clusterID}
       </Label>
 

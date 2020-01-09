@@ -195,12 +195,12 @@ class NumberPicker extends React.Component {
     } else if (desiredValue > this.props.max) {
       return {
         value: parseInt(desiredValue),
-        validationError: `Value must not be larger than ${  this.props.max}`,
+        validationError: `Value must not be larger than ${this.props.max}`,
       };
     } else if (desiredValue < this.props.min) {
       return {
         value: parseInt(desiredValue),
-        validationError: `Value must not be smaller than ${  this.props.min}`,
+        validationError: `Value must not be smaller than ${this.props.min}`,
       };
     } else if (!isWholeNumber(parseFloat(desiredValue))) {
       return {
@@ -209,11 +209,10 @@ class NumberPicker extends React.Component {
       };
     }
 
-return {
-        value: parseInt(desiredValue),
-        validationError: '',
-      };
-
+    return {
+      value: parseInt(desiredValue),
+      validationError: '',
+    };
   };
 
   handleFocus = event => {
@@ -288,8 +287,7 @@ function isWholeNumber(value) {
     return true;
   }
 
-return false;
-
+  return false;
 }
 
 export default NumberPicker;

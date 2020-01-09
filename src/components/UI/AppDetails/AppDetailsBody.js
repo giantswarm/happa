@@ -22,8 +22,8 @@ const DescriptionList = styled.dl`
 
 const AppDetailsBody = props => {
   const { description, children } = props;
-  
-return (
+
+  return (
     <DescriptionList>
       {description && description !== '' && (
         <>
