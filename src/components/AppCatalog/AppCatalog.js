@@ -27,6 +27,8 @@ class AppCatalog extends React.Component {
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
         );
+
+        // eslint-disable-next-line no-console
         console.error(error);
       });
   }

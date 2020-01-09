@@ -61,6 +61,7 @@ class ChangePassword extends React.Component {
     );
   };
 
+  // eslint-disable-next-line class-methods-use-this
   passwordEditingStarted() {
     // NOOP
   }
@@ -127,11 +128,12 @@ class ChangePassword extends React.Component {
         );
       })
       .catch(error => {
-        let errorMessage;
+        let errorMessage = null;
 
         if (
           error.body &&
           error.body.status_code &&
+          // eslint-disable-next-line no-magic-numbers
           error.body.status_code === 10010
         ) {
           errorMessage = (

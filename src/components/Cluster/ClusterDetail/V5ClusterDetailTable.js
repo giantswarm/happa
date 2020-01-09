@@ -290,7 +290,6 @@ class V5ClusterDetailTable extends React.Component {
   state = {
     loading: false,
     availableZonesGridTemplateAreas: '',
-    awsInstanceTypes: {},
     RAM: 0,
     CPUs: 0,
     workerNodesRunning: 0,
@@ -352,9 +351,9 @@ class V5ClusterDetailTable extends React.Component {
     }));
 
   updateNodePoolForm = data => {
-    this.setState(
-      produce(this.state, draft => {
-        draft.nodePoolForm = { ...this.state.nodePoolForm, ...data };
+    this.setState(prevState =>
+      produce(prevState, draft => {
+        draft.nodePoolForm = { ...prevState.nodePoolForm, ...data };
       })
     );
   };
@@ -381,8 +380,8 @@ class V5ClusterDetailTable extends React.Component {
     if (cluster && cluster.lastUpdated) {
       return moment(cluster.lastUpdated).fromNow();
     }
-    
-return 'n/a';
+
+    return 'n/a';
   }
 
   render() {
@@ -475,10 +474,9 @@ return 'n/a';
                       return -1;
                     } else if (a.id > b.id) {
                       return 1;
-                    } 
-                      
-return -1;
-                    
+                    }
+
+                    return -1;
                   })
                   .map(nodePool => (
                     <BaseTransition
@@ -548,9 +546,9 @@ return -1;
           <FlexWrapperDiv className={zeroNodePools && 'zero-nodepools'}>
             {zeroNodePools && (
               <p>
-                  Add at least one node pool to this cluster so that you can
-                  actually run workloads.
-                </p>
+                Add at least one node pool to this cluster so that you can
+                actually run workloads.
+              </p>
             )}
             <Button onClick={this.toggleAddNodePoolForm}>
               <i className='fa fa-add-circle' /> ADD NODE POOL

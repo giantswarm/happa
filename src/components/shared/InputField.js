@@ -55,28 +55,31 @@ class InputField extends React.Component {
 
   onChange = () => {
     const currentValue = this.input.value;
-    const validation = this.props.validate(currentValue);
-    let valid = false;
-    let validationError = this.state.validationError;
-
-    if (this.props.onStartTyping) {
-      this.props.onStartTyping(currentValue);
-    }
-
-    clearTimeout(typingTimer);
-
-    // If its valid, show that immediately to the user. Thats nice for them
-    // to get instant feedback.
-    if (validation.valid) {
-      valid = true;
-      validationError = '';
-    }
 
     this.setState(
-      {
-        valid: valid,
-        validationError: validationError,
-        value: currentValue,
+      (prevState, prevProps) => {
+        const validation = prevProps.validate(currentValue);
+        let valid = false;
+        let validationError = prevState.validationError;
+
+        if (prevProps.onStartTyping) {
+          prevProps.onStartTyping(currentValue);
+        }
+
+        clearTimeout(typingTimer);
+
+        // If its valid, show that immediately to the user. Thats nice for them
+        // to get instant feedback.
+        if (validation.valid) {
+          valid = true;
+          validationError = '';
+        }
+
+        return {
+          valid: valid,
+          validationError: validationError,
+          value: currentValue,
+        };
       },
       () => {
         if (this.props.onChange) {

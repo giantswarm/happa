@@ -28,8 +28,9 @@ class OAuthCallback extends React.Component {
             .then(() => {
               props.dispatch(push('/'));
             })
-            .catch(err => {
-              console.error(err);
+            .catch(authError => {
+              // eslint-disable-next-line no-console
+              console.error(authError);
             });
         } else {
           this.setState({ error: err });

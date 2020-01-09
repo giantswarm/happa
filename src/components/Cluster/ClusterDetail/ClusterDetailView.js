@@ -3,7 +3,6 @@ import * as appActions from 'actions/appActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
 import { bindActionCreators } from 'redux';
-import { clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { getNumberOfNodes } from 'utils/clusterUtils';
@@ -63,6 +62,7 @@ class ClusterDetailView extends React.Component {
   registerRefreshInterval = () => {
     this.loadDataInterval = this.props.setInterval(
       this.loadDetails,
+      // eslint-disable-next-line no-magic-numbers
       30 * 1000 // 30 seconds
     );
   };
@@ -71,17 +71,17 @@ class ClusterDetailView extends React.Component {
     const {
       cluster,
       clusterId,
-      clusterActions,
+      clusterActions: clusterActionsController,
       organizationId,
       dispatch,
-      releaseActions,
+      releaseActions: releaseActionsController,
     } = this.props;
 
     if (typeof cluster === 'undefined') {
-      dispatch(push(`/organizations/${  organizationId}`));
+      dispatch(push(`/organizations/${organizationId}`));
 
       new FlashMessage(
-        `Cluster <code>${  clusterId  }</code> not found`,
+        `Cluster <code>${clusterId}</code> not found`,
         messageType.ERROR,
         messageTTL.FOREVER,
         'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.'
@@ -93,15 +93,16 @@ class ClusterDetailView extends React.Component {
     dispatch(organizationCredentialsLoad(organizationId));
 
     // TODO This probably should go to action creators where this logic belongs (?)
-    releaseActions
+    releaseActionsController
       .loadReleases()
       .then(() => {
-        return clusterActions.clusterLoadDetails(cluster.id);
+        return clusterActionsController.clusterLoadDetails(cluster.id);
       })
       .then(() => {
         return this.props.dispatch(appActions.loadApps(cluster.id));
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error(error);
       });
 
@@ -137,10 +138,9 @@ class ClusterDetailView extends React.Component {
   clusterName() {
     if (this.props.cluster) {
       return this.props.cluster.name;
-    } 
-      
-return 'Not found';
-    
+    }
+
+    return 'Not found';
   }
 
   // Determine whether the current cluster can be upgraded
@@ -160,7 +160,7 @@ return 'Not found';
   canClusterScale() {
     if (
       !Object.keys(this.props.cluster).includes('status') ||
-      this.props.cluster.status == null
+      this.props.cluster.status === null
     ) {
       // Cluster doesn't have status object yet.
       return false;
@@ -181,6 +181,8 @@ return 'Not found';
     ) {
       return true;
     }
+
+    return false;
   }
 
   getDesiredNumberOfNodes() {
@@ -196,12 +198,12 @@ return 'Not found';
     // Is AWSConfig.Status present yet?
     if (
       Object.keys(this.props.cluster).includes('status') &&
-      this.props.cluster.status != null
+      this.props.cluster.status !== null
     ) {
       return this.props.cluster.status.cluster.scaling.desiredCapacity;
     }
-    
-return 0; // if we return null no value is rendered in AWS v4 cluster view
+
+    return 0; // if we return null no value is rendered in AWS v4 cluster view
   }
 
   accessCluster = () => {
@@ -215,7 +217,7 @@ return 0; // if we return null no value is rendered in AWS v4 cluster view
     return new Promise((resolve, reject) => {
       this.props
         .dispatch(
-          clusterPatch(
+          clusterActions.clusterPatch(
             this.props.cluster,
             { name: value },
             this.props.isNodePoolsCluster

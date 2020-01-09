@@ -129,13 +129,15 @@ class ClusterApps extends React.Component {
   // It combines information from the release endpoint with the latest info
   // coming from App CRs.
   preinstalledApps() {
+    let i = 0;
+
     const displayApps = {
       essentials: [],
       management: [],
       ingress: [],
     };
 
-    for (var i = 0; i < this.props.release.components.length; i++) {
+    for (i = 0; i < this.props.release.components.length; i++) {
       const component = this.props.release.components[i];
 
       // Find the component in the mapping above. If it's not there, then
@@ -167,9 +169,9 @@ class ClusterApps extends React.Component {
     const iconErrors = {};
     iconErrors[imageUrl] = true;
 
-    this.setState({
-      iconErrors: Object.assign({}, this.state.iconErrors, iconErrors),
-    });
+    this.setState(prevState => ({
+      iconErrors: Object.assign({}, prevState.iconErrors, iconErrors),
+    }));
   };
 
   openAppCatalog = () => {
@@ -256,7 +258,7 @@ class ClusterApps extends React.Component {
                             {app.logoUrl &&
                               !this.state.iconErrors[app.logoUrl] && (
                                 <img
-                                  alt={`${app.metadata.name  } icon`}
+                                  alt={`${app.metadata.name} icon`}
                                   height='36'
                                   onError={this.imgError}
                                   src={app.logoUrl}
@@ -289,7 +291,8 @@ class ClusterApps extends React.Component {
 
               <div className='browse-apps'>
                 <Button onClick={this.openAppCatalog}>
-                  <i className='fa fa-add-circle' />Install App
+                  <i className='fa fa-add-circle' />
+                  Install App
                 </Button>
               </div>
             </div>
@@ -311,7 +314,7 @@ class ClusterApps extends React.Component {
                     {this.preinstalledApps()[appCategory].map(app => {
                       return (
                         <div className='cluster-apps--app' key={app.name}>
-                          <img alt={`${app.title  } icon`} src={app.logoUrl} />
+                          <img alt={`${app.title} icon`} src={app.logoUrl} />
                           {app.name}
                           <small>{app.version}&nbsp;</small>
                         </div>

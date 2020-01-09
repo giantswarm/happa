@@ -65,18 +65,23 @@ const InstallAppModal = props => {
     setVisible(true);
   };
 
-  const onSelectCluster = clusterID => {
-    setClusterID(clusterID);
+  const onSelectCluster = newClusterID => {
+    setClusterID(newClusterID);
     next();
   };
 
   const lunrIndex = lunr(function() {
+    // eslint-disable-next-line react/no-this-in-sfc
     this.ref('id');
+    // eslint-disable-next-line react/no-this-in-sfc
     this.field('name');
+    // eslint-disable-next-line react/no-this-in-sfc
     this.field('owner');
+    // eslint-disable-next-line react/no-this-in-sfc
     this.field('id');
 
     props.clusters.forEach(function(cluster) {
+      // eslint-disable-next-line react/no-this-in-sfc
       this.add(cluster);
     }, this);
   });
@@ -85,11 +90,32 @@ const InstallAppModal = props => {
 
   if (query !== '') {
     clusters = lunrIndex
-      .search(`${query.trim()  } ${  query.trim()  }*`)
+      .search(`${query.trim()} ${query.trim()}*`)
       .map(result => {
         return props.clusters.find(cluster => cluster.id === result.ref);
       });
   }
+
+  const validate = str => {
+    if (str.length > maxLength) {
+      return 'must not be longer than 253 characters';
+    }
+
+    if (!str.match(validateStartEnd)) {
+      return 'must start and end with lower case alphanumeric characters';
+    }
+
+    if (!str.match(validateCharacters)) {
+      return `must consist of lower case alphanumeric characters, '-' or '.'`;
+    }
+
+    return '';
+  };
+
+  const updateNamespace = ns => {
+    setNamespace(ns);
+    setNamespaceError(validate(ns));
+  };
 
   const updateName = newName => {
     if (namespace === name) {
@@ -99,11 +125,6 @@ const InstallAppModal = props => {
     setName(newName);
 
     setNameError(validate(newName));
-  };
-
-  const updateNamespace = namespace => {
-    setNamespace(namespace);
-    setNamespaceError(validate(namespace));
   };
 
   const updateValuesYAML = files => {
@@ -124,26 +145,12 @@ const InstallAppModal = props => {
     reader.readAsText(files[0]);
   };
 
-  const validate = str => {
-    if (str.length > maxLength) {
-      return 'must not be longer than 253 characters';
-    }
-
-    if (!str.match(validateStartEnd)) {
-      return 'must start and end with lower case alphanumeric characters';
-    }
-
-    if (!str.match(validateCharacters)) {
-      return `must consist of lower case alphanumeric characters, '-' or '.'`;
-    }
-
-    return '';
-  };
-
   const anyValidationErrors = () => {
-    if (namespaceError != '' || nameError != '' || valuesYAMLError != '') {
+    if (namespaceError !== '' || nameError !== '' || valuesYAMLError !== '') {
       return true;
     }
+
+    return false;
   };
 
   const createApp = () => {
@@ -259,6 +266,8 @@ const InstallAppModal = props => {
               </GenericModal>
             );
         }
+
+        return null;
       })()}
     </>
   );

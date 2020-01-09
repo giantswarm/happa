@@ -9,9 +9,6 @@ const MIN_COLUMN_COUNT = 1;
 const RESPONSIVE_FEATURES_UPDATE_TIME = 300;
 
 class VirtualizedScrollableGrid extends React.PureComponent {
-  gridRef = React.createRef();
-  componentMounted = false;
-
   static defaultProps = {
     height: window.innerHeight,
     width: window.innerWidth,
@@ -32,6 +29,9 @@ class VirtualizedScrollableGrid extends React.PureComponent {
       width: widthToSet,
     };
   }
+
+  gridRef = React.createRef();
+  componentMounted = false;
 
   state = {
     columnCount: 1,
@@ -59,7 +59,10 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     const { current: gridElement } = this.gridRef;
 
     if (gridElement && index !== -1) {
-      const [rowIndex, columnIndex] = VirtualizedScrollableGrid.getGridIndexesFromAbsoluteIndex(
+      const [
+        rowIndex,
+        columnIndex,
+      ] = VirtualizedScrollableGrid.getGridIndexesFromAbsoluteIndex(
         index,
         colCount
       );
@@ -160,39 +163,39 @@ class VirtualizedScrollableGrid extends React.PureComponent {
 
     return (
       <WindowScroller onScroll={this.handleScroll}>
-          {({ isScrolling, onChildScroll, scrollTop }) => (
-            <List
-              direction='rtl'
-              ref={this.gridRef}
-              columnCount={columnCount}
-              rowCount={rowCount}
-              rowHeight={this.props.rowHeight}
-              columnWidth={columnWidth}
-              width={width}
-              height={this.props.height}
-              isScrolling={isScrolling}
-              onScroll={onChildScroll}
-              scrollTop={scrollTop}
-              className={this.props.className}
-              style={newStyle}
-            >
-              {({ columnIndex, rowIndex, style }) => {
-                const itemIndex = VirtualizedScrollableGrid.getAbsoluteIndexFromGridIndexes(
-                  rowIndex,
-                  columnIndex,
-                  columnCount
-                );
-                const item = data[itemIndex];
+        {({ isScrolling, onChildScroll, scrollTop }) => (
+          <List
+            direction='rtl'
+            ref={this.gridRef}
+            columnCount={columnCount}
+            rowCount={rowCount}
+            rowHeight={this.props.rowHeight}
+            columnWidth={columnWidth}
+            width={width}
+            height={this.props.height}
+            isScrolling={isScrolling}
+            onScroll={onChildScroll}
+            scrollTop={scrollTop}
+            className={this.props.className}
+            style={newStyle}
+          >
+            {({ columnIndex, rowIndex, style }) => {
+              const itemIndex = VirtualizedScrollableGrid.getAbsoluteIndexFromGridIndexes(
+                rowIndex,
+                columnIndex,
+                columnCount
+              );
+              const item = data[itemIndex];
 
-                if (!item) {
-                  return null;
-                }
+              if (!item) {
+                return null;
+              }
 
-                return this.props.children(style, item);
-              }}
-            </List>
-          )}
-        </WindowScroller>
+              return this.props.children(style, item);
+            }}
+          </List>
+        )}
+      </WindowScroller>
     );
   }
 }

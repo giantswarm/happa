@@ -80,8 +80,8 @@ class UpgradeClusterModal extends React.Component {
           {_.sortBy(changedComponents, 'name').map(diffEdit => {
             if (diffEdit.kind === 'E') {
               const component = components[diffEdit.path[0]];
-              
-return (
+
+              return (
                 <ReleaseComponentLabel
                   key={component.name}
                   name={component.name}
@@ -93,8 +93,8 @@ return (
 
             if (diffEdit.kind === 'N') {
               const component = diffEdit.rhs;
-              
-return (
+
+              return (
                 <ReleaseComponentLabel
                   isAdded
                   name={component.name}
@@ -105,8 +105,8 @@ return (
 
             if (diffEdit.kind === 'D') {
               const component = diffEdit.lhs;
-              
-return (
+
+              return (
                 <ReleaseComponentLabel
                   isRemoved
                   name={component.name}
@@ -114,6 +114,8 @@ return (
                 />
               );
             }
+
+            return null;
           })}
         </div>
 
@@ -222,10 +224,9 @@ return (
 
             this.close();
           })
-          .catch(error => {
+          .catch(_error => {
             this.setState({
               loading: false,
-              error: error,
             });
           });
       }
@@ -238,6 +239,8 @@ return (
     } else if (this.state.page === 'inspect-changes') {
       return this.inspectChangesPage();
     }
+
+    return null;
   };
 
   render() {

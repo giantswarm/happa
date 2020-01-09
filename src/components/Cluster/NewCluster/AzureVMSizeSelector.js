@@ -9,18 +9,19 @@ class AzureVMSizeSelector extends React.Component {
     super(props);
 
     let vmSizes = {};
-    if (window.config.azureCapabilitiesJSON != '') {
+    if (window.config.azureCapabilitiesJSON !== '') {
       vmSizes = JSON.parse(window.config.azureCapabilitiesJSON);
     }
 
     const availableVMSizes = [];
     // Create a list of only the allowed VM sizes.
-    props.allowedVMSizes.forEach((vs) => {
+    props.allowedVMSizes.forEach(vs => {
       if (typeof vmSizes[vs] === 'object') {
         availableVMSizes.push(vmSizes[vs]);
       }
     });
 
+    // eslint-disable-next-line react/state-in-constructor
     this.state = {
       modalVisible: false,
       preSelectedVMSize: props.value,
@@ -53,10 +54,9 @@ class AzureVMSizeSelector extends React.Component {
   buttonClass() {
     if (this.props.readOnly) {
       return 'disabled';
-    } 
-      
-return '';
-    
+    }
+
+    return '';
   }
 
   preSelect(vmSize) {
@@ -74,19 +74,16 @@ return '';
   };
 
   validateVMSize = vmSize => {
-    let valid;
-    let validationError;
+    let valid = false;
+    let validationError = 'Please enter a valid vm size';
 
     const validVMSizes = this.state.vmSizes.map(x => {
       return x.name;
     });
 
-    if (validVMSizes.indexOf(vmSize) != -1) {
+    if (validVMSizes.indexOf(vmSize) !== -1) {
       valid = true;
       validationError = '';
-    } else {
-      valid = false;
-      validationError = 'Please enter a valid vm size';
     }
 
     this.setState({
@@ -118,10 +115,7 @@ return '';
             />
 
             <div
-              className={
-                `new-cluster--instance-type-selector-button ${ 
-                this.buttonClass()}`
-              }
+              className={`new-cluster--instance-type-selector-button ${this.buttonClass()}`}
               onClick={this.showModal}
             >
               <i className='fa fa-menu' />
@@ -170,6 +164,7 @@ return '';
                       <td className='description'>{vmSize.description}</td>
                       <td className='numeric'>{vmSize.numberOfCores}</td>
                       <td className='numeric'>
+                        {/* eslint-disable-next-line no-magic-numbers */}
                         {(vmSize.memoryInMb / 1000).toFixed(2)} GB
                       </td>
                     </tr>

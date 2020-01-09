@@ -34,11 +34,11 @@ const YAMLFileUpload = props => {
     const reader = new FileReader();
 
     reader.onload = (function() {
-      let parsedYAML;
-      
-return function(e) {
+      let parsedYAML = '';
+
+      return function(event) {
         try {
-          parsedYAML = yaml.safeLoad(e.target.result);
+          parsedYAML = yaml.safeLoad(event.target.result);
         } catch (err) {
           new FlashMessage(
             'Unable to parse valid YAML from this file. Please validate that it is a valid YAML file and try again.',
@@ -47,8 +47,8 @@ return function(e) {
           );
           setFileUploading(false);
           refreshFileInputs();
-          
-return;
+
+          return;
         }
 
         props.onInputChange(parsedYAML, () => {

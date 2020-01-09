@@ -25,12 +25,10 @@ class ChangeEmailForm extends React.Component {
 
   validateEmail = e => {
     const email = e.target.value;
-    let isButtonVisible;
+    let isButtonVisible = false;
 
     if (email !== this.props.user.email) {
       isButtonVisible = true;
-    } else {
-      isButtonVisible = false;
     }
 
     let newState = update(this.state, {
@@ -64,7 +62,7 @@ class ChangeEmailForm extends React.Component {
     e.preventDefault();
 
     // Don't submit the form if nothing changed.
-    if (this.props.user.email != this.state.fields.email.value) {
+    if (this.props.user.email !== this.state.fields.email.value) {
       const usersApi = new GiantSwarm.UsersApi();
 
       this.setState({
@@ -87,11 +85,12 @@ class ChangeEmailForm extends React.Component {
           return this.props.actions.refreshUserInfo();
         })
         .catch(error => {
-          let errorMessage;
+          let errorMessage = null;
 
           if (
             error.body &&
             error.body.status_code &&
+            // eslint-disable-next-line no-magic-numbers
             error.body.status_code === 10009
           ) {
             errorMessage = (

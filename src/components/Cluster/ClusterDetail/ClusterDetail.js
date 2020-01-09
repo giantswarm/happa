@@ -8,36 +8,29 @@ import GettingStarted from '../../GettingStarted/GettingStarted';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class ClusterDetail extends React.Component {
-  render() {
-    return (
-      <Breadcrumb
-        data={{
-          title: this.props.match.params.clusterId,
-          pathname: this.props.match.url,
-        }}
-      >
-        <Switch>
-          <Route
-            exact
-            path={`${this.props.match.path}`}
-            render={() => <ClusterDetailView {...this.props} />}
-          />
+const ClusterDetail = props => (
+  <Breadcrumb
+    data={{
+      title: props.match.params.clusterId,
+      pathname: props.match.url,
+    }}
+  >
+    <Switch>
+      <Route
+        exact
+        path={`${props.match.path}`}
+        render={() => <ClusterDetailView {...props} />}
+      />
 
-          <Route
-            path={`${this.props.match.path}/getting-started/`}
-            render={() => <GettingStarted {...this.props} />}
-          />
+      <Route
+        path={`${props.match.path}/getting-started/`}
+        render={() => <GettingStarted {...props} />}
+      />
 
-          <Redirect
-            path={`${this.props.match.path}/*`}
-            to={`${this.props.match.url}`}
-          />
-        </Switch>
-      </Breadcrumb>
-    );
-  }
-}
+      <Redirect path={`${props.match.path}/*`} to={`${props.match.url}`} />
+    </Switch>
+  </Breadcrumb>
+);
 
 ClusterDetail.propTypes = {
   dispatch: PropTypes.func,
@@ -61,8 +54,11 @@ ClusterDetail.propTypes = {
   isNodePoolsCluster: PropTypes.bool,
 };
 function mapStateToProps(state, ownProps) {
-  const cluster = state.entities.clusters.items[ownProps.match.params.clusterId];
+  const cluster =
+    state.entities.clusters.items[ownProps.match.params.clusterId];
+  // eslint-disable-next-line init-declarations
   let release;
+  // eslint-disable-next-line init-declarations
   let targetReleaseVersion;
   let isNodePoolsCluster = false;
 

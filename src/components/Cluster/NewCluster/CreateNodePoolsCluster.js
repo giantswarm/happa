@@ -186,6 +186,17 @@ const defaultNodePool = () => ({
 });
 
 class CreateNodePoolsCluster extends Component {
+  static errorState() {
+    return (
+      <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
+        <b>Something went wrong while trying to create your cluster.</b>
+        <br />
+        Perhaps our servers are down, please try again later or contact support:
+        support@giantswarm.io
+      </div>
+    );
+  }
+
   state = {
     name: {
       value: this.props.clusterName,
@@ -216,7 +227,8 @@ class CreateNodePoolsCluster extends Component {
 
   updateName = event => {
     const name = event.target.value;
-    const [isValid, message] = hasAppropriateLength(name, 0, 100);
+    const maxNameLength = 100;
+    const [isValid, message] = hasAppropriateLength(name, 0, maxNameLength);
 
     this.props.updateClusterNameInParent(name);
 
@@ -249,11 +261,7 @@ class CreateNodePoolsCluster extends Component {
     } = this.state;
 
     const areNodePoolsValid = Object.keys(nodePoolsForms.nodePools)
-      .map(np =>
-        (nodePoolsForms.nodePools[np].isValid
-          ? nodePoolsForms.nodePools[np].isValid
-          : false)
-      )
+      .map(np => nodePoolsForms.nodePools[np].isValid)
       .every(np => np); // This checks if everything is true.
 
     const isValid =
@@ -303,24 +311,15 @@ class CreateNodePoolsCluster extends Component {
         )
       );
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error);
+
       this.setState({
         submitting: false,
         error: error,
       });
     }
   };
-
-  errorState() {
-    return (
-      <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
-        <b>Something went wrong while trying to create your cluster.</b>
-        <br />
-        Perhaps our servers are down, please try again later or contact support:
-        support@giantswarm.io
-      </div>
-    );
-  }
 
   toggleMasterAZSelector = () => {
     this.setState(state => ({
@@ -486,17 +485,17 @@ class CreateNodePoolsCluster extends Component {
               {Object.keys(nodePools).length === 0 && <hr />}
               <TransitionGroup>
                 {Object.keys(nodePools).map(npId => {
-                  const name = nodePools[npId].data.name;
-                  
-return (
+                  const nodePoolName = nodePools[npId].data.name;
+
+                  return (
                     <SlideTransition key={npId} appear={true} direction='down'>
                       <AddNodePoolWrapperDiv>
-                        <NodePoolHeading>{name}</NodePoolHeading>
+                        <NodePoolHeading>{nodePoolName}</NodePoolHeading>
                         <AddNodePoolFlexColumnDiv>
                           <AddNodePool
                             selectedRelease={this.props.selectedRelease}
                             informParent={this.updateNodePoolForm}
-                            name={name}
+                            name={nodePoolName}
                             id={npId}
                           />
                           <i
@@ -504,7 +503,7 @@ return (
                             title='Remove node pool'
                             aria-hidden='true'
                             onClick={() => this.removeNodePoolForm(npId)}
-                           />
+                          />
                         </AddNodePoolFlexColumnDiv>
                       </AddNodePoolWrapperDiv>
                     </SlideTransition>
@@ -517,7 +516,7 @@ return (
               <hr style={{ margin: '30px 0' }} />
             </WrapperDiv>
 
-            {this.state.error && this.errorState()}
+            {this.state.error && CreateNodePoolsCluster.errorState()}
 
             <FlexRowDiv>
               <Button
@@ -585,6 +584,7 @@ function mapStateToProps(state) {
   const { availability_zones: AZ } = state.app.info.general;
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
+  // eslint-disable-next-line no-magic-numbers
   const maxAZ = Math.min(AZ.max, 4);
   const minAZ = 1;
   const defaultAZ = AZ.default;
@@ -593,6 +593,7 @@ function mapStateToProps(state) {
   const provider = state.app.info.general.provider;
   const clusterCreationStats = state.app.info.stats.cluster_creation_duration;
 
+  // eslint-disable-next-line init-declarations
   let defaultInstanceType;
   if (
     state.app.info.workers.instance_type &&

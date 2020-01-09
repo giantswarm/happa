@@ -8,6 +8,7 @@ import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 class OauthCallback extends React.Component {
+  // eslint-disable-next-line class-methods-use-this
   componentWillUnmount() {
     clearQueues();
   }

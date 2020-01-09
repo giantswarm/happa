@@ -15,13 +15,13 @@ class AWSInstanceTypeSelector extends React.Component {
 
     let instanceTypes = {};
 
-    if (window.config.awsCapabilitiesJSON != '') {
+    if (window.config.awsCapabilitiesJSON !== '') {
       instanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
     }
 
     const availableInstanceTypes = [];
     // Create a list of only the allowed instance types
-    props.allowedInstanceTypes.forEach((it) => {
+    props.allowedInstanceTypes.forEach(it => {
       if (typeof instanceTypes[it] === 'object') {
         availableInstanceTypes.push(
           Object.assign({}, instanceTypes[it], { name: it })
@@ -29,6 +29,7 @@ class AWSInstanceTypeSelector extends React.Component {
       }
     });
 
+    // eslint-disable-next-line react/state-in-constructor
     this.state = {
       modalVisible: false,
       selectedInstanceType: props.value,
@@ -61,10 +62,9 @@ class AWSInstanceTypeSelector extends React.Component {
   buttonClass() {
     if (this.props.readOnly) {
       return 'disabled';
-    } 
-      
-return '';
-    
+    }
+
+    return '';
   }
 
   preSelect(instanceTypeName) {
@@ -82,19 +82,16 @@ return '';
   };
 
   validateInstanceType = instanceTypeName => {
-    let valid;
-    let validationError;
+    let valid = false;
+    let validationError = 'Please enter a valid instance type';
 
     const validInstanceTypes = this.state.instanceTypes.map(x => {
       return x.name;
     });
 
-    if (validInstanceTypes.indexOf(instanceTypeName) != -1) {
+    if (validInstanceTypes.indexOf(instanceTypeName) !== -1) {
       valid = true;
       validationError = '';
-    } else {
-      valid = false;
-      validationError = 'Please enter a valid instance type';
     }
 
     this.setState({
@@ -130,10 +127,7 @@ return '';
             />
 
             <div
-              className={
-                `new-cluster--instance-type-selector-button ${ 
-                this.buttonClass()}`
-              }
+              className={`new-cluster--instance-type-selector-button ${this.buttonClass()}`}
               onClick={this.showModal}
             >
               <i className='fa fa-menu' />

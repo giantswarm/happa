@@ -3,7 +3,6 @@ import { Providers } from 'shared/constants';
 import AWSAccountID from 'UI/AWSAccountID';
 import PropTypes from 'prop-types';
 import React from 'react';
-// import styled from '@emotion/styled';
 
 function CredentialInfoRow({ cluster, credentials, provider }) {
   const { credential_id } = cluster;
@@ -13,7 +12,6 @@ function CredentialInfoRow({ cluster, credentials, provider }) {
   if (
     cluster &&
     credential_id &&
-    credential_id != '' &&
     credentials.items.length === 1
   ) {
     // check if we have the right credential info
@@ -66,14 +64,15 @@ function CredentialInfoRow({ cluster, credentials, provider }) {
         {credentialInfoRows}
       </FlexRowWithTwoBlocksOnEdges>
     );
-  } 
-    
-return null;
-  
+  }
+
+  return null;
 }
 
 CredentialInfoRow.propTypes = {
   cluster: PropTypes.object,
+  credentials: PropTypes.object,
+  provider: PropTypes.string,
 };
 
 export default CredentialInfoRow;

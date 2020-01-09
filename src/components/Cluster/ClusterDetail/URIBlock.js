@@ -36,6 +36,7 @@ const BlockWrapper = styled.div`
 
 const getTooltip = text => <Tooltip id='tooltip'>{text}</Tooltip>;
 
+// eslint-disable-next-line react/no-multi-comp
 const URIBlock = ({ children, title, ...props }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
   const tooltipText = `Copy ${children} to clipboard.`;

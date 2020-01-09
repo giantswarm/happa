@@ -5,7 +5,7 @@ import React from 'react';
 const certificateOrgsColorHashCache = {};
 
 class CertificateOrgsLabel extends React.Component {
-  calculateColour(str) {
+  static calculateColour(str) {
     if (!certificateOrgsColorHashCache[str]) {
       const col = new ColorHash({ lightness: 0.25, saturation: 0.6 }).hex(str);
       certificateOrgsColorHashCache[str] = col;
@@ -21,18 +21,24 @@ class CertificateOrgsLabel extends React.Component {
           .split(',')
           .sort()
           .map((element, index) => {
-            if (element != '') {
+            if (element !== '') {
               return (
                 <span
-                  className="orglabel"
+                  className='orglabel'
                   data-testid={`orglabel-${index}`}
                   key={element}
-                  style={{ backgroundColor: this.calculateColour(element) }}
+                  style={{
+                    backgroundColor: CertificateOrgsLabel.calculateColour(
+                      element
+                    ),
+                  }}
                 >
                   {element}
                 </span>
               );
             }
+
+            return null;
           })}
       </div>
     );

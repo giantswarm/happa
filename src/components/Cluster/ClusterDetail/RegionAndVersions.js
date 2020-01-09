@@ -71,6 +71,8 @@ function RegionAndVersions({
                   component => component.name === 'kubernetes'
                 );
                 if (kubernetes) return kubernetes.version;
+
+                return null;
               })()}
             </>
           )}

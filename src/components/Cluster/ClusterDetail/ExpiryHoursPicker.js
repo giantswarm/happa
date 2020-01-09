@@ -12,13 +12,18 @@ class ExpiryHoursPicker extends React.Component {
     let days = 0;
     let hours = 0;
 
+    // eslint-disable-next-line no-magic-numbers
     years = Math.floor(props.initialValue / 8760);
+    // eslint-disable-next-line no-magic-numbers
     months = Math.floor((props.initialValue - years * 8760) / 720);
+    // eslint-disable-next-line no-magic-numbers
     days = Math.floor((props.initialValue - years * 8760 - months * 720) / 24);
     hours = Math.floor(
+      // eslint-disable-next-line no-magic-numbers
       props.initialValue - years * 8760 - months * 720 - days * 24
     );
 
+    // eslint-disable-next-line react/state-in-constructor
     this.state = {
       yearsValue: years,
       monthsValue: months,
@@ -114,11 +119,11 @@ class ExpiryHoursPicker extends React.Component {
   }
 
   updateTTL() {
-    let expireDate; // The expiration date the user intends
+    let expireDate = 0; // The expiration date the user intends
     // This will either come straight from the date picker state
     // or calculated based on values from the various year/month/day/hour
     // inputs.
-    let TTL;
+    let TTL = 0;
 
     if (this.state.selectionType === 'date') {
       // expireDate is at the start of the day of whatever the user picked.
@@ -238,6 +243,7 @@ class ExpiryHoursPicker extends React.Component {
           <DatePicker
             dateFormat='YYYY-MM-DD'
             dropdownMode='select'
+            // eslint-disable-next-line no-magic-numbers
             maxDate={moment().add(30, 'years')}
             minDate={moment().add(1, 'day')}
             onChange={this.handleDateChange.bind(this)}

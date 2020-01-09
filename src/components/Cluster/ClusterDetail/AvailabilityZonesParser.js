@@ -33,6 +33,8 @@ export default function AvailabilityZonesParser({
 
   // Picker.
   const [AZPicker, setAZPicker] = useState(initialStatePicker);
+  const [AZLabels, setAZLabels] = useState(initialStateLabels);
+
   useEffect(() => {
     if (isLabels) return;
 
@@ -43,7 +45,6 @@ export default function AvailabilityZonesParser({
   }, [AZPicker, isLabels, updateAZValuesInParent]);
 
   // Labels.
-  const [AZLabels, setAZLabels] = useState(initialStateLabels);
   useEffect(() => {
     if (!isLabels) return;
 

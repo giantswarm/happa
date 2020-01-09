@@ -20,6 +20,7 @@ class AppDetail extends React.Component {
     const query = new URLSearchParams(props.location.search);
     const q = query.get('q');
 
+    // eslint-disable-next-line react/state-in-constructor
     this.state = {
       q,
     };
@@ -32,7 +33,7 @@ class AppDetail extends React.Component {
       <Breadcrumb
         data={{
           title: this.props.match.params.repo.toUpperCase(),
-          pathname: `/app-catalogs/${  this.props.match.params.repo  }/`,
+          pathname: `/app-catalogs/${this.props.match.params.repo}/`,
         }}
       >
         <LoadingOverlay loading={!repo || this.props.repo.isFetchingIndex}>

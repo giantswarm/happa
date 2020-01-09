@@ -36,26 +36,29 @@ class EmailField extends React.Component {
 
   onChange = () => {
     const currentValue = this.input.value;
-    let valid = false;
-    let validationError = this.state.validationError;
-
-    if (this.props.onStartTyping) {
-      this.props.onStartTyping(currentValue);
-    }
-
-    clearTimeout(typingTimer);
-
-    // If its valid, show that immediately to the user. Thats nice for them
-    // to get instant feedback.
-    if (validationRegEx.test(currentValue)) {
-      valid = true;
-      validationError = '';
-    }
 
     this.setState(
-      {
-        valid: valid,
-        validationError: validationError,
+      prevState => {
+        let valid = false;
+        let validationError = prevState.validationError;
+
+        if (this.props.onStartTyping) {
+          this.props.onStartTyping(currentValue);
+        }
+
+        clearTimeout(typingTimer);
+
+        // If its valid, show that immediately to the user. Thats nice for them
+        // to get instant feedback.
+        if (validationRegEx.test(currentValue)) {
+          valid = true;
+          validationError = '';
+        }
+
+        return {
+          valid: valid,
+          validationError: validationError,
+        };
       },
       () => {
         if (this.props.onChange) {

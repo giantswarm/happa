@@ -5,27 +5,13 @@ import NewCluster from './NewCluster/NewCluster';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-class Cluster extends React.Component {
-  render() {
-    return (
-      <Switch>
-        <Route
-          component={NewCluster}
-          exact
-          path={`${this.props.match.path}/new`}
-        />
-        <Route
-          component={ClusterDetail}
-          path={`${this.props.match.path}/:clusterId`}
-        />
-        <Redirect
-          path={`${this.props.match.path}/*`}
-          to={`${this.props.match.url}`}
-        />
-      </Switch>
-    );
-  }
-}
+const Cluster = props => (
+  <Switch>
+    <Route component={NewCluster} exact path={`${props.match.path}/new`} />
+    <Route component={ClusterDetail} path={`${props.match.path}/:clusterId`} />
+    <Redirect path={`${props.match.path}/*`} to={`${props.match.url}`} />
+  </Switch>
+);
 
 Cluster.propTypes = {
   dispatch: PropTypes.func,

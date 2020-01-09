@@ -12,7 +12,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class ScaleNodePoolModal extends React.Component {
-  rollupAnimationDuration = 500;
+  static supportsAutoscaling(provider) {
+    if (provider !== Providers.AWS) return false;
+
+    return true;
+  }
+
+  // eslint-disable-next-line no-magic-numbers
+  static rollupAnimationDuration = 500;
 
   state = {
     modalVisible: false,
@@ -27,30 +34,32 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   reset = () => {
-    this.setState({
+    this.setState(prevState => ({
       scaling: {
-        ...this.state.scaling,
+        ...prevState.scaling,
         min: this.props.nodePool.scaling.min,
         max: this.props.nodePool.scaling.max,
       },
+      // eslint-disable-next-line react/no-unused-state
       loading: false,
       error: null,
-    });
+    }));
   };
 
   setNodePool = nodePool => {
-    this.setState({
+    this.setState(prevState => ({
       scaling: {
-        ...this.state.scaling,
+        ...prevState.scaling,
         min: nodePool.scaling.min,
         max: nodePool.scaling.max,
       },
       nodePool,
-    });
+    }));
   };
 
   back = () => {
     this.setState({
+      // eslint-disable-next-line react/no-unused-state
       loading: false,
       error: null,
     });
@@ -68,12 +77,6 @@ class ScaleNodePoolModal extends React.Component {
     });
   };
 
-  supportsAutoscaling(provider) {
-    if (provider !== Providers.AWS) return false;
-    
-return true;
-  }
-
   updateScaling = nodeCountSelector => {
     const { min, max, minValid, maxValid } = nodeCountSelector.scaling;
     this.setState({
@@ -84,6 +87,7 @@ return true;
   submit = () => {
     this.setState(
       {
+        // eslint-disable-next-line react/no-unused-state
         loading: true,
       },
       () => {
@@ -107,6 +111,7 @@ return true;
           })
           .catch(error => {
             this.setState({
+              // eslint-disable-next-line react/no-unused-state
               loading: false,
               error: error,
             });
@@ -120,7 +125,10 @@ return true;
     const { min, max } = this.state.scaling;
 
     if (
-      !this.supportsAutoscaling(this.props.provider, nodePool.release_version)
+      !ScaleNodePoolModal.supportsAutoscaling(
+        this.props.provider,
+        nodePool.release_version
+      )
     ) {
       // On non-auto-scaling clusters scaling.min == scaling.max so comparing
       // only min between props and current state works.
@@ -129,7 +137,8 @@ return true;
 
     if (workerNodesDesired < min) return min - workerNodesDesired;
     if (workerNodesDesired > max) return max - workerNodesDesired;
-    if (min == max && workerNodesDesired < max) return workerNodesDesired - max;
+    if (min === max && workerNodesDesired < max)
+      return workerNodesDesired - max;
 
     return 0;
   };
@@ -153,11 +162,11 @@ return true;
     // Are there any nodes already?
     const hasNodes = nodePool.status.nodes && nodePool.status.nodes_ready;
 
-    if (this.supportsAutoscaling(this.props.provider)) {
+    if (ScaleNodePoolModal.supportsAutoscaling(this.props.provider)) {
       if (min > workerNodesDesired && hasNodes) {
         workerDelta = min - workerNodesDesired;
-        
-return {
+
+        return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
           style: 'success',
           disabled: !minValid,
@@ -166,8 +175,8 @@ return {
 
       if (max < workerNodesDesired && hasNodes) {
         workerDelta = Math.abs(workerNodesDesired - max);
-        
-return {
+
+        return {
           title: `Remove ${workerDelta} worker node${this.pluralize(
             workerDelta
           )}`,
@@ -176,7 +185,7 @@ return {
         };
       }
 
-      if (min != nodePool.scaling.min) {
+      if (min !== nodePool.scaling.min) {
         return {
           title: 'Apply',
           style: 'success',
@@ -184,7 +193,7 @@ return {
         };
       }
 
-      if (max != nodePool.scaling.max) {
+      if (max !== nodePool.scaling.max) {
         return {
           title: 'Apply',
           style: 'success',
@@ -226,20 +235,20 @@ return {
     if (max < workerNodesRunning && minValid) {
       const diff = workerNodesRunning - max;
 
-      if (this.supportsAutoscaling(provider)) {
+      if (ScaleNodePoolModal.supportsAutoscaling(provider)) {
         warnings.push(
           <CSSTransition
             classNames='rollup'
             enter={true}
             exit={true}
             key={1}
-            timeout={this.rollupAnimationDuration}
+            timeout={ScaleNodePoolModal.rollupAnimationDuration}
           >
             <p key='node-removal'>
               <i className='fa fa-warning' /> The node pool currently has{' '}
               {workerNodesRunning} worker nodes running. By setting the maximum
               lower than that, you enforce the removal of{' '}
-              {diff === 1 ? 'one node' : `${diff  } nodes`}. This could result in
+              {diff === 1 ? 'one node' : `${diff} nodes`}. This could result in
               unscheduled workloads.
             </p>
           </CSSTransition>
@@ -249,11 +258,11 @@ return {
           <CSSTransition
             classNames='rollup'
             key={2}
-            timeout={this.rollupAnimationDuration}
+            timeout={ScaleNodePoolModal.rollupAnimationDuration}
           >
             <p key='node-removal'>
               <i className='fa fa-warning' /> You are about to enforce the
-              removal of {diff === 1 ? 'one node' : `${diff  } nodes`}. Please
+              removal of {diff === 1 ? 'one node' : `${diff} nodes`}. Please
               make sure the node pool has enough capacity to schedule all
               workloads.
             </p>
@@ -262,12 +271,13 @@ return {
       }
     }
 
+    // eslint-disable-next-line no-magic-numbers
     if (min < 3) {
       warnings.push(
         <CSSTransition
           classNames='rollup'
           key={3}
-          timeout={this.rollupAnimationDuration}
+          timeout={ScaleNodePoolModal.rollupAnimationDuration}
         >
           <p key='unsupported'>
             <i className='fa fa-warning' /> We recommend that you run clusters
@@ -280,13 +290,15 @@ return {
     let body = (
       <BootstrapModal.Body>
         <p>
-          {this.supportsAutoscaling(provider)
+          {ScaleNodePoolModal.supportsAutoscaling(provider)
             ? 'Set the scaling range and let the autoscaler set the effective number of worker nodes based on the usage.'
             : 'How many workers would you like your node pool to have?'}
         </p>
         <div className='row section'>
           <NodeCountSelector
-            autoscalingEnabled={this.supportsAutoscaling(provider)}
+            autoscalingEnabled={ScaleNodePoolModal.supportsAutoscaling(
+              provider
+            )}
             onChange={this.updateScaling}
             readOnly={false}
             scaling={this.state.scaling}

@@ -8,6 +8,39 @@ import React from 'react';
 const SEARCH_URL_PARAM = 'q';
 
 class AppListInner extends React.Component {
+  static filterApps(searchQuery, allApps) {
+    const fieldsToCheck = ['name', 'description', 'keywords'];
+    const trimmedSearchQuery = searchQuery.trim().toLowerCase();
+
+    let filteredApps = [];
+
+    if (trimmedSearchQuery === '') return allApps;
+
+    filteredApps = allApps.filter(app => {
+      // Go through all the app versions
+      return app.some(appVersions => {
+        // Check if any of the checked fields include the search query
+        return fieldsToCheck.some(field => {
+          const appVersionsField = appVersions[field]
+            ? String(appVersions[field])
+            : '';
+          const appVersionsFieldValue = appVersionsField.toLowerCase();
+
+          return appVersionsFieldValue.includes(trimmedSearchQuery);
+        });
+      });
+    });
+
+    return filteredApps;
+  }
+
+  static getSearchQueryFromLocation(location) {
+    const searchParams = new URLSearchParams(location.search);
+    const searchQuery = searchParams.get(SEARCH_URL_PARAM);
+
+    return searchQuery || '';
+  }
+
   iconErrors = {};
 
   state = {
@@ -38,45 +71,12 @@ class AppListInner extends React.Component {
     });
   };
 
-  filterApps(searchQuery, allApps) {
-    const fieldsToCheck = ['name', 'description', 'keywords'];
-    const trimmedSearchQuery = searchQuery.trim().toLowerCase();
-
-    let filteredApps = [];
-
-    if (trimmedSearchQuery === '') return allApps;
-
-    filteredApps = allApps.filter(app => {
-      // Go through all the app versions
-      return app.some(appVersions => {
-        // Check if any of the checked fields include the search query
-        return fieldsToCheck.some(field => {
-          const appVersionsField = appVersions[field]
-            ? String(appVersions[field])
-            : '';
-          const appVersionsFieldValue = appVersionsField.toLowerCase();
-
-          return appVersionsFieldValue.includes(trimmedSearchQuery);
-        });
-      });
-    });
-
-    return filteredApps;
-  }
-
   setSearchQuery(query) {
     this.props.dispatch(
       replace({
         search: query,
       })
     );
-  }
-
-  getSearchQueryFromLocation(location) {
-    const searchParams = new URLSearchParams(location.search);
-    const searchQuery = searchParams.get(SEARCH_URL_PARAM);
-
-    return searchQuery || '';
   }
 
   updateSearchParams = e => {
@@ -102,10 +102,12 @@ class AppListInner extends React.Component {
   render() {
     const { catalog } = this.props;
 
-    const searchQuery = this.getSearchQueryFromLocation(this.props.location);
+    const searchQuery = AppListInner.getSearchQueryFromLocation(
+      this.props.location
+    );
 
     const allApps = this.getAppsWithOrderedVersions(catalog.apps);
-    const filteredApps = this.filterApps(searchQuery, allApps);
+    const filteredApps = AppListInner.filterApps(searchQuery, allApps);
 
     return (
       <>

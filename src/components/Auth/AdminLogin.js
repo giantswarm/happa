@@ -32,6 +32,7 @@ class AdminLogin extends React.Component {
             this.props.dispatch(push('/'));
           })
           .catch(e => {
+            // eslint-disable-next-line no-console
             console.error(e);
             // Unable to refresh token silently, so send the down the auth0
             // flow.
@@ -48,10 +49,12 @@ class AdminLogin extends React.Component {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   componentWillUnmount() {
     clearQueues();
   }
 
+  // eslint-disable-next-line class-methods-use-this
   render() {
     return (
       <div>
