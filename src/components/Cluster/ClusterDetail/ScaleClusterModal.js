@@ -436,11 +436,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-  undefined,
-  {
-    forwardRef: true,
-  }
-)(ScaleClusterModal);
+export default connect(mapStateToProps, mapDispatchToProps, undefined, {
+  forwardRef: true,
+})(ScaleClusterModal);

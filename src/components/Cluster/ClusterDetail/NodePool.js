@@ -192,7 +192,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NodePool);
+export default connect(mapStateToProps, mapDispatchToProps)(NodePool);
