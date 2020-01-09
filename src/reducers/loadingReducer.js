@@ -1,8 +1,8 @@
 import produce from 'immer';
 
 const initialState = {
-  CLUSTER_LIST: false,
-  CLUSTERS_DETAILS: false,
+  CLUSTERS_LIST: true,
+  CLUSTER_LOAD_DETAILS: true,
 };
 
 const loadingReducer = produce((draft, action) => {

@@ -232,13 +232,11 @@ class ClusterDetailView extends React.Component {
       loadingCluster,
     } = this.props;
 
-    const loading = loadingCluster !== false;
-
     return (
       <>
-        <LoadingOverlay loading={loading} />
+        <LoadingOverlay loading={loadingCluster} />
 
-        {!loading && (
+        {!loadingCluster && (
           <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
             <WrapperDiv
               className='cluster-details'
@@ -274,20 +272,20 @@ class ClusterDetailView extends React.Component {
                           workerNodesDesired={this.getDesiredNumberOfNodes()}
                         />
                       ) : (
-                        <V4ClusterDetailTable
-                          accessCluster={this.accessCluster}
-                          canClusterUpgrade={this.canClusterUpgrade()}
-                          cluster={cluster}
-                          credentials={credentials}
-                          provider={provider}
-                          release={release}
-                          region={region}
-                          showScalingModal={this.showScalingModal}
-                          showUpgradeModal={this.showUpgradeModal}
-                          workerNodesDesired={this.getDesiredNumberOfNodes()}
-                          workerNodesRunning={getNumberOfNodes(cluster)}
-                        />
-                      )}
+                          <V4ClusterDetailTable
+                            accessCluster={this.accessCluster}
+                            canClusterUpgrade={this.canClusterUpgrade()}
+                            cluster={cluster}
+                            credentials={credentials}
+                            provider={provider}
+                            release={release}
+                            region={region}
+                            showScalingModal={this.showScalingModal}
+                            showUpgradeModal={this.showUpgradeModal}
+                            workerNodesDesired={this.getDesiredNumberOfNodes()}
+                            workerNodesRunning={getNumberOfNodes(cluster)}
+                          />
+                        )}
 
                       <div className='row section cluster_delete col-12'>
                         <div className='row'>
@@ -387,13 +385,11 @@ ClusterDetailView.propTypes = {
   targetRelease: PropTypes.object,
   user: PropTypes.object,
   loadingCluster: PropTypes.bool,
-  loadingNodePools: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
   return {
     loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
-    // loadingNodePools: state.loadingFlags.CLUSTER_NODEPOOLS_LOAD,
   };
 }
 

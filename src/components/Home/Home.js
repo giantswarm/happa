@@ -80,7 +80,7 @@ class Home extends React.Component {
   render() {
     return (
       <DocumentTitle title={this.title()}>
-        <LoadingOverlay loading={this.props.loadingClustersList !== false}>
+        <LoadingOverlay loading={this.props.loadingClustersList}>
           <div>
             {this.props.selectedOrganization && (
               <div className='well launch-new-cluster'>
@@ -155,6 +155,7 @@ Home.propTypes = {
   errorLoadingClusters: PropTypes.bool,
   v5Clusters: PropTypes.array,
   nodePools: PropTypes.object,
+  loadingClustersList: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
@@ -180,7 +181,6 @@ function mapStateToProps(state) {
     v5Clusters,
     nodePools,
     loadingClustersList: state.loadingFlags.CLUSTERS_LIST,
-    loadingClustersDetails: state.loadingFlags.CLUSTERS_DETAILS,
   };
 }
 

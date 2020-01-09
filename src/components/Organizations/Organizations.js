@@ -12,7 +12,7 @@ const Organizations = props => {
 
   return (
     <Breadcrumb data={{ title: 'ORGANIZATIONS', pathname: url }}>
-      <LoadingOverlay loading={props.loadingClustersDetails !== false}>
+      <LoadingOverlay loading={props.loadingClustersDetails}>
         <Switch>
           <Route component={List} exact path={`${path}`} />
           <Route component={Detail} path={`${path}/:orgId`} />
@@ -26,6 +26,7 @@ const Organizations = props => {
 Organizations.propTypes = {
   dispatch: PropTypes.func,
   match: PropTypes.object,
+  loadingClustersDetails: PropTypes.bool
 };
 
 function mapStateToProps(state) {

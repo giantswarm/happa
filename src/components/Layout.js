@@ -51,7 +51,7 @@ class Layout extends React.Component {
   render() {
     return (
       <DocumentTitle>
-        <LoadingOverlay loading={this.props.loadingClustersList !== false}>
+        <LoadingOverlay loading={this.props.loadingClustersList}>
           <Modals />
           <Navigation
             onSelectOrganization={this.selectOrganization}

@@ -316,4 +316,4 @@ it('patches v4 cluster name correctly', async () => {
 
 /******************** PENDING TESTS ********************/
 
-it.skip('renders all the v4 AWS nodes', async () => {});
+it.skip('renders all the v4 AWS nodes', async () => { });
