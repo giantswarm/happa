@@ -178,7 +178,7 @@ export function organizationDeleteConfirmed(orgId) {
       .deleteOrganization(orgId)
       .then(() => {
         new FlashMessage(
-          `Organization  <code>${orgId}</code> deleted`,
+          `Organization <code>${orgId}</code> deleted`,
           messageType.INFO,
           messageTTL.SHORT
         );

@@ -27,38 +27,21 @@ const BASE_ROUTE = '/organizations';
 
 // Responses to requests
 beforeEach(() => {
-  getMockCall('/v4/organizations/', orgsResponse);
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/info/', AWSInfoResponse);
-  getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/`,
-    orgResponse
-  );
+  getPersistedMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCall('/v4/clusters/', v4ClustersResponse);
-  getMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    v4AWSClusterResponse
-  );
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
   getMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
     v4AWSClusterStatusResponse
   );
-  getMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-    appsResponse
-  );
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
   // Empty response
-  getMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/key-pairs/`
-  );
-  getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/credentials/`
-  );
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+  getPersistedMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
   getMockCall('/v4/releases/', releasesResponse);
-  getMockCall(
-    '/v4/appcatalogs/',
-    appCatalogsResponse
-  );
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 });
 
 // Stop persisting responses
@@ -68,6 +51,7 @@ afterEach(() => {
 });
 
 it('navigation has selected the right page when in organization list route', async () => {
+  getMockCall('/v4/organizations/', orgsResponse);
   const { getByText } = renderRouteWithStore(BASE_ROUTE);
 
   await wait(() => {
@@ -85,6 +69,7 @@ it('navigation has selected the right page when in organization list route', asy
 });
 
 it('correctly renders the organizations list', async () => {
+  getMockCall('/v4/organizations/', orgsResponse);
   const { getByText, getByTestId } = renderRouteWithStore(BASE_ROUTE);
 
   // We want to make sure correct values appear in the row for number of clusters
@@ -106,6 +91,7 @@ it('correctly renders the organizations list', async () => {
 });
 
 it('shows the organization creation modal when requested and organization creation success flash', async () => {
+  getMockCall('/v4/organizations/', orgsResponse);
   const newOrganizationId = generateRandomString();
   const newOrganizationPutRequest = nock(API_ENDPOINT)
     .intercept(`/v4/organizations/${newOrganizationId}/`, 'PUT')
@@ -159,5 +145,75 @@ it('shows the organization creation modal when requested and organization creati
 
   await wait(() => {
     expect(getByTestId(`${newOrganizationId}-name`)).toBeInTheDocument();
+  });
+});
+
+it('shows the organization deletion modal when requested and organization deletion success flash', async () => {
+  const organizationToDeleteId = generateRandomString();
+  getMockCall('/v4/organizations/', [
+    ...orgsResponse,
+    { id: organizationToDeleteId },
+  ]);
+  const organizationToDeleteRequest = getMockCall(
+    `/v4/organizations/${organizationToDeleteId}/`,
+    {
+      id: organizationToDeleteId,
+      members: [],
+      credentials: [],
+    }
+  );
+  const credentialsRequest = getMockCall(
+    `/v4/organizations/${organizationToDeleteId}/credentials/`
+  );
+  const deleteOrganizationRequest = nock(API_ENDPOINT)
+    .intercept(`/v4/organizations/${organizationToDeleteId}/`, 'DELETE')
+    .reply(StatusCodes.Ok, {
+      code: 'RESOURCE_DELETED',
+      message: `The organization with ID \`${organizationToDeleteId}\` has been deleted.`,
+    });
+
+  const { getByText, getByTestId, queryByTestId } = renderRouteWithStore(
+    BASE_ROUTE
+  );
+
+  await wait(() => {
+    expect(getByTestId(`${organizationToDeleteId}-name`)).toBeInTheDocument();
+  });
+
+  organizationToDeleteRequest.done();
+  credentialsRequest.done();
+
+  fireEvent.click(getByTestId(`${organizationToDeleteId}-delete`));
+
+  await wait(() => {
+    expect(
+      getByText(
+        (_, element) =>
+          element.innerHTML ===
+          `Are you sure you want to delete <code>${organizationToDeleteId}</code>?`
+      )
+    ).toBeInTheDocument();
+    expect(getByText('There is no undo')).toBeInTheDocument();
+  });
+
+  getMockCall('/v4/organizations/', orgsResponse);
+  fireEvent.click(getByText('Delete Organization'));
+
+  await wait(() => {
+    expect(
+      getByText(
+        (_, element) =>
+          element.innerHTML ===
+          `Organization <code>${organizationToDeleteId}</code> deleted`
+      )
+    ).toBeInTheDocument();
+  });
+
+  deleteOrganizationRequest.done();
+  await wait(() => {
+    expect(getByTestId(`${orgResponse.id}-name`)).toBeInTheDocument();
+    expect(
+      queryByTestId(`${organizationToDeleteId}-name`)
+    ).not.toBeInTheDocument();
   });
 });
