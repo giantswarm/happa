@@ -7,6 +7,7 @@ import {
   appCatalogsResponse,
   appsResponse,
   generateRandomString,
+  getMockCall,
   getPersistedMockCall,
   orgResponse,
   orgsResponse,
@@ -23,52 +24,46 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 const BASE_ROUTE = '/organizations';
 
-const requests = {};
-
 // Responses to requests
-beforeAll(() => {
-  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
-  requests.organizations = getPersistedMockCall(
-    '/v4/organizations/',
-    orgsResponse
-  );
-  requests.organization = getPersistedMockCall(
+beforeEach(() => {
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/info/', AWSInfoResponse);
+  getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/`,
     orgResponse
   );
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v4ClustersResponse);
-  requests.cluster = getPersistedMockCall(
+  getMockCall('/v4/clusters/', v4ClustersResponse);
+  getMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/`,
     v4AWSClusterResponse
   );
-  requests.status = getPersistedMockCall(
+  getMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
     v4AWSClusterStatusResponse
   );
-  requests.apps = getPersistedMockCall(
+  getMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/apps/`,
     appsResponse
   );
   // Empty response
-  requests.keyPairs = getPersistedMockCall(
+  getMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/key-pairs/`
   );
-  requests.credentials = getPersistedMockCall(
+  getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/credentials/`
   );
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.appcatalogs = getPersistedMockCall(
+  getMockCall('/v4/releases/', releasesResponse);
+  getMockCall(
     '/v4/appcatalogs/',
     appCatalogsResponse
   );
 });
 
 // Stop persisting responses
-afterAll(() => {
-  Object.keys(requests).forEach(req => {
-    requests[req].persist(false);
-  });
+afterEach(() => {
+  expect(nock.isDone());
+  nock.cleanAll();
 });
 
 it('navigation has selected the right page when in organization list route', async () => {
@@ -115,12 +110,13 @@ it('shows the organization creation modal when requested and organization creati
     .intercept(`/v4/organizations/${newOrganizationId}/`, 'PUT')
     .reply(StatusCodes.Created, { id: newOrganizationId, members: null });
 
-  const { getByText, getByLabelText } = renderRouteWithStore(BASE_ROUTE);
+  const { getByText, getByLabelText, getByTestId } = renderRouteWithStore(
+    BASE_ROUTE
+  );
 
   await wait(() => {
     expect(getByText('Create New Organization')).toBeInTheDocument();
   });
-
   fireEvent.click(getByText('Create New Organization'));
 
   await wait(() => {
@@ -137,6 +133,17 @@ it('shows the organization creation modal when requested and organization creati
   fireEvent.click(getByText('Create Organization'));
 
   newOrganizationPutRequest.done();
+  getMockCall(`/v4/organizations/${newOrganizationId}/`, {
+    id: newOrganizationId,
+    members: [],
+    credentials: null,
+  });
+  getMockCall(`/v4/organizations/${newOrganizationId}/credentials/`);
+
+  const updatedOrganizationsRequest = getMockCall('/v4/organizations/', [
+    ...orgsResponse,
+    { id: newOrganizationId },
+  ]);
 
   await wait(() => {
     expect(
@@ -146,5 +153,10 @@ it('shows the organization creation modal when requested and organization creati
           `Organization <code>${newOrganizationId}</code> has been created`
       )
     ).toBeInTheDocument();
+  });
+  updatedOrganizationsRequest.done();
+
+  await wait(() => {
+    expect(getByTestId(`${newOrganizationId}-name`)).toBeInTheDocument();
   });
 });
