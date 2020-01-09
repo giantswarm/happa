@@ -1,7 +1,8 @@
-import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import GiantSwarm from 'giantswarm';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import cmp from 'semver-compare';
+
+import * as types from './actionTypes';
 
 export function loadReleases() {
   return function(dispatch) {

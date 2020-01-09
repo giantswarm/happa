@@ -3,8 +3,8 @@
 
 // Airbrake doesn't expose a easy interface for setting custom headers for each
 // request. We need to set headers for authentication against our API.
-import { StatusCodes } from 'shared/constants';
 import fetch from 'cross-fetch';
+import { StatusCodes } from 'shared/constants';
 
 export class Requester {
   constructor(store) {

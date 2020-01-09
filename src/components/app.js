@@ -1,18 +1,4 @@
 import 'babel-polyfill';
-import { ConnectedRouter } from 'connected-react-router';
-import { Notifier } from '@airbrake/browser';
-import { Provider } from 'react-redux';
-import React from 'react';
-import { Requester } from 'lib/patchedAirbrakeRequester';
-import Routes from './Routes';
-import { ThemeProvider } from 'emotion-theming';
-import configureStore from 'stores/configureStore';
-import history from 'stores/history';
-import { hot } from 'react-hot-loader';
-import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
-import { render } from 'react-dom';
-import theme from 'styles/theme';
-
 // CSS Imports
 // Keep the blank lines to allow for a certain ordering!
 // eslint-disable-next-line sort-imports
@@ -21,6 +7,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'noty/lib/noty.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/app.sass';
+
+import { Notifier } from '@airbrake/browser';
+import { ConnectedRouter } from 'connected-react-router';
+import { ThemeProvider } from 'emotion-theming';
+import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
+import { Requester } from 'lib/patchedAirbrakeRequester';
+import React from 'react';
+import { render } from 'react-dom';
+import { hot } from 'react-hot-loader';
+import { Provider } from 'react-redux';
+import configureStore from 'stores/configureStore';
+import history from 'stores/history';
+import theme from 'styles/theme';
+
+import Routes from './Routes';
 
 // Remove the loading class on the body, the javascript has loaded now.
 const body = document.getElementsByTagName('body')[0];

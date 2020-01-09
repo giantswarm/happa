@@ -1,11 +1,11 @@
 import * as types from 'actions/actionTypes';
+import produce from 'immer';
 import {
   fetchSelectedOrganizationFromStorage,
   fetchUserFromStorage,
   removeUserFromStorage,
   setUserToStorage,
 } from 'utils/localStorageUtils';
-import produce from 'immer';
 
 const initialState = () => ({
   selectedOrganization: fetchSelectedOrganizationFromStorage(),
