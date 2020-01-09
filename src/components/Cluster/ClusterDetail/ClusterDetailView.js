@@ -2,7 +2,10 @@ import * as clusterActions from 'actions/clusterActions';
 import * as appActions from 'actions/appActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
-import { batchedClusterDetailView } from 'actions/batchedActions';
+import {
+  batchedClusterDetailView,
+  refreshClusterDetailView,
+} from 'actions/batchedActions';
 import { bindActionCreators } from 'redux';
 import { clusterPatch } from 'actions/clusterActions';
 import { connect } from 'react-redux';
@@ -63,7 +66,7 @@ class ClusterDetailView extends React.Component {
 
   registerRefreshInterval = () => {
     this.loadDataInterval = this.props.setInterval(
-      this.loadDetails,
+      this.refreshClusterData,
       30 * 1000 // 30 seconds
     );
   };
@@ -94,7 +97,12 @@ class ClusterDetailView extends React.Component {
   };
 
   refreshClusterData = () => {
-    this.loadDetails();
+    this.props.dispatch(
+      refreshClusterDetailView(
+        this.props.cluster.id,
+        this.props.isNodePoolsCluster
+      )
+    );
   };
 
   handleVisibilityChange = () => {
@@ -310,9 +318,7 @@ class ClusterDetailView extends React.Component {
                       </div>
                     </Tab>
                     <Tab eventKey={2} title='Key Pairs'>
-                      <LoadingOverlay
-                        loading={this.props.loadingClusterDetails !== false}
-                      >
+                      <LoadingOverlay loading={this.props.loadingCluster}>
                         <KeyPairs cluster={cluster} />
                       </LoadingOverlay>
                     </Tab>

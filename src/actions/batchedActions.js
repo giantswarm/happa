@@ -16,6 +16,7 @@ export const batchedLayout = () => async dispatch => {
     dispatch(catalogActions.catalogsLoad());
     await dispatch(clusterActions.clustersList({ withLoadingFlags: true }));
     await dispatch(clusterActions.clustersDetails({ withLoadingFlags: true }));
+    await dispatch(nodePoolActions.nodePoolsLoad());
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Error in batchedLayout', err);
@@ -25,7 +26,8 @@ export const batchedLayout = () => async dispatch => {
 export const batchedRefreshClusters = () => async dispatch => {
   try {
     await dispatch(clusterActions.clustersList({ withLoadingFlags: false }));
-    dispatch(clusterActions.clustersDetails({ withLoadingFlags: false }));
+    await dispatch(clusterActions.clustersDetails({ withLoadingFlags: false }));
+    dispatch(nodePoolActions.nodePoolsLoad());
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Error in batchedRefreshClusters', err);
@@ -51,12 +53,6 @@ export const batchedClusterCreate = (
       await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId));
     }
 
-    await dispatch(clusterActions.clusterLoadDetails(clusterId));
-
-    if (isV5Cluster) {
-      await dispatch(nodePoolActions.nodePoolsLoad(clusterId));
-    }
-
     dispatch(push(`/organizations/${owner}/clusters/${clusterId}`));
   } catch (err) {
     // eslint-disable-next-line no-console
@@ -66,8 +62,7 @@ export const batchedClusterCreate = (
 
 export const batchedClusterDetailView = (
   organizationId,
-  clusterId,
-  isV5Cluster
+  clusterId
 ) => async dispatch => {
   try {
     await dispatch(
@@ -75,15 +70,29 @@ export const batchedClusterDetailView = (
     );
 
     await dispatch(releaseActions.loadReleases());
-    await clusterActions.clusterLoadDetails(clusterId);
-    await appActions.loadApps(clusterId);
-
-    if (isV5Cluster) {
-      await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId));
-    }
+    // await dispatch(clusterActions.clusterLoadDetails(clusterId));
+    // if (isV5Cluster) {
+    //   await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId));
+    // }
+    await dispatch(appActions.loadApps(clusterId));
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Error in batchedClusterDetailView', err);
+  }
+};
+
+export const refreshClusterDetailView = (
+  clusterId,
+  isV5Cluster
+) => async dispatch => {
+  try {
+    await dispatch(clusterActions.clusterLoadDetails(clusterId)); // TODO { withLoadingFlags: false }
+    if (isV5Cluster) {
+      await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId)); // TODO { withLoadingFlags: false }
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('Error in refreshClusterDetailView', err);
   }
 };
 

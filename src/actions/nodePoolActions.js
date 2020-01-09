@@ -53,9 +53,11 @@ export function nodePoolsLoad() {
     dispatch({ type: types.NODEPOOLS_LOAD_REQUEST });
 
     const v5ClustersId = getState().entities.clusters.v5Clusters || [];
-    await Promise.all(
-      v5ClustersId.map(clusterId => clusterNodePoolsLoad(clusterId))
-    );
+    if (v5ClustersId.length > 0) {
+      await Promise.all(
+        v5ClustersId.map(clusterId => dispatch(clusterNodePoolsLoad(clusterId)))
+      );
+    }
 
     dispatch({ type: types.NODEPOOLS_LOAD_FINISHED });
   };
@@ -205,7 +207,7 @@ export function nodePoolsCreate(clusterId, nodePools) {
     );
 
     // Dispatch action for populating nodePools key inside clusters
-    dispatch(nodePoolsLoad());
+    // dispatch(nodePoolsLoad());
 
     return allNodePools;
   };

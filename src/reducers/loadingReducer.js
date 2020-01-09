@@ -3,6 +3,9 @@ import produce from 'immer';
 const initialState = {
   CLUSTERS_LIST: true,
   CLUSTER_LOAD_DETAILS: true,
+  CLUSTER_NODEPOOLS_LOAD: true,
+  NODEPOOLS_LOAD: true, // all node pools
+  CLUSTERS_DETAILS: true, // all clusters
 };
 
 const loadingReducer = produce((draft, action) => {
