@@ -1,7 +1,8 @@
-import * as types from './actionTypes';
 import GiantSwarm from 'giantswarm';
-import { StatusCodes } from 'shared/constants';
 import yaml from 'js-yaml';
+import { StatusCodes } from 'shared/constants';
+
+import * as types from './actionTypes';
 
 // loadCatalog takes a catalog object and tries to load further data.
 function loadCatalogIndex(catalog) {
