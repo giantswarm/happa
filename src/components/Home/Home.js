@@ -62,8 +62,7 @@ class Home extends React.Component {
       return `Cluster Overview | ${this.props.selectedOrganization}`;
     }
 
-return 'Cluster Overview';
-
+    return 'Cluster Overview';
   }
 
   /**
@@ -76,76 +75,76 @@ return 'Cluster Overview';
       maxTimestamp = Math.max(maxTimestamp, cluster.lastUpdated);
     });
 
-return moment(maxTimestamp).fromNow();
+    return moment(maxTimestamp).fromNow();
   };
 
   render() {
     return (
       <DocumentTitle title={this.title()}>
         <div>
-            {this.props.selectedOrganization ? (
-              <div className='well launch-new-cluster'>
-                <Link
-                  to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
-                >
-                  <Button bsStyle='primary' type='button'>
-                    <i className='fa fa-add-circle' /> Launch New Cluster
-                  </Button>
-                </Link>
-                {this.props.clusters.length === 0
-                  ? 'Ready to launch your first cluster? Click the green button!'
-                  : ''}
-              </div>
-            ) : (
-              undefined
-            )}
+          {this.props.selectedOrganization ? (
+            <div className='well launch-new-cluster'>
+              <Link
+                to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
+              >
+                <Button bsStyle='primary' type='button'>
+                  <i className='fa fa-add-circle' /> Launch New Cluster
+                </Button>
+              </Link>
+              {this.props.clusters.length === 0
+                ? 'Ready to launch your first cluster? Click the green button!'
+                : ''}
+            </div>
+          ) : (
+            undefined
+          )}
 
-            {this.props.clusters.length === 0 ? (
-              <ClusterEmptyState
-                errorLoadingClusters={this.props.errorLoadingClusters}
-                organizations={this.props.organizations}
-                selectedOrganization={this.props.selectedOrganization}
-              />
-            ) : null}
+          {this.props.clusters.length === 0 ? (
+            <ClusterEmptyState
+              errorLoadingClusters={this.props.errorLoadingClusters}
+              organizations={this.props.organizations}
+              selectedOrganization={this.props.selectedOrganization}
+            />
+          ) : null}
 
-            <TransitionGroup className='cluster-list'>
-              {_.sortBy(this.props.clusters, cluster => cluster.name).map(
-                cluster => {
-                  return (
-                    <CSSTransition
-                      classNames='cluster-list-item'
+          <TransitionGroup className='cluster-list'>
+            {_.sortBy(this.props.clusters, cluster => cluster.name).map(
+              cluster => {
+                return (
+                  <CSSTransition
+                    classNames='cluster-list-item'
+                    key={cluster.id}
+                    timeout={500}
+                  >
+                    <ClusterDashboardItem
+                      animate={true}
+                      cluster={cluster}
+                      isNodePool={this.props.nodePoolsClusters.includes(
+                        cluster.id
+                      )}
                       key={cluster.id}
-                      timeout={500}
-                    >
-                      <ClusterDashboardItem
-                        animate={true}
-                        cluster={cluster}
-                        isNodePool={this.props.nodePoolsClusters.includes(
-                          cluster.id
-                        )}
-                        key={cluster.id}
-                        nodePools={this.props.nodePools}
-                        selectedOrganization={this.props.selectedOrganization}
-                      />
-                    </CSSTransition>
-                  );
-                },
-                cluster => cluster.id
-              )}
-            </TransitionGroup>
+                      nodePools={this.props.nodePools}
+                      selectedOrganization={this.props.selectedOrganization}
+                    />
+                  </CSSTransition>
+                );
+              },
+              cluster => cluster.id
+            )}
+          </TransitionGroup>
 
-            {this.props.clusters.length > 0 ? (
-              <p className='last-updated'>
-                <small>
-                  This table is auto-refreshing. Details last fetched{' '}
-                  <span className='last-updated-datestring'>
-                    {this.lastUpdatedLabel()}
-                  </span>
-                  .
-                </small>
-              </p>
-            ) : null}
-          </div>
+          {this.props.clusters.length > 0 ? (
+            <p className='last-updated'>
+              <small>
+                This table is auto-refreshing. Details last fetched{' '}
+                <span className='last-updated-datestring'>
+                  {this.lastUpdatedLabel()}
+                </span>
+                .
+              </small>
+            </p>
+          ) : null}
+        </div>
       </DocumentTitle>
     );
   }

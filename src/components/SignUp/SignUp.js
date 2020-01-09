@@ -23,6 +23,7 @@ const passage = new Passage({ endpoint: window.config.passageEndpoint });
 export class SignUp extends React.Component {
   state = {
     statusMessage: 'verify_started',
+    // eslint-disable-next-line react/no-unused-state
     checkInviteStatus: 'started',
     email: undefined,
     passwordField: { value: '', valid: false },
@@ -31,6 +32,7 @@ export class SignUp extends React.Component {
     formValid: undefined,
     submitting: false,
     buttonText: ['', 'Next', 'Next', 'Create your account now'],
+    // eslint-disable-next-line react/no-unused-state
     formSteps: ['', 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
     currentStep: 0,
     advancable: false,
@@ -39,6 +41,7 @@ export class SignUp extends React.Component {
   resetForm() {
     this.setState({
       statusMessage: 'verify_started',
+      // eslint-disable-next-line react/no-unused-state
       checkInviteStatus: 'started',
       email: undefined,
       passwordField: { value: '', valid: false },
@@ -47,6 +50,7 @@ export class SignUp extends React.Component {
       formValid: undefined,
       submitting: false,
       buttonText: ['', 'Next', 'Next', 'Create your account now'],
+      // eslint-disable-next-line react/no-unused-state
       formSteps: ['', 'passwordGroup', 'passwordConfirmationGroup', 'TOSGroup'],
       currentStep: 0,
       advancable: false,
@@ -55,6 +59,7 @@ export class SignUp extends React.Component {
 
   componentDidMount() {
     const token = this.props.match.params.token;
+    const statusMessageChangeTimeout = 800;
 
     passage
       .checkInvite({ token })
@@ -62,6 +67,7 @@ export class SignUp extends React.Component {
         this.setState({
           email: data.email,
           statusMessage: 'verify_completed',
+          // eslint-disable-next-line react/no-unused-state
           checkInviteStatus: 'completed',
         });
 
@@ -71,10 +77,11 @@ export class SignUp extends React.Component {
           });
 
           this.advanceForm();
-        }, 800);
+        }, statusMessageChangeTimeout);
       })
       .catch(error => {
         this.setState({
+          // eslint-disable-next-line react/no-unused-state
           checkInviteStatus: 'failed',
         });
 
@@ -91,24 +98,29 @@ export class SignUp extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.match.params.token != this.props.match.params.token) {
+    if (prevProps.match.params.token !== this.props.match.params.token) {
       this.resetForm();
       this.componentDidMount();
     }
   }
 
   advanceForm() {
-    const nextStep = this.state.currentStep + 1;
+    let nextStep = 0;
 
     this.setState(
-      {
-        currentStep: nextStep,
+      prevState => {
+        nextStep = prevState.currentStep + 1;
+
+        return {
+          currentStep: nextStep,
+        };
       },
       () => {
         if (nextStep === 1) {
           this.password.focus();
         } else if (nextStep === 2) {
           this.passwordConfirmation.focus();
+          // eslint-disable-next-line no-magic-numbers
         } else if (nextStep === 3) {
           this.setState({
             statusMessage: 'tos_intro',
@@ -121,9 +133,10 @@ export class SignUp extends React.Component {
   }
 
   accountCreated() {
+    const transitionDelay = 1000;
+
     // Delay a bit so the user sees the DONE message
     // and then transition to the getting started guide
-    //
     new FlashMessage(
       'Account created. Welcome to Giant Swarm!',
       messageType.SUCCESS,
@@ -132,7 +145,7 @@ export class SignUp extends React.Component {
 
     setTimeout(() => {
       this.props.dispatch(push('/'));
-    }, 1000);
+    }, transitionDelay);
   }
 
   handleSubmit = e => {
@@ -181,37 +194,32 @@ export class SignUp extends React.Component {
   tosChanged = e => {
     const checked = e.target.checked;
 
-    let statusMessage = this.state.statusMessage;
-
-    this.setState({
-      formValid: false,
-      advancable: false,
-      termsOfServiceField: {
-        valid: false,
-        value: checked,
-      },
-    });
-
-    let termsOfServiceFieldValid = false;
-    let termsOfServiceFieldValue = false;
-
-    if (checked) {
-      termsOfServiceFieldValid = true;
-      termsOfServiceFieldValue = true;
-      statusMessage = 'tos_ok';
-    } else {
-      termsOfServiceFieldValid = false;
-      termsOfServiceFieldValue = false;
-      statusMessage = 'tos_not_accepted';
-    }
-
     this.setState(
-      {
-        termsOfServiceField: {
-          valid: termsOfServiceFieldValid,
-          value: termsOfServiceFieldValue,
-        },
-        statusMessage: statusMessage,
+      prevState => {
+        let statusMessage = prevState.statusMessage;
+
+        let termsOfServiceFieldValid = false;
+        let termsOfServiceFieldValue = false;
+
+        if (checked) {
+          termsOfServiceFieldValid = true;
+          termsOfServiceFieldValue = true;
+          statusMessage = 'tos_ok';
+        } else {
+          termsOfServiceFieldValid = false;
+          termsOfServiceFieldValue = false;
+          statusMessage = 'tos_not_accepted';
+        }
+
+        return {
+          formValid: false,
+          advancable: false,
+          termsOfServiceField: {
+            valid: termsOfServiceFieldValid,
+            value: termsOfServiceFieldValue,
+          },
+          statusMessage: statusMessage,
+        };
       },
       () => {
         this.validateForm();
@@ -314,44 +322,47 @@ export class SignUp extends React.Component {
   };
 
   validateForm() {
-    let advancable = false;
-    let formValid = false;
-    let statusMessage = this.state.statusMessage;
+    this.setState(prevState => {
+      let advancable = false;
+      let formValid = false;
+      let statusMessage = prevState.statusMessage;
 
-    if (this.state.currentStep === 1 && this.state.passwordField.valid) {
-      advancable = true;
-    } else if (
-      this.state.currentStep === 2 &&
-      this.state.passwordField.valid &&
-      this.state.passwordConfirmationField.valid
-    ) {
-      advancable = true;
-    } else if (
-      this.state.currentStep === 3 &&
-      this.state.passwordField.valid &&
-      this.state.passwordConfirmationField.valid &&
-      this.state.termsOfServiceField.valid
-    ) {
-      advancable = true;
-    } else {
-      advancable = false;
-    }
+      if (prevState.currentStep === 1 && prevState.passwordField.valid) {
+        advancable = true;
+      } else if (
+        prevState.currentStep === 2 &&
+        prevState.passwordField.valid &&
+        prevState.passwordConfirmationField.valid
+      ) {
+        advancable = true;
+      } else if (
+        // eslint-disable-next-line no-magic-numbers
+        prevState.currentStep === 3 &&
+        prevState.passwordField.valid &&
+        prevState.passwordConfirmationField.valid &&
+        prevState.termsOfServiceField.valid
+      ) {
+        advancable = true;
+      } else {
+        advancable = false;
+      }
 
-    if (
-      this.state.passwordField.valid &&
-      this.state.passwordConfirmationField.valid &&
-      this.state.termsOfServiceField.valid
-    ) {
-      formValid = true;
-      statusMessage = 'all_good';
-    } else {
-      formValid = false;
-    }
+      if (
+        prevState.passwordField.valid &&
+        prevState.passwordConfirmationField.valid &&
+        prevState.termsOfServiceField.valid
+      ) {
+        formValid = true;
+        statusMessage = 'all_good';
+      } else {
+        formValid = false;
+      }
 
-    this.setState({
-      advancable: advancable,
-      formValid: formValid,
-      statusMessage: statusMessage,
+      return {
+        advancable: advancable,
+        formValid: formValid,
+        statusMessage: statusMessage,
+      };
     });
   }
 
@@ -419,7 +430,7 @@ export class SignUp extends React.Component {
           </div>
 
           <StatusMessage status={this.state.statusMessage} />
-          {this.state.buttonText[this.state.currentStep] != '' ? (
+          {this.state.buttonText[this.state.currentStep] !== '' ? (
             <Button
               bsSize='large'
               bsStyle='primary'

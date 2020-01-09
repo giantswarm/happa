@@ -14,6 +14,7 @@ import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
 
 class ConfigKubeCtl extends React.Component {
   state = {
+    // eslint-disable-next-line react/no-unused-state
     loading: true,
     selectedPlatform: platform,
     alternativeOpen: false,
@@ -21,6 +22,7 @@ class ConfigKubeCtl extends React.Component {
 
   componentDidMount() {
     this.setState({
+      // eslint-disable-next-line react/no-unused-state
       loading: true,
     });
 
@@ -28,6 +30,7 @@ class ConfigKubeCtl extends React.Component {
       .clusterLoadDetails(this.props.selectedCluster.id)
       .then(() => {
         this.setState({
+          // eslint-disable-next-line react/no-unused-state
           loading: false,
         });
       })
@@ -40,6 +43,7 @@ class ConfigKubeCtl extends React.Component {
         );
 
         this.setState({
+          // eslint-disable-next-line react/no-unused-state
           loading: 'failed',
         });
       });
@@ -49,9 +53,9 @@ class ConfigKubeCtl extends React.Component {
     this.props.actions.clusterSelect(clusterId);
   }
 
-  selectPlatform(platform) {
+  selectPlatform(nextPlatform) {
     this.setState({
-      selectedPlatform: platform,
+      selectedPlatform: nextPlatform,
     });
   }
 
@@ -144,22 +148,22 @@ class ConfigKubeCtl extends React.Component {
           </div>
         );
       default:
-        <p>Shouldn&apos;t be here</p>;
+        return <p>Shouldn&apos;t be here</p>;
     }
   }
 
-  isSelectedPlatform(platform) {
-    return this.state.selectedPlatform === platform;
+  isSelectedPlatform(nextPlatform) {
+    return this.state.selectedPlatform === nextPlatform;
   }
 
   toggleAlternative = () => {
-    this.setState({
-      alternativeOpen: !this.state.alternativeOpen,
-    });
+    this.setState(prevState => ({
+      alternativeOpen: !prevState.alternativeOpen,
+    }));
   };
 
   friendlyClusterName = cluster => {
-    return `${cluster.name} ` + `(${cluster.id})`;
+    return `${cluster.name} (${cluster.id})`;
   };
 
   render() {

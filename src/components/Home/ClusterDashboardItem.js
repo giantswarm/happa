@@ -76,6 +76,7 @@ const DeleteDateWrapper = styled.div`
 
 class ClusterDashboardItem extends React.Component {
   state = {
+    // eslint-disable-next-line react/no-unused-state
     enforceReRender: null,
     nodePools: [],
   };
@@ -109,9 +110,11 @@ class ClusterDashboardItem extends React.Component {
    * dates, fresh.
    */
   registerReRenderInterval = () => {
+    // eslint-disable-next-line no-magic-numbers
     const refreshInterval = 10 * 1000; // 10 seconds
     this.reRenderInterval = window.setInterval(() => {
       // enforce re-rendering by state change
+      // eslint-disable-next-line react/no-unused-state
       this.setState({ enforceReRender: Date.now() });
     }, refreshInterval);
   };
@@ -123,9 +126,11 @@ class ClusterDashboardItem extends React.Component {
     const age = Math.abs(
       moment(this.props.cluster.create_date)
         .utc()
+        // eslint-disable-next-line no-magic-numbers
         .diff(moment().utc()) / 1000
     );
 
+    // eslint-disable-next-line no-magic-numbers
     return age < 30 * 24 * 60 * 60;
   }
 

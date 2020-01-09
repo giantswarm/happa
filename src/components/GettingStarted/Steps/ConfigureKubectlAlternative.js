@@ -14,6 +14,7 @@ const Modernizr = window.Modernizr;
 
 class ConfigKubeCtl extends React.Component {
   state = {
+    // eslint-disable-next-line react/no-unused-state
     loading: true,
     selectedPlatform: platform,
     alternativeOpen: false,
@@ -48,6 +49,9 @@ class ConfigKubeCtl extends React.Component {
         });
       })
       .catch(error => {
+        const keyPairChangeDelay = 200;
+
+        // eslint-disable-next-line no-console
         console.error(error);
 
         setTimeout(() => {
@@ -58,7 +62,7 @@ class ConfigKubeCtl extends React.Component {
               error: true,
             },
           });
-        }, 200);
+        }, keyPairChangeDelay);
       });
   };
 
@@ -72,10 +76,12 @@ class ConfigKubeCtl extends React.Component {
       );
 
       this.setState({
+        // eslint-disable-next-line react/no-unused-state
         loading: 'failed',
       });
     } else {
       this.setState({
+        // eslint-disable-next-line react/no-unused-state
         loading: true,
       });
 
@@ -83,6 +89,7 @@ class ConfigKubeCtl extends React.Component {
         .clusterLoadDetails(this.props.cluster.id)
         .then(() => {
           this.setState({
+            // eslint-disable-next-line react/no-unused-state
             loading: false,
           });
         })
@@ -95,6 +102,7 @@ class ConfigKubeCtl extends React.Component {
           );
 
           this.setState({
+            // eslint-disable-next-line react/no-unused-state
             loading: 'failed',
           });
         });
@@ -198,14 +206,14 @@ class ConfigKubeCtl extends React.Component {
     );
   }
 
-  isSelectedPlatform(platform) {
-    return this.state.selectedPlatform === platform;
+  isSelectedPlatform(nextPlatform) {
+    return this.state.selectedPlatform === nextPlatform;
   }
 
   toggleAlternative() {
-    this.setState({
-      alternativeOpen: !this.state.alternativeOpen,
-    });
+    this.setState(prevState => ({
+      alternativeOpen: !prevState.alternativeOpen,
+    }));
   }
 
   selectCluster(clusterId) {
