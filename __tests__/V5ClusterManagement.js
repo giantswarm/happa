@@ -98,7 +98,7 @@ it('renders nodes data correctly with nodes ready in v5 cluster view', async () 
     nodePoolsResponseWithNodes
   );
 
-  const { getByText } = renderRouteWithStore(ROUTE);
+  const { getByText, getByTestId, debug } = renderRouteWithStore(ROUTE);
 
   const workerNodesRunning = getNumberOfNodePoolsNodes(
     nodePoolsResponseWithNodes
@@ -107,7 +107,10 @@ it('renders nodes data correctly with nodes ready in v5 cluster view', async () 
 
   // Expect computed values are rendered
   await wait(() => {
-    expect(getByText(textRendered)).toBeInTheDocument();
+    expect(getByTestId('nodes-running').querySelector('span').textContent).toBe(
+      '0 nodes'
+    );
+    // expect(getByText(textRendered)).toBeInTheDocument();
   });
 
   // Restore nodePools response
