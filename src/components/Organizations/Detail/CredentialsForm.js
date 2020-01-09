@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Button from 'UI/Button';
-import { Providers } from 'shared/constants';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
+import { Providers } from 'shared/constants';
+import Button from 'UI/Button';
 
 /**
  * CredentialsForm is a sub-component of Credentials.

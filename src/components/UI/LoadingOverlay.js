@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 
 // LoadingOverlay takes one boolean prop 'loading' and will render a
 // page centered loading spinner if 'loading' is true, or its children if

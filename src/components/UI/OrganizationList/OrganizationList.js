@@ -1,9 +1,10 @@
-import PropTypes from 'prop-types';
-import { Providers } from 'shared/constants';
-import React from 'react';
-import Row from './OrganizationListRow';
-import { clustersForOrg } from 'lib/helpers';
 import styled from '@emotion/styled';
+import { clustersForOrg } from 'lib/helpers';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Providers } from 'shared/constants';
+
+import Row from './OrganizationListRow';
 
 const StyledTableHeader = styled.th`
   text-align: ${({ centered }) => (centered ? 'center' : 'initial')};

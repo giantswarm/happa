@@ -1,9 +1,9 @@
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import InputField from 'shared/InputField';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import InputField from 'shared/InputField';
+import Button from 'UI/Button';
 
 const WrapperDiv = styled.div`
   max-width: 200px;

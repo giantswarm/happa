@@ -1,9 +1,9 @@
-import { FixedSizeGrid as List } from 'react-window';
+import { withTheme } from 'emotion-theming';
 import PropTypes from 'prop-types';
 import React from 'react';
 import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller/WindowScroller';
+import { FixedSizeGrid as List } from 'react-window';
 import { debounce } from 'underscore';
-import { withTheme } from 'emotion-theming';
 
 const MIN_COLUMN_COUNT = 1;
 const RESPONSIVE_FEATURES_UPDATE_TIME = 300;

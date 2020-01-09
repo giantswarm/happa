@@ -1,11 +1,12 @@
-import { NEVER_EXPIRES, formatStatus, isExpiringSoon } from './UsersUtils';
-import BootstrapTable from 'react-bootstrap-table-next';
-import Button from 'UI/Button';
+import { relativeDate } from 'lib/helpers.js';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapTable from 'react-bootstrap-table-next';
+import Button from 'UI/Button';
+
 import UsersLoader from './UsersLoader';
 import UsersPlaceholder from './UsersPlaceholder';
-import { relativeDate } from 'lib/helpers.js';
+import { formatStatus, isExpiringSoon,NEVER_EXPIRES } from './UsersUtils';
 
 const tableDefaultSorting = [
   {

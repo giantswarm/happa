@@ -1,12 +1,13 @@
+import PropTypes from 'prop-types';
+import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import _ from 'underscore';
-import ClusterDetailView from './ClusterDetailView';
 import cmp from 'semver-compare';
+import _ from 'underscore';
+
 import GettingStarted from '../../GettingStarted/GettingStarted';
-import PropTypes from 'prop-types';
-import React from 'react';
+import ClusterDetailView from './ClusterDetailView';
 
 const ClusterDetail = props => (
   <Breadcrumb

@@ -1,13 +1,14 @@
 import * as clusterActions from 'actions/clusterActions';
-import { bindActionCreators } from 'redux';
-import { Breadcrumb } from 'react-breadcrumbs';
-import { CodeBlock, Output, Prompt } from '../CodeBlock';
-import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { Link } from 'react-router-dom';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+
+import { CodeBlock, Output, Prompt } from '../CodeBlock';
 
 class SimpleExample extends React.Component {
   state = {

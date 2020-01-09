@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
 import MultiSelect from '@khanacademy/react-multi-select';
 import PropTypes from 'prop-types';
-import { getInitialState } from '.';
+import React, { useMemo } from 'react';
 import { sortBy } from 'underscore';
+
+import { getInitialState } from '.';
 
 const InviteUserForm = ({
   inviteForm,

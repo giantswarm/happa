@@ -1,8 +1,8 @@
+import yaml from 'js-yaml';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import yaml from 'js-yaml';
+import Button from 'UI/Button';
 
 // YAMLFileUpload is a component that renders a button and a hidden file
 // input element. When you click the button the file dialog opens, and the

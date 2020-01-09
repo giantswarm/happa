@@ -1,9 +1,10 @@
-import ClusterEmptyState from './ClusterEmptyState';
-import ComponentChangelog from './ComponentChangelog';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import ClusterEmptyState from './ClusterEmptyState';
+import ComponentChangelog from './ComponentChangelog';
 import ReleaseComponentLabel from './ReleaseComponentLabel';
-import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
   h2 {

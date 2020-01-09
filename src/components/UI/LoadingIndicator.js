@@ -1,8 +1,8 @@
+import styled from '@emotion/styled';
+import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
-import { spinner } from 'images';
-import styled from '@emotion/styled';
 
 const ProgressButtonStatusIndicator = styled.div`
   display: inline;

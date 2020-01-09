@@ -1,18 +1,18 @@
 import * as forgotPasswordActions from 'actions/forgotPasswordActions';
-import { bindActionCreators } from 'redux';
 import {
-  FlashMessage,
   clearQueues,
+  FlashMessage,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import Button from 'UI/Button';
-import LoginFormContainer from 'UI/LoginFormContainer';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Button';
+import LoginFormContainer from 'UI/LoginFormContainer';
 
 class ForgotPassword extends React.Component {
   state = {

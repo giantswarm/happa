@@ -1,19 +1,20 @@
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
-import { bindActionCreators } from 'redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import _ from 'underscore';
-import Button from 'UI/Button';
-import ClusterDashboardItem from './ClusterDashboardItem';
-import ClusterEmptyState from 'UI/ClusterEmptyState';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import moment from 'moment';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { bindActionCreators } from 'redux';
+import Button from 'UI/Button';
+import ClusterEmptyState from 'UI/ClusterEmptyState';
+import _ from 'underscore';
+
+import ClusterDashboardItem from './ClusterDashboardItem';
 
 class Home extends React.Component {
   visibilityTracker = new PageVisibilityTracker();

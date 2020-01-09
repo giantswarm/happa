@@ -1,17 +1,18 @@
 import * as clusterActions from 'actions/clusterActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { relativeDate } from 'lib/helpers.js';
 import { spinner } from 'images';
-import BootstrapTable from 'react-bootstrap-table-next';
-import Button from 'UI/Button';
-import CertificateOrgsLabel from './CertificateOrgsLabel';
-import Copyable from 'shared/Copyable';
-import KeypairCreateModal from './KeyPairCreateModal';
-import KeyPairDetailsModal from './KeyPairDetailsModal';
+import { relativeDate } from 'lib/helpers.js';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapTable from 'react-bootstrap-table-next';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Copyable from 'shared/Copyable';
+import Button from 'UI/Button';
+
+import CertificateOrgsLabel from './CertificateOrgsLabel';
+import KeypairCreateModal from './KeyPairCreateModal';
+import KeyPairDetailsModal from './KeyPairDetailsModal';
 
 class KeyPairs extends React.Component {
   static createdCellFormatter(_cell, row) {

@@ -1,8 +1,9 @@
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import Input from './Input';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
+
+import Input from './Input';
 
 const ClusterPickerWrapper = styled.div`
   display: flex;

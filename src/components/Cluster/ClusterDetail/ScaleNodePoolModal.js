@@ -1,15 +1,15 @@
 import * as nodePoolActions from 'actions/nodePoolActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { Providers } from 'shared/constants';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import NodeCountSelector from 'shared/NodeCountSelector';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { connect } from 'react-redux';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { bindActionCreators } from 'redux';
+import { Providers } from 'shared/constants';
+import NodeCountSelector from 'shared/NodeCountSelector';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 class ScaleNodePoolModal extends React.Component {
   static supportsAutoscaling(provider) {

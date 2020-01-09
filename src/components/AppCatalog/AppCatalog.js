@@ -1,13 +1,14 @@
-import { Breadcrumb } from 'react-breadcrumbs';
 import { catalogLoadIndex, catalogsLoad } from 'actions/catalogActions';
-import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { Route, Switch } from 'react-router-dom';
-import AppList from './AppList/AppList';
-import Catalogs from './CatalogList/CatalogList';
-import Detail from './AppDetail/AppDetail';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
+
+import Detail from './AppDetail/AppDetail';
+import AppList from './AppList/AppList';
+import Catalogs from './CatalogList/CatalogList';
 
 class AppCatalog extends React.Component {
   componentDidMount() {

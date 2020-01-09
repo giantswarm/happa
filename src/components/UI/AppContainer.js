@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 export const APP_CONTAINER_HEIGHT = 200;
 export const APP_CONTAINER_IMAGE_HEIGHT = 100;

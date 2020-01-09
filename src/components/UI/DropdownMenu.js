@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
 /*
  * This is a reusable component. It is responsible for:

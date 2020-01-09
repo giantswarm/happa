@@ -1,7 +1,8 @@
 import { makeKubeConfigTextFile } from 'lib/helpers';
-import FileBlock from './FileBlock';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import FileBlock from './FileBlock';
 
 const KubeConfig = ({ cluster, keyPair }) => (
   <FileBlock fileName='giantswarm-kubeconfig'>

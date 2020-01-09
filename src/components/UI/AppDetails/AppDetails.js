@@ -1,9 +1,10 @@
-import AppDetailsBody from './AppDetailsBody';
-import AppDetailsItem from './AppDetailsItem';
-import { Link } from 'react-router-dom';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
+
+import AppDetailsBody from './AppDetailsBody';
+import AppDetailsItem from './AppDetailsItem';
 
 const Header = styled.div`
   border-bottom: 1px solid #2a5a74;

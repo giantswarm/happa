@@ -1,13 +1,14 @@
 import * as clusterActions from 'actions/clusterActions';
-import { bindActionCreators } from 'redux';
-import { CodeBlock, Prompt } from '../CodeBlock';
-import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import Button from 'UI/Button';
-import FileBlock from '../FileBlock';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Button from 'UI/Button';
+
+import { CodeBlock, Prompt } from '../CodeBlock';
+import FileBlock from '../FileBlock';
 
 const Modernizr = window.Modernizr;
 

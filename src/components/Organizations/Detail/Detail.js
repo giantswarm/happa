@@ -1,12 +1,13 @@
-import { Breadcrumb } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
 import { organizationSelect } from 'actions/organizationActions';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import _ from 'underscore';
 import Cluster from 'Cluster/Cluster';
-import DetailView from './View';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import _ from 'underscore';
+
+import DetailView from './View';
 
 class DetailIndex extends React.Component {
   componentDidMount() {

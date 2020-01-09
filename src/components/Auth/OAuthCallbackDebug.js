@@ -1,10 +1,10 @@
 import * as userActions from 'actions/userActions';
-import { bindActionCreators } from 'redux';
 import { clearQueues } from 'lib/flashMessage';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import QueryString from 'query-string';
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 class OauthCallback extends React.Component {

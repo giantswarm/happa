@@ -1,7 +1,7 @@
-import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import DatePicker from 'react-datepicker';
 
 class ExpiryHoursPicker extends React.Component {
   constructor(props) {

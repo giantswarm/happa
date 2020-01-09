@@ -1,11 +1,12 @@
-import { Link, NavLink } from 'react-router-dom';
-import { Breadcrumbs } from 'react-breadcrumbs';
-import OrganizationDropdown from './OrganizationDropdown';
+import styled from '@emotion/styled';
+import { logo } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumbs } from 'react-breadcrumbs';
+import { Link, NavLink } from 'react-router-dom';
+
+import OrganizationDropdown from './OrganizationDropdown';
 import UserDropdown from './UserDropdown';
-import { logo } from 'images';
-import styled from '@emotion/styled';
 
 const OuterNav = styled.nav`
   height: 50px;

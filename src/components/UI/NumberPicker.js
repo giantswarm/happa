@@ -1,8 +1,8 @@
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
-import { css } from '@emotion/core';
-import styled from '@emotion/styled';
 
 // NumberPicker is a component that allows a user to pick a number by
 // incrementing / decrementing a value or typing it straight into the input

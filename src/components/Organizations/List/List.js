@@ -2,13 +2,13 @@ import {
   organizationCreate,
   organizationDelete,
 } from 'actions/organizationActions';
-import Button from 'react-bootstrap/lib/Button';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import EmptyStateDisplay from 'UI/EmptyStateDisplay';
-import OrganizationList from 'UI/OrganizationList/OrganizationList';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Button from 'react-bootstrap/lib/Button';
 import { connect } from 'react-redux';
+import EmptyStateDisplay from 'UI/EmptyStateDisplay';
+import OrganizationList from 'UI/OrganizationList/OrganizationList';
 
 class OrganizationListWrapper extends React.Component {
   getOrganizationURL = id => {

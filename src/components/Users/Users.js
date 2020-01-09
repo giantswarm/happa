@@ -4,18 +4,19 @@ import {
   userRemoveExpiration,
   usersLoad,
 } from 'actions/userActions';
-import { Breadcrumb } from 'react-breadcrumbs';
-import Button from 'UI/Button';
-import DeleteUserModal from './DeleteUserModal';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import InviteUserModal from './InviteUserModal';
+import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import Button from 'UI/Button';
+
+import DeleteUserModal from './DeleteUserModal';
+import InviteUserModal from './InviteUserModal';
 import UnexpireUserModal from './UnexpireUserModal';
 import UsersTable from './UsersTable';
-import { connect } from 'react-redux';
 import { formatStatus } from './UsersUtils';
-import { push } from 'connected-react-router';
 
 const UserModalTypes = {
   Unexpire: 'unexpire',

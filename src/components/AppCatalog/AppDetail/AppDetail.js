@@ -1,11 +1,12 @@
+import DocumentTitle from 'components/shared/DocumentTitle';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import AppDetails from 'UI/AppDetails/AppDetails';
-import DocumentTitle from 'components/shared/DocumentTitle';
-import InstallAppModal from './InstallAppModal';
 import LoadingOverlay from 'UI/LoadingOverlay';
-import PropTypes from 'prop-types';
-import React from 'react';
+
+import InstallAppModal from './InstallAppModal';
 
 class AppDetail extends React.Component {
   imgError = () => {

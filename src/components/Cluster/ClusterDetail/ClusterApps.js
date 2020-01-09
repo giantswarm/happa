@@ -1,9 +1,10 @@
-import { push } from 'connected-react-router';
 import { selectCluster } from 'actions/appActions';
-import AppDetailsModal from './AppDetailsModal';
-import Button from 'UI/Button';
+import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Button from 'UI/Button';
+
+import AppDetailsModal from './AppDetailsModal';
 
 // This component shows the list of components and apps installed on a cluster.
 // Apps can be:

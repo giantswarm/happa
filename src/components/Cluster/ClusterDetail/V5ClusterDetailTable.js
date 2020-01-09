@@ -1,29 +1,30 @@
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
+import { nodePoolsCreate } from 'actions/nodePoolActions';
+import produce from 'immer';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import ReactTimeout from 'react-timeout';
+import { TransitionGroup } from 'react-transition-group';
+import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
+import BaseTransition from 'styles/transitions/BaseTransition';
+import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Button';
 import {
   clusterNodePools,
   getCpusTotalNodePools,
   getMemoryTotalNodePools,
   getNumberOfNodePoolsNodes,
 } from 'utils/clusterUtils';
-import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
-import { connect } from 'react-redux';
-import { css } from '@emotion/core';
-import { nodePoolsCreate } from 'actions/nodePoolActions';
-import { TransitionGroup } from 'react-transition-group';
+
 import AddNodePool from './AddNodePool';
-import BaseTransition from 'styles/transitions/BaseTransition';
-import Button from 'UI/Button';
 import CredentialInfoRow from './CredentialInfoRow';
-import moment from 'moment';
 import NodePool from './NodePool';
 import NodesRunning from './NodesRunning';
 import PortMappingsRow from './PortMappingsRow';
-import produce from 'immer';
-import PropTypes from 'prop-types';
-import React from 'react';
-import ReactTimeout from 'react-timeout';
 import RegionAndVersions from './RegionAndVersions';
-import SlideTransition from 'styles/transitions/SlideTransition';
-import styled from '@emotion/styled';
 import URIBlock from './URIBlock';
 
 export const Upgrade = styled.div`

@@ -1,11 +1,12 @@
+import DocumentTitle from 'components/shared/DocumentTitle';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import AppListInner from './AppListInner';
-import DocumentTitle from 'components/shared/DocumentTitle';
 import LoadingOverlay from 'UI/LoadingOverlay';
-import PropTypes from 'prop-types';
-import React from 'react';
+
+import AppListInner from './AppListInner';
 
 const AppList = ({ catalog, ...props }) => {
   const breadCrumbTitle = catalog ? catalog.metadata.name.toUpperCase() : '';

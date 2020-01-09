@@ -1,9 +1,10 @@
-import { memoize } from 'underscore';
 import { replace } from 'connected-react-router';
-import AppListItems from './AppListItems';
-import AppListSearch from './AppListSearch';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { memoize } from 'underscore';
+
+import AppListItems from './AppListItems';
+import AppListSearch from './AppListSearch';
 
 const SEARCH_URL_PARAM = 'q';
 

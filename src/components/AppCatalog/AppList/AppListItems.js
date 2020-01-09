@@ -1,9 +1,10 @@
-import { APP_CONTAINER_HEIGHT } from '../../UI/AppContainer';
-import AppContainer from 'UI/AppContainer';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import AppContainer from 'UI/AppContainer';
+
 import VirtualizedScrollableGrid from '../../shared/VirtualizedScrollableGrid';
+import { APP_CONTAINER_HEIGHT } from '../../UI/AppContainer';
 
 const StyledEmptyState = styled.div`
   text-align: center;

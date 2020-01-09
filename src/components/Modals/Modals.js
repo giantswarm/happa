@@ -1,5 +1,4 @@
 import { clusterDeleteConfirmed } from 'actions/clusterActions';
-import { connect } from 'react-redux';
 import { modalHide } from 'actions/modalActions';
 import { nodePoolDeleteConfirmed } from 'actions/nodePoolActions';
 import {
@@ -9,12 +8,13 @@ import {
   organizationDeleteConfirmed,
   organizationRemoveMemberConfirmed,
 } from 'actions/organizationActions';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import EmailField from 'shared/EmailField';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { connect } from 'react-redux';
+import EmailField from 'shared/EmailField';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 class Modals extends React.Component {
   state = {

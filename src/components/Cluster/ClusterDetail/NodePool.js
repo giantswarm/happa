@@ -1,17 +1,18 @@
+import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
-import { bindActionCreators } from 'redux';
-import { Code } from 'styles/';
-import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { spinner } from 'images';
-import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
-import NodePoolDropdownMenu from './NodePoolDropdownMenu';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import ScaleNodePoolModal from './ScaleNodePoolModal';
-import styled from '@emotion/styled';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Code } from 'styles/';
 import theme from 'styles/theme';
 import ViewAndEditName from 'UI/ViewEditName';
+
+import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
+import NodePoolDropdownMenu from './NodePoolDropdownMenu';
+import ScaleNodePoolModal from './ScaleNodePoolModal';
 
 const NodesWrapper = styled.div`
   width: 36px;

@@ -1,6 +1,6 @@
-import BootstrapTabs from 'react-bootstrap/lib/Tabs';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapTabs from 'react-bootstrap/lib/Tabs';
 
 const Tabs = props => {
   return (

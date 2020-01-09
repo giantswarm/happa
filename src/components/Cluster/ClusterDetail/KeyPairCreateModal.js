@@ -1,12 +1,13 @@
-import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
-import { Providers } from 'shared/constants';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import ExpiryHoursPicker from './ExpiryHoursPicker';
-import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import useDebounce from 'lib/effects/useDebounce';
+import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { Providers } from 'shared/constants';
+import Button from 'UI/Button';
+
+import ExpiryHoursPicker from './ExpiryHoursPicker';
 
 const EXPIRE_TTL_TIME = 720;
 

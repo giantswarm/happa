@@ -1,9 +1,10 @@
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
+import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
-import PropTypes from 'prop-types';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+
 import { getInitialState } from '.';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
 const InviteUserSuccess = ({ inviteForm, invitationResult }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();

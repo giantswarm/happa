@@ -1,7 +1,7 @@
-import { Breadcrumb } from 'react-breadcrumbs';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { Link } from 'react-router-dom';
 
 const NextSteps = props => (
   <Breadcrumb

@@ -1,10 +1,10 @@
+import styled from '@emotion/styled';
+import PropTypes from 'prop-types';
+import React from 'react';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { NavLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import React from 'react';
 import _ from 'underscore';
-import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
   display: inline;

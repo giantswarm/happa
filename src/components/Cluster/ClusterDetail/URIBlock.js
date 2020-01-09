@@ -1,10 +1,10 @@
-import { Code } from 'styles';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import styled from '@emotion/styled';
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
+import { Code } from 'styles';
 
 const CopyButton = styled.div`
   opacity: 0;

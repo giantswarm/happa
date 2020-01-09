@@ -1,12 +1,13 @@
+import styled from '@emotion/styled';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import Button from './Button';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import { truncate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
-import styled from '@emotion/styled';
-import { truncate } from 'lib/helpers';
+
+import Button from './Button';
 
 const MIN_NAME_LENGTH = 3;
 const MAX_NAME_LENGTH = 14;

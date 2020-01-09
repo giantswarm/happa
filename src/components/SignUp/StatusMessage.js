@@ -1,6 +1,6 @@
+import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { spinner } from 'images';
 
 class StatusMessage extends React.Component {
   static statusMessage() {

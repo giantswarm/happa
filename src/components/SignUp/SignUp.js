@@ -1,14 +1,15 @@
 import * as userActions from 'actions/userActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { push } from 'connected-react-router';
-import { validatePassword } from 'lib/passwordValidation';
-import Button from 'UI/Button';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import Passage from 'lib/passageClient';
-import PasswordField from './PasswordField';
+import { validatePassword } from 'lib/passwordValidation';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Button from 'UI/Button';
+
+import PasswordField from './PasswordField';
 import StatusMessage from './StatusMessage';
 import TermsOfService from './TermsOfService';
 

@@ -1,22 +1,23 @@
 import * as forgotPasswordActions from 'actions/forgotPasswordActions';
-import { bindActionCreators } from 'redux';
+import { giantswarmLogin } from 'actions/userActions';
+import { push } from 'connected-react-router';
+import { spinner } from 'images';
 import {
-  FlashMessage,
   clearQueues,
+  FlashMessage,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
-import { connect } from 'react-redux';
-import { giantswarmLogin } from 'actions/userActions';
-import { Link } from 'react-router-dom';
-import { parseErrorMessages } from '../Auth/parseErrorMessages';
-import { push } from 'connected-react-router';
-import { spinner } from 'images';
 import { validatePassword } from 'lib/passwordValidation';
-import PasswordField from '../SignUp/PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import SlideTransition from 'styles/transitions/SlideTransition';
+
+import { parseErrorMessages } from '../Auth/parseErrorMessages';
+import PasswordField from '../SignUp/PasswordField';
 import StatusMessage from '../SignUp/StatusMessage';
 
 class SetPassword extends React.Component {

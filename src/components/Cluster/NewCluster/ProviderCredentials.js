@@ -1,9 +1,9 @@
-import { connect } from 'react-redux';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
-import { Providers } from 'shared/constants';
-import AWSAccountID from 'UI/AWSAccountID';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Providers } from 'shared/constants';
+import AWSAccountID from 'UI/AWSAccountID';
 
 class ProviderCredentials extends React.Component {
   componentDidMount() {

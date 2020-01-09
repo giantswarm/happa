@@ -1,17 +1,18 @@
-import { connect } from 'react-redux';
 import { css } from '@emotion/core';
-import { hasAppropriateLength } from 'lib/helpers';
-import { Constants, Providers } from 'shared/constants';
-import { RadioWrapper } from '../NewCluster/CreateNodePoolsCluster';
-import AvailabilityZonesParser from './AvailabilityZonesParser';
-import AWSInstanceTypeSelector from '../NewCluster/AWSInstanceTypeSelector';
-import BaseTransition from 'styles/transitions/BaseTransition';
-import NodeCountSelector from 'shared/NodeCountSelector';
+import styled from '@emotion/styled';
 import produce from 'immer';
+import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import styled from '@emotion/styled';
+import { connect } from 'react-redux';
+import { Constants, Providers } from 'shared/constants';
+import NodeCountSelector from 'shared/NodeCountSelector';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
+
+import AWSInstanceTypeSelector from '../NewCluster/AWSInstanceTypeSelector';
+import { RadioWrapper } from '../NewCluster/CreateNodePoolsCluster';
+import AvailabilityZonesParser from './AvailabilityZonesParser';
 
 const FlexWrapperDiv = styled.div`
   display: flex;

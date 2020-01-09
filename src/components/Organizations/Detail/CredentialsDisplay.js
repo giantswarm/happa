@@ -1,9 +1,9 @@
+import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Button from 'UI/Button';
-import { spinner } from 'images';
 import { Providers } from 'shared/constants';
 import AWSAccountID from 'UI/AWSAccountID';
+import Button from 'UI/Button';
 
 const CredentialsDisplay = props => {
   if (props.credentials.isFetching) {

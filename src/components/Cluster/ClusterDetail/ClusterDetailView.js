@@ -1,33 +1,34 @@
-import * as clusterActions from 'actions/clusterActions';
+import styled from '@emotion/styled';
 import * as appActions from 'actions/appActions';
+import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
-import * as releaseActions from 'actions/releaseActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { getNumberOfNodes } from 'utils/clusterUtils';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
-import { Providers } from 'shared/constants';
-import { push } from 'connected-react-router';
-import Button from 'UI/Button';
-import ClusterApps from './ClusterApps';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import cmp from 'semver-compare';
+import * as releaseActions from 'actions/releaseActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import KeyPairs from './KeyPairs';
-import LoadingOverlay from 'UI/LoadingOverlay';
+import { push } from 'connected-react-router';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactTimeout from 'react-timeout';
-import ScaleClusterModal from './ScaleClusterModal';
-import styled from '@emotion/styled';
 import Tab from 'react-bootstrap/lib/Tab';
+import { connect } from 'react-redux';
+import ReactTimeout from 'react-timeout';
+import { bindActionCreators } from 'redux';
+import cmp from 'semver-compare';
+import { Providers } from 'shared/constants';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
+import LoadingOverlay from 'UI/LoadingOverlay';
+import ViewAndEditName from 'UI/ViewEditName';
+import { getNumberOfNodes } from 'utils/clusterUtils';
+
+import ClusterApps from './ClusterApps';
+import KeyPairs from './KeyPairs';
+import ScaleClusterModal from './ScaleClusterModal';
 import Tabs from './Tabs';
 import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
 import V5ClusterDetailTable from './V5ClusterDetailTable';
-import ViewAndEditName from 'UI/ViewEditName';
 
 const WrapperDiv = styled.div`
   h2 {

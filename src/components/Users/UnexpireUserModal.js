@@ -1,6 +1,7 @@
-import UsersModal, { UsersModalPropTypes } from './UsersModal';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import UsersModal, { UsersModalPropTypes } from './UsersModal';
 
 const UnexpireUserModal = ({ forUser, isLoading, ...props }) => {
   const confirmButtonText = isLoading

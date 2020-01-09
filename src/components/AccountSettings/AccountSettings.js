@@ -1,12 +1,13 @@
 import * as UserActions from 'actions/userActions';
-import { bindActionCreators } from 'redux';
-import { Breadcrumb } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
-import ChangeEmailForm from './ChangeEmailForm';
-import ChangePasswordForm from './ChangePasswordForm';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import ChangeEmailForm from './ChangeEmailForm';
+import ChangePasswordForm from './ChangePasswordForm';
 
 const AccountSettings = props => (
   <Breadcrumb

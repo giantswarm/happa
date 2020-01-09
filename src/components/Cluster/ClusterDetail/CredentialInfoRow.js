@@ -1,8 +1,8 @@
-import { FlexRowWithTwoBlocksOnEdges } from 'styles';
-import { Providers } from 'shared/constants';
-import AWSAccountID from 'UI/AWSAccountID';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Providers } from 'shared/constants';
+import { FlexRowWithTwoBlocksOnEdges } from 'styles';
+import AWSAccountID from 'UI/AWSAccountID';
 
 function CredentialInfoRow({ cluster, credentials, provider }) {
   const { credential_id } = cluster;

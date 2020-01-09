@@ -1,9 +1,10 @@
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import { dedent } from 'lib/helpers';
-import BaseTransition from 'styles/transitions/BaseTransition';
-import Line from './Line';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
+import BaseTransition from 'styles/transitions/BaseTransition';
+
+import Line from './Line';
 
 const Modernizr = window.Modernizr;
 

@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import {
   organizationCredentialsLoad,
   organizationCredentialsSet,
@@ -6,8 +5,10 @@ import {
 } from 'actions/organizationActions';
 import PropTypes from 'prop-types';
 import React from 'react';
-import CredentialsForm from './CredentialsForm';
+import { connect } from 'react-redux';
+
 import CredentialsDisplay from './CredentialsDisplay';
+import CredentialsForm from './CredentialsForm';
 
 class Credentials extends React.Component {
   state = {

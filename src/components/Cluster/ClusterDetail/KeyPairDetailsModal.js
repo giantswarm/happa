@@ -1,10 +1,11 @@
 import { relativeDate } from 'lib/helpers.js';
-import CertificateOrgsLabel from './CertificateOrgsLabel';
-import Copyable from 'shared/Copyable';
-import GenericModal from '../../Modals/GenericModal';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Copyable from 'shared/Copyable';
+
+import GenericModal from '../../Modals/GenericModal';
+import CertificateOrgsLabel from './CertificateOrgsLabel';
 
 class KeyPairDetailsModal extends React.Component {
   static createDate(date) {

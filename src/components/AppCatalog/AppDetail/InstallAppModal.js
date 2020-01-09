@@ -1,15 +1,16 @@
 import { installApp } from 'actions/appActions';
-import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import ClusterPicker from './ClusterPicker';
-import GenericModal from '../../Modals/GenericModal';
-import InstallAppForm from './InstallAppForm';
+import yaml from 'js-yaml';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import yaml from 'js-yaml';
+import { connect } from 'react-redux';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
+
+import GenericModal from '../../Modals/GenericModal';
+import ClusterPicker from './ClusterPicker';
+import InstallAppForm from './InstallAppForm';
 
 const InstallAppModal = props => {
   const CLUSTER_PICKER_PAGE = 'CLUSTER_PICKER_PAGE';

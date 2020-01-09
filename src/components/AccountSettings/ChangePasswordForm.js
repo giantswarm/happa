@@ -1,11 +1,12 @@
+import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
 import { validatePassword } from 'lib/passwordValidation';
-import Button from 'UI/Button';
-import GiantSwarm from 'giantswarm';
-import PasswordField from '../SignUp/PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Button';
+
+import PasswordField from '../SignUp/PasswordField';
 
 class ChangePassword extends React.Component {
   state = {

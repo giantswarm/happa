@@ -1,7 +1,7 @@
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import Button from 'UI/Button';
 
 const UsersModal = ({
   show,

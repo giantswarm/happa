@@ -1,7 +1,7 @@
-import { CSSTransition } from 'react-transition-group';
+import useDelayedChange from 'lib/effects/useDelayedChange';
 import PropTypes from 'prop-types';
 import React from 'react';
-import useDelayedChange from 'lib/effects/useDelayedChange';
+import { CSSTransition } from 'react-transition-group';
 
 export const BaseTransitionPropTypes = {
   in: PropTypes.bool,
