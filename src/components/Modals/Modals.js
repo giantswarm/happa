@@ -142,8 +142,11 @@ class Modals extends React.Component {
             </BootstrapModal.Header>
             <BootstrapModal.Body>
               <form onSubmit={this.createOrganisation.bind(this)}>
-                <label>Organization Name:</label>
+                <label htmlFor='create-organization-name'>
+                  Organization Name:
+                </label>
                 <input
+                  id='create-organization-name'
                   autoFocus
                   ref={i => {
                     this.orgId = i;
