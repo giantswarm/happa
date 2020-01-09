@@ -26,7 +26,7 @@ class FlashMessage extends React.Component {
     if (this.state.isVisible) {
       return (
         <div
-          className={`${'flash-messages--flash-message' + ' flash-messages--'}${
+          className={`${'flash-messages--flash-message flash-messages--'}${
             this.props.class
           }`}
         >
