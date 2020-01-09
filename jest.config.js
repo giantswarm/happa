@@ -22,7 +22,7 @@ module.exports = {
   globals: {
     // window.config object will now be available in all tests
     config: {
-      apiEndpoint: 'http://localhost:8000',
+      apiEndpoint: 'http://1.2.3.4',
       passageEndpoint: 'http://localhost:5001',
       environment: 'development',
       ingressBaseDomain: 'k8s.sample.io',
