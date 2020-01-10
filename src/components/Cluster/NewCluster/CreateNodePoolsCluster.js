@@ -2,6 +2,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
+import { push } from 'connected-react-router';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';

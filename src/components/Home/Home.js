@@ -167,7 +167,7 @@ function mapStateToProps(state) {
   const organizations = state.entities.organizations.items;
   const allClusters = state.entities.clusters.items;
   const errorLoadingClusters = state.entities.clusters.errorLoading;
-  const v5Clusters = state.entities.clusters.nodePoolsClusters;
+  const v5Clusters = state.entities.clusters.v5Clusters;
   const nodePools = state.entities.nodePools.items;
 
   let clusters = [];
