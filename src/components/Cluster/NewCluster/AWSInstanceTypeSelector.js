@@ -1,9 +1,9 @@
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import InputField from 'shared/InputField';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import InputField from 'shared/InputField';
+import Button from 'UI/Button';
 
 const WrapperDiv = styled.div`
   max-width: 200px;
@@ -13,15 +13,15 @@ class AWSInstanceTypeSelector extends React.Component {
   constructor(props) {
     super(props);
 
-    var instanceTypes = {};
+    let instanceTypes = {};
 
-    if (window.config.awsCapabilitiesJSON != '') {
+    if (window.config.awsCapabilitiesJSON !== '') {
       instanceTypes = JSON.parse(window.config.awsCapabilitiesJSON);
     }
 
-    var availableInstanceTypes = [];
+    const availableInstanceTypes = [];
     // Create a list of only the allowed instance types
-    props.allowedInstanceTypes.forEach(function(it) {
+    props.allowedInstanceTypes.forEach(it => {
       if (typeof instanceTypes[it] === 'object') {
         availableInstanceTypes.push(
           Object.assign({}, instanceTypes[it], { name: it })
@@ -29,6 +29,7 @@ class AWSInstanceTypeSelector extends React.Component {
       }
     });
 
+    // eslint-disable-next-line react/state-in-constructor
     this.state = {
       modalVisible: false,
       selectedInstanceType: props.value,
@@ -61,9 +62,9 @@ class AWSInstanceTypeSelector extends React.Component {
   buttonClass() {
     if (this.props.readOnly) {
       return 'disabled';
-    } else {
-      return '';
     }
+
+    return '';
   }
 
   preSelect(instanceTypeName) {
@@ -81,19 +82,16 @@ class AWSInstanceTypeSelector extends React.Component {
   };
 
   validateInstanceType = instanceTypeName => {
-    var valid;
-    var validationError;
+    let valid = false;
+    let validationError = 'Please enter a valid instance type';
 
-    var validInstanceTypes = this.state.instanceTypes.map(x => {
+    const validInstanceTypes = this.state.instanceTypes.map(x => {
       return x.name;
     });
 
-    if (validInstanceTypes.indexOf(instanceTypeName) != -1) {
+    if (validInstanceTypes.indexOf(instanceTypeName) !== -1) {
       valid = true;
       validationError = '';
-    } else {
-      valid = false;
-      validationError = 'Please enter a valid instance type';
     }
 
     this.setState({
@@ -129,10 +127,7 @@ class AWSInstanceTypeSelector extends React.Component {
             />
 
             <div
-              className={
-                'new-cluster--instance-type-selector-button ' +
-                this.buttonClass()
-              }
+              className={`new-cluster--instance-type-selector-button ${this.buttonClass()}`}
               onClick={this.showModal}
             >
               <i className='fa fa-menu' />

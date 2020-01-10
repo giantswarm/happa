@@ -1,17 +1,18 @@
-import { connect } from 'react-redux';
 import { css } from '@emotion/core';
-import { hasAppropriateLength } from 'lib/helpers';
-import { Providers, Constants } from 'shared/constants';
-import { RadioWrapper } from '../NewCluster/CreateNodePoolsCluster';
-import AvailabilityZonesParser from './AvailabilityZonesParser';
-import AWSInstanceTypeSelector from '../NewCluster/AWSInstanceTypeSelector';
-import BaseTransition from 'styles/transitions/BaseTransition';
-import NodeCountSelector from 'shared/NodeCountSelector';
+import styled from '@emotion/styled';
 import produce from 'immer';
+import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import styled from '@emotion/styled';
+import { connect } from 'react-redux';
+import { Constants, Providers } from 'shared/constants';
+import NodeCountSelector from 'shared/NodeCountSelector';
+import BaseTransition from 'styles/transitions/BaseTransition';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
+
+import AWSInstanceTypeSelector from '../NewCluster/AWSInstanceTypeSelector';
+import { RadioWrapper } from '../NewCluster/CreateNodePoolsCluster';
+import AvailabilityZonesParser from './AvailabilityZonesParser';
 
 const FlexWrapperDiv = styled.div`
   display: flex;
@@ -165,8 +166,11 @@ class AddNodePool extends Component {
       max: 10,
       maxValid: true,
     },
+    // eslint-disable-next-line react/no-unused-state
     submitting: false,
+    // eslint-disable-next-line react/no-unused-state
     valid: false,
+    // eslint-disable-next-line react/no-unused-state
     error: false,
     aws: {
       instanceType: {
@@ -189,7 +193,8 @@ class AddNodePool extends Component {
 
   updateName = event => {
     const name = event.target.value;
-    const [isValid, message] = hasAppropriateLength(name, 0, 100);
+    const maxNameLength = 100;
+    const [isValid, message] = hasAppropriateLength(name, 0, maxNameLength);
 
     // We don't let the user write more characters if the name exceeds the max number allowed
     if (!isValid) {
@@ -198,6 +203,7 @@ class AddNodePool extends Component {
           draft.name.validationError = message;
         })
       );
+
       return;
     }
 
@@ -527,6 +533,7 @@ function mapStateToProps(state) {
   const { availability_zones: AZ } = state.app.info.general;
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
+  // eslint-disable-next-line no-magic-numbers
   const maxAZ = Math.min(AZ.max, 4);
   const minAZ = 1;
   const defaultAZ = AZ.default;

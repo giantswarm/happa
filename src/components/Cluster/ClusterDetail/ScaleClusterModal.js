@@ -1,19 +1,37 @@
 import * as clusterActions from 'actions/clusterActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { Providers } from 'shared/constants';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import cmp from 'semver-compare';
-import NodeCountSelector from 'shared/NodeCountSelector';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { connect } from 'react-redux';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { bindActionCreators } from 'redux';
+import cmp from 'semver-compare';
+import { Providers } from 'shared/constants';
+import NodeCountSelector from 'shared/NodeCountSelector';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 class ScaleClusterModal extends React.Component {
-  rollupAnimationDuration = 500;
+  // eslint-disable-next-line no-magic-numbers
+  static rollupAnimationDuration = 500;
+
+  /**
+   * Returns true if autoscaling of worker nodes is possible in this
+   * tenant cluster.
+   *
+   * @param String Provider identifier (aws, azure, kvm)
+   * @param String Semantic release version number
+   */
+  static supportsAutoscaling(provider, releaseVer) {
+    if (provider !== Providers.AWS) {
+      return false;
+    }
+
+    // In order to have support for automatic scaling and therefore for scaling
+    // limits, provider must be AWS and cluster release >= 6.3.0.
+    return cmp(releaseVer, '6.2.99') === 1;
+  }
 
   state = {
     modalVisible: false,
@@ -63,23 +81,6 @@ class ScaleClusterModal extends React.Component {
     });
   };
 
-  /**
-   * Returns true if autoscaling of worker nodes is possible in this
-   * tenant cluster.
-   *
-   * @param String Provider identifier (aws, azure, kvm)
-   * @param String Semantic release version number
-   */
-  supportsAutoscaling(provider, releaseVer) {
-    if (provider !== Providers.AWS) {
-      return false;
-    }
-
-    // In order to have support for automatic scaling and therefore for scaling
-    // limits, provider must be AWS and cluster release >= 6.3.0.
-    return cmp(releaseVer, '6.2.99') === 1;
-  }
-
   updateScaling = nodeCountSelector => {
     this.setState({
       scaling: {
@@ -97,7 +98,7 @@ class ScaleClusterModal extends React.Component {
         loading: true,
       },
       () => {
-        var scaling = {
+        const scaling = {
           min: this.state.scaling.min,
           max: this.state.scaling.max,
         };
@@ -127,7 +128,7 @@ class ScaleClusterModal extends React.Component {
 
   workerDelta = () => {
     if (
-      !this.supportsAutoscaling(
+      !ScaleClusterModal.supportsAutoscaling(
         this.props.provider,
         this.props.cluster.release_version
       )
@@ -146,7 +147,7 @@ class ScaleClusterModal extends React.Component {
     }
 
     if (
-      this.state.scaling.min == this.state.scaling.max &&
+      this.state.scaling.min === this.state.scaling.max &&
       this.props.workerNodesDesired < this.state.scaling.max
     ) {
       return this.props.workerNodesDesired - this.state.scaling.max;
@@ -156,7 +157,7 @@ class ScaleClusterModal extends React.Component {
   };
 
   pluralize = nodes => {
-    var pluralize = 's';
+    let pluralize = 's';
 
     if (Math.abs(nodes) === 1) {
       pluralize = '';
@@ -166,17 +167,18 @@ class ScaleClusterModal extends React.Component {
   };
 
   buttonProperties = () => {
-    var workerDelta = this.workerDelta();
-    var pluralizeWorkers = this.pluralize(workerDelta);
+    let workerDelta = this.workerDelta();
+    const pluralizeWorkers = this.pluralize(workerDelta);
 
     if (
-      this.supportsAutoscaling(
+      ScaleClusterModal.supportsAutoscaling(
         this.props.provider,
         this.props.cluster.release_version
       )
     ) {
       if (this.state.scaling.min > this.props.workerNodesDesired) {
         workerDelta = this.state.scaling.min - this.props.workerNodesDesired;
+
         return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
           style: 'success',
@@ -188,6 +190,7 @@ class ScaleClusterModal extends React.Component {
         workerDelta = Math.abs(
           this.props.workerNodesDesired - this.state.scaling.max
         );
+
         return {
           title: `Remove ${workerDelta} worker node${this.pluralize(
             workerDelta
@@ -197,7 +200,7 @@ class ScaleClusterModal extends React.Component {
         };
       }
 
-      if (this.state.scaling.min != this.props.cluster.scaling.min) {
+      if (this.state.scaling.min !== this.props.cluster.scaling.min) {
         return {
           title: 'Apply',
           style: 'success',
@@ -207,7 +210,7 @@ class ScaleClusterModal extends React.Component {
         };
       }
 
-      if (this.state.scaling.max != this.props.cluster.scaling.max) {
+      if (this.state.scaling.max !== this.props.cluster.scaling.max) {
         return {
           title: 'Apply',
           style: 'success',
@@ -250,15 +253,15 @@ class ScaleClusterModal extends React.Component {
   };
 
   render() {
-    var warnings = [];
+    const warnings = [];
     if (
       this.state.scaling.max < this.props.workerNodesRunning &&
       this.state.scaling.minValid
     ) {
-      var diff = this.props.workerNodesRunning - this.state.scaling.max;
+      const diff = this.props.workerNodesRunning - this.state.scaling.max;
 
       if (
-        this.supportsAutoscaling(
+        ScaleClusterModal.supportsAutoscaling(
           this.props.provider,
           this.props.cluster.release_version
         )
@@ -269,13 +272,13 @@ class ScaleClusterModal extends React.Component {
             enter={true}
             exit={true}
             key={1}
-            timeout={this.rollupAnimationDuration}
+            timeout={ScaleClusterModal.rollupAnimationDuration}
           >
             <p key='node-removal'>
               <i className='fa fa-warning' /> The cluster currently has{' '}
               {this.props.workerNodesRunning} worker nodes running. By setting
               the maximum lower than that, you enforce the removal of{' '}
-              {diff === 1 ? 'one node' : diff + ' nodes'}. This could result in
+              {diff === 1 ? 'one node' : `${diff} nodes`}. This could result in
               unscheduled workloads.
             </p>
           </CSSTransition>
@@ -285,11 +288,11 @@ class ScaleClusterModal extends React.Component {
           <CSSTransition
             classNames='rollup'
             key={2}
-            timeout={this.rollupAnimationDuration}
+            timeout={ScaleClusterModal.rollupAnimationDuration}
           >
             <p key='node-removal'>
               <i className='fa fa-warning' /> You are about to enforce the
-              removal of {diff === 1 ? 'one node' : diff + ' nodes'}. Please
+              removal of {diff === 1 ? 'one node' : `${diff} nodes`}. Please
               make sure the cluster has enough capacity to schedule all
               workloads.
             </p>
@@ -298,12 +301,13 @@ class ScaleClusterModal extends React.Component {
       }
     }
 
+    // eslint-disable-next-line no-magic-numbers
     if (this.state.scaling.min < 3) {
       warnings.push(
         <CSSTransition
           classNames='rollup'
           key={3}
-          timeout={this.rollupAnimationDuration}
+          timeout={ScaleClusterModal.rollupAnimationDuration}
         >
           <p key='unsupported'>
             <i className='fa fa-warning' /> We recommend that you run clusters
@@ -313,10 +317,10 @@ class ScaleClusterModal extends React.Component {
       );
     }
 
-    var body = (
+    let body = (
       <BootstrapModal.Body>
         <p>
-          {this.supportsAutoscaling(
+          {ScaleClusterModal.supportsAutoscaling(
             this.props.provider,
             this.props.cluster.release_version
           )
@@ -325,7 +329,7 @@ class ScaleClusterModal extends React.Component {
         </p>
         <div className='row section'>
           <NodeCountSelector
-            autoscalingEnabled={this.supportsAutoscaling(
+            autoscalingEnabled={ScaleClusterModal.supportsAutoscaling(
               this.props.provider,
               this.props.cluster.release_version
             )}
@@ -338,7 +342,7 @@ class ScaleClusterModal extends React.Component {
         <TransitionGroup>{warnings}</TransitionGroup>
       </BootstrapModal.Body>
     );
-    var footer = (
+    let footer = (
       <BootstrapModal.Footer>
         {this.buttonProperties().disabled ? (
           undefined

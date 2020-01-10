@@ -1,10 +1,10 @@
-import { Code } from 'styles';
-import Button from 'UI/Button';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import RefreshableLabel from 'UI/RefreshableLabel';
-import styled from '@emotion/styled';
+import { Code } from 'styles';
 import theme from 'styles/theme';
+import Button from 'UI/Button';
+import RefreshableLabel from 'UI/RefreshableLabel';
 
 export const WrapperDiv = styled.div`
   font-size: 16px;
@@ -24,6 +24,7 @@ export const LineDiv = styled.div`
 function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
   const instanceTypeText = instanceType
     ? // prettier-ignore
+      // eslint-disable-next-line no-magic-numbers
       `${instanceType.numberOfCores} CPUs, ${(instanceType.memoryInMb / 1000.0).toFixed(1)} GB RAM`
     : '0 CPUs, 0 GB RAM';
 

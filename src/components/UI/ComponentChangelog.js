@@ -1,8 +1,8 @@
 //import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import styled from '@emotion/styled';
 
 /**
  * Displays changes for one component. Expects the context of a <dl>.

@@ -1,11 +1,12 @@
+import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
 import { validatePassword } from 'lib/passwordValidation';
-import Button from 'UI/Button';
-import GiantSwarm from 'giantswarm';
-import PasswordField from '../SignUp/PasswordField';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Button';
+
+import PasswordField from '../SignUp/PasswordField';
 
 class ChangePassword extends React.Component {
   state = {
@@ -17,9 +18,9 @@ class ChangePassword extends React.Component {
   };
 
   newPasswordValid = () => {
-    var password = this.new_password.value();
+    const password = this.new_password.value();
 
-    var validationResult = validatePassword(password);
+    const validationResult = validatePassword(password);
 
     if (validationResult.statusMessage === 'password_too_short') {
       validationResult.statusMessage = 'Your new password is too short';
@@ -41,8 +42,8 @@ class ChangePassword extends React.Component {
   };
 
   newPasswordConfirmationValid = () => {
-    var password = this.new_password.value();
-    var passwordConfirmation = this.new_password_confirmation.value();
+    const password = this.new_password.value();
+    const passwordConfirmation = this.new_password_confirmation.value();
 
     if (password !== passwordConfirmation && password && passwordConfirmation) {
       this.setState({
@@ -61,6 +62,7 @@ class ChangePassword extends React.Component {
     );
   };
 
+  // eslint-disable-next-line class-methods-use-this
   passwordEditingStarted() {
     // NOOP
   }
@@ -105,7 +107,7 @@ class ChangePassword extends React.Component {
       error: false,
     });
 
-    var usersApi = new GiantSwarm.UsersApi();
+    const usersApi = new GiantSwarm.UsersApi();
 
     usersApi
       .modifyPassword(this.props.user.email, {
@@ -127,11 +129,12 @@ class ChangePassword extends React.Component {
         );
       })
       .catch(error => {
-        var errorMessage;
+        let errorMessage = null;
 
         if (
           error.body &&
           error.body.status_code &&
+          // eslint-disable-next-line no-magic-numbers
           error.body.status_code === 10010
         ) {
           errorMessage = (

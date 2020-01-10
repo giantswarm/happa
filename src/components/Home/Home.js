@@ -1,19 +1,20 @@
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
-import { bindActionCreators } from 'redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import _ from 'underscore';
-import Button from 'UI/Button';
-import ClusterDashboardItem from './ClusterDashboardItem';
-import ClusterEmptyState from 'UI/ClusterEmptyState';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import moment from 'moment';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { bindActionCreators } from 'redux';
+import Button from 'UI/Button';
+import ClusterEmptyState from 'UI/ClusterEmptyState';
+import _ from 'underscore';
+
+import ClusterDashboardItem from './ClusterDashboardItem';
 
 class Home extends React.Component {
   visibilityTracker = new PageVisibilityTracker();
@@ -32,7 +33,8 @@ class Home extends React.Component {
    * Load clusters list periodically
    */
   registerRefreshInterval = () => {
-    var refreshIntervalDuration = 30 * 1000; // 30 seconds
+    // eslint-disable-next-line no-magic-numbers
+    const refreshIntervalDuration = 30 * 1000; // 30 seconds
     this.refreshInterval = window.setInterval(
       this.refreshClustersList,
       refreshIntervalDuration
@@ -58,9 +60,9 @@ class Home extends React.Component {
   title() {
     if (this.props.selectedOrganization) {
       return `Cluster Overview | ${this.props.selectedOrganization}`;
-    } else {
-      return 'Cluster Overview';
     }
+
+    return 'Cluster Overview';
   }
 
   /**
@@ -68,82 +70,81 @@ class Home extends React.Component {
    * cluster and/or status information.
    */
   lastUpdatedLabel = () => {
-    var maxTimestamp = 0;
+    let maxTimestamp = 0;
     this.props.clusters.forEach(cluster => {
       maxTimestamp = Math.max(maxTimestamp, cluster.lastUpdated);
     });
+
     return moment(maxTimestamp).fromNow();
   };
 
   render() {
     return (
       <DocumentTitle title={this.title()}>
-        {
-          <div>
-            {this.props.selectedOrganization ? (
-              <div className='well launch-new-cluster'>
-                <Link
-                  to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
-                >
-                  <Button bsStyle='primary' type='button'>
-                    <i className='fa fa-add-circle' /> Launch New Cluster
-                  </Button>
-                </Link>
-                {this.props.clusters.length === 0
-                  ? 'Ready to launch your first cluster? Click the green button!'
-                  : ''}
-              </div>
-            ) : (
-              undefined
-            )}
+        <div>
+          {this.props.selectedOrganization ? (
+            <div className='well launch-new-cluster'>
+              <Link
+                to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
+              >
+                <Button bsStyle='primary' type='button'>
+                  <i className='fa fa-add-circle' /> Launch New Cluster
+                </Button>
+              </Link>
+              {this.props.clusters.length === 0
+                ? 'Ready to launch your first cluster? Click the green button!'
+                : ''}
+            </div>
+          ) : (
+            undefined
+          )}
 
-            {this.props.clusters.length === 0 ? (
-              <ClusterEmptyState
-                errorLoadingClusters={this.props.errorLoadingClusters}
-                organizations={this.props.organizations}
-                selectedOrganization={this.props.selectedOrganization}
-              />
-            ) : null}
+          {this.props.clusters.length === 0 ? (
+            <ClusterEmptyState
+              errorLoadingClusters={this.props.errorLoadingClusters}
+              organizations={this.props.organizations}
+              selectedOrganization={this.props.selectedOrganization}
+            />
+          ) : null}
 
-            <TransitionGroup className='cluster-list'>
-              {_.sortBy(this.props.clusters, cluster => cluster.name).map(
-                cluster => {
-                  return (
-                    <CSSTransition
-                      classNames='cluster-list-item'
+          <TransitionGroup className='cluster-list'>
+            {_.sortBy(this.props.clusters, cluster => cluster.name).map(
+              cluster => {
+                return (
+                  <CSSTransition
+                    classNames='cluster-list-item'
+                    key={cluster.id}
+                    timeout={500}
+                  >
+                    <ClusterDashboardItem
+                      animate={true}
+                      cluster={cluster}
+                      isNodePool={this.props.nodePoolsClusters.includes(
+                        cluster.id
+                      )}
                       key={cluster.id}
-                      timeout={500}
-                    >
-                      <ClusterDashboardItem
-                        animate={true}
-                        cluster={cluster}
-                        isNodePool={this.props.nodePoolsClusters.includes(
-                          cluster.id
-                        )}
-                        key={cluster.id}
-                        nodePools={this.props.nodePools}
-                        selectedOrganization={this.props.selectedOrganization}
-                      />
-                    </CSSTransition>
-                  );
-                },
-                cluster => cluster.id
-              )}
-            </TransitionGroup>
+                      nodePools={this.props.nodePools}
+                      selectedOrganization={this.props.selectedOrganization}
+                    />
+                  </CSSTransition>
+                );
+              },
+              cluster => cluster.id
+            )}
+          </TransitionGroup>
 
-            {this.props.clusters.length > 0 ? (
-              <p className='last-updated'>
-                <small>
-                  This table is auto-refreshing. Details last fetched{' '}
-                  <span className='last-updated-datestring'>
-                    {this.lastUpdatedLabel()}
-                  </span>
-                  .
-                </small>
-              </p>
-            ) : null}
-          </div>
-        }
+          {this.props.clusters.length > 0 ? (
+            <p className='last-updated'>
+              <small>
+                This table is auto-refreshing. Details last fetched{' '}
+                <span className='last-updated-datestring'>
+                  {this.lastUpdatedLabel()}
+                </span>
+                .
+              </small>
+            </p>
+          ) : null}
+        </div>
       </DocumentTitle>
     );
   }
@@ -161,14 +162,14 @@ Home.propTypes = {
 };
 
 function mapStateToProps(state) {
-  var selectedOrganization = state.app.selectedOrganization;
-  var organizations = state.entities.organizations.items;
-  var allClusters = state.entities.clusters.items;
-  var errorLoadingClusters = state.entities.clusters.errorLoading;
+  const selectedOrganization = state.app.selectedOrganization;
+  const organizations = state.entities.organizations.items;
+  const allClusters = state.entities.clusters.items;
+  const errorLoadingClusters = state.entities.clusters.errorLoading;
   const nodePoolsClusters = state.entities.clusters.nodePoolsClusters;
   const nodePools = state.entities.nodePools.items;
 
-  var clusters = [];
+  let clusters = [];
   if (selectedOrganization) {
     clusters = _.filter(allClusters, cluster => {
       return cluster.owner === selectedOrganization;

@@ -1,9 +1,10 @@
-import { APP_CONTAINER_HEIGHT } from '../../UI/AppContainer';
-import AppContainer from 'UI/AppContainer';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import AppContainer from 'UI/AppContainer';
+
 import VirtualizedScrollableGrid from '../../shared/VirtualizedScrollableGrid';
+import { APP_CONTAINER_HEIGHT } from '../../UI/AppContainer';
 
 const StyledEmptyState = styled.div`
   text-align: center;
@@ -27,6 +28,10 @@ const StyledVirtualizedGrid = styled(VirtualizedScrollableGrid)`
 `;
 
 class AppListItems extends React.Component {
+  static findAppToScrollToIndex(apps, appName) {
+    return apps.findIndex(appVersions => appVersions[0].name === appName);
+  }
+
   appsListRef = React.createRef();
 
   componentDidMount() {
@@ -38,13 +43,9 @@ class AppListItems extends React.Component {
     this.forceUpdate();
   }
 
-  findAppToScrollToIndex(apps, appName) {
-    return apps.findIndex(appVersions => appVersions[0].name === appName);
-  }
-
   render() {
     const { apps, searchQuery } = this.props;
-    const scrollToAppIndex = this.findAppToScrollToIndex(
+    const scrollToAppIndex = AppListItems.findAppToScrollToIndex(
       apps,
       this.props.scrollToApp
     );

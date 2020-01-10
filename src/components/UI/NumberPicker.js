@@ -1,7 +1,7 @@
 import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
 // NumberPicker is a component that allows a user to pick a number by
@@ -64,7 +64,7 @@ const ValueSpan = styled.span`
   }
   input[type='number']::-webkit-inner-spin-button,
   input[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
+    --webkit-appearance: none;
     margin: 0;
   }
 `;
@@ -138,8 +138,8 @@ class NumberPicker extends React.Component {
   };
 
   increment = () => {
-    var currentValue = this.props.value;
-    var desiredValue = currentValue + this.props.stepSize;
+    const currentValue = this.props.value;
+    const desiredValue = currentValue + this.props.stepSize;
 
     this.updateInput({
       target: { value: desiredValue },
@@ -159,6 +159,7 @@ class NumberPicker extends React.Component {
     const desiredValue = e.target.value;
 
     // Validate.
+    // eslint-disable-next-line prefer-const
     let { value, validationError } = this.validateInput(desiredValue);
 
     // Ensure values are never above max or below min. They can be null.
@@ -194,24 +195,24 @@ class NumberPicker extends React.Component {
     } else if (desiredValue > this.props.max) {
       return {
         value: parseInt(desiredValue),
-        validationError: 'Value must not be larger than ' + this.props.max,
+        validationError: `Value must not be larger than ${this.props.max}`,
       };
     } else if (desiredValue < this.props.min) {
       return {
         value: parseInt(desiredValue),
-        validationError: 'Value must not be smaller than ' + this.props.min,
+        validationError: `Value must not be smaller than ${this.props.min}`,
       };
     } else if (!isWholeNumber(parseFloat(desiredValue))) {
       return {
         value: parseInt(desiredValue),
         validationError: 'Value must be a whole number',
       };
-    } else {
-      return {
-        value: parseInt(desiredValue),
-        validationError: '',
-      };
     }
+
+    return {
+      value: parseInt(desiredValue),
+      validationError: '',
+    };
   };
 
   handleFocus = event => {
@@ -284,9 +285,9 @@ NumberPicker.propTypes = {
 function isWholeNumber(value) {
   if (typeof value === 'number' && value % 1 === 0) {
     return true;
-  } else {
-    return false;
   }
+
+  return false;
 }
 
 export default NumberPicker;

@@ -1,6 +1,6 @@
-import AvailabilityZonesLabel from 'UI/AvailabilityZonesLabel';
 import PropTypes from 'prop-types';
 import React from 'react';
+import AvailabilityZonesLabel from 'UI/AvailabilityZonesLabel';
 
 // Returns an array of AvailabilityZonesLabel components
 const AvailabilityZonesLabels = ({
@@ -10,7 +10,7 @@ const AvailabilityZonesLabels = ({
   isMaxReached,
   isRadioButtons,
 }) => {
-  if (typeof zones === 'undefined' || zones.length == 0) {
+  if (typeof zones === 'undefined' || zones.length === 0) {
     return <abbr title='No information available'>n/a</abbr>;
   }
 

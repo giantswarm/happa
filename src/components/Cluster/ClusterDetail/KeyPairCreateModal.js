@@ -1,19 +1,22 @@
-import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
-import { Providers } from 'shared/constants';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import ExpiryHoursPicker from './ExpiryHoursPicker';
-import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import useDebounce from 'lib/effects/useDebounce';
+import { dedent, makeKubeConfigTextFile } from 'lib/helpers';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { Providers } from 'shared/constants';
+import Button from 'UI/Button';
+
+import ExpiryHoursPicker from './ExpiryHoursPicker';
+
+const EXPIRE_TTL_TIME = 720;
 
 const KeyPairCreateModal = props => {
   const defaultDescription = email => {
-    return 'Added by user ' + email + ' using Happa web interface';
+    return `Added by user ${email} using Happa web interface`;
   };
 
-  const [expireTTL, setExpireTTL] = useState(720);
+  const [expireTTL, setExpireTTL] = useState(EXPIRE_TTL_TIME);
   const [description, setDescription] = useState(
     defaultDescription(props.user.email)
   );
@@ -30,19 +33,22 @@ const KeyPairCreateModal = props => {
   });
 
   const blob = () => {
-    var blob = new Blob([kubeconfig], {
+    const kubeConfigBlob = new Blob([kubeconfig], {
       type: 'application/plain;charset=utf-8',
     });
-    return blob;
+
+    return kubeConfigBlob;
   };
 
   const copyKubeConfig = e => {
     e.preventDefault();
 
+    const clipboardResetTime = 500;
+
     setClipboardContent(kubeconfig);
     setTimeout(() => {
       setClipboardContent(null);
-    }, 500);
+    }, clipboardResetTime);
   };
 
   const confirmAddKeyPair = e => {
@@ -75,17 +81,22 @@ const KeyPairCreateModal = props => {
         return props.actions.clusterLoadKeyPairs(props.cluster.id);
       })
       .catch(error => {
+        const modalChangeTimeout = 200;
+
+        // eslint-disable-next-line no-console
         console.error(error);
+
         setTimeout(() => {
           setModal({
             visible: true,
             loading: false,
             template: 'addKeyPairFailure',
           });
-        }, 200);
+        }, modalChangeTimeout);
       });
   };
 
+  // eslint-disable-next-line react/no-multi-comp
   const downloadAsFileLink = () => {
     return (
       <a
@@ -109,18 +120,18 @@ const KeyPairCreateModal = props => {
   };
 
   const cnPrefixOrEmail = () => {
-    if (cnPrefix == '') {
+    if (cnPrefix === '') {
       return props.user.email;
-    } else {
-      return cnPrefix;
     }
+
+    return cnPrefix;
   };
 
   const cnPrefixValidation = value => {
-    var error = null;
+    let error = null;
     if (value !== '') {
-      var endRegex = /[a-zA-Z0-9]$/g;
-      var regex = /^[a-zA-Z0-9][a-zA-Z0-9@\.-]*$/g;
+      const endRegex = /[a-zA-Z0-9]$/g;
+      const regex = /^[a-zA-Z0-9][a-zA-Z0-9@\.-]*$/g;
       if (!endRegex.test(value)) {
         error = 'The CN prefix must end with a-z, A-Z, 0-9';
       } else if (!regex.test(value)) {
@@ -131,7 +142,8 @@ const KeyPairCreateModal = props => {
     setCNPrefixError(error);
   };
 
-  const cnPrefixDebounced = useDebounce(cnPrefix, 1000);
+  const debounceRateTime = 1000;
+  const cnPrefixDebounced = useDebounce(cnPrefix, debounceRateTime);
   useEffect(
     () => {
       // Make sure we have a value (user has entered something in input)
@@ -147,7 +159,7 @@ const KeyPairCreateModal = props => {
   );
 
   const handleCNPrefixChange = e => {
-    var inputValue = e.target.value;
+    const inputValue = e.target.value;
 
     if (cnPrefixError) {
       setCNPrefix(inputValue);
@@ -222,7 +234,7 @@ const KeyPairCreateModal = props => {
                         />
                         <div className='text-field-hint'>
                           {cnPrefixError === null ? (
-                            cnPrefixOrEmail() + '.user.api.clusterdomain'
+                            `${cnPrefixOrEmail()}.user.api.clusterdomain`
                           ) : (
                             <span className='error'>
                               <i className='fa fa-warning' /> {cnPrefixError}
@@ -387,6 +399,8 @@ const KeyPairCreateModal = props => {
               </BootstrapModal>
             );
         }
+
+        return null;
       })()}
     </>
   );

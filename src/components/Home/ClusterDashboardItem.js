@@ -1,5 +1,19 @@
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import * as clusterActions from 'actions/clusterActions';
+import { push } from 'connected-react-router';
+import { relativeDate } from 'lib/helpers.js';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import { Dot } from 'styles';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
+import RefreshableLabel from 'UI/RefreshableLabel';
 import {
   clusterNodePools,
   getCpusTotal,
@@ -10,20 +24,6 @@ import {
   getNumberOfNodes,
   getStorageTotal,
 } from 'utils/clusterUtils';
-import { connect } from 'react-redux';
-import { css } from '@emotion/core';
-import { Dot } from 'styles';
-import { Link } from 'react-router-dom';
-import { push } from 'connected-react-router';
-import { relativeDate } from 'lib/helpers.js';
-import Button from 'UI/Button';
-import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import moment from 'moment';
-import PropTypes from 'prop-types';
-import React from 'react';
-import RefreshableLabel from 'UI/RefreshableLabel';
-import styled from '@emotion/styled';
 
 const WrapperStyles = props => css`
   display: flex;
@@ -76,6 +76,7 @@ const DeleteDateWrapper = styled.div`
 
 class ClusterDashboardItem extends React.Component {
   state = {
+    // eslint-disable-next-line react/no-unused-state
     enforceReRender: null,
     nodePools: [],
   };
@@ -109,9 +110,11 @@ class ClusterDashboardItem extends React.Component {
    * dates, fresh.
    */
   registerReRenderInterval = () => {
-    var refreshInterval = 10 * 1000; // 10 seconds
+    // eslint-disable-next-line no-magic-numbers
+    const refreshInterval = 10 * 1000; // 10 seconds
     this.reRenderInterval = window.setInterval(() => {
       // enforce re-rendering by state change
+      // eslint-disable-next-line react/no-unused-state
       this.setState({ enforceReRender: Date.now() });
     }, refreshInterval);
   };
@@ -120,12 +123,14 @@ class ClusterDashboardItem extends React.Component {
    * Returns true if the cluster is younger than 30 days
    */
   clusterYoungerThan30Days() {
-    var age = Math.abs(
+    const age = Math.abs(
       moment(this.props.cluster.create_date)
         .utc()
+        // eslint-disable-next-line no-magic-numbers
         .diff(moment().utc()) / 1000
     );
 
+    // eslint-disable-next-line no-magic-numbers
     return age < 30 * 24 * 60 * 60;
   }
 
@@ -141,17 +146,17 @@ class ClusterDashboardItem extends React.Component {
     const { cluster, isNodePool, selectedOrganization } = this.props;
     const { nodePools } = this.state;
 
-    var memory = isNodePool
+    const memory = isNodePool
       ? getMemoryTotalNodePools(nodePools)
       : getMemoryTotal(cluster);
 
-    var storage = getStorageTotal(cluster);
+    const storage = getStorageTotal(cluster);
 
-    var cpus = isNodePool
+    const cpus = isNodePool
       ? getCpusTotalNodePools(nodePools)
       : getCpusTotal(cluster);
 
-    var numNodes = isNodePool
+    const numNodes = isNodePool
       ? getNumberOfNodePoolsNodes(nodePools)
       : getNumberOfNodes(cluster);
 

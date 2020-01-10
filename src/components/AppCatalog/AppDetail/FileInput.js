@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -62,7 +62,7 @@ const TextInput = props => {
         {props.description ? <p>{props.description}</p> : undefined}
       </Text>
       <InputWrapper>
-        {props.icon ? <Icon className={'fa fa-' + props.icon} /> : undefined}
+        {props.icon ? <Icon className={`fa fa-${props.icon}`} /> : undefined}
         <Input id={props.label} onChange={onChange} type='file' />
       </InputWrapper>
       {props.validationError ? (

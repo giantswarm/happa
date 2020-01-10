@@ -3,8 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
-var typingTimer;
-var doneTypingInterval = 250; // ms
+let typingTimer = 0;
+const doneTypingInterval = 250; // ms
 
 //
 // InputField
@@ -29,8 +29,8 @@ class InputField extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.value != state.value) {
-      var validation = props.validate(props.value);
+    if (props.value !== state.value) {
+      const validation = props.validate(props.value);
 
       return {
         value: props.value,
@@ -38,6 +38,7 @@ class InputField extends React.Component {
         validationError: validation.validationError,
       };
     }
+
     return null;
   }
 
@@ -53,29 +54,32 @@ class InputField extends React.Component {
   };
 
   onChange = () => {
-    var currentValue = this.input.value;
-    var validation = this.props.validate(currentValue);
-    var valid = false;
-    var validationError = this.state.validationError;
-
-    if (this.props.onStartTyping) {
-      this.props.onStartTyping(currentValue);
-    }
-
-    clearTimeout(typingTimer);
-
-    // If its valid, show that immediately to the user. Thats nice for them
-    // to get instant feedback.
-    if (validation.valid) {
-      valid = true;
-      validationError = '';
-    }
+    const currentValue = this.input.value;
 
     this.setState(
-      {
-        valid: valid,
-        validationError: validationError,
-        value: currentValue,
+      (prevState, prevProps) => {
+        const validation = prevProps.validate(currentValue);
+        let valid = false;
+        let validationError = prevState.validationError;
+
+        if (prevProps.onStartTyping) {
+          prevProps.onStartTyping(currentValue);
+        }
+
+        clearTimeout(typingTimer);
+
+        // If its valid, show that immediately to the user. Thats nice for them
+        // to get instant feedback.
+        if (validation.valid) {
+          valid = true;
+          validationError = '';
+        }
+
+        return {
+          valid: valid,
+          validationError: validationError,
+          value: currentValue,
+        };
       },
       () => {
         if (this.props.onChange) {
@@ -86,10 +90,10 @@ class InputField extends React.Component {
 
     // Check after a few ms afer stopping typing if it is invalid, and then show an error message
     typingTimer = setTimeout(() => {
-      var validation = this.props.validate(currentValue);
-      if (!validation.valid) {
+      const validationOutput = this.props.validate(currentValue);
+      if (!validationOutput.valid) {
         this.setState({
-          validationError: validation.validationError,
+          validationError: validationOutput.validationError,
         });
       }
     }, doneTypingInterval);
@@ -104,10 +108,12 @@ class InputField extends React.Component {
   };
 
   focus = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.input).focus();
   };
 
   blur = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.input).blur();
   };
 

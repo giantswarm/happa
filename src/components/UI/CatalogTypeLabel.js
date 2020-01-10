@@ -1,7 +1,7 @@
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 const Wrapper = styled.div`
@@ -27,10 +27,10 @@ const Wrapper = styled.div`
  * CatalogTypeLabel shows some information about a catalog depending on its type.
  */
 const CatalogTypeLabel = props => {
-  let icon;
-  let message;
+  let icon = '';
+  let message = '';
 
-  let validCatalogTypes = ['community', 'incubator', 'test'];
+  const validCatalogTypes = ['community', 'incubator', 'test'];
 
   // Early return if we're dealing with a unknown catalog type.
   if (!validCatalogTypes.includes(props.catalogType)) {
@@ -58,18 +58,16 @@ const CatalogTypeLabel = props => {
   }
 
   return (
-    <>
-      <Wrapper>
-        <OverlayTrigger
-          overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
-          placement='top'
-        >
-          <div>
-            <span>{props.catalogType}</span> <i className={`fa fa-${icon}`} />
-          </div>
-        </OverlayTrigger>
-      </Wrapper>
-    </>
+    <Wrapper>
+      <OverlayTrigger
+        overlay={<Tooltip id='tooltip'>{message}</Tooltip>}
+        placement='top'
+      >
+        <div>
+          <span>{props.catalogType}</span> <i className={`fa fa-${icon}`} />
+        </div>
+      </OverlayTrigger>
+    </Wrapper>
   );
 };
 

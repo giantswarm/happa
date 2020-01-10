@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var typingTimer;
-var doneTypingInterval = 250; // ms
+let typingTimer = 0;
+const doneTypingInterval = 250; // ms
 
 //
 // PasswordField
@@ -36,10 +36,12 @@ class PasswordField extends React.Component {
   };
 
   focus = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.input).focus();
   };
 
   blur = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.input).blur();
   };
 
