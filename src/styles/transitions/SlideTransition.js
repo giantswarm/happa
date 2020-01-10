@@ -1,6 +1,7 @@
-import BaseTransition, { BaseTransitionPropTypes } from './BaseTransition';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import BaseTransition, { BaseTransitionPropTypes } from './BaseTransition';
 
 const SlideTransition = ({ direction, children, ...props }) => {
   return (

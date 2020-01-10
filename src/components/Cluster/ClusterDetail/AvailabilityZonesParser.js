@@ -1,7 +1,7 @@
-import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
-import NumberPicker from 'UI/NumberPicker';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
+import NumberPicker from 'UI/NumberPicker';
 
 const initialStateLabels = {
   number: 0,
@@ -33,6 +33,8 @@ export default function AvailabilityZonesParser({
 
   // Picker.
   const [AZPicker, setAZPicker] = useState(initialStatePicker);
+  const [AZLabels, setAZLabels] = useState(initialStateLabels);
+
   useEffect(() => {
     if (isLabels) return;
 
@@ -40,17 +42,16 @@ export default function AvailabilityZonesParser({
     // We could save state instead. I'm just doing this because it's easier.
     setAZLabels(initialStateLabels);
     updateAZValuesInParent(AZPicker);
-  }, [AZPicker]);
+  }, [AZPicker, isLabels, updateAZValuesInParent]);
 
   // Labels.
-  const [AZLabels, setAZLabels] = useState(initialStateLabels);
   useEffect(() => {
     if (!isLabels) return;
 
     // Reset picker
     setAZPicker(initialStatePicker);
     updateAZValuesInParent(AZLabels);
-  }, [AZLabels]);
+  }, [AZLabels, initialStatePicker, isLabels, updateAZValuesInParent]);
 
   // Function passed to child Number Picker component to allow it to update state here
   const updateAZPicker = payload => {

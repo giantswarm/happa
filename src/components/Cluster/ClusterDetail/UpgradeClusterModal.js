@@ -1,15 +1,15 @@
 import * as clusterActions from 'actions/clusterActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import _ from 'underscore';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import ComponentChangelog from 'UI/ComponentChangelog';
 import diff from 'deep-diff';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Button from 'UI/Button';
+import ComponentChangelog from 'UI/ComponentChangelog';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
+import _ from 'underscore';
 
 class UpgradeClusterModal extends React.Component {
   state = {
@@ -40,27 +40,27 @@ class UpgradeClusterModal extends React.Component {
 
   changedComponents = () => {
     const { release } = this.props;
-    var currentComponents = {};
+    let currentComponents = {};
     if (release && release.components) {
       currentComponents = release.components;
     }
 
-    var components = {};
+    const components = {};
     currentComponents.forEach(component => {
       components[component.name] = component;
     });
 
-    var targetComponents = {};
+    const targetComponents = {};
     this.props.targetRelease.components.forEach(component => {
       targetComponents[component.name] = component;
     });
 
-    var changedComponents = diff.diff(components, targetComponents);
+    const changedComponents = diff.diff(components, targetComponents);
 
-    let changes = _.groupBy(this.props.targetRelease.changelog, item => {
+    const changes = _.groupBy(this.props.targetRelease.changelog, item => {
       return item.component;
     });
-    let changedComponentNames = Object.keys(changes).sort();
+    const changedComponentNames = Object.keys(changes).sort();
 
     return (
       <div>
@@ -79,7 +79,8 @@ class UpgradeClusterModal extends React.Component {
         <div className='release-selector-modal--components'>
           {_.sortBy(changedComponents, 'name').map(diffEdit => {
             if (diffEdit.kind === 'E') {
-              let component = components[diffEdit.path[0]];
+              const component = components[diffEdit.path[0]];
+
               return (
                 <ReleaseComponentLabel
                   key={component.name}
@@ -91,7 +92,8 @@ class UpgradeClusterModal extends React.Component {
             }
 
             if (diffEdit.kind === 'N') {
-              let component = diffEdit.rhs;
+              const component = diffEdit.rhs;
+
               return (
                 <ReleaseComponentLabel
                   isAdded
@@ -102,7 +104,8 @@ class UpgradeClusterModal extends React.Component {
             }
 
             if (diffEdit.kind === 'D') {
-              let component = diffEdit.lhs;
+              const component = diffEdit.lhs;
+
               return (
                 <ReleaseComponentLabel
                   isRemoved
@@ -111,6 +114,8 @@ class UpgradeClusterModal extends React.Component {
                 />
               );
             }
+
+            return null;
           })}
         </div>
 
@@ -201,7 +206,7 @@ class UpgradeClusterModal extends React.Component {
         loading: true,
       },
       () => {
-        var targetReleaseVersion = this.props.targetRelease.version;
+        const targetReleaseVersion = this.props.targetRelease.version;
 
         this.props.clusterActions
           .clusterPatch(this.props.cluster, {
@@ -219,10 +224,9 @@ class UpgradeClusterModal extends React.Component {
 
             this.close();
           })
-          .catch(error => {
+          .catch(_error => {
             this.setState({
               loading: false,
-              error: error,
             });
           });
       }
@@ -235,6 +239,8 @@ class UpgradeClusterModal extends React.Component {
     } else if (this.state.page === 'inspect-changes') {
       return this.inspectChangesPage();
     }
+
+    return null;
   };
 
   render() {

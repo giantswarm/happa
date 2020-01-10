@@ -1,10 +1,10 @@
-import { NavLink } from 'react-router-dom';
-import _ from 'underscore';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
+import { NavLink } from 'react-router-dom';
+import _ from 'underscore';
 
 const Wrapper = styled.div`
   display: inline;
@@ -109,6 +109,7 @@ const Wrapper = styled.div`
   }
 `;
 
+// eslint-disable-next-line react/prefer-stateless-function
 class OrganizationDropdown extends React.Component {
   render() {
     return (
@@ -146,7 +147,7 @@ class OrganizationDropdown extends React.Component {
             <MenuItem
               componentClass={NavLink}
               href='/organizations/'
-              to={'/organizations/' + this.props.selectedOrganization}
+              to={`/organizations/${this.props.selectedOrganization}`}
             >
               Details for {this.props.selectedOrganization}
             </MenuItem>

@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom/extend-expect';
+
 import { render } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from 'emotion-theming';
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import theme from 'styles/theme';
 
 import PortMappingsRow from '../PortMappingsRow';

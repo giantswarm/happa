@@ -1,10 +1,11 @@
-import Button from 'UI/Button';
-import LoadingOverlay from 'UI/LoadingOverlay';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Button from 'UI/Button';
+import LoadingOverlay from 'UI/LoadingOverlay';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
+
 import ReleaseDetailsModal from '../../Modals/ReleaseDetailsModal';
-import styled from '@emotion/styled';
 
 const FlexRowDiv = styled.div`
   display: flex;

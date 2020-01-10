@@ -6,24 +6,9 @@ import cmp from 'semver-compare';
 import { Providers, StatusCodes } from 'shared/constants';
 
 import * as types from './actionTypes';
-import { modalHide } from './modalActions';
-import { nodePoolsLoad } from './nodePoolActions';
 
 // API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
-
-// enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
-// their release version and provider.
-// ? Do we reaaly need this function?
-function enhanceWithCapabilities(clusters, provider) {
-  const newClusters = clusters.map(c => {
-    c.capabilities = computeCapabilities(c, provider);
-
-    return c;
-  });
-
-  return newClusters;
-}
 
 // computeCapabilities takes a cluster object and provider and returns a
 // capabilities object with the features that this cluster supports.
@@ -45,75 +30,8 @@ function computeCapabilities(cluster, provider) {
   return capabilities;
 }
 
-export const clusterLoadDetailsSuccess = cluster => ({
-  type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
-  cluster,
-});
-
-export const clusterLoadDetailsError = (clusterId, error) => ({
-  type: types.CLUSTER_LOAD_DETAILS_ERROR,
-  clusterId,
-  error,
-});
-
-export const clusterLoadStatusSuccess = (clusterId, status) => ({
-  type: types.CLUSTER_LOAD_STATUS_SUCCESS,
-  clusterId,
-  status,
-});
-
-export const clusterLoadStatusNotFound = clusterId => ({
-  type: types.CLUSTER_LOAD_STATUS_NOT_FOUND,
-  clusterId,
-});
-
-export const clusterLoadStatusError = error => ({
-  type: types.CLUSTER_LOAD_STATUS_ERROR,
-  error,
-});
-
-export const clusterCreateError = cluster => ({
-  type: types.CLUSTER_CREATE_ERROR,
-  cluster,
-});
-
-export const clusterDelete = cluster => ({
-  type: types.CLUSTER_DELETE,
-  cluster,
-});
-
-export const clusterDeleteSuccess = clusterId => ({
-  type: types.CLUSTER_DELETE_SUCCESS,
-  clusterId,
-});
-
-export const clusterDeleteError = (clusterId, error) => ({
-  type: types.CLUSTER_DELETE_ERROR,
-  clusterId,
-  error,
-});
-
-export const clustersLoadError = error => ({
-  type: types.CLUSTERS_LOAD_ERROR,
-  error: error,
-});
-
-// nodePoolsClusters is an array of clusters id
-export const clustersLoadSuccess = (
-  v4ClustersObject,
-  v5ClustersObject,
-  nodePoolsClusters,
-  lastUpdated
-) => ({
-  type: types.CLUSTERS_LOAD_SUCCESS,
-  v4Clusters: v4ClustersObject,
-  v5Clusters: v5ClustersObject,
-  nodePoolsClusters,
-  lastUpdated,
-});
-
-// This is a helper function, not an action creator.
-// For some reason we are storing clusters as objects instead as arrays
+// This is a helper function that transforms an array of clusters into an object
+// of clusters with its ids as keys. Also we add some data to the clusters objects.
 function clustersLoadArrayToObject(clusters) {
   return clusters
     .map(cluster => {
@@ -131,218 +49,102 @@ function clustersLoadArrayToObject(clusters) {
 }
 
 /**
- * Performs the getClusters API call and dispatches the clustersLoadSuccess
- * action.
+ * Performs the getClusters API call and dispatches related actions
+ * This is just for getting all the clusters, but not their details.
+ * @param {Boolean} withLoadingFlags Set to false to avoid loading state (eg when refreshing)
  */
-export function clustersLoad() {
-  return async function(dispatch, getState) {
-    dispatch({ type: types.CLUSTERS_LOAD });
+export function clustersList({ withLoadingFlags }) {
+  return function(dispatch) {
+    if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
 
     // Fetch all clusters.
-    const clusters = await clustersApi
+    return clustersApi
       .getClusters()
-      .then(clusterList => {
-        // ? Do we really need to do this here? We are doing it after when fetching details.
-        const enhancedClusters = enhanceWithCapabilities(
-          clusterList,
-          getState().app.info.general.provider
-        );
+      .then(data => {
+        const clusters = clustersLoadArrayToObject(data);
 
-        return enhancedClusters;
+        const v5ClusterIds = data
+          .filter(cluster => cluster.path.startsWith('/v5'))
+          .map(cluster => cluster.id);
+
+        dispatch({ type: types.CLUSTERS_LIST_SUCCESS, clusters, v5ClusterIds });
       })
       .catch(error => {
         // eslint-disable-next-line no-console
         console.error(error);
-
-        dispatch(clustersLoadError(error));
+        dispatch({ type: types.CLUSTERS_LIST_ERROR, error });
       });
-
-    // Extract v4 clusters from the clusters fetched array.
-    const v4Clusters = clusters.filter(cluster =>
-      cluster.path.startsWith('/v4')
-    );
-
-    // TODO at some point we will probably have just one flow for all clusters.
-    // Now we can't as we are not computing capabilities and not getting status
-    // either for v5 clusters, so we fetch v5 clusters details in a separate method
-    // at the end of this one.
-
-    /********************** V4 CLUSTER DETAILS FETCHING **********************/
-
-    // Clusters array to object, because we are storing an object in the store
-    const v4ClustersObject = clustersLoadArrayToObject(v4Clusters);
-
-    // Fetch all details for each cluster.
-    const details = await Promise.all(
-      Object.keys(v4ClustersObject).map(clusterId => {
-        return clustersApi
-          .getCluster(clusterId)
-          .then(clusterDetails => {
-            clusterDetails.capabilities = computeCapabilities(
-              clusterDetails,
-              getState().app.info.general.provider
-            );
-
-            return clusterDetails;
-          })
-          .catch(error => {
-            // eslint-disable-next-line no-console
-            console.error('Error loading cluster details:', error);
-
-            dispatch(clusterLoadDetailsError(clusterId, error));
-          });
-      })
-    );
-
-    // And merge them with each cluster
-    details.forEach(clusterDetail => {
-      v4ClustersObject[clusterDetail.id] = {
-        ...v4ClustersObject[clusterDetail.id],
-        ...clusterDetail,
-      };
-    });
-
-    // Fetch status for each cluster.
-    const status = await Promise.all(
-      Object.keys(v4ClustersObject).map(clusterId => {
-        // TODO: Find out why we are getting an empty object back from this call.
-        //Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
-        return clustersApi
-          .getClusterStatusWithHttpInfo(clusterId)
-          .then(clusterStatus => {
-            // For some reason we're getting an empty object back.
-            // The Giantswarm JS client is not parsing the returned JSON
-            // and giving us a object in the normal way anymore.
-            // Very stumped, since nothing has changed.
-            // So we need to access the raw response and parse the json
-            // ourselves.
-            const statusResponse = JSON.parse(clusterStatus.response.text);
-
-            return { id: clusterId, statusResponse: statusResponse };
-          })
-          .catch(error => {
-            if (error.status === StatusCodes.NotFound) {
-              return { id: clusterId, statusResponse: null };
-            }
-            // eslint-disable-next-line no-console
-            console.error(error);
-
-            dispatch(clusterLoadStatusError(clusterId, error));
-            throw error;
-          });
-      })
-    );
-
-    // And merge status with each cluster.
-    status.forEach(clusterStatus => {
-      v4ClustersObject[clusterStatus.id] = {
-        ...v4ClustersObject[clusterStatus.id],
-        ...{ status: clusterStatus.statusResponse },
-      };
-    });
-
-    const lastUpdated = Date.now();
-
-    /********************** V5 CLUSTER DETAILS FETCHING **********************/
-
-    // Extract v5 clusters from the clusters fetched.
-    const v5Clusters = clusters.filter(cluster =>
-      cluster.path.startsWith('/v5')
-    );
-
-    // Get the details for v5 clusters.
-    let v5ClustersDetails = await Promise.all(
-      v5Clusters.map(cluster => clusterDetailsV5(dispatch, getState, cluster))
-    );
-
-    // Sometimes we fail to fetch a detail, and get undefined back.
-    // So remove those from this list.
-    v5ClustersDetails = v5ClustersDetails.filter(x => x);
-
-    // Clusters array to object, because we are storing an object in the store.
-
-    const v5ClustersObject = clustersLoadArrayToObject(v5ClustersDetails);
-
-    // nodePoolsClusters is an array of v5 clusters ids and is stored in clusters.
-    const nodePoolsClusters = v5ClustersDetails.map(cluster => cluster.id);
-
-    dispatch(
-      clustersLoadSuccess(
-        v4ClustersObject,
-        v5ClustersObject,
-        nodePoolsClusters,
-        lastUpdated
-      )
-    );
-
-    // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
-    dispatch(nodePoolsLoad(nodePoolsClusters));
   };
 }
 
-function clusterDetailsV5(dispatch, getState, cluster) {
-  return clustersApi
-    .getClusterV5(cluster.id)
-    .then(clusterDetails => {
-      clusterDetails.capabilities = computeCapabilities(
-        clusterDetails,
-        getState().app.info.general.provider
-      );
+/**
+ * Performs getCluster API call to get the details of all clusters in store
+ * @param {Boolean} filterBySelectedOrganization
+ */
+export function clustersDetails({
+  filterBySelectedOrganization,
+  withLoadingFlags,
+}) {
+  return async function(dispatch, getState) {
+    if (withLoadingFlags) {
+      dispatch({ type: types.CLUSTERS_DETAILS_REQUEST });
+    }
 
-      return clusterDetails;
-    })
-    .catch(error => {
-      if (error.status === StatusCodes.NotFound) {
-        new FlashMessage(
-          'This cluster no longer exists.',
-          messageType.INFO,
-          messageTTL.MEDIUM,
-          'Redirecting you to your organization clusters list'
-        );
+    const selectedOrganization = getState().app.selectedOrganization;
+    const allClusters = await getState().entities.clusters.items;
 
-        dispatch(clusterDeleteSuccess(cluster.id));
-        dispatch(push('/'));
-      } else {
-        // eslint-disable-next-line no-console
-        console.error('Error loading cluster details:', error);
+    const clusters = filterBySelectedOrganization
+      ? Object.keys(allClusters).filter(
+          id => allClusters[id].owner === selectedOrganization
+        )
+      : allClusters;
 
-        dispatch(clusterLoadDetailsError(cluster.id, error));
-      }
-    });
+    const clusterDetails = await Promise.all(
+      Object.keys(clusters).map(clusterId => {
+        return dispatch(clusterLoadDetails(clusterId));
+      })
+    );
+
+    // We actually don't care if success or error, just want to set loading flag to
+    // false when all the promises are resolved/rejected.
+    dispatch({ type: types.CLUSTERS_DETAILS_FINISHED });
+
+    return clusterDetails; // just in case we want to await it
+  };
 }
 
 /**
  * Loads details for a cluster.
- *
  * @param {String} clusterId Cluster ID
  */
 export function clusterLoadDetails(clusterId) {
   return async function(dispatch, getState) {
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterId);
 
     dispatch({
-      type: types.CLUSTER_LOAD_DETAILS,
+      type: types.CLUSTER_LOAD_DETAILS_REQUEST,
       clusterId,
     });
 
-    if (isNodePoolsCluster) {
-      dispatch({ type: types.V5_CLUSTER_LOAD_DETAILS });
-    }
-
     try {
-      const cluster = isNodePoolsCluster
+      const cluster = isV5Cluster
         ? await clustersApi.getClusterV5(clusterId)
         : await clustersApi.getCluster(clusterId);
 
-      dispatch(clusterLoadStatus(clusterId));
+      dispatch(clusterLoadStatus(clusterId)); // TODO
 
       cluster.capabilities = computeCapabilities(
         cluster,
         getState().app.info.general.provider
       );
 
-      dispatch(clusterLoadDetailsSuccess(cluster));
+      if (isV5Cluster) cluster.nodePools = [];
+
+      dispatch({
+        type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
+        cluster,
+      });
 
       return cluster;
     } catch (error) {
@@ -354,6 +156,8 @@ export function clusterLoadDetails(clusterId) {
           'Redirecting you to your organization clusters list'
         );
 
+        // Delete the cluster in te store.
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterDeleteSuccess(clusterId));
         dispatch(push('/'));
 
@@ -362,6 +166,7 @@ export function clusterLoadDetails(clusterId) {
 
       // eslint-disable-next-line no-console
       console.error('Error loading cluster details:', error);
+      // eslint-disable-next-line no-use-before-define
       dispatch(clusterLoadDetailsError(clusterId, error));
 
       new FlashMessage(
@@ -383,10 +188,10 @@ export function clusterLoadDetails(clusterId) {
  */
 export function clusterLoadStatus(clusterId) {
   return function(dispatch, getState) {
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterId);
 
-    if (isNodePoolsCluster) {
+    if (isV5Cluster) {
       // Here we will have something like clusterLoadStatusV5(...)?
       return;
     }
@@ -407,6 +212,7 @@ function clusterLoadStatusV4(dispatch, clusterId) {
       return JSON.parse(data.response.text);
     })
     .then(status => {
+      // eslint-disable-next-line no-use-before-define
       dispatch(clusterLoadStatusSuccess(clusterId, status));
 
       return status;
@@ -414,9 +220,13 @@ function clusterLoadStatusV4(dispatch, clusterId) {
     .catch(error => {
       // TODO: Find a better way to deal with status endpoint errors in dev:
       // https://github.com/giantswarm/giantswarm/issues/6757
+      // eslint-disable-next-line no-console
+      console.error(error);
       if (error.status === StatusCodes.NotFound) {
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterLoadStatusNotFound(clusterId));
       } else {
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterLoadStatusError(clusterId, error));
 
         new FlashMessage(
@@ -426,7 +236,7 @@ function clusterLoadStatusV4(dispatch, clusterId) {
           'Please try again later or contact support: support@giantswarm.io'
         );
 
-        throw error;
+        // throw error;
       }
     });
 }
@@ -479,9 +289,10 @@ export function clusterCreate(cluster, isV5Cluster) {
           messageTTL.MEDIUM
         );
 
-        return dispatch(clusterLoadDetails(clusterId));
+        return { clusterId, owner: cluster.owner };
       })
       .catch(error => {
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterCreateError(cluster.id, error));
 
         // eslint-disable-next-line no-console
@@ -507,11 +318,9 @@ export function clusterDeleteConfirmed(cluster) {
 
     return clustersApi
       .deleteCluster(cluster.id)
-      .then(() => {
-        dispatch(push(`/organizations/${cluster.owner}`));
+      .then(data => {
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterDeleteSuccess(cluster.id));
-
-        dispatch(modalHide());
 
         new FlashMessage(
           `Cluster <code>${cluster.id}</code> will be deleted`,
@@ -519,12 +328,9 @@ export function clusterDeleteConfirmed(cluster) {
           messageTTL.SHORT
         );
 
-        // ensure refreshing of the clusters list
-        dispatch(clustersLoad());
+        return data;
       })
       .catch(error => {
-        dispatch(modalHide());
-
         new FlashMessage(
           `An error occurred when trying to delete cluster <code>${cluster.id}</code>.`,
           messageType.ERROR,
@@ -535,6 +341,7 @@ export function clusterDeleteConfirmed(cluster) {
         // eslint-disable-next-line no-console
         console.error(error);
 
+        // eslint-disable-next-line no-use-before-define
         return dispatch(clusterDeleteError(cluster.id, error));
       });
   };
@@ -551,9 +358,9 @@ export function clusterLoadKeyPairs(clusterId) {
   return function(dispatch, getState) {
     // This method is going to work for NP clusters, now in local dev it is not
     // working, so early return if the cluster is a NP one.
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
-    if (isNodePoolsCluster) return Promise.resolve([]);
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterId);
+    if (isV5Cluster) return Promise.resolve([]);
 
     const keypairsApi = new GiantSwarm.KeyPairsApi();
 
@@ -595,6 +402,54 @@ export function clusterLoadKeyPairs(clusterId) {
       });
   };
 }
+
+export const clusterLoadDetailsError = (clusterId, error) => ({
+  type: types.CLUSTER_LOAD_DETAILS_ERROR,
+  clusterId,
+  error,
+});
+
+export const clusterLoadStatusSuccess = (clusterId, status) => ({
+  type: types.CLUSTER_LOAD_STATUS_SUCCESS,
+  clusterId,
+  status,
+});
+
+export const clusterLoadStatusNotFound = clusterId => ({
+  type: types.CLUSTER_LOAD_STATUS_NOT_FOUND,
+  clusterId,
+});
+
+export const clusterLoadStatusError = error => ({
+  type: types.CLUSTER_LOAD_STATUS_ERROR,
+  error,
+});
+
+export const clusterCreateError = cluster => ({
+  type: types.CLUSTER_CREATE_ERROR,
+  cluster,
+});
+
+export const clusterDelete = cluster => ({
+  type: types.CLUSTER_DELETE,
+  cluster,
+});
+
+export const clusterDeleteSuccess = clusterId => ({
+  type: types.CLUSTER_DELETE_SUCCESS,
+  clusterId,
+});
+
+export const clusterDeleteError = (clusterId, error) => ({
+  type: types.CLUSTER_DELETE_ERROR,
+  clusterId,
+  error,
+});
+
+export const clustersLoadError = error => ({
+  type: types.CLUSTERS_LOAD_ERROR,
+  error: error,
+});
 
 /**
  * Takes a cluster object and tries to patch it.

@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import copy from 'copy-to-clipboard';
+
 import useCopyToClipboard from '../useCopyToClipboard';
 
 jest.mock('copy-to-clipboard');

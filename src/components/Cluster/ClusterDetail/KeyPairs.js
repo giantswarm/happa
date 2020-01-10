@@ -1,28 +1,69 @@
 import * as clusterActions from 'actions/clusterActions';
-import { bindActionCreators } from 'redux';
-import { clusterLoadKeyPairs } from 'actions/clusterActions';
-import { connect } from 'react-redux';
-import { relativeDate } from 'lib/helpers.js';
 import { spinner } from 'images';
-import BootstrapTable from 'react-bootstrap-table-next';
-import Button from 'UI/Button';
-import CertificateOrgsLabel from './CertificateOrgsLabel';
-import Copyable from 'shared/Copyable';
-import KeypairCreateModal from './KeyPairCreateModal';
-import KeyPairDetailsModal from './KeyPairDetailsModal';
+import { relativeDate } from 'lib/helpers.js';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapTable from 'react-bootstrap-table-next';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Copyable from 'shared/Copyable';
+import Button from 'UI/Button';
+
+import CertificateOrgsLabel from './CertificateOrgsLabel';
+import KeypairCreateModal from './KeyPairCreateModal';
+import KeyPairDetailsModal from './KeyPairDetailsModal';
 
 class KeyPairs extends React.Component {
+  static createdCellFormatter(_cell, row) {
+    return <small>{relativeDate(row.create_date)}</small>;
+  }
+
+  static expireDateCellFormatter(_cell, row) {
+    let expiryClass = '';
+    const expirySeconds =
+      moment(row.expire_date)
+        .utc()
+        // eslint-disable-next-line no-magic-numbers
+        .diff(moment().utc()) / 1000;
+
+    // eslint-disable-next-line no-magic-numbers
+    if (Math.abs(expirySeconds) < 60 * 60 * 24) {
+      expiryClass = 'expiring';
+    }
+
+    return (
+      <small className={expiryClass}>{relativeDate(row.expire_date)}</small>
+    );
+  }
+
+  static organizationFormatter(_cell, row) {
+    if (row.certificate_organizations !== '') {
+      return (
+        <Copyable copyText={row.certificate_organizations}>
+          <CertificateOrgsLabel value={row.certificate_organizations} />
+        </Copyable>
+      );
+    }
+
+    return <span />;
+  }
+
   state = {
     loading: true,
+    // eslint-disable-next-line react/no-unused-state
     error: false,
+    // eslint-disable-next-line react/no-unused-state
     expireTTL: 720,
+    // eslint-disable-next-line react/no-unused-state
     description: '',
+    // eslint-disable-next-line react/no-unused-state
     cn_prefix: '',
+    // eslint-disable-next-line react/no-unused-state
     cn_prefix_error: null,
+    // eslint-disable-next-line react/no-unused-state
     certificate_organizations: '',
+    // eslint-disable-next-line react/no-unused-state
     modal: {
       visible: false,
       loading: false,
@@ -47,9 +88,12 @@ class KeyPairs extends React.Component {
   loadKeyPairs = () => {
     this.setState({
       loading: false,
+      // eslint-disable-next-line react/no-unused-state
       error: false,
     });
-    this.props.dispatch(clusterLoadKeyPairs(this.props.cluster.id));
+    this.props.dispatch(
+      clusterActions.clusterLoadKeyPairs(this.props.cluster.id)
+    );
   };
 
   // Provides the configuration for the keypairs table
@@ -65,20 +109,20 @@ class KeyPairs extends React.Component {
         dataField: 'certificate_organizations',
         text: 'Organization (O)',
         sort: true,
-        formatter: this.organizationFormatter,
+        formatter: KeyPairs.organizationFormatter,
         classes: 'certificate-orgs-column',
       },
       {
         dataField: 'create_date',
         text: 'Created',
         sort: true,
-        formatter: this.createdCellFormatter,
+        formatter: KeyPairs.createdCellFormatter,
       },
       {
         dataField: 'expire_date',
         text: 'Expiry',
         sort: true,
-        formatter: this.expireDateCellFormatter,
+        formatter: KeyPairs.expireDateCellFormatter,
       },
       {
         dataField: 'id',
@@ -89,31 +133,12 @@ class KeyPairs extends React.Component {
     ];
   };
 
-  createdCellFormatter(cell, row) {
-    return <small>{relativeDate(row.create_date)}</small>;
-  }
-
-  expireDateCellFormatter(cell, row) {
-    var expiryClass = '';
-    var expirySeconds =
-      moment(row.expire_date)
-        .utc()
-        .diff(moment().utc()) / 1000;
-    if (Math.abs(expirySeconds) < 60 * 60 * 24) {
-      expiryClass = 'expiring';
-    }
-
-    return (
-      <small className={expiryClass}>{relativeDate(row.expire_date)}</small>
-    );
-  }
-
   /**
    * Replaces a common suffix in every CN string, returns it as copyable
    */
-  commonNameFormatter = (cell, row) => {
+  commonNameFormatter = (_cell, row) => {
     let displayName = row.common_name;
-    displayName = displayName.replace('.' + this.apiEndpointHostname, '...');
+    displayName = displayName.replace(`.${this.apiEndpointHostname}`, '...');
 
     return (
       <Copyable copyText={row.common_name}>
@@ -121,17 +146,6 @@ class KeyPairs extends React.Component {
       </Copyable>
     );
   };
-
-  organizationFormatter(cell, row) {
-    if (row.certificate_organizations !== '') {
-      return (
-        <Copyable copyText={row.certificate_organizations}>
-          <CertificateOrgsLabel value={row.certificate_organizations} />
-        </Copyable>
-      );
-    }
-    return <span />;
-  }
 
   showKeyPairModal = row => {
     this.setState({
@@ -151,7 +165,7 @@ class KeyPairs extends React.Component {
     });
   };
 
-  actionsCellFormatter = (cell, row) => {
+  actionsCellFormatter = (_cell, row) => {
     return (
       <Button onClick={this.showKeyPairModal.bind(this, row)}>Details</Button>
     );
@@ -200,22 +214,22 @@ class KeyPairs extends React.Component {
                     </p>
                   </div>
                 );
-              } else {
-                return (
-                  <div>
-                    <BootstrapTable
-                      bordered={false}
-                      columns={this.getKeypairsTableColumnsConfig()}
-                      data={this.props.cluster.keyPairs}
-                      defaultSortDirection='asc'
-                      defaultSorted={[
-                        { dataField: 'create_date', order: 'desc' },
-                      ]}
-                      keyField='id'
-                    />
-                  </div>
-                );
               }
+
+              return (
+                <div>
+                  <BootstrapTable
+                    bordered={false}
+                    columns={this.getKeypairsTableColumnsConfig()}
+                    data={this.props.cluster.keyPairs}
+                    defaultSortDirection='asc'
+                    defaultSorted={[
+                      { dataField: 'create_date', order: 'desc' },
+                    ]}
+                    keyField='id'
+                  />
+                </div>
+              );
             })()}
             <KeypairCreateModal
               actions={this.props.actions}

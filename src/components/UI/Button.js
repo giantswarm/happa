@@ -1,7 +1,8 @@
-import BsButton from 'react-bootstrap/lib/Button';
-import LoadingIndicator from './LoadingIndicator';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BsButton from 'react-bootstrap/lib/Button';
+
+import LoadingIndicator from './LoadingIndicator';
 
 // Button
 //

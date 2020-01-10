@@ -1,6 +1,6 @@
-import { Dot } from 'styles';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Dot } from 'styles';
 
 const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
   const nodesSingularPlural = workerNodesRunning === 1 ? ' node' : ' nodes';
@@ -8,7 +8,7 @@ const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
     nodePools && nodePools.length === 1 ? ' node pool' : ' node pools';
 
   return (
-    <div>
+    <div data-testid='nodes-running'>
       {!workerNodesRunning ? (
         <span>0 nodes</span>
       ) : (

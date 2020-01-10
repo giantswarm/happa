@@ -1,22 +1,22 @@
+import styled from '@emotion/styled';
+import { batchedClusterCreate } from 'actions/batchedActions';
+import DocumentTitle from 'components/shared/DocumentTitle';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { clusterCreate } from 'actions/clusterActions';
 import { connect } from 'react-redux';
-import { FlexColumnDiv, Wrapper } from './CreateNodePoolsCluster';
+import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
-import { push } from 'connected-react-router';
+import NodeCountSelector from 'shared/NodeCountSelector';
+import Button from 'UI/Button';
+import NumberPicker from 'UI/NumberPicker';
+
 import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
 import AzureVMSizeSelector from './AzureVMSizeSelector';
-import Button from 'UI/Button';
 import ClusterCreationDuration from './ClusterCreationDuration';
-import cmp from 'semver-compare';
-import DocumentTitle from 'components/shared/DocumentTitle';
-import NodeCountSelector from 'shared/NodeCountSelector';
-import NumberPicker from 'UI/NumberPicker';
-import PropTypes from 'prop-types';
+import { FlexColumnDiv, Wrapper } from './CreateNodePoolsCluster';
 import ProviderCredentials from './ProviderCredentials';
-import React from 'react';
 import ReleaseSelector from './ReleaseSelector';
-import styled from '@emotion/styled';
 
 const WrapperDiv = styled.div`
   ${Wrapper}
@@ -68,11 +68,22 @@ const FlexWrapperAZDiv = styled.div`
 `;
 
 class CreateRegularCluster extends React.Component {
+  static isScalingAutomatic(provider, releaseVer) {
+    if (provider !== Providers.AWS) {
+      return false;
+    }
+
+    // In order to have support for automatic scaling and therefore for scaling
+    // limits, provider must be AWS and cluster release >= 6.3.0.
+    return cmp(releaseVer, '6.2.99') === 1;
+  }
+
   state = {
     availabilityZonesPicker: {
       value: 1,
       valid: true,
     },
+    // eslint-disable-next-line react/no-unused-state
     releaseVersion: this.props.selectedRelease,
     clusterName: this.props.clusterName,
     scaling: {
@@ -83,6 +94,7 @@ class CreateRegularCluster extends React.Component {
       maxValid: true,
     },
     submitting: false,
+    // eslint-disable-next-line react/no-unused-state
     valid: false, // Start off invalid now since we're not sure we have a valid release yet, the release endpoint could be malfunctioning.
     error: false,
     aws: {
@@ -152,8 +164,8 @@ class CreateRegularCluster extends React.Component {
   createCluster = () => {
     this.setState({ submitting: true });
 
-    var i;
-    var workers = [];
+    let i = 0;
+    let workers = [];
 
     // TODO/FYI: This IF / ELSE on this.props.provider is a antipattern that
     // will spread throughout the codebase if we are not careful. I am waiting
@@ -189,73 +201,39 @@ class CreateRegularCluster extends React.Component {
     // Adjust final workers array when cluster uses auto scaling. This is currently
     // only in AWS and from release 6.1.0 onwards.
     if (
-      this.isScalingAutomatic(
+      CreateRegularCluster.isScalingAutomatic(
         this.props.provider,
         this.props.selectedRelease
       ) &&
       workers.length > 1
     ) {
       // Only one worker is allowed to be present when auto scaling is enabled.
-      var firstWorker = workers[0];
+      const firstWorker = workers[0];
       workers = [];
       workers.push(firstWorker);
     }
 
-    this.props
-      .dispatch(
-        clusterCreate({
-          availability_zones: this.state.availabilityZonesPicker.value,
-          scaling: {
-            min: this.state.scaling.min,
-            max: this.state.scaling.max,
-          },
-          name:
-            this.state.clusterName === ''
-              ? 'Unnamed cluster'
-              : this.state.clusterName,
-          owner: this.props.selectedOrganization,
-          release_version: this.props.selectedRelease,
-          workers: workers,
-        })
-      )
-      .then(cluster => {
-        // after successful creation, redirect to cluster details
-        this.props.dispatch(
-          push(
-            '/organizations/' +
-              this.props.selectedOrganization +
-              '/clusters/' +
-              cluster.id
-          )
-        );
+    this.props.dispatch(
+      batchedClusterCreate({
+        availability_zones: this.state.availabilityZonesPicker.value,
+        scaling: {
+          min: this.state.scaling.min,
+          max: this.state.scaling.max,
+        },
+        name:
+          this.state.clusterName === ''
+            ? 'Unnamed cluster'
+            : this.state.clusterName,
+        owner: this.props.selectedOrganization,
+        release_version: this.props.selectedRelease,
+        workers: workers,
       })
-      .catch(error => {
-        var errorMessage = '';
-
-        if (error.body && error.body.message) {
-          errorMessage = error.body.message;
-        }
-
-        this.setState({
-          submitting: false,
-          error: error,
-          errorMessage: errorMessage,
-        });
-      });
+    );
   };
-
-  isScalingAutomatic(provider, releaseVer) {
-    if (provider !== Providers.AWS) {
-      return false;
-    }
-
-    // In order to have support for automatic scaling and therefore for scaling
-    // limits, provider must be AWS and cluster release >= 6.3.0.
-    return cmp(releaseVer, '6.2.99') === 1;
-  }
 
   selectRelease = releaseVersion => {
     this.setState({
+      // eslint-disable-next-line react/no-unused-state
       releaseVersion,
     });
     this.props.informParent(releaseVersion);
@@ -301,42 +279,42 @@ class CreateRegularCluster extends React.Component {
   };
 
   updateCPUCores = value => {
-    this.setState({
+    this.setState(prevState => ({
       kvm: {
         cpuCores: {
           value: value.value,
           valid: value.valid,
         },
-        memorySize: this.state.kvm.memorySize,
-        diskSize: this.state.kvm.diskSize,
+        memorySize: prevState.kvm.memorySize,
+        diskSize: prevState.kvm.diskSize,
       },
-    });
+    }));
   };
 
   updateMemorySize = value => {
-    this.setState({
+    this.setState(prevState => ({
       kvm: {
-        cpuCores: this.state.kvm.cpuCores,
+        cpuCores: prevState.kvm.cpuCores,
         memorySize: {
           value: value.value,
           valid: value.valid,
         },
-        diskSize: this.state.kvm.diskSize,
+        diskSize: prevState.kvm.diskSize,
       },
-    });
+    }));
   };
 
   updateDiskSize = value => {
-    this.setState({
+    this.setState(prevState => ({
       kvm: {
-        cpuCores: this.state.kvm.cpuCores,
-        memorySize: this.state.kvm.memorySize,
+        cpuCores: prevState.kvm.cpuCores,
+        memorySize: prevState.kvm.memorySize,
         diskSize: {
           value: value.value,
           valid: value.valid,
         },
       },
-    });
+    }));
   };
 
   produceRAMAndCoresAWS = () => {
@@ -356,6 +334,7 @@ class CreateRegularCluster extends React.Component {
     const CPUCores = hasInstances
       ? awsInstanceTypes[instanceType].cpu_cores
       : '0';
+
     return [RAM, CPUCores];
   };
 
@@ -371,11 +350,13 @@ class CreateRegularCluster extends React.Component {
       instanceTypesKeys && instanceTypesKeys.includes(instanceType);
 
     const RAM = hasInstances
-      ? (azureInstanceTypes[instanceType].memoryInMb / 1000).toFixed(2)
+      ? // eslint-disable-next-line no-magic-numbers
+        (azureInstanceTypes[instanceType].memoryInMb / 1000).toFixed(2)
       : '0';
     const CPUCores = hasInstances
       ? azureInstanceTypes[instanceType].numberOfCores
       : '0';
+
     return [RAM, CPUCores];
   };
 
@@ -601,12 +582,14 @@ class CreateRegularCluster extends React.Component {
                       );
                     }
                   }
+
+                  return null;
                 })()}
               </label>
               <label className='scaling-range' htmlFor='scaling-range'>
                 <span className='label-span'>Number of worker nodes</span>
                 <NodeCountSelector
-                  autoscalingEnabled={this.isScalingAutomatic(
+                  autoscalingEnabled={CreateRegularCluster.isScalingAutomatic(
                     this.props.provider,
                     this.props.selectedRelease
                   )}

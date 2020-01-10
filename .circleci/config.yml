@@ -43,13 +43,23 @@ jobs:
     - checkout
 
     - run:
-        name: Install node@12.10.0
+        name: Install node@12
+        environment:
+          NODE_VERSION: v12.14.1
         command: |
           set +e
           export NVM_DIR="/opt/circleci/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install v12.10.0
-          nvm alias default v12.10.0
+
+          # Check if we're running the newest node 12 version
+          if [ "$(nvm version-remote v12)" != "$NODE_VERSION" ]
+          then
+            echo "Please upgrade the NODE_VERSION variable to $(nvm version-remote v12)"
+            exit 1
+          fi
+
+          nvm install "$NODE_VERSION"
+          nvm alias default "$NODE_VERSION"
 
           # Each step uses the same `$BASH_ENV`, so need to modify it
           echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
