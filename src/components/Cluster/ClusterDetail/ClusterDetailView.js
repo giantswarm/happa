@@ -73,7 +73,6 @@ class ClusterDetailView extends React.Component {
   loadDetails = () => {
     const { cluster, clusterId, organizationId, dispatch } = this.props;
 
-
     if (typeof cluster === 'undefined') {
       dispatch(push(`/organizations/${organizationId}`));
 
@@ -86,7 +85,6 @@ class ClusterDetailView extends React.Component {
 
       return;
     }
-
 
     dispatch(
       batchedClusterDetailView(
