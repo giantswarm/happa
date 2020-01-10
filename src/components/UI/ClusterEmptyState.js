@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 const Wrapper = styled.div`
   background-color: #30556a;
@@ -23,6 +23,7 @@ const Inner = styled.div`
   }
 `;
 
+// eslint-disable-next-line react/prefer-stateless-function
 class ClusterEmptyState extends React.Component {
   render() {
     return (
@@ -58,24 +59,24 @@ class ClusterEmptyState extends React.Component {
                   </p>
                 </>
               );
-            } else {
-              return (
-                <>
-                  <h1>
-                    Couldn&apos;t find any clusters in organization{' '}
-                    <code>{this.props.selectedOrganization}</code>
-                  </h1>
-                  <p>
-                    Make your first cluster by pressing the green &quot;Launch
-                    New Cluster&quot; button above.
-                  </p>
-                  <p>
-                    You can switch to a different organization by using the
-                    organization selector at the top right of the page.
-                  </p>
-                </>
-              );
             }
+
+            return (
+              <>
+                <h1>
+                  Couldn&apos;t find any clusters in organization{' '}
+                  <code>{this.props.selectedOrganization}</code>
+                </h1>
+                <p>
+                  Make your first cluster by pressing the green &quot;Launch New
+                  Cluster&quot; button above.
+                </p>
+                <p>
+                  You can switch to a different organization by using the
+                  organization selector at the top right of the page.
+                </p>
+              </>
+            );
           })()}
         </Inner>
       </Wrapper>

@@ -1,14 +1,15 @@
-import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { loadReleases } from 'actions/releaseActions';
-import { Providers } from 'shared/constants';
-import { Route, Switch } from 'react-router-dom';
-import cmp from 'semver-compare';
-import CreateNodePoolsCluster from './CreateNodePoolsCluster';
-import CreateRegularCluster from './CreateRegularCluster';
-import LoadingOverlay from 'UI/LoadingOverlay';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
+import cmp from 'semver-compare';
+import { Providers } from 'shared/constants';
+import LoadingOverlay from 'UI/LoadingOverlay';
+
+import CreateNodePoolsCluster from './CreateNodePoolsCluster';
+import CreateRegularCluster from './CreateRegularCluster';
 
 class NewCluster extends React.Component {
   state = {
@@ -84,6 +85,7 @@ class NewCluster extends React.Component {
     if (this.state.selectedRelease && this.props.firstNodePoolsRelease) {
       return cmp(this.state.selectedRelease, this.props.firstNodePoolsRelease);
     }
+
     return -1;
   };
 
@@ -137,6 +139,7 @@ NewCluster.propTypes = {
 
 function mapStateToProps(state) {
   const { items, activeSortedReleases } = state.entities.releases;
+
   return {
     releases: items,
     activeSortedReleases,

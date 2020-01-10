@@ -1,21 +1,22 @@
+import { batchedRefreshClusters } from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
-import { batchedRefreshClusters } from 'actions/batchedActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { Link } from 'react-router-dom';
-import _ from 'underscore';
-import Button from 'UI/Button';
-import ClusterDashboardItem from './ClusterDashboardItem';
-import ClusterEmptyState from 'UI/ClusterEmptyState';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import LoadingOverlay from 'UI/LoadingOverlay';
-import moment from 'moment';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { bindActionCreators } from 'redux';
+import Button from 'UI/Button';
+import ClusterEmptyState from 'UI/ClusterEmptyState';
+import LoadingOverlay from 'UI/LoadingOverlay';
+import _ from 'underscore';
+
+import ClusterDashboardItem from './ClusterDashboardItem';
 
 class Home extends React.Component {
   visibilityTracker = new PageVisibilityTracker();
@@ -34,7 +35,8 @@ class Home extends React.Component {
    * Load clusters list periodically
    */
   registerRefreshInterval = () => {
-    var refreshIntervalDuration = 30 * 1000; // 30 seconds
+    // eslint-disable-next-line no-magic-numbers
+    const refreshIntervalDuration = 30 * 1000; // 30 seconds
     this.refreshInterval = window.setInterval(
       this.refreshClustersList,
       refreshIntervalDuration
@@ -60,9 +62,9 @@ class Home extends React.Component {
   title() {
     if (this.props.selectedOrganization) {
       return `Cluster Overview | ${this.props.selectedOrganization}`;
-    } else {
-      return 'Cluster Overview';
     }
+
+    return 'Cluster Overview';
   }
 
   /**
@@ -70,10 +72,11 @@ class Home extends React.Component {
    * cluster and/or status information.
    */
   lastUpdatedLabel = () => {
-    var maxTimestamp = 0;
+    let maxTimestamp = 0;
     this.props.clusters.forEach(cluster => {
       maxTimestamp = Math.max(maxTimestamp, cluster.lastUpdated);
     });
+
     return moment(maxTimestamp).fromNow();
   };
 
@@ -156,17 +159,18 @@ Home.propTypes = {
   v5Clusters: PropTypes.array,
   nodePools: PropTypes.object,
   loadingClustersList: PropTypes.bool,
+  dispatch: PropTypes.func,
 };
 
 function mapStateToProps(state) {
-  var selectedOrganization = state.app.selectedOrganization;
-  var organizations = state.entities.organizations.items;
-  var allClusters = state.entities.clusters.items;
-  var errorLoadingClusters = state.entities.clusters.errorLoading;
-  const v5Clusters = state.entities.clusters.v5Clusters;
+  const selectedOrganization = state.app.selectedOrganization;
+  const organizations = state.entities.organizations.items;
+  const allClusters = state.entities.clusters.items;
+  const errorLoadingClusters = state.entities.clusters.errorLoading;
+  const v5Clusters = state.entities.clusters.nodePoolsClusters;
   const nodePools = state.entities.nodePools.items;
 
-  var clusters = [];
+  let clusters = [];
   if (selectedOrganization) {
     clusters = _.filter(allClusters, cluster => {
       return cluster.owner === selectedOrganization;

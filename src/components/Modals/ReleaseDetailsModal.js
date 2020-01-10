@@ -1,12 +1,12 @@
 import { relativeDate } from 'lib/helpers.js';
-import _ from 'underscore';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import ComponentChangelog from 'UI/ComponentChangelog';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
 import theme from 'styles/theme';
+import Button from 'UI/Button';
+import ComponentChangelog from 'UI/ComponentChangelog';
+import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
+import _ from 'underscore';
 
 class ReleaseDetailsModal extends React.Component {
   state = {
@@ -39,11 +39,11 @@ class ReleaseDetailsModal extends React.Component {
           <BootstrapModal.Body>
             {this.props.releases.map(release => {
               // group changes by component
-              let changes = _.groupBy(release.changelog, item => {
+              const changes = _.groupBy(release.changelog, item => {
                 return item.component;
               });
 
-              let changedComponents = Object.keys(changes).sort();
+              const changedComponents = Object.keys(changes).sort();
 
               return (
                 <div
@@ -111,13 +111,13 @@ class ReleaseDetailsModal extends React.Component {
           </BootstrapModal.Footer>
         </BootstrapModal>
       );
-    } else {
-      return (
-        <p style={{ color: theme.colors.error, fontWeight: 400 }}>
-          No releases found.
-        </p>
-      );
     }
+
+    return (
+      <p style={{ color: theme.colors.error, fontWeight: 400 }}>
+        No releases found.
+      </p>
+    );
   }
 }
 

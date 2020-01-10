@@ -1,8 +1,8 @@
 import { keyframes } from '@emotion/core';
-import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import usePrevious from 'lib/effects/usePrevious';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 
 const yellowFade = keyframes`
   from {
@@ -47,17 +47,23 @@ function RefreshableLabel({ children, value, style }) {
   // used for storing previous value and so be able to compare with new value
   const prevValue = usePrevious(value);
 
-  const compareData = () => {
-    if (prevValue && value !== prevValue) {
-      setHasDataChanged(true);
-    }
-    return setTimeout(() => setHasDataChanged(false), animationDuration * 1000);
-  };
-
   useEffect(() => {
+    const sToMs = 1000;
+    const compareData = () => {
+      if (prevValue && value !== prevValue) {
+        setHasDataChanged(true);
+      }
+
+      return setTimeout(
+        () => setHasDataChanged(false),
+        animationDuration * sToMs
+      );
+    };
+
     const timer = compareData();
+
     return () => clearTimeout(timer);
-  }, [value]);
+  }, [prevValue, value]);
 
   return (
     <Wrapper className={hasDataChanged && 'changed'} style={style}>

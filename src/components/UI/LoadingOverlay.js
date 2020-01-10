@@ -1,5 +1,6 @@
-import React from 'react';
 import styled from '@emotion/styled';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 // LoadingOverlay takes one boolean prop 'loading' and will render a
 // page centered loading spinner if 'loading' is true, or its children if
@@ -28,7 +29,7 @@ const LoadingOverlayInner = styled.div`
   margin-left: -100px;
 `;
 
-export default function LoadingOverlay(props) {
+function LoadingOverlay(props) {
   if (props.loading) {
     return (
       <LoadingOverlayOuter>
@@ -39,7 +40,14 @@ export default function LoadingOverlay(props) {
     );
   } else if (props.children) {
     return props.children;
-  } else {
-    return null;
   }
+
+  return null;
 }
+
+LoadingOverlay.propTypes = {
+  loading: PropTypes.bool,
+  children: PropTypes.node,
+};
+
+export default LoadingOverlay;

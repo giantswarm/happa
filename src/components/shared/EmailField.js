@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var typingTimer;
-var doneTypingInterval = 250; // ms
+let typingTimer = 0;
+const doneTypingInterval = 250; // ms
 
 //
 // EmailField
@@ -13,7 +13,7 @@ var doneTypingInterval = 250; // ms
 //
 // And shows a error message if the email is not valid
 
-var validationRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const validationRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 class EmailField extends React.Component {
   state = {
@@ -35,27 +35,30 @@ class EmailField extends React.Component {
   };
 
   onChange = () => {
-    var currentValue = this.input.value;
-    var valid = false;
-    var validationError = this.state.validationError;
-
-    if (this.props.onStartTyping) {
-      this.props.onStartTyping(currentValue);
-    }
-
-    clearTimeout(typingTimer);
-
-    // If its valid, show that immediately to the user. Thats nice for them
-    // to get instant feedback.
-    if (validationRegEx.test(currentValue)) {
-      valid = true;
-      validationError = '';
-    }
+    const currentValue = this.input.value;
 
     this.setState(
-      {
-        valid: valid,
-        validationError: validationError,
+      prevState => {
+        let valid = false;
+        let validationError = prevState.validationError;
+
+        if (this.props.onStartTyping) {
+          this.props.onStartTyping(currentValue);
+        }
+
+        clearTimeout(typingTimer);
+
+        // If its valid, show that immediately to the user. Thats nice for them
+        // to get instant feedback.
+        if (validationRegEx.test(currentValue)) {
+          valid = true;
+          validationError = '';
+        }
+
+        return {
+          valid: valid,
+          validationError: validationError,
+        };
       },
       () => {
         if (this.props.onChange) {
@@ -83,10 +86,12 @@ class EmailField extends React.Component {
   };
 
   focus = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.input).focus();
   };
 
   blur = () => {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(this.input).blur();
   };
 

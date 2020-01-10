@@ -1,16 +1,17 @@
-import { FlexRowWithTwoBlocksOnEdges } from 'styles';
-import { getCpusTotal, getMemoryTotal } from 'utils/clusterUtils';
-import { Providers } from 'shared/constants';
-import Button from 'UI/Button';
-import CredentialInfoRow from './CredentialInfoRow';
+import styled from '@emotion/styled';
 import moment from 'moment';
-import NodesRunning from './NodesRunning';
-import PortMappingsRow from './PortMappingsRow';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
+import { Providers } from 'shared/constants';
+import { FlexRowWithTwoBlocksOnEdges } from 'styles';
+import Button from 'UI/Button';
+import { getCpusTotal, getMemoryTotal } from 'utils/clusterUtils';
+
+import CredentialInfoRow from './CredentialInfoRow';
+import NodesRunning from './NodesRunning';
+import PortMappingsRow from './PortMappingsRow';
 import RegionAndVersions from './RegionAndVersions';
-import styled from '@emotion/styled';
 import URIBlock from './URIBlock';
 import WorkerNodesAWS from './WorkerNodesAWS';
 import WorkerNodesAzure from './WorkerNodesAzure';
@@ -66,6 +67,7 @@ class V4ClusterDetailTable extends React.Component {
     if (cluster && cluster.status && cluster.status.lastUpdated) {
       return moment(cluster.status.lastUpdated).fromNow();
     }
+
     return 'n/a';
   }
 

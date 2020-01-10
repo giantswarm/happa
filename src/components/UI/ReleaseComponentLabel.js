@@ -1,7 +1,7 @@
 import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 
 const radius = '5px';
 
@@ -86,6 +86,7 @@ VersionLabel.propTypes = {
   isRemoved: PropTypes.bool,
 };
 
+// eslint-disable-next-line react/no-multi-comp
 const ReleaseComponentLabel = props => {
   const { name, version, oldVersion, isAdded, isRemoved } = props;
 

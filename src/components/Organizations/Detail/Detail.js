@@ -1,12 +1,13 @@
-import { Breadcrumb } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
 import { organizationSelect } from 'actions/organizationActions';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import _ from 'underscore';
 import Cluster from 'Cluster/Cluster';
-import DetailView from './View';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import _ from 'underscore';
+
+import DetailView from './View';
 
 class DetailIndex extends React.Component {
   componentDidMount() {
@@ -52,14 +53,14 @@ DetailIndex.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  var allClusters = state.entities.clusters.items;
-  var clusters = [];
+  const allClusters = state.entities.clusters.items;
+  let clusters = [];
 
   clusters = _.filter(allClusters, cluster => {
     return cluster.owner === ownProps.match.params.orgId;
   });
 
-  var membersForTable = state.entities.organizations.items[
+  const membersForTable = state.entities.organizations.items[
     ownProps.match.params.orgId
   ].members.map(member => {
     return Object.assign({}, member, {

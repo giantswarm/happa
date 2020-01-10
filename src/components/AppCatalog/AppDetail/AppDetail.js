@@ -1,11 +1,12 @@
+import DocumentTitle from 'components/shared/DocumentTitle';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import AppDetails from 'UI/AppDetails/AppDetails';
-import DocumentTitle from 'components/shared/DocumentTitle';
-import InstallAppModal from './InstallAppModal';
 import LoadingOverlay from 'UI/LoadingOverlay';
-import PropTypes from 'prop-types';
-import React from 'react';
+
+import InstallAppModal from './InstallAppModal';
 
 class AppDetail extends React.Component {
   imgError = () => {
@@ -17,9 +18,10 @@ class AppDetail extends React.Component {
   constructor(props) {
     super(props);
 
-    let query = new URLSearchParams(props.location.search);
-    let q = query.get('q');
+    const query = new URLSearchParams(props.location.search);
+    const q = query.get('q');
 
+    // eslint-disable-next-line react/state-in-constructor
     this.state = {
       q,
     };
@@ -32,7 +34,7 @@ class AppDetail extends React.Component {
       <Breadcrumb
         data={{
           title: this.props.match.params.repo.toUpperCase(),
-          pathname: '/app-catalogs/' + this.props.match.params.repo + '/',
+          pathname: `/app-catalogs/${this.props.match.params.repo}/`,
         }}
       >
         <LoadingOverlay loading={!repo || this.props.repo.isFetchingIndex}>
@@ -80,10 +82,10 @@ AppDetail.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  var repo = decodeURIComponent(ownProps.match.params.repo);
-  var appName = decodeURIComponent(ownProps.match.params.app);
+  const repo = decodeURIComponent(ownProps.match.params.repo);
+  const appName = decodeURIComponent(ownProps.match.params.app);
 
-  var appVersions = [{}];
+  let appVersions = [{}];
   if (
     state.entities.catalogs.items[repo] &&
     !state.entities.catalogs.items[repo].isFetchingIndex &&

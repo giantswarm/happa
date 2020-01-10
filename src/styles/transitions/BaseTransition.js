@@ -1,7 +1,7 @@
-import { CSSTransition } from 'react-transition-group';
+import useDelayedChange from 'lib/effects/useDelayedChange';
 import PropTypes from 'prop-types';
 import React from 'react';
-import useDelayedChange from 'lib/effects/useDelayedChange';
+import { CSSTransition } from 'react-transition-group';
 
 export const BaseTransitionPropTypes = {
   in: PropTypes.bool,
@@ -17,7 +17,8 @@ export const BaseTransitionPropTypes = {
 };
 
 const BaseTransition = ({ children, in: inProp, ...props }) => {
-  const delayedInProp = useDelayedChange(inProp, 500);
+  const delayTimeout = 500;
+  const delayedInProp = useDelayedChange(inProp, delayTimeout);
 
   return (
     <CSSTransition in={delayedInProp} mountOnEnter unmountOnExit {...props}>
@@ -27,7 +28,10 @@ const BaseTransition = ({ children, in: inProp, ...props }) => {
 };
 
 BaseTransition.defaultProps = {
+  // Disabling lines due to including in `BaseTransitionPropTypes`
+  // eslint-disable-next-line react/default-props-match-prop-types
   in: false,
+  // eslint-disable-next-line react/default-props-match-prop-types
   timeout: 200,
 };
 

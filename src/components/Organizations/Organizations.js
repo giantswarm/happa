@@ -1,11 +1,12 @@
+import PropTypes from 'prop-types';
+import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import LoadingOverlay from 'UI/LoadingOverlay';
+
 import Detail from './Detail/Detail';
 import List from './List/List';
-import LoadingOverlay from 'UI/LoadingOverlay';
-import PropTypes from 'prop-types';
-import React from 'react';
 
 const Organizations = props => {
   const { url, path } = props.match;

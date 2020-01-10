@@ -4,12 +4,13 @@
 // And provides a way to dismiss them.
 //
 
-import { connect } from 'react-redux';
 import { flashRemove } from 'actions/flashMessageActions';
-import BaseTransition from 'styles/transitions/BaseTransition';
-import FlashMessage from './FlashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import BaseTransition from 'styles/transitions/BaseTransition';
+
+import FlashMessage from './FlashMessage';
 
 class FlashMessages extends React.Component {
   makeFlashComponent = flashMessage => {

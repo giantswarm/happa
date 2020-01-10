@@ -1,9 +1,10 @@
-import InviteUserForm from './InviteUserForm';
-import InviteUserSuccess from './InviteUserSuccess';
+import usePrevious from 'lib/effects/usePrevious';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import usePrevious from 'lib/effects/usePrevious';
+
 import UsersModal, { UsersModalPropTypes } from '../UsersModal';
+import InviteUserForm from './InviteUserForm';
+import InviteUserSuccess from './InviteUserSuccess';
 
 export function getInitialState(initiallySelectedOrganizations) {
   return {
@@ -103,7 +104,7 @@ const InviteUserModal = ({
     if (show !== prevShow && show === true) {
       setInviteForm(getInitialState(initiallySelectedOrganizations));
     }
-  }, [show, initiallySelectedOrganizations]);
+  }, [show, initiallySelectedOrganizations, prevShow]);
 
   return (
     <UsersModal

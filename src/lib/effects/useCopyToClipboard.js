@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import copy from 'copy-to-clipboard';
+import { useEffect, useState } from 'react';
 
 /**
  * Hook for copying text to the user's clipboard

@@ -1,18 +1,18 @@
 import * as forgotPasswordActions from 'actions/forgotPasswordActions';
-import { bindActionCreators } from 'redux';
 import {
   clearQueues,
   FlashMessage,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import Button from 'UI/Button';
-import LoginFormContainer from 'UI/LoginFormContainer';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Button';
+import LoginFormContainer from 'UI/LoginFormContainer';
 
 class ForgotPassword extends React.Component {
   state = {
@@ -51,9 +51,9 @@ class ForgotPassword extends React.Component {
               messageTTL.MEDIUM
             );
             break;
-          default:
-            var heading = 'Unable to reset password';
-            var message =
+          default: {
+            const heading = 'Unable to reset password';
+            let message =
               'Something went wrong. Our servers might be down, or perhaps you&apos;ve made too many requests in a row. Please try again in 5 minutes.';
 
             if (error.message) {
@@ -69,6 +69,7 @@ class ForgotPassword extends React.Component {
               messageTTL.LONG,
               message
             );
+          }
         }
 
         this.setState({
@@ -78,6 +79,7 @@ class ForgotPassword extends React.Component {
       });
   };
 
+  // eslint-disable-next-line class-methods-use-this
   componentWillUnmount() {
     clearQueues();
   }

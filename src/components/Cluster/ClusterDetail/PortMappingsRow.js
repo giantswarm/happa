@@ -1,7 +1,7 @@
-import { FlexRowWithTwoBlocksOnEdges } from 'styles';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import { FlexRowWithTwoBlocksOnEdges } from 'styles';
 
 const PortMappings = styled.div`
   dl {
@@ -53,9 +53,9 @@ function PortMappingsRow({ cluster }) {
         </FlexRowWithTwoBlocksOnEdges>
       </PortMappings>
     );
-  } else {
-    return null;
   }
+
+  return null;
 }
 
 PortMappingsRow.propTypes = {
