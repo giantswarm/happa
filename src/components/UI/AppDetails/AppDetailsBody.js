@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 
 const DescriptionList = styled.dl`
   margin: 0;
@@ -22,6 +22,7 @@ const DescriptionList = styled.dl`
 
 const AppDetailsBody = props => {
   const { description, children } = props;
+
   return (
     <DescriptionList>
       {description && description !== '' && (

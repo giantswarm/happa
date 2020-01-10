@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 class Overview extends React.Component {
-  testFileContent() {
+  static testFileContent() {
     return `
       The contents of the file
 

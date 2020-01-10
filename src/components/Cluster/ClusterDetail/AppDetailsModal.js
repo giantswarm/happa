@@ -10,11 +10,12 @@ import {
   updateAppSecret,
 } from 'actions/appSecretActions';
 import { truncate } from 'lib/helpers';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import GenericModal from '../../Modals/GenericModal';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
+
+import GenericModal from '../../Modals/GenericModal';
 import YAMLFileUpload from './YamlFileUpload';
 
 const AppDetailsModal = props => {
@@ -50,6 +51,7 @@ const AppDetailsModal = props => {
         onClose();
       })
       .catch(e => {
+        // eslint-disable-next-line no-console
         console.error(e);
       });
   }
@@ -63,6 +65,7 @@ const AppDetailsModal = props => {
         onClose();
       })
       .catch(e => {
+        // eslint-disable-next-line no-console
         console.error(e);
       });
   }
@@ -76,6 +79,7 @@ const AppDetailsModal = props => {
         onClose();
       })
       .catch(e => {
+        // eslint-disable-next-line no-console
         console.error(e);
       });
   }
@@ -101,6 +105,8 @@ const AppDetailsModal = props => {
       })
       .catch(e => {
         done();
+
+        // eslint-disable-next-line no-console
         console.error(e);
       });
   }
@@ -126,6 +132,8 @@ const AppDetailsModal = props => {
       })
       .catch(e => {
         done();
+
+        // eslint-disable-next-line no-console
         console.error(e);
       });
   }
@@ -151,6 +159,8 @@ const AppDetailsModal = props => {
       })
       .catch(e => {
         done();
+
+        // eslint-disable-next-line no-console
         console.error(e);
       });
   }
@@ -176,6 +186,8 @@ const AppDetailsModal = props => {
       })
       .catch(e => {
         done();
+
+        // eslint-disable-next-line no-console
         console.error(e);
       });
   }
@@ -211,6 +223,7 @@ const AppDetailsModal = props => {
             <div className='labelvaluepair'>
               <div className='labelvaluepair--label'>CHART VERSION</div>
               <div className='labelvaluepair--value code'>
+                {/* eslint-disable-next-line no-magic-numbers */}
                 <span>{truncate(props.app.spec.version, 20)}</span>
               </div>
             </div>
@@ -248,7 +261,7 @@ const AppDetailsModal = props => {
                     />
 
                     <Button bsStyle='danger' onClick={showDeleteAppConfigPane}>
-                      <i className='fa fa-delete'></i> Delete
+                      <i className='fa fa-delete' /> Delete
                     </Button>
                   </div>
                 </>
@@ -294,7 +307,7 @@ const AppDetailsModal = props => {
                     />
 
                     <Button bsStyle='danger' onClick={showDeleteAppSecretPane}>
-                      <i className='fa fa-delete'></i> Delete
+                      <i className='fa fa-delete' /> Delete
                     </Button>
                   </div>
                 </>
@@ -324,7 +337,8 @@ const AppDetailsModal = props => {
               Delete This App
             </div>
             <Button bsStyle='danger' onClick={showDeleteAppPane}>
-              <i className='fa fa-delete'></i>Delete App
+              <i className='fa fa-delete' />
+              Delete App
             </Button>
           </div>
         </div>
@@ -346,7 +360,8 @@ const AppDetailsModal = props => {
                 props.dispatch
               )}
             >
-              <i className='fa fa-delete'></i>Delete ConfigMap
+              <i className='fa fa-delete' />
+              Delete ConfigMap
             </Button>
             <Button bsStyle='link' onClick={showInitialPane}>
               Cancel
@@ -357,7 +372,6 @@ const AppDetailsModal = props => {
         title={
           <>
             Delete ConfigMap for {props.app.metadata.name} on
-            {` `}
             <ClusterIDLabel clusterID={props.clusterId} />
           </>
         }
@@ -365,7 +379,6 @@ const AppDetailsModal = props => {
       >
         Are you sure you want to delete the ConfigMap for{' '}
         {props.app.metadata.name} on
-        {` `}
         <ClusterIDLabel clusterID={props.clusterId} />?
         <br />
         <br />
@@ -388,7 +401,8 @@ const AppDetailsModal = props => {
                 props.dispatch
               )}
             >
-              <i className='fa fa-delete'></i>Delete Secret
+              <i className='fa fa-delete' />
+              Delete Secret
             </Button>
             <Button bsStyle='link' onClick={showInitialPane}>
               Cancel
@@ -399,7 +413,6 @@ const AppDetailsModal = props => {
         title={
           <>
             Delete Secret for {props.app.metadata.name} on
-            {` `}
             <ClusterIDLabel clusterID={props.clusterId} />
           </>
         }
@@ -407,7 +420,6 @@ const AppDetailsModal = props => {
       >
         Are you sure you want to delete the Secret for {props.app.metadata.name}{' '}
         on
-        {` `}
         <ClusterIDLabel clusterID={props.clusterId} />?
         <br />
         <br />
@@ -430,7 +442,8 @@ const AppDetailsModal = props => {
                 props.dispatch
               )}
             >
-              <i className='fa fa-delete'></i>Delete App
+              <i className='fa fa-delete' />
+              Delete App
             </Button>
             <Button bsStyle='link' onClick={showInitialPane}>
               Cancel
@@ -441,14 +454,12 @@ const AppDetailsModal = props => {
         title={
           <>
             Delete {props.app.metadata.name} on
-            {` `}
             <ClusterIDLabel clusterID={props.clusterId} />
           </>
         }
         visible={props.visible}
       >
         Are you sure you want to delete {props.app.metadata.name} on
-        {` `}
         <ClusterIDLabel clusterID={props.clusterId} />?
         <br />
         <br />
@@ -456,6 +467,8 @@ const AppDetailsModal = props => {
       </GenericModal>
     );
   }
+
+  return null;
 };
 
 AppDetailsModal.propTypes = {

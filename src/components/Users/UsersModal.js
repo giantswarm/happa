@@ -1,7 +1,7 @@
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import Button from 'UI/Button';
 
 const UsersModal = ({
   show,
@@ -54,7 +54,9 @@ const UsersModal = ({
 UsersModal.defaultProps = {
   show: false,
   title: '',
+  // eslint-disable-next-line no-empty-function
   onClose: () => {},
+  // eslint-disable-next-line no-empty-function
   onConfirm: () => {},
   isLoading: false,
   confirmText: 'Confirm',

@@ -1,8 +1,8 @@
+import yaml from 'js-yaml';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import yaml from 'js-yaml';
+import Button from 'UI/Button';
 
 // YAMLFileUpload is a component that renders a button and a hidden file
 // input element. When you click the button the file dialog opens, and the
@@ -31,13 +31,14 @@ const YAMLFileUpload = props => {
   function fileInputOnChange(e) {
     setFileUploading(true);
 
-    var reader = new FileReader();
+    const reader = new FileReader();
 
     reader.onload = (function() {
-      let parsedYAML;
-      return function(e) {
+      let parsedYAML = '';
+
+      return function(event) {
         try {
-          parsedYAML = yaml.safeLoad(e.target.result);
+          parsedYAML = yaml.safeLoad(event.target.result);
         } catch (err) {
           new FlashMessage(
             'Unable to parse valid YAML from this file. Please validate that it is a valid YAML file and try again.',
@@ -46,6 +47,7 @@ const YAMLFileUpload = props => {
           );
           setFileUploading(false);
           refreshFileInputs();
+
           return;
         }
 

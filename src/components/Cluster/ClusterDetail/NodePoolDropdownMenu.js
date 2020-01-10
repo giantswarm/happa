@@ -1,6 +1,6 @@
-import DropdownMenu from 'UI/DropdownMenu';
 import PropTypes from 'prop-types';
 import React from 'react';
+import DropdownMenu from 'UI/DropdownMenu';
 
 const NodePoolDropdownMenu = props => {
   return (

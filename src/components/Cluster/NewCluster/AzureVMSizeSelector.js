@@ -1,26 +1,27 @@
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import InputField from 'shared/InputField';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import InputField from 'shared/InputField';
+import Button from 'UI/Button';
 
 class AzureVMSizeSelector extends React.Component {
   constructor(props) {
     super(props);
 
-    var vmSizes = {};
-    if (window.config.azureCapabilitiesJSON != '') {
+    let vmSizes = {};
+    if (window.config.azureCapabilitiesJSON !== '') {
       vmSizes = JSON.parse(window.config.azureCapabilitiesJSON);
     }
 
-    var availableVMSizes = [];
+    const availableVMSizes = [];
     // Create a list of only the allowed VM sizes.
-    props.allowedVMSizes.forEach(function(vs) {
+    props.allowedVMSizes.forEach(vs => {
       if (typeof vmSizes[vs] === 'object') {
         availableVMSizes.push(vmSizes[vs]);
       }
     });
 
+    // eslint-disable-next-line react/state-in-constructor
     this.state = {
       modalVisible: false,
       preSelectedVMSize: props.value,
@@ -53,9 +54,9 @@ class AzureVMSizeSelector extends React.Component {
   buttonClass() {
     if (this.props.readOnly) {
       return 'disabled';
-    } else {
-      return '';
     }
+
+    return '';
   }
 
   preSelect(vmSize) {
@@ -73,19 +74,16 @@ class AzureVMSizeSelector extends React.Component {
   };
 
   validateVMSize = vmSize => {
-    var valid;
-    var validationError;
+    let valid = false;
+    let validationError = 'Please enter a valid vm size';
 
-    var validVMSizes = this.state.vmSizes.map(x => {
+    const validVMSizes = this.state.vmSizes.map(x => {
       return x.name;
     });
 
-    if (validVMSizes.indexOf(vmSize) != -1) {
+    if (validVMSizes.indexOf(vmSize) !== -1) {
       valid = true;
       validationError = '';
-    } else {
-      valid = false;
-      validationError = 'Please enter a valid vm size';
     }
 
     this.setState({
@@ -117,10 +115,7 @@ class AzureVMSizeSelector extends React.Component {
             />
 
             <div
-              className={
-                'new-cluster--instance-type-selector-button ' +
-                this.buttonClass()
-              }
+              className={`new-cluster--instance-type-selector-button ${this.buttonClass()}`}
               onClick={this.showModal}
             >
               <i className='fa fa-menu' />
@@ -169,6 +164,7 @@ class AzureVMSizeSelector extends React.Component {
                       <td className='description'>{vmSize.description}</td>
                       <td className='numeric'>{vmSize.numberOfCores}</td>
                       <td className='numeric'>
+                        {/* eslint-disable-next-line no-magic-numbers */}
                         {(vmSize.memoryInMb / 1000).toFixed(2)} GB
                       </td>
                     </tr>

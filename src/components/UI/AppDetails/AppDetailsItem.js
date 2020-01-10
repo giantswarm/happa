@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 
 const Code = styled.code`
   background-color: transparent;
@@ -27,11 +27,11 @@ const AppDetailsItem = props => {
         )}
         {label !== 'Home' && (
           <ul>
-            {data.map(data => (
-              <li key={data}>
+            {data.map(app => (
+              <li key={app}>
                 <Code>
-                  <a href={data} rel='noopener noreferrer'>
-                    {data}
+                  <a href={app} rel='noopener noreferrer'>
+                    {app}
                   </a>
                 </Code>
               </li>

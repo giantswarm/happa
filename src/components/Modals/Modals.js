@@ -1,5 +1,4 @@
 import { clusterDeleteConfirmed } from 'actions/clusterActions';
-import { connect } from 'react-redux';
 import { modalHide } from 'actions/modalActions';
 import { nodePoolDeleteConfirmed } from 'actions/nodePoolActions';
 import {
@@ -9,12 +8,13 @@ import {
   organizationDeleteConfirmed,
   organizationRemoveMemberConfirmed,
 } from 'actions/organizationActions';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import EmailField from 'shared/EmailField';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { connect } from 'react-redux';
+import EmailField from 'shared/EmailField';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 class Modals extends React.Component {
   state = {
@@ -37,7 +37,7 @@ class Modals extends React.Component {
     if (e) {
       e.preventDefault();
     }
-    var orgId = this.orgId.value;
+    const orgId = this.orgId.value;
     this.props.dispatch(organizationCreateConfirmed(orgId));
   };
 
@@ -47,7 +47,7 @@ class Modals extends React.Component {
     }
 
     if (this.state.emailValid) {
-      var email = this.email.value();
+      const email = this.email.value();
       this.props.dispatch(
         organizationAddMemberConfirmed(
           this.props.modal.templateValues.orgId,
@@ -62,14 +62,14 @@ class Modals extends React.Component {
       e.preventDefault();
     }
 
-    var email = this.props.modal.templateValues.email;
-    var orgId = this.props.modal.templateValues.orgId;
+    const email = this.props.modal.templateValues.email;
+    const orgId = this.props.modal.templateValues.orgId;
     this.props.dispatch(organizationRemoveMemberConfirmed(orgId, email));
   };
 
   emailFieldChanged = emailField => {
-    var email = this.props.modal.templateValues.email;
-    var orgId = this.props.modal.templateValues.orgId;
+    const email = this.props.modal.templateValues.email;
+    const orgId = this.props.modal.templateValues.orgId;
     this.props.dispatch(organizationAddMemberTyping(orgId, email));
 
     if (emailField.valid()) {
@@ -265,10 +265,11 @@ class Modals extends React.Component {
           </BootstrapModal>
         );
 
-      case 'clusterDelete':
-        var cluster = this.props.modal.templateValues.cluster;
-        var clusterId = this.props.modal.templateValues.cluster.id;
-        var clusterName = this.props.modal.templateValues.cluster.name;
+      case 'clusterDelete': {
+        const cluster = this.props.modal.templateValues.cluster;
+        const clusterId = this.props.modal.templateValues.cluster.id;
+        const clusterName = this.props.modal.templateValues.cluster.name;
+
         return (
           <BootstrapModal
             onHide={this.close.bind(this)}
@@ -309,11 +310,12 @@ class Modals extends React.Component {
             </BootstrapModal.Footer>
           </BootstrapModal>
         );
+      }
 
       case 'nodePoolDelete': {
-        var nodePool = this.props.modal.templateValues.nodePool;
-        var nodePoolId = this.props.modal.templateValues.nodePool.id;
-        var nodePoolName = this.props.modal.templateValues.nodePool.name;
+        const nodePool = this.props.modal.templateValues.nodePool;
+        const nodePoolId = this.props.modal.templateValues.nodePool.id;
+        const nodePoolName = this.props.modal.templateValues.nodePool.name;
         const clusterId = this.props.modal.templateValues.clusterId;
 
         return (

@@ -1,10 +1,10 @@
+import styled from '@emotion/styled';
 import ColorHash from 'color-hash';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
 const colorHashCache = {};
 
@@ -60,7 +60,7 @@ const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
 
   return (
     <Wrapper onMouseLeave={() => setClipboardContent(null)}>
-      <Label clusterID={clusterID} title={'Unique Cluster ID: ' + clusterID}>
+      <Label clusterID={clusterID} title={`Unique Cluster ID: ${clusterID}`}>
         {clusterID}
       </Label>
 

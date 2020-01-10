@@ -1,14 +1,16 @@
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import { dedent } from 'lib/helpers';
-import BaseTransition from 'styles/transitions/BaseTransition';
-import Line from './Line';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
+import BaseTransition from 'styles/transitions/BaseTransition';
+
+import Line from './Line';
 
 export const Prompt = ({ children }) => {
   return <Line prompt={true} text={dedent(children)} />;
 };
 
+// eslint-disable-next-line react/no-multi-comp
 export const Output = ({ children }) => {
   return <Line prompt={false} text={dedent(children)} />;
 };
@@ -36,6 +38,7 @@ export const Output = ({ children }) => {
  *
  * The copy to clipboard button will only take the content in the Prompt tags.
  */
+// eslint-disable-next-line react/no-multi-comp
 export const CodeBlock = ({ children }) => {
   const [isHovering, setHovering] = useState(false);
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();

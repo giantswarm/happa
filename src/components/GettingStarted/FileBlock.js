@@ -1,11 +1,12 @@
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import { dedent } from 'lib/helpers';
-import BaseTransition from 'styles/transitions/BaseTransition';
-import Line from './Line';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
+import BaseTransition from 'styles/transitions/BaseTransition';
 
-var Modernizr = window.Modernizr;
+import Line from './Line';
+
+const Modernizr = window.Modernizr;
 
 /**
  *
@@ -69,6 +70,7 @@ export const FileBlock = ({ children, hideText, fileName }) => {
     return blob;
   };
 
+  // eslint-disable-next-line react/no-multi-comp
   const downloadAsFileLink = () => {
     return (
       <a download={fileName} href={window.URL.createObjectURL(getFileAsBlob())}>

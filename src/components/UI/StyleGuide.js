@@ -1,9 +1,10 @@
-import ClusterEmptyState from './ClusterEmptyState';
-import ComponentChangelog from './ComponentChangelog';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import ClusterEmptyState from './ClusterEmptyState';
+import ComponentChangelog from './ComponentChangelog';
 import ReleaseComponentLabel from './ReleaseComponentLabel';
-import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
   h2 {
@@ -23,6 +24,7 @@ const ExampleBox = styled.div`
 
 const Header = props => {
   const { name } = props;
+
   return (
     <h2 id={name}>
       {name} <a href={`#${name}`}>¶</a>
@@ -34,6 +36,7 @@ Header.propTypes = {
   name: PropTypes.string,
 };
 
+// eslint-disable-next-line react/no-multi-comp
 const StyleGuide = () => {
   return (
     <Wrapper className='main col-9'>

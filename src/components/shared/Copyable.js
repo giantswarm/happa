@@ -1,8 +1,8 @@
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 
 const Copyable = ({ children, copyText }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();

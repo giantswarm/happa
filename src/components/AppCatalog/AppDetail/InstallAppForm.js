@@ -1,8 +1,9 @@
-import FileInput from './FileInput';
-import Input from './Input';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+
+import FileInput from './FileInput';
+import Input from './Input';
 
 const FormWrapper = styled.div`
   display: flex;

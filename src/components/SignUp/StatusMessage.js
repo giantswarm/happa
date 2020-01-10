@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 class StatusMessage extends React.Component {
-  statusMessage() {
+  static statusMessage() {
     return {
       verify_started: <span>Verifying invite...</span>,
       verify_completed: (
@@ -57,7 +57,7 @@ class StatusMessage extends React.Component {
     };
   }
 
-  showLoader() {
+  static showLoader() {
     return false;
   }
 
@@ -65,9 +65,13 @@ class StatusMessage extends React.Component {
     return (
       <div className='signup--status'>
         <div className='signup--status-text'>
-          {this.statusMessage()[this.props.status] || <span>&nbsp;</span>}
+          {StatusMessage.statusMessage()[this.props.status] || (
+            <span>&nbsp;</span>
+          )}
         </div>
-        {this.showLoader() ? <img className='loader' src={spinner} /> : null}
+        {StatusMessage.showLoader() ? (
+          <img className='loader' src={spinner} />
+        ) : null}
       </div>
     );
   }

@@ -1,6 +1,6 @@
-import { Dot } from 'styles';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Dot } from 'styles';
 
 const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
   const nodesSingularPlural = workerNodesRunning === 1 ? ' node' : ' nodes';

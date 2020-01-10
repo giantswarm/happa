@@ -1,15 +1,16 @@
 import { installApp } from 'actions/appActions';
-import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import ClusterPicker from './ClusterPicker';
-import GenericModal from '../../Modals/GenericModal';
-import InstallAppForm from './InstallAppForm';
+import yaml from 'js-yaml';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import yaml from 'js-yaml';
+import { connect } from 'react-redux';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
+
+import GenericModal from '../../Modals/GenericModal';
+import ClusterPicker from './ClusterPicker';
+import InstallAppForm from './InstallAppForm';
 
 const InstallAppModal = props => {
   const CLUSTER_PICKER_PAGE = 'CLUSTER_PICKER_PAGE';
@@ -65,18 +66,23 @@ const InstallAppModal = props => {
     setVisible(true);
   };
 
-  const onSelectCluster = clusterID => {
-    setClusterID(clusterID);
+  const onSelectCluster = newClusterID => {
+    setClusterID(newClusterID);
     next();
   };
 
   const lunrIndex = lunr(function() {
+    // eslint-disable-next-line react/no-this-in-sfc
     this.ref('id');
+    // eslint-disable-next-line react/no-this-in-sfc
     this.field('name');
+    // eslint-disable-next-line react/no-this-in-sfc
     this.field('owner');
+    // eslint-disable-next-line react/no-this-in-sfc
     this.field('id');
 
     props.clusters.forEach(function(cluster) {
+      // eslint-disable-next-line react/no-this-in-sfc
       this.add(cluster);
     }, this);
   });
@@ -85,44 +91,11 @@ const InstallAppModal = props => {
 
   if (query !== '') {
     clusters = lunrIndex
-      .search(query.trim() + ' ' + query.trim() + '*')
+      .search(`${query.trim()} ${query.trim()}*`)
       .map(result => {
         return props.clusters.find(cluster => cluster.id === result.ref);
       });
   }
-
-  const updateName = newName => {
-    if (namespace === name) {
-      // If name and namespace are synced up, keep them that way.
-      updateNamespace(newName);
-    }
-    setName(newName);
-
-    setNameError(validate(newName));
-  };
-
-  const updateNamespace = namespace => {
-    setNamespace(namespace);
-    setNamespaceError(validate(namespace));
-  };
-
-  const updateValuesYAML = files => {
-    var reader = new FileReader();
-
-    reader.onload = (function() {
-      return function(e) {
-        try {
-          let parsedYAML = yaml.safeLoad(e.target.result);
-          setValuesYAML(parsedYAML);
-          setValuesYAMLError('');
-        } catch (err) {
-          setValuesYAMLError('Unable to parse valid YAML from this file.');
-        }
-      };
-    })(files[0]);
-
-    reader.readAsText(files[0]);
-  };
 
   const validate = str => {
     if (str.length > maxLength) {
@@ -140,10 +113,45 @@ const InstallAppModal = props => {
     return '';
   };
 
+  const updateNamespace = ns => {
+    setNamespace(ns);
+    setNamespaceError(validate(ns));
+  };
+
+  const updateName = newName => {
+    if (namespace === name) {
+      // If name and namespace are synced up, keep them that way.
+      updateNamespace(newName);
+    }
+    setName(newName);
+
+    setNameError(validate(newName));
+  };
+
+  const updateValuesYAML = files => {
+    const reader = new FileReader();
+
+    reader.onload = (function() {
+      return function(e) {
+        try {
+          const parsedYAML = yaml.safeLoad(e.target.result);
+          setValuesYAML(parsedYAML);
+          setValuesYAMLError('');
+        } catch (err) {
+          setValuesYAMLError('Unable to parse valid YAML from this file.');
+        }
+      };
+    })(files[0]);
+
+    reader.readAsText(files[0]);
+  };
+
   const anyValidationErrors = () => {
-    if (namespaceError != '' || nameError != '' || valuesYAMLError != '') {
+    if (namespaceError !== '' || nameError !== '' || valuesYAMLError !== '') {
       return true;
     }
+
+    return false;
   };
 
   const createApp = () => {
@@ -259,6 +267,8 @@ const InstallAppModal = props => {
               </GenericModal>
             );
         }
+
+        return null;
       })()}
     </>
   );
@@ -272,7 +282,7 @@ InstallAppModal.propTypes = {
 };
 
 function mapStateToProps(state) {
-  let clusters = Object.keys(state.entities.clusters.items).map(clusterID => {
+  const clusters = Object.keys(state.entities.clusters.items).map(clusterID => {
     return {
       id: clusterID,
       name: state.entities.clusters.items[clusterID].name,

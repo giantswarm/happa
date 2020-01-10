@@ -1,9 +1,9 @@
-import Button from 'UI/Button';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
 import React from 'react';
-import SlideTransition from 'styles/transitions/SlideTransition';
 import update from 'react-addons-update';
+import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Button';
 
 class ChangeEmailForm extends React.Component {
   state = {
@@ -24,16 +24,14 @@ class ChangeEmailForm extends React.Component {
   }
 
   validateEmail = e => {
-    var email = e.target.value;
-    var isButtonVisible;
+    const email = e.target.value;
+    let isButtonVisible = false;
 
     if (email !== this.props.user.email) {
       isButtonVisible = true;
-    } else {
-      isButtonVisible = false;
     }
 
-    var newState = update(this.state, {
+    let newState = update(this.state, {
       isSuccess: { $set: false },
       isButtonVisible: { $set: isButtonVisible },
 
@@ -44,7 +42,7 @@ class ChangeEmailForm extends React.Component {
       },
     });
 
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (re.test(email)) {
       newState = update(newState, {
         isValid: { $set: true },
@@ -64,8 +62,8 @@ class ChangeEmailForm extends React.Component {
     e.preventDefault();
 
     // Don't submit the form if nothing changed.
-    if (this.props.user.email != this.state.fields.email.value) {
-      var usersApi = new GiantSwarm.UsersApi();
+    if (this.props.user.email !== this.state.fields.email.value) {
+      const usersApi = new GiantSwarm.UsersApi();
 
       this.setState({
         isSubmitting: true,
@@ -87,11 +85,12 @@ class ChangeEmailForm extends React.Component {
           return this.props.actions.refreshUserInfo();
         })
         .catch(error => {
-          var errorMessage;
+          let errorMessage = null;
 
           if (
             error.body &&
             error.body.status_code &&
+            // eslint-disable-next-line no-magic-numbers
             error.body.status_code === 10009
           ) {
             errorMessage = (
