@@ -80,45 +80,18 @@ it('renders all the v5 cluster data correctly with 0 nodes ready', async () => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
   });
   expect(getAllByText(V5_CLUSTER.id)).toHaveLength(2);
-  expect(getByText('0 nodes')).toBeInTheDocument();
-  const k8sEndpoint = getByText('Kubernetes endpoint URI:').nextSibling;
-  expect(k8sEndpoint).not.toBeEmpty();
-});
 
-it('renders nodes data correctly with nodes ready in v5 cluster view', async () => {
-  const nodePoolsResponseWithNodes = nodePoolsResponse.map(np => ({
-    ...np,
-    status: { nodes: 3, nodes_ready: 3 },
-  }));
-
-  // Replace nodePools response
-  requests.nodePools.persist(false);
-  requests.nodePools = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
-    nodePoolsResponseWithNodes
-  );
-
-  const { getByText, getByTestId, debug } = renderRouteWithStore(ROUTE);
-
-  const workerNodesRunning = getNumberOfNodePoolsNodes(
-    nodePoolsResponseWithNodes
-  );
-  const textRendered = `${workerNodesRunning} nodes in ${nodePoolsResponseWithNodes.length} node pools`;
+  // expect(getByText('0 nodes')).toBeInTheDocument();
+  const workerNodesRunning = getNumberOfNodePoolsNodes(nodePoolsResponse);
+  const textRendered = `${workerNodesRunning} nodes in ${nodePoolsResponse.length} node pools`;
 
   // Expect computed values are rendered
   await wait(() => {
-    expect(getByTestId('nodes-running').querySelector('span').textContent).toBe(
-      '0 nodes'
-    );
-    // expect(getByText(textRendered)).toBeInTheDocument();
+    expect(getByText(textRendered)).toBeInTheDocument();
   });
 
-  // Restore nodePools response
-  requests.nodePools.persist(false);
-  requests.nodePools = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
-    nodePoolsResponse
-  );
+  const k8sEndpoint = getByText('Kubernetes endpoint URI:').nextSibling;
+  expect(k8sEndpoint).not.toBeEmpty();
 });
 
 it('renders all node pools in store', async () => {
@@ -232,6 +205,7 @@ scales node pools correctly`, async () => {
     getAllByText,
     getAllByTestId,
     getByLabelText,
+    getByTestId,
   } = renderRouteWithStore(ROUTE);
 
   await wait(() => getAllByTestId('node-pool-id'));
@@ -260,11 +234,11 @@ scales node pools correctly`, async () => {
   // Change the values and modify the scaling settings.
   fireEvent.change(inputMin, { target: { value: newScaling.min } });
   fireEvent.change(inputMax, { target: { value: newScaling.max } });
-  const textButton = 'Apply';
 
-  await wait(() => getByText(textButton));
+  // Wait for the text button to update
+  await wait(() => getByText(/increase minimum number of nodes by 1/i));
 
-  const submitButton = getByText(textButton);
+  const submitButton = getByText(/increase minimum number of nodes by 1/i);
   fireEvent.click(submitButton);
 
   //Wait for the Flash message to appear
