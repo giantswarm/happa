@@ -20,6 +20,7 @@ class NewCluster extends React.Component {
   };
 
   componentDidMount() {
+    // TODO move this to batchedActions
     this.props.dispatch(loadReleases()).then(() => {
       this.setSelectableReleases();
       const selectedRelease = this.props.activeSortedReleases[0];

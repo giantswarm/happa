@@ -80,42 +80,18 @@ it('renders all the v5 cluster data correctly with 0 nodes ready', async () => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
   });
   expect(getAllByText(V5_CLUSTER.id)).toHaveLength(2);
-  expect(getByText('0 nodes')).toBeInTheDocument();
-  const k8sEndpoint = getByText('Kubernetes endpoint URI:').nextSibling;
-  expect(k8sEndpoint).not.toBeEmpty();
-});
 
-it('renders nodes data correctly with nodes ready in v5 cluster view', async () => {
-  const nodePoolsResponseWithNodes = nodePoolsResponse.map(np => ({
-    ...np,
-    status: { nodes: 3, nodes_ready: 3 },
-  }));
-
-  // Replace nodePools response
-  requests.nodePools.persist(false);
-  requests.nodePools = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
-    nodePoolsResponseWithNodes
-  );
-
-  const { getByText } = renderRouteWithStore(ROUTE);
-
-  const workerNodesRunning = getNumberOfNodePoolsNodes(
-    nodePoolsResponseWithNodes
-  );
-  const textRendered = `${workerNodesRunning} nodes in ${nodePoolsResponseWithNodes.length} node pools`;
+  // expect(getByText('0 nodes')).toBeInTheDocument();
+  const workerNodesRunning = getNumberOfNodePoolsNodes(nodePoolsResponse);
+  const textRendered = `${workerNodesRunning} nodes in ${nodePoolsResponse.length} node pools`;
 
   // Expect computed values are rendered
   await wait(() => {
     expect(getByText(textRendered)).toBeInTheDocument();
   });
 
-  // Restore nodePools response
-  requests.nodePools.persist(false);
-  requests.nodePools = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
-    nodePoolsResponse
-  );
+  const k8sEndpoint = getByText('Kubernetes endpoint URI:').nextSibling;
+  expect(k8sEndpoint).not.toBeEmpty();
 });
 
 it('renders all node pools in store', async () => {
@@ -148,7 +124,9 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
     .reply(200, nodePoolPatchResponse);
 
   // Mounting
-  const { getAllByTestId, getByText, container } = renderRouteWithStore(ROUTE);
+  const { getAllByTestId, getByText, getByDisplayValue } = renderRouteWithStore(
+    ROUTE
+  );
 
   await wait(() => getByText(truncate(nodePoolName, 14)));
 
@@ -160,10 +138,14 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   expect(nodePools[0]).toContainHTML(nodePoolNameEl);
   fireEvent.click(nodePoolNameEl);
 
-  // Write the new name and submit it
-  container.querySelector(
-    `input[value="${nodePoolName}"]`
-  ).value = newNodePoolName;
+  await wait(() => {
+    getByDisplayValue(nodePoolName);
+  });
+
+  // Change the new name and submit it.
+  fireEvent.change(getByDisplayValue(nodePoolName), {
+    target: { value: newNodePoolName },
+  });
 
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
@@ -223,6 +205,7 @@ scales node pools correctly`, async () => {
     getAllByText,
     getAllByTestId,
     getByLabelText,
+    getByTestId,
   } = renderRouteWithStore(ROUTE);
 
   await wait(() => getAllByTestId('node-pool-id'));
@@ -251,11 +234,11 @@ scales node pools correctly`, async () => {
   // Change the values and modify the scaling settings.
   fireEvent.change(inputMin, { target: { value: newScaling.min } });
   fireEvent.change(inputMax, { target: { value: newScaling.max } });
-  const textButton = 'Apply';
 
-  await wait(() => getByText(textButton));
+  // Wait for the text button to update
+  await wait(() => getByText(/increase minimum number of nodes by 1/i));
 
-  const submitButton = getByText(textButton);
+  const submitButton = getByText(/increase minimum number of nodes by 1/i);
   fireEvent.click(submitButton);
 
   //Wait for the Flash message to appear
@@ -302,8 +285,8 @@ it('deletes a v5 cluster', async () => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
   });
 
-  await wait(() => getByText('Delete Cluster'));
-  fireEvent.click(getByText('Delete Cluster'));
+  const button = getByText(/delete cluster/i);
+  fireEvent.click(button);
 
   // Is the modal in the document?
   const titleText = /are you sure you want to delete/i;
@@ -429,8 +412,14 @@ it('adds a node pool with default values', async () => {
     nodePoolCreationResponse.id
   );
 
+  // Remove flash message.
+  document.querySelector('#noty_layout__topRight').remove();
+
   // Is the new NodePool in the document?
-  await wait(() => getByText(nodePoolCreationResponse.id));
+  await wait(() => {
+    getByText(nodePoolCreationResponse.id);
+  });
+
   expect(getByText(nodePoolCreationResponse.id)).toBeInTheDocument();
 
   nodePoolCreationRequest.done();

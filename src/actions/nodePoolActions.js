@@ -7,86 +7,34 @@ import { modalHide } from './modalActions';
 // API instantiations.
 const nodePoolsApi = new GiantSwarm.NodePoolsApi();
 
-// Actions
-const clusterNodePoolsLoadSuccess = (clusterId, nodePools) => ({
-  type: types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS,
-  clusterId,
-  nodePools: nodePools,
-});
+// Loads one cluster node pools
+export function clusterNodePoolsLoad(clusterId) {
+  return function(dispatch) {
+    dispatch({ type: types.CLUSTER_NODEPOOLS_LOAD_REQUEST });
 
-const nodePoolPatchAction = (nodePool, payload) => ({
-  type: types.NODEPOOL_PATCH,
-  nodePool,
-  payload,
-});
-
-const nodePoolPatchError = (error, nodePool) => ({
-  type: types.NODEPOOL_PATCH_ERROR,
-  error,
-  nodePool,
-});
-
-export const nodePoolDelete = (clusterId, nodePool) => ({
-  type: types.NODEPOOL_DELETE,
-  clusterId,
-  nodePool,
-});
-
-const nodePoolDeleteSuccess = (nodePoolId, clusterId) => ({
-  type: types.NODEPOOL_DELETE_SUCCESS,
-  nodePoolId,
-  clusterId,
-});
-
-const nodePoolDeleteError = (nodePoolId, error) => ({
-  type: types.NODEPOOL_DELETE_ERROR,
-  nodePoolId,
-  error,
-});
-
-//Loads all node pools for all node pools clusters.
-export function nodePoolsLoad() {
-  return function(dispatch, getState) {
-    dispatch({
-      type: types.NODEPOOLS_LOAD,
-      isFetching: true,
-    });
-
-    const nodePoolsClustersId =
-      getState().entities.clusters.nodePoolsClusters || [];
-
-    return Promise.all(
-      nodePoolsClustersId.map(async clusterId => {
-        const nodePools = await nodePoolsApi.getNodePools(clusterId);
-
+    return nodePoolsApi
+      .getNodePools(clusterId)
+      .then(data => {
         // Receiving an array-like with weird prototype from API call,
         // so converting it to an array.
-        const nodePoolsArray = (Array.from(nodePools) || []).map(np => np.id);
+        const nodePoolsArray = Array.from(data) || [];
 
         // Dispatch action for populating nodePools key inside cluster
-        dispatch(clusterNodePoolsLoadSuccess(clusterId, nodePoolsArray));
-
-        return nodePools;
-      })
-    )
-      .then(nodePools => {
-        const allNodePools = Array.from(nodePools)
-          .flat()
-          .reduce((accumulator, np) => {
-            return { ...accumulator, [np.id]: np };
-          }, {});
-
         dispatch({
-          type: types.NODEPOOLS_LOAD_SUCCESS,
-          nodePools: allNodePools,
+          type: types.CLUSTER_NODEPOOLS_LOAD_SUCCESS,
+          clusterId,
+          nodePools: nodePoolsArray, // nodePools
+          nodePoolsIds: nodePoolsArray.map(np => np.id), // array of ids to store in cluster
         });
+
+        return nodePoolsArray;
       })
       .catch(error => {
         // eslint-disable-next-line no-console
         console.error('Error loading cluster node pools:', error);
 
         dispatch({
-          type: types.NODEPOOLS_LOAD_ERROR,
+          type: types.CLUSTER_NODEPOOLS_LOAD_ERROR,
           error,
         });
 
@@ -96,9 +44,23 @@ export function nodePoolsLoad() {
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
         );
-
-        throw error;
       });
+  };
+}
+
+// Loads all node pools for all v5 clusters in store.
+export function nodePoolsLoad() {
+  return async function(dispatch, getState) {
+    dispatch({ type: types.NODEPOOLS_LOAD_REQUEST });
+
+    const v5ClustersId = getState().entities.clusters.v5Clusters || [];
+    if (v5ClustersId.length > 0) {
+      await Promise.all(
+        v5ClustersId.map(clusterId => dispatch(clusterNodePoolsLoad(clusterId)))
+      );
+    }
+
+    dispatch({ type: types.NODEPOOLS_LOAD_FINISHED });
   };
 }
 
@@ -113,12 +75,14 @@ export function nodePoolsLoad() {
  */
 export function nodePoolPatch(clusterId, nodePool, payload) {
   return function(dispatch) {
+    // eslint-disable-next-line no-use-before-define
     dispatch(nodePoolPatchAction(nodePool, payload));
 
     return nodePoolsApi
       .modifyNodePool(clusterId, nodePool.id, payload)
       .catch(error => {
         // Undo update to store if the API call fails.
+        // eslint-disable-next-line no-use-before-define
         dispatch(nodePoolPatchError(error, nodePool));
 
         new FlashMessage(
@@ -153,6 +117,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
     return nodePoolsApi
       .deleteNodePool(clusterId, nodePool.id)
       .then(() => {
+        // eslint-disable-next-line no-use-before-define
         dispatch(nodePoolDeleteSuccess(nodePool.id, clusterId));
 
         dispatch(modalHide());
@@ -176,6 +141,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
         // eslint-disable-next-line no-console
         console.error(error);
 
+        // eslint-disable-next-line no-use-before-define
         return dispatch(nodePoolDeleteError(nodePool.id, error));
       });
   };
@@ -197,10 +163,10 @@ export function nodePoolsCreate(clusterId, nodePools) {
       nodePools.map(nodePool => {
         return nodePoolsApi
           .addNodePool(clusterId, nodePool)
-          .then(pool => {
+          .then(newNodePool => {
             // When created no status in the response
             const nodePoolWithStatus = {
-              ...pool,
+              ...newNodePool,
               status: { nodes_ready: 0, nodes: 0 },
             };
 
@@ -242,8 +208,39 @@ export function nodePoolsCreate(clusterId, nodePools) {
     );
 
     // Dispatch action for populating nodePools key inside clusters
-    dispatch(nodePoolsLoad());
+    // dispatch(nodePoolsLoad());
 
     return allNodePools;
   };
 }
+
+// Actions
+const nodePoolPatchAction = (nodePool, payload) => ({
+  type: types.NODEPOOL_PATCH,
+  nodePool,
+  payload,
+});
+
+const nodePoolPatchError = (error, nodePool) => ({
+  type: types.NODEPOOL_PATCH_ERROR,
+  error,
+  nodePool,
+});
+
+export const nodePoolDelete = (clusterId, nodePool) => ({
+  type: types.NODEPOOL_DELETE,
+  clusterId,
+  nodePool,
+});
+
+const nodePoolDeleteSuccess = (nodePoolId, clusterId) => ({
+  type: types.NODEPOOL_DELETE_SUCCESS,
+  nodePoolId,
+  clusterId,
+});
+
+const nodePoolDeleteError = (nodePoolId, error) => ({
+  type: types.NODEPOOL_DELETE_ERROR,
+  nodePoolId,
+  error,
+});

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
-import { clusterCreate } from 'actions/clusterActions';
+import { batchedClusterCreate } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -214,44 +213,22 @@ class CreateRegularCluster extends React.Component {
       workers.push(firstWorker);
     }
 
-    this.props
-      .dispatch(
-        clusterCreate({
-          availability_zones: this.state.availabilityZonesPicker.value,
-          scaling: {
-            min: this.state.scaling.min,
-            max: this.state.scaling.max,
-          },
-          name:
-            this.state.clusterName === ''
-              ? 'Unnamed cluster'
-              : this.state.clusterName,
-          owner: this.props.selectedOrganization,
-          release_version: this.props.selectedRelease,
-          workers: workers,
-        })
-      )
-      .then(cluster => {
-        // after successful creation, redirect to cluster details
-        this.props.dispatch(
-          push(
-            `/organizations/${this.props.selectedOrganization}/clusters/${cluster.id}`
-          )
-        );
+    this.props.dispatch(
+      batchedClusterCreate({
+        availability_zones: this.state.availabilityZonesPicker.value,
+        scaling: {
+          min: this.state.scaling.min,
+          max: this.state.scaling.max,
+        },
+        name:
+          this.state.clusterName === ''
+            ? 'Unnamed cluster'
+            : this.state.clusterName,
+        owner: this.props.selectedOrganization,
+        release_version: this.props.selectedRelease,
+        workers: workers,
       })
-      .catch(error => {
-        let errorMessage = '';
-
-        if (error.body && error.body.message) {
-          errorMessage = error.body.message;
-        }
-
-        this.setState({
-          submitting: false,
-          error: error,
-          errorMessage: errorMessage,
-        });
-      });
+    );
   };
 
   selectRelease = releaseVersion => {
