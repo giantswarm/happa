@@ -243,8 +243,8 @@ class ExpiryHoursPicker extends React.Component {
           <DatePicker
             dateFormat='yyyy-MM-dd'
             dropdownMode='select'
-            // eslint-disable-next-line no-magic-numbers
             maxDate={moment()
+              // eslint-disable-next-line no-magic-numbers
               .add(30, 'years')
               .toDate()}
             minDate={moment()
