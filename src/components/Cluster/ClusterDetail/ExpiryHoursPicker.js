@@ -244,8 +244,12 @@ class ExpiryHoursPicker extends React.Component {
             dateFormat='yyyy-MM-dd'
             dropdownMode='select'
             // eslint-disable-next-line no-magic-numbers
-            maxDate={moment().add(30, 'years').toDate()}
-            minDate={moment().add(1, 'day').toDate()}
+            maxDate={moment()
+              .add(30, 'years')
+              .toDate()}
+            minDate={moment()
+              .add(1, 'day')
+              .toDate()}
             onChange={this.handleDateChange.bind(this)}
             selected={this.state.expireDate.toDate()}
             showMonthDropdown
