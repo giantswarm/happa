@@ -1,6 +1,7 @@
-import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import GiantSwarm from 'giantswarm';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+
+import * as types from './actionTypes';
 import { modalHide } from './modalActions';
 
 // API instantiations.

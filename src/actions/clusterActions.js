@@ -1,10 +1,11 @@
-import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { Providers, StatusCodes } from 'shared/constants';
-import GiantSwarm from 'giantswarm';
-import cmp from 'semver-compare';
-import moment from 'moment';
 import { push } from 'connected-react-router';
+import GiantSwarm from 'giantswarm';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import moment from 'moment';
+import cmp from 'semver-compare';
+import { Providers, StatusCodes } from 'shared/constants';
+
+import * as types from './actionTypes';
 
 // API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();

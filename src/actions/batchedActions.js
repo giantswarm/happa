@@ -1,3 +1,5 @@
+import { push } from 'connected-react-router';
+
 import * as appActions from './appActions';
 import * as catalogActions from './catalogActions';
 import * as clusterActions from './clusterActions';
@@ -6,7 +8,6 @@ import * as nodePoolActions from './nodePoolActions';
 import * as organizationActions from './organizationActions';
 import * as releaseActions from './releaseActions';
 import * as userActions from './userActions';
-import { push } from 'connected-react-router';
 
 export const batchedLayout = () => async dispatch => {
   try {
