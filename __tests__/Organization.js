@@ -221,15 +221,15 @@ it('shows the organization deletion modal when requested and organization deleti
 it('shows organization details correctly', async () => {
   getMockCall('/v4/organizations/', orgsResponse);
   const {
+    findByText,
     getByText,
     getByTestId,
     queryByTestId,
     getByTitle,
   } = renderRouteWithStore(`${BASE_ROUTE}/${orgResponse.id}`);
 
-  await wait(() => {
-    expect(getByText(`Organization: ${orgResponse.id}`)).toBeInTheDocument();
-  });
+  const pageTitle = await findByText(`Organization: ${orgResponse.id}`);
+  expect(pageTitle).toBeInTheDocument();
 
   // id column in clusters table
   expect(
