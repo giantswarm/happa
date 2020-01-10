@@ -52,11 +52,7 @@ class Layout extends React.Component {
   render() {
     return (
       <DocumentTitle>
-        <LoadingOverlay
-          loading={
-            this.props.loadingClustersList || this.props.loadingNodePools
-          }
-        >
+        <LoadingOverlay loading={this.props.loadingClustersList}>
           <Modals />
           <Navigation
             onSelectOrganization={this.selectOrganization}
@@ -101,8 +97,6 @@ Layout.propTypes = {
   actions: PropTypes.object,
   catalogs: PropTypes.object,
   loadingClustersList: PropTypes.bool,
-  // loadingClustersDetails: PropTypes.bool,
-  loadingNodePools: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
@@ -111,8 +105,6 @@ function mapStateToProps(state) {
     user: state.app.loggedInUser,
     selectedOrganization: state.app.selectedOrganization,
     loadingClustersList: state.loadingFlags.CLUSTERS_LIST,
-    // loadingClustersDetails: state.loadingFlags.CLUSTERS_DETAILS,
-    loadingNodePools: state.loadingFlags.NODEPOOLS_LOAD,
     catalogs: state.entities.catalogs,
   };
 }

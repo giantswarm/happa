@@ -240,11 +240,12 @@ class ClusterDetailView extends React.Component {
       targetRelease,
       region,
       loadingCluster,
+      loadingNodePools,
     } = this.props;
 
     return (
       <>
-        <LoadingOverlay loading={loadingCluster} />
+        <LoadingOverlay loading={loadingCluster || loadingNodePools} />
 
         {!loadingCluster && (
           <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
@@ -393,11 +394,13 @@ ClusterDetailView.propTypes = {
   targetRelease: PropTypes.object,
   user: PropTypes.object,
   loadingCluster: PropTypes.bool,
+  loadingNodePools: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
   return {
     loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
+    loadingNodePools: state.loadingFlags.NODEPOOLS_LOAD,
   };
 }
 
