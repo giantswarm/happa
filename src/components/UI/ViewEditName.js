@@ -82,7 +82,10 @@ class ViewAndEditName extends React.Component {
   componentDidUpdate(prevProps) {
     const { name } = this.props.entity;
     if (prevProps.entity.name !== name) {
-      this.setState({ name, inputFieldValue: name });
+      this.setState({
+        name: truncate(prevProps.entity.name, MAX_NAME_LENGTH),
+        inputFieldValue: name,
+      });
     }
   }
 
