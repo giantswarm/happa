@@ -74,23 +74,29 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('lets me open and close the keypair create modal', async () => {
-  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, {});
+  // Given the app is on the cluster detail page.
+  const { findByText, getByText, queryByTestId } = renderRouteWithStore(ROUTE, {});
 
-  await wait(() => {
-    expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
-  });
+  // And it is done loading.
+  const clusterName = await findByText(V5_CLUSTER.name);
+  expect(clusterName).toBeInTheDocument();
 
+  // When I click the Key Pairs tab button.
   const keyPairTab = getByText('Key Pairs');
   fireEvent.click(keyPairTab);
 
+  // And I click the create key pair button.
   const createKeyPairButton = getByText('Create Key Pair and Kubeconfig');
   fireEvent.click(createKeyPairButton);
 
+  // Then I should see the create key pair modal on the screen.
+  const modal = await queryByTestId('create-key-pair-modal');
+  expect(modal).toBeInTheDocument();
+
+  // And when I click the cancel button.
   const cancelButton = getByText('Cancel');
   fireEvent.click(cancelButton);
 
-  await wait(() => {
-    const expectedText = 'No key pairs yet. Why don\'t you create your first?';
-    expect(queryByTestId('create-key-pair-modal')).not.toBeInTheDocument();q
-  });
+  // Then the modal should be gone.
+  expect(modal).not.toBeInTheDocument();
 });
