@@ -189,8 +189,8 @@ it('shows the organization deletion modal when requested and organization deleti
     expect(
       getByText(
         (_, element) =>
-          element.innerHTML ===
-          `Are you sure you want to delete <code>${organizationToDeleteId}</code>?`
+          element.textContent ===
+          `Are you sure you want to delete ${organizationToDeleteId}?`
       )
     ).toBeInTheDocument();
     expect(getByText('There is no undo')).toBeInTheDocument();
@@ -216,4 +216,45 @@ it('shows the organization deletion modal when requested and organization deleti
       queryByTestId(`${organizationToDeleteId}-name`)
     ).not.toBeInTheDocument();
   });
+});
+
+it('shows organization details correctly', async () => {
+  getMockCall('/v4/organizations/', orgsResponse);
+  const {
+    getByText,
+    getByTestId,
+    queryByTestId,
+    getByTitle,
+  } = renderRouteWithStore(`${BASE_ROUTE}/${orgResponse.id}`);
+
+  await wait(() => {
+    expect(getByText(`Organization: ${orgResponse.id}`)).toBeInTheDocument();
+  });
+
+  // id column in clusters table
+  expect(
+    getByTitle(`Unique Cluster ID: ${v4AWSClusterResponse.id}`)
+  ).toBeInTheDocument();
+
+  // name cloumn in clusters table
+  expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
+
+  // release column in clusters table
+  expect(getByText(V4_CLUSTER.releaseVersion)).toBeInTheDocument();
+
+  // users
+  const usersTable = getByTestId('org-detail-users-wrapper');
+  expect(usersTable.querySelector('tbody > tr > td').textContent).toBe(
+    orgResponse.members[0].email
+  );
+
+  await wait(() => {
+    expect(queryByTestId('Loading credentials')).not.toBeInTheDocument();
+  });
+
+  expect(
+    getByText(
+      'No credentials set. Clusters of this organization will be created in the default tenant cluster account of this installation.'
+    )
+  ).toBeInTheDocument();
 });
