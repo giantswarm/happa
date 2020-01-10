@@ -55,6 +55,7 @@ jobs:
           if [ "$(nvm version-remote v12)" != "$NODE_VERSION" ]
           then
             echo "Please upgrade the NODE_VERSION variable to $(nvm version-remote v12)"
+            exit 1
           fi
 
           nvm install "$NODE_VERSION"
