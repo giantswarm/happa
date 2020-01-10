@@ -190,6 +190,50 @@ describe('Organizations basic', () => {
       )
     ).toBeInTheDocument();
   });
+
+  it('allows to add an user to an organization', async () => {
+    const newMemberEmail = `${generateRandomString()}@giantswarm.io`;
+    const patchOrganizationRequest = nock(API_ENDPOINT)
+      .intercept(`/v4/organizations/${orgResponse.id}/`, 'PATCH')
+      .reply(StatusCodes.Ok, {
+        code: 'RESOURCE_UPDATED',
+        message: `The organization with ID ${orgResponse.id} has been updated.`,
+      });
+
+    const {
+      findByText,
+      getByText,
+      findByLabelText,
+    } = renderRouteWithStore(`${BASE_ROUTE}/${orgResponse.id}`);
+
+    const addMemberButton = await findByText('Add Member');
+    expect(addMemberButton).toBeInTheDocument();
+
+    fireEvent.click(addMemberButton);
+
+    const newMemberEmailField = await findByLabelText('Email:');
+    expect(newMemberEmailField).toBeInTheDocument();
+
+    fireEvent.change(newMemberEmailField, {
+      target: { value: newMemberEmail },
+    });
+
+    fireEvent.click(await findByText('Add Member to Organization'));
+
+    getMockCall('/v4/organizations/', orgsResponse);
+
+    await wait(() => {
+      expect(
+        getByText(
+          (_, element) =>
+            element.innerHTML ===
+            `Added <code>${newMemberEmail}</code> to organization <code>${orgResponse.id}</code>`
+        )
+      ).toBeInTheDocument();
+    });
+
+    patchOrganizationRequest.done();
+  });
 });
 
 describe('Organization deletion', () => {
