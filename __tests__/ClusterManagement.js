@@ -110,8 +110,8 @@ it('creates a v5 cluster and redirect to details view', async () => {
 
   // Expect we have been redirected to the cluster details view
   expect(getByTestId('cluster-details-view')).toBeInTheDocument();
-  expect(getAllByText(v5ClusterResponse.id)[0]).toBeInTheDocument();
-  expect(getByText(nodePoolCreationResponse.id)).toBeInTheDocument();
+  expect(getAllByText(v5ClusterResponse.id));
+  expect(getAllByText(nodePoolCreationResponse.id));
 
   v5ClusterCreationRequest.done();
   nodePoolCreationRequest.done();

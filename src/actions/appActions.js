@@ -18,12 +18,12 @@ export function loadApps(clusterId) {
   return function(dispatch, getState) {
     const appsApi = new GiantSwarm.AppsApi();
 
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
+    const v5Clusters = getState().entities.clusters.v5Clusters || [];
+    const isV5Cluster = v5Clusters.includes(clusterId);
 
     let getClusterApps = appsApi.getClusterAppsV4.bind(appsApi);
 
-    if (isNodePoolsCluster) {
+    if (isV5Cluster) {
       getClusterApps = appsApi.getClusterAppsV5.bind(appsApi);
     }
 
@@ -92,15 +92,15 @@ export function installApp(app, clusterID) {
     const appsApi = new GiantSwarm.AppsApi();
     const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterID);
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterID);
 
     let createAppConfiguration = appConfigsApi.createClusterAppConfigV4.bind(
       appConfigsApi
     );
     let createApp = appsApi.createClusterAppV4.bind(appsApi);
 
-    if (isNodePoolsCluster) {
+    if (isV5Cluster) {
       createAppConfiguration = appConfigsApi.createClusterAppConfigV5.bind(
         appConfigsApi
       );
@@ -224,12 +224,12 @@ export function deleteApp(appName, clusterID) {
 
     const appsApi = new GiantSwarm.AppsApi();
 
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterID);
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterID);
 
     let removeApp = appsApi.deleteClusterAppV4.bind(appsApi);
 
-    if (isNodePoolsCluster) {
+    if (isV5Cluster) {
       removeApp = appsApi.deleteClusterAppV5.bind(appsApi);
     }
 

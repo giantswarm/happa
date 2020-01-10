@@ -25,7 +25,8 @@ export function loadReleases() {
         }, {});
 
         const activeSortedReleases = Object.keys(releases)
-          .filter(release => releases[release].active)
+          // TODO remove second condition
+          .filter(release => releases[release].active || release === '10.0.0')
           .sort(cmp)
           .reverse();
 

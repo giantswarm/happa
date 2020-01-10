@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
-import * as appActions from 'actions/appActions';
+import {
+  batchedClusterDetailView,
+  refreshClusterDetailView,
+} from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
-import { organizationCredentialsLoad } from 'actions/organizationActions';
 import * as releaseActions from 'actions/releaseActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
@@ -62,21 +64,14 @@ class ClusterDetailView extends React.Component {
 
   registerRefreshInterval = () => {
     this.loadDataInterval = this.props.setInterval(
-      this.loadDetails,
+      this.refreshClusterData,
       // eslint-disable-next-line no-magic-numbers
       30 * 1000 // 30 seconds
     );
   };
 
   loadDetails = () => {
-    const {
-      cluster,
-      clusterId,
-      clusterActions: clusterActionsController,
-      organizationId,
-      dispatch,
-      releaseActions: releaseActionsController,
-    } = this.props;
+    const { cluster, clusterId, organizationId, dispatch } = this.props;
 
     if (typeof cluster === 'undefined') {
       dispatch(push(`/organizations/${organizationId}`));
@@ -91,27 +86,22 @@ class ClusterDetailView extends React.Component {
       return;
     }
 
-    dispatch(organizationCredentialsLoad(organizationId));
-
-    // TODO This probably should go to action creators where this logic belongs (?)
-    releaseActionsController
-      .loadReleases()
-      .then(() => {
-        return clusterActionsController.clusterLoadDetails(cluster.id);
-      })
-      .then(() => {
-        return this.props.dispatch(appActions.loadApps(cluster.id));
-      })
-      .catch(error => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-      });
-
-    this.props.dispatch(nodePoolActions.nodePoolsLoad());
+    dispatch(
+      batchedClusterDetailView(
+        organizationId,
+        cluster.id,
+        this.props.isNodePoolsCluster
+      )
+    );
   };
 
   refreshClusterData = () => {
-    this.loadDetails();
+    this.props.dispatch(
+      refreshClusterDetailView(
+        this.props.cluster.id,
+        this.props.isNodePoolsCluster
+      )
+    );
   };
 
   handleVisibilityChange = () => {
@@ -249,14 +239,15 @@ class ClusterDetailView extends React.Component {
       release,
       targetRelease,
       region,
-      loading,
+      loadingCluster,
+      loadingNodePools,
     } = this.props;
 
     return (
       <>
-        <LoadingOverlay loading={loading} />
+        <LoadingOverlay loading={loadingCluster || loadingNodePools} />
 
-        {!loading && (
+        {!loadingCluster && (
           <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
             <WrapperDiv
               className='cluster-details'
@@ -271,17 +262,6 @@ class ClusterDetailView extends React.Component {
                       entityType='cluster'
                       onSubmit={this.editClusterName}
                     />{' '}
-                    {/* TODO Remove this */}
-                    {loading ? (
-                      <img
-                        className='loader'
-                        height='25px'
-                        src='/images/loader_oval_light.svg'
-                        width='25px'
-                      />
-                    ) : (
-                      ''
-                    )}
                   </h1>
                 </div>
               </div>
@@ -341,7 +321,9 @@ class ClusterDetailView extends React.Component {
                       </div>
                     </Tab>
                     <Tab eventKey={2} title='Key Pairs'>
-                      <KeyPairs cluster={cluster} />
+                      <LoadingOverlay loading={this.props.loadingCluster}>
+                        <KeyPairs cluster={cluster} />
+                      </LoadingOverlay>
                     </Tab>
                     <Tab eventKey={3} title='Apps'>
                       <ClusterApps
@@ -411,16 +393,14 @@ ClusterDetailView.propTypes = {
   setInterval: PropTypes.func,
   targetRelease: PropTypes.object,
   user: PropTypes.object,
-  loading: PropTypes.bool,
+  loadingCluster: PropTypes.bool,
+  loadingNodePools: PropTypes.bool,
 };
 
-function mapStateToProps(state, ownProps) {
-  const { releases, clusters } = state.entities;
-  const loading =
-    releases.isFetching || clusters.isFetching || !ownProps.cluster;
-
+function mapStateToProps(state) {
   return {
-    loading,
+    loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
+    loadingNodePools: state.loadingFlags.NODEPOOLS_LOAD,
   };
 }
 

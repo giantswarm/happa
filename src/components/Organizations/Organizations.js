@@ -3,6 +3,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import LoadingOverlay from 'UI/LoadingOverlay';
 
 import Detail from './Detail/Detail';
 import List from './List/List';
@@ -12,11 +13,13 @@ const Organizations = props => {
 
   return (
     <Breadcrumb data={{ title: 'ORGANIZATIONS', pathname: url }}>
-      <Switch>
-        <Route component={List} exact path={`${path}`} />
-        <Route component={Detail} path={`${path}/:orgId`} />
-        <Redirect path={`${path}*`} to={`${url}`} />
-      </Switch>
+      <LoadingOverlay loading={props.loadingClustersDetails}>
+        <Switch>
+          <Route component={List} exact path={`${path}`} />
+          <Route component={Detail} path={`${path}/:orgId`} />
+          <Redirect path={`${path}*`} to={`${url}`} />
+        </Switch>
+      </LoadingOverlay>
     </Breadcrumb>
   );
 };
@@ -24,6 +27,15 @@ const Organizations = props => {
 Organizations.propTypes = {
   dispatch: PropTypes.func,
   match: PropTypes.object,
+  loadingClustersDetails: PropTypes.bool,
 };
 
-export default connect()(Organizations);
+function mapStateToProps(state) {
+  const loadingClustersDetails = state.loadingFlags.CLUSTERS_DETAILS;
+
+  return {
+    loadingClustersDetails,
+  };
+}
+
+export default connect(mapStateToProps)(Organizations);

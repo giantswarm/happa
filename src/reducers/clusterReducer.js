@@ -23,12 +23,23 @@ const initialState = {
   lastUpdated: null,
   isFetching: false,
   items: {},
-  nodePoolsClusters: [],
+  v5Clusters: [],
 };
 
 // eslint-disable-next-line complexity
 const clusterReducer = produce((draft, action) => {
   switch (action.type) {
+    case types.CLUSTERS_LIST_SUCCESS:
+      draft.items = action.clusters;
+      draft.v5Clusters = action.v5ClusterIds;
+
+      return;
+
+    case types.CLUSTERS_LIST_ERROR:
+      draft.errorLoading = true;
+
+      return;
+
     case types.CLUSTERS_LOAD_SUCCESS:
       Object.keys(action.v4Clusters).forEach(clusterId => {
         const withAwsKeys = ensureWorkersHaveAWSkey(
@@ -43,7 +54,7 @@ const clusterReducer = produce((draft, action) => {
         draft.items[clusterId] = action.v5Clusters[clusterId];
       });
       draft.lastUpdated = action.lastUpdated;
-      draft.nodePoolsClusters = action.nodePoolsClusters;
+      draft.v5Clusters = action.v5Clusters;
 
       return;
 
@@ -76,6 +87,11 @@ const clusterReducer = produce((draft, action) => {
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].errorLoading = true;
       }
+
+      return;
+
+    case types.CLUSTER_NODEPOOLS_LOAD_SUCCESS:
+      draft.items[action.clusterId].nodePools = action.nodePoolsIds;
 
       return;
 
@@ -160,7 +176,7 @@ const clusterReducer = produce((draft, action) => {
       return;
 
     case types.V5_CLUSTER_CREATE_SUCCESS:
-      draft.nodePoolsClusters.push(action.clusterId);
+      draft.v5Clusters.push(action.clusterId);
 
       return;
 
@@ -184,6 +200,11 @@ const clusterReducer = produce((draft, action) => {
       if (draft.items[action.cluster.id]) {
         draft.items[action.cluster.id] = action.cluster;
       }
+
+      return;
+
+    case types.NODEPOOL_CREATE_SUCCESS:
+      draft.items[action.clusterId].nodePools.push(action.nodePool.id);
 
       return;
 
