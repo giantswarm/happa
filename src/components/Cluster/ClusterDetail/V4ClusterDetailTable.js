@@ -48,6 +48,17 @@ class V4ClusterDetailTable extends React.Component {
       ? JSON.parse(window.config.azureCapabilitiesJSON)
       : {};
 
+    this.setState({ awsInstanceTypes, azureVMSizes });
+    this.produceRAMAndCPUs();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.cluster !== this.props.cluster) {
+      this.produceRAMAndCPUs();
+    }
+  }
+
+  produceRAMAndCPUs = () => {
     const { cluster } = this.props;
     const memory = getMemoryTotal(cluster);
     const RAM = !memory ? 0 : memory;
@@ -55,8 +66,8 @@ class V4ClusterDetailTable extends React.Component {
     const cores = getCpusTotal(cluster);
     const CPUs = !cores ? 0 : cores;
 
-    this.setState({ awsInstanceTypes, azureVMSizes, RAM, CPUs });
-  }
+    this.setState({ RAM, CPUs });
+  };
 
   /**
    * Returns the proper last updated info string based on available
