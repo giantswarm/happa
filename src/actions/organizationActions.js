@@ -92,6 +92,7 @@ export function organizationsLoad() {
           );
         })
       );
+
       const organizationsAsMap = organizationsWithDetails.reduce(
         (orgAcc, currentOrg) => {
           orgAcc[currentOrg.id] = currentOrg;
@@ -157,7 +158,7 @@ async function updateOrganizationDetailsForID(
     organizationInfo,
     {
       members: sortedMembers,
-      credentials: organizationCredentials,
+      credentials: Array.from(organizationCredentials),
     }
   );
 
@@ -428,7 +429,7 @@ export function organizationCredentialsLoad(orgId) {
       .then(credentials => {
         dispatch({
           type: types.ORGANIZATION_CREDENTIALS_LOAD_SUCCESS,
-          credentials: credentials,
+          credentials: Array.from(credentials),
         });
       })
       .catch(error => {
