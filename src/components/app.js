@@ -57,6 +57,12 @@ if (window.config.environment !== 'development') {
   // that we can authenticate against our API endpoint.
   airbrake._url = `${window.config.apiEndpoint}/v5/exception-notifications/`;
   airbrake._requester = new Requester(store).request;
+
+  // set up a filter for reporting addtional information (happa version)
+  airbrake.addFilter(notice => ({
+    ...notice,
+    context: { version: window.config.happaVersion },
+  }));
 }
 
 // Scroll to the top when we change the URL.
