@@ -13,6 +13,7 @@ import {
   v4AWSClusterStatusResponse,
   appsResponse,
   V4_CLUSTER,
+  V5_CLUSTER,
   v4ClustersResponse,
   v4AWSClusterResponse,
   v5ClusterResponse,
@@ -40,6 +41,13 @@ beforeAll(() => {
     orgResponse
   );
   requests.clusters = getPersistedMockCall('/v4/clusters/');
+  requests.apps = getPersistedMockCall(
+    `/v5/clusters/${V5_CLUSTER.id}/apps/`,
+    appsResponse
+  );
+  requests.keyPairs = getPersistedMockCall(
+    `/v4/clusters/${V5_CLUSTER.id}/key-pairs/`
+  );
   requests.credentials = getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/credentials/`
   );

@@ -353,13 +353,7 @@ export function clusterDeleteConfirmed(cluster) {
  * @param {String} clusterId Cluster ID
  */
 export function clusterLoadKeyPairs(clusterId) {
-  return function(dispatch, getState) {
-    // This method is going to work for NP clusters, now in local dev it is not
-    // working, so early return if the cluster is a NP one.
-    const v5Clusters = getState().entities.clusters.v5Clusters;
-    const isV5Cluster = v5Clusters.includes(clusterId);
-    if (isV5Cluster) return Promise.resolve([]);
-
+  return function(dispatch) {
     const keypairsApi = new GiantSwarm.KeyPairsApi();
 
     dispatch({
