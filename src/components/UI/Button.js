@@ -23,10 +23,20 @@ import LoadingIndicator from './LoadingIndicator';
 //
 
 const Button = props => {
-  const { loadingPosition, loading } = props;
+  const {
+    loadingPosition,
+    loading,
+    disabled,
+    bsStyle,
+    bsSize,
+    onClick,
+    type,
+    children,
+    ...rest
+  } = props;
 
   return (
-    <div className='progress_button--container'>
+    <div className='progress_button--container' {...rest}>
       {loadingPosition === 'left' ? (
         <LoadingIndicator loading={loading} loadingPosition={loadingPosition} />
       ) : (
@@ -34,13 +44,13 @@ const Button = props => {
       )}
 
       <BsButton
-        bsSize={props.bsSize}
-        bsStyle={props.bsStyle}
-        disabled={props.disabled || props.loading}
-        onClick={props.onClick}
-        type={props.type}
+        bsSize={bsSize}
+        bsStyle={bsStyle}
+        disabled={disabled || loading}
+        onClick={onClick}
+        type={type}
       >
-        {props.children}
+        {children}
       </BsButton>
 
       {loadingPosition === 'right' ? (

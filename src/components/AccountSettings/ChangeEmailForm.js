@@ -139,7 +139,6 @@ class ChangeEmailForm extends React.Component {
                 bsStyle='primary'
                 disabled={!this.state.isValid}
                 loading={this.state.isSubmitting}
-                loadingMessage='Saving...'
                 type='submit'
               >
                 Set New Email
