@@ -1,8 +1,8 @@
 import { fireEvent, wait } from '@testing-library/react';
 import { Base64 } from 'js-base64';
+import { StatusCodes } from 'shared/constants';
 import { postPayloadMockCall, USER_EMAIL } from 'testUtils/mockHttpCalls';
 import { renderWithTheme } from 'testUtils/renderUtils';
-import { StatusCodes } from 'shared/constants';
 
 import ChangePasswordForm from '../ChangePasswordForm';
 
