@@ -59,7 +59,7 @@ export const batchedClusterCreate = (
       clusterActions.clusterCreate(cluster, isV5Cluster)
     );
 
-    // TODO We can avoid this call by computing capabilities in the call above abd storing the cluster
+    // TODO We can avoid this call by computing capabilities in the call above and storing the cluster
     await dispatch(clusterActions.clusterLoadDetails(clusterId));
 
     if (isV5Cluster) {
@@ -77,7 +77,8 @@ export const batchedClusterCreate = (
 
 export const batchedClusterDetailView = (
   organizationId,
-  clusterId
+  clusterId,
+  isV5Cluster
 ) => async dispatch => {
   try {
     await dispatch(
@@ -85,10 +86,10 @@ export const batchedClusterDetailView = (
     );
 
     await dispatch(releaseActions.loadReleases());
-    // await dispatch(clusterActions.clusterLoadDetails(clusterId));
-    // if (isV5Cluster) {
-    //   await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId));
-    // }
+    await dispatch(clusterActions.clusterLoadDetails(clusterId));
+    if (isV5Cluster) {
+      await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId));
+    }
     await dispatch(appActions.loadApps(clusterId));
   } catch (err) {
     // eslint-disable-next-line no-console
