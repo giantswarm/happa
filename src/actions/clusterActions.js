@@ -115,36 +115,6 @@ export function clustersDetails({
   };
 }
 
-function clusterDetailsV5(dispatch, getState, cluster) {
-  return clustersApi
-    .getClusterV5(cluster.id)
-    .then(clusterDetails => {
-      clusterDetails.capabilities = computeCapabilities(
-        clusterDetails,
-        getState().app.info.general.provider
-      );
-
-      return clusterDetails;
-    })
-    .catch(error => {
-      if (error.status === StatusCodes.NotFound) {
-        new FlashMessage(
-          'This cluster no longer exists.',
-          messageType.INFO,
-          messageTTL.MEDIUM,
-          'Redirecting you to your organization clusters list'
-        );
-
-        dispatch(clusterDeleteSuccess(cluster.id));
-        dispatch(push('/'));
-      } else {
-        // eslint-disable-next-line no-console
-        console.error('Error loading cluster details:', error);
-        dispatch(clusterLoadDetailsError(cluster.id, error));
-      }
-    });
-}
-
 /**
  * Loads apps for a cluster.
  *
@@ -162,7 +132,8 @@ export function clusterLoadApps(clusterId) {
         clusterId,
         apps: [],
       });
-      return;
+
+      return Promise.resolve([]);
     }
 
     dispatch({
@@ -170,7 +141,7 @@ export function clusterLoadApps(clusterId) {
       clusterId,
     });
 
-    var appsApi = new GiantSwarm.AppsApi();
+    const appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
       .getClusterApps(clusterId)
@@ -189,7 +160,6 @@ export function clusterLoadApps(clusterId) {
         return apps;
       })
       .catch(error => {
-        console.error('Error loading cluster apps:', error);
         dispatch({
           type: types.CLUSTER_LOAD_APPS_ERROR,
           clusterId,
@@ -333,13 +303,13 @@ function createAppSecret(app, clusterID) {
  * @param {object} error The error that occured.
  */
 function showAppConfigErrorFlashMessages(thing, app, clusterID, error) {
-  if (error.status === 409) {
+  if (error.status === StatusCodes.Conflict) {
     new FlashMessage(
       `The ${thing} for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
       messageType.ERROR,
       messageTTL.LONG
     );
-  } else if (error.status === 400) {
+  } else if (error.status === StatusCodes.BadRequest) {
     new FlashMessage(
       `Your ${thing} appears to be invalid. Please make sure all fields are filled in correctly.`,
       messageType.ERROR,
@@ -362,13 +332,13 @@ function showAppConfigErrorFlashMessages(thing, app, clusterID, error) {
  * @param {object} error The error that occured.
  */
 function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
-  if (error.status === 409) {
+  if (error.status === StatusCodes.Conflict) {
     new FlashMessage(
       `An app called <code>${appName}</code> already exists on cluster <code>${clusterID}</code>`,
       messageType.ERROR,
       messageTTL.LONG
     );
-  } else if (error.status === 400) {
+  } else if (error.status === StatusCodes.BadRequest) {
     new FlashMessage(
       `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
       messageType.ERROR,
@@ -398,7 +368,7 @@ export function clusterDeleteApp(appName, clusterID) {
       appName,
     });
 
-    var appsApi = new GiantSwarm.AppsApi();
+    const appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
       .deleteClusterApp(clusterID, appName)
