@@ -10,7 +10,7 @@ import {
   AWSInfoResponse,
   generateRandomString,
   getMockCall,
-  getPersistedMockCall,
+  getMockCallTimes,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -25,11 +25,19 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 const BASE_ROUTE = '/organizations';
 
+beforeAll(() => {
+  nock.disableNetConnect();
+});
+
+afterAll(() => {
+  nock.enableNetConnect();
+});
+
 // Responses to requests
 beforeEach(() => {
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/info/', AWSInfoResponse);
-  getPersistedMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
   getMockCall('/v4/clusters/', v4ClustersResponse);
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
   getMockCall(
@@ -39,7 +47,7 @@ beforeEach(() => {
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
   // Empty response
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
-  getPersistedMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
   getMockCall('/v4/releases/', releasesResponse);
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 });
@@ -50,12 +58,10 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-describe('Organizations basic', () => {
-  beforeEach(() => {
-    getMockCall('/v4/organizations/', orgsResponse);
-  });
-
+describe('Navigation', () => {
   it('navigation has selected the right page when in organization list route', async () => {
+    getMockCall('/v4/organizations/', orgsResponse);
+
     const { getByText } = renderRouteWithStore(BASE_ROUTE);
 
     await wait(() => {
@@ -69,6 +75,15 @@ describe('Organizations basic', () => {
         )
       ).toBeInTheDocument();
     });
+
+    // abort any pending requests
+    nock.abortPendingRequests();
+  });
+});
+
+describe('Organizations basic', () => {
+  beforeEach(() => {
+    getMockCall('/v4/organizations/', orgsResponse);
   });
 
   it('correctly renders the organizations list', async () => {
@@ -96,9 +111,20 @@ describe('Organizations basic', () => {
 
   it('shows the organization creation modal when requested and organization creation success flash', async () => {
     const newOrganizationId = generateRandomString();
+
     const newOrganizationPutRequest = nock(API_ENDPOINT)
       .intercept(`/v4/organizations/${newOrganizationId}/`, 'PUT')
       .reply(StatusCodes.Created, { id: newOrganizationId, members: null });
+    const updatedOrganizationsRequest = getMockCall('/v4/organizations/', [
+      ...orgsResponse,
+      { id: newOrganizationId },
+    ]);
+    getMockCall(`/v4/organizations/${newOrganizationId}/`, {
+      id: newOrganizationId,
+      members: [],
+      credentials: null,
+    });
+    getMockCall(`/v4/organizations/${newOrganizationId}/credentials/`);
 
     const { getByText, getByLabelText, getByTestId } = renderRouteWithStore(
       BASE_ROUTE
@@ -123,17 +149,6 @@ describe('Organizations basic', () => {
     fireEvent.click(getByText('Create Organization'));
 
     newOrganizationPutRequest.done();
-    getMockCall(`/v4/organizations/${newOrganizationId}/`, {
-      id: newOrganizationId,
-      members: [],
-      credentials: null,
-    });
-    getMockCall(`/v4/organizations/${newOrganizationId}/credentials/`);
-
-    const updatedOrganizationsRequest = getMockCall('/v4/organizations/', [
-      ...orgsResponse,
-      { id: newOrganizationId },
-    ]);
 
     await wait(() => {
       expect(
@@ -192,7 +207,9 @@ describe('Organizations basic', () => {
   });
 
   it('allows to add an user to an organization', async () => {
-    const newMemberEmail = `${generateRandomString()}@giantswarm.io`;
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     const patchOrganizationRequest = nock(API_ENDPOINT)
       .intercept(`/v4/organizations/${orgResponse.id}/`, 'PATCH')
       .reply(StatusCodes.Ok, {
@@ -200,11 +217,11 @@ describe('Organizations basic', () => {
         message: `The organization with ID ${orgResponse.id} has been updated.`,
       });
 
-    const {
-      findByText,
-      getByText,
-      findByLabelText,
-    } = renderRouteWithStore(`${BASE_ROUTE}/${orgResponse.id}`);
+    const newMemberEmail = `${generateRandomString()}@giantswarm.io`;
+
+    const { findByText, getByText, findByLabelText } = renderRouteWithStore(
+      `${BASE_ROUTE}/${orgResponse.id}`
+    );
 
     const addMemberButton = await findByText('Add Member');
     expect(addMemberButton).toBeInTheDocument();
@@ -219,8 +236,6 @@ describe('Organizations basic', () => {
     });
 
     fireEvent.click(await findByText('Add Member to Organization'));
-
-    getMockCall('/v4/organizations/', orgsResponse);
 
     await wait(() => {
       expect(
@@ -239,6 +254,7 @@ describe('Organizations basic', () => {
 describe('Organization deletion', () => {
   it('shows the organization deletion modal when requested and organization deletion success flash', async () => {
     const organizationToDeleteId = generateRandomString();
+
     getMockCall('/v4/organizations/', [
       ...orgsResponse,
       { id: organizationToDeleteId },

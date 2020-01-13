@@ -23,6 +23,12 @@ export const getMockCall = (endpoint, response = []) =>
     .get(endpoint)
     .reply(StatusCodes.Ok, response);
 
+export const getMockCallTimes = (endpoint, response = [], times = 1) =>
+  nock(API_ENDPOINT)
+    .get(endpoint)
+    .times(times)
+    .reply(StatusCodes.Ok, response);
+
 export const getPersistedMockCall = (endpoint, response = []) =>
   nock(API_ENDPOINT)
     .persist()
