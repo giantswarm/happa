@@ -46,7 +46,7 @@ class ExpiryHoursPicker extends React.Component {
   handleDateChange(date) {
     this.setState(
       {
-        expireDate: date,
+        expireDate: moment(date),
         selectionType: 'date',
       },
       () => {
@@ -139,12 +139,12 @@ class ExpiryHoursPicker extends React.Component {
       expireDate.add(this.state.monthsValue, 'months');
       expireDate.add(this.state.daysValue, 'days');
       expireDate.add(this.state.hoursValue, 'hours');
-
-      // Set date picker to this value too
-      this.setState({
-        expireDate: expireDate,
-      });
     }
+
+    // Set date picker to this value too
+    this.setState({
+      expireDate: expireDate,
+    });
 
     // Now that we have an expireDate, calculate the difference between it and
     // now in hours.
@@ -241,13 +241,17 @@ class ExpiryHoursPicker extends React.Component {
           />
           <label htmlFor='dateCheck'>Date:</label>
           <DatePicker
-            dateFormat='YYYY-MM-DD'
+            dateFormat='yyyy-MM-dd'
             dropdownMode='select'
-            // eslint-disable-next-line no-magic-numbers
-            maxDate={moment().add(30, 'years')}
-            minDate={moment().add(1, 'day')}
+            maxDate={moment()
+              // eslint-disable-next-line no-magic-numbers
+              .add(30, 'years')
+              .toDate()}
+            minDate={moment()
+              .add(1, 'day')
+              .toDate()}
             onChange={this.handleDateChange.bind(this)}
-            selected={this.state.expireDate}
+            selected={this.state.expireDate.toDate()}
             showMonthDropdown
             showYearDropdown
           />

@@ -48,6 +48,17 @@ class V4ClusterDetailTable extends React.Component {
       ? JSON.parse(window.config.azureCapabilitiesJSON)
       : {};
 
+    this.setState({ awsInstanceTypes, azureVMSizes });
+    this.produceRAMAndCPUs();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.cluster !== this.props.cluster) {
+      this.produceRAMAndCPUs();
+    }
+  }
+
+  produceRAMAndCPUs = () => {
     const { cluster } = this.props;
     const memory = getMemoryTotal(cluster);
     const RAM = !memory ? 0 : memory;
@@ -55,8 +66,8 @@ class V4ClusterDetailTable extends React.Component {
     const cores = getCpusTotal(cluster);
     const CPUs = !cores ? 0 : cores;
 
-    this.setState({ awsInstanceTypes, azureVMSizes, RAM, CPUs });
-  }
+    this.setState({ RAM, CPUs });
+  };
 
   /**
    * Returns the proper last updated info string based on available
@@ -140,19 +151,23 @@ class V4ClusterDetailTable extends React.Component {
             showScalingModal={this.props.showScalingModal}
           />
         )}
-        {provider === Providers.AWS && (
-          <WorkerNodesAWS
-            az={cluster.availability_zones}
-            instanceName={cluster.workers[0].aws.instance_type}
-            instanceType={
-              this.state.awsInstanceTypes[cluster.workers[0].aws.instance_type]
-            }
-            scaling={cluster.scaling}
-            showScalingModal={this.props.showScalingModal}
-            workerNodesDesired={this.props.workerNodesDesired}
-            workerNodesRunning={workerNodesRunning}
-          />
-        )}
+        {provider === Providers.AWS &&
+          cluster.workers &&
+          cluster.workers.length !== 0 && (
+            <WorkerNodesAWS
+              az={cluster.availability_zones}
+              instanceName={cluster.workers[0].aws.instance_type}
+              instanceType={
+                this.state.awsInstanceTypes[
+                  cluster.workers[0].aws.instance_type
+                ]
+              }
+              scaling={cluster.scaling}
+              showScalingModal={this.props.showScalingModal}
+              workerNodesDesired={this.props.workerNodesDesired}
+              workerNodesRunning={workerNodesRunning}
+            />
+          )}
         <p className='last-updated'>
           <small>
             The information above is auto-refreshing. Details last fetched{' '}

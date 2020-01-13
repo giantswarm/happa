@@ -360,8 +360,10 @@ class ScaleNodePoolModal extends React.Component {
             <ClusterIDLabel clusterID={this.props.nodePool.id} />
           </BootstrapModal.Title>
         </BootstrapModal.Header>
-        {body}
-        {footer}
+        <div data-testid='oriol'>
+          {body}
+          {footer}
+        </div>
       </BootstrapModal>
     );
   }

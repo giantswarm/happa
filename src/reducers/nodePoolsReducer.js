@@ -16,7 +16,6 @@ const initialState = {
 const nodePools = produce((draft, action) => {
   switch (action.type) {
     // TODO Find a better/simpler approach.
-    case types.NODEPOOLS_LOAD:
     case types.CLUSTERS_LOAD:
     case types.NODEPOOL_DELETE_CONFIRMED:
     case types.V5_CLUSTER_CREATE_SUCCESS:
@@ -31,14 +30,20 @@ const nodePools = produce((draft, action) => {
 
       return;
 
-    case types.NODEPOOLS_LOAD_SUCCESS:
+    case types.CLUSTER_NODEPOOLS_LOAD_SUCCESS:
+      action.nodePools.forEach(np => {
+        draft.items[np.id] = np;
+      });
+      draft.isFetching = false;
+
+      return;
+
     case types.NODEPOOLS_CREATE_SUCCESS:
       draft.items = action.nodePools;
       draft.isFetching = false;
 
       return;
 
-    case types.NODEPOOLS_LOAD_ERROR:
     case types.NODEPOOL_DELETE_ERROR:
       draft.errorLoading = true;
       draft.isFetching = false;

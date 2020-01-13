@@ -1,9 +1,7 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import { clusterCreate } from 'actions/clusterActions';
-import { nodePoolsCreate } from 'actions/nodePoolActions';
+import { batchedClusterCreate } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import { push } from 'connected-react-router';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
@@ -295,31 +293,13 @@ class CreateNodePoolsCluster extends Component {
       };
     }
 
-    try {
-      const newCluster = await this.props.dispatch(
-        clusterCreate(
-          createPayload,
-          true // is v5
-        )
-      );
-
-      await this.props.dispatch(nodePoolsCreate(newCluster.id, nodePools));
-
-      // after successful creation, redirect to cluster details
-      this.props.dispatch(
-        push(
-          `/organizations/${this.props.selectedOrganization}/clusters/${newCluster.id}`
-        )
-      );
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-
-      this.setState({
-        submitting: false,
-        error: error,
-      });
-    }
+    await this.props.dispatch(
+      batchedClusterCreate(
+        createPayload,
+        true, // is v5
+        nodePools
+      )
+    );
   };
 
   toggleMasterAZSelector = () => {

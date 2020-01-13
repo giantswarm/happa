@@ -32,6 +32,8 @@ fi
 # VERSION file.
 VERSION=$(cat VERSION | tr '\n' ' ' | tr -d '[:space:]')
 
+sed -i "s|happaVersion: .*|happaVersion: '${VERSION}',|g" /www/index.html
+
 STRLENGTH=$(echo -n $VERSION | wc -m)
 if [ $STRLENGTH -gt 30 ]; then
   # VERSION is a commit hash, not a tag

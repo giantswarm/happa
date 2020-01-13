@@ -203,6 +203,7 @@ const KeyPairCreateModal = props => {
           case 'addKeyPair':
             return (
               <BootstrapModal
+                data-testid='create-key-pair-modal'
                 className='create-key-pair-modal'
                 onHide={close}
                 show={modal.visible}

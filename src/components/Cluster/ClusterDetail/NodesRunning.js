@@ -8,7 +8,7 @@ const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
     nodePools && nodePools.length === 1 ? ' node pool' : ' node pools';
 
   return (
-    <div>
+    <div data-testid='nodes-running'>
       {!workerNodesRunning ? (
         <span>0 nodes</span>
       ) : (
