@@ -1,4 +1,5 @@
 import { fireEvent, wait } from '@testing-library/react';
+import { postMockCall, USER_EMAIL } from 'testUtils/mockHttpCalls';
 import { renderWithTheme } from 'testUtils/renderUtils';
 
 import ChangePasswordForm from '../ChangePasswordForm';
@@ -127,10 +128,9 @@ describe('ChangePasswordForm', () => {
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
-      const setButtonElement = setButton.querySelector('button');
 
       expect(setButton).not.toBe(null);
-      expect(setButtonElement.disabled).toBe(true);
+      expect(setButton.disabled).toBe(true);
     });
 
     // Check if the new password cannot be just numbers
@@ -142,10 +142,9 @@ describe('ChangePasswordForm', () => {
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
-      const setButtonElement = setButton.querySelector('button');
 
       expect(setButton).not.toBe(null);
-      expect(setButtonElement.disabled).toBe(true);
+      expect(setButton.disabled).toBe(true);
     });
 
     // Check if the new password cannot be just letters
@@ -157,10 +156,9 @@ describe('ChangePasswordForm', () => {
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
-      const setButtonElement = setButton.querySelector('button');
 
       expect(setButton).not.toBe(null);
-      expect(setButtonElement.disabled).toBe(true);
+      expect(setButton.disabled).toBe(true);
     });
 
     triggerInputChange(newPasswordInputElement, 'AAAAAAAASDASDASDAS');
@@ -171,10 +169,9 @@ describe('ChangePasswordForm', () => {
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
-      const setButtonElement = setButton.querySelector('button');
 
       expect(setButton).not.toBe(null);
-      expect(setButtonElement.disabled).toBe(true);
+      expect(setButton.disabled).toBe(true);
     });
 
     triggerInputChange(newPasswordInputElement, 'aaasAAA11231aasdaA');
@@ -182,10 +179,9 @@ describe('ChangePasswordForm', () => {
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
-      const setButtonElement = setButton.querySelector('button');
 
       expect(setButton).not.toBe(null);
-      expect(setButtonElement.disabled).toBe(true);
+      expect(setButton.disabled).toBe(true);
 
       // Check if error text is still present
       errorElement = queryByText(validationErrors.JustLetters);
@@ -232,10 +228,9 @@ describe('ChangePasswordForm', () => {
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
-      const setButtonElement = setButton.querySelector('button');
 
       expect(setButton).not.toBe(null);
-      expect(setButtonElement.disabled).toBe(true);
+      expect(setButton.disabled).toBe(true);
     });
 
     triggerInputChange(confirmNewPasswordInputElement, newPassword);
@@ -243,10 +238,9 @@ describe('ChangePasswordForm', () => {
     // Check if set button is present and enabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
-      const setButtonElement = setButton.querySelector('button');
 
       expect(setButton).not.toBe(null);
-      expect(setButtonElement.disabled).toBe(false);
+      expect(setButton.disabled).toBe(false);
 
       // Check if error text is still present
       errorElement = queryByText(validationErrors.NoMatch);
@@ -254,5 +248,38 @@ describe('ChangePasswordForm', () => {
     });
   });
 
-  // it('disables ')
+  it.skip('sends the correct password change request', async () => {
+    const newPassword = 'abasdasdas2312312312c';
+    const { getByTestId, findByTestId } = renderWithProps();
+    const passwordChangeRequest = postMockCall(
+      `/v4/users/${USER_EMAIL}/password/`,
+      {}
+    );
+
+    // Find current password input
+    const inputWrapper = getByTestId(elementIDs.currPassword);
+    const firstInputElement = inputWrapper.querySelector('input');
+
+    // Find the new password input
+    const newPasswordInputWrapper = getByTestId(elementIDs.newPassword);
+    const newPasswordInputElement = newPasswordInputWrapper.querySelector(
+      'input'
+    );
+
+    // Find the confirm new password input
+    const confirmNewPasswordInputWrapper = getByTestId(
+      elementIDs.confirmNewPassword
+    );
+    const confirmNewPasswordInputElement = confirmNewPasswordInputWrapper.querySelector(
+      'input'
+    );
+
+    // Set the input values
+    triggerInputChange(firstInputElement, 'abcdefg');
+    triggerInputChange(newPasswordInputElement, newPassword);
+    triggerInputChange(confirmNewPasswordInputElement, newPassword);
+
+    const setButton = await findByTestId(elementIDs.setButton);
+    setButton.click();
+  });
 });

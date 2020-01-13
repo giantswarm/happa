@@ -36,7 +36,7 @@ const Button = props => {
   } = props;
 
   return (
-    <div className='progress_button--container' {...rest}>
+    <div className='progress_button--container'>
       {loadingPosition === 'left' ? (
         <LoadingIndicator loading={loading} loadingPosition={loadingPosition} />
       ) : (
@@ -49,6 +49,7 @@ const Button = props => {
         disabled={disabled || loading}
         onClick={onClick}
         type={type}
+        {...rest}
       >
         {children}
       </BsButton>
