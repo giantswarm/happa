@@ -130,7 +130,6 @@ class ChangePassword extends React.Component {
       })
       .catch(error => {
         let errorMessage = null;
-
         if (
           error.body &&
           error.body.status_code &&

@@ -1,6 +1,8 @@
 import { fireEvent, wait } from '@testing-library/react';
-import { postMockCall, USER_EMAIL } from 'testUtils/mockHttpCalls';
+import { Base64 } from 'js-base64';
+import { postPayloadMockCall, USER_EMAIL } from 'testUtils/mockHttpCalls';
 import { renderWithTheme } from 'testUtils/renderUtils';
+import { StatusCodes } from 'shared/constants';
 
 import ChangePasswordForm from '../ChangePasswordForm';
 
@@ -27,6 +29,12 @@ const validationErrors = {
   NoMatch: 'Password confirmation does not match',
 };
 
+const statusMessages = {
+  Success: 'Password set succesfully',
+  CurrPwdWrong: `Your current password doesn't seem to be right.`,
+  ServerError: 'Something went wrong while trying to set your password.',
+};
+
 const renderWithProps = (props = {}) =>
   renderWithTheme(ChangePasswordForm, props);
 
@@ -47,7 +55,7 @@ describe('ChangePasswordForm', () => {
     const { getByTestId } = renderWithProps();
     const label = getByTestId(elementIDs.label);
 
-    expect(label).not.toBe(null);
+    expect(label).not.toBeNull();
     expect(label.textContent.length).toBeGreaterThan(0);
   });
 
@@ -55,7 +63,7 @@ describe('ChangePasswordForm', () => {
     const { getByTestId } = renderWithProps();
     const explText = getByTestId(elementIDs.explanatoryText);
 
-    expect(explText).not.toBe(null);
+    expect(explText).not.toBeNull();
     expect(explText.textContent.length).toBeGreaterThan(0);
   });
 
@@ -82,7 +90,7 @@ describe('ChangePasswordForm', () => {
     const { queryByTestId } = renderWithProps();
     const setButton = queryByTestId(elementIDs.setPasswordButton);
 
-    expect(setButton).toBe(null);
+    expect(setButton).toBeNull();
   });
 
   it('typing in the current password input makes the set button appear', async () => {
@@ -94,7 +102,7 @@ describe('ChangePasswordForm', () => {
 
     const setButton = await findByTestId(elementIDs.setPasswordButton);
 
-    expect(setButton).not.toBe(null);
+    expect(setButton).not.toBeNull();
   });
 
   it('validates the new password input', async () => {
@@ -123,13 +131,13 @@ describe('ChangePasswordForm', () => {
     triggerInputChange(newPasswordInputElement, 'abc');
 
     errorElement = await findByText(validationErrors.TooShort);
-    expect(errorElement).not.toBe(null);
+    expect(errorElement).not.toBeNull();
 
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
-      expect(setButton).not.toBe(null);
+      expect(setButton).not.toBeNull();
       expect(setButton.disabled).toBe(true);
     });
 
@@ -137,13 +145,13 @@ describe('ChangePasswordForm', () => {
     triggerInputChange(newPasswordInputElement, '1231319810112');
 
     errorElement = await findByText(validationErrors.JustNumbers);
-    expect(errorElement).not.toBe(null);
+    expect(errorElement).not.toBeNull();
 
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
-      expect(setButton).not.toBe(null);
+      expect(setButton).not.toBeNull();
       expect(setButton.disabled).toBe(true);
     });
 
@@ -151,26 +159,26 @@ describe('ChangePasswordForm', () => {
     triggerInputChange(newPasswordInputElement, 'aaaaaaaadasdasda');
 
     errorElement = await findByText(validationErrors.JustLetters);
-    expect(errorElement).not.toBe(null);
+    expect(errorElement).not.toBeNull();
 
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
-      expect(setButton).not.toBe(null);
+      expect(setButton).not.toBeNull();
       expect(setButton.disabled).toBe(true);
     });
 
     triggerInputChange(newPasswordInputElement, 'AAAAAAAASDASDASDAS');
 
     errorElement = await findByText(validationErrors.JustLetters);
-    expect(errorElement).not.toBe(null);
+    expect(errorElement).not.toBeNull();
 
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
-      expect(setButton).not.toBe(null);
+      expect(setButton).not.toBeNull();
       expect(setButton.disabled).toBe(true);
     });
 
@@ -180,12 +188,12 @@ describe('ChangePasswordForm', () => {
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
-      expect(setButton).not.toBe(null);
+      expect(setButton).not.toBeNull();
       expect(setButton.disabled).toBe(true);
 
       // Check if error text is still present
       errorElement = queryByText(validationErrors.JustLetters);
-      expect(errorElement).toBe(null);
+      expect(errorElement).toBeNull();
     });
   });
 
@@ -223,13 +231,13 @@ describe('ChangePasswordForm', () => {
     triggerInputChange(confirmNewPasswordInputElement, 'aaasdaadsa');
 
     errorElement = await findByText(validationErrors.NoMatch);
-    expect(errorElement).not.toBe(null);
+    expect(errorElement).not.toBeNull();
 
     // Check if set button is present and disabled
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
-      expect(setButton).not.toBe(null);
+      expect(setButton).not.toBeNull();
       expect(setButton.disabled).toBe(true);
     });
 
@@ -239,22 +247,40 @@ describe('ChangePasswordForm', () => {
     await wait(() => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
-      expect(setButton).not.toBe(null);
+      expect(setButton).not.toBeNull();
       expect(setButton.disabled).toBe(false);
 
       // Check if error text is still present
       errorElement = queryByText(validationErrors.NoMatch);
-      expect(errorElement).toBe(null);
+      expect(errorElement).toBeNull();
     });
   });
 
-  it.skip('sends the correct password change request', async () => {
+  it('sends the correct password change request, and logs in after', async () => {
     const newPassword = 'abasdasdas2312312312c';
-    const { getByTestId, findByTestId } = renderWithProps();
-    const passwordChangeRequest = postMockCall(
-      `/v4/users/${USER_EMAIL}/password/`,
+    const newPasswordBase64 = Base64.encode(newPassword);
+
+    const encodedEmail = encodeURIComponent(USER_EMAIL);
+
+    const loginFn = jest.fn();
+
+    const passwordChangeRequest = postPayloadMockCall(
+      `/v4/users/${encodedEmail}/password/`,
+      {
+        current_password_base64: newPasswordBase64,
+        new_password_base64: newPasswordBase64,
+      },
       {}
     );
+
+    const { getByTestId, findByTestId, findByText } = renderWithProps({
+      user: {
+        email: USER_EMAIL,
+      },
+      actions: {
+        giantswarmLogin: loginFn,
+      },
+    });
 
     // Find current password input
     const inputWrapper = getByTestId(elementIDs.currPassword);
@@ -275,11 +301,80 @@ describe('ChangePasswordForm', () => {
     );
 
     // Set the input values
-    triggerInputChange(firstInputElement, 'abcdefg');
+    triggerInputChange(firstInputElement, newPassword);
     triggerInputChange(newPasswordInputElement, newPassword);
     triggerInputChange(confirmNewPasswordInputElement, newPassword);
 
-    const setButton = await findByTestId(elementIDs.setButton);
-    setButton.click();
+    const setButton = await findByTestId(elementIDs.setPasswordButton);
+    fireEvent.click(setButton);
+
+    const succesMessageElement = await findByText(statusMessages.Success);
+
+    expect(succesMessageElement).not.toBeNull();
+
+    expect(loginFn).toBeCalledWith(USER_EMAIL, newPassword);
+
+    passwordChangeRequest.done();
+  });
+
+  it('shows error messages if any request fails', async () => {
+    const newPassword = 'abasdasdas2312312312c';
+    const newPasswordBase64 = Base64.encode(newPassword);
+
+    const encodedEmail = encodeURIComponent(USER_EMAIL);
+
+    const loginFn = jest.fn();
+
+    const passwordChangeRequest = postPayloadMockCall(
+      `/v4/users/${encodedEmail}/password/`,
+      {
+        current_password_base64: newPasswordBase64,
+        new_password_base64: newPasswordBase64,
+      },
+      {},
+      StatusCodes.BadRequest
+    );
+
+    const { getByTestId, findByTestId, findByText } = renderWithProps({
+      user: {
+        email: USER_EMAIL,
+      },
+      actions: {
+        giantswarmLogin: loginFn,
+      },
+    });
+
+    // Find current password input
+    const inputWrapper = getByTestId(elementIDs.currPassword);
+    const firstInputElement = inputWrapper.querySelector('input');
+
+    // Find the new password input
+    const newPasswordInputWrapper = getByTestId(elementIDs.newPassword);
+    const newPasswordInputElement = newPasswordInputWrapper.querySelector(
+      'input'
+    );
+
+    // Find the confirm new password input
+    const confirmNewPasswordInputWrapper = getByTestId(
+      elementIDs.confirmNewPassword
+    );
+    const confirmNewPasswordInputElement = confirmNewPasswordInputWrapper.querySelector(
+      'input'
+    );
+
+    // Set the input values
+    triggerInputChange(firstInputElement, newPassword);
+    triggerInputChange(newPasswordInputElement, newPassword);
+    triggerInputChange(confirmNewPasswordInputElement, newPassword);
+
+    const setButton = await findByTestId(elementIDs.setPasswordButton);
+    fireEvent.click(setButton);
+
+    const errorMessageElement = await findByText(new RegExp(statusMessages.ServerError));
+
+    expect(errorMessageElement).not.toBeNull();
+    expect(loginFn).toHaveBeenCalledTimes(0);
+
+    passwordChangeRequest.done();
   });
 });
