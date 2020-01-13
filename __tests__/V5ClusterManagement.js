@@ -48,6 +48,9 @@ beforeAll(() => {
     `/v5/clusters/${V5_CLUSTER.id}/apps/`,
     appsResponse
   );
+  requests.keyPairs = getPersistedMockCall(
+    `/v4/clusters/${V5_CLUSTER.id}/key-pairs/`
+  );
   requests.credentials = getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/credentials/`
   );

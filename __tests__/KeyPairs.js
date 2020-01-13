@@ -60,6 +60,9 @@ beforeAll(() => {
     '/v4/appcatalogs/',
     appCatalogsResponse
   );
+  requests.keyPairs = getPersistedMockCall(
+    `/v4/clusters/${V5_CLUSTER.id}/key-pairs/`
+  );
 
   // TODO no apps response?? Check on gauss.
 });
@@ -75,7 +78,10 @@ afterAll(() => {
 
 it('lets me open and close the keypair create modal', async () => {
   // Given the app is on the cluster detail page.
-  const { findByText, getByText, queryByTestId } = renderRouteWithStore(ROUTE, {});
+  const { findByText, getByText, queryByTestId } = renderRouteWithStore(
+    ROUTE,
+    {}
+  );
 
   // And it is done loading.
   const clusterName = await findByText(V5_CLUSTER.name);
