@@ -6,7 +6,6 @@ import {
   V4_CLUSTER,
   appCatalogsResponse,
   appsResponse,
-  getMockCall,
   getPersistedMockCall,
   orgResponse,
   orgsResponse,
