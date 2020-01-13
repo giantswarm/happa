@@ -71,16 +71,11 @@ describe('ChangePasswordForm', () => {
     let validPasswordInputs = 0;
 
     const { getByTestId } = renderWithProps();
-    const inputs = textInputsIDs.map(id => {
+    for (const id of textInputsIDs) {
       const inputElement = getByTestId(id).querySelector('input');
 
       if (inputElement.type === 'password') validPasswordInputs++;
-
-      return inputElement;
-    });
-
-    // eslint-disable-next-line no-magic-numbers
-    expect(inputs.length).toBe(3);
+    }
 
     // eslint-disable-next-line no-magic-numbers
     expect(validPasswordInputs).toBe(3);
