@@ -370,7 +370,9 @@ describe('ChangePasswordForm', () => {
     const setButton = await findByTestId(elementIDs.setPasswordButton);
     fireEvent.click(setButton);
 
-    const errorMessageElement = await findByText(new RegExp(statusMessages.ServerError));
+    const errorMessageElement = await findByText(
+      new RegExp(statusMessages.ServerError)
+    );
 
     expect(errorMessageElement).not.toBeNull();
     expect(loginFn).toHaveBeenCalledTimes(0);
