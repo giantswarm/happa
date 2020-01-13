@@ -15,8 +15,17 @@ export const batchedLayout = () => async dispatch => {
     await dispatch(userActions.getInfo());
     await dispatch(organizationActions.organizationsLoad());
     dispatch(catalogActions.catalogsLoad());
-    await dispatch(clusterActions.clustersList({ withLoadingFlags: true }));
-    await dispatch(clusterActions.clustersDetails({ withLoadingFlags: true }));
+    await dispatch(
+      clusterActions.clustersList({
+        withLoadingFlags: true,
+      })
+    );
+    await dispatch(
+      clusterActions.clustersDetails({
+        filterBySelectedOrganization: true,
+        withLoadingFlags: true,
+      })
+    );
     await dispatch(nodePoolActions.nodePoolsLoad());
   } catch (err) {
     // eslint-disable-next-line no-console
@@ -27,7 +36,12 @@ export const batchedLayout = () => async dispatch => {
 export const batchedRefreshClusters = () => async dispatch => {
   try {
     await dispatch(clusterActions.clustersList({ withLoadingFlags: false }));
-    await dispatch(clusterActions.clustersDetails({ withLoadingFlags: false }));
+    await dispatch(
+      clusterActions.clustersDetails({
+        filterBySelectedOrganization: true,
+        withLoadingFlags: false,
+      })
+    );
     dispatch(nodePoolActions.nodePoolsLoad());
   } catch (err) {
     // eslint-disable-next-line no-console
@@ -113,7 +127,12 @@ export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
 export const batchedOrganizationSelect = orgId => async dispatch => {
   try {
     await dispatch(organizationActions.organizationSelect(orgId));
-    dispatch(clusterActions.clustersDetails());
+    dispatch(
+      clusterActions.clustersDetails({
+        filterBySelectedOrganization: false,
+        withLoadingFlags: false,
+      })
+    );
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Error in batchedOrganizationSelect', err);
