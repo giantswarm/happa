@@ -46,10 +46,7 @@ describe('passwordValidation', () => {
 
   it('is valid on a password that is both letters and numbers', () => {
     const validateResult = validatePassword('abdasqiejnf2231oaoa');
-    const expectedResult = getValidationResult(
-      true,
-      statusMessages.Ok
-    );
+    const expectedResult = getValidationResult(true, statusMessages.Ok);
 
     expect(validateResult).toStrictEqual(expectedResult);
   });
