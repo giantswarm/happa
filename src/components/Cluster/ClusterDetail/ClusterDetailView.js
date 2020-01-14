@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   batchedClusterDetailView,
-  refreshClusterDetailView,
+  batchedRefreshClusterDetailView,
 } from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
@@ -97,7 +97,7 @@ class ClusterDetailView extends React.Component {
 
   refreshClusterData = () => {
     this.props.dispatch(
-      refreshClusterDetailView(
+      batchedRefreshClusterDetailView(
         this.props.cluster.id,
         this.props.isNodePoolsCluster
       )
