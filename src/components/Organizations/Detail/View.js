@@ -179,7 +179,7 @@ class OrganizationDetail extends React.Component {
               <div className='col-3'>
                 <h3 className='table-label'>Members</h3>
               </div>
-              <div className='col-9'>
+              <div className='col-9' data-testid='org-detail-users-wrapper'>
                 {this.props.organization.members.length === 0 ? (
                   <p>This organization has no members</p>
                 ) : (
