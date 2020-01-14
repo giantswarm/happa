@@ -1,18 +1,20 @@
 import * as clusterActions from 'actions/clusterActions';
-import { bindActionCreators } from 'redux';
-import { CodeBlock, Prompt } from '../CodeBlock';
-import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import Button from 'UI/Button';
-import FileBlock from '../FileBlock';
 import platform from 'lib/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Button from 'UI/Button';
 
-var Modernizr = window.Modernizr;
+import { CodeBlock, Prompt } from '../CodeBlock';
+import FileBlock from '../FileBlock';
+
+const Modernizr = window.Modernizr;
 
 class ConfigKubeCtl extends React.Component {
   state = {
+    // eslint-disable-next-line react/no-unused-state
     loading: true,
     selectedPlatform: platform,
     alternativeOpen: false,
@@ -47,6 +49,9 @@ class ConfigKubeCtl extends React.Component {
         });
       })
       .catch(error => {
+        const keyPairChangeDelay = 200;
+
+        // eslint-disable-next-line no-console
         console.error(error);
 
         setTimeout(() => {
@@ -57,7 +62,7 @@ class ConfigKubeCtl extends React.Component {
               error: true,
             },
           });
-        }, 200);
+        }, keyPairChangeDelay);
       });
   };
 
@@ -71,10 +76,12 @@ class ConfigKubeCtl extends React.Component {
       );
 
       this.setState({
+        // eslint-disable-next-line react/no-unused-state
         loading: 'failed',
       });
     } else {
       this.setState({
+        // eslint-disable-next-line react/no-unused-state
         loading: true,
       });
 
@@ -82,6 +89,7 @@ class ConfigKubeCtl extends React.Component {
         .clusterLoadDetails(this.props.cluster.id)
         .then(() => {
           this.setState({
+            // eslint-disable-next-line react/no-unused-state
             loading: false,
           });
         })
@@ -94,6 +102,7 @@ class ConfigKubeCtl extends React.Component {
           );
 
           this.setState({
+            // eslint-disable-next-line react/no-unused-state
             loading: 'failed',
           });
         });
@@ -197,14 +206,14 @@ class ConfigKubeCtl extends React.Component {
     );
   }
 
-  isSelectedPlatform(platform) {
-    return this.state.selectedPlatform === platform;
+  isSelectedPlatform(nextPlatform) {
+    return this.state.selectedPlatform === nextPlatform;
   }
 
   toggleAlternative() {
-    this.setState({
-      alternativeOpen: !this.state.alternativeOpen,
-    });
+    this.setState(prevState => ({
+      alternativeOpen: !prevState.alternativeOpen,
+    }));
   }
 
   selectCluster(clusterId) {
@@ -291,7 +300,7 @@ class ConfigKubeCtl extends React.Component {
         </p>
 
         <CodeBlock>
-          <Prompt>{`kubectl config view`}</Prompt>
+          <Prompt>kubectl config view</Prompt>
         </CodeBlock>
 
         <p>
@@ -300,7 +309,7 @@ class ConfigKubeCtl extends React.Component {
         </p>
 
         <CodeBlock>
-          <Prompt>{`kubectl config use-context giantswarm-default`}</Prompt>
+          <Prompt>kubectl config use-context giantswarm-default</Prompt>
         </CodeBlock>
 
         <div className='aside'>
@@ -328,7 +337,4 @@ ConfigKubeCtl.propTypes = {
   actions: PropTypes.object,
 };
 
-export default connect(
-  undefined,
-  mapDispatchToProps
-)(ConfigKubeCtl);
+export default connect(undefined, mapDispatchToProps)(ConfigKubeCtl);

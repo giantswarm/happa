@@ -1,12 +1,12 @@
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import Button from 'UI/Button';
 
 const GenericModal = props => {
   return (
     <BootstrapModal
-      className={'modal ' + props.className}
+      className={`modal ${props.className}`}
       onHide={props.onClose}
       show={props.visible}
     >

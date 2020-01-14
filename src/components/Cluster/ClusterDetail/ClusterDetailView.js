@@ -1,34 +1,36 @@
+import styled from '@emotion/styled';
+import {
+  batchedClusterDetailView,
+  batchedRefreshClusterDetailView,
+} from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
-import * as appActions from 'actions/appActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
-import { bindActionCreators } from 'redux';
-import { clusterPatch } from 'actions/clusterActions';
-import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { getNumberOfNodes } from 'utils/clusterUtils';
-import { organizationCredentialsLoad } from 'actions/organizationActions';
-import { Providers } from 'shared/constants';
-import { push } from 'connected-react-router';
-import Button from 'UI/Button';
-import ClusterApps from './ClusterApps';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import cmp from 'semver-compare';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import KeyPairs from './KeyPairs';
-import LoadingOverlay from 'UI/LoadingOverlay';
+import { push } from 'connected-react-router';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactTimeout from 'react-timeout';
-import ScaleClusterModal from './ScaleClusterModal';
-import styled from '@emotion/styled';
 import Tab from 'react-bootstrap/lib/Tab';
+import { connect } from 'react-redux';
+import ReactTimeout from 'react-timeout';
+import { bindActionCreators } from 'redux';
+import cmp from 'semver-compare';
+import { Providers } from 'shared/constants';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
+import LoadingOverlay from 'UI/LoadingOverlay';
+import ViewAndEditName from 'UI/ViewEditName';
+import { getNumberOfNodes } from 'utils/clusterUtils';
+
+import ClusterApps from './ClusterApps';
+import KeyPairs from './KeyPairs';
+import ScaleClusterModal from './ScaleClusterModal';
 import Tabs from './Tabs';
 import UpgradeClusterModal from './UpgradeClusterModal';
 import V4ClusterDetailTable from './V4ClusterDetailTable';
 import V5ClusterDetailTable from './V5ClusterDetailTable';
-import ViewAndEditName from 'UI/ViewEditName';
 
 const WrapperDiv = styled.div`
   h2 {
@@ -62,26 +64,20 @@ class ClusterDetailView extends React.Component {
 
   registerRefreshInterval = () => {
     this.loadDataInterval = this.props.setInterval(
-      this.loadDetails,
+      this.refreshClusterData,
+      // eslint-disable-next-line no-magic-numbers
       30 * 1000 // 30 seconds
     );
   };
 
   loadDetails = () => {
-    const {
-      cluster,
-      clusterId,
-      clusterActions,
-      organizationId,
-      dispatch,
-      releaseActions,
-    } = this.props;
+    const { cluster, clusterId, organizationId, dispatch } = this.props;
 
-    if (cluster === undefined) {
-      dispatch(push('/organizations/' + organizationId));
+    if (typeof cluster === 'undefined') {
+      dispatch(push(`/organizations/${organizationId}`));
 
       new FlashMessage(
-        'Cluster <code>' + clusterId + '</code> not found',
+        `Cluster <code>${clusterId}</code> not found`,
         messageType.ERROR,
         messageTTL.FOREVER,
         'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.'
@@ -90,26 +86,22 @@ class ClusterDetailView extends React.Component {
       return;
     }
 
-    dispatch(organizationCredentialsLoad(organizationId));
-
-    // TODO This probably should go to action creators where this logic belongs (?)
-    releaseActions
-      .loadReleases()
-      .then(() => {
-        return clusterActions.clusterLoadDetails(cluster.id);
-      })
-      .then(() => {
-        return this.props.dispatch(appActions.loadApps(cluster.id));
-      })
-      .catch(error => {
-        console.error(error);
-      });
-
-    this.props.dispatch(nodePoolActions.nodePoolsLoad());
+    dispatch(
+      batchedClusterDetailView(
+        organizationId,
+        cluster.id,
+        this.props.isNodePoolsCluster
+      )
+    );
   };
 
   refreshClusterData = () => {
-    this.loadDetails();
+    this.props.dispatch(
+      batchedRefreshClusterDetailView(
+        this.props.cluster.id,
+        this.props.isNodePoolsCluster
+      )
+    );
   };
 
   handleVisibilityChange = () => {
@@ -137,9 +129,9 @@ class ClusterDetailView extends React.Component {
   clusterName() {
     if (this.props.cluster) {
       return this.props.cluster.name;
-    } else {
-      return 'Not found';
     }
+
+    return 'Not found';
   }
 
   // Determine whether the current cluster can be upgraded
@@ -148,7 +140,7 @@ class ClusterDetailView extends React.Component {
     if (this.props.cluster.release_version === '') return false;
 
     // a target release to upgrade to must be defined
-    if (!!this.props.targetRelease !== true) {
+    if (Boolean(this.props.targetRelease) !== true) {
       return false;
     }
 
@@ -159,7 +151,7 @@ class ClusterDetailView extends React.Component {
   canClusterScale() {
     if (
       !Object.keys(this.props.cluster).includes('status') ||
-      this.props.cluster.status == null
+      this.props.cluster.status === null
     ) {
       // Cluster doesn't have status object yet.
       return false;
@@ -180,6 +172,8 @@ class ClusterDetailView extends React.Component {
     ) {
       return true;
     }
+
+    return false;
   }
 
   getDesiredNumberOfNodes() {
@@ -195,10 +189,11 @@ class ClusterDetailView extends React.Component {
     // Is AWSConfig.Status present yet?
     if (
       Object.keys(this.props.cluster).includes('status') &&
-      this.props.cluster.status != null
+      this.props.cluster.status !== null
     ) {
       return this.props.cluster.status.cluster.scaling.desiredCapacity;
     }
+
     return 0; // if we return null no value is rendered in AWS v4 cluster view
   }
 
@@ -213,7 +208,7 @@ class ClusterDetailView extends React.Component {
     return new Promise((resolve, reject) => {
       this.props
         .dispatch(
-          clusterPatch(
+          clusterActions.clusterPatch(
             this.props.cluster,
             { name: value },
             this.props.isNodePoolsCluster
@@ -244,14 +239,15 @@ class ClusterDetailView extends React.Component {
       release,
       targetRelease,
       region,
-      loading,
+      loadingCluster,
+      loadingNodePools,
     } = this.props;
 
     return (
       <>
-        <LoadingOverlay loading={loading} />
+        <LoadingOverlay loading={loadingCluster || loadingNodePools} />
 
-        {!loading && (
+        {!loadingCluster && (
           <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
             <WrapperDiv
               className='cluster-details'
@@ -266,17 +262,6 @@ class ClusterDetailView extends React.Component {
                       entityType='cluster'
                       onSubmit={this.editClusterName}
                     />{' '}
-                    {/* TODO Remove this */}
-                    {loading ? (
-                      <img
-                        className='loader'
-                        height='25px'
-                        src='/images/loader_oval_light.svg'
-                        width='25px'
-                      />
-                    ) : (
-                      ''
-                    )}
                   </h1>
                 </div>
               </div>
@@ -336,7 +321,9 @@ class ClusterDetailView extends React.Component {
                       </div>
                     </Tab>
                     <Tab eventKey={2} title='Key Pairs'>
-                      <KeyPairs cluster={cluster} />
+                      <LoadingOverlay loading={this.props.loadingCluster}>
+                        <KeyPairs cluster={cluster} />
+                      </LoadingOverlay>
                     </Tab>
                     <Tab eventKey={3} title='Apps'>
                       <ClusterApps
@@ -406,16 +393,14 @@ ClusterDetailView.propTypes = {
   setInterval: PropTypes.func,
   targetRelease: PropTypes.object,
   user: PropTypes.object,
-  loading: PropTypes.bool,
+  loadingCluster: PropTypes.bool,
+  loadingNodePools: PropTypes.bool,
 };
 
-function mapStateToProps(state, ownProps) {
-  const { releases, clusters } = state.entities;
-  const loading =
-    releases.isFetching || clusters.isFetching || !ownProps.cluster;
-
+function mapStateToProps(state) {
   return {
-    loading,
+    loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
+    loadingNodePools: state.loadingFlags.NODEPOOLS_LOAD,
   };
 }
 

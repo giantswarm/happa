@@ -1,14 +1,14 @@
 import * as userActions from 'actions/userActions';
-import { AuthorizationTypes } from 'shared/constants';
-import { bindActionCreators } from 'redux';
-import { clearQueues } from 'lib/flashMessage';
-import { connect } from 'react-redux';
-import { isJwtExpired } from 'lib/helpers';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
 import Auth0 from 'lib/auth0';
+import { clearQueues } from 'lib/flashMessage';
+import { isJwtExpired } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { AuthorizationTypes } from 'shared/constants';
 
 class AdminLogin extends React.Component {
   componentDidMount() {
@@ -32,6 +32,7 @@ class AdminLogin extends React.Component {
             this.props.dispatch(push('/'));
           })
           .catch(e => {
+            // eslint-disable-next-line no-console
             console.error(e);
             // Unable to refresh token silently, so send the down the auth0
             // flow.
@@ -48,10 +49,12 @@ class AdminLogin extends React.Component {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   componentWillUnmount() {
     clearQueues();
   }
 
+  // eslint-disable-next-line class-methods-use-this
   render() {
     return (
       <div>
@@ -91,7 +94,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AdminLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminLogin);

@@ -1,12 +1,16 @@
-import { connect } from 'react-redux';
+import styled from '@emotion/styled';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { truncate } from 'lib/helpers';
-import Button from './Button';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
+import { connect } from 'react-redux';
+
+import Button from './Button';
+
+const MIN_NAME_LENGTH = 3;
+const MAX_NAME_LENGTH = 14;
 
 const FormWrapper = styled.div`
   display: inline-block;
@@ -70,15 +74,27 @@ class ViewAndEditName extends React.Component {
 
   componentDidMount() {
     if (this.props.entityType === 'node pool') {
-      const name = truncate(this.props.entity.name, 14);
+      const name = truncate(this.props.entity.name, MAX_NAME_LENGTH);
       this.setState({ name });
     }
   }
 
   componentDidUpdate(prevProps) {
     const { name } = this.props.entity;
+
+    // If the name provided by the parent component is different than the name in
+    // local state, it means that the patch call has failed, so we revert this.state.name
+    // TODO Is this too convoluted? Remove optimistic update
     if (prevProps.entity.name !== name) {
-      this.setState({ name, inputFieldValue: name });
+      const oldName =
+        this.props.entityType === 'node pool'
+          ? truncate(name, MAX_NAME_LENGTH)
+          : name;
+
+      this.setState({
+        name: oldName,
+        inputFieldValue: name,
+      });
     }
   }
 
@@ -110,13 +126,14 @@ class ViewAndEditName extends React.Component {
     const { onSubmit } = this.props;
     const inputFieldValue = this.nameInputRef.current.value;
 
-    var validate = this.validate();
+    const validate = this.validate();
     if (typeof validate === 'object') {
       new FlashMessage(
-        'Error: ' + validate.error,
+        `Error: ${validate.error}`,
         messageType.ERROR,
         messageTTL.MEDIUM
       );
+
       return;
     }
 
@@ -124,7 +141,7 @@ class ViewAndEditName extends React.Component {
       editing: false,
       name:
         this.props.entityType === 'node pool'
-          ? truncate(inputFieldValue, 14)
+          ? truncate(inputFieldValue, MAX_NAME_LENGTH)
           : inputFieldValue,
     });
 
@@ -137,13 +154,14 @@ class ViewAndEditName extends React.Component {
 
   handleKey = evt => {
     // 27 = Escape key
+    // eslint-disable-next-line no-magic-numbers
     if (evt.keyCode === 27) {
       this.deactivateEditMode();
     }
   };
 
   validate = () => {
-    if (this.nameInputRef.current.value.length < 3) {
+    if (this.nameInputRef.current.value.length < MIN_NAME_LENGTH) {
       return {
         valid: false,
         error: 'Please use a name with at least 3 characters',
@@ -205,9 +223,6 @@ ViewAndEditName.propTypes = {
   toggleEditingState: PropTypes.func,
 };
 
-export default connect(
-  undefined,
-  undefined,
-  undefined,
-  { forwardRef: true }
-)(ViewAndEditName);
+export default connect(undefined, undefined, undefined, { forwardRef: true })(
+  ViewAndEditName
+);

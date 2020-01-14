@@ -1,8 +1,10 @@
 export function validatePassword(password) {
-  var valid = false;
-  var statusMessage = '';
+  const minPasswordLength = 8;
 
-  if (password.length < 8) {
+  let valid = false;
+  let statusMessage = '';
+
+  if (password.length < minPasswordLength) {
     statusMessage = 'password_too_short';
   } else if (/^[0-9]+$/.test(password)) {
     statusMessage = 'password_not_just_numbers';

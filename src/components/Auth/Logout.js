@@ -1,12 +1,12 @@
 import * as userActions from 'actions/userActions';
-import { AuthorizationTypes } from 'shared/constants';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
-import BaseTransition from 'styles/transitions/BaseTransition';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { AuthorizationTypes } from 'shared/constants';
+import BaseTransition from 'styles/transitions/BaseTransition';
 
 class Logout extends React.Component {
   componentDidMount() {
@@ -27,6 +27,7 @@ class Logout extends React.Component {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   render() {
     return (
       <div>
@@ -69,7 +70,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Logout);
+export default connect(mapStateToProps, mapDispatchToProps)(Logout);

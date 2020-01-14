@@ -1,27 +1,27 @@
 import 'babel-polyfill';
-import { ConnectedRouter } from 'connected-react-router';
-import { hot } from 'react-hot-loader';
-import { Notifier } from '@airbrake/browser';
-import { Provider } from 'react-redux';
-import { render } from 'react-dom';
-import { Requester } from 'lib/patchedAirbrakeRequester';
-import { ThemeProvider } from 'emotion-theming';
-import configureStore from 'stores/configureStore';
-import history from 'stores/history';
-import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
-import React from 'react';
-import Routes from './Routes';
-import theme from 'styles/theme';
-
 // CSS Imports
 // Keep the blank lines to allow for a certain ordering!
+// eslint-disable-next-line sort-imports
 import 'normalize.css';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import 'noty/lib/noty.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/app.sass';
+
+import { Notifier } from '@airbrake/browser';
+import { ConnectedRouter } from 'connected-react-router';
+import { ThemeProvider } from 'emotion-theming';
+import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
+import { Requester } from 'lib/patchedAirbrakeRequester';
+import React from 'react';
+import { render } from 'react-dom';
+import { hot } from 'react-hot-loader';
+import { Provider } from 'react-redux';
+import configureStore from 'stores/configureStore';
+import history from 'stores/history';
+import theme from 'styles/theme';
+
+import Routes from './Routes';
 
 // Remove the loading class on the body, the javascript has loaded now.
 const body = document.getElementsByTagName('body')[0];
@@ -55,8 +55,14 @@ if (window.config.environment !== 'development') {
   // _requester attributes since the constructor does not allow us to edit the
   // url or the headers used during the request easily. We need to set headers so
   // that we can authenticate against our API endpoint.
-  airbrake._url = window.config.apiEndpoint + '/v5/exception-notifications/';
+  airbrake._url = `${window.config.apiEndpoint}/v5/exception-notifications/`;
   airbrake._requester = new Requester(store).request;
+
+  // set up a filter for reporting addtional information (happa version)
+  airbrake.addFilter(notice => ({
+    ...notice,
+    context: { ...notice.context, version: window.config.happaVersion },
+  }));
 }
 
 // Scroll to the top when we change the URL.

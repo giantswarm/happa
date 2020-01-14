@@ -1,6 +1,6 @@
 const parseErrorMessages = error => {
-  var heading = 'Could not log in';
-  var message =
+  let heading = 'Could not log in';
+  let message =
     'Something went wrong. Please try again later or contact support: support@giantswarm.io';
 
   if (

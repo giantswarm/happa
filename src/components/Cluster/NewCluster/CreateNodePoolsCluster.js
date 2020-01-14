@@ -1,28 +1,27 @@
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
+import { batchedClusterCreate } from 'actions/batchedActions';
+import DocumentTitle from 'components/shared/DocumentTitle';
+import produce from 'immer';
+import { hasAppropriateLength } from 'lib/helpers';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import { TransitionGroup } from 'react-transition-group';
+import { Constants, Providers } from 'shared/constants';
+import { Input } from 'styles';
+import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Button';
+import ValidationErrorMessage from 'UI/ValidationErrorMessage';
+
+import AddNodePool from '../ClusterDetail/AddNodePool';
+import AvailabilityZonesParser from '../ClusterDetail/AvailabilityZonesParser';
 import {
   AddNodePoolFlexColumnDiv,
   AddNodePoolWrapper,
 } from '../ClusterDetail/V5ClusterDetailTable';
-import { Breadcrumb } from 'react-breadcrumbs';
-import { clusterCreate } from 'actions/clusterActions';
-import { connect } from 'react-redux';
-import { css } from '@emotion/core';
-import { hasAppropriateLength } from 'lib/helpers';
-import { Input } from 'styles';
-import { nodePoolsCreate } from 'actions/nodePoolActions';
-import { Providers } from 'shared/constants';
-import { push } from 'connected-react-router';
-import { TransitionGroup } from 'react-transition-group';
-import AddNodePool from '../ClusterDetail/AddNodePool';
-import AvailabilityZonesParser from '../ClusterDetail/AvailabilityZonesParser';
-import Button from 'UI/Button';
-import DocumentTitle from 'components/shared/DocumentTitle';
-import produce from 'immer';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import ReleaseSelector from './ReleaseSelector';
-import SlideTransition from 'styles/transitions/SlideTransition';
-import styled from '@emotion/styled';
-import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
 export const Wrapper = css`
   h1 {
@@ -78,7 +77,7 @@ export const FlexColumnDiv = styled.div`
   .name-container {
     margin-bottom: 21px;
   }
-  input[id='name'] {
+  input[id='cluster-name'] {
     margin-bottom: 0;
   }
 `;
@@ -137,7 +136,7 @@ const RadioWrapperDiv = styled.div`
 `;
 
 const AZWrapperDiv = styled.div`
-  margin: 0 0 8px 24px;
+  margin: 0 0 25px 24px;
   height: 26px;
   display: flex;
   justify-content: flex-start;
@@ -181,9 +180,22 @@ const NodePoolHeading = styled.div`
   word-break: break-all;
 `;
 
-const defaultNodePool = id => ({ data: { name: `Node Pool #${id}` } });
+const defaultNodePool = () => ({
+  data: { name: Constants.DEFAULT_NODEPOOL_NAME },
+});
 
 class CreateNodePoolsCluster extends Component {
+  static errorState() {
+    return (
+      <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
+        <b>Something went wrong while trying to create your cluster.</b>
+        <br />
+        Perhaps our servers are down, please try again later or contact support:
+        support@giantswarm.io
+      </div>
+    );
+  }
+
   state = {
     name: {
       value: this.props.clusterName,
@@ -192,11 +204,6 @@ class CreateNodePoolsCluster extends Component {
     },
     submitting: false,
     error: false,
-    availabilityZonesRandom: {
-      // Select automatically
-      value: 1,
-      valid: true,
-    },
     availabilityZonesLabels: {
       // Manually select AZs
       number: 0,
@@ -219,7 +226,8 @@ class CreateNodePoolsCluster extends Component {
 
   updateName = event => {
     const name = event.target.value;
-    const [isValid, message] = hasAppropriateLength(name, 0, 100);
+    const maxNameLength = 100;
+    const [isValid, message] = hasAppropriateLength(name, 0, maxNameLength);
 
     this.props.updateClusterNameInParent(name);
 
@@ -248,23 +256,17 @@ class CreateNodePoolsCluster extends Component {
       name,
       hasAZLabels,
       availabilityZonesLabels,
-      availabilityZonesRandom,
       nodePoolsForms,
     } = this.state;
 
     const areNodePoolsValid = Object.keys(nodePoolsForms.nodePools)
-      .map(np =>
-        nodePoolsForms.nodePools[np].isValid
-          ? nodePoolsForms.nodePools[np].isValid
-          : false
-      )
+      .map(np => nodePoolsForms.nodePools[np].isValid)
       .every(np => np); // This checks if everything is true.
 
     const isValid =
       name.valid &&
       areNodePoolsValid &&
-      ((hasAZLabels && availabilityZonesLabels.valid) ||
-        (!hasAZLabels && availabilityZonesRandom.valid))
+      ((hasAZLabels && availabilityZonesLabels.valid) || !hasAZLabels)
         ? true
         : false;
 
@@ -278,50 +280,27 @@ class CreateNodePoolsCluster extends Component {
       np => np.data
     );
 
-    try {
-      const newCluster = await this.props.dispatch(
-        clusterCreate(
-          {
-            owner: this.props.selectedOrganization,
-            name: this.state.name.value,
-            release_version: this.props.selectedRelease,
-            master: {
-              availabilityZone: this.state.hasAZLabels
-                ? this.state.availabilityZonesLabels.zonesArray
-                : this.state.availabilityZonesRandom.value,
-            },
-          },
-          true // is v5
-        )
-      );
+    const createPayload = {
+      owner: this.props.selectedOrganization,
+      name: this.state.name.value,
+      release_version: this.props.selectedRelease,
+    };
 
-      await this.props.dispatch(nodePoolsCreate(newCluster.id, nodePools));
-
-      // after successful creation, redirect to cluster details
-      this.props.dispatch(
-        push(
-          `/organizations/${this.props.selectedOrganization}/clusters/${newCluster.id}`
-        )
-      );
-    } catch (error) {
-      console.error(error);
-      this.setState({
-        submitting: false,
-        error: error,
-      });
+    if (this.state.hasAZLabels) {
+      // TODO: don't use array here as long as there can be only one master node.
+      createPayload.master = {
+        availability_zone: this.state.availabilityZonesLabels.zonesArray[0],
+      };
     }
-  };
 
-  errorState() {
-    return (
-      <div className='new-cluster-error flash-messages--flash-message flash-messages--danger'>
-        <b>Something went wrong while trying to create your cluster.</b>
-        <br />
-        Perhaps our servers are down, please try again later or contact support:
-        support@giantswarm.io
-      </div>
+    await this.props.dispatch(
+      batchedClusterCreate(
+        createPayload,
+        true, // is v5
+        nodePools
+      )
     );
-  }
+  };
 
   toggleMasterAZSelector = () => {
     this.setState(state => ({
@@ -379,16 +358,16 @@ class CreateNodePoolsCluster extends Component {
 
               <FlexColumnDiv>
                 {/* Name */}
-                <label htmlFor='name'>
+                <label htmlFor='cluster-name'>
                   <span className='label-span'>Name</span>
                   <div className='name-container'>
                     <input
                       value={name.value}
                       onChange={this.updateName}
-                      id='name'
+                      id='cluster-name'
                       type='text'
                       placeholder={name.value}
-                    ></input>
+                    />
                     <ValidationErrorMessage message={name.validationError} />
                   </div>
                   <p>Give your cluster a name to recognize it among others.</p>
@@ -487,16 +466,17 @@ class CreateNodePoolsCluster extends Component {
               {Object.keys(nodePools).length === 0 && <hr />}
               <TransitionGroup>
                 {Object.keys(nodePools).map(npId => {
-                  const name = nodePools[npId].data.name;
+                  const nodePoolName = nodePools[npId].data.name;
+
                   return (
                     <SlideTransition key={npId} appear={true} direction='down'>
                       <AddNodePoolWrapperDiv>
-                        <NodePoolHeading>{name}</NodePoolHeading>
+                        <NodePoolHeading>{nodePoolName}</NodePoolHeading>
                         <AddNodePoolFlexColumnDiv>
                           <AddNodePool
                             selectedRelease={this.props.selectedRelease}
                             informParent={this.updateNodePoolForm}
-                            name={name}
+                            name={nodePoolName}
                             id={npId}
                           />
                           <i
@@ -504,7 +484,7 @@ class CreateNodePoolsCluster extends Component {
                             title='Remove node pool'
                             aria-hidden='true'
                             onClick={() => this.removeNodePoolForm(npId)}
-                          ></i>
+                          />
                         </AddNodePoolFlexColumnDiv>
                       </AddNodePoolWrapperDiv>
                     </SlideTransition>
@@ -517,7 +497,7 @@ class CreateNodePoolsCluster extends Component {
               <hr style={{ margin: '30px 0' }} />
             </WrapperDiv>
 
-            {this.state.error && this.errorState()}
+            {this.state.error && CreateNodePoolsCluster.errorState()}
 
             <FlexRowDiv>
               <Button
@@ -585,15 +565,17 @@ function mapStateToProps(state) {
   const { availability_zones: AZ } = state.app.info.general;
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
+  // eslint-disable-next-line no-magic-numbers
   const maxAZ = Math.min(AZ.max, 4);
   const minAZ = 1;
   const defaultAZ = AZ.default;
 
-  let selectedOrganization = state.app.selectedOrganization;
+  const selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
-  let clusterCreationStats = state.app.info.stats.cluster_creation_duration;
+  const clusterCreationStats = state.app.info.stats.cluster_creation_duration;
 
-  var defaultInstanceType;
+  // eslint-disable-next-line init-declarations
+  let defaultInstanceType;
   if (
     state.app.info.workers.instance_type &&
     state.app.info.workers.instance_type.default

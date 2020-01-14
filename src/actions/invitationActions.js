@@ -1,7 +1,8 @@
-import * as types from './actionTypes';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import _ from 'underscore';
 import Passage from 'lib/passageClient';
+import _ from 'underscore';
+
+import * as types from './actionTypes';
 
 // invitationsLoad
 // -----------------
@@ -10,11 +11,11 @@ import Passage from 'lib/passageClient';
 
 export function invitationsLoad() {
   return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
+    const token = getState().app.loggedInUser.auth.token;
 
-    var passage = new Passage({ endpoint: window.config.passageEndpoint });
+    const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
-    var alreadyFetching = getState().entities.invitations.isFetching;
+    const alreadyFetching = getState().entities.invitations.isFetching;
 
     if (alreadyFetching) {
       return new Promise(resolve => {
@@ -27,7 +28,7 @@ export function invitationsLoad() {
     return passage
       .getInvitations(token)
       .then(invitesArray => {
-        var invites = {};
+        const invites = {};
 
         _.each(invitesArray, invite => {
           invite.emaildomain = invite.email.split('@')[1];
@@ -40,6 +41,7 @@ export function invitationsLoad() {
         });
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error when loading invitation:', error);
 
         new FlashMessage(
@@ -65,9 +67,9 @@ export function invitationsLoad() {
 
 export function invitationCreate(invitation) {
   return function(dispatch, getState) {
-    var token = getState().app.loggedInUser.auth.token;
+    const token = getState().app.loggedInUser.auth.token;
 
-    var passage = new Passage({ endpoint: window.config.passageEndpoint });
+    const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
     dispatch({ type: types.INVITATION_CREATE });
 
@@ -87,6 +89,7 @@ export function invitationCreate(invitation) {
         return result;
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error('Error inviting user:', error);
 
         new FlashMessage(

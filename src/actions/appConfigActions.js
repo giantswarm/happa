@@ -1,6 +1,8 @@
-import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import GiantSwarm from 'giantswarm';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { StatusCodes } from 'shared/constants';
+
+import * as types from './actionTypes';
 
 /**
  * updateAppConfig updates an appConfig
@@ -10,19 +12,31 @@ import GiantSwarm from 'giantswarm';
  * @param {Object} values The values which will be set for the uservalues configmap.
  */
 export function updateAppConfig(appName, clusterID, values) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({
       type: types.CLUSTER_UPDATE_APP_CONFIG,
       clusterID,
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
-    return appConfigsApi
-      .modifyClusterAppConfig(clusterID, appName, {
-        body: values,
-      })
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterID);
+
+    let updateClusterAppConfig = appConfigsApi.modifyClusterAppConfigV4.bind(
+      appConfigsApi
+    );
+
+    if (isV5Cluster) {
+      updateClusterAppConfig = appConfigsApi.modifyClusterAppConfigV5.bind(
+        appConfigsApi
+      );
+    }
+
+    return updateClusterAppConfig(clusterID, appName, {
+      body: values,
+    })
       .then(() => {
         dispatch({
           type: types.CLUSTER_UPDATE_APP_CONFIG_SUCCESS,
@@ -43,13 +57,13 @@ export function updateAppConfig(appName, clusterID, values) {
           appName,
         });
 
-        if (error.status === 404) {
+        if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
             `Could not find an app or app config to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
-        } else if (error.status === 400) {
+        } else if (error.status === StatusCodes.BadRequest) {
           new FlashMessage(
             `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
             messageType.ERROR,
@@ -74,19 +88,31 @@ export function updateAppConfig(appName, clusterID, values) {
  * @param {Object} values The values which will be set for the uservalues configmap.
  */
 export function createAppConfig(appName, clusterID, values) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({
       type: types.CLUSTER_CREATE_APP_CONFIG,
       clusterID,
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
-    return appConfigsApi
-      .createClusterAppConfig(clusterID, appName, {
-        body: values,
-      })
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterID);
+
+    let createClusterAppConfig = appConfigsApi.createClusterAppConfigV4.bind(
+      appConfigsApi
+    );
+
+    if (isV5Cluster) {
+      createClusterAppConfig = appConfigsApi.createClusterAppConfigV5.bind(
+        appConfigsApi
+      );
+    }
+
+    return createClusterAppConfig(clusterID, appName, {
+      body: values,
+    })
       .then(() => {
         dispatch({
           type: types.CLUSTER_CREATE_APP_CONFIG_SUCCESS,
@@ -107,13 +133,13 @@ export function createAppConfig(appName, clusterID, values) {
           appName,
         });
 
-        if (error.status === 404) {
+        if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
             `Could not find an app to create a ConfigMap for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
-        } else if (error.status === 400) {
+        } else if (error.status === StatusCodes.BadRequest) {
           new FlashMessage(
             `The request appears to be invalid. Please make sure all fields are filled in correctly.`,
             messageType.ERROR,
@@ -137,17 +163,29 @@ export function createAppConfig(appName, clusterID, values) {
  * @param {Object} clusterID What cluster it is on.
  */
 export function deleteAppConfig(appName, clusterID) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({
       type: types.CLUSTER_DELETE_APP_CONFIG,
       clusterID,
       appName,
     });
 
-    var appConfigsApi = new GiantSwarm.AppConfigsApi();
+    const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
-    return appConfigsApi
-      .deleteClusterAppConfig(clusterID, appName)
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterID);
+
+    let deleteClusterAppConfig = appConfigsApi.deleteClusterAppConfigV4.bind(
+      appConfigsApi
+    );
+
+    if (isV5Cluster) {
+      deleteClusterAppConfig = appConfigsApi.deleteClusterAppConfigV5.bind(
+        appConfigsApi
+      );
+    }
+
+    return deleteClusterAppConfig(clusterID, appName)
       .then(() => {
         dispatch({
           type: types.CLUSTER_DELETE_APP_CONFIG_SUCCESS,
@@ -168,13 +206,13 @@ export function deleteAppConfig(appName, clusterID) {
           appName,
         });
 
-        if (error.status === 404) {
+        if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
             `Could not find ConfigMap for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
-        } else if (error.status === 400) {
+        } else if (error.status === StatusCodes.BadRequest) {
           new FlashMessage(
             `The request appears to be invalid. Please try again later or contact support: support@giantswarm.io.`,
             messageType.ERROR,

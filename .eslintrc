@@ -98,6 +98,7 @@
     ],
     "no-multi-str": 1,
     "no-new-func": 2,
+    "newline-before-return": 1,
     "no-new-wrappers": 2,
     "no-octal": 2,
     "no-octal-escape": 2,
@@ -141,7 +142,7 @@
     "no-confusing-arrow": 2,
     "no-const-assign": 2,
     "no-dupe-class-members": 2,
-    "no-duplicate-imports": 2,
+    "no-duplicate-imports": 0,
     "no-new-symbol": 2,
     "no-restricted-imports": 2,
     "no-this-before-super": 2,
@@ -155,10 +156,7 @@
     "prefer-spread": 2,
     "require-yield": 2,
     "prefer-template": 2,
-    "sort-imports": [
-      1,
-      { "memberSyntaxSortOrder": ["none", "all", "multiple", "single"] }
-    ],
+    "sort-imports": 0,
     "react/button-has-type": 2,
     "react/prefer-es6-class": [1, "always"],
     "react/no-find-dom-node": 2,
@@ -196,10 +194,14 @@
     "react/jsx-curly-brace-presence": 1,
     "react/jsx-pascal-case": 1,
     "react-hooks/rules-of-hooks": 2,
-    "react-hooks/exhaustive-deps": 1
+    "react-hooks/exhaustive-deps": 1,
+    "simple-import-sort/sort": 2,
+    "import/first": 2,
+    "import/newline-after-import": 2,
+    "import/no-duplicates": 2
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "plugins": ["emotion", "react", "react-hooks"],
+  "plugins": ["emotion", "react", "react-hooks", "simple-import-sort", "import"],
   "settings": {
     "react": {
       "version": "16.9.0"

@@ -1,9 +1,9 @@
-import { connect } from 'react-redux';
 import { organizationCredentialsLoad } from 'actions/organizationActions';
-import { Providers } from 'shared/constants';
-import AWSAccountID from 'UI/AWSAccountID';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Providers } from 'shared/constants';
+import AWSAccountID from 'UI/AWSAccountID';
 
 class ProviderCredentials extends React.Component {
   componentDidMount() {
@@ -13,8 +13,8 @@ class ProviderCredentials extends React.Component {
   }
 
   render() {
-    var showInfo = false;
-    var details = (
+    let showInfo = false;
+    let details = (
       <span>
         Provider credentials for {this.props.organizationName}{' '}
         {this.props.provider}
@@ -63,9 +63,9 @@ class ProviderCredentials extends React.Component {
           <div className='col-9'>{details}</div>
         </div>
       );
-    } else {
-      return <div />;
     }
+
+    return <div />;
   }
 }
 

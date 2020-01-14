@@ -1,29 +1,30 @@
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
+import { nodePoolsCreate } from 'actions/nodePoolActions';
+import produce from 'immer';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import ReactTimeout from 'react-timeout';
+import { TransitionGroup } from 'react-transition-group';
+import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
+import BaseTransition from 'styles/transitions/BaseTransition';
+import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Button';
 import {
   clusterNodePools,
   getCpusTotalNodePools,
   getMemoryTotalNodePools,
   getNumberOfNodePoolsNodes,
 } from 'utils/clusterUtils';
-import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
-import { connect } from 'react-redux';
-import { css } from '@emotion/core';
-import { nodePoolsCreate } from 'actions/nodePoolActions';
-import { TransitionGroup } from 'react-transition-group';
+
 import AddNodePool from './AddNodePool';
-import BaseTransition from 'styles/transitions/BaseTransition';
-import Button from 'UI/Button';
 import CredentialInfoRow from './CredentialInfoRow';
-import moment from 'moment';
 import NodePool from './NodePool';
 import NodesRunning from './NodesRunning';
 import PortMappingsRow from './PortMappingsRow';
-import produce from 'immer';
-import PropTypes from 'prop-types';
-import React from 'react';
-import ReactTimeout from 'react-timeout';
 import RegionAndVersions from './RegionAndVersions';
-import SlideTransition from 'styles/transitions/SlideTransition';
-import styled from '@emotion/styled';
 import URIBlock from './URIBlock';
 
 export const Upgrade = styled.div`
@@ -290,7 +291,6 @@ class V5ClusterDetailTable extends React.Component {
   state = {
     loading: false,
     availableZonesGridTemplateAreas: '',
-    awsInstanceTypes: {},
     RAM: 0,
     CPUs: 0,
     workerNodesRunning: 0,
@@ -308,42 +308,50 @@ class V5ClusterDetailTable extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nodePools !== this.props.nodePools && this.props.nodePools) {
+    if (prevProps.nodePools !== this.props.nodePools) {
       this.produceNodePools();
     }
   }
 
   // TODO Move this to the action creator so it will be triggered on every NPs load.
   produceNodePools = () => {
-    this.setState({ loading: true });
-    const nodePools = clusterNodePools(
-      this.props.nodePools,
-      this.props.cluster
-    );
+    if (Object.keys(this.props.nodePools).length > 0) {
+      this.setState({ loading: true });
+      const nodePools = clusterNodePools(
+        this.props.nodePools,
+        this.props.cluster
+      );
 
-    const allZones = nodePools
-      ? nodePools
-          .reduce((accumulator, current) => {
-            return [...accumulator, ...current.availability_zones];
-          }, [])
-          .map(zone => zone.slice(-1))
-      : [];
+      const allZones = nodePools
+        ? nodePools
+            .reduce((accumulator, current) => {
+              return [...accumulator, ...current.availability_zones];
+            }, [])
+            .map(zone => zone.slice(-1))
+        : [];
 
-    // This array stores available zones that are in at least one node pool.
-    // We only want unique values because this is used fot building the grid.
-    const availableZonesGridTemplateAreas = [...new Set(allZones)]
-      .sort()
-      .join(' ');
-    this.setState({
-      availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
-    });
+      // This array stores available zones that are in at least one node pool.
+      // We only want unique values because this is used fot building the grid.
+      const availableZonesGridTemplateAreas = [...new Set(allZones)]
+        .sort()
+        .join(' ');
+      this.setState({
+        availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
+      });
 
-    // Compute RAM & CPU:
-    const RAM = getMemoryTotalNodePools(nodePools);
-    const CPUs = getCpusTotalNodePools(nodePools);
-    const workerNodesRunning = getNumberOfNodePoolsNodes(nodePools);
+      // Compute RAM & CPU:
+      const RAM = getMemoryTotalNodePools(nodePools);
+      const CPUs = getCpusTotalNodePools(nodePools);
+      const workerNodesRunning = getNumberOfNodePoolsNodes(nodePools);
 
-    this.setState({ nodePools, RAM, CPUs, workerNodesRunning, loading: false });
+      this.setState({
+        nodePools,
+        RAM,
+        CPUs,
+        workerNodesRunning,
+        loading: false,
+      });
+    }
   };
 
   toggleAddNodePoolForm = () =>
@@ -352,14 +360,14 @@ class V5ClusterDetailTable extends React.Component {
     }));
 
   updateNodePoolForm = data => {
-    this.setState(
-      produce(this.state, draft => {
-        draft.nodePoolForm = { ...this.state.nodePoolForm, ...data };
+    this.setState(prevState =>
+      produce(prevState, draft => {
+        draft.nodePoolForm = { ...prevState.nodePoolForm, ...data };
       })
     );
   };
 
-  createNodePool = () => {
+  createNodePool = async () => {
     const data = [this.state.nodePoolForm.data];
 
     this.setState(
@@ -369,7 +377,7 @@ class V5ClusterDetailTable extends React.Component {
     );
 
     this.toggleAddNodePoolForm();
-    this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
+    await this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
   };
 
   /**
@@ -381,6 +389,7 @@ class V5ClusterDetailTable extends React.Component {
     if (cluster && cluster.lastUpdated) {
       return moment(cluster.lastUpdated).fromNow();
     }
+
     return 'n/a';
   }
 
@@ -474,9 +483,9 @@ class V5ClusterDetailTable extends React.Component {
                       return -1;
                     } else if (a.id > b.id) {
                       return 1;
-                    } else {
-                      return -1;
                     }
+
+                    return -1;
                   })
                   .map(nodePool => (
                     <BaseTransition
@@ -545,12 +554,10 @@ class V5ClusterDetailTable extends React.Component {
         ) : (
           <FlexWrapperDiv className={zeroNodePools && 'zero-nodepools'}>
             {zeroNodePools && (
-              <>
-                <p>
-                  Add at least one node pool to this cluster so that you can
-                  actually run workloads.
-                </p>
-              </>
+              <p>
+                Add at least one node pool to this cluster so that you can
+                actually run workloads.
+              </p>
             )}
             <Button onClick={this.toggleAddNodePoolForm}>
               <i className='fa fa-add-circle' /> ADD NODE POOL

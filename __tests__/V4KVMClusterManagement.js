@@ -71,7 +71,7 @@ afterAll(() => {
   });
 });
 
-it('renders all the v4 KVM cluster data correctly without nodes ready', async () => {
+it('renders all the v4 KVM cluster data correctly', async () => {
   const { getByText, getAllByText } = renderRouteWithStore(ROUTE);
 
   await wait(() => {
@@ -91,13 +91,17 @@ it('renders all the v4 KVM cluster data correctly without nodes ready', async ()
     expect(portsContainer).toContainHTML(html);
   });
 
-  const nodes = getByText('Nodes').nextSibling;
   const nodesRunning = getNumberOfNodes({
     ...v4KVMClusterResponse,
     status: v4KVMClusterStatusResponse,
+  }).toString();
+
+  await wait(() => {
+    expect(getByText('Nodes').nextSibling.textContent).toBe(nodesRunning);
   });
-  expect(nodes).toHaveTextContent(nodesRunning);
 });
+
+/******************** PENDING TESTS ********************/
 
 it.skip(`shows the v4 KVM cluster scaling modal when the button is clicked with default values and 
 scales correctly`, async () => {});

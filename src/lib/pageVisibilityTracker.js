@@ -23,8 +23,9 @@ class PageVisibilityTracker {
   addEventListener(func) {
     if (
       typeof document.addEventListener === 'undefined' ||
-      this.hidden === undefined
+      typeof this.hidden === 'undefined'
     ) {
+      // eslint-disable-next-line no-console
       console.error(
         'This piece of code requires a browser that supports the Page Visibility API.'
       );

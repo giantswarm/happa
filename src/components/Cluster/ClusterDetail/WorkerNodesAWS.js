@@ -1,11 +1,12 @@
-import { Code } from 'styles';
-import { LineDiv, WrapperDiv } from './WorkerNodesAzure';
-import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
-import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
-import RefreshableLabel from 'UI/RefreshableLabel';
+import { Code } from 'styles';
 import theme from 'styles/theme';
+import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
+import Button from 'UI/Button';
+import RefreshableLabel from 'UI/RefreshableLabel';
+
+import { LineDiv, WrapperDiv } from './WorkerNodesAzure';
 
 function WorkerNodesAWS({
   az,
@@ -28,9 +29,9 @@ function WorkerNodesAWS({
 
   // TODO remove after checks
   const workerNodesDesiredText =
-    workerNodesDesired !== undefined ? workerNodesDesired : 0;
+    typeof workerNodesDesired !== 'undefined' ? workerNodesDesired : 0;
   const workerNodesRunningText =
-    workerNodesRunning !== undefined ? workerNodesRunning : 0;
+    typeof workerNodesRunning !== 'undefined' ? workerNodesRunning : 0;
 
   return (
     <WrapperDiv>

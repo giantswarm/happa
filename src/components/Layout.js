@@ -1,33 +1,31 @@
-import * as UserActions from 'actions/userActions';
 import {
   batchedLayout,
   batchedOrganizationSelect,
 } from 'actions/batchedActions';
-import { bindActionCreators } from 'redux';
-import { Breadcrumb } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { organizationSelect } from 'actions/organizationActions';
-import { organizationsLoad } from 'actions/organizationActions';
-import { push } from 'connected-react-router';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import AccountSettings from './AccountSettings/AccountSettings';
-import AppCatalog from './AppCatalog/AppCatalog';
+import * as UserActions from 'actions/userActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
+import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
-import Home from './Home/Home';
-import LoadingOverlay from './UI/LoadingOverlay';
-import Modals from './Modals/Modals';
-import Navigation from './UI/Navigation/Navigation';
-import Organizations from './Organizations/Organizations';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+
+import AccountSettings from './AccountSettings/AccountSettings';
+import AppCatalog from './AppCatalog/AppCatalog';
+import Home from './Home/Home';
+import Modals from './Modals/Modals';
+import Organizations from './Organizations/Organizations';
+import LoadingOverlay from './UI/LoadingOverlay';
+import Navigation from './UI/Navigation/Navigation';
 import Users from './Users/Users';
 
-var defaultClient = GiantSwarm.ApiClient.instance;
+const defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 defaultClient.timeout = 10000;
-var defaultClientAuth =
+const defaultClientAuth =
   defaultClient.authentications['AuthorizationHeaderToken'];
 
 class Layout extends React.Component {
@@ -54,7 +52,7 @@ class Layout extends React.Component {
   render() {
     return (
       <DocumentTitle>
-        <LoadingOverlay loading={!this.props.firstLoadComplete}>
+        <LoadingOverlay loading={this.props.loadingClustersList}>
           <Modals />
           <Navigation
             onSelectOrganization={this.selectOrganization}
@@ -98,6 +96,7 @@ Layout.propTypes = {
   dispatch: PropTypes.func,
   actions: PropTypes.object,
   catalogs: PropTypes.object,
+  loadingClustersList: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
@@ -105,7 +104,7 @@ function mapStateToProps(state) {
     organizations: state.entities.organizations,
     user: state.app.loggedInUser,
     selectedOrganization: state.app.selectedOrganization,
-    firstLoadComplete: state.app.firstLoadComplete,
+    loadingClustersList: state.loadingFlags.CLUSTERS_LIST,
     catalogs: state.entities.catalogs,
   };
 }
@@ -117,7 +116,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Layout);
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);

@@ -1,44 +1,15 @@
-import { memoize } from 'underscore';
 import { replace } from 'connected-react-router';
-import AppListItems from './AppListItems';
-import AppListSearch from './AppListSearch';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { memoize } from 'underscore';
+
+import AppListItems from './AppListItems';
+import AppListSearch from './AppListSearch';
 
 const SEARCH_URL_PARAM = 'q';
 
 class AppListInner extends React.Component {
-  iconErrors = {};
-
-  state = {
-    scrollToApp: null,
-  };
-
-  componentDidMount() {
-    // The hash value of the url is used by the app detail screen's back button
-    // to indicate what app we should scroll to.
-    const scrollToApp = this.props.location.hash.substring(1);
-
-    if (scrollToApp) {
-      this.setState({ scrollToApp });
-    }
-  }
-
-  getAppsWithOrderedVersions = memoize(allApps => {
-    const apps = Object.values(allApps);
-
-    apps.map(this.sortVersionsByCreationDateDESC);
-
-    return apps;
-  });
-
-  sortVersionsByCreationDateDESC = versions => {
-    return versions.sort((a, b) => {
-      return new Date(b.created) - new Date(a.created);
-    });
-  };
-
-  filterApps(searchQuery, allApps) {
+  static filterApps(searchQuery, allApps) {
     const fieldsToCheck = ['name', 'description', 'keywords'];
     const trimmedSearchQuery = searchQuery.trim().toLowerCase();
 
@@ -64,19 +35,49 @@ class AppListInner extends React.Component {
     return filteredApps;
   }
 
+  static getSearchQueryFromLocation(location) {
+    const searchParams = new URLSearchParams(location.search);
+    const searchQuery = searchParams.get(SEARCH_URL_PARAM);
+
+    return searchQuery || '';
+  }
+
+  iconErrors = {};
+
+  state = {
+    scrollToApp: null,
+  };
+
+  componentDidMount() {
+    // The hash value of the url is used by the app detail screen's back button
+    // to indicate what app we should scroll to.
+    const scrollToApp = this.props.location.hash.substring(1);
+
+    if (scrollToApp) {
+      this.setState({ scrollToApp });
+    }
+  }
+
+  getAppsWithOrderedVersions = memoize(allApps => {
+    const apps = Object.values(allApps);
+
+    apps.map(this.sortVersionsByCreationDateDESC);
+
+    return apps;
+  });
+
+  sortVersionsByCreationDateDESC = versions => {
+    return versions.concat().sort((a, b) => {
+      return new Date(b.created) - new Date(a.created);
+    });
+  };
+
   setSearchQuery(query) {
     this.props.dispatch(
       replace({
         search: query,
       })
     );
-  }
-
-  getSearchQueryFromLocation(location) {
-    const searchParams = new URLSearchParams(location.search);
-    const searchQuery = searchParams.get(SEARCH_URL_PARAM);
-
-    return searchQuery || '';
   }
 
   updateSearchParams = e => {
@@ -102,10 +103,12 @@ class AppListInner extends React.Component {
   render() {
     const { catalog } = this.props;
 
-    const searchQuery = this.getSearchQueryFromLocation(this.props.location);
+    const searchQuery = AppListInner.getSearchQueryFromLocation(
+      this.props.location
+    );
 
     const allApps = this.getAppsWithOrderedVersions(catalog.apps);
-    const filteredApps = this.filterApps(searchQuery, allApps);
+    const filteredApps = AppListInner.filterApps(searchQuery, allApps);
 
     return (
       <>

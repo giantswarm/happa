@@ -1,7 +1,8 @@
-import * as types from './actionTypes';
+import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import cmp from 'semver-compare';
-import GiantSwarm from 'giantswarm';
+
+import * as types from './actionTypes';
 
 export function loadReleases() {
   return function(dispatch) {
@@ -24,7 +25,8 @@ export function loadReleases() {
         }, {});
 
         const activeSortedReleases = Object.keys(releases)
-          .filter(release => releases[release].active)
+          // TODO remove second condition
+          .filter(release => releases[release].active || release === '10.0.0')
           .sort(cmp)
           .reverse();
 

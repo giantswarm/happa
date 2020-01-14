@@ -1,23 +1,24 @@
 import '@testing-library/jest-dom/extend-expect';
 import {
   API_ENDPOINT,
+  AWSInfoResponse,
+  ORGANIZATION,
+  V4_CLUSTER,
   appCatalogsResponse,
   appsResponse,
-  AWSInfoResponse,
   getPersistedMockCall,
-  ORGANIZATION,
   orgResponse,
   orgsResponse,
   releasesResponse,
   userResponse,
-  V4_CLUSTER,
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
 } from 'testUtils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+import { getNumberOfNodes } from 'utils/clusterUtils';
 import nock from 'nock';
+import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 // Cluster and route we are testing with.
 const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V4_CLUSTER.id}`;
@@ -84,12 +85,23 @@ it('renders all the v4 AWS cluster data correctly without nodes ready', async ()
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
   expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
-  expect(
-    getByTestId('desired-nodes').querySelector('div:nth-child(2)').textContent
-  ).toBe('3');
-  expect(
-    getByTestId('running-nodes').querySelector('div:nth-child(2)').textContent
-  ).toBe('3');
+
+  const nodesRunning = getNumberOfNodes({
+    ...v4AWSClusterResponse,
+    status: v4AWSClusterStatusResponse,
+  }).toString();
+
+  const nodesDesired = v4AWSClusterStatusResponse.cluster.scaling.desiredCapacity.toString();
+
+  await wait(() => {
+    expect(
+      getByTestId('running-nodes').querySelector('div:nth-child(2)').textContent
+    ).toBe(nodesRunning);
+    expect(
+      getByTestId('desired-nodes').querySelector('div:nth-child(2)').textContent
+    ).toBe(nodesDesired);
+  });
+
   expect(getByText(v4AWSClusterResponse.api_endpoint)).toBeInTheDocument();
   // n/a because the cluster hasn't been updated yet
   expect(document.querySelector('abbr')).toHaveTextContent('n/a');
@@ -260,12 +272,6 @@ it('patches v4 cluster name correctly', async () => {
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
     .reply(200, clusterPatchResponse);
 
-  requests.cluster.persist(false);
-  requests.cluster = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    clusterPatchResponse
-  );
-
   // Mounting
   const { getByText, getByDisplayValue } = renderRouteWithStore(ROUTE);
 
@@ -293,11 +299,8 @@ it('patches v4 cluster name correctly', async () => {
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
   clusterPatchRequest.done();
-
-  // Restore response
-  requests.cluster.persist(false);
-  requests.cluster = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    v4AWSClusterResponse
-  );
 });
+
+/******************** PENDING TESTS ********************/
+
+it.skip('renders all the v4 AWS nodes', async () => {});

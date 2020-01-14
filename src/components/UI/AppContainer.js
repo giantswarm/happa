@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 export const APP_CONTAINER_HEIGHT = 200;
 export const APP_CONTAINER_IMAGE_HEIGHT = 100;
@@ -140,6 +140,7 @@ const AppContainer = ({
   catalog,
   searchQuery,
   onImgError,
+  hasIconError,
   ...props
 }) => {
   const { icon, name, repoName, version } = appVersions[0];
@@ -150,9 +151,15 @@ const AppContainer = ({
       <StyledLink to={to}>
         {repoName === 'managed' && <Badge>MANAGED</Badge>}
         <AppIcon>
-          <StyledAppImage className={!icon && IMG_NO_SRC_CLASSNAME}>
-            <img src={icon} alt={name} onError={onImgFailLoading(onImgError)} />
-          </StyledAppImage>
+          {!hasIconError && (
+            <StyledAppImage className={!icon && IMG_NO_SRC_CLASSNAME}>
+              <img
+                src={icon}
+                alt={name}
+                onError={onImgFailLoading(onImgError)}
+              />
+            </StyledAppImage>
+          )}
           <h3>{name}</h3>
         </AppIcon>
         <AppDetails>
@@ -168,6 +175,7 @@ AppContainer.propTypes = {
   appVersions: PropTypes.array,
   catalog: PropTypes.object,
   searchQuery: PropTypes.string,
+  hasIconError: PropTypes.bool,
   onImgError: PropTypes.func,
 };
 

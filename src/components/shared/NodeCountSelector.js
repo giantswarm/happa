@@ -1,7 +1,7 @@
-import NumberPicker from 'UI/NumberPicker';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
+import NumberPicker from 'UI/NumberPicker';
 
 const DEFAULT_VALUE_CONSTRAINTS = {
   min: 1,
@@ -107,27 +107,27 @@ class NodeCountSelector extends React.Component {
           </div>
         </form>
       );
-    } else {
-      return (
-        <div className='row'>
-          <div className='col-12'>
-            <form onSubmit={this.handleFormSubmit}>
-              <label data-testid='node-count-selector-picker'>
-                <NumberPicker
-                  label=''
-                  min={minValue}
-                  max={maxValue}
-                  onChange={this.updateNodeCount}
-                  readOnly={readOnly}
-                  stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
-                  value={scaling.max}
-                />
-              </label>
-            </form>
-          </div>
-        </div>
-      );
     }
+
+    return (
+      <div className='row'>
+        <div className='col-12'>
+          <form onSubmit={this.handleFormSubmit}>
+            <label data-testid='node-count-selector-picker'>
+              <NumberPicker
+                label=''
+                min={minValue}
+                max={maxValue}
+                onChange={this.updateNodeCount}
+                readOnly={readOnly}
+                stepSize={DEFAULT_VALUE_CONSTRAINTS.stepSize}
+                value={scaling.max}
+              />
+            </label>
+          </form>
+        </div>
+      </div>
+    );
   }
 }
 
@@ -142,6 +142,7 @@ NodeCountSelector.defaultProps = {
     max: DEFAULT_VALUE_CONSTRAINTS.max,
     maxValid: true,
   },
+  // eslint-disable-next-line no-empty-function
   onChange: () => {},
 };
 

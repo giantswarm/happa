@@ -8,7 +8,7 @@ export const nodePoolsResponse = [
       aws: { instance_type: 'm3.xlarge' },
       volume_sizes_gb: { docker: 100, kubelet: 100 },
     },
-    status: { nodes: 0, nodes_ready: 0 },
+    status: { nodes: 3, nodes_ready: 3 },
     subnet: '10.1.8.0/24',
   },
   {
@@ -20,7 +20,7 @@ export const nodePoolsResponse = [
       aws: { instance_type: 'm3.xlarge' },
       volume_sizes_gb: { docker: 100, kubelet: 100 },
     },
-    status: { nodes: 0, nodes_ready: 0 },
+    status: { nodes: 3, nodes_ready: 3 },
     subnet: '10.1.7.0/24',
   },
 ];

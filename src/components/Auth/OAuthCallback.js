@@ -1,12 +1,12 @@
 import * as userActions from 'actions/userActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
 import Auth from 'lib/auth0';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 class OAuthCallback extends React.Component {
@@ -28,8 +28,9 @@ class OAuthCallback extends React.Component {
             .then(() => {
               props.dispatch(push('/'));
             })
-            .catch(err => {
-              console.error(err);
+            .catch(authError => {
+              // eslint-disable-next-line no-console
+              console.error(authError);
             });
         } else {
           this.setState({ error: err });
@@ -97,7 +98,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(OAuthCallback);
+export default connect(mapStateToProps, mapDispatchToProps)(OAuthCallback);

@@ -1,21 +1,37 @@
-import { debounce } from 'underscore';
-import { FixedSizeGrid as List } from 'react-window';
 import { withTheme } from 'emotion-theming';
 import PropTypes from 'prop-types';
 import React from 'react';
 import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller/WindowScroller';
+import { FixedSizeGrid as List } from 'react-window';
+import { debounce } from 'underscore';
 
 const MIN_COLUMN_COUNT = 1;
+const RESPONSIVE_FEATURES_UPDATE_TIME = 300;
 
 class VirtualizedScrollableGrid extends React.PureComponent {
-  gridRef = React.createRef();
-  componentMounted = false;
-
   static defaultProps = {
     height: window.innerHeight,
     width: window.innerWidth,
     adaptWidthToElement: null,
   };
+
+  static setWidth(props) {
+    const { adaptWidthToElement, width } = props;
+    let widthToSet = 0;
+
+    if (adaptWidthToElement === null) {
+      widthToSet = width;
+    } else {
+      widthToSet = adaptWidthToElement.clientWidth;
+    }
+
+    return {
+      width: widthToSet,
+    };
+  }
+
+  gridRef = React.createRef();
+  componentMounted = false;
 
   state = {
     columnCount: 1,
@@ -43,7 +59,10 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     const { current: gridElement } = this.gridRef;
 
     if (gridElement && index !== -1) {
-      const [rowIndex, columnIndex] = this.getGridIndexesFromAbsoluteIndex(
+      const [
+        rowIndex,
+        columnIndex,
+      ] = VirtualizedScrollableGrid.getGridIndexesFromAbsoluteIndex(
         index,
         colCount
       );
@@ -59,16 +78,16 @@ class VirtualizedScrollableGrid extends React.PureComponent {
   updateResponsiveFeatures = debounce(() => {
     const newState = Object.assign(
       {},
-      this.setColumnCount(this.props),
-      this.setWidth(this.props)
+      VirtualizedScrollableGrid.setColumnCount(this.props),
+      VirtualizedScrollableGrid.setWidth(this.props)
     );
 
     if (this.componentMounted) {
       this.setState(newState);
     }
-  }, 300);
+  }, RESPONSIVE_FEATURES_UPDATE_TIME);
 
-  setColumnCount(props) {
+  static setColumnCount(props) {
     const { theme, columnCount } = props;
 
     let columnCountToSet = MIN_COLUMN_COUNT;
@@ -76,7 +95,7 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     if (typeof columnCount === 'number') {
       columnCountToSet = columnCount;
     } else {
-      const currentColumnCount = this.findCurrentColumnCount(
+      const currentColumnCount = VirtualizedScrollableGrid.findCurrentColumnCount(
         columnCount,
         theme
       );
@@ -94,21 +113,6 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     };
   }
 
-  setWidth(props) {
-    const { adaptWidthToElement, width } = props;
-    let widthToSet = 0;
-
-    if (adaptWidthToElement === null) {
-      widthToSet = width;
-    } else {
-      widthToSet = adaptWidthToElement.clientWidth;
-    }
-
-    return {
-      width: widthToSet,
-    };
-  }
-
   handleScroll = scrollDestination => {
     const { current } = this.gridRef;
 
@@ -117,24 +121,24 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     }
   };
 
-  findCurrentColumnCount(columnCountObj, theme) {
+  static findCurrentColumnCount(columnCountObj, theme) {
     const windowWidth = window.innerWidth;
 
     const currentColumn = Object.keys(columnCountObj).find(breakpoint => {
       const currentBreakpointResolution = theme.breakpoints[breakpoint];
 
       return (
-        currentBreakpointResolution !== undefined &&
+        typeof currentBreakpointResolution !== 'undefined' &&
         windowWidth < currentBreakpointResolution
       );
     });
 
-    if (currentColumn === undefined) return null;
+    if (typeof currentColumn === 'undefined') return null;
 
     return columnCountObj[currentColumn];
   }
 
-  getAbsoluteIndexFromGridIndexes(rowIndex, columnIndex, colCount) {
+  static getAbsoluteIndexFromGridIndexes(rowIndex, columnIndex, colCount) {
     return (rowIndex + 1) * colCount - (columnIndex + 1);
   }
 
@@ -144,7 +148,7 @@ class VirtualizedScrollableGrid extends React.PureComponent {
    * @param {Number} colCount Column Count
    * @returns {[Number, Number]} [RowIndex, ColIndex]
    */
-  getGridIndexesFromAbsoluteIndex(index, colCount) {
+  static getGridIndexesFromAbsoluteIndex(index, colCount) {
     return [Math.floor(index / colCount), index % colCount];
   }
 
@@ -158,42 +162,40 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     const newStyle = Object.assign({}, this.props.style, { direction: 'ltr' });
 
     return (
-      <>
-        <WindowScroller onScroll={this.handleScroll}>
-          {({ isScrolling, onChildScroll, scrollTop }) => (
-            <List
-              direction='rtl'
-              ref={this.gridRef}
-              columnCount={columnCount}
-              rowCount={rowCount}
-              rowHeight={this.props.rowHeight}
-              columnWidth={columnWidth}
-              width={width}
-              height={this.props.height}
-              isScrolling={isScrolling}
-              onScroll={onChildScroll}
-              scrollTop={scrollTop}
-              className={this.props.className}
-              style={newStyle}
-            >
-              {({ columnIndex, rowIndex, style }) => {
-                const itemIndex = this.getAbsoluteIndexFromGridIndexes(
-                  rowIndex,
-                  columnIndex,
-                  columnCount
-                );
-                const item = data[itemIndex];
+      <WindowScroller onScroll={this.handleScroll}>
+        {({ isScrolling, onChildScroll, scrollTop }) => (
+          <List
+            direction='rtl'
+            ref={this.gridRef}
+            columnCount={columnCount}
+            rowCount={rowCount}
+            rowHeight={this.props.rowHeight}
+            columnWidth={columnWidth}
+            width={width}
+            height={this.props.height}
+            isScrolling={isScrolling}
+            onScroll={onChildScroll}
+            scrollTop={scrollTop}
+            className={this.props.className}
+            style={newStyle}
+          >
+            {({ columnIndex, rowIndex, style }) => {
+              const itemIndex = VirtualizedScrollableGrid.getAbsoluteIndexFromGridIndexes(
+                rowIndex,
+                columnIndex,
+                columnCount
+              );
+              const item = data[itemIndex];
 
-                if (!item) {
-                  return null;
-                }
+              if (!item) {
+                return null;
+              }
 
-                return this.props.children(style, item);
-              }}
-            </List>
-          )}
-        </WindowScroller>
-      </>
+              return this.props.children(style, item);
+            }}
+          </List>
+        )}
+      </WindowScroller>
     );
   }
 }

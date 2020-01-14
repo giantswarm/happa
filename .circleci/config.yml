@@ -1,7 +1,8 @@
-version: 2
+orbs:
+  architect: giantswarm/architect@0.4.5
+version: 2.1
 
 workflows:
-  version: 2
   build-and-deploy:
     jobs:
       - build:
@@ -10,9 +11,17 @@ workflows:
               only: /^[0-9]+\.[0-9]+\.[0-9]+$/
             branches:
               only: /.*/
+      - architect/push-to-docker-legacy:
+          name: push-happa-to-aliyun-master
+          image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/happa"
+          username_envar: "ALIYUN_USERNAME"
+          password_envar: "ALIYUN_PASSWORD"
+          requires:
+            - build
       - deploy-to-all:
           requires:
             - build
+            - push-happa-to-aliyun-master
           filters:
             tags:
               only: /^[0-9]+\.[0-9]+\.[0-9]+$/
@@ -21,6 +30,7 @@ workflows:
       - deploy-to-testing:
           requires:
             - build
+            - push-happa-to-aliyun-master
           filters:
             branches:
               only:
@@ -33,13 +43,23 @@ jobs:
     - checkout
 
     - run:
-        name: Install node@12.10.0
+        name: Install node@12
+        environment:
+          NODE_VERSION: v12.14.1
         command: |
           set +e
           export NVM_DIR="/opt/circleci/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install v12.10.0
-          nvm alias default v12.10.0
+
+          # Check if we're running the newest node 12 version
+          if [ "$(nvm version-remote v12)" != "$NODE_VERSION" ]
+          then
+            echo "Please upgrade the NODE_VERSION variable to $(nvm version-remote v12)"
+            exit 1
+          fi
+
+          nvm install "$NODE_VERSION"
+          nvm alias default "$NODE_VERSION"
 
           # Each step uses the same `$BASH_ENV`, so need to modify it
           echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
@@ -73,6 +93,11 @@ jobs:
           fi
 
     - run:
+        name: Lint code using ESlint
+        command: |
+          make lint
+
+    - run:
         name: Validate code style using prettier
         command: |
           make validate-prettier
@@ -100,6 +125,12 @@ jobs:
             git tag --points-at HEAD | tr '\n' ' ' > VERSION
           fi
 
+    - persist_to_workspace:
+        root: .
+        paths:
+        - ./dist
+        - ./architect
+        - ./VERSION
     - run:
         name: Build Docker image
         command: ./architect build

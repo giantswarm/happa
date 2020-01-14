@@ -1,8 +1,8 @@
-import NumberPicker from 'UI/NumberPicker';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import cmp from 'semver-compare';
-import styled from '@emotion/styled';
+import NumberPicker from 'UI/NumberPicker';
 
 const FlexWrapperAZDiv = styled.div`
   display: flex;

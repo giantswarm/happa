@@ -1,19 +1,20 @@
 import * as userActions from 'actions/userActions';
-import { bindActionCreators } from 'redux';
+import { push } from 'connected-react-router';
 import {
   clearQueues,
   FlashMessage,
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { parseErrorMessages } from './parseErrorMessages';
-import { push } from 'connected-react-router';
-import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import SlideTransition from 'styles/transitions/SlideTransition';
+import Button from 'UI/Button';
+
+import { parseErrorMessages } from './parseErrorMessages';
 
 class Login extends React.Component {
   state = {
@@ -79,7 +80,7 @@ class Login extends React.Component {
             authenticating: false,
           });
 
-          var [heading, message] = parseErrorMessages(error);
+          const [heading, message] = parseErrorMessages(error);
 
           new FlashMessage(
             heading,
@@ -178,7 +179,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

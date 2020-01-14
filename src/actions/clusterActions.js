@@ -1,33 +1,20 @@
-import * as types from './actionTypes';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { modalHide } from './modalActions';
-import { nodePoolsLoad } from './nodePoolActions';
-import { Providers } from 'shared/constants';
 import { push } from 'connected-react-router';
-import cmp from 'semver-compare';
 import GiantSwarm from 'giantswarm';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import moment from 'moment';
+import cmp from 'semver-compare';
+import { Providers, StatusCodes } from 'shared/constants';
+
+import * as types from './actionTypes';
 
 // API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
 
-// enhanceWithCapabilities enhances a list of clusters with the capabilities they support based on
-// their release version and provider.
-// ? Do we reaaly need this function?
-function enhanceWithCapabilities(clusters, provider) {
-  clusters = clusters.map(c => {
-    c.capabilities = computeCapabilities(c, provider);
-    return c;
-  });
-
-  return clusters;
-}
-
 // computeCapabilities takes a cluster object and provider and returns a
 // capabilities object with the features that this cluster supports.
 function computeCapabilities(cluster, provider) {
-  let capabilities = {};
-  let releaseVer = cluster.release_version;
+  const capabilities = {};
+  const releaseVer = cluster.release_version;
 
   // Installing Apps
   // Must be AWS or KVM and larger than 8.1.0
@@ -43,9 +30,9 @@ function computeCapabilities(cluster, provider) {
   return capabilities;
 }
 
-// This is a helper function, not an action creator.
-// For some reason we are storing clusters as objects instead as arrays
-function clustersLoadArrayToObject(clusters) {
+// This is a helper function that transforms an array of clusters into an object
+// of clusters with its ids as keys. Also we add some data to the clusters objects.
+function clustersLoadArrayToObject(clusters, provider) {
   return clusters
     .map(cluster => {
       return {
@@ -54,6 +41,7 @@ function clustersLoadArrayToObject(clusters) {
         nodes: cluster.nodes || [],
         keyPairs: cluster.keyPairs || [],
         scaling: cluster.scaling || {},
+        capabilities: computeCapabilities(cluster, provider),
       };
     })
     .reduce((accumulator, current) => {
@@ -62,234 +50,412 @@ function clustersLoadArrayToObject(clusters) {
 }
 
 /**
- * Performs the getClusters API call and dispatches the clustersLoadSuccess
- * action.
+ * Performs the getClusters API call and dispatches related actions
+ * This is just for getting all the clusters, but not their details.
+ * @param {Boolean} withLoadingFlags Set to false to avoid loading state (eg when refreshing)
  */
-export function clustersLoad() {
-  return async function(dispatch, getState) {
-    dispatch({ type: types.CLUSTERS_LOAD });
+export function clustersList({ withLoadingFlags }) {
+  return function(dispatch, getState) {
+    if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
+
+    const provider = getState().app.info.general.provider;
 
     // Fetch all clusters.
-    const clusters = await clustersApi
+    return clustersApi
       .getClusters()
-      .then(clusters => {
-        // ? Do we really need to do this here? We are doing it after when fetching details.
-        const enhancedClusters = enhanceWithCapabilities(
-          clusters,
-          getState().app.info.general.provider
-        );
+      .then(data => {
+        const clusters = clustersLoadArrayToObject(data, provider);
 
-        return enhancedClusters;
+        const v5ClusterIds = data
+          .filter(cluster => cluster.path.startsWith('/v5'))
+          .map(cluster => cluster.id);
+
+        dispatch({ type: types.CLUSTERS_LIST_SUCCESS, clusters, v5ClusterIds });
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error(error);
-        dispatch(clustersLoadError(error));
+        dispatch({ type: types.CLUSTERS_LIST_ERROR, error });
       });
-
-    // Extract v4 clusters from the clusters fetched array.
-    const v4Clusters = clusters.filter(cluster =>
-      cluster.path.startsWith('/v4')
-    );
-
-    // TODO at some point we will probably have just one flow for all clusters.
-    // Now we can't as we are not computing capabilities and not getting status
-    // either for v5 clusters, so we fetch v5 clusters details in a separate method
-    // at the end of this one.
-
-    /********************** V4 CLUSTER DETAILS FETCHING **********************/
-
-    // Clusters array to object, because we are storing an object in the store
-    let v4ClustersObject = clustersLoadArrayToObject(v4Clusters);
-
-    // Fetch all details for each cluster.
-    const details = await Promise.all(
-      Object.keys(v4ClustersObject).map(clusterId => {
-        return clustersApi
-          .getCluster(clusterId)
-          .then(clusterDetails => {
-            clusterDetails.capabilities = computeCapabilities(
-              clusterDetails,
-              getState().app.info.general.provider
-            );
-            return clusterDetails;
-          })
-          .catch(error => {
-            console.error('Error loading cluster details:', error);
-            dispatch(clusterLoadDetailsError(clusterId, error));
-          });
-      })
-    );
-
-    // And merge them with each cluster
-    details.forEach(clusterDetail => {
-      v4ClustersObject[clusterDetail.id] = {
-        ...v4ClustersObject[clusterDetail.id],
-        ...clusterDetail,
-      };
-    });
-
-    // Fetch status for each cluster.
-    const status = await Promise.all(
-      Object.keys(v4ClustersObject).map(clusterId => {
-        // TODO: Find out why we are getting an empty object back from this call.
-        //Forcing us to use getClusterStatusWithHttpInfo instead of getClusterStatus
-        return clustersApi
-          .getClusterStatusWithHttpInfo(clusterId)
-          .then(clusterStatus => {
-            // For some reason we're getting an empty object back.
-            // The Giantswarm JS client is not parsing the returned JSON
-            // and giving us a object in the normal way anymore.
-            // Very stumped, since nothing has changed.
-            // So we need to access the raw response and parse the json
-            // ourselves.
-            let statusResponse = JSON.parse(clusterStatus.response.text);
-            return { id: clusterId, statusResponse: statusResponse };
-          })
-          .catch(error => {
-            if (error.status === 404) {
-              return { id: clusterId, statusResponse: null };
-            } else {
-              console.error(error);
-              dispatch(clusterLoadStatusError(clusterId, error));
-              throw error;
-            }
-          });
-      })
-    );
-
-    // And merge status with each cluster.
-    status.forEach(clusterStatus => {
-      v4ClustersObject[clusterStatus.id] = {
-        ...v4ClustersObject[clusterStatus.id],
-        ...{ status: clusterStatus.statusResponse },
-      };
-    });
-
-    const lastUpdated = Date.now();
-
-    /********************** V5 CLUSTER DETAILS FETCHING **********************/
-
-    // Extract v5 clusters from the clusters fetched.
-    const v5Clusters = clusters.filter(cluster =>
-      cluster.path.startsWith('/v5')
-    );
-
-    // Get the details for v5 clusters.
-    let v5ClustersDetails = await Promise.all(
-      v5Clusters.map(cluster => clusterDetailsV5(dispatch, getState, cluster))
-    );
-
-    // Sometimes we fail to fetch a detail, and get undefined back.
-    // So remove those from this list.
-    v5ClustersDetails = v5ClustersDetails.filter(x => x);
-
-    // Clusters array to object, because we are storing an object in the store.
-
-    let v5ClustersObject = clustersLoadArrayToObject(v5ClustersDetails);
-
-    // nodePoolsClusters is an array of v5 clusters ids and is stored in clusters.
-    const nodePoolsClusters = v5ClustersDetails.map(cluster => cluster.id);
-
-    dispatch(
-      clustersLoadSuccess(
-        v4ClustersObject,
-        v5ClustersObject,
-        nodePoolsClusters,
-        lastUpdated
-      )
-    );
-
-    // Once we have stored the Node Pools Clusters, let's fetch actual Node Pools.
-    dispatch(nodePoolsLoad(nodePoolsClusters));
   };
 }
 
-function clusterDetailsV5(dispatch, getState, cluster) {
-  return clustersApi
-    .getClusterV5(cluster.id)
-    .then(clusterDetails => {
-      clusterDetails.capabilities = computeCapabilities(
-        clusterDetails,
-        getState().app.info.general.provider
-      );
+/**
+ * Performs getCluster API call to get the details of all clusters in store
+ * @param {Boolean} filterBySelectedOrganization
+ */
+export function clustersDetails({
+  filterBySelectedOrganization,
+  withLoadingFlags,
+}) {
+  return async function(dispatch, getState) {
+    if (withLoadingFlags) {
+      dispatch({ type: types.CLUSTERS_DETAILS_REQUEST });
+    }
 
-      return clusterDetails;
-    })
-    .catch(error => {
-      if (error.status === 404) {
-        new FlashMessage(
-          'This cluster no longer exists.',
-          messageType.INFO,
-          messageTTL.MEDIUM,
-          'Redirecting you to your organization clusters list'
-        );
+    const selectedOrganization = getState().app.selectedOrganization;
+    const allClusters = await getState().entities.clusters.items;
 
-        dispatch(clusterDeleteSuccess(cluster.id));
-        dispatch(push('/'));
-      } else {
-        console.error('Error loading cluster details:', error);
-        dispatch(clusterLoadDetailsError(cluster.id, error));
-      }
-    });
+    const clustersIds = filterBySelectedOrganization
+      ? Object.keys(allClusters).filter(
+          id => allClusters[id].owner === selectedOrganization
+        )
+      : Object.keys(allClusters);
+
+    const clusterDetails = await Promise.all(
+      clustersIds.map(id =>
+        dispatch(clusterLoadDetails(id, { withLoadingFlags: true }))
+      )
+    );
+
+    // We actually don't care if success or error, just want to set loading flag to
+    // false when all the promises are resolved/rejected.
+    dispatch({ type: types.CLUSTERS_DETAILS_FINISHED });
+
+    return clusterDetails; // just in case we want to await it
+  };
 }
 
 /**
- * Loads details for a cluster.
+ * Loads apps for a cluster.
  *
  * @param {String} clusterId Cluster ID
  */
-export function clusterLoadDetails(clusterId) {
-  return async function(dispatch, getState) {
+export function clusterLoadApps(clusterId) {
+  return function(dispatch, getState) {
+    // This method is going to work for NP clusters, now in local dev it is not
+    // working, so early return if the cluster is a NP one.
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
     const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
+    if (isNodePoolsCluster) {
+      dispatch({
+        type: types.CLUSTER_LOAD_APPS_SUCCESS,
+        clusterId,
+        apps: [],
+      });
+
+      return Promise.resolve([]);
+    }
 
     dispatch({
-      type: types.CLUSTER_LOAD_DETAILS,
+      type: types.CLUSTER_LOAD_APPS,
       clusterId,
     });
 
-    if (isNodePoolsCluster) {
-      dispatch({ type: types.V5_CLUSTER_LOAD_DETAILS });
-    }
+    const appsApi = new GiantSwarm.AppsApi();
 
-    try {
-      const cluster = isNodePoolsCluster
-        ? await clustersApi.getClusterV5(clusterId)
-        : await clustersApi.getCluster(clusterId);
+    return appsApi
+      .getClusterApps(clusterId)
+      .then(apps => {
+        // For some reason the array that we get back from the generated js client is an
+        // array-like structure, so I make a new one here.
+        // In tests we are using a real array, so we are applying Array.from() to an actual
+        // array. Apparently it works fine.
+        const appsArray = Array.from(apps);
+        dispatch({
+          type: types.CLUSTER_LOAD_APPS_SUCCESS,
+          clusterId,
+          apps: appsArray,
+        });
 
-      dispatch(clusterLoadStatus(clusterId));
-
-      cluster.capabilities = computeCapabilities(
-        cluster,
-        getState().app.info.general.provider
-      );
-
-      dispatch(clusterLoadDetailsSuccess(cluster));
-      return cluster;
-    } catch (error) {
-      if (error.status === 404) {
-        new FlashMessage(
-          'This cluster no longer exists.',
-          messageType.INFO,
-          messageTTL.MEDIUM,
-          'Redirecting you to your organization clusters list'
-        );
-
-        dispatch(clusterDeleteSuccess(clusterId));
-        dispatch(push('/'));
-      } else {
-        console.error('Error loading cluster details:', error);
-        dispatch(clusterLoadDetailsError(clusterId, error));
+        return apps;
+      })
+      .catch(error => {
+        dispatch({
+          type: types.CLUSTER_LOAD_APPS_ERROR,
+          clusterId,
+          error,
+        });
 
         new FlashMessage(
-          'Something went wrong while trying to load cluster details.',
+          'Something went wrong while trying to load apps installed on this cluster.',
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
         );
 
         throw error;
+      });
+  };
+}
+
+/**
+ * Takes an app and a cluster id and tries to install it. Dispatches CLUSTER_INSTALL_APP_SUCCESS
+ * on success or CLUSTER_INSTALL_APP_ERROR on error.
+ *
+ * If the app has valuesYAML or secretsYAML set to a non empty object, then
+ * this will first try to create the user config configmap and/or secret
+ * before creating the app.
+ *
+ * @param {Object} app App definition object.
+ * @param {Object} clusterID Where to install the app.
+ */
+export function clusterInstallApp(app, clusterID) {
+  return async function(dispatch) {
+    dispatch({
+      type: types.CLUSTER_INSTALL_APP,
+      clusterID,
+      app,
+    });
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    try {
+      // If we have user config that we want to create, then
+      // fire off the call to create it.
+      if (Object.keys(app.valuesYAML).length !== 0) {
+        await createAppConfig(app, clusterID);
       }
+
+      // If we have an app secret that we want to create, then
+      // fire off the call to create it.
+      if (Object.keys(app.secretsYAML).length !== 0) {
+        await createAppSecret(app, clusterID);
+      }
+
+      // Create the App.
+      await appsApi
+        .createClusterApp(clusterID, app.name, {
+          body: {
+            spec: {
+              catalog: app.catalog,
+              name: app.chartName,
+              namespace: app.namespace,
+              version: app.version,
+            },
+          },
+        })
+        .catch(error => {
+          showAppInstallationErrorFlashMessage(app, clusterID, error);
+          throw error;
+        });
+
+      dispatch({
+        type: types.CLUSTER_INSTALL_APP_SUCCESS,
+        clusterID,
+        app,
+      });
+
+      new FlashMessage(
+        `Your app <code>${app.name}</code> is being installed on <code>${clusterID}</code>`,
+        messageType.SUCCESS,
+        messageTTL.MEDIUM
+      );
+    } catch (error) {
+      dispatch({
+        type: types.CLUSTER_INSTALL_APP_ERROR,
+        clusterID,
+        app,
+        error,
+      });
+
+      throw error;
+    }
+  };
+}
+
+/**
+ * createAppConfig takes an app and a clusterID and tries to create the config map
+ * of that app. The app object must have a valuesYAML field representing the config
+ * map to be created.
+ * @param {object} app
+ * @param {string} clusterID
+ */
+function createAppConfig(app, clusterID) {
+  const appConfigsApi = new GiantSwarm.AppConfigsApi();
+
+  return appConfigsApi
+    .createClusterAppConfig(clusterID, app.name, {
+      body: app.valuesYAML,
+    })
+    .catch(error => {
+      showAppConfigErrorFlashMessages('ConfigMap', app.name, clusterID, error);
+      throw error;
+    });
+}
+
+/**
+ * createAppSecret takes an app and a clusterID and tries to create the secret
+ * of that app. The app object must have a secretsYAML field representing the secret
+ * to be created.
+ * @param {object} app
+ * @param {string} clusterID
+ */
+function createAppSecret(app, clusterID) {
+  const appSecretsApi = new GiantSwarm.AppSecretsApi();
+
+  return appSecretsApi
+    .createClusterAppSecret(clusterID, app.name, {
+      body: app.secretsYAML,
+    })
+    .catch(error => {
+      showAppConfigErrorFlashMessages('Secret', app.name, clusterID, error);
+      throw error;
+    });
+}
+
+/**
+ * showAppConfigErrorFlashMessages provides flash messages when something went wrong
+ * when creating either the ConfigMap or Secret during app installation.
+ *
+ * @param {string} resource Name of the resource we were trying to create.
+ * @param {string} appName Name of the app.
+ * @param {string} clusterID Where we tried to install the app on.
+ * @param {object} error The error that occured.
+ */
+function showAppConfigErrorFlashMessages(thing, app, clusterID, error) {
+  if (error.status === StatusCodes.Conflict) {
+    new FlashMessage(
+      `The ${thing} for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  } else if (error.status === StatusCodes.BadRequest) {
+    new FlashMessage(
+      `Your ${thing} appears to be invalid. Please make sure all fields are filled in correctly.`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  } else {
+    new FlashMessage(
+      `Something went wrong while trying to create the ${thing}. Please try again later or contact support: support@giantswarm.io`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  }
+}
+
+/**
+ * appInstallationErrorFlashMessage provides flash messages for failed app creation.
+ *
+ * @param {string} appName Name of the app.
+ * @param {string} clusterID Where we tried to install the app on.
+ * @param {object} error The error that occured.
+ */
+function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
+  if (error.status === StatusCodes.Conflict) {
+    new FlashMessage(
+      `An app called <code>${appName}</code> already exists on cluster <code>${clusterID}</code>`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  } else if (error.status === StatusCodes.BadRequest) {
+    new FlashMessage(
+      `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  } else {
+    new FlashMessage(
+      `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  }
+}
+
+/**
+ * Takes an app and a cluster id and tries to delete it. Dispatches CLUSTER_DELETE_APP_SUCCESS
+ * on success or CLUSTER_DELETE_APP_ERROR on error.
+ *
+ * @param {Object} appName The name of the app
+ * @param {Object} clusterID Where to delete the app.
+ */
+export function clusterDeleteApp(appName, clusterID) {
+  return function(dispatch) {
+    dispatch({
+      type: types.CLUSTER_DELETE_APP,
+      clusterID,
+      appName,
+    });
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    return appsApi
+      .deleteClusterApp(clusterID, appName)
+      .then(() => {
+        new FlashMessage(
+          `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
+          messageType.SUCCESS,
+          messageTTL.LONG
+        );
+      })
+      .catch(error => {
+        new FlashMessage(
+          `Something went wrong while trying to delete your app. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+
+        throw error;
+      });
+  };
+}
+
+/**
+ * Loads details for a cluster.
+ * @param {String} clusterId Cluster ID
+ */
+export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
+  return async function(dispatch, getState) {
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterId);
+
+    if (withLoadingFlags) {
+      dispatch({
+        type: types.CLUSTER_LOAD_DETAILS_REQUEST,
+        clusterId,
+      });
+    }
+
+    try {
+      const cluster = isV5Cluster
+        ? await clustersApi.getClusterV5(clusterId)
+        : await clustersApi.getCluster(clusterId);
+
+      dispatch(clusterLoadStatus(clusterId)); // TODO
+
+      if (isV5Cluster) cluster.nodePools = [];
+
+      const provider = getState().app.info.general.provider;
+      cluster.capabilities = computeCapabilities(cluster, provider);
+
+      dispatch({
+        type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
+        cluster,
+      });
+
+      return cluster;
+    } catch (error) {
+      if (error.status === StatusCodes.NotFound) {
+        new FlashMessage(
+          'This cluster no longer exists.',
+          messageType.INFO,
+          messageTTL.MEDIUM,
+          'Redirecting you to your organization clusters list'
+        );
+
+        // Delete the cluster in te store.
+        // eslint-disable-next-line no-use-before-define
+        dispatch(clusterDeleteSuccess(clusterId));
+        dispatch(push('/'));
+
+        return {};
+      }
+
+      // eslint-disable-next-line no-console
+      console.error('Error loading cluster details:', error);
+      // eslint-disable-next-line no-use-before-define
+      dispatch(clusterLoadDetailsError(clusterId, error));
+
+      new FlashMessage(
+        'Something went wrong while trying to load cluster details.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      throw error;
     }
   };
 }
@@ -301,10 +467,10 @@ export function clusterLoadDetails(clusterId) {
  */
 export function clusterLoadStatus(clusterId) {
   return function(dispatch, getState) {
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterId);
 
-    if (isNodePoolsCluster) {
+    if (isV5Cluster) {
       // Here we will have something like clusterLoadStatusV5(...)?
       return;
     }
@@ -325,15 +491,21 @@ function clusterLoadStatusV4(dispatch, clusterId) {
       return JSON.parse(data.response.text);
     })
     .then(status => {
+      // eslint-disable-next-line no-use-before-define
       dispatch(clusterLoadStatusSuccess(clusterId, status));
+
       return status;
     })
     .catch(error => {
       // TODO: Find a better way to deal with status endpoint errors in dev:
       // https://github.com/giantswarm/giantswarm/issues/6757
-      if (error.status === 404) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      if (error.status === StatusCodes.NotFound) {
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterLoadStatusNotFound(clusterId));
       } else {
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterLoadStatusError(clusterId, error));
 
         new FlashMessage(
@@ -343,7 +515,7 @@ function clusterLoadStatusV4(dispatch, clusterId) {
           'Please try again later or contact support: support@giantswarm.io'
         );
 
-        throw error;
+        // throw error;
       }
     });
 }
@@ -368,13 +540,14 @@ export function clusterCreate(cluster, isV5Cluster) {
     return clustersApi[method](cluster)
       .then(data => {
         const location = data.response.headers.location;
-        if (location === undefined) {
-          throw 'Did not get a location header back.';
+        if (typeof location === 'undefined') {
+          throw new Error('Did not get a location header back.');
         }
 
-        const clusterId = location.split('/')[3];
-        if (clusterId === undefined) {
-          throw 'Did not get a valid cluster id.';
+        const clusterIdURLParamIndex = 3;
+        const clusterId = location.split('/')[clusterIdURLParamIndex];
+        if (typeof clusterId === 'undefined') {
+          throw new Error('Did not get a valid cluster id.');
         }
 
         if (isV5Cluster) {
@@ -390,18 +563,20 @@ export function clusterCreate(cluster, isV5Cluster) {
         }
 
         new FlashMessage(
-          'Your new cluster with ID <code>' +
-            clusterId +
-            '</code> is being created.',
+          `Your new cluster with ID <code>${clusterId}</code> is being created.`,
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );
 
-        return dispatch(clusterLoadDetails(clusterId));
+        return { clusterId, owner: cluster.owner };
       })
       .catch(error => {
-        console.error(error);
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterCreateError(cluster.id, error));
+
+        // eslint-disable-next-line no-console
+        console.error(error);
+
         throw error;
       });
   };
@@ -422,34 +597,30 @@ export function clusterDeleteConfirmed(cluster) {
 
     return clustersApi
       .deleteCluster(cluster.id)
-      .then(() => {
-        dispatch(push('/organizations/' + cluster.owner));
+      .then(data => {
+        // eslint-disable-next-line no-use-before-define
         dispatch(clusterDeleteSuccess(cluster.id));
 
-        dispatch(modalHide());
-
         new FlashMessage(
-          'Cluster <code>' + cluster.id + '</code> will be deleted',
+          `Cluster <code>${cluster.id}</code> will be deleted`,
           messageType.INFO,
           messageTTL.SHORT
         );
 
-        // ensure refreshing of the clusters list
-        dispatch(clustersLoad());
+        return data;
       })
       .catch(error => {
-        dispatch(modalHide());
-
         new FlashMessage(
-          'An error occurred when trying to delete cluster <code>' +
-            cluster.id +
-            '</code>.',
+          `An error occurred when trying to delete cluster <code>${cluster.id}</code>.`,
           messageType.ERROR,
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
         );
 
+        // eslint-disable-next-line no-console
         console.error(error);
+
+        // eslint-disable-next-line no-use-before-define
         return dispatch(clusterDeleteError(cluster.id, error));
       });
   };
@@ -463,14 +634,8 @@ export function clusterDeleteConfirmed(cluster) {
  * @param {String} clusterId Cluster ID
  */
 export function clusterLoadKeyPairs(clusterId) {
-  return function(dispatch, getState) {
-    // This method is going to work for NP clusters, now in local dev it is not
-    // working, so early return if the cluster is a NP one.
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
-    if (isNodePoolsCluster) return Promise.resolve([]);
-
-    var keypairsApi = new GiantSwarm.KeyPairsApi();
+  return function(dispatch) {
+    const keypairsApi = new GiantSwarm.KeyPairsApi();
 
     dispatch({
       type: types.CLUSTER_LOAD_KEY_PAIRS,
@@ -486,6 +651,7 @@ export function clusterLoadKeyPairs(clusterId) {
             keyPair.expire_date = moment(keyPair.create_date)
               .utc()
               .add(keyPair.ttl_hours, 'hours');
+
             return keyPair;
           }
         );
@@ -502,16 +668,13 @@ export function clusterLoadKeyPairs(clusterId) {
           clusterId,
         });
 
+        // eslint-disable-next-line no-console
         console.error(error);
+
         throw error;
       });
   };
 }
-
-export const clusterLoadDetailsSuccess = cluster => ({
-  type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
-  cluster,
-});
 
 export const clusterLoadDetailsError = (clusterId, error) => ({
   type: types.CLUSTER_LOAD_DETAILS_ERROR,
@@ -556,20 +719,6 @@ export const clusterDeleteError = (clusterId, error) => ({
   error,
 });
 
-// nodePoolsClusters is an array of clusters id
-const clustersLoadSuccess = (
-  v4ClustersObject,
-  v5ClustersObject,
-  nodePoolsClusters,
-  lastUpdated
-) => ({
-  type: types.CLUSTERS_LOAD_SUCCESS,
-  v4Clusters: v4ClustersObject,
-  v5Clusters: v5ClustersObject,
-  nodePoolsClusters,
-  lastUpdated,
-});
-
 export const clustersLoadError = error => ({
   type: types.CLUSTERS_LOAD_ERROR,
   error: error,
@@ -611,7 +760,9 @@ export function clusterPatch(cluster, payload, isNodePoolCluster) {
         'Please try again later or contact support: support@giantswarm.io'
       );
 
+      // eslint-disable-next-line no-console
       console.error(error);
+
       throw error;
     });
   };
@@ -632,16 +783,17 @@ export function clusterCreateKeyPair(clusterId, keypair) {
       keypair,
     });
 
-    var keypairsApi = new GiantSwarm.KeyPairsApi();
+    const keypairsApi = new GiantSwarm.KeyPairsApi();
+
     return keypairsApi
       .addKeyPair(clusterId, keypair)
-      .then(keypair => {
+      .then(pair => {
         dispatch({
           type: types.CLUSTER_CREATE_KEY_PAIR_SUCCESS,
-          keypair,
+          pair,
         });
 
-        return keypair;
+        return pair;
       })
       .catch(error => {
         dispatch({
@@ -649,7 +801,9 @@ export function clusterCreateKeyPair(clusterId, keypair) {
           error,
         });
 
+        // eslint-disable-next-line no-console
         console.error(error);
+
         throw error;
       });
   };

@@ -1,11 +1,12 @@
+import DocumentTitle from 'components/shared/DocumentTitle';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import AppDetails from 'UI/AppDetails/AppDetails';
-import DocumentTitle from 'components/shared/DocumentTitle';
-import InstallAppModal from './InstallAppModal';
 import LoadingOverlay from 'UI/LoadingOverlay';
-import PropTypes from 'prop-types';
-import React from 'react';
+
+import InstallAppModal from './InstallAppModal';
 
 class AppDetail extends React.Component {
   imgError = () => {
@@ -17,9 +18,10 @@ class AppDetail extends React.Component {
   constructor(props) {
     super(props);
 
-    let query = new URLSearchParams(props.location.search);
-    let q = query.get('q');
+    const query = new URLSearchParams(props.location.search);
+    const q = query.get('q');
 
+    // eslint-disable-next-line react/state-in-constructor
     this.state = {
       q,
     };
@@ -32,39 +34,52 @@ class AppDetail extends React.Component {
       <Breadcrumb
         data={{
           title: this.props.match.params.repo.toUpperCase(),
-          pathname: '/app-catalogs/' + this.props.match.params.repo + '/',
+          pathname: `/app-catalogs/${this.props.match.params.repo}/`,
         }}
       >
-        <LoadingOverlay loading={!repo || this.props.repo.isFetchingIndex}>
-          <Breadcrumb
-            data={{
-              title: this.props.app.name,
-              pathname: this.props.match.url,
-            }}
-          >
-            <DocumentTitle title={this.props.app.name}>
-              {repo && (
-                <AppDetails
-                  app={this.props.app}
-                  imgError={this.imgError}
-                  imgErrorFlag={this.state.imgError}
-                  params={this.props.match.params}
-                  q={this.state.q}
-                  repo={repo}
-                >
-                  <InstallAppModal
-                    app={{
-                      catalog: repo.metadata.name,
-                      name: this.props.app.name,
-                      version: this.props.app.version,
-                    }}
-                    selectedClusterID={this.props.selectedClusterID}
-                  />
-                </AppDetails>
-              )}
-            </DocumentTitle>
-          </Breadcrumb>
-        </LoadingOverlay>
+        <>
+          <LoadingOverlay
+            loading={
+              !repo ||
+              this.props.repo.isFetchingIndex ||
+              this.props.loadingCluster
+            }
+          />
+          {!(
+            !repo ||
+            this.props.repo.isFetchingIndex ||
+            this.props.loadingCluster
+          ) && (
+            <Breadcrumb
+              data={{
+                title: this.props.app.name,
+                pathname: this.props.match.url,
+              }}
+            >
+              <DocumentTitle title={this.props.app.name}>
+                {repo && (
+                  <AppDetails
+                    app={this.props.app}
+                    imgError={this.imgError}
+                    imgErrorFlag={this.state.imgError}
+                    params={this.props.match.params}
+                    q={this.state.q}
+                    repo={repo}
+                  >
+                    <InstallAppModal
+                      app={{
+                        catalog: repo.metadata.name,
+                        name: this.props.app.name,
+                        version: this.props.app.version,
+                      }}
+                      selectedClusterID={this.props.selectedClusterID}
+                    />
+                  </AppDetails>
+                )}
+              </DocumentTitle>
+            </Breadcrumb>
+          )}
+        </>
       </Breadcrumb>
     );
   }
@@ -77,13 +92,14 @@ AppDetail.propTypes = {
   match: PropTypes.object,
   repo: PropTypes.object,
   selectedClusterID: PropTypes.string,
+  loadingCluster: PropTypes.bool,
 };
 
 function mapStateToProps(state, ownProps) {
-  var repo = decodeURIComponent(ownProps.match.params.repo);
-  var appName = decodeURIComponent(ownProps.match.params.app);
+  const repo = decodeURIComponent(ownProps.match.params.repo);
+  const appName = decodeURIComponent(ownProps.match.params.app);
 
-  var appVersions = [{}];
+  let appVersions = [{}];
   if (
     state.entities.catalogs.items[repo] &&
     !state.entities.catalogs.items[repo].isFetchingIndex &&
@@ -96,6 +112,7 @@ function mapStateToProps(state, ownProps) {
     app: appVersions[0],
     repo: state.entities.catalogs.items[repo],
     selectedClusterID: state.app.selectedClusterID,
+    loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
   };
 }
 
@@ -105,7 +122,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AppDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(AppDetail);

@@ -1,17 +1,28 @@
-import { Breadcrumb } from 'react-breadcrumbs';
-import { connect } from 'react-redux';
+import * as types from 'actions/actionTypes';
 import { organizationSelect } from 'actions/organizationActions';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import _ from 'underscore';
 import Cluster from 'Cluster/Cluster';
-import DetailView from './View';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import _ from 'underscore';
+
+import DetailView from './View';
 
 class DetailIndex extends React.Component {
   componentDidMount() {
     const { id: orgID } = this.props.organization;
     this.props.dispatch(organizationSelect(orgID));
+
+    // Reset loading flag to true just in case we are accessing cluster details of a
+    // cluster owned by a non selected organization. In those cases we want nothing
+    // to be rendered until cluster details are fetched
+    // If we don't set this here, and do this in batchedActions, there's a fraction
+    // of a second during which flag is false, and therefore errors are triggered
+    this.props.dispatch({
+      type: types.CLUSTER_LOAD_DETAILS_REQUEST,
+    });
   }
 
   render() {
@@ -52,14 +63,14 @@ DetailIndex.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  var allClusters = state.entities.clusters.items;
-  var clusters = [];
+  const allClusters = state.entities.clusters.items;
+  let clusters = [];
 
   clusters = _.filter(allClusters, cluster => {
     return cluster.owner === ownProps.match.params.orgId;
   });
 
-  var membersForTable = state.entities.organizations.items[
+  const membersForTable = state.entities.organizations.items[
     ownProps.match.params.orgId
   ].members.map(member => {
     return Object.assign({}, member, {
@@ -82,7 +93,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DetailIndex);
+export default connect(mapStateToProps, mapDispatchToProps)(DetailIndex);

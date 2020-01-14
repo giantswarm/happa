@@ -1,17 +1,32 @@
 import * as OrganizationActions from 'actions/organizationActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Providers } from 'shared/constants';
-import { relativeDate } from 'lib/helpers.js';
-import BootstrapTable from 'react-bootstrap-table-next';
-import Button from 'react-bootstrap/lib/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import cmp from 'semver-compare';
-import Credentials from './Credentials';
 import DocumentTitle from 'components/shared/DocumentTitle';
+import { relativeDate } from 'lib/helpers.js';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapTable from 'react-bootstrap-table-next';
+import Button from 'react-bootstrap/lib/Button';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import cmp from 'semver-compare';
+import { Providers } from 'shared/constants';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
+
+import Credentials from './Credentials';
+
+const clusterTableDefaultSorting = [
+  {
+    dataField: 'id',
+    order: 'asc',
+  },
+];
+
+const memberTableDefaultSorting = [
+  {
+    dataField: 'email',
+    order: 'asc',
+  },
+];
 
 class OrganizationDetail extends React.Component {
   addMember = () => {
@@ -31,6 +46,7 @@ class OrganizationDetail extends React.Component {
     if (provider === Providers.AWS || provider === Providers.AZURE) {
       return true;
     }
+
     return false;
   };
 
@@ -56,6 +72,7 @@ class OrganizationDetail extends React.Component {
           if (order === 'desc') {
             return cmp(a, b) * -1;
           }
+
           return cmp(a, b);
         },
       },
@@ -104,7 +121,8 @@ class OrganizationDetail extends React.Component {
   };
 
   render() {
-    var credentialsSection;
+    let credentialsSection = null;
+
     if (this.canCredentials(this.props.app.info.general.provider)) {
       credentialsSection = (
         <div className='row section' id='credentials-section'>
@@ -161,7 +179,7 @@ class OrganizationDetail extends React.Component {
               <div className='col-3'>
                 <h3 className='table-label'>Members</h3>
               </div>
-              <div className='col-9'>
+              <div className='col-9' data-testid='org-detail-users-wrapper'>
                 {this.props.organization.members.length === 0 ? (
                   <p>This organization has no members</p>
                 ) : (
@@ -184,10 +202,10 @@ class OrganizationDetail extends React.Component {
           </div>
         </DocumentTitle>
       );
-    } else {
-      // 404 or fetching
-      return <h1>404 or fetching</h1>;
     }
+
+    // 404 or fetching
+    return <h1>404 or fetching</h1>;
   }
 }
 
@@ -201,34 +219,21 @@ OrganizationDetail.propTypes = {
   membersForTable: PropTypes.array,
 };
 
-const clusterTableDefaultSorting = [
-  {
-    dataField: 'id',
-    order: 'asc',
-  },
-];
-
-const memberTableDefaultSorting = [
-  {
-    dataField: 'email',
-    order: 'asc',
-  },
-];
-
+// eslint-disable-next-line react/no-multi-comp
 function clusterIDCellFormatter(cell) {
   return <ClusterIDLabel clusterID={cell} copyEnabled />;
 }
 
-function clusterActionsCellFormatter(cell, row) {
+// eslint-disable-next-line react/no-multi-comp
+function clusterActionsCellFormatter(_cell, row) {
   if (row.delete_date) {
     return <span />;
   }
 
   return (
     <Link
-      to={
-        '/organizations/' + this.props.organization.id + '/clusters/' + row.id
-      }
+      // eslint-disable-next-line react/no-this-in-sfc
+      to={`/organizations/${this.props.organization.id}/clusters/${row.id}`}
     >
       <Button bsStyle='default' type='button'>
         Details
@@ -237,8 +242,10 @@ function clusterActionsCellFormatter(cell, row) {
   );
 }
 
-function memberActionsCellFormatter(cell, row) {
+// eslint-disable-next-line react/no-multi-comp
+function memberActionsCellFormatter(_cell, row) {
   return (
+    // eslint-disable-next-line react/no-this-in-sfc
     <Button onClick={this.removeMember.bind(this, row.email)} type='button'>
       Remove
     </Button>
@@ -251,7 +258,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  undefined,
-  mapDispatchToProps
-)(OrganizationDetail);
+export default connect(undefined, mapDispatchToProps)(OrganizationDetail);

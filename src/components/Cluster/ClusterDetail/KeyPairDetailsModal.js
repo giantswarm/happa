@@ -1,13 +1,14 @@
 import { relativeDate } from 'lib/helpers.js';
-import CertificateOrgsLabel from './CertificateOrgsLabel';
-import Copyable from 'shared/Copyable';
-import GenericModal from '../../Modals/GenericModal';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Copyable from 'shared/Copyable';
+
+import GenericModal from '../../Modals/GenericModal';
+import CertificateOrgsLabel from './CertificateOrgsLabel';
 
 class KeyPairDetailsModal extends React.Component {
-  createDate(date) {
+  static createDate(date) {
     return (
       <span>
         {moment(date)
@@ -18,9 +19,12 @@ class KeyPairDetailsModal extends React.Component {
     );
   }
 
-  expireDate(expiry) {
-    var expiryClass = '';
-    var expirySeconds = expiry.utc().diff(moment().utc()) / 1000;
+  static expireDate(expiry) {
+    let expiryClass = '';
+    // eslint-disable-next-line no-magic-numbers
+    const expirySeconds = expiry.utc().diff(moment().utc()) / 1000;
+
+    // eslint-disable-next-line no-magic-numbers
     if (Math.abs(expirySeconds) < 60 * 60 * 24) {
       expiryClass = 'expiring';
     }
@@ -92,14 +96,14 @@ class KeyPairDetailsModal extends React.Component {
           <div className='labelvaluepair'>
             <div className='labelvaluepair--label'>Created</div>
             <div className='labelvaluepair--value'>
-              {this.createDate(this.props.keyPair.create_date)}
+              {KeyPairDetailsModal.createDate(this.props.keyPair.create_date)}
             </div>
           </div>
 
           <div className='labelvaluepair'>
             <div className='labelvaluepair--label'>Expiry</div>
             <div className='labelvaluepair--value'>
-              {this.expireDate(this.props.keyPair.expire_date)}
+              {KeyPairDetailsModal.expireDate(this.props.keyPair.expire_date)}
             </div>
           </div>
 

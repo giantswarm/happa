@@ -1,10 +1,12 @@
-import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
+import { combineReducers } from 'redux';
+
+import makeAppReducer from './appReducer';
 import catalogs from './catalogsReducer';
 import clusters from './clusterReducer';
 import credentials from './credentialReducer';
 import invitations from './invitationReducer';
-import makeAppReducer from './appReducer';
+import loadingFlags from './loadingReducer';
 import modal from './modalReducer';
 import nodePools from './nodePoolsReducer';
 import organizations from './organizationReducer';
@@ -28,6 +30,7 @@ const rootReducer = history =>
     app: makeAppReducer(),
     entities,
     modal,
+    loadingFlags,
   });
 
 export default rootReducer;

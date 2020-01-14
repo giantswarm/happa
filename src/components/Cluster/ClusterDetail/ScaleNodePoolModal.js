@@ -1,18 +1,25 @@
 import * as nodePoolActions from 'actions/nodePoolActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { Providers } from 'shared/constants';
-import BootstrapModal from 'react-bootstrap/lib/Modal';
-import Button from 'UI/Button';
-import ClusterIDLabel from 'UI/ClusterIDLabel';
-import NodeCountSelector from 'shared/NodeCountSelector';
 import PropTypes from 'prop-types';
 import React from 'react';
+import BootstrapModal from 'react-bootstrap/lib/Modal';
+import { connect } from 'react-redux';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { bindActionCreators } from 'redux';
+import { Providers } from 'shared/constants';
+import NodeCountSelector from 'shared/NodeCountSelector';
+import Button from 'UI/Button';
+import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 class ScaleNodePoolModal extends React.Component {
-  rollupAnimationDuration = 500;
+  static supportsAutoscaling(provider) {
+    if (provider !== Providers.AWS) return false;
+
+    return true;
+  }
+
+  // eslint-disable-next-line no-magic-numbers
+  static rollupAnimationDuration = 500;
 
   state = {
     modalVisible: false,
@@ -27,30 +34,32 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   reset = () => {
-    this.setState({
+    this.setState(prevState => ({
       scaling: {
-        ...this.state.scaling,
+        ...prevState.scaling,
         min: this.props.nodePool.scaling.min,
         max: this.props.nodePool.scaling.max,
       },
+      // eslint-disable-next-line react/no-unused-state
       loading: false,
       error: null,
-    });
+    }));
   };
 
   setNodePool = nodePool => {
-    this.setState({
+    this.setState(prevState => ({
       scaling: {
-        ...this.state.scaling,
+        ...prevState.scaling,
         min: nodePool.scaling.min,
         max: nodePool.scaling.max,
       },
       nodePool,
-    });
+    }));
   };
 
   back = () => {
     this.setState({
+      // eslint-disable-next-line react/no-unused-state
       loading: false,
       error: null,
     });
@@ -68,11 +77,6 @@ class ScaleNodePoolModal extends React.Component {
     });
   };
 
-  supportsAutoscaling(provider) {
-    if (provider !== Providers.AWS) return false;
-    return true;
-  }
-
   updateScaling = nodeCountSelector => {
     const { min, max, minValid, maxValid } = nodeCountSelector.scaling;
     this.setState({
@@ -83,6 +87,7 @@ class ScaleNodePoolModal extends React.Component {
   submit = () => {
     this.setState(
       {
+        // eslint-disable-next-line react/no-unused-state
         loading: true,
       },
       () => {
@@ -106,6 +111,7 @@ class ScaleNodePoolModal extends React.Component {
           })
           .catch(error => {
             this.setState({
+              // eslint-disable-next-line react/no-unused-state
               loading: false,
               error: error,
             });
@@ -119,7 +125,10 @@ class ScaleNodePoolModal extends React.Component {
     const { min, max } = this.state.scaling;
 
     if (
-      !this.supportsAutoscaling(this.props.provider, nodePool.release_version)
+      !ScaleNodePoolModal.supportsAutoscaling(
+        this.props.provider,
+        nodePool.release_version
+      )
     ) {
       // On non-auto-scaling clusters scaling.min == scaling.max so comparing
       // only min between props and current state works.
@@ -128,13 +137,14 @@ class ScaleNodePoolModal extends React.Component {
 
     if (workerNodesDesired < min) return min - workerNodesDesired;
     if (workerNodesDesired > max) return max - workerNodesDesired;
-    if (min == max && workerNodesDesired < max) return workerNodesDesired - max;
+    if (min === max && workerNodesDesired < max)
+      return workerNodesDesired - max;
 
     return 0;
   };
 
   pluralize = nodes => {
-    var pluralize = 's';
+    let pluralize = 's';
 
     if (Math.abs(nodes) === 1) {
       pluralize = '';
@@ -145,16 +155,17 @@ class ScaleNodePoolModal extends React.Component {
 
   buttonProperties = () => {
     let workerDelta = this.workerDelta();
-    let pluralizeWorkers = this.pluralize(workerDelta);
+    const pluralizeWorkers = this.pluralize(workerDelta);
 
     const { nodePool, workerNodesDesired } = this.props;
     const { min, max, minValid, maxValid } = this.state.scaling;
     // Are there any nodes already?
     const hasNodes = nodePool.status.nodes && nodePool.status.nodes_ready;
 
-    if (this.supportsAutoscaling(this.props.provider)) {
+    if (ScaleNodePoolModal.supportsAutoscaling(this.props.provider)) {
       if (min > workerNodesDesired && hasNodes) {
         workerDelta = min - workerNodesDesired;
+
         return {
           title: `Increase minimum number of nodes by ${workerDelta}`,
           style: 'success',
@@ -164,6 +175,7 @@ class ScaleNodePoolModal extends React.Component {
 
       if (max < workerNodesDesired && hasNodes) {
         workerDelta = Math.abs(workerNodesDesired - max);
+
         return {
           title: `Remove ${workerDelta} worker node${this.pluralize(
             workerDelta
@@ -173,7 +185,7 @@ class ScaleNodePoolModal extends React.Component {
         };
       }
 
-      if (min != nodePool.scaling.min) {
+      if (min !== nodePool.scaling.min) {
         return {
           title: 'Apply',
           style: 'success',
@@ -181,7 +193,7 @@ class ScaleNodePoolModal extends React.Component {
         };
       }
 
-      if (max != nodePool.scaling.max) {
+      if (max !== nodePool.scaling.max) {
         return {
           title: 'Apply',
           style: 'success',
@@ -218,25 +230,25 @@ class ScaleNodePoolModal extends React.Component {
     const { error, scaling } = this.state;
     const { min, max, minValid, loading } = scaling;
 
-    let warnings = [];
+    const warnings = [];
 
     if (max < workerNodesRunning && minValid) {
       const diff = workerNodesRunning - max;
 
-      if (this.supportsAutoscaling(provider)) {
+      if (ScaleNodePoolModal.supportsAutoscaling(provider)) {
         warnings.push(
           <CSSTransition
             classNames='rollup'
             enter={true}
             exit={true}
             key={1}
-            timeout={this.rollupAnimationDuration}
+            timeout={ScaleNodePoolModal.rollupAnimationDuration}
           >
             <p key='node-removal'>
               <i className='fa fa-warning' /> The node pool currently has{' '}
               {workerNodesRunning} worker nodes running. By setting the maximum
               lower than that, you enforce the removal of{' '}
-              {diff === 1 ? 'one node' : diff + ' nodes'}. This could result in
+              {diff === 1 ? 'one node' : `${diff} nodes`}. This could result in
               unscheduled workloads.
             </p>
           </CSSTransition>
@@ -246,11 +258,11 @@ class ScaleNodePoolModal extends React.Component {
           <CSSTransition
             classNames='rollup'
             key={2}
-            timeout={this.rollupAnimationDuration}
+            timeout={ScaleNodePoolModal.rollupAnimationDuration}
           >
             <p key='node-removal'>
               <i className='fa fa-warning' /> You are about to enforce the
-              removal of {diff === 1 ? 'one node' : diff + ' nodes'}. Please
+              removal of {diff === 1 ? 'one node' : `${diff} nodes`}. Please
               make sure the node pool has enough capacity to schedule all
               workloads.
             </p>
@@ -259,12 +271,13 @@ class ScaleNodePoolModal extends React.Component {
       }
     }
 
+    // eslint-disable-next-line no-magic-numbers
     if (min < 3) {
       warnings.push(
         <CSSTransition
           classNames='rollup'
           key={3}
-          timeout={this.rollupAnimationDuration}
+          timeout={ScaleNodePoolModal.rollupAnimationDuration}
         >
           <p key='unsupported'>
             <i className='fa fa-warning' /> We recommend that you run clusters
@@ -274,16 +287,18 @@ class ScaleNodePoolModal extends React.Component {
       );
     }
 
-    var body = (
+    let body = (
       <BootstrapModal.Body>
         <p>
-          {this.supportsAutoscaling(provider)
+          {ScaleNodePoolModal.supportsAutoscaling(provider)
             ? 'Set the scaling range and let the autoscaler set the effective number of worker nodes based on the usage.'
             : 'How many workers would you like your node pool to have?'}
         </p>
         <div className='row section'>
           <NodeCountSelector
-            autoscalingEnabled={this.supportsAutoscaling(provider)}
+            autoscalingEnabled={ScaleNodePoolModal.supportsAutoscaling(
+              provider
+            )}
             onChange={this.updateScaling}
             readOnly={false}
             scaling={this.state.scaling}
@@ -292,7 +307,7 @@ class ScaleNodePoolModal extends React.Component {
         <TransitionGroup>{warnings}</TransitionGroup>
       </BootstrapModal.Body>
     );
-    var footer = (
+    let footer = (
       <BootstrapModal.Footer>
         {this.buttonProperties().disabled ? (
           undefined
@@ -345,8 +360,10 @@ class ScaleNodePoolModal extends React.Component {
             <ClusterIDLabel clusterID={this.props.nodePool.id} />
           </BootstrapModal.Title>
         </BootstrapModal.Header>
-        {body}
-        {footer}
+        <div data-testid='oriol'>
+          {body}
+          {footer}
+        </div>
       </BootstrapModal>
     );
   }
@@ -367,9 +384,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  undefined,
-  mapDispatchToProps,
-  undefined,
-  { forwardRef: true }
-)(ScaleNodePoolModal);
+export default connect(undefined, mapDispatchToProps, undefined, {
+  forwardRef: true,
+})(ScaleNodePoolModal);

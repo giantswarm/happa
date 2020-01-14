@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -44,7 +44,7 @@ const Hint = styled.span`
   font-size: 12px;
 `;
 
-const TextInput = props => {
+const FileInput = props => {
   const onChange = e => {
     if (props.onChange) {
       props.onChange(e.target.files);
@@ -62,7 +62,7 @@ const TextInput = props => {
         {props.description ? <p>{props.description}</p> : undefined}
       </Text>
       <InputWrapper>
-        {props.icon ? <Icon className={'fa fa-' + props.icon} /> : undefined}
+        {props.icon ? <Icon className={`fa fa-${props.icon}`} /> : undefined}
         <Input id={props.label} onChange={onChange} type='file' />
       </InputWrapper>
       {props.validationError ? (
@@ -76,14 +76,14 @@ const TextInput = props => {
   );
 };
 
-TextInput.propTypes = {
+FileInput.propTypes = {
   description: PropTypes.string,
-  hint: PropTypes.string,
+  hint: PropTypes.any,
   icon: PropTypes.string,
   label: PropTypes.string,
   onChange: PropTypes.func,
   validationError: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.object,
 };
 
-export default TextInput;
+export default FileInput;

@@ -1,20 +1,21 @@
-import { Breadcrumb } from 'react-breadcrumbs';
 import { catalogLoadIndex, catalogsLoad } from 'actions/catalogActions';
-import { connect } from 'react-redux';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { Route, Switch } from 'react-router-dom';
-import AppList from './AppList/AppList';
-import Catalogs from './CatalogList/CatalogList';
-import Detail from './AppDetail/AppDetail';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
+
+import Detail from './AppDetail/AppDetail';
+import AppList from './AppList/AppList';
+import Catalogs from './CatalogList/CatalogList';
 
 class AppCatalog extends React.Component {
   componentDidMount() {
     this.props
       .dispatch(catalogsLoad())
       .then(catalogs => {
-        let promises = Object.keys(catalogs).map(catalog => {
+        const promises = Object.keys(catalogs).map(catalog => {
           return this.props.dispatch(catalogLoadIndex(catalogs[catalog]));
         });
 
@@ -27,6 +28,8 @@ class AppCatalog extends React.Component {
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
         );
+
+        // eslint-disable-next-line no-console
         console.error(error);
       });
   }
@@ -81,7 +84,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AppCatalog);
+export default connect(mapStateToProps, mapDispatchToProps)(AppCatalog);

@@ -20,7 +20,18 @@ module.exports = {
       },
       {
         test: /\.sass$/,
-        loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded',
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                outputStyle: 'expanded',
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpg)$/,
@@ -41,6 +52,9 @@ module.exports = {
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader?limit=10000&mimetype=image/svg+xml',
+        options: {
+          esModule:false
+        }
       },
       {
         parser: {

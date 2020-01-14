@@ -1,8 +1,9 @@
-import { LineDiv, WrapperDiv } from './WorkerNodesAzure';
-import Button from 'UI/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Button from 'UI/Button';
 import RefreshableLabel from 'UI/RefreshableLabel';
+
+import { LineDiv, WrapperDiv } from './WorkerNodesAzure';
 
 function WorkerNodesKVM({ worker, nodes, showScalingModal }) {
   const nodeSpecText = worker
@@ -21,7 +22,7 @@ function WorkerNodesKVM({ worker, nodes, showScalingModal }) {
           <RefreshableLabel value={nodes} style={{ marginRight: '25px' }}>
             {nodes}
           </RefreshableLabel>
-        )}
+        )}{' '}
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>

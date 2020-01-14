@@ -1,16 +1,17 @@
-import { FlexRowWithTwoBlocksOnEdges } from 'styles';
-import { getCpusTotal, getMemoryTotal } from 'utils/clusterUtils';
-import { Providers } from 'shared/constants';
-import Button from 'UI/Button';
-import CredentialInfoRow from './CredentialInfoRow';
+import styled from '@emotion/styled';
 import moment from 'moment';
-import NodesRunning from './NodesRunning';
-import PortMappingsRow from './PortMappingsRow';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactTimeout from 'react-timeout';
+import { Providers } from 'shared/constants';
+import { FlexRowWithTwoBlocksOnEdges } from 'styles';
+import Button from 'UI/Button';
+import { getCpusTotal, getMemoryTotal } from 'utils/clusterUtils';
+
+import CredentialInfoRow from './CredentialInfoRow';
+import NodesRunning from './NodesRunning';
+import PortMappingsRow from './PortMappingsRow';
 import RegionAndVersions from './RegionAndVersions';
-import styled from '@emotion/styled';
 import URIBlock from './URIBlock';
 import WorkerNodesAWS from './WorkerNodesAWS';
 import WorkerNodesAzure from './WorkerNodesAzure';
@@ -47,6 +48,17 @@ class V4ClusterDetailTable extends React.Component {
       ? JSON.parse(window.config.azureCapabilitiesJSON)
       : {};
 
+    this.setState({ awsInstanceTypes, azureVMSizes });
+    this.produceRAMAndCPUs();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.cluster !== this.props.cluster) {
+      this.produceRAMAndCPUs();
+    }
+  }
+
+  produceRAMAndCPUs = () => {
     const { cluster } = this.props;
     const memory = getMemoryTotal(cluster);
     const RAM = !memory ? 0 : memory;
@@ -54,8 +66,8 @@ class V4ClusterDetailTable extends React.Component {
     const cores = getCpusTotal(cluster);
     const CPUs = !cores ? 0 : cores;
 
-    this.setState({ awsInstanceTypes, azureVMSizes, RAM, CPUs });
-  }
+    this.setState({ RAM, CPUs });
+  };
 
   /**
    * Returns the proper last updated info string based on available
@@ -66,6 +78,7 @@ class V4ClusterDetailTable extends React.Component {
     if (cluster && cluster.status && cluster.status.lastUpdated) {
       return moment(cluster.status.lastUpdated).fromNow();
     }
+
     return 'n/a';
   }
 
@@ -139,19 +152,23 @@ class V4ClusterDetailTable extends React.Component {
             showScalingModal={this.props.showScalingModal}
           />
         )}
-        {provider === Providers.AWS && (
-          <WorkerNodesAWS
-            az={cluster.availability_zones}
-            instanceName={cluster.workers[0].aws.instance_type}
-            instanceType={
-              this.state.awsInstanceTypes[cluster.workers[0].aws.instance_type]
-            }
-            scaling={cluster.scaling}
-            showScalingModal={this.props.showScalingModal}
-            workerNodesDesired={this.props.workerNodesDesired}
-            workerNodesRunning={workerNodesRunning}
-          />
-        )}
+        {provider === Providers.AWS &&
+          cluster.workers &&
+          cluster.workers.length !== 0 && (
+            <WorkerNodesAWS
+              az={cluster.availability_zones}
+              instanceName={cluster.workers[0].aws.instance_type}
+              instanceType={
+                this.state.awsInstanceTypes[
+                  cluster.workers[0].aws.instance_type
+                ]
+              }
+              scaling={cluster.scaling}
+              showScalingModal={this.props.showScalingModal}
+              workerNodesDesired={this.props.workerNodesDesired}
+              workerNodesRunning={workerNodesRunning}
+            />
+          )}
         <p className='last-updated'>
           <small>
             The information above is auto-refreshing. Details last fetched{' '}
