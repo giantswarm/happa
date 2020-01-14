@@ -68,8 +68,8 @@ describe('AccountSettings', () => {
   it('renders the account deletion section', async () => {
     const { findByTestId } = renderRouteWithStore('/account-settings', {});
 
-    const passwordChangeForm = await findByTestId(elementIDs.DeleteAccount);
+    const accountDeletionSection = await findByTestId(elementIDs.DeleteAccount);
 
-    expect(passwordChangeForm).not.toBeNull();
+    expect(accountDeletionSection).not.toBeNull();
   });
 });
