@@ -20,6 +20,7 @@ import ClusterIDLabel from 'UI/ClusterIDLabel';
 class Modals extends React.Component {
   state = {
     emailValid: false,
+    organizationNameValid: false,
   };
 
   close = () => {
@@ -84,6 +85,11 @@ class Modals extends React.Component {
     }
   };
 
+  organizationNameFieldChanged = event => {
+    const { target } = event;
+    this.setState({ organizationNameValid: target.validity.valid });
+  };
+
   render() {
     switch (this.props.modal.template) {
       case 'organizationDelete':
@@ -141,6 +147,15 @@ class Modals extends React.Component {
               </BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
+              <p>Organization names must:</p>
+              <ul>
+                <li>be between 4 and 63 characters long</li>
+                <li>
+                  contain only letters, numbers, dots (.), hyphens (-) and
+                  underscores (_)
+                </li>
+                <li>must start and end with a letter or number</li>
+              </ul>
               <form onSubmit={this.createOrganisation.bind(this)}>
                 <label htmlFor='create-organization-name'>
                   Organization Name:
@@ -152,6 +167,11 @@ class Modals extends React.Component {
                     this.orgId = i;
                   }}
                   type='text'
+                  required
+                  minLength='4'
+                  maxLength='63'
+                  pattern='^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$'
+                  onChange={this.organizationNameFieldChanged}
                 />
               </form>
             </BootstrapModal.Body>
@@ -162,6 +182,7 @@ class Modals extends React.Component {
                 loadingPosition='left'
                 onClick={this.createOrganisation.bind(this)}
                 type='submit'
+                disabled={!this.state.organizationNameValid}
               >
                 {this.props.modal.templateValues.loading
                   ? 'Creating Organization'
