@@ -414,7 +414,7 @@ class CreateRegularCluster extends React.Component {
   render() {
     const { provider } = this.props;
 
-    const requiredReleaseForAZ = CreateRegularCluster.getRequiredVersionForAZ(
+    const requiredReleaseForAZ = CreateRegularCluster.getRequiredVersionForMultiAZ(
       provider
     );
 
