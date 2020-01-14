@@ -66,3 +66,27 @@ export function getComponentWithTheme(Component, props) {
     </ThemeProvider>
   );
 }
+
+export function renderComponentWithStore(
+  Component,
+  props = {},
+  state = {},
+  storage = initialStorage,
+  history = createMemoryHistory()
+) {
+  localStorage.replaceWith(storage);
+
+  const store = configureStore(state, history);
+
+  const app = (
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <ConnectedRouter history={history}>
+          <Component {...props} />
+        </ConnectedRouter>
+      </ThemeProvider>
+    </Provider>
+  );
+
+  return app;
+}
