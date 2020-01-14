@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   batchedClusterDetailView,
-  refreshClusterDetailView,
+  batchedRefreshClusterDetailView,
 } from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
@@ -66,7 +66,7 @@ class ClusterDetailView extends React.Component {
     this.loadDataInterval = this.props.setInterval(
       this.refreshClusterData,
       // eslint-disable-next-line no-magic-numbers
-      30 * 1000 // 30 seconds
+      3 * 1000 // 30 seconds
     );
   };
 
@@ -97,7 +97,7 @@ class ClusterDetailView extends React.Component {
 
   refreshClusterData = () => {
     this.props.dispatch(
-      refreshClusterDetailView(
+      batchedRefreshClusterDetailView(
         this.props.cluster.id,
         this.props.isNodePoolsCluster
       )
