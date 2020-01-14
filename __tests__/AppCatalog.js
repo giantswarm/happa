@@ -103,11 +103,39 @@ it('renders all apps in the app list for a given catalog', async () => {
   nock('https://catalogshost').get('/giantswarm-test-catalog/index.yaml').reply(200, catalogIndexResponse);
   nock('https://catalogshost').get('/helmstable/index.yaml').reply(200, catalogIndexResponse);
 
-  const { debug, findByText } = renderRouteWithStore(
+  const { findByText } = renderRouteWithStore(
     ROUTE + "giantswarm-incubator/"
   );
 
   const catalogTitle = await findByText('Giant Swarm Incubator')
   expect(catalogTitle).toBeInTheDocument();
+});
+
+it('renders all apps in the app list for a given catalog', async () => {
+  nock('https://catalogshost').get('/giantswarm-incubator-catalog/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost').get('/giantswarm-test-catalog/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost').get('/helmstable/index.yaml').reply(200, catalogIndexResponse);
+
+  const { findByText } = renderRouteWithStore(
+    ROUTE + "giantswarm-incubator/"
+  );
+
+  const catalogTitle = await findByText('Giant Swarm Incubator')
+  expect(catalogTitle).toBeInTheDocument();
+});
+
+it('renders the app detail page for a given app', async () => {
+  nock('https://catalogshost').get('/giantswarm-incubator-catalog/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost').get('/giantswarm-test-catalog/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost').get('/helmstable/index.yaml').reply(200, catalogIndexResponse);
+
+  const { findByText } = renderRouteWithStore(
+    ROUTE + "giantswarm-incubator/nginx-ingress-controller-app/"
+  );
+
+  // The app's description should be there.
+  // This comes from parsing the index.yaml, which is mocked in catalogIndexResponse.
+  const appDescription = await findByText('A Helm chart for the nginx ingress-controller')
+  expect(appDescription).toBeInTheDocument();
 });
 
