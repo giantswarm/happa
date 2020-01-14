@@ -96,16 +96,14 @@ export function clustersDetails({
     const selectedOrganization = getState().app.selectedOrganization;
     const allClusters = await getState().entities.clusters.items;
 
-    const clusters = filterBySelectedOrganization
+    const clustersIds = filterBySelectedOrganization
       ? Object.keys(allClusters).filter(
           id => allClusters[id].owner === selectedOrganization
         )
-      : allClusters;
+      : Object.keys(allClusters);
 
     const clusterDetails = await Promise.all(
-      Object.keys(clusters).map(clusterId => {
-        return dispatch(clusterLoadDetails(clusterId));
-      })
+      clustersIds.map(id => dispatch(clusterLoadDetails(id)))
     );
 
     // We actually don't care if success or error, just want to set loading flag to
