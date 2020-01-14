@@ -60,9 +60,9 @@ const InstallAppForm = props => {
       {formAbilities.hasFixedNamespace ? (
         <Input
           description={
-            'This app must be installed in the ' +
-            formAbilities.fixedNamespace +
-            'namespace'
+            `This app must be installed in the ${ 
+            formAbilities.fixedNamespace 
+            }namespace`
           }
           hint={<>&nbsp;</>}
           label='Namespace:'
