@@ -14,13 +14,14 @@ const FormWrapper = styled.div`
 // Some apps have special rules about what namespace they are allowed to be in.
 // In the future there might be other rules.
 // This object is a place to keep this logic.
-const AppFormAbilities = appName => {
+const AppFormAbilities = (appName, updateNamespace) => {
   let hasFixedNamespace = false;
   let fixedNamespace = '';
 
   if (appName === 'nginx-ingress-controller-app') {
     hasFixedNamespace = true;
     fixedNamespace = 'kube-system';
+    updateNamespace('kube-system');
   }
 
   return {
@@ -46,6 +47,8 @@ const InstallAppForm = props => {
     props.onChangeSecretsYAML(files);
   };
 
+  const formAbilities = AppFormAbilities(props.appName, updateNamespace);
+
   return (
     <FormWrapper>
       <Input
@@ -59,11 +62,7 @@ const InstallAppForm = props => {
 
       {formAbilities.hasFixedNamespace ? (
         <Input
-          description={
-            `This app must be installed in the ${
-            formAbilities.fixedNamespace
-            } namespace`
-          }
+          description={`This app must be installed in the ${formAbilities.fixedNamespace} namespace`}
           hint={<>&nbsp;</>}
           label='Namespace:'
           value={formAbilities.fixedNamespace}
