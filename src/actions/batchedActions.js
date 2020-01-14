@@ -118,7 +118,6 @@ export const batchedRefreshClusterDetailView = (
       clusterActions.clusterLoadDetails(clusterId, { withLoadingFlags: false })
     );
     if (isV5Cluster) {
-      // TODO { withLoadingFlags: false }
       await dispatch(
         nodePoolActions.clusterNodePoolsLoad(clusterId, {
           withLoadingFlags: false,
