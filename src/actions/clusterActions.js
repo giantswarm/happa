@@ -32,7 +32,7 @@ function computeCapabilities(cluster, provider) {
 
 // This is a helper function that transforms an array of clusters into an object
 // of clusters with its ids as keys. Also we add some data to the clusters objects.
-function clustersLoadArrayToObject(clusters) {
+function clustersLoadArrayToObject(clusters, provider) {
   return clusters
     .map(cluster => {
       return {
@@ -41,6 +41,7 @@ function clustersLoadArrayToObject(clusters) {
         nodes: cluster.nodes || [],
         keyPairs: cluster.keyPairs || [],
         scaling: cluster.scaling || {},
+        capabilities: computeCapabilities(cluster, provider),
       };
     })
     .reduce((accumulator, current) => {
@@ -54,14 +55,15 @@ function clustersLoadArrayToObject(clusters) {
  * @param {Boolean} withLoadingFlags Set to false to avoid loading state (eg when refreshing)
  */
 export function clustersList({ withLoadingFlags }) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
 
     // Fetch all clusters.
     return clustersApi
       .getClusters()
       .then(data => {
-        const clusters = clustersLoadArrayToObject(data);
+        const provider = getState().app.info.general.provider;
+        const clusters = clustersLoadArrayToObject(data, provider);
 
         const v5ClusterIds = data
           .filter(cluster => cluster.path.startsWith('/v5'))
