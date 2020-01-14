@@ -8,6 +8,7 @@ const FlexWrapperAZDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+
   p {
     margin-right: 18px;
     transform: translateY(-4px);

@@ -69,6 +69,22 @@ class CreateRegularCluster extends React.Component {
     return cmp(releaseVer, '6.2.99') === 1;
   }
 
+  static getRequiredVersionForMultiAZ(provider) {
+    let requiredVersion = '';
+
+    switch (provider) {
+      case Providers.AZURE:
+        // TODO: Add version check for next release
+        requiredVersion = '6.1.0';
+        break;
+
+      default:
+        requiredVersion = '6.1.0';
+    }
+
+    return requiredVersion;
+  }
+
   state = {
     availabilityZonesPicker: {
       value: 1,
@@ -124,22 +140,6 @@ class CreateRegularCluster extends React.Component {
       awsInstanceTypes: JSON.parse(window.config.awsCapabilitiesJSON),
       azureInstanceTypes: JSON.parse(window.config.azureCapabilitiesJSON),
     });
-  }
-
-  static getRequiredVersionForAZ(provider) {
-    let requiredVersion = '';
-
-    switch (provider) {
-      case Providers.AZURE:
-        // TODO: Add version check for next release
-        requiredVersion = '6.1.0';
-        break;
-
-      default:
-        requiredVersion = '6.1.0';
-    }
-
-    return requiredVersion;
   }
 
   updateAvailabilityZonesPicker = n => {

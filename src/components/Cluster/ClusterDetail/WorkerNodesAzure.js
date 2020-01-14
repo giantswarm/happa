@@ -17,6 +17,7 @@ export const LineDiv = styled.div`
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 25px;
+
   div:first-of-type {
     width: 185px;
   }
