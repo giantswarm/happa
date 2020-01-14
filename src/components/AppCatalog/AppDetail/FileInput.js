@@ -44,7 +44,7 @@ const Hint = styled.span`
   font-size: 12px;
 `;
 
-const TextInput = props => {
+const FileInput = props => {
   const onChange = e => {
     if (props.onChange) {
       props.onChange(e.target.files);
@@ -76,14 +76,14 @@ const TextInput = props => {
   );
 };
 
-TextInput.propTypes = {
+FileInput.propTypes = {
   description: PropTypes.string,
-  hint: PropTypes.string,
+  hint: PropTypes.any,
   icon: PropTypes.string,
   label: PropTypes.string,
   onChange: PropTypes.func,
   validationError: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.object,
 };
 
-export default TextInput;
+export default FileInput;
