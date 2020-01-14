@@ -10,6 +10,25 @@ const FormWrapper = styled.div`
   flex-direction: column;
 `;
 
+// AppFormAbilities is an object that helps us with the form.
+// Some apps have special rules about what namespace they are allowed to be in.
+// In the future there might be other rules.
+// This object is a place to keep this logic.
+const AppFormAbilities = appName => {
+  let hasFixedNamespace = false;
+  let fixedNamespace = '';
+
+  if (appName === 'nginx-ingress-controller-app') {
+    hasFixedNamespace = true;
+    fixedNamespace = 'kube-system';
+  }
+
+  return {
+    hasFixedNamespace,
+    fixedNamespace,
+  };
+};
+
 const InstallAppForm = props => {
   const updateName = name => {
     props.onChangeName(name);
@@ -38,14 +57,28 @@ const InstallAppForm = props => {
         value={props.name}
       />
 
-      <Input
-        description='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
-        hint={<>&nbsp;</>}
-        label='Namespace:'
-        onChange={updateNamespace}
-        validationError={props.namespaceError}
-        value={props.namespace}
-      />
+      {formAbilities.hasFixedNamespace ? (
+        <Input
+          description={
+            'This app must be installed in the ' +
+            formAbilities.fixedNamespace +
+            'namespace'
+          }
+          hint={<>&nbsp;</>}
+          label='Namespace:'
+          value={formAbilities.fixedNamespace}
+          readOnly={true}
+        />
+      ) : (
+        <Input
+          description='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
+          hint={<>&nbsp;</>}
+          label='Namespace:'
+          onChange={updateNamespace}
+          validationError={props.namespaceError}
+          value={props.namespace}
+        />
+      )}
 
       <FileInput
         description='Apps can be configured using a values.yaml file. If you have one, you can upload it here already.'
@@ -69,6 +102,7 @@ const InstallAppForm = props => {
 };
 
 InstallAppForm.propTypes = {
+  appName: PropTypes.string,
   name: PropTypes.string,
   nameError: PropTypes.string,
   namespace: PropTypes.string,
