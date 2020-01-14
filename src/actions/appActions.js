@@ -102,8 +102,6 @@ export function installApp(app, clusterID) {
       createApp = appsApi.createClusterAppV5.bind(appsApi);
     }
 
-    console.log(app);
-
     try {
       if (Object.keys(app.valuesYAML).length !== 0) {
         await dispatch(createAppConfig(app.name, clusterID, app.valuesYAML));
@@ -138,7 +136,6 @@ export function installApp(app, clusterID) {
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
-
     } catch (error) {
       dispatch({
         type: types.CLUSTER_INSTALL_APP_ERROR,
