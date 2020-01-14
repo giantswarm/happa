@@ -36,7 +36,9 @@ const InstallAppForm = props => {
   };
 
   const updateNamespace = namespace => {
-    props.onChangeNamespace(namespace);
+    if (props.onChangeNamespace) {
+      props.onChangeNamespace(namespace);
+    }
   };
 
   const updateValuesYAML = files => {
