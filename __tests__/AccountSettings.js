@@ -48,10 +48,10 @@ describe('AccountSettings', () => {
   it('renders the email change form label and description', async () => {
     const { findByTestId } = renderRouteWithStore('/account-settings', {});
 
-    const emailLabel = await findByTestId(elementIDs.ChangeEmailForm);
+    const emailLabel = await findByTestId(elementIDs.EmailLabel);
     expect(emailLabel).not.toBeNull();
 
-    const emailDescription = await findByTestId(elementIDs.ChangeEmailForm);
+    const emailDescription = await findByTestId(elementIDs.EmailDescription);
     expect(emailDescription).not.toBeNull();
   });
 
@@ -68,9 +68,7 @@ describe('AccountSettings', () => {
   it('renders the account deletion section', async () => {
     const { findByTestId } = renderRouteWithStore('/account-settings', {});
 
-    const passwordChangeForm = await findByTestId(
-      elementIDs.ChangePasswordForm
-    );
+    const passwordChangeForm = await findByTestId(elementIDs.DeleteAccount);
 
     expect(passwordChangeForm).not.toBeNull();
   });
