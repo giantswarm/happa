@@ -1,17 +1,19 @@
 import '@testing-library/jest-dom/extend-expect';
 import {
+  API_ENDPOINT,
+  AWSInfoResponse,
   authTokenResponse,
   getPersistedMockCall,
-  AWSInfoResponse,
   postMockCall,
   userResponse,
 } from 'testUtils/mockHttpCalls';
 import { fireEvent, wait } from '@testing-library/react';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
+import { StatusCodes } from 'shared/constants';
 import nock from 'nock';
+import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 it('renders the login page at /login', async () => {
-  const { getByText } = renderRouteWithStore('/login');
+  const { getByText } = renderRouteWithStore('/login', {}, {});
 
   await wait(() => {
     expect(getByText('Log in to Giant Swarm')).toBeInTheDocument();
@@ -114,15 +116,16 @@ it('tells the user to give a email if they leave it blank', async () => {
 
 it('shows an error if the user logs in with invalid credentials', async () => {
   // Don't want to pollute the terminal with this error
+  /* eslint-disable no-console */
   const originalConsoleError = console.error;
   console.error = jest.fn();
 
   // Given I have a Giant Swarm API that does not accept my login attempt
 
   // The failed 401 response to the login call
-  const authTokensRequest = nock('http://localhost:8000')
+  const authTokensRequest = nock(API_ENDPOINT)
     .post('/v4/auth-tokens/')
-    .reply(401);
+    .reply(StatusCodes.Unauthorized);
 
   // And I arrive at the login page with nothing in the state.
   const { getByText, getByLabelText } = renderRouteWithStore('/login', {}, {});
@@ -145,6 +148,8 @@ it('shows an error if the user logs in with invalid credentials', async () => {
     expect(getByText(/Could not log in/i)).toBeInTheDocument();
   });
 
+  authTokensRequest.done();
   // Restore console.og
   console.error = originalConsoleError;
+  /* eslint-enable no-console */
 });

@@ -1,150 +1,325 @@
 import '@testing-library/jest-dom/extend-expect';
+
+import { fireEvent, wait } from '@testing-library/react';
+import nock from 'nock';
+import { StatusCodes } from 'shared/constants';
 import {
   API_ENDPOINT,
-  AWSInfoResponse,
-  ORGANIZATION,
-  V4_CLUSTER,
   appCatalogsResponse,
   appsResponse,
+  AWSInfoResponse,
   generateRandomString,
-  getPersistedMockCall,
+  getMockCall,
+  getMockCallTimes,
+  ORGANIZATION,
   orgResponse,
   orgsResponse,
   releasesResponse,
   userResponse,
+  V4_CLUSTER,
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
 } from 'testUtils/mockHttpCalls';
-import { fireEvent, wait } from '@testing-library/react';
-import { StatusCodes } from 'shared/constants';
-import nock from 'nock';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 const BASE_ROUTE = '/organizations';
 
-const requests = {};
+beforeAll(() => {
+  nock.disableNetConnect();
+});
+
+afterAll(() => {
+  nock.enableNetConnect();
+});
 
 // Responses to requests
-beforeAll(() => {
-  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
-  requests.organizations = getPersistedMockCall(
-    '/v4/organizations/',
-    orgsResponse
-  );
-  requests.organization = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/`,
-    orgResponse
-  );
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v4ClustersResponse);
-  requests.cluster = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    v4AWSClusterResponse
-  );
-  requests.status = getPersistedMockCall(
+beforeEach(() => {
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/info/', AWSInfoResponse);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
+  getMockCall('/v4/clusters/', v4ClustersResponse);
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+  getMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
     v4AWSClusterStatusResponse
   );
-  requests.apps = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-    appsResponse
-  );
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
   // Empty response
-  requests.keyPairs = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/key-pairs/`
-  );
-  requests.credentials = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/credentials/`
-  );
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.appcatalogs = getPersistedMockCall(
-    '/v4/appcatalogs/',
-    appCatalogsResponse
-  );
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+  getMockCall('/v4/releases/', releasesResponse);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 });
 
 // Stop persisting responses
-afterAll(() => {
-  Object.keys(requests).forEach(req => {
-    requests[req].persist(false);
+afterEach(() => {
+  expect(nock.isDone());
+  nock.cleanAll();
+});
+
+describe('Navigation', () => {
+  it('navigation has selected the right page when in organization list route', async () => {
+    getMockCall('/v4/organizations/', orgsResponse);
+
+    const { getByText } = renderRouteWithStore(BASE_ROUTE);
+
+    await wait(() => {
+      expect(
+        getByText(
+          (content, element) =>
+            element.tagName.toLowerCase() === 'a' &&
+            element.attributes['aria-current'] &&
+            element.attributes['aria-current'].value === 'page' &&
+            content === 'Organizations'
+        )
+      ).toBeInTheDocument();
+    });
+
+    // abort any pending requests
+    nock.abortPendingRequests();
   });
 });
 
-it('navigation has selected the right page when in organization list route', async () => {
-  const { getByText } = renderRouteWithStore(BASE_ROUTE);
+describe('Organizations basic', () => {
+  beforeEach(() => {
+    getMockCall('/v4/organizations/', orgsResponse);
+  });
 
-  await wait(() => {
+  it('correctly renders the organizations list', async () => {
+    const { getByText, getByTestId } = renderRouteWithStore(BASE_ROUTE);
+
+    // We want to make sure correct values appear in the row for number of clusters
+    // and members.
+    const members = orgResponse.members.length.toString();
+    const clusters = v4ClustersResponse
+      .filter(cluster => cluster.owner === orgResponse.id)
+      .length.toString();
+
+    await wait(() => {
+      expect(getByTestId(`${orgResponse.id}-name`)).toBeInTheDocument();
+    });
+
+    expect(getByTestId(`${orgResponse.id}-members`).textContent).toBe(members);
+    expect(getByTestId(`${orgResponse.id}-clusters`).textContent).toBe(
+      clusters
+    );
+    expect(getByTestId(`${orgResponse.id}-delete`)).toBeInTheDocument();
+
+    expect(getByText(/create new organization/i)).toBeInTheDocument();
+  });
+
+  it('shows the organization creation modal when requested and organization creation success flash', async () => {
+    const newOrganizationId = generateRandomString();
+
+    const newOrganizationPutRequest = nock(API_ENDPOINT)
+      .intercept(`/v4/organizations/${newOrganizationId}/`, 'PUT')
+      .reply(StatusCodes.Created, { id: newOrganizationId, members: null });
+    const updatedOrganizationsRequest = getMockCall('/v4/organizations/', [
+      ...orgsResponse,
+      { id: newOrganizationId },
+    ]);
+    getMockCall(`/v4/organizations/${newOrganizationId}/`, {
+      id: newOrganizationId,
+      members: [],
+      credentials: null,
+    });
+    getMockCall(`/v4/organizations/${newOrganizationId}/credentials/`);
+
+    const { getByText, getByLabelText, getByTestId } = renderRouteWithStore(
+      BASE_ROUTE
+    );
+
+    await wait(() => {
+      expect(getByText('Create New Organization')).toBeInTheDocument();
+    });
+    fireEvent.click(getByText('Create New Organization'));
+
+    await wait(() => {
+      expect(getByText('Create an Organization')).toBeInTheDocument();
+    });
+
+    const newOrganizationNameInput = getByLabelText(/Organization Name:/);
+    expect(newOrganizationNameInput).toBeInTheDocument();
+
+    fireEvent.change(newOrganizationNameInput, {
+      target: { value: newOrganizationId },
+    });
+
+    fireEvent.click(getByText('Create Organization'));
+
+    newOrganizationPutRequest.done();
+
+    await wait(() => {
+      expect(
+        getByText(
+          (_, element) =>
+            element.innerHTML ===
+            `Organization <code>${newOrganizationId}</code> has been created`
+        )
+      ).toBeInTheDocument();
+    });
+    updatedOrganizationsRequest.done();
+
+    await wait(() => {
+      expect(getByTestId(`${newOrganizationId}-name`)).toBeInTheDocument();
+    });
+  });
+
+  it('shows organization details correctly', async () => {
+    const {
+      findByText,
+      getByText,
+      getByTestId,
+      queryByTestId,
+      getByTitle,
+    } = renderRouteWithStore(`${BASE_ROUTE}/${orgResponse.id}`);
+
+    const pageTitle = await findByText(`Organization: ${orgResponse.id}`);
+    expect(pageTitle).toBeInTheDocument();
+
+    // id column in clusters table
     expect(
-      //
+      getByTitle(`Unique Cluster ID: ${v4AWSClusterResponse.id}`)
+    ).toBeInTheDocument();
+
+    // name cloumn in clusters table
+    expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
+
+    // release column in clusters table
+    expect(getByText(V4_CLUSTER.releaseVersion)).toBeInTheDocument();
+
+    // users
+    const usersTable = getByTestId('org-detail-users-wrapper');
+    expect(usersTable.querySelector('tbody > tr > td').textContent).toBe(
+      orgResponse.members[0].email
+    );
+
+    await wait(() => {
+      expect(queryByTestId('Loading credentials')).not.toBeInTheDocument();
+    });
+
+    expect(
       getByText(
-        (content, element) =>
-          element.tagName.toLowerCase() === 'a' &&
-          element.attributes['aria-current'] &&
-          element.attributes['aria-current'].value === 'page' &&
-          content === 'Organizations'
+        'No credentials set. Clusters of this organization will be created in the default tenant cluster account of this installation.'
       )
     ).toBeInTheDocument();
   });
+
+  it('allows to add an user to an organization', async () => {
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    const patchOrganizationRequest = nock(API_ENDPOINT)
+      .intercept(`/v4/organizations/${orgResponse.id}/`, 'PATCH')
+      .reply(StatusCodes.Ok, {
+        code: 'RESOURCE_UPDATED',
+        message: `The organization with ID ${orgResponse.id} has been updated.`,
+      });
+
+    const newMemberEmail = `${generateRandomString()}@giantswarm.io`;
+
+    const { findByText, getByText, findByLabelText } = renderRouteWithStore(
+      `${BASE_ROUTE}/${orgResponse.id}`
+    );
+
+    const addMemberButton = await findByText('Add Member');
+    expect(addMemberButton).toBeInTheDocument();
+
+    fireEvent.click(addMemberButton);
+
+    const newMemberEmailField = await findByLabelText('Email:');
+    expect(newMemberEmailField).toBeInTheDocument();
+
+    fireEvent.change(newMemberEmailField, {
+      target: { value: newMemberEmail },
+    });
+
+    fireEvent.click(await findByText('Add Member to Organization'));
+
+    await wait(() => {
+      expect(
+        getByText(
+          (_, element) =>
+            element.innerHTML ===
+            `Added <code>${newMemberEmail}</code> to organization <code>${orgResponse.id}</code>`
+        )
+      ).toBeInTheDocument();
+    });
+
+    patchOrganizationRequest.done();
+  });
 });
 
-it('correctly renders the organizations list', async () => {
-  const { getByText, getByTestId } = renderRouteWithStore(BASE_ROUTE);
+describe('Organization deletion', () => {
+  it('shows the organization deletion modal when requested and organization deletion success flash', async () => {
+    const organizationToDeleteId = generateRandomString();
 
-  // We want to make sure correct values appear in the row for number of clusters
-  // and members.
-  const members = orgResponse.members.length.toString();
-  const clusters = v4ClustersResponse
-    .filter(cluster => cluster.owner === orgResponse.id)
-    .length.toString();
+    getMockCall('/v4/organizations/', [
+      ...orgsResponse,
+      { id: organizationToDeleteId },
+    ]);
+    const organizationToDeleteRequest = getMockCall(
+      `/v4/organizations/${organizationToDeleteId}/`,
+      {
+        id: organizationToDeleteId,
+        members: [],
+        credentials: [],
+      }
+    );
+    const credentialsRequest = getMockCall(
+      `/v4/organizations/${organizationToDeleteId}/credentials/`
+    );
+    const deleteOrganizationRequest = nock(API_ENDPOINT)
+      .intercept(`/v4/organizations/${organizationToDeleteId}/`, 'DELETE')
+      .reply(StatusCodes.Ok, {
+        code: 'RESOURCE_DELETED',
+        message: `The organization with ID \`${organizationToDeleteId}\` has been deleted.`,
+      });
 
-  await wait(() =>
-    expect(getByTestId(`${orgResponse.id}-name`)).toBeInTheDocument()
-  );
+    const { getByText, getByTestId, queryByTestId } = renderRouteWithStore(
+      BASE_ROUTE
+    );
 
-  expect(getByTestId(`${orgResponse.id}-members`).textContent).toBe(members);
-  expect(getByTestId(`${orgResponse.id}-clusters`).textContent).toBe(clusters);
-  expect(getByTestId(`${orgResponse.id}-delete`)).toBeInTheDocument();
+    await wait(() => {
+      expect(getByTestId(`${organizationToDeleteId}-name`)).toBeInTheDocument();
+    });
 
-  expect(getByText(/create new organization/i)).toBeInTheDocument();
-});
+    organizationToDeleteRequest.done();
+    credentialsRequest.done();
 
-it('shows the organization creation modal when requested and organization creation success flash', async () => {
-  const newOrganizationId = generateRandomString();
-  const newOrganizationPutRequest = nock(API_ENDPOINT)
-    .intercept(`/v4/organizations/${newOrganizationId}/`, 'PUT')
-    .reply(StatusCodes.Created, { id: newOrganizationId, members: null });
+    fireEvent.click(getByTestId(`${organizationToDeleteId}-delete`));
 
-  const { getByText, getByLabelText } = renderRouteWithStore(BASE_ROUTE);
+    await wait(() => {
+      expect(
+        getByText(
+          (_, element) =>
+            element.textContent ===
+            `Are you sure you want to delete ${organizationToDeleteId}?`
+        )
+      ).toBeInTheDocument();
+      expect(getByText('There is no undo')).toBeInTheDocument();
+    });
 
-  await wait(() => {
-    expect(getByText('Create New Organization')).toBeInTheDocument();
-  });
+    getMockCall('/v4/organizations/', orgsResponse);
+    fireEvent.click(getByText('Delete Organization'));
 
-  fireEvent.click(getByText('Create New Organization'));
+    await wait(() => {
+      expect(
+        getByText(
+          (_, element) =>
+            element.innerHTML ===
+            `Organization <code>${organizationToDeleteId}</code> deleted`
+        )
+      ).toBeInTheDocument();
+    });
 
-  await wait(() => {
-    expect(getByText('Create an Organization')).toBeInTheDocument();
-  });
-
-  const newOrganizationNameInput = getByLabelText(/Organization Name:/);
-  expect(newOrganizationNameInput).toBeInTheDocument();
-
-  fireEvent.change(newOrganizationNameInput, {
-    target: { value: newOrganizationId },
-  });
-
-  fireEvent.click(getByText('Create Organization'));
-
-  newOrganizationPutRequest.done();
-
-  await wait(() => {
-    expect(
-      getByText(
-        (_, element) =>
-          element.innerHTML ===
-          `Organization <code>${newOrganizationId}</code> has been created`
-      )
-    ).toBeInTheDocument();
+    deleteOrganizationRequest.done();
+    await wait(() => {
+      expect(getByTestId(`${orgResponse.id}-name`)).toBeInTheDocument();
+      expect(
+        queryByTestId(`${organizationToDeleteId}-name`)
+      ).not.toBeInTheDocument();
+    });
   });
 });

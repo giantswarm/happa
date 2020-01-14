@@ -193,8 +193,8 @@ class Modals extends React.Component {
               </p>
 
               <form onSubmit={this.addMember.bind(this)}>
-                <label>Email:</label>
                 <EmailField
+                  label='Email:'
                   autofocus
                   errorMessage={this.props.modal.templateValues.errorMessage}
                   name='email'
