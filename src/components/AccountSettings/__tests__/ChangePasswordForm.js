@@ -88,7 +88,7 @@ describe('ChangePasswordForm', () => {
     expect(setButton).toBeNull();
   });
 
-  it('typing in the current password input makes the set button appear', async () => {
+  it('makes the set button appear after typing in the current password input', async () => {
     const { getByTestId, findByTestId } = renderWithProps();
     const inputWrapper = getByTestId(elementIDs.currPassword);
     const firstInputElement = inputWrapper.querySelector('input');
@@ -133,7 +133,7 @@ describe('ChangePasswordForm', () => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
       expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBe(true);
+      expect(setButton.disabled).toBeTruthy();
     });
 
     // Check if the new password cannot be just numbers
@@ -147,7 +147,7 @@ describe('ChangePasswordForm', () => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
       expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBe(true);
+      expect(setButton.disabled).toBeTruthy();
     });
 
     // Check if the new password cannot be just letters
@@ -161,7 +161,7 @@ describe('ChangePasswordForm', () => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
       expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBe(true);
+      expect(setButton.disabled).toBeTruthy();
     });
 
     triggerInputChange(newPasswordInputElement, 'AAAAAAAASDASDASDAS');
@@ -174,7 +174,7 @@ describe('ChangePasswordForm', () => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
       expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBe(true);
+      expect(setButton.disabled).toBeTruthy();
     });
 
     triggerInputChange(newPasswordInputElement, 'aaasAAA11231aasdaA');
@@ -184,7 +184,7 @@ describe('ChangePasswordForm', () => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
       expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBe(true);
+      expect(setButton.disabled).toBeTruthy();
 
       // Check if error text is still present
       errorElement = queryByText(validationErrors.JustLetters);
@@ -233,7 +233,7 @@ describe('ChangePasswordForm', () => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
       expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBe(true);
+      expect(setButton.disabled).toBeTruthy();
     });
 
     triggerInputChange(confirmNewPasswordInputElement, newPassword);
@@ -243,7 +243,7 @@ describe('ChangePasswordForm', () => {
       const setButton = queryByTestId(elementIDs.setPasswordButton);
 
       expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBe(false);
+      expect(setButton.disabled).toBeFalsy();
 
       // Check if error text is still present
       errorElement = queryByText(validationErrors.NoMatch);
@@ -264,8 +264,7 @@ describe('ChangePasswordForm', () => {
       {
         current_password_base64: newPasswordBase64,
         new_password_base64: newPasswordBase64,
-      },
-      {}
+      }
     );
 
     const { getByTestId, findByTestId, findByText } = renderWithProps({

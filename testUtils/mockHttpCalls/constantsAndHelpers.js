@@ -1,4 +1,5 @@
 import nock from 'nock';
+import { StatusCodes } from 'shared/constants';
 
 export const API_ENDPOINT = 'http://localhost:8000';
 export const USER_EMAIL = 'developer@giantswarm.io';
@@ -34,7 +35,12 @@ export const postMockCall = (endpoint, response = []) =>
     .post(endpoint)
     .reply(200, response);
 
-export const postPayloadMockCall = (endpoint, payload = {}, response = [], statusCode = 200) =>
+export const postPayloadMockCall = (
+  endpoint,
+  payload = {},
+  response = [],
+  statusCode = StatusCodes.Ok
+) =>
   nock(API_ENDPOINT)
     .post(endpoint, payload)
     .reply(statusCode, response);
