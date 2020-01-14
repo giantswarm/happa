@@ -3,7 +3,9 @@ import {
   appCatalogsResponse,
   appsResponse,
   AWSInfoResponse,
+  catalogIndexResponse,
   getPersistedMockCall,
+  getMockCall,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -54,10 +56,13 @@ beforeAll(() => {
     `/v4/organizations/${ORGANIZATION}/credentials/`
   );
   requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
+
   requests.appcatalogs = getPersistedMockCall(
     '/v4/appcatalogs/',
     appCatalogsResponse
   );
+
+  nock('https://cors-anywhere.herokuapp.com').get(/.*$/).reply(500, 'Not supposed to get here in these tests.').persist();
 });
 
 // Stop persisting responses
@@ -70,6 +75,10 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('renders all non internal app catalogs in the app catalogs overview', async () => {
+  nock('https://catalogshost').get('/giantswarm-incubator-catalog/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost').get('/giantswarm-test-catalog/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost').get('/helmstable/index.yaml').reply(200, catalogIndexResponse);
+
   const { findByText } = renderRouteWithStore(
     ROUTE
   );
@@ -86,3 +95,17 @@ it('renders all non internal app catalogs in the app catalogs overview', async (
     expect(catalogTitle).toBeInTheDocument();
   }
 });
+
+it('renders all apps in the app list for a given catalog', async () => {
+  nock('https://catalogshost').get('/giantswarm-incubator-catalog/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost').get('/giantswarm-test-catalog/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost').get('/helmstable/index.yaml').reply(200, catalogIndexResponse);
+
+  const { debug, findByText } = renderRouteWithStore(
+    ROUTE + "giantswarm-incubator/"
+  );
+
+  const catalogTitle = await findByText('Giant Swarm Incubator')
+  expect(catalogTitle).toBeInTheDocument();
+});
+

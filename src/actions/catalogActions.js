@@ -24,7 +24,6 @@ function loadCatalogIndex(catalog) {
       throw error;
     })
     .then(response => {
-      // eslint-disable-next-line no-magic-numbers
       if (response.status === StatusCodes.Ok) {
         return response.text();
       }
@@ -42,9 +41,6 @@ function loadCatalogIndex(catalog) {
       return catalogWithApps;
     })
     .catch(error => {
-      // eslint-disable-next-line no-console
-      console.error('YAML error: ', error);
-
       throw error;
     });
 }

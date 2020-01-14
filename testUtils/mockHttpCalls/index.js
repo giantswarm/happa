@@ -32,3 +32,6 @@ export * from './releases';
 
 // App Catalogs
 export * from './appCatalogs';
+
+// Catalog Indexes
+export * from './catalogIndex';
