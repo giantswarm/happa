@@ -70,7 +70,7 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('renders all non internal app catalogs in the app catalogs overview', async () => {
-  const { findByText, debug, getAllByText, getByTestId } = renderRouteWithStore(
+  const { findByText } = renderRouteWithStore(
     ROUTE
   );
 
