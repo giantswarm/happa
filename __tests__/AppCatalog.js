@@ -69,11 +69,20 @@ afterAll(() => {
 
 /************ TESTS ************/
 
-it('renders all the app catalogs in the app catalogs overview', async () => {
+it('renders all non internal app catalogs in the app catalogs overview', async () => {
   const { findByText, debug, getAllByText, getByTestId } = renderRouteWithStore(
     ROUTE
   );
 
   const introText = await findByText('Pick an App Catalog to browse all the Apps in it.')
   expect(introText).toBeInTheDocument();
+
+  for (const catalog of appCatalogsResponse) {
+    if (catalog.metadata.labels['application.giantswarm.io/catalog-type'] === 'internal') {
+      continue;
+    }
+
+    const catalogTitle = await findByText(catalog.spec.title)
+    expect(catalogTitle).toBeInTheDocument();
+  }
 });
