@@ -160,8 +160,10 @@ class ChangePassword extends React.Component {
   };
 
   render() {
+    const { user, actions, ...rest } = this.props;
+
     return (
-      <div className='row section'>
+      <div className='row section' {...rest}>
         <div className='col-3'>
           <h3 className='table-label' data-testid='change-password/label'>
             Password

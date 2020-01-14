@@ -121,8 +121,10 @@ class ChangeEmailForm extends React.Component {
   };
 
   render() {
+    const { user, actions, ...rest } = this.props;
+
     return (
-      <div>
+      <div {...rest}>
         <form className='change_email_form' onSubmit={this.submit}>
           <input
             onChange={this.validateEmail}
