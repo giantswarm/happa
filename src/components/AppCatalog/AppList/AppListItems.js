@@ -73,17 +73,15 @@ class AppListItems extends React.Component {
         >
           {(style, content) => {
             const newContent = [].concat(content);
-            const currentIconURL = newContent[0].icon;
-
-            if (this.props.iconErrors.hasOwnProperty(currentIconURL))
-              newContent[0].icon = '';
 
             return (
               <AppContainer
                 style={style}
                 appVersions={newContent}
                 catalog={this.props.catalog}
-                hasError={this.props.iconErrors.hasOwnProperty(content[0].icon)}
+                hasIconError={this.props.iconErrors.hasOwnProperty(
+                  newContent[0].icon
+                )}
                 onImgError={this.props.onImgError}
                 searchQuery={searchQuery}
               />

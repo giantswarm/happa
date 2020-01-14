@@ -42,7 +42,8 @@ export default function AvailabilityZonesParser({
     // We could save state instead. I'm just doing this because it's easier.
     setAZLabels(initialStateLabels);
     updateAZValuesInParent(AZPicker);
-  }, [AZPicker, isLabels, updateAZValuesInParent]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [AZPicker]);
 
   // Labels.
   useEffect(() => {
@@ -51,7 +52,8 @@ export default function AvailabilityZonesParser({
     // Reset picker
     setAZPicker(initialStatePicker);
     updateAZValuesInParent(AZLabels);
-  }, [AZLabels, initialStatePicker, isLabels, updateAZValuesInParent]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [AZLabels]);
 
   // Function passed to child Number Picker component to allow it to update state here
   const updateAZPicker = payload => {

@@ -1,3 +1,5 @@
+const nodeFetch = require('node-fetch');
+
 const localStorageMock = (function() {
   let store = {};
 
@@ -37,3 +39,5 @@ global.console = {
   debug: console.debug,
 };
 /* eslint-enable no-console */
+
+global.fetch = nodeFetch;

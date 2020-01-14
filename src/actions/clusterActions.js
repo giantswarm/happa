@@ -32,7 +32,7 @@ function computeCapabilities(cluster, provider) {
 
 // This is a helper function that transforms an array of clusters into an object
 // of clusters with its ids as keys. Also we add some data to the clusters objects.
-function clustersLoadArrayToObject(clusters) {
+function clustersLoadArrayToObject(clusters, provider) {
   return clusters
     .map(cluster => {
       return {
@@ -41,6 +41,7 @@ function clustersLoadArrayToObject(clusters) {
         nodes: cluster.nodes || [],
         keyPairs: cluster.keyPairs || [],
         scaling: cluster.scaling || {},
+        capabilities: computeCapabilities(cluster, provider),
       };
     })
     .reduce((accumulator, current) => {
@@ -54,14 +55,16 @@ function clustersLoadArrayToObject(clusters) {
  * @param {Boolean} withLoadingFlags Set to false to avoid loading state (eg when refreshing)
  */
 export function clustersList({ withLoadingFlags }) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
+
+    const provider = getState().app.info.general.provider;
 
     // Fetch all clusters.
     return clustersApi
       .getClusters()
       .then(data => {
-        const clusters = clustersLoadArrayToObject(data);
+        const clusters = clustersLoadArrayToObject(data, provider);
 
         const v5ClusterIds = data
           .filter(cluster => cluster.path.startsWith('/v5'))
@@ -112,6 +115,282 @@ export function clustersDetails({
 }
 
 /**
+ * Loads apps for a cluster.
+ *
+ * @param {String} clusterId Cluster ID
+ */
+export function clusterLoadApps(clusterId) {
+  return function(dispatch, getState) {
+    // This method is going to work for NP clusters, now in local dev it is not
+    // working, so early return if the cluster is a NP one.
+    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
+    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
+    if (isNodePoolsCluster) {
+      dispatch({
+        type: types.CLUSTER_LOAD_APPS_SUCCESS,
+        clusterId,
+        apps: [],
+      });
+
+      return Promise.resolve([]);
+    }
+
+    dispatch({
+      type: types.CLUSTER_LOAD_APPS,
+      clusterId,
+    });
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    return appsApi
+      .getClusterApps(clusterId)
+      .then(apps => {
+        // For some reason the array that we get back from the generated js client is an
+        // array-like structure, so I make a new one here.
+        // In tests we are using a real array, so we are applying Array.from() to an actual
+        // array. Apparently it works fine.
+        const appsArray = Array.from(apps);
+        dispatch({
+          type: types.CLUSTER_LOAD_APPS_SUCCESS,
+          clusterId,
+          apps: appsArray,
+        });
+
+        return apps;
+      })
+      .catch(error => {
+        dispatch({
+          type: types.CLUSTER_LOAD_APPS_ERROR,
+          clusterId,
+          error,
+        });
+
+        new FlashMessage(
+          'Something went wrong while trying to load apps installed on this cluster.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          'Please try again later or contact support: support@giantswarm.io'
+        );
+
+        throw error;
+      });
+  };
+}
+
+/**
+ * Takes an app and a cluster id and tries to install it. Dispatches CLUSTER_INSTALL_APP_SUCCESS
+ * on success or CLUSTER_INSTALL_APP_ERROR on error.
+ *
+ * If the app has valuesYAML or secretsYAML set to a non empty object, then
+ * this will first try to create the user config configmap and/or secret
+ * before creating the app.
+ *
+ * @param {Object} app App definition object.
+ * @param {Object} clusterID Where to install the app.
+ */
+export function clusterInstallApp(app, clusterID) {
+  return async function(dispatch) {
+    dispatch({
+      type: types.CLUSTER_INSTALL_APP,
+      clusterID,
+      app,
+    });
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    try {
+      // If we have user config that we want to create, then
+      // fire off the call to create it.
+      if (Object.keys(app.valuesYAML).length !== 0) {
+        await createAppConfig(app, clusterID);
+      }
+
+      // If we have an app secret that we want to create, then
+      // fire off the call to create it.
+      if (Object.keys(app.secretsYAML).length !== 0) {
+        await createAppSecret(app, clusterID);
+      }
+
+      // Create the App.
+      await appsApi
+        .createClusterApp(clusterID, app.name, {
+          body: {
+            spec: {
+              catalog: app.catalog,
+              name: app.chartName,
+              namespace: app.namespace,
+              version: app.version,
+            },
+          },
+        })
+        .catch(error => {
+          showAppInstallationErrorFlashMessage(app, clusterID, error);
+          throw error;
+        });
+
+      dispatch({
+        type: types.CLUSTER_INSTALL_APP_SUCCESS,
+        clusterID,
+        app,
+      });
+
+      new FlashMessage(
+        `Your app <code>${app.name}</code> is being installed on <code>${clusterID}</code>`,
+        messageType.SUCCESS,
+        messageTTL.MEDIUM
+      );
+    } catch (error) {
+      dispatch({
+        type: types.CLUSTER_INSTALL_APP_ERROR,
+        clusterID,
+        app,
+        error,
+      });
+
+      throw error;
+    }
+  };
+}
+
+/**
+ * createAppConfig takes an app and a clusterID and tries to create the config map
+ * of that app. The app object must have a valuesYAML field representing the config
+ * map to be created.
+ * @param {object} app
+ * @param {string} clusterID
+ */
+function createAppConfig(app, clusterID) {
+  const appConfigsApi = new GiantSwarm.AppConfigsApi();
+
+  return appConfigsApi
+    .createClusterAppConfig(clusterID, app.name, {
+      body: app.valuesYAML,
+    })
+    .catch(error => {
+      showAppConfigErrorFlashMessages('ConfigMap', app.name, clusterID, error);
+      throw error;
+    });
+}
+
+/**
+ * createAppSecret takes an app and a clusterID and tries to create the secret
+ * of that app. The app object must have a secretsYAML field representing the secret
+ * to be created.
+ * @param {object} app
+ * @param {string} clusterID
+ */
+function createAppSecret(app, clusterID) {
+  const appSecretsApi = new GiantSwarm.AppSecretsApi();
+
+  return appSecretsApi
+    .createClusterAppSecret(clusterID, app.name, {
+      body: app.secretsYAML,
+    })
+    .catch(error => {
+      showAppConfigErrorFlashMessages('Secret', app.name, clusterID, error);
+      throw error;
+    });
+}
+
+/**
+ * showAppConfigErrorFlashMessages provides flash messages when something went wrong
+ * when creating either the ConfigMap or Secret during app installation.
+ *
+ * @param {string} resource Name of the resource we were trying to create.
+ * @param {string} appName Name of the app.
+ * @param {string} clusterID Where we tried to install the app on.
+ * @param {object} error The error that occured.
+ */
+function showAppConfigErrorFlashMessages(thing, app, clusterID, error) {
+  if (error.status === StatusCodes.Conflict) {
+    new FlashMessage(
+      `The ${thing} for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  } else if (error.status === StatusCodes.BadRequest) {
+    new FlashMessage(
+      `Your ${thing} appears to be invalid. Please make sure all fields are filled in correctly.`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  } else {
+    new FlashMessage(
+      `Something went wrong while trying to create the ${thing}. Please try again later or contact support: support@giantswarm.io`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  }
+}
+
+/**
+ * appInstallationErrorFlashMessage provides flash messages for failed app creation.
+ *
+ * @param {string} appName Name of the app.
+ * @param {string} clusterID Where we tried to install the app on.
+ * @param {object} error The error that occured.
+ */
+function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
+  if (error.status === StatusCodes.Conflict) {
+    new FlashMessage(
+      `An app called <code>${appName}</code> already exists on cluster <code>${clusterID}</code>`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  } else if (error.status === StatusCodes.BadRequest) {
+    new FlashMessage(
+      `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  } else {
+    new FlashMessage(
+      `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`,
+      messageType.ERROR,
+      messageTTL.LONG
+    );
+  }
+}
+
+/**
+ * Takes an app and a cluster id and tries to delete it. Dispatches CLUSTER_DELETE_APP_SUCCESS
+ * on success or CLUSTER_DELETE_APP_ERROR on error.
+ *
+ * @param {Object} appName The name of the app
+ * @param {Object} clusterID Where to delete the app.
+ */
+export function clusterDeleteApp(appName, clusterID) {
+  return function(dispatch) {
+    dispatch({
+      type: types.CLUSTER_DELETE_APP,
+      clusterID,
+      appName,
+    });
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    return appsApi
+      .deleteClusterApp(clusterID, appName)
+      .then(() => {
+        new FlashMessage(
+          `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
+          messageType.SUCCESS,
+          messageTTL.LONG
+        );
+      })
+      .catch(error => {
+        new FlashMessage(
+          `Something went wrong while trying to delete your app. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+
+        throw error;
+      });
+  };
+}
+
+/**
  * Loads details for a cluster.
  * @param {String} clusterId Cluster ID
  */
@@ -132,12 +411,10 @@ export function clusterLoadDetails(clusterId) {
 
       dispatch(clusterLoadStatus(clusterId)); // TODO
 
-      cluster.capabilities = computeCapabilities(
-        cluster,
-        getState().app.info.general.provider
-      );
-
       if (isV5Cluster) cluster.nodePools = [];
+
+      const provider = getState().app.info.general.provider;
+      cluster.capabilities = computeCapabilities(cluster, provider);
 
       dispatch({
         type: types.CLUSTER_LOAD_DETAILS_SUCCESS,

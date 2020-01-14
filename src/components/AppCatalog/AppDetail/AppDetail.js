@@ -37,36 +37,49 @@ class AppDetail extends React.Component {
           pathname: `/app-catalogs/${this.props.match.params.repo}/`,
         }}
       >
-        <LoadingOverlay loading={!repo || this.props.repo.isFetchingIndex}>
-          <Breadcrumb
-            data={{
-              title: this.props.app.name,
-              pathname: this.props.match.url,
-            }}
-          >
-            <DocumentTitle title={this.props.app.name}>
-              {repo && (
-                <AppDetails
-                  app={this.props.app}
-                  imgError={this.imgError}
-                  imgErrorFlag={this.state.imgError}
-                  params={this.props.match.params}
-                  q={this.state.q}
-                  repo={repo}
-                >
-                  <InstallAppModal
-                    app={{
-                      catalog: repo.metadata.name,
-                      name: this.props.app.name,
-                      version: this.props.app.version,
-                    }}
-                    selectedClusterID={this.props.selectedClusterID}
-                  />
-                </AppDetails>
-              )}
-            </DocumentTitle>
-          </Breadcrumb>
-        </LoadingOverlay>
+        <>
+          <LoadingOverlay
+            loading={
+              !repo ||
+              this.props.repo.isFetchingIndex ||
+              this.props.loadingCluster
+            }
+          />
+          {!(
+            !repo ||
+            this.props.repo.isFetchingIndex ||
+            this.props.loadingCluster
+          ) && (
+            <Breadcrumb
+              data={{
+                title: this.props.app.name,
+                pathname: this.props.match.url,
+              }}
+            >
+              <DocumentTitle title={this.props.app.name}>
+                {repo && (
+                  <AppDetails
+                    app={this.props.app}
+                    imgError={this.imgError}
+                    imgErrorFlag={this.state.imgError}
+                    params={this.props.match.params}
+                    q={this.state.q}
+                    repo={repo}
+                  >
+                    <InstallAppModal
+                      app={{
+                        catalog: repo.metadata.name,
+                        name: this.props.app.name,
+                        version: this.props.app.version,
+                      }}
+                      selectedClusterID={this.props.selectedClusterID}
+                    />
+                  </AppDetails>
+                )}
+              </DocumentTitle>
+            </Breadcrumb>
+          )}
+        </>
       </Breadcrumb>
     );
   }
@@ -79,6 +92,7 @@ AppDetail.propTypes = {
   match: PropTypes.object,
   repo: PropTypes.object,
   selectedClusterID: PropTypes.string,
+  loadingCluster: PropTypes.bool,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -98,6 +112,7 @@ function mapStateToProps(state, ownProps) {
     app: appVersions[0],
     repo: state.entities.catalogs.items[repo],
     selectedClusterID: state.app.selectedClusterID,
+    loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
   };
 }
 
