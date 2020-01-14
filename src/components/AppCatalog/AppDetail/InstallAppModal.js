@@ -30,6 +30,9 @@ const InstallAppModal = props => {
   const [valuesYAML, setValuesYAML] = useState({});
   const [valuesYAMLError, setValuesYAMLError] = useState('');
 
+  const [secretsYAML, setSecretsYAML] = useState({});
+  const [secretsYAMLError, setSecretsYAMLError] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
 
@@ -131,17 +134,31 @@ const InstallAppModal = props => {
   const updateValuesYAML = files => {
     const reader = new FileReader();
 
-    reader.onload = (function() {
-      return function(e) {
-        try {
-          const parsedYAML = yaml.safeLoad(e.target.result);
-          setValuesYAML(parsedYAML);
-          setValuesYAMLError('');
-        } catch (err) {
-          setValuesYAMLError('Unable to parse valid YAML from this file.');
-        }
-      };
-    })(files[0]);
+    reader.onload = e => {
+      try {
+        const parsedYAML = yaml.safeLoad(e.target.result);
+        setValuesYAML(parsedYAML);
+        setValuesYAMLError('');
+      } catch {
+        setValuesYAMLError('Unable to parse valid YAML from this file.');
+      }
+    };
+
+    reader.readAsText(files[0]);
+  };
+
+  const updateSecretsYAML = files => {
+    const reader = new FileReader();
+
+    reader.onload = e => {
+      try {
+        const parsedYAML = yaml.safeLoad(e.target.result);
+        setSecretsYAML(parsedYAML);
+        setSecretsYAMLError('');
+      } catch {
+        setSecretsYAMLError('Unable to parse valid YAML from this file.');
+      }
+    };
 
     reader.readAsText(files[0]);
   };
@@ -167,6 +184,7 @@ const InstallAppModal = props => {
             version: props.app.version,
             namespace: namespace,
             valuesYAML: valuesYAML,
+            secretsYAML: secretsYAML,
           },
           clusterID
         )
@@ -260,7 +278,10 @@ const InstallAppModal = props => {
                   namespaceError={namespaceError}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
+                  onChangeSecretsYAML={updateSecretsYAML}
                   onChangeValuesYAML={updateValuesYAML}
+                  secretsYAML={secretsYAML}
+                  secretsYAMLError={secretsYAMLError}
                   valuesYAML={valuesYAML}
                   valuesYAMLError={valuesYAMLError}
                 />

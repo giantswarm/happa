@@ -272,12 +272,6 @@ it('patches v4 cluster name correctly', async () => {
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
     .reply(200, clusterPatchResponse);
 
-  requests.cluster.persist(false);
-  requests.cluster = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    clusterPatchResponse
-  );
-
   // Mounting
   const { getByText, getByDisplayValue } = renderRouteWithStore(ROUTE);
 
@@ -305,15 +299,8 @@ it('patches v4 cluster name correctly', async () => {
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
   clusterPatchRequest.done();
-
-  // Restore response
-  requests.cluster.persist(false);
-  requests.cluster = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    v4AWSClusterResponse
-  );
 });
 
 /******************** PENDING TESTS ********************/
 
-it.skip('renders all the v4 AWS nodes', async () => { });
+it.skip('renders all the v4 AWS nodes', async () => {});

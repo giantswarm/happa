@@ -61,7 +61,7 @@ if (window.config.environment !== 'development') {
   // set up a filter for reporting addtional information (happa version)
   airbrake.addFilter(notice => ({
     ...notice,
-    context: { version: window.config.happaVersion },
+    context: { ...notice.context, version: window.config.happaVersion },
   }));
 }
 

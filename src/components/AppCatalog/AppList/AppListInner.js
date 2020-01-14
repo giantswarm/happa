@@ -67,7 +67,7 @@ class AppListInner extends React.Component {
   });
 
   sortVersionsByCreationDateDESC = versions => {
-    return versions.sort((a, b) => {
+    return versions.concat().sort((a, b) => {
       return new Date(b.created) - new Date(a.created);
     });
   };

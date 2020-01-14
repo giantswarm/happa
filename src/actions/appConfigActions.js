@@ -12,7 +12,7 @@ import * as types from './actionTypes';
  * @param {Object} values The values which will be set for the uservalues configmap.
  */
 export function updateAppConfig(appName, clusterID, values) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({
       type: types.CLUSTER_UPDATE_APP_CONFIG,
       clusterID,
@@ -21,10 +21,22 @@ export function updateAppConfig(appName, clusterID, values) {
 
     const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
-    return appConfigsApi
-      .modifyClusterAppConfig(clusterID, appName, {
-        body: values,
-      })
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterID);
+
+    let updateClusterAppConfig = appConfigsApi.modifyClusterAppConfigV4.bind(
+      appConfigsApi
+    );
+
+    if (isV5Cluster) {
+      updateClusterAppConfig = appConfigsApi.modifyClusterAppConfigV5.bind(
+        appConfigsApi
+      );
+    }
+
+    return updateClusterAppConfig(clusterID, appName, {
+      body: values,
+    })
       .then(() => {
         dispatch({
           type: types.CLUSTER_UPDATE_APP_CONFIG_SUCCESS,
@@ -76,7 +88,7 @@ export function updateAppConfig(appName, clusterID, values) {
  * @param {Object} values The values which will be set for the uservalues configmap.
  */
 export function createAppConfig(appName, clusterID, values) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({
       type: types.CLUSTER_CREATE_APP_CONFIG,
       clusterID,
@@ -85,10 +97,22 @@ export function createAppConfig(appName, clusterID, values) {
 
     const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
-    return appConfigsApi
-      .createClusterAppConfig(clusterID, appName, {
-        body: values,
-      })
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterID);
+
+    let createClusterAppConfig = appConfigsApi.createClusterAppConfigV4.bind(
+      appConfigsApi
+    );
+
+    if (isV5Cluster) {
+      createClusterAppConfig = appConfigsApi.createClusterAppConfigV5.bind(
+        appConfigsApi
+      );
+    }
+
+    return createClusterAppConfig(clusterID, appName, {
+      body: values,
+    })
       .then(() => {
         dispatch({
           type: types.CLUSTER_CREATE_APP_CONFIG_SUCCESS,
@@ -139,7 +163,7 @@ export function createAppConfig(appName, clusterID, values) {
  * @param {Object} clusterID What cluster it is on.
  */
 export function deleteAppConfig(appName, clusterID) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch({
       type: types.CLUSTER_DELETE_APP_CONFIG,
       clusterID,
@@ -148,8 +172,20 @@ export function deleteAppConfig(appName, clusterID) {
 
     const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
-    return appConfigsApi
-      .deleteClusterAppConfig(clusterID, appName)
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterID);
+
+    let deleteClusterAppConfig = appConfigsApi.deleteClusterAppConfigV4.bind(
+      appConfigsApi
+    );
+
+    if (isV5Cluster) {
+      deleteClusterAppConfig = appConfigsApi.deleteClusterAppConfigV5.bind(
+        appConfigsApi
+      );
+    }
+
+    return deleteClusterAppConfig(clusterID, appName)
       .then(() => {
         dispatch({
           type: types.CLUSTER_DELETE_APP_CONFIG_SUCCESS,

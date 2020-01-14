@@ -24,7 +24,6 @@ function loadCatalogIndex(catalog) {
       throw error;
     })
     .then(response => {
-      // eslint-disable-next-line no-magic-numbers
       if (response.status === StatusCodes.Ok) {
         return response.text();
       }
@@ -35,14 +34,13 @@ function loadCatalogIndex(catalog) {
     })
     .then(body => {
       const rawCatalog = yaml.safeLoad(body);
-      catalog.apps = rawCatalog.entries;
+      const catalogWithApps = Object.assign({}, catalog, {
+        apps: rawCatalog.entries,
+      });
 
-      return catalog;
+      return catalogWithApps;
     })
     .catch(error => {
-      // eslint-disable-next-line no-console
-      console.error('YAML error: ', error);
-
       throw error;
     });
 }
