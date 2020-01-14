@@ -32,7 +32,9 @@ const AppFormAbilities = (appName, updateNamespace) => {
 
 const InstallAppForm = props => {
   const updateName = name => {
-    props.onChangeName(name);
+    if (props.onChangeName) {
+      props.onChangeName(name);
+    }
   };
 
   const updateNamespace = namespace => {
@@ -42,11 +44,15 @@ const InstallAppForm = props => {
   };
 
   const updateValuesYAML = files => {
-    props.onChangeValuesYAML(files);
+    if (props.onChangeValuesYAML) {
+      props.onChangeValuesYAML(files);
+    }
   };
 
   const updateSecretsYAML = files => {
-    props.onChangeSecretsYAML(files);
+    if (props.onChangeSecretsYAML) {
+      props.onChangeSecretsYAML(files);
+    }
   };
 
   const formAbilities = AppFormAbilities(props.appName, updateNamespace);
