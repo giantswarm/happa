@@ -250,6 +250,65 @@ describe('Organizations basic', () => {
 
     patchOrganizationRequest.done();
   });
+
+  it('allows to remove a member from an organization', async () => {
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    const patchOrganizationRequest = nock(API_ENDPOINT)
+      .intercept(`/v4/organizations/${orgResponse.id}/`, 'PATCH')
+      .reply(StatusCodes.Ok, {
+        code: 'RESOURCE_UPDATED',
+        message: `The organization with ID ${orgResponse.id} has been updated.`,
+      });
+
+    const { getByText, findByText, findByTestId } = renderRouteWithStore(
+      `${BASE_ROUTE}/${orgResponse.id}`
+    );
+
+    // users
+    const usersTable = await findByTestId('org-detail-users-wrapper');
+    expect(usersTable.querySelector('tbody > tr > td').textContent).toBe(
+      orgResponse.members[0].email
+    );
+
+    const removeUserTableButton = usersTable.querySelector(
+      'tbody > tr > td:nth-of-type(3) > button'
+    );
+    expect(removeUserTableButton.textContent).toBe('Remove');
+
+    fireEvent.click(removeUserTableButton);
+
+    const removalNotice = await findByText(
+      `Are you sure you want to remove ${orgResponse.members[0].email} from ${orgResponse.id}`
+    );
+    expect(removalNotice).toBeInTheDocument();
+
+    const removeUserButton = await findByText(
+      'Remove Member from Organization'
+    );
+    expect(removeUserButton).toBeInTheDocument();
+
+    fireEvent.click(removeUserButton);
+
+    expect(removeUserButton.textContent).toBe('Removing Member');
+    await wait(() => {
+      expect(
+        getByText(
+          (_, element) =>
+            element.innerHTML ===
+            `Removed <code>${orgResponse.members[0].email}</code> from organization <code>${orgResponse.id}</code>`
+        )
+      ).toBeInTheDocument();
+    });
+
+    patchOrganizationRequest.done();
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, {
+      ...orgResponse,
+      members: [],
+    });
+    nock.abortPendingRequests();
+  });
 });
 
 describe('Organization deletion', () => {
