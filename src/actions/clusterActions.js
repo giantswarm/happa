@@ -58,11 +58,12 @@ export function clustersList({ withLoadingFlags }) {
   return function(dispatch, getState) {
     if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
 
+    const provider = getState().app.info.general.provider;
+
     // Fetch all clusters.
     return clustersApi
       .getClusters()
       .then(data => {
-        const provider = getState().app.info.general.provider;
         const clusters = clustersLoadArrayToObject(data, provider);
 
         const v5ClusterIds = data
@@ -411,11 +412,6 @@ export function clusterLoadDetails(clusterId) {
         : await clustersApi.getCluster(clusterId);
 
       dispatch(clusterLoadStatus(clusterId)); // TODO
-
-      cluster.capabilities = computeCapabilities(
-        cluster,
-        getState().app.info.general.provider
-      );
 
       if (isV5Cluster) cluster.nodePools = [];
 

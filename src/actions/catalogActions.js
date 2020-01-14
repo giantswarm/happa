@@ -35,9 +35,11 @@ function loadCatalogIndex(catalog) {
     })
     .then(body => {
       const rawCatalog = yaml.safeLoad(body);
-      catalog.apps = rawCatalog.entries;
+      const catalogWithApps = Object.assign({}, catalog, {
+        apps: rawCatalog.entries,
+      });
 
-      return catalog;
+      return catalogWithApps;
     })
     .catch(error => {
       // eslint-disable-next-line no-console
