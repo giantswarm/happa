@@ -8,9 +8,11 @@ import { modalHide } from './modalActions';
 const nodePoolsApi = new GiantSwarm.NodePoolsApi();
 
 // Loads one cluster node pools
-export function clusterNodePoolsLoad(clusterId) {
+export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
   return function(dispatch) {
-    dispatch({ type: types.CLUSTER_NODEPOOLS_LOAD_REQUEST });
+    if (withLoadingFlags) {
+      dispatch({ type: types.CLUSTER_NODEPOOLS_LOAD_REQUEST });
+    }
 
     return nodePoolsApi
       .getNodePools(clusterId)
@@ -56,7 +58,9 @@ export function nodePoolsLoad() {
     const v5ClustersId = getState().entities.clusters.v5Clusters || [];
     if (v5ClustersId.length > 0) {
       await Promise.all(
-        v5ClustersId.map(clusterId => dispatch(clusterNodePoolsLoad(clusterId)))
+        v5ClustersId.map(clusterId =>
+          dispatch(clusterNodePoolsLoad(clusterId, { withLoadingFlags: true }))
+        )
       );
     }
 

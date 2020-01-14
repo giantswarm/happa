@@ -60,12 +60,18 @@ export const batchedClusterCreate = (
     );
 
     // TODO We can avoid this call by computing capabilities in the call above and storing the cluster
-    await dispatch(clusterActions.clusterLoadDetails(clusterId));
+    await dispatch(
+      clusterActions.clusterLoadDetails(clusterId, { withLoadingFlags: true })
+    );
 
     if (isV5Cluster) {
       // Check nodePools instead?
       await dispatch(nodePoolActions.nodePoolsCreate(clusterId, nodePools));
-      await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId));
+      await dispatch(
+        nodePoolActions.clusterNodePoolsLoad(clusterId, {
+          withLoadingFlags: true,
+        })
+      );
     }
 
     dispatch(push(`/organizations/${owner}/clusters/${clusterId}`));
@@ -86,9 +92,15 @@ export const batchedClusterDetailView = (
     );
 
     await dispatch(releaseActions.loadReleases());
-    await dispatch(clusterActions.clusterLoadDetails(clusterId));
+    await dispatch(
+      clusterActions.clusterLoadDetails(clusterId, { withLoadingFlags: true })
+    );
     if (isV5Cluster) {
-      await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId));
+      await dispatch(
+        nodePoolActions.clusterNodePoolsLoad(clusterId, {
+          withLoadingFlags: true,
+        })
+      );
     }
     await dispatch(appActions.loadApps(clusterId));
   } catch (err) {
@@ -97,18 +109,24 @@ export const batchedClusterDetailView = (
   }
 };
 
-export const refreshClusterDetailView = (
+export const batchedRefreshClusterDetailView = (
   clusterId,
   isV5Cluster
 ) => async dispatch => {
   try {
-    await dispatch(clusterActions.clusterLoadDetails(clusterId)); // TODO { withLoadingFlags: false }
+    await dispatch(
+      clusterActions.clusterLoadDetails(clusterId, { withLoadingFlags: false })
+    );
     if (isV5Cluster) {
-      await dispatch(nodePoolActions.clusterNodePoolsLoad(clusterId)); // TODO { withLoadingFlags: false }
+      await dispatch(
+        nodePoolActions.clusterNodePoolsLoad(clusterId, {
+          withLoadingFlags: false,
+        })
+      );
     }
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.error('Error in refreshClusterDetailView', err);
+    console.error('Error in batchedRefreshClusterDetailView', err);
   }
 };
 

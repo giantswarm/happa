@@ -103,7 +103,9 @@ export function clustersDetails({
       : Object.keys(allClusters);
 
     const clusterDetails = await Promise.all(
-      clustersIds.map(id => dispatch(clusterLoadDetails(id)))
+      clustersIds.map(id =>
+        dispatch(clusterLoadDetails(id, { withLoadingFlags: true }))
+      )
     );
 
     // We actually don't care if success or error, just want to set loading flag to
@@ -394,15 +396,17 @@ export function clusterDeleteApp(appName, clusterID) {
  * Loads details for a cluster.
  * @param {String} clusterId Cluster ID
  */
-export function clusterLoadDetails(clusterId) {
+export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
   return async function(dispatch, getState) {
     const v5Clusters = getState().entities.clusters.v5Clusters;
     const isV5Cluster = v5Clusters.includes(clusterId);
 
-    dispatch({
-      type: types.CLUSTER_LOAD_DETAILS_REQUEST,
-      clusterId,
-    });
+    if (withLoadingFlags) {
+      dispatch({
+        type: types.CLUSTER_LOAD_DETAILS_REQUEST,
+        clusterId,
+      });
+    }
 
     try {
       const cluster = isV5Cluster
