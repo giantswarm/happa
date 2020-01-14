@@ -87,6 +87,8 @@ it('renders all non internal app catalogs in the app catalogs overview', async (
   expect(introText).toBeInTheDocument();
 
   for (const catalog of appCatalogsResponse) {
+    // Skip expectation for internal catalogs.
+    // They should not show up in Happa.
     if (catalog.metadata.labels['application.giantswarm.io/catalog-type'] === 'internal') {
       continue;
     }
