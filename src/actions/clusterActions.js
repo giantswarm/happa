@@ -415,6 +415,9 @@ export function clusterLoadDetails(clusterId) {
 
       if (isV5Cluster) cluster.nodePools = [];
 
+      const provider = getState().app.info.general.provider;
+      cluster.capabilities = computeCapabilities(cluster, provider);
+
       dispatch({
         type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
         cluster,

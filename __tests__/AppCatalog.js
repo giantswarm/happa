@@ -70,15 +70,10 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('renders all the app catalogs in the app catalogs overview', async () => {
-  const { getByText, debug, getAllByText, getByTestId } = renderRouteWithStore(
+  const { findByText, debug, getAllByText, getByTestId } = renderRouteWithStore(
     ROUTE
   );
 
-  await wait(() => {
-    expect(
-      getByText('Pick an App Catalog to browse all the Apps in it.')
-    ).toBeInTheDocument();
-  });
-
-  debug();
+  const introText = await findByText('Pick an App Catalog to browse all the Apps in it.')
+  expect(introText).toBeInTheDocument();
 });
