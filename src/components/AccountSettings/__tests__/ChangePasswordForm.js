@@ -1,4 +1,6 @@
-import { fireEvent, wait } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+
+import { fireEvent } from '@testing-library/react';
 import { Base64 } from 'js-base64';
 import { StatusCodes } from 'shared/constants';
 import { postPayloadMockCall, USER_EMAIL } from 'testUtils/mockHttpCalls';
@@ -6,19 +8,19 @@ import { renderWithTheme } from 'testUtils/renderUtils';
 
 import ChangePasswordForm from '../ChangePasswordForm';
 
-const elementIDs = {
-  label: 'change-password/label',
-  explanatoryText: 'change-password/explanatory-text',
-  currPassword: 'change-password/curr-pwd-input',
-  newPassword: 'change-password/new-pwd-input',
-  confirmNewPassword: 'change-password/confirm-new-pwd-input',
-  setPasswordButton: 'change-password/set-password-button',
+const elementLabels = {
+  Section: 'Password',
+  ExplanatoryText: 'Use this form to change your password.',
+  CurrPassword: 'Current Password',
+  NewPassword: 'New Password',
+  ConfirmNewPassword: 'New Password (once more)',
+  SetButton: 'Set New Password',
 };
 
-const textInputsIDs = [
-  elementIDs.currPassword,
-  elementIDs.newPassword,
-  elementIDs.confirmNewPassword,
+const textInputLabels = [
+  elementLabels.CurrPassword,
+  elementLabels.NewPassword,
+  elementLabels.ConfirmNewPassword,
 ];
 
 const validationErrors = {
@@ -51,28 +53,27 @@ describe('ChangePasswordForm', () => {
     renderWithProps();
   });
 
-  it('has label', () => {
-    const { getByTestId } = renderWithProps();
-    const label = getByTestId(elementIDs.label);
+  it('has section label', () => {
+    const { getByText } = renderWithProps();
+    const sectionLabel = getByText(elementLabels.Section);
 
-    expect(label).not.toBeNull();
-    expect(label.textContent.length).toBeGreaterThan(0);
+    expect(sectionLabel).toBeInTheDocument();
   });
 
   it('has explanatory text', () => {
-    const { getByTestId } = renderWithProps();
-    const explText = getByTestId(elementIDs.explanatoryText);
+    const { getByText } = renderWithProps();
+    const explText = getByText(elementLabels.ExplanatoryText);
 
-    expect(explText).not.toBeNull();
-    expect(explText.textContent.length).toBeGreaterThan(0);
+    expect(explText).toBeInTheDocument();
   });
 
   it('renders 3 password inputs', () => {
     let validPasswordInputs = 0;
 
-    const { getByTestId } = renderWithProps();
-    for (const id of textInputsIDs) {
-      const inputElement = getByTestId(id).querySelector('input');
+    const { getByLabelText } = renderWithProps();
+
+    for (const label of textInputLabels) {
+      const inputElement = getByLabelText(label);
 
       if (inputElement.type === 'password') validPasswordInputs++;
     }
@@ -82,179 +83,123 @@ describe('ChangePasswordForm', () => {
   });
 
   it('has set button initially hidden', () => {
-    const { queryByTestId } = renderWithProps();
-    const setButton = queryByTestId(elementIDs.setPasswordButton);
+    const { queryByText } = renderWithProps();
+    const setButton = queryByText(elementLabels.SetButton);
 
     expect(setButton).toBeNull();
   });
 
   it('makes the set button appear after typing in the current password input', async () => {
-    const { getByTestId, findByTestId } = renderWithProps();
-    const inputWrapper = getByTestId(elementIDs.currPassword);
-    const firstInputElement = inputWrapper.querySelector('input');
+    const { getByLabelText, findByText } = renderWithProps();
+    const firstInput = getByLabelText(elementLabels.CurrPassword);
 
-    triggerInputChange(firstInputElement, 'abcdefg');
+    triggerInputChange(firstInput, 'abcdefg');
 
-    const setButton = await findByTestId(elementIDs.setPasswordButton);
+    const setButton = await findByText(elementLabels.SetButton);
 
-    expect(setButton).not.toBeNull();
+    expect(setButton).toBeInTheDocument();
   });
 
   it('validates the new password input', async () => {
-    const {
-      getByTestId,
-      findByText,
-      queryByTestId,
-      queryByText,
-    } = renderWithProps();
+    const { findByText, queryByText, getByLabelText } = renderWithProps();
     let errorElement = null;
+    let setButton = null;
 
-    // Find current password input
-    const inputWrapper = getByTestId(elementIDs.currPassword);
-    const firstInputElement = inputWrapper.querySelector('input');
-
-    // Find the new password input
-    const newPasswordInputWrapper = getByTestId(elementIDs.newPassword);
-    const newPasswordInputElement = newPasswordInputWrapper.querySelector(
-      'input'
-    );
+    const currPasInput = getByLabelText(elementLabels.CurrPassword);
+    const newPasswordInput = getByLabelText(elementLabels.NewPassword);
 
     // Set the current input value
-    triggerInputChange(firstInputElement, 'abcdefg');
+    triggerInputChange(currPasInput, 'abcdefg');
 
     // Check if the new password length has a minimum value
-    triggerInputChange(newPasswordInputElement, 'abc');
+    triggerInputChange(newPasswordInput, 'abc');
 
+    // Ensure that error is visible
     errorElement = await findByText(validationErrors.TooShort);
-    expect(errorElement).not.toBeNull();
 
     // Check if set button is present and disabled
-    await wait(() => {
-      const setButton = queryByTestId(elementIDs.setPasswordButton);
-
-      expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBeTruthy();
-    });
+    setButton = await findByText(elementLabels.SetButton);
+    expect(setButton.disabled).toBeTruthy();
 
     // Check if the new password cannot be just numbers
-    triggerInputChange(newPasswordInputElement, '1231319810112');
+    triggerInputChange(newPasswordInput, '1231319810112');
 
+    // Ensure that error is visible
     errorElement = await findByText(validationErrors.JustNumbers);
-    expect(errorElement).not.toBeNull();
 
     // Check if set button is present and disabled
-    await wait(() => {
-      const setButton = queryByTestId(elementIDs.setPasswordButton);
-
-      expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBeTruthy();
-    });
+    setButton = await findByText(elementLabels.SetButton);
+    expect(setButton.disabled).toBeTruthy();
 
     // Check if the new password cannot be just letters
-    triggerInputChange(newPasswordInputElement, 'aaaaaaaadasdasda');
+    triggerInputChange(newPasswordInput, 'aaaaaaaadasdasda');
 
+    // Ensure that error is visible
     errorElement = await findByText(validationErrors.JustLetters);
-    expect(errorElement).not.toBeNull();
 
     // Check if set button is present and disabled
-    await wait(() => {
-      const setButton = queryByTestId(elementIDs.setPasswordButton);
+    setButton = await findByText(elementLabels.SetButton);
+    expect(setButton.disabled).toBeTruthy();
 
-      expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBeTruthy();
-    });
+    triggerInputChange(newPasswordInput, 'AAAAAAAASDASDASDAS');
 
-    triggerInputChange(newPasswordInputElement, 'AAAAAAAASDASDASDAS');
-
+    // Ensure that error is visible
     errorElement = await findByText(validationErrors.JustLetters);
-    expect(errorElement).not.toBeNull();
 
     // Check if set button is present and disabled
-    await wait(() => {
-      const setButton = queryByTestId(elementIDs.setPasswordButton);
+    setButton = await findByText(elementLabels.SetButton);
+    expect(setButton.disabled).toBeTruthy();
 
-      expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBeTruthy();
-    });
-
-    triggerInputChange(newPasswordInputElement, 'aaasAAA11231aasdaA');
+    triggerInputChange(newPasswordInput, 'aaasAAA11231aasdaA');
 
     // Check if set button is present and disabled
-    await wait(() => {
-      const setButton = queryByTestId(elementIDs.setPasswordButton);
+    setButton = await findByText(elementLabels.SetButton);
+    expect(setButton.disabled).toBeTruthy();
 
-      expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBeTruthy();
-
-      // Check if error text is still present
-      errorElement = queryByText(validationErrors.JustLetters);
-      expect(errorElement).toBeNull();
-    });
+    // Ensure that error text is gone
+    errorElement = queryByText(validationErrors.JustLetters);
+    expect(errorElement).toBeNull();
   });
 
   it('validates the confirm new password input', async () => {
-    const {
-      getByTestId,
-      findByText,
-      queryByTestId,
-      queryByText,
-    } = renderWithProps();
+    const { findByText, queryByText, getByLabelText } = renderWithProps();
+    let setButton = null;
     let errorElement = null;
+
     const newPassword = 'abasdasdas2312312312c';
 
-    // Find current password input
-    const inputWrapper = getByTestId(elementIDs.currPassword);
-    const firstInputElement = inputWrapper.querySelector('input');
-
-    // Find the new password input
-    const newPasswordInputWrapper = getByTestId(elementIDs.newPassword);
-    const newPasswordInputElement = newPasswordInputWrapper.querySelector(
-      'input'
-    );
-
-    // Find the confirm new password input
-    const confirmNewPasswordInputWrapper = getByTestId(
-      elementIDs.confirmNewPassword
-    );
-    const confirmNewPasswordInputElement = confirmNewPasswordInputWrapper.querySelector(
-      'input'
+    const currPasswordInput = getByLabelText(elementLabels.CurrPassword);
+    const newPasswordInput = getByLabelText(elementLabels.NewPassword);
+    const confirmNewPasswordInput = getByLabelText(
+      elementLabels.ConfirmNewPassword
     );
 
     // Set the input values
-    triggerInputChange(firstInputElement, 'abcdefg');
-    triggerInputChange(newPasswordInputElement, newPassword);
-    triggerInputChange(confirmNewPasswordInputElement, 'aaasdaadsa');
+    triggerInputChange(currPasswordInput, 'abcdefg');
+    triggerInputChange(newPasswordInput, newPassword);
+    triggerInputChange(confirmNewPasswordInput, 'aaasdaadsa');
 
+    // Ensure that error is visible
     errorElement = await findByText(validationErrors.NoMatch);
-    expect(errorElement).not.toBeNull();
 
     // Check if set button is present and disabled
-    await wait(() => {
-      const setButton = queryByTestId(elementIDs.setPasswordButton);
+    setButton = await findByText(elementLabels.SetButton);
+    expect(setButton.disabled).toBeTruthy();
 
-      expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBeTruthy();
-    });
+    triggerInputChange(confirmNewPasswordInput, newPassword);
 
-    triggerInputChange(confirmNewPasswordInputElement, newPassword);
+    // Check if set button is present and disabled
+    setButton = await findByText(elementLabels.SetButton);
+    expect(setButton.disabled).toBeFalsy();
 
-    // Check if set button is present and enabled
-    await wait(() => {
-      const setButton = queryByTestId(elementIDs.setPasswordButton);
-
-      expect(setButton).not.toBeNull();
-      expect(setButton.disabled).toBeFalsy();
-
-      // Check if error text is still present
-      errorElement = queryByText(validationErrors.NoMatch);
-      expect(errorElement).toBeNull();
-    });
+    // Ensure that error text is gone
+    errorElement = queryByText(validationErrors.JustLetters);
+    expect(errorElement).toBeNull();
   });
 
   it('sends the correct password change request, and logs in after', async () => {
     const newPassword = 'abasdasdas2312312312c';
     const newPasswordBase64 = Base64.encode(newPassword);
-
     const encodedEmail = encodeURIComponent(USER_EMAIL);
 
     const loginFn = jest.fn();
@@ -267,7 +212,7 @@ describe('ChangePasswordForm', () => {
       }
     );
 
-    const { getByTestId, findByTestId, findByText } = renderWithProps({
+    const { findByText, getByLabelText } = renderWithProps({
       user: {
         email: USER_EMAIL,
       },
@@ -276,36 +221,25 @@ describe('ChangePasswordForm', () => {
       },
     });
 
-    // Find current password input
-    const inputWrapper = getByTestId(elementIDs.currPassword);
-    const firstInputElement = inputWrapper.querySelector('input');
-
-    // Find the new password input
-    const newPasswordInputWrapper = getByTestId(elementIDs.newPassword);
-    const newPasswordInputElement = newPasswordInputWrapper.querySelector(
-      'input'
-    );
-
-    // Find the confirm new password input
-    const confirmNewPasswordInputWrapper = getByTestId(
-      elementIDs.confirmNewPassword
-    );
-    const confirmNewPasswordInputElement = confirmNewPasswordInputWrapper.querySelector(
-      'input'
+    const currPasswordInput = getByLabelText(elementLabels.CurrPassword);
+    const newPasswordInput = getByLabelText(elementLabels.NewPassword);
+    const confirmNewPasswordInput = getByLabelText(
+      elementLabels.ConfirmNewPassword
     );
 
     // Set the input values
-    triggerInputChange(firstInputElement, newPassword);
-    triggerInputChange(newPasswordInputElement, newPassword);
-    triggerInputChange(confirmNewPasswordInputElement, newPassword);
+    triggerInputChange(currPasswordInput, newPassword);
+    triggerInputChange(newPasswordInput, newPassword);
+    triggerInputChange(confirmNewPasswordInput, newPassword);
 
-    const setButton = await findByTestId(elementIDs.setPasswordButton);
+    // Simulate form submit
+    const setButton = await findByText(elementLabels.SetButton);
     fireEvent.click(setButton);
 
-    const succesMessageElement = await findByText(statusMessages.Success);
+    // Ensure that success message is visible
+    await findByText(statusMessages.Success);
 
-    expect(succesMessageElement).not.toBeNull();
-
+    // Ensure that login was called
     expect(loginFn).toBeCalledWith(USER_EMAIL, newPassword);
 
     passwordChangeRequest.done();
@@ -314,7 +248,6 @@ describe('ChangePasswordForm', () => {
   it('shows error messages if any request fails', async () => {
     const newPassword = 'abasdasdas2312312312c';
     const newPasswordBase64 = Base64.encode(newPassword);
-
     const encodedEmail = encodeURIComponent(USER_EMAIL);
 
     const loginFn = jest.fn();
@@ -329,7 +262,7 @@ describe('ChangePasswordForm', () => {
       StatusCodes.BadRequest
     );
 
-    const { getByTestId, findByTestId, findByText } = renderWithProps({
+    const { findByText, getByLabelText } = renderWithProps({
       user: {
         email: USER_EMAIL,
       },
@@ -338,37 +271,25 @@ describe('ChangePasswordForm', () => {
       },
     });
 
-    // Find current password input
-    const inputWrapper = getByTestId(elementIDs.currPassword);
-    const firstInputElement = inputWrapper.querySelector('input');
-
-    // Find the new password input
-    const newPasswordInputWrapper = getByTestId(elementIDs.newPassword);
-    const newPasswordInputElement = newPasswordInputWrapper.querySelector(
-      'input'
-    );
-
-    // Find the confirm new password input
-    const confirmNewPasswordInputWrapper = getByTestId(
-      elementIDs.confirmNewPassword
-    );
-    const confirmNewPasswordInputElement = confirmNewPasswordInputWrapper.querySelector(
-      'input'
+    const currPasswordInput = getByLabelText(elementLabels.CurrPassword);
+    const newPasswordInput = getByLabelText(elementLabels.NewPassword);
+    const confirmNewPasswordInput = getByLabelText(
+      elementLabels.ConfirmNewPassword
     );
 
     // Set the input values
-    triggerInputChange(firstInputElement, newPassword);
-    triggerInputChange(newPasswordInputElement, newPassword);
-    triggerInputChange(confirmNewPasswordInputElement, newPassword);
+    triggerInputChange(currPasswordInput, newPassword);
+    triggerInputChange(newPasswordInput, newPassword);
+    triggerInputChange(confirmNewPasswordInput, newPassword);
 
-    const setButton = await findByTestId(elementIDs.setPasswordButton);
+    // Simulate form submit
+    const setButton = await findByText(elementLabels.SetButton);
     fireEvent.click(setButton);
 
-    const errorMessageElement = await findByText(
-      new RegExp(statusMessages.ServerError)
-    );
+    // Ensure that error is visible
+    await findByText(new RegExp(statusMessages.ServerError));
 
-    expect(errorMessageElement).not.toBeNull();
+    // Ensure that login was not called
     expect(loginFn).toHaveBeenCalledTimes(0);
 
     passwordChangeRequest.done();

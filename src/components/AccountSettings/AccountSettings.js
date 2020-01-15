@@ -23,15 +23,10 @@ const AccountSettings = props => (
 
         <div className='row section'>
           <div className='col-3'>
-            <h3
-              className='table-label'
-              data-testid='account-settings/email-label'
-            >
-              Email
-            </h3>
+            <h3 className='table-label'>Email</h3>
           </div>
           <div className='col-9'>
-            <p data-testid='account-settings/email-description'>
+            <p>
               This address is used for logging in and for all communication. Be
               aware that it is also visible to other members of your
               organization.
@@ -51,10 +46,7 @@ const AccountSettings = props => (
           data-testid='account-settings/change-password'
         />
 
-        <div
-          className='row section'
-          data-testid='account-settings/delete-account'
-        >
+        <div className='row section'>
           <div className='col-3'>
             <h3 className='table-label'>Delete Account</h3>
           </div>

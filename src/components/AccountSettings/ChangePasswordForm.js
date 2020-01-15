@@ -165,20 +165,15 @@ class ChangePassword extends React.Component {
     return (
       <div className='row section' {...rest}>
         <div className='col-3'>
-          <h3 className='table-label' data-testid='change-password/label'>
-            Password
-          </h3>
+          <h3 className='table-label'>Password</h3>
         </div>
         <div className='col-9'>
-          <p data-testid='change-password/explanatory-text'>
-            Use this form to change your password.
-          </p>
+          <p>Use this form to change your password.</p>
 
           <form className='change_password_form' onSubmit={this.submit}>
             <div className='textfield small'>
               <PasswordField
-                data-testid='change-password/curr-pwd-input'
-                id='current_password'
+                name='current_password'
                 label='Current Password'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
@@ -190,8 +185,7 @@ class ChangePassword extends React.Component {
 
             <div className='textfield small'>
               <PasswordField
-                data-testid='change-password/new-pwd-input'
-                id='new_password'
+                name='new_password'
                 label='New Password'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
@@ -204,8 +198,7 @@ class ChangePassword extends React.Component {
 
             <div className='textfield small'>
               <PasswordField
-                data-testid='change-password/confirm-new-pwd-input'
-                id='new_password_confirmation'
+                name='new_password_confirmation'
                 label='New Password (once more)'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
@@ -225,7 +218,6 @@ class ChangePassword extends React.Component {
                   disabled={!this.state.formValid}
                   loading={this.state.submitting}
                   type='submit'
-                  data-testid='change-password/set-password-button'
                 >
                   Set New Password
                 </Button>

@@ -133,7 +133,6 @@ class ChangeEmailForm extends React.Component {
             }}
             type='text'
             value={this.state.fields.email.value}
-            data-testid='change-email/input'
           />
 
           <div className='button-area'>
@@ -143,7 +142,6 @@ class ChangeEmailForm extends React.Component {
                 disabled={!this.state.isValid}
                 loading={this.state.isSubmitting}
                 type='submit'
-                data-testid='change-email/button'
               >
                 Set New Email
               </Button>

@@ -6,10 +6,8 @@ import { renderWithTheme } from 'testUtils/renderUtils';
 
 import ChangeEmailForm from '../ChangeEmailForm';
 
-const elementIDs = {
-  input: 'change-email/input',
-  button: 'change-email/button',
-};
+const inputInitialValue = USER_EMAIL;
+const buttonLabel = 'Set New Email';
 
 const statusMessages = {
   Success: 'Saved Succesfully',
@@ -43,49 +41,47 @@ describe('ChangeEmailForm', () => {
   });
 
   it('renders a text input', () => {
-    const { getByTestId } = renderWithProps();
-    const inputElement = getByTestId(elementIDs.input);
+    const { getByDisplayValue } = renderWithProps();
+    const inputElement = getByDisplayValue(inputInitialValue);
 
     expect(inputElement.type).toBe('text');
   });
 
   it('has set button initially hidden', () => {
-    const { queryByTestId } = renderWithProps();
-    const setButton = queryByTestId(elementIDs.button);
+    const { queryByText } = renderWithProps();
+    const setButton = queryByText(buttonLabel);
 
     expect(setButton).toBeNull();
   });
 
   it('makes the set button appear after typing in the text input', async () => {
-    const { getByTestId, findByTestId } = renderWithProps();
-    const inputElement = getByTestId(elementIDs.input);
+    const { getByDisplayValue, findByText } = renderWithProps();
+    const inputElement = getByDisplayValue(inputInitialValue);
 
     triggerInputChange(inputElement, 'test@example.com');
 
-    const setButton = await findByTestId(elementIDs.button);
-
-    expect(setButton).not.toBeNull();
+    await findByText(buttonLabel);
   });
 
   it('makes the set button disappear if it has the same email as the current one in the text input', async () => {
-    const { getByTestId, queryByTestId } = renderWithProps();
-    const inputElement = getByTestId(elementIDs.input);
+    const { getByDisplayValue, queryByText } = renderWithProps();
+    const inputElement = getByDisplayValue(inputInitialValue);
 
     triggerInputChange(inputElement, 'test@example.com');
-    triggerInputChange(inputElement, USER_EMAIL);
+    triggerInputChange(inputElement, inputInitialValue);
 
     await wait(() => {
-      expect(queryByTestId(elementIDs.button)).toBeNull();
+      expect(queryByText(buttonLabel)).not.toBeNull();
     });
   });
 
   it('validates the text input on value change, by disabling the set button', async () => {
-    const { getByTestId, findByTestId } = renderWithProps();
-    const inputElement = getByTestId(elementIDs.input);
+    const { getByDisplayValue, findByText } = renderWithProps();
+    const inputElement = getByDisplayValue(inputInitialValue);
 
     triggerInputChange(inputElement, 'test');
 
-    const setButton = await findByTestId(elementIDs.button);
+    const setButton = await findByText(buttonLabel);
     expect(setButton.disabled).toBeTruthy();
 
     triggerInputChange(inputElement, 'test@example');
@@ -115,20 +111,19 @@ describe('ChangeEmailForm', () => {
       })
       .reply(StatusCodes.Ok, {});
 
-    const { getByTestId, findByTestId, findByText } = renderWithProps({
+    const { getByDisplayValue, findByText } = renderWithProps({
       actions: {
         refreshUserInfo: refreshUserInfoFn,
       },
     });
-    const inputElement = getByTestId(elementIDs.input);
+    const inputElement = getByDisplayValue(inputInitialValue);
 
     triggerInputChange(inputElement, newEmail);
 
-    const setButton = await findByTestId(elementIDs.button);
+    const setButton = await findByText(buttonLabel);
     fireEvent.click(setButton);
 
-    const succesMessageElement = await findByText(statusMessages.Success);
-    expect(succesMessageElement).not.toBeNull();
+    await findByText(statusMessages.Success);
 
     expect(refreshUserInfoFn).toHaveBeenCalled();
 
@@ -146,22 +141,19 @@ describe('ChangeEmailForm', () => {
       })
       .reply(StatusCodes.BadRequest, {});
 
-    const { getByTestId, findByTestId, findByText } = renderWithProps({
+    const { getByDisplayValue, findByText } = renderWithProps({
       actions: {
         refreshUserInfo: refreshUserInfoFn,
       },
     });
-    const inputElement = getByTestId(elementIDs.input);
+    const inputElement = getByDisplayValue(inputInitialValue);
 
     triggerInputChange(inputElement, newEmail);
 
-    const setButton = await findByTestId(elementIDs.button);
+    const setButton = await findByText(buttonLabel);
     fireEvent.click(setButton);
 
-    const succesMessageElement = await findByText(
-      new RegExp(statusMessages.ServerError)
-    );
-    expect(succesMessageElement).not.toBeNull();
+    await findByText(new RegExp(statusMessages.ServerError));
 
     expect(refreshUserInfoFn).not.toHaveBeenCalled();
 

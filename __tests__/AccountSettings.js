@@ -8,10 +8,13 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 const elementIDs = {
   ChangeEmailForm: 'account-settings/change-email',
   ChangePasswordForm: 'account-settings/change-password',
-  DeleteAccount: 'account-settings/delete-account',
+};
 
-  EmailLabel: 'account-settings/email-label',
-  EmailDescription: 'account-settings/email-description',
+const elementLabels = {
+  Email: 'Email',
+  EmailExplanatoryText:
+    'This address is used for logging in and for all communication. Be aware that it is also visible to other members of your organization.',
+  DeleteAccount: 'Delete Account',
 };
 
 const requests = {};
@@ -40,36 +43,25 @@ describe('AccountSettings', () => {
   it('renders the email change form', async () => {
     const { findByTestId } = renderRouteWithStore('/account-settings', {});
 
-    const emailChangeForm = await findByTestId(elementIDs.ChangeEmailForm);
-
-    expect(emailChangeForm).not.toBeNull();
+    await findByTestId(elementIDs.ChangeEmailForm);
   });
 
   it('renders the email change form label and description', async () => {
-    const { findByTestId } = renderRouteWithStore('/account-settings', {});
+    const { findByText } = renderRouteWithStore('/account-settings', {});
 
-    const emailLabel = await findByTestId(elementIDs.EmailLabel);
-    expect(emailLabel).not.toBeNull();
-
-    const emailDescription = await findByTestId(elementIDs.EmailDescription);
-    expect(emailDescription).not.toBeNull();
+    await findByText(elementLabels.Email);
+    await findByText(elementLabels.EmailExplanatoryText);
   });
 
   it('renders the password change form', async () => {
     const { findByTestId } = renderRouteWithStore('/account-settings', {});
 
-    const passwordChangeForm = await findByTestId(
-      elementIDs.ChangePasswordForm
-    );
-
-    expect(passwordChangeForm).not.toBeNull();
+    await findByTestId(elementIDs.ChangePasswordForm);
   });
 
   it('renders the account deletion section', async () => {
-    const { findByTestId } = renderRouteWithStore('/account-settings', {});
+    const { findByText } = renderRouteWithStore('/account-settings', {});
 
-    const accountDeletionSection = await findByTestId(elementIDs.DeleteAccount);
-
-    expect(accountDeletionSection).not.toBeNull();
+    await findByText(elementLabels.DeleteAccount);
   });
 });
