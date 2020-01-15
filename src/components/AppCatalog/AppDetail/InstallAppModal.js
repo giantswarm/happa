@@ -272,6 +272,7 @@ const InstallAppModal = props => {
                 visible={visible}
               >
                 <InstallAppForm
+                  appName={props.app.name}
                   name={name}
                   nameError={nameError}
                   namespace={namespace}
