@@ -16,9 +16,9 @@
     "test:clean-cache": "yarn test --clearCache",
     "test:coverage": "yarn test --collect-coverage",
     "format": "./node_modules/.bin/prettier \"src/**/*.js\"",
-    "format:staged": "pretty-quick --staged --pattern ./src/**/*.js",
     "prettier": "yarn format --write",
-    "validate-prettier": "yarn format --version; yarn format --no-color --check"
+    "validate-prettier": "yarn format --version; yarn format --no-color --check",
+    "precommit": "./node_modules/.bin/lint-staged"
   },
   "prettier": {
     "singleQuote": true,
@@ -119,12 +119,12 @@
     "husky": "4.0.9",
     "jest": "24.9.0",
     "json-loader": "0.5.7",
+    "lint-staged": "9.5.0",
     "mini-css-extract-plugin": "0.9.0",
     "nock": "11.7.2",
     "node-sass": "4.13.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "prettier": "1.19.1",
-    "pretty-quick": "2.0.1",
     "react-hot-loader": "4.12.18",
     "redux-immutable-state-invariant": "2.1.0",
     "sass-loader": "8.0.2",
@@ -141,7 +141,14 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint:fix && yarn format:staged"
+      "pre-commit": "yarn precommit"
     }
+  },
+  "lint-staged": {
+    "*.js": [
+      "yarn lint:fix",
+      "yarn prettier",
+      "git add"
+    ]
   }
 }
