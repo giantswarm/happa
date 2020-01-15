@@ -86,7 +86,7 @@ class ConfigKubeCtl extends React.Component {
       });
 
       this.props.actions
-        .clusterLoadDetails(this.props.cluster.id)
+        .clusterLoadDetails(this.props.cluster.id, { withLoadingFlags: false })
         .then(() => {
           this.setState({
             // eslint-disable-next-line react/no-unused-state
