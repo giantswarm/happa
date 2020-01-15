@@ -27,6 +27,14 @@ const Input = styled.input`
   line-height: normal;
   padding: 8px 10px;
   width: 100%;
+
+  &:read-only {
+    cursor: not-allowed;
+  }
+
+  &:read-only:focus {
+    outline: none;
+  }
 `;
 
 const Icon = styled.i`
@@ -68,6 +76,7 @@ const TextInput = props => {
           onChange={onChange}
           type='text'
           value={props.value}
+          readOnly={props.readOnly}
         />
       </InputWrapper>
       {props.validationError ? (
@@ -89,6 +98,7 @@ TextInput.propTypes = {
   onChange: PropTypes.func,
   validationError: PropTypes.string,
   value: PropTypes.string,
+  readOnly: PropTypes.bool,
 };
 
 export default TextInput;

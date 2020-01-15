@@ -5,10 +5,11 @@ import {
   V5_CLUSTER,
 } from './constantsAndHelpers';
 
+const clusterCreateDateToday = (new Date()).toISOString();
+
 export const v4ClustersResponse = [
   {
-    create_date: '2019-11-15T15:53:58.549065412Z',
-    delete_date: '0001-01-01T00:00:00Z',
+    create_date: clusterCreateDateToday,
     id: V4_CLUSTER.id,
     name: V4_CLUSTER.name,
     owner: ORGANIZATION,
@@ -19,7 +20,7 @@ export const v4ClustersResponse = [
 
 export const v4AWSClusterResponse = {
   id: V4_CLUSTER.id,
-  create_date: '2019-11-15T15:53:59Z',
+  create_date: clusterCreateDateToday,
   api_endpoint: `https://api.${V4_CLUSTER.id}.k8s.gauss.eu-central-1.aws.gigantic.io`,
   owner: ORGANIZATION,
   name: V4_CLUSTER.name,
@@ -53,7 +54,7 @@ export const v4AWSClusterResponse = {
 
 export const v4AzureClusterResponse = {
   id: V4_CLUSTER.id,
-  create_date: '2019-11-29T09:40:45Z',
+  create_date: clusterCreateDateToday,
   api_endpoint: `https://api.${V4_CLUSTER.id}.k8s.godsmack.westeurope.azure.gigantic.io`,
   owner: ORGANIZATION,
   name: V4_CLUSTER.name,
@@ -80,7 +81,7 @@ export const v4AzureClusterResponse = {
 
 export const v4KVMClusterResponse = {
   id: V4_CLUSTER.id,
-  create_date: '2019-11-26T19:59:15Z',
+  create_date: clusterCreateDateToday,
   api_endpoint: `https://api.${V4_CLUSTER.id}.k8s.geckon.gridscale.kvm.gigantic.io`,
   owner: ORGANIZATION,
   name: V4_CLUSTER.name,
@@ -117,7 +118,7 @@ export const v4KVMClusterResponse = {
 
 export const v5ClustersResponse = [
   {
-    create_date: '2019-11-08T13:50:32.333996123Z',
+    create_date: clusterCreateDateToday,
     id: V5_CLUSTER.id,
     name: 'V5 CLUSTER',
     owner: ORGANIZATION,
@@ -128,7 +129,7 @@ export const v5ClustersResponse = [
 
 export const v5ClusterResponse = {
   api_endpoint: API_ENDPOINT,
-  create_date: '2019-11-10T19:22:08Z',
+  create_date: clusterCreateDateToday,
   id: V5_CLUSTER.id,
   master: { availability_zone: 'eu-central-1a' },
   name: V5_CLUSTER.name,
@@ -136,17 +137,17 @@ export const v5ClusterResponse = {
   release_version: V5_CLUSTER.releaseVersion,
   conditions: [
     {
-      last_transition_time: '2019-11-10T19:33:22.865459577Z',
+      last_transition_time: clusterCreateDateToday,
       condition: 'Created',
     },
     {
-      last_transition_time: '2019-11-10T19:22:16.166784082Z',
+      last_transition_time: clusterCreateDateToday,
       condition: 'Creating',
     },
   ],
   versions: [
     {
-      last_transition_time: '2019-11-10T19:38:23.674938735Z',
+      last_transition_time: clusterCreateDateToday,
       version: '10.0.0',
     },
   ],
