@@ -8,7 +8,6 @@ import {
 export const v4ClustersResponse = [
   {
     create_date: '2019-11-15T15:53:58.549065412Z',
-    delete_date: '0001-01-01T00:00:00Z',
     id: V4_CLUSTER.id,
     name: V4_CLUSTER.name,
     owner: ORGANIZATION,
