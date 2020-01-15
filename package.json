@@ -50,7 +50,7 @@
     "emotion-theming": "10.0.27",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
     "history": "4.10.1",
-    "immer": "5.2.1",
+    "immer": "5.3.0",
     "immutable": "3.8.2",
     "js-base64": "2.5.1",
     "js-yaml": "^3.12.1",
