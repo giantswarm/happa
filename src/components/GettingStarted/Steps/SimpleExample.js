@@ -61,7 +61,7 @@ class SimpleExample extends React.Component {
       });
 
       this.props.actions
-        .clusterLoadDetails(this.props.cluster.id, { withLoadingFlags: false})
+        .clusterLoadDetails(this.props.cluster.id, { withLoadingFlags: false })
         .then(() => {
           this.setState({
             loading: false,
