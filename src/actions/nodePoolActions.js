@@ -51,11 +51,26 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
 }
 
 // Loads all node pools for all v5 clusters in store.
-export function nodePoolsLoad() {
+export function nodePoolsLoad({
+  filterBySelectedOrganization,
+  withLoadingFlags,
+}) {
   return async function(dispatch, getState) {
-    dispatch({ type: types.NODEPOOLS_LOAD_REQUEST });
+    if (withLoadingFlags) dispatch({ type: types.NODEPOOLS_LOAD_REQUEST });
 
-    const v5ClustersId = getState().entities.clusters.v5Clusters || [];
+    let v5ClustersId = getState().entities.clusters.v5Clusters || [];
+
+    if (filterBySelectedOrganization) {
+      const selectedOrganization = getState().app.selectedOrganization;
+      const allClusters = getState().entities.clusters.items;
+
+      const filteredClusters = v5ClustersId.filter(
+        id => allClusters[id].owner === selectedOrganization
+      );
+
+      v5ClustersId = filteredClusters;
+    }
+
     if (v5ClustersId.length > 0) {
       await Promise.all(
         v5ClustersId.map(clusterId =>
@@ -64,7 +79,7 @@ export function nodePoolsLoad() {
       );
     }
 
-    dispatch({ type: types.NODEPOOLS_LOAD_FINISHED });
+    if (withLoadingFlags) dispatch({ type: types.NODEPOOLS_LOAD_FINISHED });
   };
 }
 
