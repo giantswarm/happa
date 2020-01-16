@@ -11,13 +11,13 @@ import NodeCountSelector from 'shared/NodeCountSelector';
 import Button from 'UI/Button';
 import NumberPicker from 'UI/NumberPicker';
 
-import AvailabilityZonesSelector from './AvailabilityZonesSelector';
 import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
 import AzureVMSizeSelector from './AzureVMSizeSelector';
 import ClusterCreationDuration from './ClusterCreationDuration';
 import { FlexColumnDiv, Wrapper } from './CreateNodePoolsCluster';
 import ProviderCredentials from './ProviderCredentials';
 import ReleaseSelector from './ReleaseSelector';
+import V4AvailabilityZonesSelector from './V4AvailabilityZonesSelector';
 
 const WrapperDiv = styled.div`
   ${Wrapper}
@@ -74,7 +74,7 @@ class CreateRegularCluster extends React.Component {
 
     switch (provider) {
       case Providers.AZURE:
-        requiredVersion = '5.0.0';
+        requiredVersion = '12.0.0';
         break;
 
       default:
@@ -473,7 +473,7 @@ class CreateRegularCluster extends React.Component {
                  * https://github.com/giantswarm/giantswarm/pull/2202
                  *
                  */
-                <AvailabilityZonesSelector
+                <V4AvailabilityZonesSelector
                   minValue={this.props.minAvailabilityZones}
                   maxValue={this.props.maxAvailabilityZones}
                   onChange={this.updateAvailabilityZonesPicker}

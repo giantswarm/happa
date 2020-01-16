@@ -5,7 +5,7 @@ import React from 'react';
 import cmp from 'semver-compare';
 import NumberPicker from 'UI/NumberPicker';
 
-const FlexWrapperAZDiv = styled.div`
+const AZWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -16,7 +16,7 @@ const FlexWrapperAZDiv = styled.div`
   }
 `;
 
-const AvailabilityZonesSelector = ({
+const V4AvailabilityZonesSelector = ({
   minValue,
   maxValue,
   onChange,
@@ -29,7 +29,7 @@ const AvailabilityZonesSelector = ({
     <label className='availability-zones' htmlFor='availability-zones'>
       <span className='label-span'>Availability Zones</span>
       {isAvailable ? (
-        <FlexWrapperAZDiv>
+        <AZWrapper>
           <p>Number of availability zones to use:</p>
           <div>
             <AvailabilityZonesParser
@@ -39,7 +39,7 @@ const AvailabilityZonesSelector = ({
               updateAZValuesInParent={onChange}
             />
           </div>
-        </FlexWrapperAZDiv>
+        </AZWrapper>
       ) : (
         <>
           <p>
@@ -55,7 +55,7 @@ const AvailabilityZonesSelector = ({
   );
 };
 
-AvailabilityZonesSelector.defaultProps = {
+V4AvailabilityZonesSelector.defaultProps = {
   minValue: 1,
   maxValue: 1,
   // eslint-disable-next-line no-empty-function
@@ -64,7 +64,7 @@ AvailabilityZonesSelector.defaultProps = {
   currentReleaseVersion: '0.0.2',
 };
 
-AvailabilityZonesSelector.propTypes = {
+V4AvailabilityZonesSelector.propTypes = {
   minValue: PropTypes.number,
   maxValue: PropTypes.number,
   onChange: PropTypes.func,
@@ -72,4 +72,4 @@ AvailabilityZonesSelector.propTypes = {
   currentReleaseVersion: PropTypes.string,
 };
 
-export default AvailabilityZonesSelector;
+export default V4AvailabilityZonesSelector;
