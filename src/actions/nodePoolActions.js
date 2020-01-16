@@ -68,12 +68,6 @@ export function nodePoolsLoad({
         id => allClusters[id].owner === selectedOrganization
       );
 
-      console.log(
-        selectedOrganization,
-        Object.keys(allClusters),
-        v5ClustersId,
-        filteredClusters
-      );
       v5ClustersId = filteredClusters;
     }
 
