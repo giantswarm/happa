@@ -10,7 +10,7 @@ const initialState = {
 
 const loadingReducer = produce((draft, action) => {
   const { type } = action;
-  const matches = /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED)/.exec(type);
+  const matches = /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)/.exec(type);
 
   // not a *_REQUEST / *_SUCCESS / *_ERROR / *_FINISHED actions, so we ignore them
   if (!matches) return;
