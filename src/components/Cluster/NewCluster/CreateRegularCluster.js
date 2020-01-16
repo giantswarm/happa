@@ -74,7 +74,7 @@ class CreateRegularCluster extends React.Component {
 
     switch (provider) {
       case Providers.AZURE:
-        requiredVersion = '12.0.0';
+        requiredVersion = '5.0.0';
         break;
 
       default:
@@ -477,7 +477,6 @@ class CreateRegularCluster extends React.Component {
                   minValue={this.props.minAvailabilityZones}
                   maxValue={this.props.maxAvailabilityZones}
                   onChange={this.updateAvailabilityZonesPicker}
-                  value={this.state.availabilityZonesPicker.value}
                   requiredReleaseVersion={requiredReleaseForAZ}
                   currentReleaseVersion={this.props.selectedRelease}
                 />

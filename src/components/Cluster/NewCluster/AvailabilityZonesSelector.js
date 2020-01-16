@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
 import PropTypes from 'prop-types';
 import React from 'react';
 import cmp from 'semver-compare';
@@ -18,8 +19,6 @@ const FlexWrapperAZDiv = styled.div`
 const AvailabilityZonesSelector = ({
   minValue,
   maxValue,
-  value,
-  readOnly,
   onChange,
   requiredReleaseVersion,
   currentReleaseVersion,
@@ -33,21 +32,18 @@ const AvailabilityZonesSelector = ({
         <FlexWrapperAZDiv>
           <p>Number of availability zones to use:</p>
           <div>
-            <NumberPicker
-              label=''
+            <AvailabilityZonesParser
               max={maxValue}
               min={minValue}
-              onChange={onChange}
-              readOnly={readOnly}
-              stepSize={1}
-              value={value}
+              defaultValue={minValue}
+              updateAZValuesInParent={onChange}
             />
           </div>
         </FlexWrapperAZDiv>
       ) : (
         <>
           <p>
-            Selection of availability zones is only possible for release version
+            Selection of availability zones is only possible for release version{' '}
             {requiredReleaseVersion} or greater.
           </p>
           <div className='col-3'>
@@ -64,8 +60,6 @@ AvailabilityZonesSelector.defaultProps = {
   maxValue: 1,
   // eslint-disable-next-line no-empty-function
   onChange: () => {},
-  readOnly: false,
-  value: 1,
   requiredReleaseVersion: '0.0.1',
   currentReleaseVersion: '0.0.2',
 };
@@ -74,8 +68,6 @@ AvailabilityZonesSelector.propTypes = {
   minValue: PropTypes.number,
   maxValue: PropTypes.number,
   onChange: PropTypes.func,
-  readOnly: PropTypes.bool,
-  value: PropTypes.number,
   requiredReleaseVersion: PropTypes.string,
   currentReleaseVersion: PropTypes.string,
 };
