@@ -8,7 +8,8 @@ import {
   appCatalogsResponse,
   appsResponse,
   azureInfoResponse,
-  getPersistedMockCall,
+  getMockCall,
+  getMockCallTimes,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -27,54 +28,40 @@ const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V4_CLUSTER.id}`;
 
 const minNodesCount = 3;
 
-// Tests setup
-const requests = {};
+beforeAll(() => {
+  nock.disableNetConnect();
+});
+
+afterAll(() => {
+  nock.enableNetConnect();
+});
 
 // Responses to requests
-beforeAll(() => {
-  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', azureInfoResponse);
-  requests.organizations = getPersistedMockCall(
-    '/v4/organizations/',
-    orgsResponse
-  );
-  requests.organization = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/`,
-    orgResponse
-  );
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v4ClustersResponse);
-  requests.cluster = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    v4AzureClusterResponse
-  );
-  requests.status = getPersistedMockCall(
+beforeEach(() => {
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/info/', azureInfoResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
+  getMockCall('/v4/clusters/', v4ClustersResponse);
+  // eslint-disable-next-line no-magic-numbers
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AzureClusterResponse, 4);
+  getMockCallTimes(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AzureClusterStatusResponse
+    v4AzureClusterStatusResponse,
+    // eslint-disable-next-line no-magic-numbers
+    4
   );
-  requests.apps = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-    appsResponse
-  );
-  // TODO we are not requesting this in v5 cluster calls
-  // Empty response
-  requests.keyPairs = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/key-pairs/`
-  );
-  requests.credentials = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/credentials/`
-  );
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.appcatalogs = getPersistedMockCall(
-    '/v4/appcatalogs/',
-    appCatalogsResponse
-  );
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`, [], 2);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+  getMockCall('/v4/releases/', releasesResponse);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 });
 
 // Stop persisting responses
-afterAll(() => {
-  Object.keys(requests).forEach(req => {
-    requests[req].persist(false);
-  });
+afterEach(() => {
+  expect(nock.isDone());
+  nock.cleanAll();
 });
 
 it('renders all the v4 Azure cluster data correctly', async () => {
@@ -111,7 +98,7 @@ scales correctly`, async () => {
     min: defaultScaling.min + increaseByCount,
     max: defaultScaling.max + increaseByCount,
   };
-  // Adding another worker
+  // Add another worker
   const newWorkers = [...cluster.workers, cluster.workers[0]];
 
   const scaleResponse = {
@@ -120,27 +107,27 @@ scales correctly`, async () => {
     workers: newWorkers,
   };
 
-  // Cluster scale request
-  const scaleRequest = nock(API_ENDPOINT)
-    .intercept(`/v4/clusters/${cluster.id}/`, 'PATCH')
-    .reply(StatusCodes.Ok, scaleResponse);
-
-  const { getByText, findByText, getByLabelText, getByDisplayValue } = renderRouteWithStore(ROUTE);
-
-  const nodesTitle = await findByText('Nodes');
-  const nodesCounter = nodesTitle.nextSibling;
-
-  expect(nodesCounter.textContent).toBe(String(minNodesCount));
-
-  // Replace status response
-  requests.status.persist(false);
-  requests.status = getPersistedMockCall(`/v4/clusters/${cluster.id}/status/`, {
+  getMockCall(`/v4/clusters/${cluster.id}/status/`, {
     ...v4AzureClusterStatusResponse,
     cluster: {
       ...v4AzureClusterStatusResponse.cluster,
       scaling: { desiredCapacity: newScaling.max },
     },
   });
+
+  // Cluster scale request
+  const scaleRequest = nock(API_ENDPOINT)
+    .intercept(`/v4/clusters/${cluster.id}/`, 'PATCH')
+    .reply(StatusCodes.Ok, scaleResponse);
+
+  const { getByText, findByText, getByDisplayValue } = renderRouteWithStore(
+    ROUTE
+  );
+
+  const nodesTitle = await findByText('Nodes');
+  const nodesCounter = nodesTitle.nextSibling;
+
+  expect(nodesCounter).toHaveTextContent(String(minNodesCount));
 
   // Simulate click on the Edit button
   fireEvent.click(getByText(/edit/i));
@@ -155,23 +142,14 @@ scales correctly`, async () => {
   // Set the new node count
   fireEvent.change(nodeCountInput, { target: { value: newScaling.min } });
 
-  // const textButton = `Increase minimum number of nodes by ${increaseByCount}`;
-  // const submitButton = getByText(textButton);
-  // fireEvent.click(submitButton);
+  const textButton = `Add ${increaseByCount} worker node`;
+  const submitButton = getByText(textButton);
+  fireEvent.click(submitButton);
 
-  // // Wait for the Flash message to appear
-  // await wait(() => {
-  //   getByText(/the cluster will be scaled within the next couple of minutes./i);
-  //   // Does the cluster have node values updated?
-  //   expect(getByText(`Pinned at ${newScaling.min}`));
-  // });
+  await findByText(
+    /the cluster will be scaled within the next couple of minutes./i
+  );
+  expect(nodesCounter).toHaveTextContent(String(newScaling.min));
 
-  // scaleRequest.done();
-
-  // // Restore status response
-  // requests.status.persist(false);
-  // requests.status = getPersistedMockCall(
-  //   `/v4/clusters/${cluster.id}/status/`,
-  //   v4AzureClusterResponse
-  // );
+  scaleRequest.done();
 });
