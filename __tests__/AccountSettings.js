@@ -1,6 +1,7 @@
+import nock from 'nock';
 import {
   AWSInfoResponse,
-  getPersistedMockCall,
+  getMockCall,
   userResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
@@ -17,21 +18,26 @@ const elementLabels = {
   DeleteAccount: 'Delete Account',
 };
 
-const requests = {};
-
 describe('AccountSettings', () => {
   beforeAll(() => {
-    requests.user = getPersistedMockCall('/v4/user/', userResponse);
-    requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
-    requests.orgs = getPersistedMockCall('/v4/organizations/');
-    requests.clusters = getPersistedMockCall('/v4/clusters/');
-    requests.catalogs = getPersistedMockCall('/v4/appcatalogs/');
+    nock.disableNetConnect();
   });
 
   afterAll(() => {
-    for (const req of Object.values(requests)) {
-      req.persist(false);
-    }
+    nock.enableNetConnect();
+  });
+
+  beforeEach(() => {
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/info/', AWSInfoResponse);
+    getMockCall('/v4/organizations/');
+    getMockCall('/v4/clusters/');
+    getMockCall('/v4/appcatalogs/');
+  });
+
+  afterEach(() => {
+    expect(nock.isDone());
+    nock.cleanAll();
   });
 
   it('renders the account settings component on the "/account-settings" route', async () => {
