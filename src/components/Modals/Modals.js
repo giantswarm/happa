@@ -14,12 +14,15 @@ import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import { connect } from 'react-redux';
 import EmailField from 'shared/EmailField';
+import InputField from 'shared/InputField';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 class Modals extends React.Component {
   state = {
     emailValid: false,
+    organizationNameValid: false,
+    organizationName: '',
   };
 
   close = () => {
@@ -38,8 +41,8 @@ class Modals extends React.Component {
     if (e) {
       e.preventDefault();
     }
-    const orgId = this.orgId.value;
-    this.props.dispatch(organizationCreateConfirmed(orgId));
+    const organizationName = this.orgId.value();
+    this.props.dispatch(organizationCreateConfirmed(organizationName));
   };
 
   addMember = e => {
@@ -82,6 +85,47 @@ class Modals extends React.Component {
         emailValid: false,
       });
     }
+  };
+
+  onOrganizationNameChange = organizationName => {
+    this.setState({ organizationName });
+  };
+
+  validateOrganizationName = organizationName => {
+    if (!organizationName) {
+      return {
+        valid: false,
+        validationError: '',
+      };
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    if (organizationName.length < 4 || organizationName.length > 63) {
+      this.setState({ organizationNameValid: false });
+
+      return {
+        valid: false,
+        validationError: 'must be between 4 and 63 characters long',
+      };
+    }
+
+    if (
+      !/^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/.test(organizationName)
+    ) {
+      this.setState({ organizationNameValid: false });
+
+      return {
+        valid: false,
+        validationError: 'invalid format',
+      };
+    }
+
+    this.setState({ organizationNameValid: true });
+
+    return {
+      valid: true,
+      validationError: '',
+    };
   };
 
   render() {
@@ -141,17 +185,28 @@ class Modals extends React.Component {
               </BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
+              <p>Organization names must:</p>
+              <ul>
+                <li>be between 4 and 63 characters long</li>
+                <li>
+                  contain only letters, numbers, dots (.), hyphens (-) and
+                  underscores (_)
+                </li>
+                <li>must start and end with a letter or number</li>
+              </ul>
               <form onSubmit={this.createOrganisation.bind(this)}>
-                <label htmlFor='create-organization-name'>
-                  Organization Name:
-                </label>
-                <input
+                <InputField
                   id='create-organization-name'
+                  name='create-organization-name'
                   autoFocus
+                  label='Organization Name:'
+                  type='text'
                   ref={i => {
                     this.orgId = i;
                   }}
-                  type='text'
+                  value={this.state.organizationName}
+                  validate={this.validateOrganizationName}
+                  onChange={this.onOrganizationNameChange}
                 />
               </form>
             </BootstrapModal.Body>
@@ -162,6 +217,7 @@ class Modals extends React.Component {
                 loadingPosition='left'
                 onClick={this.createOrganisation.bind(this)}
                 type='submit'
+                disabled={!this.state.organizationNameValid}
               >
                 {this.props.modal.templateValues.loading
                   ? 'Creating Organization'
