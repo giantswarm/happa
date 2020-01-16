@@ -16,7 +16,6 @@ const initialState = {
 const nodePools = produce((draft, action) => {
   switch (action.type) {
     // TODO Find a better/simpler approach.
-    case types.CLUSTERS_LOAD:
     case types.NODEPOOL_DELETE_CONFIRMED:
     case types.V5_CLUSTER_CREATE_SUCCESS:
     case types.NODEPOOLS_CREATE:
