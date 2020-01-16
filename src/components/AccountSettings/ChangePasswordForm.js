@@ -130,7 +130,6 @@ class ChangePassword extends React.Component {
       })
       .catch(error => {
         let errorMessage = null;
-
         if (
           error.body &&
           error.body.status_code &&
@@ -161,8 +160,10 @@ class ChangePassword extends React.Component {
   };
 
   render() {
+    const { user, actions, ...rest } = this.props;
+
     return (
-      <div className='row section'>
+      <div className='row section' {...rest}>
         <div className='col-3'>
           <h3 className='table-label'>Password</h3>
         </div>
@@ -172,7 +173,7 @@ class ChangePassword extends React.Component {
           <form className='change_password_form' onSubmit={this.submit}>
             <div className='textfield small'>
               <PasswordField
-                id='current_password'
+                name='current_password'
                 label='Current Password'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
@@ -184,7 +185,7 @@ class ChangePassword extends React.Component {
 
             <div className='textfield small'>
               <PasswordField
-                id='new_password'
+                name='new_password'
                 label='New Password'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
@@ -197,7 +198,7 @@ class ChangePassword extends React.Component {
 
             <div className='textfield small'>
               <PasswordField
-                id='new_password_confirmation'
+                name='new_password_confirmation'
                 label='New Password (once more)'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
@@ -216,7 +217,6 @@ class ChangePassword extends React.Component {
                   bsStyle='primary'
                   disabled={!this.state.formValid}
                   loading={this.state.submitting}
-                  loadingMessage='Saving...'
                   type='submit'
                 >
                   Set New Password

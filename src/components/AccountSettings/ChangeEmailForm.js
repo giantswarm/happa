@@ -121,8 +121,10 @@ class ChangeEmailForm extends React.Component {
   };
 
   render() {
+    const { user, actions, ...rest } = this.props;
+
     return (
-      <div>
+      <div {...rest}>
         <form className='change_email_form' onSubmit={this.submit}>
           <input
             onChange={this.validateEmail}
@@ -139,7 +141,6 @@ class ChangeEmailForm extends React.Component {
                 bsStyle='primary'
                 disabled={!this.state.isValid}
                 loading={this.state.isSubmitting}
-                loadingMessage='Saving...'
                 type='submit'
               >
                 Set New Email
