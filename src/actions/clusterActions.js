@@ -474,7 +474,11 @@ function clusterLoadStatus(clusterId) {
       })
       .then(status => {
         // eslint-disable-next-line no-use-before-define
-        dispatch(clusterLoadStatusSuccess(clusterId, status));
+        dispatch({
+          type: types.CLUSTER_LOAD_STATUS_SUCCESS,
+          clusterId,
+          status,
+        });
 
         return status;
       })
@@ -484,11 +488,12 @@ function clusterLoadStatus(clusterId) {
         // eslint-disable-next-line no-console
         console.error(error);
         if (error.status === StatusCodes.NotFound) {
-          // eslint-disable-next-line no-use-before-define
-          dispatch(clusterLoadStatusNotFound(clusterId));
+          dispatch({
+            type: types.CLUSTER_LOAD_STATUS_NOT_FOUND,
+            clusterId,
+          });
         } else {
-          // eslint-disable-next-line no-use-before-define
-          dispatch(clusterLoadStatusError(clusterId, error));
+          dispatch({ type: types.CLUSTER_LOAD_STATUS_ERROR, error });
 
           new FlashMessage(
             'Something went wrong while trying to load the cluster status.',
@@ -496,8 +501,6 @@ function clusterLoadStatus(clusterId) {
             messageTTL.LONG,
             'Please try again later or contact support: support@giantswarm.io'
           );
-
-          // throw error;
         }
       });
   };
@@ -662,22 +665,6 @@ export function clusterLoadKeyPairs(clusterId) {
 export const clusterLoadDetailsError = (clusterId, error) => ({
   type: types.CLUSTER_LOAD_DETAILS_ERROR,
   clusterId,
-  error,
-});
-
-export const clusterLoadStatusSuccess = (clusterId, status) => ({
-  type: types.CLUSTER_LOAD_STATUS_SUCCESS,
-  clusterId,
-  status,
-});
-
-export const clusterLoadStatusNotFound = clusterId => ({
-  type: types.CLUSTER_LOAD_STATUS_NOT_FOUND,
-  clusterId,
-});
-
-export const clusterLoadStatusError = error => ({
-  type: types.CLUSTER_LOAD_STATUS_ERROR,
   error,
 });
 
