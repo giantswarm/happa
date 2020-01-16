@@ -46,11 +46,13 @@ class PasswordField extends React.Component {
   };
 
   render() {
+    const { name, label, validationError, onStartTyping, ...rest } = this.props;
+
     return (
-      <div className='textfield'>
-        <label htmlFor={this.props.name}>{this.props.label}</label>
+      <div className='textfield' {...rest}>
+        <label htmlFor={name}>{label}</label>
         <input
-          id={this.props.name}
+          id={name}
           onBlur={this.onBlur}
           onChange={this.onChange}
           ref={input => {
@@ -58,7 +60,7 @@ class PasswordField extends React.Component {
           }}
           type='password'
         />
-        <span className='message'>{this.props.validationError}&nbsp;</span>
+        <span className='message'>{validationError}&nbsp;</span>
       </div>
     );
   }
