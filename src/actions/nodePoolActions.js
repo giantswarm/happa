@@ -1,5 +1,10 @@
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import {
+  getCpusTotalNodePools,
+  getMemoryTotalNodePools,
+  getNumberOfNodePoolsNodes,
+} from 'utils/clusterUtils';
 
 import * as types from './actionTypes';
 import { modalHide } from './modalActions';
@@ -21,12 +26,20 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
         // so converting it to an array.
         const nodePoolsArray = Array.from(data) || [];
 
+        // Compute resources
+        const memory = getMemoryTotalNodePools(nodePoolsArray);
+        const cores = getCpusTotalNodePools(nodePoolsArray);
+        const numberOfNodePoolsNodes = getNumberOfNodePoolsNodes(
+          nodePoolsArray
+        );
+
         // Dispatch action for populating nodePools key inside cluster
         dispatch({
           type: types.CLUSTER_NODEPOOLS_LOAD_SUCCESS,
           clusterId,
           nodePools: nodePoolsArray, // nodePools
           nodePoolsIds: nodePoolsArray.map(np => np.id), // array of ids to store in cluster
+          resources: { memory, cores, numberOfNodePoolsNodes }, // resources to be stored in the cluster object
         });
 
         return nodePoolsArray;
@@ -60,6 +73,7 @@ export function nodePoolsLoad({
 
     let v5ClustersId = getState().entities.clusters.v5Clusters || [];
 
+    // Filter by selected org
     if (filterBySelectedOrganization) {
       const selectedOrganization = getState().app.selectedOrganization;
       const allClusters = getState().entities.clusters.items;
@@ -225,9 +239,6 @@ export function nodePoolsCreate(clusterId, nodePools) {
           });
       })
     );
-
-    // Dispatch action for populating nodePools key inside clusters
-    // dispatch(nodePoolsLoad());
 
     return allNodePools;
   };

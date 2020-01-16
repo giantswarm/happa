@@ -40,20 +40,13 @@ const clusterReducer = produce((draft, action) => {
 
     case types.CLUSTER_NODEPOOLS_LOAD_SUCCESS:
       draft.items[action.clusterId].nodePools = action.nodePoolsIds;
+      draft.items[action.clusterId].resources = action.resources;
 
       return;
 
     case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].nodePools = action.nodePools;
-      }
-
-      return;
-
-    case types.CLUSTER_LOAD_STATUS_SUCCESS:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].status = action.status;
-        draft.items[action.clusterId].status.lastUpdated = Date.now();
       }
 
       return;
@@ -83,7 +76,6 @@ const clusterReducer = produce((draft, action) => {
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingApps = false;
         draft.items[action.clusterId].apps = action.apps;
-        draft.items[action.clusterId].lastUpdated = Date.now();
       }
 
       return;
@@ -91,7 +83,6 @@ const clusterReducer = produce((draft, action) => {
     case types.CLUSTER_LOAD_APPS_ERROR:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingApps = false;
-        draft.items[action.clusterId].lastUpdated = Date.now();
       }
 
       return;

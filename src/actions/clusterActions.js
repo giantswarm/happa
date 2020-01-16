@@ -91,7 +91,7 @@ export function clustersDetails({
 
     const clusterDetails = await Promise.all(
       clustersIds.map(id =>
-        dispatch(clusterLoadDetails(id, { withLoadingFlags: true }))
+        dispatch(clusterLoadDetails(id, { withLoadingFlags: false }))
       )
     );
 
@@ -400,7 +400,6 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
         ? await clustersApi.getClusterV5(clusterId)
         : await clustersApi.getCluster(clusterId);
 
-      if (!isV5Cluster) dispatch(clusterLoadStatus(clusterId));
       if (isV5Cluster) cluster.nodePools = [];
 
       const provider = getState().app.info.general.provider;
@@ -428,6 +427,13 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
       if (scaling && !scaling.min && !scaling.max) {
         cluster.scaling.min = workers.length;
         cluster.scaling.max = workers.length;
+      }
+
+      // Get status if this is a v4 cluster.
+      if (!isV5Cluster) {
+        cluster.status = await dispatch(
+          clusterLoadStatus(clusterId, { withLoadingFlags })
+        );
       }
 
       dispatch({
@@ -470,14 +476,12 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
   };
 }
 
-function clusterLoadStatus(clusterId) {
+function clusterLoadStatus(clusterId, { withLoadingFlags }) {
   return function(dispatch) {
-    dispatch({
-      type: types.CLUSTER_LOAD_STATUS,
-      clusterId,
-    });
+    // Does it  makes sense to leave it here just for let loadingReducer set/unset a flag?
+    if (withLoadingFlags)
+      dispatch({ type: types.CLUSTER_LOAD_STATUS_REQUEST, clusterId });
 
-    // TODO: getClusterStatusWithHttpInfo usage copied from line 125. When it is fixed, also fix here
     return clustersApi
       .getClusterStatusWithHttpInfo(clusterId)
       .then(data => {
@@ -485,13 +489,9 @@ function clusterLoadStatus(clusterId) {
       })
       .then(status => {
         // eslint-disable-next-line no-use-before-define
-        dispatch({
-          type: types.CLUSTER_LOAD_STATUS_SUCCESS,
-          clusterId,
-          status,
-        });
+        dispatch({ type: types.CLUSTER_LOAD_STATUS_SUCCESS, clusterId });
 
-        return status;
+        return status; // used in clusterLoadDetails!
       })
       .catch(error => {
         // TODO: Find a better way to deal with status endpoint errors in dev:
@@ -499,10 +499,7 @@ function clusterLoadStatus(clusterId) {
         // eslint-disable-next-line no-console
         console.error(error);
         if (error.status === StatusCodes.NotFound) {
-          dispatch({
-            type: types.CLUSTER_LOAD_STATUS_NOT_FOUND,
-            clusterId,
-          });
+          dispatch({ type: types.CLUSTER_LOAD_STATUS_NOT_FOUND, clusterId });
         } else {
           dispatch({ type: types.CLUSTER_LOAD_STATUS_ERROR, error });
 

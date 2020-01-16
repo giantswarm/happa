@@ -1,6 +1,5 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import * as clusterActions from 'actions/clusterActions';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
 import RoutePath from 'lib/routePath';
@@ -10,11 +9,11 @@ import React from 'react';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Dot } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
+import LoadingOverlayWithoutStyles from 'UI/LoadingOverlayWithoutStyles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 import { clusterNodePools } from 'utils/clusterUtils';
 
@@ -142,6 +141,7 @@ class ClusterDashboardItem extends React.Component {
     this.props.dispatch(push(clusterGuidePath));
   };
 
+  // eslint-disable-next-line complexity
   render() {
     const { cluster, isNodePool, selectedOrganization } = this.props;
     const { nodePools } = this.state;
@@ -234,13 +234,22 @@ ClusterDashboardItem.propTypes = {
   dispatch: PropTypes.func,
   isNodePool: PropTypes.bool,
   nodePools: PropTypes.object,
+  loadingCluster: PropTypes.bool,
 };
+
+function mapStateToProps(state) {
+  return {
+    loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
+  };
+}
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(clusterActions, dispatch),
     dispatch: dispatch,
   };
 }
 
-export default connect(null, mapDispatchToProps)(ClusterDashboardItem);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ClusterDashboardItem);
