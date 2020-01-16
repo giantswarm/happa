@@ -39,10 +39,11 @@ beforeEach(() => {
   getMockCall('/v4/info/', AWSInfoResponse);
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
   getMockCall('/v4/clusters/', v4ClustersResponse);
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-  getMockCall(
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
+  getMockCallTimes(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponse
+    v4AWSClusterStatusResponse,
+    2
   );
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
   // Empty response
