@@ -168,10 +168,11 @@ describe('Organizations basic', () => {
   });
 
   it('shows organization details correctly', async () => {
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 1);
     const {
       findByText,
       getByText,
-      getByTestId,
+      findByTestId,
       queryByTestId,
       getByTitle,
     } = renderRouteWithStore(`${BASE_ROUTE}/${orgResponse.id}`);
@@ -191,8 +192,8 @@ describe('Organizations basic', () => {
     expect(getByText(V4_CLUSTER.releaseVersion)).toBeInTheDocument();
 
     // users
-    const usersTable = getByTestId('org-detail-users-wrapper');
-    expect(usersTable.querySelector('tbody > tr > td').textContent).toBe(
+    const organizationMember = await findByTestId('organization-member-email');
+    expect(organizationMember.textContent).toBe(
       orgResponse.members[0].email
     );
 
@@ -266,21 +267,15 @@ describe('Organizations basic', () => {
       `${BASE_ROUTE}/${orgResponse.id}`
     );
 
-    // users
-    const usersTable = await findByTestId('org-detail-users-wrapper');
-    expect(usersTable.querySelector('tbody > tr > td').textContent).toBe(
-      orgResponse.members[0].email
-    );
+    const { email: emailToRemove } = orgResponse.members[0];
 
-    const removeUserTableButton = usersTable.querySelector(
-      'tbody > tr > td:nth-of-type(3) > button'
-    );
+    const removeUserTableButton = await findByTestId('organization-member-remove');
     expect(removeUserTableButton.textContent).toBe('Remove');
 
     fireEvent.click(removeUserTableButton);
 
     const removalNotice = await findByText(
-      `Are you sure you want to remove ${orgResponse.members[0].email} from ${orgResponse.id}`
+      `Are you sure you want to remove ${emailToRemove} from ${orgResponse.id}`
     );
     expect(removalNotice).toBeInTheDocument();
 
