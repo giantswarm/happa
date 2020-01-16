@@ -419,6 +419,27 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
       const provider = getState().app.info.general.provider;
       cluster.capabilities = computeCapabilities(cluster, provider);
 
+      // Since the API omits the 'aws' key from workers on kvm installations, I will
+      // add it back here with dummy values if it is not present.
+      cluster.workers = !cluster.workers
+        ? // If no workers, return an empty array.
+          []
+        : // Otherwise, and if there is no aws key in the worker object, create it.
+          cluster.workers.map(worker => {
+            if (!worker.aws) worker.aws = { instance_type: '' };
+
+            return worker;
+          });
+
+      // Fill in scaling values when they aren't supplied.
+      // Although we had this in the reducer, we were not actually updating the cluster
+      // object, so this in kinda of new
+      const { scaling, workers } = cluster;
+      if (scaling && !scaling.min && !scaling.max) {
+        cluster.scaling.min = workers.length;
+        cluster.scaling.max = workers.length;
+      }
+
       dispatch({
         type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
         cluster,
@@ -434,7 +455,7 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
           'Redirecting you to your organization clusters list'
         );
 
-        // Delete the cluster in te store.
+        // Delete the cluster in the store.
         // eslint-disable-next-line no-use-before-define
         dispatch(clusterDeleteSuccess(clusterId));
         dispatch(push('/'));
@@ -687,11 +708,6 @@ export const clusterDeleteError = (clusterId, error) => ({
   type: types.CLUSTER_DELETE_ERROR,
   clusterId,
   error,
-});
-
-export const clustersLoadError = error => ({
-  type: types.CLUSTERS_LOAD_ERROR,
-  error: error,
 });
 
 /**

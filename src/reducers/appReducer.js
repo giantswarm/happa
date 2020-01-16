@@ -66,11 +66,6 @@ const makeAppReducer = () => {
 
         return;
 
-      case types.CLUSTERS_LOAD_SUCCESS:
-        draft.firstLoadComplete = true;
-
-        return;
-
       case types.CLUSTER_SELECT:
         draft.selectedClusterID = action.clusterID;
     }
