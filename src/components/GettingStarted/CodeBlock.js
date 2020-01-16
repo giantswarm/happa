@@ -10,6 +10,8 @@ export const Prompt = ({ children }) => {
   return <Line prompt={true} text={dedent(children)} />;
 };
 
+Prompt.displayName = 'Prompt';
+
 // eslint-disable-next-line react/no-multi-comp
 export const Output = ({ children }) => {
   return <Line prompt={false} text={dedent(children)} />;
