@@ -74,8 +74,7 @@ class CreateRegularCluster extends React.Component {
 
     switch (provider) {
       case Providers.AZURE:
-        // TODO: Add version check for next release
-        requiredVersion = '6.1.0';
+        requiredVersion = '12.0.0';
         break;
 
       default:
