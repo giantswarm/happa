@@ -413,8 +413,7 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
         ? await clustersApi.getClusterV5(clusterId)
         : await clustersApi.getCluster(clusterId);
 
-      dispatch(clusterLoadStatus(clusterId)); // TODO
-
+      if (!isV5Cluster) dispatch(clusterLoadStatus(clusterId));
       if (isV5Cluster) cluster.nodePools = [];
 
       const provider = getState().app.info.general.provider;
@@ -460,64 +459,48 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
   };
 }
 
-/**
- * Takes a clusterId and loads status for that cluster.
- *
- * @param {String} clusterId Cluster ID
- */
-export function clusterLoadStatus(clusterId) {
-  return function(dispatch, getState) {
-    const v5Clusters = getState().entities.clusters.v5Clusters;
-    const isV5Cluster = v5Clusters.includes(clusterId);
-
-    if (isV5Cluster) {
-      // Here we will have something like clusterLoadStatusV5(...)?
-      return;
-    }
-    clusterLoadStatusV4(dispatch, clusterId);
-  };
-}
-
-function clusterLoadStatusV4(dispatch, clusterId) {
-  dispatch({
-    type: types.CLUSTER_LOAD_STATUS,
-    clusterId,
-  });
-
-  // TODO: getClusterStatusWithHttpInfo usage copied from line 125. When it is fixed, also fix here
-  return clustersApi
-    .getClusterStatusWithHttpInfo(clusterId)
-    .then(data => {
-      return JSON.parse(data.response.text);
-    })
-    .then(status => {
-      // eslint-disable-next-line no-use-before-define
-      dispatch(clusterLoadStatusSuccess(clusterId, status));
-
-      return status;
-    })
-    .catch(error => {
-      // TODO: Find a better way to deal with status endpoint errors in dev:
-      // https://github.com/giantswarm/giantswarm/issues/6757
-      // eslint-disable-next-line no-console
-      console.error(error);
-      if (error.status === StatusCodes.NotFound) {
-        // eslint-disable-next-line no-use-before-define
-        dispatch(clusterLoadStatusNotFound(clusterId));
-      } else {
-        // eslint-disable-next-line no-use-before-define
-        dispatch(clusterLoadStatusError(clusterId, error));
-
-        new FlashMessage(
-          'Something went wrong while trying to load the cluster status.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        // throw error;
-      }
+function clusterLoadStatus(clusterId) {
+  return function(dispatch) {
+    dispatch({
+      type: types.CLUSTER_LOAD_STATUS,
+      clusterId,
     });
+
+    // TODO: getClusterStatusWithHttpInfo usage copied from line 125. When it is fixed, also fix here
+    return clustersApi
+      .getClusterStatusWithHttpInfo(clusterId)
+      .then(data => {
+        return JSON.parse(data.response.text);
+      })
+      .then(status => {
+        // eslint-disable-next-line no-use-before-define
+        dispatch(clusterLoadStatusSuccess(clusterId, status));
+
+        return status;
+      })
+      .catch(error => {
+        // TODO: Find a better way to deal with status endpoint errors in dev:
+        // https://github.com/giantswarm/giantswarm/issues/6757
+        // eslint-disable-next-line no-console
+        console.error(error);
+        if (error.status === StatusCodes.NotFound) {
+          // eslint-disable-next-line no-use-before-define
+          dispatch(clusterLoadStatusNotFound(clusterId));
+        } else {
+          // eslint-disable-next-line no-use-before-define
+          dispatch(clusterLoadStatusError(clusterId, error));
+
+          new FlashMessage(
+            'Something went wrong while trying to load the cluster status.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
+          );
+
+          // throw error;
+        }
+      });
+  };
 }
 
 /**
