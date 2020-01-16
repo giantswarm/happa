@@ -39,10 +39,11 @@ beforeEach(() => {
   getMockCall('/v4/info/', AWSInfoResponse);
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
   getMockCall('/v4/clusters/', v4ClustersResponse);
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-  getMockCall(
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
+  getMockCallTimes(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponse
+    v4AWSClusterStatusResponse,
+    2
   );
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
   // Empty response
@@ -167,10 +168,11 @@ describe('Organizations basic', () => {
   });
 
   it('shows organization details correctly', async () => {
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 1);
     const {
       findByText,
       getByText,
-      getByTestId,
+      findByTestId,
       queryByTestId,
       getByTitle,
     } = renderRouteWithStore(`${BASE_ROUTE}/${orgResponse.id}`);
@@ -190,8 +192,8 @@ describe('Organizations basic', () => {
     expect(getByText(V4_CLUSTER.releaseVersion)).toBeInTheDocument();
 
     // users
-    const usersTable = getByTestId('org-detail-users-wrapper');
-    expect(usersTable.querySelector('tbody > tr > td').textContent).toBe(
+    const organizationMember = await findByTestId('organization-member-email');
+    expect(organizationMember.textContent).toBe(
       orgResponse.members[0].email
     );
 
@@ -248,6 +250,59 @@ describe('Organizations basic', () => {
     });
 
     patchOrganizationRequest.done();
+  });
+
+  it('allows to remove a member from an organization', async () => {
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    const patchOrganizationRequest = nock(API_ENDPOINT)
+      .intercept(`/v4/organizations/${orgResponse.id}/`, 'PATCH')
+      .reply(StatusCodes.Ok, {
+        code: 'RESOURCE_UPDATED',
+        message: `The organization with ID ${orgResponse.id} has been updated.`,
+      });
+
+    const { getByText, findByText, findByTestId } = renderRouteWithStore(
+      `${BASE_ROUTE}/${orgResponse.id}`
+    );
+
+    const { email: emailToRemove } = orgResponse.members[0];
+
+    const removeUserTableButton = await findByTestId('organization-member-remove');
+    expect(removeUserTableButton.textContent).toBe('Remove');
+
+    fireEvent.click(removeUserTableButton);
+
+    const removalNotice = await findByText(
+      `Are you sure you want to remove ${emailToRemove} from ${orgResponse.id}`
+    );
+    expect(removalNotice).toBeInTheDocument();
+
+    const removeUserButton = await findByText(
+      'Remove Member from Organization'
+    );
+    expect(removeUserButton).toBeInTheDocument();
+
+    fireEvent.click(removeUserButton);
+
+    expect(removeUserButton.textContent).toBe('Removing Member');
+    await wait(() => {
+      expect(
+        getByText(
+          (_, element) =>
+            element.innerHTML ===
+            `Removed <code>${orgResponse.members[0].email}</code> from organization <code>${orgResponse.id}</code>`
+        )
+      ).toBeInTheDocument();
+    });
+
+    patchOrganizationRequest.done();
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, {
+      ...orgResponse,
+      members: [],
+    });
+    nock.abortPendingRequests();
   });
 });
 

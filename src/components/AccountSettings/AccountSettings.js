@@ -32,11 +32,19 @@ const AccountSettings = props => (
               organization.
             </p>
 
-            <ChangeEmailForm actions={props.actions} user={props.user} />
+            <ChangeEmailForm
+              actions={props.actions}
+              user={props.user}
+              data-testid='account-settings/change-email'
+            />
           </div>
         </div>
 
-        <ChangePasswordForm actions={props.actions} user={props.user} />
+        <ChangePasswordForm
+          actions={props.actions}
+          user={props.user}
+          data-testid='account-settings/change-password'
+        />
 
         <div className='row section'>
           <div className='col-3'>

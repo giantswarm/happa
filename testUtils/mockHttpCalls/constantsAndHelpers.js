@@ -1,5 +1,5 @@
-import { StatusCodes } from 'shared/constants';
 import nock from 'nock';
+import { StatusCodes } from 'shared/constants';
 
 export const API_ENDPOINT = 'http://1.2.3.4';
 export const USER_EMAIL = 'developer@giantswarm.io';
@@ -39,6 +39,16 @@ export const postMockCall = (endpoint, response = []) =>
   nock(API_ENDPOINT)
     .post(endpoint)
     .reply(StatusCodes.Ok, response);
+
+export const postPayloadMockCall = (
+  endpoint,
+  payload = {},
+  response = [],
+  statusCode = StatusCodes.Ok
+) =>
+  nock(API_ENDPOINT)
+    .post(endpoint, payload)
+    .reply(statusCode, response);
 
 // https://gist.github.com/6174/6062387#gistcomment-2651745
 /* eslint-disable no-magic-numbers */

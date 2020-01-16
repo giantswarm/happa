@@ -104,6 +104,9 @@ class OrganizationDetail extends React.Component {
         dataField: 'email',
         text: 'Email',
         sort: true,
+        attrs: {
+          'data-testid': 'organization-member-email',
+        },
       },
       {
         dataField: 'emailDomain',
@@ -179,7 +182,7 @@ class OrganizationDetail extends React.Component {
               <div className='col-3'>
                 <h3 className='table-label'>Members</h3>
               </div>
-              <div className='col-9' data-testid='org-detail-users-wrapper'>
+              <div className='col-9'>
                 {this.props.organization.members.length === 0 ? (
                   <p>This organization has no members</p>
                 ) : (
@@ -245,8 +248,12 @@ function clusterActionsCellFormatter(_cell, row) {
 // eslint-disable-next-line react/no-multi-comp
 function memberActionsCellFormatter(_cell, row) {
   return (
-    // eslint-disable-next-line react/no-this-in-sfc
-    <Button onClick={this.removeMember.bind(this, row.email)} type='button'>
+    <Button
+      // eslint-disable-next-line react/no-this-in-sfc
+      onClick={this.removeMember.bind(this, row.email)}
+      type='button'
+      data-testid='organization-member-remove'
+    >
       Remove
     </Button>
   );
