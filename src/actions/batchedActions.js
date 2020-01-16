@@ -26,7 +26,12 @@ export const batchedLayout = () => async dispatch => {
         withLoadingFlags: true,
       })
     );
-    await dispatch(nodePoolActions.nodePoolsLoad());
+    await dispatch(
+      nodePoolActions.nodePoolsLoad({
+        filterBySelectedOrganization: true,
+        withLoadingFlags: true,
+      })
+    );
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Error in batchedLayout', err);
@@ -42,7 +47,12 @@ export const batchedRefreshClusters = () => async dispatch => {
         withLoadingFlags: false,
       })
     );
-    dispatch(nodePoolActions.nodePoolsLoad());
+    dispatch(
+      nodePoolActions.nodePoolsLoad({
+        filterBySelectedOrganization: true,
+        withLoadingFlags: true,
+      })
+    );
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Error in batchedRefreshClusters', err);
@@ -150,6 +160,12 @@ export const batchedOrganizationSelect = orgId => async dispatch => {
       clusterActions.clustersDetails({
         filterBySelectedOrganization: false,
         withLoadingFlags: false,
+      })
+    );
+    await dispatch(
+      nodePoolActions.nodePoolsLoad({
+        filterBySelectedOrganization: true,
+        withLoadingFlags: true,
       })
     );
   } catch (err) {
