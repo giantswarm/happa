@@ -21,6 +21,9 @@ function clustersLoadArrayToObject(clusters, provider) {
         nodes: cluster.nodes || [],
         keyPairs: cluster.keyPairs || [],
         scaling: cluster.scaling || {},
+        // Since we only load cluster details for clusters that are in the
+        // currently selected org, we also need to computeCapabilities here.
+        // The install app modal lists all clusters and needs to know the capabiltiies.
         capabilities: computeCapabilities(cluster.release_version, provider),
       };
     })
