@@ -343,7 +343,7 @@ class ScaleClusterModal extends React.Component {
       </BootstrapModal.Body>
     );
     let footer = (
-      <BootstrapModal.Footer data-testid='scale-cluster-modal/footer'>
+      <BootstrapModal.Footer>
         {this.buttonProperties().disabled ? (
           undefined
         ) : (
@@ -380,7 +380,7 @@ class ScaleClusterModal extends React.Component {
         </BootstrapModal.Body>
       );
       footer = (
-        <BootstrapModal.Footer data-testid='scale-cluster-modal/footer'>
+        <BootstrapModal.Footer>
           <Button
             bsStyle='link'
             disabled={this.state.loading}
@@ -402,7 +402,7 @@ class ScaleClusterModal extends React.Component {
     return (
       <BootstrapModal onHide={this.close} show={this.state.modalVisible}>
         <BootstrapModal.Header closeButton>
-          <BootstrapModal.Title data-testid='scale-cluster-modal/title'>
+          <BootstrapModal.Title>
             Edit scaling settings for{' '}
             <ClusterIDLabel clusterID={this.props.cluster.id} />
           </BootstrapModal.Title>

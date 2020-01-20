@@ -149,7 +149,6 @@ scales correctly`, async () => {
   await findByText(
     /the cluster will be scaled within the next couple of minutes./i
   );
-  expect(nodesCounter).toHaveTextContent(String(newScaling.min));
 
   scaleRequest.done();
 });
