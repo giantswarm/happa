@@ -49,7 +49,7 @@ beforeEach(() => {
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
     v4AzureClusterStatusResponse,
     // eslint-disable-next-line no-magic-numbers
-    4
+    3
   );
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
   getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`, [], 2);
@@ -111,7 +111,7 @@ scales correctly`, async () => {
     ...v4AzureClusterStatusResponse,
     cluster: {
       ...v4AzureClusterStatusResponse.cluster,
-      scaling: { desiredCapacity: newScaling.max },
+      scaling: { desiredCapacity: newScaling.min },
     },
   });
 
@@ -142,8 +142,8 @@ scales correctly`, async () => {
   // Set the new node count
   fireEvent.change(nodeCountInput, { target: { value: newScaling.min } });
 
-  const textButton = `Add ${increaseByCount} worker node`;
-  const submitButton = getByText(textButton);
+  const submitButtonLabel = `Add ${increaseByCount} worker node`;
+  const submitButton = getByText(submitButtonLabel);
   fireEvent.click(submitButton);
 
   await findByText(
