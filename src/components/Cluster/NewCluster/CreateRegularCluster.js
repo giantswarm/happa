@@ -68,7 +68,7 @@ const FlexWrapperAZDiv = styled.div`
 
 class CreateRegularCluster extends React.Component {
   static isScalingAutomatic(provider) {
-    return provider !== Providers.AWS;
+    return provider === Providers.AWS;
   }
 
   state = {

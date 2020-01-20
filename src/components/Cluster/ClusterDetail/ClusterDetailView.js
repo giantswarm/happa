@@ -16,7 +16,6 @@ import Tab from 'react-bootstrap/lib/Tab';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
-import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
@@ -157,32 +156,13 @@ class ClusterDetailView extends React.Component {
       return false;
     }
 
-    if (this.props.provider === Providers.AWS) {
-      return true;
-    }
-
-    if (this.props.provider === Providers.KVM) {
-      return true;
-    }
-
-    // on Azure, release version must be >= 1.0.0
-    if (
-      this.props.provider === Providers.AZURE &&
-      cmp(this.props.cluster.release_version, '1.0.0') !== -1
-    ) {
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
   getDesiredNumberOfNodes() {
     // Desired number of nodes only makes sense with auto-scaling and that is
     // only available on AWS starting from release 6.3.0 onwards.
-    if (
-      this.props.provider !== Providers.AWS ||
-      cmp(this.props.cluster.release_version, '6.2.99') !== 1
-    ) {
+    if (this.props.provider !== Providers.AWS) {
       return null;
     }
 
@@ -333,8 +313,7 @@ class ClusterDetailView extends React.Component {
                         installedApps={cluster.apps}
                         release={release}
                         showInstalledAppsBlock={
-                          Object.keys(this.props.catalogs.items).length > 0 &&
-                          cluster.capabilities.canInstallApps
+                          Object.keys(this.props.catalogs.items).length > 0
                         }
                       />
                     </Tab>
