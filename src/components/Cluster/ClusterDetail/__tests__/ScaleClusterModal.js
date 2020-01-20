@@ -567,6 +567,11 @@ describe('ScaleClusterModal', () => {
   });
 
   it('shows an error message if the request fails', async () => {
+    // eslint-disable-next-line no-console
+    const originalConsoleError = console.error;
+    // eslint-disable-next-line no-console
+    console.error = jest.fn();
+
     const defaultScaling = v4AWSClusterResponse.scaling;
     const increaseByCount = 1;
 
@@ -608,5 +613,8 @@ describe('ScaleClusterModal', () => {
     await findByText(/internal server error/i);
 
     scaleRequest.done();
+
+    // eslint-disable-next-line no-console
+    console.error = originalConsoleError;
   });
 });
