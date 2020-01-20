@@ -538,10 +538,9 @@ class V5ClusterDetailTable extends React.Component {
                   {!nodePoolForm.isSubmitting && (
                     <Button
                       bsSize='large'
-                      bsStyle='default'
+                      bsStyle='danger'
                       loading={nodePoolForm.isSubmitting}
                       onClick={this.toggleAddNodePoolForm}
-                      style={{ background: 'red' }}
                       type='button'
                     >
                       Cancel

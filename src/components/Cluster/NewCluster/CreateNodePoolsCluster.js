@@ -514,10 +514,9 @@ class CreateNodePoolsCluster extends Component {
               {!submitting && (
                 <Button
                   bsSize='large'
-                  bsStyle='default'
+                  bsStyle='danger'
                   loading={submitting}
                   onClick={this.props.closeForm}
-                  style={{ background: 'red' }}
                   type='button'
                 >
                   Cancel
