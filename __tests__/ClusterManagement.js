@@ -1,28 +1,28 @@
 import '@testing-library/jest-dom/extend-expect';
+
+import { fireEvent, wait } from '@testing-library/react';
+import nock from 'nock';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
-  getPersistedMockCall,
+  appsResponse,
   AWSInfoResponse,
+  getPersistedMockCall,
+  nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
   releasesResponse,
   userResponse,
-  v5ClustersResponse,
-  v4AWSClusterStatusResponse,
-  appsResponse,
   V4_CLUSTER,
-  V5_CLUSTER,
-  v4ClustersResponse,
   v4AWSClusterResponse,
+  v4AWSClusterStatusResponse,
+  v4ClustersResponse,
+  V5_CLUSTER,
   v5ClusterResponse,
-  nodePoolsResponse,
+  v5ClustersResponse,
 } from 'testUtils/mockHttpCalls';
-import { fireEvent, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import nock from 'nock';
-import { within } from '@testing-library/dom';
 
 // Tests setup
 const requests = {};
@@ -155,7 +155,7 @@ details view`, async () => {
     v4AWSClusterResponse
   );
 
-  const { getByText, getByTestId, getAllByText } = renderRouteWithStore(
+  const { findByText, findByTestId, getAllByText } = renderRouteWithStore(
     '/organizations/acme/clusters/new/'
   );
 
@@ -173,10 +173,10 @@ details view`, async () => {
     `/v4/clusters/${V4_CLUSTER.id}/key-pairs/`
   );
 
-  await wait(() => getByText('Details and Alternatives'));
-  fireEvent.click(getByText('Details and Alternatives'));
+  fireEvent.click(await findByText('Details and Alternatives'));
 
-  await wait(() => document.querySelector('.modal-content'));
+  // Wait for the modal to pop up.
+  await findByText('Release Details');
 
   // Find the second button which is the 8.5.0
   // TODO Improve this, check with cmp that this is not a node pools release
@@ -187,13 +187,13 @@ details view`, async () => {
     .querySelector('button');
   fireEvent.click(button);
 
-  // Are we in the v4 cluster creation form
-  await wait(() => expect(getByTestId('cluster-creation-view')));
-  fireEvent.click(getByText('Create Cluster'));
-  await wait(() => getByTestId('cluster-details-view'));
+  // Click the create cluster button.
+  fireEvent.click(await findByText('Create Cluster'));
+
+  // Wait till we're on the cluster detail page.
+  await findByTestId('cluster-details-view');
 
   // Expect we have been redirected to the cluster details view
-  expect(getByTestId('cluster-details-view')).toBeInTheDocument();
   expect(getAllByText(V4_CLUSTER.id)[0]).toBeInTheDocument();
 
   v4ClusterCreationRequest.done();
