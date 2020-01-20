@@ -2,33 +2,13 @@ import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import moment from 'moment';
-import cmp from 'semver-compare';
-import { Providers, StatusCodes } from 'shared/constants';
+import { StatusCodes } from 'shared/constants';
+import { computeCapabilities } from 'utils/clusterUtils';
 
 import * as types from './actionTypes';
 
 // API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
-
-// computeCapabilities takes a cluster object and provider and returns a
-// capabilities object with the features that this cluster supports.
-function computeCapabilities(cluster, provider) {
-  const capabilities = {};
-  const releaseVer = cluster.release_version;
-
-  // Installing Apps
-  // Must be AWS or KVM and larger than 8.1.0
-  // or any provider and larger than 8.2.0
-  if (
-    (cmp(releaseVer, '8.0.99') === 1 &&
-      (provider === Providers.AWS || provider === Providers.KVM)) ||
-    cmp(releaseVer, '8.1.99') === 1
-  ) {
-    capabilities.canInstallApps = true;
-  }
-
-  return capabilities;
-}
 
 // This is a helper function that transforms an array of clusters into an object
 // of clusters with its ids as keys. Also we add some data to the clusters objects.
@@ -41,7 +21,10 @@ function clustersLoadArrayToObject(clusters, provider) {
         nodes: cluster.nodes || [],
         keyPairs: cluster.keyPairs || [],
         scaling: cluster.scaling || {},
-        capabilities: computeCapabilities(cluster, provider),
+        // Since we only load cluster details for clusters that are in the
+        // currently selected org, we also need to computeCapabilities here.
+        // The install app modal lists all clusters and needs to know the capabiltiies.
+        capabilities: computeCapabilities(cluster.release_version, provider),
       };
     })
     .reduce((accumulator, current) => {
@@ -417,7 +400,31 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
       if (isV5Cluster) cluster.nodePools = [];
 
       const provider = getState().app.info.general.provider;
-      cluster.capabilities = computeCapabilities(cluster, provider);
+      cluster.capabilities = computeCapabilities(
+        cluster.release_version,
+        provider
+      );
+
+      // Since the API omits the 'aws' key from workers on kvm installations, I will
+      // add it back here with dummy values if it is not present.
+      cluster.workers = !cluster.workers
+        ? // If no workers, return an empty array.
+          []
+        : // Otherwise, and if there is no aws key in the worker object, create it.
+          cluster.workers.map(worker => {
+            if (!worker.aws) worker.aws = { instance_type: '' };
+
+            return worker;
+          });
+
+      // Fill in scaling values when they aren't supplied.
+      // Although we had this in the reducer, we were not actually updating the cluster
+      // object, so this in kinda of new
+      const { scaling, workers } = cluster;
+      if (scaling && !scaling.min && !scaling.max) {
+        cluster.scaling.min = workers.length;
+        cluster.scaling.max = workers.length;
+      }
 
       dispatch({
         type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
@@ -434,7 +441,7 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
           'Redirecting you to your organization clusters list'
         );
 
-        // Delete the cluster in te store.
+        // Delete the cluster in the store.
         // eslint-disable-next-line no-use-before-define
         dispatch(clusterDeleteSuccess(clusterId));
         dispatch(push('/'));
@@ -687,11 +694,6 @@ export const clusterDeleteError = (clusterId, error) => ({
   type: types.CLUSTER_DELETE_ERROR,
   clusterId,
   error,
-});
-
-export const clustersLoadError = error => ({
-  type: types.CLUSTERS_LOAD_ERROR,
-  error: error,
 });
 
 /**

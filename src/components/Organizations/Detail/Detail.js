@@ -1,5 +1,4 @@
 import * as types from 'actions/actionTypes';
-import { batchedOrganizationSelect } from 'actions/batchedActions';
 import Cluster from 'Cluster/Cluster';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -12,9 +11,6 @@ import DetailView from './View';
 
 class DetailIndex extends React.Component {
   componentDidMount() {
-    const { id: orgID } = this.props.organization;
-    this.props.dispatch(batchedOrganizationSelect(orgID));
-
     // Reset loading flag to true just in case we are accessing cluster details of a
     // cluster owned by a non selected organization. In those cases we want nothing
     // to be rendered until cluster details are fetched
