@@ -68,6 +68,14 @@ const DeleteDateWrapper = styled.div`
   color: ${props => props.theme.colors.darkBlueLighter5};
 `;
 
+const ClusterCreatedDateDiv = styled.div`
+  display: inline-block;
+  height: 27px;
+  img {
+    height: 22px;
+  }
+`;
+
 class ClusterDashboardItem extends React.Component {
   state = {
     // eslint-disable-next-line react/no-unused-state
@@ -143,7 +151,14 @@ class ClusterDashboardItem extends React.Component {
 
   // eslint-disable-next-line complexity
   render() {
-    const { cluster, isNodePool, selectedOrganization } = this.props;
+    const {
+      cluster,
+      isNodePool,
+      selectedOrganization,
+      loadingCluster,
+      loadingStatus,
+    } = this.props;
+
     const { nodePools } = this.state;
 
     const linkToCluster = RoutePath.createUsablePath(
@@ -198,7 +213,13 @@ class ClusterDashboardItem extends React.Component {
               </span>
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
-            Created {relativeDate(cluster.create_date)}
+            <ClusterCreatedDateDiv>
+              <LoadingOverlayWithoutStyles
+                loading={loadingCluster || loadingStatus}
+              >
+                Created {relativeDate(cluster.create_date)}
+              </LoadingOverlayWithoutStyles>
+            </ClusterCreatedDateDiv>
           </div>
           <ClusterDashboardResources
             cluster={cluster}
@@ -235,11 +256,13 @@ ClusterDashboardItem.propTypes = {
   isNodePool: PropTypes.bool,
   nodePools: PropTypes.object,
   loadingCluster: PropTypes.bool,
+  loadingStatus: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
   return {
     loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
+    loadingStatus: state.loadingFlags.CLUSTER_LOAD_STATUS,
   };
 }
 

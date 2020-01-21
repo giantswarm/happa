@@ -275,7 +275,7 @@ class ClusterDetailView extends React.Component {
                           release={release}
                           region={region}
                           showUpgradeModal={this.showUpgradeModal}
-                          workerNodesDesired={this.getDesiredNumberOfNodes()}
+                          workerNodesDesired={this.getDesiredNumberOfNodes()} // TODO delete
                         />
                       ) : (
                         <V4ClusterDetailTable

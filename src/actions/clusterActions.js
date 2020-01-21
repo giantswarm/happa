@@ -74,6 +74,7 @@ export function clustersList({ withLoadingFlags }) {
 export function clustersDetails({
   filterBySelectedOrganization,
   withLoadingFlags,
+  withNodePools,
 }) {
   return async function(dispatch, getState) {
     if (withLoadingFlags) {
@@ -91,7 +92,7 @@ export function clustersDetails({
 
     const clusterDetails = await Promise.all(
       clustersIds.map(id =>
-        dispatch(clusterLoadDetails(id, { withLoadingFlags: false }))
+        dispatch(clusterLoadDetails(id, { withLoadingFlags, withNodePools }))
       )
     );
 
@@ -383,7 +384,10 @@ export function clusterDeleteApp(appName, clusterID) {
  * Loads details for a cluster.
  * @param {String} clusterId Cluster ID
  */
-export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
+export function clusterLoadDetails(
+  clusterId,
+  { withLoadingFlags, withNodePools }
+) {
   return async function(dispatch, getState) {
     const v5Clusters = getState().entities.clusters.v5Clusters;
     const isV5Cluster = v5Clusters.includes(clusterId);
@@ -400,7 +404,8 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
         ? await clustersApi.getClusterV5(clusterId)
         : await clustersApi.getCluster(clusterId);
 
-      if (isV5Cluster) cluster.nodePools = [];
+      // We don't want this action to overwrite nodepools except on initialization.
+      if (isV5Cluster && withNodePools) cluster.nodePools = [];
 
       const provider = getState().app.info.general.provider;
       cluster.capabilities = computeCapabilities(

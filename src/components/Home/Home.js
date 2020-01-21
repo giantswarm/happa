@@ -38,7 +38,7 @@ class Home extends React.Component {
    */
   registerRefreshInterval = () => {
     // eslint-disable-next-line no-magic-numbers
-    const refreshIntervalDuration = 3 * 1000; // 30 seconds
+    const refreshIntervalDuration = 30 * 1000; // 30 seconds
     this.refreshInterval = window.setInterval(
       this.refreshClustersList,
       refreshIntervalDuration

@@ -26,6 +26,7 @@ export const batchedLayout = () => async dispatch => {
       clusterActions.clustersDetails({
         filterBySelectedOrganization: true,
         withLoadingFlags: true,
+        withNodePools: true,
       })
     );
     await dispatch(
@@ -49,12 +50,13 @@ export const batchedRefreshClusters = () => async dispatch => {
       clusterActions.clustersDetails({
         filterBySelectedOrganization: true,
         withLoadingFlags: false,
+        withNodePools: false,
       })
     );
     dispatch(
       nodePoolActions.nodePoolsLoad({
         filterBySelectedOrganization: true,
-        withLoadingFlags: true,
+        withLoadingFlags: false,
       })
     );
   } catch (err) {
@@ -82,7 +84,10 @@ export const batchedClusterCreate = (
 
     // TODO We can avoid this call by computing capabilities in the call above and storing the cluster
     await dispatch(
-      clusterActions.clusterLoadDetails(clusterId, { withLoadingFlags: true })
+      clusterActions.clusterLoadDetails(clusterId, {
+        withLoadingFlags: true,
+        withNodePools: true,
+      })
     );
 
     if (isV5Cluster) {
@@ -114,7 +119,10 @@ export const batchedClusterDetailView = (
 
     await dispatch(releaseActions.loadReleases());
     await dispatch(
-      clusterActions.clusterLoadDetails(clusterId, { withLoadingFlags: true })
+      clusterActions.clusterLoadDetails(clusterId, {
+        withLoadingFlags: true,
+        withNodePools: true,
+      })
     );
     if (isV5Cluster) {
       await dispatch(
@@ -136,7 +144,10 @@ export const batchedRefreshClusterDetailView = (
 ) => async dispatch => {
   try {
     await dispatch(
-      clusterActions.clusterLoadDetails(clusterId, { withLoadingFlags: false })
+      clusterActions.clusterLoadDetails(clusterId, {
+        withLoadingFlags: false,
+        withNodePools: true,
+      })
     );
     if (isV5Cluster) {
       await dispatch(
@@ -175,7 +186,7 @@ export const batchedOrganizationSelect = orgId => async dispatch => {
     dispatch(
       clusterActions.clustersDetails({
         filterBySelectedOrganization: false,
-        withLoadingFlags: false,
+        withLoadingFlags: true,
       })
     );
     await dispatch(
