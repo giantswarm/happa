@@ -23,7 +23,11 @@ const V4AvailabilityZonesSelector = ({
   requiredReleaseVersion,
   currentReleaseVersion,
 }) => {
-  const isAvailable = cmp(currentReleaseVersion, requiredReleaseVersion) >= 0;
+  let isAvailable = true;
+
+  if (requiredReleaseVersion && currentReleaseVersion) {
+    isAvailable = cmp(currentReleaseVersion, requiredReleaseVersion) >= 0;
+  }
 
   return (
     <label className='availability-zones' htmlFor='availability-zones'>
@@ -60,8 +64,6 @@ V4AvailabilityZonesSelector.defaultProps = {
   maxValue: 1,
   // eslint-disable-next-line no-empty-function
   onChange: () => {},
-  requiredReleaseVersion: '0.0.1',
-  currentReleaseVersion: '0.0.2',
 };
 
 V4AvailabilityZonesSelector.propTypes = {

@@ -140,27 +140,8 @@ export const clusterNodePools = (nodePools, cluster) => {
 // computeCapabilities takes a release version and provider and returns a
 // capabilities object with the features that this cluster supports.
 export function computeCapabilities(releaseVersion, provider) {
-  const capabilities = {
-    canInstallApps: false,
-    hasOptionalIngress: false,
+  return {
+    hasOptionalIngress:
+      provider === Providers.AWS && cmp(releaseVersion, '10.0.99') === 1,
   };
-
-  // Installing Apps
-  // Must be AWS or KVM and larger than 8.1.0
-  // or any provider and larger than 8.2.0
-  if (
-    (cmp(releaseVersion, '8.0.99') === 1 &&
-      (provider === Providers.AWS || provider === Providers.KVM)) ||
-    cmp(releaseVersion, '8.1.99') === 1
-  ) {
-    capabilities.canInstallApps = true;
-  }
-
-  // Optional Ingress
-  // Must be AWS and larger than 10.1.0
-  if (provider === Providers.AWS && cmp(releaseVersion, '10.0.99') === 1) {
-    capabilities.hasOptionalIngress = true;
-  }
-
-  return capabilities;
 }

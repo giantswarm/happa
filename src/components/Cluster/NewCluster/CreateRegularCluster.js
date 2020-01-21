@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import Button from 'UI/Button';
@@ -59,29 +58,17 @@ const FlexWrapperDiv = styled.div`
 `;
 
 class CreateRegularCluster extends React.Component {
-  static isScalingAutomatic(provider, releaseVer) {
-    if (provider !== Providers.AWS) {
-      return false;
-    }
-
-    // In order to have support for automatic scaling and therefore for scaling
-    // limits, provider must be AWS and cluster release >= 6.3.0.
-    return cmp(releaseVer, '6.2.99') === 1;
+  static isScalingAutomatic(provider) {
+    return provider === Providers.AWS;
   }
 
-  static getRequiredVersionForMultiAZ(provider) {
-    let requiredVersion = '';
+  static getMultiAZSelectorProps(provider, currentReleaseVersion) {
+    const multiAZSelectorProps = {};
 
-    switch (provider) {
-      case Providers.AZURE:
-        requiredVersion = '12.0.0';
-        break;
-
-      default:
-        requiredVersion = '6.1.0';
+    if (provider === Providers.AZURE) {
+      multiAZSelectorProps.requiredReleaseVersion = '12.0.0';
+      multiAZSelectorProps.currentReleaseVersion = currentReleaseVersion;
     }
-
-    return requiredVersion;
   }
 
   state = {
@@ -413,8 +400,9 @@ class CreateRegularCluster extends React.Component {
   render() {
     const { provider } = this.props;
 
-    const requiredReleaseForAZ = CreateRegularCluster.getRequiredVersionForMultiAZ(
-      provider
+    const multiAZSelectorProps = CreateRegularCluster.getMultiAZSelectorProps(
+      provider,
+      this.props.selectedRelease
     );
 
     return (
@@ -466,19 +454,11 @@ class CreateRegularCluster extends React.Component {
             <FlexColumnDiv>
               <div className='worker-nodes'>Worker nodes</div>
               {(provider === Providers.AWS || provider === Providers.AZURE) && (
-                /* For now we want to handle cases where older clusters do
-                 * still not support AZ selection. The special handling here
-                 * can be removed once all clusters run at least on 6.1.0.
-                 *
-                 * https://github.com/giantswarm/giantswarm/pull/2202
-                 *
-                 */
                 <V4AvailabilityZonesSelector
                   minValue={this.props.minAvailabilityZones}
                   maxValue={this.props.maxAvailabilityZones}
                   onChange={this.updateAvailabilityZonesPicker}
-                  requiredReleaseVersion={requiredReleaseForAZ}
-                  currentReleaseVersion={this.props.selectedRelease}
+                  {...multiAZSelectorProps}
                 />
               )}
               <label htmlFor='instance-type'>

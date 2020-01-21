@@ -5,7 +5,7 @@ import {
   V5_CLUSTER,
 } from './constantsAndHelpers';
 
-const clusterCreateDateToday = (new Date()).toISOString();
+const clusterCreateDateToday = new Date().toISOString();
 
 export const v4ClustersResponse = [
   {
@@ -59,7 +59,7 @@ export const v4AzureClusterResponse = {
   owner: ORGANIZATION,
   name: V4_CLUSTER.name,
   release_version: '9.1.0',
-  scaling: { min: 2, max: 2 },
+  scaling: { min: 3, max: 3 },
   credential_id: '',
   workers: [
     {

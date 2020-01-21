@@ -105,7 +105,7 @@ class ScaleClusterModal extends React.Component {
 
         this.props.clusterActions
           .clusterPatch(this.props.cluster, { scaling: scaling })
-          .then(patchedCluster => {
+          .then(() => {
             this.close();
 
             new FlashMessage(
@@ -113,8 +113,6 @@ class ScaleClusterModal extends React.Component {
               messageType.SUCCESS,
               messageTTL.SHORT
             );
-
-            this.props.clusterActions.clusterLoadDetailsSuccess(patchedCluster);
           })
           .catch(error => {
             this.setState({
