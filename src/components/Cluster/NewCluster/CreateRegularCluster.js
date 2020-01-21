@@ -69,6 +69,8 @@ class CreateRegularCluster extends React.Component {
       multiAZSelectorProps.requiredReleaseVersion = '12.0.0';
       multiAZSelectorProps.currentReleaseVersion = currentReleaseVersion;
     }
+
+    return multiAZSelectorProps;
   }
 
   state = {
