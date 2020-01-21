@@ -231,7 +231,7 @@ const InstallAppModal = props => {
                 visible={visible}
               >
                 <ClusterPicker
-                  clusters={clusters.filter(c => c.capabilities.canInstallApps)}
+                  clusters={clusters}
                   onChangeQuery={setQuery}
                   onSelectCluster={onSelectCluster}
                   query={query}
