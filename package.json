@@ -80,6 +80,7 @@
     "react-window": "1.8.5",
     "redux": "4.0.5",
     "redux-thunk": "2.3.0",
+    "reselect": "^4.0.0",
     "semver-compare": "1.0.0",
     "serialize-javascript": "2.1.2",
     "superagent": "5.2.1",

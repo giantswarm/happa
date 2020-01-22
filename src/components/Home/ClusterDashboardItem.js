@@ -14,16 +14,9 @@ import { Dot } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import {
-  clusterNodePools,
-  getCpusTotal,
-  getCpusTotalNodePools,
-  getMemoryTotal,
-  getMemoryTotalNodePools,
-  getNumberOfNodePoolsNodes,
-  getNumberOfNodes,
-  getStorageTotal,
-} from 'utils/clusterUtils';
+import { clusterNodePools } from 'utils/clusterUtils';
+
+import ClusterDashboardResources from './ClusterDashboardResources';
 
 const WrapperStyles = props => css`
   display: flex;
@@ -146,23 +139,7 @@ class ClusterDashboardItem extends React.Component {
     const { cluster, isNodePool, selectedOrganization } = this.props;
     const { nodePools } = this.state;
 
-    const memory = isNodePool
-      ? getMemoryTotalNodePools(nodePools)
-      : getMemoryTotal(cluster);
-
-    const storage = getStorageTotal(cluster);
-
-    const cpus = isNodePool
-      ? getCpusTotalNodePools(nodePools)
-      : getCpusTotal(cluster);
-
-    const numNodes = isNodePool
-      ? getNumberOfNodePoolsNodes(nodePools)
-      : getNumberOfNodes(cluster);
-
     const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}`;
-
-    const hasNodePools = cluster.nodePools && cluster.nodePools.length !== 0;
 
     if (cluster.delete_date) {
       return (
@@ -210,40 +187,11 @@ class ClusterDashboardItem extends React.Component {
             <Dot style={{ paddingLeft: 0 }} />
             Created {relativeDate(cluster.create_date)}
           </div>
-          <div>
-            {numNodes !== 0 && hasNodePools && (
-              <RefreshableLabel value={numNodes}>
-                <span>{cluster.nodePools.length} node pools, </span>
-              </RefreshableLabel>
-            )}
-            <RefreshableLabel value={numNodes}>
-              <span>
-                {numNodes} {numNodes === 1 ? 'node' : 'nodes'}
-              </span>
-            </RefreshableLabel>
-            {numNodes !== 0 && hasNodePools && (
-              <>
-                <Dot style={{ paddingLeft: 0 }} />
-                <RefreshableLabel value={cpus}>
-                  <span>{cpus ? cpus : '0'} CPU cores</span>
-                </RefreshableLabel>
-                <Dot style={{ paddingLeft: 0 }} />
-                <RefreshableLabel value={memory}>
-                  <span>{memory ? memory : '0'} GB RAM</span>
-                </RefreshableLabel>
-              </>
-            )}
-            {cluster.kvm ? (
-              <span>
-                <Dot style={{ paddingLeft: 0 }} />
-                <RefreshableLabel value={storage}>
-                  <span>{storage ? storage : '0'} GB storage</span>
-                </RefreshableLabel>
-              </span>
-            ) : (
-              undefined
-            )}
-          </div>
+          <ClusterDashboardResources
+            cluster={cluster}
+            nodePools={nodePools}
+            isNodePool={isNodePool}
+          />
         </ContentWrapper>
 
         <ButtonsWrapper>

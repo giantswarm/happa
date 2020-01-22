@@ -15,6 +15,9 @@ const clustersApi = new GiantSwarm.ClustersApi();
 function clustersLoadArrayToObject(clusters, provider) {
   return clusters
     .map(cluster => {
+      // Remove cluster's create_date because we are loading it in cluster details call
+      delete cluster.create_date;
+
       return {
         ...cluster,
         lastUpdated: Date.now(),

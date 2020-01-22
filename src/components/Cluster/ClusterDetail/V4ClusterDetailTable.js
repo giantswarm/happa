@@ -2,11 +2,11 @@ import styled from '@emotion/styled';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactTimeout from 'react-timeout';
+import { connect } from 'react-redux';
+import { selectComputedResourcesV4 } from 'selectors/index';
 import { Providers } from 'shared/constants';
 import { FlexRowWithTwoBlocksOnEdges } from 'styles';
 import Button from 'UI/Button';
-import { getCpusTotal, getMemoryTotal } from 'utils/clusterUtils';
 
 import CredentialInfoRow from './CredentialInfoRow';
 import NodesRunning from './NodesRunning';
@@ -33,8 +33,6 @@ const WrapperDiv = styled.div`
 
 class V4ClusterDetailTable extends React.Component {
   state = {
-    RAM: 0,
-    CPUs: 0,
     awsInstanceTypes: {},
     azureVMSizes: {},
   };
@@ -49,25 +47,7 @@ class V4ClusterDetailTable extends React.Component {
       : {};
 
     this.setState({ awsInstanceTypes, azureVMSizes });
-    this.produceRAMAndCPUs();
   }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.cluster !== this.props.cluster) {
-      this.produceRAMAndCPUs();
-    }
-  }
-
-  produceRAMAndCPUs = () => {
-    const { cluster } = this.props;
-    const memory = getMemoryTotal(cluster);
-    const RAM = !memory ? 0 : memory;
-
-    const cores = getCpusTotal(cluster);
-    const CPUs = !cores ? 0 : cores;
-
-    this.setState({ RAM, CPUs });
-  };
 
   /**
    * Returns the proper last updated info string based on available
@@ -89,10 +69,11 @@ class V4ClusterDetailTable extends React.Component {
       provider,
       release,
       region,
-      workerNodesRunning,
+      resources,
     } = this.props;
 
     const { create_date, release_version, api_endpoint } = cluster;
+    const { numberOfNodes, memory, cores } = resources;
 
     return (
       <WrapperDiv>
@@ -110,9 +91,9 @@ class V4ClusterDetailTable extends React.Component {
           </div>
           <div>
             <NodesRunning
-              workerNodesRunning={workerNodesRunning}
-              RAM={this.state.RAM}
-              CPUs={this.state.CPUs}
+              workerNodesRunning={numberOfNodes}
+              RAM={memory}
+              CPUs={cores}
             />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
@@ -140,14 +121,14 @@ class V4ClusterDetailTable extends React.Component {
             instanceType={
               this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
             }
-            nodes={workerNodesRunning}
+            nodes={numberOfNodes}
             showScalingModal={this.props.showScalingModal}
           />
         )}
         {provider === Providers.KVM && (
           <WorkerNodesKVM
             worker={cluster.workers[0]}
-            nodes={workerNodesRunning}
+            nodes={numberOfNodes}
             showScalingModal={this.props.showScalingModal}
           />
         )}
@@ -165,7 +146,7 @@ class V4ClusterDetailTable extends React.Component {
               scaling={cluster.scaling}
               showScalingModal={this.props.showScalingModal}
               workerNodesDesired={this.props.workerNodesDesired}
-              workerNodesRunning={workerNodesRunning}
+              workerNodesRunning={numberOfNodes}
             />
           )}
         <p className='last-updated'>
@@ -195,7 +176,13 @@ V4ClusterDetailTable.propTypes = {
   showScalingModal: PropTypes.func,
   showUpgradeModal: PropTypes.func,
   workerNodesDesired: PropTypes.number,
-  workerNodesRunning: PropTypes.number,
+  resources: PropTypes.object,
 };
 
-export default ReactTimeout(V4ClusterDetailTable);
+function mapStateToProps(state, ownProps) {
+  return {
+    resources: selectComputedResourcesV4(state, ownProps),
+  };
+}
+
+export default connect(mapStateToProps, undefined)(V4ClusterDetailTable);

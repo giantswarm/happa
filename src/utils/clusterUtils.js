@@ -39,15 +39,10 @@ export function getNumberOfNodes(cluster) {
   return workers;
 }
 
-export function getMemoryTotal(cluster) {
-  const workers = getNumberOfNodes(cluster);
+export function getMemoryTotal(workers, memorySizeGB) {
+  if (!workers || workers.length === 0) return 0;
 
-  if (!workers || !cluster.workers || cluster.workers.length === 0) {
-    return null; // TODO refactor this and return 0 instead, this is a function that should return a total
-  }
-  const m = workers * cluster.workers[0].memory.size_gb;
-
-  return m.toFixed(2);
+  return workers * memorySizeGB.toFixed(2);
 }
 
 export function getStorageTotal(cluster) {
@@ -60,13 +55,12 @@ export function getStorageTotal(cluster) {
   return s.toFixed(2);
 }
 
-export function getCpusTotal(cluster) {
-  const workers = getNumberOfNodes(cluster);
-  if (!workers || !cluster.workers || cluster.workers.length === 0) {
+export function getCpusTotal(numberOfNodes, workers) {
+  if (!numberOfNodes || !workers || workers.length === 0) {
     return null; // TODO refactor this and return 0 instead, this is a function that should return a total
   }
 
-  return workers * cluster.workers[0].cpu.cores;
+  return numberOfNodes * workers[0].cpu.cores;
 }
 
 // Node pools clusters functions.
@@ -140,8 +134,27 @@ export const clusterNodePools = (nodePools, cluster) => {
 // computeCapabilities takes a release version and provider and returns a
 // capabilities object with the features that this cluster supports.
 export function computeCapabilities(releaseVersion, provider) {
-  return {
-    hasOptionalIngress:
-      provider === Providers.AWS && cmp(releaseVersion, '10.0.99') === 1,
+  const capabilities = {
+    canInstallApps: false,
+    hasOptionalIngress: false,
   };
+
+  // Installing Apps
+  // Must be AWS or KVM and larger than 8.1.0
+  // or any provider and larger than 8.2.0
+  if (
+    (cmp(releaseVersion, '8.0.99') === 1 &&
+      (provider === Providers.AWS || provider === Providers.KVM)) ||
+    cmp(releaseVersion, '8.1.99') === 1
+  ) {
+    capabilities.canInstallApps = true;
+  }
+
+  // Optional Ingress
+  // Must be AWS and larger than 10.1.0
+  if (provider === Providers.AWS && cmp(releaseVersion, '10.0.99') === 1) {
+    capabilities.hasOptionalIngress = true;
+  }
+
+  return capabilities;
 }

@@ -8,16 +8,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
+import { selectComputedResourcesV5 } from 'selectors/index';
 import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
-import {
-  clusterNodePools,
-  getCpusTotalNodePools,
-  getMemoryTotalNodePools,
-  getNumberOfNodePoolsNodes,
-} from 'utils/clusterUtils';
+import { clusterNodePools } from 'utils/clusterUtils';
 
 import AddNodePool from './AddNodePool';
 import CredentialInfoRow from './CredentialInfoRow';
@@ -291,9 +287,6 @@ class V5ClusterDetailTable extends React.Component {
   state = {
     loading: false,
     availableZonesGridTemplateAreas: '',
-    RAM: 0,
-    CPUs: 0,
-    workerNodesRunning: 0,
     nodePools: null,
     isNodePoolBeingAdded: false,
     nodePoolForm: {
@@ -339,16 +332,8 @@ class V5ClusterDetailTable extends React.Component {
         availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
       });
 
-      // Compute RAM & CPU:
-      const RAM = getMemoryTotalNodePools(nodePools);
-      const CPUs = getCpusTotalNodePools(nodePools);
-      const workerNodesRunning = getNumberOfNodePoolsNodes(nodePools);
-
       this.setState({
         nodePools,
-        RAM,
-        CPUs,
-        workerNodesRunning,
         loading: false,
       });
     }
@@ -397,7 +382,6 @@ class V5ClusterDetailTable extends React.Component {
     const {
       availableZonesGridTemplateAreas,
       nodePools,
-      workerNodesRunning,
       nodePoolForm,
     } = this.state;
     const {
@@ -407,10 +391,13 @@ class V5ClusterDetailTable extends React.Component {
       provider,
       region,
       release,
+      resources,
     } = this.props;
 
     const { create_date, release_version, api_endpoint } = cluster;
     const zeroNodePools = nodePools && nodePools.length === 0;
+
+    const { numberOfNodes, memory, cores } = resources;
 
     return (
       <>
@@ -428,9 +415,9 @@ class V5ClusterDetailTable extends React.Component {
           </div>
           <div>
             <NodesRunning
-              workerNodesRunning={workerNodesRunning}
-              RAM={this.state.RAM}
-              CPUs={this.state.CPUs}
+              workerNodesRunning={numberOfNodes}
+              RAM={memory}
+              CPUs={cores}
               nodePools={nodePools}
             />
           </div>
@@ -607,7 +594,14 @@ V5ClusterDetailTable.propTypes = {
   setInterval: PropTypes.func,
   showUpgradeModal: PropTypes.func,
   workerNodesDesired: PropTypes.number,
+  resources: PropTypes.object,
 };
+
+function mapStateToProps(state, ownProps) {
+  return {
+    resources: selectComputedResourcesV5(state, ownProps),
+  };
+}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -616,6 +610,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(ReactTimeout(V5ClusterDetailTable));
