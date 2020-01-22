@@ -179,10 +179,15 @@ V4ClusterDetailTable.propTypes = {
   resources: PropTypes.object,
 };
 
-function mapStateToProps(state, ownProps) {
-  return {
-    resources: selectComputedResourcesV4(state, ownProps),
+const makeMapStateToProps = () => {
+  const resourcesV4 = selectComputedResourcesV4();
+  const mapStateToProps = (state, props) => {
+    return {
+      resources: resourcesV4(state, props),
+    };
   };
-}
 
-export default connect(mapStateToProps, undefined)(V4ClusterDetailTable);
+  return mapStateToProps;
+};
+
+export default connect(makeMapStateToProps, undefined)(V4ClusterDetailTable);

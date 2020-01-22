@@ -65,14 +65,24 @@ ClusterDashboardResources.propTypes = {
   resources: PropTypes.object,
 };
 
-function mapStateToProps(state, ownProps) {
-  const resources = ownProps.isNodePool
-    ? selectComputedResourcesV5(state, ownProps)
-    : selectComputedResourcesV4(state, ownProps);
-
-  return {
-    resources,
+const makeMapStateToProps = () => {
+  const resourcesV4 = selectComputedResourcesV4();
+  const resourcesV5 = selectComputedResourcesV5();
+  const mapStateToProps = (state, props) => {
+    return {
+      resources: props.isNodePool
+        ? resourcesV5(state, props)
+        : resourcesV4(state, props),
+      loadingClusters: state.loadingFlags.CLUSTERS_LOAD_DETAILS,
+      loadingNodePools: state.loadingFlags.NODEPOOLS_LOAD,
+      loadingStatus: state.loadingFlags.CLUSTER_LOAD_STATUS,
+    };
   };
-}
 
-export default connect(mapStateToProps, undefined)(ClusterDashboardResources);
+  return mapStateToProps;
+};
+
+export default connect(
+  makeMapStateToProps,
+  undefined
+)(ClusterDashboardResources);

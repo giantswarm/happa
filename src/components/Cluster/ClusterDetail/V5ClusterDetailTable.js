@@ -597,11 +597,16 @@ V5ClusterDetailTable.propTypes = {
   resources: PropTypes.object,
 };
 
-function mapStateToProps(state, ownProps) {
-  return {
-    resources: selectComputedResourcesV5(state, ownProps),
+const makeMapStateToProps = () => {
+  const resourcesV5 = selectComputedResourcesV5();
+  const mapStateToProps = (state, props) => {
+    return {
+      resources: resourcesV5(state, props),
+    };
   };
-}
+
+  return mapStateToProps;
+};
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -610,6 +615,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  mapStateToProps,
+  makeMapStateToProps,
   mapDispatchToProps
 )(ReactTimeout(V5ClusterDetailTable));

@@ -21,10 +21,10 @@ const selectClusterNodePoolsIds = (state, props) => {
 };
 
 // Memoized Reselect selectors
+// TODO not memoizing correctly, state in store is not modified... investigate further
 // https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc
-export const selectComputedResourcesV4 = createSelector(
-  selectClusterById,
-  cluster => {
+export const selectComputedResourcesV4 = () =>
+  createSelector(selectClusterById, cluster => {
     // In case status call fails.
     if (
       !cluster ||
@@ -45,23 +45,23 @@ export const selectComputedResourcesV4 = createSelector(
     const storage = getStorageTotal(cluster);
 
     return { numberOfNodes, memory, cores, storage };
-  }
-);
+  });
 
-export const selectComputedResourcesV5 = createSelector(
-  [selectNodePools, selectClusterNodePoolsIds],
-  (nodePools, clusterNodePoolsIds) => {
-    // TODO This is not being memoized correctly, investigate further
-    const clusterNodePools =
-      // nodePools &&
-      Object.entries(nodePools).length !== 0 && clusterNodePoolsIds
-        ? clusterNodePoolsIds.map(np => nodePools[np])
-        : [];
+export const selectComputedResourcesV5 = () =>
+  createSelector(
+    [selectNodePools, selectClusterNodePoolsIds],
+    (nodePools, clusterNodePoolsIds) => {
+      // TODO This is not being memoized correctly, investigate further
+      const clusterNodePools =
+        // nodePools &&
+        Object.entries(nodePools).length !== 0 && clusterNodePoolsIds
+          ? clusterNodePoolsIds.map(np => nodePools[np])
+          : [];
 
-    const numberOfNodes = getNumberOfNodePoolsNodes(clusterNodePools);
-    const memory = getMemoryTotalNodePools(clusterNodePools);
-    const cores = getCpusTotalNodePools(clusterNodePools);
+      const numberOfNodes = getNumberOfNodePoolsNodes(clusterNodePools);
+      const memory = getMemoryTotalNodePools(clusterNodePools);
+      const cores = getCpusTotalNodePools(clusterNodePools);
 
-    return { numberOfNodes, memory, cores };
-  }
-);
+      return { numberOfNodes, memory, cores };
+    }
+  );
