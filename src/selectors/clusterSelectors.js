@@ -23,7 +23,7 @@ const selectClusterNodePoolsIds = (state, props) => {
 // Memoized Reselect selectors
 // TODO not memoizing correctly, state in store is not modified... investigate further
 // https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc
-export const selectComputedResourcesV4 = () =>
+export const selectResourcesV4 = () =>
   createSelector(selectClusterById, cluster => {
     // In case status call fails.
     if (
@@ -47,7 +47,7 @@ export const selectComputedResourcesV4 = () =>
     return { numberOfNodes, memory, cores, storage };
   });
 
-export const selectComputedResourcesV5 = () =>
+export const selectResourcesV5 = () =>
   createSelector(
     [selectNodePools, selectClusterNodePoolsIds],
     (nodePools, clusterNodePoolsIds) => {

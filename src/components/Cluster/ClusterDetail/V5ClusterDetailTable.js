@@ -8,7 +8,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
-import { selectComputedResourcesV5 } from 'selectors/index';
+import { selectResourcesV5 } from 'selectors/clusterSelectors';
 import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -598,7 +598,7 @@ V5ClusterDetailTable.propTypes = {
 };
 
 const makeMapStateToProps = () => {
-  const resourcesV5 = selectComputedResourcesV5();
+  const resourcesV5 = selectResourcesV5();
   const mapStateToProps = (state, props) => {
     return {
       resources: resourcesV5(state, props),

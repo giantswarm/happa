@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  selectComputedResourcesV4,
-  selectComputedResourcesV5,
-} from 'selectors/index';
+  selectResourcesV4,
+  selectResourcesV5,
+} from 'selectors/clusterSelectors';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
@@ -66,8 +66,8 @@ ClusterDashboardResources.propTypes = {
 };
 
 const makeMapStateToProps = () => {
-  const resourcesV4 = selectComputedResourcesV4();
-  const resourcesV5 = selectComputedResourcesV5();
+  const resourcesV4 = selectResourcesV4();
+  const resourcesV5 = selectResourcesV5();
   const mapStateToProps = (state, props) => {
     return {
       resources: props.isNodePool

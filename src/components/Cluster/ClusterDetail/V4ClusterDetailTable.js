@@ -3,7 +3,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectComputedResourcesV4 } from 'selectors/index';
+import { selectResourcesV4 } from 'selectors/clusterSelectors';
 import { Providers } from 'shared/constants';
 import { FlexRowWithTwoBlocksOnEdges } from 'styles';
 import Button from 'UI/Button';
@@ -180,7 +180,7 @@ V4ClusterDetailTable.propTypes = {
 };
 
 const makeMapStateToProps = () => {
-  const resourcesV4 = selectComputedResourcesV4();
+  const resourcesV4 = selectResourcesV4();
   const mapStateToProps = (state, props) => {
     return {
       resources: resourcesV4(state, props),
