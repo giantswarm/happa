@@ -6,7 +6,7 @@ const initialState = {
   CLUSTER_NODEPOOLS_LOAD: true,
   NODEPOOLS_LOAD: true, // all node pools
   CLUSTERS_DETAILS: true, // all clusters
-  CLUSTER_LOAD_STATUS: true,
+  CLUSTER_LOAD_STATUS: false,
 };
 
 const loadingReducer = produce((draft, action) => {
