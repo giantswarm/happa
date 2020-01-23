@@ -39,15 +39,10 @@ export function getNumberOfNodes(cluster) {
   return workers;
 }
 
-export function getMemoryTotal(cluster) {
-  const workers = getNumberOfNodes(cluster);
+export function getMemoryTotal(workers, memorySizeGB) {
+  if (!workers || workers.length === 0) return 0;
 
-  if (!workers || !cluster.workers || cluster.workers.length === 0) {
-    return null; // TODO refactor this and return 0 instead, this is a function that should return a total
-  }
-  const m = workers * cluster.workers[0].memory.size_gb;
-
-  return m.toFixed(2);
+  return workers * memorySizeGB.toFixed(2);
 }
 
 export function getStorageTotal(cluster) {
@@ -60,13 +55,12 @@ export function getStorageTotal(cluster) {
   return s.toFixed(2);
 }
 
-export function getCpusTotal(cluster) {
-  const workers = getNumberOfNodes(cluster);
-  if (!workers || !cluster.workers || cluster.workers.length === 0) {
+export function getCpusTotal(numberOfNodes, workers) {
+  if (!numberOfNodes || !workers || workers.length === 0) {
     return null; // TODO refactor this and return 0 instead, this is a function that should return a total
   }
 
-  return workers * cluster.workers[0].cpu.cores;
+  return numberOfNodes * workers[0].cpu.cores;
 }
 
 // Node pools clusters functions.

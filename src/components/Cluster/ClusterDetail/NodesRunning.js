@@ -9,24 +9,18 @@ const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
 
   return (
     <div data-testid='nodes-running'>
-      {!workerNodesRunning ? (
-        <span>0 nodes</span>
-      ) : (
-        <>
-          <span>
-            {`${workerNodesRunning} ${nodesSingularPlural}`}
-            {nodePools && ` in ${nodePools.length} ${npSingularPlural}`}
-          </span>
-          <span>
-            <Dot />
-            {RAM} GB RAM
-          </span>
-          <span>
-            <Dot />
-            {CPUs} CPUs
-          </span>
-        </>
-      )}
+      <span>
+        {`${workerNodesRunning} ${nodesSingularPlural}`}
+        {nodePools && ` in ${nodePools.length} ${npSingularPlural}`}
+      </span>
+      <span>
+        <Dot />
+        {RAM} GB RAM
+      </span>
+      <span>
+        <Dot />
+        {CPUs} CPUs
+      </span>
     </div>
   );
 };
