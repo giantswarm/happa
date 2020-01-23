@@ -1,3 +1,4 @@
+import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -13,7 +14,7 @@ import React from 'react';
 
 function LoadingOverlayWithoutStyles(props) {
   if (props.loading) {
-    return <img className='loader' src='/images/loader_oval_light.svg' />;
+    return <img className='loader' src={spinner} />;
   }
 
   return props.children;
