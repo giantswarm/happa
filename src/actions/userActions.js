@@ -8,6 +8,7 @@ import {
   messageType,
 } from 'lib/flashMessage';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
+import { AppRoutes } from 'shared/constants/routes';
 import _ from 'underscore';
 
 import * as types from './actionTypes';
@@ -82,7 +83,7 @@ export function refreshUserInfo() {
             messageTTL.MEDIUM
           );
 
-          dispatch(push('/login'));
+          dispatch(push(AppRoutes.Login));
         } else {
           new FlashMessage(
             'Something went wrong while trying to load user and organization information.',
@@ -170,7 +171,7 @@ export function giantswarmLogin(email, password) {
         console.error('Error trying to log in:', error);
 
         dispatch(loginError(error));
-        dispatch(push('/login'));
+        dispatch(push(AppRoutes.Login));
 
         throw error;
       });
@@ -197,12 +198,12 @@ export function giantswarmLogout() {
     return authTokensApi
       .deleteAuthToken(`giantswarm ${authToken}`)
       .then(() => {
-        dispatch(push('/login'));
+        dispatch(push(AppRoutes.Login));
 
         return dispatch(logoutSuccess());
       })
       .catch(error => {
-        dispatch(push('/login'));
+        dispatch(push(AppRoutes.Login));
         dispatch(logoutError(error));
         throw error;
       });
@@ -237,7 +238,7 @@ export function unauthorized() {
       type: types.UNAUTHORIZED,
     });
 
-    dispatch(push('/login'));
+    dispatch(push(AppRoutes.Login));
 
     return null;
   };

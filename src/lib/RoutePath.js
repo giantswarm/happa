@@ -34,7 +34,11 @@ class RoutePath {
     let currentParamName = '';
     let currentMatch = null;
 
-    // Allows uppercase/lowercase letters, `-`, and `_`
+    /**
+     * Allows a name that starts with `/:',
+     * and which can contain uppercase/lowercase
+     * letters, `-`, and `_`
+     */
     const validationRegex = /\/:([a-zA-Z_\-]*)(\/)?/g;
     const params = {};
 
@@ -65,6 +69,45 @@ class RoutePath {
     newPath = newPath.replace(paramNameRegex, paramValue);
 
     return newPath;
+  }
+
+  /**
+   * Convert a known path to an editable path,
+   * by providing the template that it implements
+   *
+   * Useful for finding parameter values inside
+   * stringified paths
+   * @param {String} pathTemplate
+   * @param {String} path
+   * @returns {RoutePath}
+   */
+  static parseWithTemplate(pathTemplate, path) {
+    /**
+     * Allows a name that starts with `:',
+     * and which can contain uppercase/lowercase
+     * letters, `-`, and `_`
+     */
+    const paramValidationRegex = /:([a-zA-Z_\-]*)(\/)?/g;
+
+    const templateParts = pathTemplate.split('/');
+    const pathParts = path.split('/');
+
+    const params = {};
+
+    for (let i = 0; i < templateParts.length; i++) {
+      const currentTemplatePart = templateParts[i];
+      const currentMatch = paramValidationRegex.exec(currentTemplatePart);
+
+      if (currentMatch === null) continue;
+
+      const currentParamName = currentMatch[1];
+      const valueInPath = pathParts[i];
+
+      if (typeof valueInPath !== 'undefined')
+        params[currentParamName] = valueInPath;
+    }
+
+    return RoutePath.create(pathTemplate, params);
   }
 
   /**

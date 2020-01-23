@@ -1,12 +1,14 @@
 import * as clusterActions from 'actions/clusterActions';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
+import RoutePath from 'lib/RoutePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 import { CodeBlock, Prompt } from '../CodeBlock';
@@ -169,11 +171,31 @@ class ConfigKubeCtl extends React.Component {
   };
 
   render() {
+    const pathParams = {
+      orgId: this.props.match.params.orgId,
+      clusterId: this.props.match.params.clusterId,
+    };
+
+    const clusterGuideConfigurationPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.GettingStarted.ConfigureKubeCtl,
+      pathParams
+    );
+
+    const clusterGuideExamplePath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.GettingStarted.SimpleExample,
+      pathParams
+    );
+
+    const clusterGuideOverviewPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.GettingStarted.Overview,
+      pathParams
+    );
+
     return (
       <Breadcrumb
         data={{
           title: 'CONFIGURE',
-          pathname: `/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/configure/`,
+          pathname: clusterGuideConfigurationPath,
         }}
       >
         <div className='centered col-9'>
@@ -343,17 +365,13 @@ class ConfigKubeCtl extends React.Component {
           </p>
 
           <div className='component_slider--nav'>
-            <Link
-              to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/`}
-            >
+            <Link to={clusterGuideOverviewPath}>
               <button type='button'>
                 <i className='fa fa-chevron-left' /> Back
               </button>
             </Link>
 
-            <Link
-              to={`/organizations/${this.props.match.params.orgId}/clusters/${this.props.match.params.clusterId}/getting-started/example/`}
-            >
+            <Link to={clusterGuideExamplePath}>
               <button className='primary' type='button'>
                 Continue <i className='fa fa-chevron-right' />
               </button>

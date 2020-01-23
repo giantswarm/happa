@@ -1,8 +1,10 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
+import RoutePath from 'lib/RoutePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
+import { AppCatalogRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 
@@ -21,6 +23,11 @@ const CatalogList = props => (
       ) : (
         <div className='app-catalog--repos'>
           {Object.keys(props.catalogs.items).map(catalogName => {
+            const appCatalogListPath = RoutePath.createUsablePath(
+              AppCatalogRoutes.AppList,
+              { repo: catalogName }
+            );
+
             return (
               <div
                 className='app-catalog--repo'
@@ -46,7 +53,7 @@ const CatalogList = props => (
                   </ReactMarkdown>
                   <Link
                     className='app-catalog--open-catalog'
-                    to={`/app-catalogs/${catalogName}/`}
+                    to={appCatalogListPath}
                   >
                     <Button>Browse Apps</Button>
                   </Link>

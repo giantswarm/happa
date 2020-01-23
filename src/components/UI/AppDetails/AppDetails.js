@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
+import RoutePath from 'lib/RoutePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { AppCatalogRoutes } from 'shared/constants/routes';
 
 import AppDetailsBody from './AppDetailsBody';
 import AppDetailsItem from './AppDetailsItem';
@@ -101,7 +103,11 @@ const AppDetails = props => {
     urls,
   } = app;
 
-  const to = `/app-catalogs/${params.repo}/?q=${q}#${name}`;
+  const appCatalogAppListPath = RoutePath.createUsablePath(
+    AppCatalogRoutes.AppList,
+    { repo: params.repo }
+  );
+  const to = `${appCatalogAppListPath}?q=${q}#${name}`;
 
   return (
     <div>

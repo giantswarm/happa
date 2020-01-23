@@ -1,7 +1,10 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import RoutePath from 'lib/RoutePath';
 import nock from 'nock';
+import { StatusCodes } from 'shared/constants';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -74,7 +77,7 @@ it('creates a v5 cluster and redirect to details view', async () => {
   // Cluster POST request
   const v5ClusterCreationRequest = nock(API_ENDPOINT)
     .intercept(`/v5/clusters/`, 'POST')
-    .reply(200, v5ClusterCreationResponse, {
+    .reply(StatusCodes.Ok, v5ClusterCreationResponse, {
       location: `/v5/clusters/${v5ClusterResponse.id}/`,
     });
 
@@ -84,7 +87,7 @@ it('creates a v5 cluster and redirect to details view', async () => {
   // Node pools POST request
   const nodePoolCreationRequest = nock(API_ENDPOINT)
     .intercept(`/v5/clusters/${v5ClusterResponse.id}/nodepools/`, 'POST')
-    .reply(200, nodePoolCreationResponse);
+    .reply(StatusCodes.Ok, nodePoolCreationResponse);
 
   // Node pools get
   const nodePoolsRequest = getPersistedMockCall(
@@ -103,8 +106,14 @@ it('creates a v5 cluster and redirect to details view', async () => {
     v5ClusterResponse
   );
 
+  const newClusterPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.New,
+    {
+      orgId: ORGANIZATION,
+    }
+  );
   const { getAllByText, getByText, getByTestId } = renderRouteWithStore(
-    '/organizations/acme/clusters/new/'
+    newClusterPath
   );
 
   await wait(() => {
@@ -142,7 +151,7 @@ details view`, async () => {
   // Cluster POST request
   const v4ClusterCreationRequest = nock(API_ENDPOINT)
     .intercept(`/v4/clusters/`, 'POST')
-    .reply(200, v4ClusterCreationResponse, {
+    .reply(StatusCodes.Ok, v4ClusterCreationResponse, {
       location: `/v4/clusters/${V4_CLUSTER.id}/`, // Headers
     });
 
@@ -155,8 +164,14 @@ details view`, async () => {
     v4AWSClusterResponse
   );
 
+  const newClusterPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.New,
+    {
+      orgId: ORGANIZATION,
+    }
+  );
   const { findByText, findByTestId, getAllByText } = renderRouteWithStore(
-    '/organizations/acme/clusters/new/'
+    newClusterPath
   );
 
   requests.status = getPersistedMockCall(

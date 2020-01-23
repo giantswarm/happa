@@ -1,27 +1,28 @@
 import '@testing-library/jest-dom/extend-expect';
+
+import { fireEvent, wait } from '@testing-library/react';
+import RoutePath from 'lib/RoutePath';
+import nock from 'nock';
+import { StatusCodes } from 'shared/constants';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
-  AWSInfoResponse,
-  ORGANIZATION,
-  V4_CLUSTER,
   appCatalogsResponse,
   appsResponse,
+  AWSInfoResponse,
   getPersistedMockCall,
+  ORGANIZATION,
   orgResponse,
   orgsResponse,
   releasesResponse,
   userResponse,
+  V4_CLUSTER,
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
 } from 'testUtils/mockHttpCalls';
-import { fireEvent, wait } from '@testing-library/react';
-import { getNumberOfNodes } from 'utils/clusterUtils';
-import nock from 'nock';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-
-// Cluster and route we are testing with.
-const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V4_CLUSTER.id}`;
+import { getNumberOfNodes } from 'utils/clusterUtils';
 
 // Tests setup
 const requests = {};
@@ -79,7 +80,16 @@ afterAll(() => {
 // as a response to the apps call. Here we are using a real array to mock the response
 // and hence the warning because we are transforming an array into an array
 it('renders all the v4 AWS cluster data correctly without nodes ready', async () => {
-  const { getByText, getAllByText, getByTestId } = renderRouteWithStore(ROUTE);
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V4_CLUSTER.id,
+    }
+  );
+  const { getByText, getAllByText, getByTestId } = renderRouteWithStore(
+    clusterDetailPath
+  );
 
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
@@ -109,7 +119,7 @@ it('renders all the v4 AWS cluster data correctly without nodes ready', async ()
   expect(getByText('Pinned at 3')).toBeInTheDocument();
 });
 
-it(`shows the v4 AWS cluster scaling modal when the button is clicked with default values and 
+it(`shows the v4 AWS cluster scaling modal when the button is clicked with default values and
 scales correctly`, async () => {
   const cluster = v4AWSClusterResponse;
   const defaultScaling = cluster.scaling;
@@ -131,10 +141,17 @@ scales correctly`, async () => {
   // Cluster patch request
   const clusterPatchRequest = nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
-    .reply(200, clusterPatchResponse);
+    .reply(StatusCodes.Ok, clusterPatchResponse);
 
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V4_CLUSTER.id,
+    }
+  );
   const { getByTestId, getByText, getByLabelText } = renderRouteWithStore(
-    ROUTE
+    clusterDetailPath
   );
 
   await wait(() => {
@@ -212,10 +229,17 @@ it('deletes a v4 cluster', async () => {
   // Request
   const clusterDeleteRequest = nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'DELETE')
-    .reply(200, clusterDeleteResponse);
+    .reply(StatusCodes.Ok, clusterDeleteResponse);
 
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V4_CLUSTER.id,
+    }
+  );
   const { getByText, getAllByText, queryByTestId } = renderRouteWithStore(
-    ROUTE
+    clusterDetailPath
   );
 
   // Wait for the view to render
@@ -270,10 +294,19 @@ it('patches v4 cluster name correctly', async () => {
   // Request
   const clusterPatchRequest = nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
-    .reply(200, clusterPatchResponse);
+    .reply(StatusCodes.Ok, clusterPatchResponse);
 
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V4_CLUSTER.id,
+    }
+  );
   // Mounting
-  const { getByText, getByDisplayValue } = renderRouteWithStore(ROUTE);
+  const { getByText, getByDisplayValue } = renderRouteWithStore(
+    clusterDetailPath
+  );
 
   await wait(() => getByText(clusterName));
   const clusterNameEl = getByText(clusterName);
@@ -303,4 +336,5 @@ it('patches v4 cluster name correctly', async () => {
 
 /******************** PENDING TESTS ********************/
 
+// eslint-disable-next-line no-empty-function
 it.skip('renders all the v4 AWS nodes', async () => {});

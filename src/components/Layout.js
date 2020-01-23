@@ -12,6 +12,13 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import {
+  AccountSettingsRoutes,
+  AppCatalogRoutes,
+  AppRoutes,
+  OrganizationsRoutes,
+  UsersRoutes,
+} from 'shared/constants/routes';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import AppCatalog from './AppCatalog/AppCatalog';
@@ -38,7 +45,7 @@ class Layout extends React.Component {
       // firsts calls happa makes to the API.
       this.props.dispatch(batchedLayout());
     } else {
-      this.props.dispatch(push('/login'));
+      this.props.dispatch(push(AppRoutes.Login));
     }
   }
 
@@ -46,7 +53,7 @@ class Layout extends React.Component {
     const { dispatch } = this.props;
 
     dispatch(batchedOrganizationSelect(orgId));
-    dispatch(push('/'));
+    dispatch(push(AppRoutes.Home));
   };
 
   render() {
@@ -61,19 +68,22 @@ class Layout extends React.Component {
             showAppCatalog={Object.keys(this.props.catalogs.items).length > 0}
             user={this.props.user}
           />
-          <Breadcrumb data={{ title: 'HOME', pathname: '/' }}>
+          <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
             <div className='main col-9'>
               <Switch>
-                <Route component={Home} exact path='/' />
-                <Route component={AppCatalog} path='/app-catalogs' />
-                <Route component={Users} exact path='/users' />
-                <Route component={Organizations} path='/organizations' />
+                <Route component={Home} exact path={AppRoutes.Home} />
+                <Route component={AppCatalog} path={AppCatalogRoutes.Home} />
+                <Route component={Users} exact path={UsersRoutes.Home} />
+                <Route
+                  component={Organizations}
+                  path={OrganizationsRoutes.Home}
+                />
                 <Route
                   component={AccountSettings}
                   exact
-                  path='/account-settings'
+                  path={AccountSettingsRoutes.Home}
                 />
-                <Redirect path='*' to='/' />
+                <Redirect path='*' to={AppRoutes.Home} />
               </Switch>
             </div>
           </Breadcrumb>

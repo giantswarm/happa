@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { Organizations } from 'shared/constants/routes';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import Page1_ConfigureKubeCTL from './Steps/ConfigureKubectl';
 import Page3_NextSteps from './Steps/NextSteps';
@@ -17,7 +17,7 @@ const GettingStarted = props => (
       data={{
         title: 'GETTING STARTED',
         pathname: RoutePath.createUsablePath(
-          Organizations.GettingStarted.Overview,
+          OrganizationsRoutes.Clusters.GettingStarted.Overview,
           {
             clusterId: props.match.params.clusterId,
             orgId: props.match.params.orgId,
@@ -30,24 +30,27 @@ const GettingStarted = props => (
           <Route
             component={Page0_Overview}
             exact
-            path={Organizations.GettingStarted.Overview}
+            path={OrganizationsRoutes.Clusters.GettingStarted.Overview}
           />
           <Route
             component={Page1_ConfigureKubeCTL}
             exact
-            path={Organizations.GettingStarted.ConfigureKubeCtl}
+            path={OrganizationsRoutes.Clusters.GettingStarted.ConfigureKubeCtl}
           />
           <Route
             component={Page2_SimpleExample}
             exact
-            path={Organizations.GettingStarted.SimpleExample}
+            path={OrganizationsRoutes.Clusters.GettingStarted.SimpleExample}
           />
           <Route
             component={Page3_NextSteps}
             exact
-            path={Organizations.GettingStarted.NextSteps}
+            path={OrganizationsRoutes.Clusters.GettingStarted.NextSteps}
           />
-          <Redirect path='*' to={Organizations.GettingStarted.Overview} />
+          <Redirect
+            path='*'
+            to={OrganizationsRoutes.Clusters.GettingStarted.Overview}
+          />
         </Switch>
       </div>
     </Breadcrumb>

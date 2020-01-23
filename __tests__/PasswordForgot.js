@@ -1,11 +1,14 @@
 import '@testing-library/jest-dom/extend-expect';
+
 import { fireEvent, wait } from '@testing-library/react';
-import { renderRouteWithStore } from 'testUtils/renderUtils';
 import nock from 'nock';
+import { StatusCodes } from 'shared/constants';
+import { AppRoutes } from 'shared/constants/routes';
+import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 it('takes us to the forgot password form when clicking on "Forgot your password?" from the login form', async () => {
   // Given I am not logged in and visit the app.
-  const { getByText } = renderRouteWithStore('/', {}, {});
+  const { getByText } = renderRouteWithStore(AppRoutes.Home, {}, {});
 
   // Wait till the app is ready and we're on the login page.
   await wait(() => {
@@ -28,7 +31,7 @@ it('gives me a confirmation message after entering something into the email fiel
   // Given Passage responds favourably to a password reset call.
   const forgotPasswordRequest = nock('http://localhost:5001')
     .post('/recovery/', { email: 'iforgotmypassword@giantswarm.io' })
-    .reply(200, {
+    .reply(StatusCodes.Ok, {
       email: 'iforgotmypassword@giantswarm.io',
       message: 'Token created',
       valid_until: '2019-09-21T18:14:11.347485+00:00',
@@ -36,7 +39,7 @@ it('gives me a confirmation message after entering something into the email fiel
 
   // And I am not logged in and visit the app.
   const { getByText, getByLabelText } = renderRouteWithStore(
-    '/forgot_password',
+    AppRoutes.ForgotPassword,
     {},
     {}
   );

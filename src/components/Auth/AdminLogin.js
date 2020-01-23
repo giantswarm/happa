@@ -9,6 +9,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AuthorizationTypes } from 'shared/constants';
+import { AppRoutes } from 'shared/constants/routes';
 
 class AdminLogin extends React.Component {
   componentDidMount() {
@@ -29,7 +30,7 @@ class AdminLogin extends React.Component {
             this.props.dispatch(userActions.auth0Login(result));
 
             // Redirect to dashboard.
-            this.props.dispatch(push('/'));
+            this.props.dispatch(push(AppRoutes.Home));
           })
           .catch(e => {
             // eslint-disable-next-line no-console
@@ -40,7 +41,7 @@ class AdminLogin extends React.Component {
           });
       } else {
         // Token isn't expired yet, so just redirect the user to the dashboard.
-        this.props.dispatch(push('/'));
+        this.props.dispatch(push(AppRoutes.Home));
       }
     } else {
       // User doesn't have any previous token at all, send them to auth0 so

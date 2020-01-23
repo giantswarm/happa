@@ -1,8 +1,10 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
+import RoutePath from 'lib/RoutePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { AppCatalogRoutes } from 'shared/constants/routes';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
@@ -29,12 +31,16 @@ class AppDetail extends React.Component {
 
   render() {
     const { repo } = this.props;
+    const appCatalogListPath = RoutePath.createUsablePath(
+      AppCatalogRoutes.AppList,
+      { repo: this.props.match.params.repo }
+    );
 
     return (
       <Breadcrumb
         data={{
           title: this.props.match.params.repo.toUpperCase(),
-          pathname: `/app-catalogs/${this.props.match.params.repo}/`,
+          pathname: appCatalogListPath,
         }}
       >
         <>

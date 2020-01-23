@@ -5,6 +5,7 @@ import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import Gravatar from 'react-gravatar';
 import { NavLink } from 'react-router-dom';
+import { AccountSettingsRoutes, AppRoutes } from 'shared/constants/routes';
 
 const Wrapper = styled.div`
   margin-left: 10px;
@@ -103,15 +104,19 @@ class UserDropdown extends React.Component {
           {this.props.user.auth.scheme === 'giantswarm' ? (
             <MenuItem
               componentClass={NavLink}
-              href='/account-settings/'
-              to='/account-settings/'
+              href={AccountSettingsRoutes.Home}
+              to={AccountSettingsRoutes.Home}
             >
               Account Settings
             </MenuItem>
           ) : (
             undefined
           )}
-          <MenuItem componentClass={NavLink} href='/logout' to='/logout'>
+          <MenuItem
+            componentClass={NavLink}
+            href={AppRoutes.Logout}
+            to={AppRoutes.Logout}
+          >
             Logout
           </MenuItem>
         </DropdownButton>

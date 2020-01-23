@@ -1,8 +1,10 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import RoutePath from 'lib/RoutePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -22,9 +24,6 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 import { getNumberOfNodes } from 'utils/clusterUtils';
-
-// Cluster and route we are testing with.
-const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V4_CLUSTER.id}`;
 
 const minNodesCount = 3;
 
@@ -65,7 +64,14 @@ afterEach(() => {
 });
 
 it('renders all the v4 Azure cluster data correctly', async () => {
-  const { getByText, getAllByText } = renderRouteWithStore(ROUTE);
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V4_CLUSTER.id,
+    }
+  );
+  const { getByText, getAllByText } = renderRouteWithStore(clusterDetailPath);
 
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
@@ -120,8 +126,15 @@ scales correctly`, async () => {
     .intercept(`/v4/clusters/${cluster.id}/`, 'PATCH')
     .reply(StatusCodes.Ok, scaleResponse);
 
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V4_CLUSTER.id,
+    }
+  );
   const { getByText, findByText, getByDisplayValue } = renderRouteWithStore(
-    ROUTE
+    clusterDetailPath
   );
 
   const nodesTitle = await findByText('Nodes');

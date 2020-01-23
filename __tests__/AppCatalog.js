@@ -1,11 +1,15 @@
 import '@testing-library/jest-dom/extend-expect';
+
+import RoutePath from 'lib/RoutePath';
+import nock from 'nock';
+import { StatusCodes } from 'shared/constants';
+import { AppCatalogRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
   appsResponse,
   AWSInfoResponse,
   catalogIndexResponse,
   getPersistedMockCall,
-  getMockCall,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -16,12 +20,7 @@ import {
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
 } from 'testUtils/mockHttpCalls';
-import { fireEvent, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import nock from 'nock';
-
-// Cluster and route we are testing with.
-const ROUTE = `/app-catalogs/`;
 
 // Tests setup
 const requests = {};
@@ -62,7 +61,13 @@ beforeAll(() => {
     appCatalogsResponse
   );
 
-  nock('https://cors-anywhere.herokuapp.com').get(/.*$/).reply(500, 'Not supposed to get here in these tests.').persist();
+  nock('https://cors-anywhere.herokuapp.com')
+    .get(/.*$/)
+    .reply(
+      StatusCodes.InternalServerError,
+      'Not supposed to get here in these tests.'
+    )
+    .persist();
 });
 
 // Stop persisting responses
@@ -75,67 +80,104 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('renders all non internal app catalogs in the app catalogs overview', async () => {
-  nock('https://catalogshost').get('/giantswarm-incubator-catalog/index.yaml').reply(200, catalogIndexResponse);
-  nock('https://catalogshost').get('/giantswarm-test-catalog/index.yaml').reply(200, catalogIndexResponse);
-  nock('https://catalogshost').get('/helmstable/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/giantswarm-incubator-catalog/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/giantswarm-test-catalog/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/helmstable/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
 
-  const { findByText } = renderRouteWithStore(
-    ROUTE
+  const { findByText } = renderRouteWithStore(AppCatalogRoutes.Home);
+
+  const introText = await findByText(
+    'Pick an App Catalog to browse all the Apps in it.'
   );
-
-  const introText = await findByText('Pick an App Catalog to browse all the Apps in it.')
   expect(introText).toBeInTheDocument();
 
   for (const catalog of appCatalogsResponse) {
     // Skip expectation for internal catalogs.
     // They should not show up in Happa.
-    if (catalog.metadata.labels['application.giantswarm.io/catalog-type'] === 'internal') {
+    if (
+      catalog.metadata.labels['application.giantswarm.io/catalog-type'] ===
+      'internal'
+    ) {
       continue;
     }
 
-    const catalogTitle = await findByText(catalog.spec.title)
+    const catalogTitle = await findByText(catalog.spec.title);
     expect(catalogTitle).toBeInTheDocument();
   }
 });
 
 it('renders all apps in the app list for a given catalog', async () => {
-  nock('https://catalogshost').get('/giantswarm-incubator-catalog/index.yaml').reply(200, catalogIndexResponse);
-  nock('https://catalogshost').get('/giantswarm-test-catalog/index.yaml').reply(200, catalogIndexResponse);
-  nock('https://catalogshost').get('/helmstable/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/giantswarm-incubator-catalog/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/giantswarm-test-catalog/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/helmstable/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
 
-  const { findByText } = renderRouteWithStore(
-    ROUTE + "giantswarm-incubator/"
+  const appCatalogListPath = RoutePath.createUsablePath(
+    AppCatalogRoutes.AppList,
+    { repo: 'giantswarm-incubator' }
   );
+  const { findByText } = renderRouteWithStore(appCatalogListPath);
 
-  const catalogTitle = await findByText('Giant Swarm Incubator')
+  const catalogTitle = await findByText('Giant Swarm Incubator');
   expect(catalogTitle).toBeInTheDocument();
 });
 
 it('renders all apps in the app list for a given catalog', async () => {
-  nock('https://catalogshost').get('/giantswarm-incubator-catalog/index.yaml').reply(200, catalogIndexResponse);
-  nock('https://catalogshost').get('/giantswarm-test-catalog/index.yaml').reply(200, catalogIndexResponse);
-  nock('https://catalogshost').get('/helmstable/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/giantswarm-incubator-catalog/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/giantswarm-test-catalog/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/helmstable/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
 
-  const { findByText } = renderRouteWithStore(
-    ROUTE + "giantswarm-incubator/"
+  const appCatalogListPath = RoutePath.createUsablePath(
+    AppCatalogRoutes.AppList,
+    { repo: 'giantswarm-incubator' }
   );
+  const { findByText } = renderRouteWithStore(appCatalogListPath);
 
-  const catalogTitle = await findByText('Giant Swarm Incubator')
+  const catalogTitle = await findByText('Giant Swarm Incubator');
   expect(catalogTitle).toBeInTheDocument();
 });
 
 it('renders the app detail page for a given app', async () => {
-  nock('https://catalogshost').get('/giantswarm-incubator-catalog/index.yaml').reply(200, catalogIndexResponse);
-  nock('https://catalogshost').get('/giantswarm-test-catalog/index.yaml').reply(200, catalogIndexResponse);
-  nock('https://catalogshost').get('/helmstable/index.yaml').reply(200, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/giantswarm-incubator-catalog/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/giantswarm-test-catalog/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
+  nock('https://catalogshost')
+    .get('/helmstable/index.yaml')
+    .reply(StatusCodes.Ok, catalogIndexResponse);
 
-  const { findByText } = renderRouteWithStore(
-    ROUTE + "giantswarm-incubator/nginx-ingress-controller-app/"
+  const appCatalogListPath = RoutePath.createUsablePath(
+    AppCatalogRoutes.AppDetail,
+    {
+      repo: 'giantswarm-incubator',
+      app: 'nginx-ingress-controller-app',
+    }
   );
+  const { findByText } = renderRouteWithStore(appCatalogListPath);
 
   // The app's description should be there.
   // This comes from parsing the index.yaml, which is mocked in catalogIndexResponse.
-  const appDescription = await findByText('A Helm chart for the nginx ingress-controller')
+  const appDescription = await findByText(
+    'A Helm chart for the nginx ingress-controller'
+  );
   expect(appDescription).toBeInTheDocument();
 });
-

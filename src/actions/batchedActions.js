@@ -1,4 +1,6 @@
 import { push } from 'connected-react-router';
+import RoutePath from 'lib/RoutePath';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import * as appActions from './appActions';
 import * as catalogActions from './catalogActions';
@@ -68,6 +70,13 @@ export const batchedClusterCreate = (
     const { clusterId, owner } = await dispatch(
       clusterActions.clusterCreate(cluster, isV5Cluster)
     );
+    const clusterDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail,
+      {
+        orgId: owner,
+        clusterId: clusterId,
+      }
+    );
 
     // TODO We can avoid this call by computing capabilities in the call above and storing the cluster
     await dispatch(
@@ -84,7 +93,7 @@ export const batchedClusterCreate = (
       );
     }
 
-    dispatch(push(`/organizations/${owner}/clusters/${clusterId}`));
+    dispatch(push(clusterDetailPath));
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Error in batchedCreateCluster', err);
@@ -142,7 +151,14 @@ export const batchedRefreshClusterDetailView = (
 
 export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
   try {
-    dispatch(push(`/organizations/${cluster.owner}`));
+    const organizationDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Detail,
+      {
+        orgId: cluster.owner,
+      }
+    );
+    dispatch(push(organizationDetailPath));
+
     await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
     dispatch(modalActions.modalHide());
     // ensure refreshing of the clusters list

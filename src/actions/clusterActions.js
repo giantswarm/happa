@@ -3,6 +3,7 @@ import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import moment from 'moment';
 import { StatusCodes } from 'shared/constants';
+import { AppRoutes } from 'shared/constants/routes';
 import { computeCapabilities } from 'utils/clusterUtils';
 
 import * as types from './actionTypes';
@@ -444,7 +445,7 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
         // Delete the cluster in the store.
         // eslint-disable-next-line no-use-before-define
         dispatch(clusterDeleteSuccess(clusterId));
-        dispatch(push('/'));
+        dispatch(push(AppRoutes.Home));
 
         return {};
       }

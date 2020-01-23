@@ -3,6 +3,7 @@ import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
+import RoutePath from 'lib/RoutePath';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -11,6 +12,7 @@ import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
 import LoadingOverlay from 'UI/LoadingOverlay';
@@ -81,15 +83,20 @@ class Home extends React.Component {
   };
 
   render() {
+    const newClusterPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.New,
+      {
+        orgId: this.props.selectedOrganization,
+      }
+    );
+
     return (
       <DocumentTitle title={this.title()}>
         <LoadingOverlay loading={this.props.loadingClustersList}>
           <div>
             {this.props.selectedOrganization && (
               <div className='well launch-new-cluster'>
-                <Link
-                  to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
-                >
+                <Link to={newClusterPath}>
                   <Button bsStyle='primary' type='button'>
                     <i className='fa fa-add-circle' /> Launch New Cluster
                   </Button>

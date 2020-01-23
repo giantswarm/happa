@@ -2,6 +2,7 @@ import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { AppCatalogRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 
 import AppDetailsModal from './AppDetailsModal';
@@ -177,7 +178,7 @@ class ClusterApps extends React.Component {
 
   openAppCatalog = () => {
     this.props.dispatch(selectCluster(this.props.clusterId));
-    this.props.dispatch(push('/app-catalogs/'));
+    this.props.dispatch(push(AppCatalogRoutes.Home));
   };
 
   showAppDetail = appName => {
