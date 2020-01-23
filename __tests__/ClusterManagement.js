@@ -108,9 +108,7 @@ it('creates a v5 cluster and redirect to details view', async () => {
 
   const newClusterPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.New,
-    {
-      orgId: ORGANIZATION,
-    }
+    { orgId: ORGANIZATION }
   );
   const { getAllByText, getByText, getByTestId } = renderRouteWithStore(
     newClusterPath
