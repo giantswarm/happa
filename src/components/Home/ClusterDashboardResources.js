@@ -7,6 +7,7 @@ import {
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { Dot } from 'styles';
+import LoadingOverlayWithoutStyles from 'UI/LoadingOverlayWithoutStyles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 const ClusterDetailsDiv = styled.div`
@@ -74,6 +75,9 @@ ClusterDashboardResources.propTypes = {
   isNodePool: PropTypes.bool,
   nodePools: PropTypes.array,
   resources: PropTypes.object,
+  loadingClusters: PropTypes.bool,
+  loadingNodePools: PropTypes.bool,
+  loadingStatus: PropTypes.bool,
 };
 
 const makeMapStateToProps = () => {
