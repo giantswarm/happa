@@ -274,7 +274,6 @@ class ClusterDetailView extends React.Component {
                           showScalingModal={this.showScalingModal}
                           showUpgradeModal={this.showUpgradeModal}
                           workerNodesDesired={this.getDesiredNumberOfNodes()}
-                          workerNodesRunning={getNumberOfNodes(cluster)}
                         />
                       )}
 
