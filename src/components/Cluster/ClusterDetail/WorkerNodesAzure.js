@@ -21,12 +21,18 @@ export const LineDiv = styled.div`
   }
 `;
 
+export const ScalingNodeCounter = styled(RefreshableLabel)`
+  margin-right: 25px;
+`;
+
 function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
   const instanceTypeText = instanceType
     ? // prettier-ignore
       // eslint-disable-next-line no-magic-numbers
       `${instanceType.numberOfCores} CPUs, ${(instanceType.memoryInMb / 1000.0).toFixed(1)} GB RAM`
     : '0 CPUs, 0 GB RAM';
+
+  const nodeCount = nodes || 'n/a';
 
   return (
     <WrapperDiv>
@@ -41,11 +47,7 @@ function WorkerNodesAzure({ instanceType, nodes, showScalingModal }) {
       </LineDiv>
       <LineDiv>
         <div>Nodes</div>
-        {nodes && nodes !== 0 && (
-          <RefreshableLabel value={nodes} style={{ marginRight: '25px' }}>
-            {nodes}
-          </RefreshableLabel>
-        )}{' '}
+        <ScalingNodeCounter value={nodeCount}>{nodeCount}</ScalingNodeCounter>
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>
