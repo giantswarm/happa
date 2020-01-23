@@ -26,7 +26,7 @@ export const batchedLayout = () => async dispatch => {
       clusterActions.clustersDetails({
         filterBySelectedOrganization: true,
         withLoadingFlags: true,
-        withNodePools: true,
+        initializeNodePools: true,
       })
     );
     await dispatch(
@@ -48,7 +48,7 @@ export const batchedRefreshClusters = () => async dispatch => {
       clusterActions.clustersDetails({
         filterBySelectedOrganization: true,
         withLoadingFlags: false,
-        withNodePools: false,
+        initializeNodePools: false,
       })
     );
     dispatch(
@@ -84,7 +84,7 @@ export const batchedClusterCreate = (
     await dispatch(
       clusterActions.clusterLoadDetails(clusterId, {
         withLoadingFlags: true,
-        withNodePools: true,
+        initializeNodePools: true,
       })
     );
 
@@ -119,7 +119,7 @@ export const batchedClusterDetailView = (
     await dispatch(
       clusterActions.clusterLoadDetails(clusterId, {
         withLoadingFlags: true,
-        withNodePools: true,
+        initializeNodePools: true,
       })
     );
     if (isV5Cluster) {
@@ -144,7 +144,7 @@ export const batchedRefreshClusterDetailView = (
     await dispatch(
       clusterActions.clusterLoadDetails(clusterId, {
         withLoadingFlags: false,
-        withNodePools: true,
+        initializeNodePools: true,
       })
     );
     if (isV5Cluster) {
