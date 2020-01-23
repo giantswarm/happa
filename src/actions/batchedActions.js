@@ -161,8 +161,6 @@ export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
 
     await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
     dispatch(modalActions.modalHide());
-    // ensure refreshing of the clusters list
-    await dispatch(clusterActions.clustersList({ withLoadingFlags: false }));
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Error in batchedClusterDeleteConfirmed', err);
