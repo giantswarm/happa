@@ -129,7 +129,7 @@ const clusterReducer = produce((draft, action) => {
       return;
 
     case types.CLUSTER_DELETE_SUCCESS:
-      delete draft.items[action.clusterId];
+      draft.items[action.clusterId].delete_date = action.timestamp;
       draft.lastUpdated = Date.now();
 
       return;

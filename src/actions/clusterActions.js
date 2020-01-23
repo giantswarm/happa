@@ -446,7 +446,7 @@ export function clusterLoadDetails(clusterId, { withLoadingFlags }) {
 
         // Delete the cluster in the store.
         // eslint-disable-next-line no-use-before-define
-        dispatch(clusterDeleteSuccess(clusterId));
+        dispatch(clusterDeleteSuccess(clusterId, Date.now()));
         dispatch(push('/'));
 
         return {};
@@ -595,7 +595,7 @@ export function clusterDeleteConfirmed(cluster) {
       .deleteCluster(cluster.id)
       .then(data => {
         // eslint-disable-next-line no-use-before-define
-        dispatch(clusterDeleteSuccess(cluster.id));
+        dispatch(clusterDeleteSuccess(cluster.id, Date.now()));
 
         new FlashMessage(
           `Cluster <code>${cluster.id}</code> will be deleted`,
@@ -688,9 +688,10 @@ export const clusterDelete = cluster => ({
   cluster,
 });
 
-export const clusterDeleteSuccess = clusterId => ({
+export const clusterDeleteSuccess = (clusterId, timestamp) => ({
   type: types.CLUSTER_DELETE_SUCCESS,
   clusterId,
+  timestamp,
 });
 
 export const clusterDeleteError = (clusterId, error) => ({
