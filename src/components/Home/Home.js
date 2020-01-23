@@ -3,7 +3,7 @@ import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
-import RoutePath from 'lib/RoutePath';
+import RoutePath from 'lib/routePath';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';

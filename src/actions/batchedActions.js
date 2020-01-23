@@ -1,5 +1,5 @@
 import { push } from 'connected-react-router';
-import RoutePath from 'lib/RoutePath';
+import RoutePath from 'lib/routePath';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import * as appActions from './appActions';

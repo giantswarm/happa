@@ -4,12 +4,12 @@
 class RoutePath {
   /**
    * Generate route path with parameters
-   * @param {String} path
+   * @param {String} template
    * @param {Record<String, String|Number>} parameters
    * @returns {RoutePath}
    */
-  static create(path, parameters) {
-    const newRoute = new RoutePath(path);
+  static create(template, parameters = {}) {
+    const newRoute = new RoutePath(template);
     newRoute.params = parameters;
 
     return newRoute;
@@ -17,20 +17,20 @@ class RoutePath {
 
   /**
    * Generate an usable string path with parameters
-   * @param {String} path
+   * @param {String} template
    * @param {Record<String, String|Number>} parameters
    * @returns {String}
    */
-  static createUsablePath(path, parameters) {
-    return RoutePath.create(path, parameters).value;
+  static createUsablePath(template, parameters) {
+    return RoutePath.create(template, parameters).value;
   }
 
   /**
    * Get a parameter map based on a known path
-   * @param {String} path
+   * @param {String} template
    * @returns {Record<String, String|Number>}
    */
-  static getParametersFromPath(path) {
+  static getParametersFromPath(template) {
     let currentParamName = '';
     let currentMatch = null;
 
@@ -43,7 +43,7 @@ class RoutePath {
     const params = {};
 
     do {
-      currentMatch = validationRegex.exec(path);
+      currentMatch = validationRegex.exec(template);
 
       if (currentMatch === null) break;
 
@@ -101,21 +101,36 @@ class RoutePath {
       if (currentMatch === null) continue;
 
       const currentParamName = currentMatch[1];
-      const valueInPath = pathParts[i];
+      let valueInPath = pathParts[i];
 
-      if (typeof valueInPath !== 'undefined')
+      if (typeof valueInPath !== 'undefined') {
+        const valueAsNumber = Number(valueInPath);
+
+        if (!isNaN(valueAsNumber)) {
+          valueInPath = valueAsNumber;
+        }
+
         params[currentParamName] = valueInPath;
+      }
     }
 
     return RoutePath.create(pathTemplate, params);
   }
 
   /**
-   * Original path used on instantiation
+   * Original path template used on instantiation
    * @private
    * @type {String}
    */
-  _originalPath = '';
+  _originalTemplate = '';
+
+  /**
+   * Original params derived from
+   * the template used on instantiation
+   * @private
+   * @type {Record<String, String|Number>}
+   */
+  _originalParams = {};
 
   /**
    * Formatted value
@@ -144,16 +159,23 @@ class RoutePath {
    * @param parametersMap {Record<String, String|Number>}
    */
   set params(parametersMap) {
-    let newValue = this.originalPath;
+    let newValue = this.originalTemplate;
+    let previousValue = this.originalTemplate;
 
-    this._params = {};
+    const desiredParams = Object.assign(
+      {},
+      this._originalParams,
+      parametersMap
+    );
 
-    for (const [paramName, paramValue] of Object.entries(parametersMap)) {
+    for (const [paramName, paramValue] of Object.entries(desiredParams)) {
       newValue = RoutePath.replaceParamValue(newValue, paramName, paramValue);
 
-      if (newValue !== this.originalPath) {
+      if (newValue !== previousValue) {
         this._params[paramName] = paramValue;
       }
+
+      previousValue = newValue;
     }
 
     this._value = newValue;
@@ -163,12 +185,12 @@ class RoutePath {
    * Get the original path used for instantiating the route
    * @returns {String}
    */
-  get originalPath() {
-    return this._originalPath;
+  get originalTemplate() {
+    return this._originalTemplate;
   }
 
   // eslint-disable-next-line class-methods-use-this
-  set originalPath(_newPath) {
+  set originalTemplate(_newPath) {
     // No-op
   }
 
@@ -190,7 +212,11 @@ class RoutePath {
    * @param {String} path
    */
   constructor(path) {
-    this._originalPath = path;
+    this._originalTemplate = path;
+    this._originalParams = RoutePath.getParametersFromPath(
+      this._originalTemplate
+    );
+
     this.clear();
   }
 
@@ -213,8 +239,8 @@ class RoutePath {
    * @param {Record<String, String|Number} withParameters Parameter map
    * @returns {RoutePath}
    */
-  clone(withParameters) {
-    const newRoute = RoutePath.create(this._originalPath, withParameters);
+  clone(withParameters = {}) {
+    const newRoute = RoutePath.create(this._originalTemplate, withParameters);
 
     return newRoute;
   }
@@ -224,7 +250,7 @@ class RoutePath {
    * @returns {RoutePath}
    */
   clear() {
-    this.params = RoutePath.getParametersFromPath(this._originalPath);
+    this.params = {};
 
     return this;
   }

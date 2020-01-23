@@ -3,7 +3,7 @@ import {
   organizationDelete,
 } from 'actions/organizationActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
-import RoutePath from 'lib/RoutePath';
+import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'react-bootstrap/lib/Button';

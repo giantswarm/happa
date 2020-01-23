@@ -1,7 +1,7 @@
 import { installApp } from 'actions/appActions';
 import { push } from 'connected-react-router';
 import yaml from 'js-yaml';
-import RoutePath from 'lib/RoutePath';
+import RoutePath from 'lib/routePath';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';

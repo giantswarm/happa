@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import RoutePath from 'lib/RoutePath';
+import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';

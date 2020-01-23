@@ -1,7 +1,7 @@
 import * as OrganizationActions from 'actions/organizationActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { relativeDate } from 'lib/helpers.js';
-import RoutePath from 'lib/RoutePath';
+import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';

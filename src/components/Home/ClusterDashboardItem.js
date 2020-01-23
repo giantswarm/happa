@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import * as clusterActions from 'actions/clusterActions';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
-import RoutePath from 'lib/RoutePath';
+import RoutePath from 'lib/routePath';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';

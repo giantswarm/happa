@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import RoutePath from 'lib/RoutePath';
+import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppCatalogRoutes } from 'shared/constants/routes';
