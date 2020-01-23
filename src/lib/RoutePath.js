@@ -63,10 +63,8 @@ class RoutePath {
    * @returns {String}
    */
   static replaceParamValue(inPath, paramName, paramValue) {
-    let newPath = inPath;
-
     const paramNameRegex = new RegExp(`:${paramName}`, 'g');
-    newPath = newPath.replace(paramNameRegex, paramValue);
+    const newPath = inPath.replace(paramNameRegex, paramValue);
 
     return newPath;
   }
