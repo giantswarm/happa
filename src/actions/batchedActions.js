@@ -183,7 +183,7 @@ export const batchedOrganizationSelect = orgId => async dispatch => {
     await dispatch(organizationActions.organizationSelect(orgId));
     dispatch(
       clusterActions.clustersDetails({
-        filterBySelectedOrganization: false,
+        filterBySelectedOrganization: false, // TODO set this to false? Not sure why are we doing this
         withLoadingFlags: true,
       })
     );
