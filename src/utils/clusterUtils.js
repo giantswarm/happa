@@ -42,7 +42,7 @@ export function getNumberOfNodes(cluster) {
 export function getMemoryTotal(workers, memorySizeGB) {
   if (!workers || workers.length === 0) return 0;
 
-  return workers * memorySizeGB.toFixed(2);
+  return (workers * memorySizeGB).toFixed(2);
 }
 
 export function getStorageTotal(cluster) {

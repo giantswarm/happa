@@ -40,12 +40,14 @@ const Wrapper = styled.div`
  * value changes, visual highlighting is triggered.
  */
 
-// As this hook has styles, we are going to pass a styles prop to overwrite/add any styles
-function RefreshableLabel({ children, value, style }) {
+function RefreshableLabel({ children, value, className }) {
   // used for outputting 'changed' css class
   const [hasDataChanged, setHasDataChanged] = useState(false);
   // used for storing previous value and so be able to compare with new value
   const prevValue = usePrevious(value);
+
+  let labelClassName = className;
+  if (hasDataChanged) labelClassName += ' changed';
 
   useEffect(() => {
     const sToMs = 1000;
@@ -65,15 +67,12 @@ function RefreshableLabel({ children, value, style }) {
     return () => clearTimeout(timer);
   }, [prevValue, value]);
 
-  return (
-    <Wrapper className={hasDataChanged && 'changed'} style={style}>
-      {children}
-    </Wrapper>
-  );
+  return <Wrapper className={labelClassName}>{children}</Wrapper>;
 }
 
 RefreshableLabel.propTypes = {
   children: PropTypes.node,
+  className: PropTypes.string,
   style: PropTypes.object,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
