@@ -13,7 +13,6 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Dot } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
-import LoadingOverlayWithoutStyles from 'UI/LoadingOverlayWithoutStyles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 import { clusterNodePools } from 'utils/clusterUtils';
 
@@ -66,14 +65,6 @@ const ButtonsWrapper = styled.div`
 
 const DeleteDateWrapper = styled.div`
   color: ${props => props.theme.colors.darkBlueLighter5};
-`;
-
-const ClusterCreatedDateDiv = styled.div`
-  display: inline-block;
-  height: 27px;
-  img {
-    height: 22px;
-  }
 `;
 
 class ClusterDashboardItem extends React.Component {
@@ -151,13 +142,7 @@ class ClusterDashboardItem extends React.Component {
 
   // eslint-disable-next-line complexity
   render() {
-    const {
-      cluster,
-      isNodePool,
-      selectedOrganization,
-      loadingCluster,
-      loadingStatus,
-    } = this.props;
+    const { cluster, isNodePool, selectedOrganization } = this.props;
 
     const { nodePools } = this.state;
 
@@ -213,13 +198,7 @@ class ClusterDashboardItem extends React.Component {
               </span>
             </RefreshableLabel>
             <Dot style={{ paddingLeft: 0 }} />
-            <ClusterCreatedDateDiv>
-              <LoadingOverlayWithoutStyles
-                loading={loadingCluster || loadingStatus}
-              >
-                Created {relativeDate(cluster.create_date)}
-              </LoadingOverlayWithoutStyles>
-            </ClusterCreatedDateDiv>
+            Created {relativeDate(cluster.create_date)}
           </div>
           <ClusterDashboardResources
             cluster={cluster}
@@ -255,16 +234,7 @@ ClusterDashboardItem.propTypes = {
   dispatch: PropTypes.func,
   isNodePool: PropTypes.bool,
   nodePools: PropTypes.object,
-  loadingCluster: PropTypes.bool,
-  loadingStatus: PropTypes.bool,
 };
-
-function mapStateToProps(state) {
-  return {
-    loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
-    loadingStatus: state.loadingFlags.CLUSTER_LOAD_STATUS,
-  };
-}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -272,7 +242,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ClusterDashboardItem);
+export default connect(undefined, mapDispatchToProps)(ClusterDashboardItem);
