@@ -6,7 +6,7 @@ import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
-import { LineDiv, WrapperDiv } from './WorkerNodesAzure';
+import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
 
 function WorkerNodesAWS({
   az,
@@ -52,9 +52,9 @@ function WorkerNodesAWS({
       </LineDiv>
       <LineDiv>
         <div>Scaling</div>
-        <RefreshableLabel value={scalingText} style={{ marginRight: '25px' }}>
+        <ScalingNodeCounter value={scalingText}>
           {scalingText}
-        </RefreshableLabel>
+        </ScalingNodeCounter>
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
       <LineDiv data-testid='desired-nodes'>
