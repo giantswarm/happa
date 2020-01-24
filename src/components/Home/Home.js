@@ -15,7 +15,6 @@ import { bindActionCreators } from 'redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
-import LoadingOverlay from 'UI/LoadingOverlay';
 import _ from 'underscore';
 
 import ClusterDashboardItem from './ClusterDashboardItem';
@@ -92,65 +91,65 @@ class Home extends React.Component {
 
     return (
       <DocumentTitle title={this.title()}>
-        <LoadingOverlay loading={this.props.loadingClustersList}>
-          <div>
-            {this.props.selectedOrganization && (
-              <div className='well launch-new-cluster'>
-                <Link to={newClusterPath}>
-                  <Button bsStyle='primary' type='button'>
-                    <i className='fa fa-add-circle' /> Launch New Cluster
-                  </Button>
-                </Link>
-                {this.props.clusters.length === 0 &&
-                  'Ready to launch your first cluster? Click the green button!'}
-              </div>
-            )}
+        <div>
+          {this.props.selectedOrganization && (
+            <div className='well launch-new-cluster'>
+              <Link
+                to={`/organizations/${this.props.selectedOrganization}/clusters/new/`}
+              >
+                <Button bsStyle='primary' type='button'>
+                  <i className='fa fa-add-circle' /> Launch New Cluster
+                </Button>
+              </Link>
+              {this.props.clusters.length === 0 &&
+                'Ready to launch your first cluster? Click the green button!'}
+            </div>
+          )}
 
-            {this.props.clusters.length === 0 && (
-              <ClusterEmptyState
-                errorLoadingClusters={this.props.errorLoadingClusters}
-                organizations={this.props.organizations}
-                selectedOrganization={this.props.selectedOrganization}
-              />
-            )}
+          {this.props.clusters.length === 0 && (
+            <ClusterEmptyState
+              errorLoadingClusters={this.props.errorLoadingClusters}
+              organizations={this.props.organizations}
+              selectedOrganization={this.props.selectedOrganization}
+            />
+          )}
 
-            <TransitionGroup className='cluster-list'>
-              {_.sortBy(this.props.clusters, cluster => cluster.name).map(
-                cluster => {
-                  return (
-                    <CSSTransition
-                      classNames='cluster-list-item'
+          <TransitionGroup className='cluster-list'>
+            {_.sortBy(this.props.clusters, cluster => cluster.name).map(
+              cluster => {
+                return (
+                  <CSSTransition
+                    classNames='cluster-list-item'
+                    key={cluster.id}
+                    timeout={500}
+                  >
+                    <ClusterDashboardItem
+                      animate={true}
+                      cluster={cluster}
+                      isNodePool={this.props.v5Clusters.includes(cluster.id)}
                       key={cluster.id}
-                      timeout={500}
-                    >
-                      <ClusterDashboardItem
-                        animate={true}
-                        cluster={cluster}
-                        isNodePool={this.props.v5Clusters.includes(cluster.id)}
-                        key={cluster.id}
-                        nodePools={this.props.nodePools}
-                        selectedOrganization={this.props.selectedOrganization}
-                      />
-                    </CSSTransition>
-                  );
-                },
-                cluster => cluster.id
-              )}
-            </TransitionGroup>
+                      nodePools={this.props.nodePools}
+                      selectedOrganization={this.props.selectedOrganization}
+                    />
+                  </CSSTransition>
+                );
+              },
+              cluster => cluster.id
+            )}
+          </TransitionGroup>
 
-            {this.props.clusters.length > 0 ? (
-              <p className='last-updated'>
-                <small>
-                  This table is auto-refreshing. Details last fetched{' '}
-                  <span className='last-updated-datestring'>
-                    {this.lastUpdatedLabel()}
-                  </span>
-                  .
-                </small>
-              </p>
-            ) : null}
-          </div>
-        </LoadingOverlay>
+          {this.props.clusters.length > 0 ? (
+            <p className='last-updated'>
+              <small>
+                This table is auto-refreshing. Details last fetched{' '}
+                <span className='last-updated-datestring'>
+                  {this.lastUpdatedLabel()}
+                </span>
+                .
+              </small>
+            </p>
+          ) : null}
+        </div>
       </DocumentTitle>
     );
   }
@@ -165,7 +164,6 @@ Home.propTypes = {
   errorLoadingClusters: PropTypes.bool,
   v5Clusters: PropTypes.array,
   nodePools: PropTypes.object,
-  loadingClustersList: PropTypes.bool,
   dispatch: PropTypes.func,
 };
 
@@ -191,7 +189,6 @@ function mapStateToProps(state) {
     selectedOrganization: selectedOrganization,
     v5Clusters,
     nodePools,
-    loadingClustersList: state.loadingFlags.CLUSTERS_LIST,
   };
 }
 
