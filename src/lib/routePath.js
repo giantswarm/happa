@@ -16,7 +16,7 @@ class RoutePath {
   }
 
   /**
-   * Generate an usable string path with parameters
+   * Generate a usable string path with parameters
    * @param {String} template
    * @param {Record<String, String|Number>} parameters
    * @returns {String}
