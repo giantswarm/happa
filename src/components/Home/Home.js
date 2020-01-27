@@ -124,7 +124,7 @@ class Home extends React.Component {
                     <ClusterDashboardItem
                       animate={true}
                       cluster={cluster}
-                      isNodePool={this.props.v5Clusters.includes(cluster.id)}
+                      isV5={this.props.v5Clusters.includes(cluster.id)}
                       key={cluster.id}
                       nodePools={this.props.nodePools}
                       selectedOrganization={this.props.selectedOrganization}

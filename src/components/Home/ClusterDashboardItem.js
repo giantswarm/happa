@@ -77,13 +77,13 @@ class ClusterDashboardItem extends React.Component {
   componentDidMount() {
     this.registerReRenderInterval();
 
-    if (this.props.isNodePool) {
+    if (this.props.isV5) {
       this.setClusterNodePools();
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.isNodePool && prevProps.nodePools !== this.props.nodePools) {
+    if (this.props.isV5 && prevProps.nodePools !== this.props.nodePools) {
       this.setClusterNodePools();
     }
   }
@@ -142,7 +142,7 @@ class ClusterDashboardItem extends React.Component {
 
   // eslint-disable-next-line complexity
   render() {
-    const { cluster, isNodePool, selectedOrganization } = this.props;
+    const { cluster, isV5, selectedOrganization } = this.props;
 
     const { nodePools } = this.state;
 
@@ -203,7 +203,7 @@ class ClusterDashboardItem extends React.Component {
           <ClusterDashboardResources
             cluster={cluster}
             nodePools={nodePools}
-            isNodePool={isNodePool}
+            isV5={isV5}
           />
         </ContentWrapper>
 
@@ -232,7 +232,7 @@ ClusterDashboardItem.propTypes = {
   selectedOrganization: PropTypes.string,
   animate: PropTypes.bool,
   dispatch: PropTypes.func,
-  isNodePool: PropTypes.bool,
+  isV5: PropTypes.bool,
   nodePools: PropTypes.object,
 };
 

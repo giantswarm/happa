@@ -113,8 +113,8 @@ export function clusterLoadApps(clusterId) {
     // This method is going to work for NP clusters, now in local dev it is not
     // working, so early return if the cluster is a NP one.
     const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isNodePoolsCluster = nodePoolsClusters.includes(clusterId);
-    if (isNodePoolsCluster) {
+    const isV5Cluster = nodePoolsClusters.includes(clusterId);
+    if (isV5Cluster) {
       dispatch({
         type: types.CLUSTER_LOAD_APPS_SUCCESS,
         clusterId,
@@ -713,7 +713,7 @@ export const clusterDeleteError = (clusterId, error) => ({
  * @param {Object} cluster Cluster object
  * @param {Object} payload object with just the data we want to modify
  */
-export function clusterPatch(cluster, payload, isNodePoolCluster) {
+export function clusterPatch(cluster, payload, isV5Cluster) {
   return function(dispatch) {
     // Optimistic update.
     dispatch({
@@ -722,7 +722,7 @@ export function clusterPatch(cluster, payload, isNodePoolCluster) {
       payload,
     });
 
-    const modifyCluster = isNodePoolCluster
+    const modifyCluster = isV5Cluster
       ? clustersApi.modifyClusterV5(cluster.id, payload)
       : clustersApi.modifyCluster(cluster.id, payload);
 

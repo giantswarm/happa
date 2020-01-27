@@ -22,13 +22,13 @@ function ClusterDashboardResources({
   loadingClusters,
   loadingNodePools,
   loadingStatus,
-  isNodePool,
+  isV5,
   resources,
 }) {
   const { memory, storage, cores, numberOfNodes } = resources;
   const hasNodePools = cluster.nodePools && cluster.nodePools.length !== 0;
   const loading =
-    loadingClusters || loadingStatus || (isNodePool && loadingNodePools);
+    loadingClusters || loadingStatus || (isV5 && loadingNodePools);
 
   return (
     <ClusterDetailsDiv>
@@ -72,7 +72,7 @@ function ClusterDashboardResources({
 
 ClusterDashboardResources.propTypes = {
   cluster: PropTypes.object,
-  isNodePool: PropTypes.bool,
+  isV5: PropTypes.bool,
   nodePools: PropTypes.array,
   resources: PropTypes.object,
   loadingClusters: PropTypes.bool,
@@ -85,7 +85,7 @@ const makeMapStateToProps = () => {
   const resourcesV5 = selectResourcesV5();
   const mapStateToProps = (state, props) => {
     return {
-      resources: props.isNodePool
+      resources: props.isV5
         ? resourcesV5(state, props)
         : resourcesV4(state, props),
       loadingClusters: state.loadingFlags.CLUSTERS_LOAD_DETAILS,
