@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { AppRoutes, UsersRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 
 import DeleteUserModal from './DeleteUserModal';
@@ -41,7 +42,7 @@ class Users extends React.Component {
         .dispatch(usersLoad())
         .then(this.props.dispatch(invitationsLoad()));
     } else {
-      this.props.dispatch(push('/'));
+      this.props.dispatch(push(AppRoutes.Home));
     }
   }
 
@@ -207,7 +208,7 @@ class Users extends React.Component {
     const installationNameLabel = installation_name || 'unknown installation';
 
     return (
-      <Breadcrumb data={{ title: 'USERS', pathname: '/users/' }}>
+      <Breadcrumb data={{ title: 'USERS', pathname: UsersRoutes.Home }}>
         <DocumentTitle title='Users'>
           <div>
             <div className='row'>

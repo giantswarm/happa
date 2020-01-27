@@ -14,6 +14,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import { AppRoutes } from 'shared/constants/routes';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 import { parseErrorMessages } from '../Auth/parseErrorMessages';
@@ -100,7 +101,7 @@ class SetPassword extends React.Component {
           messageTTL.MEDIUM
         );
 
-        this.props.dispatch(push('/'));
+        this.props.dispatch(push(AppRoutes.Home));
 
         return null;
       })
@@ -274,7 +275,7 @@ class SetPassword extends React.Component {
               <img className='loader' src={spinner} />
             </SlideTransition>
           </div>
-          <Link to='/login'>Back to login form</Link>
+          <Link to={AppRoutes.Login}>Back to login form</Link>
         </form>
       );
     }
@@ -294,7 +295,7 @@ class SetPassword extends React.Component {
           Something went wrong.
         </div>
         <br />
-        <Link to='/forgot_password'>Request a new token</Link>
+        <Link to={AppRoutes.ForgotPassword}>Request a new token</Link>
       </div>
     );
   };
@@ -333,10 +334,10 @@ class SetPassword extends React.Component {
             <img className='loader' src={spinner} />
           </SlideTransition>
         </div>
-        <Link to='/login'>Back to login form</Link>
+        <Link to={AppRoutes.Login}>Back to login form</Link>
         <br />
         <br />
-        <Link to='/forgot_password'>Request a new token</Link>
+        <Link to={AppRoutes.ForgotPassword}>Request a new token</Link>
       </form>
     );
   };

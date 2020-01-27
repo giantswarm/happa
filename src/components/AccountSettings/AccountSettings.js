@@ -5,13 +5,14 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { AccountSettingsRoutes } from 'shared/constants/routes';
 
 import ChangeEmailForm from './ChangeEmailForm';
 import ChangePasswordForm from './ChangePasswordForm';
 
 const AccountSettings = props => (
   <Breadcrumb
-    data={{ title: 'ACCOUNT SETTINGS', pathname: '/account-settings/' }}
+    data={{ title: 'ACCOUNT SETTINGS', pathname: AccountSettingsRoutes.Home }}
   >
     <DocumentTitle title='Account Settings'>
       <div>

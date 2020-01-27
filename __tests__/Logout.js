@@ -1,8 +1,10 @@
 import '@testing-library/jest-dom/extend-expect';
+
 import { fireEvent, wait } from '@testing-library/react';
+import { AppRoutes } from 'shared/constants/routes';
 import {
-  getMockCall,
   AWSInfoResponse,
+  getMockCall,
   userResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
@@ -23,7 +25,7 @@ it('logging out redirects to the login page', async () => {
   const appcatalogsRequest = getMockCall('/v4/appcatalogs/');
 
   // Given I am logged in and on the home page.
-  const { getByText } = renderRouteWithStore('/');
+  const { getByText } = renderRouteWithStore(AppRoutes.Home);
 
   // Wait till the app is ready and we're on the home page.
   await wait(() => {

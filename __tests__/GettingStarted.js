@@ -1,9 +1,11 @@
 import '@testing-library/jest-dom/extend-expect';
+
+import { fireEvent } from '@testing-library/react';
+import { AppRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
   appsResponse,
   AWSInfoResponse,
-  catalogIndexResponse,
   getPersistedMockCall,
   ORGANIZATION,
   orgResponse,
@@ -15,12 +17,7 @@ import {
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
 } from 'testUtils/mockHttpCalls';
-import { fireEvent, wait } from '@testing-library/react';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import nock from 'nock';
-
-// Cluster and route we are testing with.
-const ROUTE = `/`;
 
 // Tests setup
 const requests = {};
@@ -72,14 +69,16 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('lets me get there from the dashboard and go through the pages', async () => {
-  const { findByText } = renderRouteWithStore(ROUTE);
+  const { findByText } = renderRouteWithStore(AppRoutes.Home);
 
-  const getStartedButton = await findByText("Get Started");
+  const getStartedButton = await findByText('Get Started');
   expect(getStartedButton).toBeInTheDocument();
 
   fireEvent.click(getStartedButton);
 
-  const guideTitle = await findByText('Get started with your Kubernetes cluster');
+  const guideTitle = await findByText(
+    'Get started with your Kubernetes cluster'
+  );
   expect(guideTitle).toBeInTheDocument();
 
   const startButton = await findByText('Start');

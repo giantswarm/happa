@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { AppRoutes } from 'shared/constants/routes';
 
 import AdminLogin from './Auth/AdminLogin';
 import Login from './Auth/Login';
@@ -14,15 +15,15 @@ import StyleGuide from './UI/StyleGuide';
 const Routes = () => {
   return (
     <Switch>
-      <Route component={AdminLogin} path='/admin-login' />
-      <Route component={Login} path='/login' />
-      <Route component={Logout} path='/logout' />
-      <Route component={SetPassword} path='/forgot_password/:token/' />
-      <Route component={ForgotPassword} path='/forgot_password' />
-      <Route component={SignUp} path='/signup/:token' />
-      <Route component={OAuthCallback} path='/oauth/callback' />
-      <Route component={StyleGuide} path='/styleguide' />
-      <Route component={Layout} path='/' />
+      <Route component={AdminLogin} path={AppRoutes.AdminLogin} />
+      <Route component={Login} path={AppRoutes.Login} />
+      <Route component={Logout} path={AppRoutes.Logout} />
+      <Route component={SetPassword} path={AppRoutes.SetPassword} />
+      <Route component={ForgotPassword} path={AppRoutes.ForgotPassword} />
+      <Route component={SignUp} path={AppRoutes.SignUp} />
+      <Route component={OAuthCallback} path={AppRoutes.OAuthCallback} />
+      <Route component={StyleGuide} path={AppRoutes.StyleGuide} />
+      <Route component={Layout} path={AppRoutes.Home} />
     </Switch>
   );
 };

@@ -4,6 +4,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link, NavLink } from 'react-router-dom';
+import {
+  AppCatalogRoutes,
+  AppRoutes,
+  OrganizationsRoutes,
+  UsersRoutes,
+} from 'shared/constants/routes';
 
 import OrganizationDropdown from './OrganizationDropdown';
 import UserDropdown from './UserDropdown';
@@ -119,23 +125,23 @@ class Navigation extends React.Component {
     return (
       <OuterNav>
         <div className='main-nav col-9'>
-          <Link to='/'>
+          <Link to={AppRoutes.Home}>
             <img className='logo' src={logo} />
           </Link>
           <div className='nav-responsive'>
-            <NavLink activeClassName='active' exact to='/'>
+            <NavLink activeClassName='active' exact to={AppRoutes.Home}>
               Clusters
             </NavLink>
-            <NavLink activeClassName='active' to='/organizations/'>
+            <NavLink activeClassName='active' to={OrganizationsRoutes.Home}>
               Organizations
             </NavLink>
             {this.props.showAppCatalog && (
-              <NavLink activeClassName='active' to='/app-catalogs/'>
+              <NavLink activeClassName='active' to={AppCatalogRoutes.Home}>
                 App Catalogs
               </NavLink>
             )}
             {this.props.user.isAdmin ? (
-              <NavLink activeClassName='active' to='/users/'>
+              <NavLink activeClassName='active' to={UsersRoutes.Home}>
                 Users
               </NavLink>
             ) : (

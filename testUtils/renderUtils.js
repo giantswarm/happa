@@ -5,6 +5,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
 import Routes from 'Routes';
+import { AppRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
 import theme from 'styles/theme';
 
@@ -20,7 +21,7 @@ const initialStorage = {
  * @param {HTMLElement} container An HTMLElement.
  */
 export function renderRouteWithStore(
-  initialRoute = '/',
+  initialRoute = AppRoutes.Home,
   state = {},
   storage = initialStorage,
   history = createMemoryHistory()

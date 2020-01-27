@@ -5,6 +5,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+import { AppCatalogRoutes } from 'shared/constants/routes';
 
 import Detail from './AppDetail/AppDetail';
 import AppList from './AppList/AppList';
@@ -39,23 +40,15 @@ class AppCatalog extends React.Component {
       <Breadcrumb
         data={{
           title: 'App Catalogs'.toUpperCase(),
-          pathname: '/app-catalogs/',
+          pathname: AppCatalogRoutes.Home,
         }}
       >
         <div className='app-catalog'>
           <Switch>
+            <Route component={Detail} exact path={AppCatalogRoutes.AppDetail} />
+            <Route component={AppList} exact path={AppCatalogRoutes.AppList} />
             <Route
-              component={Detail}
-              exact
-              path={`${this.props.match.path}/:repo/:app`}
-            />
-            <Route
-              component={AppList}
-              exact
-              path={`${this.props.match.path}/:repo`}
-            />
-            <Route
-              path={`${this.props.match.path}`}
+              path={AppCatalogRoutes.Home}
               render={() => <Catalogs {...this.props} />}
             />
           </Switch>

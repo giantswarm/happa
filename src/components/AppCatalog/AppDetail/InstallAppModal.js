@@ -1,10 +1,12 @@
 import { installApp } from 'actions/appActions';
 import { push } from 'connected-react-router';
 import yaml from 'js-yaml';
+import RoutePath from 'lib/routePath';
 import lunr from 'lunr';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -190,14 +192,17 @@ const InstallAppModal = props => {
         )
       )
       .then(() => {
-        onClose();
-        props.dispatch(
-          push(
-            `/organizations/${
-              props.clusters.find(c => c.id === clusterID).owner
-            }/clusters/${clusterID}/`
-          )
+        const installedApp = props.clusters.find(c => c.id === clusterID);
+        const clusterDetailPath = RoutePath.createUsablePath(
+          OrganizationsRoutes.Clusters.Detail,
+          {
+            orgId: installedApp.owner,
+            clusterId: clusterID,
+          }
         );
+
+        onClose();
+        props.dispatch(push(clusterDetailPath));
       })
       .catch(error => {
         setLoading(false);

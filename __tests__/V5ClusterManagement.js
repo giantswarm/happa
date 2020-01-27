@@ -1,10 +1,17 @@
 import '@testing-library/jest-dom/extend-expect';
+
+import { fireEvent, wait } from '@testing-library/react';
+import { truncate } from 'lib/helpers';
+import RoutePath from 'lib/routePath';
+import nock from 'nock';
+import { StatusCodes } from 'shared/constants';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
   appsResponse,
-  getPersistedMockCall,
   AWSInfoResponse,
+  getPersistedMockCall,
   nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
@@ -15,14 +22,8 @@ import {
   v5ClusterResponse,
   v5ClustersResponse,
 } from 'testUtils/mockHttpCalls';
-import { fireEvent, wait } from '@testing-library/react';
-import { getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { truncate } from 'lib/helpers';
-import nock from 'nock';
-
-// Cluster and route we are testing with.
-const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
+import { getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
 
 // Tests setup
 const requests = {};
@@ -77,7 +78,14 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('renders all the v5 cluster data correctly with 0 nodes ready', async () => {
-  const { getByText, getAllByText } = renderRouteWithStore(ROUTE, {});
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
+  const { getByText, getAllByText } = renderRouteWithStore(clusterDetailPath);
 
   await wait(() => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
@@ -98,7 +106,16 @@ it('renders all the v5 cluster data correctly with 0 nodes ready', async () => {
 });
 
 it('renders all node pools in store', async () => {
-  const { getByText, findAllByTestId } = renderRouteWithStore(ROUTE);
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
+  const { getByText, findAllByTestId } = renderRouteWithStore(
+    clusterDetailPath
+  );
 
   await wait(() => findAllByTestId('node-pool-id'));
 
@@ -111,6 +128,7 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   const newNodePoolName = 'New NP name';
   const nodePoolName = nodePoolsResponse[0].name;
   const nodePoolId = nodePoolsResponse[0].id;
+  const maxNameLength = 14;
 
   // Response to request should be the exact same NP with the new name
   const nodePoolPatchResponse = {
@@ -124,17 +142,24 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePoolsResponse[0].id}/`,
       'PATCH'
     )
-    .reply(200, nodePoolPatchResponse);
+    .reply(StatusCodes.Ok, nodePoolPatchResponse);
 
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
   // Mounting
   const { getAllByTestId, getByText, getByDisplayValue } = renderRouteWithStore(
-    ROUTE
+    clusterDetailPath
   );
 
-  await wait(() => getByText(truncate(nodePoolName, 14)));
+  await wait(() => getByText(truncate(nodePoolName, maxNameLength)));
 
   // All mock node pools have the same first 14 characters.
-  const nodePoolNameEl = getByText(truncate(nodePoolName, 14));
+  const nodePoolNameEl = getByText(truncate(nodePoolName, maxNameLength));
   const nodePools = getAllByTestId('node-pool-id');
 
   // Is this NP the first in the list?
@@ -201,15 +226,21 @@ scales node pools correctly`, async () => {
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
       'PATCH'
     )
-    .reply(200, nodePoolPatchResponse);
+    .reply(StatusCodes.Ok, nodePoolPatchResponse);
 
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
   const {
     getByText,
     getAllByText,
     getAllByTestId,
     getByLabelText,
-    getByTestId,
-  } = renderRouteWithStore(ROUTE);
+  } = renderRouteWithStore(clusterDetailPath);
 
   await wait(() => getAllByTestId('node-pool-id'));
 
@@ -277,10 +308,17 @@ it('deletes a v5 cluster', async () => {
   // Request
   const clusterDeleteRequest = nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${V5_CLUSTER.id}/`, 'DELETE')
-    .reply(200, clusterDeleteResponse);
+    .reply(StatusCodes.Ok, clusterDeleteResponse);
 
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
   const { getByText, getAllByText, queryByTestId } = renderRouteWithStore(
-    ROUTE
+    clusterDetailPath
   );
 
   // Wait for the view to render
@@ -335,14 +373,21 @@ it('deletes a node pool', async () => {
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
       'DELETE'
     )
-    .reply(200, nodePoolDeleteResponse);
+    .reply(StatusCodes.Ok, nodePoolDeleteResponse);
 
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
   const {
     getByText,
     getAllByText,
     queryByTestId,
     getAllByTestId,
-  } = renderRouteWithStore(ROUTE);
+  } = renderRouteWithStore(clusterDetailPath);
 
   // Wait for node pools to render
   await wait(() => getAllByTestId('node-pool-id'));
@@ -397,9 +442,16 @@ it('adds a node pool with default values', async () => {
   // Request
   const nodePoolCreationRequest = nock(API_ENDPOINT)
     .intercept(`/v5/clusters/${V5_CLUSTER.id}/nodepools/`, 'POST')
-    .reply(200, nodePoolCreationResponse);
+    .reply(StatusCodes.Ok, nodePoolCreationResponse);
 
-  const { getByText, getAllByText } = renderRouteWithStore(ROUTE);
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
+  const { getByText, getAllByText } = renderRouteWithStore(clusterDetailPath);
 
   await wait(() => getAllByText(/add node pool/i));
 
