@@ -7,8 +7,9 @@ import {
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { Dot } from 'styles';
-import LoadingOverlayWithoutStyles from 'UI/LoadingOverlayWithoutStyles';
 import RefreshableLabel from 'UI/RefreshableLabel';
+
+import ClusterDashboardLoadingPlaceholder from './ClusterDashboardLoadingPlaceholder';
 
 const ClusterDetailsDiv = styled.div`
   height: 27px;
@@ -32,7 +33,9 @@ function ClusterDashboardResources({
 
   return (
     <ClusterDetailsDiv>
-      <LoadingOverlayWithoutStyles loading={loading}>
+      {loading ? (
+        <ClusterDashboardLoadingPlaceholder isV5Cluster={isV5Cluster} />
+      ) : (
         <div>
           {numberOfNodes !== 0 && hasNodePools && (
             <RefreshableLabel value={numberOfNodes}>
@@ -65,7 +68,7 @@ function ClusterDashboardResources({
             </span>
           )}
         </div>
-      </LoadingOverlayWithoutStyles>
+      )}
     </ClusterDetailsDiv>
   );
 }
