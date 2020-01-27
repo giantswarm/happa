@@ -10,6 +10,7 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
+import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Tab from 'react-bootstrap/lib/Tab';
@@ -17,6 +18,7 @@ import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
 import { Providers } from 'shared/constants';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import LoadingOverlay from 'UI/LoadingOverlay';
@@ -73,7 +75,14 @@ class ClusterDetailView extends React.Component {
     const { cluster, clusterId, organizationId, dispatch } = this.props;
 
     if (typeof cluster === 'undefined') {
-      dispatch(push(`/organizations/${organizationId}`));
+      const organizationDetailPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Detail,
+        {
+          orgId: organizationId,
+        }
+      );
+
+      dispatch(push(organizationDetailPath));
 
       new FlashMessage(
         `Cluster <code>${clusterId}</code> not found`,
@@ -179,9 +188,15 @@ class ClusterDetailView extends React.Component {
 
   accessCluster = () => {
     const { owner, id } = this.props.cluster;
-    this.props.dispatch(
-      push(`/organizations/${owner}/clusters/${id}/getting-started/`)
+    const clusterGuideOverviewPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.GettingStarted.Overview,
+      {
+        orgId: owner,
+        clusterId: id,
+      }
     );
+
+    this.props.dispatch(push(clusterGuideOverviewPath));
   };
 
   editClusterName = value => {

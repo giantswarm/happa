@@ -1,10 +1,13 @@
 import '@testing-library/jest-dom/extend-expect';
+
+import { fireEvent } from '@testing-library/react';
+import RoutePath from 'lib/routePath';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
-  API_ENDPOINT,
   appCatalogsResponse,
   appsResponse,
-  getPersistedMockCall,
   AWSInfoResponse,
+  getPersistedMockCall,
   nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
@@ -15,14 +18,7 @@ import {
   v5ClusterResponse,
   v5ClustersResponse,
 } from 'testUtils/mockHttpCalls';
-import { fireEvent, wait } from '@testing-library/react';
-import { getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { truncate } from 'lib/helpers';
-import nock from 'nock';
-
-// Cluster and route we are testing with.
-const ROUTE = `/organizations/${ORGANIZATION}/clusters/${V5_CLUSTER.id}`;
 
 // Tests setup
 const requests = {};
@@ -77,10 +73,16 @@ afterAll(() => {
 /************ TESTS ************/
 
 it('lets me open and close the keypair create modal', async () => {
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
   // Given the app is on the cluster detail page.
   const { findByText, getByText, queryByTestId } = renderRouteWithStore(
-    ROUTE,
-    {}
+    clusterDetailPath
   );
 
   // And it is done loading.

@@ -1,8 +1,10 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
+import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import Page1_ConfigureKubeCTL from './Steps/ConfigureKubectl';
 import Page3_NextSteps from './Steps/NextSteps';
@@ -14,7 +16,13 @@ const GettingStarted = props => (
     <Breadcrumb
       data={{
         title: 'GETTING STARTED',
-        pathname: `/organizations/${props.match.params.orgId}/clusters/${props.match.params.clusterId}/getting-started/`,
+        pathname: RoutePath.createUsablePath(
+          OrganizationsRoutes.Clusters.GettingStarted.Overview,
+          {
+            clusterId: props.match.params.clusterId,
+            orgId: props.match.params.orgId,
+          }
+        ),
       }}
     >
       <div>
@@ -22,26 +30,26 @@ const GettingStarted = props => (
           <Route
             component={Page0_Overview}
             exact
-            path='/organizations/:orgId/clusters/:clusterId/getting-started/'
+            path={OrganizationsRoutes.Clusters.GettingStarted.Overview}
           />
           <Route
             component={Page1_ConfigureKubeCTL}
             exact
-            path='/organizations/:orgId/clusters/:clusterId/getting-started/configure/'
+            path={OrganizationsRoutes.Clusters.GettingStarted.ConfigureKubeCtl}
           />
           <Route
             component={Page2_SimpleExample}
             exact
-            path='/organizations/:orgId/clusters/:clusterId/getting-started/example/'
+            path={OrganizationsRoutes.Clusters.GettingStarted.SimpleExample}
           />
           <Route
             component={Page3_NextSteps}
             exact
-            path='/organizations/:orgId/clusters/:clusterId/getting-started/next-steps/'
+            path={OrganizationsRoutes.Clusters.GettingStarted.NextSteps}
           />
           <Redirect
             path='*'
-            to='/organizations/:orgId/clusters/:clusterId/getting-started/'
+            to={OrganizationsRoutes.Clusters.GettingStarted.Overview}
           />
         </Switch>
       </div>

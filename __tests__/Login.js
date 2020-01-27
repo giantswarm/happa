@@ -1,19 +1,21 @@
 import '@testing-library/jest-dom/extend-expect';
+
+import { fireEvent, wait } from '@testing-library/react';
+import nock from 'nock';
+import { StatusCodes } from 'shared/constants';
+import { AppRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
-  AWSInfoResponse,
   authTokenResponse,
+  AWSInfoResponse,
   getPersistedMockCall,
   postMockCall,
   userResponse,
 } from 'testUtils/mockHttpCalls';
-import { fireEvent, wait } from '@testing-library/react';
-import { StatusCodes } from 'shared/constants';
-import nock from 'nock';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 it('renders the login page at /login', async () => {
-  const { getByText } = renderRouteWithStore('/login', {}, {});
+  const { getByText } = renderRouteWithStore(AppRoutes.Login, {}, {});
 
   await wait(() => {
     expect(getByText('Log in to Giant Swarm')).toBeInTheDocument();
@@ -41,7 +43,11 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   const appcatalogsRequest = getPersistedMockCall('/v4/appcatalogs/');
 
   // AND I arrive at the login page with nothing in the state.
-  const { getByText, getByLabelText } = renderRouteWithStore('/login', {}, {});
+  const { getByText, getByLabelText } = renderRouteWithStore(
+    AppRoutes.Login,
+    {},
+    {}
+  );
 
   // When I type in my email and password
   const emailInput = getByLabelText('Email');
@@ -78,7 +84,11 @@ it('redirects to / and shows the layout after a succesful login', async () => {
 
 it('tells the user to give a password if they leave it blank', async () => {
   // Given I arrive at the login page with nothing in the state.
-  const { getByText, getByLabelText } = renderRouteWithStore('/login', {}, {});
+  const { getByText, getByLabelText } = renderRouteWithStore(
+    AppRoutes.Login,
+    {},
+    {}
+  );
 
   // When I type in my email but not my password.
   const emailInput = getByLabelText('Email');
@@ -98,7 +108,11 @@ it('tells the user to give a password if they leave it blank', async () => {
 
 it('tells the user to give a email if they leave it blank', async () => {
   // Given I arrive at the login page with nothing in the state.
-  const { getByText, getByLabelText } = renderRouteWithStore('/login', {}, {});
+  const { getByText, getByLabelText } = renderRouteWithStore(
+    AppRoutes.Login,
+    {},
+    {}
+  );
 
   // When I type in my password but not my email.
   const passwordInput = getByLabelText('Password');
@@ -128,7 +142,11 @@ it('shows an error if the user logs in with invalid credentials', async () => {
     .reply(StatusCodes.Unauthorized);
 
   // And I arrive at the login page with nothing in the state.
-  const { getByText, getByLabelText } = renderRouteWithStore('/login', {}, {});
+  const { getByText, getByLabelText } = renderRouteWithStore(
+    AppRoutes.Login,
+    {},
+    {}
+  );
 
   // When I type in my email and password
   const emailInput = getByLabelText('Email');

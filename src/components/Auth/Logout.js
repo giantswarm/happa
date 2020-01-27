@@ -6,6 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AuthorizationTypes } from 'shared/constants';
+import { AppRoutes } from 'shared/constants/routes';
 import BaseTransition from 'styles/transitions/BaseTransition';
 
 class Logout extends React.Component {
@@ -16,13 +17,13 @@ class Logout extends React.Component {
       this.props.user.auth.scheme
     ) {
       if (this.props.user.auth.scheme === AuthorizationTypes.BEARER) {
-        this.props.dispatch(push('/login'));
+        this.props.dispatch(push(AppRoutes.Login));
         this.props.actions.logoutSuccess();
       } else {
         this.props.actions.giantswarmLogout();
       }
     } else {
-      this.props.dispatch(push('/login'));
+      this.props.dispatch(push(AppRoutes.Login));
       this.props.actions.logoutSuccess();
     }
   }

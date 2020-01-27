@@ -4,6 +4,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { AppCatalogRoutes } from 'shared/constants/routes';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
 import AppListInner from './AppListInner';
@@ -21,7 +22,7 @@ const AppList = ({ catalog, ...props }) => {
     >
       <DocumentTitle title='Apps'>
         <>
-          <Link className='back-link' to='/app-catalogs/'>
+          <Link className='back-link' to={AppCatalogRoutes.Home}>
             <i aria-hidden='true' className='fa fa-chevron-left' />
             Back to all catalogs
           </Link>
