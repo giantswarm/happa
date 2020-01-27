@@ -8,6 +8,7 @@ const ClusterDashboardLoadingPlaceholder = ({ isV5Cluster }) => (
   <ContentLoader
     viewBox='0 0 400 25'
     speed={1}
+    height='27'
     backgroundColor={theme.colors.darkBlueLighter2}
     foregroundColor={theme.colors.loadingForeground}
   >
