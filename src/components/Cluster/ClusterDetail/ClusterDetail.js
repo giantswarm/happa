@@ -52,7 +52,7 @@ ClusterDetail.propTypes = {
   provider: PropTypes.string,
   targetRelease: PropTypes.object,
   user: PropTypes.object,
-  isNodePoolsCluster: PropTypes.bool,
+  isV5Cluster: PropTypes.bool,
 };
 function mapStateToProps(state, ownProps) {
   const cluster =
@@ -61,7 +61,7 @@ function mapStateToProps(state, ownProps) {
   let release;
   // eslint-disable-next-line init-declarations
   let targetReleaseVersion;
-  let isNodePoolsCluster = false;
+  let isV5Cluster = false;
 
   if (cluster) {
     if (cluster.release_version && cluster.release_version !== '') {
@@ -93,9 +93,7 @@ function mapStateToProps(state, ownProps) {
         ];
     }
 
-    isNodePoolsCluster = state.entities.clusters.v5Clusters.includes(
-      cluster.id
-    );
+    isV5Cluster = state.entities.clusters.v5Clusters.includes(cluster.id);
   }
 
   return {
@@ -110,7 +108,7 @@ function mapStateToProps(state, ownProps) {
     targetRelease: state.entities.releases.items[targetReleaseVersion],
     user: state.app.loggedInUser,
     region: state.app.info.general.datacenter,
-    isNodePoolsCluster,
+    isV5Cluster,
   };
 }
 

@@ -21,6 +21,13 @@ class DetailIndex extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    // Set loading flag to false.
+    this.props.dispatch({
+      type: types.CLUSTER_LOAD_DETAILS_FINISHED,
+    });
+  }
+
   render() {
     return (
       <Breadcrumb
