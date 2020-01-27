@@ -24,7 +24,11 @@ export const AWSInfoResponse = {
 
 export const azureInfoResponse = {
   general: {
-    availability_zones: { default: 1, max: 1 },
+    availability_zones: {
+      default: 1,
+      max: 3,
+      zones: ['1', '2', '3'],
+    },
     datacenter: 'westeurope',
     installation_name: 'ghost',
     provider: Providers.AZURE,

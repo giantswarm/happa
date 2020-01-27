@@ -58,7 +58,8 @@ export const v4AzureClusterResponse = {
   api_endpoint: `https://api.${V4_CLUSTER.id}.k8s.godsmack.westeurope.azure.gigantic.io`,
   owner: ORGANIZATION,
   name: V4_CLUSTER.name,
-  release_version: '9.1.0',
+  release_version: '11.1.0',
+  availability_zones: ['1', '2', '3'],
   scaling: { min: 3, max: 3 },
   credential_id: '',
   workers: [
