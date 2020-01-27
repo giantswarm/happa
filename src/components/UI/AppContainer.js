@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
+import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { AppCatalogRoutes } from 'shared/constants/routes';
 
 export const APP_CONTAINER_HEIGHT = 200;
 export const APP_CONTAINER_IMAGE_HEIGHT = 100;
@@ -144,7 +146,15 @@ const AppContainer = ({
   ...props
 }) => {
   const { icon, name, repoName, version } = appVersions[0];
-  const to = `/app-catalogs/${catalog.metadata.name}/${appVersions[0].name}?q=${searchQuery}`;
+
+  const appCatalogAppDetailPath = RoutePath.createUsablePath(
+    AppCatalogRoutes.AppDetail,
+    {
+      repo: catalog.metadata.name,
+      app: appVersions[0].name,
+    }
+  );
+  const to = `${appCatalogAppDetailPath}?q=${searchQuery}`;
 
   return (
     <Wrapper {...props}>

@@ -1,4 +1,5 @@
 import nock from 'nock';
+import { AccountSettingsRoutes } from 'shared/constants/routes';
 import {
   AWSInfoResponse,
   getMockCall,
@@ -41,32 +42,38 @@ describe('AccountSettings', () => {
   });
 
   it('renders the account settings component on the "/account-settings" route', async () => {
-    const { findByText } = renderRouteWithStore('/account-settings', {});
+    const { findByText } = renderRouteWithStore(AccountSettingsRoutes.Home, {});
 
     await findByText('Your Account Settings');
   });
 
   it('renders the email change form', async () => {
-    const { findByTestId } = renderRouteWithStore('/account-settings', {});
+    const { findByTestId } = renderRouteWithStore(
+      AccountSettingsRoutes.Home,
+      {}
+    );
 
     await findByTestId(elementIDs.ChangeEmailForm);
   });
 
   it('renders the email change form label and description', async () => {
-    const { findByText } = renderRouteWithStore('/account-settings', {});
+    const { findByText } = renderRouteWithStore(AccountSettingsRoutes.Home, {});
 
     await findByText(elementLabels.Email);
     await findByText(elementLabels.EmailExplanatoryText);
   });
 
   it('renders the password change form', async () => {
-    const { findByTestId } = renderRouteWithStore('/account-settings', {});
+    const { findByTestId } = renderRouteWithStore(
+      AccountSettingsRoutes.Home,
+      {}
+    );
 
     await findByTestId(elementIDs.ChangePasswordForm);
   });
 
   it('renders the account deletion section', async () => {
-    const { findByText } = renderRouteWithStore('/account-settings', {});
+    const { findByText } = renderRouteWithStore(AccountSettingsRoutes.Home, {});
 
     await findByText(elementLabels.DeleteAccount);
   });

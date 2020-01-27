@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
+import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { NavLink } from 'react-router-dom';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import _ from 'underscore';
 
 const Wrapper = styled.div`
@@ -112,6 +114,13 @@ const Wrapper = styled.div`
 // eslint-disable-next-line react/prefer-stateless-function
 class OrganizationDropdown extends React.Component {
   render() {
+    const organizationDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Detail,
+      {
+        orgId: this.props.selectedOrganization,
+      }
+    );
+
     return (
       <Wrapper>
         {Object.entries(this.props.organizations.items).length === 0 &&
@@ -127,8 +136,8 @@ class OrganizationDropdown extends React.Component {
           >
             <MenuItem
               componentClass={NavLink}
-              href='/organizations/'
-              to='/organizations/'
+              href={OrganizationsRoutes.List}
+              to={OrganizationsRoutes.List}
             >
               Manage organizations
             </MenuItem>
@@ -146,16 +155,16 @@ class OrganizationDropdown extends React.Component {
           >
             <MenuItem
               componentClass={NavLink}
-              href='/organizations/'
-              to={`/organizations/${this.props.selectedOrganization}`}
+              href={OrganizationsRoutes.List}
+              to={organizationDetailPath}
             >
               Details for {this.props.selectedOrganization}
             </MenuItem>
             <MenuItem divider />
             <MenuItem
               componentClass={NavLink}
-              href='/organizations/'
-              to='/organizations/'
+              href={OrganizationsRoutes.List}
+              to={OrganizationsRoutes.List}
             >
               Manage organizations
             </MenuItem>

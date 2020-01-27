@@ -1,8 +1,10 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -22,8 +24,6 @@ import {
   v4ClustersResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-
-const BASE_ROUTE = '/organizations';
 
 beforeAll(() => {
   nock.disableNetConnect();
@@ -63,7 +63,7 @@ describe('Navigation', () => {
   it('navigation has selected the right page when in organization list route', async () => {
     getMockCall('/v4/organizations/', orgsResponse);
 
-    const { getByText } = renderRouteWithStore(BASE_ROUTE);
+    const { getByText } = renderRouteWithStore(OrganizationsRoutes.Home);
 
     await wait(() => {
       expect(
@@ -88,7 +88,9 @@ describe('Organizations basic', () => {
   });
 
   it('correctly renders the organizations list', async () => {
-    const { getByText, getByTestId } = renderRouteWithStore(BASE_ROUTE);
+    const { getByText, getByTestId } = renderRouteWithStore(
+      OrganizationsRoutes.Home
+    );
 
     // We want to make sure correct values appear in the row for number of clusters
     // and members.
@@ -128,7 +130,7 @@ describe('Organizations basic', () => {
     getMockCall(`/v4/organizations/${newOrganizationId}/credentials/`);
 
     const { getByText, getByLabelText, getByTestId } = renderRouteWithStore(
-      BASE_ROUTE
+      OrganizationsRoutes.Home
     );
 
     await wait(() => {
@@ -169,13 +171,18 @@ describe('Organizations basic', () => {
 
   it('shows organization details correctly', async () => {
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 1);
+
+    const organizationDetailsPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Detail,
+      { orgId: orgResponse.id }
+    );
     const {
       findByText,
       getByText,
       findByTestId,
       queryByTestId,
       getByTitle,
-    } = renderRouteWithStore(`${BASE_ROUTE}/${orgResponse.id}`);
+    } = renderRouteWithStore(organizationDetailsPath);
 
     const pageTitle = await findByText(`Organization: ${orgResponse.id}`);
     expect(pageTitle).toBeInTheDocument();
@@ -193,9 +200,7 @@ describe('Organizations basic', () => {
 
     // users
     const organizationMember = await findByTestId('organization-member-email');
-    expect(organizationMember.textContent).toBe(
-      orgResponse.members[0].email
-    );
+    expect(organizationMember.textContent).toBe(orgResponse.members[0].email);
 
     await wait(() => {
       expect(queryByTestId('Loading credentials')).not.toBeInTheDocument();
@@ -221,8 +226,12 @@ describe('Organizations basic', () => {
 
     const newMemberEmail = `${generateRandomString()}@giantswarm.io`;
 
+    const organizationDetailsPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Detail,
+      { orgId: orgResponse.id }
+    );
     const { findByText, getByText, findByLabelText } = renderRouteWithStore(
-      `${BASE_ROUTE}/${orgResponse.id}`
+      organizationDetailsPath
     );
 
     const addMemberButton = await findByText('Add Member');
@@ -263,13 +272,19 @@ describe('Organizations basic', () => {
         message: `The organization with ID ${orgResponse.id} has been updated.`,
       });
 
+    const organizationDetailsPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Detail,
+      { orgId: orgResponse.id }
+    );
     const { getByText, findByText, findByTestId } = renderRouteWithStore(
-      `${BASE_ROUTE}/${orgResponse.id}`
+      organizationDetailsPath
     );
 
     const { email: emailToRemove } = orgResponse.members[0];
 
-    const removeUserTableButton = await findByTestId('organization-member-remove');
+    const removeUserTableButton = await findByTestId(
+      'organization-member-remove'
+    );
     expect(removeUserTableButton.textContent).toBe('Remove');
 
     fireEvent.click(removeUserTableButton);
@@ -333,7 +348,7 @@ describe('Organization deletion', () => {
       });
 
     const { getByText, getByTestId, queryByTestId } = renderRouteWithStore(
-      BASE_ROUTE
+      OrganizationsRoutes.Home
     );
 
     await wait(() => {

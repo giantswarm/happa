@@ -2,15 +2,23 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import ClusterDetail from './ClusterDetail/ClusterDetail';
 import NewCluster from './NewCluster/NewCluster';
 
-const Cluster = props => (
+const Cluster = () => (
   <Switch>
-    <Route component={NewCluster} exact path={`${props.match.path}/new`} />
-    <Route component={ClusterDetail} path={`${props.match.path}/:clusterId`} />
-    <Redirect path={`${props.match.path}/*`} to={`${props.match.url}`} />
+    <Route
+      component={NewCluster}
+      exact
+      path={OrganizationsRoutes.Clusters.New}
+    />
+    <Route
+      component={ClusterDetail}
+      path={OrganizationsRoutes.Clusters.Detail}
+    />
+    <Redirect to={OrganizationsRoutes.List} />
   </Switch>
 );
 

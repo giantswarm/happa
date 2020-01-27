@@ -11,6 +11,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import { AppRoutes } from 'shared/constants/routes';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 
@@ -71,7 +72,7 @@ class Login extends React.Component {
       this.props.actions
         .giantswarmLogin(this.state.email, this.state.password)
         .then(() => {
-          this.props.dispatch(push('/'));
+          this.props.dispatch(push(AppRoutes.Home));
 
           return null;
         })
@@ -139,7 +140,7 @@ class Login extends React.Component {
               >
                 Log in
               </Button>
-              <Link to='/forgot_password'>Forgot your password?</Link>
+              <Link to={AppRoutes.ForgotPassword}>Forgot your password?</Link>
             </form>
 
             <div className='login_form--legal'>

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { AppRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 
 import PasswordField from './PasswordField';
@@ -144,7 +145,7 @@ export class SignUp extends React.Component {
     );
 
     setTimeout(() => {
-      this.props.dispatch(push('/'));
+      this.props.dispatch(push(AppRoutes.Home));
     }, transitionDelay);
   }
 

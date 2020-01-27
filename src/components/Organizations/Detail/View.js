@@ -1,6 +1,7 @@
 import * as OrganizationActions from 'actions/organizationActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { relativeDate } from 'lib/helpers.js';
+import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -10,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 import Credentials from './Credentials';
@@ -125,6 +127,12 @@ class OrganizationDetail extends React.Component {
 
   render() {
     let credentialsSection = null;
+    const newClusterPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.New,
+      {
+        orgId: this.props.organization.id,
+      }
+    );
 
     if (this.canCredentials(this.props.app.info.general.provider)) {
       credentialsSection = (
@@ -168,9 +176,7 @@ class OrganizationDetail extends React.Component {
                     keyField='id'
                   />
                 )}
-                <Link
-                  to={`/organizations/${this.props.organization.id}/clusters/new/`}
-                >
+                <Link to={newClusterPath}>
                   <Button bsStyle='default'>
                     <i className='fa fa-add-circle' /> Create Cluster
                   </Button>
@@ -233,11 +239,17 @@ function clusterActionsCellFormatter(_cell, row) {
     return <span />;
   }
 
-  return (
-    <Link
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
       // eslint-disable-next-line react/no-this-in-sfc
-      to={`/organizations/${this.props.organization.id}/clusters/${row.id}`}
-    >
+      orgId: this.props.organization.id,
+      clusterId: row.id,
+    }
+  );
+
+  return (
+    <Link to={clusterDetailPath}>
       <Button bsStyle='default' type='button'>
         Details
       </Button>

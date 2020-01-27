@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import * as clusterActions from 'actions/clusterActions';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
+import RoutePath from 'lib/routePath';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -10,6 +11,7 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Dot } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
@@ -129,17 +131,28 @@ class ClusterDashboardItem extends React.Component {
 
   accessCluster = () => {
     const { id, owner } = this.props.cluster;
-
-    this.props.dispatch(
-      push(`/organizations/${owner}/clusters/${id}/getting-started/`)
+    const clusterGuidePath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.GettingStarted.Overview,
+      {
+        orgId: owner,
+        clusterId: id,
+      }
     );
+
+    this.props.dispatch(push(clusterGuidePath));
   };
 
   render() {
     const { cluster, isNodePool, selectedOrganization } = this.props;
     const { nodePools } = this.state;
 
-    const linkToCluster = `/organizations/${selectedOrganization}/clusters/${cluster.id}`;
+    const linkToCluster = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail,
+      {
+        orgId: selectedOrganization,
+        clusterId: cluster.id,
+      }
+    );
 
     if (cluster.delete_date) {
       return (

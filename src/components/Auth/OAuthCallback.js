@@ -7,6 +7,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import { AppRoutes } from 'shared/constants/routes';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 class OAuthCallback extends React.Component {
@@ -26,7 +27,7 @@ class OAuthCallback extends React.Component {
           props.actions
             .auth0Login(authResult)
             .then(() => {
-              props.dispatch(push('/'));
+              props.dispatch(push(AppRoutes.Home));
             })
             .catch(authError => {
               // eslint-disable-next-line no-console
@@ -52,7 +53,7 @@ class OAuthCallback extends React.Component {
       <div>
         <h1>Something went wrong</h1>
         <p>{this.state.error.errorDescription}</p>
-        <Link to='/admin-login'>Try again</Link>
+        <Link to={AppRoutes.AdminLogin}>Try again</Link>
       </div>
     );
   };
