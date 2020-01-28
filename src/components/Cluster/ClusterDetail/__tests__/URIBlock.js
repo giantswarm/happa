@@ -43,7 +43,7 @@ describe('URIBlock', () => {
     // Check if content is displayed
     expect(getByText(content)).toBeInTheDocument();
 
-    const copyButton = getByTitle('Copy content to clipboard');
+    const copyButton = getByTitle(/copy content to clipboard/i);
     expect(copyButton).toBeInTheDocument();
     fireEvent.mouseOver(copyButton);
     fireEvent.click(copyButton);
@@ -68,6 +68,6 @@ describe('URIBlock', () => {
     rerender(getComponentWithProps(componentProps));
 
     // Check if copy button is back
-    expect(getByTitle('Copy content to clipboard')).toBeInTheDocument();
+    expect(getByTitle(/copy content to clipboard/i)).toBeInTheDocument();
   });
 });

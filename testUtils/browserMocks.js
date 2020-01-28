@@ -41,3 +41,7 @@ global.console = {
 /* eslint-enable no-console */
 
 global.fetch = nodeFetch;
+
+global.Modernizr = {
+  adownload: true,
+};

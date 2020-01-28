@@ -74,7 +74,11 @@ export const FileBlock = ({ children, hideText, fileName }) => {
   const downloadAsFileLink = () => {
     return (
       <a download={fileName} href={window.URL.createObjectURL(getFileAsBlob())}>
-        <i aria-hidden='true' className='fa fa-file-download' />
+        <i
+          aria-hidden='true'
+          className='fa fa-file-download'
+          title='Download file'
+        />
       </a>
     );
   };
@@ -95,7 +99,11 @@ export const FileBlock = ({ children, hideText, fileName }) => {
         >
           {Modernizr.adownload ? downloadAsFileLink() : null}
           <a href='#' onClick={handleClick} onMouseUp={copyCodeToClipboard}>
-            <i aria-hidden='true' className='fa fa-content-copy' />
+            <i
+              aria-hidden='true'
+              className='fa fa-content-copy'
+              title='Copy content to clipboard'
+            />
           </a>
         </div>
         <BaseTransition
@@ -103,7 +111,11 @@ export const FileBlock = ({ children, hideText, fileName }) => {
           timeout={{ enter: 1000, exit: 1000 }}
           classNames='checkmark'
         >
-          <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
+          <i
+            aria-hidden='true'
+            className='fa fa-done codeblock--checkmark'
+            title='Content copied to clipboard'
+          />
         </BaseTransition>
       </pre>
     </div>
