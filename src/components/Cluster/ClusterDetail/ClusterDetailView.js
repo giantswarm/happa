@@ -178,6 +178,7 @@ class ClusterDetailView extends React.Component {
     // Is AWSConfig.Status present yet?
     if (
       Object.keys(this.props.cluster).includes('status') &&
+      this.props.cluster.status &&
       this.props.cluster.status !== null
     ) {
       return this.props.cluster.status.cluster.scaling.desiredCapacity;
