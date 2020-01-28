@@ -54,7 +54,6 @@ beforeEach(() => {
   getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse, 3);
   getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`, [], 2);
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-  getMockCall('/v4/releases/', releasesResponse);
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 });
 
@@ -65,6 +64,8 @@ afterEach(() => {
 });
 
 it('renders all the v4 Azure cluster data correctly', async () => {
+  getMockCall('/v4/releases/', releasesResponse);
+
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail,
     {
@@ -109,7 +110,33 @@ it('renders all the v4 Azure cluster data correctly', async () => {
   );
 });
 
-it('ensures that the availability zones can be customized during cluster creation', async () => {
+it('prevents availability zones customization for an unsupported release version', async () => {
+  // Cloning to not break the releases list for the next tests
+  const unsupportedReleaseResponse = releasesResponse.slice();
+  unsupportedReleaseResponse[2] = Object.assign(
+    {},
+    unsupportedReleaseResponse[2],
+    {
+      version: '8.4.0',
+    }
+  );
+  getMockCall('/v4/releases/', unsupportedReleaseResponse);
+
+  const clusterCreationPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.New,
+    { orgId: ORGANIZATION }
+  );
+  const { findByText } = renderRouteWithStore(clusterCreationPath);
+
+  const azNotAvailableWarning = await findByText(
+    /selection of availability zones is only possible for release version 11.1.0 or greater./i
+  );
+  expect(azNotAvailableWarning).toBeInTheDocument();
+});
+
+it('can customize availability zones during cluster creation', async () => {
+  getMockCall('/v4/releases/', releasesResponse);
+
   const clusterCreationResponse = {
     code: 'RESOURCE_CREATED',
     message: `The cluster with ID ${V4_CLUSTER.id} has been created.`,
@@ -160,6 +187,8 @@ it('ensures that the availability zones can be customized during cluster creatio
 
 it(`shows the v4 Azure cluster scaling modal when the button is clicked with default values and
 scales correctly`, async () => {
+  getMockCall('/v4/releases/', releasesResponse);
+
   const cluster = v4AzureClusterResponse;
   const defaultScaling = cluster.scaling;
   const increaseByCount = 1;
