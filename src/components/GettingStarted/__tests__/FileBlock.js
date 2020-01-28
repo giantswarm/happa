@@ -59,7 +59,7 @@ describe('FileBlock', () => {
     // Check if content is displayed
     expect(getByText(testContent)).toBeInTheDocument();
 
-    const copyButton = getByTitle(/copy content to clipboard/i).parentNode;
+    const copyButton = getByTitle(/copy content to clipboard/i);
     expect(copyButton).toBeInTheDocument();
     fireEvent.mouseUp(copyButton);
 
@@ -87,6 +87,6 @@ describe('FileBlock', () => {
     });
 
     // Check if content is hidden
-    expect(queryByText(testContent)).toBeNull();
+    expect(queryByText(testContent)).not.toBeInTheDocument();
   });
 });
