@@ -2,8 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "*": ["./src/components/*", "./src/*"]
+      "*": ["./src/components/*", "./src/*"],
+      "testUtils/*": ["./testUtils/*"],
+      "__tests__/*": ["./__tests__/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "testUtils", "__tests__"]
 }

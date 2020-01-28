@@ -1,6 +1,5 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import * as clusterActions from 'actions/clusterActions';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
 import RoutePath from 'lib/routePath';
@@ -10,7 +9,6 @@ import React from 'react';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Dot } from 'styles';
 import Button from 'UI/Button';
@@ -79,13 +77,16 @@ class ClusterDashboardItem extends React.Component {
   componentDidMount() {
     this.registerReRenderInterval();
 
-    if (this.props.isNodePool) {
+    if (this.props.isV5Cluster) {
       this.setClusterNodePools();
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.isNodePool && prevProps.nodePools !== this.props.nodePools) {
+    if (
+      this.props.isV5Cluster &&
+      prevProps.nodePools !== this.props.nodePools
+    ) {
       this.setClusterNodePools();
     }
   }
@@ -142,8 +143,10 @@ class ClusterDashboardItem extends React.Component {
     this.props.dispatch(push(clusterGuidePath));
   };
 
+  // eslint-disable-next-line complexity
   render() {
-    const { cluster, isNodePool, selectedOrganization } = this.props;
+    const { cluster, isV5Cluster, selectedOrganization } = this.props;
+
     const { nodePools } = this.state;
 
     const linkToCluster = RoutePath.createUsablePath(
@@ -203,7 +206,7 @@ class ClusterDashboardItem extends React.Component {
           <ClusterDashboardResources
             cluster={cluster}
             nodePools={nodePools}
-            isNodePool={isNodePool}
+            isV5Cluster={isV5Cluster}
           />
         </ContentWrapper>
 
@@ -232,15 +235,14 @@ ClusterDashboardItem.propTypes = {
   selectedOrganization: PropTypes.string,
   animate: PropTypes.bool,
   dispatch: PropTypes.func,
-  isNodePool: PropTypes.bool,
+  isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.object,
 };
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(clusterActions, dispatch),
     dispatch: dispatch,
   };
 }
 
-export default connect(null, mapDispatchToProps)(ClusterDashboardItem);
+export default connect(undefined, mapDispatchToProps)(ClusterDashboardItem);

@@ -98,7 +98,7 @@ class ClusterDetailView extends React.Component {
       batchedClusterDetailView(
         organizationId,
         cluster.id,
-        this.props.isNodePoolsCluster
+        this.props.isV5Cluster
       )
     );
   };
@@ -107,7 +107,7 @@ class ClusterDetailView extends React.Component {
     this.props.dispatch(
       batchedRefreshClusterDetailView(
         this.props.cluster.id,
-        this.props.isNodePoolsCluster
+        this.props.isV5Cluster
       )
     );
   };
@@ -178,7 +178,7 @@ class ClusterDetailView extends React.Component {
     // Is AWSConfig.Status present yet?
     if (
       Object.keys(this.props.cluster).includes('status') &&
-      this.props.cluster.status !== null
+      this.props.cluster.status
     ) {
       return this.props.cluster.status.cluster.scaling.desiredCapacity;
     }
@@ -206,7 +206,7 @@ class ClusterDetailView extends React.Component {
           clusterActions.clusterPatch(
             this.props.cluster,
             { name: value },
-            this.props.isNodePoolsCluster
+            this.props.isV5Cluster
           )
         )
         .then(() => {
@@ -228,7 +228,7 @@ class ClusterDetailView extends React.Component {
       cluster,
       credentials,
       dispatch,
-      isNodePoolsCluster,
+      isV5Cluster,
       nodePools,
       provider,
       release,
@@ -264,7 +264,7 @@ class ClusterDetailView extends React.Component {
                 <div className='col-12'>
                   <Tabs>
                     <Tab eventKey={1} title='General'>
-                      {isNodePoolsCluster ? (
+                      {isV5Cluster ? (
                         <V5ClusterDetailTable
                           accessCluster={this.accessCluster}
                           canClusterUpgrade={this.canClusterUpgrade()}
@@ -334,7 +334,7 @@ class ClusterDetailView extends React.Component {
                   </Tabs>
                 </div>
               </div>
-              {!isNodePoolsCluster && (
+              {!isV5Cluster && (
                 <ScaleClusterModal
                   cluster={cluster}
                   provider={provider}
@@ -376,7 +376,7 @@ ClusterDetailView.propTypes = {
   clusterId: PropTypes.string,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
-  isNodePoolsCluster: PropTypes.bool,
+  isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.object,
   organizationId: PropTypes.string,
   releaseActions: PropTypes.object,

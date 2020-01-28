@@ -49,6 +49,8 @@ const theme = {
     red: 'red',
     gray: '#ccc',
     error: '#e49090',
+
+    loadingForeground: '#507184',
   },
   border_radius: '4px',
   breakpoints: {

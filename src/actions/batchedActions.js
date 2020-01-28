@@ -26,6 +26,7 @@ export const batchedLayout = () => async dispatch => {
       clusterActions.clustersDetails({
         filterBySelectedOrganization: true,
         withLoadingFlags: true,
+        initializeNodePools: true,
       })
     );
     await dispatch(
@@ -42,17 +43,18 @@ export const batchedLayout = () => async dispatch => {
 
 export const batchedRefreshClusters = () => async dispatch => {
   try {
-    await dispatch(clusterActions.clustersList({ withLoadingFlags: false }));
+    // Removed clustersList() cause it overwrites the store and triggers new rerenders.
     await dispatch(
       clusterActions.clustersDetails({
         filterBySelectedOrganization: true,
         withLoadingFlags: false,
+        initializeNodePools: false,
       })
     );
     dispatch(
       nodePoolActions.nodePoolsLoad({
         filterBySelectedOrganization: true,
-        withLoadingFlags: true,
+        withLoadingFlags: false,
       })
     );
   } catch (err) {
@@ -80,7 +82,10 @@ export const batchedClusterCreate = (
 
     // TODO We can avoid this call by computing capabilities in the call above and storing the cluster
     await dispatch(
-      clusterActions.clusterLoadDetails(clusterId, { withLoadingFlags: true })
+      clusterActions.clusterLoadDetails(clusterId, {
+        withLoadingFlags: true,
+        initializeNodePools: true,
+      })
     );
 
     if (isV5Cluster) {
@@ -112,7 +117,10 @@ export const batchedClusterDetailView = (
 
     await dispatch(releaseActions.loadReleases());
     await dispatch(
-      clusterActions.clusterLoadDetails(clusterId, { withLoadingFlags: true })
+      clusterActions.clusterLoadDetails(clusterId, {
+        withLoadingFlags: true,
+        initializeNodePools: true,
+      })
     );
     if (isV5Cluster) {
       await dispatch(
@@ -134,7 +142,10 @@ export const batchedRefreshClusterDetailView = (
 ) => async dispatch => {
   try {
     await dispatch(
-      clusterActions.clusterLoadDetails(clusterId, { withLoadingFlags: false })
+      clusterActions.clusterLoadDetails(clusterId, {
+        withLoadingFlags: false,
+        initializeNodePools: true,
+      })
     );
     if (isV5Cluster) {
       await dispatch(
@@ -172,8 +183,8 @@ export const batchedOrganizationSelect = orgId => async dispatch => {
     await dispatch(organizationActions.organizationSelect(orgId));
     dispatch(
       clusterActions.clustersDetails({
-        filterBySelectedOrganization: false,
-        withLoadingFlags: false,
+        filterBySelectedOrganization: false, // TODO set this to false? Not sure why are we doing this
+        withLoadingFlags: true,
       })
     );
     await dispatch(
