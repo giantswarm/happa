@@ -91,7 +91,7 @@ const makeMapStateToProps = () => {
       resources: props.isV5Cluster
         ? resourcesV5(state, props)
         : resourcesV4(state, props),
-      loadingClusters: state.loadingFlags.CLUSTERS_LOAD_DETAILS,
+      loadingClusters: state.loadingFlags.CLUSTERS_DETAILS,
       loadingNodePools: state.loadingFlags.NODEPOOLS_LOAD,
       loadingStatus: state.loadingFlags.CLUSTER_LOAD_STATUS,
     };
