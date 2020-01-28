@@ -1,22 +1,25 @@
 import '@testing-library/jest-dom/extend-expect';
 
-// import { fireEvent } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
-import { renderWithTheme } from 'testUtils/renderUtils';
+import { getComponentWithTheme } from 'testUtils/renderUtils';
 
 import URIBlock from '../URIBlock';
 
-jest.mock('lib/effects/useCopyToClipboard', () => {
-  return jest.fn().mockImplementation(() => {
-    return [false, jest.fn()];
-  });
-});
+jest.mock('lib/effects/useCopyToClipboard');
 
-const renderWithProps = (props = {}) => renderWithTheme(URIBlock, props);
+let setClipboardContentMockFn = null;
+
+const getComponentWithProps = (props = {}) =>
+  getComponentWithTheme(URIBlock, props);
+const renderWithProps = (props = {}) => render(getComponentWithProps(props));
 
 describe('URIBlock', () => {
   beforeEach(() => {
     useCopyToClipboard.mockClear();
+
+    setClipboardContentMockFn = jest.fn();
+    useCopyToClipboard.mockReturnValueOnce([false, setClipboardContentMockFn]);
   });
 
   it('renders without crashing', () => {
@@ -31,26 +34,40 @@ describe('URIBlock', () => {
   });
 
   it('copies content to clipboard', () => {
-    // const setClipboardContentMockFn = jest.fn();
-    // useCopyToClipboard.mockImplementationOnce(() => [
-    //   false,
-    //   setClipboardContentMockFn,
-    // ]);
-
     const content = 'This is a test';
-    const { getByText } = renderWithProps({ children: content });
+    const componentProps = {
+      children: content,
+    };
+    const { getByText, getByTitle, rerender } = renderWithProps(componentProps);
 
     // Check if content is displayed
     expect(getByText(content)).toBeInTheDocument();
 
-    // const copyButton = getByTitle('Copy content to clipboard');
-    // expect(copyButton).toBeInTheDocument();
-    // fireEvent.mouseOver(copyButton);
+    const copyButton = getByTitle('Copy content to clipboard');
+    expect(copyButton).toBeInTheDocument();
+    fireEvent.mouseOver(copyButton);
+    fireEvent.click(copyButton);
 
-    // // useCopyToClipboard.mockReturnValue([true, setClipboardContentMockFn]);
+    expect(setClipboardContentMockFn).toBeCalledWith(content);
 
-    // fireEvent.click(copyButton);
+    // Check if moving the cursor from the
+    // button resets the clipboard content
+    fireEvent.mouseLeave(copyButton);
+    expect(setClipboardContentMockFn).toBeCalledWith(null);
 
-    // expect(setClipboardContentMockFn).toBeCalledWith(content);
+    // Set content in clipboard
+    useCopyToClipboard.mockReturnValueOnce([true, setClipboardContentMockFn]);
+    rerender(getComponentWithProps(componentProps));
+
+    // Check if validation is in the document
+    const copyConfirmationLabel = getByTitle(/content copied to clipboard/i);
+    expect(copyConfirmationLabel).toBeInTheDocument();
+
+    // Reset content in clipboard
+    useCopyToClipboard.mockReturnValueOnce([false, setClipboardContentMockFn]);
+    rerender(getComponentWithProps(componentProps));
+
+    // Check if copy button is back
+    expect(getByTitle('Copy content to clipboard')).toBeInTheDocument();
   });
 });
