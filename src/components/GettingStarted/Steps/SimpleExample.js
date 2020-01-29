@@ -48,7 +48,7 @@ class SimpleExample extends React.Component {
   componentDidMount() {
     if (!this.props.cluster) {
       new FlashMessage(
-        'This organization has no clusters.',
+        `This cluster doesn't exist.`,
         messageType.ERROR,
         messageTTL.MEDIUM,
         'This page might not work as expected.'
@@ -57,39 +57,14 @@ class SimpleExample extends React.Component {
       this.setState({
         loading: 'failed',
       });
-    } else {
-      this.setState({
-        loading: true,
-      });
-
-      this.props.actions
-        .clusterLoadDetails(this.props.cluster.id, { withLoadingFlags: false })
-        .then(() => {
-          this.setState({
-            loading: false,
-          });
-        })
-        .catch(() => {
-          new FlashMessage(
-            'Something went wrong while trying to load cluster details.',
-            messageType.ERROR,
-            messageTTL.LONG,
-            'Please try again later or contact support: support@giantswarm.io'
-          );
-
-          this.setState({
-            loading: 'failed',
-          });
-        });
     }
   }
 
   linkToHelloWorld() {
     if (this.state.loading === 'failed') {
       return 'Could not figure out the url for your hello world app. Sorry.';
-    } else if (this.state.loading) {
-      return 'Figuring out the url...';
     }
+
     const url = `http://helloworld.${this.clusterBaseDomain()}`;
 
     return (
