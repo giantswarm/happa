@@ -306,9 +306,9 @@ class V5ClusterDetailTable extends React.Component {
     }
   }
 
-  // TODO Move this to the action creator so it will be triggered on every NPs load.
   produceNodePools = () => {
-    // If there are no node pools, set local state to an empty array
+    // If there are no node pools or after all node pools are removed, set local
+    // state to an empty array
     if (Object.keys(this.props.nodePools).length === 0) {
       this.setState({
         nodePools: [],
