@@ -50,8 +50,10 @@ describe('URIBlock', () => {
 
     expect(setClipboardContentMockFn).toBeCalledWith(content);
 
-    // Check if moving the cursor from the
-    // button resets the clipboard content
+    /**
+     * Check if moving the cursor from the
+     * button resets the clipboard content
+     */
     fireEvent.mouseLeave(copyButton);
     expect(setClipboardContentMockFn).toBeCalledWith(null);
 
