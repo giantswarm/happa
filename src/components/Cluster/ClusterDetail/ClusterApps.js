@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
@@ -15,6 +16,8 @@ import AppDetailsModal from './AppDetailsModal';
 // Components are
 //  - not really ever installed (no App CR) but still something we want to show
 //    here. These would be components from the release.
+
+const OptionalIngressNotice = styled.div``;
 
 class ClusterApps extends React.Component {
   state = {
@@ -309,22 +312,61 @@ class ClusterApps extends React.Component {
           </p>
           <div className='row'>
             {this.props.release ? (
-              Object.keys(this.preinstalledApps()).map(appCategory => {
-                return (
-                  <div className='col-4' key={appCategory}>
-                    <h6>{appCategory}</h6>
-                    {this.preinstalledApps()[appCategory].map(app => {
-                      return (
-                        <div className='cluster-apps--app' key={app.name}>
-                          <img alt={`${app.title} icon`} src={app.logoUrl} />
-                          {app.name}
-                          <small>{app.version}&nbsp;</small>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })
+              <>
+                <div className='col-4' key='essentials'>
+                  <h6>essentials</h6>
+                  {this.preinstalledApps().essentials.map(app => {
+                    return (
+                      <div className='cluster-apps--app' key={app.name}>
+                        <img alt={`${app.title} icon`} src={app.logoUrl} />
+                        {app.name}
+                        <small>{app.version}&nbsp;</small>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className='col-4' key='management'>
+                  <h6>management</h6>
+                  {this.preinstalledApps().management.map(app => {
+                    return (
+                      <div className='cluster-apps--app' key={app.name}>
+                        <img alt={`${app.title} icon`} src={app.logoUrl} />
+                        {app.name}
+                        <small>{app.version}&nbsp;</small>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className='col-4' key='ingress'>
+                  <h6>ingress</h6>
+                  {this.props.hasOptionalIngress ? (
+                    <OptionalIngressNotice>
+                      The ingress controller is optional on this cluster.
+                      <br />
+                      You can install one using our app catalog.
+                      <br />
+                      <br />
+                      Read more in our{' '}
+                      <a href='/ingress-guide'>
+                        installing an ingress controller guide.
+                      </a>
+                    </OptionalIngressNotice>
+                  ) : (
+                    undefined
+                  )}
+                  {this.preinstalledApps().ingress.map(app => {
+                    return (
+                      <div className='cluster-apps--app' key={app.name}>
+                        <img alt={`${app.title} icon`} src={app.logoUrl} />
+                        {app.name}
+                        <small>{app.version}&nbsp;</small>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
             ) : (
               <div className='flash-messages--flash-message flash-messages--danger'>
                 Unable to load the list of preinstalled apps. Please try again
@@ -360,6 +402,7 @@ ClusterApps.propTypes = {
   clusterId: PropTypes.string,
   organizationId: PropTypes.string,
   release: PropTypes.object,
+  hasOptionalIngress: PropTypes.bool,
 };
 
 export default ClusterApps;
