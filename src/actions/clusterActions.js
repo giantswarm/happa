@@ -713,8 +713,11 @@ export const clusterDeleteError = (clusterId, error) => ({
  * @param {Object} cluster Cluster object
  * @param {Object} payload object with just the data we want to modify
  */
-export function clusterPatch(cluster, payload, isV5Cluster) {
-  return function(dispatch) {
+export function clusterPatch(cluster, payload) {
+  return function(dispatch, getState) {
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(cluster.id);
+
     // Optimistic update.
     dispatch({
       type: types.CLUSTER_PATCH,
