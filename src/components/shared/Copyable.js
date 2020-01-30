@@ -21,12 +21,17 @@ const Copyable = ({ children, copyText }) => {
       onClick={handleCopyToClipboard}
       onMouseLeave={handleDisplayCopyingDone}
       style={{ cursor: 'pointer' }}
+      title='Copy content to clipboard'
     >
       <div className='copyable-content'>{children}</div>
 
       <div className='copyable-tooltip'>
         {hasContentInClipboard ? (
-          <i aria-hidden='true' className='fa fa-done' />
+          <i
+            aria-hidden='true'
+            className='fa fa-done'
+            title='Content copied to clipboard'
+          />
         ) : (
           <OverlayTrigger
             overlay={<Tooltip id='tooltip'>Copy to clipboard.</Tooltip>}
@@ -41,7 +46,7 @@ const Copyable = ({ children, copyText }) => {
 };
 
 Copyable.propTypes = {
-  children: PropTypes.object,
+  children: PropTypes.node,
   copyText: PropTypes.string,
 };
 
