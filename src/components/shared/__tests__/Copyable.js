@@ -33,7 +33,7 @@ describe('Copyable', () => {
     expect(getByText(content)).toBeInTheDocument();
   });
 
-  it('copies content to clipboard', async () => {
+  it('copies content to clipboard after pressing the copy button', async () => {
     const content = 'This is a test';
     const componentProps = {
       children: content,

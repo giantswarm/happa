@@ -33,7 +33,7 @@ describe('URIBlock', () => {
     expect(getByText(title)).toBeInTheDocument();
   });
 
-  it('copies content to clipboard', () => {
+  it('copies content to clipboard after pressing the copy button', () => {
     const content = 'This is a test';
     const componentProps = {
       children: content,

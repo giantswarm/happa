@@ -53,7 +53,7 @@ describe('FileBlock', () => {
     expect(global.URL.createObjectURL).toBeCalledWith(expectedFileBlob);
   });
 
-  it('copies content to clipboard', async () => {
+  it('copies the command to clipboard after pressing the copy button', async () => {
     const { getByText, getByTitle, findByTitle, rerender } = renderWithProps();
 
     // Check if content is displayed

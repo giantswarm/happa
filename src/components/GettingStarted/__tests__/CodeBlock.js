@@ -43,7 +43,7 @@ describe('CodeBlock', () => {
     expect(getByText(command)).toBeInTheDocument();
   });
 
-  it('copies content to clipboard', async () => {
+  it('copies content to clipboard after pressing the copy button', async () => {
     const command = 'testcommand run test';
     const componentProps = {
       /**
