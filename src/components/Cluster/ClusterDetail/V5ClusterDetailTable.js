@@ -339,9 +339,6 @@ class V5ClusterDetailTable extends React.Component {
       .join(' ');
     this.setState({
       availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
-    });
-
-    this.setState({
       nodePools,
       loading: false,
     });
