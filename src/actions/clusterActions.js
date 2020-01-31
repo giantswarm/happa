@@ -478,7 +478,7 @@ export function clusterLoadDetails(
         'Please try again later or contact support: support@giantswarm.io'
       );
 
-      throw error;
+      return {};
     }
   };
 }
