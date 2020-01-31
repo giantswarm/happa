@@ -8,12 +8,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
-import { selectResourcesV5 } from 'selectors/clusterSelectors';
+import {
+  selectClusterNodePools,
+  selectResourcesV5,
+} from 'selectors/clusterSelectors';
 import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
-import { clusterNodePools } from 'utils/clusterUtils';
 
 import AddNodePool from './AddNodePool';
 import CredentialInfoRow from './CredentialInfoRow';
@@ -287,7 +289,6 @@ class V5ClusterDetailTable extends React.Component {
   state = {
     loading: false,
     availableZonesGridTemplateAreas: '',
-    nodePools: [],
     isNodePoolBeingAdded: false,
     nodePoolForm: {
       isValid: false,
@@ -297,32 +298,19 @@ class V5ClusterDetailTable extends React.Component {
   };
 
   componentDidMount() {
-    this.produceNodePools();
+    this.produceAZGrid();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.nodePools !== this.props.nodePools) {
-      this.produceNodePools();
+      this.produceAZGrid();
     }
   }
 
-  produceNodePools = () => {
-    // If there are no node pools or after all node pools are removed, set local
-    // state to an empty array
-    if (Object.keys(this.props.nodePools).length === 0) {
-      this.setState({
-        nodePools: [],
-        loading: false,
-      });
-
-      return;
-    }
-
+  produceAZGrid = () => {
     this.setState({ loading: true });
-    const nodePools = clusterNodePools(
-      this.props.nodePools,
-      this.props.cluster
-    );
+
+    const { nodePools } = this.props;
 
     const allZones = nodePools
       ? nodePools
@@ -337,9 +325,9 @@ class V5ClusterDetailTable extends React.Component {
     const availableZonesGridTemplateAreas = [...new Set(allZones)]
       .sort()
       .join(' ');
+
     this.setState({
       availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
-      nodePools,
       loading: false,
     });
   };
@@ -384,12 +372,9 @@ class V5ClusterDetailTable extends React.Component {
   }
 
   render() {
+    const { availableZonesGridTemplateAreas, nodePoolForm } = this.state;
     const {
-      availableZonesGridTemplateAreas,
       nodePools,
-      nodePoolForm,
-    } = this.state;
-    const {
       accessCluster,
       cluster,
       credentials,
@@ -597,13 +582,13 @@ V5ClusterDetailTable.propTypes = {
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
   lastUpdated: PropTypes.number,
-  nodePools: PropTypes.object,
   provider: PropTypes.string,
   region: PropTypes.string,
   release: PropTypes.object,
   setInterval: PropTypes.func,
   showUpgradeModal: PropTypes.func,
   workerNodesDesired: PropTypes.number,
+  nodePools: PropTypes.array,
   resources: PropTypes.object,
   loadingNodePools: PropTypes.bool,
 };
@@ -612,6 +597,7 @@ const makeMapStateToProps = () => {
   const resourcesV5 = selectResourcesV5();
   const mapStateToProps = (state, props) => {
     return {
+      nodePools: selectClusterNodePools(state, props.cluster.id),
       resources: resourcesV5(state, props),
       loadingNodePools: state.loadingFlags.CLUSTER_NODEPOOLS_LOAD,
     };

@@ -20,6 +20,18 @@ const selectClusterNodePoolsIds = (state, props) => {
   return state.entities.clusters.items[props.cluster.id].nodePools;
 };
 
+export const selectClusterNodePools = (state, clusterId) => {
+  const clusterNodePoolsIds =
+    state.entities.clusters.items[clusterId].nodePools;
+
+  // Return an empty array for v4 clusters
+  if (!clusterNodePoolsIds) return [];
+
+  const nodePools = state.entities.nodePools.items;
+
+  return clusterNodePoolsIds.map(nodePoolId => nodePools[nodePoolId]) || [];
+};
+
 // Memoized Reselect selectors
 // TODO not memoizing correctly, state in store is not modified... investigate further
 // https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc
