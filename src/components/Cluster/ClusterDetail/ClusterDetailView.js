@@ -203,11 +203,7 @@ class ClusterDetailView extends React.Component {
     return new Promise((resolve, reject) => {
       this.props
         .dispatch(
-          clusterActions.clusterPatch(
-            this.props.cluster,
-            { name: value },
-            this.props.isV5Cluster
-          )
+          clusterActions.clusterPatch(this.props.cluster, { name: value })
         )
         .then(() => {
           new FlashMessage(

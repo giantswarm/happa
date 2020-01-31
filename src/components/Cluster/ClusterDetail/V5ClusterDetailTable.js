@@ -287,7 +287,7 @@ class V5ClusterDetailTable extends React.Component {
   state = {
     loading: false,
     availableZonesGridTemplateAreas: '',
-    nodePools: null,
+    nodePools: [],
     isNodePoolBeingAdded: false,
     nodePoolForm: {
       isValid: false,
@@ -306,37 +306,42 @@ class V5ClusterDetailTable extends React.Component {
     }
   }
 
-  // TODO Move this to the action creator so it will be triggered on every NPs load.
   produceNodePools = () => {
-    if (Object.keys(this.props.nodePools).length > 0) {
-      this.setState({ loading: true });
-      const nodePools = clusterNodePools(
-        this.props.nodePools,
-        this.props.cluster
-      );
-
-      const allZones = nodePools
-        ? nodePools
-            .reduce((accumulator, current) => {
-              return [...accumulator, ...current.availability_zones];
-            }, [])
-            .map(zone => zone.slice(-1))
-        : [];
-
-      // This array stores available zones that are in at least one node pool.
-      // We only want unique values because this is used fot building the grid.
-      const availableZonesGridTemplateAreas = [...new Set(allZones)]
-        .sort()
-        .join(' ');
+    // If there are no node pools or after all node pools are removed, set local
+    // state to an empty array
+    if (Object.keys(this.props.nodePools).length === 0) {
       this.setState({
-        availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
-      });
-
-      this.setState({
-        nodePools,
+        nodePools: [],
         loading: false,
       });
+
+      return;
     }
+
+    this.setState({ loading: true });
+    const nodePools = clusterNodePools(
+      this.props.nodePools,
+      this.props.cluster
+    );
+
+    const allZones = nodePools
+      ? nodePools
+          .reduce((accumulator, current) => {
+            return [...accumulator, ...current.availability_zones];
+          }, [])
+          .map(zone => zone.slice(-1))
+      : [];
+
+    // This array stores available zones that are in at least one node pool.
+    // We only want unique values because this is used fot building the grid.
+    const availableZonesGridTemplateAreas = [...new Set(allZones)]
+      .sort()
+      .join(' ');
+    this.setState({
+      availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
+      nodePools,
+      loading: false,
+    });
   };
 
   toggleAddNodePoolForm = () =>
