@@ -121,7 +121,7 @@
     "husky": "4.2.1",
     "jest": "25.1.0",
     "json-loader": "0.5.7",
-    "lint-staged": "10.0.2",
+    "lint-staged": "10.0.7",
     "mini-css-extract-plugin": "0.9.0",
     "nock": "11.7.2",
     "node-sass": "4.13.1",
