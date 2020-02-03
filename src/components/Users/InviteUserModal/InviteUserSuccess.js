@@ -12,7 +12,7 @@ const InviteUserSuccess = ({ inviteForm, invitationResult }) => {
   /* prettier-ignore */
   let sendEmailContent = 'You\'ve chosen not to send them an email. Send them the link below to accept the invitation';
 
-  if (!inviteForm.sendEmail) {
+  if (inviteForm.sendEmail) {
     sendEmailContent = `An email has been sent to ${inviteForm.email} with further instructions.`;
   }
 
