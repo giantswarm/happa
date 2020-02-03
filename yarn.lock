@@ -9692,10 +9692,10 @@ react-breadcrumbs@2.1.7:
     redux "^3.6.0"
     uuid "^3.0.1"
 
-react-content-loader@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/react-content-loader/-/react-content-loader-5.0.0.tgz#6a8ac5cd9d6f3c2a6651813f9bbcbb86c2eb573f"
-  integrity sha512-cjiFpErrWLAgCFmlrwoUVFhilew0EQ8DUrx0gRuQuxqTRivuAnSfJ83N5mazGJGw6sgOqi0xcVuQvNGaj44z8Q==
+react-content-loader@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/react-content-loader/-/react-content-loader-5.0.1.tgz#8da35e362bd1f53233c9daec99a67d8ea14ecd68"
+  integrity sha512-id1zp9jcB+SfJV9Vrjpmk+Qt+zJ3owYiIAGkHy8V4Sffvcyr6zmZbai8qT+Y3bPrvnH3kWvr9iO5giC5g9cYKQ==
 
 react-datepicker@2.11.0:
   version "2.11.0"
