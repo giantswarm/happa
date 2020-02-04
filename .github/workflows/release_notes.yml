@@ -2,7 +2,7 @@ name: Release Notes Creator
 on:
   push:
     branches:
-      - master
+      - add-release-notes-creator
 jobs:
   create-release-notes:
     runs-on: ubuntu-latest
