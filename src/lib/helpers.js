@@ -158,6 +158,10 @@ export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
     apiEndpoint = apiEndpointParts.join('');
   }
 
+  const namePrefix = `giantswarm-${cluster.id}`;
+  const currentContext = `${namePrefix}-context`;
+  const currentUser = `${namePrefix}-user`;
+
   return `
     apiVersion: v1
     kind: Config
@@ -167,15 +171,15 @@ export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
           keyPairResult.certificate_authority_data
         )}
         server: ${apiEndpoint}
-      name: ${cluster.name}
+      name: ${namePrefix}
     contexts:
     - context:
-        cluster: ${cluster.name}
-        user: "giantswarm-default"
-      name: giantswarm-default
-    current-context: giantswarm-default
+        cluster: ${namePrefix}
+        user: ${currentUser}
+      name: ${currentContext}
+    current-context: ${currentContext}
     users:
-    - name: "giantswarm-default"
+    - name: ${currentUser}
       user:
         client-certificate-data: ${btoa(keyPairResult.client_certificate_data)}
         client-key-data: ${btoa(keyPairResult.client_key_data)}
