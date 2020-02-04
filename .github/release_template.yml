@@ -20,6 +20,8 @@ categories:
   label: '[SECURITY]'
 
 change-template: '- $TITLE (#$NUMBER)'
+template: |
+  $CHANGES
 replacers:
 - search: '/\[([A-Z])+\]\s/g'
   replace: ''
