@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
 import {
+  selectAndProduceAZGridTemplateAreas,
   selectClusterNodePools,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
@@ -287,49 +288,12 @@ export const CopyToClipboardDiv = styled.div`
 
 class V5ClusterDetailTable extends React.Component {
   state = {
-    loading: false,
-    availableZonesGridTemplateAreas: '',
     isNodePoolBeingAdded: false,
     nodePoolForm: {
       isValid: false,
       isSubmitting: false,
       data: {},
     },
-  };
-
-  componentDidMount() {
-    this.produceAZGrid();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.nodePools !== this.props.nodePools) {
-      this.produceAZGrid();
-    }
-  }
-
-  produceAZGrid = () => {
-    this.setState({ loading: true });
-
-    const { nodePools } = this.props;
-
-    const allZones = nodePools
-      ? nodePools
-          .reduce((accumulator, current) => {
-            return [...accumulator, ...current.availability_zones];
-          }, [])
-          .map(zone => zone.slice(-1))
-      : [];
-
-    // This array stores available zones that are in at least one node pool.
-    // We only want unique values because this is used fot building the grid.
-    const availableZonesGridTemplateAreas = [...new Set(allZones)]
-      .sort()
-      .join(' ');
-
-    this.setState({
-      availableZonesGridTemplateAreas: `"${availableZonesGridTemplateAreas}"`,
-      loading: false,
-    });
   };
 
   toggleAddNodePoolForm = () =>
@@ -372,7 +336,7 @@ class V5ClusterDetailTable extends React.Component {
   }
 
   render() {
-    const { availableZonesGridTemplateAreas, nodePoolForm } = this.state;
+    const { nodePoolForm } = this.state;
     const {
       nodePools,
       accessCluster,
@@ -382,13 +346,14 @@ class V5ClusterDetailTable extends React.Component {
       region,
       release,
       resources,
+      AZGridTemplateAreas,
       loadingNodePools,
     } = this.props;
 
     const { create_date, release_version, api_endpoint } = cluster;
-    const zeroNodePools = nodePools && nodePools.length === 0;
-
     const { numberOfNodes, memory, cores } = resources;
+
+    const zeroNodePools = nodePools && nodePools.length === 0;
 
     return (
       <>
@@ -432,65 +397,60 @@ class V5ClusterDetailTable extends React.Component {
 
         <NodePoolsWrapper>
           <h2>Node Pools</h2>
-          {nodePools &&
-            nodePools.length > 0 &&
-            !this.state.loading &&
-            !loadingNodePools && (
-              <>
-                <GridRowNodePoolsNodes>
-                  <div>
-                    <span>NODES</span>
-                  </div>
-                </GridRowNodePoolsNodes>
-                <GridRowNodePoolsHeaders>
-                  <span>ID</span>
-                  <span style={{ paddingLeft: '8px', justifySelf: 'left' }}>
-                    NAME
-                  </span>
-                  <span>INSTANCE TYPE</span>
-                  <span>AVAILABILITY ZONES</span>
-                  <span>MIN</span>
-                  <span>MAX</span>
-                  <span>DESIRED</span>
-                  <span>CURRENT</span>
-                  <span> </span>
-                </GridRowNodePoolsHeaders>
-                <TransitionGroup>
-                  {nodePools
-                    .sort((a, b) => {
-                      if (a.name > b.name) {
-                        return 1;
-                      } else if (a.name < b.name) {
-                        return -1;
-                      } else if (a.id > b.id) {
-                        return 1;
-                      }
-
+          {nodePools && nodePools.length > 0 && !loadingNodePools && (
+            <>
+              <GridRowNodePoolsNodes>
+                <div>
+                  <span>NODES</span>
+                </div>
+              </GridRowNodePoolsNodes>
+              <GridRowNodePoolsHeaders>
+                <span>ID</span>
+                <span style={{ paddingLeft: '8px', justifySelf: 'left' }}>
+                  NAME
+                </span>
+                <span>INSTANCE TYPE</span>
+                <span>AVAILABILITY ZONES</span>
+                <span>MIN</span>
+                <span>MAX</span>
+                <span>DESIRED</span>
+                <span>CURRENT</span>
+                <span> </span>
+              </GridRowNodePoolsHeaders>
+              <TransitionGroup>
+                {nodePools
+                  .sort((a, b) => {
+                    if (a.name > b.name) {
+                      return 1;
+                    } else if (a.name < b.name) {
                       return -1;
-                    })
-                    .map(nodePool => (
-                      <BaseTransition
-                        key={nodePool.id || Date.now()}
-                        appear={true}
-                        exit={false}
-                        classNames='np'
-                        timeout={{ enter: 500, appear: 500 }}
-                      >
-                        <GridRowNodePoolsItem data-testid={nodePool.id}>
-                          <NodePool
-                            availableZonesGridTemplateAreas={
-                              availableZonesGridTemplateAreas
-                            }
-                            cluster={cluster}
-                            nodePool={nodePool}
-                            provider={this.props.provider}
-                          />
-                        </GridRowNodePoolsItem>
-                      </BaseTransition>
-                    ))}
-                </TransitionGroup>
-              </>
-            )}
+                    } else if (a.id > b.id) {
+                      return 1;
+                    }
+
+                    return -1;
+                  })
+                  .map(nodePool => (
+                    <BaseTransition
+                      key={nodePool.id || Date.now()}
+                      appear={true}
+                      exit={false}
+                      classNames='np'
+                      timeout={{ enter: 500, appear: 500 }}
+                    >
+                      <GridRowNodePoolsItem data-testid={nodePool.id}>
+                        <NodePool
+                          availableZonesGridTemplateAreas={AZGridTemplateAreas}
+                          cluster={cluster}
+                          nodePool={nodePool}
+                          provider={this.props.provider}
+                        />
+                      </GridRowNodePoolsItem>
+                    </BaseTransition>
+                  ))}
+              </TransitionGroup>
+            </>
+          )}
         </NodePoolsWrapper>
         {this.state.isNodePoolBeingAdded && (
           <SlideTransition in={true} appear={true} direction='down'>
@@ -590,15 +550,18 @@ V5ClusterDetailTable.propTypes = {
   workerNodesDesired: PropTypes.number,
   nodePools: PropTypes.array,
   resources: PropTypes.object,
+  AZGridTemplateAreas: PropTypes.string,
   loadingNodePools: PropTypes.bool,
 };
 
 const makeMapStateToProps = () => {
   const resourcesV5 = selectResourcesV5();
+  const AZGridTemplateAreas = selectAndProduceAZGridTemplateAreas();
   const mapStateToProps = (state, props) => {
     return {
       nodePools: selectClusterNodePools(state, props.cluster.id),
       resources: resourcesV5(state, props),
+      AZGridTemplateAreas: AZGridTemplateAreas(state, props.cluster.id),
       loadingNodePools: state.loadingFlags.CLUSTER_NODEPOOLS_LOAD,
     };
   };

@@ -77,3 +77,22 @@ export const selectResourcesV5 = () =>
       return { numberOfNodes, memory, cores };
     }
   );
+
+export const selectAndProduceAZGridTemplateAreas = () =>
+  createSelector(selectClusterNodePools, nodePools => {
+    const allZones = nodePools
+      ? nodePools
+          .reduce((accumulator, current) => {
+            return [...accumulator, ...current.availability_zones];
+          }, [])
+          .map(zone => zone.slice(-1))
+      : [];
+
+    // This array stores available zones that are in at least one node pool.
+    // We only want unique values because this is used fot building the grid.
+    const availableZonesGridTemplateAreas = [...new Set(allZones)]
+      .sort()
+      .join(' ');
+
+    return `"${availableZonesGridTemplateAreas}"`;
+  });
