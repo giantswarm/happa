@@ -554,6 +554,8 @@ V5ClusterDetailTable.propTypes = {
   loadingNodePools: PropTypes.bool,
 };
 
+// We use this wrapper function because we want different references for each cluster
+// https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances
 const makeMapStateToProps = () => {
   const resourcesV5 = selectResourcesV5();
   const AZGridTemplateAreas = selectAndProduceAZGridTemplateAreas();

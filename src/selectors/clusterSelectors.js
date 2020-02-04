@@ -34,8 +34,11 @@ export const selectClusterNodePools = (state, clusterId) => {
 };
 
 // Memoized Reselect selectors
-// TODO not memoizing correctly, state in store is not modified... investigate further
 // https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc
+// Using factory functions because they create new references each time that are called,
+// so each cluster can have its dedicated function. More info:
+// https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances
+
 export const selectResourcesV4 = () =>
   createDeepEqualSelector(selectClusterById, cluster => {
     // In case status call fails.
