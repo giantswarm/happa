@@ -472,13 +472,13 @@ export function clusterLoadDetails(
       dispatch(clusterLoadDetailsError(clusterId, error));
 
       new FlashMessage(
-        'Something went wrong while trying to load cluster details.',
+        `Something went wrong while trying to load cluster details for <code>${clusterId}</code>.`,
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again later or contact support: support@giantswarm.io'
       );
 
-      throw error;
+      return {};
     }
   };
 }

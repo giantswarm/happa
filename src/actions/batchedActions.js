@@ -144,7 +144,7 @@ export const batchedRefreshClusterDetailView = (
     await dispatch(
       clusterActions.clusterLoadDetails(clusterId, {
         withLoadingFlags: false,
-        initializeNodePools: true,
+        initializeNodePools: false,
       })
     );
     if (isV5Cluster) {
@@ -183,7 +183,7 @@ export const batchedOrganizationSelect = orgId => async dispatch => {
     await dispatch(organizationActions.organizationSelect(orgId));
     dispatch(
       clusterActions.clustersDetails({
-        filterBySelectedOrganization: false, // TODO set this to false? Not sure why are we doing this
+        filterBySelectedOrganization: true,
         withLoadingFlags: true,
       })
     );
