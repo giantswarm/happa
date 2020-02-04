@@ -152,10 +152,7 @@ export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
   // into: https://internal-api.j7j4c.g8s.fra-1.giantswarm.io
   // if useInternalAPI is true.
   if (useInternalAPI) {
-    const apiEndpointParts = apiEndpoint.split('api');
-    apiEndpointParts.splice(1, 0, 'internal-api');
-
-    apiEndpoint = apiEndpointParts.join('');
+    apiEndpoint = apiEndpoint.replace('api', 'internal-api');
   }
 
   const namePrefix = `giantswarm-${cluster.id}`;
