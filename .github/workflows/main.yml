@@ -1,15 +1,15 @@
-name: Pull Request Validator
+name: CI
 
 on: pull_request
 
 jobs:
-  validate-pr-name:
+  validate_pr_name:
     runs-on: ubuntu-latest
     steps:
       - uses: deepakputhraya/action-pr-title@v1.0.0
-        with:
-          regex: '\[([A-Z])+\]([ a-zA-Z0-9])+'
-          allowed_prefixes: '[FEATURE],[CHANGE],[DEPRECATE],[REMOVE],[BUGFIX],[SECURITY]'
-          prefix_case_sensitive: false
-          min_length: 5
-          max_length: 100
+      with:
+        regex: '\[([A-Z])+\]([ a-zA-Z0-9])+'
+        allowed_prefixes: 'FEATURE,CHANGE,DEPRECATE,REMOVE,BUGFIX,SECURITY'
+        prefix_case_sensitive: false
+        min_length: 5
+        max_length: 100
