@@ -3,7 +3,7 @@ name: CI
 on: pull_request
 
 jobs:
-  update_pr:
+  validate_pr_name:
     runs-on: ubuntu-latest
     steps:
     - uses: deepakputhraya/action-pr-title@v1.0.0
