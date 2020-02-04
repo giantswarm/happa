@@ -1,4 +1,3 @@
-import { createSelector } from 'reselect';
 import {
   getCpusTotal,
   getCpusTotalNodePools,
@@ -8,6 +7,8 @@ import {
   getNumberOfNodes,
   getStorageTotal,
 } from 'utils/clusterUtils';
+
+import { createDeepEqualSelector } from './selectorUtils';
 
 // Regular selectors
 const selectClusterById = (state, props) => {
@@ -36,7 +37,7 @@ export const selectClusterNodePools = (state, clusterId) => {
 // TODO not memoizing correctly, state in store is not modified... investigate further
 // https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc
 export const selectResourcesV4 = () =>
-  createSelector(selectClusterById, cluster => {
+  createDeepEqualSelector(selectClusterById, cluster => {
     // In case status call fails.
     if (
       !cluster ||
@@ -60,7 +61,7 @@ export const selectResourcesV4 = () =>
   });
 
 export const selectResourcesV5 = () =>
-  createSelector(
+  createDeepEqualSelector(
     [selectNodePools, selectClusterNodePoolsIds],
     (nodePools, clusterNodePoolsIds) => {
       // TODO This is not being memoized correctly, investigate further
@@ -79,7 +80,7 @@ export const selectResourcesV5 = () =>
   );
 
 export const selectAndProduceAZGridTemplateAreas = () =>
-  createSelector(selectClusterNodePools, nodePools => {
+  createDeepEqualSelector(selectClusterNodePools, nodePools => {
     const allZones = nodePools
       ? nodePools
           .reduce((accumulator, current) => {
