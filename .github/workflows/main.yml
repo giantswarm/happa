@@ -8,7 +8,7 @@ jobs:
     steps:
     - uses: deepakputhraya/action-pr-title@v1.0.0
       with:
-        regex: '(\[[A-Z]\])+\s([a-zA-Z])+'
+        regex: '(\[[A-Z]\])+\s([ a-zA-Z])+'
         allowed_prefixes: 'FEATURE,CHANGE,DEPRECATE,REMOVE,BUGFIX,SECURITY'
         prefix_case_sensitive: true
         min_length: 5
