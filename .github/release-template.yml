@@ -21,6 +21,8 @@ categories:
 
 change-template: '- $TITLE (#$NUMBER)'
 template: |
+  ## What's changed
+
   $CHANGES
 replacers:
 - search: '/\[([A-Z])+\]\s/g'
