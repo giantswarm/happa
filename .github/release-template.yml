@@ -1,0 +1,29 @@
+name-template: 'v$NEXT_PATCH_VERSION 🚀'
+tag-template: 'v$NEXT_PATCH_VERSION'
+categories:
+  - title: 'Added'
+    labels: '[FEATURE]'
+
+  - title: 'Changed'
+    labels: '[CHANGE]'
+
+  - title: 'Deprecated'
+    labels: '[DEPRECATE]'
+
+  - title: 'Removed'
+    labels: '[REMOVE]'
+
+  - title: 'Fixed'
+    labels: '[BUGFIX]'
+
+  - title: 'Security'
+    label: '[SECURITY]'
+
+change-template: '- $TITLE (#$NUMBER)'
+template: |
+  ## What's changed
+
+  $CHANGES
+replacers:
+  - search: '/\[([A-Z])+\]\s/g'
+    replace: ''
