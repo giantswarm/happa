@@ -29,7 +29,7 @@ it('takes us to the forgot password form when clicking on "Forgot your password?
 
 it('gives me a confirmation message after entering something into the email field and clicking submit ', async () => {
   // Given Passage responds favourably to a password reset call.
-  const forgotPasswordRequest = nock('http://localhost:5001')
+  const forgotPasswordRequest = nock('http://5.6.7.8')
     .post('/recovery/', { email: 'iforgotmypassword@giantswarm.io' })
     .reply(StatusCodes.Ok, {
       email: 'iforgotmypassword@giantswarm.io',
