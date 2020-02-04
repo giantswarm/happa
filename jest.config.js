@@ -5,12 +5,12 @@ process.env.DEBUG_PRINT_LIMIT = 10000;
 module.exports = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
   testURL: 'http://localhost',
-  setupFiles: [path.resolve(__dirname + '/testUtils/browserMocks.js')],
+  setupFiles: [path.resolve(`${__dirname}/testUtils/browserMocks.js`)],
   moduleDirectories: [
     'node_modules',
-    path.resolve(__dirname + '/src'),
-    path.resolve(__dirname + '/src/components'),
-    path.resolve(__dirname + '/'),
+    path.resolve(`${__dirname}/src`),
+    path.resolve(`${__dirname}/src/components`),
+    path.resolve(`${__dirname}/`),
   ],
   moduleNameMapper: {
     '\\.css$': require.resolve('./testUtils/assetsMock.js'),
@@ -23,7 +23,7 @@ module.exports = {
     // window.config object will now be available in all tests
     config: {
       apiEndpoint: 'http://1.2.3.4',
-      passageEndpoint: 'http://localhost:5001',
+      passageEndpoint: 'http://5.6.7.8',
       environment: 'development',
       ingressBaseDomain: 'k8s.sample.io',
       awsCapabilitiesJSON:
