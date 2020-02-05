@@ -349,7 +349,7 @@ class ClusterApps extends React.Component {
                       <br />
                       <br />
                       Read more in our{' '}
-                      <a href='/ingress-guide'>
+                      <a href='https://docs.giantswarm.io/guides/installing-optional-ingress-controller/'>
                         installing an ingress controller guide.
                       </a>
                     </OptionalIngressNotice>
