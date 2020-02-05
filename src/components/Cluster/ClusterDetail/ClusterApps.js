@@ -343,15 +343,17 @@ class ClusterApps extends React.Component {
                   <h6>ingress</h6>
                   {this.props.hasOptionalIngress ? (
                     <OptionalIngressNotice>
-                      The ingress controller is optional on this cluster.
-                      <br />
-                      You can install one using our app catalog.
-                      <br />
-                      <br />
-                      Read more in our{' '}
-                      <a href='https://docs.giantswarm.io/guides/installing-optional-ingress-controller/'>
-                        installing an ingress controller guide.
-                      </a>
+                      <p>
+                        The ingress controller is optional on this cluster.
+                        <br />
+                        You can install one using our app catalog.
+                        <br />
+                        <br />
+                        Read more in our{' '}
+                        <a href='https://docs.giantswarm.io/guides/installing-optional-ingress-controller/'>
+                          installing an ingress controller guide.
+                        </a>
+                      </p>
                     </OptionalIngressNotice>
                   ) : (
                     undefined
