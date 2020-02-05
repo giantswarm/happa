@@ -323,6 +323,9 @@ class ClusterDetailView extends React.Component {
                         showInstalledAppsBlock={
                           Object.keys(this.props.catalogs.items).length > 0
                         }
+                        hasOptionalIngress={
+                          cluster.capabilities.hasOptionalIngress
+                        }
                       />
                     </Tab>
                   </Tabs>
