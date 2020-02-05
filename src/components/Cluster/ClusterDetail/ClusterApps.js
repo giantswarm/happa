@@ -350,7 +350,11 @@ class ClusterApps extends React.Component {
                         <br />
                         <br />
                         Read more in our{' '}
-                        <a target='_blank' href='https://docs.giantswarm.io/guides/installing-optional-ingress-controller/'>
+                        <a
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          href='https://docs.giantswarm.io/guides/installing-optional-ingress-controller/'
+                        >
                           installing an ingress controller guide.
                         </a>
                       </p>
