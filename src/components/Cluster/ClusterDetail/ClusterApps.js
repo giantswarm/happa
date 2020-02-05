@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
+import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 
 import AppDetailsModal from './AppDetailsModal';
 
@@ -18,6 +19,13 @@ import AppDetailsModal from './AppDetailsModal';
 //    here. These would be components from the release.
 
 const OptionalIngressNotice = styled.div``;
+
+const SmallHeading = styled.h6`
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+`;
 
 class ClusterApps extends React.Component {
   state = {
@@ -314,33 +322,31 @@ class ClusterApps extends React.Component {
             {this.props.release ? (
               <>
                 <div className='col-4' key='essentials'>
-                  <h6>essentials</h6>
-                  {this.preinstalledApps().essentials.map(app => {
-                    return (
-                      <div className='cluster-apps--app' key={app.name}>
-                        <img alt={`${app.title} icon`} src={app.logoUrl} />
-                        {app.name}
-                        <small>{app.version}&nbsp;</small>
-                      </div>
-                    );
-                  })}
+                  <SmallHeading>essentials</SmallHeading>
+                  {this.preinstalledApps().essentials.map(app => (
+                    <ClusterDetailPreinstalledApp
+                      logoUrl={app.logoUrl}
+                      name={app.name}
+                      version={app.version}
+                      key={app.name}
+                    />
+                  ))}
                 </div>
 
                 <div className='col-4' key='management'>
-                  <h6>management</h6>
-                  {this.preinstalledApps().management.map(app => {
-                    return (
-                      <div className='cluster-apps--app' key={app.name}>
-                        <img alt={`${app.title} icon`} src={app.logoUrl} />
-                        {app.name}
-                        <small>{app.version}&nbsp;</small>
-                      </div>
-                    );
-                  })}
+                  <SmallHeading>management</SmallHeading>
+                  {this.preinstalledApps().management.map(app => (
+                    <ClusterDetailPreinstalledApp
+                      logoUrl={app.logoUrl}
+                      name={app.name}
+                      version={app.version}
+                      key={app.name}
+                    />
+                  ))}
                 </div>
 
                 <div className='col-4' key='ingress'>
-                  <h6>ingress</h6>
+                  <SmallHeading>ingress</SmallHeading>
                   {this.props.hasOptionalIngress && (
                     <OptionalIngressNotice>
                       <p>
@@ -360,15 +366,14 @@ class ClusterApps extends React.Component {
                       </p>
                     </OptionalIngressNotice>
                   )}
-                  {this.preinstalledApps().ingress.map(app => {
-                    return (
-                      <div className='cluster-apps--app' key={app.name}>
-                        <img alt={`${app.title} icon`} src={app.logoUrl} />
-                        {app.name}
-                        <small>{app.version}&nbsp;</small>
-                      </div>
-                    );
-                  })}
+                  {this.preinstalledApps().ingress.map(app => (
+                    <ClusterDetailPreinstalledApp
+                      logoUrl={app.logoUrl}
+                      name={app.name}
+                      version={app.version}
+                      key={app.name}
+                    />
+                  ))}
                 </div>
               </>
             ) : (
