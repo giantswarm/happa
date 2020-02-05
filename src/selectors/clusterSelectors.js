@@ -1,4 +1,3 @@
-import { createSelector } from 'reselect';
 import {
   getCpusTotal,
   getCpusTotalNodePools,
@@ -8,6 +7,8 @@ import {
   getNumberOfNodes,
   getStorageTotal,
 } from 'utils/clusterUtils';
+
+import { createDeepEqualSelector } from './selectorUtils';
 
 // Regular selectors
 const selectClusterById = (state, props) => {
@@ -20,11 +21,26 @@ const selectClusterNodePoolsIds = (state, props) => {
   return state.entities.clusters.items[props.cluster.id].nodePools;
 };
 
+export const selectClusterNodePools = (state, clusterId) => {
+  const clusterNodePoolsIds =
+    state.entities.clusters.items[clusterId].nodePools;
+
+  // Return an empty array for v4 clusters
+  if (!clusterNodePoolsIds) return [];
+
+  const nodePools = state.entities.nodePools.items;
+
+  return clusterNodePoolsIds.map(nodePoolId => nodePools[nodePoolId]) || [];
+};
+
 // Memoized Reselect selectors
-// TODO not memoizing correctly, state in store is not modified... investigate further
 // https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc
+// Using factory functions because they create new references each time that are called,
+// so each cluster can have its dedicated function. More info:
+// https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances
+
 export const selectResourcesV4 = () =>
-  createSelector(selectClusterById, cluster => {
+  createDeepEqualSelector(selectClusterById, cluster => {
     // In case status call fails.
     if (
       !cluster ||
@@ -48,7 +64,7 @@ export const selectResourcesV4 = () =>
   });
 
 export const selectResourcesV5 = () =>
-  createSelector(
+  createDeepEqualSelector(
     [selectNodePools, selectClusterNodePoolsIds],
     (nodePools, clusterNodePoolsIds) => {
       // TODO This is not being memoized correctly, investigate further
@@ -65,3 +81,22 @@ export const selectResourcesV5 = () =>
       return { numberOfNodes, memory, cores };
     }
   );
+
+export const selectAndProduceAZGridTemplateAreas = () =>
+  createDeepEqualSelector(selectClusterNodePools, nodePools => {
+    const allZones = nodePools
+      ? nodePools
+          .reduce((accumulator, current) => {
+            return [...accumulator, ...current.availability_zones];
+          }, [])
+          .map(zone => zone.slice(-1))
+      : [];
+
+    // This array stores available zones that are in at least one node pool.
+    // We only want unique values because this is used fot building the grid.
+    const availableZonesGridTemplateAreas = [...new Set(allZones)]
+      .sort()
+      .join(' ');
+
+    return `"${availableZonesGridTemplateAreas}"`;
+  });

@@ -225,7 +225,6 @@ class ClusterDetailView extends React.Component {
       credentials,
       dispatch,
       isV5Cluster,
-      nodePools,
       provider,
       release,
       targetRelease,
@@ -266,7 +265,6 @@ class ClusterDetailView extends React.Component {
                           canClusterUpgrade={this.canClusterUpgrade()}
                           cluster={cluster}
                           credentials={credentials}
-                          nodePools={nodePools}
                           provider={provider}
                           release={release}
                           region={region}

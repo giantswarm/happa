@@ -179,6 +179,8 @@ V4ClusterDetailTable.propTypes = {
   resources: PropTypes.object,
 };
 
+// We use this wrapper function because we want different references for each cluster
+// https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances
 const makeMapStateToProps = () => {
   const resourcesV4 = selectResourcesV4();
   const mapStateToProps = (state, props) => {
