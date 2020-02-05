@@ -341,7 +341,7 @@ class ClusterApps extends React.Component {
 
                 <div className='col-4' key='ingress'>
                   <h6>ingress</h6>
-                  {this.props.hasOptionalIngress ? (
+                  {this.props.hasOptionalIngress && (
                     <OptionalIngressNotice>
                       <p>
                         The ingress controller is optional on this cluster.
@@ -359,8 +359,6 @@ class ClusterApps extends React.Component {
                         </a>
                       </p>
                     </OptionalIngressNotice>
-                  ) : (
-                    undefined
                   )}
                   {this.preinstalledApps().ingress.map(app => {
                     return (
