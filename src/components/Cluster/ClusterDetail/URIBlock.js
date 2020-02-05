@@ -53,11 +53,19 @@ const URIBlock = ({ children, title, ...props }) => {
       <Code>{children}</Code>
 
       {hasContentInClipboard ? (
-        <i aria-hidden='true' className='fa fa-done' />
+        <i
+          aria-hidden='true'
+          className='fa fa-done'
+          title='Content copied to clipboard'
+        />
       ) : (
         <OverlayTrigger placement='top' overlay={getTooltip(tooltipText)}>
           <CopyButton onClick={copyToClipboard}>
-            <i aria-hidden='true' className='fa fa-content-copy' />
+            <i
+              aria-hidden='true'
+              className='fa fa-content-copy'
+              title='Copy content to clipboard'
+            />
           </CopyButton>
         </OverlayTrigger>
       )}

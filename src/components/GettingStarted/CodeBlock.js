@@ -100,6 +100,7 @@ export const CodeBlock = ({ children }) => {
             onMouseOut={() => setHovering(false)}
             onMouseOver={() => setHovering(true)}
             onMouseUp={copyCodeToClipboard}
+            title='Copy content to clipboard'
           >
             <i aria-hidden='true' className='fa fa-content-copy' />
           </a>
@@ -109,7 +110,11 @@ export const CodeBlock = ({ children }) => {
           timeout={{ enter: 1000, exit: 1000 }}
           classNames='checkmark'
         >
-          <i aria-hidden='true' className='fa fa-done codeblock--checkmark' />
+          <i
+            aria-hidden='true'
+            className='fa fa-done codeblock--checkmark'
+            title='Content copied to clipboard'
+          />
         </BaseTransition>
       </pre>
     </div>

@@ -1,5 +1,4 @@
 import * as clusterActions from 'actions/clusterActions';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import platform from 'lib/platform';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -16,42 +15,9 @@ import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
 
 class ConfigKubeCtl extends React.Component {
   state = {
-    // eslint-disable-next-line react/no-unused-state
-    loading: true,
     selectedPlatform: platform,
     alternativeOpen: false,
   };
-
-  componentDidMount() {
-    this.setState({
-      // eslint-disable-next-line react/no-unused-state
-      loading: true,
-    });
-
-    this.props.actions
-      .clusterLoadDetails(this.props.selectedCluster.id, {
-        withLoadingFlags: false,
-      })
-      .then(() => {
-        this.setState({
-          // eslint-disable-next-line react/no-unused-state
-          loading: false,
-        });
-      })
-      .catch(() => {
-        new FlashMessage(
-          'Something went wrong while trying to load cluster details.',
-          messageType.ERROR,
-          messageTTL.MEDIUM,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        this.setState({
-          // eslint-disable-next-line react/no-unused-state
-          loading: 'failed',
-        });
-      });
-  }
 
   selectCluster(clusterId) {
     this.props.actions.clusterSelect(clusterId);

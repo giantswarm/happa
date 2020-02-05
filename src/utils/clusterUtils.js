@@ -85,8 +85,11 @@ export function getMemoryTotalNodePools(nodePools = []) {
   // TODO When working with Spot Instances a node pool could have different types
   // of instances, and this method will have to be modified
   const TotalRAM = nodePools.reduce((accumulator, nodePool) => {
-    const instanceTypeRAM =
-      awsInstanceTypes[nodePool.node_spec.aws.instance_type].memory_size_gb;
+    let instanceTypeRAM = 0;
+    if (awsInstanceTypes[nodePool.node_spec.aws.instance_type]) {
+      instanceTypeRAM =
+        awsInstanceTypes[nodePool.node_spec.aws.instance_type].memory_size_gb;
+    }
 
     return accumulator + instanceTypeRAM * nodePool.status.nodes_ready;
   }, 0);
@@ -107,29 +110,17 @@ export function getCpusTotalNodePools(nodePools = []) {
   // TODO When working with Spot Instances a node pool could have different types
   // of instances, and this method will have to be modified
   const TotalCPUs = nodePools.reduce((accumulator, nodePool) => {
-    const instanceTypeCPUs =
-      awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
+    let instanceTypeCPUs = 0;
+    if (awsInstanceTypes[nodePool.node_spec.aws.instance_type]) {
+      instanceTypeCPUs =
+        awsInstanceTypes[nodePool.node_spec.aws.instance_type].cpu_cores;
+    }
 
     return accumulator + instanceTypeCPUs * nodePool.status.nodes_ready;
   }, 0);
 
   return TotalCPUs;
 }
-
-// Finds node pools for a cluster and returns an array of node pools objects
-export const clusterNodePools = (nodePools, cluster) => {
-  // This is to avoid a TypeError when trying to map an undefined variable
-  // TODO this checks ideally shouldn't be here
-  if (
-    nodePools &&
-    Object.entries(nodePools).length !== 0 &&
-    cluster.nodePools
-  ) {
-    return cluster.nodePools.map(np => nodePools[np]);
-  }
-
-  return [];
-};
 
 // computeCapabilities takes a release version and provider and returns a
 // capabilities object with the features that this cluster supports.

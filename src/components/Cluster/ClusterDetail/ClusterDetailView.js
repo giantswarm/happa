@@ -98,7 +98,7 @@ class ClusterDetailView extends React.Component {
       batchedClusterDetailView(
         organizationId,
         cluster.id,
-        this.props.isNodePoolsCluster
+        this.props.isV5Cluster
       )
     );
   };
@@ -107,7 +107,7 @@ class ClusterDetailView extends React.Component {
     this.props.dispatch(
       batchedRefreshClusterDetailView(
         this.props.cluster.id,
-        this.props.isNodePoolsCluster
+        this.props.isV5Cluster
       )
     );
   };
@@ -178,7 +178,7 @@ class ClusterDetailView extends React.Component {
     // Is AWSConfig.Status present yet?
     if (
       Object.keys(this.props.cluster).includes('status') &&
-      this.props.cluster.status !== null
+      this.props.cluster.status
     ) {
       return this.props.cluster.status.cluster.scaling.desiredCapacity;
     }
@@ -203,11 +203,7 @@ class ClusterDetailView extends React.Component {
     return new Promise((resolve, reject) => {
       this.props
         .dispatch(
-          clusterActions.clusterPatch(
-            this.props.cluster,
-            { name: value },
-            this.props.isNodePoolsCluster
-          )
+          clusterActions.clusterPatch(this.props.cluster, { name: value })
         )
         .then(() => {
           new FlashMessage(
@@ -228,8 +224,7 @@ class ClusterDetailView extends React.Component {
       cluster,
       credentials,
       dispatch,
-      isNodePoolsCluster,
-      nodePools,
+      isV5Cluster,
       provider,
       release,
       targetRelease,
@@ -264,13 +259,12 @@ class ClusterDetailView extends React.Component {
                 <div className='col-12'>
                   <Tabs>
                     <Tab eventKey={1} title='General'>
-                      {isNodePoolsCluster ? (
+                      {isV5Cluster ? (
                         <V5ClusterDetailTable
                           accessCluster={this.accessCluster}
                           canClusterUpgrade={this.canClusterUpgrade()}
                           cluster={cluster}
                           credentials={credentials}
-                          nodePools={nodePools}
                           provider={provider}
                           release={release}
                           region={region}
@@ -337,7 +331,7 @@ class ClusterDetailView extends React.Component {
                   </Tabs>
                 </div>
               </div>
-              {!isNodePoolsCluster && (
+              {!isV5Cluster && (
                 <ScaleClusterModal
                   cluster={cluster}
                   provider={provider}
@@ -379,7 +373,7 @@ ClusterDetailView.propTypes = {
   clusterId: PropTypes.string,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
-  isNodePoolsCluster: PropTypes.bool,
+  isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.object,
   organizationId: PropTypes.string,
   releaseActions: PropTypes.object,
