@@ -20,7 +20,7 @@ import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 class Modals extends React.Component {
   emailInputRef = React.createRef();
-  orgNameInput = React.createRef();
+  orgNameInputRef = React.createRef();
 
   state = {
     emailValid: false,
@@ -59,7 +59,7 @@ class Modals extends React.Component {
   createOrganisation = e => {
     e.preventDefault();
 
-    const organizationName = this.orgNameInput.current?.value();
+    const organizationName = this.orgNameInputRef.current?.value();
 
     if (organizationName) {
       this.props.dispatch(organizationCreateConfirmed(organizationName));
@@ -67,9 +67,7 @@ class Modals extends React.Component {
   };
 
   addMember = e => {
-    if (e) {
-      e.preventDefault();
-    }
+    e.preventDefault();
 
     if (this.state.emailValid) {
       const email = this.emailInputRef.current?.value();
@@ -86,9 +84,7 @@ class Modals extends React.Component {
   };
 
   removeMember = e => {
-    if (e) {
-      e.preventDefault();
-    }
+    e.preventDefault();
 
     const email = this.props.modal.templateValues.email;
     const orgId = this.props.modal.templateValues.orgId;
@@ -213,7 +209,7 @@ class Modals extends React.Component {
                   autofocus={true}
                   label='Organization Name:'
                   type='text'
-                  ref={this.orgNameInput}
+                  ref={this.orgNameInputRef}
                   value={this.state.organizationName}
                   validate={this.validateOrganizationName}
                   onChange={this.onOrganizationNameChange}
