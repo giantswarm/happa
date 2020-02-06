@@ -1,8 +1,26 @@
 import cmp from 'semver-compare';
-import { Providers } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 
 // Here we can store functions that don't return markup/UI and are used in more
 // than one component.
+
+// Determine whether a cluster at a certain version can be upgraded to a target version.
+export function canClusterUpgrade(currentVersion, targetVersion, provider) {
+  // Cluster must have a release_version.
+  if (!currentVersion) return false;
+
+  // A target release to upgrade to must be defined.
+  if (!targetVersion) return false;
+
+  // We must not be trying to go from v4 to v5 on AWS.
+  const targetingV5 = cmp(targetVersion, Constants.AWS_V5_VERSION) >= 0;
+  const currentlyV4 = cmp(currentVersion, Constants.AWS_V5_VERSION) < 0;
+  const onAWS = provider === Providers.AWS;
+
+  if (onAWS && targetingV5 && currentlyV4) return false;
+
+  return true;
+}
 
 // Regular clusters functions
 export function getNumberOfNodes(cluster) {

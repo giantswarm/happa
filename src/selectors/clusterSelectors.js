@@ -1,4 +1,5 @@
 import {
+  canClusterUpgrade,
   getCpusTotal,
   getCpusTotalNodePools,
   getMemoryTotal,
@@ -100,3 +101,13 @@ export const selectAndProduceAZGridTemplateAreas = () =>
 
     return `"${availableZonesGridTemplateAreas}"`;
   });
+
+export const selectCanClusterUpgrade = (state, clusterID, targetVersion) => {
+  const cluster = state.entities.clusters.items[clusterID];
+
+  return canClusterUpgrade(
+    cluster.release_version,
+    targetVersion,
+    state.app.info.general.provider
+  );
+};

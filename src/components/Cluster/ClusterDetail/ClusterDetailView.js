@@ -142,19 +142,6 @@ class ClusterDetailView extends React.Component {
     return 'Not found';
   }
 
-  // Determine whether the current cluster can be upgraded
-  canClusterUpgrade() {
-    // cluster must have a release_version
-    if (this.props.cluster.release_version === '') return false;
-
-    // a target release to upgrade to must be defined
-    if (Boolean(this.props.targetRelease) !== true) {
-      return false;
-    }
-
-    return true;
-  }
-
   // Determine whether the cluster can be scaled
   canClusterScale() {
     if (
@@ -221,6 +208,7 @@ class ClusterDetailView extends React.Component {
 
   render() {
     const {
+      canClusterUpgrade,
       cluster,
       credentials,
       dispatch,
@@ -262,7 +250,7 @@ class ClusterDetailView extends React.Component {
                       {isV5Cluster ? (
                         <V5ClusterDetailTable
                           accessCluster={this.accessCluster}
-                          canClusterUpgrade={this.canClusterUpgrade()}
+                          canClusterUpgrade={canClusterUpgrade}
                           cluster={cluster}
                           credentials={credentials}
                           provider={provider}
@@ -274,7 +262,7 @@ class ClusterDetailView extends React.Component {
                       ) : (
                         <V4ClusterDetailTable
                           accessCluster={this.accessCluster}
-                          canClusterUpgrade={this.canClusterUpgrade()}
+                          canClusterUpgrade={canClusterUpgrade}
                           cluster={cluster}
                           credentials={credentials}
                           provider={provider}
@@ -343,7 +331,7 @@ class ClusterDetailView extends React.Component {
                 />
               )}
 
-              {targetRelease && (
+              {canClusterUpgrade && (
                 <UpgradeClusterModal
                   cluster={cluster}
                   ref={s => {
@@ -366,6 +354,7 @@ ClusterDetailView.contextTypes = {
 };
 
 ClusterDetailView.propTypes = {
+  canClusterUpgrade: PropTypes.bool,
   catalogs: PropTypes.object,
   clearInterval: PropTypes.func,
   clusterActions: PropTypes.object,

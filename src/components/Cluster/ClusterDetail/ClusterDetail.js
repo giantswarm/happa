@@ -3,6 +3,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { selectCanClusterUpgrade } from 'selectors/clusterSelectors';
 import cmp from 'semver-compare';
 import _ from 'underscore';
 
@@ -55,8 +56,8 @@ ClusterDetail.propTypes = {
   isV5Cluster: PropTypes.bool,
 };
 function mapStateToProps(state, ownProps) {
-  const cluster =
-    state.entities.clusters.items[ownProps.match.params.clusterId];
+  const clusterID = ownProps.match.params.clusterId;
+  const cluster = state.entities.clusters.items[clusterID];
   // eslint-disable-next-line init-declarations
   let release;
   // eslint-disable-next-line init-declarations
@@ -105,6 +106,11 @@ function mapStateToProps(state, ownProps) {
     nodePools: state.entities.nodePools.items,
     provider: state.app.info.general.provider,
     release: release,
+    canClusterUpgrade: selectCanClusterUpgrade(
+      state,
+      clusterID,
+      targetReleaseVersion
+    ),
     targetRelease: state.entities.releases.items[targetReleaseVersion],
     user: state.app.loggedInUser,
     region: state.app.info.general.datacenter,
