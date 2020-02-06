@@ -19,15 +19,34 @@ import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 class Modals extends React.Component {
+  emailInputRef = React.createRef();
+  orgNameInput = React.createRef();
+
   state = {
     emailValid: false,
     organizationNameValid: false,
     organizationName: '',
   };
 
+  componentDidUpdate(prevProps) {
+    const { visible: modalWasVisible } = prevProps.modal;
+
+    if (modalWasVisible && this.props.modal.visible !== modalWasVisible) {
+      this.clear();
+    }
+  }
+
   close = () => {
     this.props.dispatch(modalHide());
   };
+
+  clear() {
+    this.setState({
+      emailValid: false,
+      organizationNameValid: false,
+      organizationName: '',
+    });
+  }
 
   deleteClusterConfirmed = clusterId => {
     this.props.dispatch(clusterDeleteConfirmed(clusterId));
@@ -38,11 +57,13 @@ class Modals extends React.Component {
   };
 
   createOrganisation = e => {
-    if (e) {
-      e.preventDefault();
+    e.preventDefault();
+
+    const organizationName = this.orgNameInput.current?.value();
+
+    if (organizationName) {
+      this.props.dispatch(organizationCreateConfirmed(organizationName));
     }
-    const organizationName = this.orgId.value();
-    this.props.dispatch(organizationCreateConfirmed(organizationName));
   };
 
   addMember = e => {
@@ -51,13 +72,16 @@ class Modals extends React.Component {
     }
 
     if (this.state.emailValid) {
-      const email = this.email.value();
-      this.props.dispatch(
-        organizationAddMemberConfirmed(
-          this.props.modal.templateValues.orgId,
-          email
-        )
-      );
+      const email = this.emailInputRef.current?.value();
+
+      if (email) {
+        this.props.dispatch(
+          organizationAddMemberConfirmed(
+            this.props.modal.templateValues.orgId,
+            email
+          )
+        );
+      }
     }
   };
 
@@ -76,15 +100,9 @@ class Modals extends React.Component {
     const orgId = this.props.modal.templateValues.orgId;
     this.props.dispatch(organizationAddMemberTyping(orgId, email));
 
-    if (emailField.valid()) {
-      this.setState({
-        emailValid: true,
-      });
-    } else {
-      this.setState({
-        emailValid: false,
-      });
-    }
+    this.setState({
+      emailValid: emailField.valid(),
+    });
   };
 
   onOrganizationNameChange = organizationName => {
@@ -132,10 +150,7 @@ class Modals extends React.Component {
     switch (this.props.modal.template) {
       case 'organizationDelete':
         return (
-          <BootstrapModal
-            onHide={this.close.bind(this)}
-            show={this.props.modal.visible}
-          >
+          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>
                 Delete an Organization
@@ -165,7 +180,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button bsStyle='link' onClick={this.close}>
                   Cancel
                 </Button>
               )}
@@ -175,10 +190,7 @@ class Modals extends React.Component {
 
       case 'organizationCreate':
         return (
-          <BootstrapModal
-            onHide={this.close.bind(this)}
-            show={this.props.modal.visible}
-          >
+          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>
                 Create an Organization
@@ -194,16 +206,14 @@ class Modals extends React.Component {
                 </li>
                 <li>must start and end with a letter or number</li>
               </ul>
-              <form onSubmit={this.createOrganisation.bind(this)}>
+              <form onSubmit={this.createOrganisation}>
                 <InputField
                   id='create-organization-name'
                   name='create-organization-name'
-                  autoFocus
+                  autofocus={true}
                   label='Organization Name:'
                   type='text'
-                  ref={i => {
-                    this.orgId = i;
-                  }}
+                  ref={this.orgNameInput}
                   value={this.state.organizationName}
                   validate={this.validateOrganizationName}
                   onChange={this.onOrganizationNameChange}
@@ -215,7 +225,7 @@ class Modals extends React.Component {
                 bsStyle='primary'
                 loading={this.props.modal.templateValues.loading}
                 loadingPosition='left'
-                onClick={this.createOrganisation.bind(this)}
+                onClick={this.createOrganisation}
                 type='submit'
                 disabled={!this.state.organizationNameValid}
               >
@@ -225,7 +235,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button bsStyle='link' onClick={this.close}>
                   Cancel
                 </Button>
               )}
@@ -235,10 +245,7 @@ class Modals extends React.Component {
 
       case 'organizationAddMember':
         return (
-          <BootstrapModal
-            onHide={this.close.bind(this)}
-            show={this.props.modal.visible}
-          >
+          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>Add a Member</BootstrapModal.Title>
             </BootstrapModal.Header>
@@ -255,9 +262,7 @@ class Modals extends React.Component {
                   errorMessage={this.props.modal.templateValues.errorMessage}
                   name='email'
                   onChange={this.emailFieldChanged.bind(this)}
-                  ref={e => {
-                    this.email = e;
-                  }}
+                  ref={this.emailInputRef}
                 />
               </form>
             </BootstrapModal.Body>
@@ -276,7 +281,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button bsStyle='link' onClick={this.close}>
                   Cancel
                 </Button>
               )}
@@ -286,10 +291,7 @@ class Modals extends React.Component {
 
       case 'organizationRemoveMember':
         return (
-          <BootstrapModal
-            onHide={this.close.bind(this)}
-            show={this.props.modal.visible}
-          >
+          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>Remove Member</BootstrapModal.Title>
             </BootstrapModal.Header>
@@ -314,7 +316,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button bsStyle='link' onClick={this.close}>
                   Cancel
                 </Button>
               )}
@@ -328,10 +330,7 @@ class Modals extends React.Component {
         const clusterName = this.props.modal.templateValues.cluster.name;
 
         return (
-          <BootstrapModal
-            onHide={this.close.bind(this)}
-            show={this.props.modal.visible}
-          >
+          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>
                 Are you sure you want to delete cluster{' '}
@@ -362,7 +361,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button bsStyle='link' onClick={this.close}>
                   Cancel
                 </Button>
               )}
@@ -378,10 +377,7 @@ class Modals extends React.Component {
         const clusterId = this.props.modal.templateValues.clusterId;
 
         return (
-          <BootstrapModal
-            onHide={this.close.bind(this)}
-            show={this.props.modal.visible}
-          >
+          <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
             <BootstrapModal.Header closeButton>
               <BootstrapModal.Title>
                 Are you sure you want to delete node pool{' '}
@@ -411,7 +407,7 @@ class Modals extends React.Component {
               </Button>
 
               {this.props.modal.templateValues.loading ? null : (
-                <Button bsStyle='link' onClick={this.close.bind(this)}>
+                <Button bsStyle='link' onClick={this.close}>
                   Cancel
                 </Button>
               )}
