@@ -24,6 +24,7 @@ categories:
 
 exclude-labels:
   - 'dependencies'
+  - 'kind/dev-change'
 
 change-template: '- $TITLE (#$NUMBER)'
 template: |
