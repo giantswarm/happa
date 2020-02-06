@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import { Providers } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import Button from 'UI/Button';
 import NumberPicker from 'UI/NumberPicker';
@@ -66,7 +66,8 @@ class CreateRegularCluster extends React.Component {
     const multiAZSelectorProps = {};
 
     if (provider === Providers.AZURE) {
-      multiAZSelectorProps.requiredReleaseVersion = '11.1.0';
+      multiAZSelectorProps.requiredReleaseVersion =
+        Constants.AZURE_MULTI_AZ_VERSION;
       multiAZSelectorProps.currentReleaseVersion = currentReleaseVersion;
     }
 
