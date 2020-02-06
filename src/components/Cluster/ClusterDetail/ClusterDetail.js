@@ -56,8 +56,8 @@ ClusterDetail.propTypes = {
   isV5Cluster: PropTypes.bool,
 };
 function mapStateToProps(state, ownProps) {
-  const cluster =
-    state.entities.clusters.items[ownProps.match.params.clusterId];
+  const clusterID = ownProps.match.params.clusterId;
+  const cluster = state.entities.clusters.items[clusterID];
   // eslint-disable-next-line init-declarations
   let release;
   // eslint-disable-next-line init-declarations
@@ -108,7 +108,7 @@ function mapStateToProps(state, ownProps) {
     release: release,
     canClusterUpgrade: selectCanClusterUpgrade(
       state,
-      ownProps,
+      clusterID,
       targetReleaseVersion
     ),
     targetRelease: state.entities.releases.items[targetReleaseVersion],

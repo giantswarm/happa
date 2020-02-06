@@ -102,8 +102,8 @@ export const selectAndProduceAZGridTemplateAreas = () =>
     return `"${availableZonesGridTemplateAreas}"`;
   });
 
-export const selectCanClusterUpgrade = (state, props, targetVersion) => {
-  const cluster = state.entities.clusters.items[props.match.params.clusterId];
+export const selectCanClusterUpgrade = (state, clusterID, targetVersion) => {
+  const cluster = state.entities.clusters.items[clusterID];
 
   return canClusterUpgrade(
     cluster.release_version,
