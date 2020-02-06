@@ -122,21 +122,6 @@ export function getCpusTotalNodePools(nodePools = []) {
   return TotalCPUs;
 }
 
-// Finds node pools for a cluster and returns an array of node pools objects
-export const clusterNodePools = (nodePools, cluster) => {
-  // This is to avoid a TypeError when trying to map an undefined variable
-  // TODO this checks ideally shouldn't be here
-  if (
-    nodePools &&
-    Object.entries(nodePools).length !== 0 &&
-    cluster.nodePools
-  ) {
-    return cluster.nodePools.map(np => nodePools[np]);
-  }
-
-  return [];
-};
-
 // computeCapabilities takes a release version and provider and returns a
 // capabilities object with the features that this cluster supports.
 export function computeCapabilities(releaseVersion, provider) {

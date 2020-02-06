@@ -1,9 +1,11 @@
+import styled from '@emotion/styled';
 import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
+import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 
 import AppDetailsModal from './AppDetailsModal';
 
@@ -15,6 +17,15 @@ import AppDetailsModal from './AppDetailsModal';
 // Components are
 //  - not really ever installed (no App CR) but still something we want to show
 //    here. These would be components from the release.
+
+const OptionalIngressNotice = styled.div``;
+
+const SmallHeading = styled.h6`
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+`;
 
 class ClusterApps extends React.Component {
   state = {
@@ -309,22 +320,62 @@ class ClusterApps extends React.Component {
           </p>
           <div className='row'>
             {this.props.release ? (
-              Object.keys(this.preinstalledApps()).map(appCategory => {
-                return (
-                  <div className='col-4' key={appCategory}>
-                    <h6>{appCategory}</h6>
-                    {this.preinstalledApps()[appCategory].map(app => {
-                      return (
-                        <div className='cluster-apps--app' key={app.name}>
-                          <img alt={`${app.title} icon`} src={app.logoUrl} />
-                          {app.name}
-                          <small>{app.version}&nbsp;</small>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })
+              <>
+                <div className='col-4' key='essentials'>
+                  <SmallHeading>essentials</SmallHeading>
+                  {this.preinstalledApps().essentials.map(app => (
+                    <ClusterDetailPreinstalledApp
+                      logoUrl={app.logoUrl}
+                      name={app.name}
+                      version={app.version}
+                      key={app.name}
+                    />
+                  ))}
+                </div>
+
+                <div className='col-4' key='management'>
+                  <SmallHeading>management</SmallHeading>
+                  {this.preinstalledApps().management.map(app => (
+                    <ClusterDetailPreinstalledApp
+                      logoUrl={app.logoUrl}
+                      name={app.name}
+                      version={app.version}
+                      key={app.name}
+                    />
+                  ))}
+                </div>
+
+                <div className='col-4' key='ingress'>
+                  <SmallHeading>ingress</SmallHeading>
+                  {this.props.hasOptionalIngress && (
+                    <OptionalIngressNotice>
+                      <p>
+                        The ingress controller is optional on this cluster.
+                        <br />
+                        You can install one using our app catalog.
+                        <br />
+                        <br />
+                        Read more in our{' '}
+                        <a
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          href='https://docs.giantswarm.io/guides/installing-optional-ingress-controller/'
+                        >
+                          installing an ingress controller guide.
+                        </a>
+                      </p>
+                    </OptionalIngressNotice>
+                  )}
+                  {this.preinstalledApps().ingress.map(app => (
+                    <ClusterDetailPreinstalledApp
+                      logoUrl={app.logoUrl}
+                      name={app.name}
+                      version={app.version}
+                      key={app.name}
+                    />
+                  ))}
+                </div>
+              </>
             ) : (
               <div className='flash-messages--flash-message flash-messages--danger'>
                 Unable to load the list of preinstalled apps. Please try again
@@ -360,6 +411,7 @@ ClusterApps.propTypes = {
   clusterId: PropTypes.string,
   organizationId: PropTypes.string,
   release: PropTypes.object,
+  hasOptionalIngress: PropTypes.bool,
 };
 
 export default ClusterApps;

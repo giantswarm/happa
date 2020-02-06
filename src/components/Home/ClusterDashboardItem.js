@@ -9,12 +9,12 @@ import React from 'react';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { selectClusterNodePools } from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Dot } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { clusterNodePools } from 'utils/clusterUtils';
 
 import ClusterDashboardResources from './ClusterDashboardResources';
 
@@ -67,60 +67,19 @@ const DeleteDateWrapper = styled.div`
   color: ${props => props.theme.colors.darkBlueLighter5};
 `;
 
-class ClusterDashboardItem extends React.Component {
-  state = {
-    // eslint-disable-next-line react/no-unused-state
-    enforceReRender: null,
-    nodePools: [],
-  };
-
-  componentDidMount() {
-    this.registerReRenderInterval();
-
-    if (this.props.isV5Cluster) {
-      this.setClusterNodePools();
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.isV5Cluster &&
-      prevProps.nodePools !== this.props.nodePools
-    ) {
-      this.setClusterNodePools();
-    }
-  }
-
-  componentWillUnmount() {
-    window.clearInterval(this.reRenderInterval);
-  }
-
-  setClusterNodePools = () => {
-    const { cluster, nodePools } = this.props;
-    const nodePoolsData = clusterNodePools(nodePools, cluster);
-    this.setState({ nodePools: nodePoolsData });
-  };
-
-  /**
-   * Activates periodic re-rendering to keep displayed info, like relative
-   * dates, fresh.
-   */
-  registerReRenderInterval = () => {
-    // eslint-disable-next-line no-magic-numbers
-    const refreshInterval = 10 * 1000; // 10 seconds
-    this.reRenderInterval = window.setInterval(() => {
-      // enforce re-rendering by state change
-      // eslint-disable-next-line react/no-unused-state
-      this.setState({ enforceReRender: Date.now() });
-    }, refreshInterval);
-  };
-
+function ClusterDashboardItem({
+  cluster,
+  isV5Cluster,
+  selectedOrganization,
+  nodePools,
+  dispatch,
+}) {
   /**
    * Returns true if the cluster is younger than 30 days
    */
-  clusterYoungerThan30Days() {
+  const clusterYoungerThan30Days = () => {
     const age = Math.abs(
-      moment(this.props.cluster.create_date)
+      moment(cluster.create_date)
         .utc()
         // eslint-disable-next-line no-magic-numbers
         .diff(moment().utc()) / 1000
@@ -128,10 +87,10 @@ class ClusterDashboardItem extends React.Component {
 
     // eslint-disable-next-line no-magic-numbers
     return age < 30 * 24 * 60 * 60;
-  }
+  };
 
-  accessCluster = () => {
-    const { id, owner } = this.props.cluster;
+  const accessCluster = () => {
+    const { id, owner } = cluster;
     const clusterGuidePath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.GettingStarted.Overview,
       {
@@ -140,91 +99,84 @@ class ClusterDashboardItem extends React.Component {
       }
     );
 
-    this.props.dispatch(push(clusterGuidePath));
+    dispatch(push(clusterGuidePath));
   };
 
-  // eslint-disable-next-line complexity
-  render() {
-    const { cluster, isV5Cluster, selectedOrganization } = this.props;
-
-    const { nodePools } = this.state;
-
-    const linkToCluster = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
-      {
-        orgId: selectedOrganization,
-        clusterId: cluster.id,
-      }
-    );
-
-    if (cluster.delete_date) {
-      return (
-        <WrapperDeleted>
-          <LabelWrapper>
-            <ClusterIDLabel clusterID={cluster.id} copyEnabled />
-          </LabelWrapper>
-
-          <ContentWrapper>
-            <TitleWrapper>
-              <NameWrapper>{cluster.name}</NameWrapper>
-            </TitleWrapper>
-            <DeleteDateWrapper>
-              Deleted {relativeDate(cluster.delete_date)}
-            </DeleteDateWrapper>
-          </ContentWrapper>
-        </WrapperDeleted>
-      );
+  const linkToCluster = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: selectedOrganization,
+      clusterId: cluster.id,
     }
+  );
 
+  if (cluster.delete_date) {
     return (
-      <Wrapper>
+      <WrapperDeleted>
         <LabelWrapper>
-          <Link to={linkToCluster}>
-            <ClusterIDLabel clusterID={cluster.id} copyEnabled />
-          </Link>
+          <ClusterIDLabel clusterID={cluster.id} copyEnabled />
         </LabelWrapper>
 
         <ContentWrapper>
           <TitleWrapper>
-            <Link to={linkToCluster}>
-              <RefreshableLabel value={cluster.name}>
-                <NameWrapper>{cluster.name}</NameWrapper>
-              </RefreshableLabel>
-            </Link>
+            <NameWrapper>{cluster.name}</NameWrapper>
           </TitleWrapper>
-
-          <div>
-            <RefreshableLabel value={cluster.release_version}>
-              <span>
-                <i className='fa fa-version-tag' title='Release version' />{' '}
-                {cluster.release_version}
-              </span>
-            </RefreshableLabel>
-            <Dot style={{ paddingLeft: 0 }} />
-            Created {relativeDate(cluster.create_date)}
-          </div>
-          <ClusterDashboardResources
-            cluster={cluster}
-            nodePools={nodePools}
-            isV5Cluster={isV5Cluster}
-          />
+          <DeleteDateWrapper>
+            Deleted {relativeDate(cluster.delete_date)}
+          </DeleteDateWrapper>
         </ContentWrapper>
-
-        <ButtonsWrapper>
-          {this.clusterYoungerThan30Days() ? (
-            <ButtonGroup>
-              <Button onClick={this.accessCluster}>
-                <i className='fa fa-start' />
-                Get Started
-              </Button>
-            </ButtonGroup>
-          ) : (
-            ''
-          )}
-        </ButtonsWrapper>
-      </Wrapper>
+      </WrapperDeleted>
     );
   }
+
+  return (
+    <Wrapper>
+      <LabelWrapper>
+        <Link to={linkToCluster}>
+          <ClusterIDLabel clusterID={cluster.id} copyEnabled />
+        </Link>
+      </LabelWrapper>
+
+      <ContentWrapper>
+        <TitleWrapper>
+          <Link to={linkToCluster}>
+            <RefreshableLabel value={cluster.name}>
+              <NameWrapper>{cluster.name}</NameWrapper>
+            </RefreshableLabel>
+          </Link>
+        </TitleWrapper>
+
+        <div>
+          <RefreshableLabel value={cluster.release_version}>
+            <span>
+              <i className='fa fa-version-tag' title='Release version' />{' '}
+              {cluster.release_version}
+            </span>
+          </RefreshableLabel>
+          <Dot style={{ paddingLeft: 0 }} />
+          Created {relativeDate(cluster.create_date)}
+        </div>
+        <ClusterDashboardResources
+          cluster={cluster}
+          nodePools={nodePools}
+          isV5Cluster={isV5Cluster}
+        />
+      </ContentWrapper>
+
+      <ButtonsWrapper>
+        {clusterYoungerThan30Days() ? (
+          <ButtonGroup>
+            <Button onClick={accessCluster}>
+              <i className='fa fa-start' />
+              Get Started
+            </Button>
+          </ButtonGroup>
+        ) : (
+          ''
+        )}
+      </ButtonsWrapper>
+    </Wrapper>
+  );
 }
 
 ClusterDashboardItem.propTypes = {
@@ -236,8 +188,14 @@ ClusterDashboardItem.propTypes = {
   animate: PropTypes.bool,
   dispatch: PropTypes.func,
   isV5Cluster: PropTypes.bool,
-  nodePools: PropTypes.object,
+  nodePools: PropTypes.array,
 };
+
+function mapStateToProps(state, props) {
+  return {
+    nodePools: selectClusterNodePools(state, props.cluster.id),
+  };
+}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -245,4 +203,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(undefined, mapDispatchToProps)(ClusterDashboardItem);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ClusterDashboardItem);
