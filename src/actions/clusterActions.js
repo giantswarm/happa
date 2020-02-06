@@ -638,10 +638,7 @@ export function clusterLoadKeyPairs(clusterId) {
   return function(dispatch) {
     const keypairsApi = new GiantSwarm.KeyPairsApi();
 
-    dispatch({
-      type: types.CLUSTER_LOAD_KEY_PAIRS,
-      clusterId,
-    });
+    dispatch({ type: types.CLUSTER_LOAD_KEY_PAIRS_REQUEST });
 
     return keypairsApi
       .getKeyPairs(clusterId)
@@ -671,8 +668,6 @@ export function clusterLoadKeyPairs(clusterId) {
 
         // eslint-disable-next-line no-console
         console.error(error);
-
-        throw error;
       });
   };
 }

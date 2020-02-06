@@ -111,17 +111,27 @@ export const batchedClusterDetailView = (
   isV5Cluster
 ) => async dispatch => {
   try {
-    await dispatch(
-      organizationActions.organizationCredentialsLoad(organizationId, clusterId)
-    );
+    // Lets use Promise.all when we have a series of async calls that not depend
+    // on each another. It's faster and it's best from an error handling perspective.
+    await Promise.all([
+      dispatch(
+        organizationActions.organizationCredentialsLoad(
+          organizationId,
+          clusterId
+        )
+      ),
+      dispatch(releaseActions.loadReleases()),
+      dispatch(appActions.loadApps(clusterId)),
+      dispatch(clusterActions.clusterLoadKeyPairs(clusterId)),
+    ]);
 
-    await dispatch(releaseActions.loadReleases());
     await dispatch(
       clusterActions.clusterLoadDetails(clusterId, {
         withLoadingFlags: true,
         initializeNodePools: true,
       })
     );
+
     if (isV5Cluster) {
       await dispatch(
         nodePoolActions.clusterNodePoolsLoad(clusterId, {
@@ -129,7 +139,6 @@ export const batchedClusterDetailView = (
         })
       );
     }
-    await dispatch(appActions.loadApps(clusterId));
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Error in batchedClusterDetailView', err);
