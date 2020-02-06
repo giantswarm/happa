@@ -10,79 +10,61 @@ import { bindActionCreators } from 'redux';
 import { AppRoutes } from 'shared/constants/routes';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
-class OAuthCallback extends React.Component {
-  state = {
-    error: null,
-  };
+const OAuthCallback = ({ location, dispatch, actions }) => {
+  const [error, setError] = React.useState(null);
+  const auth = React.useRef(new Auth());
 
-  constructor(props) {
-    super(props);
+  React.useEffect(() => {
+    if (/id_token|error/.test(location.hash)) {
+      auth.current.handleAuthentication(async (err, authResult) => {
+        if (err) {
+          setError(err);
 
-    const auth = new Auth();
+          return;
+        }
 
-    if (/id_token|error/.test(props.location.hash)) {
-      auth.handleAuthentication((err, authResult) => {
-        if (err === null) {
-          // Login user officially
-          props.actions
-            .auth0Login(authResult)
-            .then(() => {
-              props.dispatch(push(AppRoutes.Home));
-            })
-            .catch(authError => {
-              // eslint-disable-next-line no-console
-              console.error(authError);
-            });
-        } else {
-          this.setState({ error: err });
+        // Login user officially
+        try {
+          await actions.auth0Login(authResult);
+          dispatch(push(AppRoutes.Home));
+        } catch (authError) {
+          setError(authError);
         }
       });
     } else {
-      this.setState({
-        error: {
-          error: 'unauthorized',
-          errorDescription:
-            'Invalid or empty response from the authentication provider.',
-        },
+      setError({
+        error: 'unauthorized',
+        errorDescription:
+          'Invalid or empty response from the authentication provider.',
       });
     }
-  }
+  }, [location, dispatch, actions]);
 
-  errorMessage = () => {
-    return (
-      <div>
-        <h1>Something went wrong</h1>
-        <p>{this.state.error.errorDescription}</p>
-        <Link to={AppRoutes.AdminLogin}>Try again</Link>
-      </div>
-    );
-  };
+  return (
+    <div>
+      <div className='login_form--mask' />
 
-  render() {
-    return (
-      <div>
-        <div className='login_form--mask' />
-
-        <SlideTransition in={true} appear={true} direction='down'>
-          <div className='login_form--container col-4 login_form--admin'>
-            {this.state.error ? (
-              this.errorMessage()
-            ) : (
-              <img className='loader' src={spinner} />
-            )}
-          </div>
-        </SlideTransition>
-      </div>
-    );
-  }
-}
+      <SlideTransition in={true} appear={true} direction='down'>
+        <div className='login_form--container col-4 login_form--admin'>
+          {error ? (
+            <div>
+              <h1>Something went wrong</h1>
+              <p>{error.errorDescription}</p>
+              <Link to={AppRoutes.AdminLogin}>Try again</Link>
+            </div>
+          ) : (
+            <img className='loader' src={spinner} />
+          )}
+        </div>
+      </SlideTransition>
+    </div>
+  );
+};
 
 OAuthCallback.propTypes = {
   actions: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
-  flashMessages: PropTypes.object,
-  params: PropTypes.object,
 };
 
 function mapStateToProps(state) {

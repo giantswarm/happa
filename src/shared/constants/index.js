@@ -6,4 +6,5 @@ export { Providers, AuthorizationTypes, StatusCodes };
 
 export const Constants = {
   DEFAULT_NODEPOOL_NAME: 'Unnamed node pool',
+  AWS_V5_VERSION: '10.0.0',
 };

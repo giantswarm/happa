@@ -1,8 +1,26 @@
 import cmp from 'semver-compare';
-import { Providers } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 
 // Here we can store functions that don't return markup/UI and are used in more
 // than one component.
+
+// Determine whether a cluster at a certain version can be upgraded to a target version.
+export function canClusterUpgrade(currentVersion, targetVersion, provider) {
+  // Cluster must have a release_version.
+  if (!currentVersion) return false;
+
+  // A target release to upgrade to must be defined.
+  if (!targetVersion) return false;
+
+  // We must not be trying to go from v4 to v5 on AWS.
+  const targetingV5 = cmp(targetVersion, Constants.AWS_V5_VERSION) >= 0;
+  const currentlyV4 = cmp(currentVersion, Constants.AWS_V5_VERSION) < 0;
+  const onAWS = provider === Providers.AWS;
+
+  if (onAWS && targetingV5 && currentlyV4) return false;
+
+  return true;
+}
 
 // Regular clusters functions
 export function getNumberOfNodes(cluster) {
@@ -121,21 +139,6 @@ export function getCpusTotalNodePools(nodePools = []) {
 
   return TotalCPUs;
 }
-
-// Finds node pools for a cluster and returns an array of node pools objects
-export const clusterNodePools = (nodePools, cluster) => {
-  // This is to avoid a TypeError when trying to map an undefined variable
-  // TODO this checks ideally shouldn't be here
-  if (
-    nodePools &&
-    Object.entries(nodePools).length !== 0 &&
-    cluster.nodePools
-  ) {
-    return cluster.nodePools.map(np => nodePools[np]);
-  }
-
-  return [];
-};
 
 // computeCapabilities takes a release version and provider and returns a
 // capabilities object with the features that this cluster supports.

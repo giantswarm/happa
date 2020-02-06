@@ -472,13 +472,13 @@ export function clusterLoadDetails(
       dispatch(clusterLoadDetailsError(clusterId, error));
 
       new FlashMessage(
-        'Something went wrong while trying to load cluster details.',
+        `Something went wrong while trying to load cluster details for <code>${clusterId}</code>.`,
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again later or contact support: support@giantswarm.io'
       );
 
-      throw error;
+      return {};
     }
   };
 }
@@ -638,10 +638,7 @@ export function clusterLoadKeyPairs(clusterId) {
   return function(dispatch) {
     const keypairsApi = new GiantSwarm.KeyPairsApi();
 
-    dispatch({
-      type: types.CLUSTER_LOAD_KEY_PAIRS,
-      clusterId,
-    });
+    dispatch({ type: types.CLUSTER_LOAD_KEY_PAIRS_REQUEST });
 
     return keypairsApi
       .getKeyPairs(clusterId)
@@ -671,8 +668,6 @@ export function clusterLoadKeyPairs(clusterId) {
 
         // eslint-disable-next-line no-console
         console.error(error);
-
-        throw error;
       });
   };
 }

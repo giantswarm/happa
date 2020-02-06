@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
-import { truncate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -128,7 +127,6 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   const newNodePoolName = 'New NP name';
   const nodePoolName = nodePoolsResponse[0].name;
   const nodePoolId = nodePoolsResponse[0].id;
-  const maxNameLength = 14;
 
   // Response to request should be the exact same NP with the new name
   const nodePoolPatchResponse = {
@@ -156,10 +154,10 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
     clusterDetailPath
   );
 
-  await wait(() => getByText(truncate(nodePoolName, maxNameLength)));
+  await wait(() => getByText(nodePoolName));
 
   // All mock node pools have the same first 14 characters.
-  const nodePoolNameEl = getByText(truncate(nodePoolName, maxNameLength));
+  const nodePoolNameEl = getByText(nodePoolName);
   const nodePools = getAllByTestId('node-pool-id');
 
   // Is this NP the first in the list?
