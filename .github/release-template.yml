@@ -2,19 +2,19 @@ name-template: 'v$NEXT_PATCH_VERSION 🚀'
 tag-template: 'v$NEXT_PATCH_VERSION'
 categories:
   - title: 'Added'
-    labels: '[FEATURE]'
+    label: '[FEATURE]'
 
   - title: 'Changed'
-    labels: '[CHANGE]'
+    label: '[CHANGE]'
 
   - title: 'Deprecated'
-    labels: '[DEPRECATE]'
+    label: '[DEPRECATE]'
 
   - title: 'Removed'
-    labels: '[REMOVE]'
+    label: '[REMOVE]'
 
   - title: 'Fixed'
-    labels: '[BUGFIX]'
+    label: '[BUGFIX]'
 
   - title: 'Security'
     label: '[SECURITY]'
