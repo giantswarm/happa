@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { truncate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -10,7 +9,6 @@ import { connect } from 'react-redux';
 import Button from './Button';
 
 const MIN_NAME_LENGTH = 3;
-const MAX_NAME_LENGTH = 14;
 
 const FormWrapper = styled.div`
   display: inline-block;
@@ -127,10 +125,7 @@ class ViewAndEditName extends React.Component {
 
     this.setState({
       editing: false,
-      name:
-        this.props.entityType === 'node pool'
-          ? truncate(inputFieldValue, MAX_NAME_LENGTH)
-          : inputFieldValue,
+      name: inputFieldValue,
     });
 
     const { toggleEditingState } = this.props;
