@@ -2,28 +2,31 @@ name-template: 'v$NEXT_PATCH_VERSION 🚀'
 tag-template: 'v$NEXT_PATCH_VERSION'
 categories:
   - title: 'Added'
-    label: '[FEATURE]'
+    label: 'kind/feature'
 
   - title: 'Changed'
-    label: '[CHANGE]'
+    labels:
+      - 'kind/change'
+      - 'kind/refactor'
+      - 'kind/ux-enhancement'
 
   - title: 'Deprecated'
-    label: '[DEPRECATE]'
+    label: 'kind/deprecation'
 
   - title: 'Removed'
-    label: '[REMOVE]'
+    label: 'kind/removal'
 
   - title: 'Fixed'
-    label: '[BUGFIX]'
+    label: 'kind/bug'
 
   - title: 'Security'
-    label: '[SECURITY]'
+    label: 'kind/security'
+
+exclude-labels:
+  - 'dependencies'
 
 change-template: '- $TITLE (#$NUMBER)'
 template: |
   ## What's changed
 
   $CHANGES
-replacers:
-  - search: '/\[([A-Z])+\]\s/g'
-    replace: ''
