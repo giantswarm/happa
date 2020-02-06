@@ -7,11 +7,10 @@ import { Constants, Providers } from 'shared/constants';
 // Determine whether a cluster at a certain version can be upgraded to a target version.
 export function canClusterUpgrade(currentVersion, targetVersion, provider) {
   // Cluster must have a release_version.
-  if (currentVersion === '') return false;
-  if (Boolean(currentVersion) !== true) return false;
+  if (!currentVersion) return false;
 
   // A target release to upgrade to must be defined.
-  if (Boolean(targetVersion) !== true) return false;
+  if (!targetVersion) return false;
 
   // We must not be trying to go from v4 to v5 on AWS.
   const targetingV5 = cmp(targetVersion, Constants.AWS_V5_VERSION) >= 0;
