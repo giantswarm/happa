@@ -73,7 +73,9 @@ const GridRowNodePoolsBase = css`
   ${Row};
   display: grid;
   grid-gap: 0 10px;
-  grid-template-columns: minmax(47px, 1fr) 4fr 4fr 3fr repeat(4, 2fr) 1fr;
+  grid-template-columns:
+    minmax(47px, 1fr) minmax(50px, 4fr) 4fr 3fr repeat(4, 2fr)
+    1fr;
   grid-template-rows: 30px;
   justify-content: space-between;
   place-items: center center;
