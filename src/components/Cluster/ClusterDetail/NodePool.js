@@ -22,6 +22,23 @@ const NodesWrapper = styled.div`
   border-radius: 3px;
 `;
 
+const NameWrapperDiv = styled.div`
+  padding-left: 8px;
+  justify-self: left;
+  width: 100%;
+  white-space: nowrap;
+  display: inline-block;
+  span {
+    display: flex;
+  }
+  a {
+    text-overflow: ellipsis;
+    max-width: 95%;
+    display: inline-block;
+    overflow: hidden;
+  }
+`;
+
 class NodePool extends Component {
   state = {
     isNameBeingEdited: false,
@@ -90,12 +107,8 @@ class NodePool extends Component {
       <>
         <Code data-testid='node-pool-id'>{id}</Code>
         {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
-        <div
-          style={{
-            paddingLeft: '8px',
-            justifySelf: 'left',
-            gridColumn: isNameBeingEdited ? '2 / 9' : null,
-          }}
+        <NameWrapperDiv
+          style={{ gridColumn: isNameBeingEdited ? '2 / 9' : null }}
         >
           <ViewAndEditName
             cssClass='np'
@@ -105,7 +118,7 @@ class NodePool extends Component {
             ref={viewEditName => (this.viewEditNameRef = viewEditName)}
             toggleEditingState={this.toggleEditingState}
           />
-        </div>
+        </NameWrapperDiv>
         {/* Hide the rest of fields when editing name */}
         {!isNameBeingEdited && (
           <>
