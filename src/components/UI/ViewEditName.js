@@ -72,27 +72,15 @@ class ViewAndEditName extends React.Component {
 
   nameInputRef = React.createRef();
 
-  componentDidMount() {
-    if (this.props.entityType === 'node pool') {
-      const name = truncate(this.props.entity.name, MAX_NAME_LENGTH);
-      this.setState({ name });
-    }
-  }
-
   componentDidUpdate(prevProps) {
     const { name } = this.props.entity;
 
     // If the name provided by the parent component is different than the name in
     // local state, it means that the patch call has failed, so we revert this.state.name
-    // TODO Is this too convoluted? Remove optimistic update
+    // TODO Is this too convoluted? Should we remove optimistic update?
     if (prevProps.entity.name !== name) {
-      const oldName =
-        this.props.entityType === 'node pool'
-          ? truncate(name, MAX_NAME_LENGTH)
-          : name;
-
       this.setState({
-        name: oldName,
+        name,
         inputFieldValue: name,
       });
     }
