@@ -86,13 +86,6 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTER_LOAD_KEY_PAIRS:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].isFetchingKeyPairs = true;
-      }
-
-      return;
-
     case types.CLUSTER_LOAD_KEY_PAIRS_SUCCESS:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].isFetchingKeyPairs = false;

@@ -50,7 +50,6 @@ class KeyPairs extends React.Component {
   }
 
   state = {
-    loading: true,
     // eslint-disable-next-line react/no-unused-state
     error: false,
     // eslint-disable-next-line react/no-unused-state
@@ -78,23 +77,10 @@ class KeyPairs extends React.Component {
   apiEndpointHostname = '';
 
   componentDidMount() {
-    this.loadKeyPairs();
-
     this.apiEndpointHostname = new URL(
       this.props.cluster.api_endpoint
     ).hostname;
   }
-
-  loadKeyPairs = () => {
-    this.setState({
-      loading: false,
-      // eslint-disable-next-line react/no-unused-state
-      error: false,
-    });
-    this.props.dispatch(
-      clusterActions.clusterLoadKeyPairs(this.props.cluster.id)
-    );
-  };
 
   // Provides the configuration for the keypairs table
   getKeypairsTableColumnsConfig = () => {
@@ -185,7 +171,7 @@ class KeyPairs extends React.Component {
         <div className='row'>
           <div className='col-12'>
             {(() => {
-              if (this.state.loading) {
+              if (this.props.loadingKeyPairs) {
                 return (
                   <p>
                     <img className='loader' src={spinner} />
@@ -255,6 +241,7 @@ KeyPairs.propTypes = {
   provider: PropTypes.string,
   cluster: PropTypes.object,
   dispatch: PropTypes.func,
+  loadingKeyPairs: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
@@ -262,6 +249,7 @@ function mapStateToProps(state) {
     clusters: state.entities.clusters,
     provider: state.app.info.general.provider,
     user: state.app.loggedInUser,
+    loadingKeyPairs: state.loadingFlags.CLUSTER_LOAD_KEY_PAIRS,
   };
 }
 
