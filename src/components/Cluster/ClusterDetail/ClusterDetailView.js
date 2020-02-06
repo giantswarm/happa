@@ -23,7 +23,7 @@ import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import LoadingOverlay from 'UI/LoadingOverlay';
 import ViewAndEditName from 'UI/ViewEditName';
-import { canClusterUpgrade, getNumberOfNodes } from 'utils/clusterUtils';
+import { getNumberOfNodes } from 'utils/clusterUtils';
 
 import ClusterApps from './ClusterApps';
 import KeyPairs from './KeyPairs';
@@ -208,6 +208,7 @@ class ClusterDetailView extends React.Component {
 
   render() {
     const {
+      canClusterUpgrade,
       cluster,
       credentials,
       dispatch,
@@ -249,11 +250,7 @@ class ClusterDetailView extends React.Component {
                       {isV5Cluster ? (
                         <V5ClusterDetailTable
                           accessCluster={this.accessCluster}
-                          canClusterUpgrade={canClusterUpgrade(
-                            this.props.cluster.release_version,
-                            this.props.targetRelease?.version,
-                            this.props.provider
-                          )}
+                          canClusterUpgrade={canClusterUpgrade}
                           cluster={cluster}
                           credentials={credentials}
                           provider={provider}
@@ -265,11 +262,7 @@ class ClusterDetailView extends React.Component {
                       ) : (
                         <V4ClusterDetailTable
                           accessCluster={this.accessCluster}
-                          canClusterUpgrade={canClusterUpgrade(
-                            this.props.cluster.release_version,
-                            this.props.targetRelease?.version,
-                            this.props.provider
-                          )}
+                          canClusterUpgrade={canClusterUpgrade}
                           cluster={cluster}
                           credentials={credentials}
                           provider={provider}
@@ -338,7 +331,7 @@ class ClusterDetailView extends React.Component {
                 />
               )}
 
-              {targetRelease && (
+              {canClusterUpgrade && (
                 <UpgradeClusterModal
                   cluster={cluster}
                   ref={s => {
@@ -361,6 +354,7 @@ ClusterDetailView.contextTypes = {
 };
 
 ClusterDetailView.propTypes = {
+  canClusterUpgrade: PropTypes.bool,
   catalogs: PropTypes.object,
   clearInterval: PropTypes.func,
   clusterActions: PropTypes.object,
