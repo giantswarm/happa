@@ -23,7 +23,7 @@ import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import LoadingOverlay from 'UI/LoadingOverlay';
 import ViewAndEditName from 'UI/ViewEditName';
-import { getNumberOfNodes } from 'utils/clusterUtils';
+import { canClusterUpgrade, getNumberOfNodes } from 'utils/clusterUtils';
 
 import ClusterApps from './ClusterApps';
 import KeyPairs from './KeyPairs';
@@ -142,19 +142,6 @@ class ClusterDetailView extends React.Component {
     return 'Not found';
   }
 
-  // Determine whether the current cluster can be upgraded
-  canClusterUpgrade() {
-    // cluster must have a release_version
-    if (this.props.cluster.release_version === '') return false;
-
-    // a target release to upgrade to must be defined
-    if (Boolean(this.props.targetRelease) !== true) {
-      return false;
-    }
-
-    return true;
-  }
-
   // Determine whether the cluster can be scaled
   canClusterScale() {
     if (
@@ -262,7 +249,11 @@ class ClusterDetailView extends React.Component {
                       {isV5Cluster ? (
                         <V5ClusterDetailTable
                           accessCluster={this.accessCluster}
-                          canClusterUpgrade={this.canClusterUpgrade()}
+                          canClusterUpgrade={canClusterUpgrade(
+                            this.props.cluster.release_version,
+                            this.props.targetRelease?.version,
+                            this.props.provider
+                          )}
                           cluster={cluster}
                           credentials={credentials}
                           provider={provider}
@@ -274,7 +265,11 @@ class ClusterDetailView extends React.Component {
                       ) : (
                         <V4ClusterDetailTable
                           accessCluster={this.accessCluster}
-                          canClusterUpgrade={this.canClusterUpgrade()}
+                          canClusterUpgrade={canClusterUpgrade(
+                            this.props.cluster.release_version,
+                            this.props.targetRelease?.version,
+                            this.props.provider
+                          )}
                           cluster={cluster}
                           credentials={credentials}
                           provider={provider}
