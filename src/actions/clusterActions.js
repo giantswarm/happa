@@ -452,15 +452,17 @@ export function clusterLoadDetails(
     } catch (error) {
       if (error.status === StatusCodes.NotFound) {
         new FlashMessage(
-          'This cluster no longer exists.',
+          `Cluster <code>${clusterId}</code> no longer exists.`,
           messageType.INFO,
-          messageTTL.MEDIUM,
-          'Redirecting you to your organization clusters list'
+          messageTTL.MEDIUM
         );
 
         // Delete the cluster in the store.
-        // eslint-disable-next-line no-use-before-define
-        dispatch(clusterDeleteSuccess(clusterId, Date.now()));
+        dispatch({
+          type: types.CLUSTER_DELETE,
+          clusterId,
+          isV5Cluster,
+        });
         dispatch(push(AppRoutes.Home));
 
         return {};
