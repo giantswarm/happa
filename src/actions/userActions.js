@@ -59,17 +59,6 @@ export function refreshUserInfo() {
     return usersApi
       .getCurrentUser()
       .then(data => {
-        // const userData = {
-        //   email: data.email,
-        //   auth: {
-        //     scheme: loggedInUser.auth.scheme,
-        //     token: loggedInUser.auth.token,
-        //   },
-        //   isAdmin: loggedInUser.isAdmin,
-        // };
-
-        // localStorage.setItem('user', JSON.stringify(userData));
-
         dispatch({
           type: types.REFRESH_USER_INFO_SUCCESS,
           email: data.email,
