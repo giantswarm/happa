@@ -59,20 +59,20 @@ export function refreshUserInfo() {
     return usersApi
       .getCurrentUser()
       .then(data => {
-        const userData = {
-          email: data.email,
-          auth: {
-            scheme: loggedInUser.auth.scheme,
-            token: loggedInUser.auth.token,
-          },
-          isAdmin: loggedInUser.isAdmin,
-        };
+        // const userData = {
+        //   email: data.email,
+        //   auth: {
+        //     scheme: loggedInUser.auth.scheme,
+        //     token: loggedInUser.auth.token,
+        //   },
+        //   isAdmin: loggedInUser.isAdmin,
+        // };
 
-        localStorage.setItem('user', JSON.stringify(userData));
+        // localStorage.setItem('user', JSON.stringify(userData));
 
         dispatch({
           type: types.REFRESH_USER_INFO_SUCCESS,
-          userData: userData,
+          email: data.email,
         });
       })
       .catch(error => {
