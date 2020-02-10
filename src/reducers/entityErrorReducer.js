@@ -9,7 +9,7 @@ const entityErrorReducer = produce((draft, action) => {
   const matches = /(.*)_(SUCCESS|ERROR)/.exec(type);
 
   // not a *_SUCCESS / *_ERROR actions, or no id -> we ignore them
-  if (!matches && !id) return;
+  if (!matches || !id) return;
 
   const [, requestName, requestState] = matches;
 
