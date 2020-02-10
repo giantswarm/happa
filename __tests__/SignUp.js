@@ -6,20 +6,10 @@ import nock from 'nock';
 import { StatusCodes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
 import {
-  appCatalogsResponse,
-  appsResponse,
   AWSInfoResponse,
   getMockCall,
-  getMockCallTimes,
-  ORGANIZATION,
-  orgResponse,
-  releasesResponse,
   USER_EMAIL,
   userResponse,
-  V4_CLUSTER,
-  v4AWSClusterResponse,
-  v4AWSClusterStatusResponse,
-  v4ClustersResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
@@ -53,24 +43,10 @@ afterAll(() => {
 // Responses to requests
 beforeEach(() => {
   getMockCall('/v4/user/', userResponse);
-  getMockCallTimes('/v4/info/', AWSInfoResponse, 2);
-  // eslint-disable-next-line no-magic-numbers
-  getMockCallTimes('/v4/organizations/', [], 4);
-  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
-  getMockCallTimes('/v4/clusters/', v4ClustersResponse, 2);
-  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
-  getMockCallTimes(
-    `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponse,
-    2
-  );
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
-  // Empty response
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
-  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-  getMockCall('/v4/releases/', releasesResponse);
-  // eslint-disable-next-line no-magic-numbers
-  getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 3);
+  getMockCall('/v4/info/', AWSInfoResponse);
+  getMockCall('/v4/organizations/');
+  getMockCall('/v4/clusters/');
+  getMockCall('/v4/appcatalogs/');
 });
 
 // Stop persisting responses
