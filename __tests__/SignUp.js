@@ -31,28 +31,15 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
 jest.setTimeout(10 * 1000);
 
 beforeAll(() => {
+  nock.disableNetConnect();
   // eslint-disable-next-line no-console
   console.error = jest.fn();
 });
 
 afterAll(() => {
+  nock.enableNetConnect();
   // eslint-disable-next-line no-console
   console.error = originalConsoleError;
-});
-
-// Responses to requests
-beforeEach(() => {
-  getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/info/', AWSInfoResponse);
-  getMockCall('/v4/organizations/');
-  getMockCall('/v4/clusters/');
-  getMockCall('/v4/appcatalogs/');
-});
-
-// Stop persisting responses
-afterEach(() => {
-  expect(nock.isDone());
-  nock.cleanAll();
 });
 
 describe('Signup', () => {
@@ -106,6 +93,12 @@ describe('Signup', () => {
   });
 
   it('registers a new user if the token is valid', async () => {
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/info/', AWSInfoResponse);
+    getMockCall('/v4/organizations/');
+    getMockCall('/v4/clusters/');
+    getMockCall('/v4/appcatalogs/');
+
     const verifyingRequest = nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
