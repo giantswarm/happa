@@ -45,7 +45,7 @@
     "classnames": "2.2.6",
     "color-hash": "latest",
     "connected-react-router": "6.6.1",
-    "copy-to-clipboard": "3.2.0",
+    "copy-to-clipboard": "3.2.1",
     "deep-diff": "1.0.2",
     "emotion-theming": "10.0.27",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
