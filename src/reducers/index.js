@@ -5,6 +5,7 @@ import makeAppReducer from './appReducer';
 import catalogs from './catalogsReducer';
 import clusters from './clusterReducer';
 import credentials from './credentialReducer';
+import errors from './errorReducer';
 import invitations from './invitationReducer';
 import loadingFlags from './loadingReducer';
 import modal from './modalReducer';
@@ -31,6 +32,7 @@ const rootReducer = history =>
     entities,
     modal,
     loadingFlags,
+    errors,
   });
 
 export default rootReducer;
