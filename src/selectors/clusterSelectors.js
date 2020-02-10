@@ -34,6 +34,10 @@ export const selectClusterNodePools = (state, clusterId) => {
   return clusterNodePoolsIds.map(nodePoolId => nodePools[nodePoolId]) || [];
 };
 
+export const selectClusterNodePoolsErrorsById = (state, clusterId) => {
+  return state.errorsByEntity[clusterId]?.CLUSTER_NODEPOOLS_LOAD ?? null;
+};
+
 // Memoized Reselect selectors
 // https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc
 // Using factory functions because they create new references each time that are called,
