@@ -69,7 +69,8 @@ beforeEach(() => {
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
   getMockCall('/v4/releases/', releasesResponse);
-  getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+  // eslint-disable-next-line no-magic-numbers
+  getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 3);
 });
 
 // Stop persisting responses
