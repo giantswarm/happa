@@ -26,10 +26,15 @@ const initialState = () => ({
 const makeAppReducer = () => {
   return produce((draft, action) => {
     switch (action.type) {
-      case types.REFRESH_USER_INFO_SUCCESS:
-        draft.loggedInUser = action.userData;
+      case types.REFRESH_USER_INFO_SUCCESS: {
+        const newUser = Object.assign({}, draft.loggedInUser, {
+          email: action.email,
+        });
+        setUserToStorage(newUser);
+        draft.loggedInUser = newUser;
 
         return;
+      }
 
       case types.INFO_LOAD_SUCCESS:
         draft.info = action.info;

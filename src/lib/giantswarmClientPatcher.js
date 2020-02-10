@@ -38,9 +38,9 @@ function monkeyPatchGiantSwarmClient(store) {
       if (isJwtExpired(defaultClientAuth.apiKey)) {
         return auth0
           .renewToken()
-          .then(result => {
+          .then(async result => {
             // Update state with new token.
-            store.dispatch(auth0Login(result));
+            await store.dispatch(auth0Login(result));
 
             // Ensure the second attempt uses the new token.
             headerParams[
