@@ -267,4 +267,71 @@ describe('Signup', () => {
 
     createAccountRequest.done();
   });
+
+  it('displays a warning if the user creation request fails', async () => {
+    const verifyingRequest = nock(global.config.passageEndpoint)
+      .get(tokenTestPath)
+      .reply(StatusCodes.Ok, {
+        email: USER_EMAIL,
+        invite_date: String(Date.now()),
+        is_valid: true,
+      });
+
+    const {
+      findByText,
+      getByLabelText,
+      findByLabelText,
+      findByTitle,
+    } = renderRouteWithStore(verifyingRoute);
+
+    const nextButton = await findByTitle(/next/i);
+    let fieldToUse = getByLabelText(/set a password/i);
+
+    verifyingRequest.done();
+
+    // Input validation
+
+    // Check if the password is all good
+    fireEvent.change(fieldToUse, {
+      target: { value: 'g00dPa$$w0rD' },
+    });
+
+    fireEvent.click(nextButton);
+
+    // Validate confirm password field
+    fieldToUse = getByLabelText(/password, once again/i);
+
+    fireEvent.change(fieldToUse, {
+      target: { value: 'g00dPa$$w0rD' },
+    });
+
+    await findByText(/perfect match, nice!/i);
+
+    fireEvent.click(nextButton);
+
+    // Check if terms of service are rendered
+    await findByText(/confirm that you acknowledge our Terms of Service:/i);
+
+    fieldToUse = await findByLabelText(/i accept the terms of service/i);
+
+    fireEvent.click(fieldToUse);
+    expect(fieldToUse.checked).toBeTruthy();
+
+    // Send account creation request
+    const createAccountRequest = nock(global.config.passageEndpoint)
+      .post('/accounts/', {
+        invite_token: testToken,
+        password: 'g00dPa$$w0rD',
+      })
+      .reply(StatusCodes.InternalServerError, {});
+
+    fireEvent.click(nextButton);
+
+    const statusMessage = await findByText(/creating account.../i);
+    await wait(() => {
+      expect(statusMessage.textContent.match(/failed/i)).toBeTruthy();
+    });
+
+    createAccountRequest.done();
+  });
 });
