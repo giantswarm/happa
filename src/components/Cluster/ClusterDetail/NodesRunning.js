@@ -1,8 +1,17 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { FallbackMessages } from 'shared/constants';
 import { Dot } from 'styles';
 
 const NodesRunning = ({ workerNodesRunning, RAM, CPUs, nodePools }) => {
+  if (workerNodesRunning === 0) {
+    return (
+      <div data-testid='nodes-running'>
+        <span>{FallbackMessages.NODES_NOT_READY}</span>
+      </div>
+    );
+  }
+
   const nodesSingularPlural = workerNodesRunning === 1 ? ' node' : ' nodes';
   const npSingularPlural =
     nodePools && nodePools.length === 1 ? ' node pool' : ' node pools';

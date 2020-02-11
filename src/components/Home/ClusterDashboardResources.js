@@ -6,6 +6,7 @@ import {
   selectResourcesV4,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
+import { FallbackMessages } from 'shared/constants';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
@@ -44,7 +45,9 @@ function ClusterDashboardResources({
           )}
           <RefreshableLabel value={numberOfNodes}>
             <span>
-              {numberOfNodes} {numberOfNodes === 1 ? 'node' : 'nodes'}
+              {numberOfNodes === 0
+                ? FallbackMessages.NODES_NOT_READY
+                : `${numberOfNodes} ${numberOfNodes === 1 ? 'node' : 'nodes'}`}
             </span>
           </RefreshableLabel>
           {numberOfNodes !== 0 && hasNodePools && (
