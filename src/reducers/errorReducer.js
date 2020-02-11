@@ -13,7 +13,7 @@ const errorReducer = produce((draft, action) => {
 
   switch (requestState) {
     case 'ERROR':
-      draft[requestName] = payload?.message ?? '';
+      draft[requestName] = payload ?? '';
 
       return;
 
