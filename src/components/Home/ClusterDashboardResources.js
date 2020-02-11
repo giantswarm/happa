@@ -19,6 +19,10 @@ const ClusterDetailsDiv = styled.div`
   }
 `;
 
+const FallbackSpan = styled.span`
+  opacity: 0.5;
+`;
+
 function ClusterDashboardResources({
   cluster,
   loadingClusters,
@@ -44,11 +48,13 @@ function ClusterDashboardResources({
             </RefreshableLabel>
           )}
           <RefreshableLabel value={numberOfNodes}>
-            <span>
-              {numberOfNodes === 0
-                ? FallbackMessages.NODES_NOT_READY
-                : `${numberOfNodes} ${numberOfNodes === 1 ? 'node' : 'nodes'}`}
-            </span>
+            {numberOfNodes === 0 ? (
+              <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
+            ) : (
+              <span>{`${numberOfNodes} ${
+                numberOfNodes === 1 ? 'node' : 'nodes'
+              }`}</span>
+            )}
           </RefreshableLabel>
           {numberOfNodes !== 0 && hasNodePools && (
             <>
