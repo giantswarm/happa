@@ -3,7 +3,7 @@ import { push } from 'connected-react-router';
 import { spinner } from 'images';
 import Auth from 'lib/auth0';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
@@ -11,10 +11,10 @@ import { AppRoutes } from 'shared/constants/routes';
 import SlideTransition from 'styles/transitions/SlideTransition';
 
 const OAuthCallback = ({ location, dispatch, actions }) => {
-  const [error, setError] = React.useState(null);
-  const auth = React.useRef(new Auth());
+  const [error, setError] = useState(null);
+  const auth = useRef(new Auth());
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (/id_token|error/.test(location.hash)) {
       auth.current.handleAuthentication(async (err, authResult) => {
         if (err) {
