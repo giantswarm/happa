@@ -279,13 +279,9 @@ describe('Signup', () => {
 
     fireEvent.click(nextButton);
 
-    // Check if terms of service are rendered
-    await findByText(/confirm that you acknowledge our Terms of Service:/i);
-
+    // Accept terms of service
     fieldToUse = await findByLabelText(/i accept the terms of service/i);
-
     fireEvent.click(fieldToUse);
-    expect(fieldToUse.checked).toBeTruthy();
 
     // Send account creation request
     const createAccountRequest = nock(global.config.passageEndpoint)
