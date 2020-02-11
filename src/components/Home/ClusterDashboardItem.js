@@ -162,7 +162,7 @@ function ClusterDashboardItem({
           Created {relativeDate(cluster.create_date)}
         </div>
 
-        <ErrorFallback errorMessage={nodePoolsLoadError}>
+        <ErrorFallback errors={nodePoolsLoadError}>
           <ClusterDashboardResources
             cluster={cluster}
             nodePools={nodePools}
