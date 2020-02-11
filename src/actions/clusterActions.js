@@ -8,6 +8,12 @@ import { computeCapabilities } from 'utils/clusterUtils';
 
 import * as types from './actionTypes';
 
+// Used in ClusterDetailView
+export const clusterDelete = cluster => ({
+  type: types.CLUSTER_DELETE,
+  cluster,
+});
+
 // API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
 
@@ -194,8 +200,11 @@ export function clusterLoadDetails(
 
       // eslint-disable-next-line no-console
       console.error('Error loading cluster details:', error);
-      // eslint-disable-next-line no-use-before-define
-      dispatch(clusterLoadDetailsError(clusterId, error));
+      dispatch({
+        type: types.CLUSTER_LOAD_DETAILS_ERROR,
+        clusterId,
+        error,
+      });
 
       new FlashMessage(
         `Something went wrong while trying to load cluster details for <code>${clusterId}</code>.`,
@@ -221,7 +230,6 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
         return JSON.parse(data.response.text);
       })
       .then(status => {
-        // eslint-disable-next-line no-use-before-define
         dispatch({ type: types.CLUSTER_LOAD_STATUS_SUCCESS, clusterId });
 
         return status; // used in clusterLoadDetails!
@@ -298,8 +306,10 @@ export function clusterCreate(cluster, isV5Cluster) {
         return { clusterId, owner: cluster.owner };
       })
       .catch(error => {
-        // eslint-disable-next-line no-use-before-define
-        dispatch(clusterCreateError(cluster.id, error));
+        dispatch({
+          type: types.CLUSTER_CREATE_ERROR,
+          cluster: cluster.id,
+        });
 
         // eslint-disable-next-line no-console
         console.error(error);
@@ -325,8 +335,11 @@ export function clusterDeleteConfirmed(cluster) {
     return clustersApi
       .deleteCluster(cluster.id)
       .then(data => {
-        // eslint-disable-next-line no-use-before-define
-        dispatch(clusterDeleteSuccess(cluster.id, Date.now()));
+        dispatch({
+          type: types.CLUSTER_DELETE_SUCCESS,
+          clusterId: cluster.id,
+          timestamp: Date.now(),
+        });
 
         new FlashMessage(
           `Cluster <code>${cluster.id}</code> will be deleted`,
@@ -347,8 +360,11 @@ export function clusterDeleteConfirmed(cluster) {
         // eslint-disable-next-line no-console
         console.error(error);
 
-        // eslint-disable-next-line no-use-before-define
-        return dispatch(clusterDeleteError(cluster.id, error));
+        return dispatch({
+          type: types.CLUSTER_DELETE_ERROR,
+          clusterId: cluster.id,
+          error,
+        });
       });
   };
 }
@@ -397,34 +413,6 @@ export function clusterLoadKeyPairs(clusterId) {
       });
   };
 }
-
-export const clusterLoadDetailsError = (clusterId, error) => ({
-  type: types.CLUSTER_LOAD_DETAILS_ERROR,
-  clusterId,
-  error,
-});
-
-export const clusterCreateError = cluster => ({
-  type: types.CLUSTER_CREATE_ERROR,
-  cluster,
-});
-
-export const clusterDelete = cluster => ({
-  type: types.CLUSTER_DELETE,
-  cluster,
-});
-
-export const clusterDeleteSuccess = (clusterId, timestamp) => ({
-  type: types.CLUSTER_DELETE_SUCCESS,
-  clusterId,
-  timestamp,
-});
-
-export const clusterDeleteError = (clusterId, error) => ({
-  type: types.CLUSTER_DELETE_ERROR,
-  clusterId,
-  error,
-});
 
 /**
  * Takes a cluster object and tries to patch it.
