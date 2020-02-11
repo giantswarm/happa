@@ -388,6 +388,7 @@ export class SignUp extends React.Component {
 
             <PasswordField
               label='Set a password'
+              name='password'
               onChange={this.passwordEditingCompleted}
               onStartTyping={this.passwordEditingStarted}
               ref={p => {
@@ -399,6 +400,7 @@ export class SignUp extends React.Component {
           <div id='passwordConfirmationGroup'>
             <PasswordField
               label='Password, once again'
+              name='confirm-password'
               onChange={this.passwordConfirmationEditingCompleted}
               onStartTyping={this.passwordConfirmationEditingStarted}
               ref={f => {
@@ -432,7 +434,7 @@ export class SignUp extends React.Component {
               bsStyle='primary'
               disabled={!this.state.advancable || this.state.submitting}
               loading={this.state.submitting}
-              onClick={this.logIn}
+              title='Next'
               type='submit'
             >
               {this.state.buttonText[this.state.currentStep]}
