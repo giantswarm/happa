@@ -23,6 +23,9 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { initialStorage } from 'testUtils/renderUtils';
 
+// eslint-disable-next-line no-console
+const originalConsoleError = console.error;
+
 const mockUserData = {
   email: USER_EMAIL,
   auth: {
@@ -90,18 +93,19 @@ const renderRouteWithStore = (
 describe('AdminLogin', () => {
   beforeAll(() => {
     nock.disableNetConnect();
+    // eslint-disable-next-line no-console
+    console.error = jest.fn();
   });
 
   afterAll(() => {
     nock.enableNetConnect();
+    // eslint-disable-next-line no-console
+    console.error = originalConsoleError;
   });
 
   it('renders without crashing', async () => {
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
 
-    await findByText(
-      /verifying credentials, and redirecting to our authentication provider if necessary./i
-    );
     await findByText(
       /verifying credentials, and redirecting to our authentication provider if necessary./i
     );
@@ -214,5 +218,32 @@ describe('AdminLogin', () => {
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
 
     await findByText(/^Something went wrong$/i);
+  });
+
+  it('redirects to OAuth provider login page if renewing the token fails', async () => {
+    getMockCall('/v4/user/', userResponse);
+    getMockCallTimes('/v4/info/', AWSInfoResponse, 2);
+    getMockCallTimes('/v4/appcatalogs/', [], 2);
+    getMockCall('/v4/organizations/');
+    getMockCallTimes('/v4/clusters/', [], 2);
+
+    const mockAuthResponseWithNewToken = Object.assign(
+      {},
+      mockSuccessfulAuthResponse,
+      { accessToken: 'some-other-token' }
+    );
+
+    helpers.isJwtExpired.mockReturnValue(true);
+    mockAuth0CheckSession.mockImplementation((_config, callback) =>
+      callback(new Error('u w0t m8?'), mockAuthResponseWithNewToken)
+    );
+
+    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
+      app: { loggedInUser: mockUserData },
+    });
+
+    await findByText(
+      /verifying credentials, and redirecting to our authentication provider if necessary./i
+    );
   });
 });
