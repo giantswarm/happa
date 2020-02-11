@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 // ErrorFallback takes an error string or an array of error strings and will render
-//  the message/s. If receives a falsy value or an array of falsy values it will
+//  the message/s. If it receives a falsy value or an array of falsy values it will
 // render its children.
 
 const ErrorWrapperSpan = styled.span`
