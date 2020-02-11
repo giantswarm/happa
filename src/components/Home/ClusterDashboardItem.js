@@ -9,11 +9,15 @@ import React from 'react';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectClusterNodePools } from 'selectors/clusterSelectors';
+import {
+  selectClusterNodePools,
+  selectClusterNodePoolsErrorsById,
+} from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Dot } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
+import ErrorFallback from 'UI/ErrorFallback';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 import ClusterDashboardResources from './ClusterDashboardResources';
@@ -73,6 +77,7 @@ function ClusterDashboardItem({
   selectedOrganization,
   nodePools,
   dispatch,
+  nodePoolsLoadError,
 }) {
   /**
    * Returns true if the cluster is younger than 30 days
@@ -156,11 +161,14 @@ function ClusterDashboardItem({
           <Dot style={{ paddingLeft: 0 }} />
           Created {relativeDate(cluster.create_date)}
         </div>
-        <ClusterDashboardResources
-          cluster={cluster}
-          nodePools={nodePools}
-          isV5Cluster={isV5Cluster}
-        />
+
+        <ErrorFallback errors={nodePoolsLoadError}>
+          <ClusterDashboardResources
+            cluster={cluster}
+            nodePools={nodePools}
+            isV5Cluster={isV5Cluster}
+          />
+        </ErrorFallback>
       </ContentWrapper>
 
       <ButtonsWrapper>
@@ -189,11 +197,16 @@ ClusterDashboardItem.propTypes = {
   dispatch: PropTypes.func,
   isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.array,
+  nodePoolsLoadError: PropTypes.string,
 };
 
 function mapStateToProps(state, props) {
   return {
     nodePools: selectClusterNodePools(state, props.cluster.id),
+    nodePoolsLoadError: selectClusterNodePoolsErrorsById(
+      state,
+      props.cluster.id
+    ),
   };
 }
 
