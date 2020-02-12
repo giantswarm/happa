@@ -9,7 +9,7 @@ import { AppRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
 import theme from 'styles/theme';
 
-const initialStorage = {
+export const initialStorage = {
   user:
     '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
 };
