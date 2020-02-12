@@ -30,7 +30,7 @@ export function loadApps(clusterId) {
     }
 
     dispatch({
-      type: types.CLUSTER_LOAD_APPS,
+      type: types.CLUSTER_LOAD_APPS_REQUEST,
       clusterId,
     });
 
@@ -55,7 +55,7 @@ export function loadApps(clusterId) {
 
         dispatch({
           type: types.CLUSTER_LOAD_APPS_ERROR,
-          clusterId,
+          id: clusterId,
           error,
         });
 

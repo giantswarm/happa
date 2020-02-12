@@ -17,11 +17,6 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTERS_LIST_ERROR:
-      draft.errorLoading = true;
-
-      return;
-
     case types.CLUSTER_LOAD_DETAILS_SUCCESS: {
       draft.items[action.cluster.id] = {
         ...draft.items[action.cluster.id],
@@ -30,13 +25,6 @@ const clusterReducer = produce((draft, action) => {
 
       return;
     }
-
-    case types.CLUSTER_LOAD_DETAILS_ERROR:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].errorLoading = true;
-      }
-
-      return;
 
     case types.CLUSTER_NODEPOOLS_LOAD_SUCCESS:
       draft.items[action.clusterId].nodePools = action.nodePoolsIds;
@@ -57,31 +45,9 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTER_LOAD_STATUS_ERROR:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].errorLoading = true;
-      }
-
-      return;
-
-    case types.CLUSTER_LOAD_APPS:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].isFetchingApps = true;
-      }
-
-      return;
-
     case types.CLUSTER_LOAD_APPS_SUCCESS:
       if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].isFetchingApps = false;
         draft.items[action.clusterId].apps = action.apps;
-      }
-
-      return;
-
-    case types.CLUSTER_LOAD_APPS_ERROR:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].isFetchingApps = false;
       }
 
       return;
@@ -90,11 +56,6 @@ const clusterReducer = produce((draft, action) => {
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].keyPairs = action.keyPairs;
       }
-
-      return;
-
-    case types.CLUSTER_CREATE:
-      draft.isFetching = true;
 
       return;
 
@@ -129,7 +90,7 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    // TODO does this actually work????
+    // Undo optimistic update
     case types.CLUSTER_PATCH_ERROR:
       if (draft.items[action.cluster.id]) {
         draft.items[action.cluster.id] = action.cluster;
