@@ -1,5 +1,6 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
+import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import produce from 'immer';
 import moment from 'moment';
@@ -11,6 +12,7 @@ import { TransitionGroup } from 'react-transition-group';
 import {
   selectAndProduceAZGridTemplateAreas,
   selectClusterNodePools,
+  selectLoadingFlagByAction,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
@@ -559,7 +561,10 @@ const makeMapStateToProps = () => {
       nodePools: selectClusterNodePools(state, props.cluster.id),
       resources: resourcesV5(state, props),
       AZGridTemplateAreas: AZGridTemplateAreas(state, props.cluster.id),
-      loadingNodePools: state.loadingFlags.CLUSTER_NODEPOOLS_LOAD,
+      loadingNodePools: selectLoadingFlagByAction(
+        state,
+        CLUSTER_NODEPOOLS_LOAD_REQUEST
+      ),
     };
   };
 

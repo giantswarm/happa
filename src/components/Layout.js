@@ -1,3 +1,4 @@
+import { CLUSTERS_LIST_REQUEST } from 'actions/actionTypes';
 import {
   batchedLayout,
   batchedOrganizationSelect,
@@ -12,6 +13,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import {
   AccountSettingsRoutes,
   AppCatalogRoutes,
@@ -114,7 +116,10 @@ function mapStateToProps(state) {
     organizations: state.entities.organizations,
     user: state.app.loggedInUser,
     selectedOrganization: state.app.selectedOrganization,
-    loadingClustersList: state.loadingFlags.CLUSTERS_LIST,
+    loadingClustersList: selectLoadingFlagByAction(
+      state,
+      CLUSTERS_LIST_REQUEST
+    ),
     catalogs: state.entities.catalogs,
   };
 }

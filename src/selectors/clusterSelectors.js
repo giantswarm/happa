@@ -11,6 +11,16 @@ import {
 
 import { createDeepEqualSelector } from './selectorUtils';
 
+// Helper
+const typeWithoutSuffix = actionType => {
+  const matches = /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)/.exec(
+    actionType
+  );
+  const [, requestName] = matches;
+
+  return requestName;
+};
+
 // Regular selectors
 const selectClusterById = (state, props) => {
   return state.entities.clusters.items[props.cluster.id];
@@ -36,6 +46,14 @@ export const selectClusterNodePools = (state, clusterId) => {
 
 export const selectClusterNodePoolsErrorsById = (state, clusterId) => {
   return state.errorsByEntity[clusterId]?.CLUSTER_NODEPOOLS_LOAD ?? null;
+};
+
+export const selectLoadingFlagByAction = (state, actionType) => {
+  return state.loadingFlags[typeWithoutSuffix(actionType)] ?? null;
+};
+
+export const selectErrorByAction = (state, actionType) => {
+  return state.errors[typeWithoutSuffix(actionType)] ?? null;
 };
 
 // Memoized Reselect selectors
