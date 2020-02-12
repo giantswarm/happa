@@ -1,5 +1,6 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
+import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import produce from 'immer';
 import moment from 'moment';
@@ -11,6 +12,7 @@ import { TransitionGroup } from 'react-transition-group';
 import {
   selectAndProduceAZGridTemplateAreas,
   selectClusterNodePools,
+  selectLoadingFlagByAction,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
@@ -296,7 +298,12 @@ class V5ClusterDetailTable extends React.Component {
       isSubmitting: false,
       data: {},
     },
+    lastUpdated: '',
   };
+
+  componentDidMount() {
+    this.setState({ lastUpdated: moment().fromNow() });
+  }
 
   toggleAddNodePoolForm = () =>
     this.setState(prevState => ({
@@ -323,19 +330,6 @@ class V5ClusterDetailTable extends React.Component {
     this.toggleAddNodePoolForm();
     await this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
   };
-
-  /**
-   * Returns the proper last updated info string based on available
-   * cluster and/or status information.
-   */
-  lastUpdatedLabel() {
-    const { cluster } = this.props;
-    if (cluster && cluster.lastUpdated) {
-      return moment(cluster.lastUpdated).fromNow();
-    }
-
-    return 'n/a';
-  }
 
   render() {
     const { nodePoolForm } = this.state;
@@ -528,7 +522,7 @@ class V5ClusterDetailTable extends React.Component {
           <small>
             The information above is auto-refreshing. Details last fetched{' '}
             <span className='last-updated-datestring'>
-              {this.lastUpdatedLabel()}
+              {this.state.lastUpdated}
             </span>
             .
           </small>
@@ -567,7 +561,10 @@ const makeMapStateToProps = () => {
       nodePools: selectClusterNodePools(state, props.cluster.id),
       resources: resourcesV5(state, props),
       AZGridTemplateAreas: AZGridTemplateAreas(state, props.cluster.id),
-      loadingNodePools: state.loadingFlags.CLUSTER_NODEPOOLS_LOAD,
+      loadingNodePools: selectLoadingFlagByAction(
+        state,
+        CLUSTER_NODEPOOLS_LOAD_REQUEST
+      ),
     };
   };
 

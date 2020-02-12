@@ -20,11 +20,16 @@ import _ from 'underscore';
 import ClusterDashboardItem from './ClusterDashboardItem';
 
 class Home extends React.Component {
+  state = {
+    lastUpdated: '',
+  };
+
   visibilityTracker = new PageVisibilityTracker();
 
   componentDidMount() {
     this.registerRefreshInterval();
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
+    this.setState({ lastUpdated: moment().fromNow() });
   }
 
   componentWillUnmount() {
@@ -46,6 +51,7 @@ class Home extends React.Component {
 
   refreshClustersList = () => {
     this.props.dispatch(batchedRefreshClusters());
+    this.setState({ lastUpdated: moment().fromNow() });
   };
 
   handleVisibilityChange = () => {
@@ -67,19 +73,6 @@ class Home extends React.Component {
 
     return 'Cluster Overview';
   }
-
-  /**
-   * Returns the proper last updated info string based on available
-   * cluster and/or status information.
-   */
-  lastUpdatedLabel = () => {
-    let maxTimestamp = 0;
-    this.props.clusters.forEach(cluster => {
-      maxTimestamp = Math.max(maxTimestamp, cluster.lastUpdated);
-    });
-
-    return moment(maxTimestamp).fromNow();
-  };
 
   render() {
     const newClusterPath = RoutePath.createUsablePath(
@@ -141,7 +134,7 @@ class Home extends React.Component {
               <small>
                 This table is auto-refreshing. Details last fetched{' '}
                 <span className='last-updated-datestring'>
-                  {this.lastUpdatedLabel()}
+                  {this.state.lastUpdated}
                 </span>
                 .
               </small>

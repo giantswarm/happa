@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
 import {
+  CLUSTER_LOAD_DETAILS_REQUEST,
+  NODEPOOLS_LOAD_REQUEST,
+} from 'actions/actionTypes';
+import {
   batchedClusterDetailView,
   batchedRefreshClusterDetailView,
 } from 'actions/batchedActions';
@@ -17,6 +21,7 @@ import Tab from 'react-bootstrap/lib/Tab';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
@@ -373,8 +378,11 @@ ClusterDetailView.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    loadingCluster: state.loadingFlags.CLUSTER_LOAD_DETAILS,
-    loadingNodePools: state.loadingFlags.NODEPOOLS_LOAD,
+    loadingCluster: selectLoadingFlagByAction(
+      state,
+      CLUSTER_LOAD_DETAILS_REQUEST
+    ),
+    loadingNodePools: selectLoadingFlagByAction(state, NODEPOOLS_LOAD_REQUEST),
   };
 }
 
