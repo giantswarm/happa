@@ -169,7 +169,7 @@ function mapStateToProps(state) {
   const selectedOrganization = state.app.selectedOrganization;
   const organizations = state.entities.organizations.items;
   const allClusters = state.entities.clusters.items;
-  const errorLoadingClusters = state.entities.clusters.errorLoading;
+  const errorLoadingClusters = state.errors.CLUSTERS_LIST;
   const v5Clusters = state.entities.clusters.v5Clusters;
   const nodePools = state.entities.nodePools.items;
 
@@ -181,10 +181,10 @@ function mapStateToProps(state) {
   }
 
   return {
-    clusters: clusters,
-    organizations: organizations,
-    errorLoadingClusters: errorLoadingClusters,
-    selectedOrganization: selectedOrganization,
+    clusters,
+    organizations,
+    errorLoadingClusters,
+    selectedOrganization,
     v5Clusters,
     nodePools,
   };
