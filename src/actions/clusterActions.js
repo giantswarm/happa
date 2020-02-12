@@ -8,6 +8,12 @@ import { computeCapabilities } from 'utils/clusterUtils';
 
 import * as types from './actionTypes';
 
+// Used in ClusterDetailView
+export const clusterDelete = cluster => ({
+  type: types.CLUSTER_DELETE,
+  cluster,
+});
+
 // API instantiations.
 const clustersApi = new GiantSwarm.ClustersApi();
 
@@ -104,282 +110,6 @@ export function clustersDetails({
 }
 
 /**
- * Loads apps for a cluster.
- *
- * @param {String} clusterId Cluster ID
- */
-export function clusterLoadApps(clusterId) {
-  return function(dispatch, getState) {
-    // This method is going to work for NP clusters, now in local dev it is not
-    // working, so early return if the cluster is a NP one.
-    const nodePoolsClusters = getState().entities.clusters.nodePoolsClusters;
-    const isV5Cluster = nodePoolsClusters.includes(clusterId);
-    if (isV5Cluster) {
-      dispatch({
-        type: types.CLUSTER_LOAD_APPS_SUCCESS,
-        clusterId,
-        apps: [],
-      });
-
-      return Promise.resolve([]);
-    }
-
-    dispatch({
-      type: types.CLUSTER_LOAD_APPS,
-      clusterId,
-    });
-
-    const appsApi = new GiantSwarm.AppsApi();
-
-    return appsApi
-      .getClusterApps(clusterId)
-      .then(apps => {
-        // For some reason the array that we get back from the generated js client is an
-        // array-like structure, so I make a new one here.
-        // In tests we are using a real array, so we are applying Array.from() to an actual
-        // array. Apparently it works fine.
-        const appsArray = Array.from(apps);
-        dispatch({
-          type: types.CLUSTER_LOAD_APPS_SUCCESS,
-          clusterId,
-          apps: appsArray,
-        });
-
-        return apps;
-      })
-      .catch(error => {
-        dispatch({
-          type: types.CLUSTER_LOAD_APPS_ERROR,
-          clusterId,
-          error,
-        });
-
-        new FlashMessage(
-          'Something went wrong while trying to load apps installed on this cluster.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        throw error;
-      });
-  };
-}
-
-/**
- * Takes an app and a cluster id and tries to install it. Dispatches CLUSTER_INSTALL_APP_SUCCESS
- * on success or CLUSTER_INSTALL_APP_ERROR on error.
- *
- * If the app has valuesYAML or secretsYAML set to a non empty object, then
- * this will first try to create the user config configmap and/or secret
- * before creating the app.
- *
- * @param {Object} app App definition object.
- * @param {Object} clusterID Where to install the app.
- */
-export function clusterInstallApp(app, clusterID) {
-  return async function(dispatch) {
-    dispatch({
-      type: types.CLUSTER_INSTALL_APP,
-      clusterID,
-      app,
-    });
-
-    const appsApi = new GiantSwarm.AppsApi();
-
-    try {
-      // If we have user config that we want to create, then
-      // fire off the call to create it.
-      if (Object.keys(app.valuesYAML).length !== 0) {
-        await createAppConfig(app, clusterID);
-      }
-
-      // If we have an app secret that we want to create, then
-      // fire off the call to create it.
-      if (Object.keys(app.secretsYAML).length !== 0) {
-        await createAppSecret(app, clusterID);
-      }
-
-      // Create the App.
-      await appsApi
-        .createClusterApp(clusterID, app.name, {
-          body: {
-            spec: {
-              catalog: app.catalog,
-              name: app.chartName,
-              namespace: app.namespace,
-              version: app.version,
-            },
-          },
-        })
-        .catch(error => {
-          showAppInstallationErrorFlashMessage(app, clusterID, error);
-          throw error;
-        });
-
-      dispatch({
-        type: types.CLUSTER_INSTALL_APP_SUCCESS,
-        clusterID,
-        app,
-      });
-
-      new FlashMessage(
-        `Your app <code>${app.name}</code> is being installed on <code>${clusterID}</code>`,
-        messageType.SUCCESS,
-        messageTTL.MEDIUM
-      );
-    } catch (error) {
-      dispatch({
-        type: types.CLUSTER_INSTALL_APP_ERROR,
-        clusterID,
-        app,
-        error,
-      });
-
-      throw error;
-    }
-  };
-}
-
-/**
- * createAppConfig takes an app and a clusterID and tries to create the config map
- * of that app. The app object must have a valuesYAML field representing the config
- * map to be created.
- * @param {object} app
- * @param {string} clusterID
- */
-function createAppConfig(app, clusterID) {
-  const appConfigsApi = new GiantSwarm.AppConfigsApi();
-
-  return appConfigsApi
-    .createClusterAppConfig(clusterID, app.name, {
-      body: app.valuesYAML,
-    })
-    .catch(error => {
-      showAppConfigErrorFlashMessages('ConfigMap', app.name, clusterID, error);
-      throw error;
-    });
-}
-
-/**
- * createAppSecret takes an app and a clusterID and tries to create the secret
- * of that app. The app object must have a secretsYAML field representing the secret
- * to be created.
- * @param {object} app
- * @param {string} clusterID
- */
-function createAppSecret(app, clusterID) {
-  const appSecretsApi = new GiantSwarm.AppSecretsApi();
-
-  return appSecretsApi
-    .createClusterAppSecret(clusterID, app.name, {
-      body: app.secretsYAML,
-    })
-    .catch(error => {
-      showAppConfigErrorFlashMessages('Secret', app.name, clusterID, error);
-      throw error;
-    });
-}
-
-/**
- * showAppConfigErrorFlashMessages provides flash messages when something went wrong
- * when creating either the ConfigMap or Secret during app installation.
- *
- * @param {string} resource Name of the resource we were trying to create.
- * @param {string} appName Name of the app.
- * @param {string} clusterID Where we tried to install the app on.
- * @param {object} error The error that occured.
- */
-function showAppConfigErrorFlashMessages(thing, app, clusterID, error) {
-  if (error.status === StatusCodes.Conflict) {
-    new FlashMessage(
-      `The ${thing} for <code>${app.name}</code> already exists on cluster <code>${clusterID}</code>`,
-      messageType.ERROR,
-      messageTTL.LONG
-    );
-  } else if (error.status === StatusCodes.BadRequest) {
-    new FlashMessage(
-      `Your ${thing} appears to be invalid. Please make sure all fields are filled in correctly.`,
-      messageType.ERROR,
-      messageTTL.LONG
-    );
-  } else {
-    new FlashMessage(
-      `Something went wrong while trying to create the ${thing}. Please try again later or contact support: support@giantswarm.io`,
-      messageType.ERROR,
-      messageTTL.LONG
-    );
-  }
-}
-
-/**
- * appInstallationErrorFlashMessage provides flash messages for failed app creation.
- *
- * @param {string} appName Name of the app.
- * @param {string} clusterID Where we tried to install the app on.
- * @param {object} error The error that occured.
- */
-function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
-  if (error.status === StatusCodes.Conflict) {
-    new FlashMessage(
-      `An app called <code>${appName}</code> already exists on cluster <code>${clusterID}</code>`,
-      messageType.ERROR,
-      messageTTL.LONG
-    );
-  } else if (error.status === StatusCodes.BadRequest) {
-    new FlashMessage(
-      `Your input appears to be invalid. Please make sure all fields are filled in correctly.`,
-      messageType.ERROR,
-      messageTTL.LONG
-    );
-  } else {
-    new FlashMessage(
-      `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`,
-      messageType.ERROR,
-      messageTTL.LONG
-    );
-  }
-}
-
-/**
- * Takes an app and a cluster id and tries to delete it. Dispatches CLUSTER_DELETE_APP_SUCCESS
- * on success or CLUSTER_DELETE_APP_ERROR on error.
- *
- * @param {Object} appName The name of the app
- * @param {Object} clusterID Where to delete the app.
- */
-export function clusterDeleteApp(appName, clusterID) {
-  return function(dispatch) {
-    dispatch({
-      type: types.CLUSTER_DELETE_APP,
-      clusterID,
-      appName,
-    });
-
-    const appsApi = new GiantSwarm.AppsApi();
-
-    return appsApi
-      .deleteClusterApp(clusterID, appName)
-      .then(() => {
-        new FlashMessage(
-          `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
-          messageType.SUCCESS,
-          messageTTL.LONG
-        );
-      })
-      .catch(error => {
-        new FlashMessage(
-          `Something went wrong while trying to delete your app. Please try again later or contact support: support@giantswarm.io`,
-          messageType.ERROR,
-          messageTTL.LONG
-        );
-
-        throw error;
-      });
-  };
-}
-
-/**
  * Loads details for a cluster.
  * @param {String} clusterId Cluster ID
  */
@@ -470,8 +200,11 @@ export function clusterLoadDetails(
 
       // eslint-disable-next-line no-console
       console.error('Error loading cluster details:', error);
-      // eslint-disable-next-line no-use-before-define
-      dispatch(clusterLoadDetailsError(clusterId, error));
+      dispatch({
+        type: types.CLUSTER_LOAD_DETAILS_ERROR,
+        clusterId,
+        error,
+      });
 
       new FlashMessage(
         `Something went wrong while trying to load cluster details for <code>${clusterId}</code>.`,
@@ -497,7 +230,6 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
         return JSON.parse(data.response.text);
       })
       .then(status => {
-        // eslint-disable-next-line no-use-before-define
         dispatch({ type: types.CLUSTER_LOAD_STATUS_SUCCESS, clusterId });
 
         return status; // used in clusterLoadDetails!
@@ -574,8 +306,10 @@ export function clusterCreate(cluster, isV5Cluster) {
         return { clusterId, owner: cluster.owner };
       })
       .catch(error => {
-        // eslint-disable-next-line no-use-before-define
-        dispatch(clusterCreateError(cluster.id, error));
+        dispatch({
+          type: types.CLUSTER_CREATE_ERROR,
+          cluster: cluster.id,
+        });
 
         // eslint-disable-next-line no-console
         console.error(error);
@@ -601,8 +335,11 @@ export function clusterDeleteConfirmed(cluster) {
     return clustersApi
       .deleteCluster(cluster.id)
       .then(data => {
-        // eslint-disable-next-line no-use-before-define
-        dispatch(clusterDeleteSuccess(cluster.id, Date.now()));
+        dispatch({
+          type: types.CLUSTER_DELETE_SUCCESS,
+          clusterId: cluster.id,
+          timestamp: Date.now(),
+        });
 
         new FlashMessage(
           `Cluster <code>${cluster.id}</code> will be deleted`,
@@ -623,8 +360,11 @@ export function clusterDeleteConfirmed(cluster) {
         // eslint-disable-next-line no-console
         console.error(error);
 
-        // eslint-disable-next-line no-use-before-define
-        return dispatch(clusterDeleteError(cluster.id, error));
+        return dispatch({
+          type: types.CLUSTER_DELETE_ERROR,
+          clusterId: cluster.id,
+          error,
+        });
       });
   };
 }
@@ -673,34 +413,6 @@ export function clusterLoadKeyPairs(clusterId) {
       });
   };
 }
-
-export const clusterLoadDetailsError = (clusterId, error) => ({
-  type: types.CLUSTER_LOAD_DETAILS_ERROR,
-  clusterId,
-  error,
-});
-
-export const clusterCreateError = cluster => ({
-  type: types.CLUSTER_CREATE_ERROR,
-  cluster,
-});
-
-export const clusterDelete = cluster => ({
-  type: types.CLUSTER_DELETE,
-  cluster,
-});
-
-export const clusterDeleteSuccess = (clusterId, timestamp) => ({
-  type: types.CLUSTER_DELETE_SUCCESS,
-  clusterId,
-  timestamp,
-});
-
-export const clusterDeleteError = (clusterId, error) => ({
-  type: types.CLUSTER_DELETE_ERROR,
-  clusterId,
-  error,
-});
 
 /**
  * Takes a cluster object and tries to patch it.
