@@ -1,13 +1,17 @@
 import styled from '@emotion/styled';
+import * as actionTypes from 'actions/actionTypes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
+  selectLoadingFlagByAction,
   selectResourcesV4,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
+import { FallbackMessages } from 'shared/constants';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
+import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
 
 import ClusterDashboardLoadingPlaceholder from './ClusterDashboardLoadingPlaceholder';
 
@@ -16,6 +20,10 @@ const ClusterDetailsDiv = styled.div`
   img {
     height: 22px;
   }
+`;
+
+const FallbackSpan = styled.span`
+  opacity: 0.5;
 `;
 
 function ClusterDashboardResources({
@@ -43,9 +51,16 @@ function ClusterDashboardResources({
             </RefreshableLabel>
           )}
           <RefreshableLabel value={numberOfNodes}>
-            <span>
-              {numberOfNodes} {numberOfNodes === 1 ? 'node' : 'nodes'}
-            </span>
+            {/* If it was created more than an hour ago, then we should not show this message
+             because something went wrong, so it's best to make it noticeable. */}
+            {numberOfNodes === 0 &&
+            isClusterYoungerThanOneHour(cluster.create_date) ? (
+              <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
+            ) : (
+              <span>{`${numberOfNodes} ${
+                numberOfNodes === 1 ? 'node' : 'nodes'
+              }`}</span>
+            )}
           </RefreshableLabel>
           {numberOfNodes !== 0 && hasNodePools && (
             <>
@@ -91,9 +106,18 @@ const makeMapStateToProps = () => {
       resources: props.isV5Cluster
         ? resourcesV5(state, props)
         : resourcesV4(state, props),
-      loadingClusters: state.loadingFlags.CLUSTERS_DETAILS,
-      loadingNodePools: state.loadingFlags.NODEPOOLS_LOAD,
-      loadingStatus: state.loadingFlags.CLUSTER_LOAD_STATUS,
+      loadingClusters: selectLoadingFlagByAction(
+        state,
+        actionTypes.CLUSTERS_DETAILS_REQUEST
+      ),
+      loadingNodePools: selectLoadingFlagByAction(
+        state,
+        actionTypes.NODEPOOLS_LOAD_REQUEST
+      ),
+      loadingStatus: selectLoadingFlagByAction(
+        state,
+        actionTypes.CLUSTER_LOAD_STATUS_REQUEST
+      ),
     };
   };
 

@@ -177,9 +177,9 @@ export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
         orgId: cluster.owner,
       }
     );
-    dispatch(push(organizationDetailPath));
 
     await dispatch(clusterActions.clusterDeleteConfirmed(cluster));
+    dispatch(push(organizationDetailPath));
     dispatch(modalActions.modalHide());
   } catch (err) {
     // eslint-disable-next-line no-console

@@ -103,9 +103,20 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
+    // This is the action that is dispatched when deletion is confirmed in the modal.
+    // The cluster is not removed from the store, but it is now marked as a deleted one.
     case types.CLUSTER_DELETE_SUCCESS:
       draft.items[action.clusterId].delete_date = action.timestamp;
       draft.lastUpdated = Date.now();
+
+      return;
+
+    // This is the action that we dipatch in order to actually remove a cluster from the store.
+    case types.CLUSTER_DELETE:
+      delete draft.items[action.clusterId];
+      if (action.isV5) {
+        draft.v5Clusters.filter(id => id !== action.clusterId);
+      }
 
       return;
 
