@@ -1,3 +1,4 @@
+import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'actions/actionTypes';
 import * as clusterActions from 'actions/clusterActions';
 import { spinner } from 'images';
 import { relativeDate } from 'lib/helpers.js';
@@ -7,6 +8,7 @@ import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import Copyable from 'shared/Copyable';
 import Button from 'UI/Button';
 
@@ -249,7 +251,10 @@ function mapStateToProps(state) {
     clusters: state.entities.clusters,
     provider: state.app.info.general.provider,
     user: state.app.loggedInUser,
-    loadingKeyPairs: state.loadingFlags.CLUSTER_LOAD_KEY_PAIRS,
+    loadingKeyPairs: selectLoadingFlagByAction(
+      state,
+      CLUSTER_LOAD_KEY_PAIRS_REQUEST
+    ),
   };
 }
 

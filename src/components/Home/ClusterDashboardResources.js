@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
+import * as actionTypes from 'actions/actionTypes';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
+  selectLoadingFlagByAction,
   selectResourcesV4,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
@@ -104,9 +106,18 @@ const makeMapStateToProps = () => {
       resources: props.isV5Cluster
         ? resourcesV5(state, props)
         : resourcesV4(state, props),
-      loadingClusters: state.loadingFlags.CLUSTERS_DETAILS,
-      loadingNodePools: state.loadingFlags.NODEPOOLS_LOAD,
-      loadingStatus: state.loadingFlags.CLUSTER_LOAD_STATUS,
+      loadingClusters: selectLoadingFlagByAction(
+        state,
+        actionTypes.CLUSTERS_DETAILS_REQUEST
+      ),
+      loadingNodePools: selectLoadingFlagByAction(
+        state,
+        actionTypes.NODEPOOLS_LOAD_REQUEST
+      ),
+      loadingStatus: selectLoadingFlagByAction(
+        state,
+        actionTypes.CLUSTER_LOAD_STATUS_REQUEST
+      ),
     };
   };
 
