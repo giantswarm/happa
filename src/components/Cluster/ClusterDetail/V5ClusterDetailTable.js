@@ -298,7 +298,12 @@ class V5ClusterDetailTable extends React.Component {
       isSubmitting: false,
       data: {},
     },
+    lastUpdated: '',
   };
+
+  componentDidMount() {
+    this.setState({ lastUpdated: moment().fromNow() });
+  }
 
   toggleAddNodePoolForm = () =>
     this.setState(prevState => ({
@@ -325,19 +330,6 @@ class V5ClusterDetailTable extends React.Component {
     this.toggleAddNodePoolForm();
     await this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
   };
-
-  /**
-   * Returns the proper last updated info string based on available
-   * cluster and/or status information.
-   */
-  lastUpdatedLabel() {
-    const { cluster } = this.props;
-    if (cluster && cluster.lastUpdated) {
-      return moment(cluster.lastUpdated).fromNow();
-    }
-
-    return 'n/a';
-  }
 
   render() {
     const { nodePoolForm } = this.state;
@@ -530,7 +522,7 @@ class V5ClusterDetailTable extends React.Component {
           <small>
             The information above is auto-refreshing. Details last fetched{' '}
             <span className='last-updated-datestring'>
-              {this.lastUpdatedLabel()}
+              {this.state.lastUpdated}
             </span>
             .
           </small>
