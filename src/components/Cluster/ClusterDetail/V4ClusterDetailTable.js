@@ -35,6 +35,7 @@ class V4ClusterDetailTable extends React.Component {
   state = {
     awsInstanceTypes: {},
     azureVMSizes: {},
+    lastUpdated: '',
   };
 
   componentDidMount() {
@@ -46,20 +47,9 @@ class V4ClusterDetailTable extends React.Component {
       ? JSON.parse(window.config.azureCapabilitiesJSON)
       : {};
 
-    this.setState({ awsInstanceTypes, azureVMSizes });
-  }
+    const lastUpdated = moment().fromNow();
 
-  /**
-   * Returns the proper last updated info string based on available
-   * cluster and/or status information.
-   */
-  lastUpdatedLabel() {
-    const { cluster } = this.props;
-    if (cluster && cluster.status && cluster.status.lastUpdated) {
-      return moment(cluster.status.lastUpdated).fromNow();
-    }
-
-    return 'n/a';
+    this.setState({ awsInstanceTypes, azureVMSizes, lastUpdated });
   }
 
   render() {
@@ -154,7 +144,7 @@ class V4ClusterDetailTable extends React.Component {
           <small>
             The information above is auto-refreshing. Details last fetched{' '}
             <span className='last-updated-datestring'>
-              {this.lastUpdatedLabel()}
+              {this.state.lastUpdated}
             </span>
             .
           </small>
