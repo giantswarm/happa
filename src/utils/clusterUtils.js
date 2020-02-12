@@ -148,3 +148,7 @@ export function computeCapabilities(releaseVersion, provider) {
       provider === Providers.AWS && cmp(releaseVersion, '10.0.99') === 1,
   };
 }
+
+export const isClusterYoungerThanOneHour = createDate =>
+  // eslint-disable-next-line no-magic-numbers
+  (Date.now() - Date.parse(createDate)) / 1000 / 60 < 1;
