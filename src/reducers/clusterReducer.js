@@ -17,10 +17,10 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTERS_LIST_ERROR:
-      draft.errorLoading = true;
+    // case types.CLUSTERS_LIST_ERROR:
+    //   draft.errorLoading = true;
 
-      return;
+    //   return;
 
     case types.CLUSTER_LOAD_DETAILS_SUCCESS: {
       draft.items[action.cluster.id] = {
@@ -64,24 +64,9 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTER_LOAD_APPS:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].isFetchingApps = true;
-      }
-
-      return;
-
     case types.CLUSTER_LOAD_APPS_SUCCESS:
       if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].isFetchingApps = false;
         draft.items[action.clusterId].apps = action.apps;
-      }
-
-      return;
-
-    case types.CLUSTER_LOAD_APPS_ERROR:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].isFetchingApps = false;
       }
 
       return;

@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
+import * as actionTypes from 'actions/actionTypes';
 import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { selectErrorByIdAndAction } from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
@@ -225,6 +228,8 @@ class ClusterApps extends React.Component {
   };
 
   render() {
+    const { appsLoadError } = this.props;
+
     return (
       <>
         {this.props.showInstalledAppsBlock && (
@@ -233,7 +238,7 @@ class ClusterApps extends React.Component {
             <div className='row'>
               {this.getUserInstalledApps() &&
                 this.getUserInstalledApps().length === 0 &&
-                !this.props.errorLoading && (
+                !appsLoadError && (
                   <p
                     className='well'
                     data-testid='no-apps-found'
@@ -245,7 +250,7 @@ class ClusterApps extends React.Component {
                   </p>
                 )}
 
-              {this.props.errorLoading && (
+              {appsLoadError && (
                 <p
                   className='well'
                   data-testid='error-loading-apps'
@@ -405,7 +410,7 @@ class ClusterApps extends React.Component {
 
 ClusterApps.propTypes = {
   dispatch: PropTypes.func,
-  errorLoading: PropTypes.bool,
+  appsLoadError: PropTypes.bool,
   installedApps: PropTypes.array,
   showInstalledAppsBlock: PropTypes.bool,
   clusterId: PropTypes.string,
@@ -414,4 +419,15 @@ ClusterApps.propTypes = {
   hasOptionalIngress: PropTypes.bool,
 };
 
-export default ClusterApps;
+function mapStateToProps(state, props) {
+  return {
+    loadingApps: state.loadingFlags.CLUSTER_LOAD_APPS,
+    appsLoadError: selectErrorByIdAndAction(
+      state,
+      props.clusterId,
+      actionTypes.CLUSTER_LOAD_APPS_REQUEST
+    ),
+  };
+}
+
+export default connect(mapStateToProps)(ClusterApps);

@@ -45,10 +45,6 @@ const WrapperDiv = styled.div`
   }
 `;
 class ClusterDetailView extends React.Component {
-  state = {
-    errorLoadingApps: false,
-  };
-
   loadDataInterval = null;
 
   componentDidMount() {
@@ -305,7 +301,6 @@ class ClusterDetailView extends React.Component {
                       <ClusterApps
                         clusterId={this.props.clusterId}
                         dispatch={dispatch}
-                        errorLoading={this.state.errorLoadingApps}
                         installedApps={cluster.apps}
                         release={release}
                         showInstalledAppsBlock={

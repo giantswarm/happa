@@ -477,3 +477,23 @@ it('adds a node pool with default values', async () => {
 
   nodePoolCreationRequest.done();
 });
+
+it('renders an error message if there was an error loading apps', () => {
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: V5_CLUSTER.id,
+    }
+  );
+
+  const { queryByTestId } = renderRouteWithStore(clusterDetailPath, {
+    errorsByEntity: {
+      [V5_CLUSTER.id]: { CLUSTER_LOAD_APPS: 'Error loading apps' },
+    },
+  });
+
+  expect(queryByTestId('error-loading-apps')).toBeDefined();
+  expect(queryByTestId('installed-apps')).toBeNull();
+  expect(queryByTestId('no-apps-found')).toBeNull();
+});
