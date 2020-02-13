@@ -141,6 +141,9 @@
     "webpack-dev-server": "3.10.3",
     "webpack-merge": "4.2.2"
   },
+  "resolutions": {
+    "**/crypto-js": "^3.2.1"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "yarn precommit"
