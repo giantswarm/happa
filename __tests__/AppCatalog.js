@@ -9,7 +9,8 @@ import {
   appsResponse,
   AWSInfoResponse,
   catalogIndexResponse,
-  getPersistedMockCall,
+  getMockCall,
+  getMockCallTimes,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -22,64 +23,48 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-// Tests setup
-const requests = {};
-
-// Responses to requests
 beforeAll(() => {
-  // prettier-ignore
-  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
-  requests.organizations = getPersistedMockCall(
-    '/v4/organizations/',
-    orgsResponse
-  );
-  requests.organization = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/`,
-    orgResponse
-  );
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v4ClustersResponse);
-  requests.cluster = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    v4AWSClusterResponse
-  );
-  requests.status = getPersistedMockCall(
+  nock.disableNetConnect();
+});
+
+afterAll(() => {
+  nock.enableNetConnect();
+});
+
+beforeEach(() => {
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/info/', AWSInfoResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCall('/v4/clusters/', v4ClustersResponse);
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+  getMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
     v4AWSClusterStatusResponse
   );
-  requests.apps = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-    appsResponse
-  );
-  requests.credentials = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/credentials/`
-  );
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-
-  requests.appcatalogs = getPersistedMockCall(
-    '/v4/appcatalogs/',
-    appCatalogsResponse
-  );
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+  getMockCall('/v4/releases/', releasesResponse);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 
   nock('https://cors-anywhere.herokuapp.com')
     .get(/.*$/)
     .reply(
       StatusCodes.InternalServerError,
       'Not supposed to get here in these tests.'
-    )
-    .persist();
+    );
 });
 
-// Stop persisting responses
-afterAll(() => {
-  Object.keys(requests).forEach(req => {
-    requests[req].persist(false);
-  });
+afterEach(() => {
+  expect(nock.isDone());
+  nock.cleanAll();
 });
 
 /************ TESTS ************/
 
 it('renders all non internal app catalogs in the app catalogs overview', async () => {
+  getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+
   nock('https://catalogshost')
     .get('/giantswarm-incubator-catalog/index.yaml')
     .reply(StatusCodes.Ok, catalogIndexResponse);
@@ -113,6 +98,8 @@ it('renders all non internal app catalogs in the app catalogs overview', async (
 });
 
 it('renders all apps in the app list for a given catalog', async () => {
+  getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+
   nock('https://catalogshost')
     .get('/giantswarm-incubator-catalog/index.yaml')
     .reply(StatusCodes.Ok, catalogIndexResponse);
@@ -134,6 +121,8 @@ it('renders all apps in the app list for a given catalog', async () => {
 });
 
 it('renders all apps in the app list for a given catalog', async () => {
+  getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+
   nock('https://catalogshost')
     .get('/giantswarm-incubator-catalog/index.yaml')
     .reply(StatusCodes.Ok, catalogIndexResponse);
@@ -155,6 +144,9 @@ it('renders all apps in the app list for a given catalog', async () => {
 });
 
 it('renders the app detail page for a given app', async () => {
+  // eslint-disable-next-line no-magic-numbers
+  getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 3);
+
   nock('https://catalogshost')
     .get('/giantswarm-incubator-catalog/index.yaml')
     .reply(StatusCodes.Ok, catalogIndexResponse);
