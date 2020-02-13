@@ -15,7 +15,7 @@ class DetailIndex extends React.Component {
     // cluster owned by a non selected organization. In those cases we want nothing
     // to be rendered until cluster details are fetched
     // If we don't set this here, and do this in batchedActions, there's a fraction
-    // of a second during which flag is false, and therefore errors are triggered
+    // of a second during which the flag is false, and therefore errors are triggered
     this.props.dispatch({
       type: types.CLUSTER_LOAD_DETAILS_REQUEST,
     });
