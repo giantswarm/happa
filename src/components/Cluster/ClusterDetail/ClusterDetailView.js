@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   CLUSTER_LOAD_DETAILS_REQUEST,
-  CLUSTER_NODEPOOLS_LOAD_REQUEST,
+  NODEPOOLS_LOAD_REQUEST,
 } from 'actions/actionTypes';
 import {
   batchedClusterDetailView,
@@ -21,7 +21,7 @@ import Tab from 'react-bootstrap/lib/Tab';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
-import { selectLoadingFlagByIdAndAction } from 'selectors/clusterSelectors';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
@@ -376,19 +376,14 @@ ClusterDetailView.propTypes = {
   loadingNodePools: PropTypes.bool,
 };
 
-function mapStateToProps(state, props) {
-  const loadingCluster = selectLoadingFlagByIdAndAction(
-    state,
-    props.cluster.id,
-    CLUSTER_LOAD_DETAILS_REQUEST
-  );
-  const loadingNodePools = selectLoadingFlagByIdAndAction(
-    state,
-    props.cluster.id,
-    CLUSTER_NODEPOOLS_LOAD_REQUEST
-  );
-
-  return { loadingCluster, loadingNodePools };
+function mapStateToProps(state) {
+  return {
+    loadingCluster: selectLoadingFlagByAction(
+      state,
+      CLUSTER_LOAD_DETAILS_REQUEST
+    ),
+    loadingNodePools: selectLoadingFlagByAction(state, NODEPOOLS_LOAD_REQUEST),
+  };
 }
 
 function mapDispatchToProps(dispatch) {

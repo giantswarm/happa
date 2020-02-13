@@ -16,6 +16,12 @@ const entityLoadingReducer = produce((draft, action) => {
   // Store whether a request is happening at the moment or not
   // e.g. will be true when receiving CLUSTER_LOAD_DETAILS_REQUEST
   // and false when receiving CLUSTER_LOAD_DETAILS_SUCCESS / CLUSTER_LOAD_DETAILS_ERROR
+  if (draft[id]) {
+    draft[id][requestName] = requestState === 'REQUEST';
+
+    return;
+  }
+
   draft[id] = { [requestName]: requestState === 'REQUEST' };
 }, initialState);
 
