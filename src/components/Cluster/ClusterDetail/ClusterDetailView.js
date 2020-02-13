@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   CLUSTER_LOAD_DETAILS_REQUEST,
-  NODEPOOLS_LOAD_REQUEST,
+  CLUSTER_NODEPOOLS_LOAD_REQUEST,
 } from 'actions/actionTypes';
 import {
   batchedClusterDetailView,
@@ -385,7 +385,7 @@ function mapStateToProps(state, props) {
   const loadingNodePools = selectLoadingFlagByIdAndAction(
     state,
     props.cluster.id,
-    NODEPOOLS_LOAD_REQUEST
+    CLUSTER_NODEPOOLS_LOAD_REQUEST
   );
 
   return { loadingCluster, loadingNodePools };
