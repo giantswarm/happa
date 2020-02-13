@@ -6,6 +6,7 @@ import catalogs from './catalogsReducer';
 import clusters from './clusterReducer';
 import credentials from './credentialReducer';
 import errorsByEntity from './entityErrorReducer';
+import loadingFlagsByEntity from './entityLoadingReducer';
 import errors from './errorReducer';
 import invitations from './invitationReducer';
 import loadingFlags from './loadingReducer';
@@ -35,6 +36,7 @@ const rootReducer = history =>
     loadingFlags,
     errors,
     errorsByEntity,
+    loadingFlagsByEntity,
   });
 
 export default rootReducer;
