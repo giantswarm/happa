@@ -18,6 +18,8 @@ export function loadReleases() {
             messageTTL.LONG,
             'Please try again later or contact support: support@giantswarm.io'
           );
+
+          return;
         }
 
         const releases = allReleases.reduce((accumulator, release) => {
@@ -30,14 +32,28 @@ export function loadReleases() {
           .sort(cmp)
           .reverse();
 
-        dispatch({
-          type: types.RELEASES_LOAD_SUCCESS,
-          releases,
-          activeSortedReleases,
-        });
+        if (activeSortedReleases.length === 0) {
+          new FlashMessage(
+            'Something went wrong while processing the list of releases. No active releases found.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
+          );
+
+          dispatch({
+            type: types.RELEASES_LOAD_ERROR,
+            error: 'No active releases found.',
+          });
+        } else {
+          dispatch({
+            type: types.RELEASES_LOAD_SUCCESS,
+            releases,
+            activeSortedReleases,
+          });
+        }
       })
       .catch(error => {
-        dispatch({ type: types.RELEASES_LOAD_ERROR });
+        dispatch({ type: types.RELEASES_LOAD_ERROR, error });
 
         new FlashMessage(
           'Something went wrong while trying to fetch the list of releases.',
@@ -45,8 +61,6 @@ export function loadReleases() {
           messageTTL.LONG,
           'Please try again later or contact support: support@giantswarm.io'
         );
-
-        throw error;
       });
   };
 }
