@@ -19,6 +19,11 @@ export function loadReleases() {
             'Please try again later or contact support: support@giantswarm.io'
           );
 
+          dispatch({
+            type: types.RELEASES_LOAD_ERROR,
+            error: 'No releases found.',
+          });
+
           return;
         }
 
