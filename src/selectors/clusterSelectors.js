@@ -48,6 +48,12 @@ export const selectErrorByIdAndAction = (state, id, actionType) => {
   return state.errorsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? null;
 };
 
+export const selectLoadingFlagByIdAndAction = (state, id, actionType) => {
+  return (
+    state.loadingFlagsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? null
+  );
+};
+
 export const selectLoadingFlagByAction = (state, actionType) => {
   return state.loadingFlags[typeWithoutSuffix(actionType)] ?? null;
 };
