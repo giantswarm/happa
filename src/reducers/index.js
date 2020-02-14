@@ -34,9 +34,9 @@ const rootReducer = history =>
     entities,
     modal,
     loadingFlags,
+    loadingFlagsByEntity,
     errors,
     errorsByEntity,
-    loadingFlagsByEntity,
   });
 
 export default rootReducer;
