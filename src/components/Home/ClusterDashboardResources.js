@@ -8,7 +8,6 @@ import {
   selectResourcesV4,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
-import { FallbackMessages } from 'shared/constants';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
@@ -19,10 +18,6 @@ const ClusterDetailsDiv = styled.div`
   img {
     height: 22px;
   }
-`;
-
-const FallbackSpan = styled.span`
-  opacity: 0.5;
 `;
 
 function ClusterDashboardResources({
@@ -50,13 +45,9 @@ function ClusterDashboardResources({
             </RefreshableLabel>
           )}
           <RefreshableLabel value={numberOfNodes}>
-            {numberOfNodes === 0 ? (
-              <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
-            ) : (
-              <span>{`${numberOfNodes} ${
-                numberOfNodes === 1 ? 'node' : 'nodes'
-              }`}</span>
-            )}
+            <span>
+              {numberOfNodes} {numberOfNodes === 1 ? 'node' : 'nodes'}
+            </span>
           </RefreshableLabel>
           {numberOfNodes !== 0 && hasNodePools && (
             <>

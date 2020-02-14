@@ -76,7 +76,7 @@ afterAll(() => {
 
 /************ TESTS ************/
 
-it('renders all the v5 cluster data correctly', async () => {
+it('renders all the v5 cluster data correctly with 0 nodes ready', async () => {
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail,
     {
