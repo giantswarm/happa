@@ -363,12 +363,6 @@ describe('AppCatalog', () => {
     await findAllByText(V4_CLUSTER.name);
     await findByText(/kubernetes endpoint uri/i);
 
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
-
     installAppRequest.done();
   });
 
@@ -404,8 +398,10 @@ describe('AppCatalog', () => {
     fireEvent.click(appsTab);
 
     // Click on app details button to open the editing modal
-    const appLabel = getByText(/my app/i);
-    const appDetailsButton = appLabel.parentNode.querySelector('button');
+    const appLabel = getByText(/app version: 0.0.1/i);
+    const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
+      'button'
+    );
     fireEvent.click(appDetailsButton);
 
     // Delete the existing file
@@ -430,14 +426,7 @@ describe('AppCatalog', () => {
       },
     });
 
-    // Check if the success toast notification was displayed
-    await findByText(/has successfully been updated/i);
-
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
+    await waitForDomChange();
 
     updateAppConfigRequest.done();
   });
@@ -477,8 +466,10 @@ describe('AppCatalog', () => {
     fireEvent.click(appsTab);
 
     // Click on app details button to open the editing modal
-    const appLabel = getByText(/my app/i);
-    const appDetailsButton = appLabel.parentNode.querySelector('button');
+    const appLabel = getByText(/app version: 0.0.1/i);
+    const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
+      'button'
+    );
     fireEvent.click(appDetailsButton);
 
     // Upload a configmap file
@@ -491,17 +482,6 @@ describe('AppCatalog', () => {
     // Confirm deletion
     deleteButton = getByText(/^delete configmap$/i);
     fireEvent.click(deleteButton);
-
-    await waitForDomChange();
-
-    // Check if the success toast notification was displayed
-    getByText(/has been deleted/i);
-
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
 
     deleteAppConfigRequest.done();
   });
@@ -538,8 +518,10 @@ describe('AppCatalog', () => {
     fireEvent.click(appsTab);
 
     // Click on app details button to open the editing modal
-    const appLabel = getByText(/my app/i);
-    const appDetailsButton = appLabel.parentNode.querySelector('button');
+    const appLabel = getByText(/app version: 0.0.1/i);
+    const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
+      'button'
+    );
     fireEvent.click(appDetailsButton);
 
     // Upload a secrets file
@@ -563,14 +545,7 @@ describe('AppCatalog', () => {
       },
     });
 
-    // Check if the success toast notification was displayed
-    await findByText(/has successfully been updated/i);
-
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
+    await waitForDomChange();
 
     updateAppConfigRequest.done();
   });
@@ -610,8 +585,10 @@ describe('AppCatalog', () => {
     fireEvent.click(appsTab);
 
     // Click on app details button to open the editing modal
-    const appLabel = getByText(/my app/i);
-    const appDetailsButton = appLabel.parentNode.querySelector('button');
+    const appLabel = getByText(/app version: 0.0.1/i);
+    const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
+      'button'
+    );
     fireEvent.click(appDetailsButton);
 
     // Delete the existing file
@@ -625,14 +602,7 @@ describe('AppCatalog', () => {
     deleteButton = getByText(/^delete secret$/i);
     fireEvent.click(deleteButton);
 
-    // Check if the success toast notification was displayed
-    getByText(/has been deleted/i);
-
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
+    await waitForDomChange();
 
     deleteSecretsRequest.done();
   });
@@ -669,8 +639,10 @@ describe('AppCatalog', () => {
     fireEvent.click(appsTab);
 
     // Click on app details button to open the editing modal
-    const appLabel = getByText(/my app/i);
-    const appDetailsButton = appLabel.parentNode.querySelector('button');
+    const appLabel = getByText(/app version: 0.0.1/i);
+    const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
+      'button'
+    );
     fireEvent.click(appDetailsButton);
 
     // Delete the app
@@ -680,15 +652,6 @@ describe('AppCatalog', () => {
     // Confirm deletion
     deleteButton = getByText(/delete app/i);
     fireEvent.click(deleteButton);
-
-    // Check if the success toast notification was displayed
-    getByText(/will be deleted on/i);
-
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
 
     deleteAppRequest.done();
   });
