@@ -15,6 +15,11 @@ const entityErrorReducer = produce((draft, action) => {
 
   switch (requestState) {
     case 'ERROR':
+      if (draft[id]) {
+        draft[id][requestName] = error ?? '';
+
+        return;
+      }
       draft[id] = { [requestName]: error ?? '' };
 
       return;
