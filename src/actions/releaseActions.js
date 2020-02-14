@@ -13,7 +13,7 @@ export function loadReleases() {
       .then(allReleases => {
         if (allReleases.length === 0) {
           new FlashMessage(
-            'Something went wrong while trying to fetch the list of releases. No releases found.',
+            'No releases found.',
             messageType.ERROR,
             messageTTL.LONG,
             'Please try again later or contact support: support@giantswarm.io'
@@ -39,7 +39,7 @@ export function loadReleases() {
 
         if (activeSortedReleases.length === 0) {
           new FlashMessage(
-            'Something went wrong while processing the list of releases. No active releases found.',
+            'No active releases found.',
             messageType.ERROR,
             messageTTL.LONG,
             'Please try again later or contact support: support@giantswarm.io'
