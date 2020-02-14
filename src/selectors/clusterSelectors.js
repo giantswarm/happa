@@ -44,11 +44,14 @@ export const selectClusterNodePools = (state, clusterId) => {
   return clusterNodePoolsIds.map(nodePoolId => nodePools[nodePoolId]) || [];
 };
 
-// Action should be a _REQUEST action
-export const selectErrorByIdAndAction = (state, id, action) => {
-  const actionWithoutSuffix = action.replace('_REQUEST', '');
+export const selectErrorByIdAndAction = (state, id, actionType) => {
+  return state.errorsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? null;
+};
 
-  return state.errorsByEntity[id]?.[actionWithoutSuffix] ?? null;
+export const selectLoadingFlagByIdAndAction = (state, id, actionType) => {
+  return (
+    state.loadingFlagsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? null
+  );
 };
 
 export const selectLoadingFlagByAction = (state, actionType) => {
