@@ -1,13 +1,14 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, waitForDomChange } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
-import { AppCatalogRoutes } from 'shared/constants/routes';
+import { AppCatalogRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
+  appResponseWithCustomConfig,
   appsResponse,
   AWSInfoResponse,
   catalogIndexResponse,
@@ -52,17 +53,8 @@ describe('AppCatalog', () => {
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
       v4AWSClusterStatusResponse
     );
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-    getMockCall('/v4/releases/', releasesResponse);
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-
-    nock('https://cors-anywhere.herokuapp.com')
-      .get(/.*$/)
-      .reply(
-        StatusCodes.InternalServerError,
-        'Not supposed to get here in these tests.'
-      );
   });
 
   afterEach(() => {
@@ -73,7 +65,8 @@ describe('AppCatalog', () => {
   /************ TESTS ************/
 
   it('renders all non internal app catalogs in the app catalogs overview', async () => {
-    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 
     nock('https://catalogshost')
       .get('/giantswarm-incubator-catalog/index.yaml')
@@ -108,7 +101,8 @@ describe('AppCatalog', () => {
   });
 
   it('renders all apps in the app list for a given catalog', async () => {
-    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 
     nock('https://catalogshost')
       .get('/giantswarm-incubator-catalog/index.yaml')
@@ -131,7 +125,7 @@ describe('AppCatalog', () => {
   });
 
   it('renders all apps in the app list for a given catalog', async () => {
-    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 
     nock('https://catalogshost')
       .get('/giantswarm-incubator-catalog/index.yaml')
@@ -154,8 +148,7 @@ describe('AppCatalog', () => {
   });
 
   it('renders the app detail page for a given app', async () => {
-    // eslint-disable-next-line no-magic-numbers
-    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 3);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 
     nock('https://catalogshost')
       .get('/giantswarm-incubator-catalog/index.yaml')
@@ -197,15 +190,17 @@ describe('AppCatalog', () => {
       .reply(StatusCodes.Ok, installAppResponse);
 
     // eslint-disable-next-line no-magic-numbers
-    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 3);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
       v4AWSClusterStatusResponse
     );
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
     getMockCall('/v4/clusters/', v4ClustersResponse);
+    getMockCall('/v4/releases/', releasesResponse);
 
     nock('https://catalogshost')
       .get('/giantswarm-incubator-catalog/index.yaml')
@@ -224,7 +219,9 @@ describe('AppCatalog', () => {
         app: 'nginx-ingress-controller-app',
       }
     );
-    const { findByText, getByText } = renderRouteWithStore(appCatalogListPath);
+    const { findByText, findAllByText, getByText } = renderRouteWithStore(
+      appCatalogListPath
+    );
 
     // Press the configure button
     let installButton = await findByText(/configure & install/i);
@@ -237,14 +234,16 @@ describe('AppCatalog', () => {
     installButton = await findByText(/install app/i);
     fireEvent.click(installButton);
 
-    // Waiting for the modal to close
-    await wait();
-
     await findByText(/is being installed on/i);
 
-    // This is not inside the component tree we are testing and so it is not cleaned up
-    // after test, so we have to remove it manually in order to not cause conflicts with
-    // the next test with a flash message
+    // Check if the user got redirected to the cluster detail view
+    await findAllByText(V4_CLUSTER.name);
+    await findByText(/kubernetes endpoint uri/i);
+
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
     document.querySelector('#noty_layout__topRight').remove();
 
     installAppRequest.done();
@@ -262,16 +261,17 @@ describe('AppCatalog', () => {
       .reply(StatusCodes.Ok, installAppResponse);
 
     // eslint-disable-next-line no-magic-numbers
-    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 3);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCallTimes(
+    getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse,
-      2
+      v4AWSClusterStatusResponse
     );
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
     getMockCall('/v4/clusters/', v4ClustersResponse);
+    getMockCall('/v4/releases/', releasesResponse);
 
     nock('https://catalogshost')
       .get('/giantswarm-incubator-catalog/index.yaml')
@@ -290,9 +290,12 @@ describe('AppCatalog', () => {
         app: testApp,
       }
     );
-    const { findByText, getByText, getByLabelText } = renderRouteWithStore(
-      appCatalogListPath
-    );
+    const {
+      findByText,
+      findAllByText,
+      getByText,
+      getByLabelText,
+    } = renderRouteWithStore(appCatalogListPath);
 
     // Press the configure button
     let installButton = await findByText(/configure & install/i);
@@ -302,21 +305,21 @@ describe('AppCatalog', () => {
     fireEvent.click(getByText(V4_CLUSTER.name));
 
     // Set a new application name
-    const appNameInput = getByLabelText('Application Name:');
+    const appNameInput = getByLabelText(/application name/i);
     fireEvent.change(appNameInput, {
       target: { value: 'test-app' },
     });
 
     // Check if namespace input is disabled
-    expect(getByLabelText('Namespace:').readOnly).toBeTruthy();
+    expect(getByLabelText(/namespace:/i).readOnly).toBeTruthy();
 
     // Upload a configmap file
-    let fileInput = getByLabelText('ConfigMap:');
+    let fileInput = getByLabelText(/configmap:/i);
     let file = new Blob(
       [
         JSON.stringify({
-          var: 'test',
-          path: 'some-other-test',
+          name: 'test',
+          namespace: 'some-other-test',
         }),
       ],
       {
@@ -324,17 +327,19 @@ describe('AppCatalog', () => {
         name: 'config.json',
       }
     );
-    Object.defineProperty(fileInput, 'files', {
-      value: [file],
+    fireEvent.change(fileInput, {
+      target: {
+        files: [file],
+      },
     });
-    fireEvent.change(fileInput);
 
     // Upload a secrets file
-    fileInput = getByLabelText('Secret:');
+    fileInput = getByLabelText(/secret:/i);
     file = new Blob(
       [
         JSON.stringify({
-          agent: 'secret-key',
+          name: 'test',
+          namespace: 'some-other-test',
         }),
       ],
       {
@@ -342,25 +347,349 @@ describe('AppCatalog', () => {
         name: 'secrets.json',
       }
     );
-    Object.defineProperty(fileInput, 'files', {
-      value: [file],
+    fireEvent.change(fileInput, {
+      target: {
+        files: [file],
+      },
     });
-    fireEvent.change(fileInput);
 
     // Install the new app
     installButton = await findByText(/install app/i);
     fireEvent.click(installButton);
 
-    // Waiting for the modal to close
-    await wait();
-
     await findByText(/is being installed on/i);
 
-    // This is not inside the component tree we are testing and so it is not cleaned up
-    // after test, so we have to remove it manually in order to not cause conflicts with
-    // the next test with a flash message
+    // Check if the user got redirected to the cluster detail view
+    await findAllByText(V4_CLUSTER.name);
+    await findByText(/kubernetes endpoint uri/i);
+
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
     document.querySelector('#noty_layout__topRight').remove();
 
     installAppRequest.done();
+  });
+
+  it('updates the config map of an already installed app', async () => {
+    const updateAppConfigRequest = nock(API_ENDPOINT)
+      .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`, 'PATCH')
+      .reply(StatusCodes.Ok);
+
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCallTimes(
+      `/v4/clusters/${V4_CLUSTER.id}/apps/`,
+      [appResponseWithCustomConfig],
+      2
+    );
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+    getMockCall('/v4/releases/', releasesResponse);
+
+    const clusterDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail,
+      {
+        orgId: ORGANIZATION,
+        clusterId: V4_CLUSTER.id,
+      }
+    );
+    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+
+    const appsTab = await findByText(/^apps$/i);
+    fireEvent.click(appsTab);
+
+    // Click on app details button to open the editing modal
+    const appLabel = getByText(/my app/i);
+    const appDetailsButton = appLabel.parentNode.querySelector('button');
+    fireEvent.click(appDetailsButton);
+
+    // Delete the existing file
+    const fileInputPlaceholder = getByText(/configmap has been set/i);
+    const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
+    const file = new Blob(
+      [
+        JSON.stringify({
+          name: 'test',
+          namespace: 'some-other-test',
+        }),
+      ],
+      {
+        type: 'application/json',
+        name: 'config2.json',
+      }
+    );
+
+    fireEvent.change(fileInput, {
+      target: {
+        files: [file],
+      },
+    });
+
+    // Check if the success toast notification was displayed
+    await findByText(/has successfully been updated/i);
+
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
+    document.querySelector('#noty_layout__topRight').remove();
+
+    updateAppConfigRequest.done();
+  });
+
+  it('deletes the config map of an already installed app', async () => {
+    const deleteAppConfigRequest = nock(API_ENDPOINT)
+      .intercept(
+        `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
+        'DELETE'
+      )
+      .reply(StatusCodes.Ok);
+
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCallTimes(
+      `/v4/clusters/${V4_CLUSTER.id}/apps/`,
+      [appResponseWithCustomConfig],
+      2
+    );
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+    getMockCall('/v4/releases/', releasesResponse);
+
+    const clusterDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail,
+      {
+        orgId: ORGANIZATION,
+        clusterId: V4_CLUSTER.id,
+      }
+    );
+    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+
+    const appsTab = await findByText(/^apps$/i);
+    fireEvent.click(appsTab);
+
+    // Click on app details button to open the editing modal
+    const appLabel = getByText(/my app/i);
+    const appDetailsButton = appLabel.parentNode.querySelector('button');
+    fireEvent.click(appDetailsButton);
+
+    // Upload a configmap file
+    const fileInputPlaceholder = getByText(/configmap has been set/i);
+    let deleteButton = fileInputPlaceholder.parentNode.querySelector(
+      '.btn-danger'
+    );
+    fireEvent.click(deleteButton);
+
+    // Confirm deletion
+    deleteButton = getByText(/^delete configmap$/i);
+    fireEvent.click(deleteButton);
+
+    await waitForDomChange();
+
+    // Check if the success toast notification was displayed
+    getByText(/has been deleted/i);
+
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
+    document.querySelector('#noty_layout__topRight').remove();
+
+    deleteAppConfigRequest.done();
+  });
+
+  it('updates secrets of an already installed app', async () => {
+    const updateAppConfigRequest = nock(API_ENDPOINT)
+      .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`, 'PATCH')
+      .reply(StatusCodes.Ok);
+
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCallTimes(
+      `/v4/clusters/${V4_CLUSTER.id}/apps/`,
+      [appResponseWithCustomConfig],
+      2
+    );
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+    getMockCall('/v4/releases/', releasesResponse);
+
+    const clusterDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail,
+      {
+        orgId: ORGANIZATION,
+        clusterId: V4_CLUSTER.id,
+      }
+    );
+    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+
+    const appsTab = await findByText(/^apps$/i);
+    fireEvent.click(appsTab);
+
+    // Click on app details button to open the editing modal
+    const appLabel = getByText(/my app/i);
+    const appDetailsButton = appLabel.parentNode.querySelector('button');
+    fireEvent.click(appDetailsButton);
+
+    // Upload a secrets file
+    const fileInputPlaceholder = getByText(/secret has been set/i);
+    const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
+    const file = new Blob(
+      [
+        JSON.stringify({
+          name: 'test',
+          namespace: 'some-other-test',
+        }),
+      ],
+      {
+        type: 'application/json',
+        name: 'secret.json',
+      }
+    );
+    fireEvent.change(fileInput, {
+      target: {
+        files: [file],
+      },
+    });
+
+    // Check if the success toast notification was displayed
+    await findByText(/has successfully been updated/i);
+
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
+    document.querySelector('#noty_layout__topRight').remove();
+
+    updateAppConfigRequest.done();
+  });
+
+  it('deletes secrets of an already installed app', async () => {
+    const deleteSecretsRequest = nock(API_ENDPOINT)
+      .intercept(
+        `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
+        'DELETE'
+      )
+      .reply(StatusCodes.Ok);
+
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCallTimes(
+      `/v4/clusters/${V4_CLUSTER.id}/apps/`,
+      [appResponseWithCustomConfig],
+      2
+    );
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+    getMockCall('/v4/releases/', releasesResponse);
+
+    const clusterDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail,
+      {
+        orgId: ORGANIZATION,
+        clusterId: V4_CLUSTER.id,
+      }
+    );
+    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+
+    const appsTab = await findByText(/^apps$/i);
+    fireEvent.click(appsTab);
+
+    // Click on app details button to open the editing modal
+    const appLabel = getByText(/my app/i);
+    const appDetailsButton = appLabel.parentNode.querySelector('button');
+    fireEvent.click(appDetailsButton);
+
+    // Delete the existing file
+    const fileInputPlaceholder = getByText(/secret has been set/i);
+    let deleteButton = fileInputPlaceholder.parentNode.querySelector(
+      '.btn-danger'
+    );
+    fireEvent.click(deleteButton);
+
+    // Confirm deletion
+    deleteButton = getByText(/^delete secret$/i);
+    fireEvent.click(deleteButton);
+
+    // Check if the success toast notification was displayed
+    getByText(/has been deleted/i);
+
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
+    document.querySelector('#noty_layout__topRight').remove();
+
+    deleteSecretsRequest.done();
+  });
+
+  it('deletes already installed app', async () => {
+    const deleteAppRequest = nock(API_ENDPOINT)
+      .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/`, 'DELETE')
+      .reply(StatusCodes.Ok);
+
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCallTimes(
+      `/v4/clusters/${V4_CLUSTER.id}/apps/`,
+      [appResponseWithCustomConfig],
+      2
+    );
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+    getMockCall('/v4/releases/', releasesResponse);
+
+    const clusterDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail,
+      {
+        orgId: ORGANIZATION,
+        clusterId: V4_CLUSTER.id,
+      }
+    );
+    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+
+    const appsTab = await findByText(/^apps$/i);
+    fireEvent.click(appsTab);
+
+    // Click on app details button to open the editing modal
+    const appLabel = getByText(/my app/i);
+    const appDetailsButton = appLabel.parentNode.querySelector('button');
+    fireEvent.click(appDetailsButton);
+
+    // Delete the app
+    let deleteButton = getByText(/delete app/i);
+    fireEvent.click(deleteButton);
+
+    // Confirm deletion
+    deleteButton = getByText(/delete app/i);
+    fireEvent.click(deleteButton);
+
+    // Check if the success toast notification was displayed
+    getByText(/will be deleted on/i);
+
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
+    document.querySelector('#noty_layout__topRight').remove();
+
+    deleteAppRequest.done();
   });
 });

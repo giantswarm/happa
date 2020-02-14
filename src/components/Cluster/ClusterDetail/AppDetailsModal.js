@@ -371,14 +371,14 @@ const AppDetailsModal = props => {
         onClose={onClose}
         title={
           <>
-            Delete ConfigMap for {props.app.metadata.name} on
+            Delete ConfigMap for {props.app.metadata.name} on{' '}
             <ClusterIDLabel clusterID={props.clusterId} />
           </>
         }
         visible={props.visible}
       >
         Are you sure you want to delete the ConfigMap for{' '}
-        {props.app.metadata.name} on
+        {props.app.metadata.name} on{' '}
         <ClusterIDLabel clusterID={props.clusterId} />?
         <br />
         <br />
@@ -412,15 +412,14 @@ const AppDetailsModal = props => {
         onClose={onClose}
         title={
           <>
-            Delete Secret for {props.app.metadata.name} on
+            Delete Secret for {props.app.metadata.name} on{' '}
             <ClusterIDLabel clusterID={props.clusterId} />
           </>
         }
         visible={props.visible}
       >
         Are you sure you want to delete the Secret for {props.app.metadata.name}{' '}
-        on
-        <ClusterIDLabel clusterID={props.clusterId} />?
+        on <ClusterIDLabel clusterID={props.clusterId} />?
         <br />
         <br />
         There is no undo.
