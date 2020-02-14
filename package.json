@@ -50,9 +50,9 @@
     "emotion-theming": "10.0.27",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
     "history": "4.10.1",
-    "immer": "5.3.5",
+    "immer": "5.3.6",
     "immutable": "3.8.2",
-    "js-base64": "2.5.1",
+    "js-base64": "2.5.2",
     "js-yaml": "^3.12.1",
     "lunr": "^2.3.6",
     "moment": "2.24.0",
@@ -118,7 +118,7 @@
     "file-loader": "5.0.2",
     "fstream": "1.0.12",
     "html-webpack-plugin": "3.2.0",
-    "husky": "4.2.2",
+    "husky": "4.2.3",
     "jest": "25.1.0",
     "json-loader": "0.5.7",
     "lint-staged": "10.0.7",
@@ -140,6 +140,9 @@
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.10.3",
     "webpack-merge": "4.2.2"
+  },
+  "resolutions": {
+    "**/crypto-js": "^3.2.1"
   },
   "husky": {
     "hooks": {
