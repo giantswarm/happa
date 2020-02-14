@@ -184,7 +184,7 @@ describe('AppCatalog', () => {
     expect(appDescription).toBeInTheDocument();
   });
 
-  it.skip('installs an app in a cluster, with default settings', async () => {
+  it('installs an app in a cluster, with default settings', async () => {
     const installAppResponse = {
       code: 'RESOURCE_CREATED',
       message: `We're installing your app called 'nginx-ingress-controller-app' on ${V4_CLUSTER.id}`,
