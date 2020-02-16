@@ -45,6 +45,9 @@ fi
 
 sed -i "s|VERSION|${VERSION}|g" /www/index.html
 
+# gzip index.html again because we changed it
+gzip -f -9 -k /www/index.html
+
 echo ""
 echo "--- Starting Happa nginx server ---"
 exec nginx -c /etc/nginx/config/nginx.conf -g "daemon off;"
