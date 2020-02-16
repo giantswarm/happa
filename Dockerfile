@@ -22,4 +22,6 @@ RUN find /www \
 
 RUN chown -R nginx:nginx /www
 
+USER nginx
+
 CMD ["/start.sh"]

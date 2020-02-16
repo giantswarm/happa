@@ -85,5 +85,13 @@ spec:
           limits:
             cpu: 250m
             memory: 250Mi
+        volumeMounts:
+        - mountPath: /tmp
+          name: nginx-tmpfs
       imagePullSecrets:
       - name: happa-pull-secret
+      volumes:
+      - name: nginx-tmpfs
+        emptyDir:
+          medium: Memory
+          sizeLimit: 200Mi
