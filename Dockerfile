@@ -1,18 +1,13 @@
 FROM nginx:1.16-alpine
 
-RUN apk --no-cache add jq findutils gzip
+RUN apk --no-cache add jq findutils gzip && \
+  rm -r /etc/nginx/conf.d && \
+  mkdir -p /etc/nginx/config
 
-COPY dist /www
-
-RUN rm -r /etc/nginx/conf.d
-RUN mkdir -p /etc/nginx/config
 COPY nginx.conf /etc/nginx/config
-
-COPY VERSION /
 COPY scripts/start.sh /
-
-# Test certifiates will be overwritten in production by configmap
-COPY test/certs /etc/nginx/certs
+COPY dist /www
+COPY VERSION /
 
 RUN find /www \
   -type f -regextype posix-extended \
