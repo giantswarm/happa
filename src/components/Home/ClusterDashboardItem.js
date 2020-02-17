@@ -1,5 +1,6 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
+import * as actionTypes from 'actions/actionTypes';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers.js';
 import RoutePath from 'lib/routePath';
@@ -11,7 +12,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   selectClusterNodePools,
-  selectClusterNodePoolsErrorsById,
+  selectErrorByIdAndAction,
 } from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Dot } from 'styles';
@@ -203,9 +204,10 @@ ClusterDashboardItem.propTypes = {
 function mapStateToProps(state, props) {
   return {
     nodePools: selectClusterNodePools(state, props.cluster.id),
-    nodePoolsLoadError: selectClusterNodePoolsErrorsById(
+    nodePoolsLoadError: selectErrorByIdAndAction(
       state,
-      props.cluster.id
+      props.cluster.id,
+      actionTypes.CLUSTER_NODEPOOLS_LOAD_REQUEST
     ),
   };
 }

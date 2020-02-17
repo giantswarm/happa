@@ -21,7 +21,10 @@ import Tab from 'react-bootstrap/lib/Tab';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
+import {
+  selectLoadingFlagByAction,
+  selectLoadingFlagByIdAndAction,
+} from 'selectors/clusterSelectors';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
@@ -50,10 +53,6 @@ const WrapperDiv = styled.div`
   }
 `;
 class ClusterDetailView extends React.Component {
-  state = {
-    errorLoadingApps: false,
-  };
-
   loadDataInterval = null;
 
   componentDidMount() {
@@ -222,15 +221,15 @@ class ClusterDetailView extends React.Component {
       release,
       targetRelease,
       region,
-      loadingCluster,
+      genericLoadingCluster,
       loadingNodePools,
     } = this.props;
 
     return (
       <>
-        <LoadingOverlay loading={loadingCluster || loadingNodePools} />
+        <LoadingOverlay loading={genericLoadingCluster || loadingNodePools} />
 
-        {!loadingCluster && (
+        {!genericLoadingCluster && !loadingNodePools && (
           <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
             <WrapperDiv
               className='cluster-details'
@@ -310,7 +309,6 @@ class ClusterDetailView extends React.Component {
                       <ClusterApps
                         clusterId={this.props.clusterId}
                         dispatch={dispatch}
-                        errorLoading={this.state.errorLoadingApps}
                         installedApps={cluster.apps}
                         release={release}
                         showInstalledAppsBlock={
@@ -378,16 +376,27 @@ ClusterDetailView.propTypes = {
   targetRelease: PropTypes.object,
   user: PropTypes.object,
   loadingCluster: PropTypes.bool,
+  genericLoadingCluster: PropTypes.bool,
   loadingNodePools: PropTypes.bool,
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
-    loadingCluster: selectLoadingFlagByAction(
+    // We are using this genericLoadingCluster because we are setting
+    // loadingFlags.CLUSTER_LOAD_DETAILS_REQUEST to true in Organizations/Detail
+    // componentDidMount() just in case of accessing cluster details of a non
+    // selected organization from there.
+    genericLoadingCluster: selectLoadingFlagByAction(
       state,
       CLUSTER_LOAD_DETAILS_REQUEST
     ),
     loadingNodePools: selectLoadingFlagByAction(state, NODEPOOLS_LOAD_REQUEST),
+    // This looks for this specific cluster to be loaded.
+    loadingCluster: selectLoadingFlagByIdAndAction(
+      state,
+      props.cluster.id,
+      CLUSTER_LOAD_DETAILS_REQUEST
+    ),
   };
 }
 

@@ -11,7 +11,7 @@ const nodePoolsApi = new GiantSwarm.NodePoolsApi();
 export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
   return function(dispatch) {
     if (withLoadingFlags) {
-      dispatch({ type: types.CLUSTER_NODEPOOLS_LOAD_REQUEST });
+      dispatch({ type: types.CLUSTER_NODEPOOLS_LOAD_REQUEST, id: clusterId });
     }
 
     return nodePoolsApi
@@ -24,7 +24,7 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
         // Dispatch action for populating nodePools key inside cluster
         dispatch({
           type: types.CLUSTER_NODEPOOLS_LOAD_SUCCESS,
-          clusterId,
+          id: clusterId,
           nodePools: nodePoolsArray, // nodePools
           nodePoolsIds: nodePoolsArray.map(np => np.id), // array of ids to store in cluster
         });
@@ -37,6 +37,7 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
 
         dispatch({
           type: types.CLUSTER_NODEPOOLS_LOAD_ERROR,
+          id: clusterId,
           error,
         });
 

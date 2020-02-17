@@ -8,10 +8,8 @@ import {
   selectResourcesV4,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
-import { FallbackMessages } from 'shared/constants';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
-import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
 
 import ClusterDashboardLoadingPlaceholder from './ClusterDashboardLoadingPlaceholder';
 
@@ -20,10 +18,6 @@ const ClusterDetailsDiv = styled.div`
   img {
     height: 22px;
   }
-`;
-
-const FallbackSpan = styled.span`
-  opacity: 0.5;
 `;
 
 function ClusterDashboardResources({
@@ -51,16 +45,9 @@ function ClusterDashboardResources({
             </RefreshableLabel>
           )}
           <RefreshableLabel value={numberOfNodes}>
-            {/* If it was created more than an hour ago, then we should not show this message
-             because something went wrong, so it's best to make it noticeable. */}
-            {numberOfNodes === 0 &&
-            isClusterYoungerThanOneHour(cluster.create_date) ? (
-              <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
-            ) : (
-              <span>{`${numberOfNodes} ${
-                numberOfNodes === 1 ? 'node' : 'nodes'
-              }`}</span>
-            )}
+            <span>
+              {numberOfNodes} {numberOfNodes === 1 ? 'node' : 'nodes'}
+            </span>
           </RefreshableLabel>
           {numberOfNodes !== 0 && hasNodePools && (
             <>

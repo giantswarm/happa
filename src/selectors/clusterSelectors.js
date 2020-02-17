@@ -44,8 +44,14 @@ export const selectClusterNodePools = (state, clusterId) => {
   return clusterNodePoolsIds.map(nodePoolId => nodePools[nodePoolId]) || [];
 };
 
-export const selectClusterNodePoolsErrorsById = (state, clusterId) => {
-  return state.errorsByEntity[clusterId]?.CLUSTER_NODEPOOLS_LOAD ?? null;
+export const selectErrorByIdAndAction = (state, id, actionType) => {
+  return state.errorsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? null;
+};
+
+export const selectLoadingFlagByIdAndAction = (state, id, actionType) => {
+  return (
+    state.loadingFlagsByEntity[id]?.[typeWithoutSuffix(actionType)] ?? null
+  );
 };
 
 export const selectLoadingFlagByAction = (state, actionType) => {

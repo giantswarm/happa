@@ -12,7 +12,7 @@ import { TransitionGroup } from 'react-transition-group';
 import {
   selectAndProduceAZGridTemplateAreas,
   selectClusterNodePools,
-  selectLoadingFlagByAction,
+  selectLoadingFlagByIdAndAction,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
@@ -368,7 +368,6 @@ class V5ClusterDetailTable extends React.Component {
           <div>
             <NodesRunning
               workerNodesRunning={numberOfNodes}
-              createDate={create_date}
               RAM={memory}
               CPUs={cores}
               nodePools={nodePools}
@@ -561,8 +560,9 @@ const makeMapStateToProps = () => {
       nodePools: selectClusterNodePools(state, props.cluster.id),
       resources: resourcesV5(state, props),
       AZGridTemplateAreas: AZGridTemplateAreas(state, props.cluster.id),
-      loadingNodePools: selectLoadingFlagByAction(
+      loadingNodePools: selectLoadingFlagByIdAndAction(
         state,
+        props.cluster.id,
         CLUSTER_NODEPOOLS_LOAD_REQUEST
       ),
     };

@@ -124,7 +124,7 @@ export function clusterLoadDetails(
     if (withLoadingFlags) {
       dispatch({
         type: types.CLUSTER_LOAD_DETAILS_REQUEST,
-        clusterId,
+        id: clusterId,
       });
     }
 
@@ -176,6 +176,7 @@ export function clusterLoadDetails(
       dispatch({
         type: types.CLUSTER_LOAD_DETAILS_SUCCESS,
         cluster,
+        id: clusterId,
       });
 
       return cluster;
@@ -202,7 +203,7 @@ export function clusterLoadDetails(
       console.error('Error loading cluster details:', error);
       dispatch({
         type: types.CLUSTER_LOAD_DETAILS_ERROR,
-        clusterId,
+        id: clusterId,
         error,
       });
 
