@@ -15,6 +15,9 @@ metadata:
     {{- end }}
     nginx.ingress.kubernetes.io/configuration-snippet: |
       add_header X-Frame-Options deny always;
+      add_header X-XSS-Protection "1; mode=block" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header Referrer-Policy "no-referrer-when-downgrade" always;
 spec:
   rules:
   - host: {{ .Values.Installation.V1.GiantSwarm.Happa.Host }}
