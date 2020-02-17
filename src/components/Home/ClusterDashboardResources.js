@@ -11,6 +11,7 @@ import {
 import { FallbackMessages } from 'shared/constants';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
+import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
 
 import ClusterDashboardLoadingPlaceholder from './ClusterDashboardLoadingPlaceholder';
 
@@ -50,7 +51,10 @@ function ClusterDashboardResources({
             </RefreshableLabel>
           )}
           <RefreshableLabel value={numberOfNodes}>
-            {numberOfNodes === 0 ? (
+            {/* If it was created more than an hour ago, then we should not show this message
+             because something went wrong, so it's best to make it noticeable. */}
+            {numberOfNodes !== 0 &&
+            isClusterYoungerThanOneHour(cluster.create_date) ? (
               <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
             ) : (
               <span>{`${numberOfNodes} ${

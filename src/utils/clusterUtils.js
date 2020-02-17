@@ -1,3 +1,4 @@
+import moment from 'moment';
 import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
 
@@ -148,3 +149,12 @@ export function computeCapabilities(releaseVersion, provider) {
       provider === Providers.AWS && cmp(releaseVersion, '10.0.99') === 1,
   };
 }
+
+export const isClusterYoungerThanOneHour = createDate => {
+  // eslint-disable-next-line no-magic-numbers
+  const creationPlusOneHour = moment(createDate).add(1, 'hour');
+
+  return moment()
+    .utc()
+    .isBefore(creationPlusOneHour);
+};
