@@ -151,7 +151,6 @@ export function computeCapabilities(releaseVersion, provider) {
 }
 
 export const isClusterYoungerThanOneHour = createDate => {
-  // eslint-disable-next-line no-magic-numbers
   const creationPlusOneHour = moment(createDate).add(1, 'hour');
 
   return moment()
