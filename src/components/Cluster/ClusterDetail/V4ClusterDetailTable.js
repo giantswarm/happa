@@ -107,15 +107,16 @@ class V4ClusterDetailTable extends React.Component {
 
         <hr style={{ margin: '25px 0' }} />
         <h2>Worker nodes</h2>
-        {provider === Providers.AZURE && (
-          <WorkerNodesAzure
-            instanceType={
-              this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
-            }
-            nodes={numberOfNodes}
-            showScalingModal={this.props.showScalingModal}
-          />
-        )}
+        {provider === Providers.AZURE &&
+          Object.keys(this.state.azureVMSizes).length > 0 && (
+            <WorkerNodesAzure
+              instanceType={
+                this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
+              }
+              nodes={numberOfNodes}
+              showScalingModal={this.props.showScalingModal}
+            />
+          )}
         {provider === Providers.KVM && (
           <WorkerNodesKVM
             worker={cluster.workers[0]}
@@ -124,8 +125,7 @@ class V4ClusterDetailTable extends React.Component {
           />
         )}
         {provider === Providers.AWS &&
-          cluster.workers &&
-          cluster.workers.length !== 0 && (
+          Object.keys(this.state.awsInstanceTypes).length > 0 && (
             <WorkerNodesAWS
               az={cluster.availability_zones}
               instanceName={cluster.workers[0].aws.instance_type}
