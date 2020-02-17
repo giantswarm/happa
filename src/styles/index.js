@@ -99,3 +99,7 @@ export const Dot = styled.span`
     content: '·';
   }
 `;
+
+export const FallbackSpan = styled.span`
+  opacity: 0.5;
+`;
