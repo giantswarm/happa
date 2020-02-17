@@ -87,11 +87,16 @@ export function clustersDetails({
     const selectedOrganization = getState().app.selectedOrganization;
     const allClusters = await getState().entities.clusters.items;
 
+    // Remove deleted clusters from clusters array
+    const allActiveClustersIds = Object.keys(allClusters).filter(
+      id => !allClusters[id].delete_date
+    );
+
     const clustersIds = filterBySelectedOrganization
-      ? Object.keys(allClusters).filter(
+      ? allActiveClustersIds.filter(
           id => allClusters[id].owner === selectedOrganization
         )
-      : Object.keys(allClusters);
+      : allActiveClustersIds;
 
     const clusterDetails = await Promise.all(
       clustersIds.map(id =>
