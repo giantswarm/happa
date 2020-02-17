@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eu
+
 # This script replaces some placeholders in index.html with values from the
 # environment. It is used for Happa's production deployment.
 if [ -n "$API_ENDPOINT" ]; then
@@ -42,6 +44,9 @@ if [ $STRLENGTH -gt 30 ]; then
 fi
 
 sed -i "s|VERSION|${VERSION}|g" /www/index.html
+
+# gzip index.html again because we changed it
+gzip -f -9 -k /www/index.html
 
 echo ""
 echo "--- Starting Happa nginx server ---"
