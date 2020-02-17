@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, waitForDomChange } from '@testing-library/react';
+import { fireEvent, wait } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -28,45 +28,55 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('AppCatalog', () => {
   // eslint-disable-next-line no-console
-  const originalConsoleError = console.error;
+  // const originalConsoleError = console.error;
 
   beforeAll(() => {
     nock.disableNetConnect();
     // eslint-disable-next-line no-console
-    console.error = jest.fn();
+    // console.error = jest.fn();
   });
 
   afterAll(() => {
     nock.enableNetConnect();
     // eslint-disable-next-line no-console
-    console.error = originalConsoleError;
+    // console.error = originalConsoleError;
   });
 
   beforeEach(() => {
-    getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/info/', AWSInfoResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCall(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
-    );
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+    // getMockCall('/v4/user/', userResponse);
+    // getMockCall('/v4/organizations/', orgsResponse);
+    // getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    // getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    // getMockCall(
+    //   `/v4/clusters/${V4_CLUSTER.id}/status/`,
+    //   v4AWSClusterStatusResponse
+    // );
+    // getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    // getMockCall('/v4/appcatalogs/', appCatalogsResponse);
   });
 
   afterEach(() => {
-    expect(nock.isDone());
+    const pendingMocks = nock.pendingMocks();
+    if (pendingMocks.length) console.log('pending mocks:', pendingMocks);
+
+    expect(nock.isDone()).toBeTruthy();
     nock.cleanAll();
   });
 
   /************ TESTS ************/
 
   it('renders all non internal app catalogs in the app catalogs overview', async () => {
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
 
     nock('https://catalogshost')
       .get('/giantswarm-incubator-catalog/index.yaml')
@@ -101,31 +111,15 @@ describe('AppCatalog', () => {
   });
 
   it('renders all apps in the app list for a given catalog', async () => {
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-
-    nock('https://catalogshost')
-      .get('/giantswarm-incubator-catalog/index.yaml')
-      .reply(StatusCodes.Ok, catalogIndexResponse);
-    nock('https://catalogshost')
-      .get('/giantswarm-test-catalog/index.yaml')
-      .reply(StatusCodes.Ok, catalogIndexResponse);
-    nock('https://catalogshost')
-      .get('/helmstable/index.yaml')
-      .reply(StatusCodes.Ok, catalogIndexResponse);
-
-    const appCatalogListPath = RoutePath.createUsablePath(
-      AppCatalogRoutes.AppList,
-      { repo: 'giantswarm-incubator' }
+    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
     );
-    const { findByText } = renderRouteWithStore(appCatalogListPath);
-
-    const catalogTitle = await findByText('Giant Swarm Incubator');
-    expect(catalogTitle).toBeInTheDocument();
-  });
-
-  it('renders all apps in the app list for a given catalog', async () => {
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
 
     nock('https://catalogshost')
       .get('/giantswarm-incubator-catalog/index.yaml')
@@ -148,7 +142,16 @@ describe('AppCatalog', () => {
   });
 
   it('renders the app detail page for a given app', async () => {
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
 
     nock('https://catalogshost')
       .get('/giantswarm-incubator-catalog/index.yaml')
@@ -178,28 +181,26 @@ describe('AppCatalog', () => {
   });
 
   it('installs an app in a cluster, with default settings', async () => {
-    const installAppResponse = {
-      code: 'RESOURCE_CREATED',
-      message: `We're installing your app called 'nginx-ingress-controller-app' on ${V4_CLUSTER.id}`,
-    };
-    const installAppRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(
         `/v4/clusters/${V4_CLUSTER.id}/apps/nginx-ingress-controller-app/`,
         'PUT'
       )
-      .reply(StatusCodes.Ok, installAppResponse);
+      .reply(StatusCodes.Ok);
 
-    // eslint-disable-next-line no-magic-numbers
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCall(
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
+    getMockCallTimes(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
+      v4AWSClusterStatusResponse,
+      2
     );
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
-    getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCall('/v4/releases/', releasesResponse);
 
     nock('https://catalogshost')
@@ -245,8 +246,6 @@ describe('AppCatalog', () => {
      * it from showing up in other tests
      */
     document.querySelector('#noty_layout__topRight').remove();
-
-    installAppRequest.done();
   });
 
   it('installs an app in a cluster, with custom settings', async () => {
@@ -256,21 +255,23 @@ describe('AppCatalog', () => {
       code: 'RESOURCE_CREATED',
       message: `We're installing your app called 'test-app' on ${V4_CLUSTER.id}`,
     };
-    const installAppRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/test-app/`, 'PUT')
       .reply(StatusCodes.Ok, installAppResponse);
 
-    // eslint-disable-next-line no-magic-numbers
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCall(
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+    getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
+    getMockCallTimes(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
+      v4AWSClusterStatusResponse,
+      2
     );
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
-    getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCall('/v4/releases/', releasesResponse);
 
     nock('https://catalogshost')
@@ -362,16 +363,24 @@ describe('AppCatalog', () => {
     // Check if the user got redirected to the cluster detail view
     await findAllByText(V4_CLUSTER.name);
     await findByText(/kubernetes endpoint uri/i);
-
-    installAppRequest.done();
   });
 
   it('updates the config map of an already installed app', async () => {
-    const updateAppConfigRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`, 'PATCH')
       .reply(StatusCodes.Ok);
 
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
@@ -426,20 +435,34 @@ describe('AppCatalog', () => {
       },
     });
 
-    await waitForDomChange();
+    await findByText(/has successfully been updated./i);
 
-    updateAppConfigRequest.done();
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
+    document.querySelector('#noty_layout__topRight').remove();
   });
 
   it('deletes the config map of an already installed app', async () => {
-    const deleteAppConfigRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(
         `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
         'DELETE'
       )
       .reply(StatusCodes.Ok);
 
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
@@ -460,7 +483,9 @@ describe('AppCatalog', () => {
         clusterId: V4_CLUSTER.id,
       }
     );
-    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+    const { findByText, getByText, queryByText } = renderRouteWithStore(
+      clusterDetailPath
+    );
 
     const appsTab = await findByText(/^apps$/i);
     fireEvent.click(appsTab);
@@ -483,15 +508,29 @@ describe('AppCatalog', () => {
     deleteButton = getByText(/^delete configmap$/i);
     fireEvent.click(deleteButton);
 
-    deleteAppConfigRequest.done();
+    await wait(() => {
+      expect(queryByText(/delete configmap/i)).not.toBeInTheDocument();
+    });
+
+    await findByText(/has been deleted./i);
   });
 
   it('updates secrets of an already installed app', async () => {
-    const updateAppConfigRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`, 'PATCH')
       .reply(StatusCodes.Ok);
 
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
@@ -545,20 +584,34 @@ describe('AppCatalog', () => {
       },
     });
 
-    await waitForDomChange();
+    await findByText(/has successfully been updated./i);
 
-    updateAppConfigRequest.done();
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
+    document.querySelector('#noty_layout__topRight').remove();
   });
 
   it('deletes secrets of an already installed app', async () => {
-    const deleteSecretsRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(
         `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
         'DELETE'
       )
       .reply(StatusCodes.Ok);
 
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+    getMockCall(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse
+    );
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
@@ -579,7 +632,9 @@ describe('AppCatalog', () => {
         clusterId: V4_CLUSTER.id,
       }
     );
-    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+    const { findByText, getByText, queryByText } = renderRouteWithStore(
+      clusterDetailPath
+    );
 
     const appsTab = await findByText(/^apps$/i);
     fireEvent.click(appsTab);
@@ -602,27 +657,36 @@ describe('AppCatalog', () => {
     deleteButton = getByText(/^delete secret$/i);
     fireEvent.click(deleteButton);
 
-    await waitForDomChange();
+    await wait(() => {
+      expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
+    });
 
-    deleteSecretsRequest.done();
+    await findByText(/has been deleted./i);
+
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
+    document.querySelector('#noty_layout__topRight').remove();
   });
 
   it('deletes already installed app', async () => {
-    const deleteAppRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/`, 'DELETE')
       .reply(StatusCodes.Ok);
 
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCall(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
-    );
+    getMockCall('/v4/user/', userResponse);
+    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
     getMockCallTimes(
-      `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-      [appResponseWithCustomConfig],
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse,
       2
     );
+    getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse, 2);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
     getMockCall('/v4/releases/', releasesResponse);
 
@@ -633,7 +697,9 @@ describe('AppCatalog', () => {
         clusterId: V4_CLUSTER.id,
       }
     );
-    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+    const { findByText, getByText, queryByText } = renderRouteWithStore(
+      clusterDetailPath
+    );
 
     const appsTab = await findByText(/^apps$/i);
     fireEvent.click(appsTab);
@@ -653,6 +719,16 @@ describe('AppCatalog', () => {
     deleteButton = getByText(/delete app/i);
     fireEvent.click(deleteButton);
 
-    deleteAppRequest.done();
+    await wait(() => {
+      expect(queryByText(/delete app/i)).not.toBeInTheDocument();
+    });
+
+    await findByText(/will be deleted/i);
+
+    /**
+     * Manually removing the toast notification to prevent
+     * it from showing up in other tests
+     */
+    document.querySelector('#noty_layout__topRight').remove();
   });
 });

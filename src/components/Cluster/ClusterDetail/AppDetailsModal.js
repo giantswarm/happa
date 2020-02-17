@@ -42,13 +42,13 @@ const AppDetailsModal = props => {
     props.onClose();
   }
 
-  function dispatchDeleteAppConfig(app, clusterId, dispatch) {
-    dispatch(deleteAppConfig(app.metadata.name, clusterId))
+  function dispatchDeleteAppConfig(app, clusterId, dispatch, closeModal) {
+    return dispatch(deleteAppConfig(app.metadata.name, clusterId))
       .then(() => {
         return dispatch(loadApps(clusterId));
       })
       .then(() => {
-        onClose();
+        closeModal();
       })
       .catch(e => {
         // eslint-disable-next-line no-console
@@ -56,13 +56,13 @@ const AppDetailsModal = props => {
       });
   }
 
-  function dispatchDeleteAppSecret(app, clusterId, dispatch) {
-    dispatch(deleteAppSecret(app.metadata.name, clusterId))
+  function dispatchDeleteAppSecret(app, clusterId, dispatch, closeModal) {
+    return dispatch(deleteAppSecret(app.metadata.name, clusterId))
       .then(() => {
         return dispatch(loadApps(clusterId));
       })
       .then(() => {
-        onClose();
+        closeModal();
       })
       .catch(e => {
         // eslint-disable-next-line no-console
@@ -70,13 +70,13 @@ const AppDetailsModal = props => {
       });
   }
 
-  function dispatchDeleteApp(app, clusterId, dispatch) {
-    dispatch(deleteApp(app.metadata.name, clusterId))
+  function dispatchDeleteApp(app, clusterId, dispatch, closeModal) {
+    return dispatch(deleteApp(app.metadata.name, clusterId))
       .then(() => {
         return dispatch(loadApps(clusterId));
       })
       .then(() => {
-        onClose();
+        closeModal();
       })
       .catch(e => {
         // eslint-disable-next-line no-console
@@ -354,10 +354,11 @@ const AppDetailsModal = props => {
             <Button
               bsStyle='danger'
               onClick={dispatchDeleteAppConfig.bind(
-                this,
+                undefined,
                 props.app,
                 props.clusterId,
-                props.dispatch
+                props.dispatch,
+                onClose
               )}
             >
               <i className='fa fa-delete' />
@@ -395,10 +396,11 @@ const AppDetailsModal = props => {
             <Button
               bsStyle='danger'
               onClick={dispatchDeleteAppSecret.bind(
-                this,
+                undefined,
                 props.app,
                 props.clusterId,
-                props.dispatch
+                props.dispatch,
+                onClose
               )}
             >
               <i className='fa fa-delete' />
@@ -435,10 +437,11 @@ const AppDetailsModal = props => {
             <Button
               bsStyle='danger'
               onClick={dispatchDeleteApp.bind(
-                this,
+                undefined,
                 props.app,
                 props.clusterId,
-                props.dispatch
+                props.dispatch,
+                onClose
               )}
             >
               <i className='fa fa-delete' />
