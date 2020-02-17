@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -28,33 +29,24 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('AppCatalog', () => {
   // eslint-disable-next-line no-console
-  // const originalConsoleError = console.error;
+  const originalConsoleError = console.error;
 
   beforeAll(() => {
     nock.disableNetConnect();
     // eslint-disable-next-line no-console
-    // console.error = jest.fn();
+    console.error = jest.fn();
   });
 
   afterAll(() => {
     nock.enableNetConnect();
     // eslint-disable-next-line no-console
-    // console.error = originalConsoleError;
+    console.error = originalConsoleError;
   });
 
   beforeEach(() => {
     getMockCall('/v4/info/', AWSInfoResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
-    // getMockCall('/v4/user/', userResponse);
-    // getMockCall('/v4/organizations/', orgsResponse);
-    // getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-    // getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    // getMockCall(
-    //   `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    //   v4AWSClusterStatusResponse
-    // );
-    // getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-    // getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+    getMockCallTimes('/v4/organizations/', orgsResponse);
   });
 
   afterEach(() => {
@@ -63,13 +55,14 @@ describe('AppCatalog', () => {
 
     expect(nock.isDone()).toBeTruthy();
     nock.cleanAll();
+
+    forceRemoveAll();
   });
 
   /************ TESTS ************/
 
   it('renders all non internal app catalogs in the app catalogs overview', async () => {
     getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
-    getMockCall('/v4/organizations/', orgsResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
@@ -112,7 +105,6 @@ describe('AppCatalog', () => {
 
   it('renders all apps in the app list for a given catalog', async () => {
     getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
-    getMockCall('/v4/organizations/', orgsResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
@@ -142,8 +134,7 @@ describe('AppCatalog', () => {
   });
 
   it('renders the app detail page for a given app', async () => {
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCallTimes('/v4/user/', userResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
@@ -188,8 +179,7 @@ describe('AppCatalog', () => {
       )
       .reply(StatusCodes.Ok);
 
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCallTimes('/v4/user/', userResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
@@ -240,12 +230,6 @@ describe('AppCatalog', () => {
     // Check if the user got redirected to the cluster detail view
     await findAllByText(V4_CLUSTER.name);
     await findByText(/kubernetes endpoint uri/i);
-
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
   });
 
   it('installs an app in a cluster, with custom settings', async () => {
@@ -259,8 +243,7 @@ describe('AppCatalog', () => {
       .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/test-app/`, 'PUT')
       .reply(StatusCodes.Ok, installAppResponse);
 
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCallTimes('/v4/user/', userResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
     getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
@@ -370,8 +353,7 @@ describe('AppCatalog', () => {
       .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`, 'PATCH')
       .reply(StatusCodes.Ok);
 
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCallTimes('/v4/user/', userResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
@@ -436,12 +418,6 @@ describe('AppCatalog', () => {
     });
 
     await findByText(/has successfully been updated./i);
-
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
   });
 
   it('deletes the config map of an already installed app', async () => {
@@ -452,8 +428,7 @@ describe('AppCatalog', () => {
       )
       .reply(StatusCodes.Ok);
 
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCallTimes('/v4/user/', userResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
@@ -520,8 +495,7 @@ describe('AppCatalog', () => {
       .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`, 'PATCH')
       .reply(StatusCodes.Ok);
 
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCallTimes('/v4/user/', userResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
@@ -551,7 +525,9 @@ describe('AppCatalog', () => {
         clusterId: V4_CLUSTER.id,
       }
     );
-    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+    const { findByText, getByText, queryByText } = renderRouteWithStore(
+      clusterDetailPath
+    );
 
     const appsTab = await findByText(/^apps$/i);
     fireEvent.click(appsTab);
@@ -584,13 +560,11 @@ describe('AppCatalog', () => {
       },
     });
 
-    await findByText(/has successfully been updated./i);
+    await wait(() => {
+      expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
+    });
 
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
+    await findByText(/has successfully been updated./i);
   });
 
   it('deletes secrets of an already installed app', async () => {
@@ -601,8 +575,7 @@ describe('AppCatalog', () => {
       )
       .reply(StatusCodes.Ok);
 
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCallTimes('/v4/user/', userResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
     getMockCall(
@@ -662,12 +635,6 @@ describe('AppCatalog', () => {
     });
 
     await findByText(/has been deleted./i);
-
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
   });
 
   it('deletes already installed app', async () => {
@@ -675,8 +642,7 @@ describe('AppCatalog', () => {
       .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/`, 'DELETE')
       .reply(StatusCodes.Ok);
 
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/organizations/', orgsResponse);
+    getMockCallTimes('/v4/user/', userResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
@@ -724,11 +690,5 @@ describe('AppCatalog', () => {
     });
 
     await findByText(/will be deleted/i);
-
-    /**
-     * Manually removing the toast notification to prevent
-     * it from showing up in other tests
-     */
-    document.querySelector('#noty_layout__topRight').remove();
   });
 });
