@@ -8,7 +8,7 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -22,20 +22,35 @@ import {
   UsersRoutes,
 } from 'shared/constants/routes';
 
-import AccountSettings from './AccountSettings/AccountSettings';
-import AppCatalog from './AppCatalog/AppCatalog';
-import Home from './Home/Home';
 import Modals from './Modals/Modals';
-import Organizations from './Organizations/Organizations';
 import LoadingOverlay from './UI/LoadingOverlay';
 import Navigation from './UI/Navigation/Navigation';
-import Users from './Users/Users';
 
 const defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 defaultClient.timeout = 10000;
 const defaultClientAuth =
   defaultClient.authentications['AuthorizationHeaderToken'];
+
+const AccountSettings = lazy(() =>
+  import(
+    /* webpackChunkName: "AccountSettings" */ './AccountSettings/AccountSettings'
+  )
+);
+const AppCatalog = lazy(() =>
+  import(/* webpackChunkName: "AppCatalog" */ './AppCatalog/AppCatalog')
+);
+const Home = lazy(() =>
+  import(/* webpackChunkName: "Layout_Home" */ './Home/Home')
+);
+const Organizations = lazy(() =>
+  import(
+    /* webpackChunkName: "Organizations" */ './Organizations/Organizations'
+  )
+);
+const Users = lazy(() =>
+  import(/* webpackChunkName: "Users" */ './Users/Users')
+);
 
 class Layout extends React.Component {
   componentDidMount() {
@@ -73,17 +88,48 @@ class Layout extends React.Component {
           <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
             <div className='main col-9'>
               <Switch>
-                <Route component={Home} exact path={AppRoutes.Home} />
-                <Route component={AppCatalog} path={AppCatalogRoutes.Home} />
-                <Route component={Users} exact path={UsersRoutes.Home} />
                 <Route
-                  component={Organizations}
-                  path={OrganizationsRoutes.Home}
+                  exact
+                  path={AppRoutes.Home}
+                  render={routeProps => (
+                    <Suspense fallback={<LoadingOverlay loading={true} />}>
+                      <Home {...routeProps} />
+                    </Suspense>
+                  )}
                 />
                 <Route
-                  component={AccountSettings}
+                  path={AppCatalogRoutes.Home}
+                  render={routeProps => (
+                    <Suspense fallback={<LoadingOverlay loading={true} />}>
+                      <AppCatalog {...routeProps} />
+                    </Suspense>
+                  )}
+                />
+                <Route
+                  exact
+                  path={UsersRoutes.Home}
+                  render={routeProps => (
+                    <Suspense fallback={<LoadingOverlay loading={true} />}>
+                      <Users {...routeProps} />
+                    </Suspense>
+                  )}
+                />
+                <Route
+                  path={OrganizationsRoutes.Home}
+                  render={routeProps => (
+                    <Suspense fallback={<LoadingOverlay loading={true} />}>
+                      <Organizations {...routeProps} />
+                    </Suspense>
+                  )}
+                />
+                <Route
                   exact
                   path={AccountSettingsRoutes.Home}
+                  render={routeProps => (
+                    <Suspense fallback={<LoadingOverlay loading={true} />}>
+                      <AccountSettings {...routeProps} />
+                    </Suspense>
+                  )}
                 />
                 <Redirect path='*' to={AppRoutes.Home} />
               </Switch>

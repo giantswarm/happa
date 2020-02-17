@@ -19,6 +19,7 @@ module.exports = merge(common, {
     reasons: true,
   },
   optimization: {
+    splitChunks: { chunks: 'all' },
     // Terser is a substitution for AgressiveMergingPlugin
     minimizer: [
       new TerserPlugin({ sourceMap: true }),

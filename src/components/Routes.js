@@ -1,28 +1,100 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { AppRoutes } from 'shared/constants/routes';
 
-import AdminLogin from './Auth/AdminLogin';
-import Login from './Auth/Login';
-import Logout from './Auth/Logout';
-import OAuthCallback from './Auth/OAuthCallback';
-import ForgotPassword from './ForgotPassword/ForgotPassword';
-import SetPassword from './ForgotPassword/SetPassword';
 import Layout from './Layout';
-import SignUp from './SignUp/SignUp';
-import StyleGuide from './UI/StyleGuide';
+import LoadingOverlay from './UI/LoadingOverlay';
+
+const AdminLogin = lazy(() =>
+  import(/* webpackChunkName: "AdminLogin" */ './Auth/AdminLogin')
+);
+const Login = lazy(() =>
+  import(/* webpackChunkName: "Login" */ './Auth/Login')
+);
+const StyleGuide = lazy(() =>
+  import(/* webpackChunkName: "StyleGuide" */ './UI/StyleGuide')
+);
+const Logout = lazy(/* webpackChunkName: "Logout" */ () => './Auth/Logout');
+const OAuthCallback = lazy(
+  /* webpackChunkName: "OAuthCallback" */ () => './Auth/OAuthCallback'
+);
+const ForgotPassword = lazy(
+  /* webpackChunkName: "ForgotPassword" */ () =>
+    './ForgotPassword/ForgotPassword'
+);
+const SetPassword = lazy(
+  /* webpackChunkName: "SetPassword" */ () => './ForgotPassword/SetPassword'
+);
+const SignUp = lazy(/* webpackChunkName: "SignUp" */ () => './SignUp/SignUp');
 
 const Routes = () => {
   return (
     <Switch>
-      <Route component={AdminLogin} path={AppRoutes.AdminLogin} />
-      <Route component={Login} path={AppRoutes.Login} />
-      <Route component={Logout} path={AppRoutes.Logout} />
-      <Route component={SetPassword} path={AppRoutes.SetPassword} />
-      <Route component={ForgotPassword} path={AppRoutes.ForgotPassword} />
-      <Route component={SignUp} path={AppRoutes.SignUp} />
-      <Route component={OAuthCallback} path={AppRoutes.OAuthCallback} />
-      <Route component={StyleGuide} path={AppRoutes.StyleGuide} />
+      <Route
+        path={AppRoutes.AdminLogin}
+        render={routeProps => (
+          <Suspense fallback={<LoadingOverlay loading={true} />}>
+            <AdminLogin {...routeProps} />
+          </Suspense>
+        )}
+      />
+      <Route
+        component={Login}
+        path={AppRoutes.Login}
+        render={routeProps => (
+          <Suspense fallback={<LoadingOverlay loading={true} />}>
+            <Login {...routeProps} />
+          </Suspense>
+        )}
+      />
+      <Route
+        path={AppRoutes.Logout}
+        render={routeProps => (
+          <Suspense fallback={<LoadingOverlay loading={true} />}>
+            <Logout {...routeProps} />
+          </Suspense>
+        )}
+      />
+      <Route
+        path={AppRoutes.SetPassword}
+        render={routeProps => (
+          <Suspense fallback={<LoadingOverlay loading={true} />}>
+            <SetPassword {...routeProps} />
+          </Suspense>
+        )}
+      />
+      <Route
+        path={AppRoutes.ForgotPassword}
+        render={routeProps => (
+          <Suspense fallback={<LoadingOverlay loading={true} />}>
+            <ForgotPassword {...routeProps} />
+          </Suspense>
+        )}
+      />
+      <Route
+        path={AppRoutes.SignUp}
+        render={routeProps => (
+          <Suspense fallback={<LoadingOverlay loading={true} />}>
+            <SignUp {...routeProps} />
+          </Suspense>
+        )}
+      />
+      <Route
+        path={AppRoutes.OAuthCallback}
+        render={routeProps => (
+          <Suspense fallback={<LoadingOverlay loading={true} />}>
+            <OAuthCallback {...routeProps} />
+          </Suspense>
+        )}
+      />
+      <Route
+        path={AppRoutes.StyleGuide}
+        render={routeProps => (
+          <Suspense fallback={<LoadingOverlay loading={true} />}>
+            <StyleGuide {...routeProps} />
+          </Suspense>
+        )}
+      />
       <Route component={Layout} path={AppRoutes.Home} />
     </Switch>
   );
