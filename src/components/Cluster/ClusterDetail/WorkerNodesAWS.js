@@ -1,15 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Code } from 'styles';
+import { FallbackMessages } from 'shared/constants';
+import { Code, FallbackSpan } from 'styles';
 import theme from 'styles/theme';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
 import RefreshableLabel from 'UI/RefreshableLabel';
+import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
 
 import { LineDiv, ScalingNodeCounter, WrapperDiv } from './WorkerNodesAzure';
 
 function WorkerNodesAWS({
   az,
+  createDate,
   instanceName,
   instanceType,
   scaling,
@@ -26,12 +29,6 @@ function WorkerNodesAWS({
     scaling && scaling.min === scaling.max
       ? `Pinned at ${scaling.min}`
       : `Autoscaling between ${scaling.min} and ${scaling.max}`;
-
-  // TODO remove after checks
-  const workerNodesDesiredText =
-    typeof workerNodesDesired !== 'undefined' ? workerNodesDesired : 0;
-  const workerNodesRunningText =
-    typeof workerNodesRunning !== 'undefined' ? workerNodesRunning : 0;
 
   return (
     <WrapperDiv>
@@ -59,14 +56,24 @@ function WorkerNodesAWS({
       </LineDiv>
       <LineDiv data-testid='desired-nodes'>
         <div>Desired number</div>
-        <RefreshableLabel value={workerNodesDesiredText}>
-          {workerNodesDesired}
+        <RefreshableLabel value={workerNodesDesired}>
+          {workerNodesDesired === 0 &&
+          isClusterYoungerThanOneHour(createDate) ? (
+            <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
+          ) : (
+            workerNodesDesired
+          )}
         </RefreshableLabel>
       </LineDiv>
       <LineDiv data-testid='running-nodes'>
         <div>Current number</div>
-        <RefreshableLabel value={workerNodesRunningText}>
-          {workerNodesRunning}
+        <RefreshableLabel value={workerNodesRunning}>
+          {workerNodesRunning === 0 &&
+          isClusterYoungerThanOneHour(createDate) ? (
+            <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
+          ) : (
+            workerNodesRunning
+          )}
         </RefreshableLabel>
       </LineDiv>
     </WrapperDiv>
@@ -77,6 +84,7 @@ WorkerNodesAWS.propTypes = {
   az: PropTypes.array,
   instanceName: PropTypes.string,
   instanceType: PropTypes.object,
+  createDate: PropTypes.string,
   scaling: PropTypes.object,
   showScalingModal: PropTypes.func,
   workerNodesDesired: PropTypes.number,

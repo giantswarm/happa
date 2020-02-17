@@ -9,7 +9,7 @@ import {
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
 import { FallbackMessages } from 'shared/constants';
-import { Dot } from 'styles';
+import { Dot, FallbackSpan } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
 
@@ -20,10 +20,6 @@ const ClusterDetailsDiv = styled.div`
   img {
     height: 22px;
   }
-`;
-
-const FallbackSpan = styled.span`
-  opacity: 0.5;
 `;
 
 function ClusterDashboardResources({
