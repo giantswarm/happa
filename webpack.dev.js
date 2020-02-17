@@ -11,6 +11,9 @@ const webpack = require('webpack');
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
+  output: {
+    filename: 'assets/[name].[hash].js',
+  },
   devServer: {
     contentBase: './src',
     hotOnly: true,
