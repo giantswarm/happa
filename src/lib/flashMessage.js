@@ -62,6 +62,10 @@ export function clearQueue(queueName) {
   Noty.closeAll(queueName);
 }
 
+/**
+ * Remove all messages from all queues without waiting for the animation
+ * to finish
+ */
 export function forceRemoveAll() {
   clearQueues();
 
