@@ -9,7 +9,7 @@ module.exports = {
   output: {
     publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
-    filename: 'app.[hash].js',
+    filename: 'assets/[name].[chunkhash:12].js',
   },
   module: {
     rules: [
@@ -39,22 +39,24 @@ module.exports = {
       },
       {
         test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader?limit=10000&mimetype=application/font-woff',
+        loader:
+          'url-loader?limit=10000&mimetype=application/font-woff&name=assets/[name].[contenthash:12].[ext]',
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader?limit=10000&mimetype=application/octet-stream',
+        loader:
+          'url-loader?limit=10000&mimetype=application/octet-stream&name=assets/[name].[contenthash:12].[ext]',
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader',
+        loader: 'file-loader?name=assets/[name].[contenthash:12].[ext]',
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader?limit=10000&mimetype=image/svg+xml',
         options: {
-          esModule:false
-        }
+          esModule: false,
+        },
       },
       {
         parser: {
@@ -67,8 +69,8 @@ module.exports = {
     extensions: ['*', '.js', '.jsx'],
     modules: [
       'node_modules',
-      path.resolve(__dirname + '/src'),
-      path.resolve(__dirname + '/src/components'),
+      path.resolve(`${__dirname}/src`),
+      path.resolve(`${__dirname}/src/components`),
     ],
   },
   plugins: [
