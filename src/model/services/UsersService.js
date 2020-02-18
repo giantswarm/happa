@@ -1,5 +1,4 @@
 import { getUserData } from 'model/gateways/ControlPlaneGateway';
-import LocalStorage from 'model/storage/LocalStorage';
 
 class UsersService {
   // otherService = null;
@@ -11,7 +10,6 @@ class UsersService {
   // eslint-disable-next-line class-methods-use-this
   async getUser() {
     const userData = await getUserData();
-    LocalStorage.getInstance().setValue('user', userData);
 
     return userData;
   }
