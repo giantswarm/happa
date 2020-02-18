@@ -59,22 +59,24 @@ export function nodePoolsLoad({
   return async function(dispatch, getState) {
     if (withLoadingFlags) dispatch({ type: types.NODEPOOLS_LOAD_REQUEST });
 
-    let v5ClustersId = getState().entities.clusters.v5Clusters || [];
+    const selectedOrganization = getState().app.selectedOrganization;
+    const allClusters = getState().entities.clusters.items;
+    const v5ClustersId = getState().entities.clusters.v5Clusters || [];
 
-    if (filterBySelectedOrganization) {
-      const selectedOrganization = getState().app.selectedOrganization;
-      const allClusters = getState().entities.clusters.items;
+    // Remove deleted clusters from clusters array
+    const v5ActiveClustersIds = v5ClustersId.filter(
+      id => !allClusters[id].delete_date
+    );
 
-      const filteredClusters = v5ClustersId.filter(
-        id => allClusters[id].owner === selectedOrganization
-      );
+    const filteredClusters = filterBySelectedOrganization
+      ? v5ActiveClustersIds.filter(
+          id => allClusters[id].owner === selectedOrganization
+        )
+      : v5ActiveClustersIds;
 
-      v5ClustersId = filteredClusters;
-    }
-
-    if (v5ClustersId.length > 0) {
+    if (filteredClusters.length > 0) {
       await Promise.all(
-        v5ClustersId.map(clusterId =>
+        filteredClusters.map(clusterId =>
           dispatch(clusterNodePoolsLoad(clusterId, { withLoadingFlags: true }))
         )
       );
