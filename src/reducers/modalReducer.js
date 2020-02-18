@@ -24,7 +24,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.ORGANIZATION_DELETE:
+    case types.ORGANIZATION_DELETE_REQUEST:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, loading: false };
       draft.template = 'organizationDelete';
@@ -38,7 +38,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.ORGANIZATION_CREATE:
+    case types.ORGANIZATION_CREATE_REQUEST:
       draft.visible = true;
       draft.templateValues = { loading: false };
       draft.template = 'organizationCreate';
@@ -52,7 +52,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.ORGANIZATION_ADD_MEMBER:
+    case types.ORGANIZATION_ADD_MEMBER_REQUEST:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId };
       draft.template = 'organizationAddMember';
@@ -84,7 +84,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.ORGANIZATION_REMOVE_MEMBER:
+    case types.ORGANIZATION_REMOVE_MEMBER_REQUEST:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, email: action.email };
       draft.template = 'organizationRemoveMember';
@@ -102,7 +102,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.NODEPOOL_DELETE:
+    case types.NODEPOOL_DELETE_REQUEST:
       draft.visible = true;
       draft.templateValues = {
         clusterId: action.clusterId,

@@ -31,13 +31,6 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].nodePools = action.nodePools;
-      }
-
-      return;
-
     case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].status = null;

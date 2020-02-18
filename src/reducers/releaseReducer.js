@@ -10,7 +10,7 @@ const initialState = {
 
 const releaseReducer = produce((draft, action) => {
   switch (action.type) {
-    case types.RELEASES_LOAD:
+    case types.RELEASES_LOAD_REQUEST:
       draft.isFetching = true;
 
       return;

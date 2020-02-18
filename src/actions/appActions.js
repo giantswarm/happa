@@ -85,11 +85,8 @@ export function loadApps(clusterId) {
  */
 export function installApp(app, clusterID) {
   return async function(dispatch, getState) {
-    dispatch({
-      type: types.CLUSTER_INSTALL_APP,
-      clusterID,
-      app,
-    });
+    // TODONone of the actions dispatched by this method are handled by any reducer.
+    dispatch({ type: types.CLUSTER_INSTALL_APP_REQUEST });
 
     const appsApi = new GiantSwarm.AppsApi();
 
@@ -187,11 +184,7 @@ function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
  */
 export function deleteApp(appName, clusterID) {
   return function(dispatch, getState) {
-    dispatch({
-      type: types.CLUSTER_DELETE_APP,
-      clusterID,
-      appName,
-    });
+    dispatch({ type: types.CLUSTER_DELETE_APP_REQUEST });
 
     const appsApi = new GiantSwarm.AppsApi();
 

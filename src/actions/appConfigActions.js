@@ -13,11 +13,8 @@ import * as types from './actionTypes';
  */
 export function updateAppConfig(appName, clusterID, values) {
   return function(dispatch, getState) {
-    dispatch({
-      type: types.CLUSTER_UPDATE_APP_CONFIG,
-      clusterID,
-      appName,
-    });
+    // TODONone of the actions dispatched by this method are handled by any reducer.
+    dispatch({ type: types.CLUSTER_UPDATE_APP_CONFIG_REQUEST });
 
     const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
@@ -89,11 +86,8 @@ export function updateAppConfig(appName, clusterID, values) {
  */
 export function createAppConfig(appName, clusterID, values) {
   return function(dispatch, getState) {
-    dispatch({
-      type: types.CLUSTER_CREATE_APP_CONFIG,
-      clusterID,
-      appName,
-    });
+    // TODONone of the actions dispatched by this method are handled by any reducer.
+    dispatch({ type: types.CLUSTER_CREATE_APP_CONFIG_REQUEST });
 
     const appConfigsApi = new GiantSwarm.AppConfigsApi();
 
@@ -164,11 +158,8 @@ export function createAppConfig(appName, clusterID, values) {
  */
 export function deleteAppConfig(appName, clusterID) {
   return function(dispatch, getState) {
-    dispatch({
-      type: types.CLUSTER_DELETE_APP_CONFIG,
-      clusterID,
-      appName,
-    });
+    // TODONone of the actions dispatched by this method are handled by any reducer.
+    dispatch({ type: types.CLUSTER_DELETE_APP_CONFIG_REQUEST });
 
     const appConfigsApi = new GiantSwarm.AppConfigsApi();
 

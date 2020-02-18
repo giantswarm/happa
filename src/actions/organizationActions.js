@@ -76,7 +76,7 @@ export function organizationsLoad() {
         return new Promise(resolve => resolve());
       }
 
-      dispatch({ type: types.ORGANIZATIONS_LOAD });
+      dispatch({ type: types.ORGANIZATIONS_LOAD_REQUEST });
 
       const organizationsApi = new GiantSwarm.OrganizationsApi();
       const organizations = await organizationsApi.getOrganizations();
@@ -210,15 +210,13 @@ export function organizationDeleteConfirmed(orgId) {
 
 export function organizationDelete(orgId) {
   return {
-    type: types.ORGANIZATION_DELETE,
+    type: types.ORGANIZATION_DELETE_REQUEST,
     orgId: orgId,
   };
 }
 
 export function organizationCreate() {
-  return {
-    type: types.ORGANIZATION_CREATE,
-  };
+  return { type: types.ORGANIZATION_CREATE_REQUEST };
 }
 
 // organizationCreateConfirmed is called when the user confirms they want to create
@@ -279,7 +277,7 @@ export function organizationCreateConfirmed(orgId) {
 
 export function organizationAddMember(orgId) {
   return {
-    type: types.ORGANIZATION_ADD_MEMBER,
+    type: types.ORGANIZATION_ADD_MEMBER_REQUEST,
     orgId: orgId,
   };
 }
@@ -409,7 +407,7 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
 
 export function organizationRemoveMember(orgId, email) {
   return {
-    type: types.ORGANIZATION_REMOVE_MEMBER,
+    type: types.ORGANIZATION_REMOVE_MEMBER_REQUEST,
     orgId: orgId,
     email: email,
   };
@@ -419,7 +417,7 @@ export function organizationRemoveMember(orgId, email) {
 export function organizationCredentialsLoad(orgId) {
   return function(dispatch) {
     dispatch({
-      type: types.ORGANIZATION_CREDENTIALS_LOAD,
+      type: types.ORGANIZATION_CREDENTIALS_LOAD_REQUEST,
     });
 
     const organizationsApi = new GiantSwarm.OrganizationsApi();
@@ -454,7 +452,7 @@ export function organizationCredentialsLoad(orgId) {
 export function organizationCredentialsSet() {
   return function(dispatch) {
     dispatch({
-      type: types.ORGANIZATION_CREDENTIALS_SET,
+      type: types.ORGANIZATION_CREDENTIALS_SET_REQUEST,
     });
   };
 }

@@ -271,7 +271,7 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
 export function clusterCreate(cluster, isV5Cluster) {
   return function(dispatch) {
     dispatch({
-      type: types.CLUSTER_CREATE,
+      type: types.CLUSTER_CREATE_REQUEST,
     });
 
     const method = isV5Cluster
@@ -477,10 +477,8 @@ export function clusterPatch(cluster, payload) {
  */
 export function clusterCreateKeyPair(clusterId, keypair) {
   return function(dispatch) {
-    dispatch({
-      type: types.CLUSTER_CREATE_KEY_PAIR,
-      keypair,
-    });
+    // TODONone of the actions dispatched by this method are handled by any reducer.
+    dispatch({ type: types.CLUSTER_CREATE_KEY_PAIR_REQUEST });
 
     const keypairsApi = new GiantSwarm.KeyPairsApi();
 

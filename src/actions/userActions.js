@@ -129,7 +129,7 @@ export function giantswarmLogin(email, password) {
     const authTokensApi = new GiantSwarm.AuthTokensApi();
 
     dispatch({
-      type: types.LOGIN,
+      type: types.LOGIN_REQUEST,
       email: email,
     });
 
@@ -181,7 +181,7 @@ export function giantswarmLogout() {
     const authTokensApi = new GiantSwarm.AuthTokensApi();
 
     dispatch({
-      type: types.LOGOUT,
+      type: types.LOGOUT_REQUEST,
     });
 
     return authTokensApi
@@ -239,9 +239,7 @@ export function getInfo() {
   return function(dispatch) {
     const infoApi = new GiantSwarm.InfoApi();
 
-    dispatch({
-      type: types.INFO_LOAD,
-    });
+    dispatch({ type: types.INFO_LOAD_REQUEST });
 
     return infoApi
       .getInfo()
@@ -257,10 +255,8 @@ export function getInfo() {
 
         dispatch({
           type: types.INFO_LOAD_ERROR,
-          error: error,
+          error,
         });
-
-        throw error;
       });
   };
 }
@@ -281,7 +277,7 @@ export function usersLoad() {
       });
     }
 
-    dispatch({ type: types.USERS_LOAD });
+    dispatch({ type: types.USERS_LOAD_REQUEST });
 
     return usersApi
       .getUsers()
@@ -325,7 +321,7 @@ export function userRemoveExpiration(email) {
 
     const usersApi = new GiantSwarm.UsersApi();
 
-    dispatch({ type: types.USERS_REMOVE_EXPIRATION });
+    dispatch({ type: types.USERS_REMOVE_EXPIRATION_REQUEST });
 
     return usersApi
       .modifyUser(email, { expiry: NEVER_EXPIRES })
@@ -359,7 +355,7 @@ export function userDelete(email) {
   return function(dispatch) {
     const usersApi = new GiantSwarm.UsersApi();
 
-    dispatch({ type: types.USERS_DELETE });
+    dispatch({ type: types.USERS_DELETE_REQUEST });
 
     return usersApi
       .deleteUser(email)
