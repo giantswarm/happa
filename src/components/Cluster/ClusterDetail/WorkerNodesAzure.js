@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Code } from 'styles';
+import { FallbackMessages } from 'shared/constants';
+import { Code, FallbackSpan } from 'styles';
 import theme from 'styles/theme';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
 import RefreshableLabel from 'UI/RefreshableLabel';
+import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
 
 export const WrapperDiv = styled.div`
   font-size: 16px;
@@ -27,7 +29,13 @@ export const ScalingNodeCounter = styled(RefreshableLabel)`
   margin-right: 25px;
 `;
 
-function WorkerNodesAzure({ az, instanceType, nodes, showScalingModal }) {
+function WorkerNodesAzure({
+  az,
+  createDate,
+  instanceType,
+  nodes,
+  showScalingModal,
+}) {
   const instanceTypeText = instanceType
     ? // prettier-ignore
       // eslint-disable-next-line no-magic-numbers
@@ -55,7 +63,13 @@ function WorkerNodesAzure({ az, instanceType, nodes, showScalingModal }) {
       </LineDiv>
       <LineDiv>
         <div>Nodes</div>
-        <ScalingNodeCounter value={nodeCount}>{nodeCount}</ScalingNodeCounter>
+        <ScalingNodeCounter value={nodeCount}>
+          {nodeCount === 0 && isClusterYoungerThanOneHour(createDate) ? (
+            <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>
+          ) : (
+            nodeCount
+          )}
+        </ScalingNodeCounter>
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
     </WrapperDiv>
@@ -64,6 +78,7 @@ function WorkerNodesAzure({ az, instanceType, nodes, showScalingModal }) {
 
 WorkerNodesAzure.propTypes = {
   az: PropTypes.array,
+  createDate: PropTypes.string,
   instanceType: PropTypes.object,
   nodes: PropTypes.number,
   showScalingModal: PropTypes.func,

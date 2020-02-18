@@ -82,6 +82,7 @@ class V4ClusterDetailTable extends React.Component {
           <div>
             <NodesRunning
               workerNodesRunning={numberOfNodes}
+              createDate={create_date}
               RAM={memory}
               CPUs={cores}
             />
@@ -106,28 +107,31 @@ class V4ClusterDetailTable extends React.Component {
 
         <hr style={{ margin: '25px 0' }} />
         <h2>Worker nodes</h2>
-        {provider === Providers.AZURE && (
-          <WorkerNodesAzure
-            az={cluster.availability_zones}
-            instanceType={
-              this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
-            }
-            nodes={numberOfNodes}
-            showScalingModal={this.props.showScalingModal}
-          />
-        )}
+        {provider === Providers.AZURE &&
+          Object.keys(this.state.azureVMSizes).length > 0 && (
+            <WorkerNodesAzure
+              az={cluster.availability_zones}
+              createDate={cluster.create_date}
+              instanceType={
+                this.state.azureVMSizes[cluster.workers[0].azure.vm_size]
+              }
+              nodes={numberOfNodes}
+              showScalingModal={this.props.showScalingModal}
+            />
+          )}
         {provider === Providers.KVM && (
           <WorkerNodesKVM
+            createDate={cluster.create_date}
             worker={cluster.workers[0]}
             nodes={numberOfNodes}
             showScalingModal={this.props.showScalingModal}
           />
         )}
         {provider === Providers.AWS &&
-          cluster.workers &&
-          cluster.workers.length !== 0 && (
+          Object.keys(this.state.awsInstanceTypes).length > 0 && (
             <WorkerNodesAWS
               az={cluster.availability_zones}
+              createDate={cluster.create_date}
               instanceName={cluster.workers[0].aws.instance_type}
               instanceType={
                 this.state.awsInstanceTypes[
