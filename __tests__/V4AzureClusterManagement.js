@@ -50,10 +50,10 @@ beforeEach(() => {
     // eslint-disable-next-line no-magic-numbers
     3
   );
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+  // eslint-disable-next-line no-magic-numbers
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse, 3);
   getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`, [], 2);
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-  getMockCall('/v4/releases/', releasesResponse);
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 });
 
@@ -64,6 +64,8 @@ afterEach(() => {
 });
 
 it('renders all the v4 Azure cluster data correctly', async () => {
+  getMockCall('/v4/releases/', releasesResponse);
+
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail,
     {
@@ -71,7 +73,9 @@ it('renders all the v4 Azure cluster data correctly', async () => {
       clusterId: V4_CLUSTER.id,
     }
   );
-  const { getByText, getAllByText } = renderRouteWithStore(clusterDetailPath);
+  const { getByText, getAllByText, getByTitle } = renderRouteWithStore(
+    clusterDetailPath
+  );
 
   await wait(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
@@ -92,10 +96,99 @@ it('renders all the v4 Azure cluster data correctly', async () => {
   await wait(() => {
     expect(getByText('Nodes').nextSibling.textContent).toBe(nodesRunning);
   });
+
+  const availabilityZones = getByText(/availability zones/i);
+  expect(availabilityZones).toBeInTheDocument();
+
+  const azLabels = [];
+  for (const azLabel of v4AzureClusterResponse.availability_zones) {
+    azLabels.push(getByTitle(azLabel));
+  }
+
+  expect(azLabels.length).toBe(
+    v4AzureClusterResponse.availability_zones.length
+  );
+});
+
+it('prevents availability zones customization for an unsupported release version', async () => {
+  // Cloning to not break the releases list for the next tests
+  const unsupportedReleaseResponse = releasesResponse.slice();
+  unsupportedReleaseResponse[2] = Object.assign(
+    {},
+    unsupportedReleaseResponse[2],
+    {
+      version: '8.4.0',
+    }
+  );
+  getMockCall('/v4/releases/', unsupportedReleaseResponse);
+
+  const clusterCreationPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.New,
+    { orgId: ORGANIZATION }
+  );
+  const { findByText } = renderRouteWithStore(clusterCreationPath);
+
+  const azNotAvailableWarning = await findByText(
+    /selection of availability zones is only possible for release version 11.1.0 or greater./i
+  );
+  expect(azNotAvailableWarning).toBeInTheDocument();
+});
+
+it('can customize availability zones during cluster creation', async () => {
+  getMockCall('/v4/releases/', releasesResponse);
+
+  const clusterCreationResponse = {
+    code: 'RESOURCE_CREATED',
+    message: `The cluster with ID ${V4_CLUSTER.id} has been created.`,
+  };
+  const clusterCreationRequest = nock(API_ENDPOINT)
+    .intercept('/v4/clusters/', 'POST')
+    .reply(StatusCodes.Ok, clusterCreationResponse, {
+      location: `/v4/clusters/${V4_CLUSTER.id}/`,
+    });
+
+  const clusterCreationPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.New,
+    { orgId: ORGANIZATION }
+  );
+  const { findByText, getByText } = renderRouteWithStore(clusterCreationPath);
+  const {
+    default: defaultAZCount,
+    max: maxAZCount,
+  } = azureInfoResponse.general.availability_zones;
+
+  const azLabel = await findByText(/number of availability zones to use:/i);
+  expect(azLabel).toBeInTheDocument();
+
+  const azInput = azLabel.parentNode.querySelector(
+    `[value='${defaultAZCount}']`
+  );
+  expect(azInput).toBeInTheDocument();
+
+  fireEvent.change(azInput, {
+    target: {
+      value: defaultAZCount - 1,
+    },
+  });
+  expect(azInput.value).toBe(String(defaultAZCount));
+
+  fireEvent.change(azInput, {
+    target: {
+      value: maxAZCount + 1,
+    },
+  });
+  expect(azInput.value).toBe(String(maxAZCount));
+
+  const createButton = getByText('Create Cluster');
+  fireEvent.click(createButton);
+
+  clusterCreationRequest.done();
 });
 
 it(`shows the v4 Azure cluster scaling modal when the button is clicked with default values and
 scales correctly`, async () => {
+  getMockCall('/v4/releases/', releasesResponse);
+
   const cluster = v4AzureClusterResponse;
   const defaultScaling = cluster.scaling;
   const increaseByCount = 1;

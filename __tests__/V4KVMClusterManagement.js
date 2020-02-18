@@ -49,7 +49,8 @@ beforeEach(() => {
     // eslint-disable-next-line no-magic-numbers
     3
   );
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+  // eslint-disable-next-line no-magic-numbers
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse, 3);
   getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`, [], 2);
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
   getMockCall('/v4/releases/', releasesResponse);

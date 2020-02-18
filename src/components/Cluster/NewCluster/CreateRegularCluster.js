@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import { Providers } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import Button from 'UI/Button';
 import NumberPicker from 'UI/NumberPicker';
@@ -16,6 +16,7 @@ import ClusterCreationDuration from './ClusterCreationDuration';
 import { FlexColumnDiv, Wrapper } from './CreateNodePoolsCluster';
 import ProviderCredentials from './ProviderCredentials';
 import ReleaseSelector from './ReleaseSelector';
+import V4AvailabilityZonesSelector from './V4AvailabilityZonesSelector';
 
 const WrapperDiv = styled.div`
   ${Wrapper}
@@ -56,19 +57,21 @@ const FlexWrapperDiv = styled.div`
   }
 `;
 
-const FlexWrapperAZDiv = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  p {
-    margin-right: 18px;
-    transform: translateY(-4px);
-  }
-`;
-
 class CreateRegularCluster extends React.Component {
   static isScalingAutomatic(provider) {
     return provider === Providers.AWS;
+  }
+
+  static getMultiAZSelectorProps(provider, currentReleaseVersion) {
+    const multiAZSelectorProps = {};
+
+    if (provider === Providers.AZURE) {
+      multiAZSelectorProps.requiredReleaseVersion =
+        Constants.AZURE_MULTI_AZ_VERSION;
+      multiAZSelectorProps.currentReleaseVersion = currentReleaseVersion;
+    }
+
+    return multiAZSelectorProps;
   }
 
   state = {
@@ -398,6 +401,13 @@ class CreateRegularCluster extends React.Component {
   }
 
   render() {
+    const { provider } = this.props;
+
+    const multiAZSelectorProps = CreateRegularCluster.getMultiAZSelectorProps(
+      provider,
+      this.props.selectedRelease
+    );
+
     return (
       <Breadcrumb
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
@@ -446,32 +456,17 @@ class CreateRegularCluster extends React.Component {
 
             <FlexColumnDiv>
               <div className='worker-nodes'>Worker nodes</div>
-              {this.props.provider === Providers.AWS && (
-                <label
-                  className='availability-zones'
-                  htmlFor='availability-zones'
-                >
-                  <span className='label-span'>Availability Zones</span>
-                  <FlexWrapperAZDiv>
-                    <p>Number of availability zones to use:</p>
-                    <div>
-                      <NumberPicker
-                        label=''
-                        max={this.props.maxAvailabilityZones}
-                        min={this.props.minAvailabilityZones}
-                        onChange={this.updateAvailabilityZonesPicker}
-                        readOnly={false}
-                        stepSize={1}
-                        value={this.state.availabilityZonesPicker.value}
-                      />
-                    </div>
-                  </FlexWrapperAZDiv>
-                </label>
+              {(provider === Providers.AWS || provider === Providers.AZURE) && (
+                <V4AvailabilityZonesSelector
+                  minValue={this.props.minAvailabilityZones}
+                  maxValue={this.props.maxAvailabilityZones}
+                  onChange={this.updateAvailabilityZonesPicker}
+                  {...multiAZSelectorProps}
+                />
               )}
-
               <label htmlFor='instance-type'>
                 {(() => {
-                  switch (this.props.provider) {
+                  switch (provider) {
                     case Providers.AWS: {
                       const [RAM, CPUCores] = this.produceRAMAndCoresAWS();
 
@@ -565,7 +560,7 @@ class CreateRegularCluster extends React.Component {
                 <span className='label-span'>Number of worker nodes</span>
                 <NodeCountSelector
                   autoscalingEnabled={CreateRegularCluster.isScalingAutomatic(
-                    this.props.provider,
+                    provider,
                     this.props.selectedRelease
                   )}
                   maxValue={this.props.maxWorkersPerCluster}
@@ -575,7 +570,7 @@ class CreateRegularCluster extends React.Component {
                 />
                 <ProviderCredentials
                   organizationName={this.props.selectedOrganization}
-                  provider={this.props.provider}
+                  provider={provider}
                 />
                 {this.state.error && this.errorState()}
               </label>

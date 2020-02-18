@@ -322,6 +322,6 @@ export const releasesResponse = [
       },
     ],
     timestamp: '2019-10-31T11:00:00Z',
-    version: '10.0.0',
+    version: '11.1.0',
   },
 ];
