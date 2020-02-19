@@ -56,7 +56,7 @@ class ClusterDetailView extends React.Component {
   loadDataInterval = null;
 
   componentDidMount() {
-    this.registerRefreshInterval();
+    // this.registerRefreshInterval();
     this.visibilityTracker = new PageVisibilityTracker();
     this.visibilityTracker.addEventListener(this.handleVisibilityChange);
     this.loadDetails();
