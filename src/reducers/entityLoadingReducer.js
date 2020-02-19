@@ -2,7 +2,9 @@ import * as types from 'actions/actionTypes';
 import produce from 'immer';
 import { typeWithoutSuffix } from 'selectors/selectorUtils';
 
-const initialState = {};
+const initialState = {
+  appCatalogs: {},
+};
 
 // Lets use this reducer to track API call errors where we need an ID to identify the
 // item that we are having problems with getting its info, ie getCluster or getNodePool
