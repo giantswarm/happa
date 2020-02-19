@@ -9,17 +9,7 @@ import {
   getStorageTotal,
 } from 'utils/clusterUtils';
 
-import { createDeepEqualSelector } from './selectorUtils';
-
-// Helper
-const typeWithoutSuffix = actionType => {
-  const matches = /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)/.exec(
-    actionType
-  );
-  const [, requestName] = matches;
-
-  return requestName;
-};
+import { createDeepEqualSelector, typeWithoutSuffix } from './selectorUtils';
 
 // Regular selectors
 const selectClusterById = (state, props) => {
