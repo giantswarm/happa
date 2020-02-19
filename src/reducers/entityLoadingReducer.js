@@ -2,7 +2,9 @@ import * as types from 'actions/actionTypes';
 import produce from 'immer';
 import { typeWithoutSuffix } from 'selectors/selectorUtils';
 
-const initialState = {};
+const initialState = {
+  appCatalogs: {},
+};
 
 // Lets use this reducer to track API call errors where we need an ID to identify the
 // item that we are having problems with getting its info, ie getCluster or getNodePool
@@ -18,7 +20,7 @@ const entityLoadingReducer = produce((draft, action) => {
   // Store whether a request is happening at the moment or not
   // e.g. will be true when receiving CLUSTER_LOAD_DETAILS_REQUEST
   // and false when receiving CLUSTER_LOAD_DETAILS_SUCCESS / CLUSTER_LOAD_DETAILS_ERROR
-  if (requestName === typeWithoutSuffix(types.CATALOG_LOAD_INDEX_REQUEST)) {
+  if (requestName === typeWithoutSuffix('CATALOG_LOAD_INDEX_REQUEST')) {
     draft.appCatalogs = {
       ...draft.appCatalogs,
       [id]: { [requestName]: requestState === 'REQUEST' },
