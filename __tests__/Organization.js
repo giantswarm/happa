@@ -81,7 +81,7 @@ describe('', () => {
 
   describe('Organizations basic', () => {
     it('correctly renders the organizations list', async () => {
-      const { getByText, getByTestId } = renderRouteWithStore(
+      const { getByTestId, getByText, findByTestId } = renderRouteWithStore(
         OrganizationsRoutes.Home
       );
 
@@ -92,10 +92,7 @@ describe('', () => {
         .filter(cluster => cluster.owner === orgResponse.id)
         .length.toString();
 
-      await wait(() => {
-        expect(getByTestId(`${orgResponse.id}-name`)).toBeInTheDocument();
-      });
-
+      expect(await findByTestId(`${orgResponse.id}-name`)).toBeInTheDocument();
       expect(getByTestId(`${orgResponse.id}-members`).textContent).toBe(
         members
       );
@@ -103,7 +100,6 @@ describe('', () => {
         clusters
       );
       expect(getByTestId(`${orgResponse.id}-delete`)).toBeInTheDocument();
-
       expect(getByText(/create new organization/i)).toBeInTheDocument();
     });
 
@@ -127,18 +123,17 @@ describe('', () => {
       });
       getMockCall(`/v4/organizations/${newOrganizationId}/credentials/`);
 
-      const { getByText, getByLabelText, getByTestId } = renderRouteWithStore(
-        OrganizationsRoutes.Home
-      );
+      const {
+        getByText,
+        getByLabelText,
+        findByText,
+        findByTestId,
+      } = renderRouteWithStore(OrganizationsRoutes.Home);
 
-      await wait(() => {
-        expect(getByText('Create New Organization')).toBeInTheDocument();
-      });
-      fireEvent.click(getByText('Create New Organization'));
+      const createOrgButton = await findByText('Create New Organization');
+      fireEvent.click(createOrgButton);
 
-      await wait(() => {
-        expect(getByText('Create an Organization')).toBeInTheDocument();
-      });
+      await findByText('Create an Organization');
 
       const newOrganizationNameInput = getByLabelText(/Organization Name:/);
       expect(newOrganizationNameInput).toBeInTheDocument();
@@ -149,19 +144,13 @@ describe('', () => {
 
       fireEvent.click(getByText('Create Organization'));
 
-      await wait(() => {
-        expect(
-          getByText(
-            (_, element) =>
-              element.innerHTML ===
-              `Organization <code>${newOrganizationId}</code> has been created`
-          )
-        ).toBeInTheDocument();
-      });
+      await findByText(
+        (_, element) =>
+          element.innerHTML ===
+          `Organization <code>${newOrganizationId}</code> has been created`
+      );
 
-      await wait(() => {
-        expect(getByTestId(`${newOrganizationId}-name`)).toBeInTheDocument();
-      });
+      await findByTestId(`${newOrganizationId}-name`);
     });
 
     it('shows organization details correctly', async () => {
@@ -229,7 +218,7 @@ describe('', () => {
         { orgId: orgResponse.id }
       );
 
-      const { findByText, getByText, findByLabelText } = renderRouteWithStore(
+      const { findByText, findByLabelText } = renderRouteWithStore(
         organizationDetailsPath
       );
 
@@ -247,15 +236,13 @@ describe('', () => {
 
       fireEvent.click(await findByText('Add Member to Organization'));
 
-      await wait(() => {
-        expect(
-          getByText(
-            (_, element) =>
-              element.innerHTML ===
-              `Added <code>${newMemberEmail}</code> to organization <code>${orgResponse.id}</code>`
-          )
-        ).toBeInTheDocument();
-      });
+      expect(
+        await findByText(
+          (_, element) =>
+            element.innerHTML ===
+            `Added <code>${newMemberEmail}</code> to organization <code>${orgResponse.id}</code>`
+        )
+      ).toBeInTheDocument();
 
       await wait(() => {
         expect(nock.isDone()).toBe(true);
@@ -375,6 +362,7 @@ describe('Organization deletion', () => {
 
     const {
       getByText,
+      findByText,
       findByTestId,
       getByTestId,
       queryByTestId,
@@ -390,32 +378,30 @@ describe('Organization deletion', () => {
 
     fireEvent.click(getByTestId(`${organizationToDeleteId}-delete`));
 
-    await wait(() => {
-      expect(
-        getByText(
-          (_, element) =>
-            element.textContent ===
-            `Are you sure you want to delete ${organizationToDeleteId}?`
-        )
-      ).toBeInTheDocument();
-      expect(getByText('There is no undo')).toBeInTheDocument();
-    });
+    expect(
+      await findByText(
+        (_, element) =>
+          element.textContent ===
+          `Are you sure you want to delete ${organizationToDeleteId}?`
+      )
+    ).toBeInTheDocument();
+    expect(getByText('There is no undo')).toBeInTheDocument();
 
     fireEvent.click(getByText('Delete Organization'));
 
-    await wait(() => {
-      expect(
-        getByText(
-          (_, element) =>
-            element.innerHTML ===
-            `Organization <code>${organizationToDeleteId}</code> deleted`
-        )
-      ).toBeInTheDocument();
-    });
+    expect(
+      await findByText(
+        (_, element) =>
+          element.innerHTML ===
+          `Organization <code>${organizationToDeleteId}</code> deleted`
+      )
+    ).toBeInTheDocument();
 
     deleteOrganizationRequest.done();
+
+    expect(await findByTestId(`${orgResponse.id}-name`)).toBeInTheDocument();
+
     await wait(() => {
-      expect(getByTestId(`${orgResponse.id}-name`)).toBeInTheDocument();
       expect(
         queryByTestId(`${organizationToDeleteId}-name`)
       ).not.toBeInTheDocument();
