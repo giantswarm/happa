@@ -1,11 +1,9 @@
-import { CLUSTER_LOAD_DETAILS_REQUEST } from 'actions/actionTypes';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
@@ -46,13 +44,7 @@ class AppDetail extends React.Component {
         }}
       >
         <>
-          <LoadingOverlay
-            loading={
-              !repo ||
-              this.props.repo.isFetchingIndex ||
-              this.props.loadingCluster
-            }
-          />
+          <LoadingOverlay loading={!repo || this.props.repo.isFetchingIndex} />
           {!(
             !repo ||
             this.props.repo.isFetchingIndex ||
@@ -120,10 +112,6 @@ function mapStateToProps(state, ownProps) {
     app: appVersions[0],
     repo: state.entities.catalogs.items[repo],
     selectedClusterID: state.app.selectedClusterID,
-    loadingCluster: selectLoadingFlagByAction(
-      state,
-      CLUSTER_LOAD_DETAILS_REQUEST
-    ),
   };
 }
 
