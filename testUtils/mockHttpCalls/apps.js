@@ -1,3 +1,22 @@
+export const appResponseWithCustomConfig = {
+  metadata: { name: 'my app', labels: {} },
+  spec: {
+    catalog: 'default',
+    name: 'my-app',
+    namespace: 'giantswarm',
+    user_config: {
+      configmap: { name: 'test app', namespace: 'giantswarm' },
+      secret: { name: 'secret test', namespace: 'giantswarm' },
+    },
+    version: '0.0.1',
+  },
+  status: {
+    app_version: '',
+    release: { last_deployed: '0001-01-01T00:00:00Z', status: '' },
+    version: '',
+  },
+};
+
 export const appsResponse = [
   {
     metadata: { name: 'my app', labels: {} },
