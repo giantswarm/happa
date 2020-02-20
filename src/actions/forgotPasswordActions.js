@@ -7,7 +7,7 @@ const passage = new Passage({ endpoint: window.config.passageEndpoint });
 export function requestPasswordRecoveryToken(email) {
   return function(dispatch) {
     dispatch({
-      type: types.REQUEST_PASSWORD_RECOVERY_TOKEN,
+      type: types.REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
     });
 
     return passage.requestPasswordRecoveryToken({ email });
