@@ -28,7 +28,7 @@ import { getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
 const requests = {};
 
 // Responses to requests
-beforeAll(() => {
+beforeEach(() => {
   requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
   requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
   requests.organizations = getPersistedMockCall(
@@ -68,7 +68,7 @@ beforeAll(() => {
 });
 
 // Stop persisting responses
-afterAll(() => {
+afterEach(() => {
   Object.keys(requests).forEach(req => {
     requests[req].persist(false);
   });
