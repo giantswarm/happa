@@ -14,7 +14,7 @@ import * as types from './actionTypes';
 export function updateAppConfig(appName, clusterID, values) {
   return function(dispatch, getState) {
     dispatch({
-      type: types.CLUSTER_UPDATE_APP_CONFIG,
+      type: types.CLUSTER_UPDATE_APP_CONFIG_REQUEST,
       clusterID,
       appName,
     });
@@ -90,7 +90,7 @@ export function updateAppConfig(appName, clusterID, values) {
 export function createAppConfig(appName, clusterID, values) {
   return function(dispatch, getState) {
     dispatch({
-      type: types.CLUSTER_CREATE_APP_CONFIG,
+      type: types.CLUSTER_CREATE_APP_CONFIG_REQUEST,
       clusterID,
       appName,
     });
@@ -165,7 +165,7 @@ export function createAppConfig(appName, clusterID, values) {
 export function deleteAppConfig(appName, clusterID) {
   return function(dispatch, getState) {
     dispatch({
-      type: types.CLUSTER_DELETE_APP_CONFIG,
+      type: types.CLUSTER_DELETE_APP_CONFIG_REQUEST,
       clusterID,
       appName,
     });

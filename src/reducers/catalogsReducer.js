@@ -9,7 +9,7 @@ const initialState = {
 
 const catalogReducer = produce((draft, action) => {
   switch (action.type) {
-    case types.CATALOGS_LOAD:
+    case types.CATALOGS_LOAD_REQUEST:
       draft.isFetching = true;
 
       return;
@@ -26,7 +26,7 @@ const catalogReducer = produce((draft, action) => {
 
       return;
 
-    case types.CATALOG_LOAD_INDEX:
+    case types.CATALOG_LOAD_INDEX_REQUEST:
       draft.items[action.catalogName].isFetchingIndex = true;
 
       return;

@@ -13,7 +13,7 @@ const initialState = { lastUpdated: 0, isFetching: false, items: {} };
  */
 const organizationReducer = produce((draft, action) => {
   switch (action.type) {
-    case types.ORGANIZATIONS_LOAD:
+    case types.ORGANIZATIONS_LOAD_REQUEST:
       draft.isFetching = true;
 
       return;
@@ -41,7 +41,7 @@ const organizationReducer = produce((draft, action) => {
       return;
 
     case types.ORGANIZATION_CREDENTIALS_SET:
-    case types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED:
+    case types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED_REQUEST:
     case types.ORGANIZATION_CREDENTIALS_SET_ERROR:
       draft.showCredentialsForm = true;
 

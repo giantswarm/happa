@@ -5,7 +5,7 @@ const initialState = { lastUpdated: 0, isFetching: false, items: {} };
 
 const invitationReducer = produce((draft, action) => {
   switch (action.type) {
-    case types.INVITATIONS_LOAD:
+    case types.INVITATIONS_LOAD_REQUEST:
       draft.isFetching = true;
 
       return;

@@ -131,7 +131,7 @@ export function nodePoolPatch(clusterId, nodePool, payload) {
 export function nodePoolDeleteConfirmed(clusterId, nodePool) {
   return function(dispatch) {
     dispatch({
-      type: types.NODEPOOL_DELETE_CONFIRMED,
+      type: types.NODEPOOL_DELETE_CONFIRMED_REQUEST,
       clusterId,
       nodePool,
     });
@@ -179,14 +179,16 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  */
 export function nodePoolsCreate(clusterId, nodePools) {
   return async function(dispatch) {
-    dispatch({ type: types.NODEPOOLS_CREATE });
+    dispatch({ type: types.NODEPOOLS_CREATE_REQUEST });
 
     const allNodePools = await Promise.all(
       nodePools.map(nodePool => {
         return nodePoolsApi
           .addNodePool(clusterId, nodePool)
           .then(newNodePool => {
-            // When created no status in the response
+            dispatch({ type: types.NODEPOOL_CREATE_REQUEST });
+
+            // When created, there is no status in the response
             const nodePoolWithStatus = {
               ...newNodePool,
               status: { nodes_ready: 0, nodes: 0 },

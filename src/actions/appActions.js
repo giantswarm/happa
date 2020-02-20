@@ -86,7 +86,7 @@ export function loadApps(clusterId) {
 export function installApp(app, clusterID) {
   return async function(dispatch, getState) {
     dispatch({
-      type: types.CLUSTER_INSTALL_APP,
+      type: types.CLUSTER_INSTALL_APP_REQUEST,
       clusterID,
       app,
     });
@@ -188,7 +188,7 @@ function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
 export function deleteApp(appName, clusterID) {
   return function(dispatch, getState) {
     dispatch({
-      type: types.CLUSTER_DELETE_APP,
+      type: types.CLUSTER_DELETE_APP_REQUEST,
       clusterID,
       appName,
     });
