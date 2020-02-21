@@ -104,7 +104,11 @@ function AvailabilityZonesLabel({
   const color = azColors[colorIndex];
 
   const toggleChecked = () => {
-    if (!isMaxReached || isChecked || isRadioButtons) {
+    // This component is used in forms, where we do pass an onToggleChecked function
+    // to change form state, and in cluster details view where we do not need to
+    // perform any action onClick.
+    // We only want to return onToggleChecked if it is passed.
+    if ((!isMaxReached || isChecked || isRadioButtons) && onToggleChecked) {
       onToggleChecked(!isChecked, { title, value, label });
     }
   };
