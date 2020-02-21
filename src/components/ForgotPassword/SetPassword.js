@@ -243,7 +243,8 @@ class SetPassword extends React.Component {
           <div className='textfield'>
             <PasswordField
               autofocus
-              label='New password'
+              label='password'
+              name='New password'
               onChange={this.passwordEditingCompleted}
               onStartTyping={this.passwordEditingStarted}
               ref={p => {
@@ -254,6 +255,7 @@ class SetPassword extends React.Component {
 
           <div className='textfield'>
             <PasswordField
+              name='confirm-password'
               label='Password, once again'
               onChange={this.passwordConfirmationEditingCompleted}
               onStartTyping={this.passwordConfirmationEditingStarted}
@@ -308,7 +310,7 @@ class SetPassword extends React.Component {
           again for verification purposes.
         </p>
         <div className='textfield'>
-          <label>Email</label>
+          <label htmlFor='email'>Email</label>
           <input
             autoFocus
             id='email'
