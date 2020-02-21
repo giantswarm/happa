@@ -112,7 +112,7 @@ function AvailabilityZonesLabel({
       return onToggleChecked(!isChecked, { title, value, label });
     }
 
-    // We want tot return a function for consistency (?)
+    // Returning a function for consistency
     // eslint-disable-next-line no-empty-function
     return () => {};
   };
