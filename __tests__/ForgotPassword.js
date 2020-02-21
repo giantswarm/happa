@@ -1,12 +1,20 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitForDomChange } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
-import { generateRandomString, USER_EMAIL } from 'testUtils/mockHttpCalls';
+import {
+  authTokenResponse,
+  AWSInfoResponse,
+  generateRandomString,
+  getMockCall,
+  postMockCall,
+  USER_EMAIL,
+  userResponse,
+} from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('PasswordReset', () => {
@@ -121,17 +129,16 @@ describe('PasswordReset', () => {
       expect(pageLinkToCreateNewToken).toBeInTheDocument();
     });
 
-    it('sets a new password for the email in the form', async () => {
+    it('displays an error if the token is invalid', async () => {
       nock(global.config.passageEndpoint)
-        .post('/recovery/', { email: USER_EMAIL })
+        .post(`/recovery/${token}/`, { email: USER_EMAIL })
         .reply(StatusCodes.Ok, {
           email: USER_EMAIL,
-          is_valid: true,
+          is_valid: false,
           token,
-          valid_until: '2020-02-21T16:50:20.589772+00:00',
         });
 
-      const { findByText, getByText, findByLabelText } = renderRouteWithStore(
+      const { findByText, findByLabelText } = renderRouteWithStore(
         routeWithToken,
         {},
         {}
@@ -143,22 +150,170 @@ describe('PasswordReset', () => {
       const submitButton = await findByText(/submit/i);
       fireEvent.click(submitButton);
 
+      const errorMessage = await findByText(
+        /the reset token appears to be invalid./i
+      );
+      expect(errorMessage).toBeInTheDocument();
+    });
+
+    it('sets a new password for the email in the form', async () => {
+      const finalPassword = 'g00dPa$$w0rD';
+
+      postMockCall('/v4/auth-tokens/', authTokenResponse);
+      getMockCall('/v4/user/', userResponse);
+      getMockCall('/v4/info/', AWSInfoResponse);
+      getMockCall('/v4/organizations/');
+      getMockCall('/v4/clusters/');
+      getMockCall('/v4/appcatalogs/');
+
+      nock(global.config.passageEndpoint)
+        .post(`/recovery/${token}/`, { email: USER_EMAIL })
+        .reply(StatusCodes.Ok, {
+          email: USER_EMAIL,
+          is_valid: true,
+          token,
+          valid_until: '2020-02-21T16:50:20.589772+00:00',
+        });
+      nock(global.config.passageEndpoint)
+        .post(`/recovery/${token}/password/`, {
+          email: USER_EMAIL,
+          password: finalPassword,
+        })
+        .reply(StatusCodes.Ok, {
+          email: USER_EMAIL,
+          message: 'Password updated',
+          // eslint-disable-next-line no-magic-numbers
+          token: generateRandomString(10),
+          username: 'adrian@giantswarm.io',
+        });
+
+      const { findByText, getByText, findByLabelText } = renderRouteWithStore(
+        routeWithToken,
+        {},
+        {}
+      );
+
+      const emailInput = await findByLabelText(/email/i);
+      fireEvent.change(emailInput, { target: { value: USER_EMAIL } });
+
+      let submitButton = await findByText(/submit/i);
+      fireEvent.click(submitButton);
+
+      let validationProgressMessage = await findByText(
+        /validating your token/i
+      );
+      expect(validationProgressMessage).toBeInTheDocument();
+
+      const passwordInput = await findByLabelText(/new password/i);
+      const confirmPasswordInput = await findByLabelText(
+        /password, once again/i
+      );
+      submitButton = getByText(/submit/i);
+
+      // Input validation
+
+      // Check if password is too short
+      fireEvent.change(passwordInput, {
+        target: { value: 'short' },
+      });
+
+      let validationTextEl = await findByText(
+        /please use at least 8 characters/i
+      );
+      expect(validationTextEl).toBeInTheDocument();
+      expect(submitButton.disabled).toBeTruthy();
+
+      // Check if password is only made up of letters
+      fireEvent.change(passwordInput, {
+        target: { value: 'justletters' },
+      });
+
+      validationTextEl = await findByText(
+        /please add some more diverse characters./i
+      );
+      expect(validationTextEl).toBeInTheDocument();
+      expect(submitButton.disabled).toBeTruthy();
+
+      // Check if password is only made up of numbers
+      fireEvent.change(passwordInput, {
+        target: { value: '01234567' },
+      });
+
+      validationTextEl = await findByText(
+        /please add something else than only numbers/i
+      );
+      expect(validationTextEl).toBeInTheDocument();
+      expect(submitButton.disabled).toBeTruthy();
+
+      // Check if the password is all good
+      fireEvent.change(passwordInput, {
+        target: { value: finalPassword },
+      });
+
+      validationTextEl = await findByText(/password looks good/i);
+      expect(validationTextEl).toBeInTheDocument();
+      expect(submitButton.disabled).toBeTruthy();
+
+      /**
+       * Check if password confirmation is not
+       * the same as the regular password field
+       */
+      fireEvent.change(confirmPasswordInput, {
+        target: { value: 'pass' },
+      });
+
+      await findByText(/password confirmation does not match./i);
+      expect(submitButton.disabled).toBeTruthy();
+
+      /**
+       * Check if password confirmation is the same
+       * as the password
+       */
+      fireEvent.change(confirmPasswordInput, {
+        target: { value: finalPassword },
+      });
+
+      await findByText(/perfect match, nice!/i);
+      expect(submitButton.disabled).toBeFalsy();
+
+      fireEvent.click(submitButton);
+
+      validationProgressMessage = await findByText(/submitting.../i);
+      expect(validationProgressMessage).toBeInTheDocument();
+
+      // Check if the user has been redirected to the homepage
+      await findByText(/there are no organizations yet in your installation./i);
+    });
+
+    it(`jumps to password setup automatically if there's an email saved in the local storage`, async () => {
+      getMockCall('/v4/user/', userResponse);
+      getMockCall('/v4/info/', AWSInfoResponse);
+      getMockCall('/v4/organizations/');
+      getMockCall('/v4/appcatalogs/');
+      getMockCall('/v4/clusters/');
+
+      nock(global.config.passageEndpoint)
+        .post(`/recovery/${token}/`, { email: USER_EMAIL })
+        .reply(StatusCodes.Ok, {
+          email: USER_EMAIL,
+          is_valid: true,
+          token,
+          valid_until: '2020-02-21T16:50:20.589772+00:00',
+        });
+
+      const { findByLabelText, findByText } = renderRouteWithStore(
+        routeWithToken
+      );
+
       const validationProgressMessage = await findByText(
         /validating your token/i
       );
       expect(validationProgressMessage).toBeInTheDocument();
 
-      const passwordInput = await findByLabelText(/password/i);
-      const confirmPasswordInput = await findByLabelText(/confirm-password/i);
+      const passwordInput = await findByLabelText(/new password/i);
+      expect(passwordInput).toBeInTheDocument();
 
-      const desiredPassword = 'abc';
-      fireEvent.change(passwordInput, { target: { value: desiredPassword } });
-      fireEvent.change(confirmPasswordInput, {
-        target: { value: desiredPassword },
-      });
-
-      const validationTextEl = getByText(/please use at least 8 characters/i);
-      expect(validationTextEl).toBeInTheDocument();
+      await waitForDomChange();
     });
   });
 });

@@ -23,7 +23,7 @@ import StatusMessage from '../SignUp/StatusMessage';
 
 class SetPassword extends React.Component {
   state = {
-    email: localStorage.getItem('user.email') || '',
+    email: '',
     emailField: '',
 
     submitting: false,
@@ -44,10 +44,16 @@ class SetPassword extends React.Component {
   };
 
   componentDidMount() {
-    // If we have the email already from localstorage, verify the token immediately.
-    if (this.state.email) {
+    const savedUser = localStorage.getItem('user');
+
+    if (!savedUser) return;
+
+    const savedEmail = JSON.parse(savedUser).email;
+
+    this.setState({ email: savedEmail }, () => {
+      // If we have the email already from localstorage, verify the token immediately.
       this.verifyToken();
-    }
+    });
   }
 
   verifyToken() {
@@ -242,9 +248,9 @@ class SetPassword extends React.Component {
 
           <div className='textfield'>
             <PasswordField
-              autofocus
-              label='password'
-              name='New password'
+              autoFocus
+              name='password'
+              label='New password'
               onChange={this.passwordEditingCompleted}
               onStartTyping={this.passwordEditingStarted}
               ref={p => {

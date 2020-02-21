@@ -11,7 +11,7 @@ import theme from 'styles/theme';
 
 export const initialStorage = {
   user:
-    '"{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}"',
+    '{"email":"developer@giantswarm.io","auth":{"scheme":"giantswarm","token":"a-valid-token"},"isAdmin":true}',
 };
 
 /**

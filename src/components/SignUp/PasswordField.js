@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-let typingTimer = 0;
 const doneTypingInterval = 250; // ms
 
 //
@@ -12,27 +11,35 @@ const doneTypingInterval = 250; // ms
 // after 500 ms or after leaving the field
 //
 class PasswordField extends React.Component {
+  state = {
+    value: '',
+  };
+
+  typingTimer = 0;
+
   componentDidMount() {
-    if (this.props.autofocus) {
+    if (this.props.autoFocus) {
       this.input.focus();
     }
   }
 
   onBlur = () => {
-    clearTimeout(typingTimer);
-    this.props.onChange(this.input.value);
+    clearTimeout(this.typingTimer);
+    this.props.onChange(this.state.value);
   };
 
-  onChange = () => {
-    this.props.onStartTyping(this.input.value);
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(() => {
-      this.props.onChange(this.input.value);
+  onChange = e => {
+    this.setState({ value: e.target.value });
+
+    this.props.onStartTyping(this.state.value);
+    clearTimeout(this.typingTimer);
+    this.typingTimer = setTimeout(() => {
+      this.props.onChange(this.state.value);
     }, doneTypingInterval);
   };
 
   value = () => {
-    return this.input.value;
+    return this.state.value;
   };
 
   focus = () => {
@@ -46,7 +53,14 @@ class PasswordField extends React.Component {
   };
 
   render() {
-    const { name, label, validationError, onStartTyping, ...rest } = this.props;
+    const {
+      name,
+      label,
+      validationError,
+      onStartTyping,
+      onChange,
+      ...rest
+    } = this.props;
 
     return (
       <div className='textfield' {...rest}>
@@ -67,7 +81,7 @@ class PasswordField extends React.Component {
 }
 
 PasswordField.propTypes = {
-  autofocus: PropTypes.bool,
+  autoFocus: PropTypes.bool,
   onChange: PropTypes.func,
   onStartTyping: PropTypes.func,
   name: PropTypes.string,
