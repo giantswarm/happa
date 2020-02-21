@@ -109,12 +109,8 @@ function AvailabilityZonesLabel({
     // perform any action onClick.
     // We only want to return onToggleChecked if it is passed.
     if ((!isMaxReached || isChecked || isRadioButtons) && onToggleChecked) {
-      return onToggleChecked(!isChecked, { title, value, label });
+      onToggleChecked(!isChecked, { title, value, label });
     }
-
-    // Returning a function for consistency
-    // eslint-disable-next-line no-empty-function
-    return () => {};
   };
 
   return (
