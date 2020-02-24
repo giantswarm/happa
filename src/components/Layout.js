@@ -33,7 +33,7 @@ import Users from './Users/Users';
 
 const defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
-defaultClient.timeout = 10000;
+defaultClient.timeout = 20000;
 const defaultClientAuth =
   defaultClient.authentications['AuthorizationHeaderToken'];
 
