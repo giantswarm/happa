@@ -14,7 +14,7 @@ import * as types from './actionTypes';
 export function updateAppSecret(appName, clusterID, values) {
   return function(dispatch, getState) {
     dispatch({
-      type: types.CLUSTER_UPDATE_APP_SECRET,
+      type: types.CLUSTER_UPDATE_APP_SECRET_REQUEST,
       clusterID,
       appName,
     });
@@ -90,7 +90,7 @@ export function updateAppSecret(appName, clusterID, values) {
 export function createAppSecret(appName, clusterID, values) {
   return function(dispatch, getState) {
     dispatch({
-      type: types.CLUSTER_CREATE_APP_SECRET,
+      type: types.CLUSTER_CREATE_APP_SECRET_REQUEST,
       clusterID,
       appName,
     });
@@ -165,7 +165,7 @@ export function createAppSecret(appName, clusterID, values) {
 export function deleteAppSecret(appName, clusterID) {
   return function(dispatch, getState) {
     dispatch({
-      type: types.CLUSTER_DELETE_APP_SECRET,
+      type: types.CLUSTER_DELETE_APP_SECRET_REQUEST,
       clusterID,
       appName,
     });

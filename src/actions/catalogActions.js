@@ -53,7 +53,7 @@ function loadCatalogIndex(catalog) {
 //
 export function catalogsLoad() {
   return function(dispatch) {
-    dispatch({ type: types.CATALOGS_LOAD });
+    dispatch({ type: types.CATALOGS_LOAD_REQUEST });
 
     const appsApi = new GiantSwarm.AppsApi();
 
@@ -102,7 +102,7 @@ export function catalogsLoad() {
 export function catalogLoadIndex(catalog) {
   return function(dispatch) {
     dispatch({
-      type: types.CATALOG_LOAD_INDEX,
+      type: types.CATALOG_LOAD_INDEX_REQUEST,
       catalogName: catalog.metadata.name,
     });
 

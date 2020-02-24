@@ -31,12 +31,22 @@ const SmallHeading = styled.h6`
 `;
 
 class ClusterApps extends React.Component {
+  isComponentMounted = false;
+
   state = {
     appDetailsModal: {
       visible: false,
       app: null,
     },
   };
+
+  componentDidMount() {
+    this.isComponentMounted = true;
+  }
+
+  componentWillUnmount() {
+    this.isComponentMounted = false;
+  }
 
   // The `appMetas` object below is a mapping of known
   // release component names to logos and categories.
@@ -205,12 +215,14 @@ class ClusterApps extends React.Component {
   };
 
   hideAppModal = () => {
-    this.setState({
-      appDetailsModal: {
-        appName: null,
-        visible: false,
-      },
-    });
+    if (this.isComponentMounted) {
+      this.setState({
+        appDetailsModal: {
+          appName: null,
+          visible: false,
+        },
+      });
+    }
   };
 
   // getUserInstallApps returns a list of just the apps that the user installed
@@ -410,7 +422,7 @@ class ClusterApps extends React.Component {
 
 ClusterApps.propTypes = {
   dispatch: PropTypes.func,
-  appsLoadError: PropTypes.bool,
+  appsLoadError: PropTypes.object,
   installedApps: PropTypes.array,
   showInstalledAppsBlock: PropTypes.bool,
   clusterId: PropTypes.string,

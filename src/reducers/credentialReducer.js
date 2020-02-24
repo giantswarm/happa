@@ -9,7 +9,7 @@ const initialState = {
 
 const credentialReducer = produce((draft, action) => {
   switch (action.type) {
-    case types.ORGANIZATION_CREDENTIALS_LOAD:
+    case types.ORGANIZATION_CREDENTIALS_LOAD_REQUEST:
       draft.isFetching = true;
 
       return;

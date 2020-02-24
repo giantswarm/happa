@@ -1,7 +1,7 @@
 import yaml from 'js-yaml';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from 'UI/Button';
 
 // YAMLFileUpload is a component that renders a button and a hidden file
@@ -11,11 +11,21 @@ import Button from 'UI/Button';
 const YAMLFileUpload = props => {
   const [fileUploading, setFileUploading] = useState(false);
   const [renderFileInputs, setRenderFileInputs] = useState(true);
+  const isMounted = useRef(false);
+  const fileInput = useRef(null);
 
-  let fileInput = null;
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   function handleUploadClick() {
-    fileInput.click();
+    if (fileInput.current !== null) {
+      fileInput.current.click();
+    }
   }
 
   // resetFileInput is a hack to clear the file input. Since the only event
@@ -45,15 +55,20 @@ const YAMLFileUpload = props => {
             messageType.ERROR,
             messageTTL.MEDIUM
           );
-          setFileUploading(false);
-          refreshFileInputs();
+
+          if (isMounted.current) {
+            setFileUploading(false);
+            refreshFileInputs();
+          }
 
           return;
         }
 
         props.onInputChange(parsedYAML, () => {
-          setFileUploading(false);
-          refreshFileInputs();
+          if (isMounted.current) {
+            setFileUploading(false);
+            refreshFileInputs();
+          }
         });
       };
     })(e.target.files[0]);
@@ -71,7 +86,7 @@ const YAMLFileUpload = props => {
         <input
           accept='.yaml'
           onChange={fileInputOnChange}
-          ref={i => (fileInput = i)}
+          ref={fileInput}
           style={{ display: 'none' }}
           type='file'
         />

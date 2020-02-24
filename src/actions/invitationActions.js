@@ -23,7 +23,7 @@ export function invitationsLoad() {
       });
     }
 
-    dispatch({ type: types.INVITATIONS_LOAD });
+    dispatch({ type: types.INVITATIONS_LOAD_REQUEST });
 
     return passage
       .getInvitations(token)
@@ -71,7 +71,7 @@ export function invitationCreate(invitation) {
 
     const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
-    dispatch({ type: types.INVITATION_CREATE });
+    dispatch({ type: types.INVITATION_CREATE_REQUEST });
 
     return passage
       .createInvitation(token, invitation)

@@ -31,13 +31,6 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTERS_LOAD_NODEPOOLS_SUCCESS:
-      if (draft.items[action.clusterId]) {
-        draft.items[action.clusterId].nodePools = action.nodePools;
-      }
-
-      return;
-
     case types.CLUSTER_LOAD_STATUS_NOT_FOUND:
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].status = null;
@@ -73,7 +66,7 @@ const clusterReducer = produce((draft, action) => {
       return;
 
     // This is the action that we dipatch in order to actually remove a cluster from the store.
-    case types.CLUSTER_DELETE:
+    case types.CLUSTER_DELETE_REQUEST:
       delete draft.items[action.clusterId];
       if (action.isV5) {
         draft.v5Clusters.filter(id => id !== action.clusterId);

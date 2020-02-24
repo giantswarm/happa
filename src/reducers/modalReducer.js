@@ -10,7 +10,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.CLUSTER_DELETE:
+    case types.CLUSTER_DELETE_REQUEST:
       draft.visible = true;
       draft.templateValues = { cluster: action.cluster, loading: false };
       draft.template = 'clusterDelete';
@@ -24,7 +24,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.ORGANIZATION_DELETE:
+    case types.ORGANIZATION_DELETE_REQUEST:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, loading: false };
       draft.template = 'organizationDelete';
@@ -38,7 +38,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.ORGANIZATION_CREATE:
+    case types.ORGANIZATION_CREATE_REQUEST:
       draft.visible = true;
       draft.templateValues = { loading: false };
       draft.template = 'organizationCreate';
@@ -52,7 +52,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.ORGANIZATION_ADD_MEMBER:
+    case types.ORGANIZATION_ADD_MEMBER_REQUEST:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId };
       draft.template = 'organizationAddMember';
@@ -91,7 +91,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.ORGANIZATION_REMOVE_MEMBER_CONFIRMED:
+    case types.ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST:
       draft.visible = true;
       draft.templateValues = {
         orgId: action.orgId,
@@ -113,7 +113,7 @@ const modalReducer = produce((draft, action) => {
 
       return;
 
-    case types.NODEPOOL_DELETE_CONFIRMED:
+    case types.NODEPOOL_DELETE_CONFIRMED_REQUEST:
       draft.visible = true;
       draft.templateValues = {
         clusterId: action.clusterId,

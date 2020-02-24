@@ -10,7 +10,8 @@ import {
   appCatalogsResponse,
   appsResponse,
   AWSInfoResponse,
-  getPersistedMockCall,
+  getMockCall,
+  getMockCallTimes,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -24,54 +25,32 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 import { getNumberOfNodes } from 'utils/clusterUtils';
 
-// Tests setup
-const requests = {};
-
 // Responses to requests
-beforeAll(() => {
-  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
-  requests.organizations = getPersistedMockCall(
-    '/v4/organizations/',
-    orgsResponse
-  );
-  requests.organization = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/`,
-    orgResponse
-  );
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v4ClustersResponse);
-  requests.cluster = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    v4AWSClusterResponse
-  );
-  requests.status = getPersistedMockCall(
+beforeEach(() => {
+  nock.disableNetConnect();
+
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/info/', AWSInfoResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCall('/v4/clusters/', v4ClustersResponse);
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
+  getMockCallTimes(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponse
+    v4AWSClusterStatusResponse,
+    2
   );
-  requests.apps = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-    appsResponse
-  );
-  // TODO we are not requesting this in v5 cluster calls
-  // Empty response
-  requests.keyPairs = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/key-pairs/`
-  );
-  requests.credentials = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/credentials/`
-  );
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.appcatalogs = getPersistedMockCall(
-    '/v4/appcatalogs/',
-    appCatalogsResponse
-  );
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`, 3);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, {}, 3);
+  getMockCall('/v4/releases/', releasesResponse);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
 });
 
-// Stop persisting responses
-afterAll(() => {
-  Object.keys(requests).forEach(req => {
-    requests[req].persist(false);
-  });
+afterEach(() => {
+  nock.enableNetConnect();
+  expect(nock.isDone());
+  nock.cleanAll();
 });
 
 /************ TESTS ************/
@@ -87,30 +66,35 @@ it('renders all the v4 AWS cluster data correctly without nodes ready', async ()
       clusterId: V4_CLUSTER.id,
     }
   );
-  const { getByText, getAllByText, getByTestId } = renderRouteWithStore(
-    clusterDetailPath
-  );
+  const {
+    getByText,
+    findByText,
+    findAllByText,
+    findByTestId,
+  } = renderRouteWithStore(clusterDetailPath);
 
-  await wait(() => {
-    expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
-  });
-  expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
+  const clusterHeader = await findByText(V4_CLUSTER.name);
+  expect(clusterHeader).toBeInTheDocument();
 
-  const nodesRunning = getNumberOfNodes({
+  const clusterIDElements = await findAllByText(V4_CLUSTER.id);
+  expect(clusterIDElements).toHaveLength(2);
+
+  const expectedNodesRunning = getNumberOfNodes({
     ...v4AWSClusterResponse,
     status: v4AWSClusterStatusResponse,
   }).toString();
 
-  const nodesDesired = v4AWSClusterStatusResponse.cluster.scaling.desiredCapacity.toString();
+  const expectedNodesDesired = v4AWSClusterStatusResponse.cluster.scaling.desiredCapacity.toString();
 
-  await wait(() => {
-    expect(
-      getByTestId('running-nodes').querySelector('div:nth-child(2)').textContent
-    ).toBe(nodesRunning);
-    expect(
-      getByTestId('desired-nodes').querySelector('div:nth-child(2)').textContent
-    ).toBe(nodesDesired);
-  });
+  const nodesRunning = await findByTestId('running-nodes');
+  expect(nodesRunning.querySelector('div:nth-child(2)').textContent).toBe(
+    expectedNodesRunning
+  );
+
+  const nodesDesired = await findByTestId('desired-nodes');
+  expect(nodesDesired.querySelector('div:nth-child(2)').textContent).toBe(
+    expectedNodesDesired
+  );
 
   expect(getByText(v4AWSClusterResponse.api_endpoint)).toBeInTheDocument();
   // n/a because the cluster hasn't been updated yet
@@ -139,7 +123,7 @@ scales correctly`, async () => {
   };
 
   // Cluster patch request
-  const clusterPatchRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
     .reply(StatusCodes.Ok, clusterPatchResponse);
 
@@ -164,17 +148,13 @@ scales correctly`, async () => {
   });
 
   // Replace status response
-  requests.status.persist(false);
-  requests.status = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    {
-      ...v4AWSClusterStatusResponse,
-      cluster: {
-        ...v4AWSClusterStatusResponse.cluster,
-        scaling: { desiredCapacity: newScaling.max },
-      },
-    }
-  );
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/status/`, {
+    ...v4AWSClusterStatusResponse,
+    cluster: {
+      ...v4AWSClusterStatusResponse.cluster,
+      scaling: { desiredCapacity: newScaling.max },
+    },
+  });
 
   // Click edit button. Will throw an error if it founds more thanon edit button
   fireEvent.click(getByText(/edit/i));
@@ -208,15 +188,6 @@ scales correctly`, async () => {
     // Does the cluster have node values updated?
     expect(getByText(`Pinned at ${newScaling.min}`));
   });
-
-  clusterPatchRequest.done();
-
-  // Restore status response
-  requests.status.persist(false);
-  requests.status = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponse
-  );
 });
 
 it('deletes a v4 cluster', async () => {

@@ -10,7 +10,7 @@ import * as types from './actionTypes';
 
 // Used in ClusterDetailView
 export const clusterDelete = cluster => ({
-  type: types.CLUSTER_DELETE,
+  type: types.CLUSTER_DELETE_REQUEST,
   cluster,
 });
 
@@ -87,11 +87,16 @@ export function clustersDetails({
     const selectedOrganization = getState().app.selectedOrganization;
     const allClusters = await getState().entities.clusters.items;
 
+    // Remove deleted clusters from clusters array
+    const allActiveClustersIds = Object.keys(allClusters).filter(
+      id => !allClusters[id].delete_date
+    );
+
     const clustersIds = filterBySelectedOrganization
-      ? Object.keys(allClusters).filter(
+      ? allActiveClustersIds.filter(
           id => allClusters[id].owner === selectedOrganization
         )
-      : Object.keys(allClusters);
+      : allActiveClustersIds;
 
     const clusterDetails = await Promise.all(
       clustersIds.map(id =>
@@ -190,7 +195,7 @@ export function clusterLoadDetails(
 
         // Delete the cluster in the store.
         dispatch({
-          type: types.CLUSTER_DELETE,
+          type: types.CLUSTER_DELETE_REQUEST,
           clusterId,
           isV5Cluster,
         });
@@ -265,9 +270,7 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
  */
 export function clusterCreate(cluster, isV5Cluster) {
   return function(dispatch) {
-    dispatch({
-      type: types.CLUSTER_CREATE,
-    });
+    dispatch({ type: types.CLUSTER_CREATE_REQUEST });
 
     const method = isV5Cluster
       ? 'addClusterV5WithHttpInfo'
@@ -473,7 +476,7 @@ export function clusterPatch(cluster, payload) {
 export function clusterCreateKeyPair(clusterId, keypair) {
   return function(dispatch) {
     dispatch({
-      type: types.CLUSTER_CREATE_KEY_PAIR,
+      type: types.CLUSTER_CREATE_KEY_PAIR_REQUEST,
       keypair,
     });
 

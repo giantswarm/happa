@@ -5,7 +5,7 @@ const initialState = { lastUpdated: 0, isFetching: false, items: {} };
 
 const userReducer = produce((draft, action) => {
   switch (action.type) {
-    case types.USERS_LOAD:
+    case types.USERS_LOAD_REQUEST:
       draft.isFetching = true;
 
       return;

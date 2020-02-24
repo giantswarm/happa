@@ -10,11 +10,6 @@ const initialState = {
 
 const releaseReducer = produce((draft, action) => {
   switch (action.type) {
-    case types.RELEASES_LOAD:
-      draft.isFetching = true;
-
-      return;
-
     case types.RELEASES_LOAD_SUCCESS:
       draft.items = action.releases;
       draft.activeSortedReleases = action.activeSortedReleases;

@@ -4,6 +4,7 @@ import React from 'react';
 import { FallbackMessages } from 'shared/constants';
 import { Code, FallbackSpan } from 'styles';
 import theme from 'styles/theme';
+import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';
 import RefreshableLabel from 'UI/RefreshableLabel';
 import { isClusterYoungerThanOneHour } from 'utils/clusterUtils';
@@ -18,6 +19,7 @@ export const LineDiv = styled.div`
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 25px;
+
   div:first-of-type {
     width: 185px;
   }
@@ -28,6 +30,7 @@ export const ScalingNodeCounter = styled(RefreshableLabel)`
 `;
 
 function WorkerNodesAzure({
+  az,
   createDate,
   instanceType,
   nodes,
@@ -43,6 +46,12 @@ function WorkerNodesAzure({
 
   return (
     <WrapperDiv>
+      <LineDiv>
+        <div>Availability zones</div>
+        <div>
+          <AvailabilityZonesLabels zones={az} />
+        </div>
+      </LineDiv>
       <LineDiv>
         <div>VM size</div>
         <Code style={{ background: theme.colors.shade7, marginRight: '10px' }}>
@@ -68,6 +77,7 @@ function WorkerNodesAzure({
 }
 
 WorkerNodesAzure.propTypes = {
+  az: PropTypes.array,
   createDate: PropTypes.string,
   instanceType: PropTypes.object,
   nodes: PropTypes.number,
