@@ -2,10 +2,10 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
-import AppVersionPicker from './AppVersionPicker/AppVersionPicker';
 import ClusterEmptyState from './ClusterEmptyState';
 import ComponentChangelog from './ComponentChangelog';
 import ReleaseComponentLabel from './ReleaseComponentLabel';
+import VersionPicker from './VersionPicker/VersionPicker';
 
 const Wrapper = styled.div`
   h2 {
@@ -39,10 +39,10 @@ Header.propTypes = {
 
 // eslint-disable-next-line react/no-multi-comp
 const StyleGuide = () => {
-  const [selectedAppVersion, setAppVersion] = useState('1.0.5');
+  const [selectedVersion, setVersion] = useState('1.0.5');
 
-  const handleSetAppVersion = version => {
-    setAppVersion(version);
+  const handleSetVersion = version => {
+    setVersion(version);
   };
 
   return (
@@ -51,7 +51,7 @@ const StyleGuide = () => {
 
       <hr />
 
-      <Header name='AppVersionPicker' />
+      <Header name='VersionPicker' />
 
       <p>
         A dropdown type of component that lets you pick from app versions, with
@@ -59,9 +59,12 @@ const StyleGuide = () => {
       </p>
 
       <ExampleBox>
-        <AppVersionPicker
-          onChange={handleSetAppVersion}
-          selectedVersion={selectedAppVersion}
+        Selected Version: {selectedVersion}
+        <br />
+        <br />
+        <VersionPicker
+          onChange={handleSetVersion}
+          selectedVersion={selectedVersion}
           versions={[
             { version: '1.0.5', test: false },
             { version: '1.0.4-test', test: true },

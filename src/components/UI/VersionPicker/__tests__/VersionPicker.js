@@ -4,7 +4,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { ThemeProvider } from 'emotion-theming';
 import React from 'react';
 import theme from 'styles/theme';
-import AppVersionPicker from 'UI/AppVersionPicker/AppVersionPicker';
+import AppVersionPicker from 'UI/VersionPicker/VersionPicker';
 
 it('renders without crashing', () => {
   render(
