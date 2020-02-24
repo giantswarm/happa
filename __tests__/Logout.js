@@ -1,8 +1,11 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import nock from 'nock';
+import { StatusCodes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
 import {
+  API_ENDPOINT,
   AWSInfoResponse,
   getMockCall,
   userResponse,
@@ -23,6 +26,10 @@ it('logging out redirects to the login page', async () => {
   const clustersRequest = getMockCall('/v4/clusters/');
   // The response to the appcatalogs call (no catalogs)
   const appcatalogsRequest = getMockCall('/v4/appcatalogs/');
+
+  nock(API_ENDPOINT)
+    .delete('/v4/auth-tokens/')
+    .reply(StatusCodes.Ok);
 
   // Given I am logged in and on the home page.
   const { getByText } = renderRouteWithStore(AppRoutes.Home);
