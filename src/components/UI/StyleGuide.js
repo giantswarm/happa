@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 
 import AppVersionPicker from './AppVersionPicker/AppVersionPicker';
 import ClusterEmptyState from './ClusterEmptyState';
@@ -39,6 +39,12 @@ Header.propTypes = {
 
 // eslint-disable-next-line react/no-multi-comp
 const StyleGuide = () => {
+  const [selectedAppVersion, setAppVersion] = useState('1.0.5');
+
+  const handleSetAppVersion = version => {
+    setAppVersion(version);
+  };
+
   return (
     <Wrapper className='main col-9'>
       <h1>Style Guide</h1>
@@ -54,7 +60,8 @@ const StyleGuide = () => {
 
       <ExampleBox>
         <AppVersionPicker
-          selectedVersion='1.0.5'
+          onChange={handleSetAppVersion}
+          selectedVersion={selectedAppVersion}
           versions={[
             { version: '1.0.5', test: false },
             { version: '1.0.4-test', test: true },
