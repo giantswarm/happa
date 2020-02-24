@@ -171,9 +171,9 @@ const AppVersionPicker = ({
                 <Body role='menu' data-testid='menu'>
                   <ul>
                     {versions
-                      ?.filter(version =>
-                        includeTestVersions ? true : !version.test
-                      )
+                      ?.filter(version => {
+                        return includeTestVersions ? true : !version.test;
+                      })
                       .map(version => {
                         return (
                           <li key={version.version}>
