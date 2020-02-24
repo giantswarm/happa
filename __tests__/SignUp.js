@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
+import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { getInfo } from 'model/gateways/ControlPlaneGateway';
 import nock from 'nock';
@@ -41,6 +42,14 @@ afterAll(() => {
   nock.enableNetConnect();
   // eslint-disable-next-line no-console
   console.error = originalConsoleError;
+});
+
+beforeEach(() => {
+  getMockCall('/v4/appcatalogs/');
+});
+
+afterEach(() => {
+  forceRemoveAll();
 });
 
 describe('Signup', () => {
