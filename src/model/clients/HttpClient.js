@@ -100,6 +100,9 @@ class HttpClient {
     this.requestConfig.url = url;
   }
 
+  // eslint-disable-next-line no-unused-vars,class-methods-use-this, no-empty-function
+  async onBeforeRequest(reqConfig) {}
+
   async execute() {
     const {
       baseURL,
@@ -111,6 +114,8 @@ class HttpClient {
     } = this.requestConfig;
 
     try {
+      await this.onBeforeRequest(this.requestConfig);
+
       const response = await axios({
         baseURL,
         timeout,
