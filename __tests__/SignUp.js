@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInfo } from 'model/gateways/ControlPlaneGateway';
 import nock from 'nock';
@@ -271,6 +271,8 @@ describe('Signup', () => {
 
     // Validate confirm password field
     fieldToUse = getByLabelText(/password, once again/i);
+
+    await waitForDomChange();
 
     fireEvent.change(fieldToUse, {
       target: { value: 'g00dPa$$w0rD' },
