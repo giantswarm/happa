@@ -77,11 +77,7 @@ class HttpClient {
       config
     );
 
-    this.requestConfig.headers = Object.assign(
-      {},
-      this.requestConfig.headers,
-      this.headers
-    );
+    this.requestConfig.headers = Object.assign({}, this.headers);
   }
 
   setHeader(key, value) {

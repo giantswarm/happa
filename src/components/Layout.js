@@ -7,7 +7,6 @@ import * as UserActions from 'actions/userActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
-import ControlPlaneGateway from 'model/gateways/ControlPlaneGateway';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -43,13 +42,6 @@ class Layout extends React.Component {
     if (this.props.user) {
       defaultClientAuth.apiKeyPrefix = this.props.user.auth.scheme;
       defaultClientAuth.apiKey = this.props.user.auth.token;
-      /**
-       * TODO: Remove this after refactoring this functionality
-       * to be in the the store
-       */
-      ControlPlaneGateway.getInstance().setAuthorizationToken(
-        this.props.user.auth.token
-      );
 
       // This is the first component that loads, these are the
       // firsts calls happa makes to the API.
