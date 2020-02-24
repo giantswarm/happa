@@ -60,7 +60,7 @@ class HttpClient {
     return newClient.execute();
   }
 
-  headers = {};
+  requestConfig = {};
 
   constructor(config) {
     this.setRequestConfig(config);
@@ -85,22 +85,43 @@ class HttpClient {
   }
 
   setHeader(key, value) {
-    this.headers[key] = value;
+    this.requestConfig.headers[key] = value;
   }
 
   setAuthorizationToken(token) {
-    this.headers.Authorization = `${AuthorizationTypes.BEARER} ${token}`;
+    this.setHeader('Authorization', `${AuthorizationTypes.BEARER} ${token}`);
+  }
+
+  setRequestMethod(method) {
+    this.requestConfig.method = method;
+  }
+
+  setBody(body) {
+    this.requestConfig.body = body;
+  }
+
+  setURL(url) {
+    this.requestConfig.url = url;
   }
 
   async execute() {
+    const {
+      baseURL,
+      timeout,
+      headers,
+      url,
+      method,
+      body: data,
+    } = this.requestConfig;
+
     try {
       const response = await axios({
-        url: this.requestConfig.url,
-        method: this.requestConfig.method,
-        baseURL: this.requestConfig.baseURL,
-        headers: this.requestConfig.headers,
-        data: this.requestConfig.body,
-        timeout: this.requestConfig.timeout,
+        baseURL,
+        timeout,
+        headers,
+        url,
+        method,
+        data,
       });
 
       return response.data;

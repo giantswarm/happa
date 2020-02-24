@@ -10,7 +10,11 @@ class ControlPlaneGateway {
    * @returns {ControlPlaneGateway}
    */
   static getInstance() {
-    return ControlPlaneGateway._instance ?? new ControlPlaneGateway();
+    if (!ControlPlaneGateway._instance) {
+      ControlPlaneGateway._instance = new ControlPlaneGateway();
+    }
+
+    return ControlPlaneGateway._instance;
   }
 
   authorizationToken = null;
@@ -24,7 +28,7 @@ class ControlPlaneGateway {
    */
   getClient() {
     const newClient = new HttpClient({
-      baseUrl: window.config.apiEndpoint,
+      baseURL: window.config.apiEndpoint,
     });
     newClient.setAuthorizationToken(this.authorizationToken);
 
@@ -34,4 +38,4 @@ class ControlPlaneGateway {
 
 export default ControlPlaneGateway;
 
-export * from './users';
+export * from './info';

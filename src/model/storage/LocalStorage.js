@@ -8,7 +8,11 @@ class LocalStorage {
    * @returns {LocalStorage}
    */
   static getInstance() {
-    return LocalStorage._instance ?? new LocalStorage(window.localStorage);
+    if (!LocalStorage._instance) {
+      LocalStorage._instance = new LocalStorage(window.localStorage);
+    }
+
+    return LocalStorage._instance;
   }
 
   storage = null;

@@ -7,6 +7,8 @@ import {
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
+import ControlPlaneGateway from 'model/gateways/ControlPlaneGateway';
+import InfoService from 'model/services/InfoService';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 import _ from 'underscore';
@@ -152,6 +154,13 @@ export function giantswarmLogin(email, password) {
         return userData;
       })
       .then(userData => {
+        /**
+         * TODO: Remove this after refactoring this function to use
+         * the PassageGateway
+         */
+        ControlPlaneGateway.getInstance().setAuthorizationToken(
+          userData.auth.token
+        );
         localStorage.setItem('user', JSON.stringify(userData));
         dispatch(loginSuccess(userData));
 
@@ -236,30 +245,28 @@ export function unauthorized() {
 // getInfo calls the /v4/info/ endpoint and dispatches accordingly to store
 // the resulting info into the state.
 export function getInfo() {
-  return function(dispatch) {
-    const infoApi = new GiantSwarm.InfoApi();
-
+  return async function(dispatch) {
+    const infoService = new InfoService();
     dispatch({ type: types.INFO_LOAD_REQUEST });
 
-    return infoApi
-      .getInfo()
-      .then(info => {
-        dispatch({
-          type: types.INFO_LOAD_SUCCESS,
-          info: info,
-        });
-      })
-      .catch(error => {
-        // eslint-disable-next-line no-console
-        console.error('Error loading installation info:', error);
+    try {
+      const info = await infoService.getInfo();
 
-        dispatch({
-          type: types.INFO_LOAD_ERROR,
-          error: error,
-        });
-
-        throw error;
+      dispatch({
+        type: types.INFO_LOAD_SUCCESS,
+        info: info,
       });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error loading installation info:', error);
+
+      dispatch({
+        type: types.INFO_LOAD_ERROR,
+        error: error,
+      });
+
+      throw error;
+    }
   };
 }
 
