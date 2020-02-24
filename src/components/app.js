@@ -73,16 +73,16 @@ history.listen(() => {
 // Finally, render the app!
 const appContainer = document.getElementById('app');
 
-const renderApp = () =>
-  render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <Routes />
-        </ConnectedRouter>
-      </ThemeProvider>
-    </Provider>,
-    appContainer
-  );
+const App = () => (
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <ConnectedRouter history={history}>
+        <Routes />
+      </ConnectedRouter>
+    </ThemeProvider>
+  </Provider>
+);
 
-export default hot(module)(renderApp());
+const HotApp = hot(module)(App);
+
+render(<HotApp />, appContainer);
