@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import DropdownMenu from 'UI/DropdownMenu';
 
 // AppVersionPicker takes a list of app versions and a currently selected version
 // and provides a dropdown like component for picking one of those versions.
@@ -9,16 +10,30 @@ import React, { useState } from 'react';
 // AppVersionPicker's onChange and does something with it.
 
 const INNER_PADDING = '5px 15px';
-const MAX_WIDTH = '250px';
+const WIDTH = '250px';
 const MAX_HEIGHT = '250px';
 
 const Wrapper = styled.div`
-  max-width: ${MAX_WIDTH};
+  div > button {
+    background-color: ${props => props.theme.colors.shade5};
+    border: 1px solid ${props => props.theme.colors.shade6};
+    border-radius: ${props => props.theme.border_radius};
+    font-size: 14px;
+    line-height: normal;
+    padding: 8px 10px;
+    width: auto;
+  }
+`;
+
+const Menu = styled.form`
+  width: ${WIDTH};
   border-radius: ${props => props.theme.border_radius};
   background-color: ${props => props.theme.colors.shade4};
   overflow: hidden;
   font-size: 14px;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 45px;
 `;
 
 const Header = styled.div`
@@ -33,7 +48,10 @@ const Header = styled.div`
   }
 
   label {
+    padding: 0px;
+    cursor: pointer;
     font-weight: normal;
+
     &::selection {
       color: none;
       background: none;
@@ -43,6 +61,16 @@ const Header = styled.div`
       margin-right: 5px;
       position: relative;
       top: -1px;
+      z-index: 2;
+    }
+
+    a {
+      display: inline;
+      padding: 0px;
+
+      &:hover {
+        background-color: inherit;
+      }
     }
   }
 `;
@@ -53,20 +81,22 @@ const Body = styled.div`
 
   ul {
     padding: 0px;
+    width: 100%;
+    position: relative;
+    right: 0px;
   }
 
   li {
-    padding: 10px 15px;
     list-style-type: none;
     border-bottom: 1px solid ${props => props.theme.colors.shade1};
     cursor: pointer;
 
-    &:hover {
-      background-color: ${props => props.theme.colors.shade3};
+    a.selected {
+      font-weight: bold;
     }
 
-    &.selected {
-      font-weight: bold;
+    a {
+      padding: 10px 15px;
     }
   }
 `;
@@ -84,47 +114,94 @@ const AppVersionPicker = ({
   };
 
   const handleOnChange = event => {
+    event.preventDefault();
     if (onChange) {
       onChange(event.currentTarget.dataset.version);
     }
   };
 
+  const toggleIncludeTestVersions = () => {
+    setIncludeTestVersions(!includeTestVersions);
+  };
+
   return (
-    <Wrapper {...props}>
-      <Header>
-        <h5>Switch Chart Version</h5>
+    <Wrapper>
+      <DropdownMenu
+        render={({
+          isOpen,
+          onClickHandler,
+          onKeyDownHandler,
+          onBlurHandler,
+          onFocusHandler,
+        }) => (
+          <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
+            <button
+              aria-expanded={isOpen}
+              aria-haspopup='true'
+              onClick={onClickHandler}
+              onKeyDown={onKeyDownHandler}
+              type='button'
+            >
+              {selectedVersion}
+            </button>
+            {isOpen && (
+              <Menu {...props}>
+                <Header>
+                  <h5>Switch Chart Version</h5>
 
-        <label>
-          <input
-            name='includeTestVersions'
-            type='checkbox'
-            checked={includeTestVersions}
-            onChange={handleSetIncludeTestVersions}
-          />
-          Include test versions
-        </label>
-      </Header>
+                  <label>
+                    <input
+                      name='includeTestVersions'
+                      type='checkbox'
+                      checked={includeTestVersions}
+                      onChange={handleSetIncludeTestVersions}
+                    />
+                    <a
+                      href='#'
+                      onClick={e => {
+                        e.preventDefault();
+                        toggleIncludeTestVersions();
+                      }}
+                    >
+                      Include test versions
+                    </a>
+                  </label>
+                </Header>
 
-      <Body>
-        <ul>
-          {versions
-            ?.filter(version => (includeTestVersions ? true : !version.test))
-            .map(version => {
-              return (
-                <li
-                  className={
-                    version.version === selectedVersion ? 'selected' : ''
-                  }
-                  key={version.version}
-                  onClick={handleOnChange}
-                  data-version={version.version}
-                >
-                  {version.version}
-                </li>
-              );
-            })}
-        </ul>
-      </Body>
+                <Body role='menu' data-testid='menu'>
+                  <ul>
+                    {versions
+                      ?.filter(version =>
+                        includeTestVersions ? true : !version.test
+                      )
+                      .map(version => {
+                        return (
+                          <li key={version.version}>
+                            <a
+                              className={
+                                version.version === selectedVersion
+                                  ? 'selected'
+                                  : ''
+                              }
+                              href='#'
+                              onClick={e => {
+                                handleOnChange(e);
+                              }}
+                              data-version={version.version}
+                              role='menuitem'
+                            >
+                              {version.version}
+                            </a>
+                          </li>
+                        );
+                      })}
+                  </ul>
+                </Body>
+              </Menu>
+            )}
+          </div>
+        )}
+      />
     </Wrapper>
   );
 };
