@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, wait } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
+import { getInfo } from 'model/gateways/ControlPlaneGateway/info';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppCatalogRoutes, OrganizationsRoutes } from 'shared/constants/routes';
@@ -44,7 +45,7 @@ describe('AppCatalog', () => {
   });
 
   beforeEach(() => {
-    getMockCall('/v4/info/', AWSInfoResponse);
+    getInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
   });

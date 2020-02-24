@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInfo } from 'model/gateways/ControlPlaneGateway';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -29,8 +30,8 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 beforeEach(() => {
   nock.disableNetConnect();
 
+  getInfo.mockResolvedValueOnce(AWSInfoResponse);
   getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/info/', AWSInfoResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCall('/v4/clusters/', v4ClustersResponse);

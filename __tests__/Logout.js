@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import { getInfo } from 'model/gateways/ControlPlaneGateway';
 import { AppRoutes } from 'shared/constants/routes';
 import {
   AWSInfoResponse,
@@ -16,7 +17,7 @@ it('logging out redirects to the login page', async () => {
   // The response to the user info call
   const userInfoRequest = getMockCall('/v4/user/', userResponse);
   // The response to the info call
-  const infoRequest = getMockCall('/v4/info/', AWSInfoResponse);
+  getInfo.mockResolvedValueOnce(AWSInfoResponse);
   // The response to the org call (no orgs)
   const orgRequest = getMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
@@ -47,7 +48,6 @@ it('logging out redirects to the login page', async () => {
   // Assert that the mocked responses got called, tell them to stop waiting for
   // a request.
   userInfoRequest.done();
-  infoRequest.done();
   orgRequest.done();
   clustersRequest.done();
   appcatalogsRequest.done();

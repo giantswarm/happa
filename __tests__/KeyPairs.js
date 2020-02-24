@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInfo } from 'model/gateways/ControlPlaneGateway';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
@@ -25,8 +26,8 @@ const requests = {};
 
 // Responses to requests
 beforeAll(() => {
+  getInfo.mockResolvedValueOnce(AWSInfoResponse);
   requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
   requests.organizations = getPersistedMockCall(
     '/v4/organizations/',
     orgsResponse

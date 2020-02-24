@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInfo } from 'model/gateways/ControlPlaneGateway';
 import nock from 'nock';
 import { StatusCodes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
@@ -93,8 +94,8 @@ describe('Signup', () => {
   });
 
   it('registers a new user if the token is valid', async () => {
+    getInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/info/', AWSInfoResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');

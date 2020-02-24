@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInfo } from 'model/gateways/ControlPlaneGateway';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -37,8 +38,8 @@ afterAll(() => {
 
 // Responses to requests
 beforeEach(() => {
+  getInfo.mockResolvedValueOnce(azureInfoResponse);
   getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/info/', azureInfoResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
   getMockCall('/v4/clusters/', v4ClustersResponse);

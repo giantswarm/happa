@@ -1,3 +1,4 @@
+import { getInfo } from 'model/gateways/ControlPlaneGateway';
 import nock from 'nock';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
 import {
@@ -29,8 +30,8 @@ describe('AccountSettings', () => {
   });
 
   beforeEach(() => {
+    getInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/info/', AWSInfoResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');

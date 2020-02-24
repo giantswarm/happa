@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import { getInfo } from 'model/gateways/ControlPlaneGateway';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
@@ -34,7 +35,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // The response to the user info call
   const userInfoRequest = getPersistedMockCall('/v4/user/', userResponse);
   // The response to the info call
-  const infoRequest = getPersistedMockCall('/v4/info/', AWSInfoResponse);
+  getInfo.mockResolvedValueOnce(AWSInfoResponse);
   // The response to the org call (no orgs)
   const orgRequest = getPersistedMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
@@ -76,7 +77,6 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // a request.
   authTokensRequest.persist(false);
   userInfoRequest.persist(false);
-  infoRequest.persist(false);
   orgRequest.persist(false);
   clustersRequest.persist(false);
   appcatalogsRequest.persist(false);
