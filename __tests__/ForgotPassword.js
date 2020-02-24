@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, waitForDomChange } from '@testing-library/react';
+import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
@@ -26,13 +26,14 @@ describe('PasswordReset', () => {
     nock.enableNetConnect();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     if (!nock.isDone()) {
       // eslint-disable-next-line no-console
       console.error('Nock has pending mocks:', nock.pendingMocks());
     }
 
-    expect(nock.isDone()).toBeTruthy();
+    await wait(() => expect(nock.isDone()).toBeTruthy());
+
     nock.cleanAll();
 
     forceRemoveAll();
