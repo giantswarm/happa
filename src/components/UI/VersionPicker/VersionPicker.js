@@ -22,6 +22,10 @@ const Wrapper = styled.div`
     line-height: normal;
     padding: 8px 10px;
     width: auto;
+
+    .caret {
+      margin-left: 10px;
+    }
   }
 `;
 
@@ -143,6 +147,7 @@ const AppVersionPicker = ({
               type='button'
             >
               {selectedVersion}
+              <span className='caret' />
             </button>
             {isOpen && (
               <Menu {...props}>
