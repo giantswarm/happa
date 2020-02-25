@@ -269,57 +269,61 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
  * @param {Boolean} isV5Cluster
  */
 export function clusterCreate(cluster, isV5Cluster) {
-  return function(dispatch) {
-    dispatch({ type: types.CLUSTER_CREATE_REQUEST });
+  return async function(dispatch) {
+    try {
+      dispatch({ type: types.CLUSTER_CREATE_REQUEST });
 
-    const method = isV5Cluster
-      ? 'addClusterV5WithHttpInfo'
-      : 'addClusterWithHttpInfo';
+      const method = isV5Cluster
+        ? 'addClusterV5WithHttpInfo'
+        : 'addClusterWithHttpInfo';
 
-    return clustersApi[method](cluster)
-      .then(data => {
-        const location = data.response.headers.location;
-        if (typeof location === 'undefined') {
-          throw new Error('Did not get a location header back.');
-        }
+      const data = await clustersApi[method](cluster);
 
-        const clusterIdURLParamIndex = 3;
-        const clusterId = location.split('/')[clusterIdURLParamIndex];
-        if (typeof clusterId === 'undefined') {
-          throw new Error('Did not get a valid cluster id.');
-        }
+      const location = data.response.headers.location;
+      if (typeof location === 'undefined') {
+        throw new Error('Did not get a location header back.');
+      }
 
-        if (isV5Cluster) {
-          dispatch({
-            type: types.V5_CLUSTER_CREATE_SUCCESS,
-            clusterId,
-          });
-        } else {
-          dispatch({
-            type: types.CLUSTER_CREATE_SUCCESS,
-            clusterId,
-          });
-        }
+      const clusterIdURLParamIndex = 3;
+      const clusterId = location.split('/')[clusterIdURLParamIndex];
+      if (typeof clusterId === 'undefined') {
+        throw new Error('Did not get a valid cluster id.');
+      }
 
-        new FlashMessage(
-          `Your new cluster with ID <code>${clusterId}</code> is being created.`,
-          messageType.SUCCESS,
-          messageTTL.MEDIUM
-        );
-
-        return { clusterId, owner: cluster.owner };
-      })
-      .catch(error => {
+      if (isV5Cluster) {
         dispatch({
-          type: types.CLUSTER_CREATE_ERROR,
-          cluster: cluster.id,
+          type: types.V5_CLUSTER_CREATE_SUCCESS,
+          clusterId,
         });
+      } else {
+        dispatch({
+          type: types.CLUSTER_CREATE_SUCCESS,
+          clusterId,
+        });
+      }
 
-        // eslint-disable-next-line no-console
-        console.error(error);
+      new FlashMessage(
+        `Your new cluster with ID <code>${clusterId}</code> is being created.`,
+        messageType.SUCCESS,
+        messageTTL.MEDIUM
+      );
 
-        throw error;
-      });
+      return { clusterId, owner: cluster.owner };
+    } catch (error) {
+      dispatch({ type: types.CLUSTER_CREATE_ERROR, error: error.message });
+
+      new FlashMessage(
+        'An error occurred when trying to create the cluster.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+
+    return null;
   };
 }
 

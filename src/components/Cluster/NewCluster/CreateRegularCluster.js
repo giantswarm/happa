@@ -1,13 +1,16 @@
 import styled from '@emotion/styled';
+import * as actionTypes from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { selectErrorByAction } from 'selectors/clusterSelectors';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import Button from 'UI/Button';
+import ErrorFallback from 'UI/ErrorFallback';
 import NumberPicker from 'UI/NumberPicker';
 
 import AWSInstanceTypeSelector from './AWSInstanceTypeSelector';
@@ -578,18 +581,19 @@ class CreateRegularCluster extends React.Component {
 
             <hr style={{ margin: '37px 0 31px' }} />
 
-            <FlexColumnDiv>
-              <Button
-                bsSize='large'
-                bsStyle='primary'
-                disabled={!this.valid()}
-                loading={this.state.submitting}
-                onClick={this.createCluster}
-                type='submit'
-                style={{ marginBottom: '23px' }}
-              >
-                Create Cluster
-              </Button>
+            <FlexColumnDiv style={{ marginBottom: '23px' }}>
+              <ErrorFallback errors={this.props.clusterCreateError}>
+                <Button
+                  bsSize='large'
+                  bsStyle='primary'
+                  disabled={!this.valid()}
+                  loading={this.state.submitting}
+                  onClick={this.createCluster}
+                  type='submit'
+                >
+                  Create Cluster
+                </Button>
+              </ErrorFallback>
               <ClusterCreationDuration
                 stats={this.props.clusterCreationStats}
               />
@@ -634,6 +638,7 @@ CreateRegularCluster.propTypes = {
   activeSortedReleases: PropTypes.array,
   clusterName: PropTypes.string,
   updateClusterNameInParent: PropTypes.func,
+  clusterCreateError: PropTypes.string,
 };
 
 function mapStateToProps(state) {
@@ -675,7 +680,13 @@ function mapStateToProps(state) {
       state.app.info.workers.count_per_cluster.max;
   }
 
-  return propsToPush;
+  return {
+    ...propsToPush,
+    clusterCreateError: selectErrorByAction(
+      state,
+      actionTypes.CLUSTER_CREATE_REQUEST
+    ),
+  };
 }
 
 function mapDispatchToProps(dispatch) {
