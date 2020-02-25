@@ -182,14 +182,16 @@ describe('Users', () => {
 
     const { findByText, getByText } = renderRouteWithStore(UsersRoutes.Home);
 
-    const selectedEmailCell = await findByText(/developer4@giantswarm.io/i);
+    const selectedEmailCell = await findByText(new RegExp(desiredEmail, 'i'));
     let deleteButton = within(selectedEmailCell.parentNode).getByText(
       /delete/i
     );
     fireEvent.click(deleteButton);
 
     expect(
-      getByText(/Are you sure you want to delete developer4@giantswarm.io?/i)
+      getByText(
+        new RegExp(`Are you sure you want to delete ${desiredEmail}?`, 'i')
+      )
     ).toBeInTheDocument();
 
     deleteButton = getByText(/delete user/i);
@@ -197,6 +199,39 @@ describe('Users', () => {
 
     await wait(() => {
       expect(deleteButton).not.toBeInTheDocument();
+    });
+  });
+
+  it(`unexpires an user's invitation`, async () => {
+    const desiredEmail = 'developer3@giantswarm.io';
+    const encodedEmail = encodeURIComponent(desiredEmail);
+
+    nock(API_ENDPOINT)
+      .intercept(`/v4/users/${encodedEmail}/`, 'PATCH')
+      .reply(StatusCodes.Ok, userResponse);
+
+    const { findByText, getByText } = renderRouteWithStore(UsersRoutes.Home);
+
+    const selectedEmailCell = await findByText(new RegExp(desiredEmail, 'i'));
+    const expiryDate = within(selectedEmailCell.parentNode).getByText(
+      /in 2 days/i
+    );
+    expect(expiryDate).toBeInTheDocument();
+
+    let unexpireButton = within(selectedEmailCell.parentNode).getByTitle(
+      /remove expiration/i
+    );
+    fireEvent.click(unexpireButton);
+
+    expect(
+      getByText(new RegExp(`remove expiration date from ${desiredEmail}`, 'i'))
+    ).toBeInTheDocument();
+
+    unexpireButton = getByText(/^remove expiration$/i);
+    fireEvent.click(unexpireButton);
+
+    await wait(() => {
+      expect(unexpireButton).not.toBeInTheDocument();
     });
   });
 });
