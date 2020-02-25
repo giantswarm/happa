@@ -1,32 +1,22 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, render, within } from '@testing-library/react';
-import { ThemeProvider } from 'emotion-theming';
-import React from 'react';
-import theme from 'styles/theme';
+import { fireEvent, within } from '@testing-library/react';
+import { renderWithTheme } from 'testUtils/renderUtils';
 import AppVersionPicker from 'UI/VersionPicker/VersionPicker';
 
 it('renders without crashing', () => {
-  render(
-    <ThemeProvider theme={theme}>
-      <AppVersionPicker />
-    </ThemeProvider>
-  );
+  renderWithTheme(AppVersionPicker);
 });
 
 it('lists all non test versions by default', () => {
-  const { getByText, getByTestId } = render(
-    <ThemeProvider theme={theme}>
-      <AppVersionPicker
-        selectedVersion='1.0.5'
-        versions={[
-          { version: '1.0.5', test: false },
-          { version: '1.0.4-test', test: true },
-          { version: '1.0.3', test: false },
-        ]}
-      />
-    </ThemeProvider>
-  );
+  const { getByText, getByTestId } = renderWithTheme(AppVersionPicker, {
+    selectedVersion: '1.0.5',
+    versions: [
+      { version: '1.0.5', test: false },
+      { version: '1.0.4-test', test: true },
+      { version: '1.0.3', test: false },
+    ],
+  });
 
   fireEvent.click(getByText('1.0.5'));
 
@@ -38,18 +28,14 @@ it('lists all non test versions by default', () => {
 });
 
 it('lets me click a toggle switch to show test versions', () => {
-  const { getByText, getByTestId } = render(
-    <ThemeProvider theme={theme}>
-      <AppVersionPicker
-        selectedVersion='1.0.5'
-        versions={[
-          { version: '1.0.5', test: false },
-          { version: '1.0.4-test', test: true },
-          { version: '1.0.3', test: false },
-        ]}
-      />
-    </ThemeProvider>
-  );
+  const { getByText, getByTestId } = renderWithTheme(AppVersionPicker, {
+    selectedVersion: '1.0.5',
+    versions: [
+      { version: '1.0.5', test: false },
+      { version: '1.0.4-test', test: true },
+      { version: '1.0.3', test: false },
+    ],
+  });
 
   fireEvent.click(getByText('1.0.5'));
   fireEvent.click(getByText('Include test versions'));
@@ -62,18 +48,14 @@ it('lets me click a toggle switch to show test versions', () => {
 });
 
 it('the selectedVersion gets highlighted', () => {
-  const { getByText, getByTestId } = render(
-    <ThemeProvider theme={theme}>
-      <AppVersionPicker
-        selectedVersion='1.0.5'
-        versions={[
-          { version: '1.0.5', test: false },
-          { version: '1.0.4-test', test: true },
-          { version: '1.0.3', test: false },
-        ]}
-      />
-    </ThemeProvider>
-  );
+  const { getByText, getByTestId } = renderWithTheme(AppVersionPicker, {
+    selectedVersion: '1.0.5',
+    versions: [
+      { version: '1.0.5', test: false },
+      { version: '1.0.4-test', test: true },
+      { version: '1.0.3', test: false },
+    ],
+  });
 
   fireEvent.click(getByText('1.0.5'));
 
@@ -95,19 +77,15 @@ it('the selectedVersion gets highlighted', () => {
 it('clicking a version calls the onChange prop', () => {
   const mockCallback = jest.fn(x => `Got version: ${x}`);
 
-  const { getByText, getByTestId } = render(
-    <ThemeProvider theme={theme}>
-      <AppVersionPicker
-        onChange={mockCallback}
-        selectedVersion='1.0.5'
-        versions={[
-          { version: '1.0.5', test: false },
-          { version: '1.0.4-test', test: true },
-          { version: '1.0.3', test: false },
-        ]}
-      />
-    </ThemeProvider>
-  );
+  const { getByText, getByTestId } = renderWithTheme(AppVersionPicker, {
+    onChange: mockCallback,
+    selectedVersion: '1.0.5',
+    versions: [
+      { version: '1.0.5', test: false },
+      { version: '1.0.4-test', test: true },
+      { version: '1.0.3', test: false },
+    ],
+  });
 
   fireEvent.click(getByText('1.0.5'));
 

@@ -3,12 +3,6 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import DropdownMenu from 'UI/DropdownMenu';
 
-// AppVersionPicker takes a list of app versions and a currently selected version
-// and provides a dropdown like component for picking one of those versions.
-// It is a 'controlled' input type of component meaning it does not track its
-// own state. Instead it should be controlled by another component that receives
-// AppVersionPicker's onChange and does something with it.
-
 const INNER_PADDING = '5px 15px';
 const WIDTH = '250px';
 const MAX_HEIGHT = '250px';
@@ -105,12 +99,18 @@ const Body = styled.div`
   }
 `;
 
-const AppVersionPicker = ({
-  onChange,
-  selectedVersion,
-  versions,
-  ...props
-}) => {
+/**
+ * VersionPicker is a dropdown style UI component for selecting a single version from a list
+ * of versions. The list of versions can contain test versions, and this component
+ * allows the users to choose whether they want to see the test versions or not.
+ * @param {Object} props - The props that this component can take
+ * @param {function} props.onChange - A callback function that gets called when a version is selected by the user.
+ * @param {string} props.selectedVersion - The currently selected version, will be highlighted in bold in the list.
+ * @param {Object[]} props.versions - An array of versions to pick from.
+ * @param {string} props.versions[].version - The version
+ * @param {boolean} props.versions[].test - Whether or not this version is a test version.
+ */
+const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
   const [includeTestVersions, setIncludeTestVersions] = useState(false);
 
   const handleSetIncludeTestVersions = event => {
@@ -211,10 +211,10 @@ const AppVersionPicker = ({
   );
 };
 
-AppVersionPicker.propTypes = {
+VersionPicker.propTypes = {
   onChange: PropTypes.func,
   selectedVersion: PropTypes.string,
   versions: PropTypes.array,
 };
 
-export default AppVersionPicker;
+export default VersionPicker;
