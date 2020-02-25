@@ -123,6 +123,9 @@ export const selectAndProduceAZGridTemplateAreas = () =>
 export const selectCanClusterUpgrade = (state, clusterID, targetVersion) => {
   const cluster = state.entities.clusters.items[clusterID];
 
+  if (!cluster) return false;
+
+  // eslint-disable-next-line consistent-return
   return canClusterUpgrade(
     cluster.release_version,
     targetVersion,
