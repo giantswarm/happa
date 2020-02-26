@@ -6,7 +6,7 @@ import { ConnectedRouter, push } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import { createMemoryHistory } from 'history';
 import * as helpers from 'lib/helpers';
-import { getInfo } from 'model/gateways/ControlPlaneGateway';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -113,7 +113,7 @@ describe('AdminLogin', () => {
   });
 
   it('redirects to the OAuth provider and handles login, if there is no user stored', async () => {
-    getInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');
@@ -138,8 +138,8 @@ describe('AdminLogin', () => {
 
   it('redirects to homepage if the user has been previously logged in', async () => {
     getMockCall('/v4/user/', userResponse);
-    getInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCallTimes('/v4/appcatalogs/', [], 2);
     getMockCall('/v4/organizations/');
     getMockCallTimes('/v4/clusters/', [], 2);
@@ -156,8 +156,8 @@ describe('AdminLogin', () => {
 
   it('renews user token if the previously stored one is expired', async () => {
     getMockCall('/v4/user/', userResponse);
-    getInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCallTimes('/v4/appcatalogs/', [], 2);
     getMockCall('/v4/organizations/');
     getMockCallTimes('/v4/clusters/', [], 2);
@@ -225,8 +225,8 @@ describe('AdminLogin', () => {
 
   it('redirects to OAuth provider login page if renewing the token fails', async () => {
     getMockCall('/v4/user/', userResponse);
-    getInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCallTimes('/v4/appcatalogs/', [], 2);
     getMockCall('/v4/organizations/');
     getMockCallTimes('/v4/clusters/', [], 2);

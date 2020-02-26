@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
-import { getInfo } from 'model/gateways/ControlPlaneGateway';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -46,7 +46,7 @@ describe('V4AzureClusterManagement', () => {
 
   // Responses to requests
   beforeEach(() => {
-    getInfo.mockResolvedValueOnce(azureInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(azureInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);

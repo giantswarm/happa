@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInfo } from 'model/gateways/ControlPlaneGateway';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -42,7 +42,7 @@ afterEach(() => {
 
 describe('', () => {
   beforeEach(() => {
-    getInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/', orgsResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
@@ -319,7 +319,7 @@ describe('', () => {
 
 describe('Organization deletion', () => {
   it('shows the organization deletion modal when requested and organization deletion success flash', async () => {
-    getInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);

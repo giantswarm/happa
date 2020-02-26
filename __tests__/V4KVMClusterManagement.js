@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
-import { getInfo } from 'model/gateways/ControlPlaneGateway';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -37,7 +37,7 @@ afterAll(() => {
 });
 
 beforeEach(() => {
-  getInfo.mockResolvedValueOnce(KVMInfoResponse);
+  getInstallationInfo.mockResolvedValueOnce(KVMInfoResponse);
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);

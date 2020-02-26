@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
-import { getInfo } from 'model/gateways/ControlPlaneGateway';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
@@ -161,7 +161,7 @@ describe('PasswordReset', () => {
     it('sets a new password for the email in the form', async () => {
       const finalPassword = 'g00dPa$$w0rD';
 
-      getInfo.mockResolvedValueOnce(AWSInfoResponse);
+      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
       postMockCall('/v4/auth-tokens/', authTokenResponse);
       getMockCall('/v4/user/', userResponse);
       getMockCall('/v4/organizations/');
@@ -288,7 +288,7 @@ describe('PasswordReset', () => {
     });
 
     it(`jumps to password setup automatically if there's an email saved in the local storage`, async () => {
-      getInfo.mockResolvedValueOnce(AWSInfoResponse);
+      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
       getMockCall('/v4/user/', userResponse);
       getMockCall('/v4/organizations/');
       getMockCall('/v4/appcatalogs/');

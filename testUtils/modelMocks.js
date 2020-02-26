@@ -1,1 +1,1 @@
-jest.mock('model/gateways/ControlPlaneGateway/info');
+jest.mock('model/services/giantSwarm');

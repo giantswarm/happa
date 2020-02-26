@@ -1,4 +1,4 @@
-import { getInfo } from 'model/gateways/ControlPlaneGateway';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
 import {
@@ -30,7 +30,7 @@ describe('AccountSettings', () => {
   });
 
   beforeEach(() => {
-    getInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');
