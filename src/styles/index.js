@@ -38,6 +38,12 @@ export const Input = props => css`
   }
 `;
 
+export const Ellipsis = css`
+  text-overflow: ellipsis;
+  max-width: 95%;
+  overflow: hidden;
+`;
+
 /***** STYLED ELEMENTS *****/
 
 // Layout

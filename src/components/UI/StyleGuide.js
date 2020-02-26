@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 
 import ClusterEmptyState from './ClusterEmptyState';
 import ComponentChangelog from './ComponentChangelog';
 import ReleaseComponentLabel from './ReleaseComponentLabel';
+import VersionPicker from './VersionPicker/VersionPicker';
 
 const Wrapper = styled.div`
   h2 {
@@ -38,9 +39,53 @@ Header.propTypes = {
 
 // eslint-disable-next-line react/no-multi-comp
 const StyleGuide = () => {
+  const [selectedVersion, setVersion] = useState('1.0.5');
+
+  const handleSetVersion = version => {
+    setVersion(version);
+  };
+
   return (
     <Wrapper className='main col-9'>
       <h1>Style Guide</h1>
+
+      <hr />
+
+      <Header name='VersionPicker' />
+
+      <p>
+        A dropdown type of component that lets you pick from app versions, with
+        a toggle to be able to filter between showing or hiding test versions.
+      </p>
+
+      <ExampleBox>
+        Selected Version: {selectedVersion}
+        <br />
+        <br />
+        <VersionPicker
+          onChange={handleSetVersion}
+          selectedVersion={selectedVersion}
+          versions={[
+            { version: '1.0.5', test: false },
+            { version: '1.0.4-test', test: true },
+            { version: '1.0.3', test: false },
+            { version: '1.0.2', test: false },
+            { version: '0.8.9', test: false },
+            { version: '0.8.8', test: false },
+            { version: '0.8.7', test: false },
+            { version: '0.8.6', test: false },
+            { version: '0.8.5', test: false },
+            { version: '0.8.4', test: false },
+            { version: '0.8.3', test: false },
+            { version: '0.8.2', test: false },
+            { version: '0.8.1', test: false },
+            { version: '0.8.0', test: false },
+            { version: '0.7.10', test: false },
+            { version: '0.7.8', test: false },
+            { version: '0.7.3', test: false },
+          ]}
+        />
+      </ExampleBox>
 
       <hr />
 
