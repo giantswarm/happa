@@ -7,3 +7,11 @@ export const orgResponse = {
   members: [{ email: USER_EMAIL }],
   credentials: [],
 };
+
+export const orgsWithGSResponse = [...orgsResponse, { id: 'giantswarm' }];
+
+export const gsOrgResponse = {
+  id: 'giantswarm',
+  members: [{ email: USER_EMAIL }],
+  credentials: [],
+};
