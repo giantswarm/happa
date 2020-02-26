@@ -223,7 +223,10 @@ class CreateNodePoolsCluster extends Component {
     },
   };
 
+  clusterNameInput = React.createRef();
+
   componentDidMount() {
+    this.clusterNameInput.current.select();
     this.isValid();
   }
 
@@ -365,6 +368,8 @@ class CreateNodePoolsCluster extends Component {
                   <span className='label-span'>Name</span>
                   <div className='name-container'>
                     <input
+                      autoFocus
+                      ref={this.clusterNameInput}
                       value={name.value}
                       onChange={this.updateName}
                       id='cluster-name'
