@@ -1,6 +1,6 @@
 {
   "presets": ["@babel/preset-env", "@babel/preset-react"],
-  "plugins": ["transform-class-properties", "emotion"],
+  "plugins": ["transform-class-properties", "emotion", "react-hot-loader/babel"],
   "env": {
     "test": {
       "presets": [

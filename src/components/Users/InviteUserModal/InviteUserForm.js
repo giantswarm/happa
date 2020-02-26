@@ -29,8 +29,9 @@ const InviteUserForm = ({
       <p>Invitations are valid for 48 hours.</p>
 
       <div className='textfield'>
-        <label>Email:</label>
+        <label htmlFor='email'>Email:</label>
         <input
+          id='email'
           autoFocus
           onChange={handleEmailChange}
           type='text'
@@ -39,8 +40,9 @@ const InviteUserForm = ({
       </div>
 
       <div className='textfield'>
-        <label>Organizations:</label>
+        <label htmlFor='organizations'>Organizations:</label>
         <MultiSelect
+          id='organizations'
           options={memoizedOptions}
           selected={inviteForm.organizations}
           onSelectedChanged={handleOrganizationChange}

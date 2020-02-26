@@ -3,7 +3,7 @@ import produce from 'immer';
 const initialState = {};
 
 const errorReducer = produce((draft, action) => {
-  const { type, payload } = action;
+  const { type, error } = action;
   const matches = /(.*)_(SUCCESS|ERROR)/.exec(type);
 
   // not a *_SUCCESS / *_ERROR actions, so we ignore them
@@ -13,7 +13,7 @@ const errorReducer = produce((draft, action) => {
 
   switch (requestState) {
     case 'ERROR':
-      draft[requestName] = payload ?? '';
+      draft[requestName] = error ?? '';
 
       return;
 

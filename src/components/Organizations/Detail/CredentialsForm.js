@@ -184,7 +184,7 @@ class CredentialsForm extends React.Component {
             Here you can set credentials for the organization{' '}
             <code>{this.props.organizationName}</code> , to be used by all new
             clusters created for this organization. Find more information on how
-            to prepare an AWS for running tenant cluster in our{' '}
+            to prepare an AWS account for running tenant cluster in our{' '}
             <a
               href='https://docs.giantswarm.io/guides/prepare-aws-account-for-tenant-clusters/'
               rel='noopener noreferrer'
