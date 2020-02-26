@@ -79,9 +79,13 @@ class KeyPairs extends React.Component {
   apiEndpointHostname = '';
 
   componentDidMount() {
-    this.apiEndpointHostname = new URL(
-      this.props.cluster.api_endpoint
-    ).hostname;
+    try {
+      this.apiEndpointHostname = new URL(
+        this.props.cluster.api_endpoint
+      ).hostname;
+    } catch (error) {
+      throw Error(`Api endpoint: ${this.props.cluster.api_endpoint}`);
+    }
   }
 
   // Provides the configuration for the keypairs table
