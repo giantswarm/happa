@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import * as OrganizationActions from 'actions/organizationActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { relativeDate } from 'lib/helpers.js';
@@ -12,9 +13,16 @@ import { bindActionCreators } from 'redux';
 import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import { Ellipsis } from 'styles';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 import Credentials from './Credentials';
+
+const MembersTable = styled.div`
+  .member-email {
+    ${Ellipsis}
+  }
+`;
 
 const clusterTableDefaultSorting = [
   {
@@ -108,6 +116,7 @@ class OrganizationDetail extends React.Component {
         sort: true,
         attrs: {
           'data-testid': 'organization-member-email',
+          className: 'member-email',
         },
       },
       {
@@ -188,7 +197,7 @@ class OrganizationDetail extends React.Component {
               <div className='col-3'>
                 <h3 className='table-label'>Members</h3>
               </div>
-              <div className='col-9'>
+              <MembersTable className='col-9'>
                 {this.props.organization.members.length === 0 ? (
                   <p>This organization has no members</p>
                 ) : (
@@ -204,7 +213,7 @@ class OrganizationDetail extends React.Component {
                 <Button bsStyle='default' onClick={this.addMember}>
                   <i className='fa fa-add-circle' /> Add Member
                 </Button>
-              </div>
+              </MembersTable>
             </div>
 
             {credentialsSection}
