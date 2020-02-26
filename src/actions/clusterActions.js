@@ -273,11 +273,9 @@ export function clusterCreate(cluster, isV5Cluster) {
     try {
       dispatch({ type: types.CLUSTER_CREATE_REQUEST });
 
-      const method = isV5Cluster
-        ? 'addClusterV5WithHttpInfo'
-        : 'addClusterWithHttpInfo';
-
-      const data = await clustersApi[method](cluster);
+      const data = isV5Cluster
+        ? await clustersApi.addClusterV5WithHttpInfo(cluster)
+        : await clustersApi.addClusterWithHttpInfo(cluster);
 
       const location = data.response.headers.location;
       if (typeof location === 'undefined') {
