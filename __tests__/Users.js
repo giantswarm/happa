@@ -57,20 +57,9 @@ describe('Users', () => {
       .reply(StatusCodes.Ok, invitesResponse);
   });
 
-  // Stop persisting responses
   afterEach(async () => {
-    await wait(() => {
-      const isDone = nock.isDone();
-
-      if (!isDone) {
-        // eslint-disable-next-line no-console
-        console.error('Nock has pending mocks:', nock.pendingMocks());
-      }
-      expect(isDone).toBeTruthy();
-    });
-
+    await wait(() => expect(nock.isDone()).toBe(true));
     nock.cleanAll();
-
     forceRemoveAll();
   });
 
