@@ -7,7 +7,9 @@ import {
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
-import InfoService from 'model/services/InfoService';
+import { GiantSwarmClient } from 'model/clients';
+import { getInstallationInfo } from 'model/services/giantSwarm';
+import { selectAuthToken } from 'selectors/authSelectors';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 import _ from 'underscore';
@@ -237,12 +239,13 @@ export function unauthorized() {
 // getInfo calls the /v4/info/ endpoint and dispatches accordingly to store
 // the resulting info into the state.
 export function getInfo() {
-  return async function(dispatch) {
-    const infoService = new InfoService();
+  return async function(dispatch, getState) {
     dispatch({ type: types.INFO_LOAD_REQUEST });
 
     try {
-      const info = await infoService.getInfo();
+      const authToken = await selectAuthToken(dispatch, getState());
+      const httpClient = new GiantSwarmClient(authToken);
+      const info = await getInstallationInfo(httpClient);
 
       dispatch({
         type: types.INFO_LOAD_SUCCESS,

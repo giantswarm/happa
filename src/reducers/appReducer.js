@@ -1,6 +1,5 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
-import ConfigService from 'model/services/ConfigService';
 import {
   fetchSelectedOrganizationFromStorage,
   fetchUserFromStorage,
@@ -33,9 +32,6 @@ const makeAppReducer = () => {
         });
         setUserToStorage(newUser);
 
-        const configService = new ConfigService();
-        configService.setAuthToken(newUser.auth.token);
-
         draft.loggedInUser = newUser;
 
         return;
@@ -49,9 +45,6 @@ const makeAppReducer = () => {
       case types.LOGIN_SUCCESS: {
         setUserToStorage(action.userData);
 
-        const configService = new ConfigService();
-        configService.setAuthToken(action.userData.auth.token);
-
         draft.loggedInUser = action.userData;
 
         return;
@@ -62,9 +55,6 @@ const makeAppReducer = () => {
       case types.LOGOUT_ERROR:
       case types.UNAUTHORIZED: {
         removeUserFromStorage();
-
-        const configService = new ConfigService();
-        configService.setAuthToken(null);
 
         draft.loggedInUser = {};
         draft.firstLoadComplete = false;

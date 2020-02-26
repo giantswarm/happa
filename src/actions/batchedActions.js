@@ -1,6 +1,5 @@
 import { push } from 'connected-react-router';
 import RoutePath from 'lib/routePath';
-import ConfigService from 'model/services/ConfigService';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import * as appActions from './appActions';
@@ -14,11 +13,6 @@ import * as userActions from './userActions';
 
 export const batchedLayout = () => async dispatch => {
   try {
-    const configService = new ConfigService();
-    configService.setAuthTokenRenewCallback = authData => {
-      dispatch(userActions.auth0Login(authData));
-    };
-
     await dispatch(userActions.refreshUserInfo());
     await dispatch(userActions.getInfo());
     await dispatch(organizationActions.organizationsLoad());

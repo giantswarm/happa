@@ -1,6 +1,8 @@
 import auth0 from 'auth0-js';
 
 export default class Auth {
+  static _instance = null;
+
   auth0 = new auth0.WebAuth({
     domain: 'giantswarm.eu.auth0.com',
     clientID: 'mgYdxCGCZ2eao0OJUGOFXurGIaQAACHs',
@@ -14,20 +16,23 @@ export default class Auth {
     },
   });
 
-  constructor() {
-    this.login = this.login.bind(this);
-    this.handleAuthentication = this.handleAuthentication.bind(this);
+  static getInstance() {
+    if (!Auth._instance) {
+      Auth._instance = new Auth();
+    }
+
+    return Auth._instance;
   }
 
-  login() {
+  login = () => {
     this.auth0.authorize();
-  }
+  };
 
-  handleAuthentication(callback) {
+  handleAuthentication = callback => {
     this.auth0.parseHash((err, authResult) => {
       callback(err, authResult);
     });
-  }
+  };
 
   renewToken() {
     return new Promise((resolve, reject) => {

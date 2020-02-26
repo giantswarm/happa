@@ -9,7 +9,7 @@ export const HttpRequestMethods = {
   DELETE: 'DELETE',
 };
 
-class HttpClient {
+export class HttpClient {
   static get(url, config) {
     const boundConfig = Object.assign({}, config, {
       url,
@@ -131,5 +131,3 @@ class HttpClient {
     }
   }
 }
-
-export default HttpClient;

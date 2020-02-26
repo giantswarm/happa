@@ -12,7 +12,7 @@ import SlideTransition from 'styles/transitions/SlideTransition';
 
 const OAuthCallback = ({ location, dispatch, actions }) => {
   const [error, setError] = useState(null);
-  const auth = useRef(new Auth());
+  const auth = useRef(Auth.getInstance());
 
   useEffect(() => {
     if (/id_token|error/.test(location.hash)) {
