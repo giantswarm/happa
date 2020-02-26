@@ -1,5 +1,6 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
+import * as actionTypes from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import produce from 'immer';
@@ -9,10 +10,12 @@ import React, { Component } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
+import { selectErrorByAction } from 'selectors/clusterSelectors';
 import { Constants, Providers } from 'shared/constants';
 import { Input } from 'styles';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
+import ErrorFallback from 'UI/ErrorFallback';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
 import AddNodePool from '../ClusterDetail/AddNodePool';
@@ -500,16 +503,18 @@ class CreateNodePoolsCluster extends Component {
             {this.state.error && CreateNodePoolsCluster.errorState()}
 
             <FlexRowDiv>
-              <Button
-                bsSize='large'
-                bsStyle='primary'
-                disabled={!this.isValid()}
-                loading={submitting}
-                onClick={this.createCluster}
-                type='button'
-              >
-                Create Cluster
-              </Button>
+              <ErrorFallback errors={this.props.clusterCreateError}>
+                <Button
+                  bsSize='large'
+                  bsStyle='primary'
+                  disabled={!this.isValid()}
+                  loading={submitting}
+                  onClick={this.createCluster}
+                  type='button'
+                >
+                  Create Cluster
+                </Button>
+              </ErrorFallback>
               {/* We want to hide cancel button when the Create NP button has been clicked */}
               {!submitting && (
                 <Button
@@ -558,6 +563,7 @@ CreateNodePoolsCluster.propTypes = {
   defaultAZ: PropTypes.number,
   clusterName: PropTypes.string,
   updateClusterNameInParent: PropTypes.func,
+  clusterCreateError: PropTypes.string,
 };
 
 function mapStateToProps(state) {
@@ -606,6 +612,10 @@ function mapStateToProps(state) {
     minAZ,
     maxAZ,
     defaultAZ,
+    clusterCreateError: selectErrorByAction(
+      state,
+      actionTypes.CLUSTER_CREATE_REQUEST
+    ),
   };
 }
 
