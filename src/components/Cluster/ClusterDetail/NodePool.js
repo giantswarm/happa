@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Code } from 'styles/';
+import { Code, Ellipsis } from 'styles/';
 import theme from 'styles/theme';
 import ViewAndEditName from 'UI/ViewEditName';
 
@@ -32,10 +32,8 @@ const NameWrapperDiv = styled.div`
     display: flex;
   }
   a {
-    text-overflow: ellipsis;
-    max-width: 95%;
+    ${Ellipsis}
     display: inline-block;
-    overflow: hidden;
   }
 `;
 
