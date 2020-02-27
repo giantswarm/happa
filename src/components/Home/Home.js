@@ -84,7 +84,7 @@ class Home extends React.Component {
 
     return (
       <DocumentTitle title={this.title()}>
-        <div>
+        <div data-testid='clusters-list'>
           {this.props.selectedOrganization && (
             <div className='well launch-new-cluster'>
               <Link to={newClusterPath}>
