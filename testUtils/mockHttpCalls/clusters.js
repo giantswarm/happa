@@ -121,7 +121,7 @@ export const v5ClustersResponse = [
   {
     create_date: clusterCreateDateToday,
     id: V5_CLUSTER.id,
-    name: 'V5 CLUSTER',
+    name: V5_CLUSTER.name,
     owner: ORGANIZATION,
     path: `/v5/clusters/${V5_CLUSTER.id}/`,
     release_version: V5_CLUSTER.releaseVersion,

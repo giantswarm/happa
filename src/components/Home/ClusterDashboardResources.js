@@ -40,7 +40,7 @@ function ClusterDashboardResources({
       {loading ? (
         <ClusterDashboardLoadingPlaceholder isV5Cluster={isV5Cluster} />
       ) : (
-        <div>
+        <div data-testid='cluster-resources'>
           {numberOfNodes !== 0 && hasNodePools && (
             <RefreshableLabel value={numberOfNodes}>
               <span>{cluster.nodePools.length} node pools, </span>
