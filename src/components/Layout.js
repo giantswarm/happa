@@ -87,52 +87,23 @@ class Layout extends React.Component {
           />
           <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
             <div className='main col-9'>
-              <Switch>
-                <Route
-                  exact
-                  path={AppRoutes.Home}
-                  render={routeProps => (
-                    <Suspense fallback={<LoadingOverlay loading={true} />}>
-                      <Home {...routeProps} />
-                    </Suspense>
-                  )}
-                />
-                <Route
-                  path={AppCatalogRoutes.Home}
-                  render={routeProps => (
-                    <Suspense fallback={<LoadingOverlay loading={true} />}>
-                      <AppCatalog {...routeProps} />
-                    </Suspense>
-                  )}
-                />
-                <Route
-                  exact
-                  path={UsersRoutes.Home}
-                  render={routeProps => (
-                    <Suspense fallback={<LoadingOverlay loading={true} />}>
-                      <Users {...routeProps} />
-                    </Suspense>
-                  )}
-                />
-                <Route
-                  path={OrganizationsRoutes.Home}
-                  render={routeProps => (
-                    <Suspense fallback={<LoadingOverlay loading={true} />}>
-                      <Organizations {...routeProps} />
-                    </Suspense>
-                  )}
-                />
-                <Route
-                  exact
-                  path={AccountSettingsRoutes.Home}
-                  render={routeProps => (
-                    <Suspense fallback={<LoadingOverlay loading={true} />}>
-                      <AccountSettings {...routeProps} />
-                    </Suspense>
-                  )}
-                />
-                <Redirect path='*' to={AppRoutes.Home} />
-              </Switch>
+              <Suspense fallback={<LoadingOverlay loading={true} />}>
+                <Switch>
+                  <Route exact path={AppRoutes.Home} component={Home} />
+                  <Route path={AppCatalogRoutes.Home} component={AppCatalog} />
+                  <Route exact path={UsersRoutes.Home} component={Users} />
+                  <Route
+                    path={OrganizationsRoutes.Home}
+                    component={Organizations}
+                  />
+                  <Route
+                    exact
+                    path={AccountSettingsRoutes.Home}
+                    component={AccountSettings}
+                  />
+                  <Redirect path='*' to={AppRoutes.Home} />
+                </Switch>
+              </Suspense>
             </div>
           </Breadcrumb>
         </LoadingOverlay>
