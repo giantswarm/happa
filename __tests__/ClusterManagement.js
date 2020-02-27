@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -10,7 +11,8 @@ import {
   appCatalogsResponse,
   appsResponse,
   AWSInfoResponse,
-  getPersistedMockCall,
+  getMockCall,
+  getMockCallTimes,
   nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
@@ -20,62 +22,45 @@ import {
   V4_CLUSTER,
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
-  v4ClustersResponse,
   V5_CLUSTER,
   v5ClusterResponse,
-  v5ClustersResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-// Tests setup
-const requests = {};
-
-// Responses to requests
 beforeAll(() => {
-  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
-  requests.organizations = getPersistedMockCall(
-    '/v4/organizations/',
-    orgsResponse
-  );
-  requests.organization = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/`,
-    orgResponse
-  );
-  requests.clusters = getPersistedMockCall('/v4/clusters/');
-  requests.apps = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/apps/`,
-    appsResponse
-  );
-  requests.keyPairs = getPersistedMockCall(
-    `/v4/clusters/${V5_CLUSTER.id}/key-pairs/`
-  );
-  requests.credentials = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/credentials/`
-  );
-  requests.appcatalogs = getPersistedMockCall(
-    '/v4/appcatalogs/',
-    appCatalogsResponse
-  );
+  nock.disableNetConnect();
 });
 
-// Stop persisting responses
 afterAll(() => {
-  Object.keys(requests).forEach(req => {
-    requests[req].persist(false);
-  });
+  nock.enableNetConnect();
+});
+
+afterEach(async () => {
+  await wait(() => expect(nock.isDone()).toBe(true));
+  nock.cleanAll();
+  forceRemoveAll();
 });
 
 /************ TESTS ************/
 it('creates a v5 cluster and redirect to details view', async () => {
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/info/', AWSInfoResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+  getMockCall('/v4/clusters/');
+  getMockCall('/v4/releases/', releasesResponse);
+  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/apps/`, appsResponse);
+  getMockCall(`/v4/clusters/${V5_CLUSTER.id}/key-pairs/`);
+
   const v5ClusterCreationResponse = {
     code: 'RESOURCE_CREATED',
     message: `The cluster with ID ${v5ClusterResponse.id} has been created.`,
   };
 
   // Cluster POST request
-  const v5ClusterCreationRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v5/clusters/`, 'POST')
     .reply(StatusCodes.Ok, v5ClusterCreationResponse, {
       location: `/v5/clusters/${v5ClusterResponse.id}/`,
@@ -85,25 +70,22 @@ it('creates a v5 cluster and redirect to details view', async () => {
   const nodePoolCreationResponse = { ...nodePoolsResponse[0] };
 
   // Node pools POST request
-  const nodePoolCreationRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v5/clusters/${v5ClusterResponse.id}/nodepools/`, 'POST')
     .reply(StatusCodes.Ok, nodePoolCreationResponse);
 
   // Node pools get
-  const nodePoolsRequest = getPersistedMockCall(
+  getMockCallTimes(
     `/v5/clusters/${v5ClusterResponse.id}/nodepools/`,
-    [nodePoolCreationResponse]
+    [nodePoolCreationResponse],
+    2
   );
 
-  // Clusters GET request
-  requests.clusters = getPersistedMockCall('/v4/clusters/', [
-    v5ClusterResponse,
-  ]);
-
   // Cluster GET request
-  const clusterRequest = getPersistedMockCall(
+  getMockCallTimes(
     `/v5/clusters/${v5ClusterResponse.id}/`,
-    v5ClusterResponse
+    v5ClusterResponse,
+    2
   );
 
   const newClusterPath = RoutePath.createUsablePath(
@@ -127,40 +109,33 @@ it('creates a v5 cluster and redirect to details view', async () => {
   expect(getByTestId('cluster-details-view')).toBeInTheDocument();
   expect(getAllByText(v5ClusterResponse.id));
   expect(getAllByText(nodePoolCreationResponse.id));
-
-  v5ClusterCreationRequest.done();
-  nodePoolCreationRequest.done();
-
-  clusterRequest.persist(false);
-  nodePoolsRequest.persist(false);
-
-  // Restore clusters request
-  requests.clusters.persist(false);
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v5ClustersResponse);
 });
 
 it(`switches to v4 cluster creation form, creates a v4 cluster and redirect to
 details view`, async () => {
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/info/', AWSInfoResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 3);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+  getMockCall('/v4/clusters/');
+  getMockCall('/v4/releases/', releasesResponse);
+
   const v4ClusterCreationResponse = {
     code: 'RESOURCE_CREATED',
     message: `The cluster with ID ${V4_CLUSTER.id} has been created.`,
   };
 
   // Cluster POST request
-  const v4ClusterCreationRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v4/clusters/`, 'POST')
     .reply(StatusCodes.Ok, v4ClusterCreationResponse, {
       location: `/v4/clusters/${V4_CLUSTER.id}/`, // Headers
     });
 
-  // Clusters GET request
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v4ClustersResponse);
-
   // Cluster GET request
-  const clusterRequest = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    v4AWSClusterResponse
-  );
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
 
   const newClusterPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.New,
@@ -168,22 +143,18 @@ details view`, async () => {
       orgId: ORGANIZATION,
     }
   );
+  getMockCallTimes(
+    `/v4/clusters/${V4_CLUSTER.id}/status/`,
+    v4AWSClusterStatusResponse,
+    2
+  );
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+
+  // Empty response
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+
   const { findByText, findByTestId, getAllByText } = renderRouteWithStore(
     newClusterPath
-  );
-
-  requests.status = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponse
-  );
-  requests.apps = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-    appsResponse
-  );
-  // TODO we are not requesting this in v5 cluster calls
-  // Empty response
-  requests.keyPairs = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/key-pairs/`
   );
 
   fireEvent.click(await findByText('Details and Alternatives'));
@@ -198,6 +169,7 @@ details view`, async () => {
       `.modal-content .release-selector-modal--release-details h2`
     )[1]
     .querySelector('button');
+
   fireEvent.click(button);
 
   // Click the create cluster button.
@@ -208,12 +180,32 @@ details view`, async () => {
 
   // Expect we have been redirected to the cluster details view
   expect(getAllByText(V4_CLUSTER.id)[0]).toBeInTheDocument();
+});
 
-  v4ClusterCreationRequest.done();
+it('redirects the user to clusters to list and shows flash message when cluster doesn’t exist', async () => {
+  const fakeCluster = 'f4ke1';
+  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/info/', AWSInfoResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+  getMockCall('/v4/clusters/');
 
-  clusterRequest.persist(false);
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      orgId: ORGANIZATION,
+      clusterId: fakeCluster,
+    }
+  );
+  const { getByTestId } = renderRouteWithStore(clusterDetailPath);
 
-  // Restore clusters request
-  requests.clusters.persist(false);
-  requests.clusters = getPersistedMockCall('/v4/clusters/');
+  // Expect we have been redirected to the clusters list.
+  await wait(() => expect(getByTestId('clusters-list')).toBeInTheDocument());
+
+  const flashMessage = document.querySelector('#noty_layout__topRight');
+  expect(flashMessage).toContainHTML(
+    `Cluster <code>f4ke1</code> doesn't exist.`
+  );
 });
