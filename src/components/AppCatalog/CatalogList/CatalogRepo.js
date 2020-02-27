@@ -5,17 +5,24 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
-import Button from 'UI/Button';
 import CatalogTypeLabel from 'UI/CatalogTypeLabel';
 
-const Repo = styled.div`
+import CatalogExternalLink from './CatalogExternalLink';
+
+const Repo = styled(Link)`
   flex: 0 0;
+  display: flex;
+  flex-direction: row;
   margin-bottom: 15px;
   border-radius: 5px;
   background-color: ${({ theme }) => theme.colors.shade4};
-  flex-direction: row;
-  display: flex;
   padding: 18px;
+  border: 1px solid transparent;
+
+  &:hover {
+    text-decoration: none;
+    border-color: ${({ theme }) => theme.colors.shade8};
+  }
 
   p {
     max-width: 600px;
@@ -42,9 +49,9 @@ const Image = styled.img`
   border-radius: 5px;
 `;
 
-const BrowseButton = styled(Button)`
-  margin: 0px;
-`;
+const markdownRenderers = {
+  link: CatalogExternalLink,
+};
 
 const CatalogRepo = ({ catalog }) => {
   const { name, labels } = catalog.metadata;
@@ -56,18 +63,16 @@ const CatalogRepo = ({ catalog }) => {
   );
 
   return (
-    <Repo>
+    <Repo to={appCatalogListPath}>
       <Image src={logoURL} alt={name} />
-
       <Description>
         <Title>{title}</Title>
         <CatalogTypeLabel
           catalogType={labels['application.giantswarm.io/catalog-type']}
         />
-        <ReactMarkdown>{description}</ReactMarkdown>
-        <Link className='app-catalog--open-catalog' to={appCatalogListPath}>
-          <BrowseButton>Browse Apps</BrowseButton>
-        </Link>
+        <ReactMarkdown renderers={markdownRenderers}>
+          {description}
+        </ReactMarkdown>
       </Description>
     </Repo>
   );
