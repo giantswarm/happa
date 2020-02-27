@@ -37,6 +37,14 @@ afterAll(() => {
   nock.enableNetConnect();
 });
 
+beforeEach(() => {
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/info/', AWSInfoResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+});
+
 afterEach(async () => {
   await wait(() => expect(nock.isDone()).toBe(true));
   nock.cleanAll();
@@ -45,12 +53,7 @@ afterEach(async () => {
 
 /************ TESTS ************/
 it('creates a v5 cluster and redirect to details view', async () => {
-  getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/info/', AWSInfoResponse);
-  getMockCall('/v4/organizations/', orgsResponse);
-  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
   getMockCall('/v4/clusters/');
   getMockCall('/v4/releases/', releasesResponse);
   getMockCall(`/v5/clusters/${V5_CLUSTER.id}/apps/`, appsResponse);
@@ -115,12 +118,7 @@ it('creates a v5 cluster and redirect to details view', async () => {
 
 it(`switches to v4 cluster creation form, creates a v4 cluster and redirect to
 details view`, async () => {
-  getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/info/', AWSInfoResponse);
-  getMockCall('/v4/organizations/', orgsResponse);
-  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 3);
-  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
   getMockCall('/v4/clusters/');
   getMockCall('/v4/releases/', releasesResponse);
 
@@ -187,11 +185,6 @@ details view`, async () => {
 it(`redirects the user to clusters to list and shows flash message when cluster doesn't exist`, async () => {
   const fakeCluster = 'f4ke1';
   getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-  getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/info/', AWSInfoResponse);
-  getMockCall('/v4/organizations/', orgsResponse);
-  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
   getMockCall('/v4/clusters/');
 
   const clusterDetailPath = RoutePath.createUsablePath(
@@ -212,13 +205,9 @@ it(`redirects the user to clusters to list and shows flash message when cluster 
   );
 });
 
-it.only('Cluster list shows all clusters, each one with its details, for the selected organization', async () => {
+it('Cluster list shows all clusters, each one with its details, for the selected organization', async () => {
   getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-  getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/info/', AWSInfoResponse);
-  getMockCall('/v4/organizations/', orgsResponse);
-  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+
   getMockCall('/v4/clusters/', [...v4ClustersResponse, ...v5ClustersResponse]);
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
   getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);
