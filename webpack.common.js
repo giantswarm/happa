@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: './src/components/app.js',
+  entry: ['react-hot-loader/patch', './src/components/index.js'],
   context: __dirname,
   output: {
     publicPath: '/',
