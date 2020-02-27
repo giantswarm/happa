@@ -1,15 +1,13 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { render } from '@testing-library/react';
+import App from 'App';
 import auth0 from 'auth0-js';
-import { ConnectedRouter, push } from 'connected-react-router';
-import { ThemeProvider } from 'emotion-theming';
+import { push } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import * as helpers from 'lib/helpers';
 import nock from 'nock';
 import React from 'react';
-import { Provider } from 'react-redux';
-import Routes from 'Routes';
 import { AuthorizationTypes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
@@ -75,15 +73,7 @@ const renderRouteWithStore = (
 
   store = configureStore(state, history);
 
-  const app = render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <Routes />
-        </ConnectedRouter>
-      </ThemeProvider>
-    </Provider>
-  );
+  const app = render(<App {...{ store, theme, history }} />);
 
   store.dispatch(push(initialRoute));
 

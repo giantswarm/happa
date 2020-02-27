@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
+import App from 'App';
 import { ConnectedRouter, push } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import Routes from 'Routes';
 import { AppRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
 import theme from 'styles/theme';
@@ -30,15 +30,7 @@ export function renderRouteWithStore(
 
   const store = configureStore(state, history);
 
-  const app = render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <Routes />
-        </ConnectedRouter>
-      </ThemeProvider>
-    </Provider>
-  );
+  const app = render(<App {...{ store, theme, history }} />);
 
   store.dispatch(push(initialRoute));
 
