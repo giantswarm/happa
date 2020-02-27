@@ -9,23 +9,15 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/app.sass';
 
 import { Notifier } from '@airbrake/browser';
-import { ConnectedRouter } from 'connected-react-router';
-import { ThemeProvider } from 'emotion-theming';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
 import { render } from 'react-dom';
-import { hot } from 'react-hot-loader';
-import { Provider } from 'react-redux';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import theme from 'styles/theme';
 
-import Routes from './Routes';
-
-// Remove the loading class on the body, the javascript has loaded now.
-const body = document.getElementsByTagName('body')[0];
-body.classList.remove('loading');
+import App from './App';
 
 // Configure the redux store.
 const store = configureStore({}, history);
@@ -70,19 +62,10 @@ history.listen(() => {
   window.scrollTo(0, 0);
 });
 
+// Remove the loading class on the body, the javascript has loaded now.
+const body = document.getElementsByTagName('body')[0];
+body.classList.remove('loading');
+
 // Finally, render the app!
 const appContainer = document.getElementById('app');
-
-const App = () => (
-  <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <ConnectedRouter history={history}>
-        <Routes />
-      </ConnectedRouter>
-    </ThemeProvider>
-  </Provider>
-);
-
-const HotApp = hot(module)(App);
-
-render(<HotApp />, appContainer);
+render(<App {...{ store, theme, history }} />, appContainer);
