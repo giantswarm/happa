@@ -30,6 +30,10 @@ else
   sed -i "s|environment: .*|environment: 'docker-container',|" /www/index.html
 fi
 
+# Remove the static releases from index.html so that releaseActions.js does an API call
+# instead of using the baked in values for development
+sed -i "s|staticReleases: .*,||" /www/index.html
+
 # This sets the VERSION placeholder in the footer to the version specified in the
 # VERSION file.
 VERSION=$(cat VERSION | tr '\n' ' ' | tr -d '[:space:]')

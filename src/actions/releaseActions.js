@@ -8,8 +8,20 @@ export function loadReleases() {
   return function(dispatch) {
     const releasesApi = new GiantSwarm.ReleasesApi();
 
-    return releasesApi
-      .getReleases()
+    let getReleaseMethod = releasesApi.getReleases.bind(releasesApi);
+
+    // Do not make an API call to the releases endpoint if we have
+    // config.staticReleases set. This is to ease development. "start.sh" removes
+    // the staticReleases in production.
+    if (window.config.staticReleases) {
+      getReleaseMethod = () => {
+        return Promise.new(resolve => {
+          resolve(window.config.staticReleases);
+        });
+      };
+    }
+
+    return getReleaseMethod()
       .then(allReleases => {
         if (allReleases.length === 0) {
           new FlashMessage(
