@@ -13,10 +13,12 @@ afterAll(() => {
 afterEach(async () => {
   await wait(() => {
     const done = nock.isDone();
-    const pendingMocks = nock.pendingMocks().map(mock => `${mock}\n`);
-    if (!done) {
-      throw new Error(`You still have pending mocks bro:\n ${pendingMocks}`);
-    }
+
+    // Uncomment the next lines to debug hanging requests
+    // const pendingMocks = nock.pendingMocks().map(mock => `${mock}\n`);
+    // if (!done) {
+    //   throw new Error(`You still have pending mocks bro:\n ${pendingMocks}`);
+    // }
 
     expect(done).toBeTruthy();
   });
