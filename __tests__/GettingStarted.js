@@ -26,8 +26,10 @@ beforeEach(() => {
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-  // prettier-ignore
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/status/`,v4AWSClusterStatusResponse);
+  getMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/status/`,
+    v4AWSClusterStatusResponse
+  );
 });
 
 afterEach(async () => {
