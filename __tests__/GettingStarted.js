@@ -32,17 +32,6 @@ beforeEach(() => {
   );
 });
 
-afterEach(async () => {
-  if (!nock.isDone()) {
-    // eslint-disable-next-line no-console
-    console.error('Nock has pending mocks:', nock.pendingMocks());
-  }
-
-  await wait(() => expect(nock.isDone()).toBeTruthy());
-
-  nock.cleanAll();
-});
-
 /************ TESTS ************/
 
 it('lets me get there from the dashboard and go through the pages', async () => {
