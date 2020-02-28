@@ -20,17 +20,14 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 // Responses to requests
 beforeEach(() => {
-  // prettier-ignore
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/info/', AWSInfoResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-  getMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4AWSClusterStatusResponse
-  );
+  // prettier-ignore
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/status/`,v4AWSClusterStatusResponse);
 });
 
 afterEach(async () => {
@@ -84,12 +81,8 @@ it('the get started button does not show up if the cluster is older than 30 days
 
   // prettier-ignore
   getMockCall('/v4/clusters/', [Object.assign({}, v4ClustersResponse[0], {create_date: clusterCreateDate2MonthsLater})]);
-  getMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    Object.assign({}, v4AWSClusterResponse, {
-      create_date: clusterCreateDate2MonthsLater,
-    })
-  );
+  // prettier-ignore
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`,Object.assign({}, v4AWSClusterResponse, {create_date: clusterCreateDate2MonthsLater,}));
 
   const { findByText, queryByText } = renderRouteWithStore(AppRoutes.Home);
 
