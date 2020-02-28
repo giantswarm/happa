@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 
 const StyledLink = styled(Link)`
   display: block;
-  border: 1px solid #2a5974;
+  border: 1px solid transparent;
   width: 100%;
   height: 100%;
   border-radius: ${props => props.theme.border_radius};
@@ -32,7 +32,7 @@ const StyledLink = styled(Link)`
     &,
     div:nth-of-type(1) {
       opacity: 1;
-      box-shadow: 0px 0px 5px #549ac3;
+      border-color: ${({ theme }) => theme.colors.shade8};
     }
   }
 `;

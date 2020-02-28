@@ -1,12 +1,8 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
-import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Link } from 'react-router-dom';
-import { AppCatalogRoutes } from 'shared/constants/routes';
-import Button from 'UI/Button';
-import CatalogTypeLabel from 'UI/CatalogTypeLabel';
+
+import CatalogRepo from './CatalogRepo';
 
 const CatalogList = props => (
   <DocumentTitle title='App Catalogs'>
@@ -22,45 +18,9 @@ const CatalogList = props => (
         </p>
       ) : (
         <div className='app-catalog--repos'>
-          {Object.keys(props.catalogs.items).map(catalogName => {
-            const appCatalogListPath = RoutePath.createUsablePath(
-              AppCatalogRoutes.AppList,
-              { repo: catalogName }
-            );
-
-            return (
-              <div
-                className='app-catalog--repo'
-                key={props.catalogs.items[catalogName].metadata.name}
-              >
-                <img
-                  height='100px'
-                  src={props.catalogs.items[catalogName].spec.logoURL}
-                  width='100px'
-                />
-
-                <div className='app-catalog--description'>
-                  <h3>{props.catalogs.items[catalogName].spec.title}</h3>
-                  <CatalogTypeLabel
-                    catalogType={
-                      props.catalogs.items[catalogName].metadata.labels[
-                        'application.giantswarm.io/catalog-type'
-                      ]
-                    }
-                  />
-                  <ReactMarkdown>
-                    {props.catalogs.items[catalogName].spec.description}
-                  </ReactMarkdown>
-                  <Link
-                    className='app-catalog--open-catalog'
-                    to={appCatalogListPath}
-                  >
-                    <Button>Browse Apps</Button>
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
+          {Object.values(props.catalogs.items).map(catalog => (
+            <CatalogRepo key={catalog.metadata.name} catalog={catalog} />
+          ))}
         </div>
       )}
     </>
