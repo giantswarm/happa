@@ -229,11 +229,6 @@ it('deletes a v4 cluster', async () => {
   await wait(() => {
     expect(queryByTestId(cluster.id)).not.toBeInTheDocument();
   });
-
-  // This is not inside the component tree we are testing and so it is not cleaned up
-  // after test, so we have to remove it manually in order to not cause conflicts with
-  // the next test with a flash message
-  document.querySelector('#noty_layout__topRight').remove();
 });
 
 it('patches v4 cluster name correctly', async () => {
