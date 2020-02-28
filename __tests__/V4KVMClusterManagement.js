@@ -31,10 +31,10 @@ beforeEach(() => {
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/info/', KVMInfoResponse);
   getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCall('/v4/releases/', releasesResponse);
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
   getMockCall('/v4/clusters/', v4ClustersResponse);
-  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
   getMockCall(
@@ -115,7 +115,7 @@ scales correctly`, async () => {
   });
 
   // Cluster scale request
-  const scaleRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${cluster.id}/`, 'PATCH')
     .reply(StatusCodes.Ok, scaleResponse);
 
@@ -155,6 +155,4 @@ scales correctly`, async () => {
   await findByText(
     /the cluster will be scaled within the next couple of minutes./i
   );
-
-  scaleRequest.done();
 });
