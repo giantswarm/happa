@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait, within } from '@testing-library/react';
-import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -30,26 +29,12 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-beforeAll(() => {
-  nock.disableNetConnect();
-});
-
-afterAll(() => {
-  nock.enableNetConnect();
-});
-
 beforeEach(() => {
   getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-});
-
-afterEach(async () => {
-  await wait(() => expect(nock.isDone()).toBe(true));
-  nock.cleanAll();
-  forceRemoveAll();
 });
 
 /************ TESTS ************/
@@ -119,6 +104,7 @@ it('creates a v5 cluster and redirect to details view', async () => {
 
 it(`switches to v4 cluster creation form, creates a v4 cluster and redirect to
 details view`, async () => {
+  // eslint-disable-next-line no-magic-numbers
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 3);
   getMockCall('/v4/clusters/');
   getMockCall('/v4/releases/', releasesResponse);

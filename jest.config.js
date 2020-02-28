@@ -9,6 +9,7 @@ module.exports = {
     path.resolve(`${__dirname}/testUtils/browserMocks.js`),
     path.resolve(`${__dirname}/testUtils/modelMocks.js`),
   ],
+  setupFilesAfterEnv: [path.resolve(`${__dirname}/testUtils/setupTests.js`)],
   moduleDirectories: [
     'node_modules',
     path.resolve(`${__dirname}/src`),

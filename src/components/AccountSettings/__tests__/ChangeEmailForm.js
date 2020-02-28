@@ -105,7 +105,7 @@ describe('ChangeEmailForm', () => {
     const refreshUserInfoFn = jest.fn();
     const newEmail = 'test@example.com';
 
-    const emailChangeRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(`/v4/users/${encodedEmail}/`, 'PATCH', {
         email: newEmail,
       })
@@ -126,8 +126,6 @@ describe('ChangeEmailForm', () => {
     await findByText(statusMessages.Success);
 
     expect(refreshUserInfoFn).toHaveBeenCalled();
-
-    emailChangeRequest.done();
   });
 
   it('shows error messages if the request fails', async () => {
@@ -135,7 +133,7 @@ describe('ChangeEmailForm', () => {
     const refreshUserInfoFn = jest.fn();
     const newEmail = 'test@example.com';
 
-    const emailChangeRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(`/v4/users/${encodedEmail}/`, 'PATCH', {
         email: newEmail,
       })
@@ -156,7 +154,5 @@ describe('ChangeEmailForm', () => {
     await findByText(new RegExp(statusMessages.ServerError));
 
     expect(refreshUserInfoFn).not.toHaveBeenCalled();
-
-    emailChangeRequest.done();
   });
 });

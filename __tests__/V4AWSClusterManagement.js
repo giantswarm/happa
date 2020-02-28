@@ -28,30 +28,22 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 
 // Responses to requests
 beforeEach(() => {
-  nock.disableNetConnect();
-
   getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCall('/v4/releases/', releasesResponse);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
   getMockCall('/v4/clusters/', v4ClustersResponse);
-  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
   getMockCallTimes(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
     v4AWSClusterStatusResponse,
     2
   );
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
-  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`, 3);
-  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, {}, 3);
-  getMockCall('/v4/releases/', releasesResponse);
-  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-});
-
-afterEach(() => {
-  nock.enableNetConnect();
-  expect(nock.isDone());
-  nock.cleanAll();
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
 });
 
 /************ TESTS ************/
@@ -148,15 +140,6 @@ scales correctly`, async () => {
     ).toBe('3');
   });
 
-  // Replace status response
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/status/`, {
-    ...v4AWSClusterStatusResponse,
-    cluster: {
-      ...v4AWSClusterStatusResponse.cluster,
-      scaling: { desiredCapacity: newScaling.max },
-    },
-  });
-
   // Click edit button. Will throw an error if it founds more thanon edit button
   fireEvent.click(getByText(/edit/i));
 
@@ -192,6 +175,8 @@ scales correctly`, async () => {
 });
 
 it('deletes a v4 cluster', async () => {
+  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+
   const cluster = v4AWSClusterResponse;
   const clusterDeleteResponse = {
     code: 'RESOURCE_DELETION_STARTED',
@@ -199,7 +184,7 @@ it('deletes a v4 cluster', async () => {
   };
 
   // Request
-  const clusterDeleteRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'DELETE')
     .reply(StatusCodes.Ok, clusterDeleteResponse);
 
@@ -245,12 +230,6 @@ it('deletes a v4 cluster', async () => {
   await wait(() => {
     expect(queryByTestId(cluster.id)).not.toBeInTheDocument();
   });
-
-  // This is not inside the component tree we are testing and so it is not cleaned up
-  // after test, so we have to remove it manually in order to not cause conflicts with
-  // the next test with a flash message
-  document.querySelector('#noty_layout__topRight').remove();
-  clusterDeleteRequest.done();
 });
 
 it('patches v4 cluster name correctly', async () => {
@@ -264,7 +243,7 @@ it('patches v4 cluster name correctly', async () => {
   };
 
   // Request
-  const clusterPatchRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${V4_CLUSTER.id}/`, 'PATCH')
     .reply(StatusCodes.Ok, clusterPatchResponse);
 
@@ -300,10 +279,6 @@ it('patches v4 cluster name correctly', async () => {
   });
 
   expect(getByText(newClusterName)).toBeInTheDocument();
-
-  // Assert that the mocked responses got called, tell them to stop waiting for
-  // a request.
-  clusterPatchRequest.done();
 });
 
 /******************** PENDING TESTS ********************/

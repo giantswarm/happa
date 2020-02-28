@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
-import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -29,35 +28,10 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('AppCatalog', () => {
-  // eslint-disable-next-line no-console
-  const originalConsoleError = console.error;
-
-  beforeAll(() => {
-    nock.disableNetConnect();
-    // eslint-disable-next-line no-console
-    console.error = jest.fn();
-  });
-
-  afterAll(() => {
-    nock.enableNetConnect();
-    // eslint-disable-next-line no-console
-    console.error = originalConsoleError;
-  });
-
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
-  });
-
-  afterEach(() => {
-    const pendingMocks = nock.pendingMocks();
-    if (pendingMocks.length) console.log('pending mocks:', pendingMocks);
-
-    expect(nock.isDone()).toBeTruthy();
-    nock.cleanAll();
-
-    forceRemoveAll();
   });
 
   /************ TESTS ************/

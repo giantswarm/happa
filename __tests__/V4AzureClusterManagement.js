@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
-import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -29,20 +28,6 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 
 describe('V4AzureClusterManagement', () => {
   const minNodesCount = 3;
-  // eslint-disable-next-line no-console
-  const originalConsoleError = console.error;
-
-  beforeAll(() => {
-    nock.disableNetConnect();
-    // eslint-disable-next-line no-console
-    console.error = jest.fn();
-  });
-
-  afterAll(() => {
-    nock.enableNetConnect();
-    // eslint-disable-next-line no-console
-    console.error = originalConsoleError;
-  });
 
   // Responses to requests
   beforeEach(() => {
@@ -58,23 +43,6 @@ describe('V4AzureClusterManagement', () => {
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-  });
-
-  // Stop persisting responses
-  afterEach(async () => {
-    await wait(() => {
-      const isDone = nock.isDone();
-
-      if (!isDone) {
-        // eslint-disable-next-line no-console
-        console.error('Nock has pending mocks:', nock.pendingMocks());
-      }
-      expect(isDone).toBeTruthy();
-    });
-
-    nock.cleanAll();
-
-    forceRemoveAll();
   });
 
   it('renders all the v4 Azure cluster data correctly', async () => {
@@ -159,11 +127,18 @@ describe('V4AzureClusterManagement', () => {
 
   it('can customize availability zones during cluster creation', async () => {
     getMockCall('/v4/releases/', releasesResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AzureClusterResponse);
-    getMockCall(
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCallTimes(
+      `/v4/clusters/${V4_CLUSTER.id}/`,
+      v4AzureClusterResponse,
+      2
+    );
+    getMockCallTimes(
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AzureClusterStatusResponse
+      v4AzureClusterStatusResponse,
+      2
     );
 
     const clusterCreationResponse = {
@@ -209,7 +184,11 @@ describe('V4AzureClusterManagement', () => {
     expect(azInput.value).toBe(String(maxAZCount));
 
     const createButton = getByText('Create Cluster');
+    expect(createButton.disabled).toBeFalsy();
     fireEvent.click(createButton);
+
+    const successMessage = await findByText(/is being created/i);
+    expect(successMessage).toBeInTheDocument();
 
     await waitForDomChange();
   });

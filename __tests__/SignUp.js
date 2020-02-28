@@ -14,9 +14,6 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-// eslint-disable-next-line no-console
-const originalConsoleError = console.error;
-
 const testToken = 'm0ckt0ken';
 const tokenTestPath = `/invite/${testToken}`;
 
@@ -24,26 +21,14 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
   token: testToken,
 });
 
-/**
- * Bump the jest test duration to 10 secs, since this is
- * a pretty long test suite
- */
-// eslint-disable-next-line no-magic-numbers
-jest.setTimeout(10 * 1000);
-
-beforeAll(() => {
-  nock.disableNetConnect();
-  // eslint-disable-next-line no-console
-  console.error = jest.fn();
-});
-
-afterAll(() => {
-  nock.enableNetConnect();
-  // eslint-disable-next-line no-console
-  console.error = originalConsoleError;
-});
-
 describe('Signup', () => {
+  beforeEach(() => {
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getMockCall('/v4/appcatalogs/');
+    getMockCall('/v4/clusters/');
+    getMockCall('/v4/organizations/');
+  });
+
   it('renders without crashing', async () => {
     const { findByText } = renderRouteWithStore(verifyingRoute);
 
@@ -51,7 +36,7 @@ describe('Signup', () => {
   });
 
   it('checks invite token on route load', async () => {
-    const verifyingRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
         email: USER_EMAIL,
@@ -66,12 +51,10 @@ describe('Signup', () => {
     await wait(() => {
       expect(statusMessage.textContent.match(/valid/i)).toBeTruthy();
     });
-
-    verifyingRequest.done();
   });
 
   it('displays a warning if the invite token is no longer valid', async () => {
-    const verifyingRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
         is_valid: false,
@@ -89,8 +72,6 @@ describe('Signup', () => {
         )
       ).toBeInTheDocument();
     });
-
-    verifyingRequest.done();
   });
 
   it('registers a new user if the token is valid', async () => {
@@ -100,7 +81,7 @@ describe('Signup', () => {
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');
 
-    const verifyingRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
         email: USER_EMAIL,
@@ -124,8 +105,6 @@ describe('Signup', () => {
 
     const nextButton = await findByTitle(/next/i);
     let fieldToValidate = getByLabelText(/set a password/i);
-
-    verifyingRequest.done();
 
     // Input validation
 
@@ -217,7 +196,7 @@ describe('Signup', () => {
     expect(nextButton.disabled).toBeFalsy();
 
     // Send account creation request
-    const createAccountRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .post('/accounts/', {
         invite_token: testToken,
         password: 'g00dPa$$w0rD',
@@ -235,12 +214,10 @@ describe('Signup', () => {
 
     // Check if the user has been redirected to the homepage
     await findByText(/there are no organizations yet in your installation./i);
-
-    createAccountRequest.done();
   });
 
   it('displays a warning if the user creation request fails', async () => {
-    const verifyingRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
         email: USER_EMAIL,
@@ -257,8 +234,6 @@ describe('Signup', () => {
 
     const nextButton = await findByTitle(/next/i);
     let fieldToUse = getByLabelText(/set a password/i);
-
-    verifyingRequest.done();
 
     // Input validation
 
@@ -287,7 +262,7 @@ describe('Signup', () => {
     fireEvent.click(fieldToUse);
 
     // Send account creation request
-    const createAccountRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .post('/accounts/', {
         invite_token: testToken,
         password: 'g00dPa$$w0rD',
@@ -300,7 +275,5 @@ describe('Signup', () => {
     await wait(() => {
       expect(statusMessage.textContent.match(/failed/i)).toBeTruthy();
     });
-
-    createAccountRequest.done();
   });
 });

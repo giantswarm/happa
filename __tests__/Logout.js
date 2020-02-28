@@ -18,15 +18,15 @@ it('logging out redirects to the login page', async () => {
   // that I am already logged in on.
 
   // The response to the user info call
-  const userInfoRequest = getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/user/', userResponse);
   // The response to the info call
   getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
   // The response to the org call (no orgs)
-  const orgRequest = getMockCall('/v4/organizations/');
+  getMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
-  const clustersRequest = getMockCall('/v4/clusters/');
+  getMockCall('/v4/clusters/');
   // The response to the appcatalogs call (no catalogs)
-  const appcatalogsRequest = getMockCall('/v4/appcatalogs/');
+  getMockCall('/v4/appcatalogs/');
 
   nock(API_ENDPOINT)
     .delete('/v4/auth-tokens/')
@@ -51,11 +51,4 @@ it('logging out redirects to the login page', async () => {
   await wait(() => {
     expect(getByText('Log in')).toBeInTheDocument();
   });
-
-  // Assert that the mocked responses got called, tell them to stop waiting for
-  // a request.
-  userInfoRequest.done();
-  orgRequest.done();
-  clustersRequest.done();
-  appcatalogsRequest.done();
 });
