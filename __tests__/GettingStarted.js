@@ -79,10 +79,17 @@ it('the get started button does not show up if the cluster is older than 30 days
 
   const clusterCreateDate2MonthsLater = futureDate.toISOString();
 
-  // prettier-ignore
-  getMockCall('/v4/clusters/', [Object.assign({}, v4ClustersResponse[0], {create_date: clusterCreateDate2MonthsLater})]);
-  // prettier-ignore
-  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`,Object.assign({}, v4AWSClusterResponse, {create_date: clusterCreateDate2MonthsLater,}));
+  const modifiedClustersResponse = [
+    Object.assign({}, v4ClustersResponse[0], {
+      create_date: clusterCreateDate2MonthsLater,
+    }),
+  ];
+  const modifiedClusterResponse = Object.assign({}, v4AWSClusterResponse, {
+    create_date: clusterCreateDate2MonthsLater,
+  });
+
+  getMockCall('/v4/clusters/', modifiedClustersResponse);
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, modifiedClusterResponse);
 
   const { findByText, queryByText } = renderRouteWithStore(AppRoutes.Home);
 
