@@ -5,7 +5,10 @@ process.env.DEBUG_PRINT_LIMIT = 10000;
 module.exports = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
   testURL: 'http://localhost',
-  setupFiles: [path.resolve(`${__dirname}/testUtils/browserMocks.js`)],
+  setupFiles: [
+    path.resolve(`${__dirname}/testUtils/browserMocks.js`),
+    path.resolve(`${__dirname}/testUtils/modelMocks.js`),
+  ],
   setupFilesAfterEnv: [path.resolve(`${__dirname}/testUtils/setupTests.js`)],
   moduleDirectories: [
     'node_modules',

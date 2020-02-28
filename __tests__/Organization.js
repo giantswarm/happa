@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -25,8 +26,8 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('', () => {
   beforeEach(() => {
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/info/', AWSInfoResponse);
     getMockCall('/v4/organizations/', orgsResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`, []);
@@ -298,8 +299,8 @@ describe('', () => {
 
 describe('Organization deletion', () => {
   it('shows the organization deletion modal when requested and organization deletion success flash', async () => {
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/info/', AWSInfoResponse);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);

@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -28,8 +29,8 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 const minNodesCount = 3;
 
 beforeEach(() => {
+  getInstallationInfo.mockResolvedValueOnce(KVMInfoResponse);
   getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/info/', KVMInfoResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCall('/v4/releases/', releasesResponse);

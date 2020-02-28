@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
@@ -22,7 +23,7 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
 
 describe('Signup', () => {
   beforeEach(() => {
-    getMockCall('/v4/info/', AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/clusters/');
     getMockCall('/v4/organizations/');
@@ -74,8 +75,8 @@ describe('Signup', () => {
   });
 
   it('registers a new user if the token is valid', async () => {
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/info/', AWSInfoResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');

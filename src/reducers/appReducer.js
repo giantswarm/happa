@@ -31,6 +31,7 @@ const makeAppReducer = () => {
           email: action.email,
         });
         setUserToStorage(newUser);
+
         draft.loggedInUser = newUser;
 
         return;
@@ -41,25 +42,25 @@ const makeAppReducer = () => {
 
         return;
 
-      case types.LOGIN_SUCCESS:
-        // TODO This is a Side effect.
-        // Is there a better place for setUserToStorage()?
+      case types.LOGIN_SUCCESS: {
         setUserToStorage(action.userData);
+
         draft.loggedInUser = action.userData;
 
         return;
+      }
 
       case types.LOGIN_ERROR:
       case types.LOGOUT_SUCCESS:
       case types.LOGOUT_ERROR:
-      case types.UNAUTHORIZED:
-        // TODO This is a Side effect.
-        // Is there a better place for removeUserFromStorage()?
+      case types.UNAUTHORIZED: {
         removeUserFromStorage();
+
         draft.loggedInUser = {};
         draft.firstLoadComplete = false;
 
         return;
+      }
 
       case types.ORGANIZATION_SELECT:
         draft.selectedOrganization = action.orgId;

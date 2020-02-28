@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, wait } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -28,8 +29,8 @@ import { getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
 
 // Responses to requests
 beforeEach(() => {
+  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
   getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/info/', AWSInfoResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCall('/v4/clusters/', v5ClustersResponse);

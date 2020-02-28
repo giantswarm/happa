@@ -1,7 +1,7 @@
 import * as userActions from 'actions/userActions';
 import { push } from 'connected-react-router';
 import { spinner } from 'images';
-import Auth0 from 'lib/auth0';
+import Auth from 'lib/auth0';
 import { clearQueues } from 'lib/flashMessage';
 import { isJwtExpired } from 'lib/helpers';
 import PropTypes from 'prop-types';
@@ -13,7 +13,7 @@ import { AppRoutes } from 'shared/constants/routes';
 
 class AdminLogin extends React.Component {
   componentDidMount() {
-    const auth0 = new Auth0();
+    const auth = Auth.getInstance();
 
     if (
       this.props.user &&
@@ -23,7 +23,7 @@ class AdminLogin extends React.Component {
       if (isJwtExpired(this.props.user.auth.token)) {
         // Token is expired. Try to renew it silently, and if that succeeds, redirect
         // the user to the dashboard. Otherwise, send them to Auth0 to refresh the token that way.
-        auth0
+        auth
           .renewToken()
           .then(async result => {
             // Update state with new token.
@@ -37,7 +37,7 @@ class AdminLogin extends React.Component {
             console.error(e);
             // Unable to refresh token silently, so send the down the auth0
             // flow.
-            auth0.login();
+            auth.login();
           });
       } else {
         // Token isn't expired yet, so just redirect the user to the dashboard.
@@ -46,7 +46,7 @@ class AdminLogin extends React.Component {
     } else {
       // User doesn't have any previous token at all, send them to auth0 so
       // they can get one.
-      auth0.login();
+      auth.login();
     }
   }
 
