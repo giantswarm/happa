@@ -28,6 +28,13 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
 jest.setTimeout(10 * 1000);
 
 describe('Signup', () => {
+  beforeEach(() => {
+    getMockCall('/v4/info/', AWSInfoResponse);
+    getMockCall('/v4/appcatalogs/');
+    getMockCall('/v4/clusters/');
+    getMockCall('/v4/organizations/');
+  });
+
   it('renders without crashing', async () => {
     const { findByText } = renderRouteWithStore(verifyingRoute);
 
@@ -35,7 +42,7 @@ describe('Signup', () => {
   });
 
   it('checks invite token on route load', async () => {
-    const verifyingRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
         email: USER_EMAIL,
@@ -50,12 +57,10 @@ describe('Signup', () => {
     await wait(() => {
       expect(statusMessage.textContent.match(/valid/i)).toBeTruthy();
     });
-
-    verifyingRequest.done();
   });
 
   it('displays a warning if the invite token is no longer valid', async () => {
-    const verifyingRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
         is_valid: false,
@@ -73,8 +78,6 @@ describe('Signup', () => {
         )
       ).toBeInTheDocument();
     });
-
-    verifyingRequest.done();
   });
 
   it('registers a new user if the token is valid', async () => {
@@ -84,7 +87,7 @@ describe('Signup', () => {
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');
 
-    const verifyingRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
         email: USER_EMAIL,
@@ -108,8 +111,6 @@ describe('Signup', () => {
 
     const nextButton = await findByTitle(/next/i);
     let fieldToValidate = getByLabelText(/set a password/i);
-
-    verifyingRequest.done();
 
     // Input validation
 
@@ -201,7 +202,7 @@ describe('Signup', () => {
     expect(nextButton.disabled).toBeFalsy();
 
     // Send account creation request
-    const createAccountRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .post('/accounts/', {
         invite_token: testToken,
         password: 'g00dPa$$w0rD',
@@ -219,12 +220,10 @@ describe('Signup', () => {
 
     // Check if the user has been redirected to the homepage
     await findByText(/there are no organizations yet in your installation./i);
-
-    createAccountRequest.done();
   });
 
   it('displays a warning if the user creation request fails', async () => {
-    const verifyingRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
         email: USER_EMAIL,
@@ -241,8 +240,6 @@ describe('Signup', () => {
 
     const nextButton = await findByTitle(/next/i);
     let fieldToUse = getByLabelText(/set a password/i);
-
-    verifyingRequest.done();
 
     // Input validation
 
@@ -271,7 +268,7 @@ describe('Signup', () => {
     fireEvent.click(fieldToUse);
 
     // Send account creation request
-    const createAccountRequest = nock(global.config.passageEndpoint)
+    nock(global.config.passageEndpoint)
       .post('/accounts/', {
         invite_token: testToken,
         password: 'g00dPa$$w0rD',
@@ -284,7 +281,5 @@ describe('Signup', () => {
     await wait(() => {
       expect(statusMessage.textContent.match(/failed/i)).toBeTruthy();
     });
-
-    createAccountRequest.done();
   });
 });

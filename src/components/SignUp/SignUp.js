@@ -17,6 +17,8 @@ import TermsOfService from './TermsOfService';
 const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
 export class SignUp extends React.Component {
+  isComponentMounted = false;
+
   state = {
     statusMessage: 'verify_started',
     // eslint-disable-next-line react/no-unused-state
@@ -54,6 +56,7 @@ export class SignUp extends React.Component {
   }
 
   componentDidMount() {
+    this.isComponentMounted = true;
     const token = this.props.match.params.token;
     const statusMessageChangeTimeout = 800;
 
@@ -68,11 +71,13 @@ export class SignUp extends React.Component {
         });
 
         setTimeout(() => {
-          this.setState({
-            statusMessage: 'enter_password',
-          });
+          if (this.isComponentMounted) {
+            this.setState({
+              statusMessage: 'enter_password',
+            });
 
-          this.advanceForm();
+            this.advanceForm();
+          }
         }, statusMessageChangeTimeout);
       })
       .catch(error => {
@@ -98,6 +103,10 @@ export class SignUp extends React.Component {
       this.resetForm();
       this.componentDidMount();
     }
+  }
+
+  componentWillUnmount() {
+    this.isComponentMounted = false;
   }
 
   advanceForm() {
