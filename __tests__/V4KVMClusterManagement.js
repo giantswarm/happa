@@ -27,14 +27,6 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 
 const minNodesCount = 3;
 
-beforeAll(() => {
-  nock.disableNetConnect();
-});
-
-afterAll(() => {
-  nock.enableNetConnect();
-});
-
 beforeEach(() => {
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/info/', KVMInfoResponse);
@@ -55,12 +47,6 @@ beforeEach(() => {
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
   getMockCall('/v4/releases/', releasesResponse);
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-});
-
-// Stop persisting responses
-afterEach(() => {
-  expect(nock.isDone());
-  nock.cleanAll();
 });
 
 it('renders all the v4 KVM cluster data correctly', async () => {

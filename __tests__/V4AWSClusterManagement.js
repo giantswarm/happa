@@ -27,8 +27,6 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 
 // Responses to requests
 beforeEach(() => {
-  nock.disableNetConnect();
-
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/info/', AWSInfoResponse);
   getMockCall('/v4/organizations/', orgsResponse);
@@ -41,16 +39,12 @@ beforeEach(() => {
     2
   );
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+  // eslint-disable-next-line no-magic-numbers
   getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`, 3);
+  // eslint-disable-next-line no-magic-numbers
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, {}, 3);
   getMockCall('/v4/releases/', releasesResponse);
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-});
-
-afterEach(() => {
-  nock.enableNetConnect();
-  expect(nock.isDone());
-  nock.cleanAll();
 });
 
 /************ TESTS ************/

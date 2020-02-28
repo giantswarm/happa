@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
-import { forceRemoveAll } from 'lib/flashMessage';
+import { fireEvent, waitForDomChange } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -18,27 +17,6 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('PasswordReset', () => {
-  beforeAll(() => {
-    nock.disableNetConnect();
-  });
-
-  afterAll(() => {
-    nock.enableNetConnect();
-  });
-
-  afterEach(async () => {
-    if (!nock.isDone()) {
-      // eslint-disable-next-line no-console
-      console.error('Nock has pending mocks:', nock.pendingMocks());
-    }
-
-    await wait(() => expect(nock.isDone()).toBeTruthy());
-
-    nock.cleanAll();
-
-    forceRemoveAll();
-  });
-
   // Letting the server know that you forgot your
   describe('ForgotPassword', () => {
     it('takes us to the forgot password form when clicking on "Forgot your password?" from the login form', async () => {

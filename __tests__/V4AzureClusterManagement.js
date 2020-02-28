@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
-import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -32,13 +31,11 @@ describe('V4AzureClusterManagement', () => {
   const originalConsoleError = console.error;
 
   beforeAll(() => {
-    nock.disableNetConnect();
     // eslint-disable-next-line no-console
     console.error = jest.fn();
   });
 
   afterAll(() => {
-    nock.enableNetConnect();
     // eslint-disable-next-line no-console
     console.error = originalConsoleError;
   });
@@ -57,23 +54,6 @@ describe('V4AzureClusterManagement', () => {
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-  });
-
-  // Stop persisting responses
-  afterEach(async () => {
-    await wait(() => {
-      const isDone = nock.isDone();
-
-      if (!isDone) {
-        // eslint-disable-next-line no-console
-        console.error('Nock has pending mocks:', nock.pendingMocks());
-      }
-      expect(isDone).toBeTruthy();
-    });
-
-    nock.cleanAll();
-
-    forceRemoveAll();
   });
 
   it('renders all the v4 Azure cluster data correctly', async () => {

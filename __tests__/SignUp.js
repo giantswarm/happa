@@ -13,9 +13,6 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-// eslint-disable-next-line no-console
-const originalConsoleError = console.error;
-
 const testToken = 'm0ckt0ken';
 const tokenTestPath = `/invite/${testToken}`;
 
@@ -29,18 +26,6 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
  */
 // eslint-disable-next-line no-magic-numbers
 jest.setTimeout(10 * 1000);
-
-beforeAll(() => {
-  nock.disableNetConnect();
-  // eslint-disable-next-line no-console
-  console.error = jest.fn();
-});
-
-afterAll(() => {
-  nock.enableNetConnect();
-  // eslint-disable-next-line no-console
-  console.error = originalConsoleError;
-});
 
 describe('Signup', () => {
   it('renders without crashing', async () => {

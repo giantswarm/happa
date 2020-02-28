@@ -23,22 +23,6 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-beforeAll(() => {
-  nock.disableNetConnect();
-});
-
-afterAll(() => {
-  nock.enableNetConnect();
-});
-
-afterEach(() => {
-  if (!nock.isDone()) {
-    console.error('Nock has pending mocks:', nock.pendingMocks());
-  }
-
-  nock.cleanAll();
-});
-
 describe('', () => {
   beforeEach(() => {
     getMockCall('/v4/user/', userResponse);

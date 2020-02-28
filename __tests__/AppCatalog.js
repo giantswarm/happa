@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
-import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -32,13 +31,11 @@ describe('AppCatalog', () => {
   const originalConsoleError = console.error;
 
   beforeAll(() => {
-    nock.disableNetConnect();
     // eslint-disable-next-line no-console
     console.error = jest.fn();
   });
 
   afterAll(() => {
-    nock.enableNetConnect();
     // eslint-disable-next-line no-console
     console.error = originalConsoleError;
   });
@@ -47,16 +44,6 @@ describe('AppCatalog', () => {
     getMockCall('/v4/info/', AWSInfoResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
-  });
-
-  afterEach(() => {
-    const pendingMocks = nock.pendingMocks();
-    if (pendingMocks.length) console.log('pending mocks:', pendingMocks);
-
-    expect(nock.isDone()).toBeTruthy();
-    nock.cleanAll();
-
-    forceRemoveAll();
   });
 
   /************ TESTS ************/

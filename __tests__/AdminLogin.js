@@ -6,7 +6,6 @@ import { ConnectedRouter, push } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import { createMemoryHistory } from 'history';
 import * as helpers from 'lib/helpers';
-import nock from 'nock';
 import React from 'react';
 import { Provider } from 'react-redux';
 import Routes from 'Routes';
@@ -92,13 +91,11 @@ const renderRouteWithStore = (
 
 describe('AdminLogin', () => {
   beforeAll(() => {
-    nock.disableNetConnect();
     // eslint-disable-next-line no-console
     console.error = jest.fn();
   });
 
   afterAll(() => {
-    nock.enableNetConnect();
     // eslint-disable-next-line no-console
     console.error = originalConsoleError;
   });
