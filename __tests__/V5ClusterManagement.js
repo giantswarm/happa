@@ -135,7 +135,7 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   };
 
   // Request
-  const nodePoolPatchRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePoolsResponse[0].id}/`,
       'PATCH'
@@ -192,10 +192,6 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   // after test, so we have to remove it manually in order to not cause conflicts with
   // the next test with a flash message
   document.querySelector('#noty_layout__topRight').remove();
-
-  // Assert that the mocked responses got called, tell them to stop waiting for
-  // a request.
-  nodePoolPatchRequest.done();
 });
 
 // TODO This test triggers a memory leak error related with setting state depending
@@ -219,7 +215,7 @@ scales node pools correctly`, async () => {
   };
 
   // Request
-  const nodePoolPatchRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
       'PATCH'
@@ -292,8 +288,6 @@ scales node pools correctly`, async () => {
   // after test, so we have to remove it manually in order to not cause conflicts with
   // the next test with a flash message
   document.querySelector('#noty_layout__topRight').remove();
-
-  nodePoolPatchRequest.done();
 });
 
 it('deletes a v5 cluster', async () => {
@@ -304,7 +298,7 @@ it('deletes a v5 cluster', async () => {
   };
 
   // Request
-  const clusterDeleteRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${V5_CLUSTER.id}/`, 'DELETE')
     .reply(StatusCodes.Ok, clusterDeleteResponse);
 
@@ -355,7 +349,6 @@ it('deletes a v5 cluster', async () => {
   // after test, so we have to remove it manually in order to not cause conflicts with
   // the next test with a flash message
   document.querySelector('#noty_layout__topRight').remove();
-  clusterDeleteRequest.done();
 });
 
 it('deletes a node pool', async () => {
@@ -366,7 +359,7 @@ it('deletes a node pool', async () => {
   };
 
   // Request
-  const nodePoolDeleteRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
       'DELETE'
@@ -419,8 +412,6 @@ it('deletes a node pool', async () => {
   await wait(() => {
     expect(queryByTestId(nodePool.id)).not.toBeInTheDocument();
   });
-
-  nodePoolDeleteRequest.done();
 });
 
 it('adds a node pool with default values', async () => {
@@ -438,7 +429,7 @@ it('adds a node pool with default values', async () => {
   };
 
   // Request
-  const nodePoolCreationRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v5/clusters/${V5_CLUSTER.id}/nodepools/`, 'POST')
     .reply(StatusCodes.Ok, nodePoolCreationResponse);
 
@@ -474,8 +465,6 @@ it('adds a node pool with default values', async () => {
   });
 
   expect(getByText(nodePoolCreationResponse.id)).toBeInTheDocument();
-
-  nodePoolCreationRequest.done();
 });
 
 it('renders an error message if there was an error loading apps', () => {

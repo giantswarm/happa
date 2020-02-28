@@ -128,7 +128,7 @@ it('shows an error if the user logs in with invalid credentials', async () => {
   // Given I have a Giant Swarm API that does not accept my login attempt
 
   // The failed 401 response to the login call
-  const authTokensRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .post('/v4/auth-tokens/')
     .reply(StatusCodes.Unauthorized);
 
@@ -157,7 +157,6 @@ it('shows an error if the user logs in with invalid credentials', async () => {
     expect(getByText(/Could not log in/i)).toBeInTheDocument();
   });
 
-  authTokensRequest.done();
   // Restore console.og
   console.error = originalConsoleError;
   /* eslint-enable no-console */
