@@ -219,10 +219,10 @@ describe('AdminLogin', () => {
 
   it('redirects to OAuth provider login page if renewing the token fails', async () => {
     getMockCall('/v4/user/', userResponse);
-    getMockCallTimes('/v4/info/', AWSInfoResponse, 2);
-    getMockCallTimes('/v4/appcatalogs/', [], 2);
+    getMockCall('/v4/info/', AWSInfoResponse);
+    getMockCall('/v4/appcatalogs/', []);
     getMockCall('/v4/organizations/');
-    getMockCallTimes('/v4/clusters/', [], 2);
+    getMockCall('/v4/clusters/', []);
 
     const mockAuthResponseWithNewToken = Object.assign(
       {},
