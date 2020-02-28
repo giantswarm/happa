@@ -160,11 +160,7 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   expect(reSortedNodePools[1]).toHaveTextContent(nodePoolId);
 });
 
-// TODO This test triggers a memory leak error related with setting state depending
-// on the response of an asynchronous call in ScaleNodePoolModal.
-// Not fixing it now because is a "minor" error, this error can't break the app and
-// because I will be working on the data flow refactor that will solve this.
-it.skip(`shows the v5 cluster scaling modal when the button is clicked with default values and
+it(`shows the v5 cluster scaling modal when the button is clicked with default values and
 scales node pools correctly`, async () => {
   // TODO default values from constants file
   const defaultScaling = { min: 3, max: 10 };
