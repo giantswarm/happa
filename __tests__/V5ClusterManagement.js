@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -411,7 +412,7 @@ it('adds a node pool with default values', async () => {
   );
 
   // Remove flash message.
-  document.querySelector('#noty_layout__topRight').remove();
+  forceRemoveAll();
 
   // Is the new NodePool in the document?
   await wait(() => {
