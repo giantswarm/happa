@@ -4,13 +4,11 @@ import { fireEvent } from '@testing-library/react';
 import { AppRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
-  appsResponse,
   AWSInfoResponse,
   getPersistedMockCall,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
-  releasesResponse,
   userResponse,
   V4_CLUSTER,
   v4AWSClusterResponse,
@@ -44,14 +42,9 @@ beforeAll(() => {
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
     v4AWSClusterStatusResponse
   );
-  requests.apps = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-    appsResponse
-  );
   requests.credentials = getPersistedMockCall(
     `/v4/organizations/${ORGANIZATION}/credentials/`
   );
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
 
   requests.appcatalogs = getPersistedMockCall(
     '/v4/appcatalogs/',
