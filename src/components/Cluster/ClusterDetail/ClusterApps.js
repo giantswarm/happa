@@ -422,7 +422,7 @@ class ClusterApps extends React.Component {
 
 ClusterApps.propTypes = {
   dispatch: PropTypes.func,
-  appsLoadError: PropTypes.string,
+  appsLoadError: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   installedApps: PropTypes.array,
   showInstalledAppsBlock: PropTypes.bool,
   clusterId: PropTypes.string,

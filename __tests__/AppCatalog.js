@@ -27,19 +27,6 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('AppCatalog', () => {
-  // eslint-disable-next-line no-console
-  const originalConsoleError = console.error;
-
-  beforeAll(() => {
-    // eslint-disable-next-line no-console
-    console.error = jest.fn();
-  });
-
-  afterAll(() => {
-    // eslint-disable-next-line no-console
-    console.error = originalConsoleError;
-  });
-
   beforeEach(() => {
     getMockCall('/v4/info/', AWSInfoResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);

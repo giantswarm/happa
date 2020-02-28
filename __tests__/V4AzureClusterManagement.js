@@ -27,18 +27,6 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 
 describe('V4AzureClusterManagement', () => {
   const minNodesCount = 3;
-  // eslint-disable-next-line no-console
-  const originalConsoleError = console.error;
-
-  beforeAll(() => {
-    // eslint-disable-next-line no-console
-    console.error = jest.fn();
-  });
-
-  afterAll(() => {
-    // eslint-disable-next-line no-console
-    console.error = originalConsoleError;
-  });
 
   // Responses to requests
   beforeEach(() => {
