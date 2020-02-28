@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -10,7 +11,8 @@ import {
   appCatalogsResponse,
   appsResponse,
   AWSInfoResponse,
-  getPersistedMockCall,
+  getMockCall,
+  getMockCallTimes,
   nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
@@ -24,54 +26,24 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 import { getNumberOfNodePoolsNodes } from 'utils/clusterUtils';
 
-// Tests setup
-const requests = {};
-
 // Responses to requests
 beforeEach(() => {
-  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
-  requests.organizations = getPersistedMockCall(
-    '/v4/organizations/',
-    orgsResponse
-  );
-  requests.organization = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/`,
-    orgResponse
-  );
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v5ClustersResponse);
-  requests.cluster = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/`,
-    v5ClusterResponse
-  );
-  requests.apps = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/apps/`,
-    appsResponse
-  );
-  requests.keyPairs = getPersistedMockCall(
-    `/v4/clusters/${V5_CLUSTER.id}/key-pairs/`
-  );
-  requests.credentials = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/credentials/`
-  );
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.nodePools = getPersistedMockCall(
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/info/', AWSInfoResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCall('/v4/clusters/', v5ClustersResponse);
+  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/apps/`, appsResponse);
+  getMockCall(`/v4/clusters/${V5_CLUSTER.id}/key-pairs/`);
+  getMockCall('/v4/releases/', releasesResponse);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+  getMockCallTimes(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse, 2);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+  getMockCallTimes(
     `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
-    nodePoolsResponse
+    nodePoolsResponse,
+    2
   );
-  requests.appcatalogs = getPersistedMockCall(
-    '/v4/appcatalogs/',
-    appCatalogsResponse
-  );
-
-  // TODO no apps response?? Check on gauss.
-});
-
-// Stop persisting responses
-afterEach(() => {
-  Object.keys(requests).forEach(req => {
-    requests[req].persist(false);
-  });
 });
 
 /************ TESTS ************/
@@ -135,7 +107,7 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   };
 
   // Request
-  const nodePoolPatchRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePoolsResponse[0].id}/`,
       'PATCH'
@@ -187,21 +159,8 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   // Is it now the 2nd node pool in list?
   const reSortedNodePools = getAllByTestId('node-pool-id');
   expect(reSortedNodePools[1]).toHaveTextContent(nodePoolId);
-
-  // This is not inside the component tree we are testing and so it is not cleaned up
-  // after test, so we have to remove it manually in order to not cause conflicts with
-  // the next test with a flash message
-  document.querySelector('#noty_layout__topRight').remove();
-
-  // Assert that the mocked responses got called, tell them to stop waiting for
-  // a request.
-  nodePoolPatchRequest.done();
 });
 
-// TODO This test triggers a memory leak error related with setting state depending
-// on the response of an asynchronous call in ScaleNodePoolModal.
-// Not fixing it now because is a "minor" error, this error can't break the app and
-// because I will be working on the data flow refactor that will solve this.
 it(`shows the v5 cluster scaling modal when the button is clicked with default values and
 scales node pools correctly`, async () => {
   // TODO default values from constants file
@@ -219,7 +178,7 @@ scales node pools correctly`, async () => {
   };
 
   // Request
-  const nodePoolPatchRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
       'PATCH'
@@ -287,13 +246,6 @@ scales node pools correctly`, async () => {
   expect(getAllByTestId('scaling-max')[0]).toHaveTextContent(
     newScaling.max.toString()
   );
-
-  // This is not inside the component tree we are testing and so it is not cleaned up
-  // after test, so we have to remove it manually in order to not cause conflicts with
-  // the next test with a flash message
-  document.querySelector('#noty_layout__topRight').remove();
-
-  nodePoolPatchRequest.done();
 });
 
 it('deletes a v5 cluster', async () => {
@@ -304,9 +256,11 @@ it('deletes a v5 cluster', async () => {
   };
 
   // Request
-  const clusterDeleteRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${V5_CLUSTER.id}/`, 'DELETE')
     .reply(StatusCodes.Ok, clusterDeleteResponse);
+
+  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
 
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail,
@@ -350,12 +304,6 @@ it('deletes a v5 cluster', async () => {
   await wait(() => {
     expect(queryByTestId(cluster.id)).not.toBeInTheDocument();
   });
-
-  // This is not inside the component tree we are testing and so it is not cleaned up
-  // after test, so we have to remove it manually in order to not cause conflicts with
-  // the next test with a flash message
-  document.querySelector('#noty_layout__topRight').remove();
-  clusterDeleteRequest.done();
 });
 
 it('deletes a node pool', async () => {
@@ -366,7 +314,7 @@ it('deletes a node pool', async () => {
   };
 
   // Request
-  const nodePoolDeleteRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
       'DELETE'
@@ -419,8 +367,6 @@ it('deletes a node pool', async () => {
   await wait(() => {
     expect(queryByTestId(nodePool.id)).not.toBeInTheDocument();
   });
-
-  nodePoolDeleteRequest.done();
 });
 
 it('adds a node pool with default values', async () => {
@@ -438,9 +384,9 @@ it('adds a node pool with default values', async () => {
   };
 
   // Request
-  const nodePoolCreationRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v5/clusters/${V5_CLUSTER.id}/nodepools/`, 'POST')
-    .reply(StatusCodes.Ok, nodePoolCreationResponse);
+    .reply(StatusCodes.Created, nodePoolCreationResponse);
 
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail,
@@ -466,7 +412,7 @@ it('adds a node pool with default values', async () => {
   );
 
   // Remove flash message.
-  document.querySelector('#noty_layout__topRight').remove();
+  forceRemoveAll();
 
   // Is the new NodePool in the document?
   await wait(() => {
@@ -474,8 +420,6 @@ it('adds a node pool with default values', async () => {
   });
 
   expect(getByText(nodePoolCreationResponse.id)).toBeInTheDocument();
-
-  nodePoolCreationRequest.done();
 });
 
 it('renders an error message if there was an error loading apps', () => {

@@ -6,6 +6,7 @@ module.exports = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
   testURL: 'http://localhost',
   setupFiles: [path.resolve(`${__dirname}/testUtils/browserMocks.js`)],
+  setupFilesAfterEnv: [path.resolve(`${__dirname}/testUtils/setupTests.js`)],
   moduleDirectories: [
     'node_modules',
     path.resolve(`${__dirname}/src`),

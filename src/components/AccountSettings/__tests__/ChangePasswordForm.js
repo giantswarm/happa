@@ -206,13 +206,10 @@ describe('ChangePasswordForm', () => {
 
     const loginFn = jest.fn();
 
-    const passwordChangeRequest = postPayloadMockCall(
-      `/v4/users/${encodedEmail}/password/`,
-      {
-        current_password_base64: newPasswordBase64,
-        new_password_base64: newPasswordBase64,
-      }
-    );
+    postPayloadMockCall(`/v4/users/${encodedEmail}/password/`, {
+      current_password_base64: newPasswordBase64,
+      new_password_base64: newPasswordBase64,
+    });
 
     const { findByText, getByLabelText } = renderWithProps({
       user: {
@@ -243,8 +240,6 @@ describe('ChangePasswordForm', () => {
 
     // Ensure that login was called
     expect(loginFn).toBeCalledWith(USER_EMAIL, newPassword);
-
-    passwordChangeRequest.done();
   });
 
   it('shows error messages if any request fails', async () => {
@@ -254,7 +249,7 @@ describe('ChangePasswordForm', () => {
 
     const loginFn = jest.fn();
 
-    const passwordChangeRequest = postPayloadMockCall(
+    postPayloadMockCall(
       `/v4/users/${encodedEmail}/password/`,
       {
         current_password_base64: newPasswordBase64,
@@ -293,7 +288,5 @@ describe('ChangePasswordForm', () => {
 
     // Ensure that login was not called
     expect(loginFn).toHaveBeenCalledTimes(0);
-
-    passwordChangeRequest.done();
   });
 });

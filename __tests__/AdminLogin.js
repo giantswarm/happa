@@ -6,7 +6,6 @@ import { ConnectedRouter, push } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import { createMemoryHistory } from 'history';
 import * as helpers from 'lib/helpers';
-import nock from 'nock';
 import React from 'react';
 import { Provider } from 'react-redux';
 import Routes from 'Routes';
@@ -22,9 +21,6 @@ import {
   userResponse,
 } from 'testUtils/mockHttpCalls';
 import { initialStorage } from 'testUtils/renderUtils';
-
-// eslint-disable-next-line no-console
-const originalConsoleError = console.error;
 
 const mockUserData = {
   email: USER_EMAIL,
@@ -91,18 +87,6 @@ const renderRouteWithStore = (
 };
 
 describe('AdminLogin', () => {
-  beforeAll(() => {
-    nock.disableNetConnect();
-    // eslint-disable-next-line no-console
-    console.error = jest.fn();
-  });
-
-  afterAll(() => {
-    nock.enableNetConnect();
-    // eslint-disable-next-line no-console
-    console.error = originalConsoleError;
-  });
-
   it('renders without crashing', async () => {
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
 
@@ -221,11 +205,16 @@ describe('AdminLogin', () => {
   });
 
   it('redirects to OAuth provider login page if renewing the token fails', async () => {
+    // eslint-disable-next-line no-console
+    const originalConsoleError = console.error;
+    // eslint-disable-next-line no-console
+    console.error = jest.fn();
+
     getMockCall('/v4/user/', userResponse);
-    getMockCallTimes('/v4/info/', AWSInfoResponse, 2);
-    getMockCallTimes('/v4/appcatalogs/', [], 2);
+    getMockCall('/v4/info/', AWSInfoResponse);
+    getMockCall('/v4/appcatalogs/', []);
     getMockCall('/v4/organizations/');
-    getMockCallTimes('/v4/clusters/', [], 2);
+    getMockCall('/v4/clusters/', []);
 
     const mockAuthResponseWithNewToken = Object.assign(
       {},
@@ -245,5 +234,8 @@ describe('AdminLogin', () => {
     await findByText(
       /verifying credentials, and redirecting to our authentication provider if necessary./i
     );
+
+    // eslint-disable-next-line no-console
+    console.error = originalConsoleError;
   });
 });
