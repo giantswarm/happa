@@ -20,13 +20,6 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
   token: testToken,
 });
 
-/**
- * Bump the jest test duration to 10 secs, since this is
- * a pretty long test suite
- */
-// eslint-disable-next-line no-magic-numbers
-jest.setTimeout(10 * 1000);
-
 describe('Signup', () => {
   beforeEach(() => {
     getMockCall('/v4/info/', AWSInfoResponse);
