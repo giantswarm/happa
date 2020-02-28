@@ -15,9 +15,7 @@ export function loadReleases() {
     // the staticReleases in production.
     if (window.config.staticReleases) {
       getReleaseMethod = () => {
-        return new Promise(resolve => {
-          resolve(window.config.staticReleases);
-        });
+        return Promise.resolve(window.config.staticReleases);
       };
     }
 
