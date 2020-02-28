@@ -8,7 +8,7 @@ import {
   API_ENDPOINT,
   authTokenResponse,
   AWSInfoResponse,
-  getPersistedMockCall,
+  getMockCall,
   postMockCall,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -30,17 +30,17 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // some calls are performed more than once
 
   // The response to the login call
-  const authTokensRequest = postMockCall('/v4/auth-tokens/', authTokenResponse);
+  postMockCall('/v4/auth-tokens/', authTokenResponse);
   // The response to the user info call
-  const userInfoRequest = getPersistedMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/user/', userResponse);
   // The response to the info call
-  const infoRequest = getPersistedMockCall('/v4/info/', AWSInfoResponse);
+  getMockCall('/v4/info/', AWSInfoResponse);
   // The response to the org call (no orgs)
-  const orgRequest = getPersistedMockCall('/v4/organizations/');
+  getMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
-  const clustersRequest = getPersistedMockCall('/v4/clusters/');
+  getMockCall('/v4/clusters/');
   // The response to the appcatalogs call (no catalogs)
-  const appcatalogsRequest = getPersistedMockCall('/v4/appcatalogs/');
+  getMockCall('/v4/appcatalogs/');
 
   // AND I arrive at the login page with nothing in the state.
   const { getByText, getByLabelText } = renderRouteWithStore(
@@ -71,15 +71,6 @@ it('redirects to / and shows the layout after a succesful login', async () => {
       getByText(/There are no organizations yet in your installation./i)
     ).toBeInTheDocument();
   });
-
-  // Assert that the mocked responses got called, tell them to stop waiting for
-  // a request.
-  authTokensRequest.persist(false);
-  userInfoRequest.persist(false);
-  infoRequest.persist(false);
-  orgRequest.persist(false);
-  clustersRequest.persist(false);
-  appcatalogsRequest.persist(false);
 });
 
 it('tells the user to give a password if they leave it blank', async () => {
