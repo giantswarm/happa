@@ -6,6 +6,7 @@ export class GiantSwarmClient extends HttpClient {
       baseURL: window.config.apiEndpoint,
     });
 
+    this.setHeader('Accept', 'application/json');
     this.setAuthorizationToken(authToken);
   }
 }
