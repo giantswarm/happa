@@ -243,8 +243,11 @@ export function getInfo() {
     dispatch({ type: types.INFO_LOAD_REQUEST });
 
     try {
-      const authToken = await selectAuthToken(dispatch, getState());
-      const httpClient = new GiantSwarmClient(authToken);
+      const [authToken, authScheme] = await selectAuthToken(
+        dispatch,
+        getState()
+      );
+      const httpClient = new GiantSwarmClient(authToken, authScheme);
       const info = await getInstallationInfo(httpClient);
 
       dispatch({
