@@ -128,7 +128,7 @@ class ClusterApps extends React.Component {
     },
     'external-dns': {
       name: 'external-dns',
-      logoUrl: '/images/app_icons/external-dns@2x.png',
+      logoUrl: '/images/app_icons/external_dns@2x.png',
       category: 'essentials',
     },
   };
