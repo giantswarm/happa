@@ -686,4 +686,36 @@ describe('Apps and App Catalog', () => {
       await findByText(/will be deleted/i);
     });
   });
+
+  it('shows a no apps installed message when there are no apps yet', async () => {
+    getMockCallTimes('/v4/user/', userResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
+    getMockCallTimes(
+      `/v4/clusters/${V4_CLUSTER.id}/status/`,
+      v4AWSClusterStatusResponse,
+      2
+    );
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+    getMockCall('/v4/releases/', releasesResponse);
+
+    const clusterDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail,
+      {
+        orgId: ORGANIZATION,
+        clusterId: V4_CLUSTER.id,
+      }
+    );
+    const { findByText } = renderRouteWithStore(clusterDetailPath);
+
+    const appsTab = await findByText(/^apps$/i);
+    fireEvent.click(appsTab);
+
+    expect(
+      await findByText('No apps installed on this cluster')
+    ).toBeInTheDocument();
+  });
 });
