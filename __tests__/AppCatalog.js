@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, wait, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -685,37 +685,96 @@ describe('Apps and App Catalog', () => {
 
       await findByText(/will be deleted/i);
     });
+
+    it('shows a no apps installed message when there are no apps yet', async () => {
+      getMockCallTimes('/v4/user/', userResponse);
+      getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+      getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+      getMockCallTimes(
+        `/v4/clusters/${V4_CLUSTER.id}/`,
+        v4AWSClusterResponse,
+        2
+      );
+      getMockCallTimes(
+        `/v4/clusters/${V4_CLUSTER.id}/status/`,
+        v4AWSClusterStatusResponse,
+        2
+      );
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+      getMockCall('/v4/releases/', releasesResponse);
+
+      const clusterDetailPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail,
+        {
+          orgId: ORGANIZATION,
+          clusterId: V4_CLUSTER.id,
+        }
+      );
+      const { findByText } = renderRouteWithStore(clusterDetailPath);
+
+      const appsTab = await findByText(/^apps$/i);
+      fireEvent.click(appsTab);
+
+      expect(
+        await findByText('No apps installed on this cluster')
+      ).toBeInTheDocument();
+    });
   });
 
-  it('shows a no apps installed message when there are no apps yet', async () => {
-    getMockCallTimes('/v4/user/', userResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-    getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
-    getMockCallTimes(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse,
-      2
-    );
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
-    getMockCall('/v4/releases/', releasesResponse);
+  describe('Preinstalled Apps', () => {
+    it('does not list apps twice when they are present in the release endpoint as well as the hardcoded app metas list', async () => {
+      getMockCallTimes('/v4/user/', userResponse);
+      getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+      getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+      getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+      getMockCallTimes(
+        `/v4/clusters/${V4_CLUSTER.id}/`,
+        v4AWSClusterResponse,
+        2
+      );
+      getMockCallTimes(
+        `/v4/clusters/${V4_CLUSTER.id}/status/`,
+        v4AWSClusterStatusResponse,
+        2
+      );
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+      getMockCall('/v4/releases/', releasesResponse);
 
-    const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
-      {
-        orgId: ORGANIZATION,
-        clusterId: V4_CLUSTER.id,
-      }
-    );
-    const { findByText } = renderRouteWithStore(clusterDetailPath);
+      const clusterDetailPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail,
+        {
+          orgId: ORGANIZATION,
+          clusterId: V4_CLUSTER.id,
+        }
+      );
+      const { findByText } = renderRouteWithStore(clusterDetailPath);
 
-    const appsTab = await findByText(/^apps$/i);
-    fireEvent.click(appsTab);
+      const appsTab = await findByText(/^apps$/i);
+      fireEvent.click(appsTab);
 
-    expect(
-      await findByText('No apps installed on this cluster')
-    ).toBeInTheDocument();
+      // findByText throws an error if there are multiple elements with the text
+      // in the document. So this is also a guarantee that these apps are not
+      // showing up twice.
+      const certExporterApp = await findByText('cert-exporter');
+      expect(certExporterApp).toBeInTheDocument();
+
+      // findByText throws an error if there are multiple elements with the text
+      // in the document. So this is also a guarantee that cert-exporter is not
+      // showing up twice.
+      const netExporterApp = await findByText('net-exporter');
+      expect(netExporterApp).toBeInTheDocument();
+
+      // Make sure we're not removing ALL manually added apps.
+      const rbacApp = await findByText('RBAC and PSP defaults');
+      expect(rbacApp).toBeInTheDocument();
+
+      // Make sure they get their version set correctly from the release endpoint
+      // response.
+      await within(certExporterApp).findByText('1.2.3');
+      await within(netExporterApp).findByText('2.3.4');
+    });
   });
 });
