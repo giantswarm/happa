@@ -112,8 +112,6 @@ export class HttpClient {
       body: data,
     } = this.requestConfig;
 
-    await this.onBeforeRequest(this.requestConfig);
-
     try {
       await this.onBeforeRequest(this.requestConfig);
 
