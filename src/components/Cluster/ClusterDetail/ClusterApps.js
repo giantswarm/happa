@@ -103,12 +103,12 @@ class ClusterApps extends React.Component {
     },
     'cert-exporter': {
       name: 'cert-exporter',
-      logoUrl: '/images/app_icons/chart_operator@2x.png',
+      logoUrl: '/images/app_icons/cert_exporter@2x.png',
       category: 'management',
     },
     'net-exporter': {
       name: 'net-exporter',
-      logoUrl: '/images/app_icons/chart_operator@2x.png',
+      logoUrl: '/images/app_icons/net_exporter@2x.png',
       category: 'management',
     },
     'node-exporter': {
@@ -165,6 +165,12 @@ class ClusterApps extends React.Component {
 
     for (i = 0; i < this.props.release.components.length; i++) {
       const component = this.props.release.components[i];
+
+      // Remove component that is now present in the release response
+      // from the manuallyAddAppMetas list to avoid showing them twice.
+      this.manuallyAddAppMetas = this.manuallyAddAppMetas.filter(app => {
+        return app.name !== component.name;
+      });
 
       // Find the component in the mapping above. If it's not there, then
       // it isn't something we want to show here.
@@ -258,7 +264,7 @@ class ClusterApps extends React.Component {
                   >
                     <b>No apps installed on this cluster</b>
                     <br />
-                    Browse the app catalog below and pick an app to install!
+                    Browse the app catalog below and pick an app to install.
                   </p>
                 )}
 
