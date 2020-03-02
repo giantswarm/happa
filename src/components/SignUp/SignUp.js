@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { AuthorizationTypes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 
@@ -172,7 +173,7 @@ export class SignUp extends React.Component {
             username: data.username,
             email: data.email,
             auth: {
-              scheme: 'giantswarm',
+              scheme: AuthorizationTypes.GS,
               token: data.token,
             },
           };
