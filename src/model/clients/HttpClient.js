@@ -126,7 +126,7 @@ export class HttpClient {
 
       return response.data;
     } catch (err) {
-      return err.response.data;
+      throw Error(err.response);
     }
   }
 }

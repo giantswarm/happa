@@ -260,7 +260,7 @@ export function getInfo() {
 
       dispatch({
         type: types.INFO_LOAD_ERROR,
-        error: error,
+        error: error.data,
       });
     }
   };
