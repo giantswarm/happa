@@ -97,15 +97,21 @@ export function nodePoolsLoad({
  */
 export function nodePoolPatch(clusterId, nodePool, payload) {
   return function(dispatch) {
-    // eslint-disable-next-line no-use-before-define
-    dispatch(nodePoolPatchAction(nodePool, payload));
+    dispatch({
+      type: types.NODEPOOL_PATCH,
+      nodePool,
+      payload,
+    });
 
     return nodePoolsApi
       .modifyNodePool(clusterId, nodePool.id, payload)
       .catch(error => {
         // Undo update to store if the API call fails.
-        // eslint-disable-next-line no-use-before-define
-        dispatch(nodePoolPatchError(error, nodePool));
+        dispatch({
+          type: types.NODEPOOL_PATCH_ERROR,
+          error,
+          nodePool,
+        });
 
         new FlashMessage(
           'Something went wrong while trying to update the node pool name',
@@ -139,8 +145,11 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
     return nodePoolsApi
       .deleteNodePool(clusterId, nodePool.id)
       .then(() => {
-        // eslint-disable-next-line no-use-before-define
-        dispatch(nodePoolDeleteSuccess(nodePool.id, clusterId));
+        dispatch({
+          type: types.NODEPOOL_DELETE_SUCCESS,
+          nodePoolId: nodePool.id,
+          clusterId,
+        });
 
         dispatch(modalHide());
 
@@ -163,8 +172,11 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
         // eslint-disable-next-line no-console
         console.error(error);
 
-        // eslint-disable-next-line no-use-before-define
-        return dispatch(nodePoolDeleteError(nodePool.id, error));
+        return dispatch({
+          type: types.NODEPOOL_DELETE_ERROR,
+          nodePoolId: nodePool.id,
+          error,
+        });
       });
   };
 }
@@ -231,37 +243,15 @@ export function nodePoolsCreate(clusterId, nodePools) {
       })
     );
 
+    dispatch({ type: types.NODEPOOLS_CREATE_FINISHED });
+
     return allNodePools;
   };
 }
 
-// Actions
-const nodePoolPatchAction = (nodePool, payload) => ({
-  type: types.NODEPOOL_PATCH,
-  nodePool,
-  payload,
-});
-
-const nodePoolPatchError = (error, nodePool) => ({
-  type: types.NODEPOOL_PATCH_ERROR,
-  error,
-  nodePool,
-});
-
+// Action creators.
 export const nodePoolDelete = (clusterId, nodePool) => ({
   type: types.NODEPOOL_DELETE,
   clusterId,
   nodePool,
-});
-
-const nodePoolDeleteSuccess = (nodePoolId, clusterId) => ({
-  type: types.NODEPOOL_DELETE_SUCCESS,
-  nodePoolId,
-  clusterId,
-});
-
-const nodePoolDeleteError = (nodePoolId, error) => ({
-  type: types.NODEPOOL_DELETE_ERROR,
-  nodePoolId,
-  error,
 });
