@@ -141,6 +141,14 @@ export const releasesResponse = [
         version: '3.8.2',
       },
       {
+        name: 'cert-exporter',
+        version: '1.2.3',
+      },
+      {
+        name: 'net-exporter',
+        version: '2.3.4',
+      },
+      {
         name: 'cert-operator',
         version: '0.1.0',
       },
