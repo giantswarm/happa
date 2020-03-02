@@ -264,7 +264,7 @@ class ClusterApps extends React.Component {
                   >
                     <b>No apps installed on this cluster</b>
                     <br />
-                    Browse the app catalog below and pick an app to install!
+                    Browse the app catalog below and pick an app to install.
                   </p>
                 )}
 
