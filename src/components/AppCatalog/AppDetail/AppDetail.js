@@ -60,6 +60,7 @@ class AppDetail extends React.Component {
                 {repo && (
                   <AppDetails
                     app={this.props.app}
+                    appVersions={this.props.appVersions}
                     imgError={this.imgError}
                     imgErrorFlag={this.state.imgError}
                     params={this.props.match.params}
@@ -110,6 +111,7 @@ function mapStateToProps(state, ownProps) {
 
   return {
     app: appVersions[0],
+    appVersions: appVersions,
     repo: state.entities.catalogs.items[repo],
     selectedClusterID: state.app.selectedClusterID,
   };

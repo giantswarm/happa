@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import Copyable from 'shared/Copyable';
+import { Ellipsis } from 'styles/';
 
 import AppDetailsBody from './AppDetailsBody';
 import AppDetailsItem from './AppDetailsItem';
@@ -88,8 +90,38 @@ const Install = styled.div`
   }
 `;
 
+const ChartVersionTable = styled.table`
+  border: 1px solid ${props => props.theme.colors.shade4};
+  margin-top: 10px;
+  max-width: 400px;
+  table-layout: fixed;
+  white-space: nowrap;
+
+  td {
+    code {
+      ${Ellipsis}
+      max-width: 130px;
+      display: block;
+    }
+    word-break: keep-all;
+  }
+
+  tr:nth-child(even) {
+    background-color: ${props => props.theme.colors.shade4};
+  }
+`;
+
 const AppDetails = props => {
-  const { app, params, q, imgErrorFlag, imgError, repo, children } = props;
+  const {
+    app,
+    appVersions,
+    params,
+    q,
+    imgErrorFlag,
+    imgError,
+    repo,
+    children,
+  } = props;
 
   const {
     name,
@@ -144,6 +176,35 @@ const AppDetails = props => {
 
         <Install>{children}</Install>
       </Header>
+
+      <ChartVersionTable style={{ float: 'right' }}>
+        <thead>
+          <tr>
+            <th width='100'>Chart Version</th>
+            <th width='100'>App Version</th>
+          </tr>
+        </thead>
+        <tbody>
+          {appVersions.map(av => {
+            return (
+              <tr key={av.version}>
+                <td>
+                  <Copyable copyText={av.version}>
+                    <code>{av.version}</code>
+                  </Copyable>
+                </td>
+
+                <td>
+                  <Copyable copyText={av.appVersion}>
+                    <code>{av.appVersion}</code>
+                  </Copyable>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </ChartVersionTable>
+
       <AppDetailsBody description={description}>
         {home && home !== '' && <AppDetailsItem data={home} label='Home' />}
         {sources && <AppDetailsItem data={sources} label='Sources' />}
@@ -155,6 +216,7 @@ const AppDetails = props => {
 
 AppDetails.propTypes = {
   app: PropTypes.object,
+  appVersions: PropTypes.array,
   params: PropTypes.object,
   q: PropTypes.string,
   imgErrorFlag: PropTypes.bool,
