@@ -114,13 +114,21 @@ export class HttpClient {
 
     await this.onBeforeRequest(this.requestConfig);
 
-    return axios({
-      baseURL,
-      timeout,
-      headers,
-      url,
-      method,
-      data,
-    });
+    try {
+      await this.onBeforeRequest(this.requestConfig);
+
+      const response = await axios({
+        baseURL,
+        timeout,
+        headers,
+        url,
+        method,
+        data,
+      });
+
+      return response.data;
+    } catch (err) {
+      return err.response.data;
+    }
   }
 }

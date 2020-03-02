@@ -252,7 +252,7 @@ export function getInfo() {
 
       dispatch({
         type: types.INFO_LOAD_SUCCESS,
-        info: info.data,
+        info: info,
       });
     } catch (error) {
       // eslint-disable-next-line no-console
