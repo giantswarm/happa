@@ -112,21 +112,15 @@ export class HttpClient {
       body: data,
     } = this.requestConfig;
 
-    try {
-      await this.onBeforeRequest(this.requestConfig);
+    await this.onBeforeRequest(this.requestConfig);
 
-      const response = await axios({
-        baseURL,
-        timeout,
-        headers,
-        url,
-        method,
-        data,
-      });
-
-      return response.data;
-    } catch (err) {
-      return Promise.reject(err.response.data);
-    }
+    return axios({
+      baseURL,
+      timeout,
+      headers,
+      url,
+      method,
+      data,
+    });
   }
 }

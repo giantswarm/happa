@@ -252,7 +252,7 @@ export function getInfo() {
 
       dispatch({
         type: types.INFO_LOAD_SUCCESS,
-        info: info,
+        info: info.data,
       });
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -262,8 +262,6 @@ export function getInfo() {
         type: types.INFO_LOAD_ERROR,
         error: error,
       });
-
-      throw error;
     }
   };
 }
