@@ -231,6 +231,8 @@ export function nodePoolsCreate(clusterId, nodePools) {
       })
     );
 
+    dispatch({ type: types.NODEPOOLS_CREATE_FINISHED });
+
     return allNodePools;
   };
 }
