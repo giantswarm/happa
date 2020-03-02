@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { AuthorizationTypes } from 'shared';
 
 export const HttpRequestMethods = {
   GET: 'GET',
@@ -84,8 +83,8 @@ export class HttpClient {
     this.requestConfig.headers[key] = value;
   }
 
-  setAuthorizationToken(token) {
-    this.setHeader('Authorization', `${AuthorizationTypes.BEARER} ${token}`);
+  setAuthorizationToken(authType, token) {
+    this.setHeader('Authorization', `${authType} ${token}`);
   }
 
   setRequestMethod(method) {
