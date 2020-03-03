@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
-import Copyable from 'shared/Copyable';
-import { Ellipsis } from 'styles/';
 
 import AppDetailsBody from './AppDetailsBody';
 import AppDetailsItem from './AppDetailsItem';
+import ChartVersionsTable from './ChartVersionsTable';
 
 const Header = styled.div`
   border-bottom: 1px solid #2a5a74;
@@ -95,51 +94,6 @@ const Install = styled.div`
   }
 `;
 
-const ChartVersionTable = styled.table`
-  border: 1px solid ${props => props.theme.colors.shade4};
-  margin-top: 10px;
-  max-width: 320px;
-  table-layout: fixed;
-  white-space: nowrap;
-
-  td {
-    vertical-align: top;
-    code {
-      ${Ellipsis}
-      max-width: 150px;
-      display: inline-block;
-    }
-
-    .copyable {
-      display: inline-block;
-      float: left;
-      margin-bottom: 10px;
-    }
-  }
-
-  th.appVersion {
-    width: 100px;
-  }
-
-  td.appVersion {
-    border-left: 1px dashed ${props => props.theme.colors.shade1};
-    text-align: center;
-    .copyable {
-      float: none;
-      position: relative;
-      left: 8px;
-      code {
-        background-color: ${props => props.theme.colors.darkBlueLighter8};
-        color: ${props => props.theme.colors.darkBlue};
-      }
-    }
-  }
-
-  tr:nth-child(even) {
-    background-color: ${props => props.theme.colors.shade4};
-  }
-`;
-
 const AppDetails = props => {
   const {
     app,
@@ -169,19 +123,6 @@ const AppDetails = props => {
     { repo: params.repo }
   );
   const to = `${appCatalogAppListPath}?q=${q}#${name}`;
-
-  const groupedAppVersions = appVersions.reduce((groups, obj) => {
-    // Create a group if there isn't one yet.
-    if (!groups.hasOwnProperty(obj.appVersion)) {
-      groups[obj.appVersion] = [];
-    }
-
-    // Push the appVersion to the group.
-    groups[obj.appVersion].push(obj);
-
-    // Pass the object on to the next loop
-    return groups;
-  }, {});
 
   return (
     <div>
@@ -219,42 +160,7 @@ const AppDetails = props => {
         <Install>{children}</Install>
       </Header>
 
-      <ChartVersionTable style={{ float: 'right' }}>
-        <thead>
-          <tr>
-            <th>Chart Versions</th>
-            <th className='appVersion'>App Version</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(groupedAppVersions).map(
-            ([appVersionString, entries]) => {
-              return (
-                <tr key={appVersionString}>
-                  <td>
-                    {entries.map(appVersionObject => {
-                      return (
-                        <Copyable
-                          key={appVersionObject.version}
-                          copyText={appVersionObject.version}
-                        >
-                          <code>{appVersionObject.version}</code>
-                        </Copyable>
-                      );
-                    })}
-                  </td>
-
-                  <td className='appVersion'>
-                    <Copyable copyText={appVersionString}>
-                      <code>{appVersionString}</code>
-                    </Copyable>
-                  </td>
-                </tr>
-              );
-            }
-          )}
-        </tbody>
-      </ChartVersionTable>
+      <ChartVersionsTable appVersions={appVersions} />
 
       <AppDetailsBody description={description}>
         {home && home !== '' && <AppDetailsItem data={home} label='Home' />}
