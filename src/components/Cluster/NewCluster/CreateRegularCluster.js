@@ -507,7 +507,7 @@ class CreateRegularCluster extends React.Component {
                           <NumberPicker
                             label='CPU Cores'
                             max={999}
-                            min={2}
+                            min={4}
                             onChange={this.updateCPUCores}
                             stepSize={1}
                             value={this.state.kvm.cpuCores.value}
@@ -517,7 +517,7 @@ class CreateRegularCluster extends React.Component {
                           <NumberPicker
                             label='Memory (GB)'
                             max={999}
-                            min={3}
+                            min={4}
                             onChange={this.updateMemorySize}
                             stepSize={1}
                             unit='GB'
