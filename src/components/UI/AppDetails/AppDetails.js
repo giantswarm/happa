@@ -73,6 +73,11 @@ const Icon = styled.div`
 
 const Title = styled.div`
   flex: 1 100%;
+
+  .appVersion {
+    background-color: ${props => props.theme.colors.darkBlueLighter8};
+    color: ${props => props.theme.colors.darkBlue};
+  }
 `;
 
 const Install = styled.div`
@@ -93,17 +98,41 @@ const Install = styled.div`
 const ChartVersionTable = styled.table`
   border: 1px solid ${props => props.theme.colors.shade4};
   margin-top: 10px;
-  max-width: 400px;
+  max-width: 320px;
   table-layout: fixed;
   white-space: nowrap;
 
   td {
+    vertical-align: top;
     code {
       ${Ellipsis}
-      max-width: 130px;
-      display: block;
+      max-width: 150px;
+      display: inline-block;
     }
-    word-break: keep-all;
+
+    .copyable {
+      display: inline-block;
+      float: left;
+      margin-bottom: 10px;
+    }
+  }
+
+  th.appVersion {
+    width: 100px;
+  }
+
+  td.appVersion {
+    border-left: 1px dashed ${props => props.theme.colors.shade1};
+    text-align: center;
+    .copyable {
+      float: none;
+      position: relative;
+      left: 8px;
+      code {
+        background-color: ${props => props.theme.colors.darkBlueLighter8};
+        color: ${props => props.theme.colors.darkBlue};
+      }
+    }
   }
 
   tr:nth-child(even) {
@@ -141,6 +170,19 @@ const AppDetails = props => {
   );
   const to = `${appCatalogAppListPath}?q=${q}#${name}`;
 
+  const groupedAppVersions = appVersions.reduce((groups, obj) => {
+    // Create a group if there isn't one yet.
+    if (!groups.hasOwnProperty(obj.appVersion)) {
+      groups[obj.appVersion] = [];
+    }
+
+    // Push the appVersion to the group.
+    groups[obj.appVersion].push(obj);
+
+    // Pass the object on to the next loop
+    return groups;
+  }, {});
+
   return (
     <div>
       <Link to={to}>
@@ -170,7 +212,7 @@ const AppDetails = props => {
           <div className='version'>
             <small>Chart&nbsp;Version</small>&nbsp;
             <code>{version}</code> <small>App&nbsp;Version</small>&nbsp;
-            <code>{appVersion}</code>
+            <code className='appVersion'>{appVersion}</code>
           </div>
         </Title>
 
@@ -180,28 +222,37 @@ const AppDetails = props => {
       <ChartVersionTable style={{ float: 'right' }}>
         <thead>
           <tr>
-            <th width='100'>Chart Version</th>
-            <th width='100'>App Version</th>
+            <th>Chart Versions</th>
+            <th className='appVersion'>App Version</th>
           </tr>
         </thead>
         <tbody>
-          {appVersions.map(av => {
-            return (
-              <tr key={av.version}>
-                <td>
-                  <Copyable copyText={av.version}>
-                    <code>{av.version}</code>
-                  </Copyable>
-                </td>
+          {Object.entries(groupedAppVersions).map(
+            ([appVersionString, entries]) => {
+              return (
+                <tr key={appVersionString}>
+                  <td>
+                    {entries.map(appVersionObject => {
+                      return (
+                        <Copyable
+                          key={appVersionObject.version}
+                          copyText={appVersionObject.version}
+                        >
+                          <code>{appVersionObject.version}</code>
+                        </Copyable>
+                      );
+                    })}
+                  </td>
 
-                <td>
-                  <Copyable copyText={av.appVersion}>
-                    <code>{av.appVersion}</code>
-                  </Copyable>
-                </td>
-              </tr>
-            );
-          })}
+                  <td className='appVersion'>
+                    <Copyable copyText={appVersionString}>
+                      <code>{appVersionString}</code>
+                    </Copyable>
+                  </td>
+                </tr>
+              );
+            }
+          )}
         </tbody>
       </ChartVersionTable>
 
