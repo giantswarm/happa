@@ -22,6 +22,7 @@ import ErrorFallback from 'UI/ErrorFallback';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 import ClusterDashboardResources from './ClusterDashboardResources';
+import UpgradeNotice from './UpgradeNotice';
 
 const WrapperStyles = props => css`
   display: flex;
@@ -149,6 +150,7 @@ function ClusterDashboardItem({
             <RefreshableLabel value={cluster.name}>
               <NameWrapper>{cluster.name}</NameWrapper>
             </RefreshableLabel>
+            <UpgradeNotice clusterId={cluster.id} />
           </Link>
         </TitleWrapper>
 

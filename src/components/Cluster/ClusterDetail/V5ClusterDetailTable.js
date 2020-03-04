@@ -28,16 +28,6 @@ import PortMappingsRow from './PortMappingsRow';
 import RegionAndVersions from './RegionAndVersions';
 import URIBlock from './URIBlock';
 
-export const Upgrade = styled.div`
-  color: #ce990f;
-  span {
-    white-space: normal !important;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
-
 const NodePoolsWrapper = styled.div`
   margin: 25px 0 23px;
   padding-top: 25px;

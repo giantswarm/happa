@@ -17,6 +17,7 @@ export const batchedLayout = () => async dispatch => {
     await dispatch(userActions.getInfo());
     await dispatch(organizationActions.organizationsLoad());
     dispatch(catalogActions.catalogsLoad());
+    dispatch(releaseActions.loadReleases());
     await dispatch(
       clusterActions.clustersList({
         withLoadingFlags: true,

@@ -5,10 +5,8 @@ import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import { Code, Dot } from 'styles';
+import { Code, Dot, UpgradeNoticeStyles } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
-
-import { Upgrade } from './V5ClusterDetailTable';
 
 const ReleaseDetail = styled.span`
   text-decoration: underline;
@@ -18,6 +16,10 @@ const ReleaseDetail = styled.span`
   &:hover {
     color: ${({ theme }) => theme.colors.white1};
   }
+`;
+
+const UpgradeWrapperDiv = styled.div`
+  ${UpgradeNoticeStyles}
 `;
 
 const showReleaseDetailsModal = modalRef => () => {
@@ -85,12 +87,9 @@ function RegionAndVersions({
       </div>
       {canUpgrade && (
         <a className='upgrade-available' onClick={showUpgradeModal}>
-          <Upgrade>
-            <span>
-              <i className='fa fa-warning' />
-              Upgrade available
-            </span>
-          </Upgrade>
+          <UpgradeWrapperDiv>
+            <span>Upgrade available</span>
+          </UpgradeWrapperDiv>
         </a>
       )}
       {release && (
