@@ -9,7 +9,6 @@ import {
   selectCanClusterUpgrade,
   selectTargetRelease,
 } from 'selectors/clusterSelectors';
-// import cmp from 'semver-compare';
 import { AppRoutes } from 'shared/constants/routes';
 import _ from 'underscore';
 
