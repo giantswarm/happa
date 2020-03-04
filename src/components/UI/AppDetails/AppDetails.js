@@ -7,6 +7,7 @@ import { AppCatalogRoutes } from 'shared/constants/routes';
 
 import AppDetailsBody from './AppDetailsBody';
 import AppDetailsItem from './AppDetailsItem';
+import ChartVersionsTable from './ChartVersionsTable';
 
 const Header = styled.div`
   border-bottom: 1px solid #2a5a74;
@@ -71,6 +72,11 @@ const Icon = styled.div`
 
 const Title = styled.div`
   flex: 1 100%;
+
+  .appVersion {
+    background-color: ${props => props.theme.colors.darkBlueLighter8};
+    color: ${props => props.theme.colors.darkBlue};
+  }
 `;
 
 const Install = styled.div`
@@ -89,7 +95,16 @@ const Install = styled.div`
 `;
 
 const AppDetails = props => {
-  const { app, params, q, imgErrorFlag, imgError, repo, children } = props;
+  const {
+    app,
+    appVersions,
+    params,
+    q,
+    imgErrorFlag,
+    imgError,
+    repo,
+    children,
+  } = props;
 
   const {
     name,
@@ -138,12 +153,15 @@ const AppDetails = props => {
           <div className='version'>
             <small>Chart&nbsp;Version</small>&nbsp;
             <code>{version}</code> <small>App&nbsp;Version</small>&nbsp;
-            <code>{appVersion}</code>
+            <code className='appVersion'>{appVersion}</code>
           </div>
         </Title>
 
         <Install>{children}</Install>
       </Header>
+
+      <ChartVersionsTable appVersions={appVersions} />
+
       <AppDetailsBody description={description}>
         {home && home !== '' && <AppDetailsItem data={home} label='Home' />}
         {sources && <AppDetailsItem data={sources} label='Sources' />}
@@ -155,6 +173,7 @@ const AppDetails = props => {
 
 AppDetails.propTypes = {
   app: PropTypes.object,
+  appVersions: PropTypes.array,
   params: PropTypes.object,
   q: PropTypes.string,
   imgErrorFlag: PropTypes.bool,

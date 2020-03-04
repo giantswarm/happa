@@ -4,7 +4,7 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-const Copyable = ({ children, copyText }) => {
+const Copyable = ({ children, copyText, className }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const handleCopyToClipboard = () => {
@@ -17,7 +17,7 @@ const Copyable = ({ children, copyText }) => {
 
   return (
     <div
-      className='copyable'
+      className={`copyable ${className}`}
       onClick={handleCopyToClipboard}
       onMouseLeave={handleDisplayCopyingDone}
       style={{ cursor: 'pointer' }}
@@ -48,6 +48,7 @@ const Copyable = ({ children, copyText }) => {
 Copyable.propTypes = {
   children: PropTypes.node,
   copyText: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default Copyable;
