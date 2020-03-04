@@ -304,6 +304,7 @@ describe('HttpClient', () => {
         TestHeader3: 'test value',
       },
     };
+
     try {
       await HttpClient.get('/api/test', config);
     } catch (err) {
@@ -323,6 +324,7 @@ describe('HttpClient', () => {
         TestHeader3: 'test value',
       },
     };
+
     try {
       await HttpClient.get({ url: '/api/test' }, config);
     } catch (err) {
