@@ -15,6 +15,8 @@ const UpgradeWrapperDiv = styled.div`
   ${UpgradeNoticeStyles({ textDecoration: 'none' })}
 `;
 
+// This component receiveis a cluster id, finds if this cluster is 'upgradable' and
+// in case it is, outputs an uograde notice,
 function UpgradeNotice({ canClusterUpgrade, loadingReleases }) {
   if (!canClusterUpgrade) return null;
 
