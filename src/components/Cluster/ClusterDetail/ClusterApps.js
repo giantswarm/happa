@@ -121,6 +121,16 @@ class ClusterApps extends React.Component {
       logoUrl: '/images/app_icons/nginx_ingress_controller@2x.png',
       category: 'ingress',
     },
+    kiam: {
+      name: 'kiam',
+      logoUrl: '/images/app_icons/kiam@2x.png',
+      category: 'essentials',
+    },
+    'external-dns': {
+      name: 'external-dns',
+      logoUrl: '/images/app_icons/external_dns@2x.png',
+      category: 'essentials',
+    },
   };
 
   // Since some components are not yet in the release endpoint output, but we do
