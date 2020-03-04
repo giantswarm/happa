@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
+import VersionPicker from 'UI/VersionPicker/VersionPicker';
 
 import FileInput from './FileInput';
 import Input from './Input';
@@ -55,6 +56,12 @@ const InstallAppForm = props => {
     }
   };
 
+  const updateVersion = version => {
+    if (props.onChangeVersion) {
+      props.onChangeVersion(version);
+    }
+  };
+
   const formAbilities = AppFormAbilities(props.appName, updateNamespace);
 
   return (
@@ -67,6 +74,18 @@ const InstallAppForm = props => {
         validationError={props.nameError}
         value={props.name}
       />
+
+      <Input
+        label='Chart Version:'
+        description='This will determine what version of the app eventually gets installed.'
+        hint={<>&nbsp;</>}
+      >
+        <VersionPicker
+          onChange={updateVersion}
+          selectedVersion={props.version}
+          versions={props.availableVersions}
+        />
+      </Input>
 
       {formAbilities.hasFixedNamespace ? (
         <Input
@@ -116,11 +135,14 @@ InstallAppForm.propTypes = {
   namespaceError: PropTypes.string,
   valuesYAMLError: PropTypes.string,
   valuesYAML: PropTypes.object,
+  version: PropTypes.string,
+  availableVersions: PropTypes.array,
   secretsYAMLError: PropTypes.string,
   secretsYAML: PropTypes.object,
   onChangeName: PropTypes.func,
   onChangeNamespace: PropTypes.func,
   onChangeValuesYAML: PropTypes.func,
+  onChangeVersion: PropTypes.func,
   onChangeSecretsYAML: PropTypes.func,
 };
 
