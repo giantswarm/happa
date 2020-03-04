@@ -52,14 +52,14 @@ class AppDetail extends React.Component {
           ) && (
             <Breadcrumb
               data={{
-                title: this.props.app.name,
+                title: this.props.latestAppVersion.name,
                 pathname: this.props.match.url,
               }}
             >
-              <DocumentTitle title={this.props.app.name}>
+              <DocumentTitle title={this.props.latestAppVersion.name}>
                 {repo && (
                   <AppDetails
-                    app={this.props.app}
+                    app={this.props.latestAppVersion}
                     appVersions={this.props.appVersions}
                     imgError={this.imgError}
                     imgErrorFlag={this.state.imgError}
@@ -70,8 +70,8 @@ class AppDetail extends React.Component {
                     <InstallAppModal
                       app={{
                         catalog: repo.metadata.name,
-                        name: this.props.app.name,
-                        version: this.props.app.version,
+                        name: this.props.latestAppVersion.name,
+                        versions: this.props.appVersions,
                       }}
                       selectedClusterID={this.props.selectedClusterID}
                     />
@@ -87,7 +87,7 @@ class AppDetail extends React.Component {
 }
 
 AppDetail.propTypes = {
-  app: PropTypes.object,
+  latestAppVersion: PropTypes.object,
   appVersions: PropTypes.array,
   location: PropTypes.object,
   match: PropTypes.object,
@@ -110,8 +110,8 @@ function mapStateToProps(state, ownProps) {
   }
 
   return {
-    app: appVersions[0],
     appVersions: appVersions,
+    latestAppVersion: appVersions[0],
     repo: state.entities.catalogs.items[repo],
     selectedClusterID: state.app.selectedClusterID,
   };

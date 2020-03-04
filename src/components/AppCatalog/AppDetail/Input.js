@@ -71,13 +71,17 @@ const TextInput = props => {
       </Text>
       <InputWrapper>
         {props.icon ? <Icon className={`fa fa-${props.icon}`} /> : undefined}
-        <Input
-          id={props.label}
-          onChange={onChange}
-          type='text'
-          value={props.value}
-          readOnly={props.readOnly}
-        />
+        {props.children ? (
+          props.children
+        ) : (
+          <Input
+            id={props.label}
+            onChange={onChange}
+            type='text'
+            value={props.value}
+            readOnly={props.readOnly}
+          />
+        )}
       </InputWrapper>
       {props.validationError ? (
         <ValidationError>
@@ -99,6 +103,7 @@ TextInput.propTypes = {
   validationError: PropTypes.string,
   value: PropTypes.string,
   readOnly: PropTypes.bool,
+  children: PropTypes.node,
 };
 
 export default TextInput;
