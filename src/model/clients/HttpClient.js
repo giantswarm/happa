@@ -76,10 +76,10 @@ export class HttpClient {
       config
     );
 
-    this.requestConfig.headers = Object.assign({}, config.headers);
+    this.requestConfig.headers = Object.assign({}, config?.headers);
   }
 
-  setHeader(key, value) {
+  setHeader(key, value = '') {
     this.requestConfig.headers[key] = value;
   }
 
@@ -92,25 +92,18 @@ export class HttpClient {
   }
 
   setBody(body) {
-    this.requestConfig.body = body;
+    this.requestConfig.data = body;
   }
 
   setURL(url) {
     this.requestConfig.url = url;
   }
 
-  // eslint-disable-next-line no-unused-vars,class-methods-use-this, no-empty-function
+  // eslint-disable-next-line no-unused-vars, class-methods-use-this, no-empty-function
   async onBeforeRequest(reqConfig) {}
 
   async execute() {
-    const {
-      baseURL,
-      timeout,
-      headers,
-      url,
-      method,
-      body: data,
-    } = this.requestConfig;
+    const { baseURL, timeout, headers, url, method, data } = this.requestConfig;
 
     try {
       await this.onBeforeRequest(this.requestConfig);
@@ -126,7 +119,13 @@ export class HttpClient {
 
       return response.data;
     } catch (err) {
-      return Promise.reject(err.response.data);
+      let response = `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`;
+
+      if (err.hasOwnProperty('response')) {
+        response = err.response.data;
+      }
+
+      return Promise.reject(response);
     }
   }
 }
