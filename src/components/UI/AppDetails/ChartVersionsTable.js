@@ -19,11 +19,6 @@ const ChartVersionTable = styled.table`
       max-width: 150px;
       display: inline-block;
     }
-
-    .copyable {
-      float: left;
-      margin-bottom: 10px;
-    }
   }
 
   th.appVersion {
@@ -33,21 +28,26 @@ const ChartVersionTable = styled.table`
   td.appVersion {
     border-left: 1px dashed ${props => props.theme.colors.shade1};
     text-align: center;
-
-    .copyable {
-      display: inline-block;
-      float: none;
-      position: relative;
-      left: 8px;
-      code {
-        background-color: ${props => props.theme.colors.darkBlueLighter8};
-        color: ${props => props.theme.colors.darkBlue};
-      }
-    }
   }
 
   tr:nth-of-type(even) {
     background-color: ${props => props.theme.colors.shade4};
+  }
+`;
+
+const ChartVersionCopyable = styled(Copyable)`
+  float: left;
+  margin-bottom: 10px;
+`;
+
+const AppVersionCopyable = styled(Copyable)`
+  display: inline-block;
+  float: none;
+  position: relative;
+  left: 8px;
+  code {
+    background-color: ${props => props.theme.colors.darkBlueLighter8};
+    color: ${props => props.theme.colors.darkBlue};
   }
 `;
 
@@ -83,20 +83,20 @@ const ChartVersionsTable = props => {
                 <td>
                   {entries.map(appVersionObject => {
                     return (
-                      <Copyable
+                      <ChartVersionCopyable
                         key={appVersionObject.version}
                         copyText={appVersionObject.version}
                       >
                         <code>{appVersionObject.version}</code>
-                      </Copyable>
+                      </ChartVersionCopyable>
                     );
                   })}
                 </td>
 
                 <td className='appVersion'>
-                  <Copyable copyText={appVersionString}>
+                  <AppVersionCopyable copyText={appVersionString}>
                     <code>{appVersionString}</code>
-                  </Copyable>
+                  </AppVersionCopyable>
                 </td>
               </tr>
             );
