@@ -99,7 +99,7 @@ describe('authSelectors', () => {
         app: {
           loggedInUser: {
             email: 'developer@giantswarm.io',
-            auth: { scheme: 'giantswarm', token: 'an-expired-token' },
+            auth: { scheme: 'giantswarm', token: 'a-non-jwt-token' },
             isAdmin: false,
           },
         },
@@ -107,7 +107,7 @@ describe('authSelectors', () => {
 
       const [authToken, scheme] = await selectAuthToken(dispatchMock, state);
 
-      expect(authToken).toBe('an-expired-token');
+      expect(authToken).toBe('a-non-jwt-token');
       expect(scheme).toBe('giantswarm');
     });
   });
