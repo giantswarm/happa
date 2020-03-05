@@ -22,6 +22,6 @@ export async function selectAuthToken(dispatch, state) {
       status: StatusCodes.Unauthorized,
     });
 
-    throw newErr;
+    return Promise.reject(newErr);
   }
 }
