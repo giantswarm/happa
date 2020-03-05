@@ -28,16 +28,6 @@ import PortMappingsRow from './PortMappingsRow';
 import RegionAndVersions from './RegionAndVersions';
 import URIBlock from './URIBlock';
 
-export const Upgrade = styled.div`
-  color: #ce990f;
-  span {
-    white-space: normal !important;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
-
 const NodePoolsWrapper = styled.div`
   margin: 25px 0 23px;
   padding-top: 25px;
@@ -360,7 +350,7 @@ class V5ClusterDetailTable extends React.Component {
               releaseVersion={release_version}
               release={release}
               k8sVersion={cluster.kubernetes_version}
-              canUpgrade={this.props.canClusterUpgrade}
+              clusterId={cluster.id}
               showUpgradeModal={this.props.showUpgradeModal}
               region={region}
             />
