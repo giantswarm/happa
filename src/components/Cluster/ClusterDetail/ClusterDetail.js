@@ -5,10 +5,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect, useDispatch } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import {
-  selectCanClusterUpgrade,
-  selectTargetRelease,
-} from 'selectors/clusterSelectors';
+import { selectTargetRelease } from 'selectors/clusterSelectors';
 import { AppRoutes } from 'shared/constants/routes';
 import _ from 'underscore';
 
@@ -94,7 +91,6 @@ function mapStateToProps(state, ownProps) {
     nodePools: state.entities.nodePools.items,
     provider: state.app.info.general.provider,
     release: release,
-    canClusterUpgrade: selectCanClusterUpgrade(state, clusterID),
     targetRelease: state.entities.releases.items[targetReleaseVersion],
     user: state.app.loggedInUser,
     region: state.app.info.general.datacenter,
