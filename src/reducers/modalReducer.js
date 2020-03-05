@@ -8,70 +8,77 @@ const modalReducer = produce((draft, action) => {
     case types.MODAL_HIDE:
       draft.visible = false;
 
-      return;
+      break;
+
+    case types.ROUTER_LOCATION_CHANGE:
+      if (!action.payload.isFirstRendering) {
+        draft.visible = false;
+      }
+
+      break;
 
     case types.CLUSTER_DELETE_REQUEST:
       draft.visible = true;
       draft.templateValues = { cluster: action.cluster, loading: false };
       draft.template = 'clusterDelete';
 
-      return;
+      break;
 
     case types.CLUSTER_DELETE_CONFIRMED:
       draft.visible = true;
       draft.templateValues = { cluster: action.cluster, loading: true };
       draft.template = 'clusterDelete';
 
-      return;
+      break;
 
     case types.ORGANIZATION_DELETE_REQUEST:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, loading: false };
       draft.template = 'organizationDelete';
 
-      return;
+      break;
 
     case types.ORGANIZATION_DELETE_CONFIRMED:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, loading: true };
       draft.template = 'organizationDelete';
 
-      return;
+      break;
 
     case types.ORGANIZATION_CREATE_REQUEST:
       draft.visible = true;
       draft.templateValues = { loading: false };
       draft.template = 'organizationCreate';
 
-      return;
+      break;
 
     case types.ORGANIZATION_CREATE_CONFIRMED:
       draft.visible = true;
       draft.templateValues = { loading: true };
       draft.template = 'organizationCreate';
 
-      return;
+      break;
 
     case types.ORGANIZATION_ADD_MEMBER_REQUEST:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId };
       draft.template = 'organizationAddMember';
 
-      return;
+      break;
 
     case types.ORGANIZATION_ADD_MEMBER_TYPING:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, loading: false };
       draft.template = 'organizationAddMember';
 
-      return;
+      break;
 
     case types.ORGANIZATION_ADD_MEMBER_CONFIRMED:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, loading: true };
       draft.template = 'organizationAddMember';
 
-      return;
+      break;
 
     case types.ORGANIZATION_ADD_MEMBER_ERROR:
       draft.visible = true;
@@ -82,14 +89,14 @@ const modalReducer = produce((draft, action) => {
       };
       draft.template = 'organizationAddMember';
 
-      return;
+      break;
 
     case types.ORGANIZATION_REMOVE_MEMBER:
       draft.visible = true;
       draft.templateValues = { orgId: action.orgId, email: action.email };
       draft.template = 'organizationRemoveMember';
 
-      return;
+      break;
 
     case types.ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST:
       draft.visible = true;
@@ -100,7 +107,7 @@ const modalReducer = produce((draft, action) => {
       };
       draft.template = 'organizationRemoveMember';
 
-      return;
+      break;
 
     case types.NODEPOOL_DELETE:
       draft.visible = true;
@@ -111,7 +118,7 @@ const modalReducer = produce((draft, action) => {
       };
       draft.template = 'nodePoolDelete';
 
-      return;
+      break;
 
     case types.NODEPOOL_DELETE_CONFIRMED_REQUEST:
       draft.visible = true;
