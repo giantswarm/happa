@@ -1,11 +1,13 @@
 import { loadReleases } from 'actions/releaseActions';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
 import CreateNodePoolsCluster from './CreateNodePoolsCluster';
@@ -90,6 +92,12 @@ class NewCluster extends React.Component {
   };
 
   renderComponent = props => {
+    const route = RoutePath.parseWithTemplate(
+      OrganizationsRoutes.Clusters.New,
+      props.location.pathname
+    );
+    const { orgId } = route.params;
+
     const Component =
       this.semVerCompare() < 0 ||
       this.props.provider === Providers.AZURE ||
@@ -100,6 +108,7 @@ class NewCluster extends React.Component {
     return (
       <Component
         {...props}
+        selectedOrganization={orgId}
         informParent={this.setSelectedRelease}
         selectedRelease={this.state.selectedRelease}
         selectableReleases={this.state.selectableReleases}
