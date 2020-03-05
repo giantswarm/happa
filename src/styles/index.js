@@ -109,27 +109,3 @@ export const Dot = styled.span`
 export const FallbackSpan = styled.span`
   opacity: 0.5;
 `;
-
-export const UpgradeNoticeStyles = ({
-  textDecoration = 'underline',
-} = {}) => props => css`
-  color: ${props.theme.colors.gold};
-  display: inline-block;
-  span {
-    white-space: normal !important;
-    display: unset;
-    font-size: 16px;
-    font-weight: 300;
-    &:hover {
-      text-decoration: ${textDecoration};
-    }
-  }
-  &:before {
-    display: inline-block;
-    content: '\f019';
-    font-family: 'GiantSwarmHappaAndDocs';
-    font-size: 16px;
-    color: ${props.theme.colors.yellow1};
-    padding: 0 2px;
-  }
-`;
