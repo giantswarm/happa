@@ -74,7 +74,7 @@ class V4ClusterDetailTable extends React.Component {
               releaseVersion={release_version}
               release={release}
               k8sVersion={cluster.kubernetes_version}
-              canUpgrade={this.props.canClusterUpgrade}
+              clusterId={cluster.id}
               showUpgradeModal={this.props.showUpgradeModal}
               region={region}
             />
