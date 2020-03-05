@@ -82,10 +82,7 @@ function RegionAndVersions({
             <i className='fa fa-kubernetes' /> + k8sVersion}
         </ReleaseDetail>
       </div>
-      <UpgradeNotice
-        clusterId={clusterId}
-        showUpgradeModal={showUpgradeModal}
-      />
+      <UpgradeNotice clusterId={clusterId} onClick={showUpgradeModal} />
       {release && (
         <ReleaseDetailsModal ref={releaseDetailsModal} releases={[release]} />
       )}
