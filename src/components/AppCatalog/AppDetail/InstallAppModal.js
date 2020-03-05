@@ -38,6 +38,8 @@ const InstallAppModal = props => {
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
 
+  const [version, setVersion] = useState(props.app.versions[0].version);
+
   const next = () => {
     if (page < pages.length - 1) {
       setPage(page + 1);
@@ -133,6 +135,10 @@ const InstallAppModal = props => {
     setNameError(validate(newName));
   };
 
+  const updateVersion = newVersion => {
+    setVersion(newVersion);
+  };
+
   const updateValuesYAML = files => {
     const reader = new FileReader();
 
@@ -183,7 +189,7 @@ const InstallAppModal = props => {
             name: name,
             catalog: props.app.catalog,
             chartName: props.app.name,
-            version: props.app.version,
+            version: version,
             namespace: namespace,
             valuesYAML: valuesYAML,
             secretsYAML: secretsYAML,
@@ -282,10 +288,15 @@ const InstallAppModal = props => {
                   nameError={nameError}
                   namespace={namespace}
                   namespaceError={namespaceError}
+                  version={version}
+                  availableVersions={props.app.versions.map(v => ({
+                    version: v.version,
+                  }))}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
                   onChangeSecretsYAML={updateSecretsYAML}
                   onChangeValuesYAML={updateValuesYAML}
+                  onChangeVersion={updateVersion}
                   secretsYAML={secretsYAML}
                   secretsYAMLError={secretsYAMLError}
                   valuesYAML={valuesYAML}
