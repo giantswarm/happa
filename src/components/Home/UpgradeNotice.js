@@ -12,15 +12,15 @@ import LoadingOverlay from 'UI/LoadingOverlay';
 const UpgradeWrapperDiv = styled.div`
   display: inline-block;
   color: ${props => props.theme.colors.gold};
-  cursor: ${({ hasFunction }) => (hasFunction ? 'pointer' : 'inherit')};
+  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'inherit')};
   span {
     white-space: normal !important;
     display: unset;
     font-size: 16px;
     font-weight: 300;
     &:hover {
-      text-decoration: ${({ hasFunction }) => {
-        return hasFunction ? 'underline' : 'inherit';
+      text-decoration: ${({ onClick }) => {
+        return onClick ? 'underline' : 'inherit';
       }};
     }
   }
@@ -41,10 +41,7 @@ function UpgradeNotice({
 
   return (
     <LoadingOverlay loading={loadingReleases}>
-      <UpgradeWrapperDiv
-        hasFunction={Boolean(showUpgradeModal)}
-        onClick={showUpgradeModal ? showUpgradeModal : null}
-      >
+      <UpgradeWrapperDiv onClick={showUpgradeModal ? showUpgradeModal : null}>
         <i className='fa fa-warning' />
         <span>Upgrade Available</span>
       </UpgradeWrapperDiv>
