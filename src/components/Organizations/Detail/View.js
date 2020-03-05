@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import * as OrganizationActions from 'actions/organizationActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
+import UpgradeNotice from 'Home/UpgradeNotice';
 import { relativeDate } from 'lib/helpers.js';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
@@ -21,6 +22,34 @@ import Credentials from './Credentials';
 const MembersTable = styled.div`
   .member-email {
     ${Ellipsis}
+  }
+`;
+
+const StyledUpgradeNotice = styled(UpgradeNotice)`
+  transform: translate(-155px, 3px);
+  position: absolute;
+  width: 145px;
+  height: 32px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  cursor: pointer;
+  span {
+    display: block;
+    width: auto;
+    opacity: 0;
+    transition: opacity 0s;
+    font-size: 14px;
+    white-space: nowrap;
+    text-decoration: underline !important;
+  }
+  &:hover {
+    justify-content: flex-end;
+    flex-direction: row;
+    span {
+      opacity: 1;
+      transition: opacity 0.2s;
+    }
   }
 `;
 
@@ -67,7 +96,7 @@ class OrganizationDetail extends React.Component {
         dataField: 'id',
         text: 'Cluster ID',
         sort: true,
-        formatter: clusterIDCellFormatter,
+        formatter: clusterIDCellFormatter.bind(this),
       },
       {
         dataField: 'name',
@@ -239,7 +268,23 @@ OrganizationDetail.propTypes = {
 
 // eslint-disable-next-line react/no-multi-comp
 function clusterIDCellFormatter(cell) {
-  return <ClusterIDLabel clusterID={cell} copyEnabled />;
+  const clusterDetailPath = RoutePath.createUsablePath(
+    OrganizationsRoutes.Clusters.Detail,
+    {
+      // eslint-disable-next-line react/no-this-in-sfc
+      orgId: this.props.organization.id,
+      clusterId: cell,
+    }
+  );
+
+  return (
+    <>
+      <Link to={clusterDetailPath}>
+        <StyledUpgradeNotice clusterId={cell} />
+      </Link>
+      <ClusterIDLabel clusterID={cell} copyEnabled />
+    </>
+  );
 }
 
 // eslint-disable-next-line react/no-multi-comp

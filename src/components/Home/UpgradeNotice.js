@@ -32,12 +32,20 @@ const UpgradeWrapperDiv = styled.div`
 
 // This component receive a cluster id, finds if this cluster is 'upgradable' and
 // in case it is, outputs an upgrade notice,
-function UpgradeNotice({ canClusterUpgrade, loadingReleases, onClick }) {
+function UpgradeNotice({
+  canClusterUpgrade,
+  loadingReleases,
+  onClick,
+  className,
+}) {
   if (!canClusterUpgrade) return null;
 
   return (
     <LoadingOverlay loading={loadingReleases}>
-      <UpgradeWrapperDiv onClick={onClick ? onClick : null}>
+      <UpgradeWrapperDiv
+        className={className}
+        onClick={onClick ? onClick : null}
+      >
         <i className='fa fa-warning' />
         <span>Upgrade Available</span>
       </UpgradeWrapperDiv>
@@ -50,6 +58,7 @@ UpgradeNotice.propTypes = {
   canClusterUpgrade: PropTypes.bool,
   loadingReleases: PropTypes.bool,
   onClick: PropTypes.func,
+  className: PropTypes.string,
 };
 
 function mapStateToProps(state, props) {
