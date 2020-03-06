@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import VersionPicker from 'UI/VersionPicker/VersionPicker';
 
 import FileInput from './FileInput';
@@ -11,58 +11,78 @@ const FormWrapper = styled.div`
   flex-direction: column;
 `;
 
-// AppFormAbilities is an object that helps us with the form.
-// Some apps have special rules about what namespace they are allowed to be in.
-// In the future there might be other rules.
-// This object is a place to keep this logic.
-const AppFormAbilities = (appName, updateNamespace) => {
-  let hasFixedNamespace = false;
-  let fixedNamespace = '';
-
-  if (appName === 'nginx-ingress-controller-app') {
-    hasFixedNamespace = true;
-    fixedNamespace = 'kube-system';
-    updateNamespace('kube-system');
-  }
-
-  return {
-    hasFixedNamespace,
-    fixedNamespace,
-  };
-};
-
-const InstallAppForm = props => {
-  const updateName = name => {
-    if (props.onChangeName) {
-      props.onChangeName(name);
-    }
-  };
-
-  const updateNamespace = namespace => {
-    if (props.onChangeNamespace) {
-      props.onChangeNamespace(namespace);
+const InstallAppForm = ({
+  onChangeNamespace,
+  onChangeName,
+  onChangeValuesYAML,
+  onChangeSecretsYAML,
+  onChangeVersion,
+  appName,
+  name,
+  nameError,
+  version,
+  availableVersions,
+  namespaceError,
+  namespace,
+  valuesYAML,
+  valuesYAMLError,
+  secretsYAML,
+  secretsYAMLError,
+}) => {
+  const updateName = newName => {
+    if (onChangeName) {
+      onChangeName(newName);
     }
   };
 
   const updateValuesYAML = files => {
-    if (props.onChangeValuesYAML) {
-      props.onChangeValuesYAML(files);
+    if (onChangeValuesYAML) {
+      onChangeValuesYAML(files);
     }
   };
 
   const updateSecretsYAML = files => {
-    if (props.onChangeSecretsYAML) {
-      props.onChangeSecretsYAML(files);
+    if (onChangeSecretsYAML) {
+      onChangeSecretsYAML(files);
     }
   };
 
-  const updateVersion = version => {
-    if (props.onChangeVersion) {
-      props.onChangeVersion(version);
+  const updateVersion = newVersion => {
+    if (onChangeVersion) {
+      onChangeVersion(newVersion);
     }
   };
 
-  const formAbilities = AppFormAbilities(props.appName, updateNamespace);
+  const updateNamespace = useCallback(
+    newNS => {
+      if (onChangeNamespace) {
+        onChangeNamespace(newNS);
+      }
+    },
+    [onChangeNamespace]
+  );
+
+  const [formAbilities, setFormAbilities] = useState({
+    hasFixedNamespace: false,
+    fixedNamespace: '',
+  });
+
+  useEffect(() => {
+    let hasFixedNamespace = false;
+    let fixedNamespace = '';
+
+    // Some apps have special rules about what namespace they are allowed to be in.
+    if (appName === 'nginx-ingress-controller-app') {
+      hasFixedNamespace = true;
+      fixedNamespace = 'kube-system';
+      updateNamespace(fixedNamespace);
+    }
+
+    setFormAbilities({
+      hasFixedNamespace,
+      fixedNamespace,
+    });
+  }, [appName, updateNamespace]);
 
   return (
     <FormWrapper>
@@ -71,8 +91,8 @@ const InstallAppForm = props => {
         hint={<>&nbsp;</>}
         label='Application Name:'
         onChange={updateName}
-        validationError={props.nameError}
-        value={props.name}
+        validationError={nameError}
+        value={name}
       />
 
       <Input
@@ -82,8 +102,8 @@ const InstallAppForm = props => {
       >
         <VersionPicker
           onChange={updateVersion}
-          selectedVersion={props.version}
-          versions={props.availableVersions}
+          selectedVersion={version}
+          versions={availableVersions}
         />
       </Input>
 
@@ -101,8 +121,8 @@ const InstallAppForm = props => {
           hint={<>&nbsp;</>}
           label='Namespace:'
           onChange={updateNamespace}
-          validationError={props.namespaceError}
-          value={props.namespace}
+          validationError={namespaceError}
+          value={namespace}
         />
       )}
 
@@ -111,8 +131,8 @@ const InstallAppForm = props => {
         hint={<>&nbsp;</>}
         label='ConfigMap:'
         onChange={updateValuesYAML}
-        validationError={props.valuesYAMLError}
-        value={props.valuesYAML}
+        validationError={valuesYAMLError}
+        value={valuesYAML}
       />
 
       <FileInput
@@ -120,8 +140,8 @@ const InstallAppForm = props => {
         hint={<>&nbsp;</>}
         label='Secret:'
         onChange={updateSecretsYAML}
-        validationError={props.secretsYAMLError}
-        value={props.secretsYAML}
+        validationError={secretsYAMLError}
+        value={secretsYAML}
       />
     </FormWrapper>
   );

@@ -10,7 +10,7 @@ import { AppCatalogRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 
-import AppDetailsModal from './AppDetailsModal';
+import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
 
 // This component shows the list of components and apps installed on a cluster.
 // Apps can be:
