@@ -457,6 +457,12 @@ export function organizationCredentialsSet() {
   };
 }
 
+export function organizationCredentialsDiscard() {
+  return {
+    type: types.ORGANIZATION_CREDENTIALS_SET_DISCARD,
+  };
+}
+
 // organizationCredentialsSetConfirmed performs the API request to set the credentials
 // for an organization and handles the result.
 export function organizationCredentialsSetConfirmed(provider, orgId, data) {

@@ -1,4 +1,5 @@
 import {
+  organizationCredentialsDiscard,
   organizationCredentialsLoad,
   organizationCredentialsSet,
   organizationCredentialsSetConfirmed,
@@ -19,6 +20,11 @@ class Credentials extends React.Component {
     this.props.dispatch(
       organizationCredentialsLoad(this.props.organizationName)
     );
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  componentWillUnmount() {
+    this.props.dispatch(organizationCredentialsDiscard());
   }
 
   // handles the click to reveal the form
