@@ -134,18 +134,14 @@ const InitialPane = props => {
 
 InitialPane.propTypes = {
   app: PropTypes.object,
-  clusterId: PropTypes.string,
-  dispatch: PropTypes.func,
   dispatchCreateAppConfig: PropTypes.func,
   dispatchCreateAppSecret: PropTypes.func,
   dispatchUpdateAppConfig: PropTypes.func,
   dispatchUpdateAppSecret: PropTypes.func,
-  onClose: PropTypes.func,
   showDeleteAppConfigPane: PropTypes.func,
   showDeleteAppPane: PropTypes.func,
   showDeleteAppSecretPane: PropTypes.func,
   showEditChartVersionPane: PropTypes.func,
-  visible: PropTypes.bool,
 };
 
 export default InitialPane;

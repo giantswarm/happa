@@ -125,18 +125,14 @@ const AppDetailsModal = props => {
       modalBody = (
         <InitialPane
           app={props.app}
-          clusterId={props.clusterId}
-          dispatch={props.dispatch}
-          showDeleteAppSecretPane={showDeleteAppSecretPane}
+          dispatchCreateAppConfig={dispatchCreateAppConfig}
+          dispatchCreateAppSecret={dispatchCreateAppSecret}
+          dispatchUpdateAppConfig={dispatchUpdateAppConfig}
+          dispatchUpdateAppSecret={dispatchUpdateAppSecret}
           showDeleteAppConfigPane={showDeleteAppConfigPane}
           showDeleteAppPane={showDeleteAppPane}
+          showDeleteAppSecretPane={showDeleteAppSecretPane}
           showEditChartVersionPane={showEditChartVersionPane}
-          dispatchCreateAppConfig={dispatchCreateAppConfig}
-          dispatchUpdateAppConfig={dispatchUpdateAppConfig}
-          dispatchCreateAppSecret={dispatchCreateAppSecret}
-          dispatchUpdateAppSecret={dispatchUpdateAppSecret}
-          visible={props.visible}
-          onClose={onClose}
         />
       );
       break;
