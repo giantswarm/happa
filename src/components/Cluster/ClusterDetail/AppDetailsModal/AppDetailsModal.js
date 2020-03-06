@@ -29,6 +29,13 @@ const modalPanes = {
 const AppDetailsModal = props => {
   const [pane, setPane] = useState(modalPanes.initial);
 
+  if (props.app === null || typeof props.app === 'undefined') {
+    return <span />;
+  }
+
+  const appName = props.app.metadata.name;
+  const clusterId = props.clusterId;
+
   function showPane(paneToShow) {
     return function() {
       setPane(paneToShow);
@@ -41,57 +48,45 @@ const AppDetailsModal = props => {
   }
 
   async function loadAppsAndClose() {
-    await props.dispatch(loadApps(props.clusterId));
+    await props.dispatch(loadApps(clusterId));
     onClose();
   }
 
   async function dispatchDeleteAppConfig() {
-    await props.dispatch(
-      deleteAppConfig(props.app.metadata.name, props.clusterId)
-    );
+    await props.dispatch(deleteAppConfig(appName, clusterId));
     await loadAppsAndClose();
   }
 
   async function dispatchDeleteAppSecret() {
-    await props.dispatch(
-      deleteAppSecret(props.app.metadata.name, props.clusterId)
-    );
+    await props.dispatch(deleteAppSecret(appName, clusterId));
     await loadAppsAndClose();
   }
 
   async function dispatchDeleteApp() {
-    await props.dispatch(deleteApp(props.app.metadata.name, props.clusterId));
+    await props.dispatch(deleteApp(appName, clusterId));
     await loadAppsAndClose();
   }
 
   async function dispatchCreateAppConfig(values, done) {
-    await props.dispatch(
-      createAppConfig(props.app.metadata.name, props.clusterId, values)
-    );
+    await props.dispatch(createAppConfig(appName, clusterId, values));
     await loadAppsAndClose();
     done();
   }
 
   async function dispatchUpdateAppConfig(values, done) {
-    await props.dispatch(
-      updateAppConfig(props.app.metadata.name, props.clusterId, values)
-    );
+    await props.dispatch(updateAppConfig(appName, clusterId, values));
     await loadAppsAndClose();
     done();
   }
 
   async function dispatchCreateAppSecret(values, done) {
-    await props.dispatch(
-      createAppSecret(props.app.metadata.name, props.clusterId, values)
-    );
+    await props.dispatch(createAppSecret(appName, clusterId, values));
     await loadAppsAndClose();
     done();
   }
 
   async function dispatchUpdateAppSecret(values, done) {
-    await props.dispatch(
-      updateAppSecret(props.app.metadata.name, props.clusterId, values)
-    );
+    await props.dispatch(updateAppSecret(appName, clusterId, values));
     await loadAppsAndClose();
     done();
   }
@@ -108,10 +103,6 @@ const AppDetailsModal = props => {
         </Button>
       </>
     );
-  }
-
-  if (props.app === null || typeof props.app === 'undefined') {
-    return <span />;
   }
 
   let modalBody = '';
