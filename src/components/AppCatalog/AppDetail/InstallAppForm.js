@@ -75,7 +75,7 @@ const InstallAppForm = ({
     if (appName === 'nginx-ingress-controller-app') {
       hasFixedNamespace = true;
       fixedNamespace = 'kube-system';
-      updateNamespace('kube-system');
+      updateNamespace(fixedNamespace);
     }
 
     setFormAbilities({
