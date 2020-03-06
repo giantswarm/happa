@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Button from 'react-bootstrap/lib/Button';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
@@ -25,31 +27,11 @@ const MembersTable = styled.div`
   }
 `;
 
-const StyledUpgradeNotice = styled(UpgradeNotice)`
-  transform: translate(-155px, 3px);
-  position: absolute;
-  width: 145px;
-  height: 32px;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row-reverse;
+const UpgradeNoticeWrapperDiv = styled.div`
   cursor: pointer;
+  width: 22px;
   span {
-    display: block;
-    width: auto;
-    opacity: 0;
-    transition: opacity 0s;
-    font-size: 14px;
-    white-space: nowrap;
-    text-decoration: underline !important;
-  }
-  &:hover {
-    justify-content: flex-end;
-    flex-direction: row;
-    span {
-      opacity: 1;
-      transition: opacity 0.2s;
-    }
+    display: none !important;
   }
 `;
 
@@ -114,6 +96,11 @@ class OrganizationDetail extends React.Component {
 
           return cmp(a, b);
         },
+      },
+      {
+        dataField: 'path',
+        text: '',
+        formatter: upgradeNoticeIcon.bind(this),
       },
       {
         dataField: 'create_date',
@@ -268,22 +255,31 @@ OrganizationDetail.propTypes = {
 
 // eslint-disable-next-line react/no-multi-comp
 function clusterIDCellFormatter(cell) {
+  return <ClusterIDLabel clusterID={cell} copyEnabled />;
+}
+
+// eslint-disable-next-line react/no-multi-comp
+function upgradeNoticeIcon(_, cluster) {
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail,
     {
       // eslint-disable-next-line react/no-this-in-sfc
       orgId: this.props.organization.id,
-      clusterId: cell,
+      clusterId: cluster.id,
     }
   );
 
   return (
-    <>
-      <Link to={clusterDetailPath}>
-        <StyledUpgradeNotice clusterId={cell} />
-      </Link>
-      <ClusterIDLabel clusterID={cell} copyEnabled />
-    </>
+    <Link to={clusterDetailPath}>
+      <OverlayTrigger
+        overlay={<Tooltip id='tooltip'>Upgrade Available</Tooltip>}
+        placement='top'
+      >
+        <UpgradeNoticeWrapperDiv>
+          <UpgradeNotice clusterId={cluster.id} />
+        </UpgradeNoticeWrapperDiv>
+      </OverlayTrigger>
+    </Link>
   );
 }
 
