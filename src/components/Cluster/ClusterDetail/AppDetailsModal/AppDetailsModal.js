@@ -15,6 +15,7 @@ import React, { useState } from 'react';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
+import DeleteConfirmFooter from './DeleteConfirmFooter';
 import EditChartVersionPane from './EditChartVersionPane';
 import InitialPane from './InitialPane';
 
@@ -93,15 +94,11 @@ const AppDetailsModal = props => {
 
   function deleteConfirmFooter(cta, onConfirm) {
     return (
-      <>
-        <Button bsStyle='danger' onClick={onConfirm}>
-          <i className='fa fa-delete' />
-          {cta}
-        </Button>
-        <Button bsStyle='link' onClick={showPane(modalPanes.initial)}>
-          Cancel
-        </Button>
-      </>
+      <DeleteConfirmFooter
+        cta={cta}
+        onConfirm={onConfirm}
+        onCancel={showPane(modalPanes.initial)}
+      />
     );
   }
 
