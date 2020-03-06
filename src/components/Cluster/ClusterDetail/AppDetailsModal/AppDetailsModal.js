@@ -1,13 +1,16 @@
-import { deleteApp, loadApps } from 'actions/appActions';
 import {
-  createAppConfig,
-  deleteAppConfig,
-  updateAppConfig,
+  deleteApp as deleteAppAction,
+  loadApps as loadAppsAction,
+} from 'actions/appActions';
+import {
+  createAppConfig as createAppConfigAction,
+  deleteAppConfig as deleteAppConfigAction,
+  updateAppConfig as updateAppConfigAction,
 } from 'actions/appConfigActions';
 import {
-  createAppSecret,
-  deleteAppSecret,
-  updateAppSecret,
+  createAppSecret as createAppSecretAction,
+  deleteAppSecret as deleteAppSecretAction,
+  updateAppSecret as updateAppSecretAction,
 } from 'actions/appSecretActions';
 import GenericModal from 'components/Modals/GenericModal';
 import PropTypes from 'prop-types';
@@ -49,45 +52,45 @@ const AppDetailsModal = props => {
   }
 
   async function loadAppsAndClose() {
-    await props.dispatch(loadApps(clusterId));
+    await props.dispatch(loadAppsAction(clusterId));
     onClose();
   }
 
-  async function _deleteAppConfig() {
-    await props.dispatch(deleteAppConfig(appName, clusterId));
+  async function deleteAppConfig() {
+    await props.dispatch(deleteAppConfigAction(appName, clusterId));
     await loadAppsAndClose();
   }
 
-  async function _deleteAppSecret() {
-    await props.dispatch(deleteAppSecret(appName, clusterId));
+  async function deleteAppSecret() {
+    await props.dispatch(deleteAppSecretAction(appName, clusterId));
     await loadAppsAndClose();
   }
 
-  async function _deleteApp() {
-    await props.dispatch(deleteApp(appName, clusterId));
+  async function deleteApp() {
+    await props.dispatch(deleteAppAction(appName, clusterId));
     await loadAppsAndClose();
   }
 
-  async function _createAppConfig(values, done) {
-    await props.dispatch(createAppConfig(appName, clusterId, values));
-    await loadAppsAndClose();
-    done();
-  }
-
-  async function _updateAppConfig(values, done) {
-    await props.dispatch(updateAppConfig(appName, clusterId, values));
+  async function createAppConfig(values, done) {
+    await props.dispatch(createAppConfigAction(appName, clusterId, values));
     await loadAppsAndClose();
     done();
   }
 
-  async function _createAppSecret(values, done) {
-    await props.dispatch(createAppSecret(appName, clusterId, values));
+  async function updateAppConfig(values, done) {
+    await props.dispatch(updateAppConfigAction(appName, clusterId, values));
     await loadAppsAndClose();
     done();
   }
 
-  async function _updateAppSecret(values, done) {
-    await props.dispatch(updateAppSecret(appName, clusterId, values));
+  async function createAppSecret(values, done) {
+    await props.dispatch(createAppSecretAction(appName, clusterId, values));
+    await loadAppsAndClose();
+    done();
+  }
+
+  async function updateAppSecret(values, done) {
+    await props.dispatch(updateAppSecretAction(appName, clusterId, values));
     await loadAppsAndClose();
     done();
   }
@@ -113,10 +116,10 @@ const AppDetailsModal = props => {
       modalBody = (
         <InitialPane
           app={props.app}
-          dispatchCreateAppConfig={_createAppConfig}
-          dispatchCreateAppSecret={_createAppSecret}
-          dispatchUpdateAppConfig={_updateAppConfig}
-          dispatchUpdateAppSecret={_updateAppSecret}
+          dispatchCreateAppConfig={createAppConfig}
+          dispatchCreateAppSecret={createAppSecret}
+          dispatchUpdateAppConfig={updateAppConfig}
+          dispatchUpdateAppSecret={updateAppSecret}
           showDeleteAppConfigPane={showPane(modalPanes.deleteAppConfig)}
           showDeleteAppPane={showPane(modalPanes.deleteApp)}
           showDeleteAppSecretPane={showPane(modalPanes.deleteAppSecret)}
@@ -177,7 +180,7 @@ const AppDetailsModal = props => {
         </>
       );
 
-      modalFooter = deleteConfirmFooter('Delete ConfigMap', _deleteAppConfig);
+      modalFooter = deleteConfirmFooter('Delete ConfigMap', deleteAppConfig);
 
       break;
 
@@ -200,7 +203,7 @@ const AppDetailsModal = props => {
         </>
       );
 
-      modalFooter = deleteConfirmFooter('Delete Secret', _deleteAppSecret);
+      modalFooter = deleteConfirmFooter('Delete Secret', deleteAppSecret);
 
       break;
 
@@ -222,7 +225,7 @@ const AppDetailsModal = props => {
         </>
       );
 
-      modalFooter = deleteConfirmFooter('Delete App', _deleteApp);
+      modalFooter = deleteConfirmFooter('Delete App', deleteApp);
 
       break;
   }
