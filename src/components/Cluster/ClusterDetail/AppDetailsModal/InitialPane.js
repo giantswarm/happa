@@ -29,10 +29,10 @@ const InitialPane = props => {
             {/* eslint-disable-next-line no-magic-numbers */}
             <span>{truncate(props.app.spec.version, 20)}</span>
           </div>
-          <br />
+          {/* <br />
           <Button onClick={props.showEditChartVersionPane}>
             Edit Chart Version
-          </Button>
+          </Button> */}
         </div>
 
         <div className='labelvaluepair'>
