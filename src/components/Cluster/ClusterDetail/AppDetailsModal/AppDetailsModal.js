@@ -54,154 +54,60 @@ const AppDetailsModal = props => {
     props.onClose();
   }
 
-  function dispatchDeleteAppConfig(app, clusterId, dispatch, closeModal) {
-    return dispatch(deleteAppConfig(app.metadata.name, clusterId))
-      .then(() => {
-        return dispatch(loadApps(clusterId));
-      })
-      .then(() => {
-        closeModal();
-      })
-      .catch(e => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
+  async function loadAppsAndClose() {
+    await props.dispatch(loadApps(props.clusterId));
+    onClose();
   }
 
-  function dispatchDeleteAppSecret(app, clusterId, dispatch, closeModal) {
-    return dispatch(deleteAppSecret(app.metadata.name, clusterId))
-      .then(() => {
-        return dispatch(loadApps(clusterId));
-      })
-      .then(() => {
-        closeModal();
-      })
-      .catch(e => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
+  async function dispatchDeleteAppConfig() {
+    await props.dispatch(
+      deleteAppConfig(props.app.metadata.name, props.clusterId)
+    );
+    await loadAppsAndClose();
   }
 
-  function dispatchDeleteApp(app, clusterId, dispatch, closeModal) {
-    return dispatch(deleteApp(app.metadata.name, clusterId))
-      .then(() => {
-        return dispatch(loadApps(clusterId));
-      })
-      .then(() => {
-        closeModal();
-      })
-      .catch(e => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
+  async function dispatchDeleteAppSecret() {
+    await props.dispatch(
+      deleteAppSecret(props.app.metadata.name, props.clusterId)
+    );
+    await loadAppsAndClose();
   }
 
-  // dispatchCreateAppConfig creates an app configmap.
-  // YAMLFileUpload takes a curried version of this function
-  // since it wants a callback with one argument for the parsed YAML result.
-  function dispatchCreateAppConfig(
-    appName,
-    clusterId,
-    dispatch,
-    closeModal,
-    values,
-    done
-  ) {
-    return dispatch(createAppConfig(appName, clusterId, values))
-      .then(() => {
-        return dispatch(loadApps(clusterId));
-      })
-      .then(() => {
-        done();
-        closeModal();
-      })
-      .catch(e => {
-        done();
-
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
+  async function dispatchDeleteApp() {
+    await props.dispatch(deleteApp(props.app.metadata.name, props.clusterId));
+    await loadAppsAndClose();
   }
 
-  // dispatchUpdateAppConfig updates an app configmap.
-  // YAMLFileUpload takes a curried version of this function
-  // since it wants a callback with one argument for the parsed YAML result.
-  function dispatchUpdateAppConfig(
-    appName,
-    clusterId,
-    dispatch,
-    closeModal,
-    values,
-    done
-  ) {
-    return dispatch(updateAppConfig(appName, clusterId, values))
-      .then(() => {
-        return dispatch(loadApps(clusterId));
-      })
-      .then(() => {
-        done();
-        closeModal();
-      })
-      .catch(e => {
-        done();
-
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
+  async function dispatchCreateAppConfig(values, done) {
+    await props.dispatch(
+      createAppConfig(props.app.metadata.name, props.clusterId, values)
+    );
+    await loadAppsAndClose();
+    done();
   }
 
-  // dispatchCreateAppSecret creates an app secret.
-  // YAMLFileUpload takes a curried version of this function
-  // since it wants a callback with one argument for the parsed YAML result.
-  function dispatchCreateAppSecret(
-    appName,
-    clusterId,
-    dispatch,
-    closeModal,
-    values,
-    done
-  ) {
-    return dispatch(createAppSecret(appName, clusterId, values))
-      .then(() => {
-        return dispatch(loadApps(clusterId));
-      })
-      .then(() => {
-        done();
-        closeModal();
-      })
-      .catch(e => {
-        done();
-
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
+  async function dispatchUpdateAppConfig(values, done) {
+    await props.dispatch(
+      updateAppConfig(props.app.metadata.name, props.clusterId, values)
+    );
+    await loadAppsAndClose();
+    done();
   }
 
-  // dispatchUpdateAppSecret updates an app secret.
-  // YAMLFileUpload takes a curried version of this function
-  // since it wants a callback with one argument for the parsed YAML result.
-  function dispatchUpdateAppSecret(
-    appName,
-    clusterId,
-    dispatch,
-    closeModal,
-    values,
-    done
-  ) {
-    return dispatch(updateAppSecret(appName, clusterId, values))
-      .then(() => {
-        return dispatch(loadApps(clusterId));
-      })
-      .then(() => {
-        done();
-        closeModal();
-      })
-      .catch(e => {
-        done();
+  async function dispatchCreateAppSecret(values, done) {
+    await props.dispatch(
+      createAppSecret(props.app.metadata.name, props.clusterId, values)
+    );
+    await loadAppsAndClose();
+    done();
+  }
 
-        // eslint-disable-next-line no-console
-        console.error(e);
-      });
+  async function dispatchUpdateAppSecret(values, done) {
+    await props.dispatch(
+      updateAppSecret(props.app.metadata.name, props.clusterId, values)
+    );
+    await loadAppsAndClose();
+    done();
   }
 
   if (props.app === null || typeof props.app === 'undefined') {
@@ -245,7 +151,6 @@ const AppDetailsModal = props => {
 
       modalBody = (
         <EditChartVersionPane
-          key='pane'
           onConfirm={() => {
             return 'todo';
           }}
@@ -290,16 +195,7 @@ const AppDetailsModal = props => {
 
       modalFooter = (
         <>
-          <Button
-            bsStyle='danger'
-            onClick={dispatchDeleteAppConfig.bind(
-              undefined,
-              props.app,
-              props.clusterId,
-              props.dispatch,
-              onClose
-            )}
-          >
+          <Button bsStyle='danger' onClick={dispatchDeleteAppConfig}>
             <i className='fa fa-delete' />
             Delete ConfigMap
           </Button>
@@ -332,16 +228,7 @@ const AppDetailsModal = props => {
 
       modalFooter = (
         <>
-          <Button
-            bsStyle='danger'
-            onClick={dispatchDeleteAppSecret.bind(
-              undefined,
-              props.app,
-              props.clusterId,
-              props.dispatch,
-              onClose
-            )}
-          >
+          <Button bsStyle='danger' onClick={dispatchDeleteAppSecret}>
             <i className='fa fa-delete' />
             Delete Secret
           </Button>
@@ -373,16 +260,7 @@ const AppDetailsModal = props => {
 
       modalFooter = (
         <>
-          <Button
-            bsStyle='danger'
-            onClick={dispatchDeleteApp.bind(
-              undefined,
-              props.app,
-              props.clusterId,
-              props.dispatch,
-              onClose
-            )}
-          >
+          <Button bsStyle='danger' onClick={dispatchDeleteApp}>
             <i className='fa fa-delete' />
             Delete App
           </Button>

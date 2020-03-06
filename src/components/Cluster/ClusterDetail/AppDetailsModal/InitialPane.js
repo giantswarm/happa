@@ -58,13 +58,7 @@ const InitialPane = props => {
               <div className='actions'>
                 <YAMLFileUpload
                   buttonText='Replace ConfigMap'
-                  onInputChange={props.dispatchUpdateAppConfig.bind(
-                    undefined,
-                    props.app.metadata.name,
-                    props.clusterId,
-                    props.dispatch,
-                    props.onClose
-                  )}
+                  onInputChange={props.dispatchUpdateAppConfig}
                 />
 
                 <Button
@@ -82,13 +76,7 @@ const InitialPane = props => {
               <div className='actions'>
                 <YAMLFileUpload
                   buttonText='Upload ConfigMap'
-                  onInputChange={props.dispatchCreateAppConfig.bind(
-                    undefined,
-                    props.app.metadata.name,
-                    props.clusterId,
-                    props.dispatch,
-                    props.onClose
-                  )}
+                  onInputChange={props.dispatchCreateAppConfig}
                 />
               </div>
             </>
@@ -107,13 +95,7 @@ const InitialPane = props => {
               <div className='actions'>
                 <YAMLFileUpload
                   buttonText='Replace Secret'
-                  onInputChange={props.dispatchUpdateAppSecret.bind(
-                    undefined,
-                    props.app.metadata.name,
-                    props.clusterId,
-                    props.dispatch,
-                    props.onClose
-                  )}
+                  onInputChange={props.dispatchUpdateAppSecret}
                 />
 
                 <Button
@@ -131,13 +113,7 @@ const InitialPane = props => {
               <div className='actions'>
                 <YAMLFileUpload
                   buttonText='Upload Secret'
-                  onInputChange={props.dispatchCreateAppSecret.bind(
-                    undefined,
-                    props.app.metadata.name,
-                    props.clusterId,
-                    props.dispatch,
-                    props.onClose
-                  )}
+                  onInputChange={props.dispatchCreateAppSecret}
                 />
               </div>
             </>
