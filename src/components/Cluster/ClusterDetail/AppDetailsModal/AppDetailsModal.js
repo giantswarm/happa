@@ -29,28 +29,14 @@ const modalPanes = {
 const AppDetailsModal = props => {
   const [pane, setPane] = useState(modalPanes.initial);
 
-  function showDeleteAppConfigPane() {
-    setPane(modalPanes.deleteAppConfig);
-  }
-
-  function showDeleteAppSecretPane() {
-    setPane(modalPanes.deleteAppSecret);
-  }
-
-  function showDeleteAppPane() {
-    setPane(modalPanes.deleteApp);
-  }
-
-  function showInitialPane() {
-    setPane(modalPanes.initial);
-  }
-
-  function showEditChartVersionPane() {
-    setPane(modalPanes.editChartVersion);
+  function showPane(paneToShow) {
+    return function() {
+      setPane(paneToShow);
+    };
   }
 
   function onClose() {
-    showInitialPane();
+    showPane(modalPanes.initial)();
     props.onClose();
   }
 
@@ -110,6 +96,20 @@ const AppDetailsModal = props => {
     done();
   }
 
+  function deleteConfirmationFooter(cta, onConfirm) {
+    return (
+      <>
+        <Button bsStyle='danger' onClick={onConfirm}>
+          <i className='fa fa-delete' />
+          {cta}
+        </Button>
+        <Button bsStyle='link' onClick={showPane(modalPanes.initial)}>
+          Cancel
+        </Button>
+      </>
+    );
+  }
+
   if (props.app === null || typeof props.app === 'undefined') {
     return <span />;
   }
@@ -129,10 +129,10 @@ const AppDetailsModal = props => {
           dispatchCreateAppSecret={dispatchCreateAppSecret}
           dispatchUpdateAppConfig={dispatchUpdateAppConfig}
           dispatchUpdateAppSecret={dispatchUpdateAppSecret}
-          showDeleteAppConfigPane={showDeleteAppConfigPane}
-          showDeleteAppPane={showDeleteAppPane}
-          showDeleteAppSecretPane={showDeleteAppSecretPane}
-          showEditChartVersionPane={showEditChartVersionPane}
+          showDeleteAppConfigPane={showPane(modalPanes.deleteAppConfig)}
+          showDeleteAppPane={showPane(modalPanes.deleteApp)}
+          showDeleteAppSecretPane={showPane(modalPanes.deleteAppSecret)}
+          showEditChartVersionPane={showPane(modalPanes.editChartVersion)}
         />
       );
       break;
@@ -163,7 +163,7 @@ const AppDetailsModal = props => {
           >
             Update Chart Version
           </Button>
-          <Button bsStyle='link' onClick={showInitialPane}>
+          <Button bsStyle='link' onClick={showPane(modalPanes.initial)}>
             Cancel
           </Button>
         </>
@@ -189,16 +189,9 @@ const AppDetailsModal = props => {
         </>
       );
 
-      modalFooter = (
-        <>
-          <Button bsStyle='danger' onClick={dispatchDeleteAppConfig}>
-            <i className='fa fa-delete' />
-            Delete ConfigMap
-          </Button>
-          <Button bsStyle='link' onClick={showInitialPane}>
-            Cancel
-          </Button>
-        </>
+      modalFooter = deleteConfirmationFooter(
+        'Delete ConfigMap',
+        dispatchDeleteAppConfig
       );
 
       break;
@@ -222,16 +215,9 @@ const AppDetailsModal = props => {
         </>
       );
 
-      modalFooter = (
-        <>
-          <Button bsStyle='danger' onClick={dispatchDeleteAppSecret}>
-            <i className='fa fa-delete' />
-            Delete Secret
-          </Button>
-          <Button bsStyle='link' onClick={showInitialPane}>
-            Cancel
-          </Button>
-        </>
+      modalFooter = deleteConfirmationFooter(
+        'Delete Secret',
+        dispatchDeleteAppSecret
       );
 
       break;
@@ -254,17 +240,7 @@ const AppDetailsModal = props => {
         </>
       );
 
-      modalFooter = (
-        <>
-          <Button bsStyle='danger' onClick={dispatchDeleteApp}>
-            <i className='fa fa-delete' />
-            Delete App
-          </Button>
-          <Button bsStyle='link' onClick={showInitialPane}>
-            Cancel
-          </Button>
-        </>
-      );
+      modalFooter = deleteConfirmationFooter('Delete App', dispatchDeleteApp);
 
       break;
   }
@@ -272,7 +248,7 @@ const AppDetailsModal = props => {
   return (
     <GenericModal
       footer={modalFooter}
-      onClose={props.onClose}
+      onClose={onClose}
       title={modalTitle}
       visible={props.visible}
       className='appdetails'
