@@ -29,7 +29,7 @@ const modalPanes = {
 const AppDetailsModal = props => {
   const [pane, setPane] = useState(modalPanes.initial);
 
-  if (props.app === null || typeof props.app === 'undefined') {
+  if (!props.app) {
     return <span />;
   }
 
