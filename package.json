@@ -52,7 +52,7 @@
     "emotion-theming": "10.0.27",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
     "history": "4.10.1",
-    "immer": "5.3.6",
+    "immer": "6.0.1",
     "immutable": "3.8.2",
     "js-base64": "2.5.2",
     "js-yaml": "^3.12.1",
@@ -92,7 +92,7 @@
     "validate.js": "0.13.1"
   },
   "devDependencies": {
-    "@babel/core": "7.8.4",
+    "@babel/core": "7.8.7",
     "@babel/preset-env": "7.8.6",
     "@babel/preset-react": "7.8.3",
     "@testing-library/jest-dom": "5.1.1",
@@ -114,7 +114,7 @@
     "eslint-loader": "3.0.3",
     "eslint-plugin-emotion": "10.0.27",
     "eslint-plugin-import": "2.20.1",
-    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.0",
     "eslint-plugin-simple-import-sort": "5.0.1",
     "file-loader": "5.1.0",
