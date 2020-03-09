@@ -104,7 +104,8 @@ class OrganizationDetail extends React.Component {
       {
         dataField: 'path',
         text: '',
-        formatter: upgradeNoticeIcon.bind(this),
+        formatter: (cell, row) =>
+          upgradeNoticeIcon(cell, row, this.props.organization.id),
         headerStyle: () => ({ width: '40px' }),
       },
       {
@@ -264,12 +265,12 @@ function clusterIDCellFormatter(cell) {
 }
 
 // eslint-disable-next-line react/no-multi-comp
-function upgradeNoticeIcon(_, cluster) {
+function upgradeNoticeIcon(_, cluster, orgId) {
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail,
     {
       // eslint-disable-next-line react/no-this-in-sfc
-      orgId: this.props.organization.id,
+      orgId,
       clusterId: cluster.id,
     }
   );
