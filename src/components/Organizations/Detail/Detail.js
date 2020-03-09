@@ -68,9 +68,9 @@ function mapStateToProps(state, ownProps) {
   const allClusters = state.entities.clusters.items;
   let clusters = [];
 
-  clusters = Object.keys(allClusters)
-    .filter(id => allClusters[id].owner === ownProps.match.params.orgId)
-    .map(id => allClusters[id]);
+  clusters = Object.values(allClusters).filter(
+    cluster => cluster.owner === ownProps.match.params.orgId
+  );
 
   const membersForTable = state.entities.organizations.items[
     ownProps.match.params.orgId
