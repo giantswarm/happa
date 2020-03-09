@@ -334,16 +334,14 @@ class ClusterDetailView extends React.Component {
                 />
               )}
 
-              {canClusterUpgrade && (
-                <UpgradeClusterModal
-                  cluster={cluster}
-                  ref={s => {
-                    this.upgradeClusterModal = s;
-                  }}
-                  release={release}
-                  targetRelease={targetRelease}
-                />
-              )}
+              <UpgradeClusterModal
+                cluster={cluster}
+                ref={s => {
+                  this.upgradeClusterModal = s;
+                }}
+                release={release}
+                targetRelease={targetRelease}
+              />
             </WrapperDiv>
           </DocumentTitle>
         )}
