@@ -96,8 +96,9 @@ class OrganizationDetail extends React.Component {
 
           return cmp(a, b);
         },
-        headerStyle: () => ({ textAlign: 'right' }),
+        headerStyle: () => ({ textAlign: 'right', paddingRight: 0 }),
         align: 'right',
+        style: { paddingRight: 0 },
       },
       // Using path just because if we use 'id', that is what we need, we will get
       // duplicated keys.
@@ -106,7 +107,8 @@ class OrganizationDetail extends React.Component {
         text: '',
         formatter: (cell, row) =>
           upgradeNoticeIcon(cell, row, this.props.organization.id),
-        headerStyle: () => ({ width: '40px' }),
+        headerStyle: () => ({ width: '40px', paddingLeft: 0 }),
+        style: { paddingLeft: 0 },
       },
       {
         dataField: 'create_date',
@@ -269,7 +271,6 @@ function upgradeNoticeIcon(_, cluster, orgId) {
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail,
     {
-      // eslint-disable-next-line react/no-this-in-sfc
       orgId,
       clusterId: cluster.id,
     }
