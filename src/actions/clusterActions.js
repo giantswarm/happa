@@ -195,7 +195,7 @@ export function clusterLoadDetails(
 
         // Delete the cluster in the store.
         dispatch({
-          type: types.CLUSTER_DELETE_REQUEST,
+          type: types.CLUSTER_REMOVE_FROM_STORE,
           clusterId,
           isV5Cluster,
         });
