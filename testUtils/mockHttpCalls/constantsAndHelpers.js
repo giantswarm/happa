@@ -1,3 +1,4 @@
+import { GenericResponse } from 'model/clients/GenericResponse';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 
@@ -55,3 +56,10 @@ export const postPayloadMockCall = (
 export const generateRandomString = (length = 8) =>
   Array.from({ length }, () => (~~(Math.random() * 36)).toString(36)).join('');
 /* eslint-enable no-magic-numbers */
+
+// eslint-disable-next-line no-magic-numbers
+export const mockAPIResponse = (apiResponse, status = 200) => {
+  const response = new GenericResponse(status, apiResponse);
+
+  return response;
+};

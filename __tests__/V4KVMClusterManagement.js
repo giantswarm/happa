@@ -13,6 +13,7 @@ import {
   getMockCall,
   getMockCallTimes,
   KVMInfoResponse,
+  mockAPIResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -29,7 +30,7 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 const minNodesCount = 3;
 
 beforeEach(() => {
-  getInstallationInfo.mockResolvedValueOnce(KVMInfoResponse);
+  getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(KVMInfoResponse));
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);

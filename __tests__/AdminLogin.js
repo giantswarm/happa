@@ -18,6 +18,7 @@ import {
   AWSInfoResponse,
   getMockCall,
   getMockCallTimes,
+  mockAPIResponse,
   USER_EMAIL,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -97,7 +98,7 @@ describe('AdminLogin', () => {
   });
 
   it('redirects to the OAuth provider and handles login, if there is no user stored', async () => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');
@@ -122,8 +123,8 @@ describe('AdminLogin', () => {
 
   it('redirects to homepage if the user has been previously logged in', async () => {
     getMockCall('/v4/user/', userResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
+    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
     getMockCallTimes('/v4/appcatalogs/', [], 2);
     getMockCall('/v4/organizations/');
     getMockCallTimes('/v4/clusters/', [], 2);
@@ -140,8 +141,8 @@ describe('AdminLogin', () => {
 
   it('renews user token if the previously stored one is expired', async () => {
     getMockCall('/v4/user/', userResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
+    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
     getMockCallTimes('/v4/appcatalogs/', [], 2);
     getMockCall('/v4/organizations/');
     getMockCallTimes('/v4/clusters/', [], 2);
@@ -213,7 +214,7 @@ describe('AdminLogin', () => {
     // eslint-disable-next-line no-console
     console.error = jest.fn();
 
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/organizations/');

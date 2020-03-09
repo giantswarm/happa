@@ -3,6 +3,7 @@ import { AccountSettingsRoutes } from 'shared/constants/routes';
 import {
   AWSInfoResponse,
   getMockCall,
+  mockAPIResponse,
   userResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
@@ -21,7 +22,7 @@ const elementLabels = {
 
 describe('AccountSettings', () => {
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');

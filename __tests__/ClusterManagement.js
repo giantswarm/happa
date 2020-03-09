@@ -13,6 +13,7 @@ import {
   AWSInfoResponse,
   getMockCall,
   getMockCallTimes,
+  mockAPIResponse,
   nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
@@ -30,7 +31,7 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 beforeEach(() => {
-  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+  getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);

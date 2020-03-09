@@ -13,6 +13,7 @@ import {
   azureInfoResponse,
   getMockCall,
   getMockCallTimes,
+  mockAPIResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -31,7 +32,9 @@ describe('V4AzureClusterManagement', () => {
 
   // Responses to requests
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(azureInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(
+      mockAPIResponse(azureInfoResponse)
+    );
     getMockCall('/v4/user/', userResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);

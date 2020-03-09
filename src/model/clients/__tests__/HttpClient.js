@@ -113,7 +113,7 @@ describe('HttpClient', () => {
     const client = new HttpClient(config);
     const result = await client.execute();
 
-    expect(result).toStrictEqual({
+    expect(result.data).toStrictEqual({
       testResponse: 'test value',
     });
   });
@@ -147,7 +147,7 @@ describe('HttpClient', () => {
 
     expect(beforeReqHook).toHaveBeenCalledWith(config);
 
-    expect(result).toStrictEqual({
+    expect(result.data).toStrictEqual({
       testResponse: 'test value',
     });
   });
@@ -171,7 +171,7 @@ describe('HttpClient', () => {
     };
     const result = await HttpClient.get('/api/test', config);
 
-    expect(result).toStrictEqual({
+    expect(result.data).toStrictEqual({
       testResponse: 'test value',
     });
   });
@@ -200,7 +200,7 @@ describe('HttpClient', () => {
     };
     const result = await HttpClient.post('/api/test', config);
 
-    expect(result).toStrictEqual({
+    expect(result.data).toStrictEqual({
       testResponse: 'test value',
     });
   });
@@ -229,7 +229,7 @@ describe('HttpClient', () => {
     };
     const result = await HttpClient.put('/api/test', config);
 
-    expect(result).toStrictEqual({
+    expect(result.data).toStrictEqual({
       testResponse: 'test value',
     });
   });
@@ -258,7 +258,7 @@ describe('HttpClient', () => {
     };
     const result = await HttpClient.patch('/api/test', config);
 
-    expect(result).toStrictEqual({
+    expect(result.data).toStrictEqual({
       testResponse: 'test value',
     });
   });
@@ -282,12 +282,12 @@ describe('HttpClient', () => {
     };
     const result = await HttpClient.delete('/api/test', config);
 
-    expect(result).toStrictEqual({
+    expect(result.data).toStrictEqual({
       testResponse: 'test value',
     });
   });
 
-  it('provides the response body as an error if the request fails', async () => {
+  it('provides the an error if the request fails', async () => {
     nock('https://httpclient.com')
       .get('/api/test')
       // eslint-disable-next-line no-magic-numbers
@@ -308,13 +308,13 @@ describe('HttpClient', () => {
     try {
       await HttpClient.get('/api/test', config);
     } catch (err) {
-      expect(err).toStrictEqual({
+      expect(err.data).toStrictEqual({
         testResponse: 'test value',
       });
     }
   });
 
-  it('displays an error message if the request is misconfigured', async () => {
+  it('provides an error if the request is misconfigured', async () => {
     const config = {
       baseURL: 'https://httpclient.com',
       timeout: 30000,
@@ -328,7 +328,7 @@ describe('HttpClient', () => {
     try {
       await HttpClient.get({ url: '/api/test' }, config);
     } catch (err) {
-      expect(err).toStrictEqual(
+      expect(err.message).toStrictEqual(
         `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`
       );
     }

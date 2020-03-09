@@ -15,6 +15,7 @@ import {
   catalogIndexResponse,
   getMockCall,
   getMockCallTimes,
+  mockAPIResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -29,7 +30,7 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('Apps and App Catalog', () => {
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
   });

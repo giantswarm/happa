@@ -10,6 +10,7 @@ import {
   authTokenResponse,
   AWSInfoResponse,
   getMockCall,
+  mockAPIResponse,
   postMockCall,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -35,7 +36,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // The response to the user info call
   getMockCall('/v4/user/', userResponse);
   // The response to the info call
-  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+  getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
   // The response to the org call (no orgs)
   getMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)

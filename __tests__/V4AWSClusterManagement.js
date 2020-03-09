@@ -13,6 +13,7 @@ import {
   AWSInfoResponse,
   getMockCall,
   getMockCallTimes,
+  mockAPIResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -28,7 +29,7 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 
 // Responses to requests
 beforeEach(() => {
-  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+  getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);

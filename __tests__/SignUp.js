@@ -9,6 +9,7 @@ import { AppRoutes } from 'shared/constants/routes';
 import {
   AWSInfoResponse,
   getMockCall,
+  mockAPIResponse,
   USER_EMAIL,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -23,7 +24,7 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
 
 describe('Signup', () => {
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
     getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/clusters/');
     getMockCall('/v4/organizations/');
@@ -75,7 +76,7 @@ describe('Signup', () => {
   });
 
   it('registers a new user if the token is valid', async () => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');
