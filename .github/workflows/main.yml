@@ -3,7 +3,7 @@ name: Pull Request Validator
 on: pull_request
 
 jobs:
-  validate-pr-name:
+  validate-pr-metadata:
     runs-on: ubuntu-latest
     steps:
       - name: Assign Author
