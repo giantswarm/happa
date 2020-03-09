@@ -8,7 +8,8 @@ import {
   appCatalogsResponse,
   appsResponse,
   AWSInfoResponse,
-  getPersistedMockCall,
+  getMockCall,
+  getMockCallTimes,
   nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
@@ -25,47 +26,27 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 const requests = {};
 
 // Responses to requests
-beforeAll(() => {
+beforeEach(() => {
   getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.organizations = getPersistedMockCall(
-    '/v4/organizations/',
-    orgsResponse
-  );
-  requests.organization = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/`,
-    orgResponse
-  );
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v5ClustersResponse);
-  requests.cluster = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/`,
-    v5ClusterResponse
-  );
-  requests.apps = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/apps/`,
-    appsResponse
-  );
-  requests.credentials = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/credentials/`
-  );
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.nodePools = getPersistedMockCall(
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCall('/v4/clusters/', v5ClustersResponse);
+  getMockCallTimes(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse, 2);
+  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/apps/`, appsResponse);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+  getMockCallTimes('/v4/releases/', releasesResponse, 2);
+  getMockCallTimes(
     `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
-    nodePoolsResponse
+    nodePoolsResponse,
+    2
   );
-  requests.appcatalogs = getPersistedMockCall(
-    '/v4/appcatalogs/',
-    appCatalogsResponse
-  );
-  requests.keyPairs = getPersistedMockCall(
-    `/v4/clusters/${V5_CLUSTER.id}/key-pairs/`
-  );
-
-  // TODO no apps response?? Check on gauss.
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+  getMockCall(`/v4/clusters/${V5_CLUSTER.id}/key-pairs/`);
 });
 
 // Stop persisting responses
-afterAll(() => {
+afterEach(() => {
   Object.keys(requests).forEach(req => {
     requests[req].persist(false);
   });
@@ -109,3 +90,6 @@ it('lets me open and close the keypair create modal', async () => {
   // Then the modal should be gone.
   expect(modal).not.toBeInTheDocument();
 });
+
+// it.only('lets me create a keypair', async () => {
+// });
