@@ -96,11 +96,16 @@ class OrganizationDetail extends React.Component {
 
           return cmp(a, b);
         },
+        headerStyle: () => ({ textAlign: 'right' }),
+        align: 'right',
       },
+      // Using path just because if we use 'id', that is what we need, we will get
+      // duplicated keys.
       {
         dataField: 'path',
         text: '',
         formatter: upgradeNoticeIcon.bind(this),
+        headerStyle: () => ({ width: '40px' }),
       },
       {
         dataField: 'create_date',
