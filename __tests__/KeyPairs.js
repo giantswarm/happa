@@ -22,9 +22,6 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-// Tests setup
-const requests = {};
-
 // Responses to requests
 beforeEach(() => {
   getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
@@ -43,13 +40,6 @@ beforeEach(() => {
   );
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
   getMockCall(`/v4/clusters/${V5_CLUSTER.id}/key-pairs/`);
-});
-
-// Stop persisting responses
-afterEach(() => {
-  Object.keys(requests).forEach(req => {
-    requests[req].persist(false);
-  });
 });
 
 /************ TESTS ************/
@@ -90,6 +80,3 @@ it('lets me open and close the keypair create modal', async () => {
   // Then the modal should be gone.
   expect(modal).not.toBeInTheDocument();
 });
-
-// it.only('lets me create a keypair', async () => {
-// });
