@@ -1,3 +1,4 @@
+import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Button';
@@ -25,12 +26,14 @@ const InitialPane = props => {
 
         <div className='labelvaluepair'>
           <div className='labelvaluepair--label'>CHART VERSION</div>
-          {props.appVersions && (
+          {props.appVersions ? (
             <VersionPicker
               selectedVersion={props.app.spec.version}
               versions={props.appVersions.map(v => ({ version: v.version }))}
               onChange={props.showEditChartVersionPane}
             />
+          ) : (
+            <img className='loader' width='25px' src={spinner} />
           )}
         </div>
 

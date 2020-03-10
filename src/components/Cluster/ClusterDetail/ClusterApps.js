@@ -299,6 +299,10 @@ class ClusterApps extends React.Component {
                         <div
                           className='installed-apps--app'
                           key={app.metadata.name}
+                          onClick={this.showAppDetail.bind(
+                            this,
+                            app.metadata.name
+                          )}
                         >
                           <div className='details'>
                             {app.logoUrl &&
@@ -313,21 +317,11 @@ class ClusterApps extends React.Component {
                               )}
                             {app.metadata.name}
                             <small>
-                              App Version:{' '}
+                              Chart Version:{' '}
                               {app && app.spec && app.spec.version
                                 ? app.spec.version
                                 : 'n/a'}
                             </small>
-                          </div>
-                          <div className='actions'>
-                            <Button
-                              onClick={this.showAppDetail.bind(
-                                this,
-                                app.metadata.name
-                              )}
-                            >
-                              Details
-                            </Button>
                           </div>
                         </div>
                       );

@@ -4,15 +4,15 @@ import React from 'react';
 const EditChartVersionPane = props => {
   return (
     <>
-      Current chart version: {props.currentVersion}
+      Current chart version: <code>{props.currentVersion}</code>
       <br />
       <br />
-      Desired chart version: {props.desiredVersion}
+      Desired chart version: <code>{props.desiredVersion}</code>
       <br />
       <br />
-      <b>Attention:</b> There might be breaking changes between chart versions.
-      We currently list all versions regardless of compatibility. It is up to
-      you to verify if you are picking a valid upgrade or downgrade path.
+      <i className='fa fa-warning' /> There could be breaking changes between
+      chart versions. It is up to you to verify if you are picking a valid
+      upgrade or downgrade path.
     </>
   );
 };
