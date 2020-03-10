@@ -287,7 +287,7 @@ describe('HttpClient', () => {
     });
   });
 
-  it('provides the an error if the request fails', async () => {
+  it('provides an error if the request fails', async () => {
     nock('https://httpclient.com')
       .get('/api/test')
       // eslint-disable-next-line no-magic-numbers
