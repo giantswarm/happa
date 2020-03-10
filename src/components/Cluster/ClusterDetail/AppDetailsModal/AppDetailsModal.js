@@ -37,13 +37,13 @@ const AppDetailsModal = props => {
   const [pane, setPane] = useState(modalPanes.initial);
   const [desiredVersion, setDesiredVersion] = useState(props.app.spec.version);
 
-  const catalog = props.catalog;
+  const { app, catalog, dispatch } = props;
 
   useEffect(() => {
     if (!catalog.apps) {
-      props.dispatch(catalogLoadIndex(catalog));
+      dispatch(catalogLoadIndex(catalog));
     }
-  }, [catalog]);
+  }, [catalog, app, dispatch]);
 
   if (!props.app) {
     return <span />;
