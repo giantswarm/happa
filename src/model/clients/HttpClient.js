@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { GenericResponse } from './GenericResponse';
+
 /**
  * The HTTP request methods
  * @readonly
@@ -31,8 +33,8 @@ export class HttpClient {
    * Shorthand function to execute a `GET` request
    * @param {string} url - The target URL
    * @param {HttpClientConfig} config - The client's configuration
-   * @return {Promise<Record<string, any>>}
-   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   * @return {Promise<import('./GenericResponse').GenericResponse>}
+   * @throws {Promise<import('./GenericResponse').GenericResponse>} The response has a non-2xx status code or the client has a bad configuration
    */
   static get(url, config) {
     const boundConfig = Object.assign({}, config, {
@@ -48,8 +50,8 @@ export class HttpClient {
    * Shorthand function to execute a `POST` request
    * @param {string} url - The target URL
    * @param {HttpClientConfig} config - The client's configuration
-   * @return {Promise<Record<string, any>>}
-   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   * @return {Promise<import('./GenericResponse').GenericResponse>}
+   * @throws {Promise<import('./GenericResponse').GenericResponse>} The response has a non-2xx status code or the client has a bad configuration
    */
   static post(url, config) {
     const boundConfig = Object.assign({}, config, {
@@ -65,8 +67,8 @@ export class HttpClient {
    * Shorthand function to execute a `PUT` request
    * @param {string} url - The target URL
    * @param {HttpClientConfig} config - The client's configuration
-   * @return {Promise<Record<string, any>>}
-   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   * @return {Promise<import('./GenericResponse').GenericResponse>}
+   * @throws {Promise<import('./GenericResponse').GenericResponse>} The response has a non-2xx status code or the client has a bad configuration
    */
   static put(url, config) {
     const boundConfig = Object.assign({}, config, {
@@ -82,8 +84,8 @@ export class HttpClient {
    * Shorthand function to execute a `{PATCH}` request
    * @param {string} url - The target URL
    * @param {HttpClientConfig} config - The client's configuration
-   * @return {Promise<Record<string, any>>}
-   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   * @return {Promise<import('./GenericResponse').GenericResponse>}
+   * @throws {Promise<import('./GenericResponse').GenericResponse>} The response has a non-2xx status code or the client has a bad configuration
    */
   static patch(url, config) {
     const boundConfig = Object.assign({}, config, {
@@ -99,8 +101,8 @@ export class HttpClient {
    * Shorthand function to execute a `DELETE` request
    * @param {string} url - The target URL
    * @param {HttpClientConfig} config - The client's configuration
-   * @return {Promise<Record<string, any>>}
-   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   * @return {Promise<import('./GenericResponse').GenericResponse>}
+   * @throws {Promise<import('./GenericResponse').GenericResponse>} The response has a non-2xx status code or the client has a bad configuration
    */
   static delete(url, config) {
     const boundConfig = Object.assign({}, config, {
@@ -196,11 +198,14 @@ export class HttpClient {
 
   /**
    * Execute the client's request
-   * @return {Promise<Record<string, any>>}
-   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   * @return {Promise<import('./GenericResponse').GenericResponse>}
+   * @throws {Promise<import('./GenericResponse').GenericResponse>} The response has a non-2xx status code or the client has a bad configuration
    */
   async execute() {
     const { baseURL, timeout, headers, url, method, data } = this.requestConfig;
+
+    const res = new GenericResponse();
+    res.requestConfig = this.requestConfig;
 
     try {
       await this.onBeforeRequest(this.requestConfig);
@@ -214,16 +219,25 @@ export class HttpClient {
         data,
       });
 
-      return response.data;
+      res.status = response.status;
+      res.data = response.data;
+      res.message = response.statusText;
+      res.headers = response.headers;
+
+      return res;
     } catch (err) {
-      let response = `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`;
+      res.status = 400;
+      res.message = `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`;
 
       // We got a non-2xx status code
       if (err.hasOwnProperty('response')) {
-        response = err.response.data;
+        res.status = err.response.status;
+        res.message = err.code;
+        res.headers = err.response.headers;
+        res.data = err.response.data;
       }
 
-      return Promise.reject(response);
+      return Promise.reject(res);
     }
   }
 }

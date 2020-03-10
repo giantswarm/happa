@@ -159,7 +159,7 @@ describe('V4AzureClusterManagement', () => {
     const {
       default: defaultAZCount,
       max: maxAZCount,
-    } = azureInfoResponse.general.availability_zones;
+    } = azureInfoResponse.data.general.availability_zones;
 
     const azLabel = await findByText(/number of availability zones to use:/i);
     expect(azLabel).toBeInTheDocument();

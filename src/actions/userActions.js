@@ -248,11 +248,11 @@ export function getInfo() {
         getState()
       );
       const httpClient = new GiantSwarmClient(authToken, authScheme);
-      const info = await getInstallationInfo(httpClient);
+      const infoRes = await getInstallationInfo(httpClient);
 
       dispatch({
         type: types.INFO_LOAD_SUCCESS,
-        info: info,
+        info: infoRes.data,
       });
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -260,7 +260,7 @@ export function getInfo() {
 
       dispatch({
         type: types.INFO_LOAD_ERROR,
-        error: error,
+        error: error.data,
       });
 
       throw error;
