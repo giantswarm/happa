@@ -417,20 +417,22 @@ class ClusterApps extends React.Component {
             )}
           </div>
         </div>
-        <AppDetailsModal
-          // Instead of just assigning the selected app to the state of this component,
-          // this ensures any updates to the apps continue to flow down into the modal.
-          app={
-            this.props.installedApps &&
-            this.props.installedApps.find(
-              x => x.metadata.name === this.state.appDetailsModal.appName
-            )
-          }
-          clusterId={this.props.clusterId}
-          dispatch={this.props.dispatch}
-          onClose={this.hideAppModal}
-          visible={this.state.appDetailsModal.visible}
-        />
+        {this.state.appDetailsModal.appName && (
+          <AppDetailsModal
+            // Instead of just assigning the selected app to the state of this component,
+            // this ensures any updates to the apps continue to flow down into the modal.
+            app={
+              this.props.installedApps &&
+              this.props.installedApps.find(
+                x => x.metadata.name === this.state.appDetailsModal.appName
+              )
+            }
+            clusterId={this.props.clusterId}
+            dispatch={this.props.dispatch}
+            onClose={this.hideAppModal}
+            visible={this.state.appDetailsModal.visible}
+          />
+        )}
       </>
     );
   }

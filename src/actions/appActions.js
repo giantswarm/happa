@@ -228,3 +228,50 @@ export function deleteApp(appName, clusterID) {
       });
   };
 }
+
+/**
+ * Takes an app and a cluster id and some values and tries to update the app to those values. Dispatches CLUSTER_UPDATE_APP_SUCCESS
+ * on success or CLUSTER_UPDATE_APP_ERROR on error.
+ *
+ * @param {Object} appName The name of the app
+ * @param {Object} clusterID Where to delete the app.
+ * @param {Object} values The values you want to change in the app.
+ */
+export function updateApp(appName, clusterID, values) {
+  return function(dispatch, getState) {
+    dispatch({
+      type: types.CLUSTER_UPDATE_APP_REQUEST,
+      clusterID,
+      appName,
+    });
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterID);
+
+    let modifyApp = appsApi.modifyClusterAppV4.bind(appsApi);
+
+    if (isV5Cluster) {
+      modifyApp = appsApi.modifyClusterAppV5.bind(appsApi);
+    }
+
+    return modifyApp(clusterID, appName, { body: values })
+      .then(() => {
+        new FlashMessage(
+          `App <code>${appName}</code> on <code>${clusterID}</code> has been updated. Changes might take some time to take effect.`,
+          messageType.SUCCESS,
+          messageTTL.LONG
+        );
+      })
+      .catch(error => {
+        new FlashMessage(
+          `Something went wrong while trying to update your app. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+
+        throw error;
+      });
+  };
+}
