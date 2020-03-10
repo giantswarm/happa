@@ -230,8 +230,8 @@ export function deleteApp(appName, clusterID) {
 }
 
 /**
- * Takes an app and a cluster id and some values and tries to update the app to those values. Dispatches CLUSTER_UPDATE_APP_SUCCESS
- * on success or CLUSTER_UPDATE_APP_ERROR on error.
+ * Takes an app and a cluster id and some values and tries to update the app to those values. Dispatches `CLUSTER_UPDATE_APP_SUCCESS`
+ * on success or `CLUSTER_UPDATE_APP_ERROR` on error.
  *
  * @param {Object} appName The name of the app
  * @param {Object} clusterID Where to delete the app.
