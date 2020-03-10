@@ -13,7 +13,6 @@ import {
   azureInfoResponse,
   getMockCall,
   getMockCallTimes,
-  mockAPIResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -32,9 +31,7 @@ describe('V4AzureClusterManagement', () => {
 
   // Responses to requests
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(
-      mockAPIResponse(azureInfoResponse)
-    );
+    getInstallationInfo.mockResolvedValueOnce(azureInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
@@ -162,7 +159,7 @@ describe('V4AzureClusterManagement', () => {
     const {
       default: defaultAZCount,
       max: maxAZCount,
-    } = azureInfoResponse.general.availability_zones;
+    } = azureInfoResponse.data.general.availability_zones;
 
     const azLabel = await findByText(/number of availability zones to use:/i);
     expect(azLabel).toBeInTheDocument();

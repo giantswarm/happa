@@ -9,7 +9,6 @@ import {
   API_ENDPOINT,
   AWSInfoResponse,
   getMockCall,
-  mockAPIResponse,
   userResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
@@ -21,7 +20,7 @@ it('logging out redirects to the login page', async () => {
   // The response to the user info call
   getMockCall('/v4/user/', userResponse);
   // The response to the info call
-  getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
+  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
   // The response to the org call (no orgs)
   getMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)

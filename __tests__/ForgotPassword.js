@@ -11,7 +11,6 @@ import {
   AWSInfoResponse,
   generateRandomString,
   getMockCall,
-  mockAPIResponse,
   postMockCall,
   USER_EMAIL,
   userResponse,
@@ -140,9 +139,7 @@ describe('PasswordReset', () => {
     it('sets a new password for the email in the form', async () => {
       const finalPassword = 'g00dPa$$w0rD';
 
-      getInstallationInfo.mockResolvedValueOnce(
-        mockAPIResponse(AWSInfoResponse)
-      );
+      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
       postMockCall('/v4/auth-tokens/', authTokenResponse);
       getMockCall('/v4/user/', userResponse);
       getMockCall('/v4/organizations/');
@@ -269,9 +266,7 @@ describe('PasswordReset', () => {
     });
 
     it(`jumps to password setup automatically if there's an email saved in the local storage`, async () => {
-      getInstallationInfo.mockResolvedValueOnce(
-        mockAPIResponse(AWSInfoResponse)
-      );
+      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
       getMockCall('/v4/user/', userResponse);
       getMockCall('/v4/organizations/');
       getMockCall('/v4/appcatalogs/');

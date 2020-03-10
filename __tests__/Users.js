@@ -12,7 +12,6 @@ import {
   getMockCall,
   gsOrgResponse,
   invitesResponse,
-  mockAPIResponse,
   ORGANIZATION,
   orgResponse,
   orgsWithGSResponse,
@@ -29,7 +28,7 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 describe('Users', () => {
   // Responses to requests
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/users/', usersResponse);
     getMockCall('/v4/organizations/', orgsWithGSResponse);

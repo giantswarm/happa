@@ -13,7 +13,6 @@ import {
   generateRandomString,
   getMockCall,
   getMockCallTimes,
-  mockAPIResponse,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
@@ -27,7 +26,7 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('', () => {
   beforeEach(() => {
-    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/', orgsResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
@@ -300,7 +299,7 @@ describe('', () => {
 
 describe('Organization deletion', () => {
   it('shows the organization deletion modal when requested and organization deletion success flash', async () => {
-    getInstallationInfo.mockResolvedValueOnce(mockAPIResponse(AWSInfoResponse));
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
