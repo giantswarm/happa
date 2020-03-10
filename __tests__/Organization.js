@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -23,26 +24,10 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-beforeAll(() => {
-  nock.disableNetConnect();
-});
-
-afterAll(() => {
-  nock.enableNetConnect();
-});
-
-afterEach(() => {
-  if (!nock.isDone()) {
-    console.error('Nock has pending mocks:', nock.pendingMocks());
-  }
-
-  nock.cleanAll();
-});
-
 describe('', () => {
   beforeEach(() => {
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/info/', AWSInfoResponse);
     getMockCall('/v4/organizations/', orgsResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`, []);
@@ -257,9 +242,7 @@ describe('', () => {
       // After removing a member from an org, Happa does a full refresh of the
       // organizations page. So we need these requests again.
       getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-      const lastOrgCredentialCall = getMockCall(
-        `/v4/organizations/${ORGANIZATION}/credentials/`
-      );
+      getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
 
       nock(API_ENDPOINT)
         .intercept(`/v4/organizations/${orgResponse.id}/`, 'PATCH')
@@ -309,17 +292,15 @@ describe('', () => {
 
       // The flash shows up before we refresh the list. So we hold here and wait for the
       // last request to be done, otherwise we'll get a pending nock failure.
-      await wait(() => {
-        lastOrgCredentialCall.done();
-      });
+      await waitForDomChange();
     });
   });
 });
 
 describe('Organization deletion', () => {
   it('shows the organization deletion modal when requested and organization deletion success flash', async () => {
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/info/', AWSInfoResponse);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);
@@ -340,20 +321,15 @@ describe('Organization deletion', () => {
 
     getMockCall('/v4/organizations/', orgsResponse);
 
-    const organizationToDeleteRequest = getMockCall(
-      `/v4/organizations/${organizationToDeleteId}/`,
-      {
-        id: organizationToDeleteId,
-        members: [],
-        credentials: [],
-      }
-    );
+    getMockCall(`/v4/organizations/${organizationToDeleteId}/`, {
+      id: organizationToDeleteId,
+      members: [],
+      credentials: [],
+    });
 
-    const credentialsRequest = getMockCall(
-      `/v4/organizations/${organizationToDeleteId}/credentials/`
-    );
+    getMockCall(`/v4/organizations/${organizationToDeleteId}/credentials/`);
 
-    const deleteOrganizationRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(`/v4/organizations/${organizationToDeleteId}/`, 'DELETE')
       .reply(StatusCodes.Ok, {
         code: 'RESOURCE_DELETED',
@@ -372,9 +348,6 @@ describe('Organization deletion', () => {
       `${organizationToDeleteId}-name`
     );
     expect(expectedElement).toBeInTheDocument();
-
-    organizationToDeleteRequest.done();
-    credentialsRequest.done();
 
     fireEvent.click(getByTestId(`${organizationToDeleteId}-delete`));
 
@@ -396,8 +369,6 @@ describe('Organization deletion', () => {
           `Organization <code>${organizationToDeleteId}</code> deleted`
       )
     ).toBeInTheDocument();
-
-    deleteOrganizationRequest.done();
 
     expect(await findByTestId(`${orgResponse.id}-name`)).toBeInTheDocument();
 

@@ -1,4 +1,4 @@
-import nock from 'nock';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import { AccountSettingsRoutes } from 'shared/constants/routes';
 import {
   AWSInfoResponse,
@@ -20,25 +20,12 @@ const elementLabels = {
 };
 
 describe('AccountSettings', () => {
-  beforeAll(() => {
-    nock.disableNetConnect();
-  });
-
-  afterAll(() => {
-    nock.enableNetConnect();
-  });
-
   beforeEach(() => {
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/info/', AWSInfoResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');
     getMockCall('/v4/appcatalogs/');
-  });
-
-  afterEach(() => {
-    expect(nock.isDone());
-    nock.cleanAll();
   });
 
   it('renders the account settings component on the "/account-settings" route', async () => {

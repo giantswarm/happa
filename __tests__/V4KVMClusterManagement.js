@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
@@ -27,43 +28,30 @@ import { getNumberOfNodes } from 'utils/clusterUtils';
 
 const minNodesCount = 3;
 
-beforeAll(() => {
-  nock.disableNetConnect();
-});
-
-afterAll(() => {
-  nock.enableNetConnect();
-});
-
 beforeEach(() => {
+  getInstallationInfo.mockResolvedValueOnce(KVMInfoResponse);
   getMockCall('/v4/user/', userResponse);
-  getMockCall('/v4/info/', KVMInfoResponse);
   getMockCall('/v4/organizations/', orgsResponse);
-  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
-  getMockCall('/v4/clusters/', v4ClustersResponse);
-  // eslint-disable-next-line no-magic-numbers
-  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4KVMClusterResponse, 3);
-  getMockCallTimes(
-    `/v4/clusters/${V4_CLUSTER.id}/status/`,
-    v4KVMClusterStatusResponse,
-    // eslint-disable-next-line no-magic-numbers
-    3
-  );
-  // eslint-disable-next-line no-magic-numbers
-  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse, 3);
-  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`, [], 2);
-  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
   getMockCall('/v4/releases/', releasesResponse);
   getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-});
-
-// Stop persisting responses
-afterEach(() => {
-  expect(nock.isDone());
-  nock.cleanAll();
+  getMockCall('/v4/clusters/', v4ClustersResponse);
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+  getMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/status/`,
+    v4KVMClusterStatusResponse
+  );
+  getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4KVMClusterResponse, 2);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
 });
 
 it('renders all the v4 KVM cluster data correctly', async () => {
+  getMockCall(
+    `/v4/clusters/${V4_CLUSTER.id}/status/`,
+    v4KVMClusterStatusResponse
+  );
+
   const clusterDetailPath = RoutePath.createUsablePath(
     OrganizationsRoutes.Clusters.Detail,
     {
@@ -100,8 +88,6 @@ it('renders all the v4 KVM cluster data correctly', async () => {
   });
 });
 
-/******************** PENDING TESTS ********************/
-
 it(`shows the v4 KVM cluster scaling modal when the button is clicked with default values and
 scales correctly`, async () => {
   const cluster = v4KVMClusterResponse;
@@ -130,7 +116,7 @@ scales correctly`, async () => {
   });
 
   // Cluster scale request
-  const scaleRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .intercept(`/v4/clusters/${cluster.id}/`, 'PATCH')
     .reply(StatusCodes.Ok, scaleResponse);
 
@@ -170,6 +156,4 @@ scales correctly`, async () => {
   await findByText(
     /the cluster will be scaled within the next couple of minutes./i
   );
-
-  scaleRequest.done();
 });

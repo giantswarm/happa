@@ -1,0 +1,229 @@
+import axios from 'axios';
+
+/**
+ * The HTTP request methods
+ * @readonly
+ * @enum {string}
+ */
+export const HttpRequestMethods = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  PATCH: 'PATCH',
+  DELETE: 'DELETE',
+};
+
+/**
+ * @typedef  {Object} HttpClientConfig
+ * @property {string} [baseURL]
+ * @property {number} [timeout=10000]
+ * @property {Record<string, string>} [headers]
+ * @property {string} [url=""]
+ * @property {HttpRequestMethods} [method="GET"]
+ * @property {Record<string, any>} [data]
+ */
+
+/**
+ * A helper class for creating HTTP requests
+ */
+export class HttpClient {
+  /**
+   * Shorthand function to execute a `GET` request
+   * @param {string} url - The target URL
+   * @param {HttpClientConfig} config - The client's configuration
+   * @return {Promise<Record<string, any>>}
+   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   */
+  static get(url, config) {
+    const boundConfig = Object.assign({}, config, {
+      url,
+      method: HttpRequestMethods.GET,
+    });
+    const newClient = new HttpClient(boundConfig);
+
+    return newClient.execute();
+  }
+
+  /**
+   * Shorthand function to execute a `POST` request
+   * @param {string} url - The target URL
+   * @param {HttpClientConfig} config - The client's configuration
+   * @return {Promise<Record<string, any>>}
+   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   */
+  static post(url, config) {
+    const boundConfig = Object.assign({}, config, {
+      url,
+      method: HttpRequestMethods.POST,
+    });
+    const newClient = new HttpClient(boundConfig);
+
+    return newClient.execute();
+  }
+
+  /**
+   * Shorthand function to execute a `PUT` request
+   * @param {string} url - The target URL
+   * @param {HttpClientConfig} config - The client's configuration
+   * @return {Promise<Record<string, any>>}
+   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   */
+  static put(url, config) {
+    const boundConfig = Object.assign({}, config, {
+      url,
+      method: HttpRequestMethods.PUT,
+    });
+    const newClient = new HttpClient(boundConfig);
+
+    return newClient.execute();
+  }
+
+  /**
+   * Shorthand function to execute a `{PATCH}` request
+   * @param {string} url - The target URL
+   * @param {HttpClientConfig} config - The client's configuration
+   * @return {Promise<Record<string, any>>}
+   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   */
+  static patch(url, config) {
+    const boundConfig = Object.assign({}, config, {
+      url,
+      method: HttpRequestMethods.PATCH,
+    });
+    const newClient = new HttpClient(boundConfig);
+
+    return newClient.execute();
+  }
+
+  /**
+   * Shorthand function to execute a `DELETE` request
+   * @param {string} url - The target URL
+   * @param {HttpClientConfig} config - The client's configuration
+   * @return {Promise<Record<string, any>>}
+   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   */
+  static delete(url, config) {
+    const boundConfig = Object.assign({}, config, {
+      url,
+      method: HttpRequestMethods.DELETE,
+    });
+    const newClient = new HttpClient(boundConfig);
+
+    return newClient.execute();
+  }
+
+  /**
+   * The client's configuration
+   * @readonly
+   * @type {HttpClientConfig}
+   */
+  requestConfig = {};
+
+  /**
+   * Create a HTTP client
+   * @param {HttpClientConfig} [config] - The client's configuration
+   */
+  constructor(config) {
+    this.setRequestConfig(config);
+  }
+
+  /**
+   * Set the client's configuration manually
+   * @param {HttpClientConfig} config - The client's configuration
+   */
+  setRequestConfig(config) {
+    this.requestConfig = Object.assign(
+      {},
+      {
+        url: '',
+        method: HttpRequestMethods.GET,
+        timeout: 10000,
+      },
+      config
+    );
+
+    this.requestConfig.headers = Object.assign({}, config?.headers);
+  }
+
+  /**
+   * Set a request header
+   * @param {string} key - Header name
+   * @param {string} [value=""] - Header value
+   */
+  setHeader(key, value = '') {
+    this.requestConfig.headers[key] = value;
+  }
+
+  /**
+   * Set an authentication header
+   * @param {string} authType - Authorization Scheme
+   * @param {string} token - Authorization token
+   */
+  setAuthorizationToken(authType, token) {
+    this.setHeader('Authorization', `${authType} ${token}`);
+  }
+
+  /**
+   * Set the request method
+   * @param {HttpRequestMethods} method - The request method
+   */
+  setRequestMethod(method) {
+    this.requestConfig.method = method;
+  }
+
+  /**
+   * Set the request body contents
+   * @param {Record<string, any>} body - The body contents
+   */
+  setBody(body) {
+    this.requestConfig.data = body;
+  }
+
+  /**
+   * Set the request target URL
+   * @param {string} url - The URL
+   */
+  setURL(url) {
+    this.requestConfig.url = url;
+  }
+
+  /**
+   * @param {HttpClientConfig} reqConfig - The client's configuration
+   * @return {Promise<void>}
+   */
+  // eslint-disable-next-line no-unused-vars, class-methods-use-this, no-empty-function
+  async onBeforeRequest(reqConfig) {}
+
+  /**
+   * Execute the client's request
+   * @return {Promise<Record<string, any>>}
+   * @throws {string} The response has a non-2xx status code or the client has a bad configuration
+   */
+  async execute() {
+    const { baseURL, timeout, headers, url, method, data } = this.requestConfig;
+
+    try {
+      await this.onBeforeRequest(this.requestConfig);
+
+      const response = await axios({
+        baseURL,
+        timeout,
+        headers,
+        url,
+        method,
+        data,
+      });
+
+      return response.data;
+    } catch (err) {
+      let response = `This is embarrassing, we couldn't execute this request. Please try again in a few moments.`;
+
+      // We got a non-2xx status code
+      if (err.hasOwnProperty('response')) {
+        response = err.response.data;
+      }
+
+      return Promise.reject(response);
+    }
+  }
+}

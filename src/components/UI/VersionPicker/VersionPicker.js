@@ -16,6 +16,7 @@ const Wrapper = styled.div`
     line-height: normal;
     padding: 8px 10px;
     width: auto;
+    height: 34px;
 
     .caret {
       margin-left: 10px;

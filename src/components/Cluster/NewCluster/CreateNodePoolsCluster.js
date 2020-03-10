@@ -580,7 +580,6 @@ function mapStateToProps(state) {
   const minAZ = 1;
   const defaultAZ = AZ.default;
 
-  const selectedOrganization = state.app.selectedOrganization;
   const provider = state.app.info.general.provider;
   const clusterCreationStats = state.app.info.stats.cluster_creation_duration;
 
@@ -612,7 +611,6 @@ function mapStateToProps(state) {
     defaultCPUCores,
     defaultMemorySize,
     defaultDiskSize,
-    selectedOrganization,
     clusterCreationStats,
     minAZ,
     maxAZ,

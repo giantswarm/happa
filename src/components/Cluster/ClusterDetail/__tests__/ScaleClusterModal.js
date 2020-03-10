@@ -533,7 +533,7 @@ describe('ScaleClusterModal', () => {
     };
 
     // Cluster scale request
-    const scaleRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(`/v4/clusters/${v4AWSClusterResponse.id}/`, 'PATCH')
       .reply(StatusCodes.Ok, scaleResponse);
 
@@ -562,8 +562,6 @@ describe('ScaleClusterModal', () => {
 
       expect(modal).not.toBeInTheDocument();
     });
-
-    scaleRequest.done();
   });
 
   it('shows an error message if the request fails', async () => {
@@ -586,7 +584,7 @@ describe('ScaleClusterModal', () => {
     };
 
     // Cluster scale request
-    const scaleRequest = nock(API_ENDPOINT)
+    nock(API_ENDPOINT)
       .intercept(`/v4/clusters/${v4AWSClusterResponse.id}/`, 'PATCH')
       .reply(StatusCodes.InternalServerError, scaleResponse);
 
@@ -611,8 +609,6 @@ describe('ScaleClusterModal', () => {
     );
 
     await findByText(/internal server error/i);
-
-    scaleRequest.done();
 
     // eslint-disable-next-line no-console
     console.error = originalConsoleError;

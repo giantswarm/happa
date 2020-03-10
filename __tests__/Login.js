@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait } from '@testing-library/react';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
@@ -8,7 +9,7 @@ import {
   API_ENDPOINT,
   authTokenResponse,
   AWSInfoResponse,
-  getPersistedMockCall,
+  getMockCall,
   postMockCall,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -30,17 +31,17 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   // some calls are performed more than once
 
   // The response to the login call
-  const authTokensRequest = postMockCall('/v4/auth-tokens/', authTokenResponse);
+  postMockCall('/v4/auth-tokens/', authTokenResponse);
   // The response to the user info call
-  const userInfoRequest = getPersistedMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/user/', userResponse);
   // The response to the info call
-  const infoRequest = getPersistedMockCall('/v4/info/', AWSInfoResponse);
+  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
   // The response to the org call (no orgs)
-  const orgRequest = getPersistedMockCall('/v4/organizations/');
+  getMockCall('/v4/organizations/');
   // The response to the clusters call (no clusters)
-  const clustersRequest = getPersistedMockCall('/v4/clusters/');
+  getMockCall('/v4/clusters/');
   // The response to the appcatalogs call (no catalogs)
-  const appcatalogsRequest = getPersistedMockCall('/v4/appcatalogs/');
+  getMockCall('/v4/appcatalogs/');
 
   // AND I arrive at the login page with nothing in the state.
   const { getByText, getByLabelText } = renderRouteWithStore(
@@ -71,15 +72,6 @@ it('redirects to / and shows the layout after a succesful login', async () => {
       getByText(/There are no organizations yet in your installation./i)
     ).toBeInTheDocument();
   });
-
-  // Assert that the mocked responses got called, tell them to stop waiting for
-  // a request.
-  authTokensRequest.persist(false);
-  userInfoRequest.persist(false);
-  infoRequest.persist(false);
-  orgRequest.persist(false);
-  clustersRequest.persist(false);
-  appcatalogsRequest.persist(false);
 });
 
 it('tells the user to give a password if they leave it blank', async () => {
@@ -137,7 +129,7 @@ it('shows an error if the user logs in with invalid credentials', async () => {
   // Given I have a Giant Swarm API that does not accept my login attempt
 
   // The failed 401 response to the login call
-  const authTokensRequest = nock(API_ENDPOINT)
+  nock(API_ENDPOINT)
     .post('/v4/auth-tokens/')
     .reply(StatusCodes.Unauthorized);
 
@@ -166,7 +158,6 @@ it('shows an error if the user logs in with invalid credentials', async () => {
     expect(getByText(/Could not log in/i)).toBeInTheDocument();
   });
 
-  authTokensRequest.done();
   // Restore console.og
   console.error = originalConsoleError;
   /* eslint-enable no-console */

@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
-import { forceRemoveAll } from 'lib/flashMessage';
+import { fireEvent, waitForDomChange } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
@@ -18,27 +18,6 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('PasswordReset', () => {
-  beforeAll(() => {
-    nock.disableNetConnect();
-  });
-
-  afterAll(() => {
-    nock.enableNetConnect();
-  });
-
-  afterEach(async () => {
-    if (!nock.isDone()) {
-      // eslint-disable-next-line no-console
-      console.error('Nock has pending mocks:', nock.pendingMocks());
-    }
-
-    await wait(() => expect(nock.isDone()).toBeTruthy());
-
-    nock.cleanAll();
-
-    forceRemoveAll();
-  });
-
   // Letting the server know that you forgot your
   describe('ForgotPassword', () => {
     it('takes us to the forgot password form when clicking on "Forgot your password?" from the login form', async () => {
@@ -160,9 +139,9 @@ describe('PasswordReset', () => {
     it('sets a new password for the email in the form', async () => {
       const finalPassword = 'g00dPa$$w0rD';
 
+      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
       postMockCall('/v4/auth-tokens/', authTokenResponse);
       getMockCall('/v4/user/', userResponse);
-      getMockCall('/v4/info/', AWSInfoResponse);
       getMockCall('/v4/organizations/');
       getMockCall('/v4/clusters/');
       getMockCall('/v4/appcatalogs/');
@@ -287,8 +266,8 @@ describe('PasswordReset', () => {
     });
 
     it(`jumps to password setup automatically if there's an email saved in the local storage`, async () => {
+      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
       getMockCall('/v4/user/', userResponse);
-      getMockCall('/v4/info/', AWSInfoResponse);
       getMockCall('/v4/organizations/');
       getMockCall('/v4/appcatalogs/');
       getMockCall('/v4/clusters/');

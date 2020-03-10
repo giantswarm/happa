@@ -47,6 +47,7 @@ const organizationReducer = produce((draft, action) => {
 
       return;
 
+    case types.ORGANIZATION_CREDENTIALS_SET_DISCARD:
     case types.ORGANIZATION_CREDENTIALS_SET_SUCCESS:
       draft.showCredentialsForm = false;
   }

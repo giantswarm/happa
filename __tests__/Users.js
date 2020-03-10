@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, wait, within } from '@testing-library/react';
-import { forceRemoveAll } from 'lib/flashMessage';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared';
 import { UsersRoutes } from 'shared/constants/routes';
@@ -26,17 +26,9 @@ import {
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
 describe('Users', () => {
-  beforeAll(() => {
-    nock.disableNetConnect();
-  });
-
-  afterAll(() => {
-    nock.enableNetConnect();
-  });
-
   // Responses to requests
   beforeEach(() => {
-    getMockCall('/v4/info/', AWSInfoResponse);
+    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/users/', usersResponse);
     getMockCall('/v4/organizations/', orgsWithGSResponse);
@@ -55,12 +47,6 @@ describe('Users', () => {
     nock(global.config.passageEndpoint)
       .get('/invites/')
       .reply(StatusCodes.Ok, invitesResponse);
-  });
-
-  afterEach(async () => {
-    await wait(() => expect(nock.isDone()).toBe(true));
-    nock.cleanAll();
-    forceRemoveAll();
   });
 
   it('renders without crashing', async () => {

@@ -7,6 +7,9 @@ import {
   messageTTL,
   messageType,
 } from 'lib/flashMessage';
+import { GiantSwarmClient } from 'model/clients';
+import { getInstallationInfo } from 'model/services/giantSwarm';
+import { selectAuthToken } from 'selectors/authSelectors';
 import { AuthorizationTypes, StatusCodes } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
 import _ from 'underscore';
@@ -236,30 +239,32 @@ export function unauthorized() {
 // getInfo calls the /v4/info/ endpoint and dispatches accordingly to store
 // the resulting info into the state.
 export function getInfo() {
-  return function(dispatch) {
-    const infoApi = new GiantSwarm.InfoApi();
-
+  return async function(dispatch, getState) {
     dispatch({ type: types.INFO_LOAD_REQUEST });
 
-    return infoApi
-      .getInfo()
-      .then(info => {
-        dispatch({
-          type: types.INFO_LOAD_SUCCESS,
-          info: info,
-        });
-      })
-      .catch(error => {
-        // eslint-disable-next-line no-console
-        console.error('Error loading installation info:', error);
+    try {
+      const [authToken, authScheme] = await selectAuthToken(
+        dispatch,
+        getState()
+      );
+      const httpClient = new GiantSwarmClient(authToken, authScheme);
+      const info = await getInstallationInfo(httpClient);
 
-        dispatch({
-          type: types.INFO_LOAD_ERROR,
-          error: error,
-        });
-
-        throw error;
+      dispatch({
+        type: types.INFO_LOAD_SUCCESS,
+        info: info,
       });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error loading installation info:', error);
+
+      dispatch({
+        type: types.INFO_LOAD_ERROR,
+        error: error,
+      });
+
+      throw error;
+    }
   };
 }
 

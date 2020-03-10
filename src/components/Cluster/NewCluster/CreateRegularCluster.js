@@ -646,7 +646,6 @@ function mapStateToProps(state) {
   const propsToPush = {
     minAvailabilityZones: state.app.info.general.availability_zones.default,
     maxAvailabilityZones: state.app.info.general.availability_zones.max,
-    selectedOrganization: state.app.selectedOrganization,
     clusterCreationStats: state.app.info.stats.cluster_creation_duration,
     provider,
   };

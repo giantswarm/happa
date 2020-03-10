@@ -1,4 +1,5 @@
 import GiantSwarm from 'giantswarm';
+import { AuthorizationTypes } from 'shared';
 
 export const removeUserFromStorage = () => localStorage.removeItem('user');
 
@@ -21,7 +22,7 @@ export const fetchUserFromStorage = () => {
   // Migrate.
   if (user && user.authToken) {
     user.auth = {
-      scheme: 'giantswarm',
+      scheme: AuthorizationTypes.GS,
       token: user.authToken,
     };
   }

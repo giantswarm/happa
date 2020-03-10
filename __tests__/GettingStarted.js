@@ -1,16 +1,16 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, wait } from '@testing-library/react';
+import { getInstallationInfo } from 'model/services/giantSwarm';
+import nock from 'nock';
 import { AppRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
-  appsResponse,
   AWSInfoResponse,
-  getPersistedMockCall,
+  getMockCall,
   ORGANIZATION,
   orgResponse,
   orgsResponse,
-  releasesResponse,
   userResponse,
   V4_CLUSTER,
   v4AWSClusterResponse,
@@ -19,56 +19,27 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-// Tests setup
-const requests = {};
-
 // Responses to requests
-beforeAll(() => {
-  // prettier-ignore
-  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
-  requests.organizations = getPersistedMockCall(
-    '/v4/organizations/',
-    orgsResponse
-  );
-  requests.organization = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/`,
-    orgResponse
-  );
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v4ClustersResponse);
-  requests.cluster = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/`,
-    v4AWSClusterResponse
-  );
-  requests.status = getPersistedMockCall(
+beforeEach(() => {
+  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+  getMockCall(
     `/v4/clusters/${V4_CLUSTER.id}/status/`,
     v4AWSClusterStatusResponse
   );
-  requests.apps = getPersistedMockCall(
-    `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-    appsResponse
-  );
-  requests.credentials = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/credentials/`
-  );
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-
-  requests.appcatalogs = getPersistedMockCall(
-    '/v4/appcatalogs/',
-    appCatalogsResponse
-  );
-});
-
-// Stop persisting responses
-afterAll(() => {
-  Object.keys(requests).forEach(req => {
-    requests[req].persist(false);
-  });
 });
 
 /************ TESTS ************/
 
 it('lets me get there from the dashboard and go through the pages', async () => {
+  // prettier-ignore
+  getMockCall('/v4/clusters/', v4ClustersResponse);
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
+
   const { findByText } = renderRouteWithStore(AppRoutes.Home);
 
   const getStartedButton = await findByText('Get Started');
@@ -92,4 +63,30 @@ it('lets me get there from the dashboard and go through the pages', async () => 
 
   const congratulations = await findByText('Congratulations');
   expect(congratulations).toBeInTheDocument();
+});
+
+it('the get started button does not show up if the cluster is older than 30 days', async () => {
+  const futureDate = new Date();
+  futureDate.setMonth(futureDate.getMonth() + 2);
+
+  const clusterCreateDate2MonthsLater = futureDate.toISOString();
+
+  const modifiedClustersResponse = [
+    Object.assign({}, v4ClustersResponse[0], {
+      create_date: clusterCreateDate2MonthsLater,
+    }),
+  ];
+  const modifiedClusterResponse = Object.assign({}, v4AWSClusterResponse, {
+    create_date: clusterCreateDate2MonthsLater,
+  });
+
+  getMockCall('/v4/clusters/', modifiedClustersResponse);
+  getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, modifiedClusterResponse);
+
+  const { findByText, queryByText } = renderRouteWithStore(AppRoutes.Home);
+
+  await findByText(V4_CLUSTER.id);
+  expect(queryByText('Get Started')).not.toBeInTheDocument();
+
+  await wait(() => expect(nock.isDone()).toBeTruthy());
 });

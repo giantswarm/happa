@@ -2,12 +2,14 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
+import { getInstallationInfo } from 'model/services/giantSwarm';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
   appsResponse,
   AWSInfoResponse,
-  getPersistedMockCall,
+  getMockCall,
+  getMockCallTimes,
   nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
@@ -20,54 +22,24 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
-// Tests setup
-const requests = {};
-
 // Responses to requests
-beforeAll(() => {
-  requests.userInfo = getPersistedMockCall('/v4/user/', userResponse);
-  requests.info = getPersistedMockCall('/v4/info/', AWSInfoResponse);
-  requests.organizations = getPersistedMockCall(
-    '/v4/organizations/',
-    orgsResponse
-  );
-  requests.organization = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/`,
-    orgResponse
-  );
-  requests.clusters = getPersistedMockCall('/v4/clusters/', v5ClustersResponse);
-  requests.cluster = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/`,
-    v5ClusterResponse
-  );
-  requests.apps = getPersistedMockCall(
-    `/v5/clusters/${V5_CLUSTER.id}/apps/`,
-    appsResponse
-  );
-  requests.credentials = getPersistedMockCall(
-    `/v4/organizations/${ORGANIZATION}/credentials/`
-  );
-  requests.releases = getPersistedMockCall('/v4/releases/', releasesResponse);
-  requests.nodePools = getPersistedMockCall(
+beforeEach(() => {
+  getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+  getMockCall('/v4/user/', userResponse);
+  getMockCall('/v4/organizations/', orgsResponse);
+  getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+  getMockCall('/v4/clusters/', v5ClustersResponse);
+  getMockCallTimes(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse, 2);
+  getMockCall(`/v5/clusters/${V5_CLUSTER.id}/apps/`, appsResponse);
+  getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+  getMockCallTimes('/v4/releases/', releasesResponse, 2);
+  getMockCallTimes(
     `/v5/clusters/${V5_CLUSTER.id}/nodepools/`,
-    nodePoolsResponse
+    nodePoolsResponse,
+    2
   );
-  requests.appcatalogs = getPersistedMockCall(
-    '/v4/appcatalogs/',
-    appCatalogsResponse
-  );
-  requests.keyPairs = getPersistedMockCall(
-    `/v4/clusters/${V5_CLUSTER.id}/key-pairs/`
-  );
-
-  // TODO no apps response?? Check on gauss.
-});
-
-// Stop persisting responses
-afterAll(() => {
-  Object.keys(requests).forEach(req => {
-    requests[req].persist(false);
-  });
+  getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+  getMockCall(`/v4/clusters/${V5_CLUSTER.id}/key-pairs/`);
 });
 
 /************ TESTS ************/

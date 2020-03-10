@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import UpgradeNotice from 'Home/UpgradeNotice';
 import { relativeDate } from 'lib/helpers.js';
 import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal';
 import PropTypes from 'prop-types';
@@ -7,8 +8,6 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Code, Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
-
-import { Upgrade } from './V5ClusterDetailTable';
 
 const ReleaseDetail = styled.span`
   text-decoration: underline;
@@ -32,7 +31,7 @@ function RegionAndVersions({
   releaseVersion,
   release,
   k8sVersion,
-  canUpgrade,
+  clusterId,
   showUpgradeModal,
   region,
 }) {
@@ -83,16 +82,7 @@ function RegionAndVersions({
             <i className='fa fa-kubernetes' /> + k8sVersion}
         </ReleaseDetail>
       </div>
-      {canUpgrade && (
-        <a className='upgrade-available' onClick={showUpgradeModal}>
-          <Upgrade>
-            <span>
-              <i className='fa fa-warning' />
-              Upgrade available
-            </span>
-          </Upgrade>
-        </a>
-      )}
+      <UpgradeNotice clusterId={clusterId} onClick={showUpgradeModal} />
       {release && (
         <ReleaseDetailsModal ref={releaseDetailsModal} releases={[release]} />
       )}
@@ -105,7 +95,7 @@ RegionAndVersions.propTypes = {
   releaseVersion: PropTypes.string,
   release: PropTypes.object,
   k8sVersion: PropTypes.string,
-  canUpgrade: PropTypes.bool,
+  clusterId: PropTypes.string,
   showUpgradeModal: PropTypes.func,
   region: PropTypes.string,
 };
