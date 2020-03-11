@@ -1,8 +1,7 @@
 import { connectRouter } from 'connected-react-router';
 import { combineReducers } from 'redux';
 
-import makeAppReducer from './appReducer';
-import catalogs from './catalogsReducer';
+import catalogs from './catalogReducer';
 import clusters from './clusterReducer';
 import credentials from './credentialReducer';
 import errorsByEntity from './entityErrorReducer';
@@ -10,8 +9,9 @@ import loadingFlagsByEntity from './entityLoadingReducer';
 import errors from './errorReducer';
 import invitations from './invitationReducer';
 import loadingFlags from './loadingReducer';
+import makeMainReducer from './mainReducer';
 import modal from './modalReducer';
-import nodePools from './nodePoolsReducer';
+import nodePools from './nodePoolReducer';
 import organizations from './organizationReducer';
 import releases from './releaseReducer';
 import users from './userReducer';
@@ -30,7 +30,7 @@ const entities = combineReducers({
 const rootReducer = history =>
   combineReducers({
     router: connectRouter(history),
-    app: makeAppReducer(),
+    app: makeMainReducer(),
     entities,
     modal,
     loadingFlags,
