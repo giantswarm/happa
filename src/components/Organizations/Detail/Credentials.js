@@ -42,7 +42,7 @@ class Credentials extends React.Component {
     this.setState({ formData: data });
     this.props.dispatch(
       organizationCredentialsSetConfirmed(
-        this.props.app.info.general.provider,
+        this.props.info.general.provider,
         this.props.organizationName,
         data
       )
@@ -57,7 +57,7 @@ class Credentials extends React.Component {
           formData={this.state.formData}
           onSubmit={this.handleFormSubmit}
           organizationName={this.props.organizationName}
-          provider={this.props.app.info.general.provider}
+          provider={this.props.info.general.provider}
         />
       );
     }
@@ -67,7 +67,7 @@ class Credentials extends React.Component {
         credentials={this.props.credentials}
         onShowForm={this.handleShowForm}
         organizationName={this.props.organizationName}
-        provider={this.props.app.info.general.provider}
+        provider={this.props.info.general.provider}
       />
     );
   }
@@ -75,7 +75,7 @@ class Credentials extends React.Component {
 
 Credentials.propTypes = {
   actions: PropTypes.object,
-  app: PropTypes.object,
+  info: PropTypes.object,
   credentials: PropTypes.object,
   dispatch: PropTypes.func,
   organizationName: PropTypes.string,
@@ -85,7 +85,7 @@ Credentials.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    app: state.app,
+    info: state.main.info,
     credentials: state.entities.credentials,
     showCredentialsForm: state.showCredentialsForm,
     organizations: state.entities.organizations,

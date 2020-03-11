@@ -18,7 +18,7 @@ import ScaleClusterModal from '../ScaleClusterModal';
 
 const getComponentWithProps = (props = {}) => {
   const initialState = {
-    app: {
+    main: {
       info: AWSInfoResponse.data,
     },
   };

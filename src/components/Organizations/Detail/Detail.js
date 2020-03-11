@@ -84,7 +84,7 @@ function mapStateToProps(state, ownProps) {
     organization:
       state.entities.organizations.items[ownProps.match.params.orgId],
     membersForTable: membersForTable,
-    app: state.app,
+    app: state.main,
     clusters: clusters,
   };
 }

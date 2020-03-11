@@ -161,6 +161,6 @@ export const selectCanClusterUpgrade = (state, clusterID) => {
   return canClusterUpgrade(
     cluster.release_version,
     targetVersion,
-    state.app.info.general.provider
+    state.main.info.general.provider
   );
 };

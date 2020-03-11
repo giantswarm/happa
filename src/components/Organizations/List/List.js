@@ -77,7 +77,7 @@ function mapStateToProps(state) {
   return {
     organizations: sortedOrganizations,
     clusters: state.entities.clusters.items,
-    provider: state.app.info.general.provider,
+    provider: state.main.info.general.provider,
   };
 }
 

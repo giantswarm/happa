@@ -427,7 +427,7 @@ Modals.propTypes = {
 function mapStateToProps(state) {
   return {
     modal: state.modal,
-    selectedOrganization: state.app.selectedOrganization,
+    selectedOrganization: state.main.selectedOrganization,
     organizations: state.entities.organizations.items,
     clusters: state.entities.clusters.items,
   };

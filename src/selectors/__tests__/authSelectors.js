@@ -27,7 +27,7 @@ describe('authSelectors', () => {
       helpers.isJwtExpired.mockReturnValue(false);
 
       const state = {
-        app: {
+        main: {
           loggedInUser: {
             email: 'developer@giantswarm.io',
             auth: { scheme: 'giantswarm', token: 'a-valid-token' },
@@ -50,7 +50,7 @@ describe('authSelectors', () => {
       });
 
       const state = {
-        app: {
+        main: {
           loggedInUser: {
             email: 'developer@giantswarm.io',
             auth: { scheme: 'Bearer', token: 'an-expired-token' },
@@ -73,7 +73,7 @@ describe('authSelectors', () => {
       });
 
       const state = {
-        app: {
+        main: {
           loggedInUser: {
             email: 'developer@giantswarm.io',
             auth: { scheme: 'Bearer', token: 'an-expired-token' },
@@ -96,7 +96,7 @@ describe('authSelectors', () => {
       helpers.isJwtExpired.mockReturnValue(true);
 
       const state = {
-        app: {
+        main: {
           loggedInUser: {
             email: 'developer@giantswarm.io',
             auth: { scheme: 'giantswarm', token: 'a-non-jwt-token' },

@@ -159,7 +159,7 @@ Home.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const selectedOrganization = state.app.selectedOrganization;
+  const selectedOrganization = state.main.selectedOrganization;
   const organizations = state.entities.organizations.items;
   const allClusters = state.entities.clusters.items;
   const errorLoadingClusters = state.errors.CLUSTERS_LIST;

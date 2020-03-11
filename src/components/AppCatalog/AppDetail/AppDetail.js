@@ -113,7 +113,7 @@ function mapStateToProps(state, ownProps) {
     appVersions: appVersions,
     latestAppVersion: appVersions[0],
     repo: state.entities.catalogs.items[repo],
-    selectedClusterID: state.app.selectedClusterID,
+    selectedClusterID: state.main.selectedClusterID,
   };
 }
 
