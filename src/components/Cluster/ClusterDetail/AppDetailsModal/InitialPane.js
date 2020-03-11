@@ -1,7 +1,8 @@
-import { truncate } from 'lib/helpers';
+import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Button';
+import VersionPicker from 'UI/VersionPicker/VersionPicker';
 
 import YAMLFileUpload from './YamlFileUpload';
 
@@ -25,14 +26,15 @@ const InitialPane = props => {
 
         <div className='labelvaluepair'>
           <div className='labelvaluepair--label'>CHART VERSION</div>
-          <div className='labelvaluepair--value code'>
-            {/* eslint-disable-next-line no-magic-numbers */}
-            <span>{truncate(props.app.spec.version, 20)}</span>
-          </div>
-          {/* <br />
-          <Button onClick={props.showEditChartVersionPane}>
-            Edit Chart Version
-          </Button> */}
+          {props.appVersions ? (
+            <VersionPicker
+              selectedVersion={props.app.spec.version}
+              versions={props.appVersions.map(v => ({ version: v.version }))}
+              onChange={props.showEditChartVersionPane}
+            />
+          ) : (
+            <img className='loader' width='25px' src={spinner} />
+          )}
         </div>
 
         <div className='labelvaluepair'>
@@ -134,6 +136,7 @@ const InitialPane = props => {
 
 InitialPane.propTypes = {
   app: PropTypes.object,
+  appVersions: PropTypes.array,
   dispatchCreateAppConfig: PropTypes.func,
   dispatchCreateAppSecret: PropTypes.func,
   dispatchUpdateAppConfig: PropTypes.func,

@@ -333,6 +333,10 @@ describe('Apps and App Catalog', () => {
 
   describe('App Detail Pane', () => {
     it('updates the config map of an already installed app', async () => {
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
@@ -375,12 +379,9 @@ describe('Apps and App Catalog', () => {
       const appsTab = await findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
-      // Click on app details button to open the editing modal
-      const appLabel = getByText(/app version: 0.0.1/i);
-      const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
-        'button'
-      );
-      fireEvent.click(appDetailsButton);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
       // Delete the existing file
       const fileInputPlaceholder = getByText(/configmap has been set/i);
@@ -408,6 +409,10 @@ describe('Apps and App Catalog', () => {
     });
 
     it('deletes the config map of an already installed app', async () => {
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
@@ -452,12 +457,9 @@ describe('Apps and App Catalog', () => {
       const appsTab = await findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
-      // Click on app details button to open the editing modal
-      const appLabel = getByText(/app version: 0.0.1/i);
-      const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
-        'button'
-      );
-      fireEvent.click(appDetailsButton);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
       // Upload a configmap file
       const fileInputPlaceholder = getByText(/configmap has been set/i);
@@ -478,6 +480,10 @@ describe('Apps and App Catalog', () => {
     });
 
     it('updates secrets of an already installed app', async () => {
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
@@ -522,12 +528,9 @@ describe('Apps and App Catalog', () => {
       const appsTab = await findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
-      // Click on app details button to open the editing modal
-      const appLabel = getByText(/app version: 0.0.1/i);
-      const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
-        'button'
-      );
-      fireEvent.click(appDetailsButton);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
       // Upload a secrets file
       const fileInputPlaceholder = getByText(/secret has been set/i);
@@ -558,6 +561,10 @@ describe('Apps and App Catalog', () => {
     });
 
     it('deletes secrets of an already installed app', async () => {
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
@@ -602,12 +609,9 @@ describe('Apps and App Catalog', () => {
       const appsTab = await findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
-      // Click on app details button to open the editing modal
-      const appLabel = getByText(/app version: 0.0.1/i);
-      const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
-        'button'
-      );
-      fireEvent.click(appDetailsButton);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
       // Delete the existing file
       const fileInputPlaceholder = getByText(/secret has been set/i);
@@ -628,6 +632,10 @@ describe('Apps and App Catalog', () => {
     });
 
     it('deletes already installed app', async () => {
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
       nock(API_ENDPOINT)
         .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/`, 'DELETE')
         .reply(StatusCodes.Ok);
@@ -664,12 +672,9 @@ describe('Apps and App Catalog', () => {
       const appsTab = await findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
-      // Click on app details button to open the editing modal
-      const appLabel = getByText(/app version: 0.0.1/i);
-      const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
-        'button'
-      );
-      fireEvent.click(appDetailsButton);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
       // Delete the app
       let deleteButton = getByText(/delete app/i);
