@@ -31,7 +31,7 @@ function ClusterDashboardResources({
   resources,
 }) {
   const { memory, storage, cores, numberOfNodes } = resources;
-  const hasNodePools = cluster.nodePools && cluster.nodePools.length !== 0;
+  const hasNodePools = cluster?.nodePools && cluster.nodePools.length !== 0;
   const loading =
     loadingClusters || loadingStatus || (isV5Cluster && loadingNodePools);
 
