@@ -48,7 +48,7 @@ export function logoutError(errorMessage) {
 export function refreshUserInfo() {
   return function(dispatch, getState) {
     const usersApi = new GiantSwarm.UsersApi();
-    const loggedInUser = getState().app.loggedInUser;
+    const loggedInUser = getState().main.loggedInUser;
 
     if (!loggedInUser) {
       dispatch({
@@ -179,8 +179,8 @@ export function giantswarmLogout() {
   return function(dispatch, getState) {
     let authToken = null;
 
-    if (getState().app.loggedInUser) {
-      authToken = getState().app.loggedInUser.auth.token;
+    if (getState().main.loggedInUser) {
+      authToken = getState().main.loggedInUser.auth.token;
     }
 
     const authTokensApi = new GiantSwarm.AuthTokensApi();

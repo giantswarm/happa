@@ -59,7 +59,7 @@ export function nodePoolsLoad({
   return async function(dispatch, getState) {
     if (withLoadingFlags) dispatch({ type: types.NODEPOOLS_LOAD_REQUEST });
 
-    const selectedOrganization = getState().app.selectedOrganization;
+    const selectedOrganization = getState().main.selectedOrganization;
     const allClusters = getState().entities.clusters.items;
     const v5ClustersId = getState().entities.clusters.v5Clusters || [];
 

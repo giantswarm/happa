@@ -62,7 +62,7 @@ OauthCallback.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    user: state.app.loggedInUser,
+    user: state.main.loggedInUser,
     flashMessages: state.flashMessages,
   };
 }

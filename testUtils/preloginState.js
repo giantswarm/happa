@@ -13,7 +13,7 @@ export default {
     },
     action: 'POP',
   },
-  app: {
+  main: {
     selectedOrganization: null,
     firstLoadComplete: false,
     loggedInUser: null,

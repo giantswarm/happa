@@ -530,21 +530,21 @@ AddNodePool.defaultProps = {
 };
 
 function mapStateToProps(state) {
-  const { availability_zones: AZ } = state.app.info.general;
+  const { availability_zones: AZ } = state.main.info.general;
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
   // eslint-disable-next-line no-magic-numbers
   const maxAZ = Math.min(AZ.max, 4);
   const minAZ = 1;
   const defaultAZ = AZ.default;
-  const selectedOrganization = state.app.selectedOrganization;
-  const provider = state.app.info.general.provider;
-  const clusterCreationStats = state.app.info.stats.cluster_creation_duration;
+  const selectedOrganization = state.main.selectedOrganization;
+  const provider = state.main.info.general.provider;
+  const clusterCreationStats = state.main.info.stats.cluster_creation_duration;
 
   const defaultInstanceType =
-    state.app.info.workers.instance_type &&
-    state.app.info.workers.instance_type.default
-      ? state.app.info.workers.instance_type.default
+    state.main.info.workers.instance_type &&
+    state.main.info.workers.instance_type.default
+      ? state.main.info.workers.instance_type.default
       : 'm3.large';
 
   const defaultCPUCores = 4; // TODO
@@ -553,7 +553,7 @@ function mapStateToProps(state) {
 
   const allowedInstanceTypes =
     provider === Providers.AWS
-      ? state.app.info.workers.instance_type.options
+      ? state.main.info.workers.instance_type.options
       : [];
 
   return {

@@ -30,7 +30,7 @@ const entities = combineReducers({
 const rootReducer = history =>
   combineReducers({
     router: connectRouter(history),
-    app: makeMainReducer(),
+    main: makeMainReducer(),
     entities,
     modal,
     loadingFlags,

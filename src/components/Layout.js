@@ -114,8 +114,8 @@ Layout.propTypes = {
 function mapStateToProps(state) {
   return {
     organizations: state.entities.organizations,
-    user: state.app.loggedInUser,
-    selectedOrganization: state.app.selectedOrganization,
+    user: state.main.loggedInUser,
+    selectedOrganization: state.main.selectedOrganization,
     loadingClustersList: selectLoadingFlagByAction(
       state,
       CLUSTERS_LIST_REQUEST

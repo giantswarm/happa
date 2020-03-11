@@ -11,7 +11,7 @@ import * as types from './actionTypes';
 
 export function invitationsLoad() {
   return function(dispatch, getState) {
-    const token = getState().app.loggedInUser.auth.token;
+    const token = getState().main.loggedInUser.auth.token;
 
     const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
@@ -67,7 +67,7 @@ export function invitationsLoad() {
 
 export function invitationCreate(invitation) {
   return function(dispatch, getState) {
-    const token = getState().app.loggedInUser.auth.token;
+    const token = getState().main.loggedInUser.auth.token;
 
     const passage = new Passage({ endpoint: window.config.passageEndpoint });
 

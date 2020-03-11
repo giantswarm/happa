@@ -424,9 +424,9 @@ ScaleClusterModal.propTypes = {
 function mapStateToProps(state) {
   const propsToPush = {};
 
-  if (state.app.info.workers.count_per_cluster.max) {
+  if (state.main.info.workers.count_per_cluster.max) {
     propsToPush.maxWorkersPerCluster =
-      state.app.info.workers.count_per_cluster.max;
+      state.main.info.workers.count_per_cluster.max;
   }
 
   return propsToPush;

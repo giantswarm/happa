@@ -131,7 +131,7 @@ describe('AdminLogin', () => {
     helpers.isJwtExpired.mockReturnValue(false);
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      app: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData },
     });
 
     // Check if the user has been redirected to the homepage
@@ -165,7 +165,7 @@ describe('AdminLogin', () => {
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      app: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData },
     });
 
     // Check if the user has been redirected to the homepage
@@ -231,7 +231,7 @@ describe('AdminLogin', () => {
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      app: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData },
     });
 
     await findByText(
