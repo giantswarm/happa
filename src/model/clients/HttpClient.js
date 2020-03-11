@@ -145,6 +145,8 @@ export class HttpClient {
     );
 
     this.requestConfig.headers = Object.assign({}, config?.headers);
+
+    return this;
   }
 
   /**
@@ -154,6 +156,8 @@ export class HttpClient {
    */
   setHeader(key, value = '') {
     this.requestConfig.headers[key] = value;
+
+    return this;
   }
 
   /**
@@ -163,6 +167,8 @@ export class HttpClient {
    */
   setAuthorizationToken(authType, token) {
     this.setHeader('Authorization', `${authType} ${token}`);
+
+    return this;
   }
 
   /**
@@ -171,6 +177,8 @@ export class HttpClient {
    */
   setRequestMethod(method) {
     this.requestConfig.method = method;
+
+    return this;
   }
 
   /**
@@ -179,6 +187,8 @@ export class HttpClient {
    */
   setBody(body) {
     this.requestConfig.data = body;
+
+    return this;
   }
 
   /**
@@ -187,6 +197,8 @@ export class HttpClient {
    */
   setURL(url) {
     this.requestConfig.url = url;
+
+    return this;
   }
 
   /**
