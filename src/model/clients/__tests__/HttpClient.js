@@ -64,24 +64,16 @@ describe('HttpClient', () => {
       timeout: 30000,
     });
 
-    // Headers
-    client.setHeader('TestHeader');
-    client.setHeader('TestHeader2', config.headers.TestHeader2);
-    client.setHeader('TestHeader3', config.headers.TestHeader3);
-
-    // Authorization Token
-    client.setAuthorizationToken('testScheme', token);
-
-    // Request method
-    client.setRequestMethod('POST');
-
-    // Request body
-    client.setBody({
-      test: 'test',
-    });
-
-    // Request target url
-    client.setURL('/api/test');
+    client
+      .setHeader('TestHeader')
+      .setHeader('TestHeader2', config.headers.TestHeader2)
+      .setHeader('TestHeader3', config.headers.TestHeader3)
+      .setAuthorizationToken('testScheme', token)
+      .setRequestMethod('POST')
+      .setBody({
+        test: 'test',
+      })
+      .setURL('/api/test');
 
     expect(client.requestConfig).toStrictEqual(config);
   });
