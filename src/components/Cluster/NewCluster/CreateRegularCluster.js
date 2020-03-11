@@ -413,7 +413,7 @@ class CreateRegularCluster extends React.Component {
     );
 
     const noReleasesErrorText = this.props.releasesLoadError
-      ? `The cluster can't be created because this installation doesn't have active releases available`
+      ? `The cluster can't be created because there is no active release currently availabe for this platform.`
       : null;
 
     return (
