@@ -25,7 +25,7 @@ const selectClusterNodePoolsIds = (state, props) => {
 
 export const selectClusterNodePools = (state, clusterId) => {
   const clusterNodePoolsIds =
-    state.entities.clusters.items[clusterId].nodePools;
+    state.entities.clusters.items[clusterId]?.nodePools ?? [];
 
   // Return an empty array for v4 clusters
   if (!clusterNodePoolsIds) return [];
