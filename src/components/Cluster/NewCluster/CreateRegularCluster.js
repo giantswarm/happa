@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
-import * as actionTypes from 'actions/actionTypes';
+import {
+  CLUSTER_CREATE_REQUEST,
+  RELEASES_LOAD_REQUEST,
+} from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
@@ -409,6 +412,10 @@ class CreateRegularCluster extends React.Component {
       this.props.selectedRelease
     );
 
+    const noReleasesErrorText = this.props.releasesLoadError
+      ? `The cluster can't be created because this installation doesn't have active releases available`
+      : null;
+
     return (
       <Breadcrumb
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
@@ -637,6 +644,7 @@ CreateRegularCluster.propTypes = {
   clusterName: PropTypes.string,
   updateClusterNameInParent: PropTypes.func,
   clusterCreateError: PropTypes.string,
+  releasesLoadError: PropTypes.string,
 };
 
 function mapStateToProps(state) {
@@ -679,10 +687,8 @@ function mapStateToProps(state) {
 
   return {
     ...propsToPush,
-    clusterCreateError: selectErrorByAction(
-      state,
-      actionTypes.CLUSTER_CREATE_REQUEST
-    ),
+    clusterCreateError: selectErrorByAction(state, CLUSTER_CREATE_REQUEST),
+    releasesLoadError: selectErrorByAction(state, RELEASES_LOAD_REQUEST),
   };
 }
 
