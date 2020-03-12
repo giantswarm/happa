@@ -69,8 +69,8 @@ const AppDetailsModal = props => {
   }
 
   async function loadAppsAndClose() {
-    await props.dispatch(loadAppsAction(clusterId));
     onClose();
+    await props.dispatch(loadAppsAction(clusterId));
   }
 
   async function editChartVersion() {
