@@ -4,7 +4,20 @@ import React, { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import BaseTransition from 'styles/transitions/BaseTransition';
 
+import InstalledApp from './InstalledApp';
+
+const InstalledAppsWrapper = styled.div`
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.shade6};
+`;
+
 const InstalledApps = styled.div`
+  margin-bottom: 25px;
+  p:last-child {
+    margin: 0px;
+  }
+
   .app-enter,
   .app-appear {
     opacity: 0.01;
@@ -35,7 +48,7 @@ const UserInstalledApps = ({
 }) => {
   const [iconErrors, setIconErrors] = useState({});
 
-  const onImgError = e => {
+  const onIconError = e => {
     const imageUrl = e.target.src;
     const errors = Object.assign({}, iconErrors, {
       [imageUrl]: true,
@@ -45,13 +58,18 @@ const UserInstalledApps = ({
   };
 
   return (
-    <div
-      data-testid='installed-apps-section'
-      id='installed-apps-section'
-      {...rest}
-    >
+    <InstalledAppsWrapper data-testid='installed-apps-section' {...rest}>
       <h3 className='table-label'>Installed Apps</h3>
       <div className='row'>
+        {error && (
+          <p className='well' data-testid='error-loading-apps'>
+            <b>Error Loading Apps:</b>
+            <br />
+            We had some trouble loading the list of apps you&apos;ve installed
+            on this cluster. Please refresh the page to try again.
+          </p>
+        )}
+
         {apps.length === 0 && !error && (
           <p className='well' data-testid='no-apps-found' id='no-apps-found'>
             <b>No apps installed on this cluster</b>
@@ -60,20 +78,8 @@ const UserInstalledApps = ({
           </p>
         )}
 
-        {error && (
-          <p
-            className='well'
-            data-testid='error-loading-apps'
-            id='error-loading-apps'
-          >
-            <b>Error Loading Apps:</b>
-            <br />
-            We had some trouble loading the list of apps you&apos;ve installed
-            on this cluster. Please refresh the page to try again.
-          </p>
-        )}
         {apps.length > 0 && (
-          <InstalledApps data-testid='installed-apps' id='installed-apps'>
+          <InstalledApps data-testid='installed-apps'>
             <TransitionGroup>
               {apps.map(app => {
                 return (
@@ -84,26 +90,11 @@ const UserInstalledApps = ({
                     timeout={{ enter: 500, appear: 500, exit: 500 }}
                     classNames='app'
                   >
-                    <div
-                      className='installed-apps--app'
+                    <InstalledApp
+                      app={app}
+                      onIconError={onIconError}
                       onClick={() => onShowDetail(app.metadata.name)}
-                    >
-                      <div className='details'>
-                        {app.logoUrl && !iconErrors[app.logoUrl] && (
-                          <img
-                            alt={`${app.metadata.name} icon`}
-                            height='36'
-                            onError={onImgError}
-                            src={app.logoUrl}
-                            width='36'
-                          />
-                        )}
-                        {app.metadata.name}
-                        <small>
-                          Chart Version: {app.spec?.version ?? 'n/a'}
-                        </small>
-                      </div>
-                    </div>
+                    />
                   </BaseTransition>
                 );
               })}
@@ -113,7 +104,7 @@ const UserInstalledApps = ({
 
         {children}
       </div>
-    </div>
+    </InstalledAppsWrapper>
   );
 };
 

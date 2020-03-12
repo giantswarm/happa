@@ -31,6 +31,11 @@ const SmallHeading = styled.h6`
   letter-spacing: 2px;
 `;
 
+const BrowseButton = styled(Button)`
+  margin-top: 5px;
+  margin-bottom: 10px;
+`;
+
 class ClusterApps extends React.Component {
   isComponentMounted = false;
 
@@ -271,11 +276,11 @@ class ClusterApps extends React.Component {
             error={appsLoadError}
             onShowDetail={this.showAppDetail}
           >
-            <div className='browse-apps'>
-              <Button onClick={this.openAppCatalog}>
+            <div>
+              <BrowseButton onClick={this.openAppCatalog}>
                 <i className='fa fa-add-circle' />
                 Install App
-              </Button>
+              </BrowseButton>
             </div>
           </UserInstalledApps>
         )}
