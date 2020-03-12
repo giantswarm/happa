@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -37,6 +38,32 @@ const BrowseButton = styled(Button)`
 `;
 
 class ClusterApps extends React.Component {
+  static getDerivedStateFromProps(newProps, prevState) {
+    if (prevState.appDetailsModal.visible) {
+      const appToDisplay =
+        newProps.installedApps?.find(
+          app => app.metadata.name === prevState.appDetailsModal.appName
+        ) ?? [];
+
+      if (appToDisplay.length < 1) {
+        new FlashMessage(
+          'The app you were looking at was deleted from the cluster by someone else.',
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+
+        return {
+          appDetailsModal: {
+            visible: false,
+            app: null,
+          },
+        };
+      }
+    }
+
+    return null;
+  }
+
   isComponentMounted = false;
 
   state = {
