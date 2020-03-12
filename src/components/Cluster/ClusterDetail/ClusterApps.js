@@ -293,7 +293,7 @@ class ClusterApps extends React.Component {
                   again.
                 </p>
               )}
-              {userInstalledApps?.length > 0 && (
+              {userInstalledApps.length > 0 && (
                 <div data-testid='installed-apps' id='installed-apps'>
                   {userInstalledApps.map(app => {
                     return (
@@ -318,7 +318,7 @@ class ClusterApps extends React.Component {
                             )}
                           {app.metadata.name}
                           <small>
-                            Chart Version: {app?.spec?.version ?? 'n/a'}
+                            Chart Version: {app.spec?.version ?? 'n/a'}
                           </small>
                         </div>
                       </div>
