@@ -268,19 +268,17 @@ class ClusterApps extends React.Component {
           <div data-testid='installed-apps-section' id='installed-apps-section'>
             <h3 className='table-label'>Installed Apps</h3>
             <div className='row'>
-              {userInstalledApps &&
-                userInstalledApps.length === 0 &&
-                !appsLoadError && (
-                  <p
-                    className='well'
-                    data-testid='no-apps-found'
-                    id='no-apps-found'
-                  >
-                    <b>No apps installed on this cluster</b>
-                    <br />
-                    Browse the app catalog below and pick an app to install.
-                  </p>
-                )}
+              {userInstalledApps?.length === 0 && !appsLoadError && (
+                <p
+                  className='well'
+                  data-testid='no-apps-found'
+                  id='no-apps-found'
+                >
+                  <b>No apps installed on this cluster</b>
+                  <br />
+                  Browse the app catalog below and pick an app to install.
+                </p>
+              )}
 
               {appsLoadError && (
                 <p
@@ -295,7 +293,7 @@ class ClusterApps extends React.Component {
                   again.
                 </p>
               )}
-              {userInstalledApps && userInstalledApps.length > 0 && (
+              {userInstalledApps?.length > 0 && (
                 <div data-testid='installed-apps' id='installed-apps'>
                   {userInstalledApps.map(app => {
                     return (
