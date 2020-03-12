@@ -654,9 +654,14 @@ describe('Apps and App Catalog', () => {
         v4AWSClusterStatusResponse,
         2
       );
-      getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse, 2);
       getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
       getMockCall('/v4/releases/', releasesResponse);
+
+      // Before deleting the app, there are apps.
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+
+      // After deleting the app, there are no apps.
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
 
       const clusterDetailPath = RoutePath.createUsablePath(
         OrganizationsRoutes.Clusters.Detail,
