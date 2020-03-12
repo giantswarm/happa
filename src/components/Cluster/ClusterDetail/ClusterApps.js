@@ -11,6 +11,7 @@ import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
+import UserInstalledApps from './UserInstalledApps/UserInstalledApps';
 
 // This component shows the list of components and apps installed on a cluster.
 // Apps can be:
@@ -265,76 +266,18 @@ class ClusterApps extends React.Component {
     return (
       <>
         {this.props.showInstalledAppsBlock && (
-          <div data-testid='installed-apps-section' id='installed-apps-section'>
-            <h3 className='table-label'>Installed Apps</h3>
-            <div className='row'>
-              {userInstalledApps?.length === 0 && !appsLoadError && (
-                <p
-                  className='well'
-                  data-testid='no-apps-found'
-                  id='no-apps-found'
-                >
-                  <b>No apps installed on this cluster</b>
-                  <br />
-                  Browse the app catalog below and pick an app to install.
-                </p>
-              )}
-
-              {appsLoadError && (
-                <p
-                  className='well'
-                  data-testid='error-loading-apps'
-                  id='error-loading-apps'
-                >
-                  <b>Error Loading Apps:</b>
-                  <br />
-                  We had some trouble loading the list of apps you&apos;ve
-                  installed on this cluster. Please refresh the page to try
-                  again.
-                </p>
-              )}
-              {userInstalledApps.length > 0 && (
-                <div data-testid='installed-apps' id='installed-apps'>
-                  {userInstalledApps.map(app => {
-                    return (
-                      <div
-                        className='installed-apps--app'
-                        key={app.metadata.name}
-                        onClick={this.showAppDetail.bind(
-                          this,
-                          app.metadata.name
-                        )}
-                      >
-                        <div className='details'>
-                          {app.logoUrl &&
-                            !this.state.iconErrors[app.logoUrl] && (
-                              <img
-                                alt={`${app.metadata.name} icon`}
-                                height='36'
-                                onError={this.imgError}
-                                src={app.logoUrl}
-                                width='36'
-                              />
-                            )}
-                          {app.metadata.name}
-                          <small>
-                            Chart Version: {app.spec?.version ?? 'n/a'}
-                          </small>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              <div className='browse-apps'>
-                <Button onClick={this.openAppCatalog}>
-                  <i className='fa fa-add-circle' />
-                  Install App
-                </Button>
-              </div>
+          <UserInstalledApps
+            apps={userInstalledApps}
+            error={appsLoadError}
+            onShowDetail={this.showAppDetail}
+          >
+            <div className='browse-apps'>
+              <Button onClick={this.openAppCatalog}>
+                <i className='fa fa-add-circle' />
+                Install App
+              </Button>
             </div>
-          </div>
+          </UserInstalledApps>
         )}
 
         <div className='row cluster-apps'>
