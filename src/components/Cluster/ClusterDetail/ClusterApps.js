@@ -173,7 +173,7 @@ class ClusterApps extends React.Component {
       ingress: [],
     };
 
-    for (i = 0; i < this.props.release.components.length; i++) {
+    for (i = 0; i < this.props.release?.components.length; i++) {
       const component = this.props.release.components[i];
 
       // Remove component that is now present in the release response
@@ -241,22 +241,26 @@ class ClusterApps extends React.Component {
     }
   };
 
-  // getUserInstallApps returns a list of just the apps that the user installed
-  // since the list of apps in a cluster also includes apps that were installed
-  // automatically.
-  getUserInstalledApps = () => {
-    if (!this.props.installedApps) {
+  /**
+   * Returns a list of just the apps that the user installed
+   * since the list of apps in a cluster also includes apps that were installed
+   * automatically.
+   */
+  getUserInstalledApps = apps => {
+    if (!apps) {
       return [];
     }
 
-    return this.props.installedApps.filter(
+    return apps.filter(
       app =>
         app.metadata.labels['giantswarm.io/managed-by'] !== 'cluster-operator'
     );
   };
 
   render() {
-    const { appsLoadError } = this.props;
+    const { appsLoadError, installedApps } = this.props;
+    const userInstalledApps = this.getUserInstalledApps(installedApps);
+    const preinstalledApps = this.preinstalledApps();
 
     return (
       <>
@@ -264,8 +268,8 @@ class ClusterApps extends React.Component {
           <div data-testid='installed-apps-section' id='installed-apps-section'>
             <h3 className='table-label'>Installed Apps</h3>
             <div className='row'>
-              {this.getUserInstalledApps() &&
-                this.getUserInstalledApps().length === 0 &&
+              {userInstalledApps &&
+                userInstalledApps.length === 0 &&
                 !appsLoadError && (
                   <p
                     className='well'
@@ -291,43 +295,39 @@ class ClusterApps extends React.Component {
                   again.
                 </p>
               )}
-              {this.getUserInstalledApps() &&
-                this.getUserInstalledApps().length > 0 && (
-                  <div data-testid='installed-apps' id='installed-apps'>
-                    {this.getUserInstalledApps().map(app => {
-                      return (
-                        <div
-                          className='installed-apps--app'
-                          key={app.metadata.name}
-                          onClick={this.showAppDetail.bind(
-                            this,
-                            app.metadata.name
-                          )}
-                        >
-                          <div className='details'>
-                            {app.logoUrl &&
-                              !this.state.iconErrors[app.logoUrl] && (
-                                <img
-                                  alt={`${app.metadata.name} icon`}
-                                  height='36'
-                                  onError={this.imgError}
-                                  src={app.logoUrl}
-                                  width='36'
-                                />
-                              )}
-                            {app.metadata.name}
-                            <small>
-                              Chart Version:{' '}
-                              {app && app.spec && app.spec.version
-                                ? app.spec.version
-                                : 'n/a'}
-                            </small>
-                          </div>
+              {userInstalledApps && userInstalledApps.length > 0 && (
+                <div data-testid='installed-apps' id='installed-apps'>
+                  {userInstalledApps.map(app => {
+                    return (
+                      <div
+                        className='installed-apps--app'
+                        key={app.metadata.name}
+                        onClick={this.showAppDetail.bind(
+                          this,
+                          app.metadata.name
+                        )}
+                      >
+                        <div className='details'>
+                          {app.logoUrl &&
+                            !this.state.iconErrors[app.logoUrl] && (
+                              <img
+                                alt={`${app.metadata.name} icon`}
+                                height='36'
+                                onError={this.imgError}
+                                src={app.logoUrl}
+                                width='36'
+                              />
+                            )}
+                          {app.metadata.name}
+                          <small>
+                            Chart Version: {app?.spec?.version ?? 'n/a'}
+                          </small>
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
 
               <div className='browse-apps'>
                 <Button onClick={this.openAppCatalog}>
@@ -350,7 +350,7 @@ class ClusterApps extends React.Component {
               <>
                 <div className='col-4' key='essentials'>
                   <SmallHeading>essentials</SmallHeading>
-                  {this.preinstalledApps().essentials.map(app => (
+                  {preinstalledApps.essentials.map(app => (
                     <ClusterDetailPreinstalledApp
                       logoUrl={app.logoUrl}
                       name={app.name}
@@ -362,7 +362,7 @@ class ClusterApps extends React.Component {
 
                 <div className='col-4' key='management'>
                   <SmallHeading>management</SmallHeading>
-                  {this.preinstalledApps().management.map(app => (
+                  {preinstalledApps.management.map(app => (
                     <ClusterDetailPreinstalledApp
                       logoUrl={app.logoUrl}
                       name={app.name}
@@ -393,7 +393,7 @@ class ClusterApps extends React.Component {
                       </p>
                     </OptionalIngressNotice>
                   )}
-                  {this.preinstalledApps().ingress.map(app => (
+                  {preinstalledApps.ingress.map(app => (
                     <ClusterDetailPreinstalledApp
                       logoUrl={app.logoUrl}
                       name={app.name}
