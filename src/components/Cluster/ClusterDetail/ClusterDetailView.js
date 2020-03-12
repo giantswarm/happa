@@ -3,6 +3,7 @@ import {
   CLUSTER_LOAD_DETAILS_REQUEST,
   NODEPOOLS_LOAD_REQUEST,
 } from 'actions/actionTypes';
+import { loadApps } from 'actions/appActions';
 import {
   batchedClusterDetailView,
   batchedRefreshClusterDetailView,
@@ -71,7 +72,8 @@ class ClusterDetailView extends React.Component {
     this.loadDataInterval = this.props.setInterval(
       this.refreshClusterData,
       // eslint-disable-next-line no-magic-numbers
-      30 * 1000 // 30 seconds
+      // 30 * 1000 // 30 seconds
+      5 * 1000 // 30 seconds
     );
   };
 
@@ -108,12 +110,12 @@ class ClusterDetailView extends React.Component {
   };
 
   refreshClusterData = () => {
+    const { id: clusterID } = this.props.cluster;
+
     this.props.dispatch(
-      batchedRefreshClusterDetailView(
-        this.props.cluster.id,
-        this.props.isV5Cluster
-      )
+      batchedRefreshClusterDetailView(clusterID, this.props.isV5Cluster)
     );
+    this.props.dispatch(loadApps(clusterID));
   };
 
   handleVisibilityChange = () => {

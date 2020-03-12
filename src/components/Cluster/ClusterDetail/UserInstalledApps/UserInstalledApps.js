@@ -1,5 +1,30 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { TransitionGroup } from 'react-transition-group';
+import BaseTransition from 'styles/transitions/BaseTransition';
+
+const InstalledApps = styled.div`
+  .app-enter,
+  .app-appear {
+    opacity: 0.01;
+    transform: translate3d(-20px, 0, 0);
+  }
+  .app-enter.app-enter-active,
+  .app-appear.app-appear-active {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition: 0.5s cubic-bezier(1, 0, 0, 1);
+  }
+  .app-exit {
+    opacity: 1;
+  }
+  .app-exit.app-exit-active {
+    opacity: 0.01;
+    transform: translate3d(-20px, 0, 0);
+    transition: 0.4s cubic-bezier(1, 0, 0, 1);
+  }
+`;
 
 const UserInstalledApps = ({
   apps,
@@ -48,31 +73,42 @@ const UserInstalledApps = ({
           </p>
         )}
         {apps.length > 0 && (
-          <div data-testid='installed-apps' id='installed-apps'>
-            {apps.map(app => {
-              return (
-                <div
-                  className='installed-apps--app'
-                  key={app.metadata.name}
-                  onClick={() => onShowDetail(app.metadata.name)}
-                >
-                  <div className='details'>
-                    {app.logoUrl && !iconErrors[app.logoUrl] && (
-                      <img
-                        alt={`${app.metadata.name} icon`}
-                        height='36'
-                        onError={onImgError}
-                        src={app.logoUrl}
-                        width='36'
-                      />
-                    )}
-                    {app.metadata.name}
-                    <small>Chart Version: {app.spec?.version ?? 'n/a'}</small>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <InstalledApps data-testid='installed-apps' id='installed-apps'>
+            <TransitionGroup>
+              {apps.map(app => {
+                return (
+                  <BaseTransition
+                    key={app.metadata.name}
+                    appear={true}
+                    exit={true}
+                    timeout={{ enter: 500, appear: 500, exit: 500 }}
+                    classNames='app'
+                  >
+                    <div
+                      className='installed-apps--app'
+                      onClick={() => onShowDetail(app.metadata.name)}
+                    >
+                      <div className='details'>
+                        {app.logoUrl && !iconErrors[app.logoUrl] && (
+                          <img
+                            alt={`${app.metadata.name} icon`}
+                            height='36'
+                            onError={onImgError}
+                            src={app.logoUrl}
+                            width='36'
+                          />
+                        )}
+                        {app.metadata.name}
+                        <small>
+                          Chart Version: {app.spec?.version ?? 'n/a'}
+                        </small>
+                      </div>
+                    </div>
+                  </BaseTransition>
+                );
+              })}
+            </TransitionGroup>
+          </InstalledApps>
         )}
 
         {children}
