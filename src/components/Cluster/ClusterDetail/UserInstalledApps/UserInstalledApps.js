@@ -21,7 +21,7 @@ const InstalledApps = styled.div`
   .app-enter,
   .app-appear {
     opacity: 0.01;
-    transform: translate3d(-20px, 0, 0);
+    transform: translate3d(-50px, 0, 0);
   }
   .app-enter.app-enter-active,
   .app-appear.app-appear-active {
@@ -34,7 +34,7 @@ const InstalledApps = styled.div`
   }
   .app-exit.app-exit-active {
     opacity: 0.01;
-    transform: translate3d(-20px, 0, 0);
+    transform: translate3d(-50px, 0, 0);
     transition: 0.4s cubic-bezier(1, 0, 0, 1);
   }
 `;
