@@ -4315,7 +4315,7 @@ dom-converter@^0.2:
   dependencies:
     utila "~0.4"
 
-dom-helpers@^3.2.0, dom-helpers@^3.2.1, dom-helpers@^3.3.1, dom-helpers@^3.4.0:
+dom-helpers@^3.2.0, dom-helpers@^3.2.1, dom-helpers@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/dom-helpers/-/dom-helpers-3.4.0.tgz#e9b369700f959f62ecde5a6babde4bccd9169af8"
   integrity sha512-LnuPJ+dwqKDIyotW1VzmOZ5TONUN7CwkCR5hrgawTUbkBGYdeoNLZo6nNfGkCrjtE1nXXaj7iMMpDa8/d9WoIA==
@@ -9729,13 +9729,13 @@ react-addons-update@15.6.2:
     fbjs "^0.8.9"
     object-assign "^4.1.0"
 
-react-bootstrap-table-next@3.3.5:
-  version "3.3.5"
-  resolved "https://registry.yarnpkg.com/react-bootstrap-table-next/-/react-bootstrap-table-next-3.3.5.tgz#fa1d6abe2d4530d59078810c334f40bdacf539c3"
-  integrity sha512-vBO+y2Y483Y1QnpxvgY8jTz6gwIPYpfc26AKZhwgESL6cpjhxSsoFGXNp3KKnT5krW5SF9zpcf/98jIJefv+RQ==
+react-bootstrap-table-next@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-table-next/-/react-bootstrap-table-next-4.0.0.tgz#51c6bcdc41d312869855c00edd015d923c877bf5"
+  integrity sha512-7pDdmMfkQ5G6z21M1adWiontCGpP4N3LGxfzGdPbTuSmqCkX9syP1sglF7GkDvF6bIADbcPT8ttM799x8SSsCA==
   dependencies:
     classnames "^2.2.5"
-    react-transition-group "2.5.3"
+    react-transition-group "^4.2.0"
     underscore "1.9.1"
 
 react-bootstrap@0.33.1:
@@ -9934,17 +9934,7 @@ react-timeout@1.2.0:
     hoist-non-react-statics "^2.3.1"
     object-assign "^4.0.1"
 
-react-transition-group@2.5.3:
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.5.3.tgz#26de363cab19e5c88ae5dbae105c706cf953bb92"
-  integrity sha512-2DGFck6h99kLNr8pOFk+z4Soq3iISydwOFeeEVPjTN6+Y01CmvbWmnN02VuTWyFdnRtIDPe+wy2q6Ui8snBPZg==
-  dependencies:
-    dom-helpers "^3.3.1"
-    loose-envify "^1.4.0"
-    prop-types "^15.6.2"
-    react-lifecycles-compat "^3.0.4"
-
-react-transition-group@4.3.0:
+react-transition-group@4.3.0, react-transition-group@^4.2.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.3.0.tgz#fea832e386cf8796c58b61874a3319704f5ce683"
   integrity sha512-1qRV1ZuVSdxPlPf4O8t7inxUGpdyO5zG9IoNfJxSO0ImU2A1YWkEQvFPuIPZmMLkg5hYs7vv5mMOyfgSkvAwvw==
