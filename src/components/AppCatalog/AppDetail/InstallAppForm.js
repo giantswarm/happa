@@ -109,6 +109,7 @@ const InstallAppForm = ({
 
       {formAbilities.hasFixedNamespace ? (
         <Input
+          key='fixed-namespace'
           description={`This app must be installed in the ${formAbilities.fixedNamespace} namespace`}
           hint={<>&nbsp;</>}
           label='Namespace:'
@@ -117,6 +118,7 @@ const InstallAppForm = ({
         />
       ) : (
         <Input
+          key='dedicated-namespace'
           description='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
           hint={<>&nbsp;</>}
           label='Namespace:'

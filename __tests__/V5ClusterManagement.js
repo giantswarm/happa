@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
@@ -59,7 +59,7 @@ it('renders all the v5 cluster data correctly', async () => {
   );
   const { getByText, getAllByText } = renderRouteWithStore(clusterDetailPath);
 
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
   });
   expect(getAllByText(V5_CLUSTER.id)).toHaveLength(2);
@@ -69,7 +69,7 @@ it('renders all the v5 cluster data correctly', async () => {
   const textRendered = `${workerNodesRunning} nodes in ${nodePoolsResponse.length} node pools`;
 
   // Expect computed values are rendered
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText(textRendered)).toBeInTheDocument();
   });
 
@@ -89,7 +89,7 @@ it('renders all node pools in store', async () => {
     clusterDetailPath
   );
 
-  await wait(() => findAllByTestId('node-pool-id'));
+  await waitFor(() => findAllByTestId('node-pool-id'));
 
   nodePoolsResponse.forEach(nodePool => {
     expect(getByText(nodePool.id)).toBeInTheDocument();
@@ -127,7 +127,7 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
     clusterDetailPath
   );
 
-  await wait(() => getByText(nodePoolName));
+  await waitFor(() => getByText(nodePoolName));
 
   // All mock node pools have the same first 14 characters.
   const nodePoolNameEl = getByText(nodePoolName);
@@ -137,7 +137,7 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   expect(nodePools[0]).toContainHTML(nodePoolNameEl);
   fireEvent.click(nodePoolNameEl);
 
-  await wait(() => {
+  await waitFor(() => {
     getByDisplayValue(nodePoolName);
   });
 
@@ -150,7 +150,7 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   fireEvent.click(submitButton);
 
   //Wait for the Flash message to appear
-  await wait(() => {
+  await waitFor(() => {
     getByText(/succesfully edited node pool name/i);
   });
 
@@ -200,7 +200,7 @@ scales node pools correctly`, async () => {
     getByLabelText,
   } = renderRouteWithStore(clusterDetailPath);
 
-  await wait(() => getAllByTestId('node-pool-id'));
+  await waitFor(() => getAllByTestId('node-pool-id'));
 
   // Expect first nodePool is the first one in the list.
   const nodePoolId = getAllByTestId('node-pool-id')[0].textContent;
@@ -209,7 +209,7 @@ scales node pools correctly`, async () => {
   fireEvent.click(getAllByText('•••')[0]);
   fireEvent.click(getByText(/edit scaling limits/i));
 
-  await wait(() => getByText(/edit scaling settings for/i));
+  await waitFor(() => getByText(/edit scaling settings for/i));
 
   // Is the modal in the document?
   const modalTitle = getByText(/edit scaling settings for/i);
@@ -228,13 +228,13 @@ scales node pools correctly`, async () => {
   fireEvent.change(inputMax, { target: { value: newScaling.max } });
 
   // Wait for the text button to update
-  await wait(() => getByText(/increase minimum number of nodes by 1/i));
+  await waitFor(() => getByText(/increase minimum number of nodes by 1/i));
 
   const submitButton = getByText(/increase minimum number of nodes by 1/i);
   fireEvent.click(submitButton);
 
   //Wait for the Flash message to appear
-  await wait(() => {
+  await waitFor(() => {
     getByText(
       /The node pool will be scaled within the next couple of minutes./i
     );
@@ -275,7 +275,7 @@ it('deletes a v5 cluster', async () => {
   );
 
   // Wait for the view to render
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText(V5_CLUSTER.name)).toBeInTheDocument();
   });
 
@@ -284,7 +284,7 @@ it('deletes a v5 cluster', async () => {
 
   // Is the modal in the document?
   const titleText = /are you sure you want to delete/i;
-  await wait(() => getByText(titleText));
+  await waitFor(() => getByText(titleText));
   const modalTitle = getByText(titleText);
   expect(modalTitle).toBeInTheDocument();
   expect(modalTitle.textContent.includes(cluster.id)).toBeTruthy();
@@ -294,7 +294,7 @@ it('deletes a v5 cluster', async () => {
   fireEvent.click(modalDeleteButton);
 
   // Flash message confirming deletion.
-  await wait(() => {
+  await waitFor(() => {
     getByText(/will be deleted/i);
   });
   const flashElement = getByText(/will be deleted/i);
@@ -302,7 +302,7 @@ it('deletes a v5 cluster', async () => {
   expect(flashElement).toHaveTextContent(cluster.id);
 
   // Expect the cluster is not in the clusters list.
-  await wait(() => {
+  await waitFor(() => {
     expect(queryByTestId(cluster.id)).not.toBeInTheDocument();
   });
 });
@@ -337,16 +337,16 @@ it('deletes a node pool', async () => {
   } = renderRouteWithStore(clusterDetailPath);
 
   // Wait for node pools to render
-  await wait(() => getAllByTestId('node-pool-id'));
+  await waitFor(() => getAllByTestId('node-pool-id'));
 
   fireEvent.click(getAllByText('•••')[0]);
   // Regex doesn't work, don't know why...
-  await wait(() => getByText('Delete'));
+  await waitFor(() => getByText('Delete'));
   fireEvent.click(getByText('Delete'));
 
   // Is the modal in the document?
   const titleText = /are you sure you want to delete/i;
-  await wait(() => getByText(titleText));
+  await waitFor(() => getByText(titleText));
   const modalTitle = getByText(titleText);
   expect(modalTitle).toBeInTheDocument();
   expect(modalTitle.textContent.includes(nodePool.id)).toBeTruthy();
@@ -357,7 +357,7 @@ it('deletes a node pool', async () => {
   fireEvent.click(deleteButton);
 
   // Flash message confirming deletion.
-  await wait(() => {
+  await waitFor(() => {
     getByText(/will be deleted/i);
   });
   const flashElement = getByText(/will be deleted/i);
@@ -365,7 +365,7 @@ it('deletes a node pool', async () => {
   expect(flashElement).toHaveTextContent(nodePool.id);
 
   // Expect the node pool is not in the view.
-  await wait(() => {
+  await waitFor(() => {
     expect(queryByTestId(nodePool.id)).not.toBeInTheDocument();
   });
 });
@@ -396,31 +396,29 @@ it('adds a node pool with default values', async () => {
       clusterId: V5_CLUSTER.id,
     }
   );
-  const { getByText, getAllByText } = renderRouteWithStore(clusterDetailPath);
+  const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
 
-  await wait(() => getAllByText(/add node pool/i));
+  let addNodePoolButton = null;
 
-  fireEvent.click(getByText(/add node pool/i));
-  await wait(() => getByText(/create node pool/i));
-  fireEvent.click(getByText(/create node pool/i));
+  // FindByText doesn't work here, for some reason
+  await waitFor(() => {
+    addNodePoolButton = getByText(/add node pool/i);
+    fireEvent.click(addNodePoolButton);
+  });
+
+  addNodePoolButton = await findByText(/create node pool/i);
+  fireEvent.click(addNodePoolButton);
 
   // Flash message confirming creation.
-  await wait(() => {
-    getByText(/Your new node pool with ID/i);
-  });
-  expect(getByText(/Your new node pool with ID/i)).toHaveTextContent(
-    nodePoolCreationResponse.id
-  );
+  const flashMessage = await findByText(/Your new node pool with ID/i);
+  expect(flashMessage).toHaveTextContent(nodePoolCreationResponse.id);
 
   // Remove flash message.
   forceRemoveAll();
 
   // Is the new NodePool in the document?
-  await wait(() => {
-    getByText(nodePoolCreationResponse.id);
-  });
-
-  expect(getByText(nodePoolCreationResponse.id)).toBeInTheDocument();
+  const newNodePool = await findByText(nodePoolCreationResponse.id);
+  expect(newNodePool).toBeInTheDocument();
 });
 
 it('renders an error message if there was an error loading apps', () => {

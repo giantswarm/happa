@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait, within } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared';
@@ -172,7 +172,7 @@ describe('Users', () => {
     deleteButton = getByText(/delete user/i);
     fireEvent.click(deleteButton);
 
-    await wait(() => {
+    await waitFor(() => {
       expect(deleteButton).not.toBeInTheDocument();
     });
   });
@@ -205,7 +205,7 @@ describe('Users', () => {
     unexpireButton = getByText(/^remove expiration$/i);
     fireEvent.click(unexpireButton);
 
-    await wait(() => {
+    await waitFor(() => {
       expect(unexpireButton).not.toBeInTheDocument();
     });
   });

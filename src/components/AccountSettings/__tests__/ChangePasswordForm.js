@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { Base64 } from 'js-base64';
 import { StatusCodes } from 'shared/constants';
 import { postPayloadMockCall, USER_EMAIL } from 'testUtils/mockHttpCalls';
@@ -157,7 +157,7 @@ describe('ChangePasswordForm', () => {
     expect(setButton.disabled).toBeTruthy();
 
     // Ensure that error text is gone
-    await wait(() => {
+    await waitFor(() => {
       errorElement = queryByText(validationErrors.JustLetters);
       expect(errorElement).toBeNull();
     });

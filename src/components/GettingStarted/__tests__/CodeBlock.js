@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, render, wait } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import React from 'react';
 import { getComponentWithTheme } from 'testUtils/renderUtils';
@@ -88,7 +88,7 @@ describe('CodeBlock', () => {
     rerender(getComponentWithProps(componentProps));
 
     // Check if the copy confirmation is no longer visible
-    await wait(() => {
+    await waitFor(() => {
       expect(
         queryByText(/content copied to clipboard/i)
       ).not.toBeInTheDocument();

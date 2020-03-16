@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait, within } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -87,14 +87,14 @@ it('creates a v5 cluster and redirect to details view', async () => {
     newClusterPath
   );
 
-  await wait(() => {
+  await waitFor(() => {
     getByText('Create Cluster');
     // Is this the v5 form?
     expect(getByTestId('nodepool-cluster-creation-view')).toBeInTheDocument();
   });
 
   fireEvent.click(getByText('Create Cluster'));
-  await wait(() => getByTestId('cluster-details-view'));
+  await waitFor(() => getByTestId('cluster-details-view'));
 
   // Expect we have been redirected to the cluster details view
   expect(getByTestId('cluster-details-view')).toBeInTheDocument();
@@ -184,7 +184,7 @@ it(`redirects the user to clusters to list and shows flash message when cluster 
   const { getByTestId } = renderRouteWithStore(clusterDetailPath);
 
   // Expect we have been redirected to the clusters list.
-  await wait(() => expect(getByTestId('clusters-list')).toBeInTheDocument());
+  await waitFor(() => expect(getByTestId('clusters-list')).toBeInTheDocument());
 
   const flashMessage = document.querySelector('#noty_layout__topRight');
   expect(flashMessage).toContainHTML(
@@ -208,7 +208,9 @@ it('Cluster list shows all clusters, each one with its details, for the selected
   const { getAllByTestId, getByText } = renderRouteWithStore(clusterDetailPath);
 
   // Wait for the last elements to load.
-  await wait(() => expect(getAllByTestId('cluster-resources').length).toBe(2));
+  await waitFor(() =>
+    expect(getAllByTestId('cluster-resources').length).toBe(2)
+  );
 
   // Expect id, name and release version of both clusters are in view.
   expect(getByText(V4_CLUSTER.id)).toBeInTheDocument();
