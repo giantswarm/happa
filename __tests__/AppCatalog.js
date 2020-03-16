@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait, within } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -54,6 +54,9 @@ describe('Apps and App Catalog', () => {
       nock('https://catalogshost')
         .get('/helmstable/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const { findByText } = renderRouteWithStore(AppCatalogRoutes.Home);
 
@@ -96,6 +99,9 @@ describe('Apps and App Catalog', () => {
       nock('https://catalogshost')
         .get('/helmstable/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppList,
@@ -126,6 +132,9 @@ describe('Apps and App Catalog', () => {
         .reply(StatusCodes.Ok, catalogIndexResponse);
       nock('https://catalogshost')
         .get('/helmstable/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
@@ -179,6 +188,9 @@ describe('Apps and App Catalog', () => {
         .reply(StatusCodes.Ok, catalogIndexResponse);
       nock('https://catalogshost')
         .get('/helmstable/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
@@ -247,6 +259,9 @@ describe('Apps and App Catalog', () => {
         .reply(StatusCodes.Ok, catalogIndexResponse);
       nock('https://catalogshost')
         .get('/helmstable/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
@@ -472,7 +487,7 @@ describe('Apps and App Catalog', () => {
       deleteButton = getByText(/^delete configmap$/i);
       fireEvent.click(deleteButton);
 
-      await wait(() => {
+      await waitFor(() => {
         expect(queryByText(/delete configmap/i)).not.toBeInTheDocument();
       });
 
@@ -553,7 +568,7 @@ describe('Apps and App Catalog', () => {
         },
       });
 
-      await wait(() => {
+      await waitFor(() => {
         expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
       });
 
@@ -624,7 +639,7 @@ describe('Apps and App Catalog', () => {
       deleteButton = getByText(/^delete secret$/i);
       fireEvent.click(deleteButton);
 
-      await wait(() => {
+      await waitFor(() => {
         expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
       });
 
@@ -689,7 +704,7 @@ describe('Apps and App Catalog', () => {
       deleteButton = getByText(/delete app/i);
       fireEvent.click(deleteButton);
 
-      await wait(() => {
+      await waitFor(() => {
         expect(queryByText(/delete app/i)).not.toBeInTheDocument();
       });
 

@@ -1,4 +1,4 @@
-import { wait } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import nock from 'nock';
 
@@ -11,7 +11,7 @@ afterAll(() => {
 });
 
 afterEach(async () => {
-  await wait(() => {
+  await waitFor(() => {
     const done = nock.isDone();
 
     // Uncomment the next lines to debug hanging requests
