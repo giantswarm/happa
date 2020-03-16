@@ -39,7 +39,7 @@
     "@emotion/core": "10.0.28",
     "@emotion/styled": "10.0.27",
     "@khanacademy/react-multi-select": "0.3.3",
-    "@hot-loader/react-dom": "16.12.0",
+    "@hot-loader/react-dom": "16.13.0",
     "auth0-js": "9.12.2",
     "axios": "^0.19.2",
     "bluebird": "3.7.2",
