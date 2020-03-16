@@ -1,6 +1,10 @@
-import { waitFor } from '@testing-library/react';
+import { configure, waitFor } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import nock from 'nock';
+
+configure({
+  asyncUtilTimeout: 4500,
+});
 
 beforeAll(() => {
   nock.disableNetConnect();
