@@ -50,6 +50,7 @@ const makeAppReducer = () => {
         return;
       }
 
+      case types.REFRESH_USER_INFO_ERROR:
       case types.LOGIN_ERROR:
       case types.LOGOUT_SUCCESS:
       case types.LOGOUT_ERROR:
