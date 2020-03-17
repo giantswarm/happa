@@ -145,7 +145,7 @@ describe('ViewEditName', () => {
     expect(input).toBeInTheDocument();
   });
 
-  it('executes callbacks from props on events', () => {
+  it('executes callbacks from props on submit', () => {
     const onSubmitMock = jest.fn();
     const onToggleEditingStateMock = jest.fn();
 
@@ -167,6 +167,32 @@ describe('ViewEditName', () => {
     const submitButton = getByText(/ok/i);
     fireEvent.click(submitButton);
     expect(onSubmitMock).toHaveBeenCalledWith('some other value');
+
+    expect(onToggleEditingStateMock).toBeCalledWith(false);
+  });
+
+  it('executes callbacks from props on cancel', () => {
+    const onSubmitMock = jest.fn();
+    const onToggleEditingStateMock = jest.fn();
+
+    const { getByText, getByDisplayValue } = renderComponent({
+      onSubmit: onSubmitMock,
+      toggleEditingState: onToggleEditingStateMock,
+    });
+
+    const label = getByText(/some value/i);
+
+    // Click to edit
+    fireEvent.click(label);
+    expect(onToggleEditingStateMock).toBeCalledWith(true);
+    const input = getByDisplayValue(/some value/i);
+    fireEvent.change(input, {
+      target: { value: 'some other value' },
+    });
+
+    const submitButton = getByText(/cancel/i);
+    fireEvent.click(submitButton);
+    expect(onSubmitMock).not.toBeCalled();
 
     expect(onToggleEditingStateMock).toBeCalledWith(false);
   });
