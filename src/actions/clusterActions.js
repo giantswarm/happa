@@ -48,7 +48,7 @@ export function clustersList({ withLoadingFlags }) {
   return function(dispatch, getState) {
     if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
 
-    const provider = getState().app.info.general.provider;
+    const provider = getState().main.info.general.provider;
 
     // Fetch all clusters.
     return clustersApi
@@ -84,7 +84,7 @@ export function clustersDetails({
       dispatch({ type: types.CLUSTERS_DETAILS_REQUEST });
     }
 
-    const selectedOrganization = getState().app.selectedOrganization;
+    const selectedOrganization = getState().main.selectedOrganization;
     const allClusters = await getState().entities.clusters.items;
 
     // Remove deleted clusters from clusters array
@@ -141,7 +141,7 @@ export function clusterLoadDetails(
       // We don't want this action to overwrite nodepools except on initialization.
       if (isV5Cluster && initializeNodePools) cluster.nodePools = [];
 
-      const provider = getState().app.info.general.provider;
+      const provider = getState().main.info.general.provider;
       cluster.capabilities = computeCapabilities(
         cluster.release_version,
         provider
@@ -198,7 +198,7 @@ export function clusterLoadDetails(
 
         // Delete the cluster in the store.
         dispatch({
-          type: types.CLUSTER_DELETE_REQUEST,
+          type: types.CLUSTER_REMOVE_FROM_STORE,
           clusterId,
           isV5Cluster,
         });

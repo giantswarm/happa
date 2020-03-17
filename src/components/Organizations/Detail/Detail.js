@@ -1,16 +1,34 @@
 import * as types from 'actions/actionTypes';
 import Cluster from 'Cluster/Cluster';
+import { push } from 'connected-react-router';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import _ from 'underscore';
+import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import DetailView from './View';
 
 class DetailIndex extends React.Component {
   componentDidMount() {
+    if (!this.props.organization) {
+      const { dispatch, match } = this.props;
+      const { orgId } = match.params;
+
+      new FlashMessage(
+        `Organization <code>${orgId}</code> not found`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        'Please make sure the Organization ID is correct and that you have access to it.'
+      );
+
+      dispatch(push(OrganizationsRoutes.Home));
+
+      return;
+    }
+
     // Reset loading flag to true just in case we are accessing cluster details of a
     // cluster owned by a non selected organization. In those cases we want nothing
     // to be rendered until cluster details are fetched
@@ -29,27 +47,26 @@ class DetailIndex extends React.Component {
   }
 
   render() {
+    const { organization, match } = this.props;
+    if (!organization) {
+      return null;
+    }
+
     return (
       <Breadcrumb
         data={{
-          title: this.props.organization.id.toUpperCase(),
-          pathname: this.props.match.url,
+          title: organization.id.toUpperCase(),
+          pathname: match.url,
         }}
       >
         <Switch>
           <Route
             exact
-            path={`${this.props.match.path}`}
+            path={`${match.path}`}
             render={() => <DetailView {...this.props} />}
           />
-          <Route
-            component={Cluster}
-            path={`${this.props.match.path}/clusters`}
-          />
-          <Redirect
-            path={`${this.props.match.path}/*`}
-            to={`${this.props.match.url}`}
-          />
+          <Route component={Cluster} path={`${match.path}/clusters`} />
+          <Redirect path={`${match.path}/*`} to={`${match.url}`} />
         </Switch>
       </Breadcrumb>
     );
@@ -67,33 +84,25 @@ DetailIndex.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   const allClusters = state.entities.clusters.items;
-  let clusters = [];
 
-  clusters = _.filter(allClusters, cluster => {
-    return cluster.owner === ownProps.match.params.orgId;
-  });
+  const clusters = Object.values(allClusters).filter(
+    cluster => cluster.owner === ownProps.match.params.orgId
+  );
 
-  const membersForTable = state.entities.organizations.items[
-    ownProps.match.params.orgId
-  ].members.map(member => {
+  const organization =
+    state.entities.organizations.items[ownProps.match.params.orgId];
+  const membersForTable = organization?.members.map(member => {
     return Object.assign({}, member, {
       emailDomain: member.email.split('@')[1],
     });
   });
 
   return {
-    organization:
-      state.entities.organizations.items[ownProps.match.params.orgId],
-    membersForTable: membersForTable,
-    app: state.app,
-    clusters: clusters,
+    organization,
+    membersForTable,
+    app: state.main,
+    clusters,
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch: dispatch,
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(DetailIndex);
+export default connect(mapStateToProps)(DetailIndex);

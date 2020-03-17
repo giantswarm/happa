@@ -287,13 +287,13 @@ function mapStateToProps(state) {
   const invitationsAndUsers = users.concat(invitations);
 
   return {
-    currentUser: state.app.loggedInUser,
+    currentUser: state.main.loggedInUser,
     users: state.entities.users,
     invitations: state.entities.invitations,
     invitationsAndUsers: invitationsAndUsers,
     organizations: state.entities.organizations,
-    initialSelectedOrganizations: [state.app.selectedOrganization],
-    installation_name: state.app.info.general.installation_name,
+    initialSelectedOrganizations: [state.main.selectedOrganization],
+    installation_name: state.main.info.general.installation_name,
   };
 }
 

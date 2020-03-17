@@ -80,7 +80,8 @@ export function organizationsLoad() {
 
       const organizationsApi = new GiantSwarm.OrganizationsApi();
       const organizations = await organizationsApi.getOrganizations();
-      const currentlySelectedOrganization = getState().app.selectedOrganization;
+      const currentlySelectedOrganization = getState().main
+        .selectedOrganization;
 
       const organizationsWithDetails = await Promise.all(
         organizations.map(organization => {
@@ -233,8 +234,8 @@ export function organizationCreateConfirmed(orgId) {
     // don't actually have any user accounts in userd. So for admins,
     // we leave the members array empty.
     let members = [];
-    if (!getState().app.loggedInUser.isAdmin) {
-      members = [{ email: getState().app.loggedInUser.email }];
+    if (!getState().main.loggedInUser.isAdmin) {
+      members = [{ email: getState().main.loggedInUser.email }];
     }
 
     return organizationsApi
@@ -454,6 +455,12 @@ export function organizationCredentialsSet() {
     dispatch({
       type: types.ORGANIZATION_CREDENTIALS_SET,
     });
+  };
+}
+
+export function organizationCredentialsDiscard() {
+  return {
+    type: types.ORGANIZATION_CREDENTIALS_SET_DISCARD,
   };
 }
 

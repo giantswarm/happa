@@ -16,6 +16,7 @@ const Wrapper = styled.div`
     line-height: normal;
     padding: 8px 10px;
     width: auto;
+    height: 34px;
 
     .caret {
       margin-left: 10px;
@@ -41,11 +42,12 @@ const Header = styled.div`
   h5 {
     font-weight: bold;
     font-size: 14px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid ${props => props.theme.colors.shade2};
   }
 
   label {
+    padding-top: 10px;
+    border-top: 1px solid ${props => props.theme.colors.shade2};
+
     padding: 0px;
     cursor: pointer;
     font-weight: normal;
@@ -154,23 +156,25 @@ const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
                 <Header>
                   <h5>Switch Chart Version</h5>
 
-                  <label>
-                    <input
-                      name='includeTestVersions'
-                      type='checkbox'
-                      checked={includeTestVersions}
-                      onChange={handleSetIncludeTestVersions}
-                    />
-                    <a
-                      href='#'
-                      onClick={e => {
-                        e.preventDefault();
-                        toggleIncludeTestVersions();
-                      }}
-                    >
-                      Include test versions
-                    </a>
-                  </label>
+                  {versions?.some(v => v.test) && (
+                    <label>
+                      <input
+                        name='includeTestVersions'
+                        type='checkbox'
+                        checked={includeTestVersions}
+                        onChange={handleSetIncludeTestVersions}
+                      />
+                      <a
+                        href='#'
+                        onClick={e => {
+                          e.preventDefault();
+                          toggleIncludeTestVersions();
+                        }}
+                      >
+                        Include test versions
+                      </a>
+                    </label>
+                  )}
                 </Header>
 
                 <Body role='menu' data-testid='menu'>

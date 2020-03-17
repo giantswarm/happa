@@ -5,8 +5,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect, useDispatch } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { selectCanClusterUpgrade } from 'selectors/clusterSelectors';
-import cmp from 'semver-compare';
+import { selectTargetRelease } from 'selectors/clusterSelectors';
 import { AppRoutes } from 'shared/constants/routes';
 import _ from 'underscore';
 
@@ -77,44 +76,11 @@ ClusterDetail.propTypes = {
 function mapStateToProps(state, ownProps) {
   const clusterID = ownProps.match.params.clusterId;
   const cluster = state.entities.clusters.items[clusterID];
-  // eslint-disable-next-line init-declarations
-  let release;
-  // eslint-disable-next-line init-declarations
-  let targetReleaseVersion;
-  let isV5Cluster = false;
-
-  if (cluster) {
-    if (cluster.release_version && cluster.release_version !== '') {
-      release = state.entities.releases.items[cluster.release_version];
-    }
-
-    const activeReleases = _.filter(state.entities.releases.items, x => {
-      return x.active;
-    });
-
-    const availableVersions = activeReleases.map(x => x.version).sort(cmp);
-
-    // Guard against the release version of this cluster not being in the /v4/releases/
-    // response.
-    // This will ensure that Happa can calculate the target version for upgrade
-    // correctly.
-    if (availableVersions.indexOf(cluster.release_version) === -1) {
-      availableVersions.push(cluster.release_version);
-      availableVersions.sort(cmp);
-    }
-
-    if (
-      availableVersions.length >
-      availableVersions.indexOf(cluster.release_version)
-    ) {
-      targetReleaseVersion =
-        availableVersions[
-          availableVersions.indexOf(cluster.release_version) + 1
-        ];
-    }
-
-    isV5Cluster = state.entities.clusters.v5Clusters.includes(cluster.id);
-  }
+  const release = cluster
+    ? state.entities.releases.items[cluster.release_version]
+    : null;
+  const isV5Cluster = state.entities.clusters.v5Clusters.includes(clusterID);
+  const targetReleaseVersion = selectTargetRelease(state, cluster);
 
   return {
     credentials: state.entities.credentials,
@@ -123,16 +89,11 @@ function mapStateToProps(state, ownProps) {
     cluster: cluster,
     clusterId: ownProps.match.params.clusterId,
     nodePools: state.entities.nodePools.items,
-    provider: state.app.info.general.provider,
+    provider: state.main.info.general.provider,
     release: release,
-    canClusterUpgrade: selectCanClusterUpgrade(
-      state,
-      clusterID,
-      targetReleaseVersion
-    ),
     targetRelease: state.entities.releases.items[targetReleaseVersion],
-    user: state.app.loggedInUser,
-    region: state.app.info.general.datacenter,
+    user: state.main.loggedInUser,
+    region: state.main.info.general.datacenter,
     isV5Cluster,
   };
 }

@@ -366,7 +366,7 @@ function mapStateToProps(state, ownProps) {
   return {
     selectedCluster: selectedCluster,
     clusters: state.entities.clusters,
-    user: state.app.loggedInUser,
+    user: state.main.loggedInUser,
   };
 }
 

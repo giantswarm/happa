@@ -226,8 +226,9 @@ const KeyPairCreateModal = props => {
                     </p>
                     <div className='row'>
                       <div className='col-6'>
-                        <label>Common Name Prefix:</label>
+                        <label htmlFor='cnPrefix'>Common Name Prefix:</label>
                         <input
+                          id='cnPrefix'
                           autoFocus
                           onChange={handleCNPrefixChange}
                           type='text'
@@ -244,8 +245,9 @@ const KeyPairCreateModal = props => {
                         </div>
                       </div>
                       <div className='col-6'>
-                        <label>Organizations:</label>
+                        <label htmlFor='organizations'>Organizations:</label>
                         <input
+                          id='organizations'
                           onChange={handleCertificateOrganizationsChange}
                           type='text'
                           value={certificateOrganizations}
@@ -324,6 +326,7 @@ const KeyPairCreateModal = props => {
           case 'addKeyPairSuccess':
             return (
               <BootstrapModal
+                data-testid='create-key-pair-modal'
                 className='create-key-pair-modal--success'
                 onHide={close}
                 show={modal.visible}
@@ -363,7 +366,7 @@ const KeyPairCreateModal = props => {
 
                   {downloadAsFileLink()}
                 </BootstrapModal.Body>
-                <BootstrapModal.Footer>
+                <BootstrapModal.Footer data-testid='create-key-pair-modal-footer'>
                   <Button bsStyle='link' onClick={close}>
                     Close
                   </Button>

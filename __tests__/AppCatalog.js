@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait, within } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -37,6 +37,7 @@ describe('Apps and App Catalog', () => {
   describe('App Catalogs, Apps, Installing Apps', () => {
     it('renders all non internal app catalogs in the app catalogs overview', async () => {
       getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+      getMockCall('/v4/user/', userResponse);
       getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
       getMockCall(
         `/v4/clusters/${V4_CLUSTER.id}/status/`,
@@ -53,6 +54,9 @@ describe('Apps and App Catalog', () => {
         .reply(StatusCodes.Ok, catalogIndexResponse);
       nock('https://catalogshost')
         .get('/helmstable/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const { findByText } = renderRouteWithStore(AppCatalogRoutes.Home);
@@ -79,6 +83,7 @@ describe('Apps and App Catalog', () => {
 
     it('renders all apps in the app list for a given catalog', async () => {
       getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+      getMockCall('/v4/user/', userResponse);
       getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
       getMockCall(
         `/v4/clusters/${V4_CLUSTER.id}/status/`,
@@ -95,6 +100,9 @@ describe('Apps and App Catalog', () => {
         .reply(StatusCodes.Ok, catalogIndexResponse);
       nock('https://catalogshost')
         .get('/helmstable/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
@@ -126,6 +134,9 @@ describe('Apps and App Catalog', () => {
         .reply(StatusCodes.Ok, catalogIndexResponse);
       nock('https://catalogshost')
         .get('/helmstable/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
@@ -179,6 +190,9 @@ describe('Apps and App Catalog', () => {
         .reply(StatusCodes.Ok, catalogIndexResponse);
       nock('https://catalogshost')
         .get('/helmstable/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
@@ -247,6 +261,9 @@ describe('Apps and App Catalog', () => {
         .reply(StatusCodes.Ok, catalogIndexResponse);
       nock('https://catalogshost')
         .get('/helmstable/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
         .reply(StatusCodes.Ok, catalogIndexResponse);
 
       const appCatalogListPath = RoutePath.createUsablePath(
@@ -333,6 +350,10 @@ describe('Apps and App Catalog', () => {
 
   describe('App Detail Pane', () => {
     it('updates the config map of an already installed app', async () => {
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
@@ -375,12 +396,9 @@ describe('Apps and App Catalog', () => {
       const appsTab = await findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
-      // Click on app details button to open the editing modal
-      const appLabel = getByText(/app version: 0.0.1/i);
-      const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
-        'button'
-      );
-      fireEvent.click(appDetailsButton);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
       // Delete the existing file
       const fileInputPlaceholder = getByText(/configmap has been set/i);
@@ -408,6 +426,10 @@ describe('Apps and App Catalog', () => {
     });
 
     it('deletes the config map of an already installed app', async () => {
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
@@ -452,12 +474,9 @@ describe('Apps and App Catalog', () => {
       const appsTab = await findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
-      // Click on app details button to open the editing modal
-      const appLabel = getByText(/app version: 0.0.1/i);
-      const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
-        'button'
-      );
-      fireEvent.click(appDetailsButton);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
       // Upload a configmap file
       const fileInputPlaceholder = getByText(/configmap has been set/i);
@@ -470,7 +489,7 @@ describe('Apps and App Catalog', () => {
       deleteButton = getByText(/^delete configmap$/i);
       fireEvent.click(deleteButton);
 
-      await wait(() => {
+      await waitFor(() => {
         expect(queryByText(/delete configmap/i)).not.toBeInTheDocument();
       });
 
@@ -478,6 +497,10 @@ describe('Apps and App Catalog', () => {
     });
 
     it('updates secrets of an already installed app', async () => {
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
@@ -522,12 +545,9 @@ describe('Apps and App Catalog', () => {
       const appsTab = await findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
-      // Click on app details button to open the editing modal
-      const appLabel = getByText(/app version: 0.0.1/i);
-      const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
-        'button'
-      );
-      fireEvent.click(appDetailsButton);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
       // Upload a secrets file
       const fileInputPlaceholder = getByText(/secret has been set/i);
@@ -550,7 +570,7 @@ describe('Apps and App Catalog', () => {
         },
       });
 
-      await wait(() => {
+      await waitFor(() => {
         expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
       });
 
@@ -558,6 +578,10 @@ describe('Apps and App Catalog', () => {
     });
 
     it('deletes secrets of an already installed app', async () => {
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
@@ -602,12 +626,9 @@ describe('Apps and App Catalog', () => {
       const appsTab = await findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
-      // Click on app details button to open the editing modal
-      const appLabel = getByText(/app version: 0.0.1/i);
-      const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
-        'button'
-      );
-      fireEvent.click(appDetailsButton);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
       // Delete the existing file
       const fileInputPlaceholder = getByText(/secret has been set/i);
@@ -620,7 +641,7 @@ describe('Apps and App Catalog', () => {
       deleteButton = getByText(/^delete secret$/i);
       fireEvent.click(deleteButton);
 
-      await wait(() => {
+      await waitFor(() => {
         expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
       });
 
@@ -628,6 +649,10 @@ describe('Apps and App Catalog', () => {
     });
 
     it('deletes already installed app', async () => {
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
+
       nock(API_ENDPOINT)
         .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/`, 'DELETE')
         .reply(StatusCodes.Ok);
@@ -646,9 +671,14 @@ describe('Apps and App Catalog', () => {
         v4AWSClusterStatusResponse,
         2
       );
-      getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse, 2);
       getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
       getMockCall('/v4/releases/', releasesResponse);
+
+      // Before deleting the app, there are apps.
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
+
+      // After deleting the app, there are no apps.
+      getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
 
       const clusterDetailPath = RoutePath.createUsablePath(
         OrganizationsRoutes.Clusters.Detail,
@@ -664,12 +694,9 @@ describe('Apps and App Catalog', () => {
       const appsTab = await findByText(/^apps$/i);
       fireEvent.click(appsTab);
 
-      // Click on app details button to open the editing modal
-      const appLabel = getByText(/app version: 0.0.1/i);
-      const appDetailsButton = appLabel.parentNode.parentNode.querySelector(
-        'button'
-      );
-      fireEvent.click(appDetailsButton);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
       // Delete the app
       let deleteButton = getByText(/delete app/i);
@@ -679,7 +706,7 @@ describe('Apps and App Catalog', () => {
       deleteButton = getByText(/delete app/i);
       fireEvent.click(deleteButton);
 
-      await wait(() => {
+      await waitFor(() => {
         expect(queryByText(/delete app/i)).not.toBeInTheDocument();
       });
 

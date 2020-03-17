@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { AppRoutes } from 'shared/constants/routes';
@@ -88,5 +88,5 @@ it('the get started button does not show up if the cluster is older than 30 days
   await findByText(V4_CLUSTER.id);
   expect(queryByText('Get Started')).not.toBeInTheDocument();
 
-  await wait(() => expect(nock.isDone()).toBeTruthy());
+  await waitFor(() => expect(nock.isDone()).toBeTruthy());
 });
