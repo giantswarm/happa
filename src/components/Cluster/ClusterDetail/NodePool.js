@@ -14,6 +14,21 @@ import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';
 import ScaleNodePoolModal from './ScaleNodePoolModal';
 
+const NPViewAndEditName = styled(ViewAndEditName)`
+  input[type='text'] {
+    font-size: 15px;
+    line-height: 1.8em;
+    margin-bottom: 0;
+  }
+  .btn-group {
+    top: 0;
+  }
+  button {
+    font-size: 13px;
+    padding: 4px 10px;
+  }
+`;
+
 const NodesWrapper = styled.div`
   width: 36px;
   height: 30px;
@@ -108,13 +123,12 @@ class NodePool extends Component {
         <NameWrapperDiv
           style={{ gridColumn: isNameBeingEdited ? '2 / 9' : null }}
         >
-          <ViewAndEditName
-            cssClass='np'
-            entity={nodePool}
-            entityType='node pool'
+          <NPViewAndEditName
+            name={nodePool.name}
+            type='node pool'
             onSubmit={this.editNodePoolName}
             ref={viewEditName => (this.viewEditNameRef = viewEditName)}
-            toggleEditingState={this.toggleEditingState}
+            onToggleEditingState={this.toggleEditingState}
           />
         </NameWrapperDiv>
         {/* Hide the rest of fields when editing name */}

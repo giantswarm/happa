@@ -11,103 +11,89 @@ const MIN_NAME_LENGTH = 3;
 
 const FormWrapper = styled.div`
   display: inline-block;
+
   form {
     display: inline-block;
   }
-  input[type='text'] {
+
+  .btn-group {
+    float: none;
+    margin-left: 4px;
+    top: -2px;
+  }
+`;
+
+const NameInput = styled.input`
+  &[type='text'] {
     display: inline-block;
     padding: 0px 5px;
     width: 320px;
     margin-right: 5px;
     font-size: 85%;
   }
-  .btn[type='submit'] {
-    display: inline;
-  }
-  .btn-group {
-    float: none;
-    margin-left: 4px;
-    top: -2px;
-  }
-  /* Node Pools specific styles */
-  &.np {
-    input[type='text'] {
-      font-size: 15px;
-      line-height: 1.8em;
-      margin-bottom: 0;
-    }
-    .btn-group {
-      top: 0;
-    }
-    button {
-      font-size: 13px;
-      padding: 4px 10px;
-    }
-  }
 `;
 
-const LinkWrapper = styled.span`
-  a:hover {
+const NameLabel = styled.a`
+  &:hover {
     text-decoration-style: dotted;
     color: #fff;
   }
 `;
 
 /**
- * ViewAndEditName is a widget to display and edit an entity (cluster or node pool)
- *  name in the same place. It renders as inline-block.
+ * A widget to display and edit an entity
+ * name in the same place.
  */
 class ViewAndEditName extends React.Component {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.value === null && nextProps.name !== prevState.value) {
+      return { value: nextProps.name };
+    }
+
+    return null;
+  }
+
   state = {
-    // editing is true while the widget is in edit mode.
     editing: false,
-    // name is a copy of the actual entity name and the value rendered
-    name: this.props.entity.name,
-    // inputFieldValue is what the input field currently holds
-    inputFieldValue: this.props.entity.name,
+    value: null,
   };
 
   componentDidUpdate(prevProps) {
-    const { name } = this.props.entity;
-
-    // If the name provided by the parent component is different than the name in
-    // local state, it means that the patch call has failed, so we revert this.state.name
-    // TODO Is this too convoluted? Should we remove optimistic update?
-    if (prevProps.entity.name !== name) {
+    if (!this.state.editing && this.props.name !== prevProps.name) {
       this.setState({
-        name,
-        inputFieldValue: name,
+        value: this.props.name,
       });
     }
   }
 
-  activateEditMode = () => {
+  toggleEditMode(state, additionalState) {
     this.setState({
-      editing: true,
+      editing: state,
+      ...additionalState,
     });
 
-    const { toggleEditingState } = this.props;
-    if (toggleEditingState) toggleEditingState(true);
+    const { onToggleEditingState } = this.props;
+    // eslint-disable-next-line no-unused-expressions
+    onToggleEditingState?.(state);
+  }
+
+  activateEditMode = () => {
+    this.toggleEditMode(true);
   };
 
-  deactivateEditMode = () => {
-    this.setState({
-      editing: false,
+  handleCancel = () => {
+    this.toggleEditMode(false, {
+      value: this.props.name,
     });
-
-    const { toggleEditingState } = this.props;
-    if (toggleEditingState) toggleEditingState(false);
   };
 
   handleChange = e => {
-    this.setState({ inputFieldValue: e.target.value });
+    this.setState({ value: e.target.value });
   };
 
   handleSubmit = e => {
     // eslint-disable-next-line no-unused-expressions
     e?.preventDefault();
-
-    const { onSubmit, toggleEditingState } = this.props;
 
     const validationResult = this.validate();
     if (!validationResult.valid) {
@@ -120,24 +106,15 @@ class ViewAndEditName extends React.Component {
       return;
     }
 
-    this.setState(
-      prevState => ({
-        editing: false,
-        name: prevState.inputFieldValue,
-      }),
-      () => {
-        // eslint-disable-next-line no-unused-expressions
-        toggleEditingState?.(false);
-        // eslint-disable-next-line no-unused-expressions
-        onSubmit?.(this.state.inputFieldValue);
-      }
-    );
+    this.toggleEditMode(false);
+    // eslint-disable-next-line no-unused-expressions
+    this.props.onSubmit?.(this.state.value);
   };
 
   handleKey = e => {
     switch (e.key) {
       case 'Escape':
-        this.deactivateEditMode();
+        this.handleCancel();
 
         break;
 
@@ -148,70 +125,73 @@ class ViewAndEditName extends React.Component {
     }
   };
 
-  validate = () => {
-    const { inputFieldValue } = this.state;
+  validate() {
+    const { value } = this.state;
 
     const result = {
       valid: true,
       error: '',
     };
 
-    if (inputFieldValue.length < MIN_NAME_LENGTH) {
+    if (value.length < MIN_NAME_LENGTH) {
       result.valid = false;
       result.error = 'Please use a name with at least 3 characters';
     }
 
     return result;
-  };
+  }
 
-  render = () => {
+  render() {
+    const { type, name, onSubmit, onToggleEditingState, ...rest } = this.props;
+
     if (this.state.editing) {
-      // edit mode
+      // Edit mode
       return (
-        <FormWrapper className={this.props.cssClass}>
+        <FormWrapper {...rest}>
           <form className='form' onSubmit={this.handleSubmit}>
-            <input
+            <NameInput
+              type='text'
               autoComplete='off'
-              autoFocus
+              autoFocus={true}
               onChange={this.handleChange}
               onKeyUp={this.handleKey}
-              type='text'
-              value={this.state.inputFieldValue}
+              value={this.state.value}
             />
             <div className='btn-group'>
               <Button type='submit'>OK</Button>
-              <Button onClick={this.deactivateEditMode}>Cancel</Button>
+              <Button onClick={this.handleCancel}>Cancel</Button>
             </div>
           </form>
         </FormWrapper>
       );
     }
 
-    // view mode
+    // View mode
     return (
-      <LinkWrapper>
+      <span>
         <OverlayTrigger
-          overlay={
-            <Tooltip id='tooltip'>
-              Click to edit {this.props.entityType} name
-            </Tooltip>
-          }
+          overlay={<Tooltip id='tooltip'>Click to edit {type} name</Tooltip>}
           placement='top'
         >
-          <a onClick={this.activateEditMode}>{this.state.name}</a>
+          <NameLabel onClick={this.activateEditMode}>
+            {this.state.value}
+          </NameLabel>
         </OverlayTrigger>
-      </LinkWrapper>
+      </span>
     );
-  };
+  }
 }
 
 ViewAndEditName.propTypes = {
-  cssClass: PropTypes.string,
-  entity: PropTypes.object,
-  // Used by flash message and tooltip.
-  entityType: PropTypes.string,
+  name: PropTypes.string,
+  type: PropTypes.string,
   onSubmit: PropTypes.func,
-  toggleEditingState: PropTypes.func,
+  onToggleEditingState: PropTypes.func,
+};
+
+ViewAndEditName.defaultProps = {
+  name: '',
+  type: '',
 };
 
 export default React.forwardRef((props, ref) => (

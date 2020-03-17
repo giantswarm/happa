@@ -11,8 +11,8 @@ const renderComponent = (props = {}) => {
   const propsWithDefault = Object.assign(
     {},
     {
-      entity: defaultEntity,
-      entityType: defaultEntity.type,
+      name: defaultEntity.name,
+      type: defaultEntity.type,
     },
     props
   );
@@ -151,7 +151,7 @@ describe('ViewEditName', () => {
 
     const { getByText, getByDisplayValue } = renderComponent({
       onSubmit: onSubmitMock,
-      toggleEditingState: onToggleEditingStateMock,
+      onToggleEditingState: onToggleEditingStateMock,
     });
 
     const label = getByText(/some value/i);
@@ -177,7 +177,7 @@ describe('ViewEditName', () => {
 
     const { getByText, getByDisplayValue } = renderComponent({
       onSubmit: onSubmitMock,
-      toggleEditingState: onToggleEditingStateMock,
+      onToggleEditingState: onToggleEditingStateMock,
     });
 
     const label = getByText(/some value/i);
