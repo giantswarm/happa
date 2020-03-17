@@ -20,14 +20,14 @@ function ClusterDashboardResourcesV5({
   resources,
 }) {
   const { memory, cores, numberOfNodes } = resources;
-  const hasNodePools = cluster?.nodePools && cluster.nodePools.length !== 0;
+  const hasNodePools = numberOfNodes !== 0 && cluster?.nodePools?.length > 0;
   const loading = loadingClusters || loadingStatus || loadingNodePools;
 
   if (loading) return <ClusterDashboardLoadingPlaceholder isV5Cluster={true} />;
 
   return (
     <div data-testid='cluster-resources'>
-      {numberOfNodes !== 0 && hasNodePools && (
+      {hasNodePools && (
         <RefreshableLabel value={numberOfNodes}>
           <span>{cluster.nodePools.length} node pools, </span>
         </RefreshableLabel>
@@ -38,7 +38,7 @@ function ClusterDashboardResourcesV5({
           createDate={cluster.create_date}
         />
       </RefreshableLabel>
-      {numberOfNodes !== 0 && hasNodePools && (
+      {hasNodePools && (
         <>
           <Dot style={{ paddingLeft: 0 }} />
           <RefreshableLabel value={cores}>
