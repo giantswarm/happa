@@ -37,6 +37,7 @@ describe('Apps and App Catalog', () => {
   describe('App Catalogs, Apps, Installing Apps', () => {
     it('renders all non internal app catalogs in the app catalogs overview', async () => {
       getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+      getMockCall('/v4/user/', userResponse);
       getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
       getMockCall(
         `/v4/clusters/${V4_CLUSTER.id}/status/`,
@@ -82,6 +83,7 @@ describe('Apps and App Catalog', () => {
 
     it('renders all apps in the app list for a given catalog', async () => {
       getMockCallTimes('/v4/appcatalogs/', appCatalogsResponse, 2);
+      getMockCall('/v4/user/', userResponse);
       getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
       getMockCall(
         `/v4/clusters/${V4_CLUSTER.id}/status/`,

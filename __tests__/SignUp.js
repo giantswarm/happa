@@ -24,6 +24,7 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
 describe('Signup', () => {
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/clusters/');
     getMockCall('/v4/organizations/');
