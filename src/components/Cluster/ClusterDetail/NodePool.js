@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import { spinner } from 'images';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -68,28 +67,13 @@ class NodePool extends Component {
   editNodePoolName = name => {
     const { cluster, nodePool } = this.props;
 
-    return new Promise((resolve, reject) => {
-      // Early return in case the name is not changed.
-      if (nodePool.name === name) return resolve();
-
-      return this.props
-        .dispatch(nodePoolActions.nodePoolPatch(cluster.id, nodePool, { name }))
-        .then(() => {
-          new FlashMessage(
-            'Succesfully edited node pool name.',
-            messageType.SUCCESS,
-            messageTTL.MEDIUM
-          );
-
-          return resolve();
-        })
-        .catch(error => {
-          // eslint-disable-next-line no-console
-          console.error(error);
-
-          return reject(error);
-        });
-    });
+    try {
+      this.props.dispatch(
+        nodePoolActions.nodePoolPatch(cluster.id, nodePool, { name })
+      );
+    } catch {
+      // Do nothing on purpose, flash message is already displayed inside the action
+    }
   };
 
   deleteNodePool = () => {

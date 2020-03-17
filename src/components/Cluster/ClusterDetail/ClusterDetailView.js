@@ -192,23 +192,13 @@ class ClusterDetailView extends React.Component {
   };
 
   editClusterName = value => {
-    return new Promise((resolve, reject) => {
-      this.props
-        .dispatch(
-          clusterActions.clusterPatch(this.props.cluster, { name: value })
-        )
-        .then(() => {
-          new FlashMessage(
-            'Succesfully edited cluster name.',
-            messageType.SUCCESS,
-            messageTTL.MEDIUM
-          );
-          resolve();
-        })
-        .catch(error => {
-          reject(error);
-        });
-    });
+    try {
+      this.props.dispatch(
+        clusterActions.clusterPatch(this.props.cluster, { name: value })
+      );
+    } catch {
+      // Do nothing on purpose, flash message is already displayed inside the action
+    }
   };
 
   render() {
