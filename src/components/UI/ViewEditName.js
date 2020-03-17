@@ -68,8 +68,6 @@ class ViewAndEditName extends React.Component {
     inputFieldValue: this.props.entity.name,
   };
 
-  nameInputRef = React.createRef();
-
   componentDidUpdate(prevProps) {
     const { name } = this.props.entity;
 
@@ -102,20 +100,19 @@ class ViewAndEditName extends React.Component {
     if (toggleEditingState) toggleEditingState(false);
   };
 
-  handleChange = () => {
-    this.setState({ inputFieldValue: this.nameInputRef.current.value });
+  handleChange = e => {
+    this.setState({ inputFieldValue: e.target.value });
   };
 
   handleSubmit = evt => {
     evt.preventDefault();
 
-    const { onSubmit } = this.props;
-    const inputFieldValue = this.nameInputRef.current.value;
+    const { onSubmit, toggleEditingState } = this.props;
 
-    const validate = this.validate();
-    if (typeof validate === 'object') {
+    const validationResult = this.validate();
+    if (!validationResult.valid) {
       new FlashMessage(
-        `Error: ${validate.error}`,
+        `Error: ${validationResult.error}`,
         messageType.ERROR,
         messageTTL.MEDIUM
       );
@@ -123,16 +120,17 @@ class ViewAndEditName extends React.Component {
       return;
     }
 
-    this.setState({
-      editing: false,
-      name: inputFieldValue,
-    });
-
-    const { toggleEditingState } = this.props;
-    if (toggleEditingState) toggleEditingState(false);
-
-    // Moved setState() out of then() to avoid setting state in an unmounted component
-    onSubmit(inputFieldValue);
+    this.setState(
+      prevState => ({
+        editing: false,
+        name: prevState.inputFieldValue,
+      }),
+      () => {
+        // eslint-disable-next-line no-unused-expressions
+        toggleEditingState?.(false);
+        onSubmit(this.state.inputFieldValue);
+      }
+    );
   };
 
   handleKey = evt => {
@@ -144,14 +142,19 @@ class ViewAndEditName extends React.Component {
   };
 
   validate = () => {
-    if (this.nameInputRef.current.value.length < MIN_NAME_LENGTH) {
-      return {
-        valid: false,
-        error: 'Please use a name with at least 3 characters',
-      };
+    const { inputFieldValue } = this.state;
+
+    const result = {
+      valid: true,
+      error: '',
+    };
+
+    if (inputFieldValue.length < MIN_NAME_LENGTH) {
+      result.valid = false;
+      result.error = 'Please use a name with at least 3 characters';
     }
 
-    return true;
+    return result;
   };
 
   render = () => {
@@ -165,7 +168,6 @@ class ViewAndEditName extends React.Component {
               autoFocus
               onChange={this.handleChange}
               onKeyUp={this.handleKey}
-              ref={this.nameInputRef}
               type='text'
               value={this.state.inputFieldValue}
             />
