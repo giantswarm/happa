@@ -21,7 +21,8 @@ import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
-import ClusterDashboardResources from './ClusterDashboardResources';
+import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
+import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';
 import UpgradeNotice from './UpgradeNotice';
 
 const WrapperStyles = props => css`
@@ -71,6 +72,13 @@ const ButtonsWrapper = styled.div`
 
 const DeleteDateWrapper = styled.div`
   color: ${props => props.theme.colors.darkBlueLighter5};
+`;
+
+const ClusterDetailsDiv = styled.div`
+  height: 27px;
+  img {
+    height: 22px;
+  }
 `;
 
 function ClusterDashboardItem({
@@ -165,12 +173,18 @@ function ClusterDashboardItem({
           Created {relativeDate(cluster.create_date)}
         </div>
 
+        {/* Cluster resources */}
         <ErrorFallback errors={nodePoolsLoadError}>
-          <ClusterDashboardResources
-            cluster={cluster}
-            nodePools={nodePools}
-            isV5Cluster={isV5Cluster}
-          />
+          <ClusterDetailsDiv>
+            {isV5Cluster ? (
+              <ClusterDashboardResourcesV5
+                cluster={cluster}
+                nodePools={nodePools}
+              />
+            ) : (
+              <ClusterDashboardResourcesV4 cluster={cluster} />
+            )}
+          </ClusterDetailsDiv>
         </ErrorFallback>
       </ContentWrapper>
 
