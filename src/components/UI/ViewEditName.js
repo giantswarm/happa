@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import { connect } from 'react-redux';
 
 import Button from './Button';
 
@@ -208,6 +207,4 @@ ViewAndEditName.propTypes = {
   toggleEditingState: PropTypes.func,
 };
 
-export default connect(undefined, undefined, undefined, { forwardRef: true })(
-  ViewAndEditName
-);
+export default ViewAndEditName;
