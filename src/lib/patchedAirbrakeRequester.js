@@ -12,15 +12,15 @@ export class Requester {
   }
 
   request = req => {
-    if (!this.store.getState().app.loggedInUser) {
+    if (!this.store.getState().main.loggedInUser) {
       const err = new Error(
         `user is not logged in yet, unable to report error to GS API`
       );
       throw err;
     }
 
-    const scheme = this.store.getState().app.loggedInUser.auth.scheme;
-    const token = this.store.getState().app.loggedInUser.auth.token;
+    const scheme = this.store.getState().main.loggedInUser.auth.scheme;
+    const token = this.store.getState().main.loggedInUser.auth.token;
     const authHeader = `${scheme} ${token}`;
 
     const opt = {

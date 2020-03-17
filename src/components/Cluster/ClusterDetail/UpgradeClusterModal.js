@@ -204,6 +204,7 @@ class UpgradeClusterModal extends React.Component {
     this.setState(
       {
         loading: true,
+        page: 'closing',
       },
       () => {
         const targetReleaseVersion = this.props.targetRelease.version;

@@ -572,7 +572,7 @@ CreateNodePoolsCluster.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { availability_zones: AZ } = state.app.info.general;
+  const { availability_zones: AZ } = state.main.info.general;
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
   // eslint-disable-next-line no-magic-numbers
@@ -580,17 +580,16 @@ function mapStateToProps(state) {
   const minAZ = 1;
   const defaultAZ = AZ.default;
 
-  const selectedOrganization = state.app.selectedOrganization;
-  const provider = state.app.info.general.provider;
-  const clusterCreationStats = state.app.info.stats.cluster_creation_duration;
+  const provider = state.main.info.general.provider;
+  const clusterCreationStats = state.main.info.stats.cluster_creation_duration;
 
   // eslint-disable-next-line init-declarations
   let defaultInstanceType;
   if (
-    state.app.info.workers.instance_type &&
-    state.app.info.workers.instance_type.default
+    state.main.info.workers.instance_type &&
+    state.main.info.workers.instance_type.default
   ) {
-    defaultInstanceType = state.app.info.workers.instance_type.default;
+    defaultInstanceType = state.main.info.workers.instance_type.default;
   } else {
     defaultInstanceType = 'm3.large';
   }
@@ -601,7 +600,7 @@ function mapStateToProps(state) {
 
   const allowedInstanceTypes =
     provider === Providers.AWS
-      ? state.app.info.workers.instance_type.options
+      ? state.main.info.workers.instance_type.options
       : [];
 
   return {
@@ -612,7 +611,6 @@ function mapStateToProps(state) {
     defaultCPUCores,
     defaultMemorySize,
     defaultDiskSize,
-    selectedOrganization,
     clusterCreationStats,
     minAZ,
     maxAZ,

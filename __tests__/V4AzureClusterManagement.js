@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -67,7 +67,7 @@ describe('V4AzureClusterManagement', () => {
       clusterDetailPath
     );
 
-    await wait(() => {
+    await waitFor(() => {
       expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
     });
     expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
@@ -83,7 +83,7 @@ describe('V4AzureClusterManagement', () => {
       status: v4AzureClusterStatusResponse,
     }).toString();
 
-    await wait(() => {
+    await waitFor(() => {
       expect(getByText('Nodes').nextSibling.textContent).toBe(nodesRunning);
     });
 
@@ -159,7 +159,7 @@ describe('V4AzureClusterManagement', () => {
     const {
       default: defaultAZCount,
       max: maxAZCount,
-    } = azureInfoResponse.general.availability_zones;
+    } = azureInfoResponse.data.general.availability_zones;
 
     const azLabel = await findByText(/number of availability zones to use:/i);
     expect(azLabel).toBeInTheDocument();
@@ -190,7 +190,8 @@ describe('V4AzureClusterManagement', () => {
     const successMessage = await findByText(/is being created/i);
     expect(successMessage).toBeInTheDocument();
 
-    await waitForDomChange();
+    // eslint-disable-next-line no-empty-function
+    await waitFor(() => {});
   });
 
   it(`shows the v4 Azure cluster scaling modal when the button is clicked with default values and

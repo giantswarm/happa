@@ -38,3 +38,6 @@ export * from './catalogIndex';
 
 // User Invites
 export * from './invites';
+
+// Keypairs
+export * from './keypairs';

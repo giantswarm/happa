@@ -48,7 +48,7 @@ export function logoutError(errorMessage) {
 export function refreshUserInfo() {
   return function(dispatch, getState) {
     const usersApi = new GiantSwarm.UsersApi();
-    const loggedInUser = getState().app.loggedInUser;
+    const loggedInUser = getState().main.loggedInUser;
 
     if (!loggedInUser) {
       dispatch({
@@ -76,8 +76,11 @@ export function refreshUserInfo() {
             messageType.WARNING,
             messageTTL.MEDIUM
           );
+          const redirectPath = loggedInUser.isAdmin
+            ? AppRoutes.AdminLogin
+            : AppRoutes.Login;
 
-          dispatch(push(AppRoutes.Login));
+          dispatch(push(redirectPath));
         } else {
           new FlashMessage(
             'Something went wrong while trying to load user and organization information.',
@@ -179,8 +182,8 @@ export function giantswarmLogout() {
   return function(dispatch, getState) {
     let authToken = null;
 
-    if (getState().app.loggedInUser) {
-      authToken = getState().app.loggedInUser.auth.token;
+    if (getState().main.loggedInUser) {
+      authToken = getState().main.loggedInUser.auth.token;
     }
 
     const authTokensApi = new GiantSwarm.AuthTokensApi();
@@ -248,11 +251,11 @@ export function getInfo() {
         getState()
       );
       const httpClient = new GiantSwarmClient(authToken, authScheme);
-      const info = await getInstallationInfo(httpClient);
+      const infoRes = await getInstallationInfo(httpClient);
 
       dispatch({
         type: types.INFO_LOAD_SUCCESS,
-        info: info,
+        info: infoRes.data,
       });
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -260,7 +263,7 @@ export function getInfo() {
 
       dispatch({
         type: types.INFO_LOAD_ERROR,
-        error: error,
+        error: error.data,
       });
 
       throw error;

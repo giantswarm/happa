@@ -1,7 +1,7 @@
 export const appCatalogsResponse = [
   {
     metadata: {
-      name: 'giantswarm',
+      name: 'giantswarm-internal',
       labels: {
         'app-operator.giantswarm.io/version': '1.0.0',
         'application.giantswarm.io/catalog-type': 'internal',
@@ -13,7 +13,7 @@ export const appCatalogsResponse = [
       logoURL: '/images/repo_icons/giantswarm.png',
       storage: {
         type: 'helm',
-        URL: 'https://catalogshost/giantswarm-catalog/',
+        URL: 'https://catalogshost/giantswarm-internal-catalog/',
       },
     },
   },
@@ -32,6 +32,25 @@ export const appCatalogsResponse = [
       storage: {
         type: 'helm',
         URL: 'https://catalogshost/giantswarm-incubator-catalog/',
+      },
+    },
+  },
+  {
+    metadata: {
+      name: 'giantswarm',
+      labels: {
+        'app-operator.giantswarm.io/version': '1.0.0',
+        'application.giantswarm.io/catalog-type': 'stable',
+      },
+    },
+    spec: {
+      title: 'Giant Swarm',
+      description:
+        'This catalog holds stable versions of the apps in Giant Swarm.',
+      logoURL: '/images/repo_icons/incubator.png',
+      storage: {
+        type: 'helm',
+        URL: 'https://catalogshost/giantswarm-catalog/',
       },
     },
   },
