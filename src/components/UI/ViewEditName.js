@@ -103,8 +103,9 @@ class ViewAndEditName extends React.Component {
     this.setState({ inputFieldValue: e.target.value });
   };
 
-  handleSubmit = evt => {
-    evt.preventDefault();
+  handleSubmit = e => {
+    // eslint-disable-next-line no-unused-expressions
+    e?.preventDefault();
 
     const { onSubmit, toggleEditingState } = this.props;
 
@@ -127,16 +128,23 @@ class ViewAndEditName extends React.Component {
       () => {
         // eslint-disable-next-line no-unused-expressions
         toggleEditingState?.(false);
-        onSubmit(this.state.inputFieldValue);
+        // eslint-disable-next-line no-unused-expressions
+        onSubmit?.(this.state.inputFieldValue);
       }
     );
   };
 
-  handleKey = evt => {
-    // 27 = Escape key
-    // eslint-disable-next-line no-magic-numbers
-    if (evt.keyCode === 27) {
-      this.deactivateEditMode();
+  handleKey = e => {
+    switch (e.key) {
+      case 'Escape':
+        this.deactivateEditMode();
+
+        break;
+
+      case 'Enter':
+        this.handleSubmit();
+
+        break;
     }
   };
 
@@ -199,7 +207,6 @@ class ViewAndEditName extends React.Component {
 
 ViewAndEditName.propTypes = {
   cssClass: PropTypes.string,
-  dispatch: PropTypes.func,
   entity: PropTypes.object,
   // Used by flash message and tooltip.
   entityType: PropTypes.string,
@@ -207,4 +214,6 @@ ViewAndEditName.propTypes = {
   toggleEditingState: PropTypes.func,
 };
 
-export default ViewAndEditName;
+export default React.forwardRef((props, ref) => (
+  <ViewAndEditName ref={ref} {...props} />
+));
