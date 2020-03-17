@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
@@ -18,7 +18,7 @@ import { renderRouteWithStore } from 'testUtils/renderUtils';
 it('renders the login page at /login', async () => {
   const { getByText } = renderRouteWithStore(AppRoutes.Login, {}, {});
 
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText('Log in to Giant Swarm')).toBeInTheDocument();
   });
 });
@@ -64,7 +64,7 @@ it('redirects to / and shows the layout after a succesful login', async () => {
   fireEvent.click(button);
 
   // Then I should be logged in and see the home page with no orgs or clusters.
-  await wait(() => {
+  await waitFor(() => {
     // Verify we are now on the layout page and I can see my username
     expect(getByText(/developer@giantswarm.io/i)).toBeInTheDocument();
     expect(getByText(/Welcome to Giant Swarm!/i)).toBeInTheDocument();
@@ -93,7 +93,7 @@ it('tells the user to give a password if they leave it blank', async () => {
   fireEvent.click(button);
 
   // Then I should see a message reminding me not to leave my password blank.
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText(/Please enter your password./i)).toBeInTheDocument();
   });
 });
@@ -115,7 +115,7 @@ it('tells the user to give a email if they leave it blank', async () => {
   fireEvent.click(button);
 
   // Then I should see a message reminding me not to leave my password blank.
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText(/Please provide the email/i)).toBeInTheDocument();
   });
 });
@@ -154,7 +154,7 @@ it('shows an error if the user logs in with invalid credentials', async () => {
   fireEvent.click(button);
 
   // Then I should see a message reminding me not to leave my password blank.
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText(/Could not log in/i)).toBeInTheDocument();
   });
 

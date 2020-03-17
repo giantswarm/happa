@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, waitForDomChange } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -293,7 +293,8 @@ describe('PasswordReset', () => {
       const passwordInput = await findByLabelText(/new password/i);
       expect(passwordInput).toBeInTheDocument();
 
-      await waitForDomChange();
+      // eslint-disable-next-line no-empty-function
+      await waitFor(() => {});
     });
   });
 });

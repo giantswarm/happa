@@ -1,4 +1,4 @@
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import nock from 'nock';
 import { StatusCodes } from 'shared/constants';
 import { API_ENDPOINT, USER_EMAIL } from 'testUtils/mockHttpCalls';
@@ -70,7 +70,7 @@ describe('ChangeEmailForm', () => {
     triggerInputChange(inputElement, 'test@example.com');
     triggerInputChange(inputElement, inputInitialValue);
 
-    await wait(() => {
+    await waitFor(() => {
       expect(queryByText(buttonLabel)).not.toBeNull();
     });
   });

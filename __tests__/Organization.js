@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -58,7 +58,7 @@ describe('', () => {
       // The nav shows up before the last request is done, so wait a bit
       // otherwise we'll either get pending nock error, console errors due to
       // failed network request after nock.cleanAll();
-      await wait(() => {
+      await waitFor(() => {
         expect(nock.isDone()).toBe(true);
       });
     });
@@ -173,7 +173,7 @@ describe('', () => {
       );
       expect(organizationMember.textContent).toBe(orgResponse.members[0].email);
 
-      await wait(() => {
+      await waitFor(() => {
         expect(queryByTestId('Loading credentials')).not.toBeInTheDocument();
       });
 
@@ -229,7 +229,7 @@ describe('', () => {
         )
       ).toBeInTheDocument();
 
-      await wait(() => {
+      await waitFor(() => {
         expect(nock.isDone()).toBe(true);
       });
     });
@@ -292,7 +292,8 @@ describe('', () => {
 
       // The flash shows up before we refresh the list. So we hold here and wait for the
       // last request to be done, otherwise we'll get a pending nock failure.
-      await waitForDomChange();
+      // eslint-disable-next-line no-empty-function
+      await waitFor(() => {});
     });
   });
 });
@@ -372,13 +373,13 @@ describe('Organization deletion', () => {
 
     expect(await findByTestId(`${orgResponse.id}-name`)).toBeInTheDocument();
 
-    await wait(() => {
+    await waitFor(() => {
       expect(
         queryByTestId(`${organizationToDeleteId}-name`)
       ).not.toBeInTheDocument();
     });
 
-    await wait(() => {
+    await waitFor(() => {
       expect(nock.isDone()).toBe(true);
     });
   });

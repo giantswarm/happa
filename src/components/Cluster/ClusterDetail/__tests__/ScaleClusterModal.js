@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, render, wait } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import nock from 'nock';
 import React from 'react';
 import { Providers } from 'shared';
@@ -80,7 +80,7 @@ describe('ScaleClusterModal', () => {
 
     fireEvent.click(cancelButton);
 
-    await wait(() => {
+    await waitFor(() => {
       const modal = queryByText(/edit scaling settings for/i);
 
       expect(modal).not.toBeInTheDocument();
@@ -557,7 +557,7 @@ describe('ScaleClusterModal', () => {
       /the cluster will be scaled within the next couple of minutes./i
     );
 
-    await wait(() => {
+    await waitFor(() => {
       const modal = queryByText(/edit scaling settings for/i);
 
       expect(modal).not.toBeInTheDocument();

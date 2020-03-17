@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
 import { StatusCodes } from 'shared';
@@ -36,7 +36,7 @@ it('logging out redirects to the login page', async () => {
   const { getByText } = renderRouteWithStore(AppRoutes.Home);
 
   // Wait till the app is ready and we're on the home page.
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText(/Welcome to Giant Swarm!/i)).toBeInTheDocument();
   });
 
@@ -48,7 +48,7 @@ it('logging out redirects to the login page', async () => {
   fireEvent.click(logoutButton);
 
   // Then I should get redirected to the login page.
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText('Log in')).toBeInTheDocument();
   });
 });
