@@ -55,7 +55,7 @@ const theme = {
   border_radius: '4px',
   breakpoints: {
     small: 540,
-    med: 825,
+    medium: 825,
     large: 1200,
   },
   fontFamilies: {

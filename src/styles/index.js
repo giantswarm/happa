@@ -1,6 +1,8 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 
+import theme from './theme';
+
 /***** BASE STYLES ****/
 
 /*
@@ -109,3 +111,13 @@ export const Dot = styled.span`
 export const FallbackSpan = styled.span`
   opacity: 0.5;
 `;
+
+/**
+ * Mixins
+ */
+
+// Breakpoint can be a string representing any of the breakpoint properties in
+// the theme object or a number/string representing a custom breakpoint.
+export const mq = breakpoint =>
+  `@media only screen and (max-width: ${theme.breakpoints[breakpoint] ??
+    breakpoint}px)`;
