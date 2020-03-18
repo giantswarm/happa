@@ -3,7 +3,7 @@ import {
   CLUSTER_LOAD_DETAILS_REQUEST,
   NODEPOOLS_LOAD_REQUEST,
 } from 'actions/actionTypes';
-import { loadApps } from 'actions/appActions';
+// import { loadApps } from 'actions/appActions';
 import {
   batchedClusterDetailView,
   batchedRefreshClusterDetailView,
@@ -114,7 +114,7 @@ class ClusterDetailView extends React.Component {
     this.props.dispatch(
       batchedRefreshClusterDetailView(clusterID, this.props.isV5Cluster)
     );
-    this.props.dispatch(loadApps(clusterID));
+    // this.props.dispatch(loadApps(clusterID));
   };
 
   handleVisibilityChange = () => {
