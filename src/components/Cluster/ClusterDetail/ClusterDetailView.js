@@ -214,13 +214,16 @@ class ClusterDetailView extends React.Component {
       region,
       genericLoadingCluster,
       loadingNodePools,
+      loadingCluster,
     } = this.props;
+
+    const loading = genericLoadingCluster || loadingNodePools || loadingCluster;
 
     return (
       <>
-        <LoadingOverlay loading={genericLoadingCluster || loadingNodePools} />
+        <LoadingOverlay loading={loading} />
 
-        {!genericLoadingCluster && !loadingNodePools && (
+        {!loading && (
           <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
             <WrapperDiv
               className='cluster-details'

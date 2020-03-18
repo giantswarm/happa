@@ -76,8 +76,11 @@ export function refreshUserInfo() {
             messageType.WARNING,
             messageTTL.MEDIUM
           );
+          const redirectPath = loggedInUser.isAdmin
+            ? AppRoutes.AdminLogin
+            : AppRoutes.Login;
 
-          dispatch(push(AppRoutes.Login));
+          dispatch(push(redirectPath));
         } else {
           new FlashMessage(
             'Something went wrong while trying to load user and organization information.',
