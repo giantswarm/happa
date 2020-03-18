@@ -200,7 +200,7 @@ class ViewAndEditName extends React.Component {
 
     // View mode
     return (
-      <span>
+      <span {...rest}>
         <OverlayTrigger
           overlay={<Tooltip id='tooltip'>Click to edit {type} name</Tooltip>}
           placement='top'
