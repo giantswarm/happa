@@ -251,6 +251,9 @@ export function getInfo() {
     const someError = errors.Error.createFromError(err);
     someError.report();
 
+    const customError = new errors.Error('Custom error', 'Boom!');
+    customError.report();
+
     console.log(err);
 
     try {

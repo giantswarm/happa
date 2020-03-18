@@ -38,19 +38,16 @@ export class Error {
   }
 
   generateStack() {
-    const stack = StackTrace.getSync();
+    const stack = StackTrace.getSync({
+      // filter: frame => {
+      //   const regex = new RegExp(/Error.generateStack|new Error/);
+      //   return !regex.test(frame.functionName);
+      // },
+    });
     this.setStack(stack);
   }
 
-  setStack(newStack) {
-    this._stack = newStack;
-  }
-
-  getStack() {
-    return this._stack;
-  }
-
-  async getDetailedStack() {
+  async generateDetailedStack() {
     let stackFrames = this.getStack();
 
     if (window.navigator.onLine) {
@@ -62,29 +59,52 @@ export class Error {
       stackFrames = await Promise.all(stackFrames);
     }
 
-    return stackFrames;
+    this.setStack(stackFrames);
   }
 
-  serialize() {
+  setStack(newStack) {
+    this._stack = newStack;
+  }
+
+  getStack() {
+    return this._stack;
+  }
+
+  serialize(stringifyStack = false) {
+    let stack = this.getStack();
+
+    if (stringifyStack) {
+      stack = this.toString();
+    }
+
     return {
       type: this.getType(),
       message: this.getMessage(),
-      stack: this.getStack(),
+      stack,
     };
   }
 
   toJSON() {
-    return this.serialize();
+    return this.serialize(true);
+  }
+
+  toString() {
+    const serializedError = this.serialize();
+
+    // Stringify error in the same way the native Error would be stringified
+    // {Error Type}: {Error message}
+    let output = `${serializedError.type}: ${serializedError.message}\n`;
+    // *tab* at {File}:{Line} *newline*
+    output += serializedError.stack
+      .map(trace => `\tat ${trace.toString()}`)
+      .join('\n');
+
+    return output;
   }
 
   async report() {
-    const serializedError = this.serialize();
-    const stackTrace = await this.getDetailedStack();
-    serializedError.stack = stackTrace;
+    await this.generateDetailedStack();
 
-    let output = `${serializedError.type}: ${serializedError.message}\n`;
-    output += stackTrace.map(trace => `\tat ${trace.toString()}`).join('\n');
-
-    console.log(output);
+    console.log(this.toString());
   }
 }
