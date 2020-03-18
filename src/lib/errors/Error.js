@@ -52,13 +52,15 @@ export class Error {
 
   async getDetailedStack() {
     let stackFrames = this.getStack();
-    const gps = new StackTraceGPS();
 
-    stackFrames = stackFrames.map(frame => {
-      return gps.pinpoint(frame);
-    });
+    if (window.navigator.onLine) {
+      const gps = new StackTraceGPS();
 
-    stackFrames = await Promise.all(stackFrames);
+      stackFrames = stackFrames.map(frame => {
+        return gps.pinpoint(frame);
+      });
+      stackFrames = await Promise.all(stackFrames);
+    }
 
     return stackFrames;
   }

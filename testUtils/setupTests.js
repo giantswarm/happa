@@ -2,6 +2,13 @@ import { configure, waitFor } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import nock from 'nock';
 
+// Force offline state since we're disabling net connect
+Object.defineProperty(window.navigator, 'onLine', {
+  get: function() {
+    return false;
+  },
+});
+
 configure({
   asyncUtilTimeout: 4500,
 });
