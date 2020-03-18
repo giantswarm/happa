@@ -1,6 +1,7 @@
 import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
+import * as errors from 'lib/errors';
 import {
   clearQueues,
   FlashMessage,
@@ -244,6 +245,13 @@ export function unauthorized() {
 export function getInfo() {
   return async function(dispatch, getState) {
     dispatch({ type: types.INFO_LOAD_REQUEST });
+
+    const err = new Error('Something went terribly wrong!');
+
+    const someError = errors.Error.createFromError(err);
+    someError.report();
+
+    console.log(err);
 
     try {
       const [authToken, authScheme] = await selectAuthToken(
