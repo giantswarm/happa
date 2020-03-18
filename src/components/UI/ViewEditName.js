@@ -1,13 +1,17 @@
 import styled from '@emotion/styled';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Overlay from 'react-bootstrap/lib/Overlay';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 
 import Button from './Button';
 
 const MIN_NAME_LENGTH = 3;
+
+const validationMessages = {
+  TooShort: `Please use a name with at least ${MIN_NAME_LENGTH} characters`,
+};
 
 const FormWrapper = styled.div`
   display: inline-block;
@@ -30,6 +34,11 @@ const NameInput = styled.input`
     width: 320px;
     margin-right: 5px;
     font-size: 85%;
+
+    &,
+    &:focus {
+      border-color: ${({ hasError, theme }) => hasError && theme.colors.error};
+    }
   }
 `;
 
@@ -53,9 +62,26 @@ class ViewAndEditName extends React.Component {
     return null;
   }
 
+  static validate(value) {
+    const result = {
+      valid: true,
+      error: '',
+    };
+
+    if (value.length < MIN_NAME_LENGTH) {
+      result.valid = false;
+      result.error = validationMessages.TooShort;
+    }
+
+    return result;
+  }
+
+  inputRef = React.createRef();
+
   state = {
     editing: false,
     value: null,
+    errorMessage: '',
   };
 
   componentDidUpdate(prevProps) {
@@ -84,31 +110,38 @@ class ViewAndEditName extends React.Component {
   handleCancel = () => {
     this.toggleEditMode(false, {
       value: this.props.name,
+      errorMessage: '',
     });
   };
 
   handleChange = e => {
-    this.setState({ value: e.target.value });
+    const { value } = e.target;
+    const validationResult = ViewAndEditName.validate(value);
+
+    this.setState({
+      value: value,
+      errorMessage: validationResult.error,
+    });
   };
 
   handleSubmit = e => {
     // eslint-disable-next-line no-unused-expressions
     e?.preventDefault();
 
-    const validationResult = this.validate();
-    if (!validationResult.valid) {
-      new FlashMessage(
-        `Error: ${validationResult.error}`,
-        messageType.ERROR,
-        messageTTL.MEDIUM
-      );
+    const { value } = this.state;
 
-      return;
+    // Validate here, also, in case we're calling this method directly
+    const validationResult = ViewAndEditName.validate(value);
+    if (!validationResult.valid) return;
+
+    this.toggleEditMode(false, {
+      errorMessage: '',
+    });
+
+    if (value !== this.props.name) {
+      // eslint-disable-next-line no-unused-expressions
+      this.props.onSubmit?.(value);
     }
-
-    this.toggleEditMode(false);
-    // eslint-disable-next-line no-unused-expressions
-    this.props.onSubmit?.(this.state.value);
   };
 
   handleKey = e => {
@@ -125,24 +158,10 @@ class ViewAndEditName extends React.Component {
     }
   };
 
-  validate() {
-    const { value } = this.state;
-
-    const result = {
-      valid: true,
-      error: '',
-    };
-
-    if (value.length < MIN_NAME_LENGTH) {
-      result.valid = false;
-      result.error = 'Please use a name with at least 3 characters';
-    }
-
-    return result;
-  }
-
   render() {
     const { type, name, onSubmit, onToggleEditingState, ...rest } = this.props;
+    const { errorMessage } = this.state;
+    const hasError = errorMessage !== '';
 
     if (this.state.editing) {
       // Edit mode
@@ -150,15 +169,28 @@ class ViewAndEditName extends React.Component {
         <FormWrapper {...rest}>
           <form className='form' onSubmit={this.handleSubmit}>
             <NameInput
+              ref={this.inputRef}
               type='text'
               autoComplete='off'
               autoFocus={true}
               onChange={this.handleChange}
               onKeyUp={this.handleKey}
               value={this.state.value}
+              hasError={hasError}
             />
+            <Overlay
+              target={this.inputRef.current}
+              placement='bottom'
+              show={hasError}
+              shouldUpdatePosition={true}
+              animation={false}
+            >
+              <Tooltip id='name-form-error'>{errorMessage}</Tooltip>
+            </Overlay>
             <div className='btn-group'>
-              <Button type='submit'>OK</Button>
+              <Button type='submit' bsStyle='primary' disabled={hasError}>
+                OK
+              </Button>
               <Button onClick={this.handleCancel}>Cancel</Button>
             </div>
           </form>

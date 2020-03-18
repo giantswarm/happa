@@ -1,5 +1,5 @@
-import { fireEvent, render } from '@testing-library/react';
-import React from 'react';
+import { fireEvent } from '@testing-library/react';
+import { renderWithTheme } from 'testUtils/renderUtils';
 import ViewEditName from 'UI/ViewEditName';
 
 const defaultEntity = {
@@ -17,7 +17,7 @@ const renderComponent = (props = {}) => {
     props
   );
 
-  return render(<ViewEditName {...propsWithDefault} />);
+  return renderWithTheme(ViewEditName, propsWithDefault);
 };
 
 describe('ViewEditName', () => {
@@ -46,6 +46,7 @@ describe('ViewEditName', () => {
     });
 
     const submitButton = getByText(/ok/i);
+    expect(submitButton).toBeEnabled();
     fireEvent.click(submitButton);
 
     // Value was changed
@@ -121,7 +122,7 @@ describe('ViewEditName', () => {
     expect(label).toBeInTheDocument();
   });
 
-  it('validates input on submit', () => {
+  it('validates input while typing', () => {
     const { getByText, getByDisplayValue } = renderComponent();
 
     const label = getByText(/some value/i);
@@ -134,7 +135,36 @@ describe('ViewEditName', () => {
     });
 
     const submitButton = getByText(/ok/i);
-    fireEvent.click(submitButton);
+    expect(submitButton).toBeDisabled();
+
+    // A warning is shown
+    expect(
+      getByText(/please use a name with at least 3 characters/i)
+    ).toBeInTheDocument();
+
+    // Input is still here, data not saved
+    expect(input).toBeInTheDocument();
+  });
+
+  it('validates input on pressing enter', () => {
+    const { getByText, getByDisplayValue } = renderComponent();
+
+    const label = getByText(/some value/i);
+
+    // Click to edit
+    fireEvent.click(label);
+    const input = getByDisplayValue(/some value/i);
+    fireEvent.change(input, {
+      target: { value: 'no' },
+    });
+
+    const submitButton = getByText(/ok/i);
+    expect(submitButton).toBeDisabled();
+
+    // Press enter
+    fireEvent.keyUp(input, {
+      key: 'Enter',
+    });
 
     // A warning is shown
     expect(
@@ -193,6 +223,32 @@ describe('ViewEditName', () => {
     const submitButton = getByText(/cancel/i);
     fireEvent.click(submitButton);
     expect(onSubmitMock).not.toBeCalled();
+
+    expect(onToggleEditingStateMock).toBeCalledWith(false);
+  });
+
+  it(`doesn't execute submit callback if the value is the same as before`, () => {
+    const onSubmitMock = jest.fn();
+    const onToggleEditingStateMock = jest.fn();
+
+    const { getByText, getByDisplayValue } = renderComponent({
+      onSubmit: onSubmitMock,
+      onToggleEditingState: onToggleEditingStateMock,
+    });
+
+    const label = getByText(/some value/i);
+
+    // Click to edit
+    fireEvent.click(label);
+    expect(onToggleEditingStateMock).toBeCalledWith(true);
+    const input = getByDisplayValue(/some value/i);
+    fireEvent.change(input, {
+      target: { value: 'Some value' },
+    });
+
+    const submitButton = getByText(/ok/i);
+    fireEvent.click(submitButton);
+    expect(onSubmitMock).not.toHaveBeenCalled();
 
     expect(onToggleEditingStateMock).toBeCalledWith(false);
   });
