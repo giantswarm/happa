@@ -151,7 +151,7 @@ export const batchedRefreshClusterDetailView = (
   isV5Cluster
 ) => async dispatch => {
   try {
-    await dispatch(
+    const cluster = await dispatch(
       clusterActions.clusterLoadDetails(clusterId, {
         withLoadingFlags: false,
         initializeNodePools: false,
@@ -163,6 +163,11 @@ export const batchedRefreshClusterDetailView = (
           withLoadingFlags: false,
         })
       );
+    }
+    // If cluster is an empty object, it means that it has been removed.
+    // We don't want to load apps in this scenario.
+    if (!Object.keys(cluster).length === 0) {
+      dispatch(appActions.loadApps(clusterId));
     }
   } catch (err) {
     // eslint-disable-next-line no-console
