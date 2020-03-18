@@ -78,7 +78,7 @@ class ClusterDetailView extends React.Component {
   loadDetails = () => {
     const { cluster, clusterId, organizationId, dispatch } = this.props;
 
-    if (typeof cluster === 'undefined') {
+    if (typeof cluster === 'undefined' || cluster.delete_date) {
       const organizationDetailPath = RoutePath.createUsablePath(
         OrganizationsRoutes.Detail,
         {
