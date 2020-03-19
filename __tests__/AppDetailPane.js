@@ -27,6 +27,14 @@ import {
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 
+const clusterDetailPath = RoutePath.createUsablePath(
+  OrganizationsRoutes.Clusters.Detail,
+  {
+    orgId: ORGANIZATION,
+    clusterId: V4_CLUSTER.id,
+  }
+);
+
 describe('Installed app detail pane', () => {
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
@@ -74,13 +82,6 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const clusterDetailPath = RoutePath.createUsablePath(
-        OrganizationsRoutes.Clusters.Detail,
-        {
-          orgId: ORGANIZATION,
-          clusterId: V4_CLUSTER.id,
-        }
-      );
       const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
 
       const appsTab = await findByText(/^apps$/i);
@@ -123,13 +124,6 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const clusterDetailPath = RoutePath.createUsablePath(
-        OrganizationsRoutes.Clusters.Detail,
-        {
-          orgId: ORGANIZATION,
-          clusterId: V4_CLUSTER.id,
-        }
-      );
       const { findByText, getByText, queryByText } = renderRouteWithStore(
         clusterDetailPath
       );
@@ -167,13 +161,6 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const clusterDetailPath = RoutePath.createUsablePath(
-        OrganizationsRoutes.Clusters.Detail,
-        {
-          orgId: ORGANIZATION,
-          clusterId: V4_CLUSTER.id,
-        }
-      );
       const { findByText, getByText, queryByText } = renderRouteWithStore(
         clusterDetailPath
       );
@@ -221,13 +208,6 @@ describe('Installed app detail pane', () => {
         )
         .reply(StatusCodes.Ok);
 
-      const clusterDetailPath = RoutePath.createUsablePath(
-        OrganizationsRoutes.Clusters.Detail,
-        {
-          orgId: ORGANIZATION,
-          clusterId: V4_CLUSTER.id,
-        }
-      );
       const { findByText, getByText, queryByText } = renderRouteWithStore(
         clusterDetailPath
       );
@@ -273,13 +253,6 @@ describe('Installed app detail pane', () => {
     // After deleting the app, there are no apps.
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
 
-    const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
-      {
-        orgId: ORGANIZATION,
-        clusterId: V4_CLUSTER.id,
-      }
-    );
     const { findByText, getByText, queryByText } = renderRouteWithStore(
       clusterDetailPath
     );
@@ -309,13 +282,6 @@ describe('Installed app detail pane', () => {
   it('shows a no apps installed message when there are no apps yet', async () => {
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
 
-    const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
-      {
-        orgId: ORGANIZATION,
-        clusterId: V4_CLUSTER.id,
-      }
-    );
     const { findByText } = renderRouteWithStore(clusterDetailPath);
 
     const appsTab = await findByText(/^apps$/i);
