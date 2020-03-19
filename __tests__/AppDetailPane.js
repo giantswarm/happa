@@ -32,16 +32,6 @@ describe('Installed app detail pane', () => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
-  });
-
-  it('updates the config map of an already installed app', async () => {
-    nock('https://catalogshost')
-      .get('/giantswarm-catalog/index.yaml')
-      .reply(StatusCodes.Ok, catalogIndexResponse);
-
-    nock(API_ENDPOINT)
-      .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`, 'PATCH')
-      .reply(StatusCodes.Ok);
 
     getMockCallTimes('/v4/user/', userResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
@@ -58,296 +48,224 @@ describe('Installed app detail pane', () => {
       `/v4/clusters/${V4_CLUSTER.id}/status/`,
       v4AWSClusterStatusResponse
     );
-    getMockCallTimes(
-      `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-      [appResponseWithCustomConfig],
-      2
-    );
+
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
     getMockCall('/v4/releases/', releasesResponse);
-
-    const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
-      {
-        orgId: ORGANIZATION,
-        clusterId: V4_CLUSTER.id,
-      }
-    );
-    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
-
-    const appsTab = await findByText(/^apps$/i);
-    fireEvent.click(appsTab);
-
-    // Click on app to open the editing modal
-    const appLabel = getByText(/chart version: 0.0.1/i);
-    fireEvent.click(appLabel);
-
-    // Delete the existing file
-    const fileInputPlaceholder = getByText(/configmap has been set/i);
-    const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
-    const file = new Blob(
-      [
-        JSON.stringify({
-          name: 'test',
-          namespace: 'some-other-test',
-        }),
-      ],
-      {
-        type: 'application/json',
-        name: 'config2.json',
-      }
-    );
-
-    fireEvent.change(fileInput, {
-      target: {
-        files: [file],
-      },
-    });
-
-    await findByText(/has successfully been updated./i);
   });
 
-  it('deletes the config map of an already installed app', async () => {
-    nock('https://catalogshost')
-      .get('/giantswarm-catalog/index.yaml')
-      .reply(StatusCodes.Ok, catalogIndexResponse);
+  describe('With apps', () => {
+    beforeEach(() => {
+      getMockCallTimes(
+        `/v4/clusters/${V4_CLUSTER.id}/apps/`,
+        [appResponseWithCustomConfig],
+        2
+      );
 
-    nock(API_ENDPOINT)
-      .intercept(
-        `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
-        'DELETE'
-      )
-      .reply(StatusCodes.Ok);
-
-    getMockCallTimes('/v4/user/', userResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCall(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
-    );
-    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCall(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
-    );
-    getMockCallTimes(
-      `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-      [appResponseWithCustomConfig],
-      2
-    );
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
-    getMockCall('/v4/releases/', releasesResponse);
-
-    const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
-      {
-        orgId: ORGANIZATION,
-        clusterId: V4_CLUSTER.id,
-      }
-    );
-    const { findByText, getByText, queryByText } = renderRouteWithStore(
-      clusterDetailPath
-    );
-
-    const appsTab = await findByText(/^apps$/i);
-    fireEvent.click(appsTab);
-
-    // Click on app to open the editing modal
-    const appLabel = getByText(/chart version: 0.0.1/i);
-    fireEvent.click(appLabel);
-
-    // Upload a configmap file
-    const fileInputPlaceholder = getByText(/configmap has been set/i);
-    let deleteButton = fileInputPlaceholder.parentNode.querySelector(
-      '.btn-danger'
-    );
-    fireEvent.click(deleteButton);
-
-    // Confirm deletion
-    deleteButton = getByText(/^delete configmap$/i);
-    fireEvent.click(deleteButton);
-
-    await waitFor(() => {
-      expect(queryByText(/delete configmap/i)).not.toBeInTheDocument();
+      nock('https://catalogshost')
+        .get('/giantswarm-catalog/index.yaml')
+        .reply(StatusCodes.Ok, catalogIndexResponse);
     });
 
-    await findByText(/has been deleted./i);
-  });
+    it('updates the config map of an already installed app', async () => {
+      nock(API_ENDPOINT)
+        .intercept(
+          `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
+          'PATCH'
+        )
+        .reply(StatusCodes.Ok);
 
-  it('updates secrets of an already installed app', async () => {
-    nock('https://catalogshost')
-      .get('/giantswarm-catalog/index.yaml')
-      .reply(StatusCodes.Ok, catalogIndexResponse);
+      const clusterDetailPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail,
+        {
+          orgId: ORGANIZATION,
+          clusterId: V4_CLUSTER.id,
+        }
+      );
+      const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
 
-    nock(API_ENDPOINT)
-      .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`, 'PATCH')
-      .reply(StatusCodes.Ok);
+      const appsTab = await findByText(/^apps$/i);
+      fireEvent.click(appsTab);
 
-    getMockCallTimes('/v4/user/', userResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCall(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
-    );
-    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCall(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
-    );
-    getMockCallTimes(
-      `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-      [appResponseWithCustomConfig],
-      2
-    );
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
-    getMockCall('/v4/releases/', releasesResponse);
+      // Delete the existing file
+      const fileInputPlaceholder = getByText(/configmap has been set/i);
+      const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
+      const file = new Blob(
+        [
+          JSON.stringify({
+            name: 'test',
+            namespace: 'some-other-test',
+          }),
+        ],
+        {
+          type: 'application/json',
+          name: 'config2.json',
+        }
+      );
 
-    const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
-      {
-        orgId: ORGANIZATION,
-        clusterId: V4_CLUSTER.id,
-      }
-    );
-    const { findByText, getByText, queryByText } = renderRouteWithStore(
-      clusterDetailPath
-    );
+      fireEvent.change(fileInput, {
+        target: {
+          files: [file],
+        },
+      });
 
-    const appsTab = await findByText(/^apps$/i);
-    fireEvent.click(appsTab);
-
-    // Click on app to open the editing modal
-    const appLabel = getByText(/chart version: 0.0.1/i);
-    fireEvent.click(appLabel);
-
-    // Upload a secrets file
-    const fileInputPlaceholder = getByText(/secret has been set/i);
-    const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
-    const file = new Blob(
-      [
-        JSON.stringify({
-          name: 'test',
-          namespace: 'some-other-test',
-        }),
-      ],
-      {
-        type: 'application/json',
-        name: 'secret.json',
-      }
-    );
-    fireEvent.change(fileInput, {
-      target: {
-        files: [file],
-      },
+      await findByText(/has successfully been updated./i);
     });
 
-    await waitFor(() => {
-      expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
+    it('deletes the config map of an already installed app', async () => {
+      nock(API_ENDPOINT)
+        .intercept(
+          `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
+          'DELETE'
+        )
+        .reply(StatusCodes.Ok);
+
+      const clusterDetailPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail,
+        {
+          orgId: ORGANIZATION,
+          clusterId: V4_CLUSTER.id,
+        }
+      );
+      const { findByText, getByText, queryByText } = renderRouteWithStore(
+        clusterDetailPath
+      );
+
+      const appsTab = await findByText(/^apps$/i);
+      fireEvent.click(appsTab);
+
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
+
+      // Upload a configmap file
+      const fileInputPlaceholder = getByText(/configmap has been set/i);
+      let deleteButton = fileInputPlaceholder.parentNode.querySelector(
+        '.btn-danger'
+      );
+      fireEvent.click(deleteButton);
+
+      // Confirm deletion
+      deleteButton = getByText(/^delete configmap$/i);
+      fireEvent.click(deleteButton);
+
+      await waitFor(() => {
+        expect(queryByText(/delete configmap/i)).not.toBeInTheDocument();
+      });
+
+      await findByText(/has been deleted./i);
     });
 
-    await findByText(/has successfully been updated./i);
-  });
+    it('updates secrets of an already installed app', async () => {
+      nock(API_ENDPOINT)
+        .intercept(
+          `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
+          'PATCH'
+        )
+        .reply(StatusCodes.Ok);
 
-  it('deletes secrets of an already installed app', async () => {
-    nock('https://catalogshost')
-      .get('/giantswarm-catalog/index.yaml')
-      .reply(StatusCodes.Ok, catalogIndexResponse);
+      const clusterDetailPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail,
+        {
+          orgId: ORGANIZATION,
+          clusterId: V4_CLUSTER.id,
+        }
+      );
+      const { findByText, getByText, queryByText } = renderRouteWithStore(
+        clusterDetailPath
+      );
 
-    nock(API_ENDPOINT)
-      .intercept(
-        `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
-        'DELETE'
-      )
-      .reply(StatusCodes.Ok);
+      const appsTab = await findByText(/^apps$/i);
+      fireEvent.click(appsTab);
 
-    getMockCallTimes('/v4/user/', userResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCall(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
-    );
-    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
 
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
-    getMockCall(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse
-    );
-    getMockCallTimes(
-      `/v4/clusters/${V4_CLUSTER.id}/apps/`,
-      [appResponseWithCustomConfig],
-      2
-    );
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
-    getMockCall('/v4/releases/', releasesResponse);
+      // Upload a secrets file
+      const fileInputPlaceholder = getByText(/secret has been set/i);
+      const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
+      const file = new Blob(
+        [
+          JSON.stringify({
+            name: 'test',
+            namespace: 'some-other-test',
+          }),
+        ],
+        {
+          type: 'application/json',
+          name: 'secret.json',
+        }
+      );
+      fireEvent.change(fileInput, {
+        target: {
+          files: [file],
+        },
+      });
 
-    const clusterDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.Detail,
-      {
-        orgId: ORGANIZATION,
-        clusterId: V4_CLUSTER.id,
-      }
-    );
-    const { findByText, getByText, queryByText } = renderRouteWithStore(
-      clusterDetailPath
-    );
+      await waitFor(() => {
+        expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
+      });
 
-    const appsTab = await findByText(/^apps$/i);
-    fireEvent.click(appsTab);
-
-    // Click on app to open the editing modal
-    const appLabel = getByText(/chart version: 0.0.1/i);
-    fireEvent.click(appLabel);
-
-    // Delete the existing file
-    const fileInputPlaceholder = getByText(/secret has been set/i);
-    let deleteButton = fileInputPlaceholder.parentNode.querySelector(
-      '.btn-danger'
-    );
-    fireEvent.click(deleteButton);
-
-    // Confirm deletion
-    deleteButton = getByText(/^delete secret$/i);
-    fireEvent.click(deleteButton);
-
-    await waitFor(() => {
-      expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
+      await findByText(/has successfully been updated./i);
     });
 
-    await findByText(/has been deleted./i);
+    it('deletes secrets of an already installed app', async () => {
+      nock(API_ENDPOINT)
+        .intercept(
+          `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
+          'DELETE'
+        )
+        .reply(StatusCodes.Ok);
+
+      const clusterDetailPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail,
+        {
+          orgId: ORGANIZATION,
+          clusterId: V4_CLUSTER.id,
+        }
+      );
+      const { findByText, getByText, queryByText } = renderRouteWithStore(
+        clusterDetailPath
+      );
+
+      const appsTab = await findByText(/^apps$/i);
+      fireEvent.click(appsTab);
+
+      // Click on app to open the editing modal
+      const appLabel = getByText(/chart version: 0.0.1/i);
+      fireEvent.click(appLabel);
+
+      // Delete the existing file
+      const fileInputPlaceholder = getByText(/secret has been set/i);
+      let deleteButton = fileInputPlaceholder.parentNode.querySelector(
+        '.btn-danger'
+      );
+      fireEvent.click(deleteButton);
+
+      // Confirm deletion
+      deleteButton = getByText(/^delete secret$/i);
+      fireEvent.click(deleteButton);
+
+      await waitFor(() => {
+        expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
+      });
+
+      await findByText(/has been deleted./i);
+    });
   });
 
   it('deletes already installed app', async () => {
-    nock('https://catalogshost')
-      .get('/giantswarm-catalog/index.yaml')
-      .reply(StatusCodes.Ok, catalogIndexResponse);
-
     nock(API_ENDPOINT)
       .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/`, 'DELETE')
       .reply(StatusCodes.Ok);
 
-    getMockCallTimes('/v4/user/', userResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-    getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
-    getMockCallTimes(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse,
-      2
-    );
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
-    getMockCall('/v4/releases/', releasesResponse);
+    nock('https://catalogshost')
+      .get('/giantswarm-catalog/index.yaml')
+      .reply(StatusCodes.Ok, catalogIndexResponse);
 
     // Before deleting the app, there are apps.
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
@@ -389,19 +307,7 @@ describe('Installed app detail pane', () => {
   });
 
   it('shows a no apps installed message when there are no apps yet', async () => {
-    getMockCallTimes('/v4/user/', userResponse);
-    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
-    getMockCall('/v4/appcatalogs/', appCatalogsResponse);
-    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
-    getMockCallTimes(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse, 2);
-    getMockCallTimes(
-      `/v4/clusters/${V4_CLUSTER.id}/status/`,
-      v4AWSClusterStatusResponse,
-      2
-    );
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, []);
-    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
-    getMockCall('/v4/releases/', releasesResponse);
 
     const clusterDetailPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.Detail,
