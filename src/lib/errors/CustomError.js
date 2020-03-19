@@ -2,32 +2,36 @@ import ErrorReporter from 'lib/errors/ErrorReporter';
 import StackTraceGPS from 'stacktrace-gps';
 import StackTrace from 'stacktrace-js';
 
-// TODO: Attach deserialization methods
-// TODO: Attach custom payloads
-
 export class CustomError extends Error {
   static resolver = new StackTraceGPS();
 
-  static createFromError(error, customType = error.constructor.name) {
-    const newError = new CustomError(customType, error.message);
+  static createFromObject(obj) {
+    const newError = new CustomError(obj.name, obj.message);
+    newError.stack = obj.stack;
 
     return newError;
   }
 
-  static stringifyStack(type, message, stackFrames) {
+  static createFromError(error, customName = error.constructor.name) {
+    const newError = new CustomError(customName, error.message);
+
+    return newError;
+  }
+
+  static stringifyStack(name, message, stackFrames) {
     // Stringify error in the same way the native Error would be stringified
-    // {Error Type}: {Error message}
-    let output = `${type}: ${message}\n`;
+    // {Error name}: {Error message}
+    let output = `${name}: ${message}\n`;
     // *tab* at {File}:{Line} *newline*
     output += stackFrames.map(trace => `\tat ${trace.toString()}`).join('\n');
 
     return output;
   }
 
-  constructor(type, message) {
+  constructor(name, message) {
     super(message);
 
-    this.name = type;
+    this.name = name;
     this.generateStack();
   }
 
@@ -73,6 +77,12 @@ ${this.stack}
       message: this.message,
       stack: this.stack,
     };
+  }
+
+  deserialize(obj) {
+    this.name = obj.name;
+    this.message = obj.message;
+    this.generateStack();
   }
 
   toJSON() {
