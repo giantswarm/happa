@@ -1,8 +1,6 @@
 import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
-import ErrorReporter from 'lib/ErrorReporter';
-import * as errors from 'lib/errors';
 import {
   clearQueues,
   FlashMessage,
@@ -247,32 +245,32 @@ export function getInfo() {
   return async function(dispatch, getState) {
     dispatch({ type: types.INFO_LOAD_REQUEST });
 
-    try {
-      const err = new Error('This is a classic error!');
+    // try {
+    //   const err = new Error('This is a classic error!');
 
-      throw err;
-    } catch (err) {
-      console.log(err);
-      ErrorReporter.getInstance().notify(new Error('This is a classic error!'));
-    }
+    //   throw err;
+    // } catch (err) {
+    //   console.log(err);
+    //   ErrorReporter.getInstance().notify(new Error('This is a classic error!'));
+    // }
 
-    try {
-      const err = errors.CustomError.createFromError(
-        new Error('This is a classic error, but with our custom stack tracer!')
-      );
+    // try {
+    //   const err = errors.CustomError.createFromError(
+    //     new Error('This is a classic error, but with our custom stack tracer!')
+    //   );
 
-      throw err;
-    } catch (err) {
-      err.report();
-    }
+    //   throw err;
+    // } catch (err) {
+    //   err.report();
+    // }
 
-    try {
-      const err = new errors.CustomError('Custom Error', 'Custom stack trace!');
+    // try {
+    //   const err = new errors.CustomError('Custom Error', 'Custom stack trace!');
 
-      throw err;
-    } catch (err) {
-      err.report();
-    }
+    //   throw err;
+    // } catch (err) {
+    //   err.report();
+    // }
 
     try {
       const [authToken, authScheme] = await selectAuthToken(
