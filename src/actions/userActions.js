@@ -1,6 +1,7 @@
 import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
+import ErrorReporter from 'lib/ErrorReporter';
 import * as errors from 'lib/errors';
 import {
   clearQueues,
@@ -246,15 +247,32 @@ export function getInfo() {
   return async function(dispatch, getState) {
     dispatch({ type: types.INFO_LOAD_REQUEST });
 
-    const err = new Error('Something went terribly wrong!');
+    try {
+      const err = new Error('This is a classic error!');
 
-    const someError = errors.Error.createFromError(err);
-    someError.report();
+      throw err;
+    } catch (err) {
+      console.log(err);
+      ErrorReporter.getInstance().notify(new Error('This is a classic error!'));
+    }
 
-    const customError = new errors.Error('Custom error', 'Boom!');
-    customError.report();
+    try {
+      const err = errors.CustomError.createFromError(
+        new Error('This is a classic error, but with our custom stack tracer!')
+      );
 
-    console.log(err);
+      throw err;
+    } catch (err) {
+      err.report();
+    }
+
+    try {
+      const err = new errors.CustomError('Custom Error', 'Custom stack trace!');
+
+      throw err;
+    } catch (err) {
+      err.report();
+    }
 
     try {
       const [authToken, authScheme] = await selectAuthToken(

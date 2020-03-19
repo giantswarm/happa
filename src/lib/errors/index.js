@@ -1,2 +1,2 @@
-export * from './Error';
+export * from './CustomError';
 export * from './util';
