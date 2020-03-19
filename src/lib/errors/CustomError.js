@@ -1,4 +1,4 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
+import { ErrorReporter } from 'lib/errors';
 import StackTraceGPS from 'stacktrace-gps';
 import StackTrace from 'stacktrace-js';
 

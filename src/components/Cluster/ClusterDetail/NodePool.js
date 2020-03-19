@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import { spinner } from 'images';
-import ErrorReporter from 'lib/errors/ErrorReporter';
+import { ErrorReporter } from 'lib/errors';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
