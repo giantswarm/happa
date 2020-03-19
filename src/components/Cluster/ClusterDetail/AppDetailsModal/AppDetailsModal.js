@@ -119,6 +119,7 @@ const AppDetailsModal = props => {
     done();
   }
 
+  // eslint-disable-next-line react/no-multi-comp
   function deleteConfirmFooter(cta, onConfirm) {
     return (
       <DeleteConfirmFooter

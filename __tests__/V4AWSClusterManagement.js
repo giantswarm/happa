@@ -273,12 +273,9 @@ it('patches v4 cluster name correctly', async () => {
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
 
-  //Wait for the Flash message to appear
   await waitFor(() => {
-    getByText(/succesfully edited cluster name/i);
+    expect(getByText(newClusterName)).toBeInTheDocument();
   });
-
-  expect(getByText(newClusterName)).toBeInTheDocument();
 });
 
 /******************** PENDING TESTS ********************/
