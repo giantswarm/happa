@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
+import { errorReporter } from 'components';
 import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -71,8 +72,9 @@ class NodePool extends Component {
       this.props.dispatch(
         nodePoolActions.nodePoolPatch(cluster.id, nodePool, { name })
       );
-    } catch {
-      // Do nothing on purpose, flash message is already displayed inside the action
+    } catch (err) {
+      // eslint-disable-next-line no-unused-expressions
+      errorReporter?.notify(err);
     }
   };
 

@@ -11,6 +11,7 @@ import {
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
+import { errorReporter } from 'components';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
@@ -196,8 +197,9 @@ class ClusterDetailView extends React.Component {
       this.props.dispatch(
         clusterActions.clusterPatch(this.props.cluster, { name: value })
       );
-    } catch {
-      // Do nothing on purpose, flash message is already displayed inside the action
+    } catch (err) {
+      // eslint-disable-next-line no-unused-expressions
+      errorReporter?.notify(err);
     }
   };
 
