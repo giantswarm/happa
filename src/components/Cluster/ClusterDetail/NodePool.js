@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
-import { errorReporter } from 'components';
 import { spinner } from 'images';
+import ErrorReporter from 'lib/ErrorReporter';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -73,8 +73,7 @@ class NodePool extends Component {
         nodePoolActions.nodePoolPatch(cluster.id, nodePool, { name })
       );
     } catch (err) {
-      // eslint-disable-next-line no-unused-expressions
-      errorReporter?.notify(err);
+      ErrorReporter.getInstance().notify(err);
     }
   };
 
