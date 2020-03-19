@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -11,6 +12,7 @@ import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 
 import AppDetailsModal from './AppDetailsModal/AppDetailsModal';
+import UserInstalledApps from './UserInstalledApps/UserInstalledApps';
 
 // This component shows the list of components and apps installed on a cluster.
 // Apps can be:
@@ -30,7 +32,38 @@ const SmallHeading = styled.h6`
   letter-spacing: 2px;
 `;
 
+const BrowseButton = styled(Button)`
+  margin-top: 5px;
+  margin-bottom: 10px;
+`;
+
 class ClusterApps extends React.Component {
+  static getDerivedStateFromProps(newProps, prevState) {
+    if (prevState.appDetailsModal.visible) {
+      const appToDisplay =
+        newProps.installedApps?.find(
+          app => app.metadata.name === prevState.appDetailsModal.appName
+        ) ?? [];
+
+      if (appToDisplay.length < 1) {
+        new FlashMessage(
+          'The app you were looking at was deleted from the cluster by someone else.',
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+
+        return {
+          appDetailsModal: {
+            visible: false,
+            app: null,
+          },
+        };
+      }
+    }
+
+    return null;
+  }
+
   isComponentMounted = false;
 
   state = {
@@ -173,7 +206,7 @@ class ClusterApps extends React.Component {
       ingress: [],
     };
 
-    for (i = 0; i < this.props.release.components.length; i++) {
+    for (i = 0; i < this.props.release?.components.length; i++) {
       const component = this.props.release.components[i];
 
       // Remove component that is now present in the release response
@@ -241,108 +274,42 @@ class ClusterApps extends React.Component {
     }
   };
 
-  // getUserInstallApps returns a list of just the apps that the user installed
-  // since the list of apps in a cluster also includes apps that were installed
-  // automatically.
-  getUserInstalledApps = () => {
-    if (!this.props.installedApps) {
+  /**
+   * Returns a list of just the apps that the user installed
+   * since the list of apps in a cluster also includes apps that were installed
+   * automatically.
+   */
+  getUserInstalledApps = apps => {
+    if (!apps) {
       return [];
     }
 
-    return this.props.installedApps.filter(
+    return apps.filter(
       app =>
         app.metadata.labels['giantswarm.io/managed-by'] !== 'cluster-operator'
     );
   };
 
   render() {
-    const { appsLoadError } = this.props;
+    const { appsLoadError, installedApps } = this.props;
+    const userInstalledApps = this.getUserInstalledApps(installedApps);
+    const preinstalledApps = this.preinstalledApps();
 
     return (
       <>
         {this.props.showInstalledAppsBlock && (
-          <div data-testid='installed-apps-section' id='installed-apps-section'>
-            <h3 className='table-label'>Installed Apps</h3>
-            <div className='row'>
-              {this.getUserInstalledApps() &&
-                this.getUserInstalledApps().length === 0 &&
-                !appsLoadError && (
-                  <p
-                    className='well'
-                    data-testid='no-apps-found'
-                    id='no-apps-found'
-                  >
-                    <b>No apps installed on this cluster</b>
-                    <br />
-                    Browse the app catalog below and pick an app to install.
-                  </p>
-                )}
-
-              {appsLoadError && (
-                <p
-                  className='well'
-                  data-testid='error-loading-apps'
-                  id='error-loading-apps'
-                >
-                  <b>Error Loading Apps:</b>
-                  <br />
-                  We had some trouble loading the list of apps you&apos;ve
-                  installed on this cluster. Please refresh the page to try
-                  again.
-                </p>
-              )}
-              {this.getUserInstalledApps() &&
-                this.getUserInstalledApps().length > 0 && (
-                  <div data-testid='installed-apps' id='installed-apps'>
-                    {this.getUserInstalledApps().map(app => {
-                      return (
-                        <div
-                          className='installed-apps--app'
-                          key={app.metadata.name}
-                        >
-                          <div className='details'>
-                            {app.logoUrl &&
-                              !this.state.iconErrors[app.logoUrl] && (
-                                <img
-                                  alt={`${app.metadata.name} icon`}
-                                  height='36'
-                                  onError={this.imgError}
-                                  src={app.logoUrl}
-                                  width='36'
-                                />
-                              )}
-                            {app.metadata.name}
-                            <small>
-                              App Version:{' '}
-                              {app && app.spec && app.spec.version
-                                ? app.spec.version
-                                : 'n/a'}
-                            </small>
-                          </div>
-                          <div className='actions'>
-                            <Button
-                              onClick={this.showAppDetail.bind(
-                                this,
-                                app.metadata.name
-                              )}
-                            >
-                              Details
-                            </Button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-              <div className='browse-apps'>
-                <Button onClick={this.openAppCatalog}>
-                  <i className='fa fa-add-circle' />
-                  Install App
-                </Button>
-              </div>
+          <UserInstalledApps
+            apps={userInstalledApps}
+            error={appsLoadError}
+            onShowDetail={this.showAppDetail}
+          >
+            <div>
+              <BrowseButton onClick={this.openAppCatalog}>
+                <i className='fa fa-add-circle' />
+                Install App
+              </BrowseButton>
             </div>
-          </div>
+          </UserInstalledApps>
         )}
 
         <div className='row cluster-apps'>
@@ -356,7 +323,7 @@ class ClusterApps extends React.Component {
               <>
                 <div className='col-4' key='essentials'>
                   <SmallHeading>essentials</SmallHeading>
-                  {this.preinstalledApps().essentials.map(app => (
+                  {preinstalledApps.essentials.map(app => (
                     <ClusterDetailPreinstalledApp
                       logoUrl={app.logoUrl}
                       name={app.name}
@@ -368,7 +335,7 @@ class ClusterApps extends React.Component {
 
                 <div className='col-4' key='management'>
                   <SmallHeading>management</SmallHeading>
-                  {this.preinstalledApps().management.map(app => (
+                  {preinstalledApps.management.map(app => (
                     <ClusterDetailPreinstalledApp
                       logoUrl={app.logoUrl}
                       name={app.name}
@@ -399,7 +366,7 @@ class ClusterApps extends React.Component {
                       </p>
                     </OptionalIngressNotice>
                   )}
-                  {this.preinstalledApps().ingress.map(app => (
+                  {preinstalledApps.ingress.map(app => (
                     <ClusterDetailPreinstalledApp
                       logoUrl={app.logoUrl}
                       name={app.name}
@@ -417,20 +384,19 @@ class ClusterApps extends React.Component {
             )}
           </div>
         </div>
-        <AppDetailsModal
-          // Instead of just assigning the selected app to the state of this component,
-          // this ensures any updates to the apps continue to flow down into the modal.
-          app={
-            this.props.installedApps &&
-            this.props.installedApps.find(
+        {this.state.appDetailsModal.appName && (
+          <AppDetailsModal
+            // Instead of just assigning the selected app to the state of this component,
+            // this ensures any updates to the apps continue to flow down into the modal.
+            app={this.props.installedApps?.find(
               x => x.metadata.name === this.state.appDetailsModal.appName
-            )
-          }
-          clusterId={this.props.clusterId}
-          dispatch={this.props.dispatch}
-          onClose={this.hideAppModal}
-          visible={this.state.appDetailsModal.visible}
-        />
+            )}
+            clusterId={this.props.clusterId}
+            dispatch={this.props.dispatch}
+            onClose={this.hideAppModal}
+            visible={this.state.appDetailsModal.visible}
+          />
+        )}
       </>
     );
   }

@@ -75,13 +75,11 @@ ProviderCredentials.propTypes = {
   organizationName: PropTypes.string,
   actions: PropTypes.object,
   credentials: PropTypes.object,
-  app: PropTypes.object,
 };
 
 function mapStateToProps(state) {
   return {
     credentials: state.entities.credentials,
-    app: state.app,
   };
 }
 

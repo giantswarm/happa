@@ -121,7 +121,7 @@ describe('AdminLogin', () => {
   });
 
   it('redirects to homepage if the user has been previously logged in', async () => {
-    getMockCall('/v4/user/', userResponse);
+    getMockCallTimes('/v4/user/', userResponse, 2);
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCallTimes('/v4/appcatalogs/', [], 2);
@@ -131,7 +131,7 @@ describe('AdminLogin', () => {
     helpers.isJwtExpired.mockReturnValue(false);
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      app: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData },
     });
 
     // Check if the user has been redirected to the homepage
@@ -139,7 +139,7 @@ describe('AdminLogin', () => {
   });
 
   it('renews user token if the previously stored one is expired', async () => {
-    getMockCall('/v4/user/', userResponse);
+    getMockCallTimes('/v4/user/', userResponse, 2);
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
     getMockCallTimes('/v4/appcatalogs/', [], 2);
@@ -165,7 +165,7 @@ describe('AdminLogin', () => {
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      app: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData },
     });
 
     // Check if the user has been redirected to the homepage
@@ -231,7 +231,7 @@ describe('AdminLogin', () => {
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      app: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData },
     });
 
     await findByText(

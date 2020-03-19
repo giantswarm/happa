@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait, waitForDomChange } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -24,6 +24,7 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
 describe('Signup', () => {
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/appcatalogs/');
     getMockCall('/v4/clusters/');
     getMockCall('/v4/organizations/');
@@ -48,7 +49,7 @@ describe('Signup', () => {
 
     const statusMessage = await findByText(/verifying invite.../i);
 
-    await wait(() => {
+    await waitFor(() => {
       expect(statusMessage.textContent.match(/valid/i)).toBeTruthy();
     });
   });
@@ -64,7 +65,7 @@ describe('Signup', () => {
 
     const statusMessage = await findByText(/verifying invite.../i);
 
-    await wait(() => {
+    await waitFor(() => {
       expect(statusMessage.textContent.match(/failed/i)).toBeTruthy();
       expect(
         getByText(
@@ -244,10 +245,16 @@ describe('Signup', () => {
 
     fireEvent.click(nextButton);
 
+    const formStatus = await findByText(/password looks good/i);
+
+    // Wait for the form status change content
+    // eslint-disable-next-line no-empty-function
+    await waitFor(() => {}, {
+      container: formStatus,
+    });
+
     // Validate confirm password field
     fieldToUse = getByLabelText(/password, once again/i);
-
-    await waitForDomChange();
 
     fireEvent.change(fieldToUse, {
       target: { value: 'g00dPa$$w0rD' },
@@ -272,7 +279,7 @@ describe('Signup', () => {
     fireEvent.click(nextButton);
 
     const statusMessage = await findByText(/creating account.../i);
-    await wait(() => {
+    await waitFor(() => {
       expect(statusMessage.textContent.match(/failed/i)).toBeTruthy();
     });
   });

@@ -25,7 +25,7 @@ const selectClusterNodePoolsIds = (state, props) => {
 
 export const selectClusterNodePools = (state, clusterId) => {
   const clusterNodePoolsIds =
-    state.entities.clusters.items[clusterId].nodePools;
+    state.entities.clusters.items[clusterId]?.nodePools ?? [];
 
   // Return an empty array for v4 clusters
   if (!clusterNodePoolsIds) return [];
@@ -161,6 +161,6 @@ export const selectCanClusterUpgrade = (state, clusterID) => {
   return canClusterUpgrade(
     cluster.release_version,
     targetVersion,
-    state.app.info.general.provider
+    state.main.info.general.provider
   );
 };

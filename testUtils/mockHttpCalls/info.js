@@ -1,6 +1,8 @@
 import { Providers } from 'shared/constants';
 
-export const AWSInfoResponse = {
+import { mockAPIResponse } from './constantsAndHelpers';
+
+export const AWSInfoResponse = mockAPIResponse({
   general: {
     availability_zones: {
       default: 1,
@@ -20,9 +22,9 @@ export const AWSInfoResponse = {
       default: 'm4.xlarge',
     },
   },
-};
+});
 
-export const azureInfoResponse = {
+export const azureInfoResponse = mockAPIResponse({
   general: {
     availability_zones: {
       default: 1,
@@ -41,9 +43,9 @@ export const azureInfoResponse = {
       default: 'Standard_A2_v2',
     },
   },
-};
+});
 
-export const KVMInfoResponse = {
+export const KVMInfoResponse = mockAPIResponse({
   general: {
     availability_zones: { default: 1, max: 1 },
     installation_name: 'geckon',
@@ -51,4 +53,4 @@ export const KVMInfoResponse = {
   },
   stats: { cluster_creation_duration: { median: 378, p25: 370, p75: 386 } },
   workers: { count_per_cluster: { max: 5, default: 3 } },
-};
+});

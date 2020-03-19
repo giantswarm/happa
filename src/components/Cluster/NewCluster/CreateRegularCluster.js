@@ -642,41 +642,41 @@ CreateRegularCluster.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const provider = state.app.info.general.provider;
+  const provider = state.main.info.general.provider;
   const propsToPush = {
-    minAvailabilityZones: state.app.info.general.availability_zones.default,
-    maxAvailabilityZones: state.app.info.general.availability_zones.max,
-    clusterCreationStats: state.app.info.stats.cluster_creation_duration,
+    minAvailabilityZones: state.main.info.general.availability_zones.default,
+    maxAvailabilityZones: state.main.info.general.availability_zones.max,
+    clusterCreationStats: state.main.info.stats.cluster_creation_duration,
     provider,
   };
 
   if (
-    state.app.info.workers.instance_type &&
-    state.app.info.workers.instance_type.default
+    state.main.info.workers.instance_type &&
+    state.main.info.workers.instance_type.default
   ) {
     propsToPush.defaultInstanceType =
-      state.app.info.workers.instance_type.default;
+      state.main.info.workers.instance_type.default;
   }
 
   if (
-    state.app.info.workers.vm_size &&
-    state.app.info.workers.vm_size.default
+    state.main.info.workers.vm_size &&
+    state.main.info.workers.vm_size.default
   ) {
-    propsToPush.defaultVMSize = state.app.info.workers.vm_size.default;
+    propsToPush.defaultVMSize = state.main.info.workers.vm_size.default;
   }
 
   if (provider === Providers.AWS) {
     propsToPush.allowedInstanceTypes =
-      state.app.info.workers.instance_type.options;
+      state.main.info.workers.instance_type.options;
   }
 
   if (provider === Providers.AZURE) {
-    propsToPush.allowedVMSizes = state.app.info.workers.vm_size.options;
+    propsToPush.allowedVMSizes = state.main.info.workers.vm_size.options;
   }
 
-  if (state.app.info.workers.count_per_cluster.max) {
+  if (state.main.info.workers.count_per_cluster.max) {
     propsToPush.maxWorkersPerCluster =
-      state.app.info.workers.count_per_cluster.max;
+      state.main.info.workers.count_per_cluster.max;
   }
 
   return {

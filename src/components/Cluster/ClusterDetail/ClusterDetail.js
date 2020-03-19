@@ -89,11 +89,11 @@ function mapStateToProps(state, ownProps) {
     cluster: cluster,
     clusterId: ownProps.match.params.clusterId,
     nodePools: state.entities.nodePools.items,
-    provider: state.app.info.general.provider,
+    provider: state.main.info.general.provider,
     release: release,
     targetRelease: state.entities.releases.items[targetReleaseVersion],
-    user: state.app.loggedInUser,
-    region: state.app.info.general.datacenter,
+    user: state.main.loggedInUser,
+    region: state.main.info.general.datacenter,
     isV5Cluster,
   };
 }

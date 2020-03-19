@@ -253,8 +253,8 @@ KeyPairs.propTypes = {
 function mapStateToProps(state) {
   return {
     clusters: state.entities.clusters,
-    provider: state.app.info.general.provider,
-    user: state.app.loggedInUser,
+    provider: state.main.info.general.provider,
+    user: state.main.loggedInUser,
     loadingKeyPairs: selectLoadingFlagByAction(
       state,
       CLUSTER_LOAD_KEY_PAIRS_REQUEST
