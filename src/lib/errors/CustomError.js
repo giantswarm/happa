@@ -125,8 +125,8 @@ ${this.stack}
    * Send a report to the error reporter endpoint
    * @return {Promise<void>}
    */
-  async report() {
-    await this.generateDetailedStack();
+  report() {
+    // await this.generateDetailedStack();
 
     ErrorReporter.getInstance().notify({
       error: this.serialize(),
