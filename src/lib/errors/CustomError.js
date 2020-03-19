@@ -126,8 +126,6 @@ ${this.stack}
    * @return {Promise<void>}
    */
   report() {
-    // await this.generateDetailedStack();
-
     ErrorReporter.getInstance().notify({
       error: this.serialize(),
       context: { severity: 'error' },
