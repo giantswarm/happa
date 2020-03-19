@@ -149,13 +149,10 @@ it('patches node pool name correctly and re-sort node pools accordingly', async 
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
 
-  //Wait for the Flash message to appear
   await waitFor(() => {
-    getByText(/succesfully edited node pool name/i);
+    // Is the new NP name in the document?
+    expect(getByText(newNodePoolName)).toBeInTheDocument();
   });
-
-  // Is the new NP name in the document?
-  expect(getByText(newNodePoolName)).toBeInTheDocument();
 
   // Is it now the 2nd node pool in list?
   const reSortedNodePools = getAllByTestId('node-pool-id');
