@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom/extend-expect';
+
 import { configure, waitFor } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import nock from 'nock';
