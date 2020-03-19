@@ -33,7 +33,7 @@ export let errorReporter = null;
 
 // Configure an airbrake notifier for excption notification.
 // But only when not in development.
-if (window.config.environment === 'development') {
+if (window.config.environment !== 'development') {
   // We use the airbrake notifier here instead of rolling our own notification
   // client, it is a stable project used by many. Though instead of sending our
   // exception reports to airbrake we send it to an endpoint of our own API, to
