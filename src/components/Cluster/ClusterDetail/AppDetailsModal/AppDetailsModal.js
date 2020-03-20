@@ -40,7 +40,7 @@ const AppDetailsModal = props => {
   const { app, catalog, dispatch } = props;
 
   useEffect(() => {
-    if (!catalog.apps) {
+    if (catalog && !catalog.apps) {
       dispatch(catalogLoadIndex(catalog));
     }
   }, [catalog, app, dispatch]);
@@ -141,6 +141,7 @@ const AppDetailsModal = props => {
       modalBody = (
         <InitialPane
           app={props.app}
+          catalogNotFound={!props.catalog}
           appVersions={props.appVersions}
           dispatchCreateAppConfig={createAppConfig}
           dispatchCreateAppSecret={createAppSecret}
@@ -277,7 +278,7 @@ function mapStateToProps(state, ownProps) {
   return {
     catalog: state.entities.catalogs?.items[ownProps.app.spec.catalog],
     appVersions:
-      state.entities.catalogs?.items[ownProps.app.spec.catalog].apps?.[
+      state.entities.catalogs?.items[ownProps.app.spec.catalog]?.apps?.[
         ownProps.app.spec.name
       ],
   };

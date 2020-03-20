@@ -1,6 +1,8 @@
 import { spinner } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Button from 'UI/Button';
 import VersionPicker from 'UI/VersionPicker/VersionPicker';
 
@@ -26,14 +28,39 @@ const InitialPane = props => {
 
         <div className='labelvaluepair'>
           <div className='labelvaluepair--label'>CHART VERSION</div>
-          {props.appVersions ? (
+          {/* If we have a catalog, but we're still loading the appVersions
+              then show a loading spinner.
+           */}
+          {!props.catalogNotFound && !props.appVersions && (
+            <img className='loader' width='25px' src={spinner} />
+          )}
+
+          {/* If we don't have a catalog, don't show a version picker because
+              we wil never know what versions are available.
+           */}
+          {props.catalogNotFound && (
+            <OverlayTrigger
+              overlay={
+                <Tooltip id='tooltip'>
+                  Unable to fetch versions for this app. Could not find the
+                  corresponding catalog. Changing versions is disabled.
+                </Tooltip>
+              }
+              placement='top'
+            >
+              <span>
+                {props.app.spec.version} <i className='fa fa-warning' />
+              </span>
+            </OverlayTrigger>
+          )}
+
+          {/* If we have app versions loaded, show the VersionPicker */}
+          {props.appVersions && (
             <VersionPicker
               selectedVersion={props.app.spec.version}
               versions={props.appVersions.map(v => ({ version: v.version }))}
               onChange={props.showEditChartVersionPane}
             />
-          ) : (
-            <img className='loader' width='25px' src={spinner} />
           )}
         </div>
 
@@ -136,6 +163,7 @@ const InitialPane = props => {
 
 InitialPane.propTypes = {
   app: PropTypes.object,
+  catalogNotFound: PropTypes.bool,
   appVersions: PropTypes.array,
   dispatchCreateAppConfig: PropTypes.func,
   dispatchCreateAppSecret: PropTypes.func,
