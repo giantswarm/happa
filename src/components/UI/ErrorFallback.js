@@ -2,15 +2,15 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-// ErrorFallback takes an error string or an array of error strings and will render
-//  the message/s. If it receives a falsy value or an array of falsy values it will
-// render its children.
-
 const ErrorWrapperSpan = styled.span`
   color: ${props => props.theme.colors.error};
   font-weight: 300;
 `;
 
+/**
+ * This component will return the error passed to it,
+ * if it exists, or the children, if it does not
+ */
 function ErrorFallback({ errors, children }) {
   if (errors) {
     return <ErrorWrapperSpan>{errors}</ErrorWrapperSpan>;
