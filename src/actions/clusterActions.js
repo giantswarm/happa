@@ -65,7 +65,10 @@ export function clustersList({ withLoadingFlags }) {
       .catch(error => {
         // eslint-disable-next-line no-console
         console.error(error);
-        dispatch({ type: types.CLUSTERS_LIST_ERROR, error });
+        dispatch({
+          type: types.CLUSTERS_LIST_ERROR,
+          error: error.message,
+        });
       });
   };
 }
