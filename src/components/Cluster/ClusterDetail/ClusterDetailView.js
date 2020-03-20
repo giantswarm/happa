@@ -13,6 +13,7 @@ import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
+import ErrorReporter from 'lib/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
@@ -192,23 +193,13 @@ class ClusterDetailView extends React.Component {
   };
 
   editClusterName = value => {
-    return new Promise((resolve, reject) => {
-      this.props
-        .dispatch(
-          clusterActions.clusterPatch(this.props.cluster, { name: value })
-        )
-        .then(() => {
-          new FlashMessage(
-            'Succesfully edited cluster name.',
-            messageType.SUCCESS,
-            messageTTL.MEDIUM
-          );
-          resolve();
-        })
-        .catch(error => {
-          reject(error);
-        });
-    });
+    try {
+      this.props.dispatch(
+        clusterActions.clusterPatch(this.props.cluster, { name: value })
+      );
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   };
 
   render() {
@@ -244,8 +235,8 @@ class ClusterDetailView extends React.Component {
                   <h1 style={{ marginLeft: '-10px' }}>
                     <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
                     <ViewAndEditName
-                      entity={cluster}
-                      entityType='cluster'
+                      name={cluster.name}
+                      type='cluster'
                       onSubmit={this.editClusterName}
                     />{' '}
                   </h1>
