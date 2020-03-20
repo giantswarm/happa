@@ -97,6 +97,9 @@ const ButtonsWrapper = styled.div`
     justify-content: flex-start;
     padding-left: 98px;
   }
+  ${mq('small')} {
+    padding-left: 9px;
+  }
 `;
 
 const DeleteDateWrapper = styled.div`
@@ -107,6 +110,9 @@ const ClusterDetailsDiv = styled.div`
   height: 27px;
   img {
     height: 22px;
+  }
+  ${mq('medium')} {
+    height: unset;
   }
 `;
 
