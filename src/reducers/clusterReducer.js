@@ -65,10 +65,10 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    // This is the action that we dipatch in order to actually remove a cluster from the store.
+    // This is the action that we dispatch in order to actually remove a cluster from the store.
     case types.CLUSTER_REMOVE_FROM_STORE:
       delete draft.items[action.clusterId];
-      if (action.isV5) {
+      if (action.isV5Cluster) {
         draft.v5Clusters.filter(id => id !== action.clusterId);
       }
 

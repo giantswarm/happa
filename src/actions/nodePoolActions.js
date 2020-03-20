@@ -1,5 +1,6 @@
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { StatusCodes } from 'shared/constants';
 
 import * as types from './actionTypes';
 import { modalHide } from './modalActions';
@@ -14,40 +15,56 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
       dispatch({ type: types.CLUSTER_NODEPOOLS_LOAD_REQUEST, id: clusterId });
     }
 
-    return nodePoolsApi
-      .getNodePools(clusterId)
-      .then(data => {
-        // Receiving an array-like with weird prototype from API call,
-        // so converting it to an array.
-        const nodePoolsArray = Array.from(data) || [];
+    return (
+      nodePoolsApi
+        .getNodePools(clusterId)
+        .then(data => {
+          // Receiving an array-like with weird prototype from API call,
+          // so converting it to an array.
+          const nodePoolsArray = Array.from(data) || [];
 
-        // Dispatch action for populating nodePools key inside cluster
-        dispatch({
-          type: types.CLUSTER_NODEPOOLS_LOAD_SUCCESS,
-          id: clusterId,
-          nodePools: nodePoolsArray, // nodePools
-          nodePoolsIds: nodePoolsArray.map(np => np.id), // array of ids to store in cluster
-        });
+          // Dispatch action for populating nodePools key inside cluster
+          dispatch({
+            type: types.CLUSTER_NODEPOOLS_LOAD_SUCCESS,
+            id: clusterId,
+            nodePools: nodePoolsArray, // nodePools
+            nodePoolsIds: nodePoolsArray.map(np => np.id), // array of ids to store in cluster
+          });
 
-        return nodePoolsArray;
-      })
-      .catch(error => {
-        // eslint-disable-next-line no-console
-        console.error('Error loading cluster node pools:', error);
+          return nodePoolsArray;
+        })
+        // here error.response.status -> delete node pools
+        .catch(error => {
+          if (error.response.status === StatusCodes.NotFound) {
+            // If 404, it means that the cluster has been deleted.
+            // We want to just log the errors silently, because cluster load
+            //action is already triggering an error message so the user knows
+            //what's going on.
+            dispatch({
+              type: types.CLUSTER_NODEPOOLS_LOAD_ERROR,
+              id: clusterId,
+              error: 'Node pools not found',
+            });
 
-        dispatch({
-          type: types.CLUSTER_NODEPOOLS_LOAD_ERROR,
-          id: clusterId,
-          error,
-        });
+            return;
+          }
+          // eslint-disable-next-line no-console
+          console.error('Error loading cluster node pools:', error);
 
-        new FlashMessage(
-          'Something went wrong while trying to load node pools on this cluster.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-      });
+          dispatch({
+            type: types.CLUSTER_NODEPOOLS_LOAD_ERROR,
+            id: clusterId,
+            error,
+          });
+
+          new FlashMessage(
+            'Something went wrong while trying to load node pools on this cluster.',
+            messageType.ERROR,
+            messageTTL.LONG,
+            'Please try again later or contact support: support@giantswarm.io'
+          );
+        })
+    );
   };
 }
 
