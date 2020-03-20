@@ -17,30 +17,40 @@ const ErrorWrapperSpan = styled.span`
 /**
  * Helper that finds the best way to return a pretty-printed
  * version of the error object passed to it
- * @param {any} errors - Error object
+ * @param {?(string[]|string)} errors - Error message(s)
+ * @param {string} [separator=". "] - Separator between messages (if passing an error list)
+ * @return {?string}
  */
-function parseErrors(errors) {
+function parseErrors(errors, separator = '. ') {
   if (typeof errors === 'string' || !errors) return errors;
 
-  let message = '';
+  let message = DEFAULT_MESSAGE;
 
   if (Array.isArray(errors)) {
     // Remove nullable values and join values in a string
     // TODO maybe we want to show errors in a different manner.
-    const notNullErrors = errors.filter(error => error);
-    if (notNullErrors.length === 0) return null;
+    message = errors.reduce((acc, currErr) => {
+      let newAcc = acc;
 
-    message = notNullErrors.join('. ');
-  } else {
-    // Maybe we're lucky and this is an error object/response object
-    message = errors.message || DEFAULT_MESSAGE;
+      if (currErr) {
+        if (newAcc !== '') {
+          newAcc += separator;
+        }
+
+        newAcc += currErr;
+      }
+
+      return newAcc;
+    }, '');
+
+    if (message === '') return null;
   }
 
   return message;
 }
 
-function ErrorFallback({ errors, children }) {
-  const errorMessage = parseErrors(errors);
+function ErrorFallback({ errors, children, separator }) {
+  const errorMessage = parseErrors(errors, separator);
 
   return errorMessage ? (
     <ErrorWrapperSpan>{errorMessage}</ErrorWrapperSpan>
@@ -50,12 +60,9 @@ function ErrorFallback({ errors, children }) {
 }
 
 ErrorFallback.propTypes = {
-  errors: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.array,
-  ]),
+  errors: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   children: PropTypes.node,
+  separator: PropTypes.string,
 };
 
 export default ErrorFallback;
