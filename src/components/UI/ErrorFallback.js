@@ -30,15 +30,14 @@ function parseErrors(errors, separator = '. ') {
     // Remove nullable values and join values in a string
     // TODO maybe we want to show errors in a different manner.
     message = errors.reduce((acc, currErr) => {
+      if (!currErr) return '';
+
       let newAcc = acc;
-
-      if (currErr) {
-        if (newAcc !== '') {
-          newAcc += separator;
-        }
-
-        newAcc += currErr;
+      if (newAcc !== '') {
+        newAcc += separator;
       }
+
+      newAcc += currErr;
 
       return newAcc;
     }, '');
