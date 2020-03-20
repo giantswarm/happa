@@ -65,7 +65,10 @@ export function clustersList({ withLoadingFlags }) {
       .catch(error => {
         // eslint-disable-next-line no-console
         console.error(error);
-        dispatch({ type: types.CLUSTERS_LIST_ERROR, error });
+        dispatch({
+          type: types.CLUSTERS_LIST_ERROR,
+          error: error.message,
+        });
       });
   };
 }
@@ -186,7 +189,7 @@ export function clusterLoadDetails(
 
       return cluster;
     } catch (error) {
-      if (error.status === StatusCodes.NotFound) {
+      if (error.response.status === StatusCodes.NotFound) {
         new FlashMessage(
           `Cluster <code>${clusterId}</code> no longer exists.`,
           messageType.INFO,
