@@ -24,16 +24,16 @@ function parseErrors(errors) {
 
   let message = '';
 
-  if (!Array.isArray(errors)) {
-    // Maybe we're lucky and this is an error object/response object
-    message = errors.message || DEFAULT_MESSAGE;
-  } else {
+  if (Array.isArray(errors)) {
     // Remove nullable values and join values in a string
     // TODO maybe we want to show errors in a different manner.
     const notNullErrors = errors.filter(error => error);
     if (notNullErrors.length === 0) return null;
 
     message = notNullErrors.join('. ');
+  } else {
+    // Maybe we're lucky and this is an error object/response object
+    message = errors.message || DEFAULT_MESSAGE;
   }
 
   return message;
