@@ -40,7 +40,7 @@ export class CustomError extends Error {
    * @param {string} [customName] - The error name (defaults to the error constructor name)
    * @return {CustomError}
    */
-  static createFromError(error, customName = error.constructor.name) {
+  static createFromError(error, customName = error.name) {
     const newError = new CustomError(customName, error.message);
 
     return newError;
