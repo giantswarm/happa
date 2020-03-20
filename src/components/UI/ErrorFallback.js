@@ -50,7 +50,11 @@ function ErrorFallback({ errors, children }) {
 }
 
 ErrorFallback.propTypes = {
-  errors: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  errors: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.array,
+  ]),
   children: PropTypes.node,
 };
 
