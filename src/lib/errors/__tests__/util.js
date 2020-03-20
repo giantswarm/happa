@@ -10,7 +10,7 @@ describe('error utils', () => {
       expect(is('Error', error)).toBe(false);
     });
 
-    it('asserts built-in error types', () => {
+    it('asserts native error types', () => {
       let error = new Error('Something went wrong!');
       expect(is('Error', error)).toBe(true);
 

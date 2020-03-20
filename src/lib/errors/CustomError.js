@@ -15,12 +15,6 @@ import StackTrace from 'stacktrace-js';
  */
 export class CustomError extends Error {
   /**
-   * Resolver that finds sourcemaps and resolves
-   * function names, line numbers, file names
-   */
-  static resolver = new StackTraceGPS();
-
-  /**
    * Create a custom error object from previously
    * serialized custom error
    * @param {ICustomError} obj - Serialized custom error
@@ -62,6 +56,21 @@ export class CustomError extends Error {
 
     return output;
   }
+
+  /**
+   * Resolver that finds sourcemaps and resolves
+   * function names, line numbers, file names
+   * @private
+   */
+  resolver = new StackTraceGPS();
+
+  /**
+   * Reporter that "reports" the error to a
+   * 3rd party error notifier
+   * @private
+   * @type {ErrorReporter}
+   */
+  reporter = ErrorReporter.getInstance();
 
   /**
    * Create new Custom error object
@@ -106,7 +115,7 @@ export class CustomError extends Error {
 
       let stackFrames = StackTrace.getSync();
       stackFrames = stackFrames.map(frame => {
-        return CustomError.resolver.pinpoint(frame);
+        return this.resolver.pinpoint(frame);
       });
       stackFrames = await Promise.all(stackFrames);
 
@@ -114,8 +123,7 @@ export class CustomError extends Error {
     } catch (err) {
       stack = `Couldn't get the detailed stack: ${err.message}
 
-${this.stack}
-      `;
+${this.stack}`;
     }
 
     this.stack = stack;
@@ -126,7 +134,7 @@ ${this.stack}
    * @return {Promise<void>}
    */
   report() {
-    ErrorReporter.getInstance().notify({
+    this.reporter.notify({
       error: this.serialize(),
       context: { severity: 'error' },
     });
