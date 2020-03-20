@@ -11,9 +11,9 @@ const ErrorWrapperSpan = styled.span`
  * This component will return the error passed to it,
  * if it exists, or the children, if it does not
  */
-function ErrorFallback({ errors, children }) {
+function ErrorFallback({ errors, children, ...rest }) {
   if (errors) {
-    return <ErrorWrapperSpan>{errors}</ErrorWrapperSpan>;
+    return <ErrorWrapperSpan {...rest}>{errors}</ErrorWrapperSpan>;
   }
 
   return children;
