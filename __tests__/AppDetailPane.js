@@ -9,6 +9,7 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
+  appResponseNoCatalog,
   appResponseWithCustomConfig,
   appsResponse,
   AWSInfoResponse,
@@ -290,5 +291,20 @@ describe('Installed app detail pane', () => {
     expect(
       await findByText('No apps installed on this cluster')
     ).toBeInTheDocument();
+  });
+
+  it('can deal with apps when not able to find the corresponding appcatalog', async () => {
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, [appResponseNoCatalog]);
+
+    const { findByText, getByText } = renderRouteWithStore(clusterDetailPath);
+
+    const appsTab = await findByText(/^apps$/i);
+    fireEvent.click(appsTab);
+
+    // Click on app to open the editing modal
+    const appLabel = getByText(/chart version: 0.0.1/i);
+    fireEvent.click(appLabel);
+
+    // If the app doesn't explode, we're ok and the test has passed.
   });
 });

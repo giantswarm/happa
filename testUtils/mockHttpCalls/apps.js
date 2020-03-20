@@ -17,6 +17,25 @@ export const appResponseWithCustomConfig = {
   },
 };
 
+export const appResponseNoCatalog = {
+  metadata: { name: 'sone app', labels: {} },
+  spec: {
+    catalog: 'INVISIBLE-CATALOG',
+    name: 'some-app',
+    namespace: 'giantswarm',
+    user_config: {
+      configmap: { name: '', namespace: '' },
+      secret: { name: '', namespace: '' },
+    },
+    version: '0.0.1',
+  },
+  status: {
+    app_version: '',
+    release: { last_deployed: '0001-01-01T00:00:00Z', status: '' },
+    version: '',
+  },
+};
+
 export const appsResponse = [
   {
     metadata: { name: 'my app', labels: {} },
