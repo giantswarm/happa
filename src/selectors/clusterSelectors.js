@@ -55,12 +55,12 @@ export const selectErrorByAction = (state, actionType) => {
 
 export const selectErrorMessageByIdAndAction = (state, id, actionType) => {
   return (
-    state.errorsByEntity[id]?.[typeWithoutSuffix(actionType)].message ?? null
+    state.errorsByEntity[id]?.[typeWithoutSuffix(actionType)]?.message ?? null
   );
 };
 
 export const selectErrorMessageByAction = (state, actionType) => {
-  return state.errors[typeWithoutSuffix(actionType)].message ?? null;
+  return state.errors[typeWithoutSuffix(actionType)]?.message ?? null;
 };
 
 // Memoized Reselect selectors
