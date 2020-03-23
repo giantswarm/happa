@@ -89,7 +89,8 @@ const ButtonsWrapper = styled.div`
     top: 21px;
     right: 8px;
   }
-  ${mq('725')} {
+  /*eslint-disable-next-line no-magic-numbers*/
+  ${mq(725)} {
     position: relative;
     width: 100%;
     top: 9px;
