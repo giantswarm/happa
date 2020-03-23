@@ -1,5 +1,3 @@
-export const CSSBreakpoints = {
-  small: 'small',
-  medium: 'medium',
-  large: 'large',
-};
+export const Small = 'small';
+export const Medium = 'medium';
+export const Large = 'large';

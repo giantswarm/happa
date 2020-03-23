@@ -14,7 +14,7 @@ import {
   selectClusterNodePools,
   selectErrorByIdAndAction,
 } from 'selectors/clusterSelectors';
-import { CSSBreakpoints } from 'shared/constants/CSSBreakpoints';
+import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import { Dot, mq } from 'styles';
 import Button from 'UI/Button';
@@ -55,7 +55,7 @@ const WrapperStyles = props => css`
   ${LabelWrapper}, ${TitleWrapper} {
     font-size: 1.2em;
   }
-  ${mq(CSSBreakpoints.small)} {
+  ${mq(CSSBreakpoints.Small)} {
     flex-direction: column;
     & > div {
       width: 100%;
@@ -84,7 +84,7 @@ const ButtonsWrapper = styled.div`
   flex: 0 0 210px;
   display: flex;
   justify-content: flex-end;
-  ${mq(CSSBreakpoints.medium)} {
+  ${mq(CSSBreakpoints.Medium)} {
     flex: unset;
     position: absolute;
     top: 21px;
@@ -99,7 +99,7 @@ const ButtonsWrapper = styled.div`
     justify-content: flex-start;
     padding-left: 98px;
   }
-  ${mq(CSSBreakpoints.small)} {
+  ${mq(CSSBreakpoints.Small)} {
     padding-left: 9px;
   }
 `;
@@ -113,7 +113,7 @@ const ClusterDetailsDiv = styled.div`
   img {
     height: 22px;
   }
-  ${mq(CSSBreakpoints.medium)} {
+  ${mq(CSSBreakpoints.Medium)} {
     height: unset;
   }
 `;
