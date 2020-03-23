@@ -1,3 +1,3 @@
-export const Small = 'small';
-export const Medium = 'medium';
-export const Large = 'large';
+export const SMALL = 'small';
+export const MEDIUM = 'medium';
+export const LARGE = 'large';

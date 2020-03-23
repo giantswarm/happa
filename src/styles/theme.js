@@ -56,9 +56,9 @@ const theme = {
   },
   border_radius: '4px',
   breakpoints: {
-    [CSSBreakpoints.Small]: 540,
-    [CSSBreakpoints.Medium]: 825,
-    [CSSBreakpoints.Large]: 1200,
+    [CSSBreakpoints.SMALL]: 540,
+    [CSSBreakpoints.MEDIUM]: 825,
+    [CSSBreakpoints.LARGE]: 1200,
   },
   fontFamilies: {
     console: 'Inconsolata, monospace',

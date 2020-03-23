@@ -55,7 +55,7 @@ const WrapperStyles = props => css`
   ${LabelWrapper}, ${TitleWrapper} {
     font-size: 1.2em;
   }
-  ${mq(CSSBreakpoints.Small)} {
+  ${mq(CSSBreakpoints.SMALL)} {
     flex-direction: column;
     & > div {
       width: 100%;
@@ -84,7 +84,7 @@ const ButtonsWrapper = styled.div`
   flex: 0 0 210px;
   display: flex;
   justify-content: flex-end;
-  ${mq(CSSBreakpoints.Medium)} {
+  ${mq(CSSBreakpoints.MEDIUM)} {
     flex: unset;
     position: absolute;
     top: 21px;
@@ -99,7 +99,7 @@ const ButtonsWrapper = styled.div`
     justify-content: flex-start;
     padding-left: 98px;
   }
-  ${mq(CSSBreakpoints.Small)} {
+  ${mq(CSSBreakpoints.SMALL)} {
     padding-left: 9px;
   }
 `;
@@ -113,7 +113,7 @@ const ClusterDetailsDiv = styled.div`
   img {
     height: 22px;
   }
-  ${mq(CSSBreakpoints.Medium)} {
+  ${mq(CSSBreakpoints.MEDIUM)} {
     height: unset;
   }
 `;
