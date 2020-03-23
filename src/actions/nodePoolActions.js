@@ -54,7 +54,7 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
           dispatch({
             type: types.CLUSTER_NODEPOOLS_LOAD_ERROR,
             id: clusterId,
-            error,
+            error: error.message,
           });
 
           new FlashMessage(
