@@ -11,7 +11,7 @@ import * as organizationActions from './organizationActions';
 import * as releaseActions from './releaseActions';
 import * as userActions from './userActions';
 
-export const batchedLayout = () => async dispatch => {
+export const batchedLayout = () => async (dispatch) => {
   try {
     await dispatch(userActions.refreshUserInfo());
     await dispatch(userActions.getInfo());
@@ -42,7 +42,7 @@ export const batchedLayout = () => async dispatch => {
   }
 };
 
-export const batchedRefreshClusters = () => async dispatch => {
+export const batchedRefreshClusters = () => async (dispatch) => {
   try {
     // Removed clustersList() cause it overwrites the store and triggers new rerenders.
     await dispatch(
@@ -68,7 +68,7 @@ export const batchedClusterCreate = (
   cluster,
   isV5Cluster,
   nodePools = []
-) => async dispatch => {
+) => async (dispatch) => {
   try {
     const { clusterId, owner } = await dispatch(
       clusterActions.clusterCreate(cluster, isV5Cluster)
@@ -110,7 +110,7 @@ export const batchedClusterDetailView = (
   organizationId,
   clusterId,
   isV5Cluster
-) => async dispatch => {
+) => async (dispatch) => {
   try {
     // Lets use Promise.all when we have a series of async calls that not depend
     // on each another. It's faster and it's best from an error handling perspective.
@@ -149,9 +149,9 @@ export const batchedClusterDetailView = (
 export const batchedRefreshClusterDetailView = (
   clusterId,
   isV5Cluster
-) => async dispatch => {
+) => async (dispatch) => {
   try {
-    await dispatch(
+    const cluster = await dispatch(
       clusterActions.clusterLoadDetails(clusterId, {
         withLoadingFlags: false,
         initializeNodePools: false,
@@ -164,13 +164,18 @@ export const batchedRefreshClusterDetailView = (
         })
       );
     }
+    // If cluster is an empty object, it means that it has been removed.
+    // We don't want to load apps in this scenario.
+    if (!Object.keys(cluster).length === 0) {
+      dispatch(appActions.loadApps(clusterId));
+    }
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('Error in batchedRefreshClusterDetailView', err);
   }
 };
 
-export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
+export const batchedClusterDeleteConfirmed = (cluster) => async (dispatch) => {
   try {
     const organizationDetailPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Detail,
@@ -188,7 +193,7 @@ export const batchedClusterDeleteConfirmed = cluster => async dispatch => {
   }
 };
 
-export const batchedOrganizationSelect = orgId => async dispatch => {
+export const batchedOrganizationSelect = (orgId) => async (dispatch) => {
   try {
     await dispatch(organizationActions.organizationSelect(orgId));
     dispatch(

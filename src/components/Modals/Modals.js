@@ -48,15 +48,15 @@ class Modals extends React.Component {
     });
   }
 
-  deleteClusterConfirmed = clusterId => {
+  deleteClusterConfirmed = (clusterId) => {
     this.props.dispatch(clusterDeleteConfirmed(clusterId));
   };
 
-  deleteOrganisation = orgId => {
+  deleteOrganisation = (orgId) => {
     this.props.dispatch(organizationDeleteConfirmed(orgId));
   };
 
-  createOrganisation = e => {
+  createOrganisation = (e) => {
     e.preventDefault();
 
     const organizationName = this.orgNameInputRef.current?.value();
@@ -66,7 +66,7 @@ class Modals extends React.Component {
     }
   };
 
-  addMember = e => {
+  addMember = (e) => {
     e.preventDefault();
 
     if (this.state.emailValid) {
@@ -83,7 +83,7 @@ class Modals extends React.Component {
     }
   };
 
-  removeMember = e => {
+  removeMember = (e) => {
     e.preventDefault();
 
     const email = this.props.modal.templateValues.email;
@@ -91,7 +91,7 @@ class Modals extends React.Component {
     this.props.dispatch(organizationRemoveMemberConfirmed(orgId, email));
   };
 
-  emailFieldChanged = emailField => {
+  emailFieldChanged = (emailField) => {
     const email = this.props.modal.templateValues.email;
     const orgId = this.props.modal.templateValues.orgId;
     this.props.dispatch(organizationAddMemberTyping(orgId, email));
@@ -101,11 +101,11 @@ class Modals extends React.Component {
     });
   };
 
-  onOrganizationNameChange = organizationName => {
+  onOrganizationNameChange = (organizationName) => {
     this.setState({ organizationName });
   };
 
-  validateOrganizationName = organizationName => {
+  validateOrganizationName = (organizationName) => {
     if (!organizationName) {
       return {
         valid: false,
@@ -427,7 +427,7 @@ Modals.propTypes = {
 function mapStateToProps(state) {
   return {
     modal: state.modal,
-    selectedOrganization: state.app.selectedOrganization,
+    selectedOrganization: state.main.selectedOrganization,
     organizations: state.entities.organizations.items,
     clusters: state.entities.clusters.items,
   };

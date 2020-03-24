@@ -14,17 +14,34 @@ import {
   selectClusterNodePools,
   selectErrorByIdAndAction,
 } from 'selectors/clusterSelectors';
+import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { Dot } from 'styles';
+import { Dot, mq } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
-import ClusterDashboardResources from './ClusterDashboardResources';
+import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
+import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';
 import UpgradeNotice from './UpgradeNotice';
 
-const WrapperStyles = props => css`
+const LabelWrapper = styled.div`
+  width: 90px;
+`;
+
+const ContentWrapper = styled.div`
+  flex: 1;
+  padding-right: 15px;
+`;
+
+const TitleWrapper = styled.div``;
+
+const NameWrapper = styled.span`
+  font-weight: 700;
+`;
+
+const WrapperStyles = (props) => css`
   display: flex;
   background-color: ${props.theme.colors.darkBlueLighter1};
   border-radius: 5px;
@@ -33,6 +50,25 @@ const WrapperStyles = props => css`
   padding: 19px;
   margin-bottom: 20px;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  position: relative;
+  flex-wrap: wrap;
+  ${LabelWrapper}, ${TitleWrapper} {
+    font-size: 1.2em;
+  }
+  ${mq(CSSBreakpoints.SMALL)} {
+    flex-direction: column;
+    & > div {
+      width: 100%;
+    }
+    ${LabelWrapper} {
+      margin-bottom: 5px;
+    }
+    /* Font sizes */
+    font-size: 0.9em;
+    ${LabelWrapper}, ${TitleWrapper} {
+      font-size: 1em;
+    }
+  }
 `;
 
 const Wrapper = styled.div`
@@ -41,36 +77,45 @@ const Wrapper = styled.div`
 
 const WrapperDeleted = styled.div`
   ${WrapperStyles};
-  background-color: ${props => props.theme.colors.darkBlueDarker1};
-`;
-
-const LabelWrapper = styled.div`
-  flex: 0 0 90px;
-  font-size: 1.2em;
-`;
-
-const ContentWrapper = styled.div`
-  flex: 1;
-  padding-right: 15px;
-`;
-
-const TitleWrapper = styled.div`
-  font-size: 1.2em;
-  z-index: 120;
-  position: relative;
-`;
-
-const NameWrapper = styled.span`
-  font-weight: 700;
+  background-color: ${(props) => props.theme.colors.darkBlueDarker1};
 `;
 
 const ButtonsWrapper = styled.div`
-  text-align: right;
   flex: 0 0 210px;
+  display: flex;
+  justify-content: flex-end;
+  ${mq(CSSBreakpoints.MEDIUM)} {
+    flex: unset;
+    position: absolute;
+    top: 21px;
+    right: 8px;
+  }
+  /*eslint-disable-next-line no-magic-numbers*/
+  ${mq(725)} {
+    position: relative;
+    width: 100%;
+    top: 9px;
+    margin-bottom: 9px;
+    justify-content: flex-start;
+    padding-left: 98px;
+  }
+  ${mq(CSSBreakpoints.SMALL)} {
+    padding-left: 9px;
+  }
 `;
 
 const DeleteDateWrapper = styled.div`
-  color: ${props => props.theme.colors.darkBlueLighter5};
+  color: ${(props) => props.theme.colors.darkBlueLighter5};
+`;
+
+const ClusterDetailsDiv = styled.div`
+  height: 27px;
+  img {
+    height: 22px;
+  }
+  ${mq(CSSBreakpoints.MEDIUM)} {
+    height: unset;
+  }
 `;
 
 function ClusterDashboardItem({
@@ -165,12 +210,18 @@ function ClusterDashboardItem({
           Created {relativeDate(cluster.create_date)}
         </div>
 
+        {/* Cluster resources */}
         <ErrorFallback errors={nodePoolsLoadError}>
-          <ClusterDashboardResources
-            cluster={cluster}
-            nodePools={nodePools}
-            isV5Cluster={isV5Cluster}
-          />
+          <ClusterDetailsDiv>
+            {isV5Cluster ? (
+              <ClusterDashboardResourcesV5
+                cluster={cluster}
+                nodePools={nodePools}
+              />
+            ) : (
+              <ClusterDashboardResourcesV4 cluster={cluster} />
+            )}
+          </ClusterDetailsDiv>
         </ErrorFallback>
       </ContentWrapper>
 

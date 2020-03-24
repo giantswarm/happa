@@ -22,7 +22,7 @@ import LoadingIndicator from './LoadingIndicator';
 // You can also disable the button by setting the disabled prop to true.
 //
 
-const Button = props => {
+const Button = (props) => {
   const {
     loadingPosition,
     loading,
@@ -39,9 +39,7 @@ const Button = props => {
     <div className='progress_button--container'>
       {loadingPosition === 'left' ? (
         <LoadingIndicator loading={loading} loadingPosition={loadingPosition} />
-      ) : (
-        undefined
-      )}
+      ) : undefined}
 
       <BsButton
         bsSize={bsSize}
@@ -56,9 +54,7 @@ const Button = props => {
 
       {loadingPosition === 'right' ? (
         <LoadingIndicator loading={loading} loadingPosition={loadingPosition} />
-      ) : (
-        undefined
-      )}
+      ) : undefined}
     </div>
   );
 };

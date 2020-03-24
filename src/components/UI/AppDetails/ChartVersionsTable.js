@@ -7,7 +7,7 @@ import { Ellipsis } from 'styles/';
 const StyledCopyable = styled(Copyable)``;
 
 const ChartVersionTable = styled.table`
-  border: 1px solid ${props => props.theme.colors.shade4};
+  border: 1px solid ${(props) => props.theme.colors.shade4};
   margin-top: 10px;
   max-width: 320px;
   table-layout: fixed;
@@ -33,7 +33,7 @@ const ChartVersionTable = styled.table`
   }
 
   td.appVersion {
-    border-left: 1px dashed ${props => props.theme.colors.shade1};
+    border-left: 1px dashed ${(props) => props.theme.colors.shade1};
     text-align: center;
 
     ${StyledCopyable} {
@@ -42,18 +42,18 @@ const ChartVersionTable = styled.table`
       position: relative;
       left: 8px;
       code {
-        background-color: ${props => props.theme.colors.darkBlueLighter8};
-        color: ${props => props.theme.colors.darkBlue};
+        background-color: ${(props) => props.theme.colors.darkBlueLighter8};
+        color: ${(props) => props.theme.colors.darkBlue};
       }
     }
   }
 
   tr:nth-of-type(even) {
-    background-color: ${props => props.theme.colors.shade4};
+    background-color: ${(props) => props.theme.colors.shade4};
   }
 `;
 
-const ChartVersionsTable = props => {
+const ChartVersionsTable = (props) => {
   const { appVersions } = props;
 
   const groupedAppVersions = appVersions.reduce((groups, obj) => {
@@ -83,7 +83,7 @@ const ChartVersionsTable = props => {
             return (
               <tr key={appVersionString}>
                 <td>
-                  {entries.map(appVersionObject => {
+                  {entries.map((appVersionObject) => {
                     return (
                       <StyledCopyable
                         key={appVersionObject.version}

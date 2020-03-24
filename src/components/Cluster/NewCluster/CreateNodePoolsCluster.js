@@ -61,7 +61,7 @@ export const FlexColumnDiv = styled.div`
     }
   }
   .label-span {
-    color: ${props => props.theme.colors.white1};
+    color: ${(props) => props.theme.colors.white1};
   }
   .label-span,
   input,
@@ -74,7 +74,7 @@ export const FlexColumnDiv = styled.div`
   p {
     margin: 0;
     font-size: 14px;
-    color: ${props => props.theme.colors.white1};
+    color: ${(props) => props.theme.colors.white1};
   }
   /* Make room for name validating message */
   .name-container {
@@ -91,7 +91,7 @@ const FlexRowDiv = styled.div`
   max-width: 650px;
 `;
 
-export const RadioWrapper = props => css`
+export const RadioWrapper = (props) => css`
   display: flex;
   justify-content: flex-start;
   position: relative;
@@ -157,13 +157,13 @@ const AZWrapperDiv = styled.div`
   .danger {
     font-weight: 400;
     margin: 0 0 0 15px;
-    color: ${props => props.theme.colors.error};
+    color: ${(props) => props.theme.colors.error};
   }
 `;
 
 const AddNodePoolWrapperDiv = styled.div`
   ${AddNodePoolWrapper};
-  background-color: ${props => props.theme.colors.shade10};
+  background-color: ${(props) => props.theme.colors.shade10};
   border-radius: 5px;
   padding: 20px 20px 0;
   margin-bottom: 20px;
@@ -230,7 +230,7 @@ class CreateNodePoolsCluster extends Component {
     this.isValid();
   }
 
-  updateName = event => {
+  updateName = (event) => {
     const name = event.target.value;
     const maxNameLength = 100;
     const [isValid, message] = hasAppropriateLength(name, 0, maxNameLength);
@@ -240,14 +240,14 @@ class CreateNodePoolsCluster extends Component {
     // We don't let the user write more characters if the name exceeds the max number allowed
     if (!isValid) {
       this.setState(
-        produce(draft => {
+        produce((draft) => {
           draft.name.validationError = message;
         })
       );
     }
 
     this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.name.valid = isValid;
         draft.name.value = name;
         draft.name.validationError = message;
@@ -266,8 +266,8 @@ class CreateNodePoolsCluster extends Component {
     } = this.state;
 
     const areNodePoolsValid = Object.keys(nodePoolsForms.nodePools)
-      .map(np => nodePoolsForms.nodePools[np].isValid)
-      .every(np => np); // This checks if everything is true.
+      .map((np) => nodePoolsForms.nodePools[np].isValid)
+      .every((np) => np); // This checks if everything is true.
 
     const isValid =
       name.valid &&
@@ -283,7 +283,7 @@ class CreateNodePoolsCluster extends Component {
     this.setState({ submitting: true });
 
     const nodePools = Object.values(this.state.nodePoolsForms.nodePools).map(
-      np => np.data
+      (np) => np.data
     );
 
     const createPayload = {
@@ -309,12 +309,12 @@ class CreateNodePoolsCluster extends Component {
   };
 
   toggleMasterAZSelector = () => {
-    this.setState(state => ({
+    this.setState((state) => ({
       hasAZLabels: !state.hasAZLabels,
     }));
   };
 
-  updateAZ = payload => {
+  updateAZ = (payload) => {
     this.setState({ availabilityZonesLabels: payload });
   };
 
@@ -323,15 +323,15 @@ class CreateNodePoolsCluster extends Component {
     const nextId = ids.length === 0 ? 1 : parseInt(ids.sort().reverse()[0]) + 1;
 
     this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.nodePoolsForms.nodePools[nextId] = defaultNodePool(nextId);
       })
     );
   };
 
-  removeNodePoolForm = id => {
+  removeNodePoolForm = (id) => {
     this.setState(
-      produce(draft => {
+      produce((draft) => {
         delete draft.nodePoolsForms.nodePools[id];
       })
     );
@@ -339,7 +339,7 @@ class CreateNodePoolsCluster extends Component {
 
   updateNodePoolForm = (data, id) => {
     this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.nodePoolsForms.nodePools[id] = data;
       })
     );
@@ -402,8 +402,9 @@ class CreateNodePoolsCluster extends Component {
                   <div>
                     <div className='fake-radio'>
                       <div
-                        className={`fake-radio-checked ${hasAZLabels ===
-                          false && 'visible'}`}
+                        className={`fake-radio-checked ${
+                          hasAZLabels === false && 'visible'
+                        }`}
                       />
                     </div>
                     <input
@@ -425,8 +426,9 @@ class CreateNodePoolsCluster extends Component {
                   <div>
                     <div className='fake-radio'>
                       <div
-                        className={`fake-radio-checked ${hasAZLabels === true &&
-                          'visible'}`}
+                        className={`fake-radio-checked ${
+                          hasAZLabels === true && 'visible'
+                        }`}
                       />
                     </div>
                     <input
@@ -473,7 +475,7 @@ class CreateNodePoolsCluster extends Component {
               </FlexColumnDiv>
               {Object.keys(nodePools).length === 0 && <hr />}
               <TransitionGroup>
-                {Object.keys(nodePools).map(npId => {
+                {Object.keys(nodePools).map((npId) => {
                   const nodePoolName = nodePools[npId].data.name;
 
                   return (
@@ -572,7 +574,7 @@ CreateNodePoolsCluster.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { availability_zones: AZ } = state.app.info.general;
+  const { availability_zones: AZ } = state.main.info.general;
   const availabilityZones = AZ.zones;
   // More than 4 AZs is not allowed by now.
   // eslint-disable-next-line no-magic-numbers
@@ -580,16 +582,16 @@ function mapStateToProps(state) {
   const minAZ = 1;
   const defaultAZ = AZ.default;
 
-  const provider = state.app.info.general.provider;
-  const clusterCreationStats = state.app.info.stats.cluster_creation_duration;
+  const provider = state.main.info.general.provider;
+  const clusterCreationStats = state.main.info.stats.cluster_creation_duration;
 
   // eslint-disable-next-line init-declarations
   let defaultInstanceType;
   if (
-    state.app.info.workers.instance_type &&
-    state.app.info.workers.instance_type.default
+    state.main.info.workers.instance_type &&
+    state.main.info.workers.instance_type.default
   ) {
-    defaultInstanceType = state.app.info.workers.instance_type.default;
+    defaultInstanceType = state.main.info.workers.instance_type.default;
   } else {
     defaultInstanceType = 'm3.large';
   }
@@ -600,7 +602,7 @@ function mapStateToProps(state) {
 
   const allowedInstanceTypes =
     provider === Providers.AWS
-      ? state.app.info.workers.instance_type.options
+      ? state.main.info.workers.instance_type.options
       : [];
 
   return {

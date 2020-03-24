@@ -46,9 +46,9 @@ export function logoutError(errorMessage) {
 // refreshUserInfo performs the /v4/user/ call and updates what Happa knows
 // about the user based on the response.
 export function refreshUserInfo() {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     const usersApi = new GiantSwarm.UsersApi();
-    const loggedInUser = getState().app.loggedInUser;
+    const loggedInUser = getState().main.loggedInUser;
 
     if (!loggedInUser) {
       dispatch({
@@ -63,21 +63,24 @@ export function refreshUserInfo() {
 
     return usersApi
       .getCurrentUser()
-      .then(data => {
+      .then((data) => {
         dispatch({
           type: types.REFRESH_USER_INFO_SUCCESS,
           email: data.email,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.status === StatusCodes.Unauthorized) {
           new FlashMessage(
             'Please log in again, as your previously saved credentials appear to be invalid.',
             messageType.WARNING,
             messageTTL.MEDIUM
           );
+          const redirectPath = loggedInUser.isAdmin
+            ? AppRoutes.AdminLogin
+            : AppRoutes.Login;
 
-          dispatch(push(AppRoutes.Login));
+          dispatch(push(redirectPath));
         } else {
           new FlashMessage(
             'Something went wrong while trying to load user and organization information.',
@@ -99,8 +102,8 @@ export function refreshUserInfo() {
 // It then dispatches loginSuccess with the users token and email
 // the userReducer takes care of storing this in state.
 export function auth0Login(authResult) {
-  return function(dispatch) {
-    return new Promise(resolve => {
+  return function (dispatch) {
+    return new Promise((resolve) => {
       let isAdmin = false;
       if (
         authResult.idTokenPayload['https://giantswarm.io/groups'] ===
@@ -130,7 +133,7 @@ export function auth0Login(authResult) {
 // It then dispatches loginSuccess with the users token and email
 // the userReducer takes care of storing this in state.
 export function giantswarmLogin(email, password) {
-  return function(dispatch) {
+  return function (dispatch) {
     const authTokensApi = new GiantSwarm.AuthTokensApi();
 
     dispatch({
@@ -143,7 +146,7 @@ export function giantswarmLogin(email, password) {
         email: email,
         password_base64: Base64.encode(password),
       })
-      .then(response => {
+      .then((response) => {
         const userData = {
           email: email,
           auth: {
@@ -154,13 +157,13 @@ export function giantswarmLogin(email, password) {
 
         return userData;
       })
-      .then(userData => {
+      .then((userData) => {
         localStorage.setItem('user', JSON.stringify(userData));
         dispatch(loginSuccess(userData));
 
         return userData;
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error trying to log in:', error);
 
@@ -176,11 +179,11 @@ export function giantswarmLogin(email, password) {
 // it then dispatches logoutSuccess, which will 'shutdown' happa, and return
 // it to the login screen.
 export function giantswarmLogout() {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     let authToken = null;
 
-    if (getState().app.loggedInUser) {
-      authToken = getState().app.loggedInUser.auth.token;
+    if (getState().main.loggedInUser) {
+      authToken = getState().main.loggedInUser.auth.token;
     }
 
     const authTokensApi = new GiantSwarm.AuthTokensApi();
@@ -194,7 +197,7 @@ export function giantswarmLogout() {
 
         return dispatch(logoutSuccess());
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch(push(AppRoutes.Login));
         dispatch(logoutError(error));
         throw error;
@@ -209,7 +212,7 @@ export function giantswarmLogout() {
  * flash message to let the user know we couldn't authenticate them.
  */
 export function unauthorized() {
-  return function(dispatch) {
+  return function (dispatch) {
     // Clear any lingering flash messages that would pop up due to failed
     // requests.
     clearQueues();
@@ -239,7 +242,7 @@ export function unauthorized() {
 // getInfo calls the /v4/info/ endpoint and dispatches accordingly to store
 // the resulting info into the state.
 export function getInfo() {
-  return async function(dispatch, getState) {
+  return async function (dispatch, getState) {
     dispatch({ type: types.INFO_LOAD_REQUEST });
 
     try {
@@ -248,11 +251,11 @@ export function getInfo() {
         getState()
       );
       const httpClient = new GiantSwarmClient(authToken, authScheme);
-      const info = await getInstallationInfo(httpClient);
+      const infoRes = await getInstallationInfo(httpClient);
 
       dispatch({
         type: types.INFO_LOAD_SUCCESS,
-        info: info,
+        info: infoRes.data,
       });
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -260,7 +263,7 @@ export function getInfo() {
 
       dispatch({
         type: types.INFO_LOAD_ERROR,
-        error: error,
+        error: error.data,
       });
 
       throw error;
@@ -273,13 +276,13 @@ export function getInfo() {
 // Loads all users from the Giant Swarm API into state.
 // /v4/users/
 export function usersLoad() {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     const usersApi = new GiantSwarm.UsersApi();
 
     const alreadyFetching = getState().entities.users.isFetching;
 
     if (alreadyFetching) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         resolve();
       });
     }
@@ -288,10 +291,10 @@ export function usersLoad() {
 
     return usersApi
       .getUsers()
-      .then(usersArray => {
+      .then((usersArray) => {
         const users = {};
 
-        _.each(usersArray, user => {
+        _.each(usersArray, (user) => {
           user.emaildomain = user.email.split('@')[1];
           users[user.email] = user;
         });
@@ -301,7 +304,7 @@ export function usersLoad() {
           users,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error(error);
 
@@ -323,7 +326,7 @@ export function usersLoad() {
 // ----------------
 // Removes the expiration date from a given user.
 export function userRemoveExpiration(email) {
-  return function(dispatch) {
+  return function (dispatch) {
     const NEVER_EXPIRES = '0001-01-01T00:00:00Z';
 
     const usersApi = new GiantSwarm.UsersApi();
@@ -332,13 +335,13 @@ export function userRemoveExpiration(email) {
 
     return usersApi
       .modifyUser(email, { expiry: NEVER_EXPIRES })
-      .then(user => {
+      .then((user) => {
         dispatch({
           type: types.USERS_REMOVE_EXPIRATION_SUCCESS,
           user,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error removing user expiration:', error);
 
@@ -359,7 +362,7 @@ export function userRemoveExpiration(email) {
 // ----------------
 // Deletes the given user.
 export function userDelete(email) {
-  return function(dispatch) {
+  return function (dispatch) {
     const usersApi = new GiantSwarm.UsersApi();
 
     dispatch({ type: types.USERS_DELETE_REQUEST });
@@ -372,7 +375,7 @@ export function userDelete(email) {
           email,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error when deleting user:', error);
 

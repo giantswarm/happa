@@ -2,8 +2,8 @@ import { fireEvent, render } from '@testing-library/react';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import { getComponentWithTheme } from 'testUtils/renderUtils';
 
-const getComponent = props => getComponentWithTheme(NodeCountSelector, props);
-const renderWithProps = props => render(getComponent(props));
+const getComponent = (props) => getComponentWithTheme(NodeCountSelector, props);
+const renderWithProps = (props) => render(getComponent(props));
 
 const labelTestID = 'node-count-selector-picker';
 
@@ -39,11 +39,11 @@ describe('NodeCountSelector', () => {
       autoscalingEnabled: true,
       readOnly: true,
     });
-    const inputs = getAllByTestId(labelTestID).map(label =>
+    const inputs = getAllByTestId(labelTestID).map((label) =>
       label.querySelector('input')
     );
 
-    const areAllInputsDisabled = inputs.every(input => input.disabled);
+    const areAllInputsDisabled = inputs.every((input) => input.disabled);
 
     expect(areAllInputsDisabled).toBe(true);
   });
@@ -85,7 +85,7 @@ describe('NodeCountSelector', () => {
       minValue,
       maxValue,
     });
-    const inputs = getAllByTestId(labelTestID).map(label =>
+    const inputs = getAllByTestId(labelTestID).map((label) =>
       label.querySelector('input')
     );
 
@@ -141,7 +141,7 @@ describe('NodeCountSelector', () => {
       onChange: onChangeCallback,
     });
 
-    const inputs = getAllByTestId(labelTestID).map(label =>
+    const inputs = getAllByTestId(labelTestID).map((label) =>
       label.querySelector('input')
     );
 
@@ -234,10 +234,10 @@ describe('NodeCountSelector', () => {
     const { getAllByTestId } = renderWithProps({
       autoscalingEnabled: true,
     });
-    const inputs = getAllByTestId(labelTestID).map(label =>
+    const inputs = getAllByTestId(labelTestID).map((label) =>
       label.querySelector('input')
     );
-    const initialValues = inputs.map(input => input.value);
+    const initialValues = inputs.map((input) => input.value);
 
     fireEvent.keyPress(inputs[0], {
       key: 'Enter',

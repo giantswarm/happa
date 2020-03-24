@@ -5,12 +5,12 @@ import { getComponentWithTheme } from 'testUtils/renderUtils';
 
 let initialTitle = '';
 
-const getComponent = props => {
+const getComponent = (props) => {
   const propsWithChildren = Object.assign({}, props, { children: <p /> });
 
   return getComponentWithTheme(DocumentTitle, propsWithChildren);
 };
-const renderWithProps = props => render(getComponent(props));
+const renderWithProps = (props) => render(getComponent(props));
 
 describe('DocumentTitle', () => {
   beforeAll(() => {

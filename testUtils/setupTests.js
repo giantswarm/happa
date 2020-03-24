@@ -1,6 +1,12 @@
-import { wait } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+
+import { configure, waitFor } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import nock from 'nock';
+
+configure({
+  asyncUtilTimeout: 4500,
+});
 
 beforeAll(() => {
   nock.disableNetConnect();
@@ -11,7 +17,7 @@ afterAll(() => {
 });
 
 afterEach(async () => {
-  await wait(() => {
+  await waitFor(() => {
     const done = nock.isDone();
 
     // Uncomment the next lines to debug hanging requests

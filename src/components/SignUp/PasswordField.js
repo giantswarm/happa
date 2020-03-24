@@ -27,7 +27,7 @@ class PasswordField extends React.Component {
     this.props.onChange(this.state.value);
   };
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({ value: e.target.value });
 
     this.props.onStartTyping(this.state.value);
@@ -61,7 +61,7 @@ class PasswordField extends React.Component {
           id={name}
           onBlur={this.onBlur}
           onChange={this.onChange}
-          ref={input => {
+          ref={(input) => {
             this.input = input;
           }}
           type='password'

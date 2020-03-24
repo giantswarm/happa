@@ -46,18 +46,18 @@ class UpgradeClusterModal extends React.Component {
     }
 
     const components = {};
-    currentComponents.forEach(component => {
+    currentComponents.forEach((component) => {
       components[component.name] = component;
     });
 
     const targetComponents = {};
-    this.props.targetRelease.components.forEach(component => {
+    this.props.targetRelease.components.forEach((component) => {
       targetComponents[component.name] = component;
     });
 
     const changedComponents = diff.diff(components, targetComponents);
 
-    const changes = _.groupBy(this.props.targetRelease.changelog, item => {
+    const changes = _.groupBy(this.props.targetRelease.changelog, (item) => {
       return item.component;
     });
     const changedComponentNames = Object.keys(changes).sort();
@@ -70,14 +70,12 @@ class UpgradeClusterModal extends React.Component {
             {this.props.cluster.release_version}.<br />
             Unable to show you an exact diff.
           </div>
-        ) : (
-          undefined
-        )}
+        ) : undefined}
         <p>
           <b>Component Changes</b>
         </p>
         <div className='release-selector-modal--components'>
-          {_.sortBy(changedComponents, 'name').map(diffEdit => {
+          {_.sortBy(changedComponents, 'name').map((diffEdit) => {
             if (diffEdit.kind === 'E') {
               const component = components[diffEdit.path[0]];
 
@@ -126,7 +124,7 @@ class UpgradeClusterModal extends React.Component {
           {changedComponentNames.map((componentName, index) => {
             return (
               <ComponentChangelog
-                changes={changes[componentName].map(c => {
+                changes={changes[componentName].map((c) => {
                   return c.description;
                 })}
                 key={index}
@@ -204,6 +202,7 @@ class UpgradeClusterModal extends React.Component {
     this.setState(
       {
         loading: true,
+        page: 'closing',
       },
       () => {
         const targetReleaseVersion = this.props.targetRelease.version;
@@ -222,7 +221,7 @@ class UpgradeClusterModal extends React.Component {
 
             this.close();
           })
-          .catch(_error => {
+          .catch((_error) => {
             this.setState({
               loading: false,
             });

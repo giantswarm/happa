@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -61,7 +61,7 @@ it('renders all the v4 KVM cluster data correctly', async () => {
   );
   const { getByText, getAllByText } = renderRouteWithStore(clusterDetailPath);
 
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
   expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
@@ -83,7 +83,7 @@ it('renders all the v4 KVM cluster data correctly', async () => {
     status: v4KVMClusterStatusResponse,
   }).toString();
 
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText('Nodes').nextSibling.textContent).toBe(nodesRunning);
   });
 });

@@ -65,17 +65,17 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
-    // This is the action that we dipatch in order to actually remove a cluster from the store.
+    // This is the action that we dispatch in order to actually remove a cluster from the store.
     case types.CLUSTER_REMOVE_FROM_STORE:
       delete draft.items[action.clusterId];
-      if (action.isV5) {
-        draft.v5Clusters.filter(id => id !== action.clusterId);
+      if (action.isV5Cluster) {
+        draft.v5Clusters.filter((id) => id !== action.clusterId);
       }
 
       return;
 
     case types.CLUSTER_PATCH:
-      Object.keys(action.payload).forEach(key => {
+      Object.keys(action.payload).forEach((key) => {
         if (draft.items[action.cluster.id]) {
           draft.items[action.cluster.id][key] = action.payload[key];
         }
@@ -100,7 +100,7 @@ const clusterReducer = produce((draft, action) => {
       if (draft.items[action.clusterId]) {
         draft.items[action.clusterId].nodePools = draft.items[
           action.clusterId
-        ].nodePools.filter(np => np !== action.nodePoolId);
+        ].nodePools.filter((np) => np !== action.nodePoolId);
       }
   }
 }, initialState);

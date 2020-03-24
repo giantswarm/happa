@@ -12,6 +12,7 @@ import * as nodePoolActions from 'actions/nodePoolActions';
 import * as releaseActions from 'actions/releaseActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
+import ErrorReporter from 'lib/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import PageVisibilityTracker from 'lib/pageVisibilityTracker';
 import RoutePath from 'lib/routePath';
@@ -78,7 +79,7 @@ class ClusterDetailView extends React.Component {
   loadDetails = () => {
     const { cluster, clusterId, organizationId, dispatch } = this.props;
 
-    if (typeof cluster === 'undefined') {
+    if (typeof cluster === 'undefined' || cluster.delete_date) {
       const organizationDetailPath = RoutePath.createUsablePath(
         OrganizationsRoutes.Detail,
         {
@@ -108,11 +109,10 @@ class ClusterDetailView extends React.Component {
   };
 
   refreshClusterData = () => {
+    const { id: clusterID } = this.props.cluster;
+
     this.props.dispatch(
-      batchedRefreshClusterDetailView(
-        this.props.cluster.id,
-        this.props.isV5Cluster
-      )
+      batchedRefreshClusterDetailView(clusterID, this.props.isV5Cluster)
     );
   };
 
@@ -190,24 +190,14 @@ class ClusterDetailView extends React.Component {
     this.props.dispatch(push(clusterGuideOverviewPath));
   };
 
-  editClusterName = value => {
-    return new Promise((resolve, reject) => {
-      this.props
-        .dispatch(
-          clusterActions.clusterPatch(this.props.cluster, { name: value })
-        )
-        .then(() => {
-          new FlashMessage(
-            'Succesfully edited cluster name.',
-            messageType.SUCCESS,
-            messageTTL.MEDIUM
-          );
-          resolve();
-        })
-        .catch(error => {
-          reject(error);
-        });
-    });
+  editClusterName = (value) => {
+    try {
+      this.props.dispatch(
+        clusterActions.clusterPatch(this.props.cluster, { name: value })
+      );
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   };
 
   render() {
@@ -223,13 +213,16 @@ class ClusterDetailView extends React.Component {
       region,
       genericLoadingCluster,
       loadingNodePools,
+      loadingCluster,
     } = this.props;
+
+    const loading = genericLoadingCluster || loadingNodePools || loadingCluster;
 
     return (
       <>
-        <LoadingOverlay loading={genericLoadingCluster || loadingNodePools} />
+        <LoadingOverlay loading={loading} />
 
-        {!genericLoadingCluster && !loadingNodePools && (
+        {!loading && (
           <DocumentTitle title={`Cluster Details | ${this.clusterName()}`}>
             <WrapperDiv
               className='cluster-details'
@@ -240,8 +233,8 @@ class ClusterDetailView extends React.Component {
                   <h1 style={{ marginLeft: '-10px' }}>
                     <ClusterIDLabel clusterID={cluster.id} copyEnabled />{' '}
                     <ViewAndEditName
-                      entity={cluster}
-                      entityType='cluster'
+                      name={cluster.name}
+                      type='cluster'
                       onSubmit={this.editClusterName}
                     />{' '}
                   </h1>
@@ -326,7 +319,7 @@ class ClusterDetailView extends React.Component {
                 <ScaleClusterModal
                   cluster={cluster}
                   provider={provider}
-                  ref={s => {
+                  ref={(s) => {
                     this.scaleClusterModal = s;
                   }}
                   workerNodesDesired={this.getDesiredNumberOfNodes()}
@@ -336,7 +329,7 @@ class ClusterDetailView extends React.Component {
 
               <UpgradeClusterModal
                 cluster={cluster}
-                ref={s => {
+                ref={(s) => {
                   this.upgradeClusterModal = s;
                 }}
                 release={release}

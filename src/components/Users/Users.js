@@ -46,7 +46,7 @@ class Users extends React.Component {
     }
   }
 
-  removeExpiration = email => {
+  removeExpiration = (email) => {
     this.setState({
       selectedUser: email,
       modal: {
@@ -57,7 +57,7 @@ class Users extends React.Component {
     });
   };
 
-  confirmRemoveExpiration = email => {
+  confirmRemoveExpiration = (email) => {
     this.setState({
       modal: {
         visible: true,
@@ -75,7 +75,7 @@ class Users extends React.Component {
       });
   };
 
-  deleteUser = email => {
+  deleteUser = (email) => {
     this.setState({
       selectedUser: email,
       modal: {
@@ -86,7 +86,7 @@ class Users extends React.Component {
     });
   };
 
-  confirmDeleteUser = email => {
+  confirmDeleteUser = (email) => {
     this.setState({
       modal: {
         template: UserModalTypes.Delete,
@@ -115,7 +115,7 @@ class Users extends React.Component {
     });
   };
 
-  confirmInviteUser = invitationForm => {
+  confirmInviteUser = (invitationForm) => {
     this.setState({
       modal: {
         template: UserModalTypes.Invite,
@@ -129,7 +129,7 @@ class Users extends React.Component {
       .then(() => {
         return this.props.dispatch(invitationCreate(invitationForm));
       })
-      .then(result => {
+      .then((result) => {
         this.setState({
           modal: {
             template: UserModalTypes.Invite,
@@ -287,13 +287,13 @@ function mapStateToProps(state) {
   const invitationsAndUsers = users.concat(invitations);
 
   return {
-    currentUser: state.app.loggedInUser,
+    currentUser: state.main.loggedInUser,
     users: state.entities.users,
     invitations: state.entities.invitations,
     invitationsAndUsers: invitationsAndUsers,
     organizations: state.entities.organizations,
-    initialSelectedOrganizations: [state.app.selectedOrganization],
-    installation_name: state.app.info.general.installation_name,
+    initialSelectedOrganizations: [state.main.selectedOrganization],
+    installation_name: state.main.info.general.installation_name,
   };
 }
 

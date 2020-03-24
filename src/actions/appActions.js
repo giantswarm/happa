@@ -17,7 +17,7 @@ export function selectCluster(clusterID) {
  * @param {String} clusterId Cluster ID
  */
 export function loadApps(clusterId) {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     const appsApi = new GiantSwarm.AppsApi();
 
     const v5Clusters = getState().entities.clusters.v5Clusters || [];
@@ -35,7 +35,7 @@ export function loadApps(clusterId) {
     });
 
     return getClusterApps(clusterId)
-      .then(apps => {
+      .then((apps) => {
         // For some reason the array that we get back from the generated js client is an
         // array-like structure, so I make a new one here.
         // In tests we are using a real array, so we are applying Array.from() to an actual
@@ -49,7 +49,7 @@ export function loadApps(clusterId) {
 
         return apps;
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error loading cluster apps:', error);
 
@@ -84,7 +84,7 @@ export function loadApps(clusterId) {
  * @param {Object} clusterID Where to install the app.
  */
 export function installApp(app, clusterID) {
-  return async function(dispatch, getState) {
+  return async function (dispatch, getState) {
     dispatch({
       type: types.CLUSTER_INSTALL_APP_REQUEST,
       clusterID,
@@ -120,7 +120,7 @@ export function installApp(app, clusterID) {
             version: app.version,
           },
         },
-      }).catch(error => {
+      }).catch((error) => {
         showAppInstallationErrorFlashMessage(app.name, clusterID, error);
 
         dispatch({
@@ -191,7 +191,7 @@ function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
  * @param {Object} clusterID Where to delete the app.
  */
 export function deleteApp(appName, clusterID) {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     dispatch({
       type: types.CLUSTER_DELETE_APP_REQUEST,
       clusterID,
@@ -217,9 +217,56 @@ export function deleteApp(appName, clusterID) {
           messageTTL.LONG
         );
       })
-      .catch(error => {
+      .catch((error) => {
         new FlashMessage(
           `Something went wrong while trying to delete your app. Please try again later or contact support: support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+
+        throw error;
+      });
+  };
+}
+
+/**
+ * Takes an app and a cluster id and some values and tries to update the app to those values. Dispatches `CLUSTER_UPDATE_APP_SUCCESS`
+ * on success or `CLUSTER_UPDATE_APP_ERROR` on error.
+ *
+ * @param {string} appName The name of the app
+ * @param {string} clusterID Where to delete the app.
+ * @param {Object} values The values you want to change in the app.
+ */
+export function updateApp(appName, clusterID, values) {
+  return function (dispatch, getState) {
+    dispatch({
+      type: types.CLUSTER_UPDATE_APP_REQUEST,
+      clusterID,
+      appName,
+    });
+
+    const appsApi = new GiantSwarm.AppsApi();
+
+    const v5Clusters = getState().entities.clusters.v5Clusters;
+    const isV5Cluster = v5Clusters.includes(clusterID);
+
+    let modifyApp = appsApi.modifyClusterAppV4.bind(appsApi);
+
+    if (isV5Cluster) {
+      modifyApp = appsApi.modifyClusterAppV5.bind(appsApi);
+    }
+
+    return modifyApp(clusterID, appName, { body: values })
+      .then(() => {
+        new FlashMessage(
+          `App <code>${appName}</code> on <code>${clusterID}</code> has been updated. Changes might take some time to take effect.`,
+          messageType.SUCCESS,
+          messageTTL.LONG
+        );
+      })
+      .catch((error) => {
+        new FlashMessage(
+          `Something went wrong while trying to update your app. Please try again later or contact support: support@giantswarm.io`,
           messageType.ERROR,
           messageTTL.LONG
         );

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -131,7 +131,7 @@ scales correctly`, async () => {
     clusterDetailPath
   );
 
-  await wait(() => {
+  await waitFor(() => {
     expect(
       getByTestId('desired-nodes').querySelector('div:nth-child(2)').textContent
     ).toBe('3');
@@ -143,7 +143,7 @@ scales correctly`, async () => {
   // Click edit button. Will throw an error if it founds more thanon edit button
   fireEvent.click(getByText(/edit/i));
 
-  await wait(() => getByText(/edit scaling settings for/i));
+  await waitFor(() => getByText(/edit scaling settings for/i));
 
   // Is the modal in the document?
   const modalTitle = getByText(/edit scaling settings for/i);
@@ -159,7 +159,7 @@ scales correctly`, async () => {
 
   // Change the values and modify the scaling settings
   fireEvent.change(inputMax, { target: { value: newScaling.max } });
-  await wait(() => expect(inputMax.value).toBe(newScaling.max.toString()));
+  await waitFor(() => expect(inputMax.value).toBe(newScaling.max.toString()));
 
   fireEvent.change(inputMin, { target: { value: newScaling.min } });
   const textButton = `Increase minimum number of nodes by ${increaseValue}`;
@@ -167,7 +167,7 @@ scales correctly`, async () => {
   fireEvent.click(submitButton);
 
   //Wait for the Flash message to appear
-  await wait(() => {
+  await waitFor(() => {
     getByText(/the cluster will be scaled within the next couple of minutes./i);
     // Does the cluster have node values updated?
     expect(getByText(`Pinned at ${newScaling.min}`));
@@ -200,16 +200,16 @@ it('deletes a v4 cluster', async () => {
   );
 
   // Wait for the view to render
-  await wait(() => {
+  await waitFor(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
 
-  await wait(() => getByText('Delete Cluster'));
+  await waitFor(() => getByText('Delete Cluster'));
   fireEvent.click(getByText('Delete Cluster'));
 
   // Is the modal in the document?
   const titleText = /are you sure you want to delete/i;
-  await wait(() => getByText(titleText));
+  await waitFor(() => getByText(titleText));
   const modalTitle = getByText(titleText);
   expect(modalTitle).toBeInTheDocument();
   expect(modalTitle.textContent.includes(cluster.id)).toBeTruthy();
@@ -219,7 +219,7 @@ it('deletes a v4 cluster', async () => {
   fireEvent.click(modalDeleteButton);
 
   // Flash message confirming deletion.
-  await wait(() => {
+  await waitFor(() => {
     getByText(/will be deleted/i);
   });
   const flashElement = getByText(/will be deleted/i);
@@ -227,7 +227,7 @@ it('deletes a v4 cluster', async () => {
   expect(flashElement).toHaveTextContent(cluster.id);
 
   // Expect the cluster is not in the clusters list.
-  await wait(() => {
+  await waitFor(() => {
     expect(queryByTestId(cluster.id)).not.toBeInTheDocument();
   });
 });
@@ -259,11 +259,11 @@ it('patches v4 cluster name correctly', async () => {
     clusterDetailPath
   );
 
-  await wait(() => getByText(clusterName));
+  await waitFor(() => getByText(clusterName));
   const clusterNameEl = getByText(clusterName);
   fireEvent.click(clusterNameEl);
 
-  await wait(() => getByDisplayValue(clusterName));
+  await waitFor(() => getByDisplayValue(clusterName));
 
   // Change the new name and submit it.
   fireEvent.change(getByDisplayValue(clusterName), {
@@ -273,12 +273,9 @@ it('patches v4 cluster name correctly', async () => {
   const submitButton = getByText(/ok/i);
   fireEvent.click(submitButton);
 
-  //Wait for the Flash message to appear
-  await wait(() => {
-    getByText(/succesfully edited cluster name/i);
+  await waitFor(() => {
+    expect(getByText(newClusterName)).toBeInTheDocument();
   });
-
-  expect(getByText(newClusterName)).toBeInTheDocument();
 });
 
 /******************** PENDING TESTS ********************/

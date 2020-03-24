@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import { spinner } from 'images';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import ErrorReporter from 'lib/ErrorReporter';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -13,6 +13,21 @@ import ViewAndEditName from 'UI/ViewEditName';
 import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';
 import ScaleNodePoolModal from './ScaleNodePoolModal';
+
+const NPViewAndEditName = styled(ViewAndEditName)`
+  input[type='text'] {
+    font-size: 15px;
+    line-height: 1.8em;
+    margin-bottom: 0;
+  }
+  .btn-group {
+    top: 0;
+  }
+  button {
+    font-size: 13px;
+    padding: 4px 10px;
+  }
+`;
 
 const NodesWrapper = styled.div`
   width: 36px;
@@ -42,7 +57,7 @@ class NodePool extends Component {
     isNameBeingEdited: false,
   };
 
-  toggleEditingState = isNameBeingEdited => {
+  toggleEditingState = (isNameBeingEdited) => {
     this.setState({ isNameBeingEdited });
   };
 
@@ -50,31 +65,16 @@ class NodePool extends Component {
     this.viewEditNameRef.activateEditMode();
   };
 
-  editNodePoolName = name => {
+  editNodePoolName = (name) => {
     const { cluster, nodePool } = this.props;
 
-    return new Promise((resolve, reject) => {
-      // Early return in case the name is not changed.
-      if (nodePool.name === name) return resolve();
-
-      return this.props
-        .dispatch(nodePoolActions.nodePoolPatch(cluster.id, nodePool, { name }))
-        .then(() => {
-          new FlashMessage(
-            'Succesfully edited node pool name.',
-            messageType.SUCCESS,
-            messageTTL.MEDIUM
-          );
-
-          return resolve();
-        })
-        .catch(error => {
-          // eslint-disable-next-line no-console
-          console.error(error);
-
-          return reject(error);
-        });
-    });
+    try {
+      this.props.dispatch(
+        nodePoolActions.nodePoolPatch(cluster.id, nodePool, { name })
+      );
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err);
+    }
   };
 
   deleteNodePool = () => {
@@ -86,7 +86,7 @@ class NodePool extends Component {
     );
   };
 
-  showNodePoolScalingModal = nodePool => {
+  showNodePoolScalingModal = (nodePool) => {
     this.scaleNodePoolModal.reset();
     this.scaleNodePoolModal.show();
     this.scaleNodePoolModal.setNodePool(nodePool);
@@ -108,13 +108,12 @@ class NodePool extends Component {
         <NameWrapperDiv
           style={{ gridColumn: isNameBeingEdited ? '2 / 9' : null }}
         >
-          <ViewAndEditName
-            cssClass='np'
-            entity={nodePool}
-            entityType='node pool'
+          <NPViewAndEditName
+            name={nodePool.name}
+            type='node pool'
             onSubmit={this.editNodePoolName}
-            ref={viewEditName => (this.viewEditNameRef = viewEditName)}
-            toggleEditingState={this.toggleEditingState}
+            ref={(viewEditName) => (this.viewEditNameRef = viewEditName)}
+            onToggleEditingState={this.toggleEditingState}
           />
         </NameWrapperDiv>
         {/* Hide the rest of fields when editing name */}
@@ -155,7 +154,7 @@ class NodePool extends Component {
           cluster={cluster}
           nodePool={nodePool}
           provider={this.props.provider}
-          ref={s => {
+          ref={(s) => {
             this.scaleNodePoolModal = s;
           }}
           workerNodesDesired={desired}

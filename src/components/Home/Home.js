@@ -1,3 +1,4 @@
+import * as actionTypes from 'actions/actionTypes';
 import { batchedRefreshClusters } from 'actions/batchedActions';
 import * as clusterActions from 'actions/clusterActions';
 import * as nodePoolActions from 'actions/nodePoolActions';
@@ -12,6 +13,7 @@ import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
+import { selectErrorByAction } from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
@@ -106,8 +108,8 @@ class Home extends React.Component {
           )}
 
           <TransitionGroup className='cluster-list'>
-            {_.sortBy(this.props.clusters, cluster => cluster.name).map(
-              cluster => {
+            {_.sortBy(this.props.clusters, (cluster) => cluster.name).map(
+              (cluster) => {
                 return (
                   <CSSTransition
                     classNames='cluster-list-item'
@@ -125,7 +127,7 @@ class Home extends React.Component {
                   </CSSTransition>
                 );
               },
-              cluster => cluster.id
+              (cluster) => cluster.id
             )}
           </TransitionGroup>
 
@@ -159,16 +161,19 @@ Home.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const selectedOrganization = state.app.selectedOrganization;
+  const selectedOrganization = state.main.selectedOrganization;
   const organizations = state.entities.organizations.items;
   const allClusters = state.entities.clusters.items;
-  const errorLoadingClusters = state.errors.CLUSTERS_LIST;
+  const errorLoadingClusters = selectErrorByAction(
+    state,
+    actionTypes.CLUSTERS_LIST_REQUEST
+  );
   const v5Clusters = state.entities.clusters.v5Clusters;
   const nodePools = state.entities.nodePools.items;
 
   let clusters = [];
   if (selectedOrganization) {
-    clusters = _.filter(allClusters, cluster => {
+    clusters = _.filter(allClusters, (cluster) => {
       return cluster.owner === selectedOrganization;
     });
   }
@@ -176,7 +181,7 @@ function mapStateToProps(state) {
   return {
     clusters,
     organizations,
-    errorLoadingClusters,
+    errorLoadingClusters: Boolean(errorLoadingClusters),
     selectedOrganization,
     v5Clusters,
     nodePools,

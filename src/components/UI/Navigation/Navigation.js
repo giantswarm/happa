@@ -23,7 +23,7 @@ const OuterNav = styled.nav`
   left: 0px;
   right: 0px;
   z-index: 1;
-  background-color: ${props => props.theme.colors.shade1};
+  background-color: ${(props) => props.theme.colors.shade1};
 
   a {
     text-decoration: none;
@@ -37,8 +37,8 @@ const OuterNav = styled.nav`
   .main-nav {
     margin: auto;
 
-    @media only screen and (max-width: ${props =>
-        props.theme.breakpoints.large}px) and (min-width: ${props =>
+    @media only screen and (max-width: ${(props) =>
+        props.theme.breakpoints.large}px) and (min-width: ${(props) =>
         props.theme.breakpoints.med}px) {
       min-width: 800px;
     }
@@ -53,7 +53,7 @@ const OuterNav = styled.nav`
       font-size: 22px;
       color: #e8e8e8;
       cursor: pointer;
-      @media only screen and (max-width: ${props =>
+      @media only screen and (max-width: ${(props) =>
           props.theme.breakpoints.large}px) {
         display: block;
       }
@@ -75,11 +75,11 @@ const OuterNav = styled.nav`
       }
 
       &:hover {
-        color: ${props => props.theme.colors.white1};
+        color: ${(props) => props.theme.colors.white1};
       }
     }
 
-    @media only screen and (max-width: ${props =>
+    @media only screen and (max-width: ${(props) =>
         props.theme.breakpoints.large}px) {
       position: fixed;
       top: 50px;
@@ -96,7 +96,7 @@ const OuterNav = styled.nav`
 
   .subactions {
     float: right;
-    @media only screen and (max-width: ${props =>
+    @media only screen and (max-width: ${(props) =>
         props.theme.breakpoints.large}px) {
       margin-right: 10px;
     }
@@ -112,7 +112,7 @@ const OuterNav = styled.nav`
     vertical-align: middle;
     position: relative;
     top: -1px;
-    @media only screen and (max-width: ${props =>
+    @media only screen and (max-width: ${(props) =>
         props.theme.breakpoints.med}px) {
       margin-left: 10px;
     }
@@ -144,9 +144,7 @@ class Navigation extends React.Component {
               <NavLink activeClassName='active' to={UsersRoutes.Home}>
                 Users
               </NavLink>
-            ) : (
-              undefined
-            )}
+            ) : undefined}
             <a
               href='https://docs.giantswarm.io'
               rel='noopener noreferrer'

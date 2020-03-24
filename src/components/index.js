@@ -9,6 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/app.sass';
 
 import { Notifier } from '@airbrake/browser';
+import ErrorReporter from 'lib/ErrorReporter';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
@@ -29,7 +30,7 @@ const store = configureStore({}, history);
 // update the store with the new token.
 monkeyPatchGiantSwarmClient(store);
 
-// Configure an airbrake notifier for exception notification.
+// Configure an airbrake notifier for excption notification.
 // But only when not in development.
 if (window.config.environment !== 'development') {
   // We use the airbrake notifier here instead of rolling our own notification
@@ -51,10 +52,13 @@ if (window.config.environment !== 'development') {
   airbrake._requester = new Requester(store).request;
 
   // set up a filter for reporting addtional information (happa version)
-  airbrake.addFilter(notice => ({
+  airbrake.addFilter((notice) => ({
     ...notice,
     context: { ...notice.context, version: window.config.happaVersion },
   }));
+
+  const errorReporter = ErrorReporter.getInstance();
+  errorReporter.notifier = airbrake;
 }
 
 // Scroll to the top when we change the URL.

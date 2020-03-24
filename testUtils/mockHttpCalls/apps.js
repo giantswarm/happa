@@ -1,8 +1,8 @@
 export const appResponseWithCustomConfig = {
   metadata: { name: 'my app', labels: {} },
   spec: {
-    catalog: 'default',
-    name: 'my-app',
+    catalog: 'giantswarm',
+    name: 'nginx-ingress-controller-app',
     namespace: 'giantswarm',
     user_config: {
       configmap: { name: 'test app', namespace: 'giantswarm' },
@@ -17,11 +17,30 @@ export const appResponseWithCustomConfig = {
   },
 };
 
+export const appResponseNoCatalog = {
+  metadata: { name: 'sone app', labels: {} },
+  spec: {
+    catalog: 'INVISIBLE-CATALOG',
+    name: 'some-app',
+    namespace: 'giantswarm',
+    user_config: {
+      configmap: { name: '', namespace: '' },
+      secret: { name: '', namespace: '' },
+    },
+    version: '0.0.1',
+  },
+  status: {
+    app_version: '',
+    release: { last_deployed: '0001-01-01T00:00:00Z', status: '' },
+    version: '',
+  },
+};
+
 export const appsResponse = [
   {
     metadata: { name: 'my app', labels: {} },
     spec: {
-      catalog: 'default',
+      catalog: 'giantswarm',
       name: 'my-app',
       namespace: 'giantswarm',
       user_config: {
@@ -42,7 +61,7 @@ export const appsResponse = [
       labels: { 'giantswarm.io/managed-by': 'cluster-operator' },
     },
     spec: {
-      catalog: 'default',
+      catalog: 'giantswarm',
       name: 'chart-operator',
       namespace: 'giantswarm',
       user_config: {
@@ -63,7 +82,7 @@ export const appsResponse = [
       labels: { 'giantswarm.io/managed-by': 'cluster-operator' },
     },
     spec: {
-      catalog: 'default',
+      catalog: 'giantswarm',
       name: 'kube-state-metrics-app',
       namespace: 'kube-system',
       user_config: {
@@ -84,7 +103,7 @@ export const appsResponse = [
       labels: { 'giantswarm.io/managed-by': 'cluster-operator' },
     },
     spec: {
-      catalog: 'default',
+      catalog: 'giantswarm',
       name: 'metrics-server-app',
       namespace: 'kube-system',
       user_config: {
@@ -105,7 +124,7 @@ export const appsResponse = [
       labels: { 'giantswarm.io/managed-by': 'cluster-operator' },
     },
     spec: {
-      catalog: 'default',
+      catalog: 'giantswarm',
       name: 'node-exporter-app',
       namespace: 'kube-system',
       user_config: {

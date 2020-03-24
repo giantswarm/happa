@@ -13,17 +13,17 @@ const initialState = {
 // From the docs: "Notice that it is not needed to handle the default case, a producer
 // that doesn't do anything will simply return the original state."
 
-const nodePools = produce((draft, action) => {
+const nodePoolReducer = produce((draft, action) => {
   switch (action.type) {
     case types.CLUSTER_NODEPOOLS_LOAD_SUCCESS:
-      action.nodePools.forEach(np => {
+      action.nodePools.forEach((np) => {
         draft.items[np.id] = np;
       });
 
       return;
 
     case types.NODEPOOL_PATCH:
-      Object.keys(action.payload).forEach(key => {
+      Object.keys(action.payload).forEach((key) => {
         draft.items[action.nodePool.id][key] = action.payload[key];
       });
 
@@ -46,4 +46,4 @@ const nodePools = produce((draft, action) => {
   // This empty object is the default state.
 }, initialState);
 
-export default nodePools;
+export default nodePoolReducer;

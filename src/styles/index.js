@@ -1,6 +1,8 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 
+import theme from './theme';
+
 /***** BASE STYLES ****/
 
 /*
@@ -23,7 +25,7 @@ export const FlexRowBase = css`
   align-items: center;
 `;
 
-export const Input = props => css`
+export const Input = (props) => css`
   input {
     box-sizing: border-box;
     width: 100%;
@@ -51,7 +53,7 @@ export const Ellipsis = css`
 export const FlexRowWithTwoBlocksOnEdges = styled.div`
   ${FlexRowBase};
   ${Row};
-  background-color: ${props => props.theme.colors.shade7};
+  background-color: ${(props) => props.theme.colors.shade7};
   > div {
     display: flex;
     align-items: center;
@@ -88,8 +90,8 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
 /* Style Wrappers & Reusable elements */
 
 export const Code = styled.code`
-  font-family: ${props => props.theme.fontFamilies.console};
-  background-color: ${props => props.theme.colors.shade2};
+  font-family: ${(props) => props.theme.fontFamilies.console};
+  background-color: ${(props) => props.theme.colors.shade2};
   border-radius: 2px;
   padding: 0 12px;
   height: 30px;
@@ -109,3 +111,14 @@ export const Dot = styled.span`
 export const FallbackSpan = styled.span`
   opacity: 0.5;
 `;
+
+/**
+ * Mixins
+ */
+
+// Breakpoint can be a string representing any of the breakpoint properties in
+// the theme object or a number/string representing a custom breakpoint.
+export const mq = (breakpoint) =>
+  `@media only screen and (max-width: ${
+    theme.breakpoints[breakpoint] ?? breakpoint
+  }px)`;

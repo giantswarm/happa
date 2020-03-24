@@ -26,14 +26,14 @@ const Wrapper = styled.div`
 
     &:hover {
       opacity: 1;
-      text-shadow: 0px 0px 15px ${props => props.theme.colors.shade1};
+      text-shadow: 0px 0px 15px ${(props) => props.theme.colors.shade1};
     }
   }
 `;
 
 const Label = styled.span`
-  background-color: ${props => calculateColour(props.clusterID)};
-  font-family: ${props => props.theme.fontFamilies.console};
+  background-color: ${(props) => calculateColour(props.clusterID)};
+  font-family: ${(props) => props.theme.fontFamilies.console};
   padding: 0.2em 0.4em;
   border-radius: 0.2em;
 `;
@@ -51,7 +51,7 @@ function calculateColour(str) {
 const ClusterIDLabel = ({ clusterID, copyEnabled }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
-  const copyToClipboard = e => {
+  const copyToClipboard = (e) => {
     e.preventDefault();
     e.stopPropagation();
 

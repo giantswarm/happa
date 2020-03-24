@@ -9,7 +9,7 @@ import { computeCapabilities } from 'utils/clusterUtils';
 import * as types from './actionTypes';
 
 // Used in ClusterDetailView
-export const clusterDelete = cluster => ({
+export const clusterDelete = (cluster) => ({
   type: types.CLUSTER_DELETE_REQUEST,
   cluster,
 });
@@ -21,7 +21,7 @@ const clustersApi = new GiantSwarm.ClustersApi();
 // of clusters with its ids as keys. Also we add some data to the clusters objects.
 function clustersLoadArrayToObject(clusters, provider) {
   return clusters
-    .map(cluster => {
+    .map((cluster) => {
       return {
         ...cluster,
         lastUpdated: Date.now(),
@@ -45,27 +45,30 @@ function clustersLoadArrayToObject(clusters, provider) {
  * @param {Boolean} withLoadingFlags Set to false to avoid loading state (eg when refreshing)
  */
 export function clustersList({ withLoadingFlags }) {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     if (withLoadingFlags) dispatch({ type: types.CLUSTERS_LIST_REQUEST });
 
-    const provider = getState().app.info.general.provider;
+    const provider = getState().main.info.general.provider;
 
     // Fetch all clusters.
     return clustersApi
       .getClusters()
-      .then(data => {
+      .then((data) => {
         const clusters = clustersLoadArrayToObject(data, provider);
 
         const v5ClusterIds = data
-          .filter(cluster => cluster.path.startsWith('/v5'))
-          .map(cluster => cluster.id);
+          .filter((cluster) => cluster.path.startsWith('/v5'))
+          .map((cluster) => cluster.id);
 
         dispatch({ type: types.CLUSTERS_LIST_SUCCESS, clusters, v5ClusterIds });
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error(error);
-        dispatch({ type: types.CLUSTERS_LIST_ERROR, error });
+        dispatch({
+          type: types.CLUSTERS_LIST_ERROR,
+          error: error.message,
+        });
       });
   };
 }
@@ -79,27 +82,27 @@ export function clustersDetails({
   withLoadingFlags,
   initializeNodePools,
 }) {
-  return async function(dispatch, getState) {
+  return async function (dispatch, getState) {
     if (withLoadingFlags) {
       dispatch({ type: types.CLUSTERS_DETAILS_REQUEST });
     }
 
-    const selectedOrganization = getState().app.selectedOrganization;
+    const selectedOrganization = getState().main.selectedOrganization;
     const allClusters = await getState().entities.clusters.items;
 
     // Remove deleted clusters from clusters array
     const allActiveClustersIds = Object.keys(allClusters).filter(
-      id => !allClusters[id].delete_date
+      (id) => !allClusters[id].delete_date
     );
 
     const clustersIds = filterBySelectedOrganization
       ? allActiveClustersIds.filter(
-          id => allClusters[id].owner === selectedOrganization
+          (id) => allClusters[id].owner === selectedOrganization
         )
       : allActiveClustersIds;
 
     const clusterDetails = await Promise.all(
-      clustersIds.map(id =>
+      clustersIds.map((id) =>
         dispatch(
           clusterLoadDetails(id, { withLoadingFlags, initializeNodePools })
         )
@@ -122,7 +125,7 @@ export function clusterLoadDetails(
   clusterId,
   { withLoadingFlags, initializeNodePools }
 ) {
-  return async function(dispatch, getState) {
+  return async function (dispatch, getState) {
     const v5Clusters = getState().entities.clusters.v5Clusters;
     const isV5Cluster = v5Clusters.includes(clusterId);
 
@@ -141,7 +144,7 @@ export function clusterLoadDetails(
       // We don't want this action to overwrite nodepools except on initialization.
       if (isV5Cluster && initializeNodePools) cluster.nodePools = [];
 
-      const provider = getState().app.info.general.provider;
+      const provider = getState().main.info.general.provider;
       cluster.capabilities = computeCapabilities(
         cluster.release_version,
         provider
@@ -153,7 +156,7 @@ export function clusterLoadDetails(
         ? // If no workers, return an empty array.
           []
         : // Otherwise, and if there is no aws key in the worker object, create it.
-          cluster.workers.map(worker => {
+          cluster.workers.map((worker) => {
             if (!worker.aws) worker.aws = { instance_type: '' };
 
             return worker;
@@ -186,7 +189,7 @@ export function clusterLoadDetails(
 
       return cluster;
     } catch (error) {
-      if (error.status === StatusCodes.NotFound) {
+      if (error.response.status === StatusCodes.NotFound) {
         new FlashMessage(
           `Cluster <code>${clusterId}</code> no longer exists.`,
           messageType.INFO,
@@ -225,22 +228,22 @@ export function clusterLoadDetails(
 }
 
 function clusterLoadStatus(clusterId, { withLoadingFlags }) {
-  return function(dispatch) {
+  return function (dispatch) {
     // Does it  makes sense to leave it here just for let loadingReducer set/unset a flag?
     if (withLoadingFlags)
       dispatch({ type: types.CLUSTER_LOAD_STATUS_REQUEST, clusterId });
 
     return clustersApi
       .getClusterStatusWithHttpInfo(clusterId)
-      .then(data => {
+      .then((data) => {
         return JSON.parse(data.response.text);
       })
-      .then(status => {
+      .then((status) => {
         dispatch({ type: types.CLUSTER_LOAD_STATUS_SUCCESS, clusterId });
 
         return status; // used in clusterLoadDetails!
       })
-      .catch(error => {
+      .catch((error) => {
         // TODO: Find a better way to deal with status endpoint errors in dev:
         // https://github.com/giantswarm/giantswarm/issues/6757
         // eslint-disable-next-line no-console
@@ -269,7 +272,7 @@ function clusterLoadStatus(clusterId, { withLoadingFlags }) {
  * @param {Boolean} isV5Cluster
  */
 export function clusterCreate(cluster, isV5Cluster) {
-  return async function(dispatch) {
+  return async function (dispatch) {
     try {
       dispatch({ type: types.CLUSTER_CREATE_REQUEST });
 
@@ -332,7 +335,7 @@ export function clusterCreate(cluster, isV5Cluster) {
  * @param {Object} cluster Cluster definition object, containing ID and owner
  */
 export function clusterDeleteConfirmed(cluster) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.CLUSTER_DELETE_CONFIRMED,
       cluster,
@@ -340,7 +343,7 @@ export function clusterDeleteConfirmed(cluster) {
 
     return clustersApi
       .deleteCluster(cluster.id)
-      .then(data => {
+      .then((data) => {
         dispatch({
           type: types.CLUSTER_DELETE_SUCCESS,
           clusterId: cluster.id,
@@ -355,7 +358,7 @@ export function clusterDeleteConfirmed(cluster) {
 
         return data;
       })
-      .catch(error => {
+      .catch((error) => {
         new FlashMessage(
           `An error occurred when trying to delete cluster <code>${cluster.id}</code>.`,
           messageType.ERROR,
@@ -383,14 +386,14 @@ export function clusterDeleteConfirmed(cluster) {
  * @param {String} clusterId Cluster ID
  */
 export function clusterLoadKeyPairs(clusterId) {
-  return function(dispatch) {
+  return function (dispatch) {
     const keypairsApi = new GiantSwarm.KeyPairsApi();
 
     dispatch({ type: types.CLUSTER_LOAD_KEY_PAIRS_REQUEST });
 
     return keypairsApi
       .getKeyPairs(clusterId)
-      .then(keyPairs => {
+      .then((keyPairs) => {
         // Add expire_date to keyPairs based on ttl_hours
         const keyPairsWithDates = Object.entries(keyPairs).map(
           ([, keyPair]) => {
@@ -408,7 +411,7 @@ export function clusterLoadKeyPairs(clusterId) {
           keyPairs: keyPairsWithDates,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch({
           type: types.CLUSTER_LOAD_KEY_PAIRS_ERROR,
           clusterId,
@@ -429,7 +432,7 @@ export function clusterLoadKeyPairs(clusterId) {
  * @param {Object} payload object with just the data we want to modify
  */
 export function clusterPatch(cluster, payload) {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     const v5Clusters = getState().entities.clusters.v5Clusters;
     const isV5Cluster = v5Clusters.includes(cluster.id);
 
@@ -444,7 +447,7 @@ export function clusterPatch(cluster, payload) {
       ? clustersApi.modifyClusterV5(cluster.id, payload)
       : clustersApi.modifyCluster(cluster.id, payload);
 
-    return modifyCluster.catch(error => {
+    return modifyCluster.catch((error) => {
       // Undo update to store if the API call fails.
       dispatch({
         type: types.CLUSTER_PATCH_ERROR,
@@ -476,7 +479,7 @@ export function clusterPatch(cluster, payload) {
  * @param {Object} keypair   Key pair object
  */
 export function clusterCreateKeyPair(clusterId, keypair) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.CLUSTER_CREATE_KEY_PAIR_REQUEST,
       keypair,
@@ -486,7 +489,7 @@ export function clusterCreateKeyPair(clusterId, keypair) {
 
     return keypairsApi
       .addKeyPair(clusterId, keypair)
-      .then(pair => {
+      .then((pair) => {
         dispatch({
           type: types.CLUSTER_CREATE_KEY_PAIR_SUCCESS,
           pair,
@@ -494,7 +497,7 @@ export function clusterCreateKeyPair(clusterId, keypair) {
 
         return pair;
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch({
           type: types.CLUSTER_CREATE_KEY_PAIR_ERROR,
           error,

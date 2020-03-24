@@ -14,7 +14,7 @@ import GenericModal from '../../Modals/GenericModal';
 import ClusterPicker from './ClusterPicker';
 import InstallAppForm from './InstallAppForm';
 
-const InstallAppModal = props => {
+const InstallAppModal = (props) => {
   const CLUSTER_PICKER_PAGE = 'CLUSTER_PICKER_PAGE';
   const APP_FORM_PAGE = 'APP_FORM_PAGE';
 
@@ -73,12 +73,12 @@ const InstallAppModal = props => {
     setVisible(true);
   };
 
-  const onSelectCluster = newClusterID => {
+  const onSelectCluster = (newClusterID) => {
     setClusterID(newClusterID);
     next();
   };
 
-  const lunrIndex = lunr(function() {
+  const lunrIndex = lunr(function () {
     // eslint-disable-next-line react/no-this-in-sfc
     this.ref('id');
     // eslint-disable-next-line react/no-this-in-sfc
@@ -88,7 +88,7 @@ const InstallAppModal = props => {
     // eslint-disable-next-line react/no-this-in-sfc
     this.field('id');
 
-    props.clusters.forEach(function(cluster) {
+    props.clusters.forEach(function (cluster) {
       // eslint-disable-next-line react/no-this-in-sfc
       this.add(cluster);
     }, this);
@@ -99,12 +99,12 @@ const InstallAppModal = props => {
   if (query !== '') {
     clusters = lunrIndex
       .search(`${query.trim()} ${query.trim()}*`)
-      .map(result => {
-        return props.clusters.find(cluster => cluster.id === result.ref);
+      .map((result) => {
+        return props.clusters.find((cluster) => cluster.id === result.ref);
       });
   }
 
-  const validate = str => {
+  const validate = (str) => {
     if (str.length > maxLength) {
       return 'must not be longer than 253 characters';
     }
@@ -120,12 +120,12 @@ const InstallAppModal = props => {
     return '';
   };
 
-  const updateNamespace = ns => {
+  const updateNamespace = (ns) => {
     setNamespace(ns);
     setNamespaceError(validate(ns));
   };
 
-  const updateName = newName => {
+  const updateName = (newName) => {
     if (namespace === name) {
       // If name and namespace are synced up, keep them that way.
       updateNamespace(newName);
@@ -135,14 +135,14 @@ const InstallAppModal = props => {
     setNameError(validate(newName));
   };
 
-  const updateVersion = newVersion => {
+  const updateVersion = (newVersion) => {
     setVersion(newVersion);
   };
 
-  const updateValuesYAML = files => {
+  const updateValuesYAML = (files) => {
     const reader = new FileReader();
 
-    reader.onload = e => {
+    reader.onload = (e) => {
       try {
         const parsedYAML = yaml.safeLoad(e.target.result);
         setValuesYAML(parsedYAML);
@@ -155,10 +155,10 @@ const InstallAppModal = props => {
     reader.readAsText(files[0]);
   };
 
-  const updateSecretsYAML = files => {
+  const updateSecretsYAML = (files) => {
     const reader = new FileReader();
 
-    reader.onload = e => {
+    reader.onload = (e) => {
       try {
         const parsedYAML = yaml.safeLoad(e.target.result);
         setSecretsYAML(parsedYAML);
@@ -198,7 +198,7 @@ const InstallAppModal = props => {
         )
       )
       .then(() => {
-        const installedApp = props.clusters.find(c => c.id === clusterID);
+        const installedApp = props.clusters.find((c) => c.id === clusterID);
         const clusterDetailPath = RoutePath.createUsablePath(
           OrganizationsRoutes.Clusters.Detail,
           {
@@ -210,7 +210,7 @@ const InstallAppModal = props => {
         onClose();
         props.dispatch(push(clusterDetailPath));
       })
-      .catch(error => {
+      .catch((error) => {
         setLoading(false);
         throw error;
       });
@@ -289,7 +289,7 @@ const InstallAppModal = props => {
                   namespace={namespace}
                   namespaceError={namespaceError}
                   version={version}
-                  availableVersions={props.app.versions.map(v => ({
+                  availableVersions={props.app.versions.map((v) => ({
                     version: v.version,
                   }))}
                   onChangeName={updateName}
@@ -320,14 +320,16 @@ InstallAppModal.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const clusters = Object.keys(state.entities.clusters.items).map(clusterID => {
-    return {
-      id: clusterID,
-      name: state.entities.clusters.items[clusterID].name,
-      owner: state.entities.clusters.items[clusterID].owner,
-      capabilities: state.entities.clusters.items[clusterID].capabilities,
-    };
-  });
+  const clusters = Object.keys(state.entities.clusters.items).map(
+    (clusterID) => {
+      return {
+        id: clusterID,
+        name: state.entities.clusters.items[clusterID].name,
+        owner: state.entities.clusters.items[clusterID].owner,
+        capabilities: state.entities.clusters.items[clusterID].capabilities,
+      };
+    }
+  );
 
   return { clusters };
 }

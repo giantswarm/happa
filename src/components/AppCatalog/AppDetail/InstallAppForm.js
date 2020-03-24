@@ -29,32 +29,32 @@ const InstallAppForm = ({
   secretsYAML,
   secretsYAMLError,
 }) => {
-  const updateName = newName => {
+  const updateName = (newName) => {
     if (onChangeName) {
       onChangeName(newName);
     }
   };
 
-  const updateValuesYAML = files => {
+  const updateValuesYAML = (files) => {
     if (onChangeValuesYAML) {
       onChangeValuesYAML(files);
     }
   };
 
-  const updateSecretsYAML = files => {
+  const updateSecretsYAML = (files) => {
     if (onChangeSecretsYAML) {
       onChangeSecretsYAML(files);
     }
   };
 
-  const updateVersion = newVersion => {
+  const updateVersion = (newVersion) => {
     if (onChangeVersion) {
       onChangeVersion(newVersion);
     }
   };
 
   const updateNamespace = useCallback(
-    newNS => {
+    (newNS) => {
       if (onChangeNamespace) {
         onChangeNamespace(newNS);
       }
@@ -109,6 +109,7 @@ const InstallAppForm = ({
 
       {formAbilities.hasFixedNamespace ? (
         <Input
+          key='fixed-namespace'
           description={`This app must be installed in the ${formAbilities.fixedNamespace} namespace`}
           hint={<>&nbsp;</>}
           label='Namespace:'
@@ -117,6 +118,7 @@ const InstallAppForm = ({
         />
       ) : (
         <Input
+          key='dedicated-namespace'
           description='We recommend that you create a dedicated namespace. The namespace will be created if it doesn’t exist yet.'
           hint={<>&nbsp;</>}
           label='Namespace:'

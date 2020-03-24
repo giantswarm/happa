@@ -34,7 +34,7 @@ class NewCluster extends React.Component {
     });
   }
 
-  setSelectedRelease = selectedRelease => {
+  setSelectedRelease = (selectedRelease) => {
     this.setState({ selectedRelease });
   };
 
@@ -51,13 +51,13 @@ class NewCluster extends React.Component {
     }
 
     const selectableReleases = releaseVersions.map(
-      version => this.props.releases[version]
+      (version) => this.props.releases[version]
     );
 
     this.setState({ selectableReleases: selectableReleases });
   }
 
-  updateClusterName = clusterName => this.setState({ clusterName });
+  updateClusterName = (clusterName) => this.setState({ clusterName });
 
   // Lets non admin users know that creating a cluster will probably fail for them,
   // since all releases are WIP and only admins can create clusters from WIP releases.
@@ -91,7 +91,7 @@ class NewCluster extends React.Component {
     return -1;
   };
 
-  renderComponent = props => {
+  renderComponent = (props) => {
     const route = RoutePath.parseWithTemplate(
       OrganizationsRoutes.Clusters.New,
       props.location.pathname
@@ -127,7 +127,7 @@ class NewCluster extends React.Component {
           <Route
             exact
             path={`${this.props.match.path}`}
-            render={props => this.renderComponent(props)}
+            render={(props) => this.renderComponent(props)}
           />
         </Switch>
       </LoadingOverlay>
@@ -152,11 +152,11 @@ function mapStateToProps(state) {
   return {
     releases: items,
     activeSortedReleases,
-    provider: state.app.info.general.provider,
-    firstNodePoolsRelease: state.app.info.features
-      ? state.app.info.features.nodepools.release_version_minimum
+    provider: state.main.info.general.provider,
+    firstNodePoolsRelease: state.main.info.features
+      ? state.main.info.features.nodepools.release_version_minimum
       : '10.0.0',
-    user: state.app.loggedInUser,
+    user: state.main.loggedInUser,
   };
 }
 

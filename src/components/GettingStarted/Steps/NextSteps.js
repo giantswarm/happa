@@ -5,7 +5,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
-const NextSteps = props => {
+const NextSteps = (props) => {
   const pathParams = {
     orgId: props.match.params.orgId,
     clusterId: props.match.params.clusterId,

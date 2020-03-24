@@ -13,7 +13,7 @@ import EmptyStateDisplay from 'UI/EmptyStateDisplay';
 import OrganizationList from 'UI/OrganizationList/OrganizationList';
 
 class OrganizationListWrapper extends React.Component {
-  getOrganizationURL = id => {
+  getOrganizationURL = (id) => {
     const organizationDetailPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Detail,
       { orgId: id }
@@ -22,7 +22,7 @@ class OrganizationListWrapper extends React.Component {
     return organizationDetailPath;
   };
 
-  deleteOrganization = e => {
+  deleteOrganization = (e) => {
     const orgID = e.currentTarget.getAttribute('data-orgID');
     this.props.dispatch(organizationDelete(orgID));
   };
@@ -77,7 +77,7 @@ function mapStateToProps(state) {
   return {
     organizations: sortedOrganizations,
     clusters: state.entities.clusters.items,
-    provider: state.app.info.general.provider,
+    provider: state.main.info.general.provider,
   };
 }
 

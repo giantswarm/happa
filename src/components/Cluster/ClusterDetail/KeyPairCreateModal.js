@@ -11,8 +11,8 @@ import ExpiryHoursPicker from './ExpiryHoursPicker';
 
 const EXPIRE_TTL_TIME = 720;
 
-const KeyPairCreateModal = props => {
-  const defaultDescription = email => {
+const KeyPairCreateModal = (props) => {
+  const defaultDescription = (email) => {
     return `Added by user ${email} using Happa web interface`;
   };
 
@@ -40,7 +40,7 @@ const KeyPairCreateModal = props => {
     return kubeConfigBlob;
   };
 
-  const copyKubeConfig = e => {
+  const copyKubeConfig = (e) => {
     e.preventDefault();
 
     const clipboardResetTime = 500;
@@ -51,7 +51,7 @@ const KeyPairCreateModal = props => {
     }, clipboardResetTime);
   };
 
-  const confirmAddKeyPair = e => {
+  const confirmAddKeyPair = (e) => {
     if (e) {
       e.preventDefault();
     }
@@ -68,7 +68,7 @@ const KeyPairCreateModal = props => {
         description: description,
         ttl_hours: expireTTL,
       })
-      .then(keypair => {
+      .then((keypair) => {
         setKubeconfig(
           dedent(makeKubeConfigTextFile(props.cluster, keypair, useInternalAPI))
         );
@@ -80,7 +80,7 @@ const KeyPairCreateModal = props => {
 
         return props.actions.clusterLoadKeyPairs(props.cluster.id);
       })
-      .catch(error => {
+      .catch((error) => {
         const modalChangeTimeout = 200;
 
         // eslint-disable-next-line no-console
@@ -127,7 +127,7 @@ const KeyPairCreateModal = props => {
     return cnPrefix;
   };
 
-  const cnPrefixValidation = value => {
+  const cnPrefixValidation = (value) => {
     let error = null;
     if (value !== '') {
       const endRegex = /[a-zA-Z0-9]$/g;
@@ -158,7 +158,7 @@ const KeyPairCreateModal = props => {
     [cnPrefixDebounced]
   );
 
-  const handleCNPrefixChange = e => {
+  const handleCNPrefixChange = (e) => {
     const inputValue = e.target.value;
 
     if (cnPrefixError) {
@@ -169,19 +169,19 @@ const KeyPairCreateModal = props => {
     }
   };
 
-  const handleCertificateOrganizationsChange = e => {
+  const handleCertificateOrganizationsChange = (e) => {
     setCertificateOrganizations(e.target.value);
   };
 
-  const handleTTLChange = ttl => {
+  const handleTTLChange = (ttl) => {
     setExpireTTL(ttl);
   };
 
-  const handleUseInternalAPIChange = event => {
+  const handleUseInternalAPIChange = (event) => {
     setUseInternalAPI(event.target.checked);
   };
 
-  const handleDescriptionChange = e => {
+  const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
   };
 
@@ -226,8 +226,9 @@ const KeyPairCreateModal = props => {
                     </p>
                     <div className='row'>
                       <div className='col-6'>
-                        <label>Common Name Prefix:</label>
+                        <label htmlFor='cnPrefix'>Common Name Prefix:</label>
                         <input
+                          id='cnPrefix'
                           autoFocus
                           onChange={handleCNPrefixChange}
                           type='text'
@@ -244,8 +245,9 @@ const KeyPairCreateModal = props => {
                         </div>
                       </div>
                       <div className='col-6'>
-                        <label>Organizations:</label>
+                        <label htmlFor='organizations'>Organizations:</label>
                         <input
+                          id='organizations'
                           onChange={handleCertificateOrganizationsChange}
                           type='text'
                           value={certificateOrganizations}
@@ -324,6 +326,7 @@ const KeyPairCreateModal = props => {
           case 'addKeyPairSuccess':
             return (
               <BootstrapModal
+                data-testid='create-key-pair-modal'
                 className='create-key-pair-modal--success'
                 onHide={close}
                 show={modal.visible}
@@ -363,7 +366,7 @@ const KeyPairCreateModal = props => {
 
                   {downloadAsFileLink()}
                 </BootstrapModal.Body>
-                <BootstrapModal.Footer>
+                <BootstrapModal.Footer data-testid='create-key-pair-modal-footer'>
                   <Button bsStyle='link' onClick={close}>
                     Close
                   </Button>

@@ -7,7 +7,7 @@ const Code = styled.code`
   padding: 0;
 `;
 
-const AppDetailsItem = props => {
+const AppDetailsItem = (props) => {
   const { label, data } = props;
 
   return (
@@ -27,7 +27,7 @@ const AppDetailsItem = props => {
         )}
         {label !== 'Home' && (
           <ul>
-            {data.map(app => (
+            {data.map((app) => (
               <li key={app}>
                 <Code>
                   <a href={app} rel='noopener noreferrer'>

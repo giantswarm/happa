@@ -11,7 +11,7 @@ import LoadingOverlay from 'UI/LoadingOverlay';
 import Detail from './Detail/Detail';
 import List from './List/List';
 
-const Organizations = props => {
+const Organizations = (props) => {
   return (
     <Breadcrumb
       data={{ title: 'ORGANIZATIONS', pathname: OrganizationsRoutes.Home }}

@@ -20,8 +20,8 @@ const StyledLink = styled(Link)`
   border: 1px solid transparent;
   width: 100%;
   height: 100%;
-  border-radius: ${props => props.theme.border_radius};
-  background-color: ${props => props.theme.colors.shade4};
+  border-radius: ${(props) => props.theme.border_radius};
+  background-color: ${(props) => props.theme.colors.shade4};
   position: relative;
   cursor: pointer;
   overflow: hidden;
@@ -129,7 +129,7 @@ const AppDetails = styled.div`
   }
 `;
 
-const onImgFailLoading = callback => event => {
+const onImgFailLoading = (callback) => (event) => {
   const element = event.target;
 
   element.parentNode.classList.add(IMG_FAILED_LOADING_CLASSNAME);

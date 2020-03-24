@@ -10,15 +10,15 @@ import * as types from './actionTypes';
 // /invites/
 
 export function invitationsLoad() {
-  return function(dispatch, getState) {
-    const token = getState().app.loggedInUser.auth.token;
+  return function (dispatch, getState) {
+    const token = getState().main.loggedInUser.auth.token;
 
     const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
     const alreadyFetching = getState().entities.invitations.isFetching;
 
     if (alreadyFetching) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         resolve();
       });
     }
@@ -27,10 +27,10 @@ export function invitationsLoad() {
 
     return passage
       .getInvitations(token)
-      .then(invitesArray => {
+      .then((invitesArray) => {
         const invites = {};
 
-        _.each(invitesArray, invite => {
+        _.each(invitesArray, (invite) => {
           invite.emaildomain = invite.email.split('@')[1];
           invites[invite.email] = invite;
         });
@@ -40,7 +40,7 @@ export function invitationsLoad() {
           invites,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error when loading invitation:', error);
 
@@ -66,8 +66,8 @@ export function invitationsLoad() {
 // POST /invite/ to Passage.
 
 export function invitationCreate(invitation) {
-  return function(dispatch, getState) {
-    const token = getState().app.loggedInUser.auth.token;
+  return function (dispatch, getState) {
+    const token = getState().main.loggedInUser.auth.token;
 
     const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
@@ -75,7 +75,7 @@ export function invitationCreate(invitation) {
 
     return passage
       .createInvitation(token, invitation)
-      .then(result => {
+      .then((result) => {
         dispatch({
           type: types.INVITATION_CREATE_SUCCESS,
         });
@@ -88,7 +88,7 @@ export function invitationCreate(invitation) {
 
         return result;
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error inviting user:', error);
 

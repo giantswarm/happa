@@ -61,21 +61,17 @@ it('the selectedVersion gets highlighted', () => {
 
   const menu = getByTestId('menu');
 
-  expect(
-    within(menu)
-      .getByText('1.0.5')
-      .classList.contains('selected')
-  ).toBe(true);
+  expect(within(menu).getByText('1.0.5').classList.contains('selected')).toBe(
+    true
+  );
 
-  expect(
-    within(menu)
-      .getByText('1.0.3')
-      .classList.contains('selected')
-  ).toBe(false);
+  expect(within(menu).getByText('1.0.3').classList.contains('selected')).toBe(
+    false
+  );
 });
 
 it('clicking a version calls the onChange prop', () => {
-  const mockCallback = jest.fn(x => `Got version: ${x}`);
+  const mockCallback = jest.fn((x) => `Got version: ${x}`);
 
   const { getByText, getByTestId } = renderWithTheme(AppVersionPicker, {
     onChange: mockCallback,

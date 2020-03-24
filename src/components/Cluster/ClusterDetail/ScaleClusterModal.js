@@ -81,7 +81,7 @@ class ScaleClusterModal extends React.Component {
     });
   };
 
-  updateScaling = nodeCountSelector => {
+  updateScaling = (nodeCountSelector) => {
     this.setState({
       scaling: {
         min: nodeCountSelector.scaling.min,
@@ -114,7 +114,7 @@ class ScaleClusterModal extends React.Component {
               messageTTL.SHORT
             );
           })
-          .catch(error => {
+          .catch((error) => {
             this.setState({
               loading: false,
               error: error,
@@ -154,7 +154,7 @@ class ScaleClusterModal extends React.Component {
     return 0;
   };
 
-  pluralize = nodes => {
+  pluralize = (nodes) => {
     let pluralize = 's';
 
     if (Math.abs(nodes) === 1) {
@@ -342,9 +342,7 @@ class ScaleClusterModal extends React.Component {
     );
     let footer = (
       <BootstrapModal.Footer>
-        {this.buttonProperties().disabled ? (
-          undefined
-        ) : (
+        {this.buttonProperties().disabled ? undefined : (
           <Button
             bsStyle={this.buttonProperties().style}
             disabled={this.buttonProperties().disabled}
@@ -424,9 +422,9 @@ ScaleClusterModal.propTypes = {
 function mapStateToProps(state) {
   const propsToPush = {};
 
-  if (state.app.info.workers.count_per_cluster.max) {
+  if (state.main.info.workers.count_per_cluster.max) {
     propsToPush.maxWorkersPerCluster =
-      state.app.info.workers.count_per_cluster.max;
+      state.main.info.workers.count_per_cluster.max;
   }
 
   return propsToPush;

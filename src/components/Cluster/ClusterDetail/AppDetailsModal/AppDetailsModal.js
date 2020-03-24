@@ -1,6 +1,7 @@
 import {
   deleteApp as deleteAppAction,
   loadApps as loadAppsAction,
+  updateApp as updateAppAction,
 } from 'actions/appActions';
 import {
   createAppConfig as createAppConfigAction,
@@ -12,9 +13,11 @@ import {
   deleteAppSecret as deleteAppSecretAction,
   updateAppSecret as updateAppSecretAction,
 } from 'actions/appSecretActions';
+import { catalogLoadIndex } from 'actions/catalogActions';
 import GenericModal from 'components/Modals/GenericModal';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -30,8 +33,17 @@ const modalPanes = {
   initial: 'initial',
 };
 
-const AppDetailsModal = props => {
+const AppDetailsModal = (props) => {
   const [pane, setPane] = useState(modalPanes.initial);
+  const [desiredVersion, setDesiredVersion] = useState(props.app.spec.version);
+
+  const { app, catalog, dispatch } = props;
+
+  useEffect(() => {
+    if (catalog && !catalog.apps) {
+      dispatch(catalogLoadIndex(catalog));
+    }
+  }, [catalog, app, dispatch]);
 
   if (!props.app) {
     return <span />;
@@ -41,9 +53,14 @@ const AppDetailsModal = props => {
   const clusterId = props.clusterId;
 
   function showPane(paneToShow) {
-    return function() {
+    return function () {
       setPane(paneToShow);
     };
+  }
+
+  function showEditChartVersionPane(version) {
+    setDesiredVersion(version);
+    setPane(modalPanes.editChartVersion);
   }
 
   function onClose() {
@@ -52,8 +69,15 @@ const AppDetailsModal = props => {
   }
 
   async function loadAppsAndClose() {
-    await props.dispatch(loadAppsAction(clusterId));
     onClose();
+    await props.dispatch(loadAppsAction(clusterId));
+  }
+
+  async function editChartVersion() {
+    await props.dispatch(
+      updateAppAction(appName, clusterId, { spec: { version: desiredVersion } })
+    );
+    await loadAppsAndClose();
   }
 
   async function deleteAppConfig() {
@@ -95,6 +119,7 @@ const AppDetailsModal = props => {
     done();
   }
 
+  // eslint-disable-next-line react/no-multi-comp
   function deleteConfirmFooter(cta, onConfirm) {
     return (
       <DeleteConfirmFooter
@@ -116,6 +141,8 @@ const AppDetailsModal = props => {
       modalBody = (
         <InitialPane
           app={props.app}
+          catalogNotFound={!props.catalog}
+          appVersions={props.appVersions}
           dispatchCreateAppConfig={createAppConfig}
           dispatchCreateAppSecret={createAppSecret}
           dispatchUpdateAppConfig={updateAppConfig}
@@ -123,7 +150,7 @@ const AppDetailsModal = props => {
           showDeleteAppConfigPane={showPane(modalPanes.deleteAppConfig)}
           showDeleteAppPane={showPane(modalPanes.deleteApp)}
           showDeleteAppSecretPane={showPane(modalPanes.deleteAppSecret)}
-          showEditChartVersionPane={showPane(modalPanes.editChartVersion)}
+          showEditChartVersionPane={showEditChartVersionPane}
         />
       );
       break;
@@ -138,20 +165,14 @@ const AppDetailsModal = props => {
 
       modalBody = (
         <EditChartVersionPane
-          onConfirm={() => {
-            return 'todo';
-          }}
+          currentVersion={props.app.spec.version}
+          desiredVersion={desiredVersion}
         />
       );
 
       modalFooter = (
         <>
-          <Button
-            bsStyle='success'
-            onClick={() => {
-              return 'todo';
-            }}
-          >
+          <Button bsStyle='success' onClick={editChartVersion}>
             Update Chart Version
           </Button>
           <Button bsStyle='link' onClick={showPane(modalPanes.initial)}>
@@ -245,10 +266,22 @@ const AppDetailsModal = props => {
 
 AppDetailsModal.propTypes = {
   app: PropTypes.object,
+  appVersions: PropTypes.array,
+  catalog: PropTypes.object,
   clusterId: PropTypes.string,
   dispatch: PropTypes.func,
   onClose: PropTypes.func,
   visible: PropTypes.bool,
 };
 
-export default AppDetailsModal;
+function mapStateToProps(state, ownProps) {
+  return {
+    catalog: state.entities.catalogs?.items[ownProps.app.spec.catalog],
+    appVersions:
+      state.entities.catalogs?.items[ownProps.app.spec.catalog]?.apps?.[
+        ownProps.app.spec.name
+      ],
+  };
+}
+
+export default connect(mapStateToProps)(AppDetailsModal);

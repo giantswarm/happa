@@ -127,7 +127,7 @@ class InputField extends React.Component {
           onBlur={this.onBlur}
           onChange={this.onChange}
           readOnly={this.props.readOnly}
-          ref={i => {
+          ref={(i) => {
             this.input = i;
           }}
           type={this.props.type}

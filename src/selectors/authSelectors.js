@@ -17,7 +17,7 @@ import { AuthorizationTypes, StatusCodes } from 'shared';
  * @throws {SSOError} Authentication token renewal failed
  */
 export async function selectAuthToken(dispatch, state) {
-  const { auth } = state.app.loggedInUser;
+  const { auth } = state.main.loggedInUser;
   const scheme = auth.scheme;
   let currentToken = auth.token;
 

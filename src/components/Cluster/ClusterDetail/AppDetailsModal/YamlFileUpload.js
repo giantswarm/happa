@@ -8,7 +8,7 @@ import Button from 'UI/Button';
 // input element. When you click the button the file dialog opens, and the
 // user can pick a file. If the file the user picks is valid YAML, then
 // "props.onInputChange" will be called with the parsed contents of that file.
-const YAMLFileUpload = props => {
+const YAMLFileUpload = (props) => {
   const [fileUploading, setFileUploading] = useState(false);
   const [renderFileInputs, setRenderFileInputs] = useState(true);
   const isMounted = useRef(false);
@@ -43,10 +43,10 @@ const YAMLFileUpload = props => {
 
     const reader = new FileReader();
 
-    reader.onload = (function() {
+    reader.onload = (function () {
       let parsedYAML = '';
 
-      return function(event) {
+      return function (event) {
         try {
           parsedYAML = yaml.safeLoad(event.target.result);
         } catch (err) {
@@ -90,9 +90,7 @@ const YAMLFileUpload = props => {
           style={{ display: 'none' }}
           type='file'
         />
-      ) : (
-        undefined
-      )}
+      ) : undefined}
     </>
   );
 };
