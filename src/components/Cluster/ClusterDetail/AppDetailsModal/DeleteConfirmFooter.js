@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Button';
 
-const DeleteConfirmFooter = props => {
+const DeleteConfirmFooter = (props) => {
   return (
     <>
       <Button bsStyle='danger' onClick={props.onConfirm}>

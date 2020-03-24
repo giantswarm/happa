@@ -1,4 +1,4 @@
-const parseErrorMessages = error => {
+const parseErrorMessages = (error) => {
   let heading = 'Could not log in';
   let message =
     'Something went wrong. Please try again later or contact support: support@giantswarm.io';

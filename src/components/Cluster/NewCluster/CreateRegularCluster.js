@@ -44,7 +44,7 @@ const WrapperDiv = styled.div`
     form {
       label {
         margin-bottom: 7px;
-        color: ${props => props.theme.colors.white1};
+        color: ${(props) => props.theme.colors.white1};
         font-weight: 400;
       }
     }
@@ -134,7 +134,7 @@ class CreateRegularCluster extends React.Component {
     });
   }
 
-  updateAvailabilityZonesPicker = n => {
+  updateAvailabilityZonesPicker = (n) => {
     this.setState({
       availabilityZonesPicker: {
         value: n.value,
@@ -143,7 +143,7 @@ class CreateRegularCluster extends React.Component {
     });
   };
 
-  updateScaling = nodeCountSelector => {
+  updateScaling = (nodeCountSelector) => {
     this.setState({
       scaling: {
         min: nodeCountSelector.scaling.min,
@@ -154,7 +154,7 @@ class CreateRegularCluster extends React.Component {
     });
   };
 
-  updateClusterName = event => {
+  updateClusterName = (event) => {
     const clusterName = event.target.value;
     this.setState({ clusterName });
     this.props.updateClusterNameInParent(clusterName);
@@ -230,7 +230,7 @@ class CreateRegularCluster extends React.Component {
     );
   };
 
-  selectRelease = releaseVersion => {
+  selectRelease = (releaseVersion) => {
     this.setState({
       // eslint-disable-next-line react/no-unused-state
       releaseVersion,
@@ -248,14 +248,12 @@ class CreateRegularCluster extends React.Component {
         <br />
         {this.state.errorMessage !== '' ? (
           <pre>{this.state.errorMessage}</pre>
-        ) : (
-          undefined
-        )}
+        ) : undefined}
       </div>
     );
   }
 
-  updateAWSInstanceType = value => {
+  updateAWSInstanceType = (value) => {
     this.setState({
       aws: {
         instanceType: {
@@ -266,7 +264,7 @@ class CreateRegularCluster extends React.Component {
     });
   };
 
-  updateVMSize = value => {
+  updateVMSize = (value) => {
     this.setState({
       azure: {
         vmSize: {
@@ -277,8 +275,8 @@ class CreateRegularCluster extends React.Component {
     });
   };
 
-  updateCPUCores = value => {
-    this.setState(prevState => ({
+  updateCPUCores = (value) => {
+    this.setState((prevState) => ({
       kvm: {
         cpuCores: {
           value: value.value,
@@ -290,8 +288,8 @@ class CreateRegularCluster extends React.Component {
     }));
   };
 
-  updateMemorySize = value => {
-    this.setState(prevState => ({
+  updateMemorySize = (value) => {
+    this.setState((prevState) => ({
       kvm: {
         cpuCores: prevState.kvm.cpuCores,
         memorySize: {
@@ -303,8 +301,8 @@ class CreateRegularCluster extends React.Component {
     }));
   };
 
-  updateDiskSize = value => {
-    this.setState(prevState => ({
+  updateDiskSize = (value) => {
+    this.setState((prevState) => ({
       kvm: {
         cpuCores: prevState.kvm.cpuCores,
         memorySize: prevState.kvm.memorySize,
@@ -429,7 +427,7 @@ class CreateRegularCluster extends React.Component {
                   <input
                     autoFocus
                     onChange={this.updateClusterName}
-                    ref={i => {
+                    ref={(i) => {
                       this.clusterNameInput = i;
                     }}
                     type='text'

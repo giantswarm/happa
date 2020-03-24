@@ -38,7 +38,7 @@ function monkeyPatchGiantSwarmClient(store) {
       if (isJwtExpired(defaultClientAuth.apiKey)) {
         return auth
           .renewToken()
-          .then(async result => {
+          .then(async (result) => {
             // Update state with new token.
             await store.dispatch(auth0Login(result));
 
@@ -61,7 +61,7 @@ function monkeyPatchGiantSwarmClient(store) {
               returnType
             );
           })
-          .catch(err => {
+          .catch((err) => {
             err.status = 401; // Add 'status: 401' to the error object
             // so the layout component can treat auth0
             // login required errors correctly.

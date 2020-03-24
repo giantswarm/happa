@@ -139,7 +139,7 @@ class KeyPairs extends React.Component {
     );
   };
 
-  showKeyPairModal = row => {
+  showKeyPairModal = (row) => {
     this.setState({
       keyPairDetailsModal: {
         visible: true,

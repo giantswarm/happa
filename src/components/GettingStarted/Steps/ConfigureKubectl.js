@@ -127,12 +127,12 @@ class ConfigKubeCtl extends React.Component {
   }
 
   toggleAlternative = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       alternativeOpen: !prevState.alternativeOpen,
     }));
   };
 
-  friendlyClusterName = cluster => {
+  friendlyClusterName = (cluster) => {
     return `${cluster.name} (${cluster.id})`;
   };
 
@@ -301,9 +301,7 @@ class ConfigKubeCtl extends React.Component {
                 cluster={this.props.selectedCluster}
                 user={this.props.user}
               />
-            ) : (
-              undefined
-            )}
+            ) : undefined}
           </div>
 
           <p>

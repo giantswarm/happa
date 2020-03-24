@@ -155,7 +155,7 @@ class NumberPicker extends React.Component {
     });
   };
 
-  updateInput = e => {
+  updateInput = (e) => {
     const desiredValue = e.target.value;
 
     // Validate.
@@ -186,7 +186,7 @@ class NumberPicker extends React.Component {
     );
   };
 
-  validateInput = desiredValue => {
+  validateInput = (desiredValue) => {
     if (desiredValue === '') {
       return {
         value: null,
@@ -215,7 +215,7 @@ class NumberPicker extends React.Component {
     };
   };
 
-  handleFocus = event => {
+  handleFocus = (event) => {
     event.target.select();
   };
 
@@ -229,9 +229,7 @@ class NumberPicker extends React.Component {
         {this.props.label ? <Label>{this.props.label}</Label> : undefined}
 
         <Control>
-          {this.props.readOnly ? (
-            undefined
-          ) : (
+          {this.props.readOnly ? undefined : (
             <DecrementButton
               className={this.state.inputValue === this.props.min && 'disabled'}
               onClick={this.decrement}
@@ -253,9 +251,7 @@ class NumberPicker extends React.Component {
               }
             />
           </ValueSpan>
-          {this.props.readOnly ? (
-            undefined
-          ) : (
+          {this.props.readOnly ? undefined : (
             <IncrementButton
               className={this.props.value === this.props.max && 'disabled'}
               onClick={this.increment}

@@ -9,9 +9,9 @@ const MAX_HEIGHT = '250px';
 
 const Wrapper = styled.div`
   div > button {
-    background-color: ${props => props.theme.colors.shade5};
-    border: 1px solid ${props => props.theme.colors.shade6};
-    border-radius: ${props => props.theme.border_radius};
+    background-color: ${(props) => props.theme.colors.shade5};
+    border: 1px solid ${(props) => props.theme.colors.shade6};
+    border-radius: ${(props) => props.theme.border_radius};
     font-size: 14px;
     line-height: normal;
     padding: 8px 10px;
@@ -26,8 +26,8 @@ const Wrapper = styled.div`
 
 const Menu = styled.form`
   width: ${WIDTH};
-  border-radius: ${props => props.theme.border_radius};
-  background-color: ${props => props.theme.colors.shade4};
+  border-radius: ${(props) => props.theme.border_radius};
+  background-color: ${(props) => props.theme.colors.shade4};
   overflow: hidden;
   font-size: 14px;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2);
@@ -36,7 +36,7 @@ const Menu = styled.form`
 `;
 
 const Header = styled.div`
-  background-color: ${props => props.theme.colors.shade1};
+  background-color: ${(props) => props.theme.colors.shade1};
   padding: ${INNER_PADDING};
 
   h5 {
@@ -46,7 +46,7 @@ const Header = styled.div`
 
   label {
     padding-top: 10px;
-    border-top: 1px solid ${props => props.theme.colors.shade2};
+    border-top: 1px solid ${(props) => props.theme.colors.shade2};
 
     padding: 0px;
     cursor: pointer;
@@ -88,7 +88,7 @@ const Body = styled.div`
 
   li {
     list-style-type: none;
-    border-bottom: 1px solid ${props => props.theme.colors.shade1};
+    border-bottom: 1px solid ${(props) => props.theme.colors.shade1};
     cursor: pointer;
 
     a.selected {
@@ -115,11 +115,11 @@ const Body = styled.div`
 const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
   const [includeTestVersions, setIncludeTestVersions] = useState(false);
 
-  const handleSetIncludeTestVersions = event => {
+  const handleSetIncludeTestVersions = (event) => {
     setIncludeTestVersions(event.target.checked);
   };
 
-  const handleOnChange = event => {
+  const handleOnChange = (event) => {
     event.preventDefault();
     if (onChange) {
       onChange(event.currentTarget.dataset.version);
@@ -156,7 +156,7 @@ const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
                 <Header>
                   <h5>Switch Chart Version</h5>
 
-                  {versions?.some(v => v.test) && (
+                  {versions?.some((v) => v.test) && (
                     <label>
                       <input
                         name='includeTestVersions'
@@ -166,7 +166,7 @@ const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
                       />
                       <a
                         href='#'
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           toggleIncludeTestVersions();
                         }}
@@ -180,10 +180,10 @@ const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
                 <Body role='menu' data-testid='menu'>
                   <ul>
                     {versions
-                      ?.filter(version => {
+                      ?.filter((version) => {
                         return includeTestVersions ? true : !version.test;
                       })
-                      .map(version => {
+                      .map((version) => {
                         return (
                           <li key={version.version}>
                             <a
@@ -193,7 +193,7 @@ const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
                                   : ''
                               }
                               href='#'
-                              onClick={e => {
+                              onClick={(e) => {
                                 handleOnChange(e);
                               }}
                               data-version={version.version}

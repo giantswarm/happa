@@ -114,7 +114,7 @@ class ViewAndEditName extends React.Component {
     });
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     const { value } = e.target;
     const validationResult = ViewAndEditName.validate(value);
 
@@ -124,7 +124,7 @@ class ViewAndEditName extends React.Component {
     });
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     // eslint-disable-next-line no-unused-expressions
     e?.preventDefault();
 
@@ -144,7 +144,7 @@ class ViewAndEditName extends React.Component {
     }
   };
 
-  handleKey = e => {
+  handleKey = (e) => {
     switch (e.key) {
       case 'Escape':
         this.handleCancel();

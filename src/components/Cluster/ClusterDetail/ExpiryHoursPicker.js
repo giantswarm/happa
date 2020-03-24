@@ -29,9 +29,7 @@ class ExpiryHoursPicker extends React.Component {
       monthsValue: months,
       daysValue: days,
       hoursValue: hours,
-      expireDate: moment()
-        .add(props.initialValue, 'hours')
-        .utc(),
+      expireDate: moment().add(props.initialValue, 'hours').utc(),
       selectionType: 'relative',
     };
 
@@ -127,15 +125,10 @@ class ExpiryHoursPicker extends React.Component {
 
     if (this.state.selectionType === 'date') {
       // expireDate is at the start of the day of whatever the user picked.
-      expireDate = this.state.expireDate
-        .utc()
-        .startOf('day')
-        .clone();
+      expireDate = this.state.expireDate.utc().startOf('day').clone();
     } else if (this.state.selectionType === 'relative') {
       // Calculate hours based on years, months, days, hours chosen
-      expireDate = moment()
-        .utc()
-        .add(this.state.yearsValue, 'years');
+      expireDate = moment().utc().add(this.state.yearsValue, 'years');
       expireDate.add(this.state.monthsValue, 'months');
       expireDate.add(this.state.daysValue, 'days');
       expireDate.add(this.state.hoursValue, 'hours');
@@ -179,7 +172,7 @@ class ExpiryHoursPicker extends React.Component {
               min='0'
               name='years'
               onChange={this.handleYearChange.bind(this)}
-              ref={i => {
+              ref={(i) => {
                 this.years = i;
               }}
               type='text'
@@ -193,7 +186,7 @@ class ExpiryHoursPicker extends React.Component {
               min='0'
               name='months'
               onChange={this.handleMonthChange.bind(this)}
-              ref={i => {
+              ref={(i) => {
                 this.months = i;
               }}
               type='text'
@@ -207,7 +200,7 @@ class ExpiryHoursPicker extends React.Component {
               min='0'
               name='days'
               onChange={this.handleDayChange.bind(this)}
-              ref={i => {
+              ref={(i) => {
                 this.days = i;
               }}
               type='text'
@@ -221,7 +214,7 @@ class ExpiryHoursPicker extends React.Component {
               min='0'
               name='hours'
               onChange={this.handleHourChange.bind(this)}
-              ref={i => {
+              ref={(i) => {
                 this.hours = i;
               }}
               type='text'
@@ -247,9 +240,7 @@ class ExpiryHoursPicker extends React.Component {
               // eslint-disable-next-line no-magic-numbers
               .add(30, 'years')
               .toDate()}
-            minDate={moment()
-              .add(1, 'day')
-              .toDate()}
+            minDate={moment().add(1, 'day').toDate()}
             onChange={this.handleDateChange.bind(this)}
             selected={this.state.expireDate.toDate()}
             showMonthDropdown

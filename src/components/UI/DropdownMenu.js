@@ -29,7 +29,7 @@ const MenuWrapper = styled.div`
     &:hover,
     &:focus,
     &:focus-within {
-      background: ${props => props.theme.colors.shade8};
+      background: ${(props) => props.theme.colors.shade8};
     }
   }
   ul {
@@ -39,7 +39,7 @@ const MenuWrapper = styled.div`
     margin: 2px 0 0;
     padding: 5px 0;
     width: 180px;
-    background: ${props => props.theme.colors.shade2};
+    background: ${(props) => props.theme.colors.shade2};
     z-index: 1;
     background-color: #2a5874;
     border: none;
@@ -55,7 +55,7 @@ const MenuWrapper = styled.div`
     padding: 7px 15px;
     width: 100%;
     &:hover {
-      background: ${props => props.theme.colors.shade9};
+      background: ${(props) => props.theme.colors.shade9};
     }
   }
 `;
@@ -75,7 +75,7 @@ function DropdownMenu(props) {
     clearTimeout(timeOutId);
   };
 
-  const onKeyDownHandler = event => {
+  const onKeyDownHandler = (event) => {
     if (event.key === 'Escape') setIsOpen(false);
   };
 

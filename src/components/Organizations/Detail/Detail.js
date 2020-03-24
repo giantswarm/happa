@@ -86,12 +86,12 @@ function mapStateToProps(state, ownProps) {
   const allClusters = state.entities.clusters.items;
 
   const clusters = Object.values(allClusters).filter(
-    cluster => cluster.owner === ownProps.match.params.orgId
+    (cluster) => cluster.owner === ownProps.match.params.orgId
   );
 
   const organization =
     state.entities.organizations.items[ownProps.match.params.orgId];
-  const membersForTable = organization?.members.map(member => {
+  const membersForTable = organization?.members.map((member) => {
     return Object.assign({}, member, {
       emailDomain: member.email.split('@')[1],
     });

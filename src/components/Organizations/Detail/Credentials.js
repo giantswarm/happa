@@ -36,7 +36,7 @@ class Credentials extends React.Component {
    * handleFormSubmit handles a credential form submission.
    * We pass on the
    */
-  handleFormSubmit = data => {
+  handleFormSubmit = (data) => {
     // keep the data to have the form filled once again,
     // in case the user needs to correct an error
     this.setState({ formData: data });

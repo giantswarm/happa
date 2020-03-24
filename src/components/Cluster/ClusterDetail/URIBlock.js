@@ -15,7 +15,7 @@ const CopyButton = styled.div`
 
   &:hover {
     i {
-      text-shadow: 0px 0px 15px ${props => props.theme.colors.shade1};
+      text-shadow: 0px 0px 15px ${(props) => props.theme.colors.shade1};
     }
   }
 `;
@@ -34,7 +34,7 @@ const BlockWrapper = styled.div`
   }
 `;
 
-const getTooltip = text => <Tooltip id='tooltip'>{text}</Tooltip>;
+const getTooltip = (text) => <Tooltip id='tooltip'>{text}</Tooltip>;
 
 // eslint-disable-next-line react/no-multi-comp
 const URIBlock = ({ children, title, ...props }) => {

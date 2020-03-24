@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const ClusterCreationDuration = props => {
+const ClusterCreationDuration = (props) => {
   // eslint-disable-next-line no-magic-numbers
   const minutes = props.stats.p75 ? Math.round(props.stats.p75 / 60.0) : 0;
 

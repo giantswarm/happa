@@ -21,7 +21,7 @@ class AWSInstanceTypeSelector extends React.Component {
 
     const availableInstanceTypes = [];
     // Create a list of only the allowed instance types
-    props.allowedInstanceTypes.forEach(it => {
+    props.allowedInstanceTypes.forEach((it) => {
       if (typeof instanceTypes[it] === 'object') {
         availableInstanceTypes.push(
           Object.assign({}, instanceTypes[it], { name: it })
@@ -52,7 +52,7 @@ class AWSInstanceTypeSelector extends React.Component {
     });
   };
 
-  updateInstanceType = instanceType => {
+  updateInstanceType = (instanceType) => {
     this.props.onChange({
       valid: this.state.valid,
       value: instanceType,
@@ -81,11 +81,11 @@ class AWSInstanceTypeSelector extends React.Component {
     this.closeModal();
   };
 
-  validateInstanceType = instanceTypeName => {
+  validateInstanceType = (instanceTypeName) => {
     let valid = false;
     let validationError = 'Please enter a valid instance type';
 
-    const validInstanceTypes = this.state.instanceTypes.map(x => {
+    const validInstanceTypes = this.state.instanceTypes.map((x) => {
       return x.name;
     });
 
@@ -109,7 +109,7 @@ class AWSInstanceTypeSelector extends React.Component {
       <WrapperDiv>
         <div className='new-cluster--instance-type-selector'>
           <form
-            onSubmit={e => {
+            onSubmit={(e) => {
               e.preventDefault();
             }}
           >
@@ -118,7 +118,7 @@ class AWSInstanceTypeSelector extends React.Component {
               onChange={this.updateInstanceType}
               readOnly={this.props.readOnly}
               disabled={true}
-              ref={i => {
+              ref={(i) => {
                 this.instance_type = i;
               }}
               type='text'
@@ -154,7 +154,7 @@ class AWSInstanceTypeSelector extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.state.instanceTypes.map(instanceType => {
+                {this.state.instanceTypes.map((instanceType) => {
                   return (
                     <tr
                       className={

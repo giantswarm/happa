@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTabs from 'react-bootstrap/lib/Tabs';
 
-const Tabs = props => {
+const Tabs = (props) => {
   return (
     <BootstrapTabs animation={false} defaultActiveKey={1} id='tabs'>
       {props.children}

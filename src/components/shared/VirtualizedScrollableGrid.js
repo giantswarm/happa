@@ -113,7 +113,7 @@ class VirtualizedScrollableGrid extends React.PureComponent {
     };
   }
 
-  handleScroll = scrollDestination => {
+  handleScroll = (scrollDestination) => {
     const { current } = this.gridRef;
 
     if (current !== null) {
@@ -124,7 +124,7 @@ class VirtualizedScrollableGrid extends React.PureComponent {
   static findCurrentColumnCount(columnCountObj, theme) {
     const windowWidth = window.innerWidth;
 
-    const currentColumn = Object.keys(columnCountObj).find(breakpoint => {
+    const currentColumn = Object.keys(columnCountObj).find((breakpoint) => {
       const currentBreakpointResolution = theme.breakpoints[breakpoint];
 
       return (

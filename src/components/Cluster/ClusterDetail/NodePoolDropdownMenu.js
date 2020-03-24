@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import DropdownMenu from 'UI/DropdownMenu';
 
-const NodePoolDropdownMenu = props => {
+const NodePoolDropdownMenu = (props) => {
   return (
     <DropdownMenu
       render={({
@@ -27,7 +27,7 @@ const NodePoolDropdownMenu = props => {
               <li>
                 <a
                   href='#'
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault();
                     props.triggerEditName();
                   }}
@@ -38,7 +38,7 @@ const NodePoolDropdownMenu = props => {
               <li>
                 <a
                   href='#'
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault();
                     props.showNodePoolScalingModal(props.nodePool);
                   }}
@@ -49,7 +49,7 @@ const NodePoolDropdownMenu = props => {
               <li>
                 <a
                   href='#'
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault();
                     props.deleteNodePool();
                   }}

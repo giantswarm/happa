@@ -13,7 +13,7 @@ import BaseTransition from 'styles/transitions/BaseTransition';
 import FlashMessage from './FlashMessage';
 
 class FlashMessages extends React.Component {
-  makeFlashComponent = flashMessage => {
+  makeFlashComponent = (flashMessage) => {
     return (
       <FlashMessage
         class={flashMessage.class}
@@ -24,7 +24,7 @@ class FlashMessages extends React.Component {
     );
   };
 
-  dismissFlash = flashMessage => {
+  dismissFlash = (flashMessage) => {
     this.props.dispatch(flashRemove(flashMessage));
   };
 

@@ -4,7 +4,7 @@ import React from 'react';
 
 import CatalogRepo from './CatalogRepo';
 
-const CatalogList = props => (
+const CatalogList = (props) => (
   <DocumentTitle title='App Catalogs'>
     <>
       <h1>App Catalogs</h1>
@@ -18,7 +18,7 @@ const CatalogList = props => (
         </p>
       ) : (
         <div className='app-catalog--repos'>
-          {Object.values(props.catalogs.items).map(catalog => (
+          {Object.values(props.catalogs.items).map((catalog) => (
             <CatalogRepo key={catalog.metadata.name} catalog={catalog} />
           ))}
         </div>

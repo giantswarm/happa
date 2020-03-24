@@ -18,20 +18,20 @@ const ClusterList = styled.div`
 
 const Cluster = styled.div`
   align-items: center;
-  border-radius: ${props => props.theme.border_radius};
+  border-radius: ${(props) => props.theme.border_radius};
   display: flex;
   padding: 10px 15px;
   :hover {
-    background-color: ${props => props.theme.colors.shade4};
+    background-color: ${(props) => props.theme.colors.shade4};
     cursor: pointer;
   }
   &.selected {
-    background-color: ${props => props.theme.colors.shade4};
+    background-color: ${(props) => props.theme.colors.shade4};
   }
 `;
 
 const ClusterTitle = styled.div`
-  color: ${props => props.theme.colors.white2};
+  color: ${(props) => props.theme.colors.white2};
   flex-grow: 1;
   font-size: 16px;
   font-weight: 800;
@@ -39,7 +39,7 @@ const ClusterTitle = styled.div`
 `;
 
 const Organisation = styled.div`
-  color: ${props => props.theme.colors.white2};
+  color: ${(props) => props.theme.colors.white2};
   font-size: 12px;
 `;
 
@@ -49,8 +49,8 @@ const NoSearchResults = styled.div`
   margin-top: 50px;
 `;
 
-const ClusterPicker = props => {
-  const onSelectCluster = e => {
+const ClusterPicker = (props) => {
+  const onSelectCluster = (e) => {
     if (props.onSelectCluster) {
       props.onSelectCluster(e.currentTarget.dataset.clusterid);
     }
@@ -70,7 +70,7 @@ const ClusterPicker = props => {
           </NoSearchResults>
         )}
 
-        {props.clusters.map(cluster => {
+        {props.clusters.map((cluster) => {
           return (
             <Cluster
               className={

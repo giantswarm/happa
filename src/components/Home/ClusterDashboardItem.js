@@ -41,7 +41,7 @@ const NameWrapper = styled.span`
   font-weight: 700;
 `;
 
-const WrapperStyles = props => css`
+const WrapperStyles = (props) => css`
   display: flex;
   background-color: ${props.theme.colors.darkBlueLighter1};
   border-radius: 5px;
@@ -77,7 +77,7 @@ const Wrapper = styled.div`
 
 const WrapperDeleted = styled.div`
   ${WrapperStyles};
-  background-color: ${props => props.theme.colors.darkBlueDarker1};
+  background-color: ${(props) => props.theme.colors.darkBlueDarker1};
 `;
 
 const ButtonsWrapper = styled.div`
@@ -105,7 +105,7 @@ const ButtonsWrapper = styled.div`
 `;
 
 const DeleteDateWrapper = styled.div`
-  color: ${props => props.theme.colors.darkBlueLighter5};
+  color: ${(props) => props.theme.colors.darkBlueLighter5};
 `;
 
 const ClusterDetailsDiv = styled.div`

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const ErrorWrapperSpan = styled.span`
-  color: ${props => props.theme.colors.error};
+  color: ${(props) => props.theme.colors.error};
   font-weight: 300;
 `;
 

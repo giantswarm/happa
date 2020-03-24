@@ -32,7 +32,7 @@ const ChangeItems = styled.dd`
   }
 `;
 
-const ComponentChangelog = props => {
+const ComponentChangelog = (props) => {
   const { name, changes } = props;
 
   return (

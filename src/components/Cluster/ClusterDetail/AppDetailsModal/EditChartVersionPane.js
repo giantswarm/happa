@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const EditChartVersionPane = props => {
+const EditChartVersionPane = (props) => {
   return (
     <>
       Current chart version: <code>{props.currentVersion}</code>

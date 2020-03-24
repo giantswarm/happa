@@ -48,7 +48,7 @@ const UserInstalledApps = ({
 }) => {
   const [iconErrors, setIconErrors] = useState({});
 
-  const onIconError = e => {
+  const onIconError = (e) => {
     const imageUrl = e.target.src;
     const errors = Object.assign({}, iconErrors, {
       [imageUrl]: true,
@@ -81,7 +81,7 @@ const UserInstalledApps = ({
         {apps.length > 0 && (
           <InstalledApps data-testid='installed-apps'>
             <TransitionGroup>
-              {apps.map(app => {
+              {apps.map((app) => {
                 return (
                   <BaseTransition
                     key={app.metadata.name}

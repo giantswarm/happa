@@ -26,7 +26,7 @@ class ForgotPassword extends React.Component {
     this.setState({ email: localStorage.getItem('user.email') || '' });
   }
 
-  submit = event => {
+  submit = (event) => {
     event.preventDefault();
     clearQueues();
 
@@ -43,7 +43,7 @@ class ForgotPassword extends React.Component {
           tokenRequested: true,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         switch (error.name) {
           case 'TypeError':
             new FlashMessage(
@@ -85,7 +85,7 @@ class ForgotPassword extends React.Component {
     clearQueues();
   }
 
-  updateEmail = event => {
+  updateEmail = (event) => {
     clearQueues();
     this.setState({
       email: event.target.value,
@@ -132,7 +132,7 @@ class ForgotPassword extends React.Component {
               autoFocus
               id='email'
               onChange={this.updateEmail}
-              ref={i => {
+              ref={(i) => {
                 this.email = i;
               }}
               type='text'
