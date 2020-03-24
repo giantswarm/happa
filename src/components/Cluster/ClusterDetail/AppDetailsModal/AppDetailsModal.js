@@ -1,4 +1,3 @@
-import { CLUSTER_UPDATE_APP_ERROR } from 'actions/actionTypes';
 import {
   deleteApp as deleteAppAction,
   loadApps as loadAppsAction,
@@ -19,7 +18,6 @@ import GenericModal from 'components/Modals/GenericModal';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { selectErrorByAction } from 'selectors/clusterSelectors';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -289,12 +287,10 @@ AppDetailsModal.propTypes = {
   dispatch: PropTypes.func,
   onClose: PropTypes.func,
   visible: PropTypes.bool,
-  clusterUpdateAppError: PropTypes.string,
 };
 
 function mapStateToProps(state, ownProps) {
   return {
-    clusterUpdateAppError: selectErrorByAction(state, CLUSTER_UPDATE_APP_ERROR),
     catalog: state.entities.catalogs?.items[ownProps.app.spec.catalog],
     appVersions:
       state.entities.catalogs?.items[ownProps.app.spec.catalog]?.apps?.[
