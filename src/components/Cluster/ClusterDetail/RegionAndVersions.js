@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import UpgradeNotice from 'Home/UpgradeNotice';
-import { relativeDate } from 'lib/helpers.js';
+import { relativeDate } from 'lib/helpers';
 import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal';
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';

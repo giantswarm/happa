@@ -2,7 +2,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { push } from 'connected-react-router';
-import { relativeDate } from 'lib/helpers.js';
+import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
 import moment from 'moment';
 import PropTypes from 'prop-types';
