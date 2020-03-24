@@ -101,25 +101,47 @@ const Body = styled.div`
   }
 `;
 
+interface IVersion {
+  // The version
+  version: string;
+
+  // Whether or not this version is a test version.
+  test: boolean;
+}
+
+interface IVersionPickerProps {
+  // An array of versions to pick from.
+  versions: IVersion[];
+
+  // The currently selected version, will be highlighted in bold in the list.
+  selectedVersion: string;
+
+  // A callback function that gets called when a version is selected by the user.
+  onChange?: (newVersion?: string) => void;
+}
+
 /**
  * VersionPicker is a dropdown style UI component for selecting a single version from a list
  * of versions. The list of versions can contain test versions, and this component
  * allows the users to choose whether they want to see the test versions or not.
- * @param {Object} props - The props that this component can take
- * @param {function} props.onChange - A callback function that gets called when a version is selected by the user.
- * @param {string} props.selectedVersion - The currently selected version, will be highlighted in bold in the list.
- * @param {Object[]} props.versions - An array of versions to pick from.
- * @param {string} props.versions[].version - The version
- * @param {boolean} props.versions[].test - Whether or not this version is a test version.
  */
-const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
-  const [includeTestVersions, setIncludeTestVersions] = useState(false);
+const VersionPicker: React.FC<IVersionPickerProps> = ({
+  onChange,
+  selectedVersion,
+  versions,
+  ...props
+}) => {
+  const [includeTestVersions, setIncludeTestVersions] = useState<boolean>(
+    false
+  );
 
-  const handleSetIncludeTestVersions = (event) => {
+  const handleSetIncludeTestVersions = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setIncludeTestVersions(event.target.checked);
   };
 
-  const handleOnChange = (event) => {
+  const handleOnChange = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     if (onChange) {
       onChange(event.currentTarget.dataset.version);
@@ -216,9 +238,9 @@ const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
 };
 
 VersionPicker.propTypes = {
+  selectedVersion: PropTypes.string.isRequired,
+  versions: PropTypes.array.isRequired,
   onChange: PropTypes.func,
-  selectedVersion: PropTypes.string,
-  versions: PropTypes.array,
 };
 
 export default VersionPicker;
