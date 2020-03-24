@@ -1,11 +1,11 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 7,
+    "ecmaVersion": 2019,
     "sourceType": "module",
+    "useJSXTextNode": true,
     "ecmaFeatures": {
-      "jsx": true,
-      "classes": true
+      "jsx": true
     }
   },
   "env": {
@@ -198,10 +198,31 @@
     "simple-import-sort/sort": 2,
     "import/first": 2,
     "import/newline-after-import": 2,
-    "import/no-duplicates": 2
+    "import/no-duplicates": 2,
+    "@typescript-eslint/camelcase": 0,
+    "@typescript-eslint/no-angle-bracket-type-assertion": 0,
+    "@typescript-eslint/consistent-type-definitions": 1,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/explicit-member-accessibility": 0,
+    "@typescript-eslint/interface-name-prefix": [2, "always"],
+    "@typescript-eslint/no-explicit-any": 2,
+    "@typescript-eslint/no-empty-interface": 0,
+    "@typescript-eslint/no-inferrable-types": 0,
+    "@typescript-eslint/ban-ts-ignore": 0
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "plugins": ["emotion", "react", "react-hooks", "simple-import-sort", "import"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "emotion",
+    "react",
+    "react-hooks",
+    "simple-import-sort",
+    "import"
+  ],
   "settings": {
     "react": {
       "version": "16.9.0"
