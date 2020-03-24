@@ -81,7 +81,7 @@ class AzureVMSizeSelector extends React.Component {
       return x.name;
     });
 
-    if (validVMSizes.indexOf(vmSize) !== -1) {
+    if (validVMSizes.includes(vmSize)) {
       valid = true;
       validationError = '';
     }
