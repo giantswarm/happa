@@ -1,5 +1,4 @@
 import { css } from '@emotion/core';
-import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers';
@@ -16,7 +15,7 @@ import {
 } from 'selectors/clusterSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { Dot, mq } from 'styles';
+import styled, { Dot, mq } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';
@@ -55,7 +54,7 @@ const WrapperStyles = props => css`
   ${LabelWrapper}, ${TitleWrapper} {
     font-size: 1.2em;
   }
-  ${mq(CSSBreakpoints.SMALL)} {
+  ${mq(CSSBreakpoints.Small)} {
     flex-direction: column;
     & > div {
       width: 100%;
@@ -84,7 +83,7 @@ const ButtonsWrapper = styled.div`
   flex: 0 0 210px;
   display: flex;
   justify-content: flex-end;
-  ${mq(CSSBreakpoints.MEDIUM)} {
+  ${mq(CSSBreakpoints.Medium)} {
     flex: unset;
     position: absolute;
     top: 21px;
@@ -98,7 +97,7 @@ const ButtonsWrapper = styled.div`
     justify-content: flex-start;
     padding-left: 98px;
   }
-  ${mq(CSSBreakpoints.SMALL)} {
+  ${mq(CSSBreakpoints.Small)} {
     padding-left: 9px;
   }
 `;
@@ -112,7 +111,7 @@ const ClusterDetailsDiv = styled.div`
   img {
     height: 22px;
   }
-  ${mq(CSSBreakpoints.MEDIUM)} {
+  ${mq(CSSBreakpoints.Medium)} {
     height: unset;
   }
 `;

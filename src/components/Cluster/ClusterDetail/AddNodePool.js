@@ -1,5 +1,4 @@
 import { css } from '@emotion/core';
-import styled from '@emotion/styled';
 import produce from 'immer';
 import { hasAppropriateLength } from 'lib/helpers';
 import PropTypes from 'prop-types';
@@ -7,6 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
+import styled from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 

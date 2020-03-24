@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { logo } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -10,6 +9,7 @@ import {
   OrganizationsRoutes,
   UsersRoutes,
 } from 'shared/constants/routes';
+import styled from 'styles';
 
 import OrganizationDropdown from './OrganizationDropdown';
 import UserDropdown from './UserDropdown';

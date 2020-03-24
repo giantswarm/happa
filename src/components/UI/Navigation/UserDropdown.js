@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
@@ -7,6 +6,7 @@ import Gravatar from 'react-gravatar';
 import { NavLink } from 'react-router-dom';
 import { AuthorizationTypes } from 'shared';
 import { AccountSettingsRoutes, AppRoutes } from 'shared/constants/routes';
+import styled from 'styles';
 
 const Wrapper = styled.div`
   margin-left: 10px;

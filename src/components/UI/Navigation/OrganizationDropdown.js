@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -6,6 +5,7 @@ import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { NavLink } from 'react-router-dom';
 import { OrganizationsRoutes } from 'shared/constants/routes';
+import styled from 'styles';
 import _ from 'underscore';
 
 const Wrapper = styled.div`

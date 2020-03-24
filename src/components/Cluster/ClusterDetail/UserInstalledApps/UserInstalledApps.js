@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
+import styled from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 
 import InstalledApp from './InstalledApp';

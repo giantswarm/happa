@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import styled from 'styles';
 
 import ClusterEmptyState from './ClusterEmptyState';
 import ComponentChangelog from './ComponentChangelog';

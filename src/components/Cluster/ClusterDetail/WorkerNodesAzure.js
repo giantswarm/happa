@@ -1,8 +1,7 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FallbackMessages } from 'shared/constants';
-import { Code, FallbackSpan } from 'styles';
+import styled, { Code, FallbackSpan } from 'styles';
 import theme from 'styles/theme';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
 import Button from 'UI/Button';

@@ -1,8 +1,8 @@
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import InputField from 'shared/InputField';
+import styled from 'styles';
 import Button from 'UI/Button';
 
 const WrapperDiv = styled.div`

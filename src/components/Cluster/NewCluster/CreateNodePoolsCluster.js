@@ -1,5 +1,4 @@
 import { css } from '@emotion/core';
-import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
@@ -12,7 +11,7 @@ import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import { selectErrorByAction } from 'selectors/clusterSelectors';
 import { Constants, Providers } from 'shared/constants';
-import { Input } from 'styles';
+import styled, { Input } from 'styles';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 import ErrorFallback from 'UI/ErrorFallback';

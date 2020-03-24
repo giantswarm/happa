@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import * as OrganizationActions from 'actions/organizationActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import UpgradeNotice from 'Home/UpgradeNotice';
@@ -16,7 +15,7 @@ import { bindActionCreators } from 'redux';
 import cmp from 'semver-compare';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import { Ellipsis } from 'styles';
+import styled, { Ellipsis } from 'styles';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 import Credentials from './Credentials';

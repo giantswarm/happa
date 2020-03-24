@@ -22,15 +22,7 @@
     "emotion/syntax-preference": [1, "string"],
     "no-console": 1,
     "no-underscore-dangle": 0,
-    "no-unused-vars": [
-      2,
-      {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "ignoreRestSiblings": true,
-        "args": "all"
-      }
-    ],
+    "no-unused-vars": 0,
     "no-useless-escape": 0,
     "quotes": [2, "single", { "allowTemplateLiterals": true }],
     "semi": [2, "always"],
@@ -209,7 +201,15 @@
     "@typescript-eslint/no-empty-interface": 0,
     "@typescript-eslint/no-inferrable-types": 0,
     "@typescript-eslint/ban-ts-ignore": 0,
-    "@typescript-eslint/no-unused-vars": 0, // already handling this with built-in command
+    "@typescript-eslint/no-unused-vars": [
+      2,
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "ignoreRestSiblings": true,
+        "args": "all"
+      }
+    ],
     "@typescript-eslint/no-empty-function": 0,
     "@typescript-eslint/no-use-before-define": 0
   },

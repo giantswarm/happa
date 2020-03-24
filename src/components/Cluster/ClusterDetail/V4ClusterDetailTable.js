@@ -1,11 +1,10 @@
-import styled from '@emotion/styled';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { selectResourcesV4 } from 'selectors/clusterSelectors';
 import { Providers } from 'shared/constants';
-import { FlexRowWithTwoBlocksOnEdges } from 'styles';
+import styled, { FlexRowWithTwoBlocksOnEdges } from 'styles';
 import Button from 'UI/Button';
 
 import CredentialInfoRow from './CredentialInfoRow';
