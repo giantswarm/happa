@@ -10,7 +10,7 @@ const nodePoolsApi = new GiantSwarm.NodePoolsApi();
 
 // Loads one cluster node pools
 export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
-  return function(dispatch) {
+  return function (dispatch) {
     if (withLoadingFlags) {
       dispatch({ type: types.CLUSTER_NODEPOOLS_LOAD_REQUEST, id: clusterId });
     }
@@ -18,7 +18,7 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
     return (
       nodePoolsApi
         .getNodePools(clusterId)
-        .then(data => {
+        .then((data) => {
           // Receiving an array-like with weird prototype from API call,
           // so converting it to an array.
           const nodePoolsArray = Array.from(data) || [];
@@ -28,13 +28,13 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
             type: types.CLUSTER_NODEPOOLS_LOAD_SUCCESS,
             id: clusterId,
             nodePools: nodePoolsArray, // nodePools
-            nodePoolsIds: nodePoolsArray.map(np => np.id), // array of ids to store in cluster
+            nodePoolsIds: nodePoolsArray.map((np) => np.id), // array of ids to store in cluster
           });
 
           return nodePoolsArray;
         })
         // here error.response.status -> delete node pools
-        .catch(error => {
+        .catch((error) => {
           if (error.response.status === StatusCodes.NotFound) {
             // If 404, it means that the cluster has been deleted.
             // We want to just log the errors silently, because cluster load
@@ -73,7 +73,7 @@ export function nodePoolsLoad({
   filterBySelectedOrganization,
   withLoadingFlags,
 }) {
-  return async function(dispatch, getState) {
+  return async function (dispatch, getState) {
     if (withLoadingFlags) dispatch({ type: types.NODEPOOLS_LOAD_REQUEST });
 
     const selectedOrganization = getState().main.selectedOrganization;
@@ -82,18 +82,18 @@ export function nodePoolsLoad({
 
     // Remove deleted clusters from clusters array
     const v5ActiveClustersIds = v5ClustersId.filter(
-      id => !allClusters[id].delete_date
+      (id) => !allClusters[id].delete_date
     );
 
     const filteredClusters = filterBySelectedOrganization
       ? v5ActiveClustersIds.filter(
-          id => allClusters[id].owner === selectedOrganization
+          (id) => allClusters[id].owner === selectedOrganization
         )
       : v5ActiveClustersIds;
 
     if (filteredClusters.length > 0) {
       await Promise.all(
-        filteredClusters.map(clusterId =>
+        filteredClusters.map((clusterId) =>
           dispatch(clusterNodePoolsLoad(clusterId, { withLoadingFlags: true }))
         )
       );
@@ -113,7 +113,7 @@ export function nodePoolsLoad({
  * @param {Object} payload Modification object
  */
 export function nodePoolPatch(clusterId, nodePool, payload) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.NODEPOOL_PATCH,
       nodePool,
@@ -122,7 +122,7 @@ export function nodePoolPatch(clusterId, nodePool, payload) {
 
     return nodePoolsApi
       .modifyNodePool(clusterId, nodePool.id, payload)
-      .catch(error => {
+      .catch((error) => {
         // Undo update to store if the API call fails.
         dispatch({
           type: types.NODEPOOL_PATCH_ERROR,
@@ -152,7 +152,7 @@ export function nodePoolPatch(clusterId, nodePool, payload) {
  * @param {Object} nodePool Node Pool object
  */
 export function nodePoolDeleteConfirmed(clusterId, nodePool) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.NODEPOOL_DELETE_CONFIRMED_REQUEST,
       clusterId,
@@ -176,7 +176,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
           messageTTL.SHORT
         );
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch(modalHide());
 
         new FlashMessage(
@@ -207,14 +207,14 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  * @param {Array} nodePools Array of Node Pool definition objects
  */
 export function nodePoolsCreate(clusterId, nodePools) {
-  return async function(dispatch) {
+  return async function (dispatch) {
     dispatch({ type: types.NODEPOOLS_CREATE_REQUEST });
 
     const allNodePools = await Promise.all(
-      nodePools.map(nodePool => {
+      nodePools.map((nodePool) => {
         return nodePoolsApi
           .addNodePool(clusterId, nodePool)
-          .then(newNodePool => {
+          .then((newNodePool) => {
             dispatch({ type: types.NODEPOOL_CREATE_REQUEST });
 
             // When created, there is no status in the response
@@ -237,7 +237,7 @@ export function nodePoolsCreate(clusterId, nodePools) {
 
             return nodePoolWithStatus;
           })
-          .catch(error => {
+          .catch((error) => {
             dispatch({
               type: types.NODEPOOL_CREATE_ERROR,
               error,

@@ -78,7 +78,7 @@ if (window.config.environment !== GlobalEnvironment.Dev) {
   airbrake._requester = new Requester(store).request;
 
   // set up a filter for reporting addtional information (happa version)
-  airbrake.addFilter(notice => ({
+  airbrake.addFilter((notice) => ({
     ...notice,
     context: { ...notice.context, version: window.config.happaVersion },
   }));

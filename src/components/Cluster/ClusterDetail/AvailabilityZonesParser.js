@@ -56,7 +56,7 @@ export default function AvailabilityZonesParser({
   }, [AZLabels]);
 
   // Function passed to child Number Picker component to allow it to update state here
-  const updateAZPicker = payload => {
+  const updateAZPicker = (payload) => {
     setAZPicker(payload);
   };
 
@@ -68,11 +68,11 @@ export default function AvailabilityZonesParser({
     // If checked, we will add the new AZ to state, else we will remove it.
     const zonesArray = checked
       ? [...oldZonesArray, payload.title]
-      : AZLabels.zonesArray.filter(az => az !== payload.title);
+      : AZLabels.zonesArray.filter((az) => az !== payload.title);
 
     setAZLabels({
       number: zonesArray.length,
-      zonesString: zonesArray.map(zone => zone.slice(-1)).join(' '),
+      zonesString: zonesArray.map((zone) => zone.slice(-1)).join(' '),
       zonesArray,
       valid: zonesArray.length > 0 && zonesArray.length <= max ? true : false, // Is this needed?
     });

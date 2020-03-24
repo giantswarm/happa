@@ -7,8 +7,8 @@ const LinkWrapper = styled.object`
   z-index: 1;
 `;
 
-const CatalogExternalLink = props => {
-  const onClick = e => {
+const CatalogExternalLink = (props) => {
+  const onClick = (e) => {
     e.stopPropagation();
 
     // eslint-disable-next-line no-unused-expressions

@@ -47,7 +47,7 @@ const ChangeArrow = styled.span`
   margin: 0 3px;
 `;
 
-const VersionLabel = props => {
+const VersionLabel = (props) => {
   const { newVersion, oldVersion, isAdded, isRemoved } = props;
 
   if (oldVersion) {
@@ -87,7 +87,7 @@ VersionLabel.propTypes = {
 };
 
 // eslint-disable-next-line react/no-multi-comp
-const ReleaseComponentLabel = props => {
+const ReleaseComponentLabel = (props) => {
   const { name, version, oldVersion, isAdded, isRemoved } = props;
 
   return (

@@ -29,32 +29,32 @@ const InstallAppForm = ({
   secretsYAML,
   secretsYAMLError,
 }) => {
-  const updateName = newName => {
+  const updateName = (newName) => {
     if (onChangeName) {
       onChangeName(newName);
     }
   };
 
-  const updateValuesYAML = files => {
+  const updateValuesYAML = (files) => {
     if (onChangeValuesYAML) {
       onChangeValuesYAML(files);
     }
   };
 
-  const updateSecretsYAML = files => {
+  const updateSecretsYAML = (files) => {
     if (onChangeSecretsYAML) {
       onChangeSecretsYAML(files);
     }
   };
 
-  const updateVersion = newVersion => {
+  const updateVersion = (newVersion) => {
     if (onChangeVersion) {
       onChangeVersion(newVersion);
     }
   };
 
   const updateNamespace = useCallback(
-    newNS => {
+    (newNS) => {
       if (onChangeNamespace) {
         onChangeNamespace(newNS);
       }

@@ -33,7 +33,7 @@ const modalPanes = {
   initial: 'initial',
 };
 
-const AppDetailsModal = props => {
+const AppDetailsModal = (props) => {
   const [pane, setPane] = useState(modalPanes.initial);
   const [desiredVersion, setDesiredVersion] = useState(props.app.spec.version);
 
@@ -53,7 +53,7 @@ const AppDetailsModal = props => {
   const clusterId = props.clusterId;
 
   function showPane(paneToShow) {
-    return function() {
+    return function () {
       setPane(paneToShow);
     };
   }

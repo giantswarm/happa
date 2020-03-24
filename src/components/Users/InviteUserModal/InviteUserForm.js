@@ -14,14 +14,14 @@ const InviteUserForm = ({
   ...props
 }) => {
   const memoizedOptions = useMemo(() => {
-    return sortBy(organizations.items, 'id').map(organization => ({
+    return sortBy(organizations.items, 'id').map((organization) => ({
       label: organization.id,
       value: organization.id,
     }));
   }, [organizations.items]);
 
   return (
-    <form onSubmit={e => e.preventDefault()} {...props}>
+    <form onSubmit={(e) => e.preventDefault()} {...props}>
       <p>
         Creating an invitation is the way to get new people onto this
         installation.

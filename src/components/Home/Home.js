@@ -108,8 +108,8 @@ class Home extends React.Component {
           )}
 
           <TransitionGroup className='cluster-list'>
-            {_.sortBy(this.props.clusters, cluster => cluster.name).map(
-              cluster => {
+            {_.sortBy(this.props.clusters, (cluster) => cluster.name).map(
+              (cluster) => {
                 return (
                   <CSSTransition
                     classNames='cluster-list-item'
@@ -127,7 +127,7 @@ class Home extends React.Component {
                   </CSSTransition>
                 );
               },
-              cluster => cluster.id
+              (cluster) => cluster.id
             )}
           </TransitionGroup>
 
@@ -173,7 +173,7 @@ function mapStateToProps(state) {
 
   let clusters = [];
   if (selectedOrganization) {
-    clusters = _.filter(allClusters, cluster => {
+    clusters = _.filter(allClusters, (cluster) => {
       return cluster.owner === selectedOrganization;
     });
   }

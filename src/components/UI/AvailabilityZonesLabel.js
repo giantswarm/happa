@@ -12,7 +12,7 @@ const azColors = [
   '#e5c494',
 ];
 
-const getLetterIndexInAlphabet = letter => {
+const getLetterIndexInAlphabet = (letter) => {
   const firstAlphabetLetterCode = 97;
   const letterCode = letter.toLowerCase().charCodeAt(0);
   const letterIndex = letterCode - firstAlphabetLetterCode;
@@ -20,7 +20,7 @@ const getLetterIndexInAlphabet = letter => {
   return letterIndex;
 };
 
-const getColorIndex = value => {
+const getColorIndex = (value) => {
   let valueAsNumber = Number(value);
 
   if (isNaN(valueAsNumber)) {

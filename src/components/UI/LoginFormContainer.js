@@ -20,7 +20,7 @@ const LoginWrapper = styled.div`
   }
 `;
 
-const LoginFormContainer = props => {
+const LoginFormContainer = (props) => {
   return <LoginWrapper>{props.children}</LoginWrapper>;
 };
 

@@ -32,14 +32,14 @@ export const FileBlock = ({ children, hideText, fileName }) => {
   const [isHovering, setHovering] = useState(false);
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
-  const copyCodeToClipboard = e => {
+  const copyCodeToClipboard = (e) => {
     e.preventDefault();
 
     const contentToCopy = dedent(children);
     setClipboardContent(contentToCopy);
   };
 
-  const handleClick = e => {
+  const handleClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
 

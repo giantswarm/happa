@@ -19,7 +19,7 @@ const ReleaseDetail = styled.span`
   }
 `;
 
-const showReleaseDetailsModal = modalRef => () => {
+const showReleaseDetailsModal = (modalRef) => () => {
   const { current: modalElement } = modalRef;
 
   if (modalElement) modalElement.show();
@@ -68,7 +68,7 @@ function RegionAndVersions({
               <i className='fa fa-kubernetes' />
               {(() => {
                 const kubernetes = release.components.find(
-                  component => component.name === 'kubernetes'
+                  (component) => component.name === 'kubernetes'
                 );
                 if (kubernetes) return kubernetes.version;
 

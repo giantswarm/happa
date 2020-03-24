@@ -40,7 +40,7 @@ function PortMappingsRow({ cluster }) {
           <div>
             Ingress ports:
             <dl>
-              {cluster.kvm.port_mappings.map(mapping => {
+              {cluster.kvm.port_mappings.map((mapping) => {
                 return (
                   <div key={mapping.protocol}>
                     <dt>{mapping.protocol.toUpperCase()}</dt>

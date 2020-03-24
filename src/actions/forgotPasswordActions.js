@@ -5,7 +5,7 @@ import * as types from './actionTypes';
 const passage = new Passage({ endpoint: window.config.passageEndpoint });
 
 export function requestPasswordRecoveryToken(email) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
     });
@@ -15,7 +15,7 @@ export function requestPasswordRecoveryToken(email) {
 }
 
 export function verifyPasswordRecoveryToken(email, token) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.VERIFY_PASSWORD_RECOVERY_TOKEN,
     });
@@ -25,7 +25,7 @@ export function verifyPasswordRecoveryToken(email, token) {
 }
 
 export function setNewPassword(email, token, password) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.SET_NEW_PASSWORD,
     });

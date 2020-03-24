@@ -10,7 +10,7 @@ import { AccountSettingsRoutes } from 'shared/constants/routes';
 import ChangeEmailForm from './ChangeEmailForm';
 import ChangePasswordForm from './ChangePasswordForm';
 
-const AccountSettings = props => (
+const AccountSettings = (props) => (
   <Breadcrumb
     data={{ title: 'ACCOUNT SETTINGS', pathname: AccountSettingsRoutes.Home }}
   >

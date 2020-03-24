@@ -17,11 +17,11 @@ class AppListInner extends React.Component {
 
     if (trimmedSearchQuery === '') return allApps;
 
-    filteredApps = allApps.filter(app => {
+    filteredApps = allApps.filter((app) => {
       // Go through all the app versions
-      return app.some(appVersions => {
+      return app.some((appVersions) => {
         // Check if any of the checked fields include the search query
-        return fieldsToCheck.some(field => {
+        return fieldsToCheck.some((field) => {
           const appVersionsField = appVersions[field]
             ? String(appVersions[field])
             : '';
@@ -58,7 +58,7 @@ class AppListInner extends React.Component {
     }
   }
 
-  getAppsWithOrderedVersions = memoize(allApps => {
+  getAppsWithOrderedVersions = memoize((allApps) => {
     const apps = Object.values(allApps);
 
     apps.map(this.sortVersionsByCreationDateDESC);
@@ -66,7 +66,7 @@ class AppListInner extends React.Component {
     return apps;
   });
 
-  sortVersionsByCreationDateDESC = versions => {
+  sortVersionsByCreationDateDESC = (versions) => {
     return versions.concat().sort((a, b) => {
       return new Date(b.created) - new Date(a.created);
     });
@@ -80,7 +80,7 @@ class AppListInner extends React.Component {
     );
   }
 
-  updateSearchParams = e => {
+  updateSearchParams = (e) => {
     const searchQuery = e.target.value;
     const urlParams = new URLSearchParams({
       [SEARCH_URL_PARAM]: searchQuery,
@@ -94,7 +94,7 @@ class AppListInner extends React.Component {
     this.setSearchQuery('');
   };
 
-  onImgError = e => {
+  onImgError = (e) => {
     const imageUrl = e.target.src;
 
     this.iconErrors[imageUrl] = true;

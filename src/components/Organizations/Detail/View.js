@@ -54,7 +54,7 @@ class OrganizationDetail extends React.Component {
     this.props.actions.organizationAddMember(this.props.organization.id);
   };
 
-  removeMember = email => {
+  removeMember = (email) => {
     this.props.actions.organizationRemoveMember(
       this.props.organization.id,
       email
@@ -63,7 +63,7 @@ class OrganizationDetail extends React.Component {
 
   // determine whether the component should deal with BYOC credentials
   // (not relevant on KVM)
-  canCredentials = provider => {
+  canCredentials = (provider) => {
     if (provider === Providers.AWS || provider === Providers.AZURE) {
       return true;
     }

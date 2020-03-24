@@ -14,7 +14,7 @@ import * as helpers from './helpers';
 // Example Usage:
 // var passage = new Passage({endpoint: 'http://localhost:5000'})
 //
-const Passage = function(config) {
+const Passage = function (config) {
   let constraints = {
     endpoint: {
       presence: true,
@@ -37,17 +37,17 @@ const Passage = function(config) {
     // Check if a invitation token is valid
     // params: {token: 'abcdef'}
     //
-    checkInvite: function(params) {
+    checkInvite: function (params) {
       constraints = {
         token: { presence: true },
       };
 
       const url = `${config.endpoint}/invite/${params.token}`;
 
-      const promise = new Promise(resolve => {
+      const promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(request.get(url).timeout(config.timeout_ms));
-      }).then(x => {
+      }).then((x) => {
         if (x.body.is_valid) {
           return x.body;
         }
@@ -63,7 +63,7 @@ const Passage = function(config) {
     // Create an account
     // params: {inviteToken: 'abcdef', password: 'uvwxyz'}
     //
-    createAccount: function(params) {
+    createAccount: function (params) {
       constraints = {
         inviteToken: { presence: true },
         password: { presence: true },
@@ -78,7 +78,7 @@ const Passage = function(config) {
         password: params.password,
       };
 
-      const promise = new Promise(resolve => {
+      const promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(
           request
@@ -87,7 +87,7 @@ const Passage = function(config) {
             .send(payload)
             .set('ContentType', 'application/json')
         );
-      }).then(x => {
+      }).then((x) => {
         return x.body;
       });
 
@@ -100,7 +100,7 @@ const Passage = function(config) {
     // Request a password recovery token, which passage will send to the user's email.
     // params: {email: 'some_valid_email@example.com'}
     //
-    requestPasswordRecoveryToken: function(params) {
+    requestPasswordRecoveryToken: function (params) {
       constraints = {
         email: { presence: true, email: true },
       };
@@ -111,7 +111,7 @@ const Passage = function(config) {
         email: params.email,
       };
 
-      const promise = new Promise(resolve => {
+      const promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(
           request
@@ -120,7 +120,7 @@ const Passage = function(config) {
             .send(payload)
             .set('ContentType', 'application/json')
         );
-      }).then(x => {
+      }).then((x) => {
         return x.body;
       });
 
@@ -136,7 +136,7 @@ const Passage = function(config) {
     //
     // params: {email: 'some_valid_email@example.com', token: '123456abcdefg'}
     //
-    verifyPasswordRecoveryToken: function(params) {
+    verifyPasswordRecoveryToken: function (params) {
       constraints = {
         email: { presence: true, email: true },
         token: { presence: true },
@@ -148,7 +148,7 @@ const Passage = function(config) {
         email: params.email,
       };
 
-      const promise = new Promise(resolve => {
+      const promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(
           request
@@ -157,7 +157,7 @@ const Passage = function(config) {
             .send(payload)
             .set('ContentType', 'application/json')
         );
-      }).then(x => {
+      }).then((x) => {
         if (x.body.is_valid) {
           return x.body;
         }
@@ -176,7 +176,7 @@ const Passage = function(config) {
     //
     // params: {email: 'some_valid_email@example.com', token: '123456abcdefg', password: 'users_new_password'}
     //
-    setNewPassword: function(params) {
+    setNewPassword: function (params) {
       constraints = {
         email: { presence: true, email: true },
         token: { presence: true },
@@ -190,7 +190,7 @@ const Passage = function(config) {
         password: params.password,
       };
 
-      const promise = new Promise(resolve => {
+      const promise = new Promise((resolve) => {
         helpers.validateOrRaise(params, constraints);
         resolve(
           request
@@ -199,7 +199,7 @@ const Passage = function(config) {
             .send(payload)
             .set('ContentType', 'application/json')
         );
-      }).then(x => {
+      }).then((x) => {
         return x.body;
       });
 
@@ -212,10 +212,10 @@ const Passage = function(config) {
     // Gets all the invitations on a given installation.
     // Requires a valid admin JWT token.
     //
-    getInvitations: function(authToken) {
+    getInvitations: function (authToken) {
       const url = `${config.endpoint}/invites/`;
 
-      const promise = new Promise(resolve => {
+      const promise = new Promise((resolve) => {
         resolve(
           request
             .get(url)
@@ -223,7 +223,7 @@ const Passage = function(config) {
             .set('ContentType', 'application/json')
             .set('Authorization', `Bearer ${authToken}`)
         );
-      }).then(x => {
+      }).then((x) => {
         return x.body;
       });
 
@@ -244,7 +244,7 @@ const Passage = function(config) {
     //   sendEmail: true
     // }
     //
-    createInvitation: function(authToken, invitation) {
+    createInvitation: function (authToken, invitation) {
       const url = `${config.endpoint}/invite/`;
 
       constraints = {
@@ -259,7 +259,7 @@ const Passage = function(config) {
         send_email: invitation.sendEmail,
       };
 
-      const promise = new Promise(resolve => {
+      const promise = new Promise((resolve) => {
         helpers.validateOrRaise(invitation, constraints);
         resolve(
           request
@@ -269,7 +269,7 @@ const Passage = function(config) {
             .set('ContentType', 'application/json')
             .set('Authorization', `Bearer ${authToken}`)
         );
-      }).then(x => {
+      }).then((x) => {
         return x.body;
       });
 

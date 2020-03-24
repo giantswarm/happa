@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const MessageSpan = styled.span`
-  color: ${props => props.theme.colors.error};
+  color: ${(props) => props.theme.colors.error};
   display: block;
   font-size: 14px;
   font-weight: 400;

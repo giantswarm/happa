@@ -40,7 +40,7 @@ export const FlexWrapperAZDiv = styled.div`
   .danger {
     font-weight: 400;
     margin: 0 0 0 15px;
-    color: ${props => props.theme.colors.error};
+    color: ${(props) => props.theme.colors.error};
   }
 `;
 
@@ -191,7 +191,7 @@ class AddNodePool extends Component {
     this.isValid();
   }
 
-  updateName = event => {
+  updateName = (event) => {
     const name = event.target.value;
     const maxNameLength = 100;
     const [isValid, message] = hasAppropriateLength(name, 0, maxNameLength);
@@ -199,7 +199,7 @@ class AddNodePool extends Component {
     // We don't let the user write more characters if the name exceeds the max number allowed
     if (!isValid) {
       this.setState(
-        produce(draft => {
+        produce((draft) => {
           draft.name.validationError = message;
         })
       );
@@ -208,7 +208,7 @@ class AddNodePool extends Component {
     }
 
     this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.name.valid = isValid;
         draft.name.value = name;
         draft.name.validationError = message;
@@ -216,21 +216,21 @@ class AddNodePool extends Component {
     );
   };
 
-  updateAWSInstanceType = payload => {
+  updateAWSInstanceType = (payload) => {
     this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.aws.instanceType = payload;
       })
     );
   };
 
-  toggleAZSelector = isLabels => {
+  toggleAZSelector = (isLabels) => {
     this.setState({
       hasAZLabels: isLabels,
     });
   };
 
-  updateAZ = payload => {
+  updateAZ = (payload) => {
     if (this.state.hasAZLabels) {
       this.setState({ availabilityZonesLabels: payload });
     } else {
@@ -238,7 +238,7 @@ class AddNodePool extends Component {
     }
   };
 
-  updateScaling = nodeCountSelector => {
+  updateScaling = (nodeCountSelector) => {
     this.setState({ scaling: nodeCountSelector.scaling });
   };
 
@@ -364,8 +364,9 @@ class AddNodePool extends Component {
             <div>
               <div className='fake-radio'>
                 <div
-                  className={`fake-radio-checked ${hasAZLabels === false &&
-                    'visible'}`}
+                  className={`fake-radio-checked ${
+                    hasAZLabels === false && 'visible'
+                  }`}
                 />
               </div>
               <input
@@ -426,8 +427,9 @@ class AddNodePool extends Component {
             <div>
               <div className='fake-radio'>
                 <div
-                  className={`fake-radio-checked ${hasAZLabels === true &&
-                    'visible'}`}
+                  className={`fake-radio-checked ${
+                    hasAZLabels === true && 'visible'
+                  }`}
                 />
               </div>
               <input

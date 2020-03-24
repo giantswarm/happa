@@ -8,7 +8,7 @@ const AvailabilityZonesLabels = ({ zones, labelsChecked, ...props }) => {
     return <abbr title='No information available'>n/a</abbr>;
   }
 
-  return zones.map(az => {
+  return zones.map((az) => {
     const value = az.slice(-1);
     const label = value.toUpperCase();
     const isChecked = labelsChecked.includes(az);

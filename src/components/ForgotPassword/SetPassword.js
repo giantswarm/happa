@@ -72,7 +72,7 @@ class SetPassword extends React.Component {
           tokenValid: true,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         switch (error.name) {
           case 'TypeError':
             new FlashMessage(
@@ -111,14 +111,14 @@ class SetPassword extends React.Component {
 
         return null;
       })
-      .catch(error => {
+      .catch((error) => {
         const [heading, message] = parseErrorMessages(error);
 
         new FlashMessage(heading, messageType.ERROR, messageTTL.LONG, message);
       });
   }
 
-  submit = event => {
+  submit = (event) => {
     event.preventDefault();
 
     this.setState({
@@ -142,11 +142,11 @@ class SetPassword extends React.Component {
       });
   };
 
-  setEmail = event => {
+  setEmail = (event) => {
     event.preventDefault();
     clearQueues();
     this.setState(
-      prevState => ({
+      (prevState) => ({
         email: prevState.emailField,
       }),
       () => {
@@ -155,7 +155,7 @@ class SetPassword extends React.Component {
     );
   };
 
-  updateEmail = event => {
+  updateEmail = (event) => {
     clearQueues();
 
     this.setState({
@@ -163,7 +163,7 @@ class SetPassword extends React.Component {
     });
   };
 
-  passwordEditingStarted = password => {
+  passwordEditingStarted = (password) => {
     this.setState({
       passwordField: {
         valid: false,
@@ -172,7 +172,7 @@ class SetPassword extends React.Component {
     });
   };
 
-  passwordEditingCompleted = password => {
+  passwordEditingCompleted = (password) => {
     const validationResult = validatePassword(password);
 
     this.setState({
@@ -185,8 +185,8 @@ class SetPassword extends React.Component {
     });
   };
 
-  passwordConfirmationEditingStarted = confirmation => {
-    this.setState(prevState => {
+  passwordConfirmationEditingStarted = (confirmation) => {
+    this.setState((prevState) => {
       let valid = false;
       let statusMessage = prevState.statusMessage;
 
@@ -208,8 +208,8 @@ class SetPassword extends React.Component {
     });
   };
 
-  passwordConfirmationEditingCompleted = confirmation => {
-    this.setState(prevState => {
+  passwordConfirmationEditingCompleted = (confirmation) => {
+    this.setState((prevState) => {
       let valid = false;
       let statusMessage = prevState.statusMessage;
 
@@ -253,7 +253,7 @@ class SetPassword extends React.Component {
               label='New password'
               onChange={this.passwordEditingCompleted}
               onStartTyping={this.passwordEditingStarted}
-              ref={p => {
+              ref={(p) => {
                 this.password = p;
               }}
             />
@@ -265,7 +265,7 @@ class SetPassword extends React.Component {
               label='Password, once again'
               onChange={this.passwordConfirmationEditingCompleted}
               onStartTyping={this.passwordConfirmationEditingStarted}
-              ref={p => {
+              ref={(p) => {
                 this.passwordConfirmation = p;
               }}
             />
@@ -321,7 +321,7 @@ class SetPassword extends React.Component {
             autoFocus
             id='email'
             onChange={this.updateEmail}
-            ref={i => {
+            ref={(i) => {
               this.email = i;
             }}
             type='email'

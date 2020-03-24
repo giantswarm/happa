@@ -23,11 +23,11 @@ class Login extends React.Component {
     password: '',
   };
 
-  onAuthenticateFailed = message => {
+  onAuthenticateFailed = (message) => {
     new FlashMessage(message, messageType.ERROR, messageTTL.LONG);
   };
 
-  updateEmail = event => {
+  updateEmail = (event) => {
     // Clear flash messages if there are any.
     clearQueues();
 
@@ -36,7 +36,7 @@ class Login extends React.Component {
     });
   };
 
-  updatePassword = event => {
+  updatePassword = (event) => {
     // Clear flash messages if there are any.
     clearQueues();
 
@@ -45,7 +45,7 @@ class Login extends React.Component {
     });
   };
 
-  logIn = e => {
+  logIn = (e) => {
     e.preventDefault();
 
     clearQueues();
@@ -76,7 +76,7 @@ class Login extends React.Component {
 
           return null;
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState({
             authenticating: false,
           });
@@ -110,7 +110,7 @@ class Login extends React.Component {
                   autoFocus
                   id='email'
                   onChange={this.updateEmail}
-                  ref={i => {
+                  ref={(i) => {
                     this.email = i;
                   }}
                   type='text'
@@ -124,7 +124,7 @@ class Login extends React.Component {
                   autoComplete='current-password'
                   id='password'
                   onChange={this.updatePassword}
-                  ref={i => {
+                  ref={(i) => {
                     this.password = i;
                   }}
                   type='password'

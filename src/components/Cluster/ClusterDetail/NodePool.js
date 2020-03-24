@@ -57,7 +57,7 @@ class NodePool extends Component {
     isNameBeingEdited: false,
   };
 
-  toggleEditingState = isNameBeingEdited => {
+  toggleEditingState = (isNameBeingEdited) => {
     this.setState({ isNameBeingEdited });
   };
 
@@ -65,7 +65,7 @@ class NodePool extends Component {
     this.viewEditNameRef.activateEditMode();
   };
 
-  editNodePoolName = name => {
+  editNodePoolName = (name) => {
     const { cluster, nodePool } = this.props;
 
     try {
@@ -86,7 +86,7 @@ class NodePool extends Component {
     );
   };
 
-  showNodePoolScalingModal = nodePool => {
+  showNodePoolScalingModal = (nodePool) => {
     this.scaleNodePoolModal.reset();
     this.scaleNodePoolModal.show();
     this.scaleNodePoolModal.setNodePool(nodePool);
@@ -112,7 +112,7 @@ class NodePool extends Component {
             name={nodePool.name}
             type='node pool'
             onSubmit={this.editNodePoolName}
-            ref={viewEditName => (this.viewEditNameRef = viewEditName)}
+            ref={(viewEditName) => (this.viewEditNameRef = viewEditName)}
             onToggleEditingState={this.toggleEditingState}
           />
         </NameWrapperDiv>
@@ -154,7 +154,7 @@ class NodePool extends Component {
           cluster={cluster}
           nodePool={nodePool}
           provider={this.props.provider}
-          ref={s => {
+          ref={(s) => {
             this.scaleNodePoolModal = s;
           }}
           workerNodesDesired={desired}

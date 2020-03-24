@@ -29,7 +29,7 @@ const OrganizationList = ({ provider, ...props }) => {
         </tr>
       </thead>
       <tbody>
-        {props.organizations.map(organization => {
+        {props.organizations.map((organization) => {
           return (
             <Row
               key={organization.id}
