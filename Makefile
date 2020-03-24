@@ -25,7 +25,7 @@ lint:
 		-v ${PWD}/package.json:/usr/src/app/package.json:z \
 		-v ${PWD}/tsconfig.json:/usr/src/app/tsconfig.json:z \
 		-v ${PWD}/yarn.lock:/usr/src/app/yarn.lock:z \
-		-v ${PWD}/.eslintrc:/usr/src/app/.eslintrc:z \
+		-v ${PWD}/.eslintrc.js:/usr/src/app/.eslintrc.js:z \
 		-v ${PWD}/.eslintignore:/usr/src/app/.eslintignore:z \
 		quay.io/giantswarm/happa-build:latest yarn lint
 
@@ -59,7 +59,7 @@ dist:
 		-v ${PWD}/.babelrc:/usr/src/app/.babelrc:z \
 		-v ${PWD}/webpack.common.js:/usr/src/app/webpack.common.js:z \
 		-v ${PWD}/webpack.prod.js:/usr/src/app/webpack.prod.js:z \
-		-v ${PWD}/.eslintrc:/usr/src/app/.eslintrc:z \
+		-v ${PWD}/.eslintrc.js:/usr/src/app/.eslintrc.js:z \
 		quay.io/giantswarm/happa-build:latest webpack --config /usr/src/app/webpack.prod.js
 
 

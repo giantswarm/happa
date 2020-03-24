@@ -9,7 +9,8 @@ services:
       - "7000:7000"
     volumes:
       - $PWD/src:/usr/src/app/src:z
-      - $PWD/.eslintrc:/usr/src/app/.eslintrc:z
+      - $PWD/.eslintrc.js:/usr/src/app/.eslintrc.js:z
+      - $PWD/tsconfig.json:/usr/src/app/tsconfig.json:z
       # to persist info on used dependencies to the repo
       - $PWD/yarn.lock:/usr/src/app/yarn.lock:z
 
