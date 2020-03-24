@@ -16,7 +16,7 @@ const EditChartVersionPane = (props) => {
       {props.clusterUpdateAppError && (
         <>
           <hr />
-          Something went wrong while trying to scale your node pool:
+          Something went wrong while trying to set the chart version:
           <br />
           <br />
           <div className='flash-messages--flash-message flash-messages--danger'>

@@ -8,7 +8,7 @@ export const appResponseWithCustomConfig = {
       configmap: { name: 'test app', namespace: 'giantswarm' },
       secret: { name: 'secret test', namespace: 'giantswarm' },
     },
-    version: '1.1.0',
+    version: '0.0.1',
   },
   status: {
     app_version: '',
