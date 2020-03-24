@@ -1,3 +1,4 @@
+import { CLUSTER_UPDATE_APP_ERROR } from 'actions/actionTypes';
 import {
   deleteApp as deleteAppAction,
   loadApps as loadAppsAction,
@@ -18,6 +19,7 @@ import GenericModal from 'components/Modals/GenericModal';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { selectErrorByAction } from 'selectors/clusterSelectors';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -36,6 +38,10 @@ const modalPanes = {
 const AppDetailsModal = (props) => {
   const [pane, setPane] = useState(modalPanes.initial);
   const [desiredVersion, setDesiredVersion] = useState(props.app.spec.version);
+  const [
+    currentClusterUpdateAppError,
+    setCurrentClusterUpdateAppError,
+  ] = useState('');
 
   const { app, catalog, dispatch } = props;
 
@@ -54,6 +60,7 @@ const AppDetailsModal = (props) => {
 
   function showPane(paneToShow) {
     return function () {
+      setCurrentClusterUpdateAppError('');
       setPane(paneToShow);
     };
   }
@@ -65,6 +72,7 @@ const AppDetailsModal = (props) => {
 
   function onClose() {
     showPane(modalPanes.initial)();
+    setCurrentClusterUpdateAppError('');
     props.onClose();
   }
 
@@ -74,9 +82,17 @@ const AppDetailsModal = (props) => {
   }
 
   async function editChartVersion() {
-    await props.dispatch(
-      updateAppAction(appName, clusterId, { spec: { version: desiredVersion } })
+    const changes = { spec: { version: desiredVersion } };
+    const { error } = await props.dispatch(
+      updateAppAction(appName, clusterId, changes)
     );
+
+    if (error) {
+      setCurrentClusterUpdateAppError(error);
+
+      return;
+    }
+
     await loadAppsAndClose();
   }
 
@@ -167,6 +183,7 @@ const AppDetailsModal = (props) => {
         <EditChartVersionPane
           currentVersion={props.app.spec.version}
           desiredVersion={desiredVersion}
+          clusterUpdateAppError={currentClusterUpdateAppError}
         />
       );
 
@@ -272,10 +289,12 @@ AppDetailsModal.propTypes = {
   dispatch: PropTypes.func,
   onClose: PropTypes.func,
   visible: PropTypes.bool,
+  clusterUpdateAppError: PropTypes.string,
 };
 
 function mapStateToProps(state, ownProps) {
   return {
+    clusterUpdateAppError: selectErrorByAction(state, CLUSTER_UPDATE_APP_ERROR),
     catalog: state.entities.catalogs?.items[ownProps.app.spec.catalog],
     appVersions:
       state.entities.catalogs?.items[ownProps.app.spec.catalog]?.apps?.[
