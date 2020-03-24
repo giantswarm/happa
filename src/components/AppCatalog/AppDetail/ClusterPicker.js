@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'styles';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
 import Input from './Input';

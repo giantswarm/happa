@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import { spinner } from 'images';
 import ErrorReporter from 'lib/ErrorReporter';
@@ -5,7 +6,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import styled from 'styles';
 import { Code, Ellipsis } from 'styles/';
 import theme from 'styles/theme';
 import ViewAndEditName from 'UI/ViewEditName';

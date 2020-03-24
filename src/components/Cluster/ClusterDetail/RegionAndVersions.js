@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import UpgradeNotice from 'Home/UpgradeNotice';
 import { relativeDate } from 'lib/helpers';
 import ReleaseDetailsModal from 'Modals/ReleaseDetailsModal';
@@ -5,7 +6,7 @@ import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import styled, { Code, Dot } from 'styles';
+import { Code, Dot } from 'styles';
 import RefreshableLabel from 'UI/RefreshableLabel';
 
 const ReleaseDetail = styled.span`

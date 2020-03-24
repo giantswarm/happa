@@ -1,4 +1,5 @@
 import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'actions/actionTypes';
 import { nodePoolsCreate } from 'actions/nodePoolActions';
 import produce from 'immer';
@@ -14,7 +15,7 @@ import {
   selectLoadingFlagByIdAndAction,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
-import styled, { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
+import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';

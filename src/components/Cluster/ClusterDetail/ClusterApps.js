@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { selectCluster } from 'actions/appActions';
 import { push } from 'connected-react-router';
@@ -7,7 +8,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { selectErrorByIdAndAction } from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
-import styled from 'styles';
 import Button from 'UI/Button';
 import ClusterDetailPreinstalledApp from 'UI/ClusterDetailPreinstalledApp';
 

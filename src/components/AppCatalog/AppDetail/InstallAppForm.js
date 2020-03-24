@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
-import styled from 'styles';
 import VersionPicker from 'UI/VersionPicker/VersionPicker';
 
 import FileInput from './FileInput';

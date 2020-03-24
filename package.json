@@ -37,6 +37,7 @@
   "dependencies": {
     "@airbrake/browser": "1.0.6",
     "@emotion/core": "10.0.28",
+    "@emotion/react": "^11.0.0-next.12",
     "@emotion/styled": "10.0.27",
     "@hot-loader/react-dom": "16.13.0",
     "@khanacademy/react-multi-select": "0.3.3",
@@ -96,7 +97,6 @@
     "@babel/preset-env": "7.9.0",
     "@babel/preset-react": "7.8.3",
     "@babel/preset-typescript": "^7.9.0",
-    "@emotion/types": "^0.7.0",
     "@testing-library/jest-dom": "5.1.1",
     "@testing-library/react": "10.0.1",
     "@testing-library/react-hooks": "3.2.1",

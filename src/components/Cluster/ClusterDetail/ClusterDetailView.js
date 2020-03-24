@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import {
   CLUSTER_LOAD_DETAILS_REQUEST,
   NODEPOOLS_LOAD_REQUEST,
@@ -27,7 +28,6 @@ import {
 } from 'selectors/clusterSelectors';
 import { Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import styled from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import LoadingOverlay from 'UI/LoadingOverlay';

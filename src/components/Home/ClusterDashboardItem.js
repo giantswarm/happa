@@ -1,4 +1,5 @@
 import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { push } from 'connected-react-router';
 import { relativeDate } from 'lib/helpers';
@@ -15,7 +16,7 @@ import {
 } from 'selectors/clusterSelectors';
 import { CSSBreakpoints } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
-import styled, { Dot, mq } from 'styles';
+import { Dot, mq } from 'styles';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import ErrorFallback from 'UI/ErrorFallback';

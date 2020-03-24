@@ -1,8 +1,8 @@
+import styled from '@emotion/styled';
 import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
 import PropTypes from 'prop-types';
 import React from 'react';
 import cmp from 'semver-compare';
-import styled from 'styles';
 import NumberPicker from 'UI/NumberPicker';
 
 const AZWrapper = styled.div`

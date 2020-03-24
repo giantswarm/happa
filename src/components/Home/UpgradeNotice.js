@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { RELEASES_LOAD_REQUEST } from 'actions/actionTypes';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -6,7 +7,6 @@ import {
   selectCanClusterUpgrade,
   selectLoadingFlagByAction,
 } from 'selectors/clusterSelectors';
-import styled from 'styles';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
 const UpgradeWrapperDiv = styled.div`

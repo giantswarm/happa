@@ -1,7 +1,7 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Copyable from 'shared/Copyable';
-import styled from 'styles';
 import { Ellipsis } from 'styles/';
 
 const StyledCopyable = styled(Copyable)``;

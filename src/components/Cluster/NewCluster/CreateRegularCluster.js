@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
@@ -8,7 +9,6 @@ import { connect } from 'react-redux';
 import { selectErrorByAction } from 'selectors/clusterSelectors';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
-import styled from 'styles';
 import Button from 'UI/Button';
 import ErrorFallback from 'UI/ErrorFallback';
 import NumberPicker from 'UI/NumberPicker';

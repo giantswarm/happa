@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'styles';
 
 const Wrapper = styled.div`
   background-color: #395c72;

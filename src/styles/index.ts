@@ -1,5 +1,5 @@
 import { css } from '@emotion/core';
-import originalStyled, { CreateStyled, WithTheme } from '@emotion/styled';
+import styled, { WithTheme } from '@emotion/styled';
 import { CSSBreakpoints } from 'shared';
 
 import theme from './theme';
@@ -58,10 +58,6 @@ export interface ITheme {
   fontFamilies: IThemeFonts;
   border: string;
 }
-
-const styled: CreateStyled<ITheme> = originalStyled;
-
-export default styled;
 
 /***** BASE STYLES ****/
 

@@ -1,9 +1,9 @@
+import styled from '@emotion/styled';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
-import styled from 'styles';
 
 export const APP_CONTAINER_HEIGHT = 200;
 export const APP_CONTAINER_IMAGE_HEIGHT = 100;
