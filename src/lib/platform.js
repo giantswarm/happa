@@ -6,7 +6,7 @@
 //
 //
 
-const platform = require('platform');
+import * as platform from 'platform';
 
 let result = 'Unknown';
 

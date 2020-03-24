@@ -203,12 +203,15 @@
     "@typescript-eslint/no-angle-bracket-type-assertion": 0,
     "@typescript-eslint/consistent-type-definitions": 1,
     "@typescript-eslint/explicit-function-return-type": 0,
-    "@typescript-eslint/explicit-member-accessibility": 0,
+    "@typescript-eslint/explicit-member-accessibility": 0, // for now
     "@typescript-eslint/interface-name-prefix": [2, "always"],
     "@typescript-eslint/no-explicit-any": 2,
     "@typescript-eslint/no-empty-interface": 0,
     "@typescript-eslint/no-inferrable-types": 0,
-    "@typescript-eslint/ban-ts-ignore": 0
+    "@typescript-eslint/ban-ts-ignore": 0,
+    "@typescript-eslint/no-unused-vars": 0, // already handling this with built-in command
+    "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/no-use-before-define": 0
   },
   "extends": [
     "eslint:recommended",
