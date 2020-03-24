@@ -2,6 +2,7 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json",
+    "tsconfigRootDir": "./",
     "ecmaVersion": 2019,
     "sourceType": "module",
     "useJSXTextNode": true,
