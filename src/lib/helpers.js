@@ -30,7 +30,7 @@ export function dedent(strings, ...values) {
   // now strip indentation
   const lines = result.split('\n');
   let mindent = null;
-  lines.forEach(l => {
+  lines.forEach((l) => {
     const m = l.match(/^(\s+)\S+/);
     if (m) {
       const indent = m[1].length;
@@ -44,7 +44,7 @@ export function dedent(strings, ...values) {
   });
 
   if (mindent !== null) {
-    result = lines.map(l => (l[0] === ' ' ? l.slice(mindent) : l)).join('\n');
+    result = lines.map((l) => (l[0] === ' ' ? l.slice(mindent) : l)).join('\n');
   }
 
   // dedent eats leading and trailing whitespace too
@@ -131,7 +131,7 @@ export function relativeDate(ISO8601DateString) {
 
 export function toTitleCase(str) {
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-  return str.replace(/\w\S*/g, txt => {
+  return str.replace(/\w\S*/g, (txt) => {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
@@ -188,7 +188,7 @@ export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
 export function clustersForOrg(orgId, allClusters) {
   let clusters = [];
 
-  clusters = _.filter(allClusters, cluster => {
+  clusters = _.filter(allClusters, (cluster) => {
     return cluster.owner === orgId;
   });
 

@@ -74,8 +74,8 @@ const Title = styled.div`
   flex: 1 100%;
 
   .appVersion {
-    background-color: ${props => props.theme.colors.darkBlueLighter8};
-    color: ${props => props.theme.colors.darkBlue};
+    background-color: ${(props) => props.theme.colors.darkBlueLighter8};
+    color: ${(props) => props.theme.colors.darkBlue};
   }
 `;
 
@@ -94,7 +94,7 @@ const Install = styled.div`
   }
 `;
 
-const AppDetails = props => {
+const AppDetails = (props) => {
   const {
     app,
     appVersions,
@@ -143,7 +143,7 @@ const AppDetails = props => {
           <h1>{name}</h1>
           <div className='keywords'>
             {keywords &&
-              keywords.map(x => (
+              keywords.map((x) => (
                 <span className='keyword' key={x}>
                   {x}
                 </span>

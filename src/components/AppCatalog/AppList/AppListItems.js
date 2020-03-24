@@ -29,7 +29,7 @@ const StyledVirtualizedGrid = styled(VirtualizedScrollableGrid)`
 
 class AppListItems extends React.Component {
   static findAppToScrollToIndex(apps, appName) {
-    return apps.findIndex(appVersions => appVersions[0].name === appName);
+    return apps.findIndex((appVersions) => appVersions[0].name === appName);
   }
 
   appsListRef = React.createRef();

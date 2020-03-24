@@ -11,7 +11,7 @@ import Page3_NextSteps from './Steps/NextSteps';
 import Page0_Overview from './Steps/Overview';
 import Page2_SimpleExample from './Steps/SimpleExample';
 
-const GettingStarted = props => (
+const GettingStarted = (props) => (
   <DocumentTitle title='Getting Started'>
     <Breadcrumb
       data={{

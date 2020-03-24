@@ -5,12 +5,12 @@ import cmp from 'semver-compare';
 import * as types from './actionTypes';
 
 export function loadReleases() {
-  return function(dispatch) {
+  return function (dispatch) {
     const releasesApi = new GiantSwarm.ReleasesApi();
 
     return releasesApi
       .getReleases()
-      .then(allReleases => {
+      .then((allReleases) => {
         if (allReleases.length === 0) {
           new FlashMessage(
             'No releases found.',
@@ -33,7 +33,7 @@ export function loadReleases() {
 
         const activeSortedReleases = Object.keys(releases)
           // TODO remove second condition
-          .filter(release => releases[release].active || release === '10.0.0')
+          .filter((release) => releases[release].active || release === '10.0.0')
           .sort(cmp)
           .reverse();
 
@@ -57,7 +57,7 @@ export function loadReleases() {
           });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch({ type: types.RELEASES_LOAD_ERROR, error });
 
         new FlashMessage(

@@ -27,7 +27,7 @@ const entities = combineReducers({
   nodePools,
 });
 
-const rootReducer = history =>
+const rootReducer = (history) =>
   combineReducers({
     router: connectRouter(history),
     main: makeMainReducer(),

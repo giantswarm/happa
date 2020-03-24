@@ -34,7 +34,7 @@ class ScaleNodePoolModal extends React.Component {
   };
 
   reset = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       scaling: {
         ...prevState.scaling,
         min: this.props.nodePool.scaling.min,
@@ -46,8 +46,8 @@ class ScaleNodePoolModal extends React.Component {
     }));
   };
 
-  setNodePool = nodePool => {
-    this.setState(prevState => ({
+  setNodePool = (nodePool) => {
+    this.setState((prevState) => ({
       scaling: {
         ...prevState.scaling,
         min: nodePool.scaling.min,
@@ -77,7 +77,7 @@ class ScaleNodePoolModal extends React.Component {
     });
   };
 
-  updateScaling = nodeCountSelector => {
+  updateScaling = (nodeCountSelector) => {
     const { min, max, minValid, maxValid } = nodeCountSelector.scaling;
     this.setState({
       scaling: { min, minValid, max, maxValid },
@@ -109,7 +109,7 @@ class ScaleNodePoolModal extends React.Component {
               messageTTL.SHORT
             );
           })
-          .catch(error => {
+          .catch((error) => {
             this.setState({
               // eslint-disable-next-line react/no-unused-state
               loading: false,
@@ -143,7 +143,7 @@ class ScaleNodePoolModal extends React.Component {
     return 0;
   };
 
-  pluralize = nodes => {
+  pluralize = (nodes) => {
     let pluralize = 's';
 
     if (Math.abs(nodes) === 1) {
@@ -309,9 +309,7 @@ class ScaleNodePoolModal extends React.Component {
     );
     let footer = (
       <BootstrapModal.Footer>
-        {this.buttonProperties().disabled ? (
-          undefined
-        ) : (
+        {this.buttonProperties().disabled ? undefined : (
           <Button
             bsStyle={this.buttonProperties().style}
             disabled={this.buttonProperties().disabled}

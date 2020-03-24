@@ -73,7 +73,7 @@ class CredentialsForm extends React.Component {
   /**
    * handleChange copies the current input field value into this.state[fieldname].
    */
-  handleChange = e => {
+  handleChange = (e) => {
     const fieldName = e.target.name;
     const fleldVal = e.target.value;
     this.setState({ [fieldName]: fleldVal }, () => {
@@ -85,7 +85,7 @@ class CredentialsForm extends React.Component {
   /**
    * Passes the current form data on to the parent component
    */
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.onSubmit(this.state);
   };

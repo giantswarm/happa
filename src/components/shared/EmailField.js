@@ -38,7 +38,7 @@ class EmailField extends React.Component {
     const currentValue = this.input.value;
 
     this.setState(
-      prevState => {
+      (prevState) => {
         let valid = false;
         let validationError = prevState.validationError;
 
@@ -103,7 +103,7 @@ class EmailField extends React.Component {
           id={this.props.name}
           onBlur={this.onBlur}
           onChange={this.onChange}
-          ref={i => {
+          ref={(i) => {
             this.input = i;
           }}
           type='email'

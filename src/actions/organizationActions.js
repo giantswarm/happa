@@ -16,7 +16,7 @@ import { modalHide } from './modalActions';
  * @param {String} orgId Organization ID
  */
 export function organizationSelect(orgId) {
-  return function(dispatch) {
+  return function (dispatch) {
     setOrganizationToStorage(orgId);
 
     return dispatch({
@@ -73,7 +73,7 @@ export function organizationsLoad() {
       const alreadyFetching = currentOrganizations.isFetching;
 
       if (alreadyFetching) {
-        return new Promise(resolve => resolve());
+        return new Promise((resolve) => resolve());
       }
 
       dispatch({ type: types.ORGANIZATIONS_LOAD_REQUEST });
@@ -84,7 +84,7 @@ export function organizationsLoad() {
         .selectedOrganization;
 
       const organizationsWithDetails = await Promise.all(
-        organizations.map(organization => {
+        organizations.map((organization) => {
           const organizationID = organization.id;
 
           return updateOrganizationDetailsForID(
@@ -170,7 +170,7 @@ async function updateOrganizationDetailsForID(
 // and organization. It performs the API call to actually delete the organization
 // and dispatches actions accordingly.
 export function organizationDeleteConfirmed(orgId) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({ type: types.ORGANIZATION_DELETE_CONFIRMED, orgId: orgId });
 
     const organizationsApi = new GiantSwarm.OrganizationsApi();
@@ -190,7 +190,7 @@ export function organizationDeleteConfirmed(orgId) {
       .then(() => {
         return dispatch(organizationDeleteSuccess(orgId));
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch(modalHide());
         // eslint-disable-next-line no-console
         console.error('Error deleting organization:', error);
@@ -224,7 +224,7 @@ export function organizationCreate() {
 // and organization. It performs the API call to actually create the organization
 // and dispatches actions accordingly.
 export function organizationCreateConfirmed(orgId) {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     dispatch({ type: types.ORGANIZATION_CREATE_CONFIRMED });
 
     const organizationsApi = new GiantSwarm.OrganizationsApi();
@@ -257,7 +257,7 @@ export function organizationCreateConfirmed(orgId) {
         return dispatch(organizationsLoad());
       })
       .then(dispatch.bind(this, modalHide()))
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error creating organization:', error);
         dispatch(modalHide());
@@ -296,7 +296,7 @@ export function organizationAddMemberTyping(orgId) {
 //
 // It also checks if the member is already in the organization before proceeding.
 export function organizationAddMemberConfirmed(orgId, email) {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     dispatch({
       type: types.ORGANIZATION_ADD_MEMBER_CONFIRMED,
       orgId: orgId,
@@ -310,7 +310,7 @@ export function organizationAddMemberConfirmed(orgId, email) {
       getState().entities.organizations.items[orgId].members
     ) {
       const members = getState().entities.organizations.items[orgId].members;
-      const memberEmails = members.map(member => {
+      const memberEmails = members.map((member) => {
         return member.email;
       });
 
@@ -327,7 +327,7 @@ export function organizationAddMemberConfirmed(orgId, email) {
 
     return organizationsApi
       .getOrganization(orgId)
-      .then(organization => {
+      .then((organization) => {
         const members = organization.members.concat([{ email: email }]);
 
         return organizationsApi.modifyOrganization(orgId, { members });
@@ -360,7 +360,7 @@ export function organizationAddMemberConfirmed(orgId, email) {
 // a member from an organization. It performs the API call to actually do the job,
 // and dispatches actions accordingly.
 export function organizationRemoveMemberConfirmed(orgId, email) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.ORGANIZATION_REMOVE_MEMBER_CONFIRMED_REQUEST,
       orgId: orgId,
@@ -371,8 +371,8 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
 
     organizationsApi
       .getOrganization(orgId)
-      .then(organization => {
-        const members = organization.members.filter(member => {
+      .then((organization) => {
+        const members = organization.members.filter((member) => {
           return member.email !== email;
         });
 
@@ -388,7 +388,7 @@ export function organizationRemoveMemberConfirmed(orgId, email) {
         return dispatch(organizationsLoad());
       })
       .then(dispatch.bind(this, modalHide()))
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error removing member from org:', error);
         dispatch(modalHide());
@@ -416,7 +416,7 @@ export function organizationRemoveMember(orgId, email) {
 
 // organizationCredentialsLoad is called to load credentials for an organization.
 export function organizationCredentialsLoad(orgId) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.ORGANIZATION_CREDENTIALS_LOAD_REQUEST,
     });
@@ -425,13 +425,13 @@ export function organizationCredentialsLoad(orgId) {
 
     organizationsApi
       .getCredentials(orgId)
-      .then(credentials => {
+      .then((credentials) => {
         dispatch({
           type: types.ORGANIZATION_CREDENTIALS_LOAD_SUCCESS,
           credentials: Array.from(credentials),
         });
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error loading credentials for organization:', error);
         new FlashMessage(
@@ -451,7 +451,7 @@ export function organizationCredentialsLoad(orgId) {
 // organizationCredentialsSet reveals the form necessary to set credentials for an
 // organization.
 export function organizationCredentialsSet() {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.ORGANIZATION_CREDENTIALS_SET,
     });
@@ -467,7 +467,7 @@ export function organizationCredentialsDiscard() {
 // organizationCredentialsSetConfirmed performs the API request to set the credentials
 // for an organization and handles the result.
 export function organizationCredentialsSetConfirmed(provider, orgId, data) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({ type: types.ORGANIZATION_CREDENTIALS_SET_CONFIRMED_REQUEST });
 
     const requestBody = new GiantSwarm.V4AddCredentialsRequest();
@@ -492,7 +492,7 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
     const organizationsApi = new GiantSwarm.OrganizationsApi();
     organizationsApi
       .addCredentials(orgId, requestBody)
-      .then(response => {
+      .then((response) => {
         new FlashMessage(
           'Credentials have been stored successfully',
           messageType.INFO,
@@ -508,7 +508,7 @@ export function organizationCredentialsSetConfirmed(provider, orgId, data) {
         // update credentials data for the organization
         return dispatch(organizationCredentialsLoad(orgId));
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('ORGANIZATION_CREDENTIALS_SET_ERROR', error);
 

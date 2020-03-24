@@ -16,14 +16,14 @@ const initialState = {
 const nodePoolReducer = produce((draft, action) => {
   switch (action.type) {
     case types.CLUSTER_NODEPOOLS_LOAD_SUCCESS:
-      action.nodePools.forEach(np => {
+      action.nodePools.forEach((np) => {
         draft.items[np.id] = np;
       });
 
       return;
 
     case types.NODEPOOL_PATCH:
-      Object.keys(action.payload).forEach(key => {
+      Object.keys(action.payload).forEach((key) => {
         draft.items[action.nodePool.id][key] = action.payload[key];
       });
 

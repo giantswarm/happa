@@ -28,7 +28,7 @@ const Wrapper = styled.div`
  * ClusterDetailPreinstalledApp is a component for showing an app in the list of preinstalled
  * apps in apps pane of the cluster detail page.
  */
-const ClusterDetailPreinstalledApp = props => {
+const ClusterDetailPreinstalledApp = (props) => {
   return (
     <Wrapper>
       <img alt={`${props.name} icon`} src={props.logoUrl} />

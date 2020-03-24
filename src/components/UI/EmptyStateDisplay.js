@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 // displayEmptyState bool
 // emptyState object
 // children object
-const EmptyStateDisplay = props => {
+const EmptyStateDisplay = (props) => {
   if (props.displayEmptyState) {
     return props.emptyState;
   }

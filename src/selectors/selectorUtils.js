@@ -7,7 +7,7 @@ export const createDeepEqualSelector = createSelectorCreator(
   isEqual
 );
 
-export const typeWithoutSuffix = actionType => {
+export const typeWithoutSuffix = (actionType) => {
   const matches = /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)/.exec(
     actionType
   );

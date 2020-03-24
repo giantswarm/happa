@@ -42,7 +42,7 @@ class ClusterApps extends React.Component {
     if (prevState.appDetailsModal.visible) {
       const appToDisplay =
         newProps.installedApps?.find(
-          app => app.metadata.name === prevState.appDetailsModal.appName
+          (app) => app.metadata.name === prevState.appDetailsModal.appName
         ) ?? [];
 
       if (appToDisplay.length < 1) {
@@ -211,7 +211,7 @@ class ClusterApps extends React.Component {
 
       // Remove component that is now present in the release response
       // from the manuallyAddAppMetas list to avoid showing them twice.
-      this.manuallyAddAppMetas = this.manuallyAddAppMetas.filter(app => {
+      this.manuallyAddAppMetas = this.manuallyAddAppMetas.filter((app) => {
         return app.name !== component.name;
       });
 
@@ -239,12 +239,12 @@ class ClusterApps extends React.Component {
     return displayApps;
   }
 
-  imgError = e => {
+  imgError = (e) => {
     const imageUrl = e.target.src;
     const iconErrors = {};
     iconErrors[imageUrl] = true;
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       iconErrors: Object.assign({}, prevState.iconErrors, iconErrors),
     }));
   };
@@ -254,7 +254,7 @@ class ClusterApps extends React.Component {
     this.props.dispatch(push(AppCatalogRoutes.Home));
   };
 
-  showAppDetail = appName => {
+  showAppDetail = (appName) => {
     this.setState({
       appDetailsModal: {
         appName: appName,
@@ -279,13 +279,13 @@ class ClusterApps extends React.Component {
    * since the list of apps in a cluster also includes apps that were installed
    * automatically.
    */
-  getUserInstalledApps = apps => {
+  getUserInstalledApps = (apps) => {
     if (!apps) {
       return [];
     }
 
     return apps.filter(
-      app =>
+      (app) =>
         app.metadata.labels['giantswarm.io/managed-by'] !== 'cluster-operator'
     );
   };
@@ -323,7 +323,7 @@ class ClusterApps extends React.Component {
               <>
                 <div className='col-4' key='essentials'>
                   <SmallHeading>essentials</SmallHeading>
-                  {preinstalledApps.essentials.map(app => (
+                  {preinstalledApps.essentials.map((app) => (
                     <ClusterDetailPreinstalledApp
                       logoUrl={app.logoUrl}
                       name={app.name}
@@ -335,7 +335,7 @@ class ClusterApps extends React.Component {
 
                 <div className='col-4' key='management'>
                   <SmallHeading>management</SmallHeading>
-                  {preinstalledApps.management.map(app => (
+                  {preinstalledApps.management.map((app) => (
                     <ClusterDetailPreinstalledApp
                       logoUrl={app.logoUrl}
                       name={app.name}
@@ -366,7 +366,7 @@ class ClusterApps extends React.Component {
                       </p>
                     </OptionalIngressNotice>
                   )}
-                  {preinstalledApps.ingress.map(app => (
+                  {preinstalledApps.ingress.map((app) => (
                     <ClusterDetailPreinstalledApp
                       logoUrl={app.logoUrl}
                       name={app.name}
@@ -389,7 +389,7 @@ class ClusterApps extends React.Component {
             // Instead of just assigning the selected app to the state of this component,
             // this ensures any updates to the apps continue to flow down into the modal.
             app={this.props.installedApps?.find(
-              x => x.metadata.name === this.state.appDetailsModal.appName
+              (x) => x.metadata.name === this.state.appDetailsModal.appName
             )}
             clusterId={this.props.clusterId}
             dispatch={this.props.dispatch}

@@ -23,7 +23,7 @@ class ChangeEmailForm extends React.Component {
     this.setState({});
   }
 
-  validateEmail = e => {
+  validateEmail = (e) => {
     const email = e.target.value;
     let isButtonVisible = false;
 
@@ -58,7 +58,7 @@ class ChangeEmailForm extends React.Component {
     this.setState(newState);
   };
 
-  submit = e => {
+  submit = (e) => {
     e.preventDefault();
 
     // Don't submit the form if nothing changed.
@@ -84,7 +84,7 @@ class ChangeEmailForm extends React.Component {
         .then(() => {
           return this.props.actions.refreshUserInfo();
         })
-        .catch(error => {
+        .catch((error) => {
           let errorMessage = null;
 
           if (
@@ -128,7 +128,7 @@ class ChangeEmailForm extends React.Component {
         <form className='change_email_form' onSubmit={this.submit}>
           <input
             onChange={this.validateEmail}
-            ref={i => {
+            ref={(i) => {
               this.new_email = i;
             }}
             type='text'

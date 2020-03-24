@@ -11,10 +11,8 @@ class KeyPairDetailsModal extends React.Component {
   static createDate(date) {
     return (
       <span>
-        {moment(date)
-          .utc()
-          .format('D MMM YYYY, HH:mm z')}{' '}
-        &ndash; {relativeDate(date)}
+        {moment(date).utc().format('D MMM YYYY, HH:mm z')} &ndash;{' '}
+        {relativeDate(date)}
       </span>
     );
   }

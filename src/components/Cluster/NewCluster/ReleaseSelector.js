@@ -32,7 +32,7 @@ class ReleaseSelector extends React.Component {
   componentDidMount() {
     const kubernetesVersion = this.props.selectedRelease
       ? this.props.releases[this.props.selectedRelease].components.find(
-          component => component.name === 'kubernetes'
+          (component) => component.name === 'kubernetes'
         ).version
       : undefined;
 
@@ -75,7 +75,7 @@ class ReleaseSelector extends React.Component {
           </div>
         )}
         <ReleaseDetailsModal
-          ref={r => {
+          ref={(r) => {
             this.releaseDetailsModal = r;
           }}
           releases={this.props.selectableReleases}

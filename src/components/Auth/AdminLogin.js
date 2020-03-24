@@ -25,14 +25,14 @@ class AdminLogin extends React.Component {
         // the user to the dashboard. Otherwise, send them to Auth0 to refresh the token that way.
         auth
           .renewToken()
-          .then(async result => {
+          .then(async (result) => {
             // Update state with new token.
             await this.props.dispatch(userActions.auth0Login(result));
 
             // Redirect to dashboard.
             this.props.dispatch(push(AppRoutes.Home));
           })
-          .catch(e => {
+          .catch((e) => {
             // eslint-disable-next-line no-console
             console.error(e);
             // Unable to refresh token silently, so send the down the auth0

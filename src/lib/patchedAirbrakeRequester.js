@@ -11,7 +11,7 @@ export class Requester {
     this.store = store;
   }
 
-  request = req => {
+  request = (req) => {
     if (!this.store.getState().main.loggedInUser) {
       const err = new Error(
         `user is not logged in yet, unable to report error to GS API`
@@ -31,12 +31,12 @@ export class Requester {
       },
     };
 
-    return fetch(req.url, opt).then(resp => {
+    return fetch(req.url, opt).then((resp) => {
       if (resp.status === StatusCodes.Created) {
         return { json: null };
       }
 
-      return resp.text().then(body => {
+      return resp.text().then((body) => {
         const err = new Error(
           `airbrake: fetch: unexpected response: code=${resp.status} body='${body}'`
         );

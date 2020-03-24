@@ -12,7 +12,7 @@ import _ from 'underscore';
 import GettingStarted from '../../GettingStarted/GettingStarted';
 import ClusterDetailView from './ClusterDetailView';
 
-const ClusterDetail = props => {
+const ClusterDetail = (props) => {
   const dispatch = useDispatch();
 
   if (!props.cluster) {

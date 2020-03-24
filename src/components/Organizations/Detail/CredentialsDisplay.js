@@ -5,7 +5,7 @@ import { Providers } from 'shared/constants';
 import AWSAccountID from 'UI/AWSAccountID';
 import Button from 'UI/Button';
 
-const CredentialsDisplay = props => {
+const CredentialsDisplay = (props) => {
   if (props.credentials.isFetching) {
     return (
       <span>

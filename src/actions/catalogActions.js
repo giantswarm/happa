@@ -18,12 +18,12 @@ function loadCatalogIndex(catalog) {
         { mode: 'cors' }
       );
     })
-    .catch(error => {
+    .catch((error) => {
       // eslint-disable-next-line no-console
       console.error('Fetch error: ', error);
       throw error;
     })
-    .then(response => {
+    .then((response) => {
       if (response.status === StatusCodes.Ok) {
         return response.text();
       }
@@ -32,7 +32,7 @@ function loadCatalogIndex(catalog) {
         `Could not fetch index.yaml at ${catalog.spec.storage.URL}`
       );
     })
-    .then(body => {
+    .then((body) => {
       const rawCatalog = yaml.safeLoad(body);
       const catalogWithApps = Object.assign({}, catalog, {
         apps: rawCatalog.entries,
@@ -40,7 +40,7 @@ function loadCatalogIndex(catalog) {
 
       return catalogWithApps;
     })
-    .catch(error => {
+    .catch((error) => {
       throw error;
     });
 }
@@ -52,14 +52,14 @@ function loadCatalogIndex(catalog) {
 // with catalogs and apps in the right places.
 //
 export function catalogsLoad() {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({ type: types.CATALOGS_LOAD_REQUEST });
 
     const appsApi = new GiantSwarm.AppsApi();
 
     return appsApi
       .getAppCatalogs()
-      .then(catalogs => {
+      .then((catalogs) => {
         /**
          * Since `catalogs` comes back as an iterable object,
          * we're converting it to an array
@@ -85,7 +85,7 @@ export function catalogsLoad() {
 
         return catalogsDict;
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error(error);
 
@@ -100,21 +100,21 @@ export function catalogsLoad() {
 }
 
 export function catalogLoadIndex(catalog) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({
       type: types.CATALOG_LOAD_INDEX_REQUEST,
       catalogName: catalog.metadata.name,
     });
 
     return loadCatalogIndex(catalog)
-      .then(loadedCatalog => {
+      .then((loadedCatalog) => {
         dispatch({
           type: types.CATALOG_LOAD_INDEX_SUCCESS,
           catalog: loadedCatalog,
         });
       })
 
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error(error);
 

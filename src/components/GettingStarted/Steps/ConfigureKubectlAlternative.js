@@ -39,7 +39,7 @@ class ConfigKubeCtl extends React.Component {
         description: `Added by user ${this.props.user.email} using the Happa web interface.`,
         certificate_organizations: 'system:masters',
       })
-      .then(keypair => {
+      .then((keypair) => {
         this.setState({
           keyPair: {
             generating: false,
@@ -48,7 +48,7 @@ class ConfigKubeCtl extends React.Component {
           },
         });
       })
-      .catch(error => {
+      .catch((error) => {
         const keyPairChangeDelay = 200;
 
         // eslint-disable-next-line no-console
@@ -211,7 +211,7 @@ class ConfigKubeCtl extends React.Component {
   }
 
   toggleAlternative() {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       alternativeOpen: !prevState.alternativeOpen,
     }));
   }

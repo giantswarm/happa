@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 
   .user_dropdown--toggle {
     display: inline;
-    @media only screen and (max-width: ${props =>
+    @media only screen and (max-width: ${(props) =>
         props.theme.breakpoints.large}px) {
       span {
         display: none;
@@ -38,7 +38,7 @@ const Wrapper = styled.div`
 
       &:hover {
         background-color: transparent;
-        color: ${props => props.theme.colors.white1};
+        color: ${(props) => props.theme.colors.white1};
       }
     }
   }
@@ -57,7 +57,7 @@ const Wrapper = styled.div`
 
     &:hover {
       background-color: transparent;
-      color: ${props => props.theme.colors.white1};
+      color: ${(props) => props.theme.colors.white1};
       text-decoration: underline;
     }
 
@@ -68,18 +68,18 @@ const Wrapper = styled.div`
 
     &:active:focus {
       background-color: transparent;
-      color: ${props => props.theme.colors.white1};
+      color: ${(props) => props.theme.colors.white1};
     }
 
     ul.dropdown-menu {
-      background-color: ${props => props.theme.colors.shade1};
+      background-color: ${(props) => props.theme.colors.shade1};
       box-shadow: none;
     }
   }
 
   .open .dropdown-toggle.btn-default {
     background-color: transparent;
-    color: ${props => props.theme.colors.white1};
+    color: ${(props) => props.theme.colors.white1};
     box-shadow: none;
   }
 `;
@@ -92,7 +92,7 @@ class UserDropdown extends React.Component {
           id='user_dropdown'
           key='1'
           pullRight={true}
-          ref={d => {
+          ref={(d) => {
             this.user_dropdown = d;
           }}
           title={
@@ -110,9 +110,7 @@ class UserDropdown extends React.Component {
             >
               Account Settings
             </MenuItem>
-          ) : (
-            undefined
-          )}
+          ) : undefined}
           <MenuItem
             componentClass={NavLink}
             href={AppRoutes.Logout}

@@ -8,7 +8,7 @@ import VersionPicker from 'UI/VersionPicker/VersionPicker';
 
 import YAMLFileUpload from './YamlFileUpload';
 
-const InitialPane = props => {
+const InitialPane = (props) => {
   return (
     <div>
       <div className='appdetails--upperlabels'>
@@ -58,7 +58,7 @@ const InitialPane = props => {
           {props.appVersions && (
             <VersionPicker
               selectedVersion={props.app.spec.version}
-              versions={props.appVersions.map(v => ({ version: v.version }))}
+              versions={props.appVersions.map((v) => ({ version: v.version }))}
               onChange={props.showEditChartVersionPane}
             />
           )}

@@ -3,7 +3,7 @@ import React from 'react';
 import BootstrapModal from 'react-bootstrap/lib/Modal';
 import Button from 'UI/Button';
 
-const GenericModal = props => {
+const GenericModal = (props) => {
   return (
     <BootstrapModal
       className={`modal ${props.className}`}

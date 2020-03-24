@@ -15,7 +15,7 @@ class AzureVMSizeSelector extends React.Component {
 
     const availableVMSizes = [];
     // Create a list of only the allowed VM sizes.
-    props.allowedVMSizes.forEach(vs => {
+    props.allowedVMSizes.forEach((vs) => {
       if (typeof vmSizes[vs] === 'object') {
         availableVMSizes.push(vmSizes[vs]);
       }
@@ -44,7 +44,7 @@ class AzureVMSizeSelector extends React.Component {
     });
   };
 
-  updateVMSize = vmSize => {
+  updateVMSize = (vmSize) => {
     this.props.onChange({
       valid: this.state.valid,
       value: vmSize,
@@ -73,11 +73,11 @@ class AzureVMSizeSelector extends React.Component {
     this.closeModal();
   };
 
-  validateVMSize = vmSize => {
+  validateVMSize = (vmSize) => {
     let valid = false;
     let validationError = 'Please enter a valid vm size';
 
-    const validVMSizes = this.state.vmSizes.map(x => {
+    const validVMSizes = this.state.vmSizes.map((x) => {
       return x.name;
     });
 
@@ -101,7 +101,7 @@ class AzureVMSizeSelector extends React.Component {
       <div className='col-4'>
         <div className='new-cluster--instance-type-selector'>
           <form
-            onSubmit={e => {
+            onSubmit={(e) => {
               e.preventDefault();
             }}
           >
@@ -142,7 +142,7 @@ class AzureVMSizeSelector extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.state.vmSizes.map(vmSize => {
+                {this.state.vmSizes.map((vmSize) => {
                   return (
                     <tr
                       className={

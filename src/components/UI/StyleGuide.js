@@ -23,7 +23,7 @@ const ExampleBox = styled.div`
   border: 1px dashed #999;
 `;
 
-const Header = props => {
+const Header = (props) => {
   const { name } = props;
 
   return (
@@ -41,7 +41,7 @@ Header.propTypes = {
 const StyleGuide = () => {
   const [selectedVersion, setVersion] = useState('1.0.5');
 
-  const handleSetVersion = version => {
+  const handleSetVersion = (version) => {
     setVersion(version);
   };
 
