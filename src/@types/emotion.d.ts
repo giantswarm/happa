@@ -1,10 +1,9 @@
-declare module '@emotion/react' {
-  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
-  export interface Theme {
-    color: {
-      primary: string;
-      positive: string;
-      negative: string;
-    };
-  }
+declare module '@emotion/styled' {
+  import { CreateStyled } from '@emotion/styled/types';
+  import { ITheme } from 'styles';
+
+  export * from '@emotion/styled/types';
+  // eslint-disable-next-line init-declarations
+  const customStyled: CreateStyled<ITheme>;
+  export default customStyled;
 }

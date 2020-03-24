@@ -919,16 +919,6 @@
     "@emotion/utils" "0.11.3"
     "@emotion/weak-memoize" "0.2.5"
 
-"@emotion/cache@^11.0.0-next.12":
-  version "11.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-11.0.0-next.12.tgz#e2445b48997ababb54a03eb06dbb1bc67c0d6f0f"
-  integrity sha512-6fMuPtXQcORvFaoAkyrtCntBnyLn7SRX7hsg/bz/1rXgQUxB3hawFDLMTKttvwr2zDd1Jfy9iit8Jz4Bz5jlcA==
-  dependencies:
-    "@emotion/sheet" "0.10.0-next.1"
-    "@emotion/stylis" "0.8.5"
-    "@emotion/utils" "0.11.3"
-    "@emotion/weak-memoize" "0.2.5"
-
 "@emotion/core@10.0.28":
   version "10.0.28"
   resolved "https://registry.yarnpkg.com/@emotion/core/-/core-10.0.28.tgz#bb65af7262a234593a9e952c041d0f1c9b9bef3d"
@@ -967,19 +957,6 @@
   resolved "https://registry.yarnpkg.com/@emotion/memoize/-/memoize-0.7.4.tgz#19bf0f5af19149111c40d98bb0cf82119f5d9eeb"
   integrity sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==
 
-"@emotion/react@^11.0.0-next.12":
-  version "11.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@emotion/react/-/react-11.0.0-next.12.tgz#535897164bc242f474af51f597cae46a6a0ea6b8"
-  integrity sha512-HpurlvmgfAoyn4gVRuXbVtP6ACc10F5/qLN63DSmXgmSp2FTn1PcCw6i8l1Yj9HAq8M1ohmOmcco1fj//30vig==
-  dependencies:
-    "@babel/runtime" "^7.7.2"
-    "@emotion/cache" "^11.0.0-next.12"
-    "@emotion/serialize" "^1.0.0-next.1"
-    "@emotion/sheet" "0.10.0-next.1"
-    "@emotion/utils" "0.11.3"
-    "@emotion/weak-memoize" "0.2.5"
-    hoist-non-react-statics "^3.3.1"
-
 "@emotion/serialize@^0.11.15", "@emotion/serialize@^0.11.16":
   version "0.11.16"
   resolved "https://registry.yarnpkg.com/@emotion/serialize/-/serialize-0.11.16.tgz#dee05f9e96ad2fb25a5206b6d759b2d1ed3379ad"
@@ -990,22 +967,6 @@
     "@emotion/unitless" "0.7.5"
     "@emotion/utils" "0.11.3"
     csstype "^2.5.7"
-
-"@emotion/serialize@^1.0.0-next.1":
-  version "1.0.0-next.1"
-  resolved "https://registry.yarnpkg.com/@emotion/serialize/-/serialize-1.0.0-next.1.tgz#309749d33d2bc7c7f0b63ce48845fc7e5bc93fa5"
-  integrity sha512-4Wqs0UTUIv0xTsDw4O6SwFR5uxZOq0Jarho9gfMflPzzp3o31o2oAWqjF/py7Uf5TO9vLv469UKoZc55x2C1Jw==
-  dependencies:
-    "@emotion/hash" "0.8.0"
-    "@emotion/memoize" "0.7.4"
-    "@emotion/unitless" "0.7.5"
-    "@emotion/utils" "0.11.3"
-    csstype "^2.6.7"
-
-"@emotion/sheet@0.10.0-next.1":
-  version "0.10.0-next.1"
-  resolved "https://registry.yarnpkg.com/@emotion/sheet/-/sheet-0.10.0-next.1.tgz#53b0c4e72b0055e8b377190f00eec56568132d21"
-  integrity sha512-dKzGmnML1bDTvKDZ3joyiNghIMCKgCwjUQZjqwFvPRN1n/M9HFZR+Iq3/I8xnfUhUDmFGIsL2A2ER4Dol75hyw==
 
 "@emotion/sheet@0.9.4":
   version "0.9.4"
@@ -6234,13 +6195,6 @@ hoist-non-react-statics@^3.1.0, hoist-non-react-statics@^3.3.0:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#101685d3aff3b23ea213163f6e8e12f4f111e19f"
   integrity sha512-wbg3bpgA/ZqWrZuMOeJi8+SKMhr7X9TesL/rXMjTzh0p0JUBo3II8DHboYbuIXWRlttrUFxwcu/5kygrCw8fJw==
-  dependencies:
-    react-is "^16.7.0"
-
-hoist-non-react-statics@^3.3.1:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
-  integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
   dependencies:
     react-is "^16.7.0"
 

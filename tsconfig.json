@@ -19,7 +19,8 @@
       "*": ["./src/components/*", "./src/*"],
       "testUtils/*": ["./testUtils/*"],
       "__tests__/*": ["./__tests__/*"]
-    }
+    },
+    "typeRoots": ["node_modules/@types", "src/@types"]
   },
   "include": ["src", "testUtils", "__tests__"]
 }
