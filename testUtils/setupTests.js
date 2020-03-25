@@ -4,6 +4,17 @@ import { configure, waitFor } from '@testing-library/react';
 import { forceRemoveAll } from 'lib/flashMessage';
 import nock from 'nock';
 
+let isOnline = false;
+// Let the browser know it's online, since we're disabling internet connectivity
+Object.defineProperty(window.navigator, 'onLine', {
+  get() {
+    return isOnline;
+  },
+  set(value) {
+    isOnline = value;
+  },
+});
+
 configure({
   asyncUtilTimeout: 4500,
 });
