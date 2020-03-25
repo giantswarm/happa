@@ -15,7 +15,6 @@ import theme from 'styles/theme';
 import {
   AWSInfoResponse,
   getMockCall,
-  getMockCallTimes,
   USER_EMAIL,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -113,12 +112,11 @@ describe('AdminLogin', () => {
   });
 
   it('redirects to homepage if the user has been previously logged in', async () => {
-    getMockCallTimes('/v4/user/', userResponse, 2);
+    getMockCall('/v4/user/', userResponse);
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCallTimes('/v4/appcatalogs/', [], 2);
+    getMockCall('/v4/appcatalogs/', []);
     getMockCall('/v4/organizations/');
-    getMockCallTimes('/v4/clusters/', [], 2);
+    getMockCall('/v4/clusters/', []);
 
     helpers.isJwtExpired.mockReturnValue(false);
 
@@ -131,12 +129,11 @@ describe('AdminLogin', () => {
   });
 
   it('renews user token if the previously stored one is expired', async () => {
-    getMockCallTimes('/v4/user/', userResponse, 2);
+    getMockCall('/v4/user/', userResponse);
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCallTimes('/v4/appcatalogs/', [], 2);
+    getMockCall('/v4/appcatalogs/', []);
     getMockCall('/v4/organizations/');
-    getMockCallTimes('/v4/clusters/', [], 2);
+    getMockCall('/v4/clusters/', []);
 
     const mockUserDataWithNewToken = Object.assign({}, mockUserData, {
       auth: {
@@ -204,12 +201,6 @@ describe('AdminLogin', () => {
     const originalConsoleError = console.error;
     // eslint-disable-next-line no-console
     console.error = jest.fn();
-
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/appcatalogs/');
-    getMockCall('/v4/organizations/');
-    getMockCall('/v4/clusters/', []);
 
     const mockAuthResponseWithNewToken = Object.assign(
       {},
