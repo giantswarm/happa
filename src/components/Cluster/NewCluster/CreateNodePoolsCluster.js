@@ -510,7 +510,7 @@ class CreateNodePoolsCluster extends Component {
             {this.state.error && CreateNodePoolsCluster.errorState()}
 
             <FlexRowDiv>
-              <ErrorFallback errors={this.props.clusterCreateError}>
+              <ErrorFallback error={this.props.clusterCreateError}>
                 <Button
                   bsSize='large'
                   bsStyle='primary'

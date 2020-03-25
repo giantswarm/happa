@@ -210,7 +210,7 @@ function ClusterDashboardItem({
         </div>
 
         {/* Cluster resources */}
-        <ErrorFallback errors={nodePoolsLoadError}>
+        <ErrorFallback error={nodePoolsLoadError}>
           <ClusterDetailsDiv>
             {isV5Cluster ? (
               <ClusterDashboardResourcesV5
