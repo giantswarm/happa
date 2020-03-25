@@ -8,7 +8,7 @@ export const useError = (errorType) => {
   return useSelector((state) => {
     const errorMessage = state.errors[typeWithoutSuffix(errorType)] ?? null;
 
-    const clear = function () {
+    const clear = () => {
       dispatch({
         type: SINGLE_ERROR_CLEAR,
         errorType: typeWithoutSuffix(errorType),
