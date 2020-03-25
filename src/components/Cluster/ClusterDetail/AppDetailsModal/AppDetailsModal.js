@@ -1,3 +1,4 @@
+import { CLUSTER_UPDATE_APP_ERROR } from 'actions/actionTypes.js';
 import {
   deleteApp as deleteAppAction,
   loadApps as loadAppsAction,
@@ -15,6 +16,7 @@ import {
 } from 'actions/appSecretActions';
 import { catalogLoadIndex } from 'actions/catalogActions';
 import GenericModal from 'components/Modals/GenericModal';
+import { useError } from 'hooks/errors';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
@@ -36,10 +38,7 @@ const modalPanes = {
 const AppDetailsModal = (props) => {
   const [pane, setPane] = useState(modalPanes.initial);
   const [desiredVersion, setDesiredVersion] = useState(props.app.spec.version);
-  const [
-    currentClusterUpdateAppError,
-    setCurrentClusterUpdateAppError,
-  ] = useState('');
+  const { clear: clearUpdateAppError } = useError(CLUSTER_UPDATE_APP_ERROR);
 
   const { app, catalog, dispatch } = props;
 
@@ -58,7 +57,7 @@ const AppDetailsModal = (props) => {
 
   function showPane(paneToShow) {
     return function () {
-      setCurrentClusterUpdateAppError('');
+      clearUpdateAppError();
       setPane(paneToShow);
     };
   }
@@ -70,7 +69,6 @@ const AppDetailsModal = (props) => {
 
   function onClose() {
     showPane(modalPanes.initial)();
-    setCurrentClusterUpdateAppError('');
     props.onClose();
   }
 
@@ -86,8 +84,6 @@ const AppDetailsModal = (props) => {
     );
 
     if (error) {
-      setCurrentClusterUpdateAppError(error);
-
       return;
     }
 
@@ -181,7 +177,6 @@ const AppDetailsModal = (props) => {
         <EditChartVersionPane
           currentVersion={props.app.spec.version}
           desiredVersion={desiredVersion}
-          clusterUpdateAppError={currentClusterUpdateAppError}
         />
       );
 
