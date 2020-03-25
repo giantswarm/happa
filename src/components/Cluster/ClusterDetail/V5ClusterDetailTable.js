@@ -66,7 +66,7 @@ const GridRowNodePoolsBase = css`
   display: grid;
   grid-gap: 0 10px;
   grid-template-columns:
-    minmax(47px, 1fr) minmax(50px, 4fr) 4fr 3fr repeat(4, 2fr)
+    minmax(47px, 1fr) minmax(50px, 4fr) 4fr 3fr 3fr repeat(4, 2fr)
     1fr;
   grid-template-rows: 30px;
   justify-content: space-between;
@@ -84,7 +84,7 @@ const GridRowNodePoolsNodes = styled.div`
   padding-bottom: 0;
   transform: translateY(12px);
   div {
-    grid-column: 5 / span 4;
+    grid-column: 6 / span 4;
     font-size: 12px;
     position: relative;
     width: 100%;
@@ -397,6 +397,7 @@ class V5ClusterDetailTable extends React.Component {
                   NAME
                 </span>
                 <span>INSTANCE TYPE</span>
+                <span>SPOT INSTANCES</span>
                 <span>AVAILABILITY ZONES</span>
                 <span>MIN</span>
                 <span>MAX</span>

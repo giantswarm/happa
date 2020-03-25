@@ -140,6 +140,13 @@ const AZLabel = styled.label`
   }
 `;
 
+const SpotLabel = styled.label`
+  .spot-instance-checkbox {
+    margin: auto 10px auto 2px;
+    flex: 0;
+  }
+`;
+
 class AddNodePool extends Component {
   state = {
     name: {
@@ -177,6 +184,7 @@ class AddNodePool extends Component {
         valid: true,
         value: this.props.defaultInstanceType,
       },
+      spotInstancesEnabled: false,
     },
     awsInstanceTypes: {},
   };
@@ -228,6 +236,11 @@ class AddNodePool extends Component {
     this.setState({
       hasAZLabels: isLabels,
     });
+  };
+
+  setSpotInstancesEnabled = (event) => {
+    const spotInstancesEnabled = event.target.checked;
+    this.setState(({ aws }) => ({ aws: { ...aws, spotInstancesEnabled } }));
   };
 
   updateAZ = (payload) => {
@@ -287,6 +300,7 @@ class AddNodePool extends Component {
           node_spec: {
             aws: {
               instance_type: this.state.aws.instanceType.value,
+              spot_instances_enabled: this.state.aws.spotInstancesEnabled,
             },
           },
         },
@@ -354,6 +368,19 @@ class AddNodePool extends Component {
             <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
           </FlexWrapperDiv>
         </label>
+        <SpotLabel htmlFor='aws-spot-instances-enabled'>
+          <span className='label-span'>AWS spot instances</span>
+          <FlexWrapperDiv>
+            <input
+              className='spot-instance-checkbox'
+              type='checkbox'
+              checked={this.state.aws.spotInstancesEnabled}
+              onChange={this.setSpotInstancesEnabled}
+              id='aws-spot-instances-enabled'
+            />
+            <p>Fill this node pool with spot instances</p>
+          </FlexWrapperDiv>
+        </SpotLabel>
         <AZLabel
           htmlFor='availability-zones'
           className={hasAZLabels && 'with-labels'}
