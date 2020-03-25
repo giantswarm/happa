@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import App from 'App';
-import { ConnectedRouter, push } from 'connected-react-router';
+import { ConnectedRouter } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import { createMemoryHistory } from 'history';
 import React from 'react';
@@ -23,16 +23,18 @@ export const initialStorage = {
 export function renderRouteWithStore(
   initialRoute = AppRoutes.Home,
   state = {},
-  storage = initialStorage,
-  history = createMemoryHistory()
+  storage = initialStorage
 ) {
   localStorage.replaceWith(storage);
+
+  const history = createMemoryHistory({
+    initialEntries: [initialRoute],
+    initialIndex: 0,
+  });
 
   const store = configureStore(state, history);
 
   const app = render(<App {...{ store, theme, history }} />);
-
-  store.dispatch(push(initialRoute));
 
   return app;
 }

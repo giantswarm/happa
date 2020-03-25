@@ -63,16 +63,18 @@ helpers.validateOrRaise = jest.fn();
 const renderRouteWithStore = (
   initialRoute = AppRoutes.Home,
   state = {},
-  storage = initialStorage,
-  history = createMemoryHistory()
+  storage = initialStorage
 ) => {
   localStorage.replaceWith(storage);
+
+  const history = createMemoryHistory({
+    initialEntries: [initialRoute],
+    initialIndex: 0,
+  });
 
   store = configureStore(state, history);
 
   const app = render(<App {...{ store, theme, history }} />);
-
-  store.dispatch(push(initialRoute));
 
   return app;
 };
@@ -97,7 +99,7 @@ describe('AdminLogin', () => {
       store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
     });
 
-    mockAuth0ParseHash.mockImplementation(callback => {
+    mockAuth0ParseHash.mockImplementation((callback) => {
       callback(null, mockSuccessfulAuthResponse);
     });
 
@@ -172,7 +174,7 @@ describe('AdminLogin', () => {
       store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=invalid`));
     });
 
-    mockAuth0ParseHash.mockImplementation(callback => {
+    mockAuth0ParseHash.mockImplementation((callback) => {
       callback(null, mockSuccessfulAuthResponse);
     });
 
@@ -188,7 +190,7 @@ describe('AdminLogin', () => {
       store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
     });
 
-    mockAuth0ParseHash.mockImplementation(callback => {
+    mockAuth0ParseHash.mockImplementation((callback) => {
       callback(new Error('u w0t m8?'), mockSuccessfulAuthResponse);
     });
 
