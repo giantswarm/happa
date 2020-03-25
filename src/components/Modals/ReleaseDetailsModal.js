@@ -37,9 +37,9 @@ class ReleaseDetailsModal extends React.Component {
             <BootstrapModal.Title>Release Details</BootstrapModal.Title>
           </BootstrapModal.Header>
           <BootstrapModal.Body>
-            {this.props.releases.map(release => {
+            {this.props.releases.map((release) => {
               // group changes by component
-              const changes = _.groupBy(release.changelog, item => {
+              const changes = _.groupBy(release.changelog, (item) => {
                 return item.component;
               });
 
@@ -67,16 +67,14 @@ class ReleaseDetailsModal extends React.Component {
                           Select
                         </Button>
                       )
-                    ) : (
-                      undefined
-                    )}
+                    ) : undefined}
                   </h2>
                   <p className='release-selector-modal--release-details--date'>
                     Released <span>{relativeDate(release.timestamp)}</span>
                   </p>
 
                   <div className='release-selector-modal--components'>
-                    {_.sortBy(release.components, 'name').map(component => {
+                    {_.sortBy(release.components, 'name').map((component) => {
                       return (
                         <ReleaseComponentLabel
                           key={component.name}
@@ -93,7 +91,7 @@ class ReleaseDetailsModal extends React.Component {
                     {changedComponents.map((componentName, index) => {
                       return (
                         <ComponentChangelog
-                          changes={changes[componentName].map(c => {
+                          changes={changes[componentName].map((c) => {
                             return c.description;
                           })}
                           key={index}

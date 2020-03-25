@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const Wrapper = styled.span`
-  font-family: ${props => props.theme.fontFamilies.console};
+  font-family: ${(props) => props.theme.fontFamilies.console};
 `;
 
 // eslint-disable-next-line react/prefer-stateless-function

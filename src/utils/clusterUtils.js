@@ -150,10 +150,8 @@ export function computeCapabilities(releaseVersion, provider) {
   };
 }
 
-export const isClusterYoungerThanOneHour = createDate => {
+export const isClusterYoungerThanOneHour = (createDate) => {
   const creationPlusOneHour = moment(createDate).add(1, 'hour');
 
-  return moment()
-    .utc()
-    .isBefore(creationPlusOneHour);
+  return moment().utc().isBefore(creationPlusOneHour);
 };

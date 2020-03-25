@@ -24,8 +24,8 @@ const Wrapper = styled.div`
 
     .divider {
       background-color: transparent;
-      border-bottom: 1px solid ${props => props.theme.colors.shade6};
-      border-top: 1px solid ${props => props.theme.colors.shade3};
+      border-bottom: 1px solid ${(props) => props.theme.colors.shade6};
+      border-top: 1px solid ${(props) => props.theme.colors.shade3};
       margin: 0px;
     }
 
@@ -35,19 +35,19 @@ const Wrapper = styled.div`
 
       &:hover {
         background-color: transparent;
-        color: ${props => props.theme.colors.white1};
+        color: ${(props) => props.theme.colors.white1};
       }
     }
   }
 
   .open .dropdown-toggle.btn-default {
     background-color: transparent;
-    color: ${props => props.theme.colors.white1};
+    color: ${(props) => props.theme.colors.white1};
     box-shadow: none;
   }
 
   .dropdown-toggle.btn-default {
-    background-color: ${props => props.theme.colors.shade2};
+    background-color: ${(props) => props.theme.colors.shade2};
     border-radius: 5px;
     border: none;
     border-top: 1px solid #2e617f;
@@ -77,34 +77,34 @@ const Wrapper = styled.div`
       color: #ccd;
       text-decoration: none;
       box-shadow: none;
-      background-color: ${props => props.theme.colors.shade2};
+      background-color: ${(props) => props.theme.colors.shade2};
     }
 
     &:focus {
-      background-color: ${props => props.theme.colors.shade2};
+      background-color: ${(props) => props.theme.colors.shade2};
       color: #ccd;
     }
 
     &:hover {
       text-decoration: none;
-      background-color: ${props => props.theme.colors.shade5} !important;
-      color: ${props => props.theme.colors.white1};
+      background-color: ${(props) => props.theme.colors.shade5} !important;
+      color: ${(props) => props.theme.colors.white1};
     }
 
     &:active:focus {
-      background-color: ${props => props.theme.colors.shade5} !important;
-      color: ${props => props.theme.colors.white1};
+      background-color: ${(props) => props.theme.colors.shade5} !important;
+      color: ${(props) => props.theme.colors.white1};
     }
 
     ul.dropdown-menu {
-      background-color: ${props => props.theme.colors.shade2};
+      background-color: ${(props) => props.theme.colors.shade2};
       box-shadow: none;
     }
   }
 
   .open {
     .dropdown-toggle.btn-default {
-      background-color: ${props => props.theme.colors.shade2};
+      background-color: ${(props) => props.theme.colors.shade2};
       border-bottom: 1px solid #2e617f;
       border-top: 1px solid #183343;
     }
@@ -170,7 +170,7 @@ class OrganizationDropdown extends React.Component {
             </MenuItem>
             <MenuItem divider />
             <MenuItem header>Switch Organization</MenuItem>
-            {_.sortBy(this.props.organizations.items, 'id').map(org => {
+            {_.sortBy(this.props.organizations.items, 'id').map((org) => {
               return (
                 <MenuItem
                   eventKey={org.id}

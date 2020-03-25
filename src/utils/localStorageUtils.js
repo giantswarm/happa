@@ -30,7 +30,7 @@ export const fetchUserFromStorage = () => {
   return user;
 };
 
-export const setUserToStorage = userData => {
+export const setUserToStorage = (userData) => {
   localStorage.setItem('user', JSON.stringify(userData));
   const defaultClient = GiantSwarm.ApiClient.instance;
   const defaultClientAuth =
@@ -39,6 +39,6 @@ export const setUserToStorage = userData => {
   defaultClientAuth.apiKeyPrefix = userData.auth.scheme;
 };
 
-export const setOrganizationToStorage = organizationId => {
+export const setOrganizationToStorage = (organizationId) => {
   localStorage.setItem('app.selectedOrganization', organizationId);
 };

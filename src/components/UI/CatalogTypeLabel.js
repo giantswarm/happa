@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 /**
  * CatalogTypeLabel shows some information about a catalog depending on its type.
  */
-const CatalogTypeLabel = props => {
+const CatalogTypeLabel = (props) => {
   let icon = '';
   let message = '';
 

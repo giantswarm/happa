@@ -46,7 +46,7 @@ class Users extends React.Component {
     }
   }
 
-  removeExpiration = email => {
+  removeExpiration = (email) => {
     this.setState({
       selectedUser: email,
       modal: {
@@ -57,7 +57,7 @@ class Users extends React.Component {
     });
   };
 
-  confirmRemoveExpiration = email => {
+  confirmRemoveExpiration = (email) => {
     this.setState({
       modal: {
         visible: true,
@@ -75,7 +75,7 @@ class Users extends React.Component {
       });
   };
 
-  deleteUser = email => {
+  deleteUser = (email) => {
     this.setState({
       selectedUser: email,
       modal: {
@@ -86,7 +86,7 @@ class Users extends React.Component {
     });
   };
 
-  confirmDeleteUser = email => {
+  confirmDeleteUser = (email) => {
     this.setState({
       modal: {
         template: UserModalTypes.Delete,
@@ -115,7 +115,7 @@ class Users extends React.Component {
     });
   };
 
-  confirmInviteUser = invitationForm => {
+  confirmInviteUser = (invitationForm) => {
     this.setState({
       modal: {
         template: UserModalTypes.Invite,
@@ -129,7 +129,7 @@ class Users extends React.Component {
       .then(() => {
         return this.props.dispatch(invitationCreate(invitationForm));
       })
-      .then(result => {
+      .then((result) => {
         this.setState({
           modal: {
             template: UserModalTypes.Invite,

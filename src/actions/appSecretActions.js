@@ -12,7 +12,7 @@ import * as types from './actionTypes';
  * @param {Object} values The values which will be set for the secret.
  */
 export function updateAppSecret(appName, clusterID, values) {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     dispatch({
       type: types.CLUSTER_UPDATE_APP_SECRET_REQUEST,
       clusterID,
@@ -50,7 +50,7 @@ export function updateAppSecret(appName, clusterID, values) {
           messageTTL.LONG
         );
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch({
           type: types.CLUSTER_UPDATE_APP_SECRET_ERROR,
           clusterID,
@@ -88,7 +88,7 @@ export function updateAppSecret(appName, clusterID, values) {
  * @param {Object} values The values which will be set for the secret
  */
 export function createAppSecret(appName, clusterID, values) {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     dispatch({
       type: types.CLUSTER_CREATE_APP_SECRET_REQUEST,
       clusterID,
@@ -126,7 +126,7 @@ export function createAppSecret(appName, clusterID, values) {
           messageTTL.LONG
         );
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch({
           type: types.CLUSTER_CREATE_APP_SECRET_ERROR,
           clusterID,
@@ -163,7 +163,7 @@ export function createAppSecret(appName, clusterID, values) {
  * @param {Object} clusterID What cluster it is on.
  */
 export function deleteAppSecret(appName, clusterID) {
-  return function(dispatch, getState) {
+  return function (dispatch, getState) {
     dispatch({
       type: types.CLUSTER_DELETE_APP_SECRET_REQUEST,
       clusterID,
@@ -199,7 +199,7 @@ export function deleteAppSecret(appName, clusterID) {
           messageTTL.MEDIUM
         );
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch({
           type: types.CLUSTER_DELETE_APP_SECRET_ERROR,
           clusterID,

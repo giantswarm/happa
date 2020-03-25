@@ -15,14 +15,14 @@ class AppCatalog extends React.Component {
   componentDidMount() {
     this.props
       .dispatch(catalogsLoad())
-      .then(catalogs => {
-        const promises = Object.keys(catalogs).map(catalog => {
+      .then((catalogs) => {
+        const promises = Object.keys(catalogs).map((catalog) => {
           return this.props.dispatch(catalogLoadIndex(catalogs[catalog]));
         });
 
         return Promise.all(promises);
       })
-      .catch(error => {
+      .catch((error) => {
         new FlashMessage(
           'Something went wrong while trying to load the catalogs.',
           messageType.ERROR,

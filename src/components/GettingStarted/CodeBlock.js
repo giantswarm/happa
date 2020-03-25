@@ -47,14 +47,14 @@ export const CodeBlock = ({ children }) => {
 
   const getPromptLinesAsString = () => {
     const string = React.Children.toArray(children)
-      .filter(x => x.type.displayName === 'Prompt')
-      .map(x => x.props.children)
+      .filter((x) => x.type.displayName === 'Prompt')
+      .map((x) => x.props.children)
       .join('\n');
 
     return dedent(string);
   };
 
-  const copyCodeToClipboard = e => {
+  const copyCodeToClipboard = (e) => {
     e.preventDefault();
 
     const contentToCopy = getPromptLinesAsString();
@@ -82,7 +82,7 @@ export const CodeBlock = ({ children }) => {
     return classNames.join(' ');
   };
 
-  const handleClick = e => {
+  const handleClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
 

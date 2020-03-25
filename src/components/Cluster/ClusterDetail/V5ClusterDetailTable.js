@@ -31,7 +31,7 @@ import URIBlock from './URIBlock';
 const NodePoolsWrapper = styled.div`
   margin: 25px 0 23px;
   padding-top: 25px;
-  border-top: 1px solid ${props => props.theme.colors.shade6};
+  border-top: 1px solid ${(props) => props.theme.colors.shade6};
   h2 {
     font-weight: 400;
     font-size: 22px;
@@ -79,7 +79,7 @@ const GridRowNodePoolsNodes = styled.div`
   margin-bottom: 0;
   margin-top: -12px;
   min-height: 25px;
-  color: ${props => props.theme.colors.gray};
+  color: ${(props) => props.theme.colors.gray};
   padding-top: 0;
   padding-bottom: 0;
   transform: translateY(12px);
@@ -93,7 +93,7 @@ const GridRowNodePoolsNodes = styled.div`
     span {
       display: inline-block;
       padding: 0 10px;
-      background: ${props => props.theme.colors.shade2};
+      background: ${(props) => props.theme.colors.shade2};
     }
     &::before {
       content: '';
@@ -102,7 +102,7 @@ const GridRowNodePoolsNodes = styled.div`
       left: 0;
       width: 100%;
       height: 4px;
-      border: 1px solid ${props => props.theme.colors.gray};
+      border: 1px solid ${(props) => props.theme.colors.gray};
       border-bottom: 0;
       z-index: -1;
     }
@@ -119,10 +119,10 @@ const GridRowNodePoolsHeaders = styled.div`
 
 const GridRowNodePoolsItem = styled.div`
   ${GridRowNodePoolsBase};
-  background-color: ${props => props.theme.colors.shade7};
+  background-color: ${(props) => props.theme.colors.shade7};
 `;
 
-export const AddNodePoolWrapper = props => css`
+export const AddNodePoolWrapper = (props) => css`
   background-color: ${props.theme.colors.shade10};
   border-radius: 5px;
   margin-bottom: 0px;
@@ -158,7 +158,7 @@ export const AddNodePoolFlexColumnDiv = styled.div`
     margin-bottom: 0;
   }
   .label-span {
-    color: ${props => props.theme.colors.white1};
+    color: ${(props) => props.theme.colors.white1};
   }
   .label-span,
   input,
@@ -170,19 +170,19 @@ export const AddNodePoolFlexColumnDiv = styled.div`
   input {
     box-sizing: border-box;
     width: 100%;
-    background-color: ${props => props.theme.colors.shade5};
+    background-color: ${(props) => props.theme.colors.shade5};
     padding: 11px 10px;
     outline: 0;
-    color: ${props => props.theme.colors.whiteInput};
+    color: ${(props) => props.theme.colors.whiteInput};
     border-radius: 4px;
-    border: 1px solid ${props => props.theme.colors.shade6};
+    border: 1px solid ${(props) => props.theme.colors.shade6};
     padding-left: 15px;
     line-height: normal;
   }
   p {
     margin: 0;
     font-size: 14px;
-    color: ${props => props.theme.colors.white1};
+    color: ${(props) => props.theme.colors.white1};
   }
   a {
     text-decoration: underline;
@@ -213,7 +213,7 @@ export const AddNodePoolFlexColumnDiv = styled.div`
     form {
       label {
         margin-bottom: 7px;
-        color: ${props => props.theme.colors.white1};
+        color: ${(props) => props.theme.colors.white1};
         font-weight: 400;
       }
       & > div:nth-of-type(2) {
@@ -246,7 +246,7 @@ export const FlexWrapperDiv = styled.div`
     justify-content: space-between;
     height: 147px;
     padding: 30px 10px;
-    background-color: ${props => props.theme.colors.shade10};
+    background-color: ${(props) => props.theme.colors.shade10};
     border-radius: 5px;
     p {
       font-size: 16px;
@@ -271,7 +271,7 @@ export const CopyToClipboardDiv = styled.div`
     transform: translateX(-15px);
     &:hover {
       opacity: 1;
-      text-shadow: 0px 0px 15px ${props => props.theme.colors.shade1};
+      text-shadow: 0px 0px 15px ${(props) => props.theme.colors.shade1};
     }
   }
 `;
@@ -296,13 +296,13 @@ class V5ClusterDetailTable extends React.Component {
   }
 
   toggleAddNodePoolForm = () =>
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       isNodePoolBeingAdded: !prevState.isNodePoolBeingAdded,
     }));
 
-  updateNodePoolForm = data => {
-    this.setState(prevState =>
-      produce(prevState, draft => {
+  updateNodePoolForm = (data) => {
+    this.setState((prevState) =>
+      produce(prevState, (draft) => {
         draft.nodePoolForm = { ...prevState.nodePoolForm, ...data };
       })
     );
@@ -312,7 +312,7 @@ class V5ClusterDetailTable extends React.Component {
     const data = [this.state.nodePoolForm.data];
 
     this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.nodePoolForm.data = { isSubmiting: true };
       })
     );
@@ -417,7 +417,7 @@ class V5ClusterDetailTable extends React.Component {
 
                     return -1;
                   })
-                  .map(nodePool => (
+                  .map((nodePool) => (
                     <BaseTransition
                       key={nodePool.id || Date.now()}
                       appear={true}

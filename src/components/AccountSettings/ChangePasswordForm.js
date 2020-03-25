@@ -99,7 +99,7 @@ class ChangePassword extends React.Component {
     }
   };
 
-  submit = e => {
+  submit = (e) => {
     e.preventDefault();
 
     this.setState({
@@ -128,7 +128,7 @@ class ChangePassword extends React.Component {
           this.new_password.value()
         );
       })
-      .catch(error => {
+      .catch((error) => {
         let errorMessage = null;
         if (
           error.body &&
@@ -177,7 +177,7 @@ class ChangePassword extends React.Component {
                 label='Current Password'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
-                ref={p => {
+                ref={(p) => {
                   this.current_password = p;
                 }}
               />
@@ -189,7 +189,7 @@ class ChangePassword extends React.Component {
                 label='New Password'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
-                ref={p => {
+                ref={(p) => {
                   this.new_password = p;
                 }}
                 validationError={this.state.newPasswordValidationMessage}
@@ -202,7 +202,7 @@ class ChangePassword extends React.Component {
                 label='New Password (once more)'
                 onChange={this.validate}
                 onStartTyping={this.passwordEditingStarted}
-                ref={p => {
+                ref={(p) => {
                   this.new_password_confirmation = p;
                 }}
                 validationError={

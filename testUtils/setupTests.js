@@ -32,7 +32,7 @@ afterEach(async () => {
     const done = nock.isDone();
 
     // Uncomment the next lines to debug hanging requests
-    // const pendingMocks = nock.pendingMocks().map(mock => `${mock}\n`);
+    // const pendingMocks = nock.pendingMocks().map((mock) => `${mock}\n`);
     // if (!done) {
     //   throw new Error(`You still have pending mocks bro:\n ${pendingMocks}`);
     // }

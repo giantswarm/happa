@@ -20,7 +20,7 @@ const SpanWrapper = styled.span`
  * max values for scaling limits.
  */
 class NodeCountSelector extends React.Component {
-  handleFormSubmit = e => {
+  handleFormSubmit = (e) => {
     e.preventDefault();
   };
 
@@ -32,18 +32,18 @@ class NodeCountSelector extends React.Component {
     });
   }
 
-  updateScalingMin = numberPicker => {
+  updateScalingMin = (numberPicker) => {
     this.updateValue({ min: numberPicker.value, minValid: numberPicker.valid });
   };
 
-  updateScalingMax = numberPicker => {
+  updateScalingMax = (numberPicker) => {
     this.updateValue({
       max: numberPicker.value,
       maxValid: numberPicker.valid,
     });
   };
 
-  updateNodeCount = numberPicker => {
+  updateNodeCount = (numberPicker) => {
     this.updateValue({
       min: numberPicker.value,
       minValid: numberPicker.valid,
@@ -52,7 +52,7 @@ class NodeCountSelector extends React.Component {
     });
   };
 
-  handleFocus = event => {
+  handleFocus = (event) => {
     event.target.select();
   };
 

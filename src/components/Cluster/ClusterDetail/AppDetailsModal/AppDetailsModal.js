@@ -1,3 +1,4 @@
+import { CLUSTER_UPDATE_APP_ERROR } from 'actions/actionTypes.js';
 import {
   deleteApp as deleteAppAction,
   loadApps as loadAppsAction,
@@ -15,6 +16,7 @@ import {
 } from 'actions/appSecretActions';
 import { catalogLoadIndex } from 'actions/catalogActions';
 import GenericModal from 'components/Modals/GenericModal';
+import { useError } from 'hooks/errors';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
@@ -33,9 +35,10 @@ const modalPanes = {
   initial: 'initial',
 };
 
-const AppDetailsModal = props => {
+const AppDetailsModal = (props) => {
   const [pane, setPane] = useState(modalPanes.initial);
   const [desiredVersion, setDesiredVersion] = useState(props.app.spec.version);
+  const { clear: clearUpdateAppError } = useError(CLUSTER_UPDATE_APP_ERROR);
 
   const { app, catalog, dispatch } = props;
 
@@ -53,7 +56,8 @@ const AppDetailsModal = props => {
   const clusterId = props.clusterId;
 
   function showPane(paneToShow) {
-    return function() {
+    return function () {
+      clearUpdateAppError();
       setPane(paneToShow);
     };
   }
@@ -74,9 +78,15 @@ const AppDetailsModal = props => {
   }
 
   async function editChartVersion() {
-    await props.dispatch(
-      updateAppAction(appName, clusterId, { spec: { version: desiredVersion } })
+    const changes = { spec: { version: desiredVersion } };
+    const { error } = await props.dispatch(
+      updateAppAction(appName, clusterId, changes)
     );
+
+    if (error) {
+      return;
+    }
+
     await loadAppsAndClose();
   }
 

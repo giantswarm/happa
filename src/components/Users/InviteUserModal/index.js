@@ -72,7 +72,7 @@ const InviteUserModal = ({
     modalTitle = `${inviteForm.email} has been Invited`;
   }
 
-  const handleOrganizationChange = orgIDs => {
+  const handleOrganizationChange = (orgIDs) => {
     let invitationForm = Object.assign({}, inviteForm);
 
     invitationForm.organizations = orgIDs;
@@ -81,7 +81,7 @@ const InviteUserModal = ({
     setInviteForm(invitationForm);
   };
 
-  const handleEmailChange = e => {
+  const handleEmailChange = (e) => {
     let invitationForm = Object.assign({}, inviteForm);
 
     invitationForm.email = e.target.value;
@@ -90,7 +90,7 @@ const InviteUserModal = ({
     setInviteForm(invitationForm);
   };
 
-  const handleSendEmailChange = e => {
+  const handleSendEmailChange = (e) => {
     const invitationForm = Object.assign({}, inviteForm, {
       sendEmail: e.target.checked,
     });

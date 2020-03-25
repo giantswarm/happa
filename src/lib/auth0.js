@@ -28,7 +28,7 @@ export default class Auth {
     this.auth0.authorize();
   };
 
-  handleAuthentication = callback => {
+  handleAuthentication = (callback) => {
     this.auth0.parseHash((err, authResult) => {
       callback(err, authResult);
     });

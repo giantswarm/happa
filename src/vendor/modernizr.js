@@ -2,7 +2,7 @@
 
 /*! modernizr 3.3.1 (Custom Build) | MIT *
  * https://modernizr.com/download/?-adownload-setclasses !*/
-!(function(e, n, s) {
+!(function (e, n, s) {
   function a(e, n) {
     return typeof e === n;
   }
@@ -60,20 +60,20 @@
         usePrefixes: !0,
       },
       _q: [],
-      on: function(e, n) {
+      on: function (e, n) {
         var s = this;
-        setTimeout(function() {
+        setTimeout(function () {
           n(s[e]);
         }, 0);
       },
-      addTest: function(e, n, s) {
+      addTest: function (e, n, s) {
         r.push({ name: e, fn: n, options: s });
       },
-      addAsyncTest: function(e) {
+      addAsyncTest: function (e) {
         r.push({ name: null, fn: e });
       },
     },
-    Modernizr = function() {};
+    Modernizr = function () {};
   (Modernizr.prototype = f), (Modernizr = new Modernizr());
   var c = n.documentElement,
     u = 'svg' === c.nodeName.toLowerCase();

@@ -17,7 +17,7 @@ const selectClusterById = (state, props) => {
   return state.entities.clusters.items[props.cluster.id];
 };
 
-const selectNodePools = state => state.entities.nodePools.items;
+const selectNodePools = (state) => state.entities.nodePools.items;
 
 const selectClusterNodePoolsIds = (state, props) => {
   return state.entities.clusters.items[props.cluster.id].nodePools;
@@ -32,7 +32,7 @@ export const selectClusterNodePools = (state, clusterId) => {
 
   const nodePools = state.entities.nodePools.items;
 
-  return clusterNodePoolsIds.map(nodePoolId => nodePools[nodePoolId]) || [];
+  return clusterNodePoolsIds.map((nodePoolId) => nodePools[nodePoolId]) || [];
 };
 
 export const selectErrorByIdAndAction = (state, id, actionType) => {
@@ -70,7 +70,7 @@ export const selectErrorMessageByAction = (state, actionType) => {
 // https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances
 
 export const selectResourcesV4 = () =>
-  createDeepEqualSelector(selectClusterById, cluster => {
+  createDeepEqualSelector(selectClusterById, (cluster) => {
     // In case status call fails.
     if (
       !cluster ||
@@ -101,7 +101,7 @@ export const selectResourcesV5 = () =>
       const clusterNodePools =
         // nodePools &&
         Object.entries(nodePools).length !== 0 && clusterNodePoolsIds
-          ? clusterNodePoolsIds.map(np => nodePools[np])
+          ? clusterNodePoolsIds.map((np) => nodePools[np])
           : [];
 
       const numberOfNodes = getNumberOfNodePoolsNodes(clusterNodePools);
@@ -113,13 +113,13 @@ export const selectResourcesV5 = () =>
   );
 
 export const selectAndProduceAZGridTemplateAreas = () =>
-  createDeepEqualSelector(selectClusterNodePools, nodePools => {
+  createDeepEqualSelector(selectClusterNodePools, (nodePools) => {
     const allZones = nodePools
       ? nodePools
           .reduce((accumulator, current) => {
             return [...accumulator, ...current.availability_zones];
           }, [])
-          .map(zone => zone.slice(-1))
+          .map((zone) => zone.slice(-1))
       : [];
 
     // This array stores available zones that are in at least one node pool.
@@ -137,7 +137,7 @@ export const selectTargetRelease = (state, cluster) => {
 
   const releases = state.entities.releases.items;
   const availableVersions = Object.keys(releases)
-    .filter(release => releases[release].active)
+    .filter((release) => releases[release].active)
     .sort(cmp);
 
   // Guard against the release version of this cluster not being in the /v4/releases/

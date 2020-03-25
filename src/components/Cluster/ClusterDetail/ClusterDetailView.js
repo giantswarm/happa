@@ -190,7 +190,7 @@ class ClusterDetailView extends React.Component {
     this.props.dispatch(push(clusterGuideOverviewPath));
   };
 
-  editClusterName = value => {
+  editClusterName = (value) => {
     try {
       this.props.dispatch(
         clusterActions.clusterPatch(this.props.cluster, { name: value })
@@ -319,7 +319,7 @@ class ClusterDetailView extends React.Component {
                 <ScaleClusterModal
                   cluster={cluster}
                   provider={provider}
-                  ref={s => {
+                  ref={(s) => {
                     this.scaleClusterModal = s;
                   }}
                   workerNodesDesired={this.getDesiredNumberOfNodes()}
@@ -329,7 +329,7 @@ class ClusterDetailView extends React.Component {
 
               <UpgradeClusterModal
                 cluster={cluster}
-                ref={s => {
+                ref={(s) => {
                   this.upgradeClusterModal = s;
                 }}
                 release={release}

@@ -63,7 +63,7 @@ export class SignUp extends React.Component {
 
     passage
       .checkInvite({ token })
-      .then(data => {
+      .then((data) => {
         this.setState({
           email: data.email,
           statusMessage: 'verify_completed',
@@ -81,7 +81,7 @@ export class SignUp extends React.Component {
           }
         }, statusMessageChangeTimeout);
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           // eslint-disable-next-line react/no-unused-state
           checkInviteStatus: 'failed',
@@ -114,7 +114,7 @@ export class SignUp extends React.Component {
     let nextStep = 0;
 
     this.setState(
-      prevState => {
+      (prevState) => {
         nextStep = prevState.currentStep + 1;
 
         return {
@@ -154,7 +154,7 @@ export class SignUp extends React.Component {
     }, transitionDelay);
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
 
     if (this.state.formValid) {
@@ -168,7 +168,7 @@ export class SignUp extends React.Component {
           inviteToken: this.props.match.params.token,
           password: this.state.passwordField.value,
         })
-        .then(data => {
+        .then((data) => {
           const userData = {
             username: data.username,
             email: data.email,
@@ -197,11 +197,11 @@ export class SignUp extends React.Component {
     }
   };
 
-  tosChanged = e => {
+  tosChanged = (e) => {
     const checked = e.target.checked;
 
     this.setState(
-      prevState => {
+      (prevState) => {
         let statusMessage = prevState.statusMessage;
 
         let termsOfServiceFieldValid = false;
@@ -233,7 +233,7 @@ export class SignUp extends React.Component {
     );
   };
 
-  passwordEditingStarted = password => {
+  passwordEditingStarted = (password) => {
     this.setState({
       formValid: false,
       advancable: false,
@@ -244,7 +244,7 @@ export class SignUp extends React.Component {
     });
   };
 
-  passwordEditingCompleted = password => {
+  passwordEditingCompleted = (password) => {
     const validationResult = validatePassword(password);
 
     this.setState({
@@ -258,7 +258,7 @@ export class SignUp extends React.Component {
     this.validateForm();
   };
 
-  passwordConfirmationEditingStarted = confirmation => {
+  passwordConfirmationEditingStarted = (confirmation) => {
     this.setState({
       formValid: false,
       advancable: false,
@@ -293,7 +293,7 @@ export class SignUp extends React.Component {
     }
   };
 
-  passwordConfirmationEditingCompleted = passwordConfirmation => {
+  passwordConfirmationEditingCompleted = (passwordConfirmation) => {
     let statusMessage = this.state.statusMessage;
     let valid = this.state.passwordConfirmationField.valid;
 
@@ -328,7 +328,7 @@ export class SignUp extends React.Component {
   };
 
   validateForm() {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       let advancable = false;
       let formValid = false;
       let statusMessage = prevState.statusMessage;
@@ -376,7 +376,7 @@ export class SignUp extends React.Component {
     return (
       <div className='signup--container col-6'>
         <h1
-          ref={t => {
+          ref={(t) => {
             this.title = t;
           }}
         >
@@ -386,7 +386,7 @@ export class SignUp extends React.Component {
         <form
           className={`step-${this.state.currentStep}`}
           onSubmit={this.handleSubmit}
-          ref={f => {
+          ref={(f) => {
             this.signupForm = f;
           }}
         >
@@ -401,7 +401,7 @@ export class SignUp extends React.Component {
               name='password'
               onChange={this.passwordEditingCompleted}
               onStartTyping={this.passwordEditingStarted}
-              ref={p => {
+              ref={(p) => {
                 this.password = p;
               }}
             />
@@ -413,7 +413,7 @@ export class SignUp extends React.Component {
               name='confirm-password'
               onChange={this.passwordConfirmationEditingCompleted}
               onStartTyping={this.passwordConfirmationEditingStarted}
-              ref={f => {
+              ref={(f) => {
                 this.passwordConfirmation = f;
               }}
             />
@@ -427,7 +427,7 @@ export class SignUp extends React.Component {
                 <input
                   id='tosAccept'
                   onChange={this.tosChanged}
-                  ref={i => {
+                  ref={(i) => {
                     this.tosAccept = i;
                   }}
                   type='checkbox'
