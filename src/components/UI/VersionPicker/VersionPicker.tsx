@@ -45,7 +45,6 @@ const Header = styled.div`
   }
 
   label {
-    padding-top: 10px;
     border-top: 1px solid ${(props) => props.theme.colors.shade2};
 
     padding: 0px;
