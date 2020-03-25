@@ -5,17 +5,16 @@ import { typeWithoutSuffix } from 'selectors/selectorUtils';
 
 export const useError = (errorType) => {
   const dispatch = useDispatch();
+  const errorMessage = useSelector((state) =>
+    selectErrorByAction(state, errorType)
+  );
 
-  return useSelector((state) => {
-    const errorMessage = selectErrorByAction(state, errorType);
+  const clear = () => {
+    dispatch({
+      type: SINGLE_ERROR_CLEAR,
+      errorType: typeWithoutSuffix(errorType),
+    });
+  };
 
-    const clear = () => {
-      dispatch({
-        type: SINGLE_ERROR_CLEAR,
-        errorType: typeWithoutSuffix(errorType),
-      });
-    };
-
-    return { errorMessage, clear };
-  });
+  return { errorMessage, clear };
 };
