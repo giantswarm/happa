@@ -52,7 +52,7 @@ export class CustomError extends Error {
     // {Error name}: {Error message}
     let output = `${name}: ${message}\n`;
     // *tab* at {File}:{Line} *newline*
-    output += stackFrames.map(trace => `\tat ${trace.toString()}`).join('\n');
+    output += stackFrames.map((trace) => `\tat ${trace.toString()}`).join('\n');
 
     return output;
   }
@@ -114,7 +114,7 @@ export class CustomError extends Error {
       }
 
       let stackFrames = StackTrace.getSync();
-      stackFrames = stackFrames.map(frame => {
+      stackFrames = stackFrames.map((frame) => {
         return this.resolver.pinpoint(frame);
       });
       stackFrames = await Promise.all(stackFrames);
