@@ -10,7 +10,7 @@ import YAMLFileUpload from './YamlFileUpload';
 
 const InitialPane = (props) => {
   return (
-    <div>
+    <div data-testid='app-details-modal'>
       <div className='appdetails--upperlabels'>
         <div className='labelvaluepair'>
           <div className='labelvaluepair--label'>CATALOG</div>

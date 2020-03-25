@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -306,5 +306,41 @@ describe('Installed app detail pane', () => {
     fireEvent.click(appLabel);
 
     // If the app doesn't explode, we're ok and the test has passed.
+  });
+
+  it('shows an error message if not able to set the desired chart version', async () => {
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, [
+      appResponseWithCustomConfig,
+    ]);
+
+    nock('https://catalogshost')
+      .get('/giantswarm-catalog/index.yaml')
+      .reply(StatusCodes.Ok, catalogIndexResponse);
+
+    const { findByText, getByText, getByTestId } = renderRouteWithStore(
+      clusterDetailPath
+    );
+
+    const appsTab = await findByText(/^apps$/i);
+    fireEvent.click(appsTab);
+
+    // Click on app to open the editing modal.
+    const appLabel = getByText(/chart version: 0.0.1/i);
+    fireEvent.click(appLabel);
+
+    // Wait for the version picker to load.
+    const modal = getByTestId('app-details-modal');
+    const versionDropdown = await within(modal).findByText(/0.0.1/i);
+    fireEvent.click(versionDropdown);
+
+    // Set the version.
+    const desiredVersion = within(modal).getByText(/1.1.1/i);
+    fireEvent.click(desiredVersion);
+
+    const confirmButton = getByText('Update Chart Version');
+    fireEvent.click(confirmButton);
+
+    // Expect an error.
+    await findByText(/Something went wrong/);
   });
 });
