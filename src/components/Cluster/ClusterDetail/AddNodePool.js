@@ -226,7 +226,7 @@ class AddNodePool extends Component {
     return {
       allowSpotInstances:
         provider === Providers.AWS &&
-        cmp(Constants.AWS_SPOT_INSTANCES_VERSION, selectedRelease) >= 0,
+        cmp(Constants.AWS_ONDEMAND_INSTANCES_VERSION, selectedRelease) >= 0,
       allowAlikeInstances:
         provider === Providers.AWS &&
         cmp(Constants.AWS_USE_ALIKE_INSTANCES_VERSION, selectedRelease) >= 0,
