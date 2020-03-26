@@ -397,7 +397,7 @@ class V5ClusterDetailTable extends React.Component {
                   NAME
                 </span>
                 <span>INSTANCE TYPE</span>
-                <span>SPOT INSTANCES</span>
+                <span>INSTANCE DISTRIBUTION</span>
                 <span>AVAILABILITY ZONES</span>
                 <span>MIN</span>
                 <span>MAX</span>

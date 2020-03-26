@@ -100,6 +100,7 @@ class NodePool extends Component {
     const { id, scaling, availability_zones, status, node_spec } = nodePool;
     const { nodes_ready: current, nodes: desired } = status;
     const { isNameBeingEdited } = this.state;
+    const { instance_distribution } = node_spec.aws;
 
     return (
       <>
@@ -119,12 +120,16 @@ class NodePool extends Component {
         {/* Hide the rest of fields when editing name */}
         {!isNameBeingEdited && (
           <>
-            <Code>{node_spec.aws.instance_type}</Code>
-            {node_spec.aws.spot_instance_enabled ? (
-              <i className='fa fa-done' />
-            ) : (
-              <span>&nbsp;</span>
-            )}
+            <Code>
+              {node_spec.aws.use_alike_instance_types
+                ? 'mixed'
+                : node_spec.aws.instance_type}
+            </Code>
+            <NodesWrapper>
+              {instance_distribution?.on_demand_base_capacity || '-'}/
+              {instance_distribution?.on_demand_percentage_above_base_capacity ||
+                '-'}
+            </NodesWrapper>
             <div>
               <AvailabilityZonesWrapper
                 availableZonesGridTemplateAreas={
