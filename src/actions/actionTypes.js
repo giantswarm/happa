@@ -294,3 +294,6 @@ export const RELEASES_LOAD_ERROR = 'RELEASES_LOAD_ERROR';
 export const RELEASE_SELECTED = 'RELEASE_SELECTED';
 
 export const ROUTER_LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
+
+// Error store management
+export const SINGLE_ERROR_CLEAR = 'SINGLE_ERROR_CLEAR';

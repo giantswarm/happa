@@ -58,5 +58,5 @@ entries:
     name: nginx-ingress-controller-app
     urls:
     - https://giantswarm.github.com/giantswarm-catalog/nginx-ingress-controller-app-0.12.0.tgz
-    version: 0.12.0
-generated: "2020-01-04T12:51:45.418183532Z"`
+    version: 0.0.1
+generated: "2020-01-04T12:51:45.418183532Z"`;

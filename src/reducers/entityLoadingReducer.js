@@ -10,7 +10,7 @@ const initialState = {
 // item that we are having problems with getting its info, ie getCluster or getNodePool
 const entityLoadingReducer = produce((draft, action) => {
   const { type, id } = action;
-  const matches = /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)/.exec(type);
+  const matches = /(.*)_(REQUEST|SUCCESS|ERROR|FINISHED|NOT_FOUND)$/.exec(type);
 
   // not a *_REQUEST / *_SUCCESS / *_ERROR / *_FINISHED actions, or no id -> we ignore them
   if (!matches || !id) return;
