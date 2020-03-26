@@ -300,7 +300,7 @@ class AddNodePool extends Component {
           node_spec: {
             aws: {
               instance_type: this.state.aws.instanceType.value,
-              spot_instances_enabled: this.state.aws.spotInstancesEnabled,
+              spot_instance_enabled: this.state.aws.spotInstancesEnabled,
             },
           },
         },

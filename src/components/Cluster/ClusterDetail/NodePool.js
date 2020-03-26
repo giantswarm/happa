@@ -120,7 +120,7 @@ class NodePool extends Component {
         {!isNameBeingEdited && (
           <>
             <Code>{node_spec.aws.instance_type}</Code>
-            {node_spec.aws.spot_instances_enabled ? (
+            {node_spec.aws.spot_instance_enabled ? (
               <i className='fa fa-done' />
             ) : (
               <span>&nbsp;</span>
