@@ -448,7 +448,7 @@ class V5ClusterDetailTable extends React.Component {
               <AddNodePoolFlexColumnDiv>
                 <AddNodePool
                   clusterId={cluster.id}
-                  releaseVersion={release_version}
+                  selectedRelease={release_version}
                   closeForm={this.toggleAddNodePoolForm}
                   informParent={this.updateNodePoolForm}
                 />
