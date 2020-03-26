@@ -461,9 +461,8 @@ class AddNodePool extends Component {
             <NumberPicker
               readOnly={false}
               label='On demand base capacity'
-              max={100}
               min={0}
-              stepSize={10}
+              stepSize={1}
               value={this.state.aws.instanceDistribution.onDemandBaseCapacity}
               onChange={this.setOnDemandBaseCapacity}
             />
