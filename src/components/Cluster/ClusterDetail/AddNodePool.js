@@ -365,7 +365,7 @@ class AddNodePool extends Component {
           node_spec: {
             aws: {
               instance_type: this.state.aws.instanceType.value,
-              use_alike: this.state.aws.useAlike,
+              use_alike_instance_types: this.state.aws.useAlike,
               instance_distribution: {
                 on_demand_base_capacity: this.state.aws.instanceDistribution
                   .onDemandBaseCapacity,
