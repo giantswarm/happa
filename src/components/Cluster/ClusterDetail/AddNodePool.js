@@ -160,11 +160,8 @@ const SpotValuesLabel = styled.label`
   .spot-number-picker {
     display: flex;
 
-    div:first-child {
+    div:first-of-type {
       font-weight: normal;
-    }
-    div:nth-child(2) {
-      margin-left: 30px;
     }
   }
 `;
