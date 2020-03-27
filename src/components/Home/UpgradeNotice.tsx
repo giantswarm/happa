@@ -33,9 +33,9 @@ const UpgradeWrapperDiv = styled.div`
 interface IUpgradeNoticeProps {
   canClusterUpgrade: boolean;
   loadingReleases: boolean;
-  onClick?: () => void;
   className: string;
   clusterId: string;
+  onClick?: () => void;
 }
 
 // This component receive a cluster id, finds if this cluster is 'upgradable' and

@@ -1,5 +1,3 @@
-import { DispatchProp } from 'react-redux';
-
 interface IScaling {
   min: number;
   max: number;
@@ -18,9 +16,4 @@ export interface INodePool {
   node_spec: object;
   scaling: IScaling;
   status: INodePoolStatus;
-}
-
-export interface IDispatchProps extends DispatchProp {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  actions: Record<string, (...args: any[]) => Promise<any>>;
 }

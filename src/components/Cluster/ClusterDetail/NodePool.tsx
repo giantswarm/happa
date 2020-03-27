@@ -4,9 +4,9 @@ import { spinner } from 'images';
 import ErrorReporter from 'lib/ErrorReporter';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { IDispatchProps, INodePool } from 'shared/types';
+import { INodePool } from 'shared/types';
 import { Code, Ellipsis } from 'styles/';
 import theme from 'styles/theme';
 import ViewAndEditName from 'UI/ViewEditName';
@@ -15,7 +15,7 @@ import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';
 import ScaleNodePoolModal from './ScaleNodePoolModal';
 
-const NPViewAndEditName = styled(ViewAndEditName)`
+const NPViewAndEditNameStyled = styled(ViewAndEditName)`
   input[type='text'] {
     font-size: 15px;
     line-height: 1.8em;
@@ -53,15 +53,20 @@ const NameWrapperDiv = styled.div`
   }
 `;
 
+interface IDispatchProps extends DispatchProp {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  actions: Record<string, (...args: any[]) => Promise<any>>;
+}
+
 interface INPViewAndEditName {
   activateEditMode: () => boolean;
   name: string;
 }
 
-type TNPViewAndEditName = React.Component<INPViewAndEditName>;
+type NPViewAndEditName = React.Component<INPViewAndEditName>;
 
 interface IStateProps {
-  availableZonesGridTemplateAreas: string | undefined;
+  availableZonesGridTemplateAreas?: string;
   cluster: object;
   nodePool: INodePool;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,12 +87,11 @@ interface IScaleNodePoolModal {
 }
 
 class NodePool extends Component<INodePoolProps, INodePoolsState> {
-  static propTypes: IStateProps & IDispatchProps = {
+  static propTypes: INodePoolProps = {
     /**
      * We skip typechecking because we don't want to define the whole object
      * structure (for now)
      */
-    // @ts-ignore
     availableZonesGridTemplateAreas: PropTypes.string,
     cluster: PropTypes.object,
     // @ts-ignore
@@ -113,14 +117,12 @@ class NodePool extends Component<INodePoolProps, INodePoolsState> {
     provider: PropTypes.string,
   };
 
-  public state: INodePoolsState = {
+  public readonly state: INodePoolsState = {
     isNameBeingEdited: false,
   };
 
-  private viewEditNameRef: React.RefObject<TNPViewAndEditName> | null = null;
-  private scaleNodePoolModal: React.RefObject<
-    IScaleNodePoolModal
-  > | null = null;
+  private viewEditNameRef: NPViewAndEditName | null = null;
+  private scaleNodePoolModal: IScaleNodePoolModal | null = null;
 
   toggleEditingState = (isNameBeingEdited: boolean): void => {
     this.setState({ isNameBeingEdited });
@@ -176,7 +178,7 @@ class NodePool extends Component<INodePoolProps, INodePoolsState> {
         <NameWrapperDiv
           style={{ gridColumn: isNameBeingEdited ? '2 / 9' : undefined }}
         >
-          <NPViewAndEditName
+          <NPViewAndEditNameStyled
             // @ts-ignore
             name={nodePool.name}
             type='node pool'
@@ -208,11 +210,7 @@ class NodePool extends Component<INodePoolProps, INodePoolsState> {
             >
               {current}
             </NodesWrapper>
-            {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
             <NodePoolDropdownMenu
-              // This is a div, but still TS doesn't like 'style' attr...
-              // @ts-ignore
-              style={{ justifySelf: 'right' }}
               clusterId={cluster.id}
               nodePool={nodePool}
               deleteNodePool={this.deleteNodePool}

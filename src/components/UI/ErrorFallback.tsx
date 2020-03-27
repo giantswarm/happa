@@ -16,7 +16,10 @@ interface IErrorFallbackProps {
  * This component will return the error passed to it,
  * if it exists, or the children, if it does not
  */
-function ErrorFallback({ error, children }: IErrorFallbackProps) {
+function ErrorFallback({
+  error,
+  children,
+}: IErrorFallbackProps): React.ReactElement | ReactNode {
   if (error) return <ErrorWrapperSpan>{error}</ErrorWrapperSpan>;
 
   return children;

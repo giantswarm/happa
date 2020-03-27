@@ -13,7 +13,7 @@ interface IClusterDashboardNodes {
 function ClusterDashboardNodes({
   numberOfNodes,
   createDate,
-}: IClusterDashboardNodes) {
+}: IClusterDashboardNodes): React.ReactElement {
   // If it was created more than an hour ago, then we should not show this message
   // because something went wrong, so it's best to make it noticeable.
   if (numberOfNodes === 0 && isClusterYoungerThanOneHour(createDate))
