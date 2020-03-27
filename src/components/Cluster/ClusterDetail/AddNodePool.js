@@ -9,6 +9,7 @@ import cmp from 'semver-compare';
 import { Constants, Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
 import BaseTransition from 'styles/transitions/BaseTransition';
+import Checkbox from 'UI/Checkbox';
 import NumberPicker from 'UI/NumberPicker';
 import ValidationErrorMessage from 'UI/ValidationErrorMessage';
 
@@ -20,8 +21,7 @@ const FlexWrapperDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  p,
-  .alike-wrapper {
+  p {
     margin-left: 15px;
   }
 `;
@@ -143,26 +143,25 @@ const AZLabel = styled.label`
   }
 `;
 
-const CheckboxWrapper = styled.div`
-  background: #32526a;
-  border: 1px solid #3a5f7b;
-  border-radius: 4px;
-  padding: 0;
-  display: flex;
+const SpotValuesSection = styled.label``;
 
-  .original-checkbox {
-    margin: 0;
-    flex: 0;
-  }
+const SpotValuesLabelText = styled.span`
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 32px;
+  margin-right: 10px;
 `;
 
-const SpotValuesLabel = styled.label`
-  .spot-number-picker {
-    display: flex;
+const SpotValuesNumberPickerWrapper = styled.div`
+  margin-bottom: 8px;
+`;
 
-    div:first-of-type {
-      font-weight: normal;
-    }
+const AlikeWrapper = styled.div`
+  margin-top: 20px;
+
+  .checkbox-label {
+    font-size: 16px;
+    font-weight: normal;
   }
 `;
 
@@ -282,8 +281,7 @@ class AddNodePool extends Component {
     });
   };
 
-  setUseAlikeInstancesEnabled = (event) => {
-    const useAlike = event.target.checked;
+  setUseAlikeInstancesEnabled = (useAlike) => {
     this.setState(({ aws }) => ({ aws: { ...aws, useAlike } }));
   };
 
@@ -446,49 +444,17 @@ class AddNodePool extends Component {
               value={this.state.aws.instanceType.value}
             />
             <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
-            {this.state.allowAlikeInstances && (
-              <FlexWrapperDiv className='alike-wrapper'>
-                <CheckboxWrapper>
-                  <input
-                    className='original-checkbox'
-                    type='checkbox'
-                    checked={this.state.aws.useAlike}
-                    onChange={this.setUseAlikeInstancesEnabled}
-                    id='aws-alike-instances-enabled'
-                  />
-                </CheckboxWrapper>
-                <label htmlFor='aws-alike-instances-enabled'>
-                  <p>Allow usage of similar instance types</p>
-                </label>
-              </FlexWrapperDiv>
-            )}
           </FlexWrapperDiv>
+          {this.state.allowAlikeInstances && (
+            <AlikeWrapper className='alike-wrapper'>
+              <Checkbox
+                checked={this.state.aws.useAlike}
+                onChange={this.setUseAlikeInstancesEnabled}
+                label='Allow usage of similar instance types'
+              />
+            </AlikeWrapper>
+          )}
         </label>
-        {this.state.allowSpotInstances && (
-          <SpotValuesLabel>
-            <span className='label-span'>Instance distribution</span>
-            <NumberPicker
-              readOnly={false}
-              label='On demand base capacity'
-              min={0}
-              max={32767}
-              stepSize={1}
-              value={this.state.aws.instanceDistribution.onDemandBaseCapacity}
-              onChange={this.setOnDemandBaseCapacity}
-              theme='spot-number-picker'
-            />
-            <NumberPicker
-              readOnly={false}
-              label='Spot instance percentage'
-              max={100}
-              min={0}
-              stepSize={10}
-              value={this.state.aws.instanceDistribution.spotInstancePercentage}
-              onChange={this.setSpotInstancePercentage}
-              theme='spot-number-picker'
-            />
-          </SpotValuesLabel>
-        )}
         <AZLabel
           htmlFor='availability-zones'
           className={hasAZLabels && 'with-labels'}
@@ -623,6 +589,39 @@ class AddNodePool extends Component {
             </BaseTransition>
           </RadioWrapperDiv>
         </AZLabel>
+        {this.state.allowSpotInstances && (
+          <SpotValuesSection>
+            <span className='label-span'>Instance distribution</span>
+            <SpotValuesNumberPickerWrapper>
+              <SpotValuesLabelText>On demand base capacity</SpotValuesLabelText>
+              <NumberPicker
+                readOnly={false}
+                min={0}
+                max={32767}
+                stepSize={1}
+                value={this.state.aws.instanceDistribution.onDemandBaseCapacity}
+                onChange={this.setOnDemandBaseCapacity}
+                theme='spot-number-picker'
+              />
+            </SpotValuesNumberPickerWrapper>
+            <SpotValuesNumberPickerWrapper>
+              <SpotValuesLabelText>
+                Spot instance percentage
+              </SpotValuesLabelText>
+              <NumberPicker
+                readOnly={false}
+                max={100}
+                min={0}
+                stepSize={10}
+                value={
+                  this.state.aws.instanceDistribution.spotInstancePercentage
+                }
+                onChange={this.setSpotInstancePercentage}
+                theme='spot-number-picker'
+              />
+            </SpotValuesNumberPickerWrapper>
+          </SpotValuesSection>
+        )}
         <label className='scaling-range' htmlFor='scaling-range'>
           <span className='label-span'>Scaling range</span>
           <NodeCountSelector
