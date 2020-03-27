@@ -93,6 +93,22 @@ class NodePool extends Component {
     this.scaleNodePoolModal.setNodePool(nodePool);
   };
 
+  formatInstanceDistribution = () => {
+    const { instance_distribution } = this.props.nodePool.node_spec.aws;
+
+    const baseCapacity = instance_distribution?.on_demand_base_capacity ?? '-';
+    let spotInstancePercentage =
+      instance_distribution?.on_demand_percentage_above_base_capacity ?? '-';
+
+    /* eslint-disable-next-line no-magic-numbers */
+    spotInstancePercentage =
+      spotInstancePercentage !== '-'
+        ? `${100 - spotInstancePercentage} %`
+        : '-';
+
+    return `${baseCapacity}/${spotInstancePercentage}`;
+  };
+
   render() {
     if (!this.props.nodePool) {
       return <img className='loader' src={spinner} />;
@@ -101,7 +117,6 @@ class NodePool extends Component {
     const { id, scaling, availability_zones, status, node_spec } = nodePool;
     const { nodes_ready: current, nodes: desired } = status;
     const { isNameBeingEdited } = this.state;
-    const { instance_distribution } = node_spec.aws;
 
     return (
       <>
@@ -126,22 +141,7 @@ class NodePool extends Component {
                 ? 'mixed'
                 : node_spec.aws.instance_type}
             </Code>
-            <NodesWrapper>
-              {instance_distribution &&
-              typeof instance_distribution.on_demand_base_capacity !==
-                'undefined'
-                ? instance_distribution.on_demand_base_capacity
-                : '-'}
-              /
-              {instance_distribution &&
-              typeof instance_distribution.on_demand_percentage_above_base_capacity !==
-                'undefined'
-                ? `${
-                    100 /* eslint-disable-line no-magic-numbers */ -
-                    instance_distribution.on_demand_percentage_above_base_capacity
-                  } %`
-                : '-'}
-            </NodesWrapper>
+            <NodesWrapper>{this.formatInstanceDistribution()}</NodesWrapper>
             <div>
               <AvailabilityZonesWrapper
                 availableZonesGridTemplateAreas={
