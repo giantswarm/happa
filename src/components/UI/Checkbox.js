@@ -12,7 +12,9 @@ const CheckboxLabel = styled.span`
 const Checkbox = ({ checked, label, onChange = () => {} }) => {
   return (
     <CheckboxWrapper onClick={() => onChange(!checked)}>
-      <i className={`fa fa-${checked ? 'done' : 'delete'}`} />
+      <i
+        className={`fa fa-${checked ? 'check-box' : 'check-box-outline-blank'}`}
+      />
       <CheckboxLabel className='checkbox-label'>{label}</CheckboxLabel>
     </CheckboxWrapper>
   );
