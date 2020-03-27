@@ -156,6 +156,19 @@ const CheckboxWrapper = styled.div`
   }
 `;
 
+const SpotValuesLabel = styled.label`
+  .spot-number-picker {
+    display: flex;
+
+    div:first-child {
+      font-weight: normal;
+    }
+    div:nth-child(2) {
+      margin-left: 30px;
+    }
+  }
+`;
+
 class AddNodePool extends Component {
   state = {
     name: {
@@ -456,7 +469,7 @@ class AddNodePool extends Component {
           </FlexWrapperDiv>
         </label>
         {this.state.allowSpotInstances && (
-          <label>
+          <SpotValuesLabel>
             <span className='label-span'>Instance distribution</span>
             <NumberPicker
               readOnly={false}
@@ -465,6 +478,7 @@ class AddNodePool extends Component {
               stepSize={1}
               value={this.state.aws.instanceDistribution.onDemandBaseCapacity}
               onChange={this.setOnDemandBaseCapacity}
+              theme='spot-number-picker'
             />
             <NumberPicker
               readOnly={false}
@@ -477,8 +491,9 @@ class AddNodePool extends Component {
                   .onDemandPercentageAboveBaseCapacity
               }
               onChange={this.setOnDemandPercentageAboveBaseCapacity}
+              theme='spot-number-picker'
             />
-          </label>
+          </SpotValuesLabel>
         )}
         <AZLabel
           htmlFor='availability-zones'
