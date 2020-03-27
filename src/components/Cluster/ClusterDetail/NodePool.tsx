@@ -4,8 +4,9 @@ import { spinner } from 'images';
 import ErrorReporter from 'lib/ErrorReporter';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { connect, DispatchProp } from 'react-redux';
+import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
+import { IDispatchProps, INodePool } from 'shared/types';
 import { Code, Ellipsis } from 'styles/';
 import theme from 'styles/theme';
 import ViewAndEditName from 'UI/ViewEditName';
@@ -59,26 +60,6 @@ interface INPViewAndEditName {
 
 type TNPViewAndEditName = React.Component<INPViewAndEditName>;
 
-interface IScaling {
-  min: number;
-  max: number;
-}
-
-interface IStatus {
-  nodes: number;
-  nodes_ready: number;
-}
-
-interface INodePool {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  availability_zones: any;
-  id: string;
-  name: string;
-  node_spec: object;
-  scaling: IScaling;
-  status: IStatus;
-}
-
 interface IStateProps {
   availableZonesGridTemplateAreas: string | undefined;
   cluster: object;
@@ -90,11 +71,6 @@ interface IStateProps {
 
 interface INodePoolsState {
   isNameBeingEdited: boolean;
-}
-
-interface IDispatchProps extends DispatchProp {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  actions: Record<string, (...args: any[]) => Promise<any>>;
 }
 
 interface INodePoolProps extends IStateProps, IDispatchProps {}
