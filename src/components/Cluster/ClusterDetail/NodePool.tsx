@@ -4,7 +4,7 @@ import { spinner } from 'images';
 import ErrorReporter from 'lib/ErrorReporter';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { connect, DispatchProp } from 'react-redux';
+import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { INodePool } from 'shared/types';
 import { Code, Ellipsis } from 'styles/';
@@ -53,11 +53,6 @@ const NameWrapperDiv = styled.div`
   }
 `;
 
-interface IDispatchProps extends DispatchProp {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  actions: Record<string, (...args: any[]) => Promise<any>>;
-}
-
 interface INPViewAndEditName {
   activateEditMode: () => boolean;
   name: string;
@@ -65,7 +60,7 @@ interface INPViewAndEditName {
 
 type NPViewAndEditName = React.Component<INPViewAndEditName>;
 
-interface IStateProps {
+interface INodePoolsProps {
   availableZonesGridTemplateAreas?: string;
   cluster: object;
   nodePool: INodePool;
@@ -78,16 +73,14 @@ interface INodePoolsState {
   isNameBeingEdited: boolean;
 }
 
-interface INodePoolProps extends IStateProps, IDispatchProps {}
-
 interface IScaleNodePoolModal {
   reset: () => void;
   show: () => void;
   setNodePool: (nodePool: INodePool) => void;
 }
 
-class NodePool extends Component<INodePoolProps, INodePoolsState> {
-  static propTypes: INodePoolProps = {
+class NodePool extends Component<INodePoolsProps, INodePoolsState> {
+  static propTypes: INodePoolsProps = {
     /**
      * We skip typechecking because we don't want to define the whole object
      * structure (for now)
@@ -179,7 +172,6 @@ class NodePool extends Component<INodePoolProps, INodePoolsState> {
           style={{ gridColumn: isNameBeingEdited ? '2 / 9' : undefined }}
         >
           <NPViewAndEditNameStyled
-            // @ts-ignore
             name={nodePool.name}
             type='node pool'
             onSubmit={this.editNodePoolName}
@@ -234,8 +226,11 @@ class NodePool extends Component<INodePoolProps, INodePoolsState> {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapStateToProps(state: Record<string, any>, ownProps: INodePoolProps) {
+function mapStateToProps(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  state: Record<string, any>,
+  ownProps: INodePoolsProps
+) {
   return {
     nodePool: state.entities.nodePools.items[ownProps.nodePool.id],
   };

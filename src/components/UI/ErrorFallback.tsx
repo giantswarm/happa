@@ -8,22 +8,19 @@ const ErrorWrapperSpan = styled.span`
 `;
 
 interface IErrorFallbackProps {
-  error: string;
   children: ReactNode;
+  error?: string;
 }
 
 /**
  * This component will return the error passed to it,
  * if it exists, or the children, if it does not
  */
-function ErrorFallback({
-  error,
-  children,
-}: IErrorFallbackProps): React.ReactElement | ReactNode {
+const ErrorFallback: React.FC<IErrorFallbackProps> = ({ error, children }) => {
   if (error) return <ErrorWrapperSpan>{error}</ErrorWrapperSpan>;
 
   return children;
-}
+};
 
 ErrorFallback.propTypes = {
   error: PropTypes.string,
