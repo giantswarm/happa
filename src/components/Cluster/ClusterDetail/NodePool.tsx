@@ -53,8 +53,7 @@ const NameWrapperDiv = styled.div`
 `;
 
 interface INPViewAndEditName {
-  // TODO
-  activateEditMode: Function;
+  activateEditMode: () => boolean;
   name: string;
 }
 
@@ -101,10 +100,9 @@ interface IDispatchProps extends DispatchProp {
 interface INodePoolProps extends IStateProps, IDispatchProps {}
 
 interface IScaleNodePoolModal {
-  // TODO
-  reset: Function;
-  show: Function;
-  setNodePool: Function;
+  reset: () => void;
+  show: () => void;
+  setNodePool: (nodePool: INodePool) => void;
 }
 
 class NodePool extends Component<INodePoolProps, INodePoolsState> {
