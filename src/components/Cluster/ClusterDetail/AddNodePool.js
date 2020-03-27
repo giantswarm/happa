@@ -209,7 +209,7 @@ class AddNodePool extends Component {
       useAlike: false,
       instanceDistribution: {
         onDemandBaseCapacity: 0,
-        onDemandPercentageAboveBaseCapacity: 100,
+        spotInstancePercentage: 0,
       },
     },
     awsInstanceTypes: {},
@@ -290,17 +290,14 @@ class AddNodePool extends Component {
     this.setState(({ aws }) => ({ aws: { ...aws, useAlike } }));
   };
 
-  setOnDemandPercentageAboveBaseCapacity = ({
-    value: onDemandPercentageAboveBaseCapacity,
-    valid,
-  }) => {
+  setSpotInstancePercentage = ({ value: spotInstancePercentage, valid }) => {
     if (valid) {
       this.setState(({ aws }) => ({
         aws: {
           ...aws,
           instanceDistribution: {
             ...aws.instanceDistribution,
-            onDemandPercentageAboveBaseCapacity,
+            spotInstancePercentage,
           },
         },
       }));
@@ -382,8 +379,10 @@ class AddNodePool extends Component {
               instance_distribution: {
                 on_demand_base_capacity: this.state.aws.instanceDistribution
                   .onDemandBaseCapacity,
-                on_demand_percentage_above_base_capacity: this.state.aws
-                  .instanceDistribution.onDemandPercentageAboveBaseCapacity,
+                /* eslint-disable-next-line no-magic-numbers */
+                on_demand_percentage_above_base_capacity:
+                  100 -
+                  this.state.aws.instanceDistribution.spotInstancePercentage,
               },
             },
           },
@@ -482,15 +481,12 @@ class AddNodePool extends Component {
             />
             <NumberPicker
               readOnly={false}
-              label='On demand percentage over base capacity'
+              label='Spot instance percentage'
               max={100}
               min={0}
               stepSize={10}
-              value={
-                this.state.aws.instanceDistribution
-                  .onDemandPercentageAboveBaseCapacity
-              }
-              onChange={this.setOnDemandPercentageAboveBaseCapacity}
+              value={this.state.aws.instanceDistribution.spotInstancePercentage}
+              onChange={this.setSpotInstancePercentage}
               theme='spot-number-picker'
             />
           </SpotValuesLabel>

@@ -49,7 +49,6 @@ const WrapperDiv = styled.div`
     margin: 0 0 15px;
   }
   p {
-    margin: 0 0 20px;
     line-height: 1.2;
   }
 `;

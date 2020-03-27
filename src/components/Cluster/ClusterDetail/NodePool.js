@@ -127,7 +127,8 @@ class NodePool extends Component {
             </Code>
             <NodesWrapper>
               {instance_distribution?.on_demand_base_capacity || '-'}/
-              {instance_distribution?.on_demand_percentage_above_base_capacity ||
+              {100 /* eslint-disable-line no-magic-numbers */ -
+                instance_distribution?.on_demand_percentage_above_base_capacity ||
                 '-'}
             </NodesWrapper>
             <div>
