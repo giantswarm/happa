@@ -53,7 +53,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     actions: PropTypes.object,
   };
 
-  public state: ILoginState = {
+  public readonly state: ILoginState = {
     email: '',
     password: '',
     authenticating: false,
