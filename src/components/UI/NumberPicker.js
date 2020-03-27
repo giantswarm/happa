@@ -171,7 +171,7 @@ class NumberPicker extends React.Component {
       {
         inputValue: value,
         value,
-        valid: validationError === '',
+        valid: value || (min <= 0 && value === 0) ? true : false,
         validationError,
       },
       () => {
