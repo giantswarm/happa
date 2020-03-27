@@ -376,8 +376,8 @@ class AddNodePool extends Component {
               instance_distribution: {
                 on_demand_base_capacity: this.state.aws.instanceDistribution
                   .onDemandBaseCapacity,
-                /* eslint-disable-next-line no-magic-numbers */
                 on_demand_percentage_above_base_capacity:
+                  /* eslint-disable-next-line no-magic-numbers */
                   100 -
                   this.state.aws.instanceDistribution.spotInstancePercentage,
               },

@@ -35,6 +35,7 @@ const NodesWrapper = styled.div`
   line-height: 31px;
   text-align: center;
   border-radius: 3px;
+  white-space: nowrap;
 `;
 
 const NameWrapperDiv = styled.div`
@@ -135,8 +136,10 @@ class NodePool extends Component {
               {instance_distribution &&
               typeof instance_distribution.on_demand_percentage_above_base_capacity !==
                 'undefined'
-                ? 100 /* eslint-disable-line no-magic-numbers */ -
-                  instance_distribution.on_demand_percentage_above_base_capacity
+                ? `${
+                    100 /* eslint-disable-line no-magic-numbers */ -
+                    instance_distribution.on_demand_percentage_above_base_capacity
+                  } %`
                 : '-'}
             </NodesWrapper>
             <div>
