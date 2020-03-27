@@ -126,10 +126,18 @@ class NodePool extends Component {
                 : node_spec.aws.instance_type}
             </Code>
             <NodesWrapper>
-              {instance_distribution?.on_demand_base_capacity || '-'}/
-              {100 /* eslint-disable-line no-magic-numbers */ -
-                instance_distribution?.on_demand_percentage_above_base_capacity ||
-                '-'}
+              {instance_distribution &&
+              typeof instance_distribution.on_demand_base_capacity !==
+                'undefined'
+                ? instance_distribution.on_demand_base_capacity
+                : '-'}
+              /
+              {instance_distribution &&
+              typeof instance_distribution.on_demand_percentage_above_base_capacity !==
+                'undefined'
+                ? 100 /* eslint-disable-line no-magic-numbers */ -
+                  instance_distribution.on_demand_percentage_above_base_capacity
+                : '-'}
             </NodesWrapper>
             <div>
               <AvailabilityZonesWrapper
