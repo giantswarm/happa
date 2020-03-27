@@ -101,10 +101,9 @@ class NodePool extends Component {
       instance_distribution?.on_demand_percentage_above_base_capacity ?? '-';
 
     /* eslint-disable-next-line no-magic-numbers */
-    spotInstancePercentage =
-      spotInstancePercentage !== '-'
-        ? `${100 - spotInstancePercentage} %`
-        : '-';
+if (spotInstancePercentage !== '-') {
+  spotInstancePercentage = `${100 - spotInstancePercentage} %`;
+}
 
     return `${baseCapacity}/${spotInstancePercentage}`;
   };
