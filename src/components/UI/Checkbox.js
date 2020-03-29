@@ -8,8 +8,7 @@ const CheckboxLabel = styled.span`
   margin-left: 5px;
 `;
 
-/* eslint-disable-next-line no-empty-function */
-const Checkbox = ({ checked, label, onChange = () => {} }) => {
+const Checkbox = ({ checked, label, onChange }) => {
   return (
     <CheckboxWrapper onClick={() => onChange(!checked)}>
       <i
@@ -24,6 +23,11 @@ Checkbox.propTypes = {
   checked: PropTypes.bool,
   label: PropTypes.node,
   onChange: PropTypes.func,
+};
+
+Checkbox.defaultProps = {
+  /* eslint-disable-next-line no-empty-function */
+  onChange: () => {},
 };
 
 export default Checkbox;
