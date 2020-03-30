@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Button';
-import LoadingOverlay from 'UI/LoadingOverlay';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 import ReleaseDetailsModal from '../../Modals/ReleaseDetailsModal';
@@ -27,38 +26,20 @@ const MarginlessReleaseComponentLabel = styled(ReleaseComponentLabel)`
   margin: 0;
 `;
 
-class ReleaseSelector extends React.Component {
-  state = {
-    kubernetesVersion: '',
-    loading: true,
-  };
-
-  componentDidMount() {
-    this.setState({
-      kubernetesVersion: this.extractKubernetesVersion(),
-      loading: false,
-    });
-  }
-
-  componentDidUpdate({ selectedRelease: prevRelease }) {
-    if (prevRelease !== this.props.selectedRelease) {
-      this.setState({ kubernetesVersion: this.extractKubernetesVersion() });
-    }
-  }
-
+class ReleaseSelector extends React.PureComponent {
   extractKubernetesVersion = () => {
     const { selectedRelease, releases } = this.props;
 
     return releases[selectedRelease]?.components.find(
       (component) => component.name === 'kubernetes'
-    ).version;
+    )?.version;
   };
 
   render() {
-    const { kubernetesVersion } = this.state;
+    const kubernetesVersion = this.extractKubernetesVersion();
 
     return (
-      <LoadingOverlay loading={this.state.loading}>
+      <>
         {kubernetesVersion ? (
           <FlexRowDiv>
             <p>{this.props.selectedRelease}</p>
@@ -88,7 +69,7 @@ class ReleaseSelector extends React.Component {
           selectRelease={this.props.selectRelease}
           selectedRelease={this.props.selectedRelease}
         />
-      </LoadingOverlay>
+      </>
     );
   }
 }
