@@ -23,6 +23,10 @@ const FlexRowDiv = styled.div`
   }
 `;
 
+const MarginlessReleaseComponentLabel = styled(ReleaseComponentLabel)`
+  margin: 0;
+`;
+
 class ReleaseSelector extends React.Component {
   state = {
     kubernetesVersion: '',
@@ -63,20 +67,11 @@ class ReleaseSelector extends React.Component {
                 ? 'Show Details'
                 : 'Details and Alternatives'}
             </Button>
-            <br />
-            <br />
-
-            {kubernetesVersion && (
-              <>
-                <p>This release contains:</p>
-                <div style={{ transform: 'translateY(6px)' }}>
-                  <ReleaseComponentLabel
-                    name='kubernetes'
-                    version={kubernetesVersion}
-                  />
-                </div>
-              </>
-            )}
+            <p>This release contains:</p>
+            <MarginlessReleaseComponentLabel
+              name='kubernetes'
+              version={kubernetesVersion}
+            />
           </FlexRowDiv>
         ) : (
           <div>
