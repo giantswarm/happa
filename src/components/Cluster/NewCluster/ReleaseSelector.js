@@ -30,14 +30,25 @@ class ReleaseSelector extends React.Component {
   };
 
   componentDidMount() {
-    const kubernetesVersion = this.props.selectedRelease
-      ? this.props.releases[this.props.selectedRelease].components.find(
-          (component) => component.name === 'kubernetes'
-        ).version
-      : undefined;
-
-    this.setState({ kubernetesVersion, loading: false });
+    this.setState({
+      kubernetesVersion: this.extractKubernetesVersion(),
+      loading: false,
+    });
   }
+
+  componentDidUpdate({ selectedRelease: prevRelease }) {
+    if (prevRelease !== this.props.selectedRelease) {
+      this.setState({ kubernetesVersion: this.extractKubernetesVersion() });
+    }
+  }
+
+  extractKubernetesVersion = () => {
+    const { selectedRelease, releases } = this.props;
+
+    return releases[selectedRelease]?.components.find(
+      (component) => component.name === 'kubernetes'
+    ).version;
+  };
 
   render() {
     const { kubernetesVersion } = this.state;
