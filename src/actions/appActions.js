@@ -17,7 +17,7 @@ export function selectCluster(clusterID) {
  * @param {String} clusterId Cluster ID
  */
 export function loadApps(clusterId) {
-  return function (dispatch, getState) {
+  return async function (dispatch, getState) {
     const appsApi = new GiantSwarm.AppsApi();
 
     const v5Clusters = getState().entities.clusters.v5Clusters || [];
@@ -34,40 +34,28 @@ export function loadApps(clusterId) {
       clusterId,
     });
 
-    return getClusterApps(clusterId)
-      .then((apps) => {
-        // For some reason the array that we get back from the generated js client is an
-        // array-like structure, so I make a new one here.
-        // In tests we are using a real array, so we are applying Array.from() to an actual
-        // array. Apparently it works fine.
-        const appsArray = Array.from(apps);
-        dispatch({
-          type: types.CLUSTER_LOAD_APPS_SUCCESS,
-          clusterId,
-          apps: appsArray,
-        });
-
-        return apps;
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error loading cluster apps:', error);
-
-        dispatch({
-          type: types.CLUSTER_LOAD_APPS_ERROR,
-          id: clusterId,
-          error,
-        });
-
-        new FlashMessage(
-          'Something went wrong while trying to load apps installed on this cluster.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          'Please try again later or contact support: support@giantswarm.io'
-        );
-
-        throw error;
+    try {
+      const apps = await getClusterApps(clusterId);
+      const appsArray = Array.from(apps);
+      dispatch({
+        type: types.CLUSTER_LOAD_APPS_SUCCESS,
+        clusterId,
+        apps: appsArray,
       });
+    } catch (error) {
+      dispatch({
+        type: types.CLUSTER_LOAD_APPS_ERROR,
+        id: clusterId,
+        error,
+      });
+
+      new FlashMessage(
+        'Something went wrong while trying to load apps installed on this cluster.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again later or contact support: support@giantswarm.io'
+      );
+    }
   };
 }
 
@@ -106,11 +94,37 @@ export function installApp(app, clusterID) {
       if (Object.keys(app.valuesYAML).length !== 0) {
         await dispatch(createAppConfig(app.name, clusterID, app.valuesYAML));
       }
+    } catch (error) {
+      dispatch({
+        type: types.CLUSTER_INSTALL_APP_ERROR,
+        clusterID,
+        app,
+        error,
+      });
 
+      return {
+        error: 'Problem creating app config.',
+      };
+    }
+
+    try {
       if (Object.keys(app.secretsYAML).length !== 0) {
         await dispatch(createAppSecret(app.name, clusterID, app.secretsYAML));
       }
+    } catch (error) {
+      dispatch({
+        type: types.CLUSTER_INSTALL_APP_ERROR,
+        clusterID,
+        app,
+        error,
+      });
 
+      return {
+        error: 'Problem creating app secret.',
+      };
+    }
+
+    try {
       await createApp(clusterID, app.name, {
         body: {
           spec: {
@@ -120,14 +134,6 @@ export function installApp(app, clusterID) {
             version: app.version,
           },
         },
-      }).catch((error) => {
-        showAppInstallationErrorFlashMessage(app.name, clusterID, error);
-
-        dispatch({
-          type: types.CLUSTER_INSTALL_APP_ERROR,
-          id: clusterID,
-          error,
-        });
       });
 
       dispatch({
@@ -141,15 +147,18 @@ export function installApp(app, clusterID) {
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
+
+      return { error: '' };
     } catch (error) {
+      showAppInstallationErrorFlashMessage(app.name, clusterID, error);
+
       dispatch({
         type: types.CLUSTER_INSTALL_APP_ERROR,
-        clusterID,
-        app,
+        id: clusterID,
         error,
       });
 
-      throw error;
+      return { error: 'Problem installing app.' };
     }
   };
 }
@@ -191,7 +200,7 @@ function showAppInstallationErrorFlashMessage(appName, clusterID, error) {
  * @param {Object} clusterID Where to delete the app.
  */
 export function deleteApp(appName, clusterID) {
-  return function (dispatch, getState) {
+  return async function (dispatch, getState) {
     dispatch({
       type: types.CLUSTER_DELETE_APP_REQUEST,
       clusterID,
@@ -209,23 +218,32 @@ export function deleteApp(appName, clusterID) {
       removeApp = appsApi.deleteClusterAppV5.bind(appsApi);
     }
 
-    return removeApp(clusterID, appName)
-      .then(() => {
-        new FlashMessage(
-          `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
-          messageType.SUCCESS,
-          messageTTL.LONG
-        );
-      })
-      .catch((error) => {
-        new FlashMessage(
-          `Something went wrong while trying to delete your app. Please try again later or contact support: support@giantswarm.io`,
-          messageType.ERROR,
-          messageTTL.LONG
-        );
+    try {
+      await removeApp(clusterID, appName);
 
-        throw error;
+      dispatch({
+        type: types.CLUSTER_DELETE_APP_SUCCESS,
+        clusterID,
+        appName,
       });
+
+      new FlashMessage(
+        `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
+    } catch (error) {
+      const errorMessage =
+        error?.message ||
+        'Something went wrong while trying to delete your app. Please try again later or contact support.';
+
+      new FlashMessage(errorMessage, messageType.ERROR, messageTTL.LONG);
+
+      dispatch({
+        type: types.CLUSTER_DELETE_APP_ERROR,
+        error: errorMessage,
+      });
+    }
   };
 }
 
@@ -238,7 +256,7 @@ export function deleteApp(appName, clusterID) {
  * @param {Object} values The values you want to change in the app.
  */
 export function updateApp(appName, clusterID, values) {
-  return function (dispatch, getState) {
+  return async function (dispatch, getState) {
     dispatch({
       type: types.CLUSTER_UPDATE_APP_REQUEST,
       clusterID,
@@ -256,37 +274,37 @@ export function updateApp(appName, clusterID, values) {
       modifyApp = appsApi.modifyClusterAppV5.bind(appsApi);
     }
 
-    return modifyApp(clusterID, appName, { body: values })
-      .then(() => {
-        new FlashMessage(
-          `App <code>${appName}</code> on <code>${clusterID}</code> has been updated. Changes might take some time to take effect.`,
-          messageType.SUCCESS,
-          messageTTL.LONG
-        );
+    try {
+      await modifyApp(clusterID, appName, { body: values });
 
-        dispatch({
-          type: types.CLUSTER_UPDATE_APP_SUCCESS,
-          clusterID,
-          appName,
-        });
+      new FlashMessage(
+        `App <code>${appName}</code> on <code>${clusterID}</code> has been updated. Changes might take some time to take effect.`,
+        messageType.SUCCESS,
+        messageTTL.LONG
+      );
 
-        return {
-          error: '',
-        };
-      })
-      .catch((error) => {
-        const errorMessage =
-          error?.message ||
-          'Something went wrong while trying to update your app. Please try again later or contact support.';
-
-        dispatch({
-          type: types.CLUSTER_UPDATE_APP_ERROR,
-          error: errorMessage,
-        });
-
-        return {
-          error: errorMessage,
-        };
+      dispatch({
+        type: types.CLUSTER_UPDATE_APP_SUCCESS,
+        clusterID,
+        appName,
       });
+
+      return {
+        error: '',
+      };
+    } catch (error) {
+      const errorMessage =
+        error?.message ||
+        'Something went wrong while trying to update your app. Please try again later or contact support.';
+
+      dispatch({
+        type: types.CLUSTER_UPDATE_APP_ERROR,
+        error: errorMessage,
+      });
+
+      return {
+        error: errorMessage,
+      };
+    }
   };
 }

@@ -179,41 +179,41 @@ const InstallAppModal = (props) => {
     return false;
   };
 
-  const createApp = () => {
+  const createApp = async () => {
     setLoading(true);
 
-    props
-      .dispatch(
-        installApp(
-          {
-            name: name,
-            catalog: props.app.catalog,
-            chartName: props.app.name,
-            version: version,
-            namespace: namespace,
-            valuesYAML: valuesYAML,
-            secretsYAML: secretsYAML,
-          },
-          clusterID
-        )
+    const { error } = await props.dispatch(
+      installApp(
+        {
+          name: name,
+          catalog: props.app.catalog,
+          chartName: props.app.name,
+          version: version,
+          namespace: namespace,
+          valuesYAML: valuesYAML,
+          secretsYAML: secretsYAML,
+        },
+        clusterID
       )
-      .then(() => {
-        const installedApp = props.clusters.find((c) => c.id === clusterID);
-        const clusterDetailPath = RoutePath.createUsablePath(
-          OrganizationsRoutes.Clusters.Detail,
-          {
-            orgId: installedApp.owner,
-            clusterId: clusterID,
-          }
-        );
+    );
 
-        onClose();
-        props.dispatch(push(clusterDetailPath));
-      })
-      .catch((error) => {
-        setLoading(false);
-        throw error;
-      });
+    if (error) {
+      setLoading(false);
+
+      return;
+    }
+
+    const installedApp = props.clusters.find((c) => c.id === clusterID);
+    const clusterDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.Detail,
+      {
+        orgId: installedApp.owner,
+        clusterId: clusterID,
+      }
+    );
+
+    onClose();
+    props.dispatch(push(clusterDetailPath));
   };
 
   return (
