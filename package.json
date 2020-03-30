@@ -120,7 +120,7 @@
     "eslint-plugin-simple-import-sort": "5.0.2",
     "file-loader": "6.0.0",
     "fstream": "1.0.12",
-    "html-webpack-plugin": "3.2.0",
+    "html-webpack-plugin": "4.0.3",
     "husky": "4.2.3",
     "jest": "25.1.0",
     "json-loader": "0.5.7",
