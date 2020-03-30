@@ -1,4 +1,7 @@
-import { CLUSTER_UPDATE_APP_ERROR } from 'actions/actionTypes.js';
+import {
+  CLUSTER_UPDATE_APP_ERROR,
+  CLUSTER_UPDATE_APP_REQUEST,
+} from 'actions/actionTypes.js';
 import {
   deleteApp as deleteAppAction,
   loadApps as loadAppsAction,
@@ -20,6 +23,7 @@ import { useError } from 'hooks/errors';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -182,7 +186,11 @@ const AppDetailsModal = (props) => {
 
       modalFooter = (
         <>
-          <Button bsStyle='success' onClick={editChartVersion}>
+          <Button
+            bsStyle='success'
+            onClick={editChartVersion}
+            loading={props.clusterUpdateRequestPending}
+          >
             Update Chart Version
           </Button>
           <Button bsStyle='link' onClick={showPane(modalPanes.initial)}>
@@ -279,6 +287,7 @@ AppDetailsModal.propTypes = {
   appVersions: PropTypes.array,
   catalog: PropTypes.object,
   clusterId: PropTypes.string,
+  clusterUpdateRequestPending: PropTypes.bool,
   dispatch: PropTypes.func,
   onClose: PropTypes.func,
   visible: PropTypes.bool,
@@ -286,6 +295,10 @@ AppDetailsModal.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
+    clusterUpdateRequestPending: selectLoadingFlagByAction(
+      state,
+      CLUSTER_UPDATE_APP_REQUEST
+    ),
     catalog: state.entities.catalogs?.items[ownProps.app.spec.catalog],
     appVersions:
       state.entities.catalogs?.items[ownProps.app.spec.catalog]?.apps?.[
