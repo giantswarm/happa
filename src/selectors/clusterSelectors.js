@@ -53,6 +53,16 @@ export const selectErrorByAction = (state, actionType) => {
   return state.errors[typeWithoutSuffix(actionType)] ?? null;
 };
 
+export const selectErrorMessageByIdAndAction = (state, id, actionType) => {
+  return (
+    state.errorsByEntity[id]?.[typeWithoutSuffix(actionType)]?.message ?? null
+  );
+};
+
+export const selectErrorMessageByAction = (state, actionType) => {
+  return state.errors[typeWithoutSuffix(actionType)]?.message ?? null;
+};
+
 // Memoized Reselect selectors
 // https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc
 // Using factory functions because they create new references each time that are called,

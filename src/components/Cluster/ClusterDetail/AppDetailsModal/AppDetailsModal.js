@@ -1,4 +1,8 @@
 import {
+  CLUSTER_UPDATE_APP_ERROR,
+  CLUSTER_UPDATE_APP_REQUEST,
+} from 'actions/actionTypes.js';
+import {
   deleteApp as deleteAppAction,
   loadApps as loadAppsAction,
   updateApp as updateAppAction,
@@ -15,9 +19,11 @@ import {
 } from 'actions/appSecretActions';
 import { catalogLoadIndex } from 'actions/catalogActions';
 import GenericModal from 'components/Modals/GenericModal';
+import { useError } from 'hooks/errors';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 
@@ -36,6 +42,7 @@ const modalPanes = {
 const AppDetailsModal = (props) => {
   const [pane, setPane] = useState(modalPanes.initial);
   const [desiredVersion, setDesiredVersion] = useState(props.app.spec.version);
+  const { clear: clearUpdateAppError } = useError(CLUSTER_UPDATE_APP_ERROR);
 
   const { app, catalog, dispatch } = props;
 
@@ -54,6 +61,7 @@ const AppDetailsModal = (props) => {
 
   function showPane(paneToShow) {
     return function () {
+      clearUpdateAppError();
       setPane(paneToShow);
     };
   }
@@ -74,9 +82,15 @@ const AppDetailsModal = (props) => {
   }
 
   async function editChartVersion() {
-    await props.dispatch(
-      updateAppAction(appName, clusterId, { spec: { version: desiredVersion } })
+    const changes = { spec: { version: desiredVersion } };
+    const { error } = await props.dispatch(
+      updateAppAction(appName, clusterId, changes)
     );
+
+    if (error) {
+      return;
+    }
+
     await loadAppsAndClose();
   }
 
@@ -172,7 +186,11 @@ const AppDetailsModal = (props) => {
 
       modalFooter = (
         <>
-          <Button bsStyle='success' onClick={editChartVersion}>
+          <Button
+            bsStyle='success'
+            onClick={editChartVersion}
+            loading={props.clusterUpdateRequestPending}
+          >
             Update Chart Version
           </Button>
           <Button bsStyle='link' onClick={showPane(modalPanes.initial)}>
@@ -269,6 +287,7 @@ AppDetailsModal.propTypes = {
   appVersions: PropTypes.array,
   catalog: PropTypes.object,
   clusterId: PropTypes.string,
+  clusterUpdateRequestPending: PropTypes.bool,
   dispatch: PropTypes.func,
   onClose: PropTypes.func,
   visible: PropTypes.bool,
@@ -276,6 +295,10 @@ AppDetailsModal.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
+    clusterUpdateRequestPending: selectLoadingFlagByAction(
+      state,
+      CLUSTER_UPDATE_APP_REQUEST
+    ),
     catalog: state.entities.catalogs?.items[ownProps.app.spec.catalog],
     appVersions:
       state.entities.catalogs?.items[ownProps.app.spec.catalog]?.apps?.[
