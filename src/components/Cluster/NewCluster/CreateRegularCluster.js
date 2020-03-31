@@ -419,7 +419,6 @@ class CreateRegularCluster extends React.Component {
         <DocumentTitle
           title={`Create Cluster | ${this.props.selectedOrganization}`}
         >
-          {/* <div className='new-cluster' data-testid='cluster-creation-view'> */}
           <WrapperDiv data-testid='cluster-creation-view'>
             <h1>Create a Cluster</h1>
 

@@ -58,7 +58,7 @@ export function loadReleases() {
         }
       })
       .catch((error) => {
-        dispatch({ type: types.RELEASES_LOAD_ERROR, error });
+        dispatch({ type: types.RELEASES_LOAD_ERROR, error: error.message });
 
         new FlashMessage(
           'Something went wrong while trying to fetch the list of releases.',

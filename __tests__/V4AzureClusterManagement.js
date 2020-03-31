@@ -126,7 +126,7 @@ describe('V4AzureClusterManagement', () => {
   });
 
   it('can customize availability zones during cluster creation', async () => {
-    getMockCall('/v4/releases/', releasesResponse);
+    getMockCallTimes('/v4/releases/', releasesResponse, 2);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, appsResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/key-pairs/`);
     getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
