@@ -32,6 +32,9 @@ const Emphasized = css`
     margin: 0 18px 0 28px;
     transform: translateY(-4px);
   }
+  .indented {
+    margin-left: 28px;
+  }
 `;
 
 export const FlexWrapperAZDiv = styled.div`
@@ -496,7 +499,7 @@ class AddNodePool extends Component {
           >
             <div key='az-automatic'>
               <FlexWrapperAZDiv>
-                <p className='emphasized no-margin'>
+                <p className='emphasized'>
                   Number of availability zones to use:
                 </p>
                 <AvailabilityZonesParser
@@ -509,9 +512,7 @@ class AddNodePool extends Component {
                 />
               </FlexWrapperAZDiv>
               <FlexWrapperAZDiv>
-                {/* This is a hack for fixing height for this element and at the same time
-                  control the height of the wrapper so it matches labels wrapper */}
-                <p style={{ margin: '5px 0 24px 28px', height: '38px' }}>
+                <p className='indented' style={{ marginTop: '8px' }}>
                   {this.state.availabilityZonesPicker.value < 2
                     ? `Covering one availability zone, the worker nodes of this node pool
                       will be placed in the same availability zone as the
@@ -560,11 +561,11 @@ class AddNodePool extends Component {
             >
               <div key='az-manual'>
                 <FlexColumnAZDiv>
-                  <p>
+                  <p className='indented'>
                     You can select up to {maxAZ} availability zones to make use
                     of.
                   </p>
-                  <FlexWrapperAZDiv>
+                  <FlexWrapperAZDiv className='indented'>
                     <AvailabilityZonesParser
                       min={minAZ}
                       max={maxAZ}
