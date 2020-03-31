@@ -22,10 +22,11 @@ const ErrorFallback: React.FC<IErrorFallbackProps> = ({
   children,
   className,
 }) => {
-  if (error)
+  if (error) {
     return <ErrorWrapperSpan className={className}>{error}</ErrorWrapperSpan>;
-
-  if (children) return children;
+  } else if (children) {
+    return children;
+  }
 
   return null;
 };
