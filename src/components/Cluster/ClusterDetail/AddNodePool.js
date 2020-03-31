@@ -639,6 +639,11 @@ class AddNodePool extends Component {
                     theme='spot-number-picker'
                   />
                 </SpotValuesNumberPickerWrapper>
+                <p>
+                  Controls the percentage of spot instances to be used for
+                  worker nodes beyond the number of{' '}
+                  <i>on demand base capacity</i>.
+                </p>
                 <SpotValuesNumberPickerWrapper>
                   <SpotValuesLabelText>
                     On demand base capacity
@@ -655,6 +660,10 @@ class AddNodePool extends Component {
                     theme='spot-number-picker'
                   />
                 </SpotValuesNumberPickerWrapper>
+                <p>
+                  Controls how much of the initial capacity is made up of
+                  on-demand instances.
+                </p>
               </SpotValuesSection>
             )}
           </label>
