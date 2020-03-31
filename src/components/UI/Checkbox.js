@@ -4,6 +4,11 @@ import React from 'react';
 
 const CheckboxWrapper = styled.div``;
 
+const FaCheckBoxIcon = styled.i`
+  cursor: pointer;
+  font-size: 16px;
+`;
+
 const CheckboxLabel = styled.span`
   margin-left: 5px;
 `;
@@ -11,8 +16,8 @@ const CheckboxLabel = styled.span`
 const Checkbox = ({ checked, label, onChange }) => {
   return (
     <CheckboxWrapper onClick={() => onChange(!checked)}>
-      <i
-        className={`fa fa-${checked ? 'check-box' : 'check-box-outline-blank'}`}
+      <FaCheckBoxIcon
+        className={`fa fa-${checked ? 'checkbox-marked' : 'checkbox-blank'}`}
       />
       <CheckboxLabel className='checkbox-label'>{label}</CheckboxLabel>
     </CheckboxWrapper>
