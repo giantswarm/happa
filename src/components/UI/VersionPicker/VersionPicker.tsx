@@ -110,10 +110,10 @@ interface IVersion {
 
 interface IVersionPickerProps {
   // An array of versions to pick from.
-  versions: IVersion[];
+  versions?: IVersion[];
 
   // The currently selected version, will be highlighted in bold in the list.
-  selectedVersion: string;
+  selectedVersion?: string;
 
   // A callback function that gets called when a version is selected by the user.
   onChange?: (newVersion?: string) => void;
@@ -237,8 +237,8 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
 };
 
 VersionPicker.propTypes = {
-  selectedVersion: PropTypes.string.isRequired,
-  versions: PropTypes.array.isRequired,
+  selectedVersion: PropTypes.string,
+  versions: PropTypes.array,
   onChange: PropTypes.func,
 };
 
