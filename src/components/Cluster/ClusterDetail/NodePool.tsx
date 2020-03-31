@@ -4,8 +4,9 @@ import { spinner } from 'images';
 import { ErrorReporter } from 'lib/errors';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { connect, DispatchProp } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { INodePool } from 'shared/types';
 import { Code, Ellipsis } from 'styles/';
 import theme from 'styles/theme';
 import ViewAndEditName from 'UI/ViewEditName';
@@ -14,7 +15,12 @@ import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';
 import ScaleNodePoolModal from './ScaleNodePoolModal';
 
-const NPViewAndEditName = styled(ViewAndEditName)`
+const NPViewAndEditNameStyled = styled<
+  React.ForwardRefExoticComponent<{}>,
+  // TODO: Remove this once `ViewAndEditName` is typed
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any
+>(ViewAndEditName)`
   input[type='text'] {
     font-size: 15px;
     line-height: 1.8em;
@@ -52,24 +58,90 @@ const NameWrapperDiv = styled.div`
   }
 `;
 
-class NodePool extends Component {
-  state = {
+interface INPViewAndEditName {
+  activateEditMode: () => boolean;
+  name: string;
+}
+
+interface IStateProps {
+  nodePool: INodePool;
+}
+
+interface IDispatchProps extends DispatchProp {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  nodePoolActions: Record<string, (...args: any[]) => Promise<any>>;
+}
+
+interface INodePoolsProps extends IStateProps, IDispatchProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cluster: any;
+  provider: string;
+  availableZonesGridTemplateAreas?: string;
+}
+
+interface INodePoolsState {
+  isNameBeingEdited: boolean;
+}
+
+interface IScaleNodePoolModal {
+  reset: () => void;
+  show: () => void;
+  setNodePool: (nodePool: INodePool) => void;
+}
+
+class NodePool extends Component<INodePoolsProps, INodePoolsState> {
+  public static propTypes = {
+    /**
+     * We skip typechecking because we don't want to define the whole object
+     * structure (for now)
+     */
+    availableZonesGridTemplateAreas: PropTypes.string,
+    cluster: PropTypes.object,
+    // @ts-ignore
+    nodePool: PropTypes.shape({
+      availability_zones: PropTypes.any, // TODO fix it.
+      id: PropTypes.string,
+      name: PropTypes.string,
+      node_spec: PropTypes.object,
+      scaling: PropTypes.shape({
+        min: PropTypes.number,
+        max: PropTypes.number,
+      }),
+      status: PropTypes.shape({
+        nodes: PropTypes.number,
+        nodes_ready: PropTypes.number,
+      }),
+    }),
+    // @ts-ignore
+    nodePoolActions: PropTypes.object,
+    // @ts-ignore
+    dispatch: PropTypes.func,
+    // @ts-ignore
+    provider: PropTypes.string,
+  };
+
+  public readonly state: INodePoolsState = {
     isNameBeingEdited: false,
   };
 
-  toggleEditingState = (isNameBeingEdited) => {
+  private viewEditNameRef: INPViewAndEditName | null = null;
+  private scaleNodePoolModal: IScaleNodePoolModal | null = null;
+
+  toggleEditingState = (isNameBeingEdited: boolean): void => {
     this.setState({ isNameBeingEdited });
   };
 
   triggerEditName = () => {
-    this.viewEditNameRef.activateEditMode();
+    // eslint-disable-next-line no-unused-expressions
+    this.viewEditNameRef?.activateEditMode();
   };
 
-  editNodePoolName = (name) => {
+  editNodePoolName = (name: string): void => {
     const { cluster, nodePool } = this.props;
 
     try {
       this.props.dispatch(
+        // @ts-ignore
         nodePoolActions.nodePoolPatch(cluster.id, nodePool, { name })
       );
     } catch (err) {
@@ -77,19 +149,24 @@ class NodePool extends Component {
     }
   };
 
-  deleteNodePool = () => {
+  deleteNodePool = (): void => {
     this.props.dispatch(
+      // @ts-ignore
       this.props.nodePoolActions.nodePoolDelete(
+        // @ts-ignore
         this.props.cluster.id,
         this.props.nodePool
       )
     );
   };
 
-  showNodePoolScalingModal = (nodePool) => {
-    this.scaleNodePoolModal.reset();
-    this.scaleNodePoolModal.show();
-    this.scaleNodePoolModal.setNodePool(nodePool);
+  showNodePoolScalingModal = (nodePool: INodePool): void => {
+    // eslint-disable-next-line no-unused-expressions
+    this.scaleNodePoolModal?.reset();
+    // eslint-disable-next-line no-unused-expressions
+    this.scaleNodePoolModal?.show();
+    // eslint-disable-next-line no-unused-expressions
+    this.scaleNodePoolModal?.setNodePool(nodePool);
   };
 
   render() {
@@ -106,13 +183,15 @@ class NodePool extends Component {
         <Code data-testid='node-pool-id'>{id}</Code>
         {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
         <NameWrapperDiv
-          style={{ gridColumn: isNameBeingEdited ? '2 / 9' : null }}
+          style={{ gridColumn: isNameBeingEdited ? '2 / 9' : undefined }}
         >
-          <NPViewAndEditName
+          <NPViewAndEditNameStyled
             name={nodePool.name}
             type='node pool'
             onSubmit={this.editNodePoolName}
-            ref={(viewEditName) => (this.viewEditNameRef = viewEditName)}
+            ref={(viewEditName: INPViewAndEditName): void => {
+              this.viewEditNameRef = viewEditName;
+            }}
             onToggleEditingState={this.toggleEditingState}
           />
         </NameWrapperDiv>
@@ -134,14 +213,12 @@ class NodePool extends Component {
             <NodesWrapper
               style={{
                 background:
-                  current < desired ? theme.colors.goldBackground : null,
+                  current < desired ? theme.colors.goldBackground : undefined,
               }}
             >
               {current}
             </NodesWrapper>
-            {/* Applying style here because is super specific for this element and can't use nth-child with emotion */}
             <NodePoolDropdownMenu
-              style={{ justifySelf: 'right' }}
               clusterId={cluster.id}
               nodePool={nodePool}
               deleteNodePool={this.deleteNodePool}
@@ -154,7 +231,7 @@ class NodePool extends Component {
           cluster={cluster}
           nodePool={nodePool}
           provider={this.props.provider}
-          ref={(s) => {
+          ref={(s: IScaleNodePoolModal): void => {
             this.scaleNodePoolModal = s;
           }}
           workerNodesDesired={desired}
@@ -165,39 +242,23 @@ class NodePool extends Component {
   }
 }
 
-NodePool.propTypes = {
-  availableZonesGridTemplateAreas: PropTypes.string,
-  cluster: PropTypes.object,
-  nodePool: PropTypes.shape({
-    availability_zones: PropTypes.any, // TODO fix it.
-    id: PropTypes.string,
-    name: PropTypes.string,
-    node_spec: PropTypes.object,
-    scaling: PropTypes.shape({
-      min: PropTypes.number,
-      max: PropTypes.number,
-    }),
-    status: PropTypes.shape({
-      nodes: PropTypes.number,
-      nodes_ready: PropTypes.number,
-    }),
-  }),
-  nodePoolActions: PropTypes.object,
-  dispatch: PropTypes.func,
-  provider: PropTypes.string,
-};
-
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  state: Record<string, any>,
+  ownProps: INodePoolsProps
+) {
   return {
     nodePool: state.entities.nodePools.items[ownProps.nodePool.id],
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
   return {
+    // @ts-ignore
     nodePoolActions: bindActionCreators(nodePoolActions, dispatch),
     dispatch,
   };
 }
 
+// @ts-ignore
 export default connect(mapStateToProps, mapDispatchToProps)(NodePool);

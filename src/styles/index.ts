@@ -1,6 +1,6 @@
 import { css } from '@emotion/core';
 import styled, { WithTheme } from '@emotion/styled';
-import { CSSBreakpoints } from 'shared';
+import { CSSBreakpoints } from 'shared/constants';
 
 import theme from './theme';
 
