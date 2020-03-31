@@ -89,7 +89,7 @@ class AWSInstanceTypeSelector extends React.Component {
       return x.name;
     });
 
-    if (validInstanceTypes.indexOf(instanceTypeName) !== -1) {
+    if (validInstanceTypes.includes(instanceTypeName)) {
       valid = true;
       validationError = '';
     }

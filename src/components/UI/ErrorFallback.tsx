@@ -1,27 +1,30 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 const ErrorWrapperSpan = styled.span`
   color: ${(props) => props.theme.colors.error};
   font-weight: 300;
 `;
 
+interface IErrorFallbackProps {
+  children: ReactElement;
+  error?: string;
+}
+
 /**
  * This component will return the error passed to it,
  * if it exists, or the children, if it does not
  */
-function ErrorFallback({ errors, children, ...rest }) {
-  if (errors) {
-    return <ErrorWrapperSpan {...rest}>{errors}</ErrorWrapperSpan>;
-  }
+const ErrorFallback: React.FC<IErrorFallbackProps> = ({ error, children }) => {
+  if (error) return <ErrorWrapperSpan>{error}</ErrorWrapperSpan>;
 
   return children;
-}
+};
 
 ErrorFallback.propTypes = {
-  errors: PropTypes.string,
-  children: PropTypes.node,
+  children: PropTypes.element.isRequired,
+  error: PropTypes.string,
 };
 
 export default ErrorFallback;

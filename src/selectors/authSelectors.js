@@ -11,7 +11,7 @@ import { AuthorizationTypes, StatusCodes } from 'shared';
 /**
  * Select the currently stored authentication token, or a renewed one,
  * if the current one is expired
- * @param {import("redux").Dispatch} dispatch - An event dispatcher
+ * @param {import("redux-thunk").ThunkDispatch} dispatch - An event dispatcher
  * @param {Record<string, any>} state - The current state in the store
  * @return {Promise<[string, string]>} [<Authentication Token>, <Authentication Scheme>]
  * @throws {SSOError} Authentication token renewal failed
@@ -30,6 +30,7 @@ export async function selectAuthToken(dispatch, state) {
       const newAuthData = await Auth.getInstance().renewToken();
       currentToken = newAuthData.accessToken;
 
+      // eslint-disable-next-line @typescript-eslint/await-thenable
       await dispatch(userActions.auth0Login(newAuthData));
     }
 

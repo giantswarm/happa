@@ -2,7 +2,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { push } from 'connected-react-router';
-import { relativeDate } from 'lib/helpers.js';
+import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -55,7 +55,7 @@ const WrapperStyles = (props) => css`
   ${LabelWrapper}, ${TitleWrapper} {
     font-size: 1.2em;
   }
-  ${mq(CSSBreakpoints.SMALL)} {
+  ${mq(CSSBreakpoints.Small)} {
     flex-direction: column;
     & > div {
       width: 100%;
@@ -84,14 +84,13 @@ const ButtonsWrapper = styled.div`
   flex: 0 0 210px;
   display: flex;
   justify-content: flex-end;
-  ${mq(CSSBreakpoints.MEDIUM)} {
+  ${mq(CSSBreakpoints.Medium)} {
     flex: unset;
     position: absolute;
     top: 21px;
     right: 8px;
   }
-  /*eslint-disable-next-line no-magic-numbers*/
-  ${mq(725)} {
+  ${mq(725) /* eslint-disable-line */} {
     position: relative;
     width: 100%;
     top: 9px;
@@ -99,7 +98,7 @@ const ButtonsWrapper = styled.div`
     justify-content: flex-start;
     padding-left: 98px;
   }
-  ${mq(CSSBreakpoints.SMALL)} {
+  ${mq(CSSBreakpoints.Small)} {
     padding-left: 9px;
   }
 `;
@@ -113,7 +112,7 @@ const ClusterDetailsDiv = styled.div`
   img {
     height: 22px;
   }
-  ${mq(CSSBreakpoints.MEDIUM)} {
+  ${mq(CSSBreakpoints.Medium)} {
     height: unset;
   }
 `;
@@ -211,7 +210,7 @@ function ClusterDashboardItem({
         </div>
 
         {/* Cluster resources */}
-        <ErrorFallback errors={nodePoolsLoadError}>
+        <ErrorFallback error={nodePoolsLoadError}>
           <ClusterDetailsDiv>
             {isV5Cluster ? (
               <ClusterDashboardResourcesV5

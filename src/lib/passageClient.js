@@ -1,5 +1,6 @@
-const request = require('superagent-bluebird-promise');
-const helpers = require('./helpers');
+import * as request from 'superagent-bluebird-promise';
+
+import * as helpers from './helpers';
 
 //
 // Passage

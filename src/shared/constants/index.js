@@ -1,5 +1,5 @@
 import * as AuthorizationTypes from './authorizationTypes';
-import * as CSSBreakpoints from './cssBreakpoints';
+import { CSSBreakpoints } from './cssBreakpoints';
 import * as FallbackMessages from './fallbackMessages';
 import * as Providers from './providers';
 import * as StatusCodes from './statusCodes';
