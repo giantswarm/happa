@@ -146,21 +146,28 @@ const AZLabel = styled.label`
   }
 `;
 
-const SpotValuesSection = styled.label``;
+const SpotValuesSection = styled.label`
+  padding-top: 20px;
+`;
 
 const SpotValuesLabelText = styled.span`
   font-weight: 300;
   font-size: 16px;
   line-height: 32px;
-  margin-right: 10px;
+  display: inline-block;
+  width: 210px;
 `;
 
 const SpotValuesNumberPickerWrapper = styled.div`
   margin-bottom: 8px;
 `;
 
-const AlikeWrapper = styled.div`
-  margin-top: 20px;
+const CheckboxWrapper = styled.div`
+  ${(props) =>
+    props.marginTop &&
+    css`
+      margin-top: 20px;
+    `}
 
   .checkbox-label {
     font-size: 16px;
@@ -208,9 +215,10 @@ class AddNodePool extends Component {
       useAlike: false,
       instanceDistribution: {
         onDemandBaseCapacity: 0,
-        spotInstancePercentage: 0,
+        spotInstancePercentage: 100,
       },
     },
+    spotInstancesEnabled: false,
     awsInstanceTypes: {},
     allowSpotInstances: false,
     allowAlikeInstances: false,
@@ -288,6 +296,10 @@ class AddNodePool extends Component {
     this.setState(({ aws }) => ({ aws: { ...aws, useAlike } }));
   };
 
+  setSpotInstancesEnabled = (spotInstancesEnabled) => {
+    this.setState({ spotInstancesEnabled });
+  };
+
   setSpotInstancePercentage = ({ value: spotInstancePercentage, valid }) => {
     if (valid) {
       this.setState(({ aws }) => ({
@@ -354,6 +366,22 @@ class AddNodePool extends Component {
         ? true
         : false;
 
+    // defaults for disabled spot instances
+    let instanceDistribution = {
+      on_demand_base_capacity: 0,
+      on_demand_percentage_above_base_capacity: 100,
+    };
+
+    if (this.state.spotInstancesEnabled) {
+      instanceDistribution = {
+        on_demand_base_capacity: this.state.aws.instanceDistribution
+          .onDemandBaseCapacity,
+        on_demand_percentage_above_base_capacity:
+          /* eslint-disable-next-line no-magic-numbers */
+          100 - this.state.aws.instanceDistribution.spotInstancePercentage,
+      };
+    }
+
     this.props.informParent(
       {
         isValid,
@@ -374,14 +402,7 @@ class AddNodePool extends Component {
             aws: {
               instance_type: this.state.aws.instanceType.value,
               use_alike_instance_types: this.state.aws.useAlike,
-              instance_distribution: {
-                on_demand_base_capacity: this.state.aws.instanceDistribution
-                  .onDemandBaseCapacity,
-                on_demand_percentage_above_base_capacity:
-                  /* eslint-disable-next-line no-magic-numbers */
-                  100 -
-                  this.state.aws.instanceDistribution.spotInstancePercentage,
-              },
+              instance_distribution: instanceDistribution,
             },
           },
         },
@@ -449,13 +470,13 @@ class AddNodePool extends Component {
             <p>{`${CPUCores} CPU cores, ${RAM} GB RAM each`}</p>
           </FlexWrapperDiv>
           {this.state.allowAlikeInstances && (
-            <AlikeWrapper className='alike-wrapper'>
+            <CheckboxWrapper marginTop>
               <Checkbox
                 checked={this.state.aws.useAlike}
                 onChange={this.setUseAlikeInstancesEnabled}
                 label='Allow usage of similar instance types'
               />
-            </AlikeWrapper>
+            </CheckboxWrapper>
           )}
         </label>
         <AZLabel
@@ -591,37 +612,52 @@ class AddNodePool extends Component {
           </RadioWrapperDiv>
         </AZLabel>
         {this.state.allowSpotInstances && (
-          <SpotValuesSection>
-            <span className='label-span'>Instance distribution</span>
-            <SpotValuesNumberPickerWrapper>
-              <SpotValuesLabelText>On demand base capacity</SpotValuesLabelText>
-              <NumberPicker
-                readOnly={false}
-                min={0}
-                max={32767}
-                stepSize={1}
-                value={this.state.aws.instanceDistribution.onDemandBaseCapacity}
-                onChange={this.setOnDemandBaseCapacity}
-                theme='spot-number-picker'
+          <label>
+            <CheckboxWrapper>
+              <Checkbox
+                checked={this.state.spotInstancesEnabled}
+                onChange={this.setSpotInstancesEnabled}
+                label='Enable AWS Spot Instances'
               />
-            </SpotValuesNumberPickerWrapper>
-            <SpotValuesNumberPickerWrapper>
-              <SpotValuesLabelText>
-                Spot instance percentage
-              </SpotValuesLabelText>
-              <NumberPicker
-                readOnly={false}
-                max={100}
-                min={0}
-                stepSize={10}
-                value={
-                  this.state.aws.instanceDistribution.spotInstancePercentage
-                }
-                onChange={this.setSpotInstancePercentage}
-                theme='spot-number-picker'
-              />
-            </SpotValuesNumberPickerWrapper>
-          </SpotValuesSection>
+            </CheckboxWrapper>
+            {this.state.spotInstancesEnabled && (
+              <SpotValuesSection>
+                <span className='label-span'>Instance distribution</span>
+                <SpotValuesNumberPickerWrapper>
+                  <SpotValuesLabelText>
+                    Spot instance percentage
+                  </SpotValuesLabelText>
+                  <NumberPicker
+                    readOnly={false}
+                    max={100}
+                    min={0}
+                    stepSize={10}
+                    value={
+                      this.state.aws.instanceDistribution.spotInstancePercentage
+                    }
+                    onChange={this.setSpotInstancePercentage}
+                    theme='spot-number-picker'
+                  />
+                </SpotValuesNumberPickerWrapper>
+                <SpotValuesNumberPickerWrapper>
+                  <SpotValuesLabelText>
+                    On demand base capacity
+                  </SpotValuesLabelText>
+                  <NumberPicker
+                    readOnly={false}
+                    min={0}
+                    max={32767}
+                    stepSize={1}
+                    value={
+                      this.state.aws.instanceDistribution.onDemandBaseCapacity
+                    }
+                    onChange={this.setOnDemandBaseCapacity}
+                    theme='spot-number-picker'
+                  />
+                </SpotValuesNumberPickerWrapper>
+              </SpotValuesSection>
+            )}
+          </label>
         )}
         <label className='scaling-range' htmlFor='scaling-range'>
           <span className='label-span'>Scaling range</span>
