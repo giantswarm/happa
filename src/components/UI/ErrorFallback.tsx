@@ -25,7 +25,9 @@ const ErrorFallback: React.FC<IErrorFallbackProps> = ({
   if (error)
     return <ErrorWrapperSpan className={className}>{error}</ErrorWrapperSpan>;
 
-  return children;
+  if (children) return children;
+
+  return null;
 };
 
 ErrorFallback.propTypes = {
