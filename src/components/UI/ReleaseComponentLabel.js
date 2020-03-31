@@ -88,10 +88,10 @@ VersionLabel.propTypes = {
 
 // eslint-disable-next-line react/no-multi-comp
 const ReleaseComponentLabel = (props) => {
-  const { name, version, oldVersion, isAdded, isRemoved } = props;
+  const { name, version, oldVersion, isAdded, isRemoved, className } = props;
 
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <NameWrapper>{name}</NameWrapper>
       <VersionLabel
         isAdded={isAdded}
@@ -109,6 +109,7 @@ ReleaseComponentLabel.propTypes = {
   version: PropTypes.string,
   isAdded: PropTypes.bool,
   isRemoved: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 export default ReleaseComponentLabel;
