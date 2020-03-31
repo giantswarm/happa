@@ -6,7 +6,7 @@
 //
 //
 
-const platform = require('platform');
+import * as platform from 'platform';
 
 let result = 'Unknown';
 
@@ -45,4 +45,4 @@ outer: for (const key in mapping) {
   }
 }
 
-module.exports = result;
+export default result;

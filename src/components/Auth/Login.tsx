@@ -7,27 +7,67 @@ import {
   messageType,
 } from 'lib/flashMessage';
 import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { ReactNode } from 'react';
+import { connect, DispatchProp } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { AppRoutes } from 'shared/constants/routes';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
 
 import { parseErrorMessages } from './parseErrorMessages';
 
-class Login extends React.Component {
-  state = {
-    email: '',
-    password: '',
+// The props coming from the global state (AKA: `mapStateToProps`)
+interface IStateProps {
+  // For now, until we have a type for it
+  user: Record<string, never>;
+  // For now, until we have a type for it
+  flashMessages: Record<string, never>;
+}
+
+// The props coming from injected actions (AKA: `mapDispatchToProps`)
+interface IDispatchProps extends DispatchProp {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  actions: Record<string, (...args: any[]) => Promise<any>>;
+}
+
+interface ILoginProps extends IStateProps, IDispatchProps {}
+
+interface ILoginState {
+  email: string;
+  password: string;
+  authenticating: boolean;
+}
+
+class Login extends React.Component<ILoginProps, ILoginState> {
+  public static propTypes: IStateProps & IDispatchProps = {
+    /**
+     * We skip typechecking because we don't want to define the whole object
+     * structure (for now)
+     */
+    // @ts-ignore
+    dispatch: PropTypes.func,
+    // @ts-ignore
+    flashMessages: PropTypes.object,
+    // @ts-ignore
+    actions: PropTypes.object,
   };
 
-  onAuthenticateFailed = (message) => {
+  public readonly state: ILoginState = {
+    email: '',
+    password: '',
+    authenticating: false,
+  };
+
+  public email: HTMLInputElement | null = null;
+
+  public password: HTMLInputElement | null = null;
+
+  public onAuthenticateFailed = (message: string) => {
     new FlashMessage(message, messageType.ERROR, messageTTL.LONG);
   };
 
-  updateEmail = (event) => {
+  public updateEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Clear flash messages if there are any.
     clearQueues();
 
@@ -36,7 +76,7 @@ class Login extends React.Component {
     });
   };
 
-  updatePassword = (event) => {
+  public updatePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Clear flash messages if there are any.
     clearQueues();
 
@@ -45,7 +85,7 @@ class Login extends React.Component {
     });
   };
 
-  logIn = (e) => {
+  public logIn = (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     clearQueues();
@@ -76,7 +116,7 @@ class Login extends React.Component {
 
           return null;
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           this.setState({
             authenticating: false,
           });
@@ -94,7 +134,7 @@ class Login extends React.Component {
   };
 
   //TODO: turn progressbutton into a component
-  render() {
+  public render(): ReactNode {
     return (
       <div>
         <div className='login_form--mask' />
@@ -160,24 +200,27 @@ class Login extends React.Component {
   }
 }
 
-Login.propTypes = {
-  dispatch: PropTypes.func,
-  flashMessages: PropTypes.object,
-  actions: PropTypes.object,
-};
-
-function mapStateToProps(state) {
+/**
+ * If we had the type of the whole state, the type of `state` would be something like
+ * `state: Partial<IAppState>`
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapStateToProps(state: Record<string, any>): IStateProps {
   return {
     user: state.main.loggedInUser,
     flashMessages: state.flashMessages,
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
   return {
+    // Skipping check as we don't have a valid type for userActions yet
+    // @ts-ignore
     actions: bindActionCreators(userActions, dispatch),
     dispatch: dispatch,
   };
 }
 
+// This is complaining about our prop types not having the EXACT same structure as our Props interface
+// @ts-ignore
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -580,7 +580,7 @@ class CreateRegularCluster extends React.Component {
             <hr style={{ margin: '37px 0 31px' }} />
 
             <FlexColumnDiv style={{ marginBottom: '23px' }}>
-              <ErrorFallback errors={this.props.clusterCreateError}>
+              <ErrorFallback error={this.props.clusterCreateError}>
                 <Button
                   bsSize='large'
                   bsStyle='primary'

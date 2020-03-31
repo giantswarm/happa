@@ -205,8 +205,8 @@ export class HttpClient {
    * @param {HttpClientConfig} reqConfig - The client's configuration
    * @return {Promise<void>}
    */
-  // eslint-disable-next-line no-unused-vars, class-methods-use-this, no-empty-function
-  async onBeforeRequest(reqConfig) {}
+  // eslint-disable-next-line class-methods-use-this, no-empty-function
+  async onBeforeRequest(_reqConfig) {}
 
   /**
    * Execute the client's request

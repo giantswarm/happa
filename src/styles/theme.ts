@@ -1,6 +1,7 @@
 import { CSSBreakpoints } from 'shared/constants';
+import { ITheme } from 'styles';
 
-const theme = {
+const theme: ITheme = {
   colors: {
     // dark blue as defined in Giant Swarm's style guide
     darkBlue: '#234a61',
@@ -56,9 +57,9 @@ const theme = {
   },
   border_radius: '4px',
   breakpoints: {
-    [CSSBreakpoints.SMALL]: 540,
-    [CSSBreakpoints.MEDIUM]: 825,
-    [CSSBreakpoints.LARGE]: 1200,
+    [CSSBreakpoints.Small]: 540,
+    [CSSBreakpoints.Medium]: 825,
+    [CSSBreakpoints.Large]: 1200,
   },
   fontFamilies: {
     console: 'Inconsolata, monospace',

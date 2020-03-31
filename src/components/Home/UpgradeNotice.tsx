@@ -30,6 +30,14 @@ const UpgradeWrapperDiv = styled.div`
   }
 `;
 
+interface IUpgradeNoticeProps {
+  canClusterUpgrade: boolean;
+  loadingReleases: boolean;
+  className: string;
+  clusterId: string;
+  onClick?: () => void;
+}
+
 // This component receive a cluster id, finds if this cluster is 'upgradable' and
 // in case it is, outputs an upgrade notice,
 function UpgradeNotice({
@@ -37,14 +45,14 @@ function UpgradeNotice({
   loadingReleases,
   onClick,
   className,
-}) {
+}: IUpgradeNoticeProps) {
   if (!canClusterUpgrade) return null;
 
   return (
     <LoadingOverlay loading={loadingReleases}>
       <UpgradeWrapperDiv
         className={className}
-        onClick={onClick ? onClick : null}
+        onClick={onClick ? onClick : undefined}
       >
         <i className='fa fa-warning' />
         <span>Upgrade Available</span>
@@ -61,11 +69,16 @@ UpgradeNotice.propTypes = {
   className: PropTypes.string,
 };
 
-function mapStateToProps(state, props) {
+function mapStateToProps(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  state: Record<string, any>,
+  props: IUpgradeNoticeProps
+) {
   return {
     canClusterUpgrade: selectCanClusterUpgrade(state, props.clusterId),
     loadingReleases: selectLoadingFlagByAction(state, RELEASES_LOAD_REQUEST),
   };
 }
 
+// @ts-ignore
 export default connect(mapStateToProps)(UpgradeNotice);
