@@ -13,7 +13,8 @@ export interface INodePool {
   availability_zones: any;
   id: string;
   name: string;
-  node_spec: object;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  node_spec: any;
   scaling: IScaling;
   status: INodePoolStatus;
 }

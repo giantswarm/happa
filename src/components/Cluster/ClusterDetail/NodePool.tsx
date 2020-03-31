@@ -4,7 +4,7 @@ import { spinner } from 'images';
 import { ErrorReporter } from 'lib/errors';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { connect, DispatchProp } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { INodePool } from 'shared/types';
 import { Code, Ellipsis } from 'styles/';
@@ -15,7 +15,12 @@ import AvailabilityZonesWrapper from './AvailabilityZonesWrapper';
 import NodePoolDropdownMenu from './NodePoolDropdownMenu';
 import ScaleNodePoolModal from './ScaleNodePoolModal';
 
-const NPViewAndEditNameStyled = styled(ViewAndEditName)`
+const NPViewAndEditNameStyled = styled<
+  React.ForwardRefExoticComponent<{}>,
+  // TODO: Remove this once `ViewAndEditName` is typed
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any
+>(ViewAndEditName)`
   input[type='text'] {
     font-size: 15px;
     line-height: 1.8em;
@@ -58,15 +63,20 @@ interface INPViewAndEditName {
   name: string;
 }
 
-type NPViewAndEditName = React.Component<INPViewAndEditName>;
-
-interface INodePoolsProps {
-  availableZonesGridTemplateAreas?: string;
-  cluster: object;
+interface IStateProps {
   nodePool: INodePool;
+}
+
+interface IDispatchProps extends DispatchProp {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   nodePoolActions: Record<string, (...args: any[]) => Promise<any>>;
+}
+
+interface INodePoolsProps extends IStateProps, IDispatchProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cluster: any;
   provider: string;
+  availableZonesGridTemplateAreas?: string;
 }
 
 interface INodePoolsState {
@@ -80,7 +90,7 @@ interface IScaleNodePoolModal {
 }
 
 class NodePool extends Component<INodePoolsProps, INodePoolsState> {
-  static propTypes: INodePoolsProps = {
+  public static propTypes = {
     /**
      * We skip typechecking because we don't want to define the whole object
      * structure (for now)
@@ -114,7 +124,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     isNameBeingEdited: false,
   };
 
-  private viewEditNameRef: NPViewAndEditName | null = null;
+  private viewEditNameRef: INPViewAndEditName | null = null;
   private scaleNodePoolModal: IScaleNodePoolModal | null = null;
 
   toggleEditingState = (isNameBeingEdited: boolean): void => {
@@ -122,8 +132,8 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
   };
 
   triggerEditName = () => {
-    // @ts-ignore
-    this.viewEditNameRef.activateEditMode();
+    // eslint-disable-next-line no-unused-expressions
+    this.viewEditNameRef?.activateEditMode();
   };
 
   editNodePoolName = (name: string): void => {
@@ -143,6 +153,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     this.props.dispatch(
       // @ts-ignore
       this.props.nodePoolActions.nodePoolDelete(
+        // @ts-ignore
         this.props.cluster.id,
         this.props.nodePool
       )
@@ -150,9 +161,12 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
   };
 
   showNodePoolScalingModal = (nodePool: INodePool): void => {
-    this.scaleNodePoolModal.reset();
-    this.scaleNodePoolModal.show();
-    this.scaleNodePoolModal.setNodePool(nodePool);
+    // eslint-disable-next-line no-unused-expressions
+    this.scaleNodePoolModal?.reset();
+    // eslint-disable-next-line no-unused-expressions
+    this.scaleNodePoolModal?.show();
+    // eslint-disable-next-line no-unused-expressions
+    this.scaleNodePoolModal?.setNodePool(nodePool);
   };
 
   render() {
@@ -175,7 +189,9 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
             name={nodePool.name}
             type='node pool'
             onSubmit={this.editNodePoolName}
-            ref={(viewEditName) => (this.viewEditNameRef = viewEditName)}
+            ref={(viewEditName: INPViewAndEditName): void => {
+              this.viewEditNameRef = viewEditName;
+            }}
             onToggleEditingState={this.toggleEditingState}
           />
         </NameWrapperDiv>
@@ -215,7 +231,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
           cluster={cluster}
           nodePool={nodePool}
           provider={this.props.provider}
-          ref={(s) => {
+          ref={(s: IScaleNodePoolModal): void => {
             this.scaleNodePoolModal = s;
           }}
           workerNodesDesired={desired}
