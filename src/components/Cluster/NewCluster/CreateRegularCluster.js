@@ -63,6 +63,11 @@ const FlexWrapperDiv = styled.div`
   }
 `;
 
+const ErrorFallbackStyled = styled(ErrorFallback)`
+  margin-bottom: 15px;
+  line-height: 1.2em;
+`;
+
 class CreateRegularCluster extends React.Component {
   static isScalingAutomatic(provider) {
     return provider === Providers.AWS;
@@ -361,34 +366,25 @@ class CreateRegularCluster extends React.Component {
   };
 
   valid() {
+    // If no releases, the form can't be valid.
+    if (this.props.releasesLoadError) return false;
+
     // If any of the releaseVersion hasn't been set yet, return false
-    if (!this.props.selectedRelease) {
-      return false;
-    }
+    if (!this.props.selectedRelease) return false;
 
     // If the availabilityZonesPicker is invalid, return false
-    if (!this.state.availabilityZonesPicker.valid) {
-      return false;
-    }
+    if (!this.state.availabilityZonesPicker.valid) return false;
 
     // If the min scaling numberpicker is invalid, return false
-    if (!this.state.scaling.minValid) {
-      return false;
-    }
+    if (!this.state.scaling.minValid) return false;
 
     // If the max scaling numberpickers is invalid, return false
-    if (!this.state.scaling.maxValid) {
-      return false;
-    }
+    if (!this.state.scaling.maxValid) return false;
 
     // If the aws instance type is invalid, return false
-    if (!this.state.aws.instanceType.valid) {
-      return false;
-    }
+    if (!this.state.aws.instanceType.valid) return false;
 
-    if (!this.state.azure.vmSize.valid) {
-      return false;
-    }
+    if (!this.state.azure.vmSize.valid) return false;
 
     // If the kvm worker is invalid, return false
     if (
@@ -587,6 +583,7 @@ class CreateRegularCluster extends React.Component {
             <hr style={{ margin: '37px 0 31px' }} />
 
             <FlexColumnDiv style={{ marginBottom: '23px' }}>
+              <ErrorFallbackStyled error={noReleasesErrorText} />
               <ErrorFallback error={this.props.clusterCreateError}>
                 <Button
                   bsSize='large'
