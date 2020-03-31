@@ -263,15 +263,30 @@ export function updateApp(appName, clusterID, values) {
           messageType.SUCCESS,
           messageTTL.LONG
         );
+
+        dispatch({
+          type: types.CLUSTER_UPDATE_APP_SUCCESS,
+          clusterID,
+          appName,
+        });
+
+        return {
+          error: '',
+        };
       })
       .catch((error) => {
-        new FlashMessage(
-          `Something went wrong while trying to update your app. Please try again later or contact support: support@giantswarm.io`,
-          messageType.ERROR,
-          messageTTL.LONG
-        );
+        const errorMessage =
+          error?.message ||
+          'Something went wrong while trying to update your app. Please try again later or contact support.';
 
-        throw error;
+        dispatch({
+          type: types.CLUSTER_UPDATE_APP_ERROR,
+          error: errorMessage,
+        });
+
+        return {
+          error: errorMessage,
+        };
       });
   };
 }
