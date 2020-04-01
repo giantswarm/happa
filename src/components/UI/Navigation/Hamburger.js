@@ -21,13 +21,9 @@ const HamburgerDiv = styled.div`
   .third {
     background: ${(props) => props.theme.colors.white3};
     height: 2px;
-    margin: 2px 2px;
+    margin: 2px 0;
     border-radius: 3px;
     transition: all 0.3s;
-  }
-
-  .second {
-    margin: 2px 1px;
   }
 
   &.open {
@@ -36,13 +32,13 @@ const HamburgerDiv = styled.div`
       width: 17.5px;
     }
     .first {
-      transform: rotate(35deg) translate(5px, 4px);
+      transform: rotate(35deg) translate(4.2px, 5.5px);
     }
     .second {
       opacity: 0;
     }
     .third {
-      transform: rotate(-35deg) translate(4.8px, -3.8px);
+      transform: rotate(-35deg) translate(3.2px, -4px);
     }
   }
 `;

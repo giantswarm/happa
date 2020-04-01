@@ -44,8 +44,7 @@ const DropdownMenuStyled = styled(DropdownMenu)`
   flex-direction: column;
   transform: translate(30px, 5px);
   position: fixed;
-  width: 45px;
-  height: 40px;
+  width: 38px;
 
   .dropdown-trigger {
     width: 100%;
