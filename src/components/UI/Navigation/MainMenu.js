@@ -33,8 +33,7 @@ const NavDiv = styled.div`
     }
   }
 
-  @media only screen and (max-width: ${(props) =>
-      props.theme.breakpoints.large}px) {
+  ${mq(CSSBreakpoints.Large)} {
     display: none;
   }
 `;
