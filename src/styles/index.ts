@@ -37,6 +37,7 @@ export interface IColorMap {
   white1: string;
   white2: string;
   white3: string;
+  white4: string;
   whiteInput: string;
   yellow1: string;
   gold: string;

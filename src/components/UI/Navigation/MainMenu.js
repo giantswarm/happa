@@ -21,7 +21,7 @@ const NavDiv = styled.div`
 
   & > a {
     text-decoration: none;
-    color: #eee;
+    color: ${(props) => props.theme.colors.white4};
     margin-right: 18px;
 
     &:last-child {
@@ -65,6 +65,20 @@ const DropdownMenuStyled = styled(DropdownMenu)`
 
   ${mq(CSSBreakpoints.Large)} {
     display: flex;
+  }
+
+  ${mq(CSSBreakpoints.Medium)} {
+    transform: translate(40px, 5px);
+
+    ul {
+      width: calc(100vw - 8px);
+      left: -35px;
+    }
+
+    a {
+      font-size: 18px;
+      padding: 20px 30px;
+    }
   }
 `;
 
