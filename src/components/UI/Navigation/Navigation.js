@@ -3,14 +3,10 @@ import { logo } from 'images';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumbs } from 'react-breadcrumbs';
-import { Link, NavLink } from 'react-router-dom';
-import {
-  AppCatalogRoutes,
-  AppRoutes,
-  OrganizationsRoutes,
-  UsersRoutes,
-} from 'shared/constants/routes';
+import { Link } from 'react-router-dom';
+import { AppRoutes } from 'shared/constants/routes';
 
+import MainMenu from './MainMenu';
 import OrganizationDropdown from './OrganizationDropdown';
 import UserDropdown from './UserDropdown';
 
@@ -60,40 +56,6 @@ const OuterNav = styled.nav`
     }
   }
 
-  .nav-responsive {
-    float: left;
-    padding-left: 20px;
-    height: 40px;
-
-    & > a {
-      text-decoration: none;
-      color: #eee;
-      margin-right: 18px;
-
-      &:last-child {
-        margin-right: 0;
-      }
-
-      &:hover {
-        color: ${(props) => props.theme.colors.white1};
-      }
-    }
-
-    @media only screen and (max-width: ${(props) =>
-        props.theme.breakpoints.large}px) {
-      position: fixed;
-      top: 50px;
-      background-color: #265068;
-      border-top: 1px solid #29566f;
-      border-bottom: 1px solid #29566f;
-      width: 100%;
-      left: 0px;
-      padding-left: 0px;
-      height: auto;
-      text-align: center;
-    }
-  }
-
   .subactions {
     float: right;
     @media only screen and (max-width: ${(props) =>
@@ -128,31 +90,10 @@ class Navigation extends React.Component {
           <Link to={AppRoutes.Home}>
             <img className='logo' src={logo} />
           </Link>
-          <div className='nav-responsive'>
-            <NavLink activeClassName='active' exact to={AppRoutes.Home}>
-              Clusters
-            </NavLink>
-            <NavLink activeClassName='active' to={OrganizationsRoutes.Home}>
-              Organizations
-            </NavLink>
-            {this.props.showAppCatalog && (
-              <NavLink activeClassName='active' to={AppCatalogRoutes.Home}>
-                App Catalogs
-              </NavLink>
-            )}
-            {this.props.user.isAdmin ? (
-              <NavLink activeClassName='active' to={UsersRoutes.Home}>
-                Users
-              </NavLink>
-            ) : undefined}
-            <a
-              href='https://docs.giantswarm.io'
-              rel='noopener noreferrer'
-              target='_blank'
-            >
-              Documentation <i className='fa fa-open-in-new' />
-            </a>
-          </div>
+          <MainMenu
+            showAppCatalog={this.props.showAppCatalog}
+            isUserAdmin={this.props.user.isAdmin}
+          />
 
           <div className='subactions'>
             <OrganizationDropdown

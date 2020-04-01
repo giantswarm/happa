@@ -14,7 +14,7 @@ import React, { useState } from 'react';
 
 const MenuWrapper = styled.div`
   position: relative;
-  button {
+  .dropdown-trigger {
     width: 40px;
     height: 40px;
     /* Overrides for bootstrap */
@@ -80,7 +80,7 @@ function DropdownMenu(props) {
   };
 
   return (
-    <MenuWrapper>
+    <MenuWrapper className={props.className}>
       {props.render({
         isOpen: isOpen,
         onClickHandler: () => setIsOpen(!isOpen),
@@ -94,6 +94,7 @@ function DropdownMenu(props) {
 
 DropdownMenu.propTypes = {
   render: PropTypes.func,
+  className: PropTypes.string,
 };
 
 export default DropdownMenu;

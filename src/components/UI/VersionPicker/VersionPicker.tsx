@@ -163,6 +163,7 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
         }) => (
           <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
             <button
+              className='dropdown-trigger'
               aria-expanded={isOpen}
               aria-haspopup='true'
               onClick={onClickHandler}
