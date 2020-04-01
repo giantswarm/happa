@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
+import { CSSBreakpoints } from 'shared/constants';
 import { AppRoutes } from 'shared/constants/routes';
+import { mq } from 'styles';
 
 import MainMenu from './MainMenu';
 import OrganizationDropdown from './OrganizationDropdown';
@@ -49,8 +51,7 @@ const OuterNav = styled.nav`
       font-size: 22px;
       color: #e8e8e8;
       cursor: pointer;
-      @media only screen and (max-width: ${(props) =>
-          props.theme.breakpoints.large}px) {
+      ${mq(CSSBreakpoints.Large)} {
         display: block;
       }
     }
@@ -58,8 +59,7 @@ const OuterNav = styled.nav`
 
   .subactions {
     float: right;
-    @media only screen and (max-width: ${(props) =>
-        props.theme.breakpoints.large}px) {
+    ${mq(CSSBreakpoints.Large)} {
       margin-right: 10px;
     }
 
@@ -74,8 +74,7 @@ const OuterNav = styled.nav`
     vertical-align: middle;
     position: relative;
     top: -1px;
-    @media only screen and (max-width: ${(props) =>
-        props.theme.breakpoints.med}px) {
+    ${mq(CSSBreakpoints.Medium)} {
       margin-left: 10px;
     }
   }
