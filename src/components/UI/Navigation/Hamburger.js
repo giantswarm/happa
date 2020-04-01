@@ -7,6 +7,7 @@ const HamburgerDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  cursor: pointer;
 
   div {
     display: flex;
