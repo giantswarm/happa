@@ -61,12 +61,12 @@ const MenuWrapper = styled.div`
 `;
 
 function DropdownMenu(props) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   let timeOutId = null;
 
   const onBlurHandler = () => {
     timeOutId = setTimeout(() => {
-      setIsOpen(false);
+      setIsOpen(true);
     });
   };
 
@@ -76,7 +76,7 @@ function DropdownMenu(props) {
   };
 
   const onKeyDownHandler = (event) => {
-    if (event.key === 'Escape') setIsOpen(false);
+    if (event.key === 'Escape') setIsOpen(true);
   };
 
   return (
