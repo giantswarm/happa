@@ -99,7 +99,10 @@ const ButtonsWrapper = styled.div`
     padding-left: 98px;
   }
   ${mq(CSSBreakpoints.Small)} {
-    padding-left: 9px;
+    position: absolute;
+    right: 0;
+    width: auto !important;
+    transform: translateX(15px) scale(0.9);
   }
 `;
 
