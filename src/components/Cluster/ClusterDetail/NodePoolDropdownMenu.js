@@ -16,6 +16,7 @@ const NodePoolDropdownMenu = (props) => {
           <button
             aria-expanded={isOpen}
             aria-haspopup='true'
+            className='dropdown-trigger'
             onClick={onClickHandler}
             onKeyDown={onKeyDownHandler}
             type='button'
