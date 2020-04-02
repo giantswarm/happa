@@ -61,7 +61,13 @@ const WrapperStyles = (props) => css`
       width: 100%;
     }
     ${LabelWrapper} {
-      margin-bottom: 5px;
+      position: absolute;
+      i {
+        display: none;
+      }
+    }
+    ${TitleWrapper} {
+      margin-left: 60px;
     }
     /* Font sizes */
     font-size: 0.9em;
@@ -99,10 +105,7 @@ const ButtonsWrapper = styled.div`
     padding-left: 98px;
   }
   ${mq(CSSBreakpoints.Small)} {
-    position: absolute;
-    right: 0;
-    width: auto !important;
-    transform: translateX(15px) scale(0.9);
+    display: none;
   }
 `;
 
