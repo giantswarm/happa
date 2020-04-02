@@ -28,7 +28,9 @@ const App: React.FC<IAppProps> = ({ store, theme, history }) => (
 
 // Ignoring these, as we don't want to specify the exact shape of each prop type for now
 App.propTypes = {
+  // @ts-ignore
   store: PropTypes.object.isRequired,
+  // @ts-ignore
   theme: PropTypes.object.isRequired,
   // @ts-ignore
   history: PropTypes.object.isRequired,
