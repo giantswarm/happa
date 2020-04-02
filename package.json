@@ -18,7 +18,8 @@
     "format": "./node_modules/.bin/prettier \"src/**/*.{js,ts,tsx}\"",
     "prettier": "yarn format --write",
     "validate-prettier": "yarn format --version; yarn format --no-color --check",
-    "precommit": "./node_modules/.bin/lint-staged"
+    "precommit": "./node_modules/.bin/lint-staged",
+    "typecheck": "./node_modules/.bin/tsc"
   },
   "prettier": {
     "singleQuote": true,
@@ -183,7 +184,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn precommit"
+      "pre-commit": "yarn typecheck && yarn precommit"
     }
   },
   "lint-staged": {
