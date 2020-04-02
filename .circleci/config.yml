@@ -90,9 +90,9 @@ jobs:
             fi
 
       - run:
-        name: Typecheck code using the TypeScript compiler
-        command: |
-          make typecheck
+          name: Typecheck code using the TypeScript compiler
+          command: |
+            make typecheck
 
       - run:
           name: Lint code using ESlint
