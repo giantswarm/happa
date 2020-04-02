@@ -179,7 +179,7 @@
   },
   "resolutions": {
     "**/crypto-js": "^3.2.1",
-    "kind-of": ">= 6.0.3"
+    "kind-of": "^6.0.3"
   },
   "husky": {
     "hooks": {
