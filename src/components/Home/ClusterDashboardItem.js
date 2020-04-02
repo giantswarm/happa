@@ -121,6 +121,10 @@ const ClusterDetailsDiv = styled.div`
   ${mq(CSSBreakpoints.Medium)} {
     height: unset;
   }
+  ${mq(CSSBreakpoints.Small)} {
+    display: inline-block;
+    transform: translateY(-1px);
+  }
 `;
 
 function ClusterDashboardItem({
