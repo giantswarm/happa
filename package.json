@@ -56,7 +56,6 @@
     "immutable": "3.8.2",
     "js-base64": "2.5.2",
     "js-yaml": "^3.12.1",
-    "kind-of": "6.0.3",
     "lunr": "^2.3.6",
     "moment": "2.24.0",
     "normalize.css": "8.0.1",
@@ -179,7 +178,8 @@
     "webpack-merge": "4.2.2"
   },
   "resolutions": {
-    "**/crypto-js": "^3.2.1"
+    "**/crypto-js": "^3.2.1",
+    "kind-of": ">= 6.0.3"
   },
   "husky": {
     "hooks": {
