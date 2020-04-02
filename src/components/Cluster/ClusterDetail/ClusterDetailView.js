@@ -48,10 +48,13 @@ const WrapperDiv = styled.div`
     font-size: 22px;
     margin: 0 0 15px;
   }
-  p {
-    line-height: 1.2;
-  }
 `;
+
+const Disclaimer = styled.p`
+  margin: 0 0 20px;
+  line-height: 1.2;
+`;
+
 class ClusterDetailView extends React.Component {
   loadDataInterval = null;
 
@@ -275,11 +278,11 @@ class ClusterDetailView extends React.Component {
                           <h3 className='table-label'>Delete This Cluster</h3>
                         </div>
                         <div className='row'>
-                          <p>
+                          <Disclaimer>
                             All workloads on this cluster will be terminated.
                             Data stored on the worker nodes will be lost. There
                             is no way to undo this action.
-                          </p>
+                          </Disclaimer>
                           <Button
                             bsStyle='danger'
                             onClick={this.showDeleteClusterModal.bind(

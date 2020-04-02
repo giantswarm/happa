@@ -8,7 +8,7 @@ const WIDTH = '250px';
 const MAX_HEIGHT = '250px';
 
 const Wrapper = styled.div`
-  div > button {
+  div > .dropdown-trigger {
     background-color: ${(props) => props.theme.colors.shade5};
     border: 1px solid ${(props) => props.theme.colors.shade6};
     border-radius: ${(props) => props.theme.border_radius};
@@ -163,6 +163,7 @@ const VersionPicker: React.FC<IVersionPickerProps> = ({
         }) => (
           <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
             <button
+              className='dropdown-trigger'
               aria-expanded={isOpen}
               aria-haspopup='true'
               onClick={onClickHandler}

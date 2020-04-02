@@ -37,6 +37,11 @@ const BrowseButton = styled(Button)`
   margin-bottom: 10px;
 `;
 
+const Disclaimer = styled.p`
+  margin: 0 0 20px;
+  line-height: 1.2;
+`;
+
 class ClusterApps extends React.Component {
   static getDerivedStateFromProps(newProps, prevState) {
     if (prevState.appDetailsModal.visible) {
@@ -314,10 +319,10 @@ class ClusterApps extends React.Component {
 
         <div className='row cluster-apps'>
           <h3 className='table-label'>Preinstalled Apps</h3>
-          <p>
+          <Disclaimer>
             These apps and services are preinstalled on your cluster and managed
             by Giant Swarm.
-          </p>
+          </Disclaimer>
           <div className='row'>
             {this.props.release ? (
               <>
@@ -349,7 +354,7 @@ class ClusterApps extends React.Component {
                   <SmallHeading>ingress</SmallHeading>
                   {this.props.hasOptionalIngress && (
                     <OptionalIngressNotice>
-                      <p>
+                      <Disclaimer>
                         The ingress controller is optional on this cluster.
                         <br />
                         You can install one using our app catalog.
@@ -363,7 +368,7 @@ class ClusterApps extends React.Component {
                         >
                           installing an ingress controller guide.
                         </a>
-                      </p>
+                      </Disclaimer>
                     </OptionalIngressNotice>
                   )}
                   {preinstalledApps.ingress.map((app) => (
