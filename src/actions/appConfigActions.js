@@ -45,7 +45,7 @@ export function updateAppConfig(appName, clusterID, values) {
         });
 
         new FlashMessage(
-          `The configuration of <code>${appName}</code> on <code>${clusterID}</code> has successfully been updated.`,
+          `The ConfigMap containing the user level config values of <code>${appName}</code> on <code>${clusterID}</code> has successfully been updated.`,
           messageType.SUCCESS,
           messageTTL.LONG
         );
@@ -59,7 +59,7 @@ export function updateAppConfig(appName, clusterID, values) {
 
         if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
-            `Could not find an app or app config to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+            `Could not find an app or ConfigMap containing user level config values to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -71,7 +71,7 @@ export function updateAppConfig(appName, clusterID, values) {
           );
         } else {
           new FlashMessage(
-            `Something went wrong while trying to update the ConfigMap. Please try again later or contact support: support@giantswarm.io`,
+            `Something went wrong while trying to update the ConfigMap containing user level config values. Please try again later or contact support: support@giantswarm.io`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -121,7 +121,7 @@ export function createAppConfig(appName, clusterID, values) {
         });
 
         new FlashMessage(
-          `The ConfigMap for <code>${appName}</code> on <code>${clusterID}</code> has successfully been created.`,
+          `A ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterID}</code> has successfully been created.`,
           messageType.SUCCESS,
           messageTTL.LONG
         );
@@ -135,7 +135,7 @@ export function createAppConfig(appName, clusterID, values) {
 
         if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
-            `Could not find an app to create a ConfigMap for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+            `Could not find app <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -147,7 +147,7 @@ export function createAppConfig(appName, clusterID, values) {
           );
         } else {
           new FlashMessage(
-            `Something went wrong while trying to create the ConfigMap. Please try again later or contact support: support@giantswarm.io`,
+            `Something went wrong while trying to create a ConfigMap to store your values. Please try again later or contact support: support@giantswarm.io`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -194,7 +194,7 @@ export function deleteAppConfig(appName, clusterID) {
         });
 
         new FlashMessage(
-          `The ConfigMap for <code>${appName}</code> on <code>${clusterID}</code> has been deleted.`,
+          `The ConfigMap containing user level config values for <code>${appName}</code> on <code>${clusterID}</code> has been deleted.`,
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );
@@ -208,7 +208,7 @@ export function deleteAppConfig(appName, clusterID) {
 
         if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
-            `Could not find ConfigMap for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+            `Could not find the ConfigMap containing user level config values for the app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -220,7 +220,7 @@ export function deleteAppConfig(appName, clusterID) {
           );
         } else {
           new FlashMessage(
-            `Something went wrong while trying to delete the ConfigMap. Please try again later or contact support: support@giantswarm.io`,
+            `Something went wrong while trying to delete the ConfigMap containing your values. Please try again later or contact support: support@giantswarm.io`,
             messageType.ERROR,
             messageTTL.LONG
           );

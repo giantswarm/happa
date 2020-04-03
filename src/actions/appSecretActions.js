@@ -45,7 +45,7 @@ export function updateAppSecret(appName, clusterID, values) {
         });
 
         new FlashMessage(
-          `The Secret of <code>${appName}</code> on <code>${clusterID}</code> has successfully been updated.`,
+          `The Secret containing user level secret values of <code>${appName}</code> on <code>${clusterID}</code> has successfully been updated.`,
           messageType.SUCCESS,
           messageTTL.LONG
         );
@@ -59,7 +59,7 @@ export function updateAppSecret(appName, clusterID, values) {
 
         if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
-            `Could not find an app or app secret to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+            `Could not find an app or Secret containing user level secret values to update for <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -71,7 +71,7 @@ export function updateAppSecret(appName, clusterID, values) {
           );
         } else {
           new FlashMessage(
-            `Something went wrong while trying to update the Secret. Please try again later or contact support: support@giantswarm.io`,
+            `Something went wrong while trying to update the Secret containing user level secret values. Please try again later or contact support: support@giantswarm.io`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -121,7 +121,7 @@ export function createAppSecret(appName, clusterID, values) {
         });
 
         new FlashMessage(
-          `A Secret for <code>${appName}</code> on <code>${clusterID}</code> has successfully been created.`,
+          `A Secret containing user level secret values for <code>${appName}</code> on <code>${clusterID}</code> has successfully been created.`,
           messageType.SUCCESS,
           messageTTL.LONG
         );
@@ -147,7 +147,7 @@ export function createAppSecret(appName, clusterID, values) {
           );
         } else {
           new FlashMessage(
-            `Something went wrong while trying to create the Secret. Please try again later or contact support: support@giantswarm.io`,
+            `Something went wrong while trying to create the Secret containing your values. Please try again later or contact support: support@giantswarm.io`,
             messageType.ERROR,
             messageTTL.LONG
           );
@@ -194,7 +194,7 @@ export function deleteAppSecret(appName, clusterID) {
         });
 
         new FlashMessage(
-          `The Secret for <code>${appName}</code> on <code>${clusterID}</code> has been deleted.`,
+          `The Secret containing user level secret values for <code>${appName}</code> on <code>${clusterID}</code> has been deleted.`,
           messageType.SUCCESS,
           messageTTL.MEDIUM
         );
@@ -208,7 +208,7 @@ export function deleteAppSecret(appName, clusterID) {
 
         if (error.status === StatusCodes.NotFound) {
           new FlashMessage(
-            `Could not find the Secret for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
+            `Could not find the Secret containing user level secret values for an app called <code>${appName}</code> on cluster <code>${clusterID}</code>`,
             messageType.ERROR,
             messageTTL.LONG
           );
