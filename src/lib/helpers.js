@@ -138,13 +138,29 @@ export function toTitleCase(str) {
   });
 }
 
-// eslint-disable-next-line no-magic-numbers
-export function truncate(string, maxLength = 20) {
-  if (string.length > maxLength) {
-    return `${string.substring(0, maxLength)}\u2026`;
+/**
+ * Truncate a string in a smart way
+ *
+ * @param {string} str - String to truncate
+ * @param {string} replacer - The symbol displayed between the start chars and the end chars
+ * @param {number} numStartChars - Chars to keep unmangled in the beginning
+ * @param {number} numEndChars - Chars to keep unmangled in the end
+ * @returns {string}
+ */
+export function truncate(str, replacer, numStartChars, numEndChars) {
+  const maxLength = numStartChars + numEndChars + replacer.length;
+
+  if (str.length <= maxLength) {
+    return str;
   }
 
-  return string;
+  const result = [
+    str.substring(0, numStartChars - 1),
+    replacer,
+    str.substring(str.length - numEndChars),
+  ];
+
+  return result.join('');
 }
 
 export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {
