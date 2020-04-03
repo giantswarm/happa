@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { FallbackMessages } from 'shared/constants';
 import { Code, FallbackSpan } from 'styles';
 import theme from 'styles/theme';
@@ -55,7 +57,19 @@ function WorkerNodesAWS({
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
       <LineDiv data-testid='desired-nodes'>
-        <div>Desired number</div>
+        <OverlayTrigger
+          overlay={
+            <Tooltip id='desired-tooltip'>
+              Autoscaler&apos;s idea how many nodes would be required for the
+              workloads
+            </Tooltip>
+          }
+          placement='top'
+        >
+          <div>
+            Desired number <i className='fa fa-info' />
+          </div>
+        </OverlayTrigger>
         <RefreshableLabel value={workerNodesDesired}>
           {workerNodesDesired === 0 &&
           isClusterYoungerThanOneHour(createDate) ? (
