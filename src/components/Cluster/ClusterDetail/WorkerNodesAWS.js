@@ -67,6 +67,7 @@ function WorkerNodesAWS({
             }
             placement='top'
           >
+            {' '}
             <i className='fa fa-info' />
           </OverlayTrigger>
         </div>
