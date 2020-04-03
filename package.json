@@ -19,7 +19,7 @@
     "prettier": "yarn format --write",
     "validate-prettier": "yarn format --version; yarn format --no-color --check",
     "precommit": "./node_modules/.bin/lint-staged",
-    "typecheck": "./node_modules/.bin/tsc -p tsconfig.json"
+    "typecheck": "./node_modules/.bin/tsc"
   },
   "prettier": {
     "singleQuote": true,

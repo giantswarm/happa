@@ -21,6 +21,7 @@ typecheck:
 	docker run --rm -t \
 		-v ${PWD}/src:/usr/src/app/src:z \
 		-v ${PWD}/dist:/usr/src/app/dist:z \
+		-v ${PWD}/testUtils:/usr/src/app/testUtils:z \
 		-v ${PWD}/node_modules_linux:/usr/src/app/node_modules:z \
 		-v ${PWD}/package.json:/usr/src/app/package.json:z \
 		-v ${PWD}/tsconfig.json:/usr/src/app/tsconfig.json:z \
