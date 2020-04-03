@@ -138,7 +138,7 @@ const InstallAppForm = ({
       />
 
       <FileInput
-        description='Sensitive configuration can be uploaded separately as a secret.'
+        description='Sensitive configuration values can be uploaded separately.'
         hint={<>&nbsp;</>}
         label='User level secret values YAML:'
         onChange={updateSecretsYAML}
