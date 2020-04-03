@@ -98,7 +98,9 @@ const ChartVersionsTable = (props) => {
 
                 <td className='appVersion'>
                   <StyledCopyable copyText={appVersionString}>
-                    <code>{appVersionString}</code>
+                    <Truncated numStart={8} as='code'>
+                      {appVersionString}
+                    </Truncated>
                   </StyledCopyable>
                 </td>
               </tr>
