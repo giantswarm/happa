@@ -58,7 +58,7 @@ function WorkerNodesAWS({
       </LineDiv>
       <LineDiv data-testid='desired-nodes'>
         <div>
-          Desired number
+          Desired number{' '}
           <OverlayTrigger
             overlay={
               <Tooltip id='desired-tooltip'>
@@ -67,10 +67,7 @@ function WorkerNodesAWS({
             }
             placement='top'
           >
-            <>
-              {' '}
-              <i className='fa fa-info' />
-            </>
+            <i className='fa fa-info' />
           </OverlayTrigger>
         </div>
         <RefreshableLabel value={workerNodesDesired}>
