@@ -17,6 +17,7 @@ import {
   selectLoadingFlagByIdAndAction,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
+import { Constants } from 'shared/constants';
 import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -405,8 +406,7 @@ class V5ClusterDetailTable extends React.Component {
                 <OverlayTrigger
                   overlay={
                     <Tooltip id='desired-tooltip'>
-                      Autoscaler&apos;s idea how many nodes would be required
-                      for the workloads
+                      {Constants.DESIRED_NODES_EXPLANATION}
                     </Tooltip>
                   }
                   placement='top'

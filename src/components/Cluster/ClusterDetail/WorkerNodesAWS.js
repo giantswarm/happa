@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import { FallbackMessages } from 'shared/constants';
+import { Constants, FallbackMessages } from 'shared/constants';
 import { Code, FallbackSpan } from 'styles';
 import theme from 'styles/theme';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
@@ -60,8 +60,7 @@ function WorkerNodesAWS({
         <OverlayTrigger
           overlay={
             <Tooltip id='desired-tooltip'>
-              Autoscaler&apos;s idea how many nodes would be required for the
-              workloads
+              {Constants.DESIRED_NODES_EXPLANATION}
             </Tooltip>
           }
           placement='top'
