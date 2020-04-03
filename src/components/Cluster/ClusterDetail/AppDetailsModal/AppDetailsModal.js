@@ -203,14 +203,14 @@ const AppDetailsModal = (props) => {
     case modalPanes.deleteAppConfig:
       modalTitle = (
         <>
-          Delete ConfigMap for {props.app.metadata.name} on{' '}
+          Delete user level config values for {props.app.metadata.name} on{' '}
           <ClusterIDLabel clusterID={props.clusterId} />
         </>
       );
 
       modalBody = (
         <>
-          Are you sure you want to delete the ConfigMap for{' '}
+          Are you sure you want to delete user level config values for{' '}
           {props.app.metadata.name} on{' '}
           <ClusterIDLabel clusterID={props.clusterId} />?
           <br />
@@ -219,21 +219,24 @@ const AppDetailsModal = (props) => {
         </>
       );
 
-      modalFooter = deleteConfirmFooter('Delete ConfigMap', deleteAppConfig);
+      modalFooter = deleteConfirmFooter(
+        'Delete user level config values',
+        deleteAppConfig
+      );
 
       break;
 
     case modalPanes.deleteAppSecret:
       modalTitle = (
         <>
-          Delete Secret for {props.app.metadata.name} on{' '}
+          Delete user level secret values for {props.app.metadata.name} on{' '}
           <ClusterIDLabel clusterID={props.clusterId} />
         </>
       );
 
       modalBody = (
         <>
-          Are you sure you want to delete the Secret for{' '}
+          Are you sure you want to delete user level secret values for{' '}
           {props.app.metadata.name} on{' '}
           <ClusterIDLabel clusterID={props.clusterId} />?
           <br />

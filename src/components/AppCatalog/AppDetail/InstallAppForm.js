@@ -129,9 +129,9 @@ const InstallAppForm = ({
       )}
 
       <FileInput
-        description='Apps can be configured using a values.yaml file. If you have one, you can upload it here already.'
+        description='Apps can be configured using a yaml file with values. If you have one, you can upload it here already.'
         hint={<>&nbsp;</>}
-        label='ConfigMap:'
+        label='User Values YAML:'
         onChange={updateValuesYAML}
         validationError={valuesYAMLError}
         value={valuesYAML}
@@ -140,7 +140,7 @@ const InstallAppForm = ({
       <FileInput
         description='Sensitive configuration can be uploaded separately as a secret.'
         hint={<>&nbsp;</>}
-        label='Secret:'
+        label='User Secrets YAML:'
         onChange={updateSecretsYAML}
         validationError={secretsYAMLError}
         value={secretsYAML}
