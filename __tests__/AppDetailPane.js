@@ -277,7 +277,7 @@ describe('Installed app detail pane', () => {
       expect(queryByText(/delete app/i)).not.toBeInTheDocument();
     });
 
-    await findByText(/will be deleted/i);
+    await findByText(/was scheduled for deletion/i);
   });
 
   it('shows a no apps installed message when there are no apps yet', async () => {
