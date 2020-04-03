@@ -67,8 +67,10 @@ function WorkerNodesAWS({
             }
             placement='top'
           >
-            {' '}
-            <i className='fa fa-info' />
+            <>
+              {' '}
+              <i className='fa fa-info' />
+            </>
           </OverlayTrigger>
         </div>
         <RefreshableLabel value={workerNodesDesired}>
