@@ -296,7 +296,7 @@ describe('Apps and App Catalog', () => {
       expect(getByLabelText(/namespace:/i).readOnly).toBeTruthy();
 
       // Upload a configmap file
-      let fileInput = getByLabelText(/configmap:/i);
+      let fileInput = getByLabelText(/User level config values YAML:/i);
       let file = new Blob(
         [
           JSON.stringify({
@@ -316,7 +316,7 @@ describe('Apps and App Catalog', () => {
       });
 
       // Upload a secrets file
-      fileInput = getByLabelText(/secret:/i);
+      fileInput = getByLabelText(/User level secret values YAML:/i);
       file = new Blob(
         [
           JSON.stringify({

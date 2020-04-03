@@ -212,7 +212,7 @@ export function deleteApp(appName, clusterID) {
     return removeApp(clusterID, appName)
       .then(() => {
         new FlashMessage(
-          `App <code>${appName}</code> will be deleted on <code>${clusterID}</code>`,
+          `App <code>${appName}</code> was scheduled for deletion on <code>${clusterID}</code>. This may take a couple of minutes.`,
           messageType.SUCCESS,
           messageTTL.LONG
         );
