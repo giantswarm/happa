@@ -19,5 +19,5 @@ export const Constants = {
 
   // UI labels
   DESIRED_NODES_EXPLANATION:
-    'Autoscaler&apos;s idea how many nodes would be required for the workloads',
+    'Autoscaler’s idea how many nodes would be required for the workloads',
 };
