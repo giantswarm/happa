@@ -93,7 +93,9 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Delete the existing file
-      const fileInputPlaceholder = getByText(/configmap has been set/i);
+      const fileInputPlaceholder = getByText(
+        /User level config values have been set/i
+      );
       const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
       const file = new Blob(
         [
@@ -137,18 +139,22 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Upload a configmap file
-      const fileInputPlaceholder = getByText(/configmap has been set/i);
+      const fileInputPlaceholder = getByText(
+        /User level config values have been set/i
+      );
       let deleteButton = fileInputPlaceholder.parentNode.querySelector(
         '.btn-danger'
       );
       fireEvent.click(deleteButton);
 
       // Confirm deletion
-      deleteButton = getByText(/^delete configmap$/i);
+      deleteButton = getByText(/^Delete user level config values$/i);
       fireEvent.click(deleteButton);
 
       await waitFor(() => {
-        expect(queryByText(/delete configmap/i)).not.toBeInTheDocument();
+        expect(
+          queryByText(/Delete user level config values/i)
+        ).not.toBeInTheDocument();
       });
 
       await findByText(/has been deleted./i);
@@ -174,7 +180,9 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Upload a secrets file
-      const fileInputPlaceholder = getByText(/secret has been set/i);
+      const fileInputPlaceholder = getByText(
+        /user level secret values have been set/i
+      );
       const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
       const file = new Blob(
         [
@@ -195,7 +203,9 @@ describe('Installed app detail pane', () => {
       });
 
       await waitFor(() => {
-        expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
+        expect(
+          queryByText(/delete user level secret values/i)
+        ).not.toBeInTheDocument();
       });
 
       await findByText(/has successfully been updated./i);
@@ -221,18 +231,22 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Delete the existing file
-      const fileInputPlaceholder = getByText(/secret has been set/i);
+      const fileInputPlaceholder = getByText(
+        /user level secret values have been set/i
+      );
       let deleteButton = fileInputPlaceholder.parentNode.querySelector(
         '.btn-danger'
       );
       fireEvent.click(deleteButton);
 
       // Confirm deletion
-      deleteButton = getByText(/^delete secret$/i);
+      deleteButton = getByText(/^delete user level secret values$/i);
       fireEvent.click(deleteButton);
 
       await waitFor(() => {
-        expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
+        expect(
+          queryByText(/delete user level secret values/i)
+        ).not.toBeInTheDocument();
       });
 
       await findByText(/has been deleted./i);

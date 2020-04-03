@@ -245,7 +245,10 @@ const AppDetailsModal = (props) => {
         </>
       );
 
-      modalFooter = deleteConfirmFooter('Delete Secret', deleteAppSecret);
+      modalFooter = deleteConfirmFooter(
+        'Delete user level secret values',
+        deleteAppSecret
+      );
 
       break;
 
