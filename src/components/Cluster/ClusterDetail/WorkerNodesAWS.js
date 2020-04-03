@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FallbackMessages } from 'shared/constants';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
+import { Constants, FallbackMessages } from 'shared/constants';
 import { Code, FallbackSpan } from 'styles';
 import theme from 'styles/theme';
 import AvailabilityZonesLabels from 'UI/AvailabilityZonesLabels';
@@ -55,7 +57,19 @@ function WorkerNodesAWS({
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
       <LineDiv data-testid='desired-nodes'>
-        <div>Desired number</div>
+        <div>
+          Desired number{' '}
+          <OverlayTrigger
+            overlay={
+              <Tooltip id='desired-tooltip'>
+                {Constants.DESIRED_NODES_EXPLANATION}
+              </Tooltip>
+            }
+            placement='top'
+          >
+            <i className='fa fa-info' />
+          </OverlayTrigger>
+        </div>
         <RefreshableLabel value={workerNodesDesired}>
           {workerNodesDesired === 0 &&
           isClusterYoungerThanOneHour(createDate) ? (

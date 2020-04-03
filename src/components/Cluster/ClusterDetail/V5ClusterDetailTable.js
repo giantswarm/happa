@@ -6,6 +6,8 @@ import produce from 'immer';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
@@ -15,6 +17,7 @@ import {
   selectLoadingFlagByIdAndAction,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
+import { Constants } from 'shared/constants';
 import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -401,7 +404,16 @@ class V5ClusterDetailTable extends React.Component {
                 <span>AVAILABILITY ZONES</span>
                 <span>MIN</span>
                 <span>MAX</span>
-                <span>DESIRED</span>
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='desired-tooltip'>
+                      {Constants.DESIRED_NODES_EXPLANATION}
+                    </Tooltip>
+                  }
+                  placement='top'
+                >
+                  <span>DESIRED</span>
+                </OverlayTrigger>
                 <span>CURRENT</span>
                 <span> </span>
               </GridRowNodePoolsHeaders>

@@ -61,7 +61,13 @@ const WrapperStyles = (props) => css`
       width: 100%;
     }
     ${LabelWrapper} {
-      margin-bottom: 5px;
+      position: absolute;
+      i {
+        display: none;
+      }
+    }
+    ${TitleWrapper} {
+      margin-left: 60px;
     }
     /* Font sizes */
     font-size: 0.9em;
@@ -99,7 +105,7 @@ const ButtonsWrapper = styled.div`
     padding-left: 98px;
   }
   ${mq(CSSBreakpoints.Small)} {
-    padding-left: 9px;
+    display: none;
   }
 `;
 
@@ -114,6 +120,10 @@ const ClusterDetailsDiv = styled.div`
   }
   ${mq(CSSBreakpoints.Medium)} {
     height: unset;
+  }
+  ${mq(CSSBreakpoints.Small)} {
+    display: inline-block;
+    transform: translateY(-1px);
   }
 `;
 

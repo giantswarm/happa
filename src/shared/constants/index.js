@@ -18,4 +18,7 @@ export const Constants = {
   AZURE_MULTI_AZ_VERSION: '11.1.0',
   AWS_ONDEMAND_INSTANCES_VERSION: '11.0.0',
   AWS_USE_ALIKE_INSTANCES_VERSION: '11.0.0',
+  // UI labels
+  DESIRED_NODES_EXPLANATION:
+    'Autoscaler’s idea how many nodes would be required for the workloads',
 };
