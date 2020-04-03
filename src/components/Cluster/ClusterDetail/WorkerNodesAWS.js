@@ -57,18 +57,19 @@ function WorkerNodesAWS({
         <Button onClick={showScalingModal}>Edit</Button>
       </LineDiv>
       <LineDiv data-testid='desired-nodes'>
-        <OverlayTrigger
-          overlay={
-            <Tooltip id='desired-tooltip'>
-              {Constants.DESIRED_NODES_EXPLANATION}
-            </Tooltip>
-          }
-          placement='top'
-        >
-          <div>
-            Desired number <i className='fa fa-info' />
-          </div>
-        </OverlayTrigger>
+        <div>
+          Desired number
+          <OverlayTrigger
+            overlay={
+              <Tooltip id='desired-tooltip'>
+                {Constants.DESIRED_NODES_EXPLANATION}
+              </Tooltip>
+            }
+            placement='top'
+          >
+            <i className='fa fa-info' />
+          </OverlayTrigger>
+        </div>
         <RefreshableLabel value={workerNodesDesired}>
           {workerNodesDesired === 0 &&
           isClusterYoungerThanOneHour(createDate) ? (
