@@ -2,22 +2,35 @@ import styled from '@emotion/styled';
 import { truncate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 
-interface ITruncatedProps {
+interface ITruncatedProps
+  extends React.ComponentPropsWithoutRef<React.ElementType> {
   children: string | number;
   replacer?: string;
   as?: React.ElementType;
   numStart?: number;
   numEnd?: number;
+  labelProps?: React.ComponentPropsWithoutRef<'span'>;
 }
 
-const StyledWrapper = styled.span``;
+const Wrapper = styled.span``;
 
+const Label = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+/**
+ * A component that truncates a string/number in a smart way
+ */
 const Truncated: React.FC<ITruncatedProps> = ({
   children,
   replacer,
   numStart,
   numEnd,
+  labelProps,
   ...rest
 }) => {
   let str = String(children);
@@ -25,7 +38,16 @@ const Truncated: React.FC<ITruncatedProps> = ({
   // Safe because we're using defaultProps in case these aren't defined
   str = truncate(str, replacer as string, numStart as number, numEnd as number);
 
-  return <StyledWrapper {...rest}>{str}</StyledWrapper>;
+  return (
+    <Wrapper {...rest}>
+      <OverlayTrigger
+        overlay={<Tooltip id='tooltip'>{children}</Tooltip>}
+        placement='top'
+      >
+        <Label {...labelProps}>{str}</Label>
+      </OverlayTrigger>
+    </Wrapper>
+  );
 };
 
 Truncated.propTypes = {
@@ -37,6 +59,7 @@ Truncated.propTypes = {
   as: PropTypes.string,
   numStart: PropTypes.number,
   numEnd: PropTypes.number,
+  labelProps: PropTypes.object,
 };
 
 Truncated.defaultProps = {
@@ -45,3 +68,5 @@ Truncated.defaultProps = {
   numStart: 15,
   numEnd: 5,
 };
+
+export default Truncated;

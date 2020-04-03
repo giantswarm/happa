@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import Truncated from 'UI/Truncated';
 
 export const APP_CONTAINER_HEIGHT = 200;
 export const APP_CONTAINER_IMAGE_HEIGHT = 100;
@@ -174,7 +175,7 @@ const AppContainer = ({
         </AppIcon>
         <AppDetails>
           <h3>{name}</h3>
-          <span>{version}</span>
+          <Truncated>{version}</Truncated>
         </AppDetails>
       </StyledLink>
     </Wrapper>
