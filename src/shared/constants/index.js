@@ -16,4 +16,8 @@ export const Constants = {
   DEFAULT_NODEPOOL_NAME: 'Unnamed node pool',
   AWS_V5_VERSION: '10.0.0',
   AZURE_MULTI_AZ_VERSION: '11.1.0',
+
+  // UI labels
+  DESIRED_NODES_EXPLANATION:
+    'Autoscaler’s idea how many nodes would be required for the workloads',
 };
