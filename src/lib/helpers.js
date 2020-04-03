@@ -155,7 +155,7 @@ export function truncate(str, replacer, numStartChars, numEndChars) {
   }
 
   const result = [
-    str.substring(0, numStartChars - 1),
+    str.substring(0, numStartChars),
     replacer,
     str.substring(str.length - numEndChars),
   ];

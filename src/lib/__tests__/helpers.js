@@ -21,7 +21,7 @@ describe('truncate', () => {
     // eslint-disable-next-line no-magic-numbers
     const result = truncate(initial, '...', 10, 8);
 
-    expect(result).toBe('someReall...Truncate');
+    expect(result).toBe('someReally...Truncate');
   });
 
   it('accepts different replacers', () => {
@@ -29,6 +29,6 @@ describe('truncate', () => {
     // eslint-disable-next-line no-magic-numbers
     const result = truncate(initial, 'NotReallyHelpful', 10, 8);
 
-    expect(result).toBe('someReallNotReallyHelpfulTruncate');
+    expect(result).toBe('someReallyNotReallyHelpfulTruncate');
   });
 });

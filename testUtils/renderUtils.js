@@ -47,9 +47,9 @@ export function renderRouteWithStore(
 
 /**
  * Render component in the Theme context
- * @param {React.ReactType} component The React Component
- * @param {<P extends Record<string, any>>React.ComponentProps<P>} props Props to pass to the component
- * @param {<Q extends TestingLibrary.Queries>TestingLibrary.RenderOptions<Q>} [options] Testing library render options
+ * @param {React.ElementType} component The React Component
+ * @param {Object} props Props to pass to the component
+ * @param {Object} [options] Testing library render options
  */
 export function renderWithTheme(component, props, options) {
   return render(getComponentWithTheme(component, props), options);
