@@ -16,11 +16,7 @@ interface ITruncatedProps
 }
 
 const Wrapper = styled.span``;
-
-const Label = styled.div`
-  width: 100%;
-  height: 100%;
-`;
+const Label = styled.span``;
 
 /**
  * A component that truncates a string/number in a smart way

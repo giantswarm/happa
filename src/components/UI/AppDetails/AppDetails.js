@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppCatalogRoutes } from 'shared/constants/routes';
+import Truncated from 'UI/Truncated';
 
 import AppDetailsBody from './AppDetailsBody';
 import AppDetailsItem from './AppDetailsItem';
@@ -152,7 +153,8 @@ const AppDetails = (props) => {
 
           <div className='version'>
             <small>Chart&nbsp;Version</small>&nbsp;
-            <code>{version}</code> <small>App&nbsp;Version</small>&nbsp;
+            <Truncated as='code'>{version}</Truncated>{' '}
+            <small>App&nbsp;Version</small>&nbsp;
             <code className='appVersion'>{appVersion}</code>
           </div>
         </Title>
