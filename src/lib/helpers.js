@@ -150,7 +150,7 @@ export function toTitleCase(str) {
 export function truncate(str, replacer, numStartChars, numEndChars) {
   const maxLength = numStartChars + numEndChars + replacer.length;
 
-  if (str.length <= maxLength) {
+  if (str.length <= maxLength || numEndChars === 0 || numEndChars === 0) {
     return str;
   }
 
