@@ -6,6 +6,8 @@ import produce from 'immer';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
@@ -400,7 +402,17 @@ class V5ClusterDetailTable extends React.Component {
                 <span>AVAILABILITY ZONES</span>
                 <span>MIN</span>
                 <span>MAX</span>
-                <span>DESIRED</span>
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='desired-tooltip'>
+                      Autoscaler&apos;s idea how many nodes would be required
+                      for the workloads
+                    </Tooltip>
+                  }
+                  placement='top'
+                >
+                  <span>DESIRED</span>
+                </OverlayTrigger>
                 <span>CURRENT</span>
                 <span> </span>
               </GridRowNodePoolsHeaders>
