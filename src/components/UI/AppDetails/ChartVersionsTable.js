@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Copyable from 'shared/Copyable';
-import { Ellipsis } from 'styles/';
+import Truncated from 'UI/Truncated';
 
 const StyledCopyable = styled(Copyable)``;
 
@@ -17,7 +17,6 @@ const ChartVersionTable = styled.table`
   td {
     vertical-align: top;
     code {
-      ${Ellipsis}
       max-width: 150px;
       display: inline-block;
     }
@@ -89,7 +88,9 @@ const ChartVersionsTable = (props) => {
                         key={appVersionObject.version}
                         copyText={appVersionObject.version}
                       >
-                        <code>{appVersionObject.version}</code>
+                        <Truncated numStart={12} as='code'>
+                          {appVersionObject.version}
+                        </Truncated>
                       </StyledCopyable>
                     );
                   })}
@@ -97,7 +98,9 @@ const ChartVersionsTable = (props) => {
 
                 <td className='appVersion'>
                   <StyledCopyable copyText={appVersionString}>
-                    <code>{appVersionString}</code>
+                    <Truncated numStart={8} as='code'>
+                      {appVersionString}
+                    </Truncated>
                   </StyledCopyable>
                 </td>
               </tr>

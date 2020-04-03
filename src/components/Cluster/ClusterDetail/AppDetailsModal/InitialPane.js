@@ -4,6 +4,7 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Button from 'UI/Button';
+import Truncated from 'UI/Truncated';
 import VersionPicker from 'UI/VersionPicker/VersionPicker';
 
 import YAMLFileUpload from './YamlFileUpload';
@@ -70,7 +71,7 @@ const InitialPane = (props) => {
             {props.app.status.app_version === '' ? (
               <span>Information pending...</span>
             ) : (
-              <span>{props.app.status.app_version}</span>
+              <Truncated as='span'>{props.app.status.app_version}</Truncated>
             )}
           </div>
         </div>
