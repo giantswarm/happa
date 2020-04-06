@@ -13,7 +13,10 @@ import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
-import { selectErrorByAction } from 'selectors/clusterSelectors';
+import {
+  selectErrorByAction,
+  selectOrganizationClustersIds,
+} from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
@@ -37,6 +40,28 @@ class Home extends React.Component {
   componentWillUnmount() {
     this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
     this.props.clearInterval(this.refreshInterval);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps !== this.props || prevState !== this.state) {
+      Object.keys(this.props).forEach((key) => {
+        if (this.props[key] !== prevProps[key]) {
+          console.log(
+            `this.props.${[key]} has changed: `,
+            _.difference(this.props[key], prevProps[key])
+          );
+        }
+      });
+      Object.keys(this.state).forEach((key) => {
+        if (this.state[key] !== prevState[key]) {
+          console.log(
+            `this.state.${[key]} has changed: `,
+            this.state[key],
+            prevState[key]
+          );
+        }
+      });
+    }
   }
 
   /**
@@ -108,27 +133,22 @@ class Home extends React.Component {
           )}
 
           <TransitionGroup className='cluster-list'>
-            {_.sortBy(this.props.clusters, (cluster) => cluster.name).map(
-              (cluster) => {
-                return (
-                  <CSSTransition
-                    classNames='cluster-list-item'
-                    key={cluster.id}
-                    timeout={500}
-                  >
-                    <ClusterDashboardItem
-                      animate={true}
-                      cluster={cluster}
-                      isV5Cluster={this.props.v5Clusters.includes(cluster.id)}
-                      key={cluster.id}
-                      nodePools={this.props.nodePools}
-                      selectedOrganization={this.props.selectedOrganization}
-                    />
-                  </CSSTransition>
-                );
-              },
-              (cluster) => cluster.id
-            )}
+            {this.props.clusters.map((id) => (
+              <CSSTransition
+                classNames='cluster-list-item'
+                key={id}
+                timeout={500}
+              >
+                <ClusterDashboardItem
+                  animate={true}
+                  clusterId={id}
+                  isV5Cluster={this.props.v5Clusters.includes(id)}
+                  key={id}
+                  nodePools={this.props.nodePools}
+                  selectedOrganization={this.props.selectedOrganization}
+                />
+              </CSSTransition>
+            ))}
           </TransitionGroup>
 
           {this.props.clusters.length > 0 ? (
@@ -163,20 +183,13 @@ Home.propTypes = {
 function mapStateToProps(state) {
   const selectedOrganization = state.main.selectedOrganization;
   const organizations = state.entities.organizations.items;
-  const allClusters = state.entities.clusters.items;
   const errorLoadingClusters = selectErrorByAction(
     state,
     actionTypes.CLUSTERS_LIST_REQUEST
   );
   const v5Clusters = state.entities.clusters.v5Clusters;
   const nodePools = state.entities.nodePools.items;
-
-  let clusters = [];
-  if (selectedOrganization) {
-    clusters = _.filter(allClusters, (cluster) => {
-      return cluster.owner === selectedOrganization;
-    });
-  }
+  const clusters = selectOrganizationClustersIds(state);
 
   return {
     clusters,

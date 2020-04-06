@@ -6,6 +6,7 @@ const initialState = {
   isFetching: false,
   items: {},
   v5Clusters: [],
+  allIds: [],
 };
 
 // eslint-disable-next-line complexity
@@ -14,6 +15,7 @@ const clusterReducer = produce((draft, action) => {
     case types.CLUSTERS_LIST_SUCCESS:
       draft.items = action.clusters;
       draft.v5Clusters = action.v5ClusterIds;
+      draft.allIds = action.allIds;
 
       return;
 

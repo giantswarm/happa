@@ -13,8 +13,17 @@ import {
 import { createDeepEqualSelector, typeWithoutSuffix } from './selectorUtils';
 
 // Regular selectors
-const selectClusterById = (state, props) => {
-  return state.entities.clusters.items[props.cluster.id];
+export const selectClusterById = (state, id) => {
+  return state.entities.clusters.items[id];
+};
+
+export const selectOrganizationClustersIds = (state) => {
+  const clusters = state.entities.clusters.items;
+  const clusterIds = Object.keys(clusters);
+
+  return clusterIds.filter(
+    (id) => clusters[id].owner === state.main.selectedOrganization
+  );
 };
 
 const selectNodePools = (state) => state.entities.nodePools.items;
