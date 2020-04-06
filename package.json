@@ -103,7 +103,7 @@
     "@testing-library/react-hooks": "3.2.1",
     "@types/auth0-js": "^9.12.4",
     "@types/bluebird": "^3.5.30",
-    "@types/bootstrap": "^4.3.1",
+    "@types/bootstrap": "^4.3.2",
     "@types/classnames": "^2.2.10",
     "@types/color-hash": "^1.0.0",
     "@types/deep-diff": "^1.0.0",
