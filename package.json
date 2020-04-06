@@ -41,7 +41,7 @@
     "@emotion/styled": "10.0.27",
     "@hot-loader/react-dom": "16.13.0",
     "@khanacademy/react-multi-select": "0.3.3",
-    "auth0-js": "9.13.0",
+    "auth0-js": "9.13.1",
     "axios": "^0.19.2",
     "bluebird": "3.7.2",
     "bootstrap": "3.4.1",
