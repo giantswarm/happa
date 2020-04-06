@@ -14,8 +14,8 @@ import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
 import {
+  selectClustersList,
   selectErrorByAction,
-  selectOrganizationClustersIds,
 } from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
@@ -40,28 +40,6 @@ class Home extends React.Component {
   componentWillUnmount() {
     this.visibilityTracker.removeEventListener(this.handleVisibilityChange);
     this.props.clearInterval(this.refreshInterval);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps !== this.props || prevState !== this.state) {
-      Object.keys(this.props).forEach((key) => {
-        if (this.props[key] !== prevProps[key]) {
-          console.log(
-            `this.props.${[key]} has changed: `,
-            _.difference(this.props[key], prevProps[key])
-          );
-        }
-      });
-      Object.keys(this.state).forEach((key) => {
-        if (this.state[key] !== prevState[key]) {
-          console.log(
-            `this.state.${[key]} has changed: `,
-            this.state[key],
-            prevState[key]
-          );
-        }
-      });
-    }
   }
 
   /**
@@ -180,26 +158,31 @@ Home.propTypes = {
   dispatch: PropTypes.func,
 };
 
-function mapStateToProps(state) {
-  const selectedOrganization = state.main.selectedOrganization;
-  const organizations = state.entities.organizations.items;
-  const errorLoadingClusters = selectErrorByAction(
-    state,
-    actionTypes.CLUSTERS_LIST_REQUEST
-  );
-  const v5Clusters = state.entities.clusters.v5Clusters;
-  const nodePools = state.entities.nodePools.items;
-  const clusters = selectOrganizationClustersIds(state);
+const makeMapStateToProps = () => {
+  const selectClusterIds = selectClustersList();
 
-  return {
-    clusters,
-    organizations,
-    errorLoadingClusters: Boolean(errorLoadingClusters),
-    selectedOrganization,
-    v5Clusters,
-    nodePools,
-  };
-}
+  function mapStateToProps(state) {
+    const selectedOrganization = state.main.selectedOrganization;
+    const organizations = state.entities.organizations.items;
+    const errorLoadingClusters = selectErrorByAction(
+      state,
+      actionTypes.CLUSTERS_LIST_REQUEST
+    );
+    const v5Clusters = state.entities.clusters.v5Clusters;
+    const nodePools = state.entities.nodePools.items;
+
+    return {
+      clusters: selectClusterIds(state),
+      organizations,
+      errorLoadingClusters: Boolean(errorLoadingClusters),
+      selectedOrganization,
+      v5Clusters,
+      nodePools,
+    };
+  }
+
+  return mapStateToProps;
+};
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -209,4 +192,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReactTimeout(Home));
+export default connect(
+  makeMapStateToProps,
+  mapDispatchToProps
+)(ReactTimeout(Home));
