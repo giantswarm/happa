@@ -72,50 +72,6 @@ export const selectErrorMessageByAction = (state, actionType) => {
   return state.errors[typeWithoutSuffix(actionType)]?.message ?? null;
 };
 
-export const selectTargetRelease = (state, cluster) => {
-  if (!cluster || Object.keys(state.entities.releases.items).length === 0)
-    return null;
-
-  const releases = state.entities.releases.items;
-  const availableVersions = Object.keys(releases)
-    .filter((release) => releases[release].active)
-    .sort(cmp);
-
-  // Guard against the release version of this cluster not being in the /v4/releases/
-  // response.
-  // This will ensure that Happa can calculate the target version for upgrade
-  // correctly.
-  if (!availableVersions.includes(cluster.release_version)) {
-    availableVersions.push(cluster.release_version);
-    availableVersions.sort(cmp);
-  }
-
-  const indexCurrentVersion = availableVersions.indexOf(
-    cluster.release_version
-  );
-
-  if (availableVersions.length > indexCurrentVersion) {
-    return availableVersions[indexCurrentVersion + 1];
-  }
-
-  return null;
-};
-
-export const selectCanClusterUpgrade = (state, clusterID) => {
-  const cluster = state.entities.clusters.items[clusterID];
-
-  if (!cluster) return false;
-
-  const targetVersion = selectTargetRelease(state, cluster);
-
-  // eslint-disable-next-line consistent-return
-  return canClusterUpgrade(
-    cluster.release_version,
-    targetVersion,
-    state.main.info.general.provider
-  );
-};
-
 // Memoized Reselect selectors
 // https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc
 // Using factory functions because they create new references each time that are called,
@@ -189,3 +145,47 @@ export const selectAndProduceAZGridTemplateAreas = () =>
 
     return `"${availableZonesGridTemplateAreas}"`;
   });
+
+export const selectTargetRelease = (state, cluster) => {
+  if (!cluster || Object.keys(state.entities.releases.items).length === 0)
+    return null;
+
+  const releases = state.entities.releases.items;
+  const availableVersions = Object.keys(releases)
+    .filter((release) => releases[release].active)
+    .sort(cmp);
+
+  // Guard against the release version of this cluster not being in the /v4/releases/
+  // response.
+  // This will ensure that Happa can calculate the target version for upgrade
+  // correctly.
+  if (!availableVersions.includes(cluster.release_version)) {
+    availableVersions.push(cluster.release_version);
+    availableVersions.sort(cmp);
+  }
+
+  const indexCurrentVersion = availableVersions.indexOf(
+    cluster.release_version
+  );
+
+  if (availableVersions.length > indexCurrentVersion) {
+    return availableVersions[indexCurrentVersion + 1];
+  }
+
+  return null;
+};
+
+export const selectCanClusterUpgrade = (state, clusterID) => {
+  const cluster = state.entities.clusters.items[clusterID];
+
+  if (!cluster) return false;
+
+  const targetVersion = selectTargetRelease(state, cluster);
+
+  // eslint-disable-next-line consistent-return
+  return canClusterUpgrade(
+    cluster.release_version,
+    targetVersion,
+    state.main.info.general.provider
+  );
+};
