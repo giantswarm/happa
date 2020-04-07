@@ -17,13 +17,16 @@ export const selectClusterById = (state, id) => {
   return state.entities.clusters.items[id];
 };
 
-const selectOrganizationClustersIds = (state) => {
+const selectOrganizationClusterNames = (state) => {
   const clusters = state.entities.clusters.items;
   const clusterIds = Object.keys(clusters);
 
-  return clusterIds.filter(
-    (id) => clusters[id].owner === state.main.selectedOrganization
-  );
+  return clusterIds
+    .filter((id) => clusters[id].owner === state.main.selectedOrganization)
+    .reduce(
+      (accumulator, id) => [...accumulator, { id, name: clusters[id].name }],
+      []
+    );
 };
 
 const selectNodePools = (state) => state.entities.nodePools.items;
@@ -78,11 +81,12 @@ export const selectErrorMessageByAction = (state, actionType) => {
 // so each cluster can have its dedicated function. More info:
 // https://github.com/reduxjs/reselect#sharing-selectors-with-props-across-multiple-component-instances
 
-export const selectClustersList = () =>
-  createDeepEqualSelector(
-    selectOrganizationClustersIds,
+export const selectClustersList = () => {
+  return createDeepEqualSelector(
+    selectOrganizationClusterNames,
     (clusters) => clusters
   );
+};
 
 export const selectResourcesV4 = () =>
   createDeepEqualSelector(selectClusterById, (cluster) => {

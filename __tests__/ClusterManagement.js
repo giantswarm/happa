@@ -223,10 +223,10 @@ it('Cluster list shows all clusters, each one with its details, for the selected
   // Expect resources to be in the view.
   // If we refactor resources selector this will break.
   // TODO Use selectors in tests to produce resources and expect this info is in the view
-  const v4ClusterResources = within(getAllByTestId('cluster-resources')[0]);
+  const v4ClusterResources = within(getAllByTestId('cluster-resources')[1]);
   expect(v4ClusterResources.getByText(/3 nodes/i)).toBeInTheDocument();
 
-  const v5ClusterResources = within(getAllByTestId('cluster-resources')[1]);
+  const v5ClusterResources = within(getAllByTestId('cluster-resources')[0]);
   expect(v5ClusterResources.getByText(/2 node pools/i)).toBeInTheDocument();
   expect(v5ClusterResources.getByText(/6 nodes/i)).toBeInTheDocument();
   expect(v5ClusterResources.getByText(/24 CPU cores/i)).toBeInTheDocument();

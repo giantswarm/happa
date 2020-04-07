@@ -171,7 +171,7 @@ function ClusterDashboardItem({
     OrganizationsRoutes.Clusters.Detail,
     {
       orgId: selectedOrganization,
-      clusterId: clusterId,
+      clusterId,
     }
   );
 
