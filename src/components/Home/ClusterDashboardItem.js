@@ -135,6 +135,9 @@ function ClusterDashboardItem({
   dispatch,
   nodePoolsLoadError,
 }) {
+  // If the cluster has been deleted using gsctl, Happa doesn't know yet.
+  if (!cluster) return null;
+
   /**
    * Returns true if the cluster is younger than 30 days
    */
