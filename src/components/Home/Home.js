@@ -80,7 +80,6 @@ class Home extends React.Component {
   }
 
   render() {
-    console.log('hey');
     const { clusters, selectedOrganization } = this.props;
 
     const newClusterPath = RoutePath.createUsablePath(
