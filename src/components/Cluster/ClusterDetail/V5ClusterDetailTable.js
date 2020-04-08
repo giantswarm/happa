@@ -401,8 +401,26 @@ class V5ClusterDetailTable extends React.Component {
                 </span>
                 <span>INSTANCE TYPE</span>
                 <span>AVAILABILITY ZONES</span>
-                <span>MIN</span>
-                <span>MAX</span>
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='min-tooltip'>
+                      {Constants.MIN_NODES_EXPLANATION}
+                    </Tooltip>
+                  }
+                  placement='top'
+                >
+                  <span>MIN</span>
+                </OverlayTrigger>
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='max-tooltip'>
+                      {Constants.MAX_NODES_EXPLANATION}
+                    </Tooltip>
+                  }
+                  placement='top'
+                >
+                  <span>MAX</span>
+                </OverlayTrigger>
                 <OverlayTrigger
                   overlay={
                     <Tooltip id='desired-tooltip'>
@@ -413,7 +431,16 @@ class V5ClusterDetailTable extends React.Component {
                 >
                   <span>DESIRED</span>
                 </OverlayTrigger>
-                <span>CURRENT</span>
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id='current-tooltip'>
+                      {Constants.CURRENT_NODES_INPOOL_EXPLANATION}
+                    </Tooltip>
+                  }
+                  placement='top'
+                >
+                  <span>CURRENT</span>
+                </OverlayTrigger>
                 <span> </span>
               </GridRowNodePoolsHeaders>
               <TransitionGroup>
