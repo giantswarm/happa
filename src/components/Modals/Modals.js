@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { batchedClusterDeleteConfirmed } from 'actions/batchedActions';
 import { clusterDeleteConfirmed } from 'actions/clusterActions';
 import { modalHide } from 'actions/modalActions';
@@ -17,6 +18,18 @@ import EmailField from 'shared/EmailField';
 import InputField from 'shared/InputField';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
+
+const NodePoolTextDiv = styled.div`
+  strong {
+    font-weight: 700;
+  }
+
+  .details {
+    > * {
+      margin-left: 15px;
+    }
+  }
+`;
 
 class Modals extends React.Component {
   emailInputRef = React.createRef();
@@ -367,24 +380,45 @@ class Modals extends React.Component {
       }
 
       case 'nodePoolDelete': {
-        const nodePool = this.props.modal.templateValues.nodePool;
-        const nodePoolId = this.props.modal.templateValues.nodePool.id;
-        const nodePoolName = this.props.modal.templateValues.nodePool.name;
-        const clusterId = this.props.modal.templateValues.clusterId;
+        const { nodePool, clusterId } = this.props.modal.templateValues;
+        const { id: nodePoolId, name: nodePoolName } = nodePool;
+        const isLastNodePool =
+          this.props.clusters[clusterId].nodePools.length === 1;
+
+        const bodyText = isLastNodePool ? (
+          <NodePoolTextDiv>
+            <p>Do you want to delete this cluster&apos;s only node pool?</p>
+            <p>
+              <strong>Warning</strong>: There are no other node pools. When
+              deleting this node pool, all workloads will be terminated and
+              cannot be scheduled anywhere.
+            </p>
+          </NodePoolTextDiv>
+        ) : (
+          <NodePoolTextDiv>
+            <p>Do you want to delete this node pool?</p>
+            <div className='details'>
+              <ClusterIDLabel clusterID={nodePoolId} />{' '}
+              <strong>{nodePoolName}</strong>
+            </div>
+            <p>
+              Nodes will be drained and workloads re-scheduled, if possible, to
+              nodes from other pools.
+            </p>
+            <p>
+              <strong>Note</strong>: This node pool is not sharing any node
+              labels with other node pools. Make sure your scheduling rules are
+              tolerant enough so that workloads can be re-assigned.
+            </p>
+          </NodePoolTextDiv>
+        );
 
         return (
           <BootstrapModal onHide={this.close} show={this.props.modal.visible}>
             <BootstrapModal.Header closeButton>
-              <BootstrapModal.Title>
-                Are you sure you want to delete node pool{' '}
-                <strong>{nodePoolName}</strong>{' '}
-                <ClusterIDLabel clusterID={nodePoolId} />?
-              </BootstrapModal.Title>
+              <BootstrapModal.Title>Delete node pool</BootstrapModal.Title>
             </BootstrapModal.Header>
-            <BootstrapModal.Body>
-              <p>All workloads on this nodePool will be terminated.</p>
-              <p>There is no way to undo this action.</p>
-            </BootstrapModal.Body>
+            <BootstrapModal.Body>{bodyText}</BootstrapModal.Body>
             <BootstrapModal.Footer>
               <Button
                 bsStyle='danger'
