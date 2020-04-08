@@ -382,7 +382,7 @@ class Modals extends React.Component {
               </BootstrapModal.Title>
             </BootstrapModal.Header>
             <BootstrapModal.Body>
-              <p>All workloads on this nodePool will be terminated.</p>
+              <p>All workloads in this node pool will be terminated.</p>
               <p>There is no way to undo this action.</p>
             </BootstrapModal.Body>
             <BootstrapModal.Footer>
