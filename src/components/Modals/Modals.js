@@ -23,8 +23,8 @@ const NodePoolTextDiv = styled.div`
   strong {
     font-weight: 700;
   }
-
   .details {
+    margin-bottom: 10px;
     > * {
       margin-left: 15px;
     }
@@ -385,9 +385,17 @@ class Modals extends React.Component {
         const isLastNodePool =
           this.props.clusters[clusterId].nodePools.length === 1;
 
+        const details = (
+          <div className='details'>
+            <ClusterIDLabel clusterID={nodePoolId} />{' '}
+            <strong>{nodePoolName}</strong>
+          </div>
+        );
+
         const bodyText = isLastNodePool ? (
           <NodePoolTextDiv>
             <p>Do you want to delete this cluster&apos;s only node pool?</p>
+            {details}
             <p>
               <strong>Warning</strong>: There are no other node pools. When
               deleting this node pool, all workloads will be terminated and
@@ -397,17 +405,13 @@ class Modals extends React.Component {
         ) : (
           <NodePoolTextDiv>
             <p>Do you want to delete this node pool?</p>
-            <div className='details'>
-              <ClusterIDLabel clusterID={nodePoolId} />{' '}
-              <strong>{nodePoolName}</strong>
-            </div>
+            {details}
             <p>
               Nodes will be drained and workloads re-scheduled, if possible, to
               nodes from other pools.
             </p>
             <p>
-              <strong>Note</strong>: This node pool is not sharing any node
-              labels with other node pools. Make sure your scheduling rules are
+              <strong>Note</strong>: Make sure your scheduling rules are
               tolerant enough so that workloads can be re-assigned.
             </p>
           </NodePoolTextDiv>
