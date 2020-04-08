@@ -44,7 +44,6 @@ export const batchedLayout = () => async (dispatch) => {
 
 export const batchedRefreshClusters = () => async (dispatch) => {
   try {
-    // Removed clustersList() cause it overwrites the store and triggers new rerenders.
     await dispatch(clusterActions.refreshClustersList());
     await dispatch(
       clusterActions.clustersDetails({
