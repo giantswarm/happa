@@ -306,7 +306,6 @@ it('deletes a v5 cluster', async () => {
 
 it('deletes a node pool', async () => {
   const nodePool = nodePoolsResponse[0];
-  const lastNodePool = nodePoolsResponse[1];
   const nodePoolDeleteResponse = {
     code: 'RESOURCE_DELETION_STARTED',
     message: `Deletion of node pool with ID '${nodePool.id}' is in progress.`,
@@ -316,13 +315,6 @@ it('deletes a node pool', async () => {
   nock(API_ENDPOINT)
     .intercept(
       `/v5/clusters/${V5_CLUSTER.id}/nodepools/${nodePool.id}/`,
-      'DELETE'
-    )
-    .reply(StatusCodes.Ok, nodePoolDeleteResponse);
-
-  nock(API_ENDPOINT)
-    .intercept(
-      `/v5/clusters/${V5_CLUSTER.id}/nodepools/${lastNodePool.id}/`,
       'DELETE'
     )
     .reply(StatusCodes.Ok, nodePoolDeleteResponse);
@@ -379,7 +371,6 @@ it('deletes a node pool', async () => {
 
   fireEvent.click(getByText('•••'));
   fireEvent.click(getByText('Delete'));
-  fireEvent.click(getByText(deleteButtonText));
   expect(getByText(bodyTextLastNP)).toBeInTheDocument();
 });
 
