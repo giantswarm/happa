@@ -19,6 +19,17 @@ const clusterReducer = produce((draft, action) => {
 
       return;
 
+    case types.CLUSTERS_LIST_REFRESH_SUCCESS:
+      if (Object.keys(action.clusters).length > 0) {
+        draft.items = { ...draft.items, ...action.clusters };
+
+        if (action.v5ClusterIds.length > 0) {
+          draft.v5Clusters = [...draft.v5Clusters, ...action.v5ClusterIds];
+        }
+      }
+
+      return;
+
     case types.CLUSTER_LOAD_DETAILS_SUCCESS: {
       draft.items[action.cluster.id] = {
         ...draft.items[action.cluster.id],
