@@ -14,7 +14,7 @@ const mockStore = configureMockStore(middlewares);
 describe('readme loading', () => {
   afterEach(() => {});
 
-  it('dispatches an error if receiving an appVersion with a sources to check for README URLs', async () => {
+  it('dispatches an error if receiving an appVersion without a sources field to check for README URLs', async () => {
     const initialState = {};
     const store = mockStore(initialState);
     const invalidAppVersion = {};
@@ -38,7 +38,7 @@ describe('readme loading', () => {
     expect(store.getActions()).toEqual(expectedActions);
   });
 
-  it('dispatches an error if receiving an appVersion without a README URLs in its sources', async () => {
+  it('dispatches an error if receiving an appVersion without a README URLs in its sources field', async () => {
     const initialState = {};
     const store = mockStore(initialState);
     const appVersionWithEmptySources = {
