@@ -36,6 +36,13 @@ const catalogReducer = produce((draft, action) => {
       draft.items[action.catalog.metadata.name].isFetchingIndex = false;
       draft.lastUpdated = Date.now();
       draft.isFetching = false;
+
+      return;
+
+    case types.CLUSTER_LOAD_APP_README_SUCCESS:
+      draft.items[action.catalogName].apps[action.appVersion.name].find(
+        (av) => av.version === action.appVersion.version
+      ).readme = action.readmeText;
   }
 }, initialState);
 

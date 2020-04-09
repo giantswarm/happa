@@ -290,3 +290,50 @@ export function updateApp(appName, clusterID, values) {
       });
   };
 }
+
+export function loadAppReadme(catalogName, appVersion) {
+  return async function (dispatch) {
+    dispatch({
+      type: types.CLUSTER_LOAD_APP_README_REQUEST,
+      catalogName,
+      appVersion,
+    });
+
+    let readmeURL = appVersion.sources.find((url) => url.endsWith('README.md'));
+    readmeURL = fixTestAppReadmeURLs(readmeURL);
+
+    try {
+      const response = await fetch(readmeURL, { mode: 'cors' });
+      const readmeText = await response.text();
+
+      dispatch({
+        type: types.CLUSTER_LOAD_APP_README_SUCCESS,
+        catalogName,
+        appVersion,
+        readmeText,
+      });
+    } catch (error) {
+      const errorMessage = 'Whoops';
+      dispatch({
+        type: types.CLUSTER_LOAD_APP_README_ERROR,
+        catalogName,
+        appVersion,
+        error: errorMessage,
+      });
+    }
+  };
+}
+
+// fixTestAppReadmeURLs looks at a readme URL and attempts to correct URLs
+// which are known not to work. Test apps have a version which is not yet
+// tagged in the git repo, but the path includes the commit sha, so we can
+// still get to the file at that commit.
+function fixTestAppReadmeURLs(readmeURL) {
+  // Test app urls will have a semver version followed by a hyphen followed by
+  // a long commit sha. We need to remove the version part. If the regex
+  // doesn't match, then the string is returned as is.
+  const regexMatcher = /^(.*)\/[0-9]+\.[0-9]+\.[0-9]+-(.*)\/README\.md$/;
+  const fixedReadmeURL = readmeURL.replace(regexMatcher, '$1/$2/README.md');
+
+  return fixedReadmeURL;
+}

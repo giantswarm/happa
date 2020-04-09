@@ -153,9 +153,10 @@ const AppContainer = ({
     {
       repo: catalog.metadata.name,
       app: appVersions[0].name,
+      version: appVersions[0].version,
     }
   );
-  const to = `${appCatalogAppDetailPath}?q=${searchQuery}`;
+  const to = `${appCatalogAppDetailPath}/?q=${searchQuery}`;
 
   return (
     <Wrapper {...props}>
