@@ -299,7 +299,30 @@ export function loadAppReadme(catalogName, appVersion) {
       appVersion,
     });
 
+    if (!appVersion.sources) {
+      dispatch({
+        type: types.CLUSTER_LOAD_APP_README_ERROR,
+        catalogName,
+        appVersion,
+        error: 'No list of sources to check for a README.',
+      });
+
+      return;
+    }
+
     let readmeURL = appVersion.sources.find((url) => url.endsWith('README.md'));
+
+    if (!readmeURL) {
+      dispatch({
+        type: types.CLUSTER_LOAD_APP_README_ERROR,
+        catalogName,
+        appVersion,
+        error: 'This app does not reference a README file.',
+      });
+
+      return;
+    }
+
     readmeURL = fixTestAppReadmeURLs(readmeURL);
 
     try {
