@@ -1,3 +1,4 @@
+import { CLUSTER_LOAD_APP_README_REQUEST } from 'actions/actionTypes';
 import { loadAppReadme } from 'actions/appActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
@@ -5,6 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
@@ -49,13 +51,16 @@ class AppDetail extends React.Component {
   // Dispatch an action to load readme associated with this app if it has one and
   // it hasn't been loaded yet.
   loadReadme() {
-    const { repo, selectedAppVersion, dispatch } = this.props;
+    const { repo, selectedAppVersion, dispatch, loadingReadme } = this.props;
 
     // Skip if there is no readme source to load.
     if (!hasReadmeSource(selectedAppVersion)) return;
 
     // Skip if the readme is already loaded.
     if (selectedAppVersion.readme) return;
+
+    // Don't dispatch the action if a request is already going.
+    if (loadingReadme) return;
 
     dispatch(loadAppReadme(repo.metadata.name, selectedAppVersion));
   }
@@ -125,6 +130,7 @@ AppDetail.propTypes = {
   selectedClusterID: PropTypes.string,
   loadingCluster: PropTypes.bool,
   dispatch: PropTypes.func,
+  loadingReadme: PropTypes.bool,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -150,6 +156,10 @@ function mapStateToProps(state, ownProps) {
     selectedAppVersion: selectedAppVersion || appVersions[0],
     repo: state.entities.catalogs.items[repo],
     selectedClusterID: state.main.selectedClusterID,
+    loadingReadme: selectLoadingFlagByAction(
+      state,
+      CLUSTER_LOAD_APP_README_REQUEST
+    ),
   };
 }
 
