@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.7.0
+  architect: giantswarm/architect@0.8.7
 
 workflows:
   build-and-deploy:
@@ -38,7 +38,8 @@ workflows:
 
 jobs:
   build:
-    machine: true
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
       - run:
@@ -62,6 +63,13 @@ jobs:
             echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
             echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> $BASH_ENV
 
+      - run:
+          name: Install yarn
+          command: |
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+            sudo apt-get update && sudo apt-get install -y yarn
+
       - restore_cache:
           keys:
             # Find a cache corresponding to this specific package.json checksum
@@ -69,52 +77,28 @@ jobs:
             - v1-npm-deps-{{ checksum "yarn.lock" }}
 
       - run:
-          name: Inspect and use cache
-          command: |
-            (test -d node_modules && du -sk node_modules) || mkdir -p node_modules
-            echo ""
-            find node_modules -maxdepth 1 | sort
-            ln -s ./node_modules ./node_modules_linux
-
-      - run:
-          name: Install CI tools
-          command: |
-            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-            chmod +x ./architect
-
-      - run:
-          name: Install dependencies (if not there or empty)
-          command: |
-            if [ "$(du -s node_modules | awk '{print $1}')" -lt "1024" ]; then
-              make install-node-modules
-            fi
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
 
       - run:
           name: Typecheck code using the TypeScript compiler
-          command: |
-            make typecheck
+          command: yarn run typecheck
 
       - run:
           name: Lint code using ESlint
-          command: |
-            make lint
+          command: yarn run lint
 
       - run:
           name: Validate code style using prettier
-          command: |
-            make validate-prettier
+          command: yarn run validate-prettier --no-color
 
       - run:
-          name: Install yarn and run tests
-          command: |
-            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-            sudo apt-get update && sudo apt-get install yarn
-            yarn test
+          name: Run tests
+          command: yarn run test
 
       - run:
           name: Build web application
-          command: make dist
+          command: NODE_ENV=production yarn run dist
 
       - run:
           name: Create VERSION file
@@ -127,15 +111,12 @@ jobs:
               git tag --points-at HEAD | tr '\n' ' ' > VERSION
             fi
 
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./dist
-            - ./architect
-            - ./VERSION
       - run:
           name: Build Docker image
-          command: ./architect build
+          command: |
+            wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/latest | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
+            chmod +x ./architect
+            ./architect build
 
       - run:
           name: Launch container for tests
