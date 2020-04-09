@@ -1,3 +1,4 @@
+import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import * as nodePoolActions from 'actions/nodePoolActions';
 import { spinner } from 'images';
@@ -35,6 +36,11 @@ const NPViewAndEditNameStyled = styled<
   }
 `;
 
+interface INodesWrapperProps {
+  highlight?: boolean;
+  children: React.ReactNode;
+}
+
 const NodesWrapper = styled.div`
   width: 36px;
   height: 30px;
@@ -42,6 +48,11 @@ const NodesWrapper = styled.div`
   text-align: center;
   border-radius: 3px;
   white-space: nowrap;
+  ${({ highlight }: INodesWrapperProps) =>
+    highlight &&
+    css`
+      background-color: ${theme.colors.goldBackground};
+    `}
 `;
 
 const NameWrapperDiv = styled.div`
@@ -191,7 +202,7 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
     }
     const { availableZonesGridTemplateAreas, cluster, nodePool } = this.props;
     const { id, scaling, availability_zones, status, node_spec } = nodePool;
-    const { nodes_ready: current, nodes: desired } = status;
+    const { nodes_ready: current, nodes: desired, spot_instances } = status;
     const { isNameBeingEdited } = this.state;
 
     return (
@@ -219,7 +230,6 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
                 ? 'mixed'
                 : node_spec.aws.instance_type}
             </Code>
-            <NodesWrapper>{this.formatInstanceDistribution()}</NodesWrapper>
             <div>
               <AvailabilityZonesWrapper
                 availableZonesGridTemplateAreas={
@@ -228,17 +238,15 @@ class NodePool extends Component<INodePoolsProps, INodePoolsState> {
                 zones={availability_zones}
               />
             </div>
-            <NodesWrapper data-testid='scaling-min'>{scaling.min}</NodesWrapper>
-            <NodesWrapper data-testid='scaling-max'>{scaling.max}</NodesWrapper>
-            <NodesWrapper>{desired}</NodesWrapper>
-            <NodesWrapper
-              style={{
-                background:
-                  current < desired ? theme.colors.goldBackground : undefined,
-              }}
-            >
-              {current}
+            <NodesWrapper>
+              <span data-testid='scaling-min'>{scaling.min}</span>–
+              <span data-testid='scaling-max'>{scaling.max}</span>
             </NodesWrapper>
+            <NodesWrapper>{this.formatInstanceDistribution()}</NodesWrapper>
+            <NodesWrapper highlight={current < desired}>
+              {desired}/{current}
+            </NodesWrapper>
+            <NodesWrapper>{spot_instances}</NodesWrapper>
             <NodePoolDropdownMenu
               clusterId={cluster.id}
               nodePool={nodePool}

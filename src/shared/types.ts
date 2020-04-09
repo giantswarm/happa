@@ -6,6 +6,7 @@ interface IScaling {
 interface INodePoolStatus {
   nodes: number;
   nodes_ready: number;
+  spot_instances: number;
 }
 
 export interface INodePool {
