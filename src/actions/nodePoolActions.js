@@ -35,7 +35,7 @@ export function clusterNodePoolsLoad(clusterId, { withLoadingFlags }) {
         })
         // here error.response.status -> delete node pools
         .catch((error) => {
-          if (error.response.status === StatusCodes.NotFound) {
+          if (error.response?.status === StatusCodes.NotFound) {
             // If 404, it means that the cluster has been deleted.
             // We want to just log the errors silently, because cluster load
             //action is already triggering an error message so the user knows
