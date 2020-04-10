@@ -26,7 +26,7 @@ import {
   selectLoadingFlagByAction,
   selectLoadingFlagByIdAndAction,
 } from 'selectors/clusterSelectors';
-import { Providers } from 'shared/constants';
+import { Constants, Providers } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
@@ -316,7 +316,12 @@ class ClusterDetailView extends React.Component {
                       />
                     </Tab>
                     <Tab eventKey={4} title='Ingress'>
-                      <Ingress provider={provider} />
+                      <Ingress
+                        provider={provider}
+                        k8sEndpoint={cluster.api_endpoint}
+                        kvmTCPHTTPPort={Constants.KVM_INGRESS_TCP_HTTP_PORT}
+                        kvmTCPHTTPSPort={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
+                      />
                     </Tab>
                   </Tabs>
                 </div>

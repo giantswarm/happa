@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Constants, Providers } from 'shared/constants';
+import { Providers } from 'shared/constants';
 import { PropertiesOf } from 'shared/types';
 
 import {
@@ -30,11 +30,32 @@ export const Steps = styled.ol`
   }
 `;
 
-interface IIngressProps {
-  provider?: PropertiesOf<typeof Providers>;
+enum IngressPathPrefixes {
+  Pattern = 'YOUR_PREFIX',
+  LoadBalancer = 'ingress',
+  Example = 'example',
 }
 
-const Ingress: React.FC<IIngressProps> = ({ provider, ...rest }) => {
+interface IIngressProps {
+  provider?: PropertiesOf<typeof Providers>;
+  k8sEndpoint?: string;
+  kvmTCPHTTPPort?: number;
+  kvmTCPHTTPSPort?: number;
+}
+
+const Ingress: React.FC<IIngressProps> = ({
+  provider,
+  k8sEndpoint,
+  kvmTCPHTTPPort,
+  kvmTCPHTTPSPort,
+  ...rest
+}) => {
+  // Safe because of default props
+  const basePath: string = getBasePathFromK8sEndpoint(k8sEndpoint as string);
+  const examplePath: string = `${IngressPathPrefixes.Example}${basePath}`;
+  const balancerPath: string = `${IngressPathPrefixes.LoadBalancer}${basePath}`;
+  const patternPath: string = `${IngressPathPrefixes.Pattern}${basePath}`;
+
   return (
     <div className='row' {...rest}>
       <div className='col-12'>
@@ -57,25 +78,21 @@ const Ingress: React.FC<IIngressProps> = ({ provider, ...rest }) => {
               <InfoRow>
                 <Label>Base domain:</Label>
                 <URIWrapper>
-                  <StyledURIBlock>
-                    .a1b2c.k8s.gollum.westeurope.azure.gigantic.io
-                  </StyledURIBlock>
+                  <StyledURIBlock>{basePath}</StyledURIBlock>
                 </URIWrapper>
               </InfoRow>
               <InfoRow>
                 <Label>Load balancer DNS name:</Label>
                 <URIWrapper>
-                  <StyledURIBlock>
-                    ingress.a1b2c.k8s.gollum.westeurope.azure.gigantic.io
-                  </StyledURIBlock>
+                  <StyledURIBlock>{balancerPath}</StyledURIBlock>
                 </URIWrapper>
               </InfoRow>
               <InfoRow>
                 <Label>Hostname pattern:</Label>
                 <URIWrapper>
-                  <StyledURIBlock copyContent='YOUR_PREFIX.a1b2c.k8s.gollum.westeurope.azure.gigantic.io'>
-                    <Emphasis>YOUR_PREFIX</Emphasis>
-                    .a1b2c.k8s.gollum.westeurope.azure.gigantic.io
+                  <StyledURIBlock copyContent={patternPath}>
+                    <Emphasis>{IngressPathPrefixes.Pattern}</Emphasis>
+                    {basePath}
                   </StyledURIBlock>
                   <Description>
                     Replace <code>YOUR_PREFIX</code> with a unique domain name
@@ -87,10 +104,7 @@ const Ingress: React.FC<IIngressProps> = ({ provider, ...rest }) => {
               {provider === Providers.KVM && (
                 <InfoRow>
                   <Label>Load balancer TCP ports:</Label>
-                  <Ports
-                    HTTP={Constants.KVM_INGRESS_TCP_HTTP_PORT}
-                    HTTPS={Constants.KVM_INGRESS_TCP_HTTPS_PORT}
-                  />
+                  <Ports HTTP={kvmTCPHTTPPort} HTTPS={kvmTCPHTTPSPort} />
                 </InfoRow>
               )}
             </Info>
@@ -132,9 +146,7 @@ const Ingress: React.FC<IIngressProps> = ({ provider, ...rest }) => {
                   Create a CNAME <code>myservice.example.com</code> pointing to
                   the load balancer DNS name
                   <URIWrapper>
-                    <StyledURIBlock>
-                      ingress.a1b2c.k8s.gollum.westeurope.azure.gigantic.io
-                    </StyledURIBlock>
+                    <StyledURIBlock>{balancerPath}</StyledURIBlock>
                   </URIWrapper>
                 </li>
               </Steps>
@@ -159,9 +171,7 @@ const Ingress: React.FC<IIngressProps> = ({ provider, ...rest }) => {
                   Set the <code>hostname</code> in your workload&apos;s Ingress
                   resource to the according name
                   <URIWrapper>
-                    <StyledURIBlock>
-                      example.a1b2c.k8s.gollum.westeurope.azure.gigantic.io
-                    </StyledURIBlock>
+                    <StyledURIBlock>{examplePath}</StyledURIBlock>
                   </URIWrapper>
                 </li>
               </Steps>
@@ -175,10 +185,27 @@ const Ingress: React.FC<IIngressProps> = ({ provider, ...rest }) => {
 
 Ingress.propTypes = {
   provider: PropTypes.oneOf(Object.values(Providers)),
+  k8sEndpoint: PropTypes.string,
+  kvmTCPHTTPPort: PropTypes.number,
+  kvmTCPHTTPSPort: PropTypes.number,
 };
 
 Ingress.defaultProps = {
   provider: Providers.AWS,
+  k8sEndpoint: '',
+  kvmTCPHTTPPort: 0,
+  kvmTCPHTTPSPort: 0,
 };
 
 export default Ingress;
+
+function getBasePathFromK8sEndpoint(endpoint: string): string {
+  const replacer = 'https://api';
+  let result = '';
+
+  if (endpoint.startsWith(replacer)) {
+    result = endpoint.replace(replacer, '');
+  }
+
+  return result;
+}
