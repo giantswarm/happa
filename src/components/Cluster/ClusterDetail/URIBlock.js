@@ -34,15 +34,20 @@ const BlockWrapper = styled.div`
   }
 `;
 
+const StyledCode = styled(Code)`
+  width: 100%;
+`;
+
 const getTooltip = (text) => <Tooltip id='tooltip'>{text}</Tooltip>;
 
 // eslint-disable-next-line react/no-multi-comp
-const URIBlock = ({ children, title, ...props }) => {
+const URIBlock = ({ children, title, copyContent, ...props }) => {
+  const content = copyContent ?? children;
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
-  const tooltipText = `Copy ${children} to clipboard.`;
+  const tooltipText = `Copy ${content} to clipboard.`;
 
   const copyToClipboard = () => {
-    setClipboardContent(children);
+    setClipboardContent(content);
   };
   const handleMouseLeave = () => setClipboardContent(null);
 
@@ -50,7 +55,7 @@ const URIBlock = ({ children, title, ...props }) => {
     <BlockWrapper {...props} onMouseLeave={handleMouseLeave}>
       {title && <span>{title}</span>}
 
-      <Code>{children}</Code>
+      <StyledCode>{children}</StyledCode>
 
       {hasContentInClipboard ? (
         <i
@@ -78,8 +83,9 @@ URIBlock.defaultProps = {
 };
 
 URIBlock.propTypes = {
-  children: PropTypes.string,
+  children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   title: PropTypes.string,
+  copyContent: PropTypes.string,
 };
 
 export default URIBlock;

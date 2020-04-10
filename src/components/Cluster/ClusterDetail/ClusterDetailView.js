@@ -35,6 +35,7 @@ import ViewAndEditName from 'UI/ViewEditName';
 import { getNumberOfNodes } from 'utils/clusterUtils';
 
 import ClusterApps from './ClusterApps';
+import Ingress from './Ingress/Ingress';
 import KeyPairs from './KeyPairs';
 import ScaleClusterModal from './ScaleClusterModal';
 import Tabs from './Tabs';
@@ -313,6 +314,9 @@ class ClusterDetailView extends React.Component {
                           cluster.capabilities.hasOptionalIngress
                         }
                       />
+                    </Tab>
+                    <Tab eventKey={4} title='Ingress'>
+                      <Ingress provider={provider} />
                     </Tab>
                   </Tabs>
                 </div>
