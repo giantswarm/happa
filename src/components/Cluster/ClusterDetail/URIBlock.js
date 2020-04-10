@@ -6,6 +6,11 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Code } from 'styles';
 
+const StatusIcon = styled.i`
+  width: 14px;
+  height: 14px;
+`;
+
 const CopyButton = styled.div`
   opacity: 0;
   cursor: pointer;
@@ -14,7 +19,7 @@ const CopyButton = styled.div`
   align-items: center;
 
   &:hover {
-    i {
+    ${StatusIcon} {
       text-shadow: 0px 0px 15px ${(props) => props.theme.colors.shade1};
     }
   }
@@ -58,7 +63,7 @@ const URIBlock = ({ children, title, copyContent, ...props }) => {
       <StyledCode>{children}</StyledCode>
 
       {hasContentInClipboard ? (
-        <i
+        <StatusIcon
           aria-hidden='true'
           className='fa fa-done'
           title='Content copied to clipboard'
@@ -66,7 +71,7 @@ const URIBlock = ({ children, title, copyContent, ...props }) => {
       ) : (
         <OverlayTrigger placement='top' overlay={getTooltip(tooltipText)}>
           <CopyButton onClick={copyToClipboard}>
-            <i
+            <StatusIcon
               aria-hidden='true'
               className='fa fa-content-copy'
               title='Copy content to clipboard'
