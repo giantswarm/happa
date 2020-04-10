@@ -17,12 +17,12 @@ import Option from './Option';
 import Ports from './Ports';
 
 export const Label = styled.span`
-  flex: 0 0 200px;
+  flex: 0 0 220px;
   max-width: 100%;
 `;
 
 export const Steps = styled.ol`
-  padding: 6px 0 0;
+  padding-left: 0;
   list-style-position: inside;
 
   ${URIWrapper} {

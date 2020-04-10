@@ -17,16 +17,19 @@ const Identifier = styled.div`
 `;
 
 const StyledInfoRow = styled(InfoRow)`
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 `;
 
 const Column = styled.div`
-  & + & {
-    margin-left: 1.5rem;
-  }
+  max-width: 100%;
 
   ${Text} {
     margin-bottom: 8px;
+  }
+
+  &:nth-of-type(2) {
+    padding: 6px 12px 0;
+    flex: 1 0 calc(100% - 32px);
   }
 `;
 

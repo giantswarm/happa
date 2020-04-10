@@ -7,11 +7,13 @@ import { FlexRowBase, Row } from 'styles';
 export const StyledURIBlock = styled<any>(URIBlock)`
   display: flex;
   align-items: center;
-  width: 500px;
   max-width: 100%;
+  width: 500px;
 
   code {
     margin-right: 1rem;
+    max-width: calc(100% - 15px);
+    overflow-x: auto;
   }
 `;
 
@@ -47,7 +49,6 @@ export const URIWrapper = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   max-width: 100%;
-  overflow: hidden;
 `;
 
 export const Text = styled.p`
