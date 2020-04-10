@@ -95,8 +95,8 @@ const Ingress: React.FC<IIngressProps> = ({
                     {basePath}
                   </StyledURIBlock>
                   <Description>
-                    Replace <code>YOUR_PREFIX</code> with a unique domain name
-                    segment to address your service.
+                    Replace <code>{IngressPathPrefixes.Pattern}</code> with a
+                    unique domain name segment to address your service.
                   </Description>
                 </URIWrapper>
               </InfoRow>

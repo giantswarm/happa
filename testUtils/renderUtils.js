@@ -58,7 +58,7 @@ export function renderWithTheme(component, props, options) {
 /**
  * Include component in the Theme context and return it
  * @param {React.ReactType} Component The React Component
- * @param {<P extends Record<string, any>>React.ComponentProps<P>} props Props to pass to the component
+ * @param {Object} props Props to pass to the component
  */
 export function getComponentWithTheme(Component, props) {
   return (

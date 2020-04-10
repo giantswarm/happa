@@ -1,5 +1,3 @@
-import '@testing-library/jest-dom/extend-expect';
-
 import { fireEvent, render } from '@testing-library/react';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import { getComponentWithTheme } from 'testUtils/renderUtils';
