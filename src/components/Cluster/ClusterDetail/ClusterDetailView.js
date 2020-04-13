@@ -78,7 +78,8 @@ class ClusterDetailView extends React.Component {
     );
   };
 
-  itDoesntExist = (isDeleted) => {
+  // It is not in your orgs or it has been deleted.
+  doesNotExist = (isDeleted) => {
     const { clusterId, organizationId, dispatch } = this.props;
 
     const organizationDetailPath = RoutePath.createUsablePath(
@@ -108,7 +109,7 @@ class ClusterDetailView extends React.Component {
     const { cluster, dispatch, organizationId } = this.props;
 
     if (typeof cluster === 'undefined' || cluster.delete_date) {
-      this.itDoesntExist(Boolean(cluster?.delete_date));
+      this.doesNotExist(Boolean(cluster?.delete_date));
     }
 
     dispatch(
@@ -124,7 +125,7 @@ class ClusterDetailView extends React.Component {
     const { cluster, dispatch, isV5Cluster } = this.props;
 
     if (typeof cluster === 'undefined' || cluster.delete_date) {
-      this.itDoesntExist(Boolean(cluster?.delete_date));
+      this.doesNotExist(Boolean(cluster?.delete_date));
     }
 
     dispatch(batchedRefreshClusterDetailView(cluster.id, isV5Cluster));
