@@ -116,7 +116,7 @@
     "@types/react-bootstrap": "^0.32.20",
     "@types/react-breadcrumbs": "^2.1.1",
     "@types/react-datepicker": "^2.11.0",
-    "@types/react-dom": "^16.9.5",
+    "@types/react-dom": "^16.9.6",
     "@types/react-gravatar": "^2.6.7",
     "@types/react-redux": "^7.1.7",
     "@types/react-router": "^5.1.5",
