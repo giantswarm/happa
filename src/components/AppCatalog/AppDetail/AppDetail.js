@@ -48,8 +48,10 @@ class AppDetail extends React.Component {
     this.loadReadme();
   }
 
-  // Dispatch an action to load readme associated with this app if it has one and
-  // it hasn't been loaded yet.
+  /**
+   * Dispatch an action to load readme associated with this app if it has one and
+   * it hasn't been loaded yet.
+   */
   loadReadme() {
     const { repo, selectedAppVersion, dispatch, loadingReadme } = this.props;
 

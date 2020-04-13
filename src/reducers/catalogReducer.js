@@ -40,12 +40,9 @@ const catalogReducer = produce((draft, action) => {
       return;
 
     case types.CLUSTER_LOAD_APP_README_SUCCESS:
-      if (!draft.items[action.catalogName]) return;
-      if (!draft.items[action.catalogName].apps[action.appVersion.name]) return;
-
-      draft.items[action.catalogName].apps[action.appVersion.name].find(
+      draft.items[action.catalogName]?.apps[action.appVersion.name]?.find(
         (av) => av.version === action.appVersion.version
-      ).readme = action.readmeText;
+      )?.readme = action.readmeText;
   }
 }, initialState);
 
