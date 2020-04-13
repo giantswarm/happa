@@ -78,27 +78,37 @@ class ClusterDetailView extends React.Component {
     );
   };
 
+  itDoesntExist = (isDeleted) => {
+    const { clusterId, organizationId, dispatch } = this.props;
+
+    const organizationDetailPath = RoutePath.createUsablePath(
+      OrganizationsRoutes.Detail,
+      {
+        orgId: organizationId,
+      }
+    );
+
+    const text = isDeleted
+      ? 'This cluster has been deleted'
+      : 'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.';
+
+    new FlashMessage(
+      `Cluster <code>${clusterId}</code> not found`,
+      messageType.ERROR,
+      messageTTL.FOREVER,
+      text
+    );
+
+    this.props.clearInterval(this.loadDataInterval);
+
+    dispatch(push(organizationDetailPath));
+  };
+
   loadDetails = () => {
-    const { cluster, clusterId, organizationId, dispatch } = this.props;
+    const { cluster, dispatch, organizationId } = this.props;
 
     if (typeof cluster === 'undefined' || cluster.delete_date) {
-      const organizationDetailPath = RoutePath.createUsablePath(
-        OrganizationsRoutes.Detail,
-        {
-          orgId: organizationId,
-        }
-      );
-
-      dispatch(push(organizationDetailPath));
-
-      new FlashMessage(
-        `Cluster <code>${clusterId}</code> not found`,
-        messageType.ERROR,
-        messageTTL.FOREVER,
-        'Please make sure the Cluster ID is correct and that you have access to the organization that it belongs to.'
-      );
-
-      return;
+      this.itDoesntExist(Boolean(cluster?.delete_date));
     }
 
     dispatch(
@@ -111,11 +121,13 @@ class ClusterDetailView extends React.Component {
   };
 
   refreshClusterData = () => {
-    const { id: clusterID } = this.props.cluster;
+    const { cluster, dispatch, isV5Cluster } = this.props;
 
-    this.props.dispatch(
-      batchedRefreshClusterDetailView(clusterID, this.props.isV5Cluster)
-    );
+    if (typeof cluster === 'undefined' || cluster.delete_date) {
+      this.itDoesntExist(Boolean(cluster?.delete_date));
+    }
+
+    dispatch(batchedRefreshClusterDetailView(cluster.id, isV5Cluster));
   };
 
   handleVisibilityChange = () => {
