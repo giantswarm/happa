@@ -32,6 +32,7 @@ module.exports = merge(common, {
     }),
     // Momentary solution until we do code splitting
     new CopyPlugin([
+      { from: 'src/metadata.json', to: 'metadata.json' },
       { from: 'src/images', to: 'images' },
       { from: 'src/vendor/modernizr.js', to: 'vendor/modernizr.js' },
     ]),
