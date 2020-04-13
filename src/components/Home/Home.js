@@ -47,7 +47,7 @@ class Home extends React.Component {
    */
   registerRefreshInterval = () => {
     // eslint-disable-next-line no-magic-numbers
-    const refreshIntervalDuration = 30 * 1000; // 30 seconds
+    const refreshIntervalDuration = 10 * 1000; // 30 seconds
     this.refreshInterval = window.setInterval(
       this.refreshClustersList,
       refreshIntervalDuration
@@ -113,24 +113,22 @@ class Home extends React.Component {
           )}
 
           <TransitionGroup className='cluster-list'>
-            {clusters
-              .sort((a, b) => (a.name > b.name ? 1 : -1))
-              .map(({ id }) => (
-                <CSSTransition
-                  classNames='cluster-list-item'
+            {clusters.map((id) => (
+              <CSSTransition
+                classNames='cluster-list-item'
+                key={id}
+                timeout={500}
+              >
+                <ClusterDashboardItem
+                  animate={true}
+                  clusterId={id}
+                  isV5Cluster={this.props.v5Clusters.includes(id)}
                   key={id}
-                  timeout={500}
-                >
-                  <ClusterDashboardItem
-                    animate={true}
-                    clusterId={id}
-                    isV5Cluster={this.props.v5Clusters.includes(id)}
-                    key={id}
-                    nodePools={this.props.nodePools}
-                    selectedOrganization={selectedOrganization}
-                  />
-                </CSSTransition>
-              ))}
+                  nodePools={this.props.nodePools}
+                  selectedOrganization={selectedOrganization}
+                />
+              </CSSTransition>
+            ))}
           </TransitionGroup>
 
           {clusters.length > 0 ? (

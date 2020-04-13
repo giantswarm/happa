@@ -23,10 +23,7 @@ const selectOrganizationClusterNames = (state) => {
 
   return clusterIds
     .filter((id) => clusters[id].owner === state.main.selectedOrganization)
-    .reduce(
-      (accumulator, id) => [...accumulator, { id, name: clusters[id].name }],
-      []
-    );
+    .sort((a, b) => (clusters[a].name > clusters[b].name ? 1 : -1));
 };
 
 const selectNodePools = (state) => state.entities.nodePools.items;
