@@ -297,3 +297,7 @@ export const ROUTER_LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
 
 // Error store management
 export const SINGLE_ERROR_CLEAR = 'SINGLE_ERROR_CLEAR';
+
+// Application Metadata
+export const METADATA_UPDATE_CHECK = 'METADATA_UPDATE_CHECK';
+export const METADATA_UPDATE_SCHEDULE = 'METADATA_UPDATE_SCHEDULE';

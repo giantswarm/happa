@@ -1,3 +1,4 @@
+import metadata from 'metadata.json';
 import { AppRoutes } from 'shared/constants/routes';
 
 // This is what the state looks like when someone brand new arrives at the site
@@ -17,6 +18,14 @@ export default {
     selectedOrganization: null,
     firstLoadComplete: false,
     loggedInUser: null,
+    metadata: {
+      version: {
+        current: metadata.version.long,
+        new: null,
+        isUpdating: false,
+        lastCheck: 0,
+      },
+    },
     info: {
       general: {
         availability_zones: {
