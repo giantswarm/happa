@@ -35,17 +35,15 @@ fi
 VERSION=$(cat VERSION | tr '\n' ' ' | tr -d '[:space:]')
 
 sed -i "s|happaVersion: .*|happaVersion: '${VERSION}',|g" /www/index.html
-sed -i "s|\"long\": .*|\"long\": '$VERSION'|" /www/metadata.json
 
 STRLENGTH=$(echo -n $VERSION | wc -m)
 SHORTVERSION=$VERSION
 if [ $STRLENGTH -gt 30 ]; then
   # VERSION is a commit hash, not a tag
   SHORTVERSION=$(echo -n $VERSION | cut -c-5)
-  VERSION="<a href=\"https://github.com/giantswarm/happa/commit/${VERSION}\">${SHORTVERSION}</a>"
 fi
 
-sed -i "s|VERSION|${VERSION}|g" /www/index.html
+sed -i "s|\"long\": .*|\"long\": '$VERSION'|" /www/metadata.json
 sed -i "s|\"short\": .*|\"short\": '$SHORTVERSION',|" /www/metadata.json
 
 # gzip index.html again because we changed it

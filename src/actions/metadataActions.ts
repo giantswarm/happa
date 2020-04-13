@@ -3,6 +3,7 @@ import {
   getConfiguration,
   IMetadataConfiguration,
 } from 'model/services/metadata';
+import { IState } from 'reducers/types';
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { Constants } from 'shared';
@@ -27,10 +28,6 @@ type MetadataActions =
   | IMetadataCheckForUpdatesAction
   | IMetadataScheduleUpdateAction
   | IMetadataExecuteUpdateAction;
-
-// Giving state a generic type for now, until whole state is typed
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-interface IState extends Record<string, any> {}
 
 /**
  * Check if there's a new version of the app available
