@@ -91,7 +91,7 @@ it('renders all node pools in store', async () => {
 
   await waitFor(() => findAllByTestId('node-pool-id'));
 
-  nodePoolsResponse.forEach(nodePool => {
+  nodePoolsResponse.forEach((nodePool) => {
     expect(getByText(nodePool.id)).toBeInTheDocument();
   });
 });
@@ -342,16 +342,16 @@ it('deletes a node pool', async () => {
   fireEvent.click(getByText('Delete'));
 
   // Is the modal in the document?
-  const titleText = /are you sure you want to delete/i;
+  const titleText = /do you want to delete this node pool?/i;
+  const bodyTextMultipleNP = /do you want to delete this node pool/i;
+
   await waitFor(() => getByText(titleText));
-  const modalTitle = getByText(titleText);
-  expect(modalTitle).toBeInTheDocument();
-  expect(modalTitle.textContent.includes(nodePool.id)).toBeTruthy();
+  expect(getByText(titleText)).toBeInTheDocument();
+  expect(getByText(bodyTextMultipleNP)).toBeInTheDocument();
 
   // Click delete button.
   const deleteButtonText = 'Delete Node Pool';
-  const deleteButton = getByText(deleteButtonText);
-  fireEvent.click(deleteButton);
+  fireEvent.click(getByText(deleteButtonText));
 
   // Flash message confirming deletion.
   await waitFor(() => {
@@ -365,6 +365,13 @@ it('deletes a node pool', async () => {
   await waitFor(() => {
     expect(queryByTestId(nodePool.id)).not.toBeInTheDocument();
   });
+
+  // Test that last nodepool warning appears.
+  const bodyTextLastNP = /do you want to delete this cluster\'s only node pool?/i;
+
+  fireEvent.click(getByText('•••'));
+  fireEvent.click(getByText('Delete'));
+  expect(getByText(bodyTextLastNP)).toBeInTheDocument();
 });
 
 it('adds a node pool with default values', async () => {

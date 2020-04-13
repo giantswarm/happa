@@ -196,7 +196,7 @@ export function clusterLoadDetails(
 
       return cluster;
     } catch (error) {
-      if (error.response.status === StatusCodes.NotFound) {
+      if (error.response?.status === StatusCodes.NotFound) {
         new FlashMessage(
           `Cluster <code>${clusterId}</code> no longer exists.`,
           messageType.INFO,
