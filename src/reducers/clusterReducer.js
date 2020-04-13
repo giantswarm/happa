@@ -24,7 +24,9 @@ const clusterReducer = produce((draft, action) => {
         draft.items = { ...draft.items, ...action.clusters };
 
         if (action.v5ClusterIds.length > 0) {
-          draft.v5Clusters = [...draft.v5Clusters, ...action.v5ClusterIds];
+          draft.v5Clusters = Array.from(
+            new Set([...draft.v5Clusters, ...action.v5ClusterIds])
+          );
         }
       }
 
