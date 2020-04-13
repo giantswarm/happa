@@ -5,6 +5,7 @@ import {
 } from 'model/services/metadata';
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
+import { Constants } from 'shared';
 
 import * as actionTypes from './actionTypes';
 
@@ -18,9 +19,14 @@ interface IMetadataScheduleUpdateAction {
   version: string;
 }
 
+interface IMetadataExecuteUpdateAction {
+  type: typeof actionTypes.METADATA_UPDATE_EXECUTE;
+}
+
 type MetadataActions =
   | IMetadataCheckForUpdatesAction
-  | IMetadataScheduleUpdateAction;
+  | IMetadataScheduleUpdateAction
+  | IMetadataExecuteUpdateAction;
 
 // Giving state a generic type for now, until whole state is typed
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,10 +79,36 @@ export const checkForUpdates = (
  * @param dispatch - Redux `dispatch` function
  * @param timeout - Time to wait in between checks
  */
-export function registerUpdateChecker(dispatch: Dispatch, timeout: number) {
+export const registerUpdateChecker = (dispatch: Dispatch, timeout: number) => {
   const callback = () => {
     window.setTimeout(dispatch, timeout, checkForUpdates(callback));
   };
 
   callback();
-}
+};
+
+/**
+ * Schedule an app update
+ * Give a few seconds of breathing room, to be able to display
+ * that there is an update in progress in the UI
+ */
+export const executeUpdate = (): ThunkAction<
+  Promise<void>,
+  IState,
+  void,
+  MetadataActions
+> => {
+  return async (dispatch: Dispatch<MetadataActions>): Promise<void> => {
+    dispatch({
+      type: actionTypes.METADATA_UPDATE_EXECUTE,
+    });
+
+    return new Promise((resolve: () => void) => {
+      window.setTimeout(() => {
+        resolve();
+
+        window.location.reload();
+      }, Constants.DEFAULT_METADATA_UPDATE_TIMEOUT);
+    });
+  };
+};

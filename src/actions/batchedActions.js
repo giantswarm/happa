@@ -17,7 +17,7 @@ export const batchedLayout = () => async (dispatch) => {
   try {
     metadataActions.registerUpdateChecker(
       dispatch,
-      Constants.DEFAULT_METADATA_UPDATE_PERIOD
+      Constants.DEFAULT_METADATA_CHECK_PERIOD
     );
     await dispatch(userActions.refreshUserInfo());
     await dispatch(userActions.getInfo());

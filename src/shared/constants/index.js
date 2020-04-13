@@ -14,7 +14,9 @@ export {
 
 export const Constants = {
   // eslint-disable-next-line no-magic-numbers
-  DEFAULT_METADATA_UPDATE_PERIOD: 30 * 1000,
+  DEFAULT_METADATA_CHECK_PERIOD: 30 * 1000,
+  // eslint-disable-next-line no-magic-numbers
+  DEFAULT_METADATA_UPDATE_TIMEOUT: 2 * 1000,
 
   DEFAULT_NODEPOOL_NAME: 'Unnamed node pool',
   AWS_V5_VERSION: '10.0.0',

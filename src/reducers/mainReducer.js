@@ -96,6 +96,11 @@ const makeAppReducer = () => {
         draft.metadata.version.new = action.version;
 
         break;
+
+      case types.METADATA_UPDATE_EXECUTE:
+        draft.metadata.version.isUpdating = true;
+
+        break;
     }
   }, initialState());
 };
