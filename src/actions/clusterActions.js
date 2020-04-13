@@ -56,11 +56,18 @@ export function clustersList({ withLoadingFlags }) {
       .then((data) => {
         const clusters = clustersLoadArrayToObject(data, provider);
 
+        const allIds = data.map((cluster) => cluster.id);
+
         const v5ClusterIds = data
           .filter((cluster) => cluster.path.startsWith('/v5'))
           .map((cluster) => cluster.id);
 
-        dispatch({ type: types.CLUSTERS_LIST_SUCCESS, clusters, v5ClusterIds });
+        dispatch({
+          type: types.CLUSTERS_LIST_SUCCESS,
+          clusters,
+          v5ClusterIds,
+          allIds,
+        });
       })
       .catch((error) => {
         // eslint-disable-next-line no-console

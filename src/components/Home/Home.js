@@ -13,7 +13,10 @@ import { Link } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
-import { selectErrorByAction } from 'selectors/clusterSelectors';
+import {
+  selectClustersList,
+  selectErrorByAction,
+} from 'selectors/clusterSelectors';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterEmptyState from 'UI/ClusterEmptyState';
@@ -77,61 +80,60 @@ class Home extends React.Component {
   }
 
   render() {
+    const { clusters, selectedOrganization } = this.props;
+
     const newClusterPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.New,
       {
-        orgId: this.props.selectedOrganization,
+        orgId: selectedOrganization,
       }
     );
 
     return (
       <DocumentTitle title={this.title()}>
         <div data-testid='clusters-list'>
-          {this.props.selectedOrganization && (
+          {selectedOrganization && (
             <div className='well launch-new-cluster'>
               <Link to={newClusterPath}>
                 <Button bsStyle='primary' type='button'>
                   <i className='fa fa-add-circle' /> Launch New Cluster
                 </Button>
               </Link>
-              {this.props.clusters.length === 0 &&
+              {clusters.length === 0 &&
                 'Ready to launch your first cluster? Click the green button!'}
             </div>
           )}
 
-          {this.props.clusters.length === 0 && (
+          {clusters.length === 0 && (
             <ClusterEmptyState
               errorLoadingClusters={this.props.errorLoadingClusters}
               organizations={this.props.organizations}
-              selectedOrganization={this.props.selectedOrganization}
+              selectedOrganization={selectedOrganization}
             />
           )}
 
           <TransitionGroup className='cluster-list'>
-            {_.sortBy(this.props.clusters, (cluster) => cluster.name).map(
-              (cluster) => {
-                return (
-                  <CSSTransition
-                    classNames='cluster-list-item'
-                    key={cluster.id}
-                    timeout={500}
-                  >
-                    <ClusterDashboardItem
-                      animate={true}
-                      cluster={cluster}
-                      isV5Cluster={this.props.v5Clusters.includes(cluster.id)}
-                      key={cluster.id}
-                      nodePools={this.props.nodePools}
-                      selectedOrganization={this.props.selectedOrganization}
-                    />
-                  </CSSTransition>
-                );
-              },
-              (cluster) => cluster.id
-            )}
+            {clusters
+              .sort((a, b) => (a.name > b.name ? 1 : -1))
+              .map(({ id }) => (
+                <CSSTransition
+                  classNames='cluster-list-item'
+                  key={id}
+                  timeout={500}
+                >
+                  <ClusterDashboardItem
+                    animate={true}
+                    clusterId={id}
+                    isV5Cluster={this.props.v5Clusters.includes(id)}
+                    key={id}
+                    nodePools={this.props.nodePools}
+                    selectedOrganization={selectedOrganization}
+                  />
+                </CSSTransition>
+              ))}
           </TransitionGroup>
 
-          {this.props.clusters.length > 0 ? (
+          {clusters.length > 0 ? (
             <p className='last-updated'>
               <small>
                 This table is auto-refreshing. Details last fetched{' '}
@@ -160,33 +162,31 @@ Home.propTypes = {
   dispatch: PropTypes.func,
 };
 
-function mapStateToProps(state) {
-  const selectedOrganization = state.main.selectedOrganization;
-  const organizations = state.entities.organizations.items;
-  const allClusters = state.entities.clusters.items;
-  const errorLoadingClusters = selectErrorByAction(
-    state,
-    actionTypes.CLUSTERS_LIST_REQUEST
-  );
-  const v5Clusters = state.entities.clusters.v5Clusters;
-  const nodePools = state.entities.nodePools.items;
+const makeMapStateToProps = () => {
+  const selectClusters = selectClustersList();
 
-  let clusters = [];
-  if (selectedOrganization) {
-    clusters = _.filter(allClusters, (cluster) => {
-      return cluster.owner === selectedOrganization;
-    });
+  function mapStateToProps(state) {
+    const selectedOrganization = state.main.selectedOrganization;
+    const organizations = state.entities.organizations.items;
+    const errorLoadingClusters = selectErrorByAction(
+      state,
+      actionTypes.CLUSTERS_LIST_REQUEST
+    );
+    const v5Clusters = state.entities.clusters.v5Clusters;
+    const nodePools = state.entities.nodePools.items;
+
+    return {
+      clusters: selectClusters(state),
+      organizations,
+      errorLoadingClusters: Boolean(errorLoadingClusters),
+      selectedOrganization,
+      v5Clusters,
+      nodePools,
+    };
   }
 
-  return {
-    clusters,
-    organizations,
-    errorLoadingClusters: Boolean(errorLoadingClusters),
-    selectedOrganization,
-    v5Clusters,
-    nodePools,
-  };
-}
+  return mapStateToProps;
+};
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -196,4 +196,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReactTimeout(Home));
+export default connect(
+  makeMapStateToProps,
+  mapDispatchToProps
+)(ReactTimeout(Home));
