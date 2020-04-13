@@ -113,24 +113,22 @@ class Home extends React.Component {
           )}
 
           <TransitionGroup className='cluster-list'>
-            {clusters
-              .sort((a, b) => (a.name > b.name ? 1 : -1))
-              .map(({ id }) => (
-                <CSSTransition
-                  classNames='cluster-list-item'
+            {clusters.map((id) => (
+              <CSSTransition
+                classNames='cluster-list-item'
+                key={id}
+                timeout={500}
+              >
+                <ClusterDashboardItem
+                  animate={true}
+                  clusterId={id}
+                  isV5Cluster={this.props.v5Clusters.includes(id)}
                   key={id}
-                  timeout={500}
-                >
-                  <ClusterDashboardItem
-                    animate={true}
-                    clusterId={id}
-                    isV5Cluster={this.props.v5Clusters.includes(id)}
-                    key={id}
-                    nodePools={this.props.nodePools}
-                    selectedOrganization={selectedOrganization}
-                  />
-                </CSSTransition>
-              ))}
+                  nodePools={this.props.nodePools}
+                  selectedOrganization={selectedOrganization}
+                />
+              </CSSTransition>
+            ))}
           </TransitionGroup>
 
           {clusters.length > 0 ? (
