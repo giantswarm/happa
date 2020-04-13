@@ -1524,12 +1524,10 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
 
-"@types/react-bootstrap@^0.32.20":
-  version "0.32.20"
-  resolved "https://registry.yarnpkg.com/@types/react-bootstrap/-/react-bootstrap-0.32.20.tgz#8d90e625a1b2d92d169de27e40b3d20057efa1ae"
-  integrity sha512-lc7bUHGMfVkbH9B7EKPD/9AYtgtFYP5go5D3tqIUN4O0znPX1UwBY4wUeicJPONaMpYtmVUGSdbDDqK9lXUCFQ==
-  dependencies:
-    "@types/react" "*"
+"@types/react-bootstrap@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-bootstrap/-/react-bootstrap-1.0.0.tgz#e2807f2f07b3973dc0c4affe1bc6f816b1f297e5"
+  integrity sha512-Orz9caIqTFNGlm/39JX6ZOpjsllUqgWRNlk81Nq1QrpXeJp3Pbl5Tc6tx+5WCR6EKtblk/Xsja9qHW95mUw0xQ==
 
 "@types/react-breadcrumbs@^2.1.1":
   version "2.1.1"
