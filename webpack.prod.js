@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /*
  * Webpack distribution configuration
  *
@@ -19,7 +20,6 @@ module.exports = merge(common, {
     reasons: true,
   },
   optimization: {
-    splitChunks: { chunks: 'all' },
     // Terser is a substitution for AgressiveMergingPlugin
     minimizer: [
       new TerserPlugin({ sourceMap: true }),

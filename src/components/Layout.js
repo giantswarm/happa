@@ -71,21 +71,23 @@ class Layout extends React.Component {
             user={this.props.user}
           />
           <Breadcrumb data={{ title: 'HOME', pathname: AppRoutes.Home }}>
-            <Switch>
-              <Route exact path={AppRoutes.Home} component={Home} />
-              <Route path={AppCatalogRoutes.Home} component={AppCatalog} />
-              <Route exact path={UsersRoutes.Home} component={Users} />
-              <Route
-                path={OrganizationsRoutes.Home}
-                component={Organizations}
-              />
-              <Route
-                exact
-                path={AccountSettingsRoutes.Home}
-                component={AccountSettings}
-              />
-              <Redirect path='*' to={AppRoutes.Home} />
-            </Switch>
+            <div className='main col-9'>
+              <Switch>
+                <Route component={Home} exact path={AppRoutes.Home} />
+                <Route component={AppCatalog} path={AppCatalogRoutes.Home} />
+                <Route component={Users} exact path={UsersRoutes.Home} />
+                <Route
+                  component={Organizations}
+                  path={OrganizationsRoutes.Home}
+                />
+                <Route
+                  component={AccountSettings}
+                  exact
+                  path={AccountSettingsRoutes.Home}
+                />
+                <Redirect path='*' to={AppRoutes.Home} />
+              </Switch>
+            </div>
           </Breadcrumb>
         </LoadingOverlay>
       </DocumentTitle>

@@ -15,15 +15,15 @@ import StyleGuide from './UI/StyleGuide';
 const Routes = () => {
   return (
     <Switch>
-      <Route path={AppRoutes.AdminLogin} component={AdminLogin} />
-      <Route path={AppRoutes.Login} component={Login} />
-      <Route path={AppRoutes.Logout} component={Logout} />
-      <Route path={AppRoutes.SetPassword} component={SetPassword} />
-      <Route path={AppRoutes.ForgotPassword} component={ForgotPassword} />
-      <Route path={AppRoutes.SignUp} component={SignUp} />
-      <Route path={AppRoutes.OAuthCallback} component={OAuthCallback} />
-      <Route path={AppRoutes.StyleGuide} component={StyleGuide} />
-      <Route path={AppRoutes.Home} component={Layout} />
+      <Route component={AdminLogin} path={AppRoutes.AdminLogin} />
+      <Route component={Login} path={AppRoutes.Login} />
+      <Route component={Logout} path={AppRoutes.Logout} />
+      <Route component={SetPassword} path={AppRoutes.SetPassword} />
+      <Route component={ForgotPassword} path={AppRoutes.ForgotPassword} />
+      <Route component={SignUp} path={AppRoutes.SignUp} />
+      <Route component={OAuthCallback} path={AppRoutes.OAuthCallback} />
+      <Route component={StyleGuide} path={AppRoutes.StyleGuide} />
+      <Route component={Layout} path={AppRoutes.Home} />
     </Switch>
   );
 };
