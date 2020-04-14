@@ -190,8 +190,7 @@ jobs:
           <<: *whitelist
 
   build-container:
-    machine:
-      image: ubuntu-1604:201903-01
+    machine: true
 
     working_directory: ~/happa
     steps:
