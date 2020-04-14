@@ -5,9 +5,11 @@ import {
   getReleaseURL,
   getVersionTooltipMessage,
   hasUpdateReady,
+  showUpdateToast,
 } from 'Footer/FooterUtils';
 import FooterVersion from 'Footer/FooterVersion';
-import React, { useCallback } from 'react';
+import usePrevious from 'lib/effects/usePrevious';
+import React, { useCallback, useEffect } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,8 +19,8 @@ import {
   getMetadataNewVersion,
 } from 'selectors/metadataSelectors';
 
-const StyledFooter = styled.footer`
-  & > span + span {
+const FooterGroup = styled.span`
+  & + & {
     margin-left: 0.35rem;
   }
 `;
@@ -32,6 +34,8 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
   const newVersion: string | null = useSelector(getMetadataNewVersion);
   const isUpdating: boolean = useSelector(getMetadataIsUpdating);
 
+  const prevUpdatedVersion: string | null | undefined = usePrevious(newVersion);
+
   const tooltipMessage: string = getVersionTooltipMessage(
     currentVersion,
     newVersion,
@@ -44,10 +48,16 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
     dispatch(executeUpdate());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (isUpdateReady && newVersion !== prevUpdatedVersion) {
+      showUpdateToast();
+    }
+  }, [isUpdateReady, newVersion, prevUpdatedVersion]);
+
   return (
-    <StyledFooter className='col-9' {...props}>
-      <span>Happa</span>
-      <span>
+    <footer className='col-9' {...props}>
+      <FooterGroup>Happa</FooterGroup>
+      <FooterGroup>
         <OverlayTrigger
           overlay={<Tooltip id='tooltip'>{tooltipMessage}</Tooltip>}
           placement='top'
@@ -60,17 +70,17 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
             />
           </span>
         </OverlayTrigger>
-      </span>
-      <span>&#183;</span>
-      <span>
+      </FooterGroup>
+      <FooterGroup>&#183;</FooterGroup>
+      <FooterGroup>
         <FooterUpdateButton
           hasUpdateReady={isUpdateReady}
           isUpdating={isUpdating}
           releaseURL={releaseURL}
           onClick={handleUpdate}
         />
-      </span>
-    </StyledFooter>
+      </FooterGroup>
+    </footer>
   );
 };
 

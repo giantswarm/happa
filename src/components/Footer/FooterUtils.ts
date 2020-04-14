@@ -1,3 +1,5 @@
+import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+
 export function isCommitHash(version: string): boolean {
   // eslint-disable-next-line no-magic-numbers
   return version.length > 30;
@@ -56,4 +58,13 @@ export function hasUpdateReady(
   newVersion: string | null
 ): boolean {
   return newVersion !== null && currentVersion !== newVersion;
+}
+
+export function showUpdateToast() {
+  new FlashMessage(
+    `There's a new version of happa available!`,
+    messageType.INFO,
+    messageTTL.FOREVER,
+    `Please press the <code>Update now!</code> button in the footer of the page to use the latest version (it only takes a couple of seconds).`
+  );
 }
