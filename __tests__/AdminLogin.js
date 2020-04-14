@@ -15,10 +15,12 @@ import theme from 'styles/theme';
 import {
   AWSInfoResponse,
   getMockCall,
+  metadataResponse,
   USER_EMAIL,
   userResponse,
 } from 'testUtils/mockHttpCalls';
 import { initialStorage } from 'testUtils/renderUtils';
+import { getConfiguration } from 'model/services/metadata';
 
 const mockUserData = {
   email: USER_EMAIL,
@@ -59,10 +61,20 @@ helpers.isJwtExpired = jest.fn();
 // eslint-disable-next-line no-import-assign
 helpers.validateOrRaise = jest.fn();
 
+// Mock metadata
+const metadataStateMock = {
+  version: {
+    current: 'VERSION',
+    new: null,
+    isUpdating: false,
+    lastCheck: 0,
+  },
+};
+
 const renderRouteWithStore = (
   initialRoute = AppRoutes.Home,
   state = {},
-  storage = initialStorage
+  storage = initialStorage,
 ) => {
   localStorage.replaceWith(storage);
 
@@ -79,54 +91,63 @@ const renderRouteWithStore = (
 };
 
 describe('AdminLogin', () => {
+  beforeEach(() => {
+    getConfiguration.mockResolvedValue(metadataResponse);
+  });
+
   it('renders without crashing', async () => {
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
 
     await findByText(
-      /verifying credentials, and redirecting to our authentication provider if necessary./i
+      /verifying credentials, and redirecting to our authentication provider if necessary./i,
     );
   });
 
-  it('redirects to the OAuth provider and handles login, if there is no user stored', async () => {
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/organizations/');
-    getMockCall('/v4/clusters/');
-    getMockCall('/v4/appcatalogs/');
+  it(
+    'redirects to the OAuth provider and handles login, if there is no user stored',
+    async () => {
+      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+      getMockCall('/v4/user/', userResponse);
+      getMockCall('/v4/organizations/');
+      getMockCall('/v4/clusters/');
+      getMockCall('/v4/appcatalogs/');
 
-    mockAuth0Authorize.mockImplementation(() => {
-      store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
+      mockAuth0Authorize.mockImplementation(() => {
+        store.dispatch(
+          push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
+      });
+
+      mockAuth0ParseHash.mockImplementation(callback => {
+        callback(null, mockSuccessfulAuthResponse);
+      });
+
+      const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
+
+      // Check if the user has been redirected to the homepage
+      await findByText(/there are no organizations yet in your installation./i);
+
+      // Check if the correct user has been saved to local storage
+      expect(localStorage.getItem('user')).
+        toEqual(JSON.stringify(mockUserData));
     });
 
-    mockAuth0ParseHash.mockImplementation((callback) => {
-      callback(null, mockSuccessfulAuthResponse);
+  it('redirects to homepage if the user has been previously logged in',
+    async () => {
+      getMockCall('/v4/user/', userResponse);
+      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+      getMockCall('/v4/appcatalogs/', []);
+      getMockCall('/v4/organizations/');
+      getMockCall('/v4/clusters/', []);
+
+      helpers.isJwtExpired.mockReturnValue(false);
+
+      const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
+        main: { loggedInUser: mockUserData, metadata: metadataStateMock },
+      });
+
+      // Check if the user has been redirected to the homepage
+      await findByText(/there are no organizations yet in your installation./i);
     });
-
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
-
-    // Check if the user has been redirected to the homepage
-    await findByText(/there are no organizations yet in your installation./i);
-
-    // Check if the correct user has been saved to local storage
-    expect(localStorage.getItem('user')).toEqual(JSON.stringify(mockUserData));
-  });
-
-  it('redirects to homepage if the user has been previously logged in', async () => {
-    getMockCall('/v4/user/', userResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCall('/v4/appcatalogs/', []);
-    getMockCall('/v4/organizations/');
-    getMockCall('/v4/clusters/', []);
-
-    helpers.isJwtExpired.mockReturnValue(false);
-
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData },
-    });
-
-    // Check if the user has been redirected to the homepage
-    await findByText(/there are no organizations yet in your installation./i);
-  });
 
   it('renews user token if the previously stored one is expired', async () => {
     getMockCall('/v4/user/', userResponse);
@@ -145,16 +166,16 @@ describe('AdminLogin', () => {
     const mockAuthResponseWithNewToken = Object.assign(
       {},
       mockSuccessfulAuthResponse,
-      { accessToken: 'some-other-token' }
+      { accessToken: 'some-other-token' },
     );
 
     helpers.isJwtExpired.mockReturnValue(true);
     mockAuth0CheckSession.mockImplementation((_config, callback) =>
-      callback(null, mockAuthResponseWithNewToken)
+      callback(null, mockAuthResponseWithNewToken),
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData, metadata: metadataStateMock },
     });
 
     // Check if the user has been redirected to the homepage
@@ -162,66 +183,72 @@ describe('AdminLogin', () => {
 
     // Check if the user with the new taken have been saved to storage
     expect(localStorage.getItem('user')).toEqual(
-      JSON.stringify(mockUserDataWithNewToken)
+      JSON.stringify(mockUserDataWithNewToken),
     );
   });
 
-  it('displays an error message if the OAuth provider callback URL is not valid', async () => {
-    mockAuth0Authorize.mockImplementation(() => {
-      store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=invalid`));
+  it(
+    'displays an error message if the OAuth provider callback URL is not valid',
+    async () => {
+      mockAuth0Authorize.mockImplementation(() => {
+        store.dispatch(
+          push(`${AppRoutes.OAuthCallback}#response_type=invalid`));
+      });
+
+      mockAuth0ParseHash.mockImplementation(callback => {
+        callback(null, mockSuccessfulAuthResponse);
+      });
+
+      const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
+
+      await findByText(
+        /invalid or empty response from the authentication provider./i,
+      );
     });
 
-    mockAuth0ParseHash.mockImplementation((callback) => {
-      callback(null, mockSuccessfulAuthResponse);
+  it('displays an error message if the OAuth provider can not login',
+    async () => {
+      mockAuth0Authorize.mockImplementation(() => {
+        store.dispatch(
+          push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
+      });
+
+      mockAuth0ParseHash.mockImplementation(callback => {
+        callback(new Error('u w0t m8?'), mockSuccessfulAuthResponse);
+      });
+
+      const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
+
+      await findByText(/^Something went wrong$/i);
     });
 
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
+  it('redirects to OAuth provider login page if renewing the token fails',
+    async () => {
+      // eslint-disable-next-line no-console
+      const originalConsoleError = console.error;
+      // eslint-disable-next-line no-console
+      console.error = jest.fn();
 
-    await findByText(
-      /invalid or empty response from the authentication provider./i
-    );
-  });
+      const mockAuthResponseWithNewToken = Object.assign(
+        {},
+        mockSuccessfulAuthResponse,
+        { accessToken: 'some-other-token' },
+      );
 
-  it('displays an error message if the OAuth provider can not login', async () => {
-    mockAuth0Authorize.mockImplementation(() => {
-      store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
+      helpers.isJwtExpired.mockReturnValue(true);
+      mockAuth0CheckSession.mockImplementation((_config, callback) =>
+        callback(new Error('u w0t m8?'), mockAuthResponseWithNewToken),
+      );
+
+      const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
+        main: { loggedInUser: mockUserData, metadata: metadataStateMock },
+      });
+
+      await findByText(
+        /verifying credentials, and redirecting to our authentication provider if necessary./i,
+      );
+
+      // eslint-disable-next-line no-console
+      console.error = originalConsoleError;
     });
-
-    mockAuth0ParseHash.mockImplementation((callback) => {
-      callback(new Error('u w0t m8?'), mockSuccessfulAuthResponse);
-    });
-
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
-
-    await findByText(/^Something went wrong$/i);
-  });
-
-  it('redirects to OAuth provider login page if renewing the token fails', async () => {
-    // eslint-disable-next-line no-console
-    const originalConsoleError = console.error;
-    // eslint-disable-next-line no-console
-    console.error = jest.fn();
-
-    const mockAuthResponseWithNewToken = Object.assign(
-      {},
-      mockSuccessfulAuthResponse,
-      { accessToken: 'some-other-token' }
-    );
-
-    helpers.isJwtExpired.mockReturnValue(true);
-    mockAuth0CheckSession.mockImplementation((_config, callback) =>
-      callback(new Error('u w0t m8?'), mockAuthResponseWithNewToken)
-    );
-
-    const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData },
-    });
-
-    await findByText(
-      /verifying credentials, and redirecting to our authentication provider if necessary./i
-    );
-
-    // eslint-disable-next-line no-console
-    console.error = originalConsoleError;
-  });
 });

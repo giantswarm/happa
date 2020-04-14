@@ -11,8 +11,10 @@ import {
   getMockCall,
   USER_EMAIL,
   userResponse,
+  metadataResponse
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
+import { getConfiguration } from 'model/services/metadata';
 
 const testToken = 'm0ckt0ken';
 const tokenTestPath = `/invite/${testToken}`;
@@ -22,6 +24,10 @@ const verifyingRoute = RoutePath.createUsablePath(AppRoutes.SignUp, {
 });
 
 describe('Signup', () => {
+  beforeEach(() => {
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
+  });
+
   it('renders without crashing', async () => {
     const { findByText } = renderRouteWithStore(verifyingRoute);
 

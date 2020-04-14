@@ -51,7 +51,6 @@ export const setInitialVersion = (): ThunkAction<
       version = ((configurationRes.data as unknown) as IMetadataConfiguration)
         .version;
     } catch (err) {
-      console.log(err);
       // Do nothing
     } finally {
       dispatch({

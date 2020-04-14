@@ -56,6 +56,18 @@ describe('Footer', () => {
     expect(getByText(/Using latest version./i)).toBeInTheDocument();
   });
 
+  it('displays the version correctly if it is a commit hash', async () => {
+    mockGetConfiguration('asd123djas123asdasdu98cnas9d81723asd98asy9812');
+    const { findByText } = renderWithStore(Footer);
+
+    const versionWrapper: HTMLElement = await findByText(/asd12/i);
+    expect(versionWrapper).toBeInTheDocument();
+
+    // Expect to be redirected to the github release page
+    const releaseNotesButton: HTMLElement = await findByText(/release notes/i);
+    fireEvent.click(releaseNotesButton);
+  });
+
   it('displays a warning if there is an update available', async () => {
     setConstants({
       // eslint-disable-next-line no-magic-numbers
@@ -142,7 +154,7 @@ describe('Footer', () => {
     mockGetConfiguration('0.0.1');
     mockGetConfiguration('0.0.2');
 
-    const { findAllByText } = renderWithStore(Footer);
+    const { findAllByText, getByText } = renderWithStore(Footer);
 
     await waitFor(() => {}, { timeout: 50 });
     await findAllByText(/update now!/i);
@@ -150,6 +162,11 @@ describe('Footer', () => {
     const updateButton = within(
       document.querySelector('footer') as HTMLElement
     ).getByText(/update now!/i);
+    fireEvent.click(updateButton);
+
+    expect(getByText(/updating.../i)).toBeInTheDocument();
+
+    // Clicking again to try to break updating
     fireEvent.click(updateButton);
 
     await waitFor(() => {

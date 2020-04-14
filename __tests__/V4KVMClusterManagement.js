@@ -22,14 +22,17 @@ import {
   v4ClustersResponse,
   v4KVMClusterResponse,
   v4KVMClusterStatusResponse,
+  metadataResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 import { getNumberOfNodes } from 'utils/clusterUtils';
+import { getConfiguration } from 'model/services/metadata';
 
 const minNodesCount = 3;
 
 beforeEach(() => {
   getInstallationInfo.mockResolvedValueOnce(KVMInfoResponse);
+  getConfiguration.mockResolvedValueOnce(metadataResponse);
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
