@@ -6,8 +6,12 @@ export function isCommitHash(version: string): boolean {
 }
 
 export function formatVersion(version: string): string {
-  // eslint-disable-next-line no-magic-numbers
-  return version.substring(0, 5);
+  if (isCommitHash(version)) {
+    // eslint-disable-next-line no-magic-numbers
+    return version.substring(0, 5);
+  }
+
+  return version;
 }
 
 export function getReleaseURL(version: string): string {

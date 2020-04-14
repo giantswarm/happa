@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { executeUpdate } from 'actions/metadataActions';
+import * as metadataActions from 'actions/metadataActions';
 import FooterUpdateButton from 'Footer/FooterUpdateButton';
 import {
   getReleaseURL,
@@ -47,6 +48,11 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
 
   const handleUpdate = useCallback(() => {
     dispatch(executeUpdate());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(metadataActions.setInitialVersion());
+    metadataActions.registerUpdateChecker(dispatch);
   }, [dispatch]);
 
   useEffect(() => {

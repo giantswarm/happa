@@ -5,7 +5,6 @@ import { OrganizationsRoutes } from 'shared/constants/routes';
 import * as appActions from './appActions';
 import * as catalogActions from './catalogActions';
 import * as clusterActions from './clusterActions';
-import * as metadataActions from './metadataActions';
 import * as modalActions from './modalActions';
 import * as nodePoolActions from './nodePoolActions';
 import * as organizationActions from './organizationActions';
@@ -14,7 +13,6 @@ import * as userActions from './userActions';
 
 export const batchedLayout = () => async (dispatch) => {
   try {
-    metadataActions.registerUpdateChecker(dispatch);
     await dispatch(userActions.refreshUserInfo());
     await dispatch(userActions.getInfo());
     await dispatch(organizationActions.organizationsLoad());

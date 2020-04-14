@@ -10,6 +10,11 @@ import { Constants } from 'shared';
 
 import * as actionTypes from './actionTypes';
 
+interface IMetadataSetVersionAction {
+  type: typeof actionTypes.METADATA_UPDATE_SET_VERSION;
+  version: string;
+}
+
 interface IMetadataCheckForUpdatesAction {
   type: typeof actionTypes.METADATA_UPDATE_CHECK;
   timestamp: number;
@@ -25,9 +30,37 @@ interface IMetadataExecuteUpdateAction {
 }
 
 type MetadataActions =
+  | IMetadataSetVersionAction
   | IMetadataCheckForUpdatesAction
   | IMetadataScheduleUpdateAction
   | IMetadataExecuteUpdateAction;
+
+export const setInitialVersion = (): ThunkAction<
+  Promise<void>,
+  IState,
+  void,
+  MetadataActions
+> => {
+  return async (dispatch: Dispatch<MetadataActions>): Promise<void> => {
+    let version: string = 'VERSION';
+
+    try {
+      const httpClient = new SelfClient();
+      const configurationRes = await getConfiguration(httpClient);
+      // Casting as correct type until the model layer is rewritten in TypeScript
+      version = ((configurationRes.data as unknown) as IMetadataConfiguration)
+        .version;
+    } catch (err) {
+      console.log(err);
+      // Do nothing
+    } finally {
+      dispatch({
+        type: actionTypes.METADATA_UPDATE_SET_VERSION,
+        version,
+      });
+    }
+  };
+};
 
 /**
  * Check if there's a new version of the app available

@@ -35,7 +35,7 @@ fi
 VERSION=$(cat VERSION | tr '\n' ' ' | tr -d '[:space:]')
 
 sed -i "s|happaVersion: .*|happaVersion: '${VERSION}',|g" /www/index.html
-sed -i "s|\"version\": .*|\"version\": '$VERSION'|" /www/metadata.json
+sed -i "s|\"version\": .*|\"version\": \"$VERSION\"|" /www/metadata.json
 
 # gzip index.html again because we changed it
 gzip -f -9 -k /www/index.html

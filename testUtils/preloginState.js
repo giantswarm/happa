@@ -1,4 +1,3 @@
-import metadata from 'metadata.json';
 import { AppRoutes } from 'shared/constants/routes';
 
 // This is what the state looks like when someone brand new arrives at the site
@@ -20,7 +19,7 @@ export default {
     loggedInUser: null,
     metadata: {
       version: {
-        current: metadata.version,
+        current: 'VERSION',
         new: null,
         isUpdating: false,
         lastCheck: 0,

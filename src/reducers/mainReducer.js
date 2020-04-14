@@ -1,6 +1,5 @@
 import * as types from 'actions/actionTypes';
 import produce from 'immer';
-import metadata from 'metadata.json';
 import {
   fetchSelectedOrganizationFromStorage,
   fetchUserFromStorage,
@@ -15,7 +14,7 @@ const initialState = () => ({
   loggedInUser: fetchUserFromStorage(),
   metadata: {
     version: {
-      current: metadata.version,
+      current: 'VERSION',
       new: null,
       isUpdating: false,
       lastCheck: 0,
@@ -84,6 +83,11 @@ const makeAppReducer = () => {
 
       case types.CLUSTER_SELECT:
         draft.selectedClusterID = action.clusterID;
+
+        break;
+
+      case types.METADATA_UPDATE_SET_VERSION:
+        draft.metadata.version.current = action.version;
 
         break;
 
