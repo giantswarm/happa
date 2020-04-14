@@ -76,7 +76,10 @@ export const checkForUpdates = (
  * @param dispatch - Redux `dispatch` function
  * @param timeout - Time to wait in between checks
  */
-export const registerUpdateChecker = (dispatch: Dispatch, timeout: number) => {
+export const registerUpdateChecker = (
+  dispatch: Dispatch,
+  timeout: number = Constants.DEFAULT_METADATA_CHECK_PERIOD
+) => {
   const callback = () => {
     window.setTimeout(dispatch, timeout, checkForUpdates(callback));
   };
@@ -88,13 +91,11 @@ export const registerUpdateChecker = (dispatch: Dispatch, timeout: number) => {
  * Schedule an app update
  * Give a few seconds of breathing room, to be able to display
  * that there is an update in progress in the UI
+ * @param timeout - The timeout between the update gets executed
  */
-export const executeUpdate = (): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  MetadataActions
-> => {
+export const executeUpdate = (
+  timeout: number = Constants.DEFAULT_METADATA_UPDATE_TIMEOUT
+): ThunkAction<Promise<void>, IState, void, MetadataActions> => {
   return async (dispatch: Dispatch<MetadataActions>): Promise<void> => {
     dispatch({
       type: actionTypes.METADATA_UPDATE_EXECUTE,
@@ -105,7 +106,7 @@ export const executeUpdate = (): ThunkAction<
         resolve();
 
         window.location.reload();
-      }, Constants.DEFAULT_METADATA_UPDATE_TIMEOUT);
+      }, timeout);
     });
   };
 };

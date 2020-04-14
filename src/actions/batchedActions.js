@@ -1,6 +1,5 @@
 import { push } from 'connected-react-router';
 import RoutePath from 'lib/routePath';
-import { Constants } from 'shared/constants';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 
 import * as appActions from './appActions';
@@ -15,10 +14,7 @@ import * as userActions from './userActions';
 
 export const batchedLayout = () => async (dispatch) => {
   try {
-    metadataActions.registerUpdateChecker(
-      dispatch,
-      Constants.DEFAULT_METADATA_CHECK_PERIOD
-    );
+    metadataActions.registerUpdateChecker(dispatch);
     await dispatch(userActions.refreshUserInfo());
     await dispatch(userActions.getInfo());
     await dispatch(organizationActions.organizationsLoad());
