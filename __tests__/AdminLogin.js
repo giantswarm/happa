@@ -1,15 +1,13 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { render } from '@testing-library/react';
+import App from 'App';
 import auth0 from 'auth0-js';
-import { ConnectedRouter, push } from 'connected-react-router';
-import { ThemeProvider } from 'emotion-theming';
+import { push } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import * as helpers from 'lib/helpers';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import React from 'react';
-import { Provider } from 'react-redux';
-import Routes from 'Routes';
 import { AuthorizationTypes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
@@ -17,7 +15,6 @@ import theme from 'styles/theme';
 import {
   AWSInfoResponse,
   getMockCall,
-  getMockCallTimes,
   USER_EMAIL,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -65,24 +62,18 @@ helpers.validateOrRaise = jest.fn();
 const renderRouteWithStore = (
   initialRoute = AppRoutes.Home,
   state = {},
-  storage = initialStorage,
-  history = createMemoryHistory()
+  storage = initialStorage
 ) => {
   localStorage.replaceWith(storage);
 
+  const history = createMemoryHistory({
+    initialEntries: [initialRoute],
+    initialIndex: 0,
+  });
+
   store = configureStore(state, history);
 
-  const app = render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <Routes />
-        </ConnectedRouter>
-      </ThemeProvider>
-    </Provider>
-  );
-
-  store.dispatch(push(initialRoute));
+  const app = render(<App {...{ store, theme, history }} />);
 
   return app;
 };
@@ -107,7 +98,7 @@ describe('AdminLogin', () => {
       store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
     });
 
-    mockAuth0ParseHash.mockImplementation(callback => {
+    mockAuth0ParseHash.mockImplementation((callback) => {
       callback(null, mockSuccessfulAuthResponse);
     });
 
@@ -121,12 +112,11 @@ describe('AdminLogin', () => {
   });
 
   it('redirects to homepage if the user has been previously logged in', async () => {
-    getMockCallTimes('/v4/user/', userResponse, 2);
+    getMockCall('/v4/user/', userResponse);
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCallTimes('/v4/appcatalogs/', [], 2);
+    getMockCall('/v4/appcatalogs/', []);
     getMockCall('/v4/organizations/');
-    getMockCallTimes('/v4/clusters/', [], 2);
+    getMockCall('/v4/clusters/', []);
 
     helpers.isJwtExpired.mockReturnValue(false);
 
@@ -139,12 +129,11 @@ describe('AdminLogin', () => {
   });
 
   it('renews user token if the previously stored one is expired', async () => {
-    getMockCallTimes('/v4/user/', userResponse, 2);
+    getMockCall('/v4/user/', userResponse);
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCallTimes('/v4/appcatalogs/', [], 2);
+    getMockCall('/v4/appcatalogs/', []);
     getMockCall('/v4/organizations/');
-    getMockCallTimes('/v4/clusters/', [], 2);
+    getMockCall('/v4/clusters/', []);
 
     const mockUserDataWithNewToken = Object.assign({}, mockUserData, {
       auth: {
@@ -182,7 +171,7 @@ describe('AdminLogin', () => {
       store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=invalid`));
     });
 
-    mockAuth0ParseHash.mockImplementation(callback => {
+    mockAuth0ParseHash.mockImplementation((callback) => {
       callback(null, mockSuccessfulAuthResponse);
     });
 
@@ -198,7 +187,7 @@ describe('AdminLogin', () => {
       store.dispatch(push(`${AppRoutes.OAuthCallback}#response_type=id_token`));
     });
 
-    mockAuth0ParseHash.mockImplementation(callback => {
+    mockAuth0ParseHash.mockImplementation((callback) => {
       callback(new Error('u w0t m8?'), mockSuccessfulAuthResponse);
     });
 
@@ -212,12 +201,6 @@ describe('AdminLogin', () => {
     const originalConsoleError = console.error;
     // eslint-disable-next-line no-console
     console.error = jest.fn();
-
-    getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-    getMockCall('/v4/user/', userResponse);
-    getMockCall('/v4/appcatalogs/');
-    getMockCall('/v4/organizations/');
-    getMockCall('/v4/clusters/', []);
 
     const mockAuthResponseWithNewToken = Object.assign(
       {},
