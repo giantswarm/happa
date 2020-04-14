@@ -65,11 +65,12 @@ export function hasUpdateReady(
   return newVersion !== null && currentVersion !== newVersion;
 }
 
-export function showUpdateToast() {
+export function showUpdateToast(callback?: () => void) {
   new FlashMessage(
     `There's a new version of happa available!`,
     messageType.INFO,
     messageTTL.FOREVER,
-    `Please press the <code>Update now!</code> button in the footer of the page to use the latest version (it only takes a couple of seconds).`
+    `Please press the <code>Update now!</code> button in the footer of the page to use the latest version (it only takes a couple of seconds).`,
+    callback
   );
 }

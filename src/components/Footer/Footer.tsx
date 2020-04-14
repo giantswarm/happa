@@ -8,8 +8,7 @@ import {
   showUpdateToast,
 } from 'Footer/FooterUtils';
 import FooterVersion from 'Footer/FooterVersion';
-import usePrevious from 'lib/effects/usePrevious';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,7 +33,9 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
   const newVersion: string | null = useSelector(getMetadataNewVersion);
   const isUpdating: boolean = useSelector(getMetadataIsUpdating);
 
-  const prevUpdatedVersion: string | null | undefined = usePrevious(newVersion);
+  const isToastVisible: React.MutableRefObject<boolean> = useRef<boolean>(
+    false
+  );
 
   const tooltipMessage: string = getVersionTooltipMessage(
     currentVersion,
@@ -49,10 +50,13 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (isUpdateReady && newVersion !== prevUpdatedVersion) {
-      showUpdateToast();
+    if (isUpdateReady && !isToastVisible.current) {
+      showUpdateToast(() => {
+        isToastVisible.current = false;
+      });
+      isToastVisible.current = true;
     }
-  }, [isUpdateReady, newVersion, prevUpdatedVersion]);
+  }, [isUpdateReady, newVersion]);
 
   return (
     <footer className='col-9' {...props}>
