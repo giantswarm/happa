@@ -5,7 +5,7 @@ orbs:
 defaults: &defaults
   working_directory: ~/happa
   docker:
-    - image: node:12-alpine
+    - image: circleci/node:12-buster
 
 whitelist: &whitelist
   paths:
@@ -84,6 +84,12 @@ jobs:
           keys:
           - v1-npm-deps-{{ checksum "yarn.lock" }}
           - v1-npm-deps-
+
+      - run:
+          name: Print version information
+          command: |
+            node --version
+            yarn --version
 
       - run:
           name: Install Dependencies
