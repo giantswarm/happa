@@ -5,6 +5,11 @@ export function isCommitHash(version: string): boolean {
   return version.length > 30;
 }
 
+export function formatVersion(version: string): string {
+  // eslint-disable-next-line no-magic-numbers
+  return version.substring(0, 5);
+}
+
 export function getReleaseURL(version: string): string {
   let URL = '';
   const isHash = isCommitHash(version);
