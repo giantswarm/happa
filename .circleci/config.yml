@@ -1,26 +1,63 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.8.7
+  architect: giantswarm/architect@0.8.9
+
+defaults: &defaults
+  working_directory: ~/happa
+  docker:
+    - image: node:12-alpine
+
+whitelist: &whitelist
+  paths:
+    - dist/*
+    - node_modules/*
+    - VERSION
 
 workflows:
-  build-and-deploy:
+  version: 2
+
+  build:
     jobs:
-      - build:
+      - checkout:
           filters:
             tags:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
             branches:
               only: /.*/
+      - test:
+          requires:
+            - checkout
+      - lint:
+          requires:
+            - checkout
+      - prettier:
+          requires:
+            - checkout
+      - typecheck:
+          requires:
+            - checkout
+      - build:
+          requires:
+            - checkout
+      - build-container:
+          requires:
+            - build
+
       - architect/push-to-docker-legacy:
           name: push-happa-to-aliyun-master
           image: 'registry-intl.cn-shanghai.aliyuncs.com/giantswarm/happa'
           username_envar: 'ALIYUN_USERNAME'
           password_envar: 'ALIYUN_PASSWORD'
           requires:
-            - build
+            - build-container
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
       - deploy-to-all:
           requires:
-            - build
+            - build-container
             - push-happa-to-aliyun-master
           filters:
             tags:
@@ -29,7 +66,7 @@ workflows:
               ignore: /.*/
       - deploy-to-testing:
           requires:
-            - build
+            - build-container
             - push-happa-to-aliyun-master
           filters:
             branches:
@@ -37,64 +74,90 @@ workflows:
                 - master
 
 jobs:
-  build:
-    machine:
-      image: ubuntu-1604:201903-01
+  checkout:
+    <<: *defaults
+
     steps:
       - checkout
-      - run:
-          name: Install node@12
-          command: |
-            set +e
-            export NVM_DIR="/opt/circleci/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-            # Check if we're running the newest node 12 version
-            if [ "$(nvm version-remote v12)" != "$NODE_VERSION" ]
-            then
-              echo "Please upgrade the NODE_VERSION variable to $(nvm version-remote v12)"
-              exit 1
-            fi
-
-            nvm install "$NODE_VERSION"
-            nvm alias default "$NODE_VERSION"
-
-            # Each step uses the same `$BASH_ENV`, so need to modify it
-            echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
-            echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> $BASH_ENV
-
-      - run:
-          name: Install yarn
-          command: |
-            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-            sudo apt-get update && sudo apt-get install -y --no-install-recommends yarn
 
       - restore_cache:
           keys:
-            # Find a cache corresponding to this specific package.json checksum
-            # created in this month.
-            - v1-npm-deps-{{ checksum "yarn.lock" }}
+          - v1-npm-deps-{{ checksum "yarn.lock" }}
+          - v1-npm-deps-
 
       - run:
-          name: Install dependencies
+          name: Install Dependencies
           command: yarn install --frozen-lockfile
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-npm-deps-{{ checksum "yarn.lock" }}
+
+      - persist_to_workspace:
+          root: ~/happa
+          <<: *whitelist
+
+  typecheck:
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/happa
 
       - run:
           name: Typecheck code using the TypeScript compiler
           command: yarn run typecheck
 
-      - run:
-          name: Lint code using ESlint
-          command: yarn run lint
+  lint:
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/happa
 
       - run:
           name: Validate code style using prettier
           command: yarn run validate-prettier --no-color
 
+  prettier:
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/happa
+
+      - run:
+          name: Validate code style using prettier
+          command: yarn run validate-prettier --no-color
+
+  test:
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/happa
+
       - run:
           name: Run tests
           command: yarn run test
+
+  build:
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/happa
 
       - run:
           name: Build web application
@@ -110,6 +173,19 @@ jobs:
             else
               git tag --points-at HEAD | tr '\n' ' ' > VERSION
             fi
+
+      - persist_to_workspace:
+          root: ~/happa
+          <<: *whitelist
+
+  build-container:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/happa
 
       - run:
           name: Build Docker image
@@ -131,13 +207,9 @@ jobs:
             CURL_OUTPUT=$(curl -s http://localhost:8000)
             echo "${CURL_OUTPUT}" | grep Happa
 
-      - save_cache:
-          key: v1-npm-deps-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
-
   deploy-to-testing:
-    machine: true
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
       - deploy:
@@ -148,7 +220,8 @@ jobs:
             ./architect deploy --group=testing
 
   deploy-to-all:
-    machine: true
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
       - deploy:
