@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import * as OrganizationActions from 'actions/organizationActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import UpgradeNotice from 'Home/UpgradeNotice';
-import { relativeDate } from 'lib/helpers.js';
+import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';

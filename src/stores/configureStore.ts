@@ -1,13 +1,18 @@
 import { routerMiddleware } from 'connected-react-router';
+import { History } from 'history';
 import rootReducer from 'reducers';
-import { applyMiddleware, compose, createStore } from 'redux';
+import { applyMiddleware, compose, createStore, Store } from 'redux';
 import thunk from 'redux-thunk';
 
-let store = {};
+let store: Store = {} as Store;
 
+// @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export default function configureStore(initialState, history) {
+export default function configureStore(
+  initialState: Record<string, never>,
+  history: History<History.LocationState>
+) {
   store = createStore(
     rootReducer(history),
     initialState,

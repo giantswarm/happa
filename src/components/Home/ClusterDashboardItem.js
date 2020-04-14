@@ -2,7 +2,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import * as actionTypes from 'actions/actionTypes';
 import { push } from 'connected-react-router';
-import { relativeDate } from 'lib/helpers.js';
+import { relativeDate } from 'lib/helpers';
 import RoutePath from 'lib/routePath';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -11,6 +11,7 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
+  selectClusterById,
   selectClusterNodePools,
   selectErrorByIdAndAction,
 } from 'selectors/clusterSelectors';
@@ -55,13 +56,19 @@ const WrapperStyles = (props) => css`
   ${LabelWrapper}, ${TitleWrapper} {
     font-size: 1.2em;
   }
-  ${mq(CSSBreakpoints.SMALL)} {
+  ${mq(CSSBreakpoints.Small)} {
     flex-direction: column;
     & > div {
       width: 100%;
     }
     ${LabelWrapper} {
-      margin-bottom: 5px;
+      position: absolute;
+      i {
+        display: none;
+      }
+    }
+    ${TitleWrapper} {
+      margin-left: 60px;
     }
     /* Font sizes */
     font-size: 0.9em;
@@ -84,14 +91,13 @@ const ButtonsWrapper = styled.div`
   flex: 0 0 210px;
   display: flex;
   justify-content: flex-end;
-  ${mq(CSSBreakpoints.MEDIUM)} {
+  ${mq(CSSBreakpoints.Medium)} {
     flex: unset;
     position: absolute;
     top: 21px;
     right: 8px;
   }
-  /*eslint-disable-next-line no-magic-numbers*/
-  ${mq(725)} {
+  ${mq(725) /* eslint-disable-line */} {
     position: relative;
     width: 100%;
     top: 9px;
@@ -99,8 +105,8 @@ const ButtonsWrapper = styled.div`
     justify-content: flex-start;
     padding-left: 98px;
   }
-  ${mq(CSSBreakpoints.SMALL)} {
-    padding-left: 9px;
+  ${mq(CSSBreakpoints.Small)} {
+    display: none;
   }
 `;
 
@@ -113,8 +119,12 @@ const ClusterDetailsDiv = styled.div`
   img {
     height: 22px;
   }
-  ${mq(CSSBreakpoints.MEDIUM)} {
+  ${mq(CSSBreakpoints.Medium)} {
     height: unset;
+  }
+  ${mq(CSSBreakpoints.Small)} {
+    display: inline-block;
+    transform: translateY(-1px);
   }
 `;
 
@@ -125,7 +135,11 @@ function ClusterDashboardItem({
   nodePools,
   dispatch,
   nodePoolsLoadError,
+  clusterId,
 }) {
+  // If the cluster has been deleted using gsctl, Happa doesn't know yet.
+  if (!cluster) return null;
+
   /**
    * Returns true if the cluster is younger than 30 days
    */
@@ -142,12 +156,11 @@ function ClusterDashboardItem({
   };
 
   const accessCluster = () => {
-    const { id, owner } = cluster;
     const clusterGuidePath = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.GettingStarted.Overview,
       {
-        orgId: owner,
-        clusterId: id,
+        orgId: cluster.owner,
+        clusterId,
       }
     );
 
@@ -158,7 +171,7 @@ function ClusterDashboardItem({
     OrganizationsRoutes.Clusters.Detail,
     {
       orgId: selectedOrganization,
-      clusterId: cluster.id,
+      clusterId,
     }
   );
 
@@ -166,7 +179,7 @@ function ClusterDashboardItem({
     return (
       <WrapperDeleted>
         <LabelWrapper>
-          <ClusterIDLabel clusterID={cluster.id} copyEnabled />
+          <ClusterIDLabel clusterID={clusterId} copyEnabled />
         </LabelWrapper>
 
         <ContentWrapper>
@@ -185,7 +198,7 @@ function ClusterDashboardItem({
     <Wrapper>
       <LabelWrapper>
         <Link to={linkToCluster}>
-          <ClusterIDLabel clusterID={cluster.id} copyEnabled />
+          <ClusterIDLabel clusterID={clusterId} copyEnabled />
         </Link>
       </LabelWrapper>
 
@@ -195,7 +208,7 @@ function ClusterDashboardItem({
             <RefreshableLabel value={cluster.name}>
               <NameWrapper>{cluster.name}</NameWrapper>
             </RefreshableLabel>
-            <UpgradeNotice clusterId={cluster.id} />
+            <UpgradeNotice clusterId={clusterId} />
           </Link>
         </TitleWrapper>
 
@@ -211,7 +224,7 @@ function ClusterDashboardItem({
         </div>
 
         {/* Cluster resources */}
-        <ErrorFallback errors={nodePoolsLoadError}>
+        <ErrorFallback error={nodePoolsLoadError}>
           <ClusterDetailsDiv>
             {isV5Cluster ? (
               <ClusterDashboardResourcesV5
@@ -252,14 +265,16 @@ ClusterDashboardItem.propTypes = {
   isV5Cluster: PropTypes.bool,
   nodePools: PropTypes.array,
   nodePoolsLoadError: PropTypes.string,
+  clusterId: PropTypes.string,
 };
 
 function mapStateToProps(state, props) {
   return {
-    nodePools: selectClusterNodePools(state, props.cluster.id),
+    cluster: selectClusterById(state, props.clusterId),
+    nodePools: selectClusterNodePools(state, props.clusterId),
     nodePoolsLoadError: selectErrorByIdAndAction(
       state,
-      props.cluster.id,
+      props.clusterId,
       actionTypes.CLUSTER_NODEPOOLS_LOAD_REQUEST
     ),
   };

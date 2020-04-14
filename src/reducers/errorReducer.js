@@ -1,8 +1,15 @@
+import { SINGLE_ERROR_CLEAR } from 'actions/actionTypes';
 import produce from 'immer';
 
 const initialState = {};
 
 const errorReducer = produce((draft, action) => {
+  if (action.type === SINGLE_ERROR_CLEAR) {
+    delete draft[action.errorType];
+
+    return;
+  }
+
   const { type, error } = action;
   const matches = /(.*)_(SUCCESS|ERROR)/.exec(type);
 

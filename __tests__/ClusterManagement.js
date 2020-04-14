@@ -108,6 +108,7 @@ details view`, async () => {
   getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 3);
   getMockCall('/v4/clusters/');
   getMockCall('/v4/releases/', releasesResponse);
+  getMockCallTimes('/v4/releases/', releasesResponse, 2);
 
   const v4ClusterCreationResponse = {
     code: 'RESOURCE_CREATED',
@@ -194,7 +195,6 @@ it(`redirects the user to clusters to list and shows flash message when cluster 
 
 it('Cluster list shows all clusters, each one with its details, for the selected organization', async () => {
   getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`);
-
   getMockCall('/v4/clusters/', [...v4ClustersResponse, ...v5ClustersResponse]);
   getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
   getMockCall(`/v5/clusters/${V5_CLUSTER.id}/`, v5ClusterResponse);

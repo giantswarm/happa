@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
 import nock from 'nock';
@@ -93,7 +93,9 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Delete the existing file
-      const fileInputPlaceholder = getByText(/configmap has been set/i);
+      const fileInputPlaceholder = getByText(
+        /User level config values have been set/i
+      );
       const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
       const file = new Blob(
         [
@@ -137,18 +139,22 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Upload a configmap file
-      const fileInputPlaceholder = getByText(/configmap has been set/i);
+      const fileInputPlaceholder = getByText(
+        /User level config values have been set/i
+      );
       let deleteButton = fileInputPlaceholder.parentNode.querySelector(
         '.btn-danger'
       );
       fireEvent.click(deleteButton);
 
       // Confirm deletion
-      deleteButton = getByText(/^delete configmap$/i);
+      deleteButton = getByText(/^Delete user level config values$/i);
       fireEvent.click(deleteButton);
 
       await waitFor(() => {
-        expect(queryByText(/delete configmap/i)).not.toBeInTheDocument();
+        expect(
+          queryByText(/Delete user level config values/i)
+        ).not.toBeInTheDocument();
       });
 
       await findByText(/has been deleted./i);
@@ -174,7 +180,9 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Upload a secrets file
-      const fileInputPlaceholder = getByText(/secret has been set/i);
+      const fileInputPlaceholder = getByText(
+        /user level secret values have been set/i
+      );
       const fileInput = fileInputPlaceholder.parentNode.querySelector('input');
       const file = new Blob(
         [
@@ -195,7 +203,9 @@ describe('Installed app detail pane', () => {
       });
 
       await waitFor(() => {
-        expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
+        expect(
+          queryByText(/delete user level secret values/i)
+        ).not.toBeInTheDocument();
       });
 
       await findByText(/has successfully been updated./i);
@@ -221,18 +231,22 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appLabel);
 
       // Delete the existing file
-      const fileInputPlaceholder = getByText(/secret has been set/i);
+      const fileInputPlaceholder = getByText(
+        /user level secret values have been set/i
+      );
       let deleteButton = fileInputPlaceholder.parentNode.querySelector(
         '.btn-danger'
       );
       fireEvent.click(deleteButton);
 
       // Confirm deletion
-      deleteButton = getByText(/^delete secret$/i);
+      deleteButton = getByText(/^delete user level secret values$/i);
       fireEvent.click(deleteButton);
 
       await waitFor(() => {
-        expect(queryByText(/delete secret/i)).not.toBeInTheDocument();
+        expect(
+          queryByText(/delete user level secret values/i)
+        ).not.toBeInTheDocument();
       });
 
       await findByText(/has been deleted./i);
@@ -277,7 +291,7 @@ describe('Installed app detail pane', () => {
       expect(queryByText(/delete app/i)).not.toBeInTheDocument();
     });
 
-    await findByText(/will be deleted/i);
+    await findByText(/was scheduled for deletion/i);
   });
 
   it('shows a no apps installed message when there are no apps yet', async () => {
@@ -306,5 +320,41 @@ describe('Installed app detail pane', () => {
     fireEvent.click(appLabel);
 
     // If the app doesn't explode, we're ok and the test has passed.
+  });
+
+  it('shows an error message if not able to set the desired chart version', async () => {
+    getMockCall(`/v4/clusters/${V4_CLUSTER.id}/apps/`, [
+      appResponseWithCustomConfig,
+    ]);
+
+    nock('https://catalogshost')
+      .get('/giantswarm-catalog/index.yaml')
+      .reply(StatusCodes.Ok, catalogIndexResponse);
+
+    const { findByText, getByText, getByTestId } = renderRouteWithStore(
+      clusterDetailPath
+    );
+
+    const appsTab = await findByText(/^apps$/i);
+    fireEvent.click(appsTab);
+
+    // Click on app to open the editing modal.
+    const appLabel = getByText(/chart version: 0.0.1/i);
+    fireEvent.click(appLabel);
+
+    // Wait for the version picker to load.
+    const modal = getByTestId('app-details-modal');
+    const versionDropdown = await within(modal).findByText(/0.0.1/i);
+    fireEvent.click(versionDropdown);
+
+    // Set the version.
+    const desiredVersion = within(modal).getByText(/1.1.1/i);
+    fireEvent.click(desiredVersion);
+
+    const confirmButton = getByText('Update Chart Version');
+    fireEvent.click(confirmButton);
+
+    // Expect an error.
+    await findByText(/Something went wrong/);
   });
 });

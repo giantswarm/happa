@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
-import * as actionTypes from 'actions/actionTypes';
+import {
+  CLUSTER_CREATE_REQUEST,
+  RELEASES_LOAD_REQUEST,
+} from 'actions/actionTypes';
 import { batchedClusterCreate } from 'actions/batchedActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import PropTypes from 'prop-types';
@@ -58,6 +61,11 @@ const FlexWrapperDiv = styled.div`
   p {
     margin-left: 15px;
   }
+`;
+
+const ErrorFallbackStyled = styled(ErrorFallback)`
+  margin-bottom: 15px;
+  line-height: 1.2em;
 `;
 
 class CreateRegularCluster extends React.Component {
@@ -358,34 +366,25 @@ class CreateRegularCluster extends React.Component {
   };
 
   valid() {
+    // If no releases, the form can't be valid.
+    if (this.props.releasesLoadError) return false;
+
     // If any of the releaseVersion hasn't been set yet, return false
-    if (!this.props.selectedRelease) {
-      return false;
-    }
+    if (!this.props.selectedRelease) return false;
 
     // If the availabilityZonesPicker is invalid, return false
-    if (!this.state.availabilityZonesPicker.valid) {
-      return false;
-    }
+    if (!this.state.availabilityZonesPicker.valid) return false;
 
     // If the min scaling numberpicker is invalid, return false
-    if (!this.state.scaling.minValid) {
-      return false;
-    }
+    if (!this.state.scaling.minValid) return false;
 
     // If the max scaling numberpickers is invalid, return false
-    if (!this.state.scaling.maxValid) {
-      return false;
-    }
+    if (!this.state.scaling.maxValid) return false;
 
     // If the aws instance type is invalid, return false
-    if (!this.state.aws.instanceType.valid) {
-      return false;
-    }
+    if (!this.state.aws.instanceType.valid) return false;
 
-    if (!this.state.azure.vmSize.valid) {
-      return false;
-    }
+    if (!this.state.azure.vmSize.valid) return false;
 
     // If the kvm worker is invalid, return false
     if (
@@ -409,6 +408,10 @@ class CreateRegularCluster extends React.Component {
       this.props.selectedRelease
     );
 
+    const noReleasesErrorText = this.props.releasesLoadError
+      ? `The cluster can't be created because there is no active release currently availabe for this platform.`
+      : null;
+
     return (
       <Breadcrumb
         data={{ title: 'CREATE CLUSTER', pathname: this.props.match.url }}
@@ -416,7 +419,6 @@ class CreateRegularCluster extends React.Component {
         <DocumentTitle
           title={`Create Cluster | ${this.props.selectedOrganization}`}
         >
-          {/* <div className='new-cluster' data-testid='cluster-creation-view'> */}
           <WrapperDiv data-testid='cluster-creation-view'>
             <h1>Create a Cluster</h1>
 
@@ -580,7 +582,8 @@ class CreateRegularCluster extends React.Component {
             <hr style={{ margin: '37px 0 31px' }} />
 
             <FlexColumnDiv style={{ marginBottom: '23px' }}>
-              <ErrorFallback errors={this.props.clusterCreateError}>
+              <ErrorFallbackStyled error={noReleasesErrorText} />
+              <ErrorFallback error={this.props.clusterCreateError}>
                 <Button
                   bsSize='large'
                   bsStyle='primary'
@@ -637,6 +640,7 @@ CreateRegularCluster.propTypes = {
   clusterName: PropTypes.string,
   updateClusterNameInParent: PropTypes.func,
   clusterCreateError: PropTypes.string,
+  releasesLoadError: PropTypes.string,
 };
 
 function mapStateToProps(state) {
@@ -679,10 +683,8 @@ function mapStateToProps(state) {
 
   return {
     ...propsToPush,
-    clusterCreateError: selectErrorByAction(
-      state,
-      actionTypes.CLUSTER_CREATE_REQUEST
-    ),
+    clusterCreateError: selectErrorByAction(state, CLUSTER_CREATE_REQUEST),
+    releasesLoadError: selectErrorByAction(state, RELEASES_LOAD_REQUEST),
   };
 }
 

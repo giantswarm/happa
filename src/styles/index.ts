@@ -1,7 +1,64 @@
 import { css } from '@emotion/core';
-import styled from '@emotion/styled';
+import styled, { WithTheme } from '@emotion/styled';
+import { CSSBreakpoints } from 'shared/constants';
 
 import theme from './theme';
+
+export interface IColorMap {
+  darkBlue: string;
+  darkBlueDarker1: string;
+  darkBlueDarker2: string;
+  darkBlueDarker3: string;
+  darkBlueDarker4: string;
+  darkBlueDarker5: string;
+  darkBlueDarker6: string;
+  darkBlueDarker7: string;
+  darkBlueDarker8: string;
+  darkBlueDarker9: string;
+  darkBlueLighter1: string;
+  darkBlueLighter2: string;
+  darkBlueLighter3: string;
+  darkBlueLighter4: string;
+  darkBlueLighter5: string;
+  darkBlueLighter6: string;
+  darkBlueLighter7: string;
+  darkBlueLighter8: string;
+  darkBlueLighter9: string;
+  shade1: string;
+  shade2: string;
+  shade3: string;
+  shade4: string;
+  shade5: string;
+  shade6: string;
+  shade7: string;
+  shade8: string;
+  shade9: string;
+  shade10: string;
+  white1: string;
+  white2: string;
+  white3: string;
+  white4: string;
+  whiteInput: string;
+  yellow1: string;
+  gold: string;
+  goldBackground: string;
+  red: string;
+  gray: string;
+  error: string;
+  loadingForeground: string;
+}
+
+export interface IThemeFonts {
+  console: string;
+}
+
+export interface ITheme {
+  colors: IColorMap;
+  border_radius: string;
+  breakpoints: Record<CSSBreakpoints, number>;
+  fontFamilies: IThemeFonts;
+  border: string;
+}
 
 /***** BASE STYLES ****/
 
@@ -25,7 +82,7 @@ export const FlexRowBase = css`
   align-items: center;
 `;
 
-export const Input = (props) => css`
+export const Input = (props: WithTheme<{}, ITheme>) => css`
   input {
     box-sizing: border-box;
     width: 100%;
@@ -118,7 +175,7 @@ export const FallbackSpan = styled.span`
 
 // Breakpoint can be a string representing any of the breakpoint properties in
 // the theme object or a number/string representing a custom breakpoint.
-export const mq = (breakpoint) =>
+export const mq = (breakpoint: CSSBreakpoints | number) =>
   `@media only screen and (max-width: ${
-    theme.breakpoints[breakpoint] ?? breakpoint
+    theme.breakpoints[breakpoint as CSSBreakpoints] ?? breakpoint
   }px)`;

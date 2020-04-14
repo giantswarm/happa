@@ -31,7 +31,7 @@ export function dedent(strings, ...values) {
   const lines = result.split('\n');
   let mindent = null;
   lines.forEach((l) => {
-    const m = l.match(/^(\s+)\S+/);
+    const m = /^(\s+)\S+/.exec(l);
     if (m) {
       const indent = m[1].length;
       if (!mindent) {
@@ -44,7 +44,9 @@ export function dedent(strings, ...values) {
   });
 
   if (mindent !== null) {
-    result = lines.map((l) => (l[0] === ' ' ? l.slice(mindent) : l)).join('\n');
+    result = lines
+      .map((l) => (l.startsWith(' ') ? l.slice(mindent) : l))
+      .join('\n');
   }
 
   // dedent eats leading and trailing whitespace too
@@ -136,13 +138,29 @@ export function toTitleCase(str) {
   });
 }
 
-// eslint-disable-next-line no-magic-numbers
-export function truncate(string, maxLength = 20) {
-  if (string.length > maxLength) {
-    return `${string.substring(0, maxLength)}\u2026`;
+/**
+ * Truncate a string in a smart way
+ *
+ * @param {string} str - String to truncate
+ * @param {string} replacer - The symbol displayed between the start chars and the end chars
+ * @param {number} numStartChars - Chars to keep unmangled in the beginning
+ * @param {number} numEndChars - Chars to keep unmangled in the end
+ * @returns {string}
+ */
+export function truncate(str, replacer, numStartChars, numEndChars) {
+  const maxLength = numStartChars + numEndChars + replacer.length;
+
+  if (str.length <= maxLength || numEndChars === 0 || numEndChars === 0) {
+    return str;
   }
 
-  return string;
+  const result = [
+    str.substring(0, numStartChars),
+    replacer,
+    str.substring(str.length - numEndChars),
+  ];
+
+  return result.join('');
 }
 
 export function makeKubeConfigTextFile(cluster, keyPairResult, useInternalAPI) {

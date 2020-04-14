@@ -4,13 +4,14 @@ import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import Button from 'UI/Button';
+import Truncated from 'UI/Truncated';
 import VersionPicker from 'UI/VersionPicker/VersionPicker';
 
 import YAMLFileUpload from './YamlFileUpload';
 
 const InitialPane = (props) => {
   return (
-    <div>
+    <div data-testid='app-details-modal'>
       <div className='appdetails--upperlabels'>
         <div className='labelvaluepair'>
           <div className='labelvaluepair--label'>CATALOG</div>
@@ -70,23 +71,23 @@ const InitialPane = (props) => {
             {props.app.status.app_version === '' ? (
               <span>Information pending...</span>
             ) : (
-              <span>{props.app.status.app_version}</span>
+              <Truncated as='span'>{props.app.status.app_version}</Truncated>
             )}
           </div>
         </div>
       </div>
 
       <div className='labelvaluepair'>
-        <div className='labelvaluepair--label'>CONFIGMAP</div>
+        <div className='labelvaluepair--label'>user level config values</div>
 
         <div className='appdetails--userconfiguration'>
           {props.app.spec.user_config.configmap.name !== '' ? (
             <>
-              <span>ConfigMap has been set</span>
+              <span>User level config values have been set</span>
 
               <div className='actions'>
                 <YAMLFileUpload
-                  buttonText='Replace ConfigMap'
+                  buttonText='Replace values'
                   onInputChange={props.dispatchUpdateAppConfig}
                 />
 
@@ -100,11 +101,11 @@ const InitialPane = (props) => {
             </>
           ) : (
             <>
-              <span>No ConfigMap</span>
+              <span>No user level config values</span>
 
               <div className='actions'>
                 <YAMLFileUpload
-                  buttonText='Upload ConfigMap'
+                  buttonText='Upload user level config values'
                   onInputChange={props.dispatchCreateAppConfig}
                 />
               </div>
@@ -114,16 +115,16 @@ const InitialPane = (props) => {
       </div>
 
       <div className='labelvaluepair'>
-        <div className='labelvaluepair--label'>SECRET</div>
+        <div className='labelvaluepair--label'>user level secret values</div>
 
         <div className='appdetails--userconfiguration'>
           {props.app.spec.user_config.secret.name !== '' ? (
             <>
-              <span>Secret has been set</span>
+              <span>User level secret values have been set</span>
 
               <div className='actions'>
                 <YAMLFileUpload
-                  buttonText='Replace Secret'
+                  buttonText='Replace user level secret values'
                   onInputChange={props.dispatchUpdateAppSecret}
                 />
 
@@ -137,11 +138,11 @@ const InitialPane = (props) => {
             </>
           ) : (
             <>
-              <span>No Secret.</span>
+              <span>No user level secret values</span>
 
               <div className='actions'>
                 <YAMLFileUpload
-                  buttonText='Upload Secret'
+                  buttonText='Upload user level secret values'
                   onInputChange={props.dispatchCreateAppSecret}
                 />
               </div>

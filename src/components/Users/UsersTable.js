@@ -1,4 +1,4 @@
-import { relativeDate } from 'lib/helpers.js';
+import { relativeDate } from 'lib/helpers';
 import PropTypes from 'prop-types';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';

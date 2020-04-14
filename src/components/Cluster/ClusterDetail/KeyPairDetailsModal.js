@@ -1,4 +1,4 @@
-import { relativeDate } from 'lib/helpers.js';
+import { relativeDate } from 'lib/helpers';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';

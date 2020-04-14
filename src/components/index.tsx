@@ -9,19 +9,43 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/app.sass';
 
 import { Notifier } from '@airbrake/browser';
-import ErrorReporter from 'lib/ErrorReporter';
+import { ErrorReporter } from 'lib/errors';
 import monkeyPatchGiantSwarmClient from 'lib/giantswarmClientPatcher';
 import { Requester } from 'lib/patchedAirbrakeRequester';
 import React from 'react';
 import { render } from 'react-dom';
+import { Store } from 'redux';
 import configureStore from 'stores/configureStore';
 import history from 'stores/history';
 import theme from 'styles/theme';
 
 import App from './App';
 
+enum GlobalEnvironment {
+  Dev = 'development',
+  Kubernetes = 'kubernetes',
+  Docker = 'docker-container',
+}
+
+interface IGlobalConfig {
+  apiEndpoint: string;
+  passageEndpoint: string;
+  environment: GlobalEnvironment;
+  ingressBaseDomain: string;
+  awsCapabilitiesJSON: string;
+  azureCapabilitiesJSON: string;
+  happaVersion: string;
+}
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
+  interface Window {
+    config: IGlobalConfig;
+  }
+}
+
 // Configure the redux store.
-const store = configureStore({}, history);
+const store: Store = configureStore({}, history);
 
 // Patch the Giant Swarm client so it has access to the store and can dispatch
 // redux actions. This is needed because admin tokens expire after 5 minutes.
@@ -32,7 +56,7 @@ monkeyPatchGiantSwarmClient(store);
 
 // Configure an airbrake notifier for excption notification.
 // But only when not in development.
-if (window.config.environment !== 'development') {
+if (window.config.environment !== GlobalEnvironment.Dev) {
   // We use the airbrake notifier here instead of rolling our own notification
   // client, it is a stable project used by many. Though instead of sending our
   // exception reports to airbrake we send it to an endpoint of our own API, to
@@ -48,7 +72,9 @@ if (window.config.environment !== 'development') {
   // _requester attributes since the constructor does not allow us to edit the
   // url or the headers used during the request easily. We need to set headers so
   // that we can authenticate against our API endpoint.
+  // @ts-ignore
   airbrake._url = `${window.config.apiEndpoint}/v5/exception-notifications/`;
+  // @ts-ignore
   airbrake._requester = new Requester(store).request;
 
   // set up a filter for reporting addtional information (happa version)

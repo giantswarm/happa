@@ -8,7 +8,7 @@ const WIDTH = '250px';
 const MAX_HEIGHT = '250px';
 
 const Wrapper = styled.div`
-  div > button {
+  div > .dropdown-trigger {
     background-color: ${(props) => props.theme.colors.shade5};
     border: 1px solid ${(props) => props.theme.colors.shade6};
     border-radius: ${(props) => props.theme.border_radius};
@@ -45,7 +45,6 @@ const Header = styled.div`
   }
 
   label {
-    padding-top: 10px;
     border-top: 1px solid ${(props) => props.theme.colors.shade2};
 
     padding: 0px;
@@ -101,25 +100,47 @@ const Body = styled.div`
   }
 `;
 
+interface IVersion {
+  // The version
+  version: string;
+
+  // Whether or not this version is a test version.
+  test: boolean;
+}
+
+interface IVersionPickerProps {
+  // An array of versions to pick from.
+  versions?: IVersion[];
+
+  // The currently selected version, will be highlighted in bold in the list.
+  selectedVersion?: string;
+
+  // A callback function that gets called when a version is selected by the user.
+  onChange?: (newVersion?: string) => void;
+}
+
 /**
  * VersionPicker is a dropdown style UI component for selecting a single version from a list
  * of versions. The list of versions can contain test versions, and this component
  * allows the users to choose whether they want to see the test versions or not.
- * @param {Object} props - The props that this component can take
- * @param {function} props.onChange - A callback function that gets called when a version is selected by the user.
- * @param {string} props.selectedVersion - The currently selected version, will be highlighted in bold in the list.
- * @param {Object[]} props.versions - An array of versions to pick from.
- * @param {string} props.versions[].version - The version
- * @param {boolean} props.versions[].test - Whether or not this version is a test version.
  */
-const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
-  const [includeTestVersions, setIncludeTestVersions] = useState(false);
+const VersionPicker: React.FC<IVersionPickerProps> = ({
+  onChange,
+  selectedVersion,
+  versions,
+  ...props
+}) => {
+  const [includeTestVersions, setIncludeTestVersions] = useState<boolean>(
+    false
+  );
 
-  const handleSetIncludeTestVersions = (event) => {
+  const handleSetIncludeTestVersions = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setIncludeTestVersions(event.target.checked);
   };
 
-  const handleOnChange = (event) => {
+  const handleOnChange = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     if (onChange) {
       onChange(event.currentTarget.dataset.version);
@@ -142,6 +163,7 @@ const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
         }) => (
           <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
             <button
+              className='dropdown-trigger'
               aria-expanded={isOpen}
               aria-haspopup='true'
               onClick={onClickHandler}
@@ -216,9 +238,9 @@ const VersionPicker = ({ onChange, selectedVersion, versions, ...props }) => {
 };
 
 VersionPicker.propTypes = {
-  onChange: PropTypes.func,
   selectedVersion: PropTypes.string,
   versions: PropTypes.array,
+  onChange: PropTypes.func,
 };
 
 export default VersionPicker;

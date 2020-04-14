@@ -1,11 +1,18 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const webpack = require('webpack');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: ['react-hot-loader/patch', './src/components/index.js'],
+  entry: ['react-hot-loader/patch', './src/components/index.tsx'],
   context: __dirname,
+  node: {
+    fs: 'empty'
+  },
   output: {
     publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
@@ -14,7 +21,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.js(x?)$/,
+        exclude: /node_modules/,
+        use: ['babel-loader'],
+      },
+      {
+        test: /\.ts(x?)$/,
         exclude: /node_modules/,
         use: ['babel-loader'],
       },
@@ -66,7 +78,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx'],
+    extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     modules: [
       'node_modules',
       path.resolve(`${__dirname}/src`),

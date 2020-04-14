@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'UI/Button';
-import LoadingOverlay from 'UI/LoadingOverlay';
 import ReleaseComponentLabel from 'UI/ReleaseComponentLabel';
 
 import ReleaseDetailsModal from '../../Modals/ReleaseDetailsModal';
@@ -23,27 +22,24 @@ const FlexRowDiv = styled.div`
   }
 `;
 
-class ReleaseSelector extends React.Component {
-  state = {
-    kubernetesVersion: '',
-    loading: true,
+const MarginlessReleaseComponentLabel = styled(ReleaseComponentLabel)`
+  margin: 0;
+`;
+
+class ReleaseSelector extends React.PureComponent {
+  extractKubernetesVersion = () => {
+    const { selectedRelease, releases } = this.props;
+
+    return releases[selectedRelease]?.components.find(
+      (component) => component.name === 'kubernetes'
+    )?.version;
   };
 
-  componentDidMount() {
-    const kubernetesVersion = this.props.selectedRelease
-      ? this.props.releases[this.props.selectedRelease].components.find(
-          (component) => component.name === 'kubernetes'
-        ).version
-      : undefined;
-
-    this.setState({ kubernetesVersion, loading: false });
-  }
-
   render() {
-    const { kubernetesVersion } = this.state;
+    const kubernetesVersion = this.extractKubernetesVersion();
 
     return (
-      <LoadingOverlay loading={this.state.loading}>
+      <>
         {kubernetesVersion ? (
           <FlexRowDiv>
             <p>{this.props.selectedRelease}</p>
@@ -52,20 +48,11 @@ class ReleaseSelector extends React.Component {
                 ? 'Show Details'
                 : 'Details and Alternatives'}
             </Button>
-            <br />
-            <br />
-
-            {kubernetesVersion && (
-              <>
-                <p>This release contains:</p>
-                <div style={{ transform: 'translateY(6px)' }}>
-                  <ReleaseComponentLabel
-                    name='kubernetes'
-                    version={kubernetesVersion}
-                  />
-                </div>
-              </>
-            )}
+            <p>This release contains:</p>
+            <MarginlessReleaseComponentLabel
+              name='kubernetes'
+              version={kubernetesVersion}
+            />
           </FlexRowDiv>
         ) : (
           <div>
@@ -82,7 +69,7 @@ class ReleaseSelector extends React.Component {
           selectRelease={this.props.selectRelease}
           selectedRelease={this.props.selectedRelease}
         />
-      </LoadingOverlay>
+      </>
     );
   }
 }

@@ -1,7 +1,8 @@
+import styled from '@emotion/styled';
 import { CLUSTER_LOAD_KEY_PAIRS_REQUEST } from 'actions/actionTypes';
 import * as clusterActions from 'actions/clusterActions';
 import { spinner } from 'images';
-import { relativeDate } from 'lib/helpers.js';
+import { relativeDate } from 'lib/helpers';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -15,6 +16,11 @@ import Button from 'UI/Button';
 import CertificateOrgsLabel from './CertificateOrgsLabel';
 import KeypairCreateModal from './KeyPairCreateModal';
 import KeyPairDetailsModal from './KeyPairDetailsModal';
+
+const Disclaimer = styled.p`
+  margin: 0 0 20px;
+  line-height: 1.2;
+`;
 
 class KeyPairs extends React.Component {
   static createdCellFormatter(_cell, row) {
@@ -167,11 +173,11 @@ class KeyPairs extends React.Component {
     return (
       <div className='row cluster_key_pairs col-12'>
         <div className='row'>
-          <p>
+          <Disclaimer>
             Key pairs consist of an RSA private key and certificate, signed by
             the certificate authority (CA) belonging to this cluster. They are
             used for access to the cluster via the Kubernetes API.
-          </p>
+          </Disclaimer>
         </div>
 
         <div className='row'>
