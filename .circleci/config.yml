@@ -41,6 +41,10 @@ workflows:
             - checkout
       - build-container:
           requires:
+            - test
+            - lint
+            - prettier
+            - typecheck
             - build
 
       - architect/push-to-docker-legacy:
@@ -188,6 +192,8 @@ jobs:
   build-container:
     machine:
       image: ubuntu-1604:201903-01
+
+    working_directory: ~/happa
     steps:
       - checkout
 
