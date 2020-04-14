@@ -36,7 +36,7 @@ const FooterVersion: React.FC<IFooterVersionProps> = ({
   const formattedVersion: string = formatVersion(currentVersion);
 
   if (isUpdating) {
-    return <StyledLoadingIndicator loading={true} loadingPosition='top' />;
+    return <StyledLoadingIndicator loading={true} loadingPosition='up' />;
   }
 
   if (hasUpdateReady) {

@@ -6,7 +6,7 @@ import {
 import { IState } from 'reducers/types';
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { Constants } from 'shared';
+import { Constants } from 'shared/constants';
 
 import * as actionTypes from './actionTypes';
 
