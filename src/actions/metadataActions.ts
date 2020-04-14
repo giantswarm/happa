@@ -54,7 +54,7 @@ export const checkForUpdates = (
 
       // Casting as correct type until the model layer is rewritten in TypeScript
       const newVersion = ((configurationRes.data as unknown) as IMetadataConfiguration)
-        .version.long;
+        .version;
 
       if (newVersion !== scheduledVersion && newVersion !== currentVersion) {
         dispatch({

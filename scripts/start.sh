@@ -35,16 +35,7 @@ fi
 VERSION=$(cat VERSION | tr '\n' ' ' | tr -d '[:space:]')
 
 sed -i "s|happaVersion: .*|happaVersion: '${VERSION}',|g" /www/index.html
-
-STRLENGTH=$(echo -n $VERSION | wc -m)
-SHORTVERSION=$VERSION
-if [ $STRLENGTH -gt 30 ]; then
-  # VERSION is a commit hash, not a tag
-  SHORTVERSION=$(echo -n $VERSION | cut -c-5)
-fi
-
-sed -i "s|\"long\": .*|\"long\": '$VERSION'|" /www/metadata.json
-sed -i "s|\"short\": .*|\"short\": '$SHORTVERSION',|" /www/metadata.json
+sed -i "s|\"version\": .*|\"version\": '$VERSION'|" /www/metadata.json
 
 # gzip index.html again because we changed it
 gzip -f -9 -k /www/index.html

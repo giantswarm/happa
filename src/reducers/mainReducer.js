@@ -15,7 +15,7 @@ const initialState = () => ({
   loggedInUser: fetchUserFromStorage(),
   metadata: {
     version: {
-      current: metadata.version.long,
+      current: metadata.version,
       new: null,
       isUpdating: false,
       lastCheck: 0,

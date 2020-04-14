@@ -3,8 +3,5 @@ export enum MetadataPaths {
 }
 
 export interface IMetadataConfiguration {
-  version: {
-    long: string;
-    short: string;
-  };
+  version: string;
 }

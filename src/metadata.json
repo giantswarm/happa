@@ -1,6 +1,3 @@
 {
-  "version": {
-    "short": "dev",
-    "long": "1.1.0"
-  }
+  "version": "development"
 }
