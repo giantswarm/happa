@@ -210,11 +210,6 @@ jobs:
       - run:
           name: Launch container for tests
           command: |
-            if [ "${CIRCLE_BRANCH}" != "master" ]; then
-              docker pull quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
-              docker run --name happa-master -e API_ENDPOINT=test -e PASSAGE_ENDPOINT=test -e INGRESS_BASE_DOMAIN=test -e AWS_CAPABILITIES_JSON={} -e AZURE_CAPABILITIES_JSON={} -e ENVIRONMENT=test-in-ci -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:latest
-            fi
-
             docker run --name happa-branch -e API_ENDPOINT=test -e PASSAGE_ENDPOINT=test -e INGRESS_BASE_DOMAIN=test -e AWS_CAPABILITIES_JSON={} -e AZURE_CAPABILITIES_JSON={} -e ENVIRONMENT=test-in-ci -p 8000:8000 -d quay.io/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
             sleep 2
             CURL_OUTPUT=$(curl -s http://localhost:8000)
