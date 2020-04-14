@@ -266,12 +266,6 @@ describe('PasswordReset', () => {
     });
 
     it(`jumps to password setup automatically if there's an email saved in the local storage`, async () => {
-      getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
-      getMockCall('/v4/user/', userResponse);
-      getMockCall('/v4/organizations/');
-      getMockCall('/v4/appcatalogs/');
-      getMockCall('/v4/clusters/');
-
       nock(global.config.passageEndpoint)
         .post(`/recovery/${token}/`, { email: USER_EMAIL })
         .reply(StatusCodes.Ok, {

@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
-import { ConnectedRouter, push } from 'connected-react-router';
+import App from 'App';
+import { ConnectedRouter } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import Routes from 'Routes';
 import { AppRoutes } from 'shared/constants/routes';
 import configureStore from 'stores/configureStore';
 import theme from 'styles/theme';
@@ -23,24 +23,18 @@ export const initialStorage = {
 export function renderRouteWithStore(
   initialRoute = AppRoutes.Home,
   state = {},
-  storage = initialStorage,
-  history = createMemoryHistory()
+  storage = initialStorage
 ) {
   localStorage.replaceWith(storage);
 
+  const history = createMemoryHistory({
+    initialEntries: [initialRoute],
+    initialIndex: 0,
+  });
+
   const store = configureStore(state, history);
 
-  const app = render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <Routes />
-        </ConnectedRouter>
-      </ThemeProvider>
-    </Provider>
-  );
-
-  store.dispatch(push(initialRoute));
+  const app = render(<App {...{ store, theme, history }} />);
 
   return app;
 }

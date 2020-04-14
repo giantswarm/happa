@@ -81,6 +81,56 @@ export function clustersList({ withLoadingFlags }) {
 }
 
 /**
+ * Let's fetch the clusters list without overwriting the existent list
+ */
+export function refreshClustersList() {
+  return function (dispatch, getState) {
+    dispatch({ type: types.CLUSTERS_LIST_REFRESH_REQUEST });
+
+    const provider = getState().main.info.general.provider;
+    const clusterStoredIds = Object.keys(getState().entities.clusters.items);
+
+    // Fetch all clusters.
+    clustersApi
+      .getClusters()
+      .then((data) => {
+        // Compare clusters.
+        const addedClusters = data.filter(
+          (cluster) => !clusterStoredIds.includes(cluster.id)
+        );
+
+        const clusters = {};
+        const v5ClusterIds = [];
+
+        // If there are new clusters...
+        if (addedClusters.length > 0) {
+          clusters = clustersLoadArrayToObject(addedClusters, provider);
+
+          v5ClusterIds = addedClusters
+            .filter((cluster) => cluster.path.startsWith('/v5'))
+            .map((cluster) => cluster.id);
+        }
+
+        // If clusters and v5Clusters are empty, we still want to dispatch this in
+        // order to set the loading flag to false.
+        dispatch({
+          type: types.CLUSTERS_LIST_REFRESH_SUCCESS,
+          clusters,
+          v5ClusterIds,
+        });
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error(error);
+        dispatch({
+          type: types.CLUSTERS_LIST_REFRESH_ERROR,
+          error: error.message,
+        });
+      });
+  };
+}
+
+/**
  * Performs getCluster API call to get the details of all clusters in store
  * @param {Boolean} filterBySelectedOrganization
  */
