@@ -180,7 +180,7 @@ const makeMapStateToProps = () => {
   const resourcesV4 = selectResourcesV4();
   const mapStateToProps = (state, props) => {
     return {
-      resources: resourcesV4(state, props),
+      resources: resourcesV4(state, props.cluster.id),
     };
   };
 
