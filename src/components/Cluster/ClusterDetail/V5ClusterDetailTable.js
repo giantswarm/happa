@@ -321,7 +321,9 @@ class V5ClusterDetailTable extends React.Component {
     );
 
     this.toggleAddNodePoolForm();
-    await this.props.dispatch(nodePoolsCreate(this.props.cluster.id, data));
+    await this.props.dispatch(
+      nodePoolsCreate(this.props.cluster.id, data, { withSuccessMessage: true })
+    );
   };
 
   render() {

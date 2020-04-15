@@ -204,9 +204,12 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  * adding multiple node pools from the v5 cluster details view
  * Dispatches NODEPOOL_CREATE_SUCCESS on success or NODEPOOL_CREATE_ERROR on error.
  *
- * @param {Array} nodePools Array of Node Pool definition objects
+ * @param {string} clusterId - The ID of the cluster
+ * @param {Array} nodePools - Array of Node Pool definition objects
+ * @param {Object} [opts] - Optional parameters
+ * @param {boolean} [opts.withSuccessMessage] - If the action should show a success message after execution
  */
-export function nodePoolsCreate(clusterId, nodePools) {
+export function nodePoolsCreate(clusterId, nodePools, opts) {
   return async function (dispatch) {
     dispatch({ type: types.NODEPOOLS_CREATE_REQUEST });
 
@@ -229,11 +232,13 @@ export function nodePoolsCreate(clusterId, nodePools) {
               nodePool: nodePoolWithStatus,
             });
 
-            new FlashMessage(
-              `Your new node pool with ID <code>${nodePoolWithStatus.id}</code> is being created.`,
-              messageType.SUCCESS,
-              messageTTL.MEDIUM
-            );
+            if (opts?.withSuccessMessage) {
+              new FlashMessage(
+                `Your new node pool with ID <code>${nodePoolWithStatus.id}</code> is being created.`,
+                messageType.SUCCESS,
+                messageTTL.MEDIUM
+              );
+            }
 
             return nodePoolWithStatus;
           })

@@ -357,12 +357,6 @@ export function clusterCreate(cluster, isV5Cluster) {
         });
       }
 
-      new FlashMessage(
-        `Your new cluster with ID <code>${clusterId}</code> is being created.`,
-        messageType.SUCCESS,
-        messageTTL.MEDIUM
-      );
-
       return { clusterId, owner: cluster.owner };
     } catch (error) {
       dispatch({ type: types.CLUSTER_CREATE_ERROR, error: error.message });
