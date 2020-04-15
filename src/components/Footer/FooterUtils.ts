@@ -52,7 +52,7 @@ export function getUpdateButtonMessage(
   let updateMessage: string = 'Release notes';
 
   if (hasUpdate) {
-    updateMessage = 'Update happa now';
+    updateMessage = 'Update happa now!';
   }
 
   if (isUpdating) {
