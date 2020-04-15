@@ -16,12 +16,20 @@ import {
 import Option from './Option';
 import Ports from './Ports';
 
-export const Label = styled.span`
+const IngressWrapper = styled.div`
+  max-width: 1200px;
+
+  & > .col-12 > .row + .row {
+    margin-top: 16px;
+  }
+`;
+
+const Label = styled.span`
   flex: 0 0 220px;
   max-width: 100%;
 `;
 
-export const Steps = styled.ol`
+const Steps = styled.ol`
   padding-left: 0;
   list-style-position: inside;
 
@@ -57,7 +65,7 @@ const Ingress: React.FC<IIngressProps> = ({
   const patternPath: string = `${IngressPathPrefixes.Pattern}${basePath}`;
 
   return (
-    <div className='row' {...rest}>
+    <IngressWrapper className='row' {...rest}>
       <div className='col-12'>
         <div className='row'>
           <div className='col-12'>
@@ -179,7 +187,7 @@ const Ingress: React.FC<IIngressProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </IngressWrapper>
   );
 };
 

@@ -30,6 +30,10 @@ export const Info = styled.div`
   ${Row};
   background-color: ${(props) => props.theme.colors.shade7};
   flex-wrap: wrap;
+
+  & + & {
+    margin-top: 32px;
+  }
 `;
 
 export const InfoRow = styled.div`
