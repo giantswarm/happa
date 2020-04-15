@@ -207,7 +207,7 @@ export function nodePoolDeleteConfirmed(clusterId, nodePool) {
  * @param {string} clusterId - The ID of the cluster
  * @param {Array} nodePools - Array of Node Pool definition objects
  * @param {Object} [opts] - Optional parameters
- * @param {boolean} [opts.withSuccessMessage] - If the action should show a success message after execution
+ * @param {boolean} [opts.withFlashMessages] - If the action should show flash messages after execution
  */
 export function nodePoolsCreate(clusterId, nodePools, opts) {
   return async function (dispatch) {
@@ -232,7 +232,7 @@ export function nodePoolsCreate(clusterId, nodePools, opts) {
               nodePool: nodePoolWithStatus,
             });
 
-            if (opts?.withSuccessMessage) {
+            if (opts?.withFlashMessages) {
               new FlashMessage(
                 `Your new node pool with ID <code>${nodePoolWithStatus.id}</code> is being created.`,
                 messageType.SUCCESS,
@@ -250,12 +250,14 @@ export function nodePoolsCreate(clusterId, nodePools, opts) {
               nodePool,
             });
 
-            new FlashMessage(
-              'Something went wrong while trying to create the node pool',
-              messageType.ERROR,
-              messageTTL.MEDIUM,
-              'Please try again later or contact support: support@giantswarm.io'
-            );
+            if (opts?.withFlashMessages) {
+              new FlashMessage(
+                'Something went wrong while trying to create the node pool',
+                messageType.ERROR,
+                messageTTL.MEDIUM,
+                'Please try again later or contact support: support@giantswarm.io'
+              );
+            }
 
             // eslint-disable-next-line no-console
             console.error(error);
