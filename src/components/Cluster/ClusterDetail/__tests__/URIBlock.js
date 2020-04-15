@@ -1,5 +1,3 @@
-import '@testing-library/jest-dom/extend-expect';
-
 import { fireEvent, render } from '@testing-library/react';
 import useCopyToClipboard from 'lib/effects/useCopyToClipboard';
 import { getComponentWithTheme } from 'testUtils/renderUtils';
@@ -71,5 +69,25 @@ describe('URIBlock', () => {
 
     // Check if copy button is back
     expect(getByTitle(/copy content to clipboard/i)).toBeInTheDocument();
+  });
+
+  it('can have custom content provided for copying, rather the one displayed', () => {
+    const displayedContent = 'This is a displayed content';
+    const copiedContent = 'This is a the actually copied content';
+    const componentProps = {
+      children: displayedContent,
+      copyContent: copiedContent,
+    };
+    const { getByText, getByTitle } = renderWithProps(componentProps);
+
+    // Check if content is displayed
+    expect(getByText(displayedContent)).toBeInTheDocument();
+
+    const copyButton = getByTitle(/copy content to clipboard/i);
+    expect(copyButton).toBeInTheDocument();
+    fireEvent.mouseOver(copyButton);
+    fireEvent.click(copyButton);
+
+    expect(setClipboardContentMockFn).toBeCalledWith(copiedContent);
   });
 });
