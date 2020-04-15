@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { configure, waitFor } from '@testing-library/react';
+import GiantSwarm from 'giantswarm';
 import { forceRemoveAll } from 'lib/flashMessage';
 import nock from 'nock';
 
@@ -21,6 +22,11 @@ configure({
 
 beforeAll(() => {
   nock.disableNetConnect();
+  // initialize a GiantSwarm api client
+  // this is usually done trough file src/components/Layout.js
+  const defaultClient = GiantSwarm.ApiClient.instance;
+  defaultClient.basePath = window.config.apiEndpoint;
+  defaultClient.timeout = 10000;
 });
 
 afterAll(() => {

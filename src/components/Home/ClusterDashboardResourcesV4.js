@@ -57,7 +57,7 @@ const makeMapStateToProps = () => {
     const resources = selectResourcesV4();
 
     return {
-      resources: resources(state, props),
+      resources: resources(state, props.cluster.id),
       loadingClusters: selectLoadingFlagByAction(
         state,
         actionTypes.CLUSTERS_DETAILS_REQUEST
