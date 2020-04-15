@@ -1,9 +1,7 @@
-import { push } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import moment from 'moment';
 import { StatusCodes } from 'shared/constants';
-import { AppRoutes } from 'shared/constants/routes';
 import { computeCapabilities } from 'utils/clusterUtils';
 
 import * as types from './actionTypes';
@@ -259,7 +257,6 @@ export function clusterLoadDetails(
           clusterId,
           isV5Cluster,
         });
-        dispatch(push(AppRoutes.Home));
 
         return {};
       }
