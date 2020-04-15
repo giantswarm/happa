@@ -13,7 +13,7 @@ const AppRoutes = {
 const AppCatalogRoutes = {
   Home: '/app-catalogs',
   AppList: '/app-catalogs/:repo',
-  AppDetail: '/app-catalogs/:repo/:app',
+  AppDetail: '/app-catalogs/:repo/:app/:version',
 };
 
 const UsersRoutes = {
