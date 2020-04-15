@@ -34,12 +34,12 @@ export function getVersionTooltipMessage(
 ): string {
   let updateMessage: string = 'Using latest version.';
 
-  if (isUpdating) {
-    updateMessage = 'Update in progress...';
-  }
-
   if (hasUpdateReady(currentVersion, newVersion)) {
     updateMessage = 'Update available!';
+  }
+
+  if (isUpdating) {
+    updateMessage = 'Update in progress...';
   }
 
   return updateMessage;
