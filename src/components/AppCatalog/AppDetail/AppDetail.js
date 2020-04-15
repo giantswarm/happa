@@ -1,14 +1,25 @@
+import { CLUSTER_LOAD_APP_README_REQUEST } from 'actions/actionTypes';
+import { loadAppReadme } from 'actions/appActions';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import RoutePath from 'lib/routePath';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
+import { selectLoadingFlagByAction } from 'selectors/clusterSelectors';
 import { AppCatalogRoutes } from 'shared/constants/routes';
 import AppDetails from 'UI/AppDetails/AppDetails';
 import LoadingOverlay from 'UI/LoadingOverlay';
 
 import InstallAppModal from './InstallAppModal';
+
+function hasReadmeSource(appVersion) {
+  if (!appVersion.sources) {
+    return false;
+  }
+
+  return appVersion.sources.some((url) => url.endsWith('README.md'));
+}
 
 class AppDetail extends React.Component {
   imgError = () => {
@@ -29,18 +40,44 @@ class AppDetail extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.loadReadme();
+  }
+
+  componentDidUpdate() {
+    this.loadReadme();
+  }
+
+  /**
+   * Dispatch an action to load readme associated with this app if it has one and
+   * it hasn't been loaded yet.
+   */
+  loadReadme() {
+    const { repo, selectedAppVersion, dispatch, loadingReadme } = this.props;
+
+    // Skip if there is no readme source to load.
+    if (!hasReadmeSource(selectedAppVersion)) return;
+
+    // Skip if the readme is already loaded.
+    if (selectedAppVersion.readme) return;
+
+    // Don't dispatch the action if a request is already going.
+    if (loadingReadme) return;
+
+    dispatch(loadAppReadme(repo.metadata.name, selectedAppVersion));
+  }
+
   render() {
     const { repo } = this.props;
-    const appCatalogListPath = RoutePath.createUsablePath(
-      AppCatalogRoutes.AppList,
-      { repo: this.props.match.params.repo }
-    );
+    const appListPath = RoutePath.createUsablePath(AppCatalogRoutes.AppList, {
+      repo: this.props.match.params.repo,
+    });
 
     return (
       <Breadcrumb
         data={{
           title: this.props.match.params.repo.toUpperCase(),
-          pathname: appCatalogListPath,
+          pathname: appListPath,
         }}
       >
         <>
@@ -52,14 +89,14 @@ class AppDetail extends React.Component {
           ) && (
             <Breadcrumb
               data={{
-                title: this.props.latestAppVersion.name,
+                title: this.props.selectedAppVersion.name,
                 pathname: this.props.match.url,
               }}
             >
-              <DocumentTitle title={this.props.latestAppVersion.name}>
+              <DocumentTitle title={this.props.selectedAppVersion.name}>
                 {repo && (
                   <AppDetails
-                    app={this.props.latestAppVersion}
+                    app={this.props.selectedAppVersion}
                     appVersions={this.props.appVersions}
                     imgError={this.imgError}
                     imgErrorFlag={this.state.imgError}
@@ -69,8 +106,8 @@ class AppDetail extends React.Component {
                   >
                     <InstallAppModal
                       app={{
-                        catalog: repo.metadata.name,
-                        name: this.props.latestAppVersion.name,
+                        repo: repo.metadata.name,
+                        name: this.props.selectedAppVersion.name,
                         versions: this.props.appVersions,
                       }}
                       selectedClusterID={this.props.selectedClusterID}
@@ -87,18 +124,21 @@ class AppDetail extends React.Component {
 }
 
 AppDetail.propTypes = {
-  latestAppVersion: PropTypes.object,
+  selectedAppVersion: PropTypes.object,
   appVersions: PropTypes.array,
   location: PropTypes.object,
   match: PropTypes.object,
   repo: PropTypes.object,
   selectedClusterID: PropTypes.string,
   loadingCluster: PropTypes.bool,
+  dispatch: PropTypes.func,
+  loadingReadme: PropTypes.bool,
 };
 
 function mapStateToProps(state, ownProps) {
   const repo = decodeURIComponent(ownProps.match.params.repo);
   const appName = decodeURIComponent(ownProps.match.params.app);
+  const version = decodeURIComponent(ownProps.match.params.version);
 
   let appVersions = [{}];
   if (
@@ -109,11 +149,19 @@ function mapStateToProps(state, ownProps) {
     appVersions = state.entities.catalogs.items[repo].apps[appName] || [{}];
   }
 
+  const selectedAppVersion = appVersions.find(
+    (appVersion) => appVersion.version === version
+  );
+
   return {
     appVersions: appVersions,
-    latestAppVersion: appVersions[0],
+    selectedAppVersion: selectedAppVersion || appVersions[0],
     repo: state.entities.catalogs.items[repo],
     selectedClusterID: state.main.selectedClusterID,
+    loadingReadme: selectLoadingFlagByAction(
+      state,
+      CLUSTER_LOAD_APP_README_REQUEST
+    ),
   };
 }
 
