@@ -1,6 +1,6 @@
-// @ts-ignore
 import { fireEvent, within } from '@testing-library/react';
 import { getConfiguration } from 'model/services/metadata';
+import { act } from 'react-dom/test-utils';
 import * as AllConstants from 'shared/constants';
 import { mockAPIResponse } from 'testUtils/mockHttpCalls';
 import { renderWithStore } from 'testUtils/renderUtils';
@@ -29,15 +29,18 @@ const mockGetConfiguration = (version: string) => {
   );
 };
 
-jest.useFakeTimers();
-
 describe('Footer', () => {
-  afterEach(() => {
-    setConstants(mockConstants);
+  beforeAll(() => {
+    jest.useFakeTimers();
   });
 
   afterAll(() => {
     setConstants(initialConstants);
+    jest.useRealTimers();
+  });
+
+  afterEach(() => {
+    setConstants(mockConstants);
   });
 
   it('renders without crashing', () => {
@@ -171,11 +174,9 @@ describe('Footer', () => {
 
     expect(getByText(/updating.../i)).toBeInTheDocument();
 
-    // Clicking again to try to break updating
-    fireEvent.click(updateButton);
-
-    // Fast-forward until all timers have been executed
-    jest.runAllTimers();
+    act(() => {
+      jest.runAllTimers();
+    });
 
     expect(window.location.reload).toBeCalled();
 
