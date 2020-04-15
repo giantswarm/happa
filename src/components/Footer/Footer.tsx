@@ -52,7 +52,7 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
 
   useEffect(() => {
     dispatch(metadataActions.setInitialVersion());
-    metadataActions.registerUpdateChecker(dispatch);
+    dispatch(metadataActions.registerUpdateChecker());
   }, [dispatch]);
 
   useEffect(() => {

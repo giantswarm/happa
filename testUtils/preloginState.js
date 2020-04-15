@@ -23,6 +23,7 @@ export default {
         new: null,
         isUpdating: false,
         lastCheck: 0,
+        timer: 0,
       },
     },
     info: {

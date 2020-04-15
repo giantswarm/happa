@@ -10,6 +10,11 @@ import { Constants } from 'shared/constants';
 
 import * as actionTypes from './actionTypes';
 
+interface IMetadataSetTimerAction {
+  type: typeof actionTypes.METADATA_UPDATE_SET_TIMER;
+  timer: number;
+}
+
 interface IMetadataSetVersionAction {
   type: typeof actionTypes.METADATA_UPDATE_SET_VERSION;
   version: string;
@@ -30,6 +35,7 @@ interface IMetadataExecuteUpdateAction {
 }
 
 type MetadataActions =
+  | IMetadataSetTimerAction
   | IMetadataSetVersionAction
   | IMetadataCheckForUpdatesAction
   | IMetadataScheduleUpdateAction
@@ -105,18 +111,27 @@ export const checkForUpdates = (
 
 /**
  * Register a checker that will permanently check if the app has been updated
- * @param dispatch - Redux `dispatch` function
  * @param timeout - Time to wait in between checks
  */
 export const registerUpdateChecker = (
-  dispatch: Dispatch,
   timeout: number = Constants.DEFAULT_METADATA_CHECK_PERIOD
-) => {
-  const callback = () => {
-    window.setTimeout(dispatch, timeout, checkForUpdates(callback));
-  };
+): ThunkAction<void, IState, void, MetadataActions> => {
+  return (
+    dispatch: Dispatch<MetadataActions>,
+    getState: () => IState
+  ): void => {
+    const existingTimeout: number = getState().main.metadata.version.timer;
+    window.clearTimeout(existingTimeout);
 
-  callback();
+    const callback = () => {
+      dispatch({
+        type: actionTypes.METADATA_UPDATE_SET_TIMER,
+        timer: window.setTimeout(dispatch, timeout, checkForUpdates(callback)),
+      });
+    };
+
+    callback();
+  };
 };
 
 /**

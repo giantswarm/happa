@@ -18,6 +18,7 @@ const initialState = () => ({
       new: null,
       isUpdating: false,
       lastCheck: 0,
+      timer: 0,
     },
   },
   info: {
@@ -83,6 +84,11 @@ const makeAppReducer = () => {
 
       case types.CLUSTER_SELECT:
         draft.selectedClusterID = action.clusterID;
+
+        break;
+
+      case types.METADATA_UPDATE_SET_TIMER:
+        draft.metadata.version.timer = action.timer;
 
         break;
 
