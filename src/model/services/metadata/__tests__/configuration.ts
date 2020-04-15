@@ -2,7 +2,7 @@ import { SelfClient } from 'model/clients/SelfClient';
 
 import { getConfiguration } from '../configuration';
 
-describe('SelfClient::configuration', () => {
+describe('MetadataService::configuration', () => {
   const setRequestMethodMock = jest.fn();
   const setURLMock = jest.fn();
   const executeMock = jest.fn();
