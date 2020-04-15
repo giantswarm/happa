@@ -1,5 +1,5 @@
 // @ts-ignore
-import { fireEvent, waitFor, within } from '@testing-library/react';
+import { fireEvent, within } from '@testing-library/react';
 import { getConfiguration } from 'model/services/metadata';
 import * as AllConstants from 'shared/constants';
 import { mockAPIResponse } from 'testUtils/mockHttpCalls';
@@ -28,6 +28,8 @@ const mockGetConfiguration = (version: string) => {
     mockAPIResponse({ version })
   );
 };
+
+jest.useFakeTimers();
 
 describe('Footer', () => {
   afterEach(() => {
@@ -78,6 +80,9 @@ describe('Footer', () => {
     mockGetConfiguration('0.0.2');
     const { findByText, findAllByText, getByText } = renderWithStore(Footer);
 
+    // Fast-forward until all timers have been executed
+    jest.runAllTimers();
+
     await findByText(/0.0.1/i);
     await findAllByText(/update happa now/i);
     // Check for the flash message
@@ -102,12 +107,10 @@ describe('Footer', () => {
 
     await findByText(/release notes/i);
 
-    await waitFor(
-      () => {
-        expect(getByText(/release notes/i)).toBeInTheDocument();
-      },
-      { timeout: 100 }
-    );
+    // Fast-forward until all timers have been executed
+    jest.runAllTimers();
+
+    expect(getByText(/release notes/i)).toBeInTheDocument();
   });
 
   it('only displays a single warning if there were multiple updates', async () => {
@@ -121,20 +124,20 @@ describe('Footer', () => {
     mockGetConfiguration('0.0.3');
     const { findAllByText, getByText } = renderWithStore(Footer);
 
+    // Fast-forward until all timers have been executed
+    jest.runAllTimers();
+
     await findAllByText(/update happa now/i);
     expect(
       getByText(/There's a new version of happa available/i)
     ).toBeInTheDocument();
 
-    // Wait for the next check to happen
-    await waitFor(
-      () => {
-        expect(
-          getByText(/There's a new version of happa available/i)
-        ).toBeInTheDocument();
-      },
-      { timeout: 100 }
-    );
+    // Fast-forward until all timers have been executed
+    jest.runAllTimers();
+
+    expect(
+      getByText(/There's a new version of happa available/i)
+    ).toBeInTheDocument();
   });
 
   it('toggles on update if clicking on the update button', async () => {
@@ -156,7 +159,9 @@ describe('Footer', () => {
 
     const { findAllByText, getByText } = renderWithStore(Footer);
 
-    await waitFor(() => {}, { timeout: 50 });
+    // Fast-forward until all timers have been executed
+    jest.runAllTimers();
+
     await findAllByText(/update happa now/i);
 
     const updateButton = within(
@@ -169,9 +174,10 @@ describe('Footer', () => {
     // Clicking again to try to break updating
     fireEvent.click(updateButton);
 
-    await waitFor(() => {
-      expect(window.location.reload).toBeCalled();
-    });
+    // Fast-forward until all timers have been executed
+    jest.runAllTimers();
+
+    expect(window.location.reload).toBeCalled();
 
     window.location = originalLocation;
   });
