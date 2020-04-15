@@ -21,12 +21,15 @@ import {
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
+  metadataResponse
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
+import { getConfiguration } from 'model/services/metadata';
 
 describe('', () => {
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/', orgsResponse);
     getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
@@ -42,6 +45,10 @@ describe('', () => {
   });
 
   describe('Navigation', () => {
+    beforeEach(() => {
+      getConfiguration.mockResolvedValueOnce(metadataResponse);
+    });
+
     it('navigation has selected the right page when in organization list route', async () => {
       const { findByText } = renderRouteWithStore(OrganizationsRoutes.Home);
 

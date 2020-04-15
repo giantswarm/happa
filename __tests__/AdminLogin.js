@@ -7,6 +7,7 @@ import { push } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import * as helpers from 'lib/helpers';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import React from 'react';
 import { AuthorizationTypes } from 'shared';
 import { AppRoutes } from 'shared/constants/routes';
@@ -15,6 +16,7 @@ import theme from 'styles/theme';
 import {
   AWSInfoResponse,
   getMockCall,
+  metadataResponse,
   USER_EMAIL,
   userResponse,
 } from 'testUtils/mockHttpCalls';
@@ -59,6 +61,17 @@ helpers.isJwtExpired = jest.fn();
 // eslint-disable-next-line no-import-assign
 helpers.validateOrRaise = jest.fn();
 
+// Mock metadata
+const metadataStateMock = {
+  version: {
+    current: 'VERSION',
+    new: null,
+    isUpdating: false,
+    lastCheck: 0,
+    timer: 0,
+  },
+};
+
 const renderRouteWithStore = (
   initialRoute = AppRoutes.Home,
   state = {},
@@ -79,6 +92,10 @@ const renderRouteWithStore = (
 };
 
 describe('AdminLogin', () => {
+  beforeEach(() => {
+    getConfiguration.mockResolvedValue(metadataResponse);
+  });
+
   it('renders without crashing', async () => {
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {}, {});
 
@@ -121,7 +138,7 @@ describe('AdminLogin', () => {
     helpers.isJwtExpired.mockReturnValue(false);
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData, metadata: metadataStateMock },
     });
 
     // Check if the user has been redirected to the homepage
@@ -154,7 +171,7 @@ describe('AdminLogin', () => {
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData, metadata: metadataStateMock },
     });
 
     // Check if the user has been redirected to the homepage
@@ -214,7 +231,7 @@ describe('AdminLogin', () => {
     );
 
     const { findByText } = renderRouteWithStore(AppRoutes.AdminLogin, {
-      main: { loggedInUser: mockUserData },
+      main: { loggedInUser: mockUserData, metadata: metadataStateMock },
     });
 
     await findByText(

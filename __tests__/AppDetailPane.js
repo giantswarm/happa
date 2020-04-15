@@ -25,8 +25,10 @@ import {
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
+  metadataResponse
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
+import { getConfiguration } from 'model/services/metadata';
 
 const clusterDetailPath = RoutePath.createUsablePath(
   OrganizationsRoutes.Clusters.Detail,
@@ -39,6 +41,7 @@ const clusterDetailPath = RoutePath.createUsablePath(
 describe('Installed app detail pane', () => {
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
 

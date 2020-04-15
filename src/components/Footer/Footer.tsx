@@ -1,0 +1,98 @@
+import styled from '@emotion/styled';
+import * as metadataActions from 'actions/metadataActions';
+import { executeUpdate } from 'actions/metadataActions';
+import FooterUpdateButton from 'Footer/FooterUpdateButton';
+import {
+  getReleaseURL,
+  getVersionTooltipMessage,
+  hasUpdateReady,
+  showUpdateToast,
+} from 'Footer/FooterUtils';
+import FooterVersion from 'Footer/FooterVersion';
+import React, { useCallback, useEffect, useRef } from 'react';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Tooltip from 'react-bootstrap/lib/Tooltip';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getMetadataCurrentVersion,
+  getMetadataIsUpdating,
+  getMetadataNewVersion,
+} from 'selectors/metadataSelectors';
+
+const FooterGroup = styled.span`
+  & + & {
+    margin-left: 0.35rem;
+  }
+`;
+
+interface IFooterProps extends React.ComponentPropsWithoutRef<'footer'> {}
+
+const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
+  const dispatch = useDispatch();
+
+  const currentVersion: string = useSelector(getMetadataCurrentVersion);
+  const newVersion: string | null = useSelector(getMetadataNewVersion);
+  const isUpdating: boolean = useSelector(getMetadataIsUpdating);
+
+  const isToastVisible: React.MutableRefObject<boolean> = useRef<boolean>(
+    false
+  );
+
+  const tooltipMessage: string = getVersionTooltipMessage(
+    currentVersion,
+    newVersion,
+    isUpdating
+  );
+  const releaseURL: string = getReleaseURL(currentVersion);
+  const isUpdateReady: boolean = hasUpdateReady(currentVersion, newVersion);
+
+  const handleUpdate = useCallback(() => {
+    dispatch(executeUpdate());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(metadataActions.setInitialVersion());
+    dispatch(metadataActions.registerUpdateChecker());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isUpdateReady && !isToastVisible.current) {
+      showUpdateToast(() => {
+        isToastVisible.current = false;
+      });
+      isToastVisible.current = true;
+    }
+  }, [isUpdateReady, newVersion]);
+
+  return (
+    <footer className='col-9' {...props}>
+      <FooterGroup>Happa</FooterGroup>
+      <FooterGroup>
+        <OverlayTrigger
+          overlay={<Tooltip id='tooltip'>{tooltipMessage}</Tooltip>}
+          placement='top'
+        >
+          <span>
+            <FooterVersion
+              currentVersion={currentVersion}
+              hasUpdateReady={isUpdateReady}
+            />
+          </span>
+        </OverlayTrigger>
+      </FooterGroup>
+
+      {!isUpdateReady && <FooterGroup>&#183;</FooterGroup>}
+
+      <FooterGroup>
+        <FooterUpdateButton
+          hasUpdateReady={isUpdateReady}
+          isUpdating={isUpdating}
+          releaseURL={releaseURL}
+          onClick={handleUpdate}
+        />
+      </FooterGroup>
+    </footer>
+  );
+};
+
+export default Footer;

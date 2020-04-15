@@ -12,8 +12,14 @@ import {
   getMockCall,
   postMockCall,
   userResponse,
+  metadataResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
+import { getConfiguration } from 'model/services/metadata';
+
+beforeEach(() => {
+  getConfiguration.mockResolvedValueOnce(metadataResponse);
+});
 
 it('renders the login page at /login', async () => {
   const { getByText } = renderRouteWithStore(AppRoutes.Login, {}, {});

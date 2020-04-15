@@ -18,3 +18,5 @@ export interface INodePool {
   scaling: IScaling;
   status: INodePoolStatus;
 }
+
+export type PropertiesOf<T> = T[keyof T];

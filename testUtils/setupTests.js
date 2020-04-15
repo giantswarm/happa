@@ -47,4 +47,5 @@ afterEach(async () => {
   });
   nock.cleanAll();
   forceRemoveAll();
+  jest.clearAllTimers();
 });
