@@ -14,10 +14,16 @@ import {
   postMockCall,
   USER_EMAIL,
   userResponse,
+  metadataResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
+import { getConfiguration } from 'model/services/metadata';
 
 describe('PasswordReset', () => {
+  beforeEach(() => {
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
+  });
+
   // Letting the server know that you forgot your
   describe('ForgotPassword', () => {
     it('takes us to the forgot password form when clicking on "Forgot your password?" from the login form', async () => {

@@ -65,8 +65,8 @@ export function getComponentWithTheme(Component, props) {
 /**
  * Render component in the Store context
  * @param {React.ReactType} component The React Component
- * @param {<P extends Record<string, any>>React.ComponentProps<P>} props Props to pass to the component
- * @param {Record<string, any>} state Current Store state
+ * @param {<P extends Record<string, any>>React.ComponentProps<P>} [props] Props to pass to the component
+ * @param {Record<string, any>} [state] Current Store state
  * @param {<Q extends TestingLibrary.Queries>TestingLibrary.RenderOptions<Q>} [options] Testing library render options
  */
 export function renderWithStore(component, props, state, options) {

@@ -22,13 +22,16 @@ import {
   v4AWSClusterResponse,
   v4AWSClusterStatusResponse,
   v4ClustersResponse,
+  metadataResponse
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 import { getNumberOfNodes } from 'utils/clusterUtils';
+import { getConfiguration } from 'model/services/metadata';
 
 // Responses to requests
 beforeEach(() => {
   getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+  getConfiguration.mockResolvedValueOnce(metadataResponse);
   getMockCall('/v4/user/', userResponse);
   getMockCall('/v4/organizations/', orgsResponse);
   getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);

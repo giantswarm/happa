@@ -1,5 +1,6 @@
 import { ConnectedRouter } from 'connected-react-router';
 import { ThemeProvider } from 'emotion-theming';
+import Footer from 'Footer/Footer';
 import { History } from 'history';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -20,7 +21,10 @@ const App: React.FC<IAppProps> = ({ store, theme, history }) => (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <ConnectedRouter history={history}>
-        <Routes />
+        <main>
+          <Routes />
+        </main>
+        <Footer />
       </ConnectedRouter>
     </ThemeProvider>
   </Provider>
