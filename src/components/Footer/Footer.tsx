@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { executeUpdate } from 'actions/metadataActions';
 import * as metadataActions from 'actions/metadataActions';
+import { executeUpdate } from 'actions/metadataActions';
 import FooterUpdateButton from 'Footer/FooterUpdateButton';
 import {
   getReleaseURL,
@@ -76,12 +76,13 @@ const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
             <FooterVersion
               currentVersion={currentVersion}
               hasUpdateReady={isUpdateReady}
-              isUpdating={isUpdating}
             />
           </span>
         </OverlayTrigger>
       </FooterGroup>
-      <FooterGroup>&#183;</FooterGroup>
+
+      {!isUpdateReady && <FooterGroup>&#183;</FooterGroup>}
+
       <FooterGroup>
         <FooterUpdateButton
           hasUpdateReady={isUpdateReady}

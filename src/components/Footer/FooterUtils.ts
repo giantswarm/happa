@@ -52,7 +52,7 @@ export function getUpdateButtonMessage(
   let updateMessage: string = 'Release notes';
 
   if (hasUpdate) {
-    updateMessage = 'Update now!';
+    updateMessage = 'Update happa now';
   }
 
   if (isUpdating) {
@@ -74,7 +74,7 @@ export function showUpdateToast(callback?: () => void) {
     `There's a new version of happa available!`,
     messageType.INFO,
     messageTTL.FOREVER,
-    `Please press the <code>Update now!</code> button in the footer of the page to use the latest version (it only takes a couple of seconds).`,
+    `Please press the <code>Update happa now!</code> button in the footer of the page to use the latest version (it only takes a couple of seconds).`,
     callback
   );
 }

@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import { getUpdateButtonMessage } from 'Footer/FooterUtils';
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
+import React from 'react';
+import Button from 'UI/Button';
 
-const Link = styled.a<{ hasUpdate: boolean; isUpdating: boolean }>`
-  color: ${({ hasUpdate, theme }) => hasUpdate && theme.colors.yellow1};
-  cursor: ${({ isUpdating }) => isUpdating && 'not-allowed'};
+const StyledButton = styled(Button)`
+  padding: 0 5px;
 `;
 
 interface IFooterUpdateButtonProps {
@@ -22,35 +22,27 @@ const FooterUpdateButton: React.FC<IFooterUpdateButtonProps> = ({
   onClick,
   ...rest
 }) => {
-  const href: string = hasUpdateReady ? '#' : releaseURL;
   const label: string = getUpdateButtonMessage(hasUpdateReady, isUpdating);
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (!hasUpdateReady) return;
-
-      e.preventDefault();
-
-      if (isUpdating) return;
-
-      // eslint-disable-next-line no-unused-expressions
-      onClick?.();
-    },
-    [hasUpdateReady, isUpdating, onClick]
-  );
+  if (hasUpdateReady) {
+    return (
+      <StyledButton
+        disabled={isUpdating}
+        loading={isUpdating}
+        bsStyle='warning'
+        bsSize='sm'
+        onClick={onClick}
+        {...rest}
+      >
+        {label}
+      </StyledButton>
+    );
+  }
 
   return (
-    <Link
-      rel='noopener noreferrer'
-      href={href}
-      target='_blank'
-      onClick={handleClick}
-      hasUpdate={hasUpdateReady}
-      isUpdating={isUpdating}
-      {...rest}
-    >
+    <a href={releaseURL} target='_blank' rel='noreferrer noopener'>
       {label}
-    </Link>
+    </a>
   );
 };
 

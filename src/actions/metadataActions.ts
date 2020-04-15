@@ -50,7 +50,7 @@ export const setInitialVersion = (): ThunkAction<
       // Casting as correct type until the model layer is rewritten in TypeScript
       version = ((configurationRes.data as unknown) as IMetadataConfiguration)
         .version;
-    } catch (err) {
+    } catch {
       // Do nothing
     } finally {
       dispatch({

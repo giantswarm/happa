@@ -79,7 +79,7 @@ describe('Footer', () => {
     const { findByText, findAllByText, getByText } = renderWithStore(Footer);
 
     await findByText(/0.0.1/i);
-    await findAllByText(/update now!/i);
+    await findAllByText(/update happa now!/i);
     // Check for the flash message
     expect(
       getByText(/There's a new version of happa available/i)
@@ -87,7 +87,7 @@ describe('Footer', () => {
 
     const versionWrapper = getByText(/0.0.1/i);
     fireEvent.mouseOver(versionWrapper);
-    expect(getByText(/Update available!/i)).toBeInTheDocument();
+    expect(getByText(/update available!/i)).toBeInTheDocument();
   });
 
   it(`only displays an update warning if there's a new version available`, async () => {
@@ -121,7 +121,7 @@ describe('Footer', () => {
     mockGetConfiguration('0.0.3');
     const { findAllByText, getByText } = renderWithStore(Footer);
 
-    await findAllByText(/update now!/i);
+    await findAllByText(/update happa now!/i);
     expect(
       getByText(/There's a new version of happa available/i)
     ).toBeInTheDocument();
@@ -157,11 +157,11 @@ describe('Footer', () => {
     const { findAllByText, getByText } = renderWithStore(Footer);
 
     await waitFor(() => {}, { timeout: 50 });
-    await findAllByText(/update now!/i);
+    await findAllByText(/update happa now/i);
 
     const updateButton = within(
       document.querySelector('footer') as HTMLElement
-    ).getByText(/update now!/i);
+    ).getByText(/update happa now/i);
     fireEvent.click(updateButton);
 
     expect(getByText(/updating.../i)).toBeInTheDocument();
