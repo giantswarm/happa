@@ -7,15 +7,15 @@ import { renderWithStore } from 'testUtils/renderUtils';
 
 import Footer from '../Footer';
 
-const setConstants = (value: Partial<typeof AllConstants.Constants>) => {
-  // @ts-ignore
-  // eslint-disable-next-line no-import-assign
-  AllConstants.Constants = value;
-};
-
 // Mock timers
 jest.mock('shared/constants');
 const initialConstants = AllConstants.Constants;
+const setConstants = (value: Partial<typeof AllConstants.Constants>) => {
+  // @ts-ignore
+  // eslint-disable-next-line no-import-assign
+  AllConstants.Constants = Object.assign({}, initialConstants, value);
+};
+
 const mockConstants = {
   // eslint-disable-next-line no-magic-numbers
   DEFAULT_METADATA_CHECK_PERIOD: 20 * 1000,
@@ -79,7 +79,7 @@ describe('Footer', () => {
     const { findByText, findAllByText, getByText } = renderWithStore(Footer);
 
     await findByText(/0.0.1/i);
-    await findAllByText(/update happa now!/i);
+    await findAllByText(/update happa now/i);
     // Check for the flash message
     expect(
       getByText(/There's a new version of happa available/i)
@@ -121,7 +121,7 @@ describe('Footer', () => {
     mockGetConfiguration('0.0.3');
     const { findAllByText, getByText } = renderWithStore(Footer);
 
-    await findAllByText(/update happa now!/i);
+    await findAllByText(/update happa now/i);
     expect(
       getByText(/There's a new version of happa available/i)
     ).toBeInTheDocument();

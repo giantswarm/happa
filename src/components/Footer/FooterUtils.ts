@@ -1,4 +1,5 @@
 import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import { Constants } from 'shared/constants';
 
 export function isCommitHash(version: string): boolean {
   // eslint-disable-next-line no-magic-numbers
@@ -52,7 +53,7 @@ export function getUpdateButtonMessage(
   let updateMessage: string = 'Release notes';
 
   if (hasUpdate) {
-    updateMessage = 'Update happa now!';
+    updateMessage = Constants.METADATA_UPDATE_LABEL;
   }
 
   if (isUpdating) {
@@ -74,7 +75,7 @@ export function showUpdateToast(callback?: () => void) {
     `There's a new version of happa available!`,
     messageType.INFO,
     messageTTL.FOREVER,
-    `Please press the <code>Update happa now!</code> button in the footer of the page to use the latest version (it only takes a couple of seconds).`,
+    `Please press the <code>${Constants.METADATA_UPDATE_LABEL}</code> button in the footer of the page to use the latest version (it only takes a couple of seconds).`,
     callback
   );
 }
