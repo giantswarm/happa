@@ -6,6 +6,11 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
 import { Code } from 'styles';
 
+const StatusIcon = styled.i`
+  width: 14px;
+  height: 14px;
+`;
+
 const CopyButton = styled.div`
   opacity: 0;
   cursor: pointer;
@@ -14,7 +19,7 @@ const CopyButton = styled.div`
   align-items: center;
 
   &:hover {
-    i {
+    ${StatusIcon} {
       text-shadow: 0px 0px 15px ${(props) => props.theme.colors.shade1};
     }
   }
@@ -34,15 +39,20 @@ const BlockWrapper = styled.div`
   }
 `;
 
+const StyledCode = styled(Code)`
+  width: 100%;
+`;
+
 const getTooltip = (text) => <Tooltip id='tooltip'>{text}</Tooltip>;
 
 // eslint-disable-next-line react/no-multi-comp
-const URIBlock = ({ children, title, ...props }) => {
+const URIBlock = ({ children, title, copyContent, ...props }) => {
+  const content = copyContent ?? children;
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
-  const tooltipText = `Copy ${children} to clipboard.`;
+  const tooltipText = `Copy ${content} to clipboard.`;
 
   const copyToClipboard = () => {
-    setClipboardContent(children);
+    setClipboardContent(content);
   };
   const handleMouseLeave = () => setClipboardContent(null);
 
@@ -50,10 +60,10 @@ const URIBlock = ({ children, title, ...props }) => {
     <BlockWrapper {...props} onMouseLeave={handleMouseLeave}>
       {title && <span>{title}</span>}
 
-      <Code>{children}</Code>
+      <StyledCode>{children}</StyledCode>
 
       {hasContentInClipboard ? (
-        <i
+        <StatusIcon
           aria-hidden='true'
           className='fa fa-done'
           title='Content copied to clipboard'
@@ -61,7 +71,7 @@ const URIBlock = ({ children, title, ...props }) => {
       ) : (
         <OverlayTrigger placement='top' overlay={getTooltip(tooltipText)}>
           <CopyButton onClick={copyToClipboard}>
-            <i
+            <StatusIcon
               aria-hidden='true'
               className='fa fa-content-copy'
               title='Copy content to clipboard'
@@ -78,8 +88,9 @@ URIBlock.defaultProps = {
 };
 
 URIBlock.propTypes = {
-  children: PropTypes.string,
+  children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   title: PropTypes.string,
+  copyContent: PropTypes.string,
 };
 
 export default URIBlock;

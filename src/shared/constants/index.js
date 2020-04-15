@@ -32,4 +32,7 @@ export const Constants = {
     'Lower end of the scaling range for the cluster autoscaler',
   MAX_NODES_EXPLANATION:
     'Upper end of the scaling range for the cluster autoscaler',
+
+  KVM_INGRESS_TCP_HTTP_PORT: 36000,
+  KVM_INGRESS_TCP_HTTPS_PORT: 36001,
 };
