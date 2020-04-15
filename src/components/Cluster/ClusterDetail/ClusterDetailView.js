@@ -27,7 +27,7 @@ import {
   selectLoadingFlagByIdAndAction,
 } from 'selectors/clusterSelectors';
 import { Providers } from 'shared/constants';
-import { OrganizationsRoutes } from 'shared/constants/routes';
+import { AppRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Button';
 import ClusterIDLabel from 'UI/ClusterIDLabel';
 import LoadingOverlay from 'UI/LoadingOverlay';
@@ -78,16 +78,9 @@ class ClusterDetailView extends React.Component {
     );
   };
 
-  // It is not in your orgs or it has been deleted.
+  // It is not in user orgs or it has been deleted.
   doesNotExist = (isDeleted) => {
-    const { clusterId, organizationId, dispatch } = this.props;
-
-    const organizationDetailPath = RoutePath.createUsablePath(
-      OrganizationsRoutes.Detail,
-      {
-        orgId: organizationId,
-      }
-    );
+    const { clusterId, dispatch } = this.props;
 
     const text = isDeleted
       ? 'This cluster has been deleted'
@@ -102,7 +95,7 @@ class ClusterDetailView extends React.Component {
 
     this.props.clearInterval(this.loadDataInterval);
 
-    dispatch(push(organizationDetailPath));
+    dispatch(push(AppRoutes.Home));
   };
 
   loadDetails = () => {
