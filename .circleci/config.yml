@@ -7,6 +7,13 @@ defaults: &defaults
   docker:
     - image: circleci/node:12-buster
 
+job_filters: &job_filters
+  filters:
+    tags:
+      only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+    branches:
+      only: /.*/
+
 whitelist: &whitelist
   paths:
     - dist/*
@@ -19,26 +26,27 @@ workflows:
   build:
     jobs:
       - checkout:
-          filters:
-            tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
-            branches:
-              only: /.*/
+          <<: *job_filters
       - test:
           requires:
             - checkout
+          <<: *job_filters
       - lint:
           requires:
             - checkout
+          <<: *job_filters
       - prettier:
           requires:
             - checkout
+          <<: *job_filters
       - typecheck:
           requires:
             - checkout
+          <<: *job_filters
       - build:
           requires:
             - checkout
+          <<: *job_filters
       - build-container:
           requires:
             - test
@@ -46,6 +54,7 @@ workflows:
             - prettier
             - typecheck
             - build
+          <<: *job_filters
 
       - architect/push-to-docker-legacy:
           name: push-happa-to-aliyun-master
