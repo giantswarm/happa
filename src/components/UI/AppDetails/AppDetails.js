@@ -103,7 +103,7 @@ const AppDetails = (props) => {
     q,
     imgErrorFlag,
     imgError,
-    repo,
+    catalog,
     children,
   } = props;
 
@@ -121,7 +121,7 @@ const AppDetails = (props) => {
 
   const appCatalogAppListPath = RoutePath.createUsablePath(
     AppCatalogRoutes.AppList,
-    { repo: params.repo }
+    { catalogName: params.catalogName }
   );
   const to = `${appCatalogAppListPath}?q=${q}#${name}`;
 
@@ -129,7 +129,7 @@ const AppDetails = (props) => {
     <div>
       <Link to={to}>
         <i aria-hidden='true' className='fa fa-chevron-left' />
-        Back to &quot;{repo.spec.title}&quot;
+        Back to &quot;{catalog.spec.title}&quot;
       </Link>
       <br />
       <br />
@@ -180,7 +180,7 @@ AppDetails.propTypes = {
   q: PropTypes.string,
   imgErrorFlag: PropTypes.bool,
   imgError: PropTypes.func,
-  repo: PropTypes.object,
+  catalog: PropTypes.object,
   children: PropTypes.any,
 };
 

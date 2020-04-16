@@ -53,7 +53,7 @@ class AppDetail extends React.Component {
    * it hasn't been loaded yet.
    */
   loadReadme() {
-    const { repo, selectedAppVersion, dispatch, loadingReadme } = this.props;
+    const { catalog, selectedAppVersion, dispatch, loadingReadme } = this.props;
 
     // Skip if there is no readme source to load.
     if (!hasReadmeSource(selectedAppVersion)) return;
@@ -64,27 +64,29 @@ class AppDetail extends React.Component {
     // Don't dispatch the action if a request is already going.
     if (loadingReadme) return;
 
-    dispatch(loadAppReadme(repo.metadata.name, selectedAppVersion));
+    dispatch(loadAppReadme(catalog.metadata.name, selectedAppVersion));
   }
 
   render() {
-    const { repo } = this.props;
+    const { catalog } = this.props;
     const appListPath = RoutePath.createUsablePath(AppCatalogRoutes.AppList, {
-      repo: this.props.match.params.repo,
+      catalogName: this.props.match.params.catalogName,
     });
 
     return (
       <Breadcrumb
         data={{
-          title: this.props.match.params.repo.toUpperCase(),
+          title: this.props.match.params.catalogName.toUpperCase(),
           pathname: appListPath,
         }}
       >
         <>
-          <LoadingOverlay loading={!repo || this.props.repo.isFetchingIndex} />
+          <LoadingOverlay
+            loading={!catalog || this.props.catalog.isFetchingIndex}
+          />
           {!(
-            !repo ||
-            this.props.repo.isFetchingIndex ||
+            !catalog ||
+            this.props.catalog.isFetchingIndex ||
             this.props.loadingCluster
           ) && (
             <Breadcrumb
@@ -94,7 +96,7 @@ class AppDetail extends React.Component {
               }}
             >
               <DocumentTitle title={this.props.selectedAppVersion.name}>
-                {repo && (
+                {catalog && (
                   <AppDetails
                     app={this.props.selectedAppVersion}
                     appVersions={this.props.appVersions}
@@ -102,11 +104,11 @@ class AppDetail extends React.Component {
                     imgErrorFlag={this.state.imgError}
                     params={this.props.match.params}
                     q={this.state.q}
-                    repo={repo}
+                    catalog={catalog}
                   >
                     <InstallAppModal
                       app={{
-                        repo: repo.metadata.name,
+                        catalog: catalog.metadata.name,
                         name: this.props.selectedAppVersion.name,
                         versions: this.props.appVersions,
                       }}
@@ -128,7 +130,7 @@ AppDetail.propTypes = {
   appVersions: PropTypes.array,
   location: PropTypes.object,
   match: PropTypes.object,
-  repo: PropTypes.object,
+  catalog: PropTypes.object,
   selectedClusterID: PropTypes.string,
   loadingCluster: PropTypes.bool,
   dispatch: PropTypes.func,
@@ -136,17 +138,19 @@ AppDetail.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  const repo = decodeURIComponent(ownProps.match.params.repo);
+  const catalogName = decodeURIComponent(ownProps.match.params.catalogName);
   const appName = decodeURIComponent(ownProps.match.params.app);
   const version = decodeURIComponent(ownProps.match.params.version);
 
   let appVersions = [{}];
   if (
-    state.entities.catalogs.items[repo] &&
-    !state.entities.catalogs.items[repo].isFetchingIndex &&
-    state.entities.catalogs.items[repo].apps[appName]
+    state.entities.catalogs.items[catalogName] &&
+    !state.entities.catalogs.items[catalogName].isFetchingIndex &&
+    state.entities.catalogs.items[catalogName].apps[appName]
   ) {
-    appVersions = state.entities.catalogs.items[repo].apps[appName] || [{}];
+    appVersions = state.entities.catalogs.items[catalogName].apps[appName] || [
+      {},
+    ];
   }
 
   const selectedAppVersion = appVersions.find(
@@ -156,7 +160,7 @@ function mapStateToProps(state, ownProps) {
   return {
     appVersions: appVersions,
     selectedAppVersion: selectedAppVersion || appVersions[0],
-    repo: state.entities.catalogs.items[repo],
+    catalog: state.entities.catalogs.items[catalogName],
     selectedClusterID: state.main.selectedClusterID,
     loadingReadme: selectLoadingFlagByAction(
       state,

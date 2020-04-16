@@ -151,7 +151,7 @@ const AppContainer = ({
   const appCatalogAppDetailPath = RoutePath.createUsablePath(
     AppCatalogRoutes.AppDetail,
     {
-      repo: catalog.metadata.name,
+      catalogName: catalog.metadata.name,
       app: appVersions[0].name,
       version: appVersions[0].version,
     }
