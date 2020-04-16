@@ -170,6 +170,9 @@ class ExpiryHoursPicker extends React.Component {
   }
 
   render() {
+    const { error } = this.state;
+    const hasError = error !== '';
+
     return (
       <List className='expiry-hours-picker'>
         <li className='expiry-hours-picker--granular'>
@@ -266,9 +269,9 @@ class ExpiryHoursPicker extends React.Component {
           />
         </li>
         <li>
-          <SlideTransition in={this.state.error}>
+          <SlideTransition in={hasError}>
             <div className='flash-messages--flash-message flash-messages--warning'>
-              {this.state.error}
+              {error}
             </div>
           </SlideTransition>
         </li>
