@@ -106,7 +106,7 @@ describe('Apps and App Catalog', () => {
 
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppList,
-        { repo: 'giantswarm-incubator' }
+        { catalogName: 'giantswarm-incubator' }
       );
       const { findByText } = renderRouteWithStore(appCatalogListPath);
 
@@ -141,7 +141,7 @@ describe('Apps and App Catalog', () => {
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppDetail,
         {
-          repo: 'giantswarm-incubator',
+          catalogName: 'giantswarm-incubator',
           app: 'nginx-ingress-controller-app',
         }
       );
@@ -197,7 +197,7 @@ describe('Apps and App Catalog', () => {
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppDetail,
         {
-          repo: 'giantswarm-incubator',
+          catalogName: 'giantswarm-incubator',
           app: 'nginx-ingress-controller-app',
         }
       );
@@ -268,7 +268,7 @@ describe('Apps and App Catalog', () => {
       const appCatalogListPath = RoutePath.createUsablePath(
         AppCatalogRoutes.AppDetail,
         {
-          repo: 'giantswarm-incubator',
+          catalogName: 'giantswarm-incubator',
           app: testApp,
         }
       );

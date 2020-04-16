@@ -47,7 +47,7 @@ AppList.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
-    catalog: state.entities.catalogs.items[ownProps.match.params.repo],
+    catalog: state.entities.catalogs.items[ownProps.match.params.catalogName],
     loading: state.entities.catalogs.isFetching,
   };
 }

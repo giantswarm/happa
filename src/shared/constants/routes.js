@@ -12,8 +12,8 @@ const AppRoutes = {
 
 const AppCatalogRoutes = {
   Home: '/app-catalogs',
-  AppList: '/app-catalogs/:repo',
-  AppDetail: '/app-catalogs/:repo/:app/:version',
+  AppList: '/app-catalogs/:catalogName',
+  AppDetail: '/app-catalogs/:catalogName/:app/:version',
 };
 
 const UsersRoutes = {
