@@ -59,7 +59,7 @@ const CatalogRepo = ({ catalog }) => {
 
   const appCatalogListPath = RoutePath.createUsablePath(
     AppCatalogRoutes.AppList,
-    { repo: name }
+    { catalogName: name }
   );
 
   return (
