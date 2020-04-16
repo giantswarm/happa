@@ -108,6 +108,7 @@ const KeyPairCreateModal = (props) => {
   };
 
   const close = () => {
+    setExpireTTL(Constants.KEYPAIR_DEFAULT_TTL);
     setCNPrefix('');
     setCertificateOrganizations('');
     setDescription(defaultDescription(props.user.email));
