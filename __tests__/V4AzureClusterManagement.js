@@ -190,7 +190,8 @@ describe('V4AzureClusterManagement', () => {
     expect(createButton.disabled).toBeFalsy();
     fireEvent.click(createButton);
 
-    const successMessage = await findByText(/is being created/i);
+    // Expect to be redirected to the cluster detail page
+    const successMessage = await findByText(/kubernetes endpoint URI/i);
     expect(successMessage).toBeInTheDocument();
 
     // eslint-disable-next-line no-empty-function
