@@ -1,7 +1,16 @@
+import styled from '@emotion/styled';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import DatePicker from 'react-datepicker';
+import { Constants } from 'shared/constants';
+import SlideTransition from 'styles/transitions/SlideTransition';
+
+const List = styled.ul`
+  & > li + li {
+    margin-top: 25px;
+  }
+`;
 
 class ExpiryHoursPicker extends React.Component {
   constructor(props) {
@@ -31,6 +40,7 @@ class ExpiryHoursPicker extends React.Component {
       hoursValue: hours,
       expireDate: moment().add(props.initialValue, 'hours').utc(),
       selectionType: 'relative',
+      error: '',
     };
 
     // to set the week start to Monday
@@ -123,37 +133,45 @@ class ExpiryHoursPicker extends React.Component {
     // inputs.
     let TTL = 0;
 
-    if (this.state.selectionType === 'date') {
-      // expireDate is at the start of the day of whatever the user picked.
-      expireDate = this.state.expireDate.utc().startOf('day').clone();
-    } else if (this.state.selectionType === 'relative') {
-      // Calculate hours based on years, months, days, hours chosen
-      expireDate = moment().utc().add(this.state.yearsValue, 'years');
-      expireDate.add(this.state.monthsValue, 'months');
-      expireDate.add(this.state.daysValue, 'days');
-      expireDate.add(this.state.hoursValue, 'hours');
-    }
+    this.setState(
+      (prevState, props) => {
+        if (prevState.selectionType === 'date') {
+          // expireDate is at the start of the day of whatever the user picked.
+          expireDate = prevState.expireDate.utc().startOf('day').clone();
+        } else if (prevState.selectionType === 'relative') {
+          // Calculate hours based on years, months, days, hours chosen
+          expireDate = moment().utc().add(prevState.yearsValue, 'years');
+          expireDate.add(prevState.monthsValue, 'months');
+          expireDate.add(prevState.daysValue, 'days');
+          expireDate.add(prevState.hoursValue, 'hours');
+        }
 
-    // Set date picker to this value too
-    this.setState({
-      expireDate: expireDate,
-    });
+        // Now that we have an expireDate, calculate the difference between it and
+        // now in hours.
+        TTL = expireDate.diff(moment().utc(), 'hours');
 
-    // Now that we have an expireDate, calculate the difference between it and
-    // now in hours.
-    TTL = expireDate.diff(moment().utc(), 'hours');
+        let error = '';
+        if (TTL >= props.maxSafeValueHours) {
+          error = Constants.KEYPAIR_UNSAFE_TTL_EXPLANATION;
+        }
 
-    // Guard against invalid value
-    if (TTL < 1) {
-      TTL = 0;
-    }
+        // Guard against invalid value
+        if (TTL < 1) {
+          TTL = 0;
+        }
 
-    this.props.onChange(TTL);
+        // Set date picker to this value too
+        return { expireDate, error };
+      },
+      () => {
+        this.props.onChange(TTL);
+      }
+    );
   }
 
   render() {
     return (
-      <ul className='expiry-hours-picker'>
+      <List className='expiry-hours-picker'>
         <li className='expiry-hours-picker--granular'>
           <input
             checked={this.state.selectionType === 'relative'}
@@ -247,7 +265,14 @@ class ExpiryHoursPicker extends React.Component {
             showYearDropdown
           />
         </li>
-      </ul>
+        <li>
+          <SlideTransition in={this.state.error}>
+            <div className='flash-messages--flash-message flash-messages--warning'>
+              {this.state.error}
+            </div>
+          </SlideTransition>
+        </li>
+      </List>
     );
   }
 }
@@ -255,6 +280,7 @@ class ExpiryHoursPicker extends React.Component {
 ExpiryHoursPicker.propTypes = {
   onChange: PropTypes.func,
   initialValue: PropTypes.number,
+  maxSafeValueHours: PropTypes.number,
 };
 
 export default ExpiryHoursPicker;
