@@ -231,7 +231,14 @@ describe('Apps and App Catalog', () => {
         message: `We're installing your app called 'test-app' on ${V4_CLUSTER.id}`,
       };
       nock(API_ENDPOINT)
-        .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/test-app/`, 'PUT')
+        .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/test-app/`, 'PUT', {
+          spec: {
+            catalog: 'giantswarm-incubator',
+            name: 'nginx-ingress-controller-app',
+            namespace: 'kube-system',
+            version: '1.1.1',
+          },
+        })
         .reply(StatusCodes.Ok, installAppResponse);
 
       getMockCallTimes('/v4/user/', userResponse);
