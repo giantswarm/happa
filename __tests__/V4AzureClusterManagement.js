@@ -22,9 +22,11 @@ import {
   v4AzureClusterResponse,
   v4AzureClusterStatusResponse,
   v4ClustersResponse,
+  metadataResponse,
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
 import { getNumberOfNodes } from 'utils/clusterUtils';
+import { getConfiguration } from 'model/services/metadata';
 
 describe('V4AzureClusterManagement', () => {
   const minNodesCount = 3;
@@ -32,6 +34,7 @@ describe('V4AzureClusterManagement', () => {
   // Responses to requests
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(azureInfoResponse);
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCallTimes('/v4/organizations/', orgsResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);

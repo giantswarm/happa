@@ -12,6 +12,15 @@ const initialState = () => ({
   selectedClusterID: undefined,
   firstLoadComplete: false,
   loggedInUser: fetchUserFromStorage(),
+  metadata: {
+    version: {
+      current: 'VERSION',
+      new: null,
+      isUpdating: false,
+      lastCheck: 0,
+      timer: 0,
+    },
+  },
   info: {
     general: {
       availability_zones: {
@@ -40,14 +49,14 @@ const makeAppReducer = () => {
       case types.INFO_LOAD_SUCCESS:
         draft.info = action.info;
 
-        return;
+        break;
 
       case types.LOGIN_SUCCESS: {
         setUserToStorage(action.userData);
 
         draft.loggedInUser = action.userData;
 
-        return;
+        break;
       }
 
       case types.REFRESH_USER_INFO_ERROR:
@@ -60,21 +69,48 @@ const makeAppReducer = () => {
         draft.loggedInUser = {};
         draft.firstLoadComplete = false;
 
-        return;
+        break;
       }
 
       case types.ORGANIZATION_SELECT:
         draft.selectedOrganization = action.orgId;
 
-        return;
+        break;
 
       case types.ORGANIZATIONS_LOAD_SUCCESS:
         draft.selectedOrganization = action.selectedOrganization;
 
-        return;
+        break;
 
       case types.CLUSTER_SELECT:
         draft.selectedClusterID = action.clusterID;
+
+        break;
+
+      case types.METADATA_UPDATE_SET_TIMER:
+        draft.metadata.version.timer = action.timer;
+
+        break;
+
+      case types.METADATA_UPDATE_SET_VERSION:
+        draft.metadata.version.current = action.version;
+
+        break;
+
+      case types.METADATA_UPDATE_CHECK:
+        draft.metadata.version.lastCheck = action.timestamp;
+
+        break;
+
+      case types.METADATA_UPDATE_SCHEDULE:
+        draft.metadata.version.new = action.version;
+
+        break;
+
+      case types.METADATA_UPDATE_EXECUTE:
+        draft.metadata.version.isUpdating = true;
+
+        break;
     }
   }, initialState());
 };

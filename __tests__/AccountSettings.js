@@ -4,8 +4,10 @@ import {
   AWSInfoResponse,
   getMockCall,
   userResponse,
+  metadataResponse
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
+import { getConfiguration } from 'model/services/metadata';
 
 const elementIDs = {
   ChangeEmailForm: 'account-settings/change-email',
@@ -22,6 +24,7 @@ const elementLabels = {
 describe('AccountSettings', () => {
   beforeEach(() => {
     getInstallationInfo.mockResolvedValueOnce(AWSInfoResponse);
+    getConfiguration.mockResolvedValueOnce(metadataResponse);
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');

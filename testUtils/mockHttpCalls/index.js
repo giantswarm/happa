@@ -41,3 +41,6 @@ export * from './invites';
 
 // Keypairs
 export * from './keypairs';
+
+// Metadata
+export * from './metadata';
