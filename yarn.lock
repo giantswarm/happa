@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@airbrake/browser@1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@airbrake/browser/-/browser-1.0.6.tgz#cac83f3f9635fae7d5406639eba06fc94dd3417a"
-  integrity sha512-Uyj2BbRPiLszd3va7CX3+OxEuXUOQ1f4MnpiRMYXIbJ++cUqDUlRf8JBCvy14c0FhpLCo6J2exedwod8qf174Q==
+"@airbrake/browser@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@airbrake/browser/-/browser-1.0.7.tgz#fefe6a999283a6fd41e717660f8696570d8fa95a"
+  integrity sha512-4iO1gE7jMXCokFF3va0LUpIyruhVawmbOZgoZLTtEuYB9qJBWTi8juOV8B34LqAjTeWiRrm5Egg4M4jptJu+Lg==
   dependencies:
     cross-fetch "^3.0.4"
     error-stack-parser "^2.0.4"
