@@ -33,6 +33,11 @@ export const Constants = {
   MAX_NODES_EXPLANATION:
     'Upper end of the scaling range for the cluster autoscaler',
 
+  KEYPAIR_DEFAULT_TTL: 24, // A day, In hours
+  // eslint-disable-next-line no-magic-numbers
+  KEYPAIR_MAX_SAFE_TTL: 24 * 30, // 30 days, in hours
+  KEYPAIR_UNSAFE_TTL_EXPLANATION: `The desired expiry date is pretty far away. Please keep in mind that there is no way to revoke keypairs once they've been created.`,
+
   KVM_INGRESS_TCP_HTTP_PORT: 36000,
   KVM_INGRESS_TCP_HTTPS_PORT: 36001,
 };
