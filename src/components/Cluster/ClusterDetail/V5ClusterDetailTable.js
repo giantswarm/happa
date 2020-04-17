@@ -17,8 +17,8 @@ import {
   selectLoadingFlagByIdAndAction,
   selectResourcesV5,
 } from 'selectors/clusterSelectors';
-import { Constants } from 'shared/constants';
-import { FlexRowWithTwoBlocksOnEdges, Row } from 'styles';
+import { Constants, CSSBreakpoints } from 'shared/constants';
+import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Button';
@@ -279,6 +279,47 @@ export const CopyToClipboardDiv = styled.div`
   }
 `;
 
+const KubernetesURIWrapper = styled(FlexRowWithTwoBlocksOnEdges)`
+  flex-wrap: wrap;
+
+  .progress_button--container {
+    margin-right: 0;
+  }
+
+  & > div:nth-of-type(1) {
+    margin-right: 0;
+
+    & > * {
+      display: flex;
+    }
+  }
+
+  & > div:nth-of-type(2) {
+    margin-left: 0;
+    margin-right: 0;
+
+    ${mq(CSSBreakpoints.Large)} {
+      & > * {
+        margin-left: 0;
+      }
+    }
+  }
+
+  i {
+    padding: 0 8px;
+  }
+`;
+
+const GetStartedWrapper = styled.div`
+  ${mq(CSSBreakpoints.Large)} {
+    margin: 8px 0;
+  }
+`;
+
+const StyledURIBlock = styled(URIBlock)`
+  flex: 1 1 auto;
+`;
+
 // TODO Now on every addition or deletion of a NP, this component will be rerendered.
 // It would be nice to split this into subcomponents so only the littele bits that need
 // to be updated were updated. Child components might be: RAM, CPUs, workerNodesRunning.
@@ -370,14 +411,16 @@ class V5ClusterDetailTable extends React.Component {
             />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
-        <FlexRowWithTwoBlocksOnEdges>
-          <URIBlock title='Kubernetes endpoint URI:'>{api_endpoint}</URIBlock>
-          <div style={{ transform: 'translateX(10px)' }}>
+        <KubernetesURIWrapper>
+          <StyledURIBlock title='Kubernetes endpoint URI:'>
+            {api_endpoint}
+          </StyledURIBlock>
+          <GetStartedWrapper>
             <Button onClick={accessCluster}>
               <i className='fa fa-start' /> GET STARTED
             </Button>
-          </div>
-        </FlexRowWithTwoBlocksOnEdges>
+          </GetStartedWrapper>
+        </KubernetesURIWrapper>
 
         <PortMappingsRow cluster={cluster} />
 
