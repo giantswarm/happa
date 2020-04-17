@@ -4,11 +4,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 import Tooltip from 'react-bootstrap/lib/Tooltip';
-import { Code } from 'styles';
+import { CSSBreakpoints } from 'shared/constants/cssBreakpoints';
+import { Code, mq } from 'styles';
 
 const StatusIcon = styled.i`
   width: 14px;
   height: 14px;
+  padding: 0 8px;
+  display: block;
 `;
 
 const CopyButton = styled.div`
@@ -26,7 +29,10 @@ const CopyButton = styled.div`
 `;
 
 const BlockWrapper = styled.div`
-  display: inline-block;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 100%;
 
   &:hover {
     ${CopyButton} {
@@ -39,8 +45,25 @@ const BlockWrapper = styled.div`
   }
 `;
 
+const CopyContent = styled.div`
+  flex: 0 1 auto;
+  display: flex;
+  max-width: 100%;
+  align-items: center;
+`;
+
 const StyledCode = styled(Code)`
-  width: 100%;
+  margin-right: 8px;
+  overflow-x: auto;
+  width: calc(100% - 8px + 8px + 14px);
+
+  ${mq(CSSBreakpoints.Large)} {
+    margin: 8px 0;
+  }
+`;
+
+const Title = styled.span`
+  flex: 0 1 100px;
 `;
 
 const getTooltip = (text) => <Tooltip id='tooltip'>{text}</Tooltip>;
@@ -58,27 +81,29 @@ const URIBlock = ({ children, title, copyContent, ...props }) => {
 
   return (
     <BlockWrapper {...props} onMouseLeave={handleMouseLeave}>
-      {title && <span>{title}</span>}
+      {title && <Title>{title}</Title>}
 
-      <StyledCode>{children}</StyledCode>
+      <CopyContent>
+        <StyledCode>{children}</StyledCode>
 
-      {hasContentInClipboard ? (
-        <StatusIcon
-          aria-hidden='true'
-          className='fa fa-done'
-          title='Content copied to clipboard'
-        />
-      ) : (
-        <OverlayTrigger placement='top' overlay={getTooltip(tooltipText)}>
-          <CopyButton onClick={copyToClipboard}>
-            <StatusIcon
-              aria-hidden='true'
-              className='fa fa-content-copy'
-              title='Copy content to clipboard'
-            />
-          </CopyButton>
-        </OverlayTrigger>
-      )}
+        {hasContentInClipboard ? (
+          <StatusIcon
+            aria-hidden='true'
+            className='fa fa-done'
+            title='Content copied to clipboard'
+          />
+        ) : (
+          <OverlayTrigger placement='top' overlay={getTooltip(tooltipText)}>
+            <CopyButton onClick={copyToClipboard}>
+              <StatusIcon
+                aria-hidden='true'
+                className='fa fa-content-copy'
+                title='Copy content to clipboard'
+              />
+            </CopyButton>
+          </OverlayTrigger>
+        )}
+      </CopyContent>
     </BlockWrapper>
   );
 };
