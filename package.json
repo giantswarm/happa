@@ -45,7 +45,7 @@
     "auth0-js": "9.13.2",
     "axios": "^0.19.2",
     "bluebird": "3.7.2",
-    "bootstrap": "3.4.1",
+    "bootstrap": "4.1.2",
     "classnames": "2.2.6",
     "color-hash": "latest",
     "connected-react-router": "6.6.1",
