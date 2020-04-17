@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, within } from '@testing-library/react';
 import RoutePath from 'lib/routePath';
 import { getInstallationInfo } from 'model/services/giantSwarm';
+import { getConfiguration } from 'model/services/metadata';
 import { OrganizationsRoutes } from 'shared/constants/routes';
 import {
   appCatalogsResponse,
@@ -12,6 +13,7 @@ import {
   getMockCall,
   getMockCallTimes,
   keyPairsResponse,
+  metadataResponse,
   nodePoolsResponse,
   ORGANIZATION,
   orgResponse,
@@ -22,10 +24,8 @@ import {
   V5_CLUSTER,
   v5ClusterResponse,
   v5ClustersResponse,
-  metadataResponse
 } from 'testUtils/mockHttpCalls';
 import { renderRouteWithStore } from 'testUtils/renderUtils';
-import { getConfiguration } from 'model/services/metadata';
 
 // Responses to requests
 beforeEach(() => {
@@ -80,7 +80,7 @@ it('lets me create a keypair', async () => {
 
   // Then I should see also that there are no keypairs yet.
   const message = getByText(
-    "No key pairs yet. Why don't you create your first?"
+    `No key pairs yet. Why don't you create your first?`
   );
   expect(message).toBeInTheDocument();
 
@@ -93,7 +93,7 @@ it('lets me create a keypair', async () => {
   fireEvent.click(createKeyPairButton);
 
   // Then I should see the create key pair modal on the screen.
-  const modal = await queryByTestId('create-key-pair-modal');
+  const modal = queryByTestId('create-key-pair-modal');
   expect(modal).toBeInTheDocument();
 
   // And type in a common name prefix.
@@ -109,13 +109,13 @@ it('lets me create a keypair', async () => {
   });
 
   // (I'm expecting a specific POST request to be made.)
-  const oneMonth = 720;
+  const ttl = 24; // In hours
   postPayloadMockCall(
     `/v4/clusters/${V5_CLUSTER.id}/key-pairs/`,
-    body =>
+    (body) =>
       body.certificate_organizations === 'my-own-organizations' &&
       body.cn_prefix === 'my-own-cn-prefix' &&
-      body.ttl_hours === oneMonth
+      body.ttl_hours === ttl
   );
 
   // (Mock window.URL.createObjectURL because it doesn't exist in a test context)
@@ -132,7 +132,7 @@ it('lets me create a keypair', async () => {
   expect(confirmText).toBeInTheDocument();
 
   // And when I click the close button.
-  const modalFooter = await queryByTestId('create-key-pair-modal-footer');
+  const modalFooter = queryByTestId('create-key-pair-modal-footer');
   const closeButton = within(modalFooter).getByText('Close');
   fireEvent.click(closeButton);
 
