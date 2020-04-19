@@ -74,15 +74,17 @@ class ReleaseDetailsModal extends React.Component {
                   </p>
 
                   <div className='release-selector-modal--components'>
-                    {_.sortBy(release.components, 'name').map((component) => {
-                      return (
-                        <ReleaseComponentLabel
-                          key={component.name}
-                          name={component.name}
-                          version={component.version}
-                        />
-                      );
-                    })}
+                    {_.sortBy(release.components, 'name').map(
+                      (component, i) => {
+                        return (
+                          <ReleaseComponentLabel
+                            key={`${component.name}-${release.version}-${i}`}
+                            name={component.name}
+                            version={component.version}
+                          />
+                        );
+                      }
+                    )}
                   </div>
 
                   <p>Changes</p>
